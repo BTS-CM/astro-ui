@@ -256,26 +256,29 @@ export default function Form() {
     }
 
     const [deeplink, setDeeplink] = useState("");
+    const [trxJSON, setTRXJSON] = useState();
     useEffect(() => {
         if (data) {
             async function generate() {
+                const opJSON = [
+                    {
+                        "account": account,
+                        "pool": pool,
+                        "amount_to_sell": {
+                            "amount": blockchainFloat(sellAmount, assetA.precision),
+                            "asset_id": assetA.id
+                        },
+                        "min_to_receive": {
+                            "amount": blockchainFloat(buyAmount, assetB.precision),
+                            "asset_id": assetB.id
+                        },
+                        "extensions": []
+                    }
+                ];
+                setTRXJSON(opJSON);
                 let deeplinkValue;
                 try {
-                    deeplinkValue = await generateDeepLink([
-                        {
-                            "account": account,
-                            "pool": pool,
-                            "amount_to_sell": {
-                                "amount": blockchainFloat(sellAmount, assetA.precision),
-                                "asset_id": assetA.id
-                            },
-                            "min_to_receive": {
-                                "amount": blockchainFloat(buyAmount, assetB.precision),
-                                "asset_id": assetB.id
-                            },
-                            "extensions": []
-                        }
-                    ]);
+                    deeplinkValue = await generateDeepLink(opJSON);
                 } catch (error) {
                     console.log(error);
                     return;
@@ -309,10 +312,10 @@ export default function Form() {
                 <button
                     style={{marginRight: "5px"}}
                     onClick={() => {
-                        copyToClipboard("TEST");
+                        copyToClipboard(JSON.stringify(trxJSON));
                     }}
                 >
-                    Copy
+                    Copy JSON
                 </button>
                 
                 {
@@ -331,7 +334,7 @@ export default function Form() {
                       onClick={handleDownloadClick}
                     >
                       <button style={{marginRight: "5px"}}>
-                        Download
+                        Local download
                       </button>
                     </a>
                     )
@@ -341,7 +344,7 @@ export default function Form() {
                     <button
                         style={{marginBottom: "20px"}}
                     >
-                        Deeplink
+                        Beet Deeplink
                     </button>
                 </a>
 
@@ -355,6 +358,7 @@ export default function Form() {
                         setAssetA();
                         setAssetB();
                         setData();
+                        setTRXJSON();
                         reset();
                     }}>
                         Close window

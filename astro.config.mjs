@@ -3,13 +3,13 @@ import react from "@astrojs/react";
 import node from '@astrojs/node';
 import { polyfillNode } from "esbuild-plugin-polyfill-node";
 
-import vercel from "@astrojs/vercel/serverless";
+import vercelStatic from '@astrojs/vercel/static';
 
 // https://astro.build/config
 export default defineConfig({
   integrations: [react()],
-  output: 'server',
-  adapter: vercel(),
+  output: 'static',
+  adapter: vercelStatic(),
   vite: {
     optimizeDeps: {
       esbuildOptions: {
