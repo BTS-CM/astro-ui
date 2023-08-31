@@ -1,0 +1,24 @@
+{
+  "name": "starry-solstice",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/react": "^3.0.0",
+    "@hookform/resolvers": "^3.3.1",
+    "@types/react": "^18.2.21",
+    "@types/react-dom": "^18.2.7",
+    "astro": "^3.0.3",
+    "bitsharesjs-ws": "^6.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-hook-form": "^7.45.4",
+    "yup": "^1.2.0"
+  }
+}

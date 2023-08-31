@@ -1,0 +1,1523 @@
+[
+  {
+    "id": "1.3.0",
+    "symbol": "BTS",
+    "precision": 5,
+    "issuer": "1.2.3",
+    "market_fee_percent": 0,
+    "max_market_fee": "1000000000000000",
+    "max_supply": "360057050210207"
+  },
+  {
+    "id": "1.3.102",
+    "symbol": "KRW",
+    "precision": 4,
+    "issuer": "1.2.0",
+    "market_fee_percent": 0,
+    "max_market_fee": "1000000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.103",
+    "symbol": "BTC",
+    "precision": 8,
+    "issuer": "1.2.0",
+    "market_fee_percent": 8,
+    "max_market_fee": "1000000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.105",
+    "symbol": "SILVER",
+    "precision": 4,
+    "issuer": "1.2.0",
+    "market_fee_percent": 8,
+    "max_market_fee": "1000000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.106",
+    "symbol": "GOLD",
+    "precision": 6,
+    "issuer": "1.2.0",
+    "market_fee_percent": 8,
+    "max_market_fee": "1000000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.107",
+    "symbol": "TRY",
+    "precision": 4,
+    "issuer": "1.2.0",
+    "market_fee_percent": 0,
+    "max_market_fee": "1000000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.108",
+    "symbol": "SGD",
+    "precision": 4,
+    "issuer": "1.2.0",
+    "market_fee_percent": 0,
+    "max_market_fee": "1000000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.109",
+    "symbol": "HKD",
+    "precision": 4,
+    "issuer": "1.2.0",
+    "market_fee_percent": 0,
+    "max_market_fee": "1000000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.110",
+    "symbol": "RUB",
+    "precision": 4,
+    "issuer": "1.2.0",
+    "market_fee_percent": 0,
+    "max_market_fee": "1000000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.111",
+    "symbol": "SEK",
+    "precision": 4,
+    "issuer": "1.2.0",
+    "market_fee_percent": 0,
+    "max_market_fee": "1000000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.112",
+    "symbol": "NZD",
+    "precision": 4,
+    "issuer": "1.2.0",
+    "market_fee_percent": 0,
+    "max_market_fee": "1000000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.113",
+    "symbol": "CNY",
+    "precision": 4,
+    "issuer": "1.2.0",
+    "market_fee_percent": 8,
+    "max_market_fee": "1000000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.114",
+    "symbol": "MXN",
+    "precision": 4,
+    "issuer": "1.2.0",
+    "market_fee_percent": 0,
+    "max_market_fee": "1000000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.115",
+    "symbol": "CAD",
+    "precision": 4,
+    "issuer": "1.2.0",
+    "market_fee_percent": 0,
+    "max_market_fee": "1000000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.116",
+    "symbol": "CHF",
+    "precision": 4,
+    "issuer": "1.2.0",
+    "market_fee_percent": 0,
+    "max_market_fee": "1000000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.117",
+    "symbol": "AUD",
+    "precision": 4,
+    "issuer": "1.2.0",
+    "market_fee_percent": 0,
+    "max_market_fee": "1000000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.118",
+    "symbol": "GBP",
+    "precision": 4,
+    "issuer": "1.2.0",
+    "market_fee_percent": 8,
+    "max_market_fee": "1000000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.119",
+    "symbol": "JPY",
+    "precision": 2,
+    "issuer": "1.2.0",
+    "market_fee_percent": 8,
+    "max_market_fee": "1000000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.120",
+    "symbol": "EUR",
+    "precision": 4,
+    "issuer": "1.2.0",
+    "market_fee_percent": 8,
+    "max_market_fee": "1000000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.121",
+    "symbol": "USD",
+    "precision": 4,
+    "issuer": "1.2.0",
+    "market_fee_percent": 8,
+    "max_market_fee": "1000000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.136",
+    "symbol": "ROSE",
+    "precision": 0,
+    "issuer": "1.2.19747",
+    "market_fee_percent": 10,
+    "max_market_fee": 999,
+    "max_supply": 100000000
+  },
+  {
+    "id": "1.3.138",
+    "symbol": "FUND",
+    "precision": 2,
+    "issuer": "1.2.26540",
+    "market_fee_percent": 0,
+    "max_market_fee": "1000000000000000",
+    "max_supply": "10000000000000"
+  },
+  {
+    "id": "1.3.556",
+    "symbol": "BOND.CNY",
+    "precision": 0,
+    "issuer": "1.2.159",
+    "market_fee_percent": 10,
+    "max_market_fee": 5,
+    "max_supply": "100000000000"
+  },
+  {
+    "id": "1.3.860",
+    "symbol": "OPEN.DOGE",
+    "precision": 4,
+    "issuer": "1.2.1728102",
+    "market_fee_percent": 20,
+    "max_market_fee": "1000000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.958",
+    "symbol": "BTWTY",
+    "precision": 5,
+    "issuer": "1.2.1014025",
+    "market_fee_percent": 20,
+    "max_market_fee": "1000000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.1017",
+    "symbol": "ARS",
+    "precision": 4,
+    "issuer": "1.2.0",
+    "market_fee_percent": 0,
+    "max_market_fee": "1000000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.1093",
+    "symbol": "YOYOW",
+    "precision": 5,
+    "issuer": "1.2.118073",
+    "market_fee_percent": 10,
+    "max_market_fee": 100000000,
+    "max_supply": "100000000000000"
+  },
+  {
+    "id": "1.3.1325",
+    "symbol": "RUBLE",
+    "precision": 5,
+    "issuer": "1.2.0",
+    "market_fee_percent": 8,
+    "max_market_fee": "10000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.1362",
+    "symbol": "HERO",
+    "precision": 5,
+    "issuer": "1.2.167072",
+    "market_fee_percent": 0,
+    "max_market_fee": 0,
+    "max_supply": "1000000000000"
+  },
+  {
+    "id": "1.3.1382",
+    "symbol": "HERTZ",
+    "precision": 4,
+    "issuer": "1.2.630504",
+    "market_fee_percent": 0,
+    "max_market_fee": 0,
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.2241",
+    "symbol": "GDEX.BTC",
+    "precision": 8,
+    "issuer": "1.2.442525",
+    "market_fee_percent": 6,
+    "max_market_fee": "100000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.2512",
+    "symbol": "EVRAZ",
+    "precision": 4,
+    "issuer": "1.2.1677406",
+    "market_fee_percent": 5,
+    "max_market_fee": 1000000000,
+    "max_supply": "2000000000000"
+  },
+  {
+    "id": "1.3.2567",
+    "symbol": "QUINT",
+    "precision": 5,
+    "issuer": "1.2.493337",
+    "market_fee_percent": 10,
+    "max_market_fee": 500000,
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.2598",
+    "symbol": "GDEX.ETH",
+    "precision": 6,
+    "issuer": "1.2.442525",
+    "market_fee_percent": 6,
+    "max_market_fee": "1000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.2635",
+    "symbol": "GDEX.EOS",
+    "precision": 6,
+    "issuer": "1.2.442525",
+    "market_fee_percent": 6,
+    "max_market_fee": "1000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.3079",
+    "symbol": "GAT",
+    "precision": 4,
+    "issuer": "1.2.669431",
+    "market_fee_percent": 5,
+    "max_market_fee": 10000000,
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.3168",
+    "symbol": "GDEX.BKBT",
+    "precision": 5,
+    "issuer": "1.2.442525",
+    "market_fee_percent": 10,
+    "max_market_fee": "1000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.3194",
+    "symbol": "VAULT",
+    "precision": 3,
+    "issuer": "1.2.1232012",
+    "market_fee_percent": 25,
+    "max_market_fee": 1000000000,
+    "max_supply": "1000000000000"
+  },
+  {
+    "id": "1.3.3291",
+    "symbol": "TWENTIX",
+    "precision": 5,
+    "issuer": "1.2.1014025",
+    "market_fee_percent": 0,
+    "max_market_fee": "10000000000000",
+    "max_supply": "100000000000000"
+  },
+  {
+    "id": "1.3.3377",
+    "symbol": "CNC",
+    "precision": 4,
+    "issuer": "1.2.771811",
+    "market_fee_percent": 10,
+    "max_market_fee": 1000000,
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.3518",
+    "symbol": "AIDOG",
+    "precision": 2,
+    "issuer": "1.2.700706",
+    "market_fee_percent": 10,
+    "max_market_fee": 100000000,
+    "max_supply": "100000000000"
+  },
+  {
+    "id": "1.3.4098",
+    "symbol": "XBTSX.POST",
+    "precision": 6,
+    "issuer": "1.2.1014725",
+    "market_fee_percent": 10,
+    "max_market_fee": "100000000000",
+    "max_supply": "10000000000000"
+  },
+  {
+    "id": "1.3.4099",
+    "symbol": "XBTSX.STH",
+    "precision": 6,
+    "issuer": "1.2.1003283",
+    "market_fee_percent": 10,
+    "max_market_fee": "100000000000000",
+    "max_supply": "246000000000000"
+  },
+  {
+    "id": "1.3.4156",
+    "symbol": "XBTSX.DOGE",
+    "precision": 5,
+    "issuer": "1.2.1014725",
+    "market_fee_percent": 10,
+    "max_market_fee": "10000000000000",
+    "max_supply": "50000000000000"
+  },
+  {
+    "id": "1.3.4157",
+    "symbol": "XBTSX.BTC",
+    "precision": 8,
+    "issuer": "1.2.1014725",
+    "market_fee_percent": 10,
+    "max_market_fee": "1000000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.4159",
+    "symbol": "XBTSX.LTC",
+    "precision": 8,
+    "issuer": "1.2.1014725",
+    "market_fee_percent": 10,
+    "max_market_fee": "1000000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.4176",
+    "symbol": "XBTSX.DASH",
+    "precision": 8,
+    "issuer": "1.2.1014725",
+    "market_fee_percent": 10,
+    "max_market_fee": "1000000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.4274",
+    "symbol": "XBTSX.BCH",
+    "precision": 8,
+    "issuer": "1.2.1014725",
+    "market_fee_percent": 10,
+    "max_market_fee": "1000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.4367",
+    "symbol": "WEYOUME",
+    "precision": 8,
+    "issuer": "1.2.1066925",
+    "market_fee_percent": 0,
+    "max_market_fee": 0,
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.4373",
+    "symbol": "XBTSX.NVC",
+    "precision": 8,
+    "issuer": "1.2.1014725",
+    "market_fee_percent": 10,
+    "max_market_fee": "10000000000000",
+    "max_supply": "200000000000000"
+  },
+  {
+    "id": "1.3.4485",
+    "symbol": "BEOS",
+    "precision": 5,
+    "issuer": "1.2.1590396",
+    "market_fee_percent": 0,
+    "max_market_fee": 0,
+    "max_supply": "360057050200000"
+  },
+  {
+    "id": "1.3.4633",
+    "symbol": "URTHR",
+    "precision": 5,
+    "issuer": "1.2.630504",
+    "market_fee_percent": 0,
+    "max_market_fee": 0,
+    "max_supply": "180028525100000"
+  },
+  {
+    "id": "1.3.4634",
+    "symbol": "SKULD",
+    "precision": 5,
+    "issuer": "1.2.630504",
+    "market_fee_percent": 0,
+    "max_market_fee": 0,
+    "max_supply": "180028525100000"
+  },
+  {
+    "id": "1.3.4635",
+    "symbol": "VERTHANDI",
+    "precision": 5,
+    "issuer": "1.2.630504",
+    "market_fee_percent": 0,
+    "max_market_fee": 0,
+    "max_supply": "180028525100000"
+  },
+  {
+    "id": "1.3.4760",
+    "symbol": "XBTSX.ETH",
+    "precision": 7,
+    "issuer": "1.2.1067172",
+    "market_fee_percent": 10,
+    "max_market_fee": "10000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.4889",
+    "symbol": "XBTSX.EGC",
+    "precision": 8,
+    "issuer": "1.2.1014725",
+    "market_fee_percent": 10,
+    "max_market_fee": "1000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.5152",
+    "symbol": "XBTSX.MDL",
+    "precision": 6,
+    "issuer": "1.2.1575320",
+    "market_fee_percent": 10,
+    "max_market_fee": "10000000000",
+    "max_supply": "189000000000000"
+  },
+  {
+    "id": "1.3.5286",
+    "symbol": "GDEX.USDT",
+    "precision": 7,
+    "issuer": "1.2.442525",
+    "market_fee_percent": 6,
+    "max_market_fee": "100000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.5476",
+    "symbol": "CNVOTE",
+    "precision": 4,
+    "issuer": "1.2.1148184",
+    "market_fee_percent": 10,
+    "max_market_fee": "99999999970000",
+    "max_supply": "12000000000000"
+  },
+  {
+    "id": "1.3.5537",
+    "symbol": "IOB.XRP",
+    "precision": 4,
+    "issuer": "1.2.1787259",
+    "market_fee_percent": 0,
+    "max_market_fee": "1000000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.5541",
+    "symbol": "XBTSX.BNB",
+    "precision": 7,
+    "issuer": "1.2.1798063",
+    "market_fee_percent": 10,
+    "max_market_fee": "10000000000000",
+    "max_supply": "160000000000000"
+  },
+  {
+    "id": "1.3.5581",
+    "symbol": "XBTSX.AXAI",
+    "precision": 6,
+    "issuer": "1.2.1106976",
+    "market_fee_percent": 10,
+    "max_market_fee": "1000000000000",
+    "max_supply": "290000000000000"
+  },
+  {
+    "id": "1.3.5589",
+    "symbol": "XBTSX.USDT",
+    "precision": 6,
+    "issuer": "1.2.1067172",
+    "market_fee_percent": 10,
+    "max_market_fee": "10000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.5597",
+    "symbol": "XBTSX.RVN",
+    "precision": 4,
+    "issuer": "1.2.1014725",
+    "market_fee_percent": 10,
+    "max_market_fee": "100000000000",
+    "max_supply": "210000000000000"
+  },
+  {
+    "id": "1.3.5640",
+    "symbol": "HONEST",
+    "precision": 0,
+    "issuer": "1.2.1808389",
+    "market_fee_percent": 20,
+    "max_market_fee": 100000,
+    "max_supply": 100000
+  },
+  {
+    "id": "1.3.5641",
+    "symbol": "HONEST.CNY",
+    "precision": 4,
+    "issuer": "1.2.1808389",
+    "market_fee_percent": 10,
+    "max_market_fee": "1000000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.5649",
+    "symbol": "HONEST.USD",
+    "precision": 4,
+    "issuer": "1.2.1808389",
+    "market_fee_percent": 0,
+    "max_market_fee": "1000000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.5650",
+    "symbol": "HONEST.BTC",
+    "precision": 8,
+    "issuer": "1.2.1808389",
+    "market_fee_percent": 0,
+    "max_market_fee": "1000000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.5651",
+    "symbol": "HONEST.XAU",
+    "precision": 8,
+    "issuer": "1.2.1808389",
+    "market_fee_percent": 10,
+    "max_market_fee": 0,
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.5652",
+    "symbol": "HONEST.XAG",
+    "precision": 8,
+    "issuer": "1.2.1808389",
+    "market_fee_percent": 10,
+    "max_market_fee": "1000000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.5659",
+    "symbol": "HONEST.ETH",
+    "precision": 6,
+    "issuer": "1.2.1808389",
+    "market_fee_percent": 10,
+    "max_market_fee": "1000000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.5660",
+    "symbol": "HONEST.XRP",
+    "precision": 6,
+    "issuer": "1.2.1808389",
+    "market_fee_percent": 10,
+    "max_market_fee": "1000000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.5661",
+    "symbol": "HONEST.XRP1",
+    "precision": 6,
+    "issuer": "1.2.1808389",
+    "market_fee_percent": 10,
+    "max_market_fee": "1000000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.5662",
+    "symbol": "HONEST.ETH1",
+    "precision": 6,
+    "issuer": "1.2.1808389",
+    "market_fee_percent": 0,
+    "max_market_fee": "1000000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.5729",
+    "symbol": "CITEX.CNY",
+    "precision": 2,
+    "issuer": "1.2.131529",
+    "market_fee_percent": 5,
+    "max_market_fee": 0,
+    "max_supply": "10000000000000"
+  },
+  {
+    "id": "1.3.5730",
+    "symbol": "CITEX.CTS",
+    "precision": 2,
+    "issuer": "1.2.131529",
+    "market_fee_percent": 0,
+    "max_market_fee": 0,
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.5761",
+    "symbol": "CRUDE.NGN",
+    "precision": 2,
+    "issuer": "1.2.1804696",
+    "market_fee_percent": 10,
+    "max_market_fee": "100000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.5768",
+    "symbol": "XBTSX.TRD",
+    "precision": 3,
+    "issuer": "1.2.1106976",
+    "market_fee_percent": 10,
+    "max_market_fee": "10000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.5769",
+    "symbol": "XBTSX.SCH",
+    "precision": 3,
+    "issuer": "1.2.1575320",
+    "market_fee_percent": 1,
+    "max_market_fee": "100000000000",
+    "max_supply": "600000000000000"
+  },
+  {
+    "id": "1.3.5773",
+    "symbol": "TWENTIX.BTSPOOL",
+    "precision": 5,
+    "issuer": "1.2.1014025",
+    "market_fee_percent": 10,
+    "max_market_fee": 0,
+    "max_supply": "100000000000000"
+  },
+  {
+    "id": "1.3.5839",
+    "symbol": "CNY1.0",
+    "precision": 4,
+    "issuer": "1.2.0",
+    "market_fee_percent": 8,
+    "max_market_fee": "1000000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.5877",
+    "symbol": "XBTSX.EOS",
+    "precision": 6,
+    "issuer": "1.2.1003283",
+    "market_fee_percent": 8,
+    "max_market_fee": "1000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.5880",
+    "symbol": "CRUDE.BTS",
+    "precision": 5,
+    "issuer": "1.2.1786234",
+    "market_fee_percent": 10,
+    "max_market_fee": "15000000000000",
+    "max_supply": "360057050300000"
+  },
+  {
+    "id": "1.3.5882",
+    "symbol": "CRUDE.LVRG",
+    "precision": 6,
+    "issuer": "1.2.1786234",
+    "market_fee_percent": 10,
+    "max_market_fee": "900000000000000",
+    "max_supply": "999999999000000"
+  },
+  {
+    "id": "1.3.5883",
+    "symbol": "YMUSD",
+    "precision": 6,
+    "issuer": "1.2.605792",
+    "market_fee_percent": 10,
+    "max_market_fee": "1000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.5887",
+    "symbol": "XBTSX.RUB",
+    "precision": 4,
+    "issuer": "1.2.1003283",
+    "market_fee_percent": 10,
+    "max_market_fee": "100000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.5899",
+    "symbol": "TWENTIX.HUSDMM",
+    "precision": 5,
+    "issuer": "1.2.1014025",
+    "market_fee_percent": 0,
+    "max_market_fee": 0,
+    "max_supply": "100000000000000"
+  },
+  {
+    "id": "1.3.5902",
+    "symbol": "XBTSX.USDC",
+    "precision": 6,
+    "issuer": "1.2.1067172",
+    "market_fee_percent": 8,
+    "max_market_fee": "1000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.5908",
+    "symbol": "TWENTIX.IOXRPMM",
+    "precision": 5,
+    "issuer": "1.2.1014025",
+    "market_fee_percent": 0,
+    "max_market_fee": 0,
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.5913",
+    "symbol": "BLINC.USDT",
+    "precision": 8,
+    "issuer": "1.2.1229881",
+    "market_fee_percent": 0,
+    "max_market_fee": 0,
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.5919",
+    "symbol": "XBTSX.BUSD",
+    "precision": 5,
+    "issuer": "1.2.1798063",
+    "market_fee_percent": 10,
+    "max_market_fee": "1000000000000",
+    "max_supply": "100000000000000"
+  },
+  {
+    "id": "1.3.5920",
+    "symbol": "XBTSX.TRX",
+    "precision": 4,
+    "issuer": "1.2.1798063",
+    "market_fee_percent": 10,
+    "max_market_fee": "100000000000000",
+    "max_supply": "710000000000000"
+  },
+  {
+    "id": "1.3.5925",
+    "symbol": "DEFI",
+    "precision": 4,
+    "issuer": "1.2.1798434",
+    "market_fee_percent": 0,
+    "max_market_fee": "100000000000",
+    "max_supply": "9000000000000"
+  },
+  {
+    "id": "1.3.5943",
+    "symbol": "ARTCASA",
+    "precision": 5,
+    "issuer": "1.2.1799854",
+    "market_fee_percent": 25,
+    "max_market_fee": 100000000,
+    "max_supply": "100000000000"
+  },
+  {
+    "id": "1.3.5951",
+    "symbol": "XBTSX.HT",
+    "precision": 6,
+    "issuer": "1.2.1800440",
+    "market_fee_percent": 10,
+    "max_market_fee": "10000000000000",
+    "max_supply": "500000000000000"
+  },
+  {
+    "id": "1.3.5998",
+    "symbol": "BTWTY.HUSDMM",
+    "precision": 5,
+    "issuer": "1.2.1014025",
+    "market_fee_percent": 0,
+    "max_market_fee": 0,
+    "max_supply": "1000000000000"
+  },
+  {
+    "id": "1.3.5999",
+    "symbol": "FUND.FTM",
+    "precision": 5,
+    "issuer": "1.2.26540",
+    "market_fee_percent": 50,
+    "max_market_fee": "1000000000000",
+    "max_supply": "10000000000"
+  },
+  {
+    "id": "1.3.6003",
+    "symbol": "TWENTIX.WYMLP",
+    "precision": 5,
+    "issuer": "1.2.1014025",
+    "market_fee_percent": 0,
+    "max_market_fee": 0,
+    "max_supply": "10000000000000"
+  },
+  {
+    "id": "1.3.6007",
+    "symbol": "BTWTY.XBTSXUSDC",
+    "precision": 5,
+    "issuer": "1.2.1014025",
+    "market_fee_percent": 0,
+    "max_market_fee": 0,
+    "max_supply": "100000000000000"
+  },
+  {
+    "id": "1.3.6009",
+    "symbol": "NIUSHI",
+    "precision": 1,
+    "issuer": "1.2.229",
+    "market_fee_percent": 100,
+    "max_market_fee": 1000000000,
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.6011",
+    "symbol": "GOUSHI",
+    "precision": 2,
+    "issuer": "1.2.158677",
+    "market_fee_percent": 0,
+    "max_market_fee": 0,
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.6013",
+    "symbol": "XBTSX.HIVE",
+    "precision": 6,
+    "issuer": "1.2.1803149",
+    "market_fee_percent": 10,
+    "max_market_fee": "1000000000000",
+    "max_supply": "399000000000000"
+  },
+  {
+    "id": "1.3.6018",
+    "symbol": "NSNFT",
+    "precision": 0,
+    "issuer": "1.2.1677360",
+    "market_fee_percent": 0,
+    "max_market_fee": 0,
+    "max_supply": 10000000
+  },
+  {
+    "id": "1.3.6019",
+    "symbol": "YMUSD.UUU",
+    "precision": 6,
+    "issuer": "1.2.605792",
+    "market_fee_percent": 1,
+    "max_market_fee": "100000000000000",
+    "max_supply": "10000000000000"
+  },
+  {
+    "id": "1.3.6037",
+    "symbol": "GOLDBACK",
+    "precision": 5,
+    "issuer": "1.2.493337",
+    "market_fee_percent": 10,
+    "max_market_fee": 500000,
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.6038",
+    "symbol": "XBTSX.EMC",
+    "precision": 7,
+    "issuer": "1.2.1014725",
+    "market_fee_percent": 10,
+    "max_market_fee": "10000000000000",
+    "max_supply": "477500000000000"
+  },
+  {
+    "id": "1.3.6041",
+    "symbol": "XBTSX.NESS",
+    "precision": 6,
+    "issuer": "1.2.1575320",
+    "market_fee_percent": 10,
+    "max_market_fee": "1000000000000",
+    "max_supply": "165000000000000"
+  },
+  {
+    "id": "1.3.6047",
+    "symbol": "BTWTY.ARTCASAMM",
+    "precision": 5,
+    "issuer": "1.2.1014025",
+    "market_fee_percent": 0,
+    "max_market_fee": 0,
+    "max_supply": "1000000000000"
+  },
+  {
+    "id": "1.3.6053",
+    "symbol": "XBTSX.PPC",
+    "precision": 7,
+    "issuer": "1.2.1014725",
+    "market_fee_percent": 10,
+    "max_market_fee": "10000000000000",
+    "max_supply": "270000000000000"
+  },
+  {
+    "id": "1.3.6055",
+    "symbol": "ARTCASA.COHRNCE",
+    "precision": 0,
+    "issuer": "1.2.1799854",
+    "market_fee_percent": 0,
+    "max_market_fee": 0,
+    "max_supply": 2
+  },
+  {
+    "id": "1.3.6056",
+    "symbol": "ARTCASA.DCOHRNCE",
+    "precision": 0,
+    "issuer": "1.2.1799854",
+    "market_fee_percent": 0,
+    "max_market_fee": 0,
+    "max_supply": 2
+  },
+  {
+    "id": "1.3.6110",
+    "symbol": "XBTSX.SHIB",
+    "precision": 1,
+    "issuer": "1.2.1067172",
+    "market_fee_percent": 10,
+    "max_market_fee": "10000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.6120",
+    "symbol": "CRUDE.STAKE",
+    "precision": 8,
+    "issuer": "1.2.1786234",
+    "market_fee_percent": 4,
+    "max_market_fee": "81310125000",
+    "max_supply": "650481000000"
+  },
+  {
+    "id": "1.3.6123",
+    "symbol": "CRUDE.CRV",
+    "precision": 5,
+    "issuer": "1.2.1786234",
+    "market_fee_percent": 10,
+    "max_market_fee": "30000000000000",
+    "max_supply": "330303029900000"
+  },
+  {
+    "id": "1.3.6137",
+    "symbol": "XBTSX.RTM",
+    "precision": 5,
+    "issuer": "1.2.1014725",
+    "market_fee_percent": 10,
+    "max_market_fee": "100000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.6139",
+    "symbol": "XBTSX.XAUT",
+    "precision": 6,
+    "issuer": "1.2.1067172",
+    "market_fee_percent": 10,
+    "max_market_fee": "100000000000",
+    "max_supply": "226000000000"
+  },
+  {
+    "id": "1.3.6149",
+    "symbol": "XBTSX.TUSC",
+    "precision": 4,
+    "issuer": "1.2.1811143",
+    "market_fee_percent": 10,
+    "max_market_fee": "100000000000000",
+    "max_supply": "480000000000000"
+  },
+  {
+    "id": "1.3.6180",
+    "symbol": "XBTSX.HVQ",
+    "precision": 5,
+    "issuer": "1.2.1014725",
+    "market_fee_percent": 10,
+    "max_market_fee": "1000000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.6181",
+    "symbol": "XBTSX.NCH",
+    "precision": 3,
+    "issuer": "1.2.1575320",
+    "market_fee_percent": 10,
+    "max_market_fee": "10000000000000",
+    "max_supply": "49000000000000"
+  },
+  {
+    "id": "1.3.6183",
+    "symbol": "XBTSX.TCG",
+    "precision": 6,
+    "issuer": "1.2.1067172",
+    "market_fee_percent": 10,
+    "max_market_fee": "10000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.6197",
+    "symbol": "XBTSX.LUNAREUM",
+    "precision": 2,
+    "issuer": "1.2.1801738",
+    "market_fee_percent": 10,
+    "max_market_fee": "1000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.6199",
+    "symbol": "XBTSX.RDD",
+    "precision": 4,
+    "issuer": "1.2.1014725",
+    "market_fee_percent": 10,
+    "max_market_fee": "10000000000000",
+    "max_supply": "303972749550000"
+  },
+  {
+    "id": "1.3.6213",
+    "symbol": "CRUDE.XNGNX",
+    "precision": 8,
+    "issuer": "1.2.1786234",
+    "market_fee_percent": 1,
+    "max_market_fee": "100000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.6241",
+    "symbol": "XBTSX.ETC",
+    "precision": 7,
+    "issuer": "1.2.1814848",
+    "market_fee_percent": 10,
+    "max_market_fee": "10000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.6268",
+    "symbol": "BTWTY.EOS",
+    "precision": 4,
+    "issuer": "1.2.1816651",
+    "market_fee_percent": 0,
+    "max_market_fee": 0,
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.6281",
+    "symbol": "BTWTY.TUSC",
+    "precision": 5,
+    "issuer": "1.2.1818131",
+    "market_fee_percent": 0,
+    "max_market_fee": 0,
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.6289",
+    "symbol": "HONEST.USDSHORT",
+    "precision": 8,
+    "issuer": "1.2.1808389",
+    "market_fee_percent": 0,
+    "max_market_fee": "1000000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.6290",
+    "symbol": "HONEST.BTCSHORT",
+    "precision": 2,
+    "issuer": "1.2.1808389",
+    "market_fee_percent": 0,
+    "max_market_fee": 1000000000,
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.6301",
+    "symbol": "HONEST.MONEY",
+    "precision": 8,
+    "issuer": "1.2.1808389",
+    "market_fee_percent": 0,
+    "max_market_fee": "99999900000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.6302",
+    "symbol": "HONEST.AGORISM",
+    "precision": 8,
+    "issuer": "1.2.1808389",
+    "market_fee_percent": 0,
+    "max_market_fee": 0,
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.6303",
+    "symbol": "HONEST.DEV",
+    "precision": 8,
+    "issuer": "1.2.1808389",
+    "market_fee_percent": 0,
+    "max_market_fee": 0,
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.6304",
+    "symbol": "HONEST.ADA",
+    "precision": 8,
+    "issuer": "1.2.1808389",
+    "market_fee_percent": 0,
+    "max_market_fee": "100000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.6305",
+    "symbol": "HONEST.DOT",
+    "precision": 8,
+    "issuer": "1.2.1808389",
+    "market_fee_percent": 0,
+    "max_market_fee": "100000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.6306",
+    "symbol": "HONEST.LTC",
+    "precision": 8,
+    "issuer": "1.2.1808389",
+    "market_fee_percent": 0,
+    "max_market_fee": "100000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.6307",
+    "symbol": "HONEST.SOL",
+    "precision": 8,
+    "issuer": "1.2.1808389",
+    "market_fee_percent": 0,
+    "max_market_fee": "100000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.6308",
+    "symbol": "HONEST.XMR",
+    "precision": 8,
+    "issuer": "1.2.1808389",
+    "market_fee_percent": 0,
+    "max_market_fee": "100000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.6309",
+    "symbol": "HONEST.ATOM",
+    "precision": 8,
+    "issuer": "1.2.1808389",
+    "market_fee_percent": 0,
+    "max_market_fee": "100000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.6310",
+    "symbol": "HONEST.XLM",
+    "precision": 8,
+    "issuer": "1.2.1808389",
+    "market_fee_percent": 0,
+    "max_market_fee": "100000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.6311",
+    "symbol": "HONEST.ALGO",
+    "precision": 8,
+    "issuer": "1.2.1808389",
+    "market_fee_percent": 0,
+    "max_market_fee": "100000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.6312",
+    "symbol": "HONEST.FIL",
+    "precision": 8,
+    "issuer": "1.2.1808389",
+    "market_fee_percent": 0,
+    "max_market_fee": "100000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.6313",
+    "symbol": "HONEST.EOS",
+    "precision": 8,
+    "issuer": "1.2.1808389",
+    "market_fee_percent": 0,
+    "max_market_fee": "100000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.6314",
+    "symbol": "HONEST.RUB",
+    "precision": 4,
+    "issuer": "1.2.1808389",
+    "market_fee_percent": 0,
+    "max_market_fee": "100000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.6315",
+    "symbol": "HONEST.EUR",
+    "precision": 4,
+    "issuer": "1.2.1808389",
+    "market_fee_percent": 0,
+    "max_market_fee": "100000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.6316",
+    "symbol": "HONEST.GBP",
+    "precision": 4,
+    "issuer": "1.2.1808389",
+    "market_fee_percent": 0,
+    "max_market_fee": "100000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.6317",
+    "symbol": "HONEST.JPY",
+    "precision": 4,
+    "issuer": "1.2.1808389",
+    "market_fee_percent": 0,
+    "max_market_fee": "100000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.6318",
+    "symbol": "HONEST.KRW",
+    "precision": 4,
+    "issuer": "1.2.1808389",
+    "market_fee_percent": 0,
+    "max_market_fee": "100000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.6319",
+    "symbol": "HONEST.ADASHORT",
+    "precision": 6,
+    "issuer": "1.2.1808389",
+    "market_fee_percent": 0,
+    "max_market_fee": "100000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.6320",
+    "symbol": "HONEST.DOTSHORT",
+    "precision": 5,
+    "issuer": "1.2.1808389",
+    "market_fee_percent": 0,
+    "max_market_fee": "100000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.6321",
+    "symbol": "HONEST.LTCSHORT",
+    "precision": 4,
+    "issuer": "1.2.1808389",
+    "market_fee_percent": 0,
+    "max_market_fee": "100000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.6322",
+    "symbol": "HONEST.SOLSHORT",
+    "precision": 4,
+    "issuer": "1.2.1808389",
+    "market_fee_percent": 0,
+    "max_market_fee": "100000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.6323",
+    "symbol": "HONEST.XMRSHORT",
+    "precision": 3,
+    "issuer": "1.2.1808389",
+    "market_fee_percent": 0,
+    "max_market_fee": "100000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.6324",
+    "symbol": "HONEST.ATOMSHORT",
+    "precision": 4,
+    "issuer": "1.2.1808389",
+    "market_fee_percent": 0,
+    "max_market_fee": "100000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.6325",
+    "symbol": "HONEST.XLMSHORT",
+    "precision": 7,
+    "issuer": "1.2.1808389",
+    "market_fee_percent": 0,
+    "max_market_fee": "100000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.6326",
+    "symbol": "HONEST.ALGOSHORT",
+    "precision": 6,
+    "issuer": "1.2.1808389",
+    "market_fee_percent": 0,
+    "max_market_fee": "100000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.6327",
+    "symbol": "HONEST.FILSHORT",
+    "precision": 5,
+    "issuer": "1.2.1808389",
+    "market_fee_percent": 0,
+    "max_market_fee": "100000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.6328",
+    "symbol": "HONEST.EOSSHORT",
+    "precision": 6,
+    "issuer": "1.2.1808389",
+    "market_fee_percent": 0,
+    "max_market_fee": "100000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.6329",
+    "symbol": "HONEST.RUBSHORT",
+    "precision": 7,
+    "issuer": "1.2.1808389",
+    "market_fee_percent": 0,
+    "max_market_fee": "100000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.6330",
+    "symbol": "HONEST.EURSHORT",
+    "precision": 5,
+    "issuer": "1.2.1808389",
+    "market_fee_percent": 0,
+    "max_market_fee": "100000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.6331",
+    "symbol": "HONEST.GBPSHORT",
+    "precision": 5,
+    "issuer": "1.2.1808389",
+    "market_fee_percent": 0,
+    "max_market_fee": "100000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.6332",
+    "symbol": "HONEST.JPYSHORT",
+    "precision": 8,
+    "issuer": "1.2.1808389",
+    "market_fee_percent": 0,
+    "max_market_fee": "100000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.6333",
+    "symbol": "HONEST.KRWSHORT",
+    "precision": 8,
+    "issuer": "1.2.1808389",
+    "market_fee_percent": 0,
+    "max_market_fee": "100000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.6334",
+    "symbol": "HONEST.XRPSHORT",
+    "precision": 6,
+    "issuer": "1.2.1808389",
+    "market_fee_percent": 0,
+    "max_market_fee": "100000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.6335",
+    "symbol": "HONEST.ETHSHORT",
+    "precision": 2,
+    "issuer": "1.2.1808389",
+    "market_fee_percent": 0,
+    "max_market_fee": "100000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.6336",
+    "symbol": "HONEST.XAUSHORT",
+    "precision": 2,
+    "issuer": "1.2.1808389",
+    "market_fee_percent": 0,
+    "max_market_fee": "100000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.6337",
+    "symbol": "HONEST.XAGSHORT",
+    "precision": 4,
+    "issuer": "1.2.1808389",
+    "market_fee_percent": 0,
+    "max_market_fee": "100000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.6338",
+    "symbol": "HONEST.CNYSHORT",
+    "precision": 6,
+    "issuer": "1.2.1808389",
+    "market_fee_percent": 0,
+    "max_market_fee": "100000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.6440",
+    "symbol": "XBTSX.XCCX",
+    "precision": 7,
+    "issuer": "1.2.1014725",
+    "market_fee_percent": 10,
+    "max_market_fee": "100000000000000",
+    "max_supply": "480000000000000"
+  },
+  {
+    "id": "1.3.6444",
+    "symbol": "IOB.XLM",
+    "precision": 4,
+    "issuer": "1.2.1787259",
+    "market_fee_percent": 0,
+    "max_market_fee": "1000000000000000",
+    "max_supply": "1000000000000000"
+  },
+  {
+    "id": "1.3.6523",
+    "symbol": "CRUDE.XNGNLP",
+    "precision": 8,
+    "issuer": "1.2.1786234",
+    "market_fee_percent": 1,
+    "max_market_fee": "1000000000000000",
+    "max_supply": "1000000000000000"
+  }
+]
