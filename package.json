@@ -7,7 +7,9 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "fetchPools": "node ./src/data/fetchPools.js",
+    "fetchAssets": "node ./src/data/batchedAssetFetch.js"
   },
   "dependencies": {
     "@astrojs/node": "^6.0.0",
@@ -21,12 +23,14 @@
     "bitsharesjs": "^6.0.0",
     "bitsharesjs-ws": "^6.0.0",
     "buffer": "^6.0.3",
+    "bufferutil": "^4.0.7",
     "esbuild-plugin-polyfill-node": "^0.3.0",
     "process": "^0.11.10",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.45.4",
     "stream-browserify": "^3.0.0",
+    "utf-8-validate": "^6.0.3",
     "util": "^0.12.5",
     "uuid": "^9.0.0",
     "yup": "^1.2.0"

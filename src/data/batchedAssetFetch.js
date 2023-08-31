@@ -1,10 +1,7 @@
-//const fs = require('fs');
-//const { Apis } = require('bitsharesjs-ws');
-
 import fs from 'fs';
 import { Apis } from 'bitsharesjs-ws';
 
-const outputFile = './assetData.json';
+const outputFile = './src/data/assetData.json';
 
 function sliceIntoChunks(arr, size) {
     const chunks = [];
@@ -33,7 +30,6 @@ async function getObjects(object_ids) {
     const chunksOfInputs = sliceIntoChunks(object_ids, 100);
     for (let i = 0; i < chunksOfInputs.length; i++) {
       const currentChunk = chunksOfInputs[i];
-      // console.log(`Fetching chunk ${i + 1} of ${chunksOfInputs.length}`);
 
       let got_objects;
       try {
@@ -57,10 +53,8 @@ async function getObjects(object_ids) {
 
 const getAllAssetData = async () => {
   const allData = [];
-  const objectIds = [];
-  for (let i = 0; i <= 7000; i++) {
-    objectIds.push(`1.3.${i}`);
-  }
+  const pools = JSON.parse(fs.readFileSync('./src/data/pools.json'));
+  const objectIds = [...new Set(pools.flatMap(pool => [pool.asset_a, pool.asset_b]))];
   console.log(`Fetching asset data for ${objectIds.length} assets`);
   let assetData;
   try {
@@ -83,7 +77,7 @@ const getAllAssetData = async () => {
 
 const writeToFile = (data) => {
   console.log(`Writing to ${outputFile}`);
-  fs.writeFileSync(outputFile, JSON.stringify(data));
+  fs.writeFileSync(outputFile, JSON.stringify(data, undefined, 4));
 };
 
 const main = async () => {

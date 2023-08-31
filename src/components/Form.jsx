@@ -7,7 +7,7 @@ import { TransactionBuilder } from 'bitsharesjs';
 import { v4 as uuidv4 } from 'uuid';
 
 import pools from "../data/pools.json";
-import assetData from "../data/matchingData.json";
+import assetData from "../data/assetData.json";
 
 const schema = yup
   .object({
