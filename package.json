@@ -1,5 +1,5 @@
 {
-  "name": "starry-solstice",
+  "name": "bitshares_astro_pool_tool",
   "type": "module",
   "version": "0.0.1",
   "scripts": {
@@ -10,15 +10,25 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/node": "^6.0.0",
     "@astrojs/react": "^3.0.0",
+    "@astrojs/vercel": "^4.0.0",
     "@hookform/resolvers": "^3.3.1",
     "@types/react": "^18.2.21",
     "@types/react-dom": "^18.2.7",
+    "assert": "^2.0.0",
     "astro": "^3.0.3",
+    "bitsharesjs": "^6.0.0",
     "bitsharesjs-ws": "^6.0.0",
+    "buffer": "^6.0.3",
+    "esbuild-plugin-polyfill-node": "^0.3.0",
+    "process": "^0.11.10",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.45.4",
+    "stream-browserify": "^3.0.0",
+    "util": "^0.12.5",
+    "uuid": "^9.0.0",
     "yup": "^1.2.0"
   }
 }

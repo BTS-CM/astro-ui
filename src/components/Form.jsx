@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useForm } from 'react-hook-form';
 import * as yup from "yup"
 import { yupResolver } from "@hookform/resolvers/yup"
+import { Apis } from 'bitsharesjs-ws';
+import { TransactionBuilder } from 'bitsharesjs';
+import { v4 as uuidv4 } from 'uuid';
 
 import pools from "../data/pools.json";
 import assetData from "../data/matchingData.json";
@@ -13,11 +16,109 @@ const schema = yup
   })
   .required()
 
+/**
+ * Returns deeplink contents
+ * @param {Array} operations
+ * @returns {Object}
+ */
+async function generateDeepLink(operations) {
+    return new Promise(async (resolve, reject) => {
+        // eslint-disable-next-line no-unused-expressions
+        /*
+        try {
+            await Apis.instance(
+                "wss://node.xbts.io/ws",
+                true,
+                10000,
+                { enableCrypto: false, enableOrders: true },
+                (error) => console.log(error),
+            ).init_promise;
+        } catch (error) {
+            console.log(error);
+            reject();
+            return;
+        }
+        */
+    
+        const tr = new TransactionBuilder();
+        for (let i = 0; i < operations.length; i++) {
+            tr.add_type_operation("liquidity_pool_exchange", operations[i]);
+        }
+    
+        /*
+        try {
+            await tr.update_head_block();
+        } catch (error) {
+            console.error(error);
+            reject();
+            return;
+        }
+    
+        try {
+            await tr.set_required_fees();
+        } catch (error) {
+            console.error(error);
+            reject();
+            return;
+        }
+        */
+    
+        try {
+            tr.set_expire_seconds(7200);
+        } catch (error) {
+            console.error(error);
+            reject();
+            return;
+        }
+    
+        /*
+        try {
+            tr.finalize();
+        } catch (error) {
+            console.error(error);
+            reject();
+            return;
+        }
+        */
+    
+        const request = {
+            type: 'api',
+            id: await uuidv4(),
+            payload: {
+            method: 'injectedCall',
+            params: [
+                "signAndBroadcast",
+                JSON.stringify(tr.toObject()),
+                [],
+            ],
+            appName: "Astro_pool_tool",
+            chain: "BTS",
+            browser: 'vercel_server',
+            origin: 'vercel_servers'
+            }
+        };
+    
+        let encodedPayload;
+        try {
+            encodedPayload = encodeURIComponent(
+            JSON.stringify(request),
+            );
+        } catch (error) {
+            console.log(error);
+            reject();
+            return;
+        }
+    
+        resolve(encodedPayload);
+    });
+}
+  
 export default function Form() {
     const {
         register,
         handleSubmit,
         formState: { errors },
+        reset
     } = useForm({
         resolver: yupResolver(schema)
     });
@@ -35,11 +136,13 @@ export default function Form() {
     const [sellAmount, setSellAmount] = useState(0);
     const [buyAmount, setBuyAmount] = useState(0);
 
+    const [foundPool, setFoundPool] = useState();
     const [assetA, setAssetA] = useState("");
     const [assetB, setAssetB] = useState("");
     useEffect(() => {
         if (pool) {
             const currentPool = pools.find((x) => x.id === pool);
+            setFoundPool(currentPool);
             const foundA = assetData.find((x) => x.id === currentPool.asset_a);
             const foundB = assetData.find((x) => x.id === currentPool.asset_b);
             setAssetA(foundA);
@@ -50,11 +153,11 @@ export default function Form() {
 
     useEffect(() => {
         // Calculating the amount the user can buy
-        if (assetA && assetB) {
-            let poolamounta = Number(pool.balance_a);
+        if (assetA && assetB && foundPool) {
+            let poolamounta = Number(foundPool.balance_a);
             let poolamountap = Number(10 ** assetA.precision);
 
-            let poolamountb = Number(pool.balance_b);
+            let poolamountb = Number(foundPool.balance_b);
             let poolamountbp = Number(10 ** assetB.precision);
     
             const maker_market_fee_percenta = assetA.market_fee_percent;
@@ -63,7 +166,7 @@ export default function Form() {
             const max_market_feea = assetA.max_market_fee;
             const max_market_feeb = assetB.max_market_fee;
     
-            const taker_fee_percenta = pool.taker_fee_percent;
+            const taker_fee_percenta = foundPool.taker_fee_percent;
     
             function flagsa() {
                 if (maker_market_fee_percenta === 0) {
@@ -101,19 +204,165 @@ export default function Form() {
                 Number(poolamountb) * Number(poolamounta) / ( Number(poolamounta) + ( (Number(sellAmount) * Number(poolamountap)) - Number(flagsa())))
             );
     
-            let tmp_b = (Number(tmp_delta_b) * Number(pool.get("taker_fee_percent")) / 10000);
+            let tmp_b = (Number(tmp_delta_b) * Number(taker_fee_percenta) / 10000);
     
             let taker_market_fee_percent_a = (Number(taker_market_fee_percenta()));
         
-            setBuyAmount(
-                (Number(tmp_delta_b) - Math.floor(Number(tmp_b)) - Math.ceil(Math.min(
-                  Number(max_market_feeb),
-                  Math.ceil(Math.ceil(Number(tmp_delta_b) * Number(taker_market_fee_percent_a)))
-                ))) / Number(poolamountbp)
-            );
+            const result = (
+                Number(tmp_delta_b) -
+                Math.floor(Number(tmp_b)) -
+                Math.ceil(
+                  Math.min(
+                    Number(max_market_feeb),
+                    Math.ceil(Number(tmp_delta_b) * Number(taker_market_fee_percent_a))
+                  )
+                )
+              ) / Number(poolamountbp);
+
+            setBuyAmount(result);
 
         }
     }, [sellAmount, assetA, assetB]);
+
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text)
+          .then(() => {
+            console.log('Text copied to clipboard');
+          })
+          .catch((error) => {
+            console.error('Error copying text to clipboard:', error);
+          });
+      }
+
+    const [downloadClicked, setDownloadClicked] = useState(false);
+
+    const handleDownloadClick = () => {
+        if (!downloadClicked) {
+            setDownloadClicked(true);
+            setTimeout(() => {
+            setDownloadClicked(false);
+            }, 10000);
+        }
+    };
+
+    /**
+     * Convert human readable quantity into the token's blockchain representation
+     * @param {Float} satoshis
+     * @param {Number} precision
+     * @returns {Number}
+     */
+    function blockchainFloat(satoshis, precision) {
+        return satoshis * 10 ** precision;
+    }
+
+    const [deeplink, setDeeplink] = useState("");
+    useEffect(() => {
+        if (data) {
+            async function generate() {
+                let deeplinkValue;
+                try {
+                    deeplinkValue = await generateDeepLink([
+                        {
+                            "account": account,
+                            "pool": pool,
+                            "amount_to_sell": {
+                                "amount": blockchainFloat(sellAmount, assetA.precision),
+                                "asset_id": assetA.id
+                            },
+                            "min_to_receive": {
+                                "amount": blockchainFloat(buyAmount, assetB.precision),
+                                "asset_id": assetB.id
+                            },
+                            "extensions": []
+                        }
+                    ]);
+                } catch (error) {
+                    console.log(error);
+                    return;
+                }
+
+                if (deeplinkValue) {
+                    setDeeplink(deeplinkValue);
+                }
+            }
+
+            generate();
+        }
+    }, [data]);
+
+    if (data && deeplink) {
+
+
+        return (
+            <dialog
+                open
+                style={{
+                    marginBottom: "2rem",
+                    border: "1px solid rgba(var(--accent-light), 25%)",
+                    background: "linear-gradient(rgba(var(--accent-dark), 66%), rgba(var(--accent-dark), 33%))",
+                    padding: "1.5rem",
+                    borderRadius: "8px",
+                    color: "white"
+                }}
+            >
+                <p>Your Bitshares pool exchange is ready!</p>
+                <button
+                    style={{marginRight: "5px"}}
+                    onClick={() => {
+                        copyToClipboard("TEST");
+                    }}
+                >
+                    Copy
+                </button>
+                
+                {
+                  downloadClicked
+                    ? (
+                    <button style={{marginRight: "5px"}} disabled>
+                      Downloading...
+                    </button>
+                    )
+                    : (
+                    <a
+                      href={`data:text/json;charset=utf-8,${deeplink}`}
+                      download={`pool_exchange.json`}
+                      target="_blank"
+                      rel="noreferrer"
+                      onClick={handleDownloadClick}
+                    >
+                      <button style={{marginRight: "5px"}}>
+                        Download
+                      </button>
+                    </a>
+                    )
+                }
+
+                <a href={`rawbeet://api?chain=BTS&request=${deeplink}`}>
+                    <button
+                        style={{marginBottom: "20px"}}
+                    >
+                        Deeplink
+                    </button>
+                </a>
+
+                <form method="dialog">
+                    <button onClick={() => {
+                        setAccount();
+                        setPool();
+                        setSellAmount();
+                        setBuyAmount();
+                        setFoundPool();
+                        setAssetA();
+                        setAssetB();
+                        setData();
+                        reset();
+                    }}>
+                        Close window
+                    </button>
+                </form>
+            </dialog>
+        )
+    }
 
     return (
         <div
@@ -125,7 +374,10 @@ export default function Form() {
                 borderRadius: "8px"
             }}
         >
-            <form onSubmit={handleSubmit((formData) => setData(formData))}>
+            <form
+                onSubmit={handleSubmit((formData) => {
+                    setData(formData);
+                })}>
                 <label>Account</label>
                 <br/>
                 <input
@@ -203,7 +455,7 @@ export default function Form() {
                 <br/>
                 {
                     (errors.account || errors.pool || errors.amount)
-                    || (!account || !pool || !sellAmount)
+                    || (!account || !pool || !sellAmount || !buyAmount)
                         ? <input disabled type="submit" />
                         : <input type="submit" />
                 }
