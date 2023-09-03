@@ -3,13 +3,13 @@ import react from "@astrojs/react";
 import node from '@astrojs/node';
 import { polyfillNode } from "esbuild-plugin-polyfill-node";
 
-import vercelStatic from '@astrojs/vercel/static';
+import vercel from '@astrojs/vercel/serverless';
 
 // https://astro.build/config
 export default defineConfig({
   integrations: [react()],
-  output: 'static',
-  adapter: vercelStatic(),
+  output: 'server',
+  adapter: vercel(),
   vite: {
     optimizeDeps: {
       esbuildOptions: {
@@ -28,7 +28,8 @@ export default defineConfig({
         process: "process/browser",
         assert: "assert",
         stream: "stream-browserify",
-        util: "util"
+        util: "util",
+        buffer: "buffer",
       }
     }
   }

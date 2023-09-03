@@ -3,8 +3,9 @@ import { useForm } from 'react-hook-form';
 import * as yup from "yup"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { Apis } from 'bitsharesjs-ws';
-import { TransactionBuilder } from 'bitsharesjs';
 import { v4 as uuidv4 } from 'uuid';
+
+import TransactionBuilder from "../lib/TransactionBuilder";
 
 import pools from "../data/pools.json";
 import assetData from "../data/assetData.json";
@@ -24,7 +25,6 @@ const schema = yup
 async function generateDeepLink(operations) {
     return new Promise(async (resolve, reject) => {
         // eslint-disable-next-line no-unused-expressions
-        /*
         try {
             await Apis.instance(
                 "wss://node.xbts.io/ws",
@@ -35,17 +35,15 @@ async function generateDeepLink(operations) {
             ).init_promise;
         } catch (error) {
             console.log(error);
-            reject();
+            reject(error);
             return;
         }
-        */
     
         const tr = new TransactionBuilder();
         for (let i = 0; i < operations.length; i++) {
             tr.add_type_operation("liquidity_pool_exchange", operations[i]);
         }
-    
-        /*
+
         try {
             await tr.update_head_block();
         } catch (error) {
@@ -53,16 +51,15 @@ async function generateDeepLink(operations) {
             reject();
             return;
         }
-    
+
         try {
             await tr.set_required_fees();
         } catch (error) {
             console.error(error);
-            reject();
+            reject(error);
             return;
         }
-        */
-    
+
         try {
             tr.set_expire_seconds(7200);
         } catch (error) {
@@ -70,8 +67,7 @@ async function generateDeepLink(operations) {
             reject();
             return;
         }
-    
-        /*
+
         try {
             tr.finalize();
         } catch (error) {
@@ -79,8 +75,7 @@ async function generateDeepLink(operations) {
             reject();
             return;
         }
-        */
-    
+
         const request = {
             type: 'api',
             id: await uuidv4(),
@@ -154,6 +149,8 @@ export default function Form() {
     useEffect(() => {
         // Calculating the amount the user can buy
         if (assetA && assetB && foundPool) {
+            console.log("Calculating the amount the user can buy")
+
             let poolamounta = Number(foundPool.balance_a);
             let poolamountap = Number(10 ** assetA.precision);
 
@@ -182,7 +179,10 @@ export default function Form() {
                     return 0;
                 }
                 if (maker_market_fee_percentb > 0) {
-                    return Math.min(Number(max_market_feeb), Math.ceil((Number(sellAmount) * Number(poolamountbp)) * (Number(maker_market_fee_percentb) / 10000)))
+                    return Math.min(
+                        Number(max_market_feeb),
+                        Math.ceil((Number(sellAmount) * Number(poolamountbp)) * (Number(maker_market_fee_percentb) / 10000))
+                    )
                 }
             }
     
@@ -204,23 +204,46 @@ export default function Form() {
                 Number(poolamountb) * Number(poolamounta) / ( Number(poolamounta) + ( (Number(sellAmount) * Number(poolamountap)) - Number(flagsa())))
             );
     
+            let tmp_a = (Number(tmp_delta_a) * Number(taker_fee_percenta) / 10000);
             let tmp_b = (Number(tmp_delta_b) * Number(taker_fee_percenta) / 10000);
     
             let taker_market_fee_percent_a = (Number(taker_market_fee_percenta()));
-        
+
             const result = (
-                Number(tmp_delta_b) -
-                Math.floor(Number(tmp_b)) -
+                Number(
+                    assetA.id === foundPool.asset_a
+                    ? tmp_delta_b
+                    : tmp_delta_a
+                ) -
+                Math.floor(
+                    Number(
+                        assetA.id === foundPool.asset_a
+                            ? tmp_b
+                            : tmp_a
+                    )
+                ) -
                 Math.ceil(
                   Math.min(
-                    Number(max_market_feeb),
-                    Math.ceil(Number(tmp_delta_b) * Number(taker_market_fee_percent_a))
+                    Number(
+                        assetA.id === foundPool.asset_a
+                            ? max_market_feeb
+                            : max_market_feea
+                    ),
+                    Math.ceil(
+                        Number(
+                            assetA.id === foundPool.asset_a
+                                ? tmp_delta_b
+                                : tmp_delta_a
+                        ) * Number(taker_market_fee_percent_a))
                   )
                 )
-              ) / Number(poolamountbp);
+              ) / Number(
+                    assetA.id === foundPool.asset_a
+                        ? poolamountbp
+                        : poolamountap
+                );
 
             setBuyAmount(result);
-
         }
     }, [sellAmount, assetA, assetB]);
 
@@ -291,11 +314,16 @@ export default function Form() {
 
             generate();
         }
-    }, [data]);
+    }, [data, assetA, assetB]);
 
+    const [buyAmountInput, setBuyAmountInput] = useState();
+    useEffect(() => {
+        setBuyAmountInput(
+            <input style={{color:'white'}} value={buyAmount ?? 0} disabled />
+        );
+    }, [buyAmount]);
+    
     if (data && deeplink) {
-
-
         return (
             <dialog
                 open
@@ -452,7 +480,9 @@ export default function Form() {
                     ? <>
                         <label>Amount of {assetB ? assetB.symbol : '???'} you'll receive:</label>
                         <br/>
-                        <input style={{color:'white'}} value={buyAmount ?? 0} disabled />
+                        {
+                            buyAmountInput
+                        }
                     </>
                     : null
                 }
@@ -464,6 +494,21 @@ export default function Form() {
                         : <input type="submit" />
                 }
             </form>
+            <br/>
+            {
+                account && pool
+                    ?   <button
+                            onClick={() => {
+                                const oldAssetA = assetA;
+                                const oldAssetB = assetB;
+                                setAssetA(oldAssetB);
+                                setAssetB(oldAssetA);
+                            }}
+                        >
+                            Swap buy/sell
+                        </button>
+                    : null
+            }
         </div>
     );
 }
