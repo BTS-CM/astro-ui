@@ -7,7 +7,9 @@ const ChainConfig = bitsharesjs.ChainConfig;
 import { Buffer } from 'buffer/';
 
 import {sha256, sha512, ripemd160} from "./hash";
-import {encode, decode} from "bs58";
+import * as bs58 from "bs58";
+const encode = bs58.encode;
+const decode = bs58.decode;
 import deepEqual from "deep-equal";
 
 /** Addresses are shortened non-reversable hashes of a public key.  The full PublicKey is preferred.

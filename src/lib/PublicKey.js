@@ -1,8 +1,9 @@
 import BigInteger from "bigi";
 import {Point, getCurveByName} from "ecurve";
-import {encode, decode} from "bs58";
+import * as bs58 from "bs58";
+const encode = bs58.encode;
+const decode = bs58.decode;
 import * as bitsharesjs from 'bitsharesjs-ws';
-
 const ChainConfig = bitsharesjs.ChainConfig;
 
 import assert from "assert";
