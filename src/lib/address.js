@@ -1,5 +1,9 @@
 import assert from "assert";
-import {ChainConfig} from "bitsharesjs-ws";
+import * as bitsharesjs from 'bitsharesjs-ws';
+
+const ChainConfig = bitsharesjs.ChainConfig;
+
+// Now you can use ChainConfig and Apis in your code
 import { Buffer } from 'buffer/';
 
 import {sha256, sha512, ripemd160} from "./hash";

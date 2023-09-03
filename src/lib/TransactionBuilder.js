@@ -1,4 +1,8 @@
-import {Apis, ChainConfig} from "bitsharesjs-ws";
+import * as bitsharesjs from 'bitsharesjs-ws';
+
+const ChainConfig = bitsharesjs.ChainConfig;
+const Apis = bitsharesjs.Apis;
+
 import assert from "assert";
 import { Buffer } from 'buffer/';
 
