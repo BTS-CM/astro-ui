@@ -1,6 +1,6 @@
 // Low-level types that make up operations
-import * as bitsharesjs from 'bitsharesjs-ws';
-const ChainConfig = bitsharesjs.ChainConfig;
+import { ChainConfig } from 'bitsharesjs-ws';
+
 
 import ByteBuffer from "bytebuffer";
 import { Buffer } from 'buffer/';

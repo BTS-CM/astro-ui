@@ -2,10 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useForm } from 'react-hook-form';
 import * as yup from "yup"
 import { yupResolver } from "@hookform/resolvers/yup"
-import { Apis } from 'bitsharesjs-ws';
-import { v4 as uuidv4 } from 'uuid';
-
-import TransactionBuilder from "../lib/TransactionBuilder";
 
 import pools from "../data/pools.json";
 import assetData from "../data/assetData.json";
@@ -18,96 +14,15 @@ const schema = yup
   .required()
 
 /**
- * Returns deeplink contents
- * @param {Array} operations
- * @returns {Object}
+ * Convert human readable quantity into the token's blockchain representation
+ * @param {Float} satoshis
+ * @param {Number} precision
+ * @returns {Number}
  */
-async function generateDeepLink(operations) {
-    return new Promise(async (resolve, reject) => {
-        // eslint-disable-next-line no-unused-expressions
-        try {
-            await Apis.instance(
-                "wss://node.xbts.io/ws",
-                true,
-                10000,
-                { enableCrypto: false, enableOrders: true },
-                (error) => console.log(error),
-            ).init_promise;
-        } catch (error) {
-            console.log(error);
-            reject(error);
-            return;
-        }
-    
-        const tr = new TransactionBuilder();
-        for (let i = 0; i < operations.length; i++) {
-            tr.add_type_operation("liquidity_pool_exchange", operations[i]);
-        }
-
-        try {
-            await tr.update_head_block();
-        } catch (error) {
-            console.error(error);
-            reject();
-            return;
-        }
-
-        try {
-            await tr.set_required_fees();
-        } catch (error) {
-            console.error(error);
-            reject(error);
-            return;
-        }
-
-        try {
-            tr.set_expire_seconds(7200);
-        } catch (error) {
-            console.error(error);
-            reject();
-            return;
-        }
-
-        try {
-            tr.finalize();
-        } catch (error) {
-            console.error(error);
-            reject();
-            return;
-        }
-
-        const request = {
-            type: 'api',
-            id: await uuidv4(),
-            payload: {
-            method: 'injectedCall',
-            params: [
-                "signAndBroadcast",
-                JSON.stringify(tr.toObject()),
-                [],
-            ],
-            appName: "Astro_pool_tool",
-            chain: "BTS",
-            browser: 'vercel_server',
-            origin: 'vercel_servers'
-            }
-        };
-    
-        let encodedPayload;
-        try {
-            encodedPayload = encodeURIComponent(
-            JSON.stringify(request),
-            );
-        } catch (error) {
-            console.log(error);
-            reject();
-            return;
-        }
-    
-        resolve(encodedPayload);
-    });
+function blockchainFloat(satoshis, precision) {
+    return satoshis * 10 ** precision;
 }
-  
+
 export default function Form() {
     const {
         register,
@@ -268,16 +183,6 @@ export default function Form() {
         }
     };
 
-    /**
-     * Convert human readable quantity into the token's blockchain representation
-     * @param {Float} satoshis
-     * @param {Number} precision
-     * @returns {Number}
-     */
-    function blockchainFloat(satoshis, precision) {
-        return satoshis * 10 ** precision;
-    }
-
     const [deeplink, setDeeplink] = useState("");
     const [trxJSON, setTRXJSON] = useState();
     useEffect(() => {
@@ -299,16 +204,24 @@ export default function Form() {
                     }
                 ];
                 setTRXJSON(opJSON);
-                let deeplinkValue;
-                try {
-                    deeplinkValue = await generateDeepLink(opJSON);
-                } catch (error) {
-                    console.log(error);
+
+                const response = await fetch("/api/deeplink", {
+                    method: "POST",
+                    body: JSON.stringify(opJSON),
+                });
+
+                if (!response.ok) {
+                    console.log({
+                        error: new Error(`${response.status} ${response.statusText}`),
+                        msg: "Couldn't generate deeplink."
+                    });
                     return;
                 }
 
-                if (deeplinkValue) {
-                    setDeeplink(deeplinkValue);
+                const deeplinkValue = await response.json();
+
+                if (deeplinkValue && deeplinkValue.generatedDeepLink) {
+                    setDeeplink(deeplinkValue.generatedDeepLink);
                 }
             }
 

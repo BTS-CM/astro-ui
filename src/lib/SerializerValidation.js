@@ -1,5 +1,4 @@
-import * as ByteBuffer from "bytebuffer";
-const Long = ByteBuffer.Long;
+import {Long} from "bytebuffer";
 import ChainTypes from "./ChainTypes";
 
 var MAX_SAFE_INT = 9007199254740991;

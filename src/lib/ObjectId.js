@@ -1,5 +1,4 @@
-import * as ByteBuffer from "bytebuffer";
-const Long = ByteBuffer.Long;
+import {Long} from "bytebuffer";
 
 import v from "./SerializerValidation";
 
