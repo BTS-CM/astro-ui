@@ -20,6 +20,7 @@
     "@types/react-dom": "^18.2.7",
     "assert": "^2.0.0",
     "astro": "^3.0.4",
+    "astro-rollup": "^0.0.3",
     "bigi": "^1.4.2",
     "bitsharesjs-ws": "^6.0.0",
     "bs58": "^5.0.0",
@@ -36,5 +37,8 @@
     "util": "^0.12.5",
     "uuid": "^9.0.0",
     "yup": "^1.2.0"
+  },
+  "devDependencies": {
+    "@originjs/vite-plugin-commonjs": "^1.0.3"
   }
 }

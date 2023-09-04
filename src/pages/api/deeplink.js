@@ -1,4 +1,3 @@
-import { APIRoute } from "astro";
 import { Apis } from 'bitsharesjs-ws';
 import { v4 as uuidv4 } from 'uuid';
 
