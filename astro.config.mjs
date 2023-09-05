@@ -10,10 +10,12 @@ import vercel from '@astrojs/vercel/serverless';
 // https://astro.build/config
 export default defineConfig({
   integrations: [react()],
-  output: 'server',
+  output: 'server',/*
   adapter: vercel({
     edgeMiddleware: true
   }),
+  */
+  adapter: vercel(),
   vite: {
     ssr: {
       noExternal: [
