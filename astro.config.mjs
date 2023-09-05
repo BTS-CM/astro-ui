@@ -19,8 +19,7 @@ export default defineConfig({
       noExternal: [
         'bytebuffer',
         'bs58',
-        'isomorphic-ws',
-        'ws'
+        'isomorphic-ws'
       ],
     },
     optimizeDeps: {
@@ -32,7 +31,8 @@ export default defineConfig({
           polyfillNode({
             process: true,
             assert: true,
-            buffer: true
+            buffer: true,
+            ws: true
           }),
         ]
       },
