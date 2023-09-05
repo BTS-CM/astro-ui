@@ -16,7 +16,7 @@ export default defineConfig({
   }),
   vite: {
     ssr: {
-      noExternal: ['bytebuffer', 'bs58'],
+      noExternal: ['bytebuffer', 'bs58', 'isomorphic-ws'],
     },
     optimizeDeps: {
       esbuildOptions: {
