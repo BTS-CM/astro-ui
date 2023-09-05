@@ -1,8 +1,9 @@
-/*
-import {ChainConfig} from 'bitsharesjs-ws';
-import {Apis} from 'bitsharesjs-ws';
-*/
-import { ChainConfig, Apis } from "bitsharesjs-ws";
+import * as Apis from '../old/ApiInstances';
+
+import { ChainConfig } from "../old/ChainConfig.js";
+
+//import { ChainConfig, Apis } from "bitsharesjs-ws";
+
 import assert from "assert";
 import { Buffer } from 'buffer/';
 
@@ -124,8 +125,13 @@ class TransactionBuilder {
         });
     }
 
-    /** Typically this is called automatically just prior to signing.  Once finalized this transaction can not be changed. */
-    finalize() {
+    /**
+     * Typically this is called automatically just prior to signing.
+     * Once finalized this transaction can not be changed.
+     * @param {Apis} thisApi 
+     * @returns {Apis || null}
+     */
+    finalize(thisApi) {
         return new Promise((resolve, reject) => {
             if (this.tr_buffer) {
                 throw new Error("already finalized");
@@ -152,7 +158,7 @@ class TransactionBuilder {
                 resolve();
             } else {
                 resolve(
-                    Apis.instance()
+                    thisApi.instance()
                         .db_api()
                         .exec("get_objects", [["2.1.0"]])
                         .then(r => {
@@ -299,12 +305,17 @@ class TransactionBuilder {
 
     /* optional: fetch the current head block */
 
-    update_head_block() {
+    /**
+     * Updates the trx
+     * @param {Apis} thisApi 
+     * @returns 
+     */
+    update_head_block(thisApi) {
         return Promise.all([
-            Apis.instance()
+            thisApi.instance()
                 .db_api()
                 .exec("get_objects", [["2.0.0"]]),
-            Apis.instance()
+            thisApi.instance()
                 .db_api()
                 .exec("get_objects", [["2.1.0"]])
         ]).then(function(res) {
@@ -363,7 +374,7 @@ class TransactionBuilder {
     }
 
     /** optional: the fees can be obtained from the witness node */
-    set_required_fees(asset_id, removeDuplicates) {
+    set_required_fees(asset_id, removeDuplicates, thisApi) {
         if (this.tr_buffer) {
             throw new Error("already finalized");
         }
@@ -468,7 +479,7 @@ class TransactionBuilder {
         promises.push(
             Promise.all(
                 feeAssets.map(id => {
-                    return Apis.instance()
+                    return thisApi.instance()
                         .db_api()
                         .exec("get_required_fees", [operations, id]);
                 })
@@ -486,12 +497,12 @@ class TransactionBuilder {
             */
             let dynamicObjectIds = feeAssets.map(a => a.replace(/^1\./, "2."));
             promises.push(
-                Apis.instance()
+                thisApi.instance()
                     .db_api()
                     .exec("get_required_fees", [operations, "1.3.0"])
             );
             promises.push(
-                Apis.instance()
+                thisApi.instance()
                     .db_api()
                     .exec("get_objects", [dynamicObjectIds])
             );

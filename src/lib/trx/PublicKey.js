@@ -1,7 +1,8 @@
 import BigInteger from "bigi";
 import {Point, getCurveByName} from "ecurve";
 import {encode, decode} from "bs58";
-import { ChainConfig } from "bitsharesjs-ws";
+//import { ChainConfig } from "../ws/bitsharesjs-ws.js";
+import { ChainConfig } from "../old/ChainConfig.js";
 
 import assert from "assert";
 import deepEqual from "deep-equal";

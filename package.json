@@ -22,7 +22,6 @@
     "astro": "^3.0.4",
     "astro-rollup": "^0.0.3",
     "bigi": "^1.4.2",
-    "bitsharesjs-ws": "^6.0.0",
     "bs58": "^5.0.0",
     "bytebuffer": "^5.0.1",
     "create-hash": "^1.2.0",
@@ -30,6 +29,7 @@
     "deep-equal": "^2.2.2",
     "ecurve": "^1.0.6",
     "esbuild-plugin-polyfill-node": "^0.3.0",
+    "isomorphic-ws": "^5.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.45.4",
@@ -37,8 +37,5 @@
     "util": "^0.12.5",
     "uuid": "^9.0.0",
     "yup": "^1.2.0"
-  },
-  "devDependencies": {
-    "@originjs/vite-plugin-commonjs": "^1.0.3"
   }
 }

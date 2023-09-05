@@ -5,11 +5,10 @@ import { polyfillNode } from "esbuild-plugin-polyfill-node";
 import vercel from '@astrojs/vercel/serverless';
 
 import rollup from "astro-rollup";
-import { esbuildCommonjs } from '@originjs/vite-plugin-commonjs'
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [react(), rollup()],
+  integrations: [react()],
   output: 'server',
   adapter: vercel({
     edgeMiddleware: true
@@ -26,9 +25,11 @@ export default defineConfig({
             assert: true,
             buffer: true
           }),
-          esbuildCommonjs(['bitsharesjs-ws'])
         ]
-      }
+      }/*,
+      commonjsOptions: {
+        transformMixedEsModules: true
+      }*/
     },
     resolve: {
       alias: {
