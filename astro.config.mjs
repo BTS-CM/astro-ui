@@ -4,7 +4,7 @@ import react from "@astrojs/react";
 import { polyfillNode } from "esbuild-plugin-polyfill-node";
 import vercel from '@astrojs/vercel/serverless';
 
-import rollup from "astro-rollup";
+//import rollup from "astro-rollup";
 
 // https://astro.build/config
 export default defineConfig({
@@ -26,10 +26,10 @@ export default defineConfig({
             buffer: true
           }),
         ]
-      }/*,
+      },
       commonjsOptions: {
         transformMixedEsModules: true
-      }*/
+      }
     },
     resolve: {
       alias: {
@@ -37,7 +37,8 @@ export default defineConfig({
         assert: "assert",
         stream: "stream-browserify",
         util: "util",
-        buffer: "buffer"
+        buffer: "buffer",
+        bytebuffer: "bytebuffer",
       }
     }
   }
