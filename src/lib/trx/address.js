@@ -5,8 +5,9 @@ import { ChainConfig } from "../old/ChainConfig.js";
 import { Buffer } from 'buffer/';
 
 import {sha256, sha512, ripemd160} from "../trx/hash";
-import {encode, decode} from "bs58";
+//import {encode, decode} from "bs58";
 import deepEqual from "deep-equal";
+import * as bs58 from 'bs58';
 
 /** Addresses are shortened non-reversable hashes of a public key.  The full PublicKey is preferred.
  */
@@ -29,7 +30,7 @@ class Address {
             `Expecting key to begin with ${address_prefix}, instead got ${prefix}`
         );
         var addy = string.slice(address_prefix.length);
-        addy = Buffer.from(decode(addy), "binary");
+        addy = Buffer.from(bs58.decode(addy), "binary");
         var checksum = addy.slice(-4);
         addy = addy.slice(0, -4);
         var new_checksum = ripemd160(addy);
@@ -61,7 +62,7 @@ class Address {
     toString(address_prefix = ChainConfig.address_prefix) {
         var checksum = ripemd160(this.addy);
         var addy = Buffer.concat([this.addy, checksum.slice(0, 4)]);
-        return address_prefix + encode(addy);
+        return address_prefix + bs58.encode(addy);
     }
 }
 

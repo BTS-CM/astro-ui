@@ -1,6 +1,8 @@
 import BigInteger from "bigi";
 import {Point, getCurveByName} from "ecurve";
-import {encode, decode} from "bs58";
+import * as bs58 from 'bs58';
+
+//import {encode, decode} from "bs58";
 //import { ChainConfig } from "../ws/bitsharesjs-ws.js";
 import { ChainConfig } from "../old/ChainConfig.js";
 
@@ -71,7 +73,7 @@ class PublicKey {
         var pub_buf = this.toBuffer();
         var checksum = ripemd160(pub_buf);
         var addy = Buffer.concat([pub_buf, checksum.slice(0, 4)]);
-        return address_prefix + encode(addy);
+        return address_prefix + bs58.encode(addy);
     }
 
     /**
@@ -111,7 +113,7 @@ class PublicKey {
         );
         public_key = public_key.slice(address_prefix.length);
 
-        public_key = Buffer.from(decode(public_key), "binary");
+        public_key = Buffer.from(bs58.decode(public_key), "binary");
         var checksum = public_key.slice(-4);
         public_key = public_key.slice(0, -4);
         var new_checksum = ripemd160(public_key);
@@ -129,7 +131,7 @@ class PublicKey {
         var addy = ripemd160(pub_sha);
         var checksum = ripemd160(addy);
         addy = Buffer.concat([addy, checksum.slice(0, 4)]);
-        return address_prefix + encode(addy);
+        return address_prefix + bs58.encode(addy);
     }
 
     toPtsAddy() {
@@ -142,7 +144,7 @@ class PublicKey {
         checksum = sha256(checksum);
 
         addy = Buffer.concat([addy, checksum.slice(0, 4)]);
-        return encode(addy);
+        return bs58.encode(addy);
     }
 
     child(offset) {
