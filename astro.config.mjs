@@ -43,6 +43,13 @@ export default defineConfig({
         util: "util",
         buffer: "buffer",
         bytebuffer: "bytebuffer",
+        bs58: "bs58",
+        'deep-equal': 'deep-equal',
+        'isomorphic-ws': 'isomorphic-ws',
+        ecurve: "ecurve",
+        bigi: "bigi",
+        'create-hash': 'create-hash',
+        'create-hmac': 'create-hmac',
       }
     }
   }
