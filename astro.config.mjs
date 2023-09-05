@@ -15,6 +15,9 @@ export default defineConfig({
     edgeMiddleware: true
   }),
   vite: {
+    ssr: {
+      noExternal: ['bytebuffer'],
+    },
     optimizeDeps: {
       esbuildOptions: {
         define: {
