@@ -205,7 +205,7 @@ export default function Form() {
                 ];
                 setTRXJSON(opJSON);
 
-                const response = await fetch("/api/deeplink", {
+                const response = await fetch("http://localhost:8080/beet", {
                     method: "POST",
                     body: JSON.stringify(opJSON),
                 });
