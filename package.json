@@ -7,9 +7,7 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro",
-    "fetchPools": "node ./src/data/fetchPools.js",
-    "fetchAssets": "node ./src/data/batchedAssetFetch.js"
+    "astro": "astro"
   },
   "dependencies": {
     "@astrojs/react": "^3.0.0",

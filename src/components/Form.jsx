@@ -3,9 +3,6 @@ import { useForm } from 'react-hook-form';
 import * as yup from "yup"
 import { yupResolver } from "@hookform/resolvers/yup"
 
-import pools from "../data/pools.json";
-import assetData from "../data/assetData.json";
-
 const schema = yup
   .object({
     account: yup.string().required(),
@@ -32,16 +29,58 @@ export default function Form() {
     } = useForm({
         resolver: yupResolver(schema)
     });
-    const [data, setData] = useState("");
 
-    const [account, setAccount] = useState("");
-    const [pool, setPool] = useState("");
+    const [data, setData] = useState(""); // form data container
+    const [account, setAccount] = useState(""); // text input account id
+    const [pool, setPool] = useState(""); // dropdown selected pool
 
-    const poolRows = pools.map((pool) => (
-        <option key={pool.id} value={pool.id}>
-            {pool.id} - {pool.details.share_asset.symbol} - {pool.details.asset_a.symbol}:{pool.details.asset_b.symbol} 
-        </option>
-    ));
+    const [pools, setPools] = useState(); // pools retrieved from api
+    const [assetData, setAssetData] = useState(); // assets retrieved from api
+
+    useEffect(() => {
+        async function retrieve() {
+            const poolResponse = await fetch("http://localhost:8080/pools", { method: "GET" });
+
+            if (!poolResponse.ok) {
+                console.log({
+                    error: new Error(`${response.status} ${response.statusText}`),
+                    msg: "Couldn't generate deeplink."
+                });
+                return;
+            }
+    
+            const poolJSON = await poolResponse.json();
+    
+            if (poolJSON) {
+                setPools(poolJSON);
+            }
+        }
+
+        retrieve();
+    }, []);
+
+    useEffect(() => {
+        async function retrieve() {
+            const assetResponse = await fetch("http://localhost:8080/assets", { method: "GET" });
+    
+            if (!assetResponse.ok) {
+                console.log({
+                    error: new Error(`${response.status} ${response.statusText}`),
+                    msg: "Couldn't generate deeplink."
+                });
+                return;
+            }
+    
+            const dataResponse = await assetResponse.json();
+    
+            if (dataResponse) {
+                setAssetData(dataResponse);
+            }
+        }
+
+        retrieve();
+    }, []);
+
 
     const [sellAmount, setSellAmount] = useState(0);
     const [buyAmount, setBuyAmount] = useState(0);
@@ -50,16 +89,16 @@ export default function Form() {
     const [assetA, setAssetA] = useState("");
     const [assetB, setAssetB] = useState("");
     useEffect(() => {
-        if (pool) {
+        if (pools && pool && assetData) {
             const currentPool = pools.find((x) => x.id === pool);
             setFoundPool(currentPool);
-            const foundA = assetData.find((x) => x.id === currentPool.asset_a);
-            const foundB = assetData.find((x) => x.id === currentPool.asset_b);
+            const foundA = assetData.find((x) => x.id === currentPool.asset_a_id);
+            const foundB = assetData.find((x) => x.id === currentPool.asset_b_id);
             setAssetA(foundA);
             setAssetB(foundB);
             setSellAmount(1);
         }
-    }, [pool]);
+    }, [pool, assetData]);
 
     useEffect(() => {
         // Calculating the amount the user can buy
@@ -111,53 +150,29 @@ export default function Form() {
                     return Number(taker_fee_percenta) / 10000;
                 }
             }
-            
-            let tmp_delta_a = Number(poolamounta) - Math.ceil(
-                Number(poolamounta) * Number(poolamountb) / ( Number(poolamountb) + ( (Number(sellAmount) * Number(poolamountbp)) - Number(flagsb())))
-            );
-            let tmp_delta_b = Number(poolamountb) - Math.ceil(
-                Number(poolamountb) * Number(poolamounta) / ( Number(poolamounta) + ( (Number(sellAmount) * Number(poolamountap)) - Number(flagsa())))
-            );
-    
-            let tmp_a = (Number(tmp_delta_a) * Number(taker_fee_percenta) / 10000);
-            let tmp_b = (Number(tmp_delta_b) * Number(taker_fee_percenta) / 10000);
-    
             let taker_market_fee_percent_a = (Number(taker_market_fee_percenta()));
 
-            const result = (
-                Number(
-                    assetA.id === foundPool.asset_a
-                    ? tmp_delta_b
-                    : tmp_delta_a
-                ) -
-                Math.floor(
-                    Number(
-                        assetA.id === foundPool.asset_a
-                            ? tmp_b
-                            : tmp_a
-                    )
-                ) -
-                Math.ceil(
-                  Math.min(
-                    Number(
-                        assetA.id === foundPool.asset_a
-                            ? max_market_feeb
-                            : max_market_feea
-                    ),
-                    Math.ceil(
-                        Number(
-                            assetA.id === foundPool.asset_a
-                                ? tmp_delta_b
-                                : tmp_delta_a
-                        ) * Number(taker_market_fee_percent_a))
-                  )
-                )
-              ) / Number(
-                    assetA.id === foundPool.asset_a
-                        ? poolamountbp
-                        : poolamountap
+            let result;
+            if (assetA.id === foundPool.asset_a_id) {
+                let tmp_delta_b = Number(poolamountb) - Math.ceil(
+                    Number(poolamountb) * Number(poolamounta) / ( Number(poolamounta) + ( (Number(sellAmount) * Number(poolamountap)) - Number(flagsa())))
                 );
-
+                let tmp_b = (Number(tmp_delta_b) * Number(taker_fee_percenta) / 10000);
+                result = (Number(tmp_delta_b) - Math.floor(Number(tmp_b)) - Math.ceil(Math.min(
+                    Number(max_market_feeb),
+                    Math.ceil(Number(tmp_delta_b) * Number(taker_market_fee_percent_a))
+                ))) / Number(poolamountbp);
+            } else {
+                let tmp_delta_a = Number(poolamounta) - Math.ceil(
+                    Number(poolamounta) * Number(poolamountb) / ( Number(poolamountb) + ( (Number(sellAmount) * Number(poolamountbp)) - Number(flagsb())))
+                );
+                let tmp_a = (Number(tmp_delta_a) * Number(taker_fee_percenta) / 10000);
+                result = (Number(tmp_delta_a) - Math.floor(Number(tmp_a)) - Math.ceil(Math.min(
+                    Number(max_market_feea),
+                    Math.ceil(Number(tmp_delta_a) * Number(taker_market_fee_percent_a))
+                ))) / Number(poolamountap);
+            }
+           
             setBuyAmount(result);
         }
     }, [sellAmount, assetA, assetB]);
@@ -235,6 +250,44 @@ export default function Form() {
             <input style={{color:'white'}} value={buyAmount ?? 0} disabled />
         );
     }, [buyAmount]);
+
+    if (!pools) {
+        return (
+            <div
+                style={{
+                    marginBottom: "2rem",
+                    border: "1px solid rgba(var(--accent-light), 25%)",
+                    background: "linear-gradient(rgba(var(--accent-dark), 66%), rgba(var(--accent-dark), 33%))",
+                    padding: "1.5rem",
+                    borderRadius: "8px"
+                }}
+            >
+                <p>Loading pool data</p>
+            </div>
+        );
+    }
+
+    if (!assetData) {
+        return (
+            <div
+                style={{
+                    marginBottom: "2rem",
+                    border: "1px solid rgba(var(--accent-light), 25%)",
+                    background: "linear-gradient(rgba(var(--accent-dark), 66%), rgba(var(--accent-dark), 33%))",
+                    padding: "1.5rem",
+                    borderRadius: "8px"
+                }}
+            >
+                <p>Loading asset data</p>
+            </div>
+        );
+    }
+
+    const poolRows = pools.map((pool) => (
+        <option key={pool.id} value={pool.id}>
+            {pool.id} - {pool.share_asset_symbol} - {pool.asset_a_symbol}:{pool.asset_b_symbol} 
+        </option>
+    ));
     
     if (data && deeplink) {
         return (
