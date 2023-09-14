@@ -39,7 +39,7 @@ export default function Form() {
 
     useEffect(() => {
         async function retrieve() {
-            const poolResponse = await fetch("http://localhost:8080/pools", { method: "GET" });
+            const poolResponse = await fetch("http://localhost:8080/pools/bitshares", { method: "GET" });
 
             if (!poolResponse.ok) {
                 console.log({
@@ -61,7 +61,7 @@ export default function Form() {
 
     useEffect(() => {
         async function retrieve() {
-            const assetResponse = await fetch("http://localhost:8080/assets", { method: "GET" });
+            const assetResponse = await fetch("http://localhost:8080/assets/bitshares", { method: "GET" });
     
             if (!assetResponse.ok) {
                 console.log({
@@ -198,6 +198,7 @@ export default function Form() {
         }
     };
 
+    const [chain, setChain] = useState("bitshares");
     const [deeplink, setDeeplink] = useState("");
     const [trxJSON, setTRXJSON] = useState();
     useEffect(() => {
@@ -220,7 +221,7 @@ export default function Form() {
                 ];
                 setTRXJSON(opJSON);
 
-                const response = await fetch("http://localhost:8080/beet", {
+                const response = await fetch(`http://localhost:8080/beet/${chain}/liquidity_pool_exchange`, {
                     method: "POST",
                     body: JSON.stringify(opJSON),
                 });
