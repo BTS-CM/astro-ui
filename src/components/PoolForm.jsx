@@ -1,34 +1,46 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from 'react-hook-form';
-import * as yup from "yup"
-import { yupResolver } from "@hookform/resolvers/yup"
+import { FixedSizeList as List } from 'react-window';
 
-const schema = yup
-  .object({
-    account: yup.string().required(),
-    pool: yup.string().required(),
-  })
-  .required()
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input"
+import { ScrollArea } from "@/components/ui/scroll-area"
 
-/**
- * Convert human readable quantity into the token's blockchain representation
- * @param {Float} satoshis
- * @param {Number} precision
- * @returns {Number}
- */
-function blockchainFloat(satoshis, precision) {
-    return satoshis * 10 ** precision;
-}
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card";
 
-export default function Form() {
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+
+import {
+    Form,
+    FormControl,
+    FormDescription,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "@/components/ui/form"
+
+import { blockchainFloat, copyToClipboard } from "../lib/common";
+
+export default function PoolForm() {
     const {
         register,
         handleSubmit,
         formState: { errors },
-        reset
-    } = useForm({
-        resolver: yupResolver(schema)
-    });
+    } = useForm();
 
     const [data, setData] = useState(""); // form data container
     const [account, setAccount] = useState(""); // text input account id
@@ -39,7 +51,8 @@ export default function Form() {
 
     useEffect(() => {
         async function retrieve() {
-            const poolResponse = await fetch("http://localhost:8080/pools/bitshares", { method: "GET" });
+            console.log("Triggered 2")
+            const poolResponse = await fetch("http://localhost:8080/cache/pools/bitshares", { method: "GET" });
 
             if (!poolResponse.ok) {
                 console.log({
@@ -55,13 +68,14 @@ export default function Form() {
                 setPools(poolJSON);
             }
         }
+        console.log("Triggered 1")
 
         retrieve();
     }, []);
 
     useEffect(() => {
         async function retrieve() {
-            const assetResponse = await fetch("http://localhost:8080/assets/bitshares", { method: "GET" });
+            const assetResponse = await fetch("http://localhost:8080/cache/poolAssets/bitshares", { method: "GET" });
     
             if (!assetResponse.ok) {
                 console.log({
@@ -80,7 +94,6 @@ export default function Form() {
 
         retrieve();
     }, []);
-
 
     const [sellAmount, setSellAmount] = useState(0);
     const [buyAmount, setBuyAmount] = useState(0);
@@ -177,16 +190,6 @@ export default function Form() {
         }
     }, [sellAmount, assetA, assetB]);
 
-    function copyToClipboard(text) {
-        navigator.clipboard.writeText(text)
-          .then(() => {
-            console.log('Text copied to clipboard');
-          })
-          .catch((error) => {
-            console.error('Error copying text to clipboard:', error);
-          });
-      }
-
     const [downloadClicked, setDownloadClicked] = useState(false);
 
     const handleDownloadClick = () => {
@@ -236,8 +239,8 @@ export default function Form() {
 
                 const deeplinkValue = await response.json();
 
-                if (deeplinkValue && deeplinkValue.generatedDeepLink) {
-                    setDeeplink(deeplinkValue.generatedDeepLink);
+                if (deeplinkValue && deeplinkValue.result && deeplinkValue.result.generatedDeepLink) {
+                    setDeeplink(deeplinkValue.result.generatedDeepLink);
                 }
             }
 
@@ -248,103 +251,151 @@ export default function Form() {
     const [buyAmountInput, setBuyAmountInput] = useState();
     useEffect(() => {
         setBuyAmountInput(
-            <input style={{color:'white'}} value={buyAmount ?? 0} disabled />
+            <Input
+                label={`Amount of ${assetB ? assetB.symbol : '???'} you'll receive:`}
+                value={buyAmount ?? 0}
+                disabled
+                className="mb-3"
+            />
         );
     }, [buyAmount]);
-
+   
+    let responseContent;
     if (!pools) {
-        return (
-            <div
-                style={{
-                    marginBottom: "2rem",
-                    border: "1px solid rgba(var(--accent-light), 25%)",
-                    background: "linear-gradient(rgba(var(--accent-dark), 66%), rgba(var(--accent-dark), 33%))",
-                    padding: "1.5rem",
-                    borderRadius: "8px"
-                }}
+        responseContent = <p>Loading pool data</p>;
+    } else if (!assetData) {
+        responseContent = <p>asset pool data</p>;
+    } else if (!data || !deeplink) {       
+        const Row = ({ index, style }) => (
+            <SelectItem
+                value={pools[index].id} style={style}
             >
-                <p>Loading pool data</p>
-            </div>
+                {`${pools[index].id} - ${pools[index].share_asset_symbol} - ${pools[index].asset_a_symbol}:${pools[index].asset_b_symbol}`}
+            </SelectItem>
         );
-    }
 
-    if (!assetData) {
-        return (
-            <div
-                style={{
-                    marginBottom: "2rem",
-                    border: "1px solid rgba(var(--accent-light), 25%)",
-                    background: "linear-gradient(rgba(var(--accent-dark), 66%), rgba(var(--accent-dark), 33%))",
-                    padding: "1.5rem",
-                    borderRadius: "8px"
-                }}
-            >
-                <p>Loading asset data</p>
-            </div>
-        );
-    }
+        responseContent = <>
+            <form onSubmit={handleSubmit((data) => setData(formData))}>
+                <Input
+                    label="Account"
+                    placeholder="Bitshares account (1.2.x)"
+                    value={account}
+                    onChange={(event) => {
+                        setAccount(event.target.value);
+                    }}
+                    className="mb-3 mt-3"
+                />
 
-    const poolRows = pools.map((pool) => (
-        <option key={pool.id} value={pool.id}>
-            {pool.id} - {pool.share_asset_symbol} - {pool.asset_a_symbol}:{pool.asset_b_symbol} 
-        </option>
-    ));
-    
-    if (data && deeplink) {
-        return (
-            <dialog
-                open
-                style={{
-                    marginBottom: "2rem",
-                    border: "1px solid rgba(var(--accent-light), 25%)",
-                    background: "linear-gradient(rgba(var(--accent-dark), 66%), rgba(var(--accent-dark), 33%))",
-                    padding: "1.5rem",
-                    borderRadius: "8px",
-                    color: "white"
-                }}
-            >
-                <p>Your Bitshares pool exchange is ready!</p>
-                <button
+                <Select onValueChange={setPool}>
+                    <SelectTrigger className="mb-3">
+                        <SelectValue placeholder="Theme" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-white">
+                        <List
+                            height={150}
+                            itemCount={pools.length}
+                            itemSize={35}
+                            width={500}
+                        >
+                            {Row}
+                        </List>
+                    </SelectContent>
+                </Select>
+
+                {
+                    account && pool
+                    ? <>
+                        <Input
+                            label={`Amount of ${assetA ? assetA.symbol : '???'} to sell`}
+                            value={sellAmount}
+                            placeholder={1}
+                            onChange={(event) => setSellAmount(event.target.value)}
+                            className="mb-3"
+                        />
+                    </>
+                    : null
+                }
+                {
+                    account && pool
+                        ? buyAmountInput
+                        : null
+                }
+                {
+                    (!account || !pool || !sellAmount || !buyAmount)
+                        ? <Button className="mt-5" variant="destructive" type="submit">Submit</Button>
+                        : <Button className="mt-5" variant="destructive" type="submit">Submit</Button>
+                }
+            </form>
+            {
+                account && pool
+                    ?   <Button
+                            variant="secondary"
+                            mt="xl"
+                            onClick={() => {
+                                const oldAssetA = assetA;
+                                const oldAssetB = assetB;
+                                setAssetA(oldAssetB);
+                                setAssetB(oldAssetA);
+                            }}
+                        >
+                            Swap buy/sell
+                        </Button>
+                    : null
+            }
+        </>;
+    } else {
+        responseContent = (
+            <>
+                <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
+                    Exchanging {sellAmount} {assetA.symbol} for {buyAmount} {assetB.symbol}
+                </h1>
+                <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight mb-3 mt-1">
+                    Your requested Bitshares pool exchange operation is ready!
+                </h3>
+                <Button
+                    color="gray"
                     style={{marginRight: "5px"}}
                     onClick={() => {
                         copyToClipboard(JSON.stringify(trxJSON));
                     }}
+                    variant="secondary"
                 >
                     Copy JSON
-                </button>
+                </Button>
                 
                 {
-                  downloadClicked
+                downloadClicked
                     ? (
-                    <button style={{marginRight: "5px"}} disabled>
-                      Downloading...
-                    </button>
+                        <Button variant="secondary" style={{marginRight: "5px"}} disabled>
+                            Downloading...
+                        </Button>
                     )
                     : (
                     <a
-                      href={`data:text/json;charset=utf-8,${deeplink}`}
-                      download={`pool_exchange.json`}
-                      target="_blank"
-                      rel="noreferrer"
-                      onClick={handleDownloadClick}
+                        href={`data:text/json;charset=utf-8,${deeplink}`}
+                        download={`pool_exchange.json`}
+                        target="_blank"
+                        rel="noreferrer"
+                        onClick={handleDownloadClick}
                     >
-                      <button style={{marginRight: "5px"}}>
-                        Local download
-                      </button>
+                        <Button variant="secondary" ml="sm" color="gray" style={{marginRight: "5px"}}>
+                            Local download
+                        </Button>
                     </a>
                     )
                 }
 
                 <a href={`rawbeet://api?chain=BTS&request=${deeplink}`}>
-                    <button
-                        style={{marginBottom: "20px"}}
-                    >
+                    <Button variant="secondary" ml="sm" color="gray" style={{marginBottom: "20px"}}>
                         Beet Deeplink
-                    </button>
+                    </Button>
                 </a>
 
-                <form method="dialog">
-                    <button onClick={() => {
+                <br />
+
+                <Button
+                    variant="secondary"
+                    onClick={() => {
                         setAccount();
                         setPool();
                         setSellAmount();
@@ -354,128 +405,25 @@ export default function Form() {
                         setAssetB();
                         setData();
                         setTRXJSON();
-                        reset();
-                    }}>
-                        Close window
-                    </button>
-                </form>
-            </dialog>
-        )
+                    }}
+                >
+                    Go back
+                </Button>
+            </>
+        );
     }
 
     return (
-        <div
-            style={{
-                marginBottom: "2rem",
-                border: "1px solid rgba(var(--accent-light), 25%)",
-                background: "linear-gradient(rgba(var(--accent-dark), 66%), rgba(var(--accent-dark), 33%))",
-                padding: "1.5rem",
-                borderRadius: "8px"
-            }}
-        >
-            <form
-                onSubmit={handleSubmit((formData) => {
-                    setData(formData);
-                })}>
-                <label>Account</label>
-                <br/>
-                <input
-                    placeholder="Bitshares account (1.2.x)"
-                    {
-                        ...register(
-                            'account',
-                            {
-                                required: true,
-                                onChange: (event) => {
-                                    setAccount(event.target.value);
-                                }
-                            }
-                        )
-                    }
-                />
-                <br/>
-                {errors.account && <><span style={{fontSize: "15px", paddingBottom: "10px"}}>Enter your Bitshares account ID to proceed.</span><br/></>}
-                <label>Pool</label>
-                <br/>
-                <select
-                    placeholder="Select a pool.."
-                    {
-                        ...register(
-                            "pool",
-                            {
-                                required: true,
-                                onChange: (event) => {
-                                    setPool(event.target.value);
-                                }
-                            }
-                        )
-                    }
-                >
-                    <option value="">Select...</option>
-                    {
-                        poolRows ?? null
-                    }
-                </select>
-                <br/>
-                {errors.account && <><span style={{fontSize: "15px", paddingBottom: "10px"}}>Select a pool to proceed.</span><br/></>}
-                {
-                    account && pool
-                    ? <>
-                        <label>Amount of {assetA ? assetA.symbol : '???'} to sell</label>
-                        <br/>
-                        <input
-                            placeholder={1}
-                            {
-                                ...register(
-                                    'amount',
-                                    {
-                                        required: true,
-                                        onChange: (event) => {
-                                            setSellAmount(Number(event.target.value));
-                                        }
-                                    }
-                                )
-                            }
-                        />
-                    </>
-                    : null
-                }
-                <br/>
-                {errors.account && <><span style={{fontSize: "15px", paddingBottom: "10px"}}>Select a pool to proceed.</span><br/></>}
-                {
-                    account && pool
-                    ? <>
-                        <label>Amount of {assetB ? assetB.symbol : '???'} you'll receive:</label>
-                        <br/>
-                        {
-                            buyAmountInput
-                        }
-                    </>
-                    : null
-                }
-                <br/>
-                {
-                    (errors.account || errors.pool || errors.amount)
-                    || (!account || !pool || !sellAmount || !buyAmount)
-                        ? <input disabled type="submit" />
-                        : <input type="submit" />
-                }
-            </form>
-            <br/>
-            {
-                account && pool
-                    ?   <button
-                            onClick={() => {
-                                const oldAssetA = assetA;
-                                const oldAssetB = assetB;
-                                setAssetA(oldAssetB);
-                                setAssetB(oldAssetA);
-                            }}
-                        >
-                            Swap buy/sell
-                        </button>
-                    : null
-            }
-        </div>
+        <>
+          <div className="container mx-auto mt-5 mb-5">
+            <div className="grid grid-cols-1 gap-3">
+                <Card className="p-2">
+                    <CardContent>
+                        { responseContent }
+                    </CardContent>
+                </Card>
+            </div>
+          </div>
+        </>
     );
 }

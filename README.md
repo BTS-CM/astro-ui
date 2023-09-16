@@ -1,8 +1,10 @@
-# Bitshares Pool exchange demo
+# Bitshares astro UI
 
 Created using [Astro](https://docs.astro.build) & React.
 
 Integrates with the Bitshares Beet multiwallet, specifically the [develop](https://github.com/bitshares/beet/tree/develop) branch.
+
+Requirements: [Run a local Beet API](https://github.com/BTS-CM/beet_api)
 
 ## 🧞 Commands
 

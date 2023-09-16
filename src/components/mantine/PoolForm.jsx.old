@@ -1,0 +1,409 @@
+import React, { useState, useEffect } from "react";
+
+import { MantineProvider } from '@mantine/core';
+import { useForm } from '@mantine/form';
+
+import {
+    Text,
+    SimpleGrid,
+    Card,
+    Button,
+    Select,
+    Input,
+    TextInput,
+    Title,
+} from '@mantine/core';
+
+import { blockchainFloat } from "../lib/common";
+
+export default function PoolForm() {
+
+    const form = useForm({
+        initialValues: {
+          email: '',
+          termsOfService: false,
+        },
+      });
+
+    const [data, setData] = useState(""); // form data container
+    const [account, setAccount] = useState(""); // text input account id
+    const [pool, setPool] = useState(""); // dropdown selected pool
+
+    const [pools, setPools] = useState(); // pools retrieved from api
+    const [assetData, setAssetData] = useState(); // assets retrieved from api
+
+    useEffect(() => {
+        async function retrieve() {
+            const poolResponse = await fetch("http://localhost:8080/cache/pools/bitshares", { method: "GET" });
+
+            if (!poolResponse.ok) {
+                console.log({
+                    error: new Error(`${response.status} ${response.statusText}`),
+                    msg: "Couldn't generate deeplink."
+                });
+                return;
+            }
+    
+            const poolJSON = await poolResponse.json();
+    
+            if (poolJSON) {
+                setPools(poolJSON);
+            }
+        }
+
+        retrieve();
+    }, []);
+
+    useEffect(() => {
+        async function retrieve() {
+            const assetResponse = await fetch("http://localhost:8080/cache/poolAssets/bitshares", { method: "GET" });
+    
+            if (!assetResponse.ok) {
+                console.log({
+                    error: new Error(`${response.status} ${response.statusText}`),
+                    msg: "Couldn't generate deeplink."
+                });
+                return;
+            }
+    
+            const dataResponse = await assetResponse.json();
+    
+            if (dataResponse) {
+                setAssetData(dataResponse);
+            }
+        }
+
+        retrieve();
+    }, []);
+
+
+    const [sellAmount, setSellAmount] = useState(0);
+    const [buyAmount, setBuyAmount] = useState(0);
+
+    const [foundPool, setFoundPool] = useState();
+    const [assetA, setAssetA] = useState("");
+    const [assetB, setAssetB] = useState("");
+    useEffect(() => {
+        if (pools && pool && assetData) {
+            const currentPool = pools.find((x) => x.id === pool);
+            console.log({pool, currentPool});
+            setFoundPool(currentPool);
+            const foundA = assetData.find((x) => x.id === currentPool.asset_a_id);
+            const foundB = assetData.find((x) => x.id === currentPool.asset_b_id);
+            setAssetA(foundA);
+            setAssetB(foundB);
+            setSellAmount(1);
+        }
+    }, [pool, assetData]);
+
+    useEffect(() => {
+        // Calculating the amount the user can buy
+        if (assetA && assetB && foundPool) {
+            console.log("Calculating the amount the user can buy")
+
+            let poolamounta = Number(foundPool.balance_a);
+            let poolamountap = Number(10 ** assetA.precision);
+
+            let poolamountb = Number(foundPool.balance_b);
+            let poolamountbp = Number(10 ** assetB.precision);
+    
+            const maker_market_fee_percenta = assetA.market_fee_percent;
+            const maker_market_fee_percentb = assetB.market_fee_percent;
+    
+            const max_market_feea = assetA.max_market_fee;
+            const max_market_feeb = assetB.max_market_fee;
+    
+            const taker_fee_percenta = foundPool.taker_fee_percent;
+    
+            function flagsa() {
+                if (maker_market_fee_percenta === 0) {
+                    return 0;
+                }
+                if (maker_market_fee_percenta > 0) {
+                    return Math.min(Number(max_market_feea), Math.ceil((Number(sellAmount) * Number(poolamountap)) * (Number(maker_market_fee_percenta) / 10000)))
+                }
+            }
+    
+            function flagsb() {
+                if (maker_market_fee_percentb === 0) {
+                    return 0;
+                }
+                if (maker_market_fee_percentb > 0) {
+                    return Math.min(
+                        Number(max_market_feeb),
+                        Math.ceil((Number(sellAmount) * Number(poolamountbp)) * (Number(maker_market_fee_percentb) / 10000))
+                    )
+                }
+            }
+    
+            function taker_market_fee_percenta() {
+                if (typeof taker_fee_percenta == 'undefined' && maker_market_fee_percenta > 0) {
+                    return Number(maker_market_fee_percenta) / 10000;
+                }
+                if (typeof taker_fee_percenta == 'undefined' && maker_market_fee_percenta === 0) {
+                    return 0;
+                } else {
+                    return Number(taker_fee_percenta) / 10000;
+                }
+            }
+            let taker_market_fee_percent_a = (Number(taker_market_fee_percenta()));
+
+            let result;
+            if (assetA.id === foundPool.asset_a_id) {
+                let tmp_delta_b = Number(poolamountb) - Math.ceil(
+                    Number(poolamountb) * Number(poolamounta) / ( Number(poolamounta) + ( (Number(sellAmount) * Number(poolamountap)) - Number(flagsa())))
+                );
+                let tmp_b = (Number(tmp_delta_b) * Number(taker_fee_percenta) / 10000);
+                result = (Number(tmp_delta_b) - Math.floor(Number(tmp_b)) - Math.ceil(Math.min(
+                    Number(max_market_feeb),
+                    Math.ceil(Number(tmp_delta_b) * Number(taker_market_fee_percent_a))
+                ))) / Number(poolamountbp);
+            } else {
+                let tmp_delta_a = Number(poolamounta) - Math.ceil(
+                    Number(poolamounta) * Number(poolamountb) / ( Number(poolamountb) + ( (Number(sellAmount) * Number(poolamountbp)) - Number(flagsb())))
+                );
+                let tmp_a = (Number(tmp_delta_a) * Number(taker_fee_percenta) / 10000);
+                result = (Number(tmp_delta_a) - Math.floor(Number(tmp_a)) - Math.ceil(Math.min(
+                    Number(max_market_feea),
+                    Math.ceil(Number(tmp_delta_a) * Number(taker_market_fee_percent_a))
+                ))) / Number(poolamountap);
+            }
+           
+            setBuyAmount(result);
+        }
+    }, [sellAmount, assetA, assetB]);
+
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text)
+          .then(() => {
+            console.log('Text copied to clipboard');
+          })
+          .catch((error) => {
+            console.error('Error copying text to clipboard:', error);
+          });
+      }
+
+    const [downloadClicked, setDownloadClicked] = useState(false);
+
+    const handleDownloadClick = () => {
+        if (!downloadClicked) {
+            setDownloadClicked(true);
+            setTimeout(() => {
+            setDownloadClicked(false);
+            }, 10000);
+        }
+    };
+
+    const [chain, setChain] = useState("bitshares");
+    const [deeplink, setDeeplink] = useState("");
+    const [trxJSON, setTRXJSON] = useState();
+    useEffect(() => {
+        if (data) {
+            async function generate() {
+                const opJSON = [
+                    {
+                        "account": account,
+                        "pool": pool,
+                        "amount_to_sell": {
+                            "amount": blockchainFloat(sellAmount, assetA.precision),
+                            "asset_id": assetA.id
+                        },
+                        "min_to_receive": {
+                            "amount": blockchainFloat(buyAmount, assetB.precision),
+                            "asset_id": assetB.id
+                        },
+                        "extensions": []
+                    }
+                ];
+                setTRXJSON(opJSON);
+
+                const response = await fetch(`http://localhost:8080/beet/${chain}/liquidity_pool_exchange`, {
+                    method: "POST",
+                    body: JSON.stringify(opJSON),
+                });
+
+                if (!response.ok) {
+                    console.log({
+                        error: new Error(`${response.status} ${response.statusText}`),
+                        msg: "Couldn't generate deeplink."
+                    });
+                    return;
+                }
+
+                const deeplinkValue = await response.json();
+
+                if (deeplinkValue && deeplinkValue.result && deeplinkValue.result.generatedDeepLink) {
+                    setDeeplink(deeplinkValue.result.generatedDeepLink);
+                }
+            }
+
+            generate();
+        }
+    }, [data, assetA, assetB]);
+
+    const [buyAmountInput, setBuyAmountInput] = useState();
+    useEffect(() => {
+        setBuyAmountInput(
+            <TextInput
+                label={`Amount of ${assetB ? assetB.symbol : '???'} you'll receive:`}
+                value={buyAmount ?? 0}
+                disabled
+            />
+        );
+    }, [buyAmount]);
+   
+    let responseContent;
+    if (!pools) {
+        responseContent = <p>Loading pool data</p>;
+    } else if (!assetData) {
+        responseContent = <p>asset pool data</p>;
+    } else if (!data || !deeplink) {
+        const poolRows = pools.map((pool) => (
+            { value: pool.id, label: `${pool.id} - ${pool.share_asset_symbol} - ${pool.asset_a_symbol}:${pool.asset_b_symbol}` }
+        ));
+        responseContent = <>
+            <form onSubmit={form.onSubmit((formData) => setData(formData))}>
+                <TextInput
+                    {...form.getInputProps('account')}
+                    label="Account"
+                    placeholder="Bitshares account (1.2.x)"
+                    value={account}
+                    onChange={(event) => {
+                        setAccount(event.target.value);
+                    }}
+                />
+                <Select
+                    {...form.getInputProps('pool', { type: 'select' })}
+                    label="Pool"
+                    placeholder="Select a pool.."
+                    dropdownPosition="bottom"
+                    data={poolRows}
+                    searchable
+                    nothingFound="Pool not found"
+                    value={pool}
+                    onChange={setPool}
+                />
+                {
+                    account && pool
+                    ? <>
+                        <TextInput
+                            {...form.getInputProps('amount')}
+                            label={`Amount of ${assetA ? assetA.symbol : '???'} to sell`}
+                            value={sellAmount}
+                            placeholder={1}
+                            onChange={(event) => setSellAmount(event.target.value)}
+                        />
+                    </>
+                    : null
+                }
+                {
+                    account && pool
+                        ? buyAmountInput
+                        : null
+                }
+                {
+                    (!account || !pool || !sellAmount || !buyAmount)
+                        ? <Button mt="xl" disabled type="submit">Submit</Button>
+                        : <Button mt="xl" color="gray" type="submit">Submit</Button>
+                }
+            </form>
+            {
+                account && pool
+                    ?   <Button
+                            color="gray"
+                            mt="xl"
+                            onClick={() => {
+                                const oldAssetA = assetA;
+                                const oldAssetB = assetB;
+                                setAssetA(oldAssetB);
+                                setAssetB(oldAssetA);
+                            }}
+                        >
+                            Swap buy/sell
+                        </Button>
+                    : null
+            }
+        </>;
+    } else {
+        responseContent = (
+            <>
+                <Title order={2}>Exchanging {sellAmount} {assetA.symbol} for {buyAmount} {assetB.symbol} </Title>
+                <Text mb="md" mt="xs">Your requested Bitshares pool exchange operation is ready!</Text>
+                <Button
+                    color="gray"
+                    style={{marginRight: "5px"}}
+                    onClick={() => {
+                        copyToClipboard(JSON.stringify(trxJSON));
+                    }}
+                >
+                    Copy JSON
+                </Button>
+                
+                {
+                downloadClicked
+                    ? (
+                        <Button color="gray" style={{marginRight: "5px"}} disabled>
+                            Downloading...
+                        </Button>
+                    )
+                    : (
+                    <a
+                        href={`data:text/json;charset=utf-8,${deeplink}`}
+                        download={`pool_exchange.json`}
+                        target="_blank"
+                        rel="noreferrer"
+                        onClick={handleDownloadClick}
+                    >
+                        <Button ml="sm" color="gray" style={{marginRight: "5px"}}>
+                            Local download
+                        </Button>
+                    </a>
+                    )
+                }
+
+                <a href={`rawbeet://api?chain=BTS&request=${deeplink}`}>
+                    <Button ml="sm" color="gray" style={{marginBottom: "20px"}}>
+                        Beet Deeplink
+                    </Button>
+                </a>
+
+                <br />
+
+                <Button
+                    color="gray"
+                    onClick={() => {
+                        setAccount();
+                        setPool();
+                        setSellAmount();
+                        setBuyAmount();
+                        setFoundPool();
+                        setAssetA();
+                        setAssetB();
+                        setData();
+                        setTRXJSON();
+                    }}
+                >
+                    Go back
+                </Button>
+            </>
+        );
+    }
+
+    return (
+        <>
+          <MantineProvider theme={{ colorScheme: 'dark' }} withGlobalStyles withNormalizeCSS>
+            <Text c="dimmed" ta="center" mt="md">
+                Use the form below to create a Bitshares Pool exchange.<br />
+                For use with the <a href="https://github.com/bitshares/beet">Bitshares Beet multiwallet</a>.<br/>
+                <a href="../index.html">Go back</a>
+            </Text>
+
+            <SimpleGrid cols={1} spacing="xl" mt={25}>
+                <Card shadow="md" radius="md" padding="xl">
+                    { responseContent }
+                </Card>
+            </SimpleGrid>
+          </MantineProvider>
+        </>
+    );
+}

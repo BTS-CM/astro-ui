@@ -1,16 +1,19 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Form from '../components/Form.jsx';
+import Home from '../components/Home.jsx';
 ---
 
-<Layout title="Bitshares pool tool">
+<Layout title="Bitshares Beet Astro UI - index">
 	<main>
-		<h2>Welcome to the <span class="text-gradient">Bitshares Beet pool tool</span> demo</h2>
-		<p class="instructions">
-			This <a href="https://github.com/BTS-CM/astro-pool">open-source tool</a> crafts Bitshares pool exchange transactions. <br/>
-			Fill out the form to create your <a href="https://github.com/bitshares/beet">Bitshares Beet wallet</a> transaction prompt.
-		</p>
-		<Form client:load />
+		<h2>Welcome to the <span class="text-gradient">Bitshares Beet Astro</span> UI</h2>
+		<h3>
+			This <a class="text-gradient" href="https://github.com/BTS-CM/astro-pool">open-source tool</a> can craft multiple Bitshares operations. <br/>
+			For use with the <a class="text-gradient" href="https://github.com/bitshares/beet">Bitshares Beet wallet</a>.
+		</h3>
+		<Home client:load />
+		<h4>
+			MIT Licensed code built with <a class="text-gradient" href="https://astro.build/">Astro</a>, <a class="text-gradient" href="https://react.dev/">React</a>, <a class="text-gradient" href="https://elysiajs.com/">ElysiaJS</a> and <a class="text-gradient" href="https://bun.sh/">Bun</a>.
+		</h4>
 	</main>
 </Layout>
 
@@ -23,20 +26,23 @@ import Form from '../components/Form.jsx';
 		color: white;
 		font-size: 20px;
 		line-height: 1.6;
+		min-height: 100vh;
 	}
-	.astro-a {
-		position: absolute;
-		top: -32px;
-		left: 50%;
-		transform: translatex(-50%);
-		width: 220px;
-		height: auto;
-		z-index: -1;
-	}
-	h1 {
-		font-size: 4rem;
+	h2 {
 		font-weight: 700;
 		line-height: 1;
+		text-align: center;
+		margin-bottom: 1em;
+	}
+	h3 {
+		font-weight: 300;
+		line-height: 0.9;
+		text-align: center;
+		margin-bottom: 1em;
+	}
+	h4 {
+		font-weight: 200;
+		line-height: 0.8;
 		text-align: center;
 		margin-bottom: 1em;
 	}
@@ -46,29 +52,5 @@ import Form from '../components/Form.jsx';
 		-webkit-text-fill-color: transparent;
 		background-size: 400%;
 		background-position: 0%;
-	}
-	.instructions {
-		margin-bottom: 2rem;
-		border: 1px solid rgba(var(--accent-light), 25%);
-		background: linear-gradient(rgba(var(--accent-dark), 66%), rgba(var(--accent-dark), 33%));
-		padding: 1.5rem;
-		border-radius: 8px;
-	}
-	.instructions code {
-		font-size: 0.8em;
-		font-weight: bold;
-		background: rgba(var(--accent-light), 12%);
-		color: rgb(var(--accent-light));
-		border-radius: 4px;
-		padding: 0.3em 0.4em;
-	}
-	.instructions strong {
-		color: rgb(var(--accent-light));
-	}
-	.link-card-grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(24ch, 1fr));
-		gap: 2rem;
-		padding: 0;
 	}
 </style>
