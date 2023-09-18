@@ -31,17 +31,23 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from "@/components/ui/form"
+} from "@/components/ui/form";
 
 import { blockchainFloat, copyToClipboard } from "../lib/common";
 
 export default function PoolForm() {
+    const form = useForm({
+        defaultValues: {
+            account: "",
+        },
+    });
+    /*
     const {
         register,
         handleSubmit,
         formState: { errors },
     } = useForm();
-
+    */
     const [data, setData] = useState(""); // form data container
     const [account, setAccount] = useState(""); // text input account id
     const [pool, setPool] = useState(""); // dropdown selected pool
@@ -51,7 +57,6 @@ export default function PoolForm() {
 
     useEffect(() => {
         async function retrieve() {
-            console.log("Triggered 2")
             const poolResponse = await fetch("http://localhost:8080/cache/pools/bitshares", { method: "GET" });
 
             if (!poolResponse.ok) {
@@ -68,7 +73,6 @@ export default function PoolForm() {
                 setPools(poolJSON);
             }
         }
-        console.log("Triggered 1")
 
         retrieve();
     }, []);
@@ -196,7 +200,7 @@ export default function PoolForm() {
         if (!downloadClicked) {
             setDownloadClicked(true);
             setTimeout(() => {
-            setDownloadClicked(false);
+                setDownloadClicked(false);
             }, 10000);
         }
     };
@@ -224,7 +228,7 @@ export default function PoolForm() {
                 ];
                 setTRXJSON(opJSON);
 
-                const response = await fetch(`http://localhost:8080/beet/${chain}/liquidity_pool_exchange`, {
+                const response = await fetch(`http://localhost:8080/api/deeplink/${chain}/liquidity_pool_exchange`, {
                     method: "POST",
                     body: JSON.stringify(opJSON),
                 });
@@ -252,7 +256,6 @@ export default function PoolForm() {
     useEffect(() => {
         setBuyAmountInput(
             <Input
-                label={`Amount of ${assetB ? assetB.symbol : '???'} you'll receive:`}
                 value={buyAmount ?? 0}
                 disabled
                 className="mb-3"
@@ -275,61 +278,121 @@ export default function PoolForm() {
         );
 
         responseContent = <>
-            <form onSubmit={handleSubmit((data) => setData(formData))}>
-                <Input
-                    label="Account"
-                    placeholder="Bitshares account (1.2.x)"
-                    value={account}
-                    onChange={(event) => {
-                        setAccount(event.target.value);
-                    }}
-                    className="mb-3 mt-3"
-                />
+            <Form {...form}>
+                <form onSubmit={form.handleSubmit((data) => setData(data))}>
+                    <FormField
+                        control={form.control}
+                        name="account"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Account</FormLabel>
+                                <FormControl
+                                    onChange={(event) => {
+                                        setAccount(event.target.value);
+                                    }}
+                                >
+                                    <Input
+                                        placeholder="Bitshares account (1.2.x)"
+                                        className="mb-3 mt-3"
+                                        value={account || ''}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="pool"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Pool</FormLabel>
+                                <FormControl onValueChange={(chosenPool) => { setPool(chosenPool) }}>
+                                    <Select>
+                                        <SelectTrigger className="mb-3">
+                                            <SelectValue placeholder="Select a pool.." />
+                                        </SelectTrigger>
+                                        <SelectContent className="bg-white">
+                                            <List
+                                                height={150}
+                                                itemCount={pools.length}
+                                                itemSize={35}
+                                                width={500}
+                                            >
+                                                {Row}
+                                            </List>
+                                        </SelectContent>
+                                    </Select>
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
 
-                <Select onValueChange={setPool}>
-                    <SelectTrigger className="mb-3">
-                        <SelectValue placeholder="Theme" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-white">
-                        <List
-                            height={150}
-                            itemCount={pools.length}
-                            itemSize={35}
-                            width={500}
-                        >
-                            {Row}
-                        </List>
-                    </SelectContent>
-                </Select>
-
-                {
-                    account && pool
-                    ? <>
-                        <Input
-                            label={`Amount of ${assetA ? assetA.symbol : '???'} to sell`}
-                            value={sellAmount}
-                            placeholder={1}
-                            onChange={(event) => setSellAmount(event.target.value)}
-                            className="mb-3"
-                        />
-                    </>
-                    : null
-                }
-                {
-                    account && pool
-                        ? buyAmountInput
+                    {
+                        account && pool
+                        ? <>
+                            <FormField
+                                control={form.control}
+                                name="sellAmount"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>{`Amount of ${assetA ? assetA.symbol : '???'} to sell:`}</FormLabel>
+                                        <FormControl
+                                            onChange={(event) => {
+                                                const input = event.target.value;
+                                                const regex = /^[0-9]*\.?[0-9]*$/; // regular expression to match numbers and a single period
+                                                if (regex.test(input)) {
+                                                    setSellAmount(input);
+                                                }
+                                            }}
+                                        >
+                                            <Input
+                                                label={`Amount of ${assetA ? assetA.symbol : '???'} to sell`}
+                                                value={sellAmount}
+                                                placeholder={sellAmount}
+                                                className="mb-3"
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </>
                         : null
-                }
-                {
-                    (!account || !pool || !sellAmount || !buyAmount)
-                        ? <Button className="mt-5" variant="destructive" type="submit">Submit</Button>
-                        : <Button className="mt-5" variant="destructive" type="submit">Submit</Button>
-                }
-            </form>
+                    }
+
+                    {
+                        account && pool
+                            ? <>
+                            <FormField
+                                control={form.control}
+                                name="buyAmount"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>{`Amount of ${assetB ? assetB.symbol : '???'} you'll receive:`}</FormLabel>
+                                        <FormControl>
+                                            { buyAmountInput }
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </>
+                            : null
+                    }
+
+                    {
+                        (!account || !pool || !sellAmount || !buyAmount)
+                            ? <Button className="mt-5 mb-3" variant="outline" disabled type="submit">Submit</Button>
+                            : <Button className="mt-5 mb-3" variant="outline" type="submit">Submit</Button>
+                    }
+                </form>
+            </Form>
             {
                 account && pool
                     ?   <Button
-                            variant="secondary"
+                            variant="outline"
                             mt="xl"
                             onClick={() => {
                                 const oldAssetA = assetA;
@@ -346,10 +409,10 @@ export default function PoolForm() {
     } else {
         responseContent = (
             <>
-                <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
+                <h1 className="scroll-m-20 text-2xl font-extrabold tracking-tight">
                     Exchanging {sellAmount} {assetA.symbol} for {buyAmount} {assetB.symbol}
                 </h1>
-                <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight mb-3 mt-1">
+                <h3 className="scroll-m-20 text-1xl font-semibold tracking-tight mb-3 mt-1">
                     Your requested Bitshares pool exchange operation is ready!
                 </h3>
                 <Button
@@ -358,7 +421,7 @@ export default function PoolForm() {
                     onClick={() => {
                         copyToClipboard(JSON.stringify(trxJSON));
                     }}
-                    variant="secondary"
+                    variant="outline"
                 >
                     Copy JSON
                 </Button>
@@ -366,7 +429,7 @@ export default function PoolForm() {
                 {
                 downloadClicked
                     ? (
-                        <Button variant="secondary" style={{marginRight: "5px"}} disabled>
+                        <Button variant="outline" style={{marginRight: "5px"}} disabled>
                             Downloading...
                         </Button>
                     )
@@ -378,7 +441,7 @@ export default function PoolForm() {
                         rel="noreferrer"
                         onClick={handleDownloadClick}
                     >
-                        <Button variant="secondary" ml="sm" color="gray" style={{marginRight: "5px"}}>
+                        <Button variant="outline" ml="sm" color="gray" style={{marginRight: "5px"}}>
                             Local download
                         </Button>
                     </a>
@@ -386,7 +449,7 @@ export default function PoolForm() {
                 }
 
                 <a href={`rawbeet://api?chain=BTS&request=${deeplink}`}>
-                    <Button variant="secondary" ml="sm" color="gray" style={{marginBottom: "20px"}}>
+                    <Button variant="outline" ml="sm" color="gray" style={{marginBottom: "20px"}}>
                         Beet Deeplink
                     </Button>
                 </a>
@@ -394,7 +457,6 @@ export default function PoolForm() {
                 <br />
 
                 <Button
-                    variant="secondary"
                     onClick={() => {
                         setAccount();
                         setPool();
@@ -407,7 +469,7 @@ export default function PoolForm() {
                         setTRXJSON();
                     }}
                 >
-                    Go back
+                    Create another pool exchange
                 </Button>
             </>
         );

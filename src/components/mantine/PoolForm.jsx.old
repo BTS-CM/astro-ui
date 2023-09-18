@@ -217,7 +217,7 @@ export default function PoolForm() {
                 ];
                 setTRXJSON(opJSON);
 
-                const response = await fetch(`http://localhost:8080/beet/${chain}/liquidity_pool_exchange`, {
+                const response = await fetch(`http://localhost:8080/api/deeplink/${chain}/liquidity_pool_exchange`, {
                     method: "POST",
                     body: JSON.stringify(opJSON),
                 });
