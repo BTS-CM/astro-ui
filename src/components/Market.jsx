@@ -22,13 +22,28 @@ import AccountSelect from './AccountSelect.jsx'
 
 export default function Market(properties) {
 
+  const [assetA, setAssetA] = useState();
+  const [assetB, setAssetB] = useState();
   const [usr, setUsr] = useState();
+
   useEffect(() => {
       const unsubscribe = $currentUser.subscribe((value) => {
-      setUsr(value);
+        setUsr(value);
       });
       return unsubscribe;
   }, [$currentUser]);
+
+  useEffect(() => {
+    if (window.location.search) {
+      const urlSearchParams = new URLSearchParams(window.location.search);
+      const params = Object.fromEntries(urlSearchParams.entries());
+      const market = params.market;
+      const asset_a = market.split('_')[0];
+      const asset_b = market.split('_')[1];
+      setAssetA(asset_a);
+      setAssetB(asset_b);
+    }
+  }, []);
 
   if (!usr || !usr.id || !usr.id.length) {
       return <AccountSelect />;

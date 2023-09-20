@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { Moodie } from 'moodie';
+
 import {
   setCurrentUser,
   $userStorage,
@@ -170,33 +172,56 @@ export default function AccountSelect(properties) {
                     <CardTitle>
                       {
                         chain === "bitshares"
-                          ? "🔐 Bitshares (BTS)"
-                          : "🔐 Bitshares testnet (TEST)"
+                          ? "Bitshares (BTS)"
+                          : "Bitshares testnet (TEST)"
                       }
                     </CardTitle>
-                    <CardDescription>Select your previously used account</CardDescription>
+                    <CardDescription>Select one of your previously used accounts</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    {
-                      users.filter((user) => user.chain === chain).length
-                        ? users
-                          .filter((user) => user.chain === chain)
-                          .map((user) => {
-                            return (
-                              <Button
-                                key={user.id}
-                                id={user.id}
-                                className="mr-2"
-                                onClick={() => {
-                                  setCurrentUser(user.username, user.id, user.referrer, user.chain);
-                                }}
-                              >
-                                {user.username}
-                              </Button>
-                            )
-                          })
-                        : <p className="text-red-500 text-xs italic">No accounts found.</p>
-                    }
+                    <div className="grid grid-cols-3 gap-5">
+                      {
+                        users.filter((user) => user.chain === chain).length
+                          ? users
+                            .filter((user) => user.chain === chain)
+                            .map((user) => {
+                              return (
+                                <Card
+                                  key={user.id}
+                                  onClick={() => {
+                                    setCurrentUser(user.username, user.id, user.referrer, user.chain);
+                                  }}
+                                >
+                                  <div className="grid grid-cols-4">
+                                    <div className="col-span-1 pt-6 pl-2">
+                                      <Moodie
+                                        size={40}
+                                        name={user.username}
+                                        expression={{
+                                          eye: 'normal',
+                                          mouth: 'open',
+                                        }}
+                                        colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]}
+                                      />
+                                    </div>
+                                    <div className="col-span-3">
+                                      <CardHeader>
+                                        <CardTitle>
+                                          {user.username}
+                                        </CardTitle>
+                                        <CardDescription>
+                                          {user.id}
+                                        </CardDescription>
+                                      </CardHeader>
+                                    </div>
+
+                                  </div>
+                                </Card>
+                              )
+                            })
+                          : <p className="text-red-500 text-xs italic">No accounts found.</p>
+                      }
+                    </div>
                   </CardContent>
                   <CardFooter>
                     <Button className="mr-2" onClick={() => setMode(null)}>

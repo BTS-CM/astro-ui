@@ -39,6 +39,14 @@ export default function PoolForm() {
         },
     });
 
+    const [usr, setUsr] = useState();
+    useEffect(() => {
+        const unsubscribe = $currentUser.subscribe((value) => {
+        setUsr(value);
+        });
+        return unsubscribe;
+    }, [$currentUser]);
+
     const [data, setData] = useState(""); // form data container
     const [pool, setPool] = useState(""); // dropdown selected pool
 
@@ -47,7 +55,7 @@ export default function PoolForm() {
 
     useEffect(() => {
         async function retrieve() {
-            const poolResponse = await fetch("http://localhost:8080/cache/pools/bitshares", { method: "GET" });
+            const poolResponse = await fetch(`http://localhost:8080/cache/pools/${usr.chain}`, { method: "GET" });
 
             if (!poolResponse.ok) {
                 console.log({
@@ -64,12 +72,14 @@ export default function PoolForm() {
             }
         }
 
-        retrieve();
-    }, []);
+        if (usr && usr.chain) {
+            retrieve();
+        }
+    }, [usr]);
 
     useEffect(() => {
         async function retrieve() {
-            const assetResponse = await fetch("http://localhost:8080/cache/poolAssets/bitshares", { method: "GET" });
+            const assetResponse = await fetch(`http://localhost:8080/cache/poolAssets/${usr.chain}`, { method: "GET" });
     
             if (!assetResponse.ok) {
                 console.log({
@@ -86,8 +96,10 @@ export default function PoolForm() {
             }
         }
 
-        retrieve();
-    }, []);
+        if (usr && usr.chain) {
+            retrieve();
+        }
+    }, [usr]);
 
     const [sellAmount, setSellAmount] = useState(0);
     const [buyAmount, setBuyAmount] = useState(0);
@@ -195,7 +207,6 @@ export default function PoolForm() {
         }
     };
 
-    const [chain, setChain] = useState("bitshares");
     const [deeplink, setDeeplink] = useState("");
     const [trxJSON, setTRXJSON] = useState();
     useEffect(() => {
@@ -203,7 +214,7 @@ export default function PoolForm() {
             async function generate() {
                 const opJSON = [
                     {
-                        "account": $currentUser.get().id,
+                        "account": usr.id,
                         "pool": pool,
                         "amount_to_sell": {
                             "amount": blockchainFloat(sellAmount, assetA.precision),
@@ -218,10 +229,13 @@ export default function PoolForm() {
                 ];
                 setTRXJSON(opJSON);
 
-                const response = await fetch(`http://localhost:8080/api/deeplink/${chain}/liquidity_pool_exchange`, {
-                    method: "POST",
-                    body: JSON.stringify(opJSON),
-                });
+                const response = await fetch(
+                    `http://localhost:8080/api/deeplink/${usr.chain}/liquidity_pool_exchange`, 
+                    {
+                        method: "POST",
+                        body: JSON.stringify(opJSON),
+                    }
+                );
 
                 if (!response.ok) {
                     console.log({
@@ -252,14 +266,6 @@ export default function PoolForm() {
             />
         );
     }, [buyAmount]);
-   
-    const [usr, setUsr] = useState();
-    useEffect(() => {
-        const unsubscribe = $currentUser.subscribe((value) => {
-        setUsr(value);
-        });
-        return unsubscribe;
-    }, [$currentUser]);
 
     if (!usr || !usr.id || !usr.id.length) {
         return <AccountSelect />;
@@ -293,7 +299,7 @@ export default function PoolForm() {
                                         disabled
                                         placeholder="Bitshares account (1.2.x)"
                                         className="mb-3 mt-3"
-                                        value={`${$currentUser.get().username} (${$currentUser.get().id})`}
+                                        value={`${usr.username} (${usr.id})`}
                                     />
                                 </FormControl>
                                 <FormMessage />
