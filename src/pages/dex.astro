@@ -1,10 +1,17 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Market from '@/components/Market';
 ---
 
 <Layout title="Bitshares pool tool">
 	<main>
 		<h2><span class="text-gradient">Bitshares Beet Astro</span> Dex</h2>
+		<h3 class="mb-5">
+			Use the form below to create a limit order on the Bitshares DEX.<br /><br />
+			For use with the <a class="text-gradient" href="https://github.com/bitshares/beet">Bitshares Beet multiwallet</a>.<br/><br/>
+			<a class="text-gradient" href="../index.html">Go back</a>
+		</h3>
+		<Market client:load />
 	</main>
 </Layout>
 
@@ -22,6 +29,12 @@ import Layout from '../layouts/Layout.astro';
 	h2 {
 		font-weight: 700;
 		line-height: 1;
+		text-align: center;
+		margin-bottom: 1em;
+	}
+	h3 {
+		font-weight: 300;
+		line-height: 0.9;
 		text-align: center;
 		margin-bottom: 1em;
 	}

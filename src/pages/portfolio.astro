@@ -1,10 +1,15 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import PortfolioTabs from '../components/PortfolioTabs.jsx';
 ---
 
 <Layout title="Bitshares portfolio">
 	<main>
 		<h2><span class="text-gradient">Bitshares Beet Astro</span> portfolio</h2>
+		<h3 class="mb-5">
+			<a class="text-gradient" href="../index.html">Go back</a>
+		</h3>
+		<PortfolioTabs client:load />
 	</main>
 </Layout>
 
@@ -22,6 +27,12 @@ import Layout from '../layouts/Layout.astro';
 	h2 {
 		font-weight: 700;
 		line-height: 1;
+		text-align: center;
+		margin-bottom: 1em;
+	}
+	h3 {
+		font-weight: 300;
+		line-height: 0.9;
 		text-align: center;
 		margin-bottom: 1em;
 	}

@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -6,8 +7,23 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+
+import { $currentUser, eraseCurrentUser } from '../stores/users.ts'
+import AccountSelect from './AccountSelect.jsx'
 
 export default function Home(properties) {
+  const [usr, setUsr] = useState();
+  useEffect(() => {
+    const unsubscribe = $currentUser.subscribe((value) => {
+      setUsr(value);
+    });
+    return unsubscribe;
+  }, [$currentUser]);
+
+  if (!usr || !usr.id || !usr.id.length) {
+    return <AccountSelect />;
+  }
 
   return (
     <>
@@ -17,7 +33,7 @@ export default function Home(properties) {
             <Card>
               <CardHeader>
                 <CardTitle>💱 Pool exchange</CardTitle>
-                <CardDescription>Trade using a liquidity pool</CardDescription>
+                <CardDescription>Trade with a liquidity pool</CardDescription>
               </CardHeader>
             </Card>
           </a>
@@ -26,7 +42,7 @@ export default function Home(properties) {
             <Card>
               <CardHeader>
                 <CardTitle>📈 DEX limit orders</CardTitle>
-                <CardDescription>Create custom asset trades</CardDescription>
+                <CardDescription>Trade on the Bitshares DEX</CardDescription>
               </CardHeader>
             </Card>
           </a>
@@ -39,6 +55,16 @@ export default function Home(properties) {
               </CardHeader>
             </Card>
           </a>
+        </div>
+        <div className="flex justify-center">
+          <Button
+            className="mt-5"
+            onClick={() => {
+              eraseCurrentUser();
+            }}
+          >
+            Switch account/chain
+          </Button>
         </div>
       </div>
     </>

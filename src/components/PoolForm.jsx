@@ -4,15 +4,10 @@ import { FixedSizeList as List } from 'react-window';
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input"
-import { ScrollArea } from "@/components/ui/scroll-area"
 
 import {
     Card,
     CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
 } from "@/components/ui/card";
 
 import {
@@ -34,6 +29,8 @@ import {
 } from "@/components/ui/form";
 
 import { blockchainFloat, copyToClipboard } from "../lib/common";
+import { $currentUser, eraseCurrentUser } from '../stores/users.ts'
+import AccountSelect from './AccountSelect.jsx'
 
 export default function PoolForm() {
     const form = useForm({
@@ -41,15 +38,8 @@ export default function PoolForm() {
             account: "",
         },
     });
-    /*
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = useForm();
-    */
+
     const [data, setData] = useState(""); // form data container
-    const [account, setAccount] = useState(""); // text input account id
     const [pool, setPool] = useState(""); // dropdown selected pool
 
     const [pools, setPools] = useState(); // pools retrieved from api
@@ -213,7 +203,7 @@ export default function PoolForm() {
             async function generate() {
                 const opJSON = [
                     {
-                        "account": account,
+                        "account": $currentUser.get().id,
                         "pool": pool,
                         "amount_to_sell": {
                             "amount": blockchainFloat(sellAmount, assetA.precision),
@@ -263,6 +253,18 @@ export default function PoolForm() {
         );
     }, [buyAmount]);
    
+    const [usr, setUsr] = useState();
+    useEffect(() => {
+        const unsubscribe = $currentUser.subscribe((value) => {
+        setUsr(value);
+        });
+        return unsubscribe;
+    }, [$currentUser]);
+
+    if (!usr || !usr.id || !usr.id.length) {
+        return <AccountSelect />;
+    }
+
     let responseContent;
     if (!pools) {
         responseContent = <p>Loading pool data</p>;
@@ -286,15 +288,12 @@ export default function PoolForm() {
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Account</FormLabel>
-                                <FormControl
-                                    onChange={(event) => {
-                                        setAccount(event.target.value);
-                                    }}
-                                >
+                                <FormControl>
                                     <Input
+                                        disabled
                                         placeholder="Bitshares account (1.2.x)"
                                         className="mb-3 mt-3"
-                                        value={account || ''}
+                                        value={`${$currentUser.get().username} (${$currentUser.get().id})`}
                                     />
                                 </FormControl>
                                 <FormMessage />
@@ -330,7 +329,7 @@ export default function PoolForm() {
                     />
 
                     {
-                        account && pool
+                        pool
                         ? <>
                             <FormField
                                 control={form.control}
@@ -363,7 +362,7 @@ export default function PoolForm() {
                     }
 
                     {
-                        account && pool
+                        pool
                             ? <>
                             <FormField
                                 control={form.control}
@@ -383,14 +382,14 @@ export default function PoolForm() {
                     }
 
                     {
-                        (!account || !pool || !sellAmount || !buyAmount)
+                        (!pool || !sellAmount || !buyAmount)
                             ? <Button className="mt-5 mb-3" variant="outline" disabled type="submit">Submit</Button>
                             : <Button className="mt-5 mb-3" variant="outline" type="submit">Submit</Button>
                     }
                 </form>
             </Form>
             {
-                account && pool
+                pool
                     ?   <Button
                             variant="outline"
                             mt="xl"
@@ -458,7 +457,6 @@ export default function PoolForm() {
 
                 <Button
                     onClick={() => {
-                        setAccount();
                         setPool();
                         setSellAmount();
                         setBuyAmount();
