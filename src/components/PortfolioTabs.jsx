@@ -145,13 +145,10 @@ export default function PortfolioTabs(properties) {
       }
     }
     
-    if ((balances && balances.length) || (openOrders && openOrders.length)) {
+    if ((balances && balances.length) && (openOrders && openOrders.length)) {
       retrieveHeldAssets();
     }
   }, [balances, openOrders]);
-
-  //////
-
 
   const [downloadClicked, setDownloadClicked] = useState(false);
 
@@ -163,8 +160,6 @@ export default function PortfolioTabs(properties) {
           }, 10000);
       }
   };
-
-
 
   const [orderID, setOrderID] = useState();
   const [deeplink, setDeeplink] = useState("");
@@ -211,8 +206,6 @@ export default function PortfolioTabs(properties) {
   }, [deepLinkTrigger, orderID]);
 
   const [showDialog, setShowDialog] = useState(false);
-
-  //////
 
   if (!usr || !usr.id || !usr.id.length) {
       return <AccountSelect />;
@@ -351,7 +344,6 @@ export default function PortfolioTabs(properties) {
                   <Dialog
                     open={showDialog}
                     onOpenChange={(open) => {
-                      console.log({open})
                       if (!open) {
                         setDeeplink();
                         setTRXJSON();
@@ -361,9 +353,12 @@ export default function PortfolioTabs(properties) {
                   >
                     <DialogContent className="sm:max-w-[425px] bg-white">
                       <>
-                        <h3 className="scroll-m-20 text-1xl font-semibold tracking-tight mb-3 mt-1">
+                        <h3 className="scroll-m-20 text-1xl font-semibold tracking-tight mt-1">
                             Your requested limit order cancellation is ready!
                         </h3>
+                        Cancelling offer of {readableBaseAmount} {sellAsset.symbol} for {readableQuoteAmount} {buyAsset.symbol}<br/>
+                        Order ID: {orderId}<br/>
+                        Account: {usr.id}
                         <div className="grid grid-cols-1 gap-3">
                           <Button
                               color="gray"
@@ -392,7 +387,7 @@ export default function PortfolioTabs(properties) {
                                   onClick={handleDownloadClick}
                               >
                                   <Button variant="outline" className="w-full">
-                                      Local download
+                                      Download Beet operation JSON
                                   </Button>
                               </a>
                               )
@@ -400,7 +395,7 @@ export default function PortfolioTabs(properties) {
 
                           <a href={`rawbeet://api?chain=BTS&request=${deeplink}`}>
                             <Button variant="outline" className="w-full">
-                                Beet Deeplink
+                                Trigger raw Beet deeplink
                             </Button>
                           </a>
                         </div>
