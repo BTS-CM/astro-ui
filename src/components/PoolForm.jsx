@@ -289,19 +289,25 @@ export default function PoolForm() {
 
     const [showDialog, setShowDialog] = useState(false);
     const [poolKey, setPoolKey] = useState("default_pool_key");
-
+    useEffect(() => {
+        setPoolKey(`pool_key${Date.now()}`);
+    }, [pool]);
 
     if (!usr || !usr.id || !usr.id.length) {
         return <AccountSelect />;
     }
 
-    const Row = ({ index, style }) => (
-        <SelectItem
-            value={pools[index].id} style={style}
-        >
-            {`${pools[index].id} - ${pools[index].share_asset_symbol} - ${pools[index].asset_a_symbol}:${pools[index].asset_b_symbol}`}
-        </SelectItem>
-    );
+    const Row = ({ index, style }) => {
+        const pool = pools[index];
+        return (
+          <SelectItem
+            value={pool.id}
+            style={style}
+          >
+            {`${pool.id} - ${pool.share_asset_symbol} - ${pool.asset_a_symbol}:${pool.asset_b_symbol}`}
+          </SelectItem>
+        );
+    };
 
     return (
         <>
@@ -358,7 +364,13 @@ export default function PoolForm() {
                                                             <FormControl onValueChange={(chosenPool) => { setPool(chosenPool) }}>
                                                                 <Select key={poolKey}>
                                                                     <SelectTrigger className="mb-3">
-                                                                        <SelectValue placeholder="Select a pool.." />
+                                                                        <SelectValue
+                                                                            placeholder={
+                                                                                foundPool
+                                                                                    ? `${foundPool.id} - ${foundPool.share_asset_symbol} - ${foundPool.asset_a_symbol}:${foundPool.asset_b_symbol}`
+                                                                                    : "Select a pool.."
+                                                                                }
+                                                                        />
                                                                     </SelectTrigger>
                                                                     <SelectContent className="bg-white">
                                                                         <List
@@ -366,6 +378,7 @@ export default function PoolForm() {
                                                                             itemCount={pools.length}
                                                                             itemSize={35}
                                                                             width={500}
+                                                                            initialScrollOffset={pools.map(x => x.id).indexOf(pool) * 35}
                                                                         >
                                                                             {Row}
                                                                         </List>
@@ -443,16 +456,16 @@ export default function PoolForm() {
                                                 onOpenChange={(open) => {
                                                     if (!open) {
                                                         // Clearing generated deeplink
-                                                        setData();
-                                                        setDeeplink();
+                                                        setData("");
+                                                        setDeeplink("");
                                                         setTRXJSON();
                                                         // Clearing form data
                                                         setPool("");
-                                                        setSellAmount();
-                                                        setBuyAmount();
+                                                        setSellAmount(0);
+                                                        setBuyAmount(0);
                                                         setFoundPool();
-                                                        setAssetA();
-                                                        setAssetB();
+                                                        setAssetA("");
+                                                        setAssetB("");
                                                         // Clearing keys
                                                         setPoolKey(`pool_key${Date.now()}`);
                                                     }
