@@ -490,6 +490,20 @@ export default function PoolForm() {
                 </Card>
             </div>
           </div>
+          <div className="flex justify-center">
+            <Button
+            className="mt-5"
+            onClick={() => {
+                eraseCurrentUser();
+                setBalances();
+                setOpenOrders();
+                setActivity();
+                setRetrievedBalanceAssets();
+            }}
+            >
+                Switch account/chain
+            </Button>
+          </div>
         </>
     );
 }

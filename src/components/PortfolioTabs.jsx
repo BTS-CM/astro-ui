@@ -44,9 +44,9 @@ export default function PortfolioTabs(properties) {
       return unsubscribe;
   }, [$currentUser]);
 
+  const [balanceCounter, setBalanceCoutner] = useState(0);
   const [balances, setBalances] = useState();
   const [openOrders, setOpenOrders] = useState();
-  const [activity, setActivity] = useState();
   useEffect(() => {
     async function fetchPortfolio() {
       const fetchedProfile = await fetch(`http://localhost:8080/api/getPortfolio/${usr.chain}/${usr.id}`, { method: "GET" });
@@ -64,7 +64,17 @@ export default function PortfolioTabs(properties) {
         setBalances(finalResult.balances);
         setOpenOrders(finalResult.limitOrders);
       }
+    }
 
+    if (usr && usr.id && usr.id.length) {
+      fetchPortfolio();
+    }
+  }, [usr, balanceCounter]);
+
+  const [activityCounter, setActivityCounter] = useState(0);
+  const [activity, setActivity] = useState();
+  useEffect(() => {
+    async function fetchActivity() {
       const historyData = await fetch(
         `http://localhost:8080/api/getAccountHistory/${usr.chain}/${usr.id}`,
         {
@@ -85,9 +95,9 @@ export default function PortfolioTabs(properties) {
     }
 
     if (usr && usr.id && usr.id.length) {
-      fetchPortfolio();
+      fetchActivity();
     }
-  }, [usr]);
+  }, [usr, activityCounter]);
 
   const [retrievedBalanceAssets, setRetrievedBalanceAssets] = useState();
   useEffect(() => {
@@ -140,6 +150,70 @@ export default function PortfolioTabs(properties) {
     }
   }, [balances, openOrders]);
 
+  //////
+
+
+  const [downloadClicked, setDownloadClicked] = useState(false);
+
+  const handleDownloadClick = () => {
+      if (!downloadClicked) {
+          setDownloadClicked(true);
+          setTimeout(() => {
+              setDownloadClicked(false);
+          }, 10000);
+      }
+  };
+
+
+
+  const [orderID, setOrderID] = useState();
+  const [deeplink, setDeeplink] = useState("");
+  const [trxJSON, setTRXJSON] = useState();
+  const [deepLinkTrigger, setDeepLinkTrigger] = useState(0);
+
+  useEffect(() => {
+    async function generate() {
+      const opJSON = [
+        {
+          fee_paying_account: usr.id,
+          order: orderID, // order id to change
+          extensions: []
+        }
+      ];
+      setTRXJSON(opJSON);
+
+      const response = await fetch(
+          `http://localhost:8080/api/deeplink/${usr.chain}/limit_order_cancel`, 
+          {
+              method: "POST",
+              body: JSON.stringify(opJSON),
+          }
+      );
+
+      if (!response.ok) {
+          console.log({
+              error: new Error(`${response.status} ${response.statusText}`),
+              msg: "Couldn't generate deeplink."
+          });
+          return;
+      }
+
+      const deeplinkValue = await response.json();
+
+      if (deeplinkValue && deeplinkValue.result && deeplinkValue.result.generatedDeepLink) {
+          setDeeplink(deeplinkValue.result.generatedDeepLink);
+      }
+    }
+
+    if (deepLinkTrigger > 0 && orderID) {
+      generate();
+    }
+  }, [deepLinkTrigger, orderID]);
+
+  const [showDialog, setShowDialog] = useState(false);
+
+  //////
+
   if (!usr || !usr.id || !usr.id.length) {
       return <AccountSelect />;
   }
@@ -168,13 +242,48 @@ export default function PortfolioTabs(properties) {
               </CardDescription>
             </CardHeader>
           </div>
-          <div className="col-span-2 pt-7">
-            <Button className="mr-2">Trade</Button>
-            <Button>Asset info</Button>
+          <div className="col-span-2 pt-5">
+            <a href={`/dex/index.html?market=${currentBalance.symbol}_${currentBalance.symbol === "BTS" ? "USD" : "BTS"}`}>
+              <Button variant="outline" className="mr-2">Trade</Button>
+            </a>
+            <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="outline" className="mt-2">Asset info</Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px] bg-white">
+                  <DialogHeader>
+                    <DialogTitle>
+                      Additional information on {currentBalance.symbol}
+                    </DialogTitle>
+                    <DialogDescription>
+                      JSON properties
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="grid grid-cols-1">
+                    <div className="col-span-1">
+                      <ScrollArea className="h-72 rounded-md border">
+                        <pre>
+                          {JSON.stringify(currentBalance, null, 2)}
+                        </pre>
+                      </ScrollArea>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
           </div>
         </div>
       </Card>
     </div>
+  };
+
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text)
+      .then(() => {
+        console.log('Text copied to clipboard');
+      })
+      .catch((err) => {
+        console.error('Error copying text: ', err);
+      });
   };
 
   const OpenOrdersRow = ({ index, style }) => {
@@ -222,41 +331,84 @@ export default function PortfolioTabs(properties) {
                 <CardDescription>
                   Trading pair: {sellPriceBaseAssetId} for {sellPriceQuoteAssetId}<br/>
                   Order ID: {orderId}<br/>
-                  Expires: {timeDiffString}<br/>
+                  Expires: {timeDiffString}
                 </CardDescription>
               </CardHeader>
             </div>
             <div className="col-span-1 pt-7">
-              <a href="/dex/index.html">
+              <a href={`/dex/index.html?market=${sellAsset.symbol}_${buyAsset.symbol}`}>
                 <Button variant="outline" className="mb-2">Trade</Button>
               </a>
-              <br/>
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button variant="outline" className="mt-2">Cancel</Button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-[425px] bg-white">
-                  <DialogHeader>
-                    <DialogTitle>Cancelling a limit order</DialogTitle>
-                    <DialogDescription>
-                      <p>
-                        Currently selling {readableBaseAmount} {sellAsset.symbol} for {readableQuoteAmount} {buyAsset.symbol}
-                      </p>
-                      <p>
-                        Order ID: {orderId}<br/>
-                        Account ID: {usr.id}
-                      </p>
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="grid grid-cols-1">
-                    <div className="col-span-1">
-                      <Button>
-                        Generate limit order cancellation
-                      </Button>
-                    </div>
-                  </div>
-                </DialogContent>
-              </Dialog>
+              <>
+                <Button variant="outline" className="mt-2" onClick={() => {
+                  setShowDialog(true);
+                  setOrderID(orderId);
+                  setDeepLinkTrigger(deepLinkTrigger + 1);
+                }}>
+                  Cancel
+                </Button>
+                {showDialog && orderId === orderID && deeplink && (
+                  <Dialog
+                    open={showDialog}
+                    onOpenChange={(open) => {
+                      console.log({open})
+                      if (!open) {
+                        setDeeplink();
+                        setTRXJSON();
+                      }
+                      setShowDialog(open)
+                    }}
+                  >
+                    <DialogContent className="sm:max-w-[425px] bg-white">
+                      <>
+                        <h3 className="scroll-m-20 text-1xl font-semibold tracking-tight mb-3 mt-1">
+                            Your requested limit order cancellation is ready!
+                        </h3>
+                        <div className="grid grid-cols-1 gap-3">
+                          <Button
+                              color="gray"
+                              className="w-full"
+                              onClick={() => {
+                                  copyToClipboard(JSON.stringify(trxJSON));
+                              }}
+                              variant="outline"
+                          >
+                              Copy operation JSON
+                          </Button>
+                          
+                          {
+                            downloadClicked
+                              ? (
+                                  <Button variant="outline" disabled>
+                                      Downloading...
+                                  </Button>
+                              )
+                              : (
+                              <a
+                                  href={`data:text/json;charset=utf-8,${deeplink}`}
+                                  download={`limit_order_cancel.json`}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  onClick={handleDownloadClick}
+                              >
+                                  <Button variant="outline" className="w-full">
+                                      Local download
+                                  </Button>
+                              </a>
+                              )
+                          }
+
+                          <a href={`rawbeet://api?chain=BTS&request=${deeplink}`}>
+                            <Button variant="outline" className="w-full">
+                                Beet Deeplink
+                            </Button>
+                          </a>
+                        </div>
+                      </>
+                    </DialogContent>
+                  </Dialog>
+                )}
+              </>
             </div>
           </div>
         </Card>
@@ -355,7 +507,7 @@ export default function PortfolioTabs(properties) {
             <TabsContent value="balances">
               <Card>
                 <CardHeader>
-                  <CardTitle>Account balances</CardTitle>
+                  <CardTitle>{usr.username}'s account balances</CardTitle>
                   <CardDescription>
                     The assets held within your account
                   </CardDescription>
@@ -371,11 +523,16 @@ export default function PortfolioTabs(properties) {
                         >
                             {BalanceRow}
                         </List>
-                      : null
+                      : <p>No balances found</p>
                   }
                 </CardContent>
                 <CardFooter>
-                  <Button>
+                  <Button
+                    onClick={() => {
+                      setBalances();
+                      setBalanceCoutner(balanceCounter + 1);
+                    }}
+                  >
                     Refresh balances
                   </Button>
                 </CardFooter>
@@ -403,7 +560,12 @@ export default function PortfolioTabs(properties) {
                   }
                 </CardContent>
                 <CardFooter>
-                  <Button>
+                  <Button
+                    onClick={() => {
+                      setOpenOrders();
+                      setBalanceCoutner(balanceCounter + 1);
+                    }}
+                  >
                     Refresh open orders
                   </Button>
                 </CardFooter>
@@ -431,7 +593,12 @@ export default function PortfolioTabs(properties) {
                   }
                 </CardContent>
                 <CardFooter>
-                  <Button>
+                  <Button
+                    onClick={() => {
+                      setActivity();
+                      setActivityCounter(activityCounter + 1);
+                    }}
+                  >
                     Refresh recent activity
                   </Button>
                 </CardFooter>
