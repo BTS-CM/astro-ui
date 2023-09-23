@@ -226,12 +226,14 @@ export default function PoolForm() {
 
     const [deeplink, setDeeplink] = useState("");
     const [trxJSON, setTRXJSON] = useState();
+    const [deepLinkInProgress, setDeepLinkInProgress] = useState(false);
     useEffect(() => {
         if (data) {
             /**
              * Generates a deeplink for the pool exchange operation
              */
             async function generate() {
+                setDeepLinkInProgress(true);
                 const opJSON = [
                     {
                         "account": usr.id,
@@ -270,6 +272,7 @@ export default function PoolForm() {
                 if (deeplinkValue && deeplinkValue.result && deeplinkValue.result.generatedDeepLink) {
                     setDeeplink(deeplinkValue.result.generatedDeepLink);
                 }
+                setDeepLinkInProgress(false);
             }
 
             generate();
@@ -377,7 +380,7 @@ export default function PoolForm() {
                                                                             height={150}
                                                                             itemCount={pools.length}
                                                                             itemSize={35}
-                                                                            width={500}
+                                                                            className="w-full"
                                                                             initialScrollOffset={pools.map(x => x.id).indexOf(pool) * 35}
                                                                         >
                                                                             {Row}
@@ -444,7 +447,7 @@ export default function PoolForm() {
                                                 }
 
                                                 {
-                                                    (!pool || !sellAmount || !buyAmount)
+                                                    (!pool || !sellAmount || !buyAmount) || deepLinkInProgress !== false
                                                         ? <Button className="mt-5 mb-3" variant="outline" disabled type="submit">Submit</Button>
                                                         : <Button className="mt-5 mb-3" variant="outline" type="submit">Submit</Button>
                                                 }
@@ -525,7 +528,7 @@ export default function PoolForm() {
                                             </Dialog>
                                         )}
                                         {
-                                            pool
+                                            pool && !deepLinkInProgress
                                                 ?   <Button
                                                         variant="outline"
                                                         mt="xl"
@@ -535,6 +538,17 @@ export default function PoolForm() {
                                                             setAssetA(oldAssetB);
                                                             setAssetB(oldAssetA);
                                                         }}
+                                                    >
+                                                        Swap buy/sell
+                                                    </Button>
+                                                : null
+                                        }
+                                        {
+                                            pool && deepLinkInProgress
+                                                ?   <Button
+                                                        variant="outline"
+                                                        mt="xl"
+                                                        disabled
                                                     >
                                                         Swap buy/sell
                                                     </Button>
