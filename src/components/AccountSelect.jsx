@@ -4,6 +4,7 @@ import { Moodie } from 'moodie';
 import {
   setCurrentUser,
   $userStorage,
+  removeUser,
 } from '../stores/users.ts';
 
 import {
@@ -14,6 +15,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card"
+
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
@@ -22,8 +30,9 @@ export default function AccountSelect(properties) {
   const [mode, setMode] = useState();
   const [accountInput, setAccountInput] = useState();
   const [errorMessage, setErrorMessage] = useState();
-  const [searchResponse, setSearchResponse] = useState();
+  const [inProgress, setInProgress] = useState(false);
 
+  const [searchResponse, setSearchResponse] = useState();
   async function lookupAccount() {
     const response = await fetch(`http://localhost:8080/api/accountLookup/${chain}/${accountInput}`, { method: "GET" });
 
@@ -32,6 +41,7 @@ export default function AccountSelect(properties) {
             error: new Error(`${response.status} ${response.statusText}`),
             msg: "Couldn't generate deeplink."
         });
+        setInProgress(false);
         return;
     }
 
@@ -39,25 +49,14 @@ export default function AccountSelect(properties) {
 
     if (responseContents && responseContents.result) {
       const finalResult = responseContents.result;
+      setInProgress(false);
       setSearchResponse(finalResult);
       return;
     }
 
+    setInProgress(false);
     setErrorMessage("Couldn't find account.");
   }
-
-  useEffect(() => {
-    if (searchResponse) {
-      const id = searchResponse.id;
-      const name = searchResponse.name;
-      const referrer = searchResponse.referrer;
-      try {
-        setCurrentUser(name, id, referrer, chain)
-      } catch (error) {
-        console.log(error);
-      }
-    }
-  }, [searchResponse]);
 
   const [users, setUsers] = useState();
   useEffect(() => {
@@ -126,21 +125,22 @@ export default function AccountSelect(properties) {
                   </CardHeader>
                   <CardContent>
                     <Input
-                        value={accountInput || ""}
-                        placeholder="Account name or ID"
-                        onKeyDown={(event) => {
-                          if (event.key === "Enter") {
-                            lookupAccount()
-                          }
-                        }}
-                        onChange={(event) => {
-                          const regex = /^[a-zA-Z0-9.-]*$/;
-                          if (regex.test(event.target.value)) {
-                            setAccountInput(event.target.value);
-                            setErrorMessage();
-                            setSearchResponse();
-                          }
-                        }}
+                      value={accountInput || ""}
+                      placeholder="Account name or ID"
+                      onKeyDown={(event) => {
+                        if (event.key === "Enter" && !inProgress) {
+                          setInProgress(true);
+                          lookupAccount()
+                        }
+                      }}
+                      onChange={(event) => {
+                        const regex = /^[a-zA-Z0-9.-]*$/;
+                        if (regex.test(event.target.value)) {
+                          setAccountInput(event.target.value);
+                          setErrorMessage();
+                          setSearchResponse();
+                        }
+                      }}
                     />
                     {
                       errorMessage
@@ -153,7 +153,7 @@ export default function AccountSelect(properties) {
                       Back
                     </Button>
                     {
-                      accountInput
+                      accountInput && !inProgress
                         ? <Button onClick={() => lookupAccount()}>
                             Continue
                           </Button>
@@ -166,7 +166,67 @@ export default function AccountSelect(properties) {
               : null
           }
           {
-            mode && mode === "existing" && users.length
+            searchResponse
+              ? <Card>
+                  <CardHeader>
+                    <CardTitle>
+                      {
+                        chain === "bitshares"
+                          ? "🔐 Bitshares (BTS) account selection"
+                          : "🔐 Bitshares testnet (TEST) account selection"
+                      }
+                    </CardTitle>
+                    <CardDescription>Proceed with the following account?</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <Card
+                      key={searchResponse.id}
+                      className="w-1/3"
+                      onClick={() => {
+                        setCurrentUser(searchResponse.name, searchResponse.id, searchResponse.referrer, chain);
+                      }}
+                    >
+                      <div className="grid grid-cols-4">
+                        <div className="col-span-1 pt-6 pl-4">
+                          <Moodie
+                            size={40}
+                            name={searchResponse.name}
+                            expression={{
+                              eye: 'normal',
+                              mouth: 'open',
+                            }}
+                            colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]}
+                          />
+                        </div>
+                        <div className="col-span-3">
+                          <CardHeader>
+                            <CardTitle>
+                              {searchResponse.name}
+                            </CardTitle>
+                            <CardDescription>
+                              {searchResponse.id}
+                            </CardDescription>
+                          </CardHeader>
+                        </div>
+                      </div>
+                    </Card>
+                  </CardContent>
+                  <CardFooter>
+                    <Button
+                      variant="outline"
+                      className="mr-2"
+                      onClick={() => {
+                        setErrorMessage();
+                        setSearchResponse();
+                      }}>
+                      Go back
+                    </Button>
+                  </CardFooter>
+                </Card>
+              : null
+          }
+          {
+            mode && mode === "existing"
               ? <Card>
                   <CardHeader>
                     <CardTitle>
@@ -186,37 +246,50 @@ export default function AccountSelect(properties) {
                             .filter((user) => user.chain === chain)
                             .map((user) => {
                               return (
-                                <Card
-                                  key={user.id}
-                                  onClick={() => {
-                                    setCurrentUser(user.username, user.id, user.referrer, user.chain);
-                                  }}
-                                >
-                                  <div className="grid grid-cols-4">
-                                    <div className="col-span-1 pt-6 pl-2">
-                                      <Moodie
-                                        size={40}
-                                        name={user.username}
-                                        expression={{
-                                          eye: 'normal',
-                                          mouth: 'open',
-                                        }}
-                                        colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]}
-                                      />
-                                    </div>
-                                    <div className="col-span-3">
-                                      <CardHeader>
-                                        <CardTitle>
-                                          {user.username}
-                                        </CardTitle>
-                                        <CardDescription>
-                                          {user.id}
-                                        </CardDescription>
-                                      </CardHeader>
-                                    </div>
-
-                                  </div>
-                                </Card>
+                                <HoverCard key={user.id}>
+                                  <HoverCardTrigger asChild>
+                                    <Card
+                                      onClick={() => {
+                                        setCurrentUser(user.username, user.id, user.referrer, user.chain);
+                                      }}
+                                    >
+                                      <div className="grid grid-cols-4">
+                                        <div className="col-span-1 pt-6 pl-2">
+                                          <Moodie
+                                            size={40}
+                                            name={user.username}
+                                            expression={{
+                                              eye: 'normal',
+                                              mouth: 'open',
+                                            }}
+                                            colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]}
+                                          />
+                                        </div>
+                                        <div className="col-span-3">
+                                          <CardHeader>
+                                            <CardTitle>
+                                              {user.username}
+                                            </CardTitle>
+                                            <CardDescription>
+                                              {user.id}
+                                            </CardDescription>
+                                          </CardHeader>
+                                        </div>
+                                      </div>
+                                    </Card>
+                                  </HoverCardTrigger>
+                                  <HoverCardContent className="w-80">
+                                    <Button
+                                      className="w-full text-bold text-white"
+                                      variant="destructive"
+                                      onClick={() => {
+                                        removeUser(user.id);
+                                      }}
+                                    >
+                                      Forget this account
+                                    </Button>
+                                  </HoverCardContent>
+                                </HoverCard>
                               )
                             })
                           : <p className="text-red-500 text-xs italic">No accounts found.</p>

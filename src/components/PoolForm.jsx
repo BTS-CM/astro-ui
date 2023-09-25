@@ -554,6 +554,18 @@ export default function PoolForm() {
                                                     </Button>
                                                 : null
                                         }
+                                        {
+                                            pool
+                                                ? <a 
+                                                    href={`https://blocksights.info/#/pools/${pool}${usr.chain !== "bitshares" ? "?network=testnet" : ""}`}
+                                                    target="_blank"
+                                                  >
+                                                    <Button variant="outline" className="ml-2">
+                                                        Blocksights pool explorer
+                                                    </Button>
+                                                  </a>
+                                                : null
+                                        }
                                     </>
                                 )
                                 : null

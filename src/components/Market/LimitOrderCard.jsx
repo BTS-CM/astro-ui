@@ -31,31 +31,24 @@ import {
 
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
+import { Label } from "@/components/ui/label"
 
 import AssetDropDown from "./AssetDropDownCard.jsx";
-import { blockchainFloat, copyToClipboard } from "../lib/common";
+import { blockchainFloat, copyToClipboard } from "../../lib/common.js";
 
 /**
  * Creating a market card component for buy and sell limit orders
- * @param {String} thisAssetA symbol
- * @param {String} thisAssetB symbol
- * @param {Function} storeA setState
- * @param {Function} storeB setState
- * @param {String} orderType buy or sell 
- * @returns 
  */
 export default function LimitOrderCard(properties) {
     const {
         usr,
         thisAssetA,
         thisAssetB,
-        storeA,
-        storeB,
         orderType,
         marketSearch
     } = properties;
 
-    const { buyOrders, sellOrders, setBuyOrders, setSellOrders } = properties;
+    const { buyOrders, sellOrders } = properties;
 
     const [amount, setAmount] = useState(1);
     const [price, setPrice] = useState(1);
@@ -148,7 +141,7 @@ export default function LimitOrderCard(properties) {
 
     return (
         <Card>
-            <CardHeader>
+            <CardHeader className="pb-2">
                 <CardTitle>
                 {
                     orderType === "buy"
@@ -157,33 +150,7 @@ export default function LimitOrderCard(properties) {
                 }
                 </CardTitle>
                 <CardDescription>
-                    <AssetDropDown
-                        assetSymbol={thisAssetA}
-                        storeCallback={storeA}
-                        otherAsset={thisAssetB}
-                        marketSearch={marketSearch}
-                    />
-                    <Button
-                        variant="outline"
-                        className="h-5 mt-1 ml-2 mr-1 p-3"
-                        onClick={() => {
-                            const tmp = thisAssetA;
-                            storeA(thisAssetB);
-                            storeB(tmp);
-
-                            const tmp2 = buyOrders;
-                            setBuyOrders(sellOrders);
-                            setSellOrders(tmp2);
-                        }}
-                    >
-                        ⇄
-                    </Button>
-                    <AssetDropDown
-                        assetSymbol={thisAssetB}
-                        storeCallback={storeB}
-                        otherAsset={thisAssetA}
-                        marketSearch={marketSearch}
-                    />
+                    Use this form to create a limit order operation.
                 </CardDescription>
             </CardHeader>
             <CardContent>
@@ -206,8 +173,8 @@ export default function LimitOrderCard(properties) {
                                                 <FormLabel>
                                                     {
                                                         orderType === "buy"
-                                                            ? `The price per ${thisAssetA} in ${thisAssetB} you're offering`
-                                                            : `The price per ${thisAssetB} in ${thisAssetA} you're offering`
+                                                            ? `Your price per ${thisAssetA} in ${thisAssetB}`
+                                                            : `Your price per ${thisAssetB} in ${thisAssetA}`
                                                     }
                                                 </FormLabel>
                                                 <FormControl
@@ -239,7 +206,7 @@ export default function LimitOrderCard(properties) {
                                                 {
                                                     orderType === "buy"
                                                         ?   `The quantity of ${thisAssetA} you want to buy`
-                                                        :   `The quantity of ${thisAssetB} you want to sell`
+                                                        :   `The quantity of ${thisAssetA} you want to sell`
                                                 }
                                             </FormLabel>
                                             <FormControl
@@ -270,7 +237,7 @@ export default function LimitOrderCard(properties) {
                                             <FormLabel>
                                                 {
                                                     orderType === "buy"
-                                                        ?   `The amount of ${thisAssetA} you will receive`
+                                                        ?   `The amount of ${thisAssetB} you will spend`
                                                         :   `The amount of ${thisAssetB} you will receive`
                                                 }
                                             </FormLabel>
@@ -307,13 +274,72 @@ export default function LimitOrderCard(properties) {
                                                     label={`fees`}
                                                     value={`0.4826 BTS`}
                                                     placeholder={1}
-                                                    className="mb-3"
                                                 />
                                             </FormControl>
                                             <FormMessage />
                                             </FormItem>
                                         )}
                                     />
+
+                                    <FormField
+                                        control={form.control}
+                                        disabled
+                                        name="marketFees"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                            <FormLabel>Market fees</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    disabled
+                                                    value={`0 ${thisAssetB}`}
+                                                    placeholder={`0 ${thisAssetB}`}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+
+                                    <FormField
+                                        control={form.control}
+                                        name="expiry"
+                                        render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>
+                                                Limit order expriration
+                                            </FormLabel>
+                                            <FormControl
+                                                onChange={(event) => {
+                                                    const input = event.target.value;
+
+                                                }}
+                                            >
+                                                test
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                        )}
+                                    />
+
+                                    <FormField
+                                        control={form.control}
+                                        name="fillOrKill"
+                                        render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>
+                                                Fill or kill?
+                                            </FormLabel>
+                                            <FormControl
+                                                onChange={(event) => {
+                                                    const input = event.target.value;
+
+                                                }}
+                                            >
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                        )}
+                                    /> 
 
                                     {
                                         (!amount || !price) || deepLinkInProgress !== false
@@ -322,7 +348,7 @@ export default function LimitOrderCard(properties) {
                                     }
 
                                     {
-                                        ((orderType === "buy" && !sellOrders.length) || (orderType === "sell" && !buyOrders.length))
+                                        ((orderType === "buy" && !sellOrders || !sellOrders.length) || (orderType === "sell" && !buyOrders || !buyOrders.length))
                                             ? (
                                                 <Button
                                                     disabled
@@ -342,11 +368,11 @@ export default function LimitOrderCard(properties) {
                                                     className="ml-2"
                                                     onClick={(event) => {
                                                         event.preventDefault();
-                                                        if (orderType === "buy" && sellOrders.length > 0) {
+                                                        if (orderType === "buy" && sellOrders && sellOrders.length > 0) {
                                                             console.log({lowestAsk: sellOrders[0]})
                                                             setPrice(1 / sellOrders[0].price);
                                                             return;
-                                                        } else if (orderType === "sell" && buyOrders.length > 0) {
+                                                        } else if (orderType === "sell" && buyOrders && buyOrders.length > 0) {
                                                             console.log({highestBid: buyOrders[0]})
                                                             setPrice(buyOrders[0].price);
                                                             return;
@@ -354,9 +380,9 @@ export default function LimitOrderCard(properties) {
                                                     }}
                                                 >
                                                     {
-                                                    orderType === "buy"
-                                                        ? `Use lowest ask`
-                                                        : `Use highest bid`
+                                                        orderType === "buy"
+                                                            ? `Lowest ask`
+                                                            : `Highest bid`
                                                     }
                                                 </Button>
                                             )

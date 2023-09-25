@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Fuse from 'fuse.js'
+import Fuse from 'fuse.js';
 import { FixedSizeList as List } from 'react-window';
 
 import {
@@ -9,17 +9,7 @@ import {
     CardFooter,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card"
-
-import {
-    Form,
-    FormControl,
-    FormDescription,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-} from "@/components/ui/form";
+} from "@/components/ui/card";
 
 import {
     Dialog,
@@ -29,11 +19,16 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
+  
+import {
+    HoverCard,
+    HoverCardContent,
+    HoverCardTrigger,
+} from "@/components/ui/hover-card";
 
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Button } from "@/components/ui/button"
-
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 
 /**
  * Creating an asset dropdown component
@@ -43,7 +38,7 @@ import { Button } from "@/components/ui/button"
  * @returns {JSX.Element}
  */
 export default function AssetDropDown(properties) {
-    const { assetSymbol, storeCallback, otherAsset, marketSearch } = properties;
+    const { assetSymbol, assetData, storeCallback, otherAsset, marketSearch, type } = properties;
 
     const fuse = new Fuse(
       marketSearch.filter((asset) => (asset.s !== otherAsset && asset.s !== assetSymbol)),
@@ -92,48 +87,68 @@ export default function AssetDropDown(properties) {
         )
     };
 
-    return assetSymbol
+    return assetSymbol && assetData
       ? (
           <Dialog
             open={dialogOpen}
             onOpenChange={(open) => {
-                setDialogOpen(open)
+              if (!open) {
+                setThisResult();
+              }
+                
+              setDialogOpen(open)
             }}
           >
             <DialogTrigger asChild>
-              <Button variant="outline" className="h-5 mt-1 p-3" onClick={() => setDialogOpen(true)}>
-                {assetSymbol}
-              </Button>
+              <HoverCard>
+                <HoverCardTrigger asChild style={{ position: 'relative' }}>
+                  <Button variant="outline" className="h-5 p-3" onClick={() => setDialogOpen(true)}>
+                    {assetSymbol.length < 12 ? assetSymbol : assetData.id}
+                  </Button>
+                </HoverCardTrigger>
+
+                <HoverCardContent className="w-60 text-md text-center">
+                  {assetSymbol} ({assetData.id})
+                </HoverCardContent>
+              </HoverCard>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px] bg-white">
-            <>
-              <h3 className="scroll-m-20 text-2xl font-extrabold tracking-tight">
-                Replacing {assetSymbol}
-              </h3>
-              <Input
-                name="assetSearch"
-                onChange={(event) => {
-                  console.log("input changed");
-                  setThisInput(event.target.value);
-                }}
-              />
-              {
-                thisResult && thisResult.length
-                  ? (
-                    <>
-                        <List
-                            height={200}
-                            itemCount={thisResult.length}
-                            itemSize={70}
-                            className="w-full"
-                        >
-                            {Row}
-                        </List>
-                    </>
-                  )
-                  : null
-              }
-            </>
+              <>
+                <h3 className="text-2xl font-extrabold tracking-tight">
+                  Replacing {assetSymbol}
+                </h3>
+                <h4 className="text-md font-bold tracking-tight">
+                  {
+                    type === "base"
+                      ? `Please select a new base asset`
+                      : `Please select a new quote asset`
+                  }
+                </h4>
+                <Input
+                  name="assetSearch"
+                  placeholder="Search for an asset"
+                  onChange={(event) => {
+                    console.log("input changed");
+                    setThisInput(event.target.value);
+                  }}
+                />
+                {
+                  thisResult && thisResult.length
+                    ? (
+                      <>
+                          <List
+                              height={200}
+                              itemCount={thisResult.length}
+                              itemSize={70}
+                              className="w-full"
+                          >
+                              {Row}
+                          </List>
+                      </>
+                    )
+                    : null
+                }
+              </>
             </DialogContent>
         </Dialog>
       )

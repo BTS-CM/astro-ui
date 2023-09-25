@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/card"
 
 import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
 
 import {
   Tabs,
@@ -17,11 +18,22 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs"
+  
+import {
+    HoverCard,
+    HoverCardContent,
+    HoverCardTrigger,
+} from "@/components/ui/hover-card";
 
 import { $currentUser, eraseCurrentUser } from '../stores/users.ts'
 import AccountSelect from './AccountSelect.jsx'
-import LimitOrderCard from "./LimitOrderCard.jsx";
-import MarketOrderCard from "./MarketOrderCard.jsx";
+import LimitOrderCard from "./Market/LimitOrderCard.jsx";
+import MarketOrderCard from "./Market/MarketOrderCard.jsx";
+import AssetDropDown from "./Market/AssetDropDownCard.jsx";
+import MarketAssetCard from "./Market/MarketAssetCard.jsx";
+import MarketSummaryTabs from "./Market/MarketSummaryTabs.jsx";
+
+import { humanReadableFloat } from '../lib/common';
 
 export default function Market(properties) {
   const [usr, setUsr] = useState();
@@ -74,19 +86,50 @@ export default function Market(properties) {
     }
   }, [usr]);
 
-  // Fetch 1
   const [buyOrders, setBuyOrders] = useState([]);
   const [sellOrders, setSellOrders] = useState([]);
   const [lastOrderBook, setLastOrderBook] = useState(null);
+  const [orderBookItr, setOrderBookItr] = useState(0);
 
-  // Fetch 2
-  const [marketTrades, setMarketTrades] = useState([]);
-  const [myTrades, setMyTrades] = useState([]);
-  const [myOpenOrders, setMyOpenOrders] = useState([]);
+  const [assetAData, setAssetAData] = useState(null);
+  const [assetADetails, setAssetADetails] = useState(null);
+
+  const [assetBData, setAssetBData] = useState(null);
+  const [assetBDetails, setAssetBDetails] = useState(null);
+
+  const [usrBalances, setUsrBalances] = useState();
+  const [usrLimitOrders, setUsrLimitOrders] = useState();
+  const [usrHistory, setUsrHistory] = useState();
+  const [publicMarketHistory, setPublicMarketHistory] = useState();
+  const [marketItr, setMarketItr] = useState(0);
+
+  function _resetA() {
+    setAssetAData(null);
+    setAssetADetails(null);
+  }
+
+  function _resetB() {
+    setAssetBData(null);
+    setAssetBDetails(null);
+  }
+
+  function _resetOrders() {
+    setBuyOrders();
+    setSellOrders();
+  }
+
+  function _resetMarketData() {
+    // If either asset changes then several states need to be erased
+    setUsrBalances();
+    setUsrLimitOrders();
+    setPublicMarketHistory();
+    setUsrHistory();
+  }
+
   useEffect(() => {
     async function fetchMarketData () {
       if (lastOrderBook) {
-        if (lastOrderBook === `${assetB}_${assetA}` || lastOrderBook === `${assetA}_${assetB}`) {
+        if (lastOrderBook === `${assetB}_${assetA}`) {
           console.log("Avoid duplicate call");
           return;
         }
@@ -96,6 +139,9 @@ export default function Market(properties) {
 
       if (!fetchedMarketOrders.ok) {
           console.log("Failed to fetch market orders");
+          if (orderBookItr < 5) {
+            setOrderBookItr(orderBookItr + 1); // retrying the query
+          }
           return;
       }
 
@@ -109,18 +155,13 @@ export default function Market(properties) {
       }
     }
 
-    async function fetchMarketActivity () {
-      // bottom tab content
-    }
-
     if (assetA && assetB && usr && usr.chain) {
       // Fetching the required market orders
-      window.history.replaceState({}, "", `?market=${assetA}_${assetB}`);
-      fetchMarketData()
+      window.history.replaceState({}, "", `?market=${assetA}_${assetB}`); // updating the url parameters
+      fetchMarketData(); // updating market data
     }
-  }, [assetA, assetB, usr]);
+  }, [assetA, assetB, usr, orderBookItr]);
 
-  const [assetAData, setAssetAData] = useState(null);
   useEffect(() => {
     async function fetchAssetA() {
       const fetchedAssetA = await fetch(`http://localhost:8080/cache/asset/${usr.chain}/${assetA}`, { method: "GET" });
@@ -139,11 +180,37 @@ export default function Market(properties) {
     }
 
     if (assetA && usr && usr.chain) {
+      _resetA();
+      _resetMarketData();
       fetchAssetA();      
     }
   }, [assetA, usr]);
 
-  const [assetBData, setAssetBData] = useState(null);
+  useEffect(() => {
+    async function fetching() {
+      const fetchedDynamicData = await fetch(
+        `http://localhost:8080/cache/dynamic/${usr.chain}/${assetAData.id.replace("1.3.", "2.3.")}`,
+        { method: "GET" }
+      );
+
+      if (!fetchedDynamicData.ok) {
+        console.log(`Failed to fetch ${assetA} dynamic data`);
+        return;
+      }
+
+      const dynamicDataJSON = await fetchedDynamicData.json();
+
+      if (dynamicDataJSON && dynamicDataJSON.result) {
+        console.log(`Fetched ${assetA} dynamic data`);
+        setAssetADetails(dynamicDataJSON.result);
+      }
+    }
+
+    if (assetAData && usr && usr.chain) {
+      fetching();
+    }
+  }, [assetAData]);
+
   useEffect(() => {
     async function fetchAssetB() {
       const fetchedAssetB = await fetch(`http://localhost:8080/cache/asset/${usr.chain}/${assetB}`, { method: "GET" });
@@ -162,10 +229,68 @@ export default function Market(properties) {
     }
 
     if (assetB && usr && usr.chain) {
-      fetchAssetB();      
+      _resetB();
+      _resetMarketData();
+      fetchAssetB();
     }
   }, [assetB, usr]);
   
+  useEffect(() => {
+    async function fetching() {
+      const fetchedDynamicData = await fetch(
+        `http://localhost:8080/cache/dynamic/${usr.chain}/${assetBData.id.replace("1.3.", "2.3.")}`,
+        { method: "GET" }
+      );
+
+      if (!fetchedDynamicData.ok) {
+        console.log(`Failed to fetch ${assetB} dynamic data`);
+        return;
+      }
+
+      const dynamicDataJSON = await fetchedDynamicData.json();
+
+      if (dynamicDataJSON && dynamicDataJSON.result) {
+        console.log(`Fetched ${assetB} dynamic data`);
+        setAssetBDetails(dynamicDataJSON.result);
+      }
+    }
+
+    if (assetBData && usr && usr.chain) {
+      fetching();
+    }
+  }, [assetBData]);
+
+  useEffect(() => {
+    async function fetchMarketHistory() {
+      // Fetching the data for the market summary tabs component
+      const fetchedMarketHistory = await fetch(`http://localhost:8080/api/getMarketHistory/${usr.chain}/${assetAData.id}/${assetBData.id}/${usr.id}`, { method: "GET" });
+      
+      if (!fetchedMarketHistory.ok) {
+          console.log("Failed to fetch market history");
+          if (marketItr < 5) {
+            setMarketItr(marketItr + 1); // retrying the query
+          }
+          return;
+      }
+
+      const marketHistoryJSON = await fetchedMarketHistory.json();
+
+      if (marketHistoryJSON && marketHistoryJSON.result) {
+        console.log("Fetched market history");
+        const { result } = marketHistoryJSON;
+        const { balances, marketHistory, accountLimitOrders, usrTrades } = result;
+        setUsrBalances(balances);
+        setUsrLimitOrders(accountLimitOrders);
+        setPublicMarketHistory(marketHistory);
+        setUsrHistory(usrTrades);
+      }
+    }
+    
+    if (assetAData && assetBData) {
+      console.log("Fetching market history");
+      fetchMarketHistory();
+    }
+  }, [assetAData, assetBData, usr, marketItr]);
 
   if (!usr || !usr.id || !usr.id.length) {
       return <AccountSelect />;
@@ -189,12 +314,8 @@ export default function Market(properties) {
                         usr={usr}
                         thisAssetA={assetA}
                         thisAssetB={assetB}
-                        storeA={setAssetA}
-                        storeB={setAssetB}
                         buyOrders={buyOrders}
                         sellOrders={sellOrders}
-                        setBuyOrders={setBuyOrders}
-                        setSellOrders={setSellOrders}
                         orderType="buy"
                         key="buyLimit"
                         marketSearch={marketSearch}
@@ -205,12 +326,8 @@ export default function Market(properties) {
                         usr={usr}
                         thisAssetA={assetA}
                         thisAssetB={assetB}
-                        storeA={setAssetA}
-                        storeB={setAssetB}
                         buyOrders={buyOrders}
                         sellOrders={sellOrders}
-                        setBuyOrders={setBuyOrders}
-                        setSellOrders={setSellOrders}
                         orderType="sell"
                         key="sellLimit"
                         marketSearch={marketSearch}
@@ -221,20 +338,163 @@ export default function Market(properties) {
               )
               : null
           }
-          <div className="grid grid-cols-1 gap-5">
-            <Card>
-              <CardHeader>
-                <CardTitle>{assetA} details</CardTitle>
-                <CardDescription>Please wait...</CardDescription>
-              </CardHeader>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>{assetB} details</CardTitle>
-                <CardDescription>Please wait...</CardDescription>
-              </CardHeader>
-            </Card>
+          <div className="col-span-1">
+            <div className="grid grid-cols-1 gap-y-2">
+              
+              <div className="flex-grow">
+                <Card style={{ maxHeight: '80px' }}>
+                  <CardHeader className="pt-2">
+                    <CardTitle className="text-center text-lg">
+                      {usr.chain === "bitshares" ? "Bitshares" : "Bitshares (Testnet)"} DEX Market controls
+                    </CardTitle>
+                    <CardDescription>
+                      <div className="grid grid-cols-3 gap-1">
+                        <AssetDropDown
+                          assetSymbol={assetA}
+                          assetData={assetAData}
+                          storeCallback={setAssetA}
+                          otherAsset={assetB}
+                          marketSearch={marketSearch}
+                          type="quote"
+                        />
+                        <HoverCard>
+                          <HoverCardTrigger asChild style={{ position: 'relative' }}>
+                            <Button
+                              variant="outline"
+                              className="h-5 ml-1 mr-1 p-3"
+                              onClick={() => {
+                                  const tmp = assetA;
+                                  setAssetA(assetB);
+                                  setAssetB(tmp);
+
+                                  const tmp2 = buyOrders;
+                                  setBuyOrders(sellOrders);
+                                  setSellOrders(tmp2);
+                              }}
+                            >
+                              ⇄
+                            </Button>
+                          </HoverCardTrigger>
+                          <HoverCardContent className="w-40 text-md text-center">
+                              Swap asset order
+                          </HoverCardContent>
+                        </HoverCard>
+                        <AssetDropDown
+                          assetSymbol={assetB}
+                          assetData={assetBData}
+                          storeCallback={setAssetB}
+                          otherAsset={assetA}
+                          marketSearch={marketSearch}
+                          type="base"
+                        />
+                      </div>
+                    </CardDescription>
+                  </CardHeader>
+                </Card>
+              </div>
+
+              <div className="flex-grow">
+                <HoverCard>
+                  <HoverCardTrigger asChild style={{ position: 'relative' }}>
+                    <Card>
+                      <CardHeader className="pt-2">
+                        <CardDescription>
+                          <div className="grid grid-cols-1 gap-1">
+                            <div className="col-span-1 mb-1">
+                              <CardTitle className="text-center text-lg">{assetA}/{assetB} Market summary</CardTitle>
+                            </div>
+                            <div className="col-span-1">
+                              Latest price:
+                              <Badge variant="outline" className="ml-2">
+                                1
+                              </Badge>
+                            </div>
+                            <div className="col-span-1">
+                              24Hr change:
+                              <Badge variant="outline" className="ml-2">
+                                1
+                              </Badge>
+                            </div>
+                            <div className="col-span-1">
+                              24Hr volume:
+                              <Badge variant="outline" className="ml-2">
+                                1
+                              </Badge>
+                            </div>
+                            <div className="col-span-1">
+                              Feed price:
+                              <Badge variant="outline" className="ml-2">
+                                1
+                              </Badge>
+                            </div>
+                            <div className="col-span-1">
+                              Global settlement:
+                              <Badge variant="outline" className="ml-2">
+                                1
+                              </Badge>
+                            </div>
+                          </div>
+                        </CardDescription>
+                      </CardHeader>
+                    </Card>
+                  </HoverCardTrigger>
+                  <HoverCardContent className="w-80 text-sm text-center">
+                    <b>{assetA}/{assetB} Market links</b><br/>
+                    <a
+                      href={
+                          usr.chain === "bitshares"
+                              ? `https://blocksights.info/#/markets/${assetA}/${assetB}`
+                              : `https://blocksights.info/#/markets/${assetA}/${assetB}?network=testnet`
+                      }
+                      target="_blank"
+                    >
+                        <Button variant="outline" className="ml-2">
+                            {assetA}/{assetB} Market explorer
+                        </Button>
+                    </a>
+                    {
+                      usr.chain === "bitshares"
+                        ? <a
+                            href={`https://bts.exchange/#/market/${assetA}_${assetB}?r=nftprofessional1`}
+                            target="_blank"
+                          >
+                              <Button variant="outline" className="ml-2">
+                                  BTS.Exchange
+                              </Button>
+                          </a>
+                        : null
+                    }
+                  </HoverCardContent>
+                </HoverCard>
+              </div>
+
+              <div className="flex-grow" style={{ paddingBottom: '0px' }}>
+                <MarketAssetCard
+                  asset={assetA}
+                  assetData={assetAData}
+                  assetDetails={assetADetails}
+                  marketSearch={marketSearch}
+                  chain={usr.chain}
+                  usrBalances={usrBalances}
+                  type="buy"
+                />
+              </div>
+
+              <div className="flex-grow">
+                <MarketAssetCard
+                  asset={assetB}
+                  assetData={assetBData}
+                  assetDetails={assetBDetails}
+                  marketSearch={marketSearch}
+                  chain={usr.chain}
+                  usrBalances={usrBalances}
+                  type="sell"
+                />
+              </div>
+
+            </div>
           </div>
+
         </div>
         <div className="grid grid-cols-1 gap-5 mt-5">
           {
@@ -255,6 +515,9 @@ export default function Market(properties) {
                         assetBData={assetBData}
                         buyOrders={buyOrders}
                         sellOrders={sellOrders}
+                        orderBookItr={orderBookItr}
+                        setOrderBookItr={setOrderBookItr}
+                        _resetOrders={_resetOrders}
                       />
                     </TabsContent>
                     <TabsContent value="sell">
@@ -266,6 +529,9 @@ export default function Market(properties) {
                         assetBData={assetBData}
                         buyOrders={buyOrders}
                         sellOrders={sellOrders}
+                        orderBookItr={orderBookItr}
+                        setOrderBookItr={setOrderBookItr}
+                        _resetOrders={_resetOrders}
                       />
                     </TabsContent>
                   </Tabs>
@@ -273,70 +539,21 @@ export default function Market(properties) {
               )
               : null
           }
-
         </div>
         {
           assetA && assetB
             ? (
-              <>
-                <div className="grid grid-cols-1 mt-5">
-                  <Tabs defaultValue="marketTrades" className="w-full">
-                    <TabsList className="grid w-full grid-cols-3">
-                      <TabsTrigger value="marketTrades">Market trades</TabsTrigger>
-                      <TabsTrigger value="myTrades">My trades</TabsTrigger>
-                      <TabsTrigger value="myOpenOrders">My open orders</TabsTrigger>
-                    </TabsList>
-                    <TabsContent value="marketTrades">
-                      <Card>
-                        <CardHeader>
-                          <CardTitle>Market trades</CardTitle>
-                          <CardDescription>
-                            Recent market trades by everyone
-                          </CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-2">
-                          content
-                        </CardContent>
-                        <CardFooter>
-                          footer
-                        </CardFooter>
-                      </Card>
-                    </TabsContent>
-                    <TabsContent value="myTrades">
-                      <Card>
-                        <CardHeader>
-                          <CardTitle>My trades</CardTitle>
-                          <CardDescription>
-                            Your recent trades in this market
-                          </CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-2">
-                          content
-                        </CardContent>
-                        <CardFooter>
-                          footer
-                        </CardFooter>
-                      </Card>
-                    </TabsContent>
-                    <TabsContent value="myOpenOrders">
-                      <Card>
-                        <CardHeader>
-                          <CardTitle>My open orders</CardTitle>
-                          <CardDescription>
-                            Your open limit orders for this market
-                          </CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-2">
-                          content
-                        </CardContent>
-                        <CardFooter>
-                          footer
-                        </CardFooter>
-                      </Card>
-                    </TabsContent>
-                  </Tabs>
-                </div>
-              </>
+              <MarketSummaryTabs
+                assetAData={assetAData}
+                assetBData={assetBData}
+                usr={usr}
+                marketItr={marketItr}
+                setMarketItr={setMarketItr}
+                usrLimitOrders={usrLimitOrders}
+                publicMarketHistory={publicMarketHistory}
+                usrHistory={usrHistory}
+                _resetMarketData={_resetMarketData}
+              />
             )
             : null
         }
