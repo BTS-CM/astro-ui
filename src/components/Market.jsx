@@ -101,7 +101,12 @@ export default function Market(properties) {
   const [usrLimitOrders, setUsrLimitOrders] = useState();
   const [usrHistory, setUsrHistory] = useState();
   const [publicMarketHistory, setPublicMarketHistory] = useState();
+  const [tickerData, setTickerData] = useState();
   const [marketItr, setMarketItr] = useState(0);
+
+  // style states
+  const [activeLimitCard, setActiveLimitCard] = useState("buy");
+  const [activeMOC, setActiveMOC] = useState("buy");
 
   function _resetA() {
     setAssetAData(null);
@@ -278,11 +283,12 @@ export default function Market(properties) {
       if (marketHistoryJSON && marketHistoryJSON.result) {
         console.log("Fetched market history");
         const { result } = marketHistoryJSON;
-        const { balances, marketHistory, accountLimitOrders, usrTrades } = result;
+        const { balances, marketHistory, accountLimitOrders, usrTrades, ticker } = result;
         setUsrBalances(balances);
         setUsrLimitOrders(accountLimitOrders);
         setPublicMarketHistory(marketHistory);
         setUsrHistory(usrTrades);
+        setTickerData(ticker);
       }
     }
     
@@ -296,6 +302,11 @@ export default function Market(properties) {
       return <AccountSelect />;
   }
 
+  const activeTabStyle = {
+    backgroundColor: "#252526",
+    color: "white",
+  }
+
   return (
     <>
       <div className="container mx-auto mt-5 mb-5">
@@ -305,9 +316,18 @@ export default function Market(properties) {
               ? (
                 <>
                   <Tabs defaultValue="buy" className="w-full">
-                    <TabsList className="grid w-full grid-cols-2">
-                      <TabsTrigger value="buy">Buy</TabsTrigger>
-                      <TabsTrigger value="sell">Sell</TabsTrigger>
+                    <TabsList className="grid w-full grid-cols-2 gap-2">
+
+                        {
+                            activeLimitCard === "buy"
+                                ? <TabsTrigger value="buy" style={activeTabStyle}>Buy</TabsTrigger>
+                                : <TabsTrigger value="buy" onClick={() => setActiveLimitCard("buy")}>Buy</TabsTrigger>
+                        }
+                        {
+                            activeLimitCard === "sell"
+                                ? <TabsTrigger value="sell" style={activeTabStyle}>Sell</TabsTrigger>
+                                : <TabsTrigger value="sell" onClick={() => setActiveLimitCard("sell")}>Sell</TabsTrigger>
+                        }
                     </TabsList>
                     <TabsContent value="buy">
                       <LimitOrderCard
@@ -406,31 +426,37 @@ export default function Market(properties) {
                             <div className="col-span-1">
                               Latest price:
                               <Badge variant="outline" className="ml-2">
-                                1
+                                {tickerData ? tickerData.latest : 'Loading...'}
                               </Badge>
                             </div>
                             <div className="col-span-1">
                               24Hr change:
                               <Badge variant="outline" className="ml-2">
-                                1
+                                {tickerData ? tickerData.percent_change : 'Loading...'}
                               </Badge>
                             </div>
                             <div className="col-span-1">
-                              24Hr volume:
+                              24Hr base volume:
                               <Badge variant="outline" className="ml-2">
-                                1
+                                {tickerData ? tickerData.base_volume : 'Loading...'}
                               </Badge>
                             </div>
                             <div className="col-span-1">
-                              Feed price:
+                              24Hr quote volume:
                               <Badge variant="outline" className="ml-2">
-                                1
+                                {tickerData ? tickerData.quote_volume : 'Loading...'}
                               </Badge>
                             </div>
                             <div className="col-span-1">
-                              Global settlement:
+                              Lowest ask:
                               <Badge variant="outline" className="ml-2">
-                                1
+                                {tickerData ? tickerData.lowest_ask : 'Loading...'}
+                              </Badge>
+                            </div>
+                            <div className="col-span-1">
+                              Highest bid:
+                              <Badge variant="outline" className="ml-2">
+                                {tickerData ? tickerData.highest_bid : 'Loading...'}
                               </Badge>
                             </div>
                           </div>
@@ -502,9 +528,17 @@ export default function Market(properties) {
               ? (
                 <>
                   <Tabs defaultValue="buy" className="w-full">
-                    <TabsList className="grid w-full grid-cols-2">
-                      <TabsTrigger value="buy">Buy orders</TabsTrigger>
-                      <TabsTrigger value="sell">Sell orders</TabsTrigger>
+                    <TabsList className="grid w-full grid-cols-2 gap-1">
+                      {
+                        activeMOC === "buy"
+                          ? <TabsTrigger value="buy" style={activeTabStyle}>Buy</TabsTrigger>
+                          : <TabsTrigger value="buy" onClick={() => setActiveMOC("buy")}>Buy</TabsTrigger>
+                      }
+                      {
+                        activeMOC === "sell"
+                          ? <TabsTrigger value="sell" style={activeTabStyle}>Sell</TabsTrigger>
+                          : <TabsTrigger value="sell" onClick={() => setActiveMOC("sell")}>Sell</TabsTrigger>
+                      }
                     </TabsList>
                     <TabsContent value="buy">
                       <MarketOrderCard

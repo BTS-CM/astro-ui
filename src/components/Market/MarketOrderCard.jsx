@@ -94,51 +94,55 @@ export default function MarketOrderCard(properties) {
                                                     cardType === "buy"
                                                         ? buyOrders.map((res, index) => (
                                                             <div className="col-span-4" key={`moc_${cardType}_${index}`}>
-                                                                <div className="col-span-1 border-r-2 pl-3">
-                                                                    {parseFloat(1 / res.price).toFixed(assetAData.precision)}
-                                                                </div>
-                                                                <div className="col-span-1 border-r-2 pl-3">
-                                                                    {res.base}
-                                                                </div>
-                                                                <div className="col-span-1 border-r-2 pl-3">
-                                                                    {res.quote}
-                                                                </div>
-                                                                <div className="col-span-1 pl-3">
-                                                                    {
-                                                                        buyOrders
-                                                                            .slice(0, index + 1)
-                                                                            .map(x => parseFloat(x.base))
-                                                                            .reduce((acc, curr) => (acc + curr), 0)
-                                                                            .toFixed(assetAData.precision)
-                                                                    }
-                                                                </div>
-                                                                <div className="col-span-4">
-                                                                    <Separator />
+                                                                <div className="grid grid-cols-4 text-sm">
+                                                                    <div className="col-span-1 border-r-2 pl-3">
+                                                                        {parseFloat(1 / res.price).toFixed(assetAData.precision)}
+                                                                    </div>
+                                                                    <div className="col-span-1 border-r-2 pl-3">
+                                                                        {res.base}
+                                                                    </div>
+                                                                    <div className="col-span-1 border-r-2 pl-3">
+                                                                        {res.quote}
+                                                                    </div>
+                                                                    <div className="col-span-1 pl-3">
+                                                                        {
+                                                                            buyOrders
+                                                                                .slice(0, index + 1)
+                                                                                .map(x => parseFloat(x.base))
+                                                                                .reduce((acc, curr) => (acc + curr), 0)
+                                                                                .toFixed(assetAData.precision)
+                                                                        }
+                                                                    </div>
+                                                                    <div className="col-span-4">
+                                                                        <Separator />
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         ))
                                                         : sellOrders.map((res, index) => (
                                                             <div className="col-span-4" key={`moc_${cardType}_${index}`}>
-                                                                <div className="col-span-1 border-r-2 pl-3">
-                                                                    {parseFloat(1 / res.price).toFixed(assetBData.precision)}
-                                                                </div>
-                                                                <div className="col-span-1 border-r-2 pl-3">
-                                                                    {res.base}
-                                                                </div>
-                                                                <div className="col-span-1 border-r-2 pl-3">
-                                                                    {res.quote}
-                                                                </div>
-                                                                <div className="col-span-1 pl-3">
-                                                                    {
-                                                                        sellOrders
-                                                                            .slice(0, index + 1)
-                                                                            .map(x => parseFloat(x.base))
-                                                                            .reduce((acc, curr) => (acc + curr), 0)
-                                                                            .toFixed(assetAData.precision)
-                                                                    }
-                                                                </div>
-                                                                <div className="col-span-4">
-                                                                    <Separator />
+                                                                <div className="grid grid-cols-4 text-sm">
+                                                                    <div className="col-span-1 border-r-2 pl-3">
+                                                                        {parseFloat(1 / res.price).toFixed(assetBData.precision)}
+                                                                    </div>
+                                                                    <div className="col-span-1 border-r-2 pl-3">
+                                                                        {res.base}
+                                                                    </div>
+                                                                    <div className="col-span-1 border-r-2 pl-3">
+                                                                        {res.quote}
+                                                                    </div>
+                                                                    <div className="col-span-1 pl-3">
+                                                                        {
+                                                                            sellOrders
+                                                                                .slice(0, index + 1)
+                                                                                .map(x => parseFloat(x.base))
+                                                                                .reduce((acc, curr) => (acc + curr), 0)
+                                                                                .toFixed(assetAData.precision)
+                                                                        }
+                                                                    </div>
+                                                                    <div className="col-span-4">
+                                                                        <Separator />
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         ))
