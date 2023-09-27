@@ -29,12 +29,18 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { Label } from "@/components/ui/label"
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 
-import AssetDropDown from "./AssetDropDownCard.jsx";
-import { blockchainFloat, copyToClipboard } from "../../lib/common.js";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+
+import { copyToClipboard, trimPrice } from "../../lib/common.js";
 
 /**
  * Creating a market card component for buy and sell limit orders
@@ -53,6 +59,8 @@ export default function LimitOrderCard(properties) {
     const [amount, setAmount] = useState(1);
     const [price, setPrice] = useState(1);
     const [calculatedAmount, setCalculatedAmount] = useState(0);
+    const [marketFees, setMarketFees] = useState(0);
+    const [expiry, setExpiry] = useState("1hr");
 
     const form = useForm({
         defaultValues: {
@@ -125,9 +133,11 @@ export default function LimitOrderCard(properties) {
                 setDeepLinkInProgress(false);
             }
 
-            generate();
+            if (marketSearch) {
+                generate();
+            }
         }
-    }, [data, thisAssetA, thisAssetB]);
+    }, [data, thisAssetA, thisAssetB, marketSearch]);
 
     const [downloadClicked, setDownloadClicked] = useState(false);
     const handleDownloadClick = () => {
@@ -155,7 +165,7 @@ export default function LimitOrderCard(properties) {
             </CardHeader>
             <CardContent>
                 {
-                    thisAssetA && thisAssetB
+                    thisAssetA && thisAssetB && marketSearch
                         ?  (
                             <Form {...form}>
                                 <form
@@ -206,7 +216,7 @@ export default function LimitOrderCard(properties) {
                                                 {
                                                     orderType === "buy"
                                                         ?   `The quantity of ${thisAssetA} you want to buy`
-                                                        :   `The quantity of ${thisAssetA} you want to sell`
+                                                        :   `The quantity of ${thisAssetA} you will have to spend`
                                                 }
                                             </FormLabel>
                                             <FormControl
@@ -237,7 +247,7 @@ export default function LimitOrderCard(properties) {
                                             <FormLabel>
                                                 {
                                                     orderType === "buy"
-                                                        ?   `The amount of ${thisAssetB} you will spend`
+                                                        ?   `The amount of ${thisAssetB} you will have to spend`
                                                         :   `The amount of ${thisAssetB} you will receive`
                                                 }
                                             </FormLabel>
@@ -250,11 +260,11 @@ export default function LimitOrderCard(properties) {
                                                 }
                                             }}
                                             >
-                                            <Input
-                                                value={amount}
-                                                placeholder={amount}
-                                                className="mb-3"
-                                            />
+                                                <Input
+                                                    value={amount}
+                                                    placeholder={amount}
+                                                    className="mb-3"
+                                                />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -267,16 +277,16 @@ export default function LimitOrderCard(properties) {
                                         name="fee"
                                         render={({ field }) => (
                                             <FormItem>
-                                            <FormLabel>Network fees</FormLabel>
-                                            <FormControl>
-                                                <Input
-                                                    disabled
-                                                    label={`fees`}
-                                                    value={`0.4826 BTS`}
-                                                    placeholder={1}
-                                                />
-                                            </FormControl>
-                                            <FormMessage />
+                                                <FormLabel>Network fees</FormLabel>
+                                                <FormControl>
+                                                    <Input
+                                                        disabled
+                                                        label={`fees`}
+                                                        value={`0.4826 BTS`}
+                                                        placeholder={1}
+                                                    />
+                                                </FormControl>
+                                                <FormMessage />
                                             </FormItem>
                                         )}
                                     />
@@ -287,15 +297,15 @@ export default function LimitOrderCard(properties) {
                                         name="marketFees"
                                         render={({ field }) => (
                                             <FormItem>
-                                            <FormLabel>Market fees</FormLabel>
-                                            <FormControl>
-                                                <Input
-                                                    disabled
-                                                    value={`0 ${thisAssetB}`}
-                                                    placeholder={`0 ${thisAssetB}`}
-                                                />
-                                            </FormControl>
-                                            <FormMessage />
+                                                <FormLabel>Market fees</FormLabel>
+                                                <FormControl>
+                                                    <Input
+                                                        disabled
+                                                        value={`${marketFees} ${thisAssetB}`}
+                                                        placeholder={`${marketFees} ${thisAssetB}`}
+                                                    />
+                                                </FormControl>
+                                                <FormMessage />
                                             </FormItem>
                                         )}
                                     />
@@ -304,42 +314,36 @@ export default function LimitOrderCard(properties) {
                                         control={form.control}
                                         name="expiry"
                                         render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>
-                                                Limit order expriration
-                                            </FormLabel>
-                                            <FormControl
-                                                onChange={(event) => {
-                                                    const input = event.target.value;
-
-                                                }}
-                                            >
-                                                test
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
+                                            <FormItem>
+                                                <FormLabel>Limit order expriration</FormLabel>
+                                                <FormControl onValueChange={(expiry) => setExpiry(expiry)}>
+                                                    <Select>
+                                                        <SelectTrigger className="mb-3">
+                                                            <SelectValue placeholder="1hr" />
+                                                        </SelectTrigger>
+                                                        <SelectContent className="bg-white">
+                                                            <SelectItem value="1hr">
+                                                                1 hour
+                                                            </SelectItem>
+                                                            <SelectItem value="12hr">
+                                                                12 hours
+                                                            </SelectItem>
+                                                            <SelectItem value="24hr">
+                                                                24 hours
+                                                            </SelectItem>
+                                                            <SelectItem value="7d">
+                                                                7 days
+                                                            </SelectItem>
+                                                            <SelectItem value="30d">
+                                                                30 days
+                                                            </SelectItem>
+                                                        </SelectContent>
+                                                    </Select>
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
                                         )}
                                     />
-
-                                    <FormField
-                                        control={form.control}
-                                        name="fillOrKill"
-                                        render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>
-                                                Fill or kill?
-                                            </FormLabel>
-                                            <FormControl
-                                                onChange={(event) => {
-                                                    const input = event.target.value;
-
-                                                }}
-                                            >
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                        )}
-                                    /> 
 
                                     {
                                         (!amount || !price) || deepLinkInProgress !== false
@@ -370,19 +374,19 @@ export default function LimitOrderCard(properties) {
                                                         event.preventDefault();
                                                         if (orderType === "buy" && sellOrders && sellOrders.length > 0) {
                                                             console.log({lowestAsk: sellOrders[0]})
-                                                            setPrice(1 / sellOrders[0].price);
+                                                            setPrice(trimPrice(1 / sellOrders[0].price, 8));
                                                             return;
                                                         } else if (orderType === "sell" && buyOrders && buyOrders.length > 0) {
                                                             console.log({highestBid: buyOrders[0]})
-                                                            setPrice(buyOrders[0].price);
+                                                            setPrice(trimPrice(buyOrders[0].price, 8));
                                                             return;
                                                         }
                                                     }}
                                                 >
                                                     {
                                                         orderType === "buy"
-                                                            ? `Lowest ask`
-                                                            : `Highest bid`
+                                                            ? `Use lowest ask`
+                                                            : `Use highest bid`
                                                     }
                                                 </Button>
                                             )
@@ -390,7 +394,7 @@ export default function LimitOrderCard(properties) {
                                 </form>
                             </Form>
                         )
-                        : null
+                        : "Loading market data..."
                 }
                 {showDialog && data && deeplink && (
                     <Dialog

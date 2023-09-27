@@ -24,6 +24,7 @@ export default function MarketOrderCard(properties) {
         assetBData,
         buyOrders,
         sellOrders,
+        marketInProgress,
         orderBookItr,
         setOrderBookItr,
         _resetOrders,
@@ -32,17 +33,37 @@ export default function MarketOrderCard(properties) {
     return (
         <>
             {
-              (cardType === "buy" && !buyOrders) || (cardType === "sell" && !sellOrders)
+                marketInProgress
+                    ? <Card>
+                        <CardHeader>
+                            <CardTitle>Loading market orders</CardTitle>
+                            <CardDescription>
+                                Fetching requested market data, please wait...<br/>
+                                <Button className="mt-5" onClick={() => setOrderBookItr(orderBookItr + 1)}>
+                                    Retry request
+                                </Button>
+                            </CardDescription>
+                        </CardHeader>
+                    </Card>
+                    : null
+            }
+            {
+              ((cardType === "buy" && !buyOrders) || (cardType === "sell" && !sellOrders)) && !marketInProgress
                 ? <Card>
                     <CardHeader>
                         <CardTitle>Loading market orders</CardTitle>
-                        <CardDescription>Please wait...</CardDescription>
+                        <CardDescription>
+                            Failed to fetch market data, please try again.<br/>
+                            <Button className="mt-5" onClick={() => setOrderBookItr(orderBookItr + 1)}>
+                                Refresh
+                            </Button>
+                        </CardDescription>
                     </CardHeader>
                   </Card>
                 : null
             }
             {
-                cardType === "buy" && buyOrders || cardType === "sell" && sellOrders
+                (cardType === "buy" && buyOrders || cardType === "sell" && sellOrders) && !marketInProgress
                 ? (
                     <Card>
                         <CardHeader>

@@ -33,7 +33,7 @@ import AssetDropDown from "./Market/AssetDropDownCard.jsx";
 import MarketAssetCard from "./Market/MarketAssetCard.jsx";
 import MarketSummaryTabs from "./Market/MarketSummaryTabs.jsx";
 
-import { humanReadableFloat } from '../lib/common';
+import { humanReadableFloat, trimPrice } from '../lib/common';
 
 export default function Market(properties) {
   const [usr, setUsr] = useState();
@@ -44,28 +44,10 @@ export default function Market(properties) {
       return unsubscribe;
   }, [$currentUser]);
 
-  const [assetA, setAssetA] = useState(!window.location.search ? "BTS" : null);
-  const [assetB, setAssetB] = useState(!window.location.search ? "USD" : null);
-  useEffect(() => {
-    if (window.location.search) {
-      console.log("Parsing market parameters");
-      const urlSearchParams = new URLSearchParams(window.location.search);
-      const params = Object.fromEntries(urlSearchParams.entries());
-      const market = params.market;
-      const asset_a = market.split('_')[0];
-      const asset_b = market.split('_')[1];
-      if (asset_a !== asset_b) {
-        setAssetA(asset_a);
-        setAssetB(asset_b);
-        return;
-      }
-      console.log("Invalid market query parameter");
-    }
-  }, []);
-
   const [marketSearch, setMarketSearch] = useState([]);
   useEffect(() => {
     // Fetching the required market asset data
+    // Fetch first to check validity of assets
     async function fetchCachedData () {
       const cachedMarketAssets = await fetch(`http://localhost:8080/cache/marketSearch/${usr.chain}`, { method: "GET" });
 
@@ -86,10 +68,83 @@ export default function Market(properties) {
     }
   }, [usr]);
 
+  const [assetA, setAssetA] = useState(!window.location.search ? "BTS" : null);
+  const [assetB, setAssetB] = useState(!window.location.search ? "USD" : null);
+  useEffect(() => {
+    async function parseUrlAssets() {
+      if (window.location.search) {
+        console.log("Parsing market parameters");
+        const urlSearchParams = new URLSearchParams(window.location.search);
+        const params = Object.fromEntries(urlSearchParams.entries());
+        const market = params.market;
+        let asset_a = market.split('_')[0].toUpperCase();
+        let asset_b = market.split('_')[1].toUpperCase();
+  
+        if (asset_a && asset_b && asset_b.length && asset_a === asset_b) {
+          // Avoid invalid duplicate asset market pairs
+          asset_b = asset_a === "BTS" ? "USD" : "BTS";
+          console.log("Invalid market parameters - replaced quote asset.");
+        }
+  
+        const searchSymbols = marketSearch.map((asset) => asset.s);
+        const searchIds = marketSearch.map((asset) => asset.id);
+  
+        if (
+          !asset_a ||
+          !asset_a.length ||
+          (!searchSymbols.includes(asset_a) && !searchIds.includes(asset_a))
+        ) {
+          console.log("Asset A replaced with default.");
+          setAssetA("BTS");
+        }
+  
+        if (!assetA) {
+          const foundAssetA = marketSearch.find((asset) => asset.id === asset_a || asset.s === asset_a);
+          if (foundAssetA) {
+            console.log("Setting asset A.");
+            setAssetA(foundAssetA.s);
+          } else {
+            console.log("Setting default asset A");
+            setAssetA("BTS");
+          }
+        }
+        
+        if (
+          !asset_b ||
+          !asset_b.length ||
+          (!searchSymbols.includes(asset_b) && !searchIds.includes(asset_b))
+        ) {
+          console.log("Asset B replaced with default.")
+          setAssetB(assetA !== "USD" ? "USD" : "BTS");
+        }
+  
+        if (!assetB) {
+          const foundAssetB = marketSearch.find((asset) => asset.id === asset_b || asset.s === asset_b);
+          if (foundAssetB) {
+            console.log("Setting asset B.");
+            setAssetB(foundAssetB.s);
+            return;
+          } else {
+            console.log("Setting default asset B");
+            setAssetB(
+              asset_a !== "BTS" && asset_a !== "1.3.0" ? "BTS" : "USD"
+            );
+          }
+
+        }
+      }
+    }
+
+    if (marketSearch && marketSearch.length) {
+      parseUrlAssets();
+    }
+  }, [marketSearch]);
+
   const [buyOrders, setBuyOrders] = useState([]);
   const [sellOrders, setSellOrders] = useState([]);
   const [lastOrderBook, setLastOrderBook] = useState(null);
   const [orderBookItr, setOrderBookItr] = useState(0);
+  const [marketInProgress, setMarketInProgress] = useState(false);
 
   const [assetAData, setAssetAData] = useState(null);
   const [assetADetails, setAssetADetails] = useState(null);
@@ -136,6 +191,7 @@ export default function Market(properties) {
       if (lastOrderBook) {
         if (lastOrderBook === `${assetB}_${assetA}`) {
           console.log("Avoid duplicate call");
+          setMarketInProgress(false);
           return;
         }
       }
@@ -144,6 +200,7 @@ export default function Market(properties) {
 
       if (!fetchedMarketOrders.ok) {
           console.log("Failed to fetch market orders");
+          setMarketInProgress(false);
           if (orderBookItr < 5) {
             setOrderBookItr(orderBookItr + 1); // retrying the query
           }
@@ -158,10 +215,13 @@ export default function Market(properties) {
         setSellOrders(marketOrdersJSON.result.bids);
         setLastOrderBook(`${assetA}_${assetB}`);
       }
+
+      setMarketInProgress(false);
     }
 
     if (assetA && assetB && usr && usr.chain) {
       // Fetching the required market orders
+      setMarketInProgress(true);
       window.history.replaceState({}, "", `?market=${assetA}_${assetB}`); // updating the url parameters
       fetchMarketData(); // updating market data
     }
@@ -298,6 +358,17 @@ export default function Market(properties) {
     }
   }, [assetAData, assetBData, usr, marketItr]);
 
+  useEffect(() => {
+    if (assetA && assetB && usr && usr.chain) {
+      const interval = setInterval(() => {
+        // Fetching data from the API every 30 seconds
+        setMarketItr(marketItr + 1);
+        setOrderBookItr(orderBookItr + 1);
+      }, 30000);
+      return () => clearInterval(interval);
+    }
+  }, [assetA, assetB, usr]);
+
   if (!usr || !usr.id || !usr.id.length) {
       return <AccountSelect />;
   }
@@ -312,52 +383,48 @@ export default function Market(properties) {
       <div className="container mx-auto mt-5 mb-5">
         <div className="grid grid-cols-2 gap-5">
           {
-            marketSearch && marketSearch.length
-              ? (
-                <>
-                  <Tabs defaultValue="buy" className="w-full">
-                    <TabsList className="grid w-full grid-cols-2 gap-2">
-
-                        {
-                            activeLimitCard === "buy"
-                                ? <TabsTrigger value="buy" style={activeTabStyle}>Buy</TabsTrigger>
-                                : <TabsTrigger value="buy" onClick={() => setActiveLimitCard("buy")}>Buy</TabsTrigger>
-                        }
-                        {
-                            activeLimitCard === "sell"
-                                ? <TabsTrigger value="sell" style={activeTabStyle}>Sell</TabsTrigger>
-                                : <TabsTrigger value="sell" onClick={() => setActiveLimitCard("sell")}>Sell</TabsTrigger>
-                        }
-                    </TabsList>
-                    <TabsContent value="buy">
-                      <LimitOrderCard
-                        usr={usr}
-                        thisAssetA={assetA}
-                        thisAssetB={assetB}
-                        buyOrders={buyOrders}
-                        sellOrders={sellOrders}
-                        orderType="buy"
-                        key="buyLimit"
-                        marketSearch={marketSearch}
-                      />
-                    </TabsContent>
-                    <TabsContent value="sell">
-                      <LimitOrderCard
-                        usr={usr}
-                        thisAssetA={assetA}
-                        thisAssetB={assetB}
-                        buyOrders={buyOrders}
-                        sellOrders={sellOrders}
-                        orderType="sell"
-                        key="sellLimit"
-                        marketSearch={marketSearch}
-                      />
-                    </TabsContent>
-                  </Tabs>
-                </>
-              )
+            !marketSearch && !assetA && !assetB
+              ? "loading..."
               : null
           }
+          <Tabs defaultValue="buy" className="w-full">
+            <TabsList className="grid w-full grid-cols-2 gap-2">
+              {
+                activeLimitCard === "buy"
+                  ? <TabsTrigger value="buy" style={activeTabStyle}>Buy</TabsTrigger>
+                  : <TabsTrigger value="buy" onClick={() => setActiveLimitCard("buy")}>Buy</TabsTrigger>
+              }
+              {
+                  activeLimitCard === "sell"
+                      ? <TabsTrigger value="sell" style={activeTabStyle}>Sell</TabsTrigger>
+                      : <TabsTrigger value="sell" onClick={() => setActiveLimitCard("sell")}>Sell</TabsTrigger>
+              }
+            </TabsList>
+            <TabsContent value="buy">
+              <LimitOrderCard
+                usr={usr}
+                thisAssetA={assetA}
+                thisAssetB={assetB}
+                buyOrders={buyOrders}
+                sellOrders={sellOrders}
+                orderType="buy"
+                key="buyLimit"
+                marketSearch={marketSearch}
+              />
+            </TabsContent>
+            <TabsContent value="sell">
+              <LimitOrderCard
+                usr={usr}
+                thisAssetA={assetA}
+                thisAssetB={assetB}
+                buyOrders={buyOrders}
+                sellOrders={sellOrders}
+                orderType="sell"
+                key="sellLimit"
+                marketSearch={marketSearch}
+              />
+            </TabsContent>
+          </Tabs>
           <div className="col-span-1">
             <div className="grid grid-cols-1 gap-y-2">
               
@@ -423,42 +490,73 @@ export default function Market(properties) {
                             <div className="col-span-1 mb-1">
                               <CardTitle className="text-center text-lg">{assetA}/{assetB} Market summary</CardTitle>
                             </div>
-                            <div className="col-span-1">
-                              Latest price:
-                              <Badge variant="outline" className="ml-2">
-                                {tickerData ? tickerData.latest : 'Loading...'}
-                              </Badge>
-                            </div>
-                            <div className="col-span-1">
-                              24Hr change:
-                              <Badge variant="outline" className="ml-2">
-                                {tickerData ? tickerData.percent_change : 'Loading...'}
-                              </Badge>
-                            </div>
-                            <div className="col-span-1">
-                              24Hr base volume:
-                              <Badge variant="outline" className="ml-2">
-                                {tickerData ? tickerData.base_volume : 'Loading...'}
-                              </Badge>
-                            </div>
-                            <div className="col-span-1">
-                              24Hr quote volume:
-                              <Badge variant="outline" className="ml-2">
-                                {tickerData ? tickerData.quote_volume : 'Loading...'}
-                              </Badge>
-                            </div>
-                            <div className="col-span-1">
-                              Lowest ask:
-                              <Badge variant="outline" className="ml-2">
-                                {tickerData ? tickerData.lowest_ask : 'Loading...'}
-                              </Badge>
-                            </div>
-                            <div className="col-span-1">
-                              Highest bid:
-                              <Badge variant="outline" className="ml-2">
-                                {tickerData ? tickerData.highest_bid : 'Loading...'}
-                              </Badge>
-                            </div>
+                            {
+                              !tickerData
+                                ? <div className="text-center">
+                                    Loading...
+                                  </div>
+                                : null
+                            }
+                            {
+                              tickerData && assetAData
+                                ? <div className="col-span-1">
+                                    Latest price:
+                                    <Badge variant="outline" className="ml-2">
+                                      {trimPrice(tickerData.latest, assetAData.precision)}
+                                    </Badge>
+                                  </div>
+                                : null
+                            }
+                            {
+                              tickerData
+                                ? <div className="col-span-1">
+                                    24Hr change:
+                                    <Badge variant="outline" className="ml-2">
+                                      {tickerData.percent_change}
+                                    </Badge>
+                                  </div>
+                                : null
+                            }
+                            {
+                              tickerData
+                                ? <div className="col-span-1">
+                                    24Hr base volume:
+                                    <Badge variant="outline" className="ml-2">
+                                      {tickerData.base_volume}
+                                    </Badge>
+                                  </div>
+                                : null
+                            }
+                            {
+                              tickerData
+                                ? <div className="col-span-1">
+                                    24Hr quote volume:
+                                    <Badge variant="outline" className="ml-2">
+                                      {tickerData.quote_volume}
+                                    </Badge>
+                                  </div>
+                                : null
+                            }
+                            {
+                              tickerData && assetAData
+                                ? <div className="col-span-1">
+                                    Lowest ask:
+                                    <Badge variant="outline" className="ml-2">
+                                      {trimPrice(tickerData.lowest_ask, assetAData.precision)}
+                                    </Badge>
+                                  </div>
+                                : null
+                            }
+                            {
+                              tickerData && assetAData
+                                ? <div className="col-span-1">
+                                    Highest bid:
+                                    <Badge variant="outline" className="ml-2">
+                                      {trimPrice(tickerData.highest_bid, assetAData.precision)}
+                                    </Badge>
+                                  </div>
+                                : null
+                            }
                           </div>
                         </CardDescription>
                       </CardHeader>
@@ -474,7 +572,7 @@ export default function Market(properties) {
                       }
                       target="_blank"
                     >
-                        <Button variant="outline" className="ml-2">
+                        <Button variant="outline" className="mb-2 mt-2">
                             {assetA}/{assetB} Market explorer
                         </Button>
                     </a>
@@ -549,6 +647,7 @@ export default function Market(properties) {
                         assetBData={assetBData}
                         buyOrders={buyOrders}
                         sellOrders={sellOrders}
+                        marketInProgress={marketInProgress}
                         orderBookItr={orderBookItr}
                         setOrderBookItr={setOrderBookItr}
                         _resetOrders={_resetOrders}
@@ -563,6 +662,7 @@ export default function Market(properties) {
                         assetBData={assetBData}
                         buyOrders={buyOrders}
                         sellOrders={sellOrders}
+                        marketInProgress={marketInProgress}
                         orderBookItr={orderBookItr}
                         setOrderBookItr={setOrderBookItr}
                         _resetOrders={_resetOrders}

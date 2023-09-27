@@ -225,8 +225,8 @@ export default function MarketSummaryTabs(properties) {
                     <CardDescription>
                         {
                             type === "buy"
-                                ? `Recently completed buy orders by entire network`
-                                : `Recently completed sell orders by entire network`
+                                ? `Recently completed buy orders on the Bitshares DEX`
+                                : `Recently completed sell orders on the Bitshares DEX`
                         }
                     </CardDescription>
                 </CardHeader>
