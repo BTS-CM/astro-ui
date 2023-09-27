@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button"
 
 import { $currentUser, eraseCurrentUser } from '../stores/users.ts'
 import AccountSelect from './AccountSelect.jsx'
+import CurrentUser from "./common/CurrentUser.jsx";
 
 export default function Home(properties) {
   const [usr, setUsr] = useState();
@@ -56,16 +57,11 @@ export default function Home(properties) {
             </Card>
           </a>
         </div>
-        <div className="flex justify-center">
-          <Button
-            className="mt-5"
-            onClick={() => {
-              eraseCurrentUser();
-            }}
-          >
-            Switch account/chain
-          </Button>
-        </div>
+        {
+          usr
+            ? <CurrentUser usr={usr} resetCallback={eraseCurrentUser} />
+            : null
+        }
       </div>
     </>
   );

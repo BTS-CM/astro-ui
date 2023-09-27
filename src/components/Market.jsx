@@ -32,6 +32,7 @@ import MarketOrderCard from "./Market/MarketOrderCard.jsx";
 import AssetDropDown from "./Market/AssetDropDownCard.jsx";
 import MarketAssetCard from "./Market/MarketAssetCard.jsx";
 import MarketSummaryTabs from "./Market/MarketSummaryTabs.jsx";
+import CurrentUser from "./common/CurrentUser.jsx";
 
 import { humanReadableFloat, trimPrice } from '../lib/common';
 
@@ -692,16 +693,11 @@ export default function Market(properties) {
             : null
         }
       </div>
-      <div className="flex justify-center">
-        <Button
-          className="mt-5"
-          onClick={() => {
-            eraseCurrentUser();
-          }}
-        >
-          Switch account/chain
-        </Button>
-      </div>
+      {
+        usr
+          ? <CurrentUser usr={usr} resetCallback={eraseCurrentUser} />
+          : null
+      }
     </>
   );
 }

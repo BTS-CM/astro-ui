@@ -200,7 +200,7 @@ export default function AccountSelect(properties) {
                         </div>
                         <div className="col-span-3">
                           <CardHeader>
-                            <CardTitle>
+                            <CardTitle style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                               {searchResponse.name}
                             </CardTitle>
                             <CardDescription>
@@ -267,7 +267,7 @@ export default function AccountSelect(properties) {
                                         </div>
                                         <div className="col-span-3">
                                           <CardHeader>
-                                            <CardTitle>
+                                            <CardTitle style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                                               {user.username}
                                             </CardTitle>
                                             <CardDescription>
@@ -279,8 +279,9 @@ export default function AccountSelect(properties) {
                                     </Card>
                                   </HoverCardTrigger>
                                   <HoverCardContent className="w-80">
+                                    Account: {user.username}<br />
                                     <Button
-                                      className="w-full text-bold text-white"
+                                      className="w-full mt-2 text-bold text-white"
                                       variant="destructive"
                                       onClick={() => {
                                         removeUser(user.id);

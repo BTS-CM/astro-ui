@@ -40,6 +40,7 @@ import {
 import { blockchainFloat, copyToClipboard } from "../lib/common";
 import { $currentUser, eraseCurrentUser } from '../stores/users.ts'
 import AccountSelect from './AccountSelect.jsx'
+import CurrentUser from "./common/CurrentUser.jsx";
 
 export default function PoolForm() {
     const form = useForm({
@@ -574,20 +575,27 @@ export default function PoolForm() {
                 </Card>
             </div>
           </div>
-          <div className="flex justify-center">
-            <Button
-            className="mt-5"
-            onClick={() => {
-                eraseCurrentUser();
-                setBalances();
-                setOpenOrders();
-                setActivity();
-                setRetrievedBalanceAssets();
-            }}
-            >
-                Switch account/chain
-            </Button>
-          </div>
+          {
+            usr
+              ? <CurrentUser usr={usr} resetCallback={() => {
+                    console.log("PoolFormClick")
+                    eraseCurrentUser();
+                    setData("");
+                    setPool("");
+                    setPools();
+                    setAssetData();
+                    setSellAmount(0);
+                    setBuyAmount(0);
+                    setFoundPool();
+                    setAssetA("");
+                    setAssetB("");
+                    setDeeplink("");
+                    setTRXJSON();
+                    setDeepLinkInProgress(false);
+                    setBuyAmountInput();
+                }} />
+              : null
+          }
         </>
     );
 }
