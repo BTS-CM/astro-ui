@@ -56,67 +56,47 @@ export default function MarketAssetCard(properties) {
         }
     }, [assetData, usrBalances]);
     
-    // {type === "buy" ? "🟢" : "🔴"}
-
     return (
         <HoverCard>
             <HoverCardTrigger asChild style={{ position: 'relative' }}>
                 <Card>
-                    <CardHeader>
+                    <CardHeader className="pb-2 pt-4">
                         <CardTitle>
-                            <div className="mb-2">
-                                <div className="grid grid-cols-2 gap-5 w-full">
-                                    <div className="col-span-1">
-                                        {asset} {assetData ? `(${assetData.id})` : ''}
-                                    </div>
-                                    <div className="col-span-1 text-right">
-                                        {type === "buy" ? "Base" : "Quote"} asset
-                                    </div>
-                                </div>
-                            </div>
+                            {asset} {assetData ? `(${assetData.id})` : ''}
                         </CardTitle>
-                        <CardDescription>
-                            {
-                            !assetDetails
-                                ? "Please wait..."
-                                : null
-                            }
-                            {
+                        <CardDescription className="text-lg">
+                            {type === "buy" ? "Base" : "Quote"} asset
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent className="text-sm pb-2">
+                        {
                             assetDetails && assetData && marketSearch
                                 ? (
                                     <>
-                                        <div className="grid grid-cols-1 gap-1 w-full">
-                                            <div className="col-span-1">
-                                                Your balance:
-                                                <Badge variant="outline" className="ml-2">
-                                                    {assetBalance} {asset}
-                                                </Badge>
-                                            </div>
-                                            <div className="col-span-1">
-                                                Issuer:
-                                                <Badge variant="outline" className="ml-2">
-                                                    {marketSearch.find(x => x.id === assetData.id).u}
-                                                </Badge>
-                                            </div>
-                                            <div className="col-span-1">
-                                                Market fee:
-                                                <Badge variant="outline" className="ml-2">
-                                                    {assetData.market_fee_percent/100} %
-                                                </Badge>
-                                            </div>
-                                            <div className="col-span-1">
-                                                Precision:
-                                                <Badge variant="outline" className="ml-2">
-                                                    {assetData.precision}
-                                                </Badge>
-                                            </div>
-                                        </div>
+                                        Your balance:
+                                        <Badge variant="outline" className="ml-2 mb-1">
+                                            {assetBalance} {asset}
+                                        </Badge>
+                                        <br/>
+                                        Issuer:
+                                        <Badge variant="outline" className="ml-2 mb-1">
+                                            {marketSearch.find(x => x.id === assetData.id).u}
+                                        </Badge>
+                                        <br/>
+                                        Market fee:
+                                        <Badge variant="outline" className="ml-2 mb-1">
+                                            {assetData.market_fee_percent/100} %
+                                        </Badge>
+                                        <br/>
+                                        Precision:
+                                        <Badge variant="outline" className="ml-2 mb-1">
+                                            {assetData.precision}
+                                        </Badge>
                                     </>
                                 )
                                 : null
-                            }
-                        </CardDescription>
-                    </CardHeader>
+                        }
+                    </CardContent>
                 </Card>
             </HoverCardTrigger>
             <HoverCardContent className="w-80 text-sm" style={{ position: 'absolute', top: '100%', marginLeft: '-160px' }}>

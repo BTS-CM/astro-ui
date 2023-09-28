@@ -31,6 +31,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 
 import { $currentUser, eraseCurrentUser } from '../stores/users.ts';
 import AccountSelect from './AccountSelect.jsx';
+import CurrentUser from './common/CurrentUser.jsx';
 
 import { humanReadableFloat } from '../lib/common';
 import { opTypes } from '../lib/opTypes';
@@ -43,6 +44,13 @@ export default function PortfolioTabs(properties) {
       });
       return unsubscribe;
   }, [$currentUser]);
+
+  const activeTabStyle = {
+    backgroundColor: "#252526",
+    color: "white",
+  }
+
+  const [activePortfolioTab, setActivePortfolioTab] = useState("balances");
 
   const [balanceCounter, setBalanceCoutner] = useState(0);
   const [balances, setBalances] = useState();
@@ -495,9 +503,21 @@ export default function PortfolioTabs(properties) {
         <div className="grid grid-cols-1 mt-5">
           <Tabs defaultValue="balances" className="w-full">
             <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="balances">Balances</TabsTrigger>
-              <TabsTrigger value="openOrders">Open orders</TabsTrigger>
-              <TabsTrigger value="activity">Activity</TabsTrigger>
+              {
+                activePortfolioTab === "balances"
+                  ? <TabsTrigger value="balances" style={activeTabStyle}>Balances</TabsTrigger>
+                  : <TabsTrigger value="balances" onClick={() => setActivePortfolioTab("balances")}>Balances</TabsTrigger>
+              }
+              {
+                activePortfolioTab === "openOrders"
+                  ? <TabsTrigger value="openOrders" style={activeTabStyle}>Open orders</TabsTrigger>
+                  : <TabsTrigger value="openOrders" onClick={() => setActivePortfolioTab("openOrders")}>Open orders</TabsTrigger>
+              }
+              {
+                activePortfolioTab === "activity"
+                  ? <TabsTrigger value="activity" style={activeTabStyle}>Activity</TabsTrigger>
+                  : <TabsTrigger value="activity" onClick={() => setActivePortfolioTab("activity")}>Activity</TabsTrigger>
+              }
             </TabsList>
             <TabsContent value="balances">
               <Card>
@@ -601,21 +621,18 @@ export default function PortfolioTabs(properties) {
             </TabsContent>
           </Tabs>
         </div>
-      </div>
-      <div className="flex justify-center">
-        <Button
-          className="mt-5"
-          onClick={() => {
-            eraseCurrentUser();
-            setBalances();
-            setOpenOrders();
-            setActivity();
-            setRetrievedBalanceAssets();
-          }}
-        >
-          Switch account/chain
-        </Button>
-      </div>
+      </div>    
+      {
+        usr
+          ? <CurrentUser usr={usr} resetCallback={() => {
+              eraseCurrentUser();
+              setBalances();
+              setOpenOrders();
+              setActivity();
+              setRetrievedBalanceAssets();
+            }} />
+          : null
+      }
     </>
   );
 }

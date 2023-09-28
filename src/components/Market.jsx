@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/hover-card";
 
 import { $currentUser, eraseCurrentUser } from '../stores/users.ts'
+
 import AccountSelect from './AccountSelect.jsx'
 import LimitOrderCard from "./Market/LimitOrderCard.jsx";
 import MarketOrderCard from "./Market/MarketOrderCard.jsx";
@@ -131,7 +132,6 @@ export default function Market(properties) {
               asset_a !== "BTS" && asset_a !== "1.3.0" ? "BTS" : "USD"
             );
           }
-
         }
       }
     }
@@ -143,7 +143,6 @@ export default function Market(properties) {
 
   const [buyOrders, setBuyOrders] = useState([]);
   const [sellOrders, setSellOrders] = useState([]);
-  const [lastOrderBook, setLastOrderBook] = useState(null);
   const [orderBookItr, setOrderBookItr] = useState(0);
   const [marketInProgress, setMarketInProgress] = useState(false);
 
@@ -183,20 +182,13 @@ export default function Market(properties) {
     // If either asset changes then several states need to be erased
     setUsrBalances();
     setUsrLimitOrders();
-    setPublicMarketHistory();
     setUsrHistory();
+    setPublicMarketHistory();
+    setTickerData();
   }
 
   useEffect(() => {
     async function fetchMarketData () {
-      if (lastOrderBook) {
-        if (lastOrderBook === `${assetB}_${assetA}`) {
-          console.log("Avoid duplicate call");
-          setMarketInProgress(false);
-          return;
-        }
-      }
-
       const fetchedMarketOrders = await fetch(`http://localhost:8080/api/orderBook/${usr.chain}/${assetA}/${assetB}`, { method: "GET" });
 
       if (!fetchedMarketOrders.ok) {
@@ -214,7 +206,6 @@ export default function Market(properties) {
         console.log(`Fetched market data for ${assetA}_${assetB}`);
         setBuyOrders(marketOrdersJSON.result.asks);
         setSellOrders(marketOrdersJSON.result.bids);
-        setLastOrderBook(`${assetA}_${assetB}`);
       }
 
       setMarketInProgress(false);
@@ -383,22 +374,51 @@ export default function Market(properties) {
     <>
       <div className="container mx-auto mt-5 mb-5">
         <div className="grid grid-cols-2 gap-5">
-          {
-            !marketSearch && !assetA && !assetB
-              ? "loading..."
-              : null
-          }
           <Tabs defaultValue="buy" className="w-full">
             <TabsList className="grid w-full grid-cols-2 gap-2">
               {
-                activeLimitCard === "buy"
-                  ? <TabsTrigger value="buy" style={activeTabStyle}>Buy</TabsTrigger>
-                  : <TabsTrigger value="buy" onClick={() => setActiveLimitCard("buy")}>Buy</TabsTrigger>
+                !assetAData || !assetBData
+                  ? <>
+                    <TabsTrigger disabled value="buy" style={activeTabStyle}>Buy</TabsTrigger>
+                    <TabsTrigger disabled value="sell">Sell</TabsTrigger>
+                  </>
+                  : null
               }
               {
-                  activeLimitCard === "sell"
-                      ? <TabsTrigger value="sell" style={activeTabStyle}>Sell</TabsTrigger>
-                      : <TabsTrigger value="sell" onClick={() => setActiveLimitCard("sell")}>Sell</TabsTrigger>
+                assetAData && assetBData && activeLimitCard === "buy"
+                  ? <>
+                    <TabsTrigger
+                      value="buy"
+                      style={activeTabStyle}
+                    >
+                      Buy
+                    </TabsTrigger>
+                    <TabsTrigger
+                      value="sell"
+                      onClick={() => setActiveLimitCard("sell")}
+                    >
+                      Sell
+                    </TabsTrigger>
+                  </>
+                  : null
+              }
+              {
+                assetAData && assetBData && activeLimitCard === "sell"
+                  ? <>
+                    <TabsTrigger
+                      value="buy"
+                      onClick={() => setActiveLimitCard("buy")}
+                    >
+                      Buy
+                    </TabsTrigger>
+                    <TabsTrigger
+                      value="sell"
+                      style={activeTabStyle}
+                    >
+                      Sell
+                    </TabsTrigger>
+                  </>
+                  : null
               }
             </TabsList>
             <TabsContent value="buy">
@@ -430,54 +450,56 @@ export default function Market(properties) {
             <div className="grid grid-cols-1 gap-y-2">
               
               <div className="flex-grow">
-                <Card style={{ maxHeight: '80px' }}>
-                  <CardHeader className="pt-2">
+                <Card>
+                  <CardHeader className="pt-2 pb-2">
                     <CardTitle className="text-center text-lg">
                       {usr.chain === "bitshares" ? "Bitshares" : "Bitshares (Testnet)"} DEX Market controls
                     </CardTitle>
-                    <CardDescription>
-                      <div className="grid grid-cols-3 gap-1">
-                        <AssetDropDown
-                          assetSymbol={assetA}
-                          assetData={assetAData}
-                          storeCallback={setAssetA}
-                          otherAsset={assetB}
-                          marketSearch={marketSearch}
-                          type="quote"
-                        />
-                        <HoverCard>
-                          <HoverCardTrigger asChild style={{ position: 'relative' }}>
-                            <Button
-                              variant="outline"
-                              className="h-5 ml-1 mr-1 p-3"
-                              onClick={() => {
-                                  const tmp = assetA;
-                                  setAssetA(assetB);
-                                  setAssetB(tmp);
-
-                                  const tmp2 = buyOrders;
-                                  setBuyOrders(sellOrders);
-                                  setSellOrders(tmp2);
-                              }}
-                            >
-                              ⇄
-                            </Button>
-                          </HoverCardTrigger>
-                          <HoverCardContent className="w-40 text-md text-center">
-                              Swap asset order
-                          </HoverCardContent>
-                        </HoverCard>
-                        <AssetDropDown
-                          assetSymbol={assetB}
-                          assetData={assetBData}
-                          storeCallback={setAssetB}
-                          otherAsset={assetA}
-                          marketSearch={marketSearch}
-                          type="base"
-                        />
-                      </div>
-                    </CardDescription>
                   </CardHeader>
+                  <CardContent className="pb-3">
+                    <div className="grid grid-cols-3 gap-1">
+                      <AssetDropDown
+                        assetSymbol={assetA}
+                        assetData={assetAData}
+                        storeCallback={setAssetA}
+                        otherAsset={assetB}
+                        marketSearch={marketSearch}
+                        type="quote"
+                      />
+                      <HoverCard>
+                        <HoverCardTrigger asChild style={{ position: 'relative' }}>
+                          <Button
+                            variant="outline"
+                            className="h-5 ml-1 mr-1 p-3"
+                            onClick={() => {
+                                // Erasing data
+                                _resetA();
+                                _resetB();
+                                _resetOrders();
+                                _resetMarketData();
+                                // Swapping asset A for B
+                                const tmp = assetA;
+                                setAssetA(assetB);
+                                setAssetB(tmp);
+                            }}
+                          >
+                            ⇄
+                          </Button>
+                        </HoverCardTrigger>
+                        <HoverCardContent className="w-40 text-md text-center">
+                            Swap asset order
+                        </HoverCardContent>
+                      </HoverCard>
+                      <AssetDropDown
+                        assetSymbol={assetB}
+                        assetData={assetBData}
+                        storeCallback={setAssetB}
+                        otherAsset={assetA}
+                        marketSearch={marketSearch}
+                        type="base"
+                      />
+                    </div>
+                  </CardContent>
                 </Card>
               </div>
 
@@ -485,82 +507,83 @@ export default function Market(properties) {
                 <HoverCard>
                   <HoverCardTrigger asChild style={{ position: 'relative' }}>
                     <Card>
-                      <CardHeader className="pt-2">
-                        <CardDescription>
-                          <div className="grid grid-cols-1 gap-1">
-                            <div className="col-span-1 mb-1">
-                              <CardTitle className="text-center text-lg">{assetA}/{assetB} Market summary</CardTitle>
-                            </div>
-                            {
-                              !tickerData
-                                ? <div className="text-center">
-                                    Loading...
-                                  </div>
-                                : null
-                            }
-                            {
-                              tickerData && assetAData
-                                ? <div className="col-span-1">
-                                    Latest price:
-                                    <Badge variant="outline" className="ml-2">
-                                      {trimPrice(tickerData.latest, assetAData.precision)}
-                                    </Badge>
-                                  </div>
-                                : null
-                            }
-                            {
-                              tickerData
-                                ? <div className="col-span-1">
-                                    24Hr change:
-                                    <Badge variant="outline" className="ml-2">
-                                      {tickerData.percent_change}
-                                    </Badge>
-                                  </div>
-                                : null
-                            }
-                            {
-                              tickerData
-                                ? <div className="col-span-1">
-                                    24Hr base volume:
-                                    <Badge variant="outline" className="ml-2">
-                                      {tickerData.base_volume}
-                                    </Badge>
-                                  </div>
-                                : null
-                            }
-                            {
-                              tickerData
-                                ? <div className="col-span-1">
-                                    24Hr quote volume:
-                                    <Badge variant="outline" className="ml-2">
-                                      {tickerData.quote_volume}
-                                    </Badge>
-                                  </div>
-                                : null
-                            }
-                            {
-                              tickerData && assetAData
-                                ? <div className="col-span-1">
-                                    Lowest ask:
-                                    <Badge variant="outline" className="ml-2">
-                                      {trimPrice(tickerData.lowest_ask, assetAData.precision)}
-                                    </Badge>
-                                  </div>
-                                : null
-                            }
-                            {
-                              tickerData && assetAData
-                                ? <div className="col-span-1">
-                                    Highest bid:
-                                    <Badge variant="outline" className="ml-2">
-                                      {trimPrice(tickerData.highest_bid, assetAData.precision)}
-                                    </Badge>
-                                  </div>
-                                : null
-                            }
-                          </div>
+                      <CardHeader className="pt-4 pb-2">
+                        <CardTitle>Market summary</CardTitle>
+                        <CardDescription className="text-lg">
+                          {
+                            !tickerData
+                              ? "Loading..."
+                              : `${assetA}/${assetB}`
+                          }
                         </CardDescription>
                       </CardHeader>
+                      <CardContent className="text-sm pb-4">
+                          {
+                            tickerData && assetAData
+                              ? <>
+                                  Latest price:
+                                  <Badge variant="outline" className="ml-2 mb-1">
+                                    {trimPrice(tickerData.latest, assetAData.precision)}
+                                  </Badge>
+                                  <br/>
+                                </>
+                              : null
+                          }
+                          {
+                            tickerData
+                              ? <>
+                                  24Hr change:
+                                  <Badge variant="outline" className="ml-2 mb-1">
+                                    {tickerData.percent_change}
+                                  </Badge>
+                                  <br/>
+                                </>
+                              : null
+                          }
+                          {
+                            tickerData
+                              ? <>
+                                  24Hr base volume:
+                                  <Badge variant="outline" className="ml-2 mb-1">
+                                    {tickerData.base_volume}
+                                  </Badge>
+                                  <br/>
+                                </>
+                              : null
+                          }
+                          {
+                            tickerData
+                              ? <>
+                                  24Hr quote volume:
+                                  <Badge variant="outline" className="ml-2 mb-1">
+                                    {tickerData.quote_volume}
+                                  </Badge>
+                                  <br/>
+                                </>
+                              : null
+                          }
+                          {
+                            tickerData && assetAData
+                              ? <>
+                                  Lowest ask:
+                                  <Badge variant="outline" className="ml-2 mb-1">
+                                    {trimPrice(tickerData.lowest_ask, assetAData.precision)}
+                                  </Badge>
+                                  <br/>
+                                </>
+                              : null
+                          }
+                          {
+                            tickerData && assetAData
+                              ? <>
+                                  Highest bid:
+                                  <Badge variant="outline" className="ml-2">
+                                    {trimPrice(tickerData.highest_bid, assetAData.precision)}
+                                  </Badge>
+                                </>
+                              : null
+                          }
+                      </CardContent>
                     </Card>
                   </HoverCardTrigger>
                   <HoverCardContent className="w-80 text-sm text-center">

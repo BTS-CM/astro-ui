@@ -578,7 +578,6 @@ export default function PoolForm() {
           {
             usr
               ? <CurrentUser usr={usr} resetCallback={() => {
-                    console.log("PoolFormClick")
                     eraseCurrentUser();
                     setData("");
                     setPool("");
