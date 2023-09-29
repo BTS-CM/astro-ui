@@ -99,17 +99,9 @@ export default function AssetDropDown(properties) {
             }}
           >
             <DialogTrigger asChild>
-              <HoverCard>
-                <HoverCardTrigger asChild style={{ position: 'relative' }}>
-                  <Button variant="outline" className="h-5 p-3" onClick={() => setDialogOpen(true)}>
-                    {assetSymbol.length < 12 ? assetSymbol : assetData.id}
-                  </Button>
-                </HoverCardTrigger>
-
-                <HoverCardContent className="w-60 text-md text-center">
-                  {assetSymbol} ({assetData.id})
-                </HoverCardContent>
-              </HoverCard>
+              <Button variant="outline" className="h-5 p-3" onClick={() => setDialogOpen(true)}>
+                {assetSymbol.length < 12 ? assetSymbol : assetData.id}
+              </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px] bg-white">
               <>

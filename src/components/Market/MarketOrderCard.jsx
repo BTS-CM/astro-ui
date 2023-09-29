@@ -18,6 +18,7 @@ import { humanReadableFloat } from '../../lib/common';
 export default function MarketOrderCard(properties) {
     const {
         cardType,
+        activeLimitCard,
         assetA,
         assetAData,
         assetB,
@@ -117,7 +118,7 @@ export default function MarketOrderCard(properties) {
                                                             <div className="col-span-4" key={`moc_${cardType}_${index}`}>
                                                                 <div className="grid grid-cols-4 text-sm">
                                                                     <div className="col-span-1 border-r-2 pl-3">
-                                                                        {parseFloat(1 / res.price).toFixed(assetAData.precision)}
+                                                                        {parseFloat(res.price).toFixed(assetAData.precision)}
                                                                     </div>
                                                                     <div className="col-span-1 border-r-2 pl-3">
                                                                         {res.base}
@@ -144,7 +145,7 @@ export default function MarketOrderCard(properties) {
                                                             <div className="col-span-4" key={`moc_${cardType}_${index}`}>
                                                                 <div className="grid grid-cols-4 text-sm">
                                                                     <div className="col-span-1 border-r-2 pl-3">
-                                                                        {parseFloat(1 / res.price).toFixed(assetBData.precision)}
+                                                                        {parseFloat(res.price).toFixed(assetBData.precision)}
                                                                     </div>
                                                                     <div className="col-span-1 border-r-2 pl-3">
                                                                         {res.base}

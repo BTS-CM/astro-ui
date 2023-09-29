@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from 'react-hook-form';
+import { CalendarIcon } from "@radix-ui/react-icons"
+import { format } from "date-fns"
 
 import {
     Card,
@@ -37,10 +39,17 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 
+import { cn } from "@/lib/utils"
+import { Calendar } from "@/components/ui/calendar"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-
-import { copyToClipboard, trimPrice } from "../../lib/common.js";
+import { copyToClipboard, trimPrice } from "@/lib/common.js";
 
 /**
  * Creating a market card component for buy and sell limit orders
@@ -50,17 +59,20 @@ export default function LimitOrderCard(properties) {
         usr,
         thisAssetA,
         thisAssetB,
+        assetAData,
+        assetBData,
         orderType,
         marketSearch
     } = properties;
 
     const { buyOrders, sellOrders } = properties;
 
-    const [amount, setAmount] = useState(1);
-    const [price, setPrice] = useState(1);
-    const [calculatedAmount, setCalculatedAmount] = useState(0);
-    const [marketFees, setMarketFees] = useState(0);
+    const [amount, setAmount] = useState(0.0);
+    const [price, setPrice] = useState(0.0);
+    const [calculatedAmount, setCalculatedAmount] = useState(0.0);
+    const [marketFees, setMarketFees] = useState(0.0);
     const [expiry, setExpiry] = useState("1hr");
+    const [date, setDate] = useState(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000))
 
     const form = useForm({
         defaultValues: {
@@ -149,6 +161,9 @@ export default function LimitOrderCard(properties) {
         }
     };
 
+    const [amountWarning, setAmountWarning] = useState(false);
+    const [total, setTotal] = useState(0);
+
     return (
         <Card>
             <CardHeader className="pb-2">
@@ -181,18 +196,14 @@ export default function LimitOrderCard(properties) {
                                         render={({ field }) => (
                                             <FormItem>
                                                 <FormLabel>
-                                                    {
-                                                        orderType === "buy"
-                                                            ? `Your price per ${thisAssetA} in ${thisAssetB}`
-                                                            : `Your price per ${thisAssetB} in ${thisAssetA}`
-                                                    }
+                                                    Price
                                                 </FormLabel>
                                                 <FormControl
                                                     onChange={(event) => {
                                                         const input = event.target.value;
-                                                        const regex = /^[0-9]*\.?[0-9]*$/; // regular expression to match numbers and a single period
+                                                        const regex = /^[0-9,]*\.?[0-9]*$/;
                                                         if (regex.test(input)) {
-                                                            setPrice(input);
+                                                            setPrice(input.replaceAll(",", ""));
                                                         }
                                                     }}
                                                 >
@@ -202,6 +213,11 @@ export default function LimitOrderCard(properties) {
                                                         className="mb-3"
                                                     />
                                                 </FormControl>
+                                                <FormDescription>
+                                                    {
+                                                        `Your price per ${thisAssetA} in ${thisAssetB}`
+                                                    }
+                                                </FormDescription>
                                                 <FormMessage />
                                             </FormItem>
                                         )}
@@ -213,52 +229,16 @@ export default function LimitOrderCard(properties) {
                                         render={({ field }) => (
                                         <FormItem>
                                             <FormLabel>
-                                                {
-                                                    orderType === "buy"
-                                                        ?   `The quantity of ${thisAssetA} you want to buy`
-                                                        :   `The quantity of ${thisAssetA} you will have to spend`
-                                                }
+                                                Amount (<a href="/index.html">Use balance</a>)
                                             </FormLabel>
                                             <FormControl
-                                            onChange={(event) => {
-                                                const input = event.target.value;
-                                                const regex = /^[0-9]*\.?[0-9]*$/; // regular expression to match numbers and a single period
-                                                if (regex.test(input)) {
-                                                    setAmount(input);
-                                                }
-                                            }}
-                                            >
-                                            <Input
-                                                value={amount}
-                                                placeholder={amount}
-                                                className="mb-3"
-                                            />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                        )}
-                                    />
-
-                                    <FormField
-                                        control={form.control}
-                                        name="sellAmount"
-                                        render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>
-                                                {
-                                                    orderType === "buy"
-                                                        ?   `The amount of ${thisAssetB} you will have to spend`
-                                                        :   `The amount of ${thisAssetB} you will receive`
-                                                }
-                                            </FormLabel>
-                                            <FormControl
-                                            onChange={(event) => {
-                                                const input = event.target.value;
-                                                const regex = /^[0-9]*\.?[0-9]*$/; // regular expression to match numbers and a single period
-                                                if (regex.test(input)) {
-                                                    setAmount(input);
-                                                }
-                                            }}
+                                                onChange={(event) => {
+                                                    const input = event.target.value;
+                                                    const regex = /^[0-9,]*\.?[0-9]*$/;
+                                                    if (regex.test(input)) {
+                                                        setAmount(input.replaceAll(",", ""));
+                                                    }
+                                                }}
                                             >
                                                 <Input
                                                     value={amount}
@@ -266,6 +246,13 @@ export default function LimitOrderCard(properties) {
                                                     className="mb-3"
                                                 />
                                             </FormControl>
+                                            <FormDescription>
+                                                {
+                                                    orderType === "buy"
+                                                        ?   `The amount of ${thisAssetA} you want to buy`
+                                                        :   `The amount of ${thisAssetA} you will have to spend`
+                                                }
+                                            </FormDescription>
                                             <FormMessage />
                                         </FormItem>
                                         )}
@@ -273,40 +260,42 @@ export default function LimitOrderCard(properties) {
 
                                     <FormField
                                         control={form.control}
-                                        disabled
-                                        name="fee"
+                                        name="sellTotal"
                                         render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>Network fees</FormLabel>
-                                                <FormControl>
-                                                    <Input
-                                                        disabled
-                                                        label={`fees`}
-                                                        value={`0.4826 BTS`}
-                                                        placeholder={1}
-                                                    />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-
-                                    <FormField
-                                        control={form.control}
-                                        disabled
-                                        name="marketFees"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>Market fees</FormLabel>
-                                                <FormControl>
-                                                    <Input
-                                                        disabled
-                                                        value={`${marketFees} ${thisAssetB}`}
-                                                        placeholder={`${marketFees} ${thisAssetB}`}
-                                                    />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
+                                        <FormItem>
+                                            <FormLabel>
+                                                Total
+                                            </FormLabel>
+                                            <FormControl
+                                                onChange={(event) => {
+                                                    const input = event.target.value;
+                                                    const regex = /^[0-9,]*\.?[0-9]*$/;
+                                                    if (regex.test(input)) {
+                                                        setTotal(input.replaceAll(",", ""));
+                                                    }
+                                                }}
+                                            >
+                                                <Input
+                                                    value={total}
+                                                    placeholder={total}
+                                                    className="mb-3"
+                                                />
+                                            </FormControl>
+                                            <FormDescription>
+                                                {
+                                                    orderType === "buy"
+                                                        ?   `The total ${thisAssetB} you will have to spend`
+                                                        :   `The total ${thisAssetB} you will receive`
+                                                }
+                                            </FormDescription>
+                                            {
+                                                amountWarning
+                                                    ?   <FormMessage>
+                                                            Can't exceed maximum
+                                                        </FormMessage>
+                                                    :   null
+                                            }
+                                        </FormItem>
                                         )}
                                     />
 
@@ -316,7 +305,38 @@ export default function LimitOrderCard(properties) {
                                         render={({ field }) => (
                                             <FormItem>
                                                 <FormLabel>Limit order expriration</FormLabel>
-                                                <FormControl onValueChange={(expiry) => setExpiry(expiry)}>
+                                                <FormControl
+                                                    onValueChange={(expiry) => {
+                                                        if (expiry !== "specific" && expiry !== "fkill") {
+                                                            const now = new Date();
+                                                            let expiryDate;
+                                                            const oneHour = 60 * 60 * 1000;
+                                                            const oneDay = 24 * oneHour;
+                                                            if (expiry === "1hr") {
+                                                                expiryDate = new Date(now.getTime() + oneHour);
+                                                            } else if (expiry === "12hr") {
+                                                                const duration = oneHour * 12;
+                                                                expiryDate = new Date(now.getTime() + duration);
+                                                            } else if (expiry === "24hr") {
+                                                                const duration = oneDay;
+                                                                expiryDate = new Date(now.getTime() + duration);
+                                                            } else if (expiry === "7d") {
+                                                                const duration = oneDay * 7;
+                                                                expiryDate = new Date(now.getTime() + duration);
+                                                            } else if (expiry === "30d") {
+                                                                const duration = oneDay * 30;
+                                                                expiryDate = new Date(now.getTime() + duration);
+                                                            }
+
+                                                            if (expiryDate) {
+                                                                setDate(expiryDate);
+                                                            }
+                                                            setExpiry(expiry);
+                                                        } else {
+                                                            setExpiry(expiry);
+                                                        }
+                                                    }}
+                                                >
                                                     <Select>
                                                         <SelectTrigger className="mb-3">
                                                             <SelectValue placeholder="1hr" />
@@ -337,13 +357,146 @@ export default function LimitOrderCard(properties) {
                                                             <SelectItem value="30d">
                                                                 30 days
                                                             </SelectItem>
+                                                            <SelectItem value="specific">
+                                                                Specific date
+                                                            </SelectItem>
+                                                            <SelectItem value="fkill">
+                                                                Fill or kill
+                                                            </SelectItem>
                                                         </SelectContent>
                                                     </Select>
                                                 </FormControl>
+                                                <FormDescription>
+                                                    {
+                                                        expiry === "specific"
+                                                            ?   <Popover>
+                                                                    <PopoverTrigger asChild>
+                                                                        <Button
+                                                                            variant={"outline"}
+                                                                            className={cn(
+                                                                                "w-[240px] justify-start text-left font-normal",
+                                                                                !date && "text-muted-foreground"
+                                                                            )}
+                                                                        >
+                                                                            <CalendarIcon className="mr-2 h-4 w-4" />
+                                                                            {date ? format(date, "PPP") : <span>Pick a date</span>}
+                                                                        </Button>
+                                                                    </PopoverTrigger>
+                                                                    <PopoverContent className="w-auto p-0" align="start">
+                                                                        <Calendar
+                                                                            mode="single"
+                                                                            selected={date}
+                                                                            onSelect={(e) => {
+                                                                                const parsedDate = new Date(e);
+                                                                                const now = new Date();
+                                                                                if (parsedDate < now) {
+                                                                                    console.log("Not a valid date");
+                                                                                    setDate(new Date(Date.now() + 1 * 24 * 60 * 60 * 1000));
+                                                                                    return;
+                                                                                }
+                                                                                console.log("Setting expiry date")
+                                                                                setDate(e);
+                                                                            }}
+                                                                            initialFocus
+                                                                        />
+                                                                    </PopoverContent>
+                                                                </Popover>
+                                                            :  null
+                                                    }
+                                                    {
+                                                        expiry === "fkill"
+                                                            ?  `This order immediately expires if not fillable`
+                                                            :  null
+                                                    }
+                                                    {
+                                                        expiry !== "specific" && expiry !== "fkill"
+                                                            ?  `This limit order will expire ${expiry} after broadcast`
+                                                            :  null
+                                                    }
+                                                </FormDescription>
                                                 <FormMessage />
                                             </FormItem>
                                         )}
                                     />
+
+                                    <FormField
+                                        control={form.control}
+                                        disabled
+                                        name="fee"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Fee</FormLabel>
+                                                <FormControl>
+                                                    <Input
+                                                        disabled
+                                                        label={`fees`}
+                                                        value={`0.4826 BTS`}
+                                                        placeholder={1}
+                                                    />
+                                                </FormControl>
+                                                <FormDescription>
+                                                    The network fee to broadcast this operation
+                                                </FormDescription>
+                                            </FormItem>
+                                        )}
+                                    />
+
+                                    {
+                                        orderType === "buy" &&
+                                            assetAData &&
+                                            assetAData.market_fee_percent &&
+                                            assetAData.market_fee_percent > 0
+                                                ?   <FormField
+                                                        control={form.control}
+                                                        disabled
+                                                        name="marketFees"
+                                                        render={({ field }) => (
+                                                            <FormItem>
+                                                                <FormLabel>Market fee</FormLabel>
+                                                                <FormControl>
+                                                                    <Input
+                                                                        disabled
+                                                                        value={`${marketFees} ${assetAData.symbol}`}
+                                                                        placeholder={`${marketFees} ${assetAData.symbol}`}
+                                                                    />
+                                                                </FormControl>
+                                                                <FormDescription>
+                                                                    The market fee applied by asset issuer
+                                                                </FormDescription>
+                                                            </FormItem>
+                                                        )}
+                                                    />
+                                                :   null
+                                    }
+
+                                    {
+                                        orderType === "sell" &&
+                                            assetBData &&
+                                            assetBData.market_fee_percent &&
+                                            assetBData.market_fee_percent > 0
+                                                ?   <FormField
+                                                        control={form.control}
+                                                        disabled
+                                                        name="marketFees"
+                                                        render={({ field }) => (
+                                                            <FormItem>
+                                                                <FormLabel>Market fee</FormLabel>
+                                                                <FormControl>
+                                                                    <Input
+                                                                        disabled
+                                                                        value={`${marketFees} ${assetBData.symbol}`}
+                                                                        placeholder={`${marketFees} ${assetBData.symbol}`}
+                                                                    />
+                                                                </FormControl>
+                                                                <FormMessage />
+                                                                <FormDescription>
+                                                                    The market fee applied by asset issuer
+                                                                </FormDescription>
+                                                            </FormItem>
+                                                        )}
+                                                    />
+                                                :   null
+                                    }      
 
                                     {
                                         (!amount || !price) || deepLinkInProgress !== false
@@ -352,7 +505,7 @@ export default function LimitOrderCard(properties) {
                                     }
 
                                     {
-                                        ((orderType === "buy" && !sellOrders || !sellOrders.length) || (orderType === "sell" && !buyOrders || !buyOrders.length))
+                                        ((orderType === "buy" && !sellOrders || sellOrders && !sellOrders.length) || (orderType === "sell" && !buyOrders || buyOrders && !buyOrders.length))
                                             ? (
                                                 <Button
                                                     disabled
@@ -373,12 +526,10 @@ export default function LimitOrderCard(properties) {
                                                     onClick={(event) => {
                                                         event.preventDefault();
                                                         if (orderType === "buy" && sellOrders && sellOrders.length > 0) {
-                                                            console.log({lowestAsk: sellOrders[0]})
-                                                            setPrice(trimPrice(1 / sellOrders[0].price, 8));
+                                                            setPrice(trimPrice(sellOrders[0].price, assetBData.precision));
                                                             return;
                                                         } else if (orderType === "sell" && buyOrders && buyOrders.length > 0) {
-                                                            console.log({highestBid: buyOrders[0]})
-                                                            setPrice(trimPrice(buyOrders[0].price, 8));
+                                                            setPrice(trimPrice(buyOrders[0].price, assetBData.precision));
                                                             return;
                                                         }
                                                     }}

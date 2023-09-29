@@ -53,7 +53,7 @@ export default function PoolForm() {
     useEffect(() => {
         // Subscribes to the user nanostore state
         const unsubscribe = $currentUser.subscribe((value) => {
-        setUsr(value);
+            setUsr(value);
         });
         return unsubscribe;
     }, [$currentUser]);
@@ -90,6 +90,42 @@ export default function PoolForm() {
             retrieve();
         }
     }, [usr]);
+
+    useEffect(() => {
+        async function parseUrlParams() {
+            if (window.location.search) {
+                console.log("Parsing url params");
+                const urlSearchParams = new URLSearchParams(window.location.search);
+                const params = Object.fromEntries(urlSearchParams.entries());
+                const poolParameter = params && params.pool ? params.pool : null;
+
+                if (!poolParameter || !poolParameter.length) {
+                    console.log("No pool parameter found");
+                    setPool("1.19.0");
+                    return;
+                }
+
+                if (poolParameter & !poolParameter.includes("1.9.")) {
+                    console.log("Invalid pool parameters");
+                    setPool("1.19.0");
+                    return;
+                }
+
+                const poolIds = pools.map((x) => x.id);
+                if (!poolIds.includes(poolParameter)) {
+                    console.log("Replacing unknown pool with first pool in list");
+                    setPool("1.19.0");
+                    return;
+                }
+
+                setPool(poolParameter);
+            }
+        }
+
+        if (pools && pools.length) {
+            parseUrlParams();
+        }
+    }, [pools]);
 
     useEffect(() => {
         /**
@@ -294,6 +330,9 @@ export default function PoolForm() {
     const [showDialog, setShowDialog] = useState(false);
     const [poolKey, setPoolKey] = useState("default_pool_key");
     useEffect(() => {
+        if (pool) {
+            window.history.replaceState({}, "", `?pool=${pool}`); // updating the url parameters
+        }
         setPoolKey(`pool_key${Date.now()}`);
     }, [pool]);
 

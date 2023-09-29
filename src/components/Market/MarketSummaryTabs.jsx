@@ -15,6 +15,7 @@ import MyCompletedTrades from "./Contents/MyCompletedTrades";
 
 export default function MarketSummaryTabs(properties) {
     const {
+        activeLimitCard,
         assetAData,
         assetBData,
         usr,
@@ -94,7 +95,7 @@ export default function MarketSummaryTabs(properties) {
                             </TabsContent>
                             <TabsContent value="sell">
                                 <MarketTradeContents 
-                                    type="sell" 
+                                    type="sell"
                                     publicMarketHistory={publicMarketHistory}
                                     marketHistoryInProgress={marketHistoryInProgress}
                                     reset={() => {

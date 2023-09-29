@@ -33,6 +33,7 @@ import MarketOrderCard from "./Market/MarketOrderCard.jsx";
 import AssetDropDown from "./Market/AssetDropDownCard.jsx";
 import MarketAssetCard from "./Market/MarketAssetCard.jsx";
 import MarketSummaryTabs from "./Market/MarketSummaryTabs.jsx";
+import PoolDialogs from "./Market/PoolDialogs.jsx";
 import CurrentUser from "./common/CurrentUser.jsx";
 
 import { humanReadableFloat, trimPrice } from '../lib/common';
@@ -68,6 +69,34 @@ export default function Market(properties) {
     if (usr && usr.chain) {
       fetchCachedData();
     }
+  }, [usr]);
+
+  const [pools, setPools] = useState(); // pools retrieved from api
+  useEffect(() => {
+      /**
+       * Retrieves the pools from the api
+       */
+      async function retrieve() {
+          const poolResponse = await fetch(`http://localhost:8080/cache/pools/${usr.chain}`, { method: "GET" });
+
+          if (!poolResponse.ok) {
+              console.log({
+                  error: new Error(`${response.status} ${response.statusText}`),
+                  msg: "Couldn't generate deeplink."
+              });
+              return;
+          }
+  
+          const poolJSON = await poolResponse.json();
+  
+          if (poolJSON) {
+            setPools(poolJSON);
+          }
+      }
+
+      if (usr && usr.chain) {
+          retrieve();
+      }
   }, [usr]);
 
   const [assetA, setAssetA] = useState(!window.location.search ? "BTS" : null);
@@ -239,12 +268,12 @@ export default function Market(properties) {
     if (assetA && usr && usr.chain) {
       _resetA();
       _resetMarketData();
-      fetchAssetA();      
+      fetchAssetA();
     }
   }, [assetA, usr]);
 
   useEffect(() => {
-    async function fetching() {
+    async function fetchDynamicData() {
       const fetchedDynamicData = await fetch(
         `http://localhost:8080/cache/dynamic/${usr.chain}/${assetAData.id.replace("1.3.", "2.3.")}`,
         { method: "GET" }
@@ -264,7 +293,7 @@ export default function Market(properties) {
     }
 
     if (assetAData && usr && usr.chain) {
-      fetching();
+      fetchDynamicData();
     }
   }, [assetAData]);
 
@@ -293,7 +322,7 @@ export default function Market(properties) {
   }, [assetB, usr]);
   
   useEffect(() => {
-    async function fetching() {
+    async function fetchDynamicData() {
       const fetchedDynamicData = await fetch(
         `http://localhost:8080/cache/dynamic/${usr.chain}/${assetBData.id.replace("1.3.", "2.3.")}`,
         { method: "GET" }
@@ -313,13 +342,15 @@ export default function Market(properties) {
     }
 
     if (assetBData && usr && usr.chain) {
-      fetching();
+      fetchDynamicData();
     }
   }, [assetBData]);
 
   useEffect(() => {
     async function fetchMarketHistory() {
       // Fetching the data for the market summary tabs component
+      console.log("Fetching market history");
+
       const fetchedMarketHistory = await fetch(`http://localhost:8080/api/getMarketHistory/${usr.chain}/${assetAData.id}/${assetBData.id}/${usr.id}`, { method: "GET" });
       
       if (!fetchedMarketHistory.ok) {
@@ -343,12 +374,11 @@ export default function Market(properties) {
         setTickerData(ticker);
       }
     }
-    
+  
     if (assetAData && assetBData) {
-      console.log("Fetching market history");
       fetchMarketHistory();
     }
-  }, [assetAData, assetBData, usr, marketItr]);
+  }, [assetAData, assetBData, usr, pools, marketItr]);
 
   useEffect(() => {
     if (assetA && assetB && usr && usr.chain) {
@@ -426,6 +456,8 @@ export default function Market(properties) {
                 usr={usr}
                 thisAssetA={assetA}
                 thisAssetB={assetB}
+                assetAData={assetAData}
+                assetBData={assetBData}
                 buyOrders={buyOrders}
                 sellOrders={sellOrders}
                 orderType="buy"
@@ -438,6 +470,8 @@ export default function Market(properties) {
                 usr={usr}
                 thisAssetA={assetA}
                 thisAssetB={assetB}
+                assetAData={assetAData}
+                assetBData={assetBData}
                 buyOrders={buyOrders}
                 sellOrders={sellOrders}
                 orderType="sell"
@@ -464,7 +498,7 @@ export default function Market(properties) {
                         storeCallback={setAssetA}
                         otherAsset={assetB}
                         marketSearch={marketSearch}
-                        type="quote"
+                        type={activeLimitCard === "buy" ? "quote" : "base"}
                       />
                       <HoverCard>
                         <HoverCardTrigger asChild style={{ position: 'relative' }}>
@@ -496,7 +530,7 @@ export default function Market(properties) {
                         storeCallback={setAssetB}
                         otherAsset={assetA}
                         marketSearch={marketSearch}
-                        type="base"
+                        type={activeLimitCard === "sell" ? "quote" : "base"}
                       />
                     </div>
                   </CardContent>
@@ -513,7 +547,17 @@ export default function Market(properties) {
                           {
                             !tickerData
                               ? "Loading..."
-                              : `${assetA}/${assetB}`
+                              : null
+                          }
+                          {
+                            tickerData && activeLimitCard === "buy"
+                              ? `${assetA}/${assetB}`
+                              : null
+                          }
+                          {
+                            tickerData && activeLimitCard === "sell"
+                              ? `${assetB}/${assetA}`
+                              : null
                           }
                         </CardDescription>
                       </CardHeader>
@@ -545,7 +589,7 @@ export default function Market(properties) {
                               ? <>
                                   24Hr base volume:
                                   <Badge variant="outline" className="ml-2 mb-1">
-                                    {tickerData.base_volume}
+                                    {activeLimitCard === "buy" ? tickerData.base_volume : tickerData.quote_volume}
                                   </Badge>
                                   <br/>
                                 </>
@@ -556,7 +600,7 @@ export default function Market(properties) {
                               ? <>
                                   24Hr quote volume:
                                   <Badge variant="outline" className="ml-2 mb-1">
-                                    {tickerData.quote_volume}
+                                    {activeLimitCard === "sell" ? tickerData.base_volume : tickerData.quote_volume }
                                   </Badge>
                                   <br/>
                                 </>
@@ -591,8 +635,8 @@ export default function Market(properties) {
                     <a
                       href={
                           usr.chain === "bitshares"
-                              ? `https://blocksights.info/#/markets/${assetA}/${assetB}`
-                              : `https://blocksights.info/#/markets/${assetA}/${assetB}?network=testnet`
+                              ? `https://blocksights.info/#/markets/${activeLimitCard === "buy" ? assetA : assetB}/${activeLimitCard === "buy" ? assetB : assetA}`
+                              : `https://blocksights.info/#/markets/${activeLimitCard === "buy" ? assetA : assetB}/${activeLimitCard === "buy" ? assetB : assetA}?network=testnet`
                       }
                       target="_blank"
                     >
@@ -603,7 +647,11 @@ export default function Market(properties) {
                     {
                       usr.chain === "bitshares"
                         ? <a
-                            href={`https://bts.exchange/#/market/${assetA}_${assetB}?r=nftprofessional1`}
+                            href={
+                              activeLimitCard === "buy"
+                                ? `https://bts.exchange/#/market/${assetA}_${assetB}?r=nftprofessional1`
+                                : `https://bts.exchange/#/market/${assetB}_${assetA}?r=nftprofessional1`
+                            }
                             target="_blank"
                           >
                               <Button variant="outline" className="ml-2">
@@ -624,7 +672,7 @@ export default function Market(properties) {
                   marketSearch={marketSearch}
                   chain={usr.chain}
                   usrBalances={usrBalances}
-                  type="buy"
+                  type={activeLimitCard === "buy" ? "buy" : "sell"}
                 />
               </div>
 
@@ -636,14 +684,25 @@ export default function Market(properties) {
                   marketSearch={marketSearch}
                   chain={usr.chain}
                   usrBalances={usrBalances}
-                  type="sell"
+                  type={activeLimitCard === "sell" ? "buy" : "sell"}
                 />
               </div>
 
             </div>
           </div>
-
         </div>
+        
+        {
+          assetA && assetB && assetAData && assetBData
+            ? <PoolDialogs
+                assetA={assetA}
+                assetAData={assetAData}
+                assetB={assetB}
+                assetBData={assetBData}
+              />
+            : null
+        }
+
         <div className="grid grid-cols-1 gap-5 mt-5">
           {
             assetAData && assetBData
@@ -665,6 +724,7 @@ export default function Market(properties) {
                     <TabsContent value="buy">
                       <MarketOrderCard
                         cardType="buy"
+                        activeLimitCard={activeLimitCard}
                         assetA={assetA}
                         assetAData={assetAData}
                         assetB={assetB}
@@ -680,6 +740,7 @@ export default function Market(properties) {
                     <TabsContent value="sell">
                       <MarketOrderCard
                         cardType="sell"
+                        activeLimitCard={activeLimitCard}
                         assetA={assetA}
                         assetAData={assetAData}
                         assetB={assetB}
@@ -698,10 +759,12 @@ export default function Market(properties) {
               : null
           }
         </div>
+        
         {
           assetA && assetB
             ? (
               <MarketSummaryTabs
+                activeLimitCard={activeLimitCard}
                 assetAData={assetAData}
                 assetBData={assetBData}
                 usr={usr}

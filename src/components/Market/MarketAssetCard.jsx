@@ -65,7 +65,11 @@ export default function MarketAssetCard(properties) {
                             {asset} {assetData ? `(${assetData.id})` : ''}
                         </CardTitle>
                         <CardDescription className="text-lg">
-                            {type === "buy" ? "Base" : "Quote"} asset
+                            {
+                                type === "buy"
+                                ? "Quote asset"
+                                : "Base asset"
+                            } - <span className="text-sm">({type === "buy" ? "Buying" : "Selling"})</span>
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="text-sm pb-2">
