@@ -266,6 +266,19 @@ export const Avatar = ({
     }
   }, [direction, distance, angle]);
 
+  const [activeEyes, setActiveEyes] = useState(data.eyeType);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      // blink every 4 seconds
+      setActiveEyes(activeEyes !== "sleepy" ? "sleepy" : "normal"); //blink
+      // wait 333ms
+      setTimeout(() => {
+        setActiveEyes(data.eyeType); //open
+      }, Math.max(100, Math.random() * 500));
+    }, Math.max(3000, Math.random() * 10000));
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <svg
       viewBox={`0 0 ${SIZE} ${SIZE}`}
@@ -313,7 +326,7 @@ export const Avatar = ({
             direction === "left" ? adjustedDegrees + 65 : adjustedDegrees - 65
           }, ${SIZE / 2} ${SIZE / 2})`}
         >
-          {eyeTypes[data.eyeType].leftEye({
+          {eyeTypes[activeEyes].leftEye({
             eyeSize: data.eyeSize,
             eyeSpread:
               Math.min(distance / 20, 5) * (direction === "left" ? -1 : 1),
@@ -321,7 +334,7 @@ export const Avatar = ({
             x: 20,
             y: 14,
           })}
-          {eyeTypes[data.eyeType].rightEye({
+          {eyeTypes[activeEyes].rightEye({
             eyeSize: data.eyeSize,
             eyeSpread:
               Math.min(distance / 20, 5) * (direction === "left" ? -1 : 1),
