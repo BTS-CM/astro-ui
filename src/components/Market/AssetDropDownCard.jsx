@@ -39,8 +39,12 @@ import { Button } from "@/components/ui/button";
 export default function AssetDropDown(properties) {
     const { assetSymbol, assetData, storeCallback, otherAsset, marketSearch, type } = properties;
 
+    const marketSearchContents = marketSearch && marketSearch.length
+      ? marketSearch.filter((asset) => (asset.s !== otherAsset && asset.s !== assetSymbol))
+      : [];
+
     const fuse = new Fuse(
-      marketSearch.filter((asset) => (asset.s !== otherAsset && asset.s !== assetSymbol)),
+      marketSearchContents,
       {
         includeScore: true,
         keys: [

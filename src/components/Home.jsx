@@ -6,11 +6,11 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
-import { $currentUser, eraseCurrentUser } from '../stores/users.ts'
-import AccountSelect from './AccountSelect.jsx'
+import { $currentUser, eraseCurrentUser } from "../stores/users.ts";
+import AccountSelect from "./AccountSelect.jsx";
 import CurrentUser from "./common/CurrentUser.jsx";
 
 export default function Home(properties) {
@@ -30,7 +30,7 @@ export default function Home(properties) {
     <>
       <div className="container mx-auto mt-5 mb-5">
         <div className="grid grid-cols-3 gap-3">
-          <a href="/pool/index.html" style={{ textDecoration: 'none' }}>
+          <a href="/pool/index.html" style={{ textDecoration: "none" }}>
             <Card>
               <CardHeader>
                 <CardTitle>💱 Pool exchange</CardTitle>
@@ -39,7 +39,7 @@ export default function Home(properties) {
             </Card>
           </a>
 
-          <a href="/dex/index.html" style={{ textDecoration: 'none' }}>
+          <a href="/dex/index.html" style={{ textDecoration: "none" }}>
             <Card>
               <CardHeader>
                 <CardTitle>📈 DEX limit orders</CardTitle>
@@ -48,7 +48,7 @@ export default function Home(properties) {
             </Card>
           </a>
 
-          <a href="/portfolio/index.html" style={{ textDecoration: 'none' }}>
+          <a href="/portfolio/index.html" style={{ textDecoration: "none" }}>
             <Card>
               <CardHeader>
                 <CardTitle>💰 Portfolio</CardTitle>
@@ -57,11 +57,11 @@ export default function Home(properties) {
             </Card>
           </a>
         </div>
-        {
-          usr
-            ? <CurrentUser usr={usr} resetCallback={eraseCurrentUser} />
-            : null
-        }
+        <div className="grid grid-cols-1 mt-5">
+          {usr ? (
+            <CurrentUser usr={usr} resetCallback={eraseCurrentUser} />
+          ) : null}
+        </div>
       </div>
     </>
   );
