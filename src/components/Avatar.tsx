@@ -266,18 +266,56 @@ export const Avatar = ({
     }
   }, [direction, distance, angle]);
 
+  const [isIdle, setIsIdle] = useState(false);
+  const [activeMouth, setActiveMouth] = useState(data.mouthType);
   const [activeEyes, setActiveEyes] = useState(data.eyeType);
   useEffect(() => {
     const interval = setInterval(() => {
+      if (isIdle) {
+        setActiveEyes("sleepy");
+        setActiveMouth("surprise");
+        return;
+      }
       // blink every 4 seconds
-      setActiveEyes(activeEyes !== "sleepy" ? "sleepy" : "normal"); //blink
+      setActiveEyes(data.eyeType !== "sleepy" ? "sleepy" : "normal"); //blink
       // wait 333ms
       setTimeout(() => {
         setActiveEyes(data.eyeType); //open
       }, Math.max(100, Math.random() * 500));
     }, Math.max(3000, Math.random() * 10000));
     return () => clearInterval(interval);
-  }, []);
+  }, [isIdle]);
+
+  const [timeoutTimer, setTimeoutTimer] = useState();
+  useEffect(() => {
+    function handleIdle() {
+      console.log("User has gone idle");
+      setIsIdle(true);
+    }
+
+    function handleMouseMove() {
+      if (timeoutTimer) {
+        clearTimeout(timeoutTimer);
+      }
+      if (isIdle) {
+        console.log("No longer idle");
+        setIsIdle(false);
+        setActiveEyes(data.eyeType);
+        setActiveMouth(data.mouthType);
+      }
+      setTimeoutTimer(setTimeout(handleIdle, 10000));
+    }
+
+    if (mousePosition.mouseX && mousePosition.mouseY) {
+      handleMouseMove();
+    }
+
+    return () => {
+      if (timeoutTimer) {
+        clearTimeout(timeoutTimer);
+      }
+    };
+  }, [mousePosition]);
 
   return (
     <svg
@@ -342,7 +380,7 @@ export const Avatar = ({
             x: 14,
             y: 14,
           })}
-          {mouthTypes[data.mouthType]({
+          {mouthTypes[activeMouth]({
             mouthSpread: Math.min(distance / 50, 5),
             mouthSize: data.mouthSize,
             mouthColor: data.faceColor,
