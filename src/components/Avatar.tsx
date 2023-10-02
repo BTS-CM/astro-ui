@@ -289,7 +289,7 @@ export const Avatar = ({
   const [timeoutTimer, setTimeoutTimer] = useState();
   useEffect(() => {
     function handleIdle() {
-      console.log("User has gone idle");
+      //console.log("User has gone idle");
       setIsIdle(true);
     }
 
@@ -298,12 +298,12 @@ export const Avatar = ({
         clearTimeout(timeoutTimer);
       }
       if (isIdle) {
-        console.log("No longer idle");
+        //console.log("No longer idle");
         setIsIdle(false);
         setActiveEyes(data.eyeType);
         setActiveMouth(data.mouthType);
       }
-      setTimeoutTimer(setTimeout(handleIdle, 10000));
+      setTimeoutTimer(setTimeout(handleIdle, 60000));
     }
 
     if (mousePosition.mouseX && mousePosition.mouseY) {

@@ -8,6 +8,7 @@ import {
   setGlobalParams,
   $marketSearchCache,
   addMarketSearchesToCache,
+  addPoolsToCache,
 } from "../stores/cache.ts";
 
 import {
@@ -42,6 +43,82 @@ export default function AccountSelect(properties) {
     return unsubscribe;
   }, [$userStorage]);
 
+  useEffect(() => {
+    /**
+     * Retrieves search data
+     */
+    async function fetchMarketSearches() {
+      const cachedMarketAssets = await fetch(
+        `http://localhost:8080/cache/marketSearch/${chain}`,
+        { method: "GET" }
+      );
+
+      if (!cachedMarketAssets.ok) {
+        console.log("Failed to fetch cached data");
+        return;
+      }
+
+      const assetJSON = await cachedMarketAssets.json();
+
+      if (assetJSON && assetJSON.result) {
+        addMarketSearchesToCache(assetJSON.result);
+      }
+    }
+
+    /**
+     * Retrieves the pools from the api
+     */
+    async function retrievePools() {
+      const poolResponse = await fetch(
+        `http://localhost:8080/cache/pools/${chain}`,
+        { method: "GET" }
+      );
+
+      if (!poolResponse.ok) {
+        console.log({
+          error: new Error(`${response.status} ${response.statusText}`),
+          msg: "Couldn't generate deeplink.",
+        });
+        return;
+      }
+
+      const poolJSON = await poolResponse.json();
+
+      if (poolJSON) {
+        addPoolsToCache(poolJSON);
+      }
+    }
+
+    async function lookupFees() {
+      const response = await fetch(
+        `http://localhost:8080/api/getObjects/${chain}`,
+        { method: "POST", body: JSON.stringify(["2.0.0"]) }
+      );
+
+      if (!response.ok) {
+        console.log("Failed to fetch fee data");
+        return;
+      }
+
+      const responseContents = await response.json();
+
+      if (
+        responseContents &&
+        responseContents.result &&
+        responseContents.result.length
+      ) {
+        const finalResult = responseContents.result[0];
+        setGlobalParams(finalResult);
+      }
+    }
+
+    if (chain) {
+      fetchMarketSearches();
+      retrievePools();
+      lookupFees();
+    }
+  }, [chain]);
+
   const [inProgress, setInProgress] = useState(false);
   const [searchResponse, setSearchResponse] = useState();
   async function lookupAccount() {
@@ -71,59 +148,6 @@ export default function AccountSelect(properties) {
     setInProgress(false);
     setErrorMessage("Couldn't find account.");
   }
-
-  useEffect(() => {
-    async function lookupFees() {
-      const response = await fetch(
-        `http://localhost:8080/api/getObjects/${chain}`,
-        { method: "POST", body: JSON.stringify(["2.0.0"]) }
-      );
-
-      if (!response.ok) {
-        console.log("Failed to fetch fee data");
-        return;
-      }
-
-      const responseContents = await response.json();
-
-      if (
-        responseContents &&
-        responseContents.result &&
-        responseContents.result.length
-      ) {
-        const finalResult = responseContents.result[0];
-        setGlobalParams(finalResult);
-      }
-    }
-
-    async function fetchCachedData() {
-      const cachedMarketAssets = await fetch(
-        `http://localhost:8080/cache/marketSearch/${chain}`,
-        { method: "GET" }
-      );
-
-      if (!cachedMarketAssets.ok) {
-        console.log("Failed to fetch cached data");
-        return;
-      }
-
-      const assetJSON = await cachedMarketAssets.json();
-      if (assetJSON && assetJSON.result && assetJSON.result.length) {
-        addMarketSearchesToCache(assetJSON.result);
-      }
-    }
-
-    if (chain) {
-      const cachedFees = $globalParamsCache.get();
-      const cachedMarketSearch = $marketSearchCache.get();
-      if (!cachedFees) {
-        lookupFees();
-      }
-      if (!cachedMarketSearch || !cachedMarketSearch.length) {
-        fetchCachedData();
-      }
-    }
-  }, [chain]);
 
   return (
     <>

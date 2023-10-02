@@ -22,6 +22,14 @@ import {
 
 import { $currentUser, eraseCurrentUser } from "../stores/users.ts";
 
+import {
+  $poolCache,
+  $marketSearchCache,
+  $globalParamsCache,
+} from "../stores/cache.ts";
+
+import { $assetCache, addAssetsToCache } from "../stores/cache.ts";
+
 import AccountSelect from "./AccountSelect.jsx";
 import LimitOrderCard from "./Market/LimitOrderCard.jsx";
 import MarketOrderCard from "./Market/MarketOrderCard.jsx";
@@ -42,63 +50,32 @@ export default function Market(properties) {
     return unsubscribe;
   }, [$currentUser]);
 
-  const [marketSearch, setMarketSearch] = useState([]);
+  const [assets, setAssetCache] = useState([]);
   useEffect(() => {
-    // Fetching the required market asset data
-    // Fetch first to check validity of assets
-    async function fetchCachedData() {
-      const cachedMarketAssets = await fetch(
-        `http://localhost:8080/cache/marketSearch/${usr.chain}`,
-        { method: "GET" }
-      );
+    const unsubscribe = $assetCache.subscribe((value) => {
+      setAssetCache(value);
+    });
+    return unsubscribe;
+  }, [$assetCache]);
 
-      if (!cachedMarketAssets.ok) {
-        console.log("Failed to fetch cached data");
-        return;
-      }
-
-      const assetJSON = await cachedMarketAssets.json();
-
-      if (assetJSON && assetJSON.result) {
-        setMarketSearch(assetJSON.result);
-      }
-    }
-
-    if (usr && usr.chain) {
-      fetchCachedData();
-    }
-  }, [usr]);
-
-  const [pools, setPools] = useState(); // pools retrieved from api
+  const [marketSearch, setMarketSearchCache] = useState([]);
   useEffect(() => {
-    /**
-     * Retrieves the pools from the api
-     */
-    async function retrieve() {
-      const poolResponse = await fetch(
-        `http://localhost:8080/cache/pools/${usr.chain}`,
-        { method: "GET" }
-      );
+    const unsubscribe = $marketSearchCache.subscribe((value) => {
+      setMarketSearchCache(value);
+    });
+    return unsubscribe;
+  }, [$marketSearchCache]);
 
-      if (!poolResponse.ok) {
-        console.log({
-          error: new Error(`${response.status} ${response.statusText}`),
-          msg: "Couldn't generate deeplink.",
-        });
-        return;
-      }
-
-      const poolJSON = await poolResponse.json();
-
-      if (poolJSON) {
-        setPools(poolJSON);
-      }
-    }
-
-    if (usr && usr.chain) {
-      retrieve();
-    }
-  }, [usr]);
+  /*
+  // Fees
+  const [globalParamsCache, setGlobalParamsCache] = useState(null);
+  useEffect(() => {
+    const unsubscribe = $globalParamsCache.subscribe((value) => {
+      setGlobalParamsCache(value);
+    });
+    return unsubscribe;
+  }, [$globalParamsCache]);
+  */
 
   const [assetA, setAssetA] = useState(!window.location.search ? "BTS" : null);
   const [assetB, setAssetB] = useState(!window.location.search ? "USD" : null);
@@ -271,13 +248,26 @@ export default function Market(properties) {
       if (assetAJSON && assetAJSON.result) {
         console.log("Fetched asset A data");
         setAssetAData(assetAJSON.result);
+        addAssetsToCache([assetAJSON.result]);
       }
     }
 
     if (assetA && usr && usr.chain) {
       _resetA();
       _resetMarketData();
-      fetchAssetA();
+
+      if (!assets || !assets.length) {
+        fetchAssetA();
+        return;
+      }
+
+      const foundAsset = assets.find((asset) => asset.s === assetA);
+      if (!foundAsset) {
+        fetchAssetA();
+      }
+
+      console.log("Retrieved asset A from cache");
+      setAssetAData(foundAsset);
     }
   }, [assetA, usr]);
 
@@ -325,13 +315,26 @@ export default function Market(properties) {
       if (assetBJSON && assetBJSON.result) {
         console.log("Fetched asset B data");
         setAssetBData(assetBJSON.result);
+        addAssetsToCache([assetBJSON.result]);
       }
     }
 
     if (assetB && usr && usr.chain) {
       _resetB();
       _resetMarketData();
-      fetchAssetB();
+
+      if (!assets || !assets.length) {
+        fetchAssetB();
+        return;
+      }
+
+      const foundAsset = assets.find((asset) => asset.s === assetB);
+      if (!foundAsset) {
+        fetchAssetB();
+      }
+
+      console.log("Retrieved asset B from cache");
+      setAssetBData(foundAsset);
     }
   }, [assetB, usr]);
 
@@ -403,7 +406,7 @@ export default function Market(properties) {
     if (assetAData && assetBData) {
       fetchMarketHistory();
     }
-  }, [assetAData, assetBData, usr, pools, marketItr]);
+  }, [assetAData, assetBData, usr, marketItr]);
 
   useEffect(() => {
     if (assetA && assetB && usr && usr.chain) {
@@ -477,6 +480,7 @@ export default function Market(properties) {
                 assetBData={assetBData}
                 buyOrders={buyOrders}
                 sellOrders={sellOrders}
+                usrBalances={usrBalances}
                 orderType="buy"
                 key="buyLimit"
                 marketSearch={marketSearch}
@@ -491,6 +495,7 @@ export default function Market(properties) {
                 assetBData={assetBData}
                 buyOrders={buyOrders}
                 sellOrders={sellOrders}
+                usrBalances={usrBalances}
                 orderType="sell"
                 key="sellLimit"
                 marketSearch={marketSearch}
@@ -647,7 +652,7 @@ export default function Market(properties) {
                   </HoverCardTrigger>
                   <HoverCardContent className="w-80 text-sm text-center">
                     <b>
-                      {assetA}/{assetB} Market links
+                      {assetA}/{assetB} External market links
                     </b>
                     <br />
                     <a
@@ -665,22 +670,48 @@ export default function Market(properties) {
                       target="_blank"
                     >
                       <Button variant="outline" className="mb-2 mt-2">
-                        {assetA}/{assetB} Market explorer
+                        🔎 Blocksights market explorer
                       </Button>
                     </a>
                     {usr.chain === "bitshares" ? (
-                      <a
-                        href={
-                          activeLimitCard === "buy"
-                            ? `https://bts.exchange/#/market/${assetA}_${assetB}?r=nftprofessional1`
-                            : `https://bts.exchange/#/market/${assetB}_${assetA}?r=nftprofessional1`
-                        }
-                        target="_blank"
-                      >
-                        <Button variant="outline" className="ml-2">
-                          BTS.Exchange
-                        </Button>
-                      </a>
+                      <>
+                        <a
+                          href={
+                            activeLimitCard === "buy"
+                              ? `https://bts.exchange/#/market/${assetA}_${assetB}?r=nftprofessional1`
+                              : `https://bts.exchange/#/market/${assetB}_${assetA}?r=nftprofessional1`
+                          }
+                          target="_blank"
+                        >
+                          <Button variant="outline" className="ml-2">
+                            🔗 BTS.Exchange
+                          </Button>
+                        </a>
+                        <a
+                          href={
+                            activeLimitCard === "buy"
+                              ? `https://wallet.btwty.com/market/${assetA}_${assetB}?r=nftprofessional1`
+                              : `https://wallet.btwty.com/market/${assetB}_${assetA}?r=nftprofessional1`
+                          }
+                          target="_blank"
+                        >
+                          <Button variant="outline" className="ml-2">
+                            🔗 BTWTY
+                          </Button>
+                        </a>
+                        <a
+                          href={
+                            activeLimitCard === "buy"
+                              ? `https://ex.xbts.io/market/${assetA}_${assetB}?r=nftprofessional1`
+                              : `https://ex.xbts.io/market/${assetB}_${assetA}?r=nftprofessional1`
+                          }
+                          target="_blank"
+                        >
+                          <Button variant="outline" className="ml-2 mt-2">
+                            🔗 XBTS
+                          </Button>
+                        </a>
+                      </>
                     ) : null}
                   </HoverCardContent>
                 </HoverCard>

@@ -5,7 +5,14 @@ import { FixedSizeList as List } from "react-window";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-import { Card, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 import {
   Select,
@@ -25,18 +32,21 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 import { blockchainFloat, copyToClipboard } from "../lib/common";
+
 import { $currentUser, eraseCurrentUser } from "../stores/users.ts";
+
+import {
+  $poolCache,
+  $marketSearchCache,
+  $globalParamsCache,
+} from "../stores/cache.ts";
+
 import AccountSelect from "./AccountSelect.jsx";
+import PoolDialogs from "./Market/PoolDialogs.jsx";
+import MarketAssetCard from "./Market/MarketAssetCard.jsx";
 import CurrentUser from "./common/CurrentUser.jsx";
 
 export default function PoolForm() {
@@ -55,41 +65,27 @@ export default function PoolForm() {
     return unsubscribe;
   }, [$currentUser]);
 
+  const [marketSearch, setMarketSearchCache] = useState([]);
+  useEffect(() => {
+    // Subscribes to the cache nanostore state
+    const unsubscribe = $marketSearchCache.subscribe((value) => {
+      setMarketSearchCache(value);
+    });
+    return unsubscribe;
+  }, [$marketSearchCache]);
+
   const [data, setData] = useState(""); // form data container
   const [pool, setPool] = useState(""); // dropdown selected pool
 
-  const [pools, setPools] = useState(); // pools retrieved from api
   const [assetData, setAssetData] = useState(); // assets retrieved from api
 
+  const [pools, setPoolCache] = useState();
   useEffect(() => {
-    /**
-     * Retrieves the pools from the api
-     */
-    async function retrieve() {
-      const poolResponse = await fetch(
-        `http://localhost:8080/cache/pools/${usr.chain}`,
-        { method: "GET" }
-      );
-
-      if (!poolResponse.ok) {
-        console.log({
-          error: new Error(`${response.status} ${response.statusText}`),
-          msg: "Couldn't generate deeplink.",
-        });
-        return;
-      }
-
-      const poolJSON = await poolResponse.json();
-
-      if (poolJSON) {
-        setPools(poolJSON);
-      }
-    }
-
-    if (usr && usr.chain) {
-      retrieve();
-    }
-  }, [usr]);
+    const unsubscribe = $poolCache.subscribe((value) => {
+      setPoolCache(value);
+    });
+    return unsubscribe;
+  }, [$poolCache]);
 
   useEffect(() => {
     async function parseUrlParams() {
@@ -175,6 +171,70 @@ export default function PoolForm() {
       setSellAmount(1);
     }
   }, [pool, assetData]);
+
+  const [assetADetails, setAssetADetails] = useState(null);
+  const [assetBDetails, setAssetBDetails] = useState(null);
+  useEffect(() => {
+    async function fetchDynamicData(chain, symbol, dynamicID, storeValue) {
+      const fetchedDynamicData = await fetch(
+        `http://localhost:8080/cache/dynamic/${chain}/${dynamicID}`,
+        { method: "GET" }
+      );
+
+      if (!fetchedDynamicData.ok) {
+        console.log(`Failed to fetch ${symbol} dynamic data`);
+        return;
+      }
+
+      const dynamicDataJSON = await fetchedDynamicData.json();
+
+      if (dynamicDataJSON && dynamicDataJSON.result) {
+        console.log(`Fetched ${symbol}'s dynamic data`);
+        storeValue(dynamicDataJSON.result);
+      }
+    }
+
+    if (usr && assetA && assetB) {
+      fetchDynamicData(
+        usr.chain,
+        assetA.symbol,
+        assetA.id.replace("1.3.", "2.3."),
+        setAssetADetails
+      );
+      fetchDynamicData(
+        usr.chain,
+        assetB.symbol,
+        assetB.id.replace("1.3.", "2.3."),
+        setAssetBDetails
+      );
+    }
+  }, [usr, assetA, assetB]);
+
+  const [usrBalances, setUsrBalances] = useState();
+  useEffect(() => {
+    async function fetchBalances(chain, accountID) {
+      const retrievedBalances = await fetch(
+        `http://localhost:8080/api/getAccountBalances/${chain}/${accountID}`,
+        { method: "GET" }
+      );
+
+      if (!retrievedBalances.ok) {
+        console.log(`Failed to retrieve user balances`);
+        return;
+      }
+
+      const balanceJSON = await retrievedBalances.json();
+
+      if (balanceJSON && balanceJSON.result) {
+        console.log(`Fetched user balances`);
+        setUsrBalances(balanceJSON.result);
+      }
+    }
+
+    if (usr && assetA && assetB) {
+      fetchBalances(usr.chain, usr.id);
+    }
+  }, [usr, assetA, assetB]);
 
   useEffect(() => {
     // Calculating the amount the user can buy
@@ -398,6 +458,13 @@ export default function PoolForm() {
       <div className="container mx-auto mt-5 mb-5">
         <div className="grid grid-cols-1 gap-3">
           <Card className="p-2">
+            <CardHeader>
+              <CardTitle>Bitshares Liquidity Pool Exchange</CardTitle>
+              <CardDescription>
+                Easily swap between Bitshares assets using one of these user
+                created liquidity pools.
+              </CardDescription>
+            </CardHeader>
             <CardContent>
               {!pools ? <p>Loading pool data</p> : null}
               {!assetData ? <p>Loading asset data</p> : null}
@@ -656,7 +723,72 @@ export default function PoolForm() {
             </CardContent>
           </Card>
         </div>
+
+        {assetA && assetB ? (
+          <PoolDialogs
+            assetA={assetA.symbol}
+            assetAData={assetA}
+            assetB={assetB.symbol}
+            assetBData={assetB}
+          />
+        ) : null}
+
+        {usrBalances ? (
+          <div className="grid grid-cols-2 gap-5 mt-5">
+            <MarketAssetCard
+              asset={assetA.symbol}
+              assetData={assetA}
+              assetDetails={assetADetails}
+              marketSearch={marketSearch}
+              chain={usr.chain}
+              usrBalances={usrBalances}
+              type="sell"
+            />
+            <MarketAssetCard
+              asset={assetB.symbol}
+              assetData={assetB}
+              assetDetails={assetBDetails}
+              marketSearch={marketSearch}
+              chain={usr.chain}
+              usrBalances={usrBalances}
+              type="buy"
+            />
+          </div>
+        ) : null}
+
+        {pool ? (
+          <div className="grid grid-cols-2 gap-5 mt-5">
+            <a
+              href={`/dex/index.html?market=${assetA.symbol}_${assetB.symbol}`}
+            >
+              <Card>
+                <CardHeader className="pb-2 pt-4">
+                  <CardTitle>Trade on the Dex instead?</CardTitle>
+                  <CardDescription className="text-lg">
+                    Market: {assetA.symbol}/{assetB.symbol}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="text-sm pb-2">
+                  Manually create limit orders on DEX market pairs of your
+                  choice.
+                </CardContent>
+              </Card>
+            </a>
+            <Card>
+              <CardHeader className="pb-2 pt-4">
+                <CardTitle>Need to borrow some assets?</CardTitle>
+                <CardDescription className="text-lg">
+                  Borrow {assetA.symbol} or {assetB.symbol}
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="text-sm pb-2">
+                Borrow from DEX participants, with user defined rates.
+              </CardContent>
+            </Card>
+          </div>
+        ) : null}
       </div>
+
       {usr ? (
         <CurrentUser
           usr={usr}

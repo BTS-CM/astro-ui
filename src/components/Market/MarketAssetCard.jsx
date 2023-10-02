@@ -146,7 +146,7 @@ export default function MarketAssetCard(properties) {
             }
           >
             <Button variant="outline" className="w-full">
-              🔗 Explore
+              🔗 Blocksights
             </Button>
           </a>
           <Dialog>
