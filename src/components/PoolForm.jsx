@@ -208,7 +208,7 @@ export default function PoolForm() {
         setAssetBDetails
       );
     }
-  }, [usr, assetA, assetB]);
+  }, [usr, assetA, assetB, foundPool]);
 
   const [usrBalances, setUsrBalances] = useState();
   useEffect(() => {
@@ -733,60 +733,81 @@ export default function PoolForm() {
           />
         ) : null}
 
-        {usrBalances ? (
-          <div className="grid grid-cols-2 gap-5 mt-5">
-            <MarketAssetCard
-              asset={assetA.symbol}
-              assetData={assetA}
-              assetDetails={assetADetails}
-              marketSearch={marketSearch}
-              chain={usr.chain}
-              usrBalances={usrBalances}
-              type="sell"
-            />
-            <MarketAssetCard
-              asset={assetB.symbol}
-              assetData={assetB}
-              assetDetails={assetBDetails}
-              marketSearch={marketSearch}
-              chain={usr.chain}
-              usrBalances={usrBalances}
-              type="buy"
-            />
+        <div className="grid grid-cols-2 gap-5 mt-5">
+          <div className="grid grid-cols-1 gap-3">
+            {usrBalances ? (
+              <>
+                <MarketAssetCard
+                  asset={assetB.symbol}
+                  assetData={assetB}
+                  assetDetails={assetBDetails}
+                  marketSearch={marketSearch}
+                  chain={usr.chain}
+                  usrBalances={usrBalances}
+                  type="buy"
+                />
+                <MarketAssetCard
+                  asset={assetA.symbol}
+                  assetData={assetA}
+                  assetDetails={assetADetails}
+                  marketSearch={marketSearch}
+                  chain={usr.chain}
+                  usrBalances={usrBalances}
+                  type="sell"
+                />
+              </>
+            ) : null}
           </div>
-        ) : null}
-
-        {pool ? (
-          <div className="grid grid-cols-2 gap-5 mt-5">
-            <a
-              href={`/dex/index.html?market=${assetA.symbol}_${assetB.symbol}`}
-            >
-              <Card>
-                <CardHeader className="pb-2 pt-4">
-                  <CardTitle>Trade on the Dex instead?</CardTitle>
-                  <CardDescription className="text-lg">
-                    Market: {assetA.symbol}/{assetB.symbol}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="text-sm pb-2">
-                  Manually create limit orders on DEX market pairs of your
-                  choice.
-                </CardContent>
-              </Card>
-            </a>
-            <Card>
-              <CardHeader className="pb-2 pt-4">
-                <CardTitle>Need to borrow some assets?</CardTitle>
-                <CardDescription className="text-lg">
-                  Borrow {assetA.symbol} or {assetB.symbol}
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="text-sm pb-2">
-                Borrow from DEX participants, with user defined rates.
-              </CardContent>
-            </Card>
+          <div className="grid grid-cols-1 gap-3">
+            {pool ? (
+              <>
+                <a
+                  href={`/dex/index.html?market=${assetA.symbol}_${assetB.symbol}`}
+                >
+                  <Card>
+                    <CardHeader className="pb-2 pt-4">
+                      <CardTitle>Trade on the Dex instead?</CardTitle>
+                      <CardDescription className="text-lg">
+                        Market: {assetA.symbol}/{assetB.symbol}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="text-sm pb-2">
+                      Manually create limit orders on DEX market trading pairs
+                      of your choice.
+                    </CardContent>
+                  </Card>
+                </a>
+                <a
+                  href={`/dex/index.html?market=${foundPool?.share_asset_symbol}_${assetA.symbol}`}
+                >
+                  <Card>
+                    <CardHeader className="pb-2 pt-4">
+                      <CardTitle>Purchase stake in this pool</CardTitle>
+                      <CardDescription className="text-lg">
+                        Share asset: {foundPool?.share_asset_symbol}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="text-sm pb-2">
+                      Consider earning yield over time by owning a stake in the
+                      pool.
+                    </CardContent>
+                  </Card>
+                </a>
+                <Card>
+                  <CardHeader className="pb-2 pt-4">
+                    <CardTitle>Need to borrow some assets?</CardTitle>
+                    <CardDescription className="text-lg">
+                      Borrow {assetA.symbol} or {assetB.symbol}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="text-sm pb-2">
+                    Borrow from DEX participants, with user defined rates.
+                  </CardContent>
+                </Card>
+              </>
+            ) : null}
           </div>
-        ) : null}
+        </div>
       </div>
 
       {usr ? (
