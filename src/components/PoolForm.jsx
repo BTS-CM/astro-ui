@@ -572,6 +572,60 @@ export default function PoolForm() {
                         </>
                       ) : null}
 
+                      {sellAmount &&
+                      foundPool &&
+                      foundPool.taker_fee_percent ? (
+                        <>
+                          <FormField
+                            control={form.control}
+                            name="marketFee"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Pool fee</FormLabel>
+                                <FormControl>
+                                  <Input
+                                    disabled
+                                    placeholder="0"
+                                    className="mb-3 mt-3"
+                                    value={(
+                                      (foundPool.taker_fee_percent / 1000) *
+                                      sellAmount
+                                    ).toFixed(assetA.precision)}
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </>
+                      ) : null}
+
+                      {foundPool ? (
+                        <FormField
+                          control={form.control}
+                          name="networkFee"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Network fee</FormLabel>
+                              <FormControl>
+                                <Input
+                                  disabled
+                                  placeholder="1 BTS"
+                                  className="mb-3 mt-3"
+                                  value="1 BTS"
+                                />
+                              </FormControl>
+                              {usr.id === usr.referrer ? (
+                                <FormMessage>
+                                  Rebate: 0.8 BTS (vesting)
+                                </FormMessage>
+                              ) : null}
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      ) : null}
+
                       {pool ? (
                         <>
                           <FormField
@@ -735,7 +789,7 @@ export default function PoolForm() {
 
         <div className="grid grid-cols-2 gap-5 mt-5">
           <div className="grid grid-cols-1 gap-3">
-            {usrBalances ? (
+            {usrBalances && pool ? (
               <>
                 <MarketAssetCard
                   asset={assetB.symbol}
@@ -772,8 +826,8 @@ export default function PoolForm() {
                       </CardDescription>
                     </CardHeader>
                     <CardContent className="text-sm pb-2">
-                      Manually create limit orders on DEX market trading pairs
-                      of your choice.
+                      You can manually create limit orders for trading pairs of
+                      your choice on the Bitshares DEX
                     </CardContent>
                   </Card>
                 </a>
@@ -782,7 +836,7 @@ export default function PoolForm() {
                 >
                   <Card>
                     <CardHeader className="pb-2 pt-4">
-                      <CardTitle>Purchase stake in this pool</CardTitle>
+                      <CardTitle>Purchase stake in this pool?</CardTitle>
                       <CardDescription className="text-lg">
                         Share asset: {foundPool?.share_asset_symbol}
                       </CardDescription>
