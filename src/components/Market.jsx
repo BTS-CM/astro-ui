@@ -11,6 +11,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -571,11 +572,10 @@ export default function Market(properties) {
                       <CardHeader className="pt-4 pb-2">
                         <CardTitle>Market summary</CardTitle>
                         <CardDescription className="text-lg">
-                          {!tickerData ? "Loading..." : null}
-                          {tickerData && activeLimitCard === "buy"
+                          {activeLimitCard === "buy"
                             ? `${assetA}/${assetB}`
                             : null}
-                          {tickerData && activeLimitCard === "sell"
+                          {activeLimitCard === "sell"
                             ? `${assetB}/${assetA}`
                             : null}
                         </CardDescription>
@@ -592,7 +592,9 @@ export default function Market(properties) {
                             </Badge>
                             <br />
                           </>
-                        ) : null}
+                        ) : (
+                          <Skeleton className="h-4 w-[125px] mt-1" />
+                        )}
                         {tickerData ? (
                           <>
                             24Hr change:
@@ -601,7 +603,9 @@ export default function Market(properties) {
                             </Badge>
                             <br />
                           </>
-                        ) : null}
+                        ) : (
+                          <Skeleton className="h-4 w-[125px] mt-1" />
+                        )}
                         {tickerData ? (
                           <>
                             24Hr base volume:
@@ -612,7 +616,9 @@ export default function Market(properties) {
                             </Badge>
                             <br />
                           </>
-                        ) : null}
+                        ) : (
+                          <Skeleton className="h-4 w-[125px] mt-1" />
+                        )}
                         {tickerData ? (
                           <>
                             24Hr quote volume:
@@ -623,7 +629,9 @@ export default function Market(properties) {
                             </Badge>
                             <br />
                           </>
-                        ) : null}
+                        ) : (
+                          <Skeleton className="h-4 w-[125px] mt-1" />
+                        )}
                         {tickerData && assetAData ? (
                           <>
                             Lowest ask:
@@ -635,7 +643,11 @@ export default function Market(properties) {
                             </Badge>
                             <br />
                           </>
-                        ) : null}
+                        ) : (
+                          <>
+                            <Skeleton className="h-4 w-[125px] mt-1" />
+                          </>
+                        )}
                         {tickerData && assetAData ? (
                           <>
                             Highest bid:
@@ -646,7 +658,9 @@ export default function Market(properties) {
                               )}
                             </Badge>
                           </>
-                        ) : null}
+                        ) : (
+                          <Skeleton className="h-4 w-[125px] mt-1" />
+                        )}
                       </CardContent>
                     </Card>
                   </HoverCardTrigger>
@@ -718,27 +732,73 @@ export default function Market(properties) {
               </div>
 
               <div className="flex-grow" style={{ paddingBottom: "0px" }}>
-                <MarketAssetCard
-                  asset={assetA}
-                  assetData={assetAData}
-                  assetDetails={assetADetails}
-                  marketSearch={marketSearch}
-                  chain={usr.chain}
-                  usrBalances={usrBalances}
-                  type={activeLimitCard === "buy" ? "buy" : "sell"}
-                />
+                {assetADetails ? (
+                  <MarketAssetCard
+                    asset={assetA}
+                    assetData={assetAData}
+                    assetDetails={assetADetails}
+                    marketSearch={marketSearch}
+                    chain={usr.chain}
+                    usrBalances={usrBalances}
+                    type={activeLimitCard === "buy" ? "buy" : "sell"}
+                  />
+                ) : (
+                  <Card>
+                    <CardHeader className="pb-2 pt-4">
+                      <CardTitle>
+                        {activeLimitCard === "buy"
+                          ? "Quote asset"
+                          : "Base asset"}
+                      </CardTitle>
+                      <CardDescription className="text-lg">
+                        Loading...
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-2">
+                        <Skeleton className="h-4 w-[250px]" />
+                        <Skeleton className="h-4 w-[200px]" />
+                        <Skeleton className="h-4 w-[250px]" />
+                        <Skeleton className="h-4 w-[200px]" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
               </div>
 
               <div className="flex-grow">
-                <MarketAssetCard
-                  asset={assetB}
-                  assetData={assetBData}
-                  assetDetails={assetBDetails}
-                  marketSearch={marketSearch}
-                  chain={usr.chain}
-                  usrBalances={usrBalances}
-                  type={activeLimitCard === "sell" ? "buy" : "sell"}
-                />
+                {assetBDetails ? (
+                  <MarketAssetCard
+                    asset={assetB}
+                    assetData={assetBData}
+                    assetDetails={assetBDetails}
+                    marketSearch={marketSearch}
+                    chain={usr.chain}
+                    usrBalances={usrBalances}
+                    type={activeLimitCard === "sell" ? "buy" : "sell"}
+                  />
+                ) : (
+                  <Card>
+                    <CardHeader className="pb-2 pt-4">
+                      <CardTitle>
+                        {activeLimitCard === "sell"
+                          ? "Base asset"
+                          : "Quote asset"}
+                      </CardTitle>
+                      <CardDescription className="text-lg">
+                        Loading...
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-2">
+                        <Skeleton className="h-4 w-[250px]" />
+                        <Skeleton className="h-4 w-[200px]" />
+                        <Skeleton className="h-4 w-[250px]" />
+                        <Skeleton className="h-4 w-[200px]" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
               </div>
             </div>
           </div>
