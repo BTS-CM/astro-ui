@@ -833,66 +833,70 @@ export default function PoolForm() {
                       />
 
                       <div className="grid grid-cols-2 gap-5 mt-5 mb-5">
-                        <Card>
-                          <CardContent>
-                            <FormField
-                              control={form.control}
-                              name="balanceA"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel>
-                                    Swappable {assetA.symbol} ({assetA.id})
-                                  </FormLabel>
-                                  <FormControl>
-                                    {foundPoolDetails ? (
-                                      <Input
-                                        disabled
-                                        placeholder="0"
-                                        className="mb-3 mt-3"
-                                        value={
-                                          foundPoolDetails.readable_balance_a
-                                        }
-                                      />
-                                    ) : (
-                                      <Skeleton className="h-4 w-[250px]" />
-                                    )}
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-                          </CardContent>
-                        </Card>
-                        <Card>
-                          <CardContent>
-                            <FormField
-                              control={form.control}
-                              name="balanceB"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel>
-                                    Swappable {assetB.symbol} ({assetB.id})
-                                  </FormLabel>
-                                  <FormControl>
-                                    {foundPoolDetails ? (
-                                      <Input
-                                        disabled
-                                        placeholder="0"
-                                        className="mb-3 mt-3"
-                                        value={
-                                          foundPoolDetails.readable_balance_b
-                                        }
-                                      />
-                                    ) : (
-                                      <Skeleton className="h-4 w-[250px]" />
-                                    )}
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-                          </CardContent>
-                        </Card>
+                        {pool ? (
+                          <>
+                            <Card>
+                              <CardContent>
+                                <FormField
+                                  control={form.control}
+                                  name="balanceA"
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormLabel>
+                                        Swappable {assetA.symbol} ({assetA.id})
+                                      </FormLabel>
+                                      <FormControl>
+                                        {foundPoolDetails ? (
+                                          <Input
+                                            disabled
+                                            placeholder="0"
+                                            className="mb-3 mt-3"
+                                            value={
+                                              foundPoolDetails.readable_balance_a
+                                            }
+                                          />
+                                        ) : (
+                                          <Skeleton className="h-4 w-[250px]" />
+                                        )}
+                                      </FormControl>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
+                              </CardContent>
+                            </Card>
+                            <Card>
+                              <CardContent>
+                                <FormField
+                                  control={form.control}
+                                  name="balanceB"
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormLabel>
+                                        Swappable {assetB.symbol} ({assetB.id})
+                                      </FormLabel>
+                                      <FormControl>
+                                        {foundPoolDetails ? (
+                                          <Input
+                                            disabled
+                                            placeholder="0"
+                                            className="mb-3 mt-3"
+                                            value={
+                                              foundPoolDetails.readable_balance_b
+                                            }
+                                          />
+                                        ) : (
+                                          <Skeleton className="h-4 w-[250px]" />
+                                        )}
+                                      </FormControl>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
+                              </CardContent>
+                            </Card>
+                          </>
+                        ) : null}
                       </div>
 
                       {pool ? (
@@ -1178,90 +1182,93 @@ export default function PoolForm() {
         ) : null}
 
         <div className="grid grid-cols-2 gap-5 mt-5">
-          <div className="grid grid-cols-1 gap-3">
-            {usrBalances && foundPoolDetails ? (
-              <>
-                <MarketAssetCard
-                  asset={assetB.symbol}
-                  assetData={assetB}
-                  assetDetails={assetBDetails}
-                  marketSearch={marketSearch}
-                  chain={usr.chain}
-                  usrBalances={usrBalances}
-                  type="buy"
-                />
-                <MarketAssetCard
-                  asset={assetA.symbol}
-                  assetData={assetA}
-                  assetDetails={assetADetails}
-                  marketSearch={marketSearch}
-                  chain={usr.chain}
-                  usrBalances={usrBalances}
-                  type="sell"
-                />
-                <MarketAssetCard
-                  asset={foundPoolDetails.share_asset_symbol}
-                  assetData={foundPoolDetails.share_asset_details}
-                  assetDetails={{}}
-                  marketSearch={marketSearch}
-                  chain={usr.chain}
-                  usrBalances={usrBalances}
-                  type="pool"
-                />
-              </>
-            ) : (
-              <>
-                <Card>
-                  <CardHeader className="pb-2 pt-4">
-                    <CardTitle>Quote asset</CardTitle>
-                    <CardDescription className="text-lg">
-                      Loading...
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-2">
-                      <Skeleton className="h-4 w-[250px]" />
-                      <Skeleton className="h-4 w-[200px]" />
-                      <Skeleton className="h-4 w-[250px]" />
-                      <Skeleton className="h-4 w-[200px]" />
-                    </div>
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardHeader className="pb-2 pt-4">
-                    <CardTitle>Base asset</CardTitle>
-                    <CardDescription className="text-lg">
-                      Loading...
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-2">
-                      <Skeleton className="h-4 w-[250px]" />
-                      <Skeleton className="h-4 w-[200px]" />
-                      <Skeleton className="h-4 w-[250px]" />
-                      <Skeleton className="h-4 w-[200px]" />
-                    </div>
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardHeader className="pb-2 pt-4">
-                    <CardTitle>Pool share asset</CardTitle>
-                    <CardDescription className="text-lg">
-                      Loading...
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-2">
-                      <Skeleton className="h-4 w-[250px]" />
-                      <Skeleton className="h-4 w-[200px]" />
-                      <Skeleton className="h-4 w-[250px]" />
-                      <Skeleton className="h-4 w-[200px]" />
-                    </div>
-                  </CardContent>
-                </Card>
-              </>
-            )}
-          </div>
+          {pool ? (
+            <div className="grid grid-cols-1 gap-3">
+              {usrBalances && foundPoolDetails ? (
+                <>
+                  <MarketAssetCard
+                    asset={assetB.symbol}
+                    assetData={assetB}
+                    assetDetails={assetBDetails}
+                    marketSearch={marketSearch}
+                    chain={usr.chain}
+                    usrBalances={usrBalances}
+                    type="buy"
+                  />
+                  <MarketAssetCard
+                    asset={assetA.symbol}
+                    assetData={assetA}
+                    assetDetails={assetADetails}
+                    marketSearch={marketSearch}
+                    chain={usr.chain}
+                    usrBalances={usrBalances}
+                    type="sell"
+                  />
+                  <MarketAssetCard
+                    asset={foundPoolDetails.share_asset_symbol}
+                    assetData={foundPoolDetails.share_asset_details}
+                    assetDetails={{}}
+                    marketSearch={marketSearch}
+                    chain={usr.chain}
+                    usrBalances={usrBalances}
+                    type="pool"
+                  />
+                </>
+              ) : (
+                <>
+                  <Card>
+                    <CardHeader className="pb-2 pt-4">
+                      <CardTitle>Quote asset</CardTitle>
+                      <CardDescription className="text-lg">
+                        Loading...
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-2">
+                        <Skeleton className="h-4 w-[250px]" />
+                        <Skeleton className="h-4 w-[200px]" />
+                        <Skeleton className="h-4 w-[250px]" />
+                        <Skeleton className="h-4 w-[200px]" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardHeader className="pb-2 pt-4">
+                      <CardTitle>Base asset</CardTitle>
+                      <CardDescription className="text-lg">
+                        Loading...
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-2">
+                        <Skeleton className="h-4 w-[250px]" />
+                        <Skeleton className="h-4 w-[200px]" />
+                        <Skeleton className="h-4 w-[250px]" />
+                        <Skeleton className="h-4 w-[200px]" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardHeader className="pb-2 pt-4">
+                      <CardTitle>Pool share asset</CardTitle>
+                      <CardDescription className="text-lg">
+                        Loading...
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-2">
+                        <Skeleton className="h-4 w-[250px]" />
+                        <Skeleton className="h-4 w-[200px]" />
+                        <Skeleton className="h-4 w-[250px]" />
+                        <Skeleton className="h-4 w-[200px]" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                </>
+              )}
+            </div>
+          ) : null}
+
           <div className="grid grid-cols-1 gap-3">
             {pool && assetA && assetB ? (
               <>
