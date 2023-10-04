@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
+import Fuse from "fuse.js";
 import { useForm } from "react-hook-form";
 import { FixedSizeList as List } from "react-window";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 import {
   Card,
@@ -13,6 +15,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 import {
   Select,
@@ -32,9 +43,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import { blockchainFloat, copyToClipboard } from "../lib/common";
+import {
+  blockchainFloat,
+  copyToClipboard,
+  humanReadableFloat,
+} from "../lib/common";
 
 import { $currentUser, eraseCurrentUser } from "../stores/users.ts";
 
@@ -56,6 +71,10 @@ export default function PoolForm() {
     },
   });
 
+  const [data, setData] = useState(""); // form data container
+  const [pool, setPool] = useState(""); // dropdown selected pool
+  const [assetData, setAssetData] = useState(); // assets retrieved from api
+
   const [usr, setUsr] = useState();
   useEffect(() => {
     // Subscribes to the user nanostore state
@@ -74,11 +93,6 @@ export default function PoolForm() {
     return unsubscribe;
   }, [$marketSearchCache]);
 
-  const [data, setData] = useState(""); // form data container
-  const [pool, setPool] = useState(""); // dropdown selected pool
-
-  const [assetData, setAssetData] = useState(); // assets retrieved from api
-
   const [pools, setPoolCache] = useState();
   useEffect(() => {
     const unsubscribe = $poolCache.subscribe((value) => {
@@ -86,6 +100,70 @@ export default function PoolForm() {
     });
     return unsubscribe;
   }, [$poolCache]);
+
+  // Search dialog
+
+  const [poolSearch, setPoolSearch] = useState();
+  const [activeTab, setActiveTab] = useState("asset");
+  useEffect(() => {
+    if (!pools || !pools.length) {
+      return;
+    }
+    const _poolSearch = new Fuse(pools ?? [], {
+      includeScore: true,
+      threshold: 0.2,
+      keys:
+        activeTab === "asset"
+          ? ["asset_a_symbol", "asset_b_symbol"]
+          : ["share_asset_symbol"],
+    });
+    setPoolSearch(_poolSearch);
+  }, [pools, activeTab]);
+
+  const [thisInput, setThisInput] = useState();
+  const [thisResult, setThisResult] = useState();
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  useEffect(() => {
+    if (poolSearch && thisInput) {
+      const result = poolSearch.search(thisInput);
+      setThisResult(result);
+    }
+  }, [poolSearch, thisInput]);
+
+  const PoolRow = ({ index, style }) => {
+    const res = thisResult[index].item;
+
+    return (
+      <div
+        style={{ ...style }}
+        className="grid grid-cols-12"
+        key={`acard-${res.id}`}
+        onClick={() => {
+          setPool(res.id);
+          setDialogOpen(false);
+          setThisResult();
+        }}
+      >
+        <div className="col-span-2">{res.id}</div>
+        <div className="col-span-3">{res.share_asset_symbol}</div>
+        <div className="col-span-3">
+          {res.asset_a_symbol} ({res.asset_a_id})
+        </div>
+        <div className="col-span-3">
+          {res.asset_b_symbol} ({res.asset_b_id})
+        </div>
+        <div className="col-span-1">{res.taker_fee_percent / 100}%</div>
+      </div>
+    );
+  };
+
+  const activeTabStyle = {
+    backgroundColor: "#252526",
+    color: "white",
+  };
+
+  // End of Search dialog
 
   useEffect(() => {
     async function parseUrlParams() {
@@ -172,6 +250,51 @@ export default function PoolForm() {
     }
   }, [pool, assetData]);
 
+  const [foundPoolDetails, setFoundPoolDetails] = useState();
+  useEffect(() => {
+    async function lookupPool(chain) {
+      const response = await fetch(
+        `http://localhost:8080/api/getObjects/${chain}`,
+        { method: "POST", body: JSON.stringify([foundPool.id]) }
+      );
+
+      if (!response.ok) {
+        console.log("Failed to fetch fee data");
+        return;
+      }
+
+      const responseContents = await response.json();
+
+      if (
+        responseContents &&
+        responseContents.result &&
+        responseContents.result.length
+      ) {
+        let finalResult = responseContents.result[0];
+        finalResult["asset_a_symbol"] = assetA.symbol;
+        finalResult["asset_a_precision"] = assetA.precision;
+
+        finalResult["asset_b_symbol"] = assetB.symbol;
+        finalResult["asset_b_precision"] = assetB.precision;
+
+        finalResult["share_asset_symbol"] = foundPool.share_asset_symbol;
+
+        finalResult["readable_balance_a"] = `${humanReadableFloat(
+          finalResult.balance_a,
+          assetA.precision
+        )} ${assetA.symbol}`;
+        finalResult["readable_balance_b"] = `${humanReadableFloat(
+          finalResult.balance_b,
+          assetB.precision
+        )} ${assetB.symbol}`;
+        setFoundPoolDetails(finalResult);
+      }
+    }
+    if (foundPool) {
+      lookupPool(usr.chain);
+    }
+  }, [foundPool]);
+
   const [assetADetails, setAssetADetails] = useState(null);
   const [assetBDetails, setAssetBDetails] = useState(null);
   useEffect(() => {
@@ -238,13 +361,13 @@ export default function PoolForm() {
 
   useEffect(() => {
     // Calculating the amount the user can buy
-    if (assetA && assetB && foundPool) {
+    if (assetA && assetB && foundPoolDetails) {
       console.log("Calculating the amount the user can buy");
 
-      let poolamounta = Number(foundPool.balance_a);
+      let poolamounta = Number(foundPoolDetails.balance_a);
       let poolamountap = Number(10 ** assetA.precision);
 
-      let poolamountb = Number(foundPool.balance_b);
+      let poolamountb = Number(foundPoolDetails.balance_b);
       let poolamountbp = Number(10 ** assetB.precision);
 
       const maker_market_fee_percenta = assetA.market_fee_percent;
@@ -253,7 +376,7 @@ export default function PoolForm() {
       const max_market_feea = assetA.max_market_fee;
       const max_market_feeb = assetB.max_market_fee;
 
-      const taker_fee_percenta = foundPool.taker_fee_percent;
+      const taker_fee_percenta = foundPoolDetails.taker_fee_percent;
 
       function flagsa() {
         if (maker_market_fee_percenta === 0) {
@@ -352,7 +475,7 @@ export default function PoolForm() {
 
       setBuyAmount(result);
     }
-  }, [sellAmount, assetA, assetB]);
+  }, [sellAmount, assetA, assetB, foundPoolDetails]);
 
   const [downloadClicked, setDownloadClicked] = useState(false);
 
@@ -501,7 +624,164 @@ export default function PoolForm() {
                         name="pool"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Pool</FormLabel>
+                            <FormLabel>
+                              <div className="grid grid-cols-2 mt-3">
+                                <div className="mt-1">Liquidity pool</div>
+                                <div className="text-gray-500 text-right">
+                                  <Dialog
+                                    open={dialogOpen}
+                                    onOpenChange={(open) => {
+                                      if (!open) {
+                                        setThisResult();
+                                      }
+
+                                      setDialogOpen(open);
+                                    }}
+                                  >
+                                    <DialogTrigger asChild>
+                                      <Button className="h-5 p-3">
+                                        Search
+                                      </Button>
+                                    </DialogTrigger>
+                                    <DialogContent className="sm:max-w-[900px] bg-white">
+                                      <DialogHeader>
+                                        <DialogTitle>
+                                          Search for a liquidity pool
+                                        </DialogTitle>
+                                        <DialogDescription>
+                                          Select a search result to proceed with
+                                          your desired asset swap.
+                                        </DialogDescription>
+                                      </DialogHeader>
+                                      <div className="grid grid-cols-1">
+                                        <div className="col-span-1">
+                                          <Tabs defaultValue="asset">
+                                            <TabsList className="grid max-w-[400px] grid-cols-2 mb-1 gap-3">
+                                              {activeTab === "asset" ? (
+                                                <TabsTrigger
+                                                  style={activeTabStyle}
+                                                  value="asset"
+                                                >
+                                                  Swappable assets
+                                                </TabsTrigger>
+                                              ) : (
+                                                <TabsTrigger
+                                                  value="asset"
+                                                  onClick={() =>
+                                                    setActiveTab("asset")
+                                                  }
+                                                >
+                                                  Swappable assets
+                                                </TabsTrigger>
+                                              )}
+                                              {activeTab === "share" ? (
+                                                <TabsTrigger
+                                                  style={activeTabStyle}
+                                                  value="share"
+                                                >
+                                                  Pool share asset
+                                                </TabsTrigger>
+                                              ) : (
+                                                <TabsTrigger
+                                                  value="share"
+                                                  onClick={() =>
+                                                    setActiveTab("share")
+                                                  }
+                                                >
+                                                  Pool share asset
+                                                </TabsTrigger>
+                                              )}
+                                            </TabsList>
+
+                                            <Input
+                                              name="assetSearch"
+                                              placeholder="Enter search text"
+                                              className="mb-3 max-w-[400px]"
+                                              onChange={(event) => {
+                                                console.log("input changed");
+                                                setThisInput(
+                                                  event.target.value
+                                                );
+                                              }}
+                                            />
+
+                                            <TabsContent value="share">
+                                              {thisResult &&
+                                              thisResult.length ? (
+                                                <>
+                                                  <div className="grid grid-cols-12">
+                                                    <div className="col-span-2">
+                                                      ID
+                                                    </div>
+                                                    <div className="col-span-3">
+                                                      <b>Share asset</b>
+                                                    </div>
+                                                    <div className="col-span-3">
+                                                      Asset A
+                                                    </div>
+                                                    <div className="col-span-3">
+                                                      Asset B
+                                                    </div>
+                                                    <div className="col-span-1">
+                                                      Taker Fee
+                                                    </div>
+                                                  </div>
+                                                  <List
+                                                    height={400}
+                                                    itemCount={
+                                                      thisResult.length
+                                                    }
+                                                    itemSize={45}
+                                                    className="w-full"
+                                                  >
+                                                    {PoolRow}
+                                                  </List>
+                                                </>
+                                              ) : null}
+                                            </TabsContent>
+
+                                            <TabsContent value="asset">
+                                              {thisResult &&
+                                              thisResult.length ? (
+                                                <>
+                                                  <div className="grid grid-cols-12">
+                                                    <div className="col-span-2">
+                                                      ID
+                                                    </div>
+                                                    <div className="col-span-3">
+                                                      Share asset
+                                                    </div>
+                                                    <div className="col-span-3">
+                                                      <b>Asset A</b>
+                                                    </div>
+                                                    <div className="col-span-3">
+                                                      <b>Asset B</b>
+                                                    </div>
+                                                    <div className="col-span-1">
+                                                      Taker Fee
+                                                    </div>
+                                                  </div>
+                                                  <List
+                                                    height={400}
+                                                    itemCount={
+                                                      thisResult.length
+                                                    }
+                                                    itemSize={45}
+                                                    className="w-full"
+                                                  >
+                                                    {PoolRow}
+                                                  </List>
+                                                </>
+                                              ) : null}
+                                            </TabsContent>
+                                          </Tabs>
+                                        </div>
+                                      </div>
+                                    </DialogContent>
+                                  </Dialog>
+                                </div>
+                              </div>
+                            </FormLabel>
                             <FormControl
                               onValueChange={(chosenPool) => {
                                 setPool(chosenPool);
@@ -537,6 +817,65 @@ export default function PoolForm() {
                         )}
                       />
 
+                      {foundPoolDetails ? (
+                        <>
+                          <div className="grid grid-cols-2 gap-5 mt-5 mb-5">
+                            <Card>
+                              <CardContent>
+                                <FormField
+                                  control={form.control}
+                                  name="balanceA"
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormLabel>
+                                        Swappable {assetA.symbol} ({assetA.id})
+                                      </FormLabel>
+                                      <FormControl>
+                                        <Input
+                                          disabled
+                                          placeholder="0"
+                                          className="mb-3 mt-3"
+                                          value={
+                                            foundPoolDetails.readable_balance_a
+                                          }
+                                        />
+                                      </FormControl>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
+                              </CardContent>
+                            </Card>
+                            <Card>
+                              <CardContent>
+                                <FormField
+                                  control={form.control}
+                                  name="balanceB"
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormLabel>
+                                        Swappable {assetB.symbol} ({assetB.id})
+                                      </FormLabel>
+                                      <FormControl>
+                                        <Input
+                                          disabled
+                                          placeholder="0"
+                                          className="mb-3 mt-3"
+                                          value={
+                                            foundPoolDetails.readable_balance_b
+                                          }
+                                        />
+                                      </FormControl>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
+                              </CardContent>
+                            </Card>
+                          </div>
+                        </>
+                      ) : null}
+
                       {pool ? (
                         <>
                           <FormField
@@ -546,7 +885,7 @@ export default function PoolForm() {
                               <FormItem>
                                 <FormLabel>{`Amount of ${
                                   assetA ? assetA.symbol : "???"
-                                } to sell:`}</FormLabel>
+                                } to swap`}</FormLabel>
                                 <FormControl
                                   onChange={(event) => {
                                     const input = event.target.value;
@@ -559,7 +898,7 @@ export default function PoolForm() {
                                   <Input
                                     label={`Amount of ${
                                       assetA ? assetA.symbol : "???"
-                                    } to sell`}
+                                    } to swap`}
                                     value={sellAmount}
                                     placeholder={sellAmount}
                                     className="mb-3"
@@ -573,8 +912,8 @@ export default function PoolForm() {
                       ) : null}
 
                       {sellAmount &&
-                      foundPool &&
-                      foundPool.taker_fee_percent ? (
+                      foundPoolDetails &&
+                      foundPoolDetails.taker_fee_percent ? (
                         <>
                           <FormField
                             control={form.control}
@@ -587,10 +926,15 @@ export default function PoolForm() {
                                     disabled
                                     placeholder="0"
                                     className="mb-3 mt-3"
-                                    value={(
-                                      (foundPool.taker_fee_percent / 1000) *
+                                    value={`${(
+                                      (foundPoolDetails.taker_fee_percent /
+                                        10000) *
                                       sellAmount
-                                    ).toFixed(assetA.precision)}
+                                    ).toFixed(assetA.precision)} (${
+                                      assetA.symbol
+                                    }) (${
+                                      foundPoolDetails.taker_fee_percent / 100
+                                    }% fee)`}
                                   />
                                 </FormControl>
                                 <FormMessage />
@@ -626,7 +970,7 @@ export default function PoolForm() {
                         />
                       ) : null}
 
-                      {pool ? (
+                      {foundPoolDetails ? (
                         <>
                           <FormField
                             control={form.control}
@@ -635,7 +979,7 @@ export default function PoolForm() {
                               <FormItem>
                                 <FormLabel>{`Amount of ${
                                   assetB ? assetB.symbol : "???"
-                                } you'll receive:`}</FormLabel>
+                                } you'll receive`}</FormLabel>
                                 <FormControl>{buyAmountInput}</FormControl>
                                 <FormMessage />
                               </FormItem>
@@ -772,6 +1116,33 @@ export default function PoolForm() {
                       </Button>
                     </a>
                   ) : null}
+                  {foundPoolDetails ? (
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button className="ml-2" variant="outline">
+                          Pool JSON
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-[550px] bg-white">
+                        <DialogHeader>
+                          <DialogTitle>Liquidity Pool JSON</DialogTitle>
+                          <DialogDescription>
+                            Check out the details returned by the network for
+                            this pool
+                          </DialogDescription>
+                        </DialogHeader>
+                        <div className="grid grid-cols-1">
+                          <div className="col-span-1">
+                            <ScrollArea className="h-72 rounded-md border">
+                              <pre>
+                                {JSON.stringify(foundPoolDetails, null, 2)}
+                              </pre>
+                            </ScrollArea>
+                          </div>
+                        </div>
+                      </DialogContent>
+                    </Dialog>
+                  ) : null}
                 </>
               ) : null}
             </CardContent>
@@ -813,7 +1184,7 @@ export default function PoolForm() {
             ) : null}
           </div>
           <div className="grid grid-cols-1 gap-3">
-            {pool ? (
+            {pool && assetA && assetB ? (
               <>
                 <a
                   href={`/dex/index.html?market=${assetA.symbol}_${assetB.symbol}`}
@@ -847,17 +1218,19 @@ export default function PoolForm() {
                     </CardContent>
                   </Card>
                 </a>
-                <Card>
-                  <CardHeader className="pb-2 pt-4">
-                    <CardTitle>Need to borrow some assets?</CardTitle>
-                    <CardDescription className="text-lg">
-                      Borrow {assetA.symbol} or {assetB.symbol}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="text-sm pb-2">
-                    Borrow from DEX participants, with user defined rates.
-                  </CardContent>
-                </Card>
+                <a href="/borrow/index.html">
+                  <Card>
+                    <CardHeader className="pb-2 pt-4">
+                      <CardTitle>Need to borrow some assets?</CardTitle>
+                      <CardDescription className="text-lg">
+                        Borrow {assetA.symbol} or {assetB.symbol}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="text-sm pb-2">
+                      Borrow from DEX participants, with user defined rates.
+                    </CardContent>
+                  </Card>
+                </a>
               </>
             ) : null}
           </div>

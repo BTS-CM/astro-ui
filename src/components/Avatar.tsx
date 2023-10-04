@@ -303,7 +303,7 @@ export const Avatar = ({
         setActiveEyes(data.eyeType);
         setActiveMouth(data.mouthType);
       }
-      setTimeoutTimer(setTimeout(handleIdle, 60000));
+      setTimeoutTimer(setTimeout(handleIdle, 30000));
     }
 
     if (mousePosition.mouseX && mousePosition.mouseY) {

@@ -129,7 +129,7 @@ export default function Home(properties) {
               >
                 <Card>
                   <CardHeader>
-                    <CardTitle>💵 Get Stablecoins</CardTitle>
+                    <CardTitle>🪙 Borrow bitassets</CardTitle>
                     <CardDescription>Issue collateralized debt</CardDescription>
                   </CardHeader>
                 </Card>
@@ -139,19 +139,19 @@ export default function Home(properties) {
               <ul className="ml-2 list-disc [&>li]:mt-2">
                 <li>
                   Bitassets like USD, CNY and EUR are committee created
-                  stablecoins backed with BTS.
+                  stablecoins (smartcoins) backed with BTS.
                 </li>
                 <li>
                   User created smartcoins can be backed with any asset and
                   reference any external feed.
                 </li>
                 <li>
-                  Exposure to external price feeds can pose a risk to
-                  collateralized debt.
-                </li>
-                <li>
                   External settlement prices are derived from configured feed
                   producers.
+                </li>
+                <li>
+                  Exposure to external price feeds can pose a risk to
+                  collateralized debt positions.
                 </li>
               </ul>
             </HoverCardContent>
