@@ -1,0 +1,47 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PoolStake from '../components/PoolStake.jsx';
+---
+
+<Layout title="Bitshares pool exchange form">
+	<main>
+		<h2><span class="text-gradient">Bitshares Beet Astro</span> UI</h2>
+		<h3 class="mb-5">
+			Stake<br /><br/>
+			<a class="text-gradient" href="../index.html">Go back</a>
+		</h3>
+		<PoolStake client:load />
+	</main>
+</Layout>
+
+<style>
+	main {
+		margin: auto;
+		padding: 1rem;
+		width: 800px;
+		max-width: calc(100% - 2rem);
+		color: white;
+		font-size: 20px;
+		line-height: 1.6;
+		min-height: 100vh;
+	}
+	h2 {
+		font-weight: 700;
+		line-height: 1;
+		text-align: center;
+		margin-bottom: 1em;
+	}
+	h3 {
+		font-weight: 300;
+		line-height: 0.9;
+		text-align: center;
+		margin-bottom: 1em;
+	}
+	.text-gradient {
+		background-image: var(--accent-gradient);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-size: 400%;
+		background-position: 0%;
+	}
+</style>
