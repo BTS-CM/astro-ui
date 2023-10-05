@@ -42,6 +42,90 @@ import CurrentUser from "./common/CurrentUser.jsx";
 
 import { humanReadableFloat, trimPrice } from "../lib/common";
 
+/**
+ * Fetching the dynamic data from api cache
+ * @param {string} chain
+ * @param {string} id
+ * @param {setState} setDynamic
+ * @returns
+ */
+async function fetchDynamicData(chain, id, setDynamic) {
+  const replacedID = id.replace("1.3.", "2.3.");
+  const fetchedDynamicData = await fetch(
+    `http://localhost:8080/cache/dynamic/${chain}/${replacedID}`,
+    { method: "GET" }
+  );
+
+  if (!fetchedDynamicData.ok) {
+    console.log(`Failed to fetch ${replacedID} dynamic data`);
+    return;
+  }
+
+  const dynamicDataJSON = await fetchedDynamicData.json();
+
+  if (dynamicDataJSON && dynamicDataJSON.result) {
+    console.log(`Fetched ${replacedID} dynamic data`);
+    setDynamic(dynamicDataJSON.result);
+  }
+}
+
+/**
+ * Retrieving bitasset data from the API
+ * @param {string} chain
+ * @param {string} id
+ * @param {setState} setBitassetData
+ * @returns
+ */
+async function fetchBitassetData(chain, id, setBitassetData) {
+  const response = await fetch(
+    `http://localhost:8080/api/getObjects/${chain}`,
+    { method: "POST", body: JSON.stringify([id]) }
+  );
+
+  if (!response.ok) {
+    console.log("Failed to fetch bitasset data");
+    return;
+  }
+
+  const responseContents = await response.json();
+
+  if (
+    responseContents &&
+    responseContents.result &&
+    responseContents.result.length
+  ) {
+    const finalResult = responseContents.result[0];
+
+    setBitassetData(finalResult);
+  }
+}
+
+/**
+ * Retrieve basic asset details from the API
+ * @param {strign} chain
+ * @param {string} assetID
+ * @param {setState} setAssetData
+ */
+async function cachedAsset(chain, assetID, setAssetData) {
+  const fetchedAsset = await fetch(
+    `http://localhost:8080/cache/asset/${chain}/${assetID}`,
+    { method: "GET" }
+  );
+
+  if (!fetchedAsset.ok) {
+    console.log(`Failed to fetch asset: ${assetID}`);
+    return;
+  }
+
+  const assetJSON = await fetchedAsset.json();
+
+  if (assetJSON && assetJSON.result) {
+    console.log("Fetched asset data");
+    setAssetData(assetJSON.result);
+    addAssetsToCache([assetJSON.result]);
+  }
+}
+
 export default function Market(properties) {
   const [usr, setUsr] = useState();
   useEffect(() => {
@@ -157,10 +241,13 @@ export default function Market(properties) {
   const [marketInProgress, setMarketInProgress] = useState(false);
 
   const [assetAData, setAssetAData] = useState(null);
-  const [assetADetails, setAssetADetails] = useState(null);
-
   const [assetBData, setAssetBData] = useState(null);
+
+  const [assetADetails, setAssetADetails] = useState(null);
   const [assetBDetails, setAssetBDetails] = useState(null);
+
+  const [aBitassetData, setABitassetData] = useState(null);
+  const [bBitassetData, setBBitassetData] = useState(null);
 
   const [usrBalances, setUsrBalances] = useState();
   const [usrLimitOrders, setUsrLimitOrders] = useState();
@@ -176,11 +263,13 @@ export default function Market(properties) {
   function _resetA() {
     setAssetAData(null);
     setAssetADetails(null);
+    setABitassetData(null);
   }
 
   function _resetB() {
     setAssetBData(null);
     setAssetBDetails(null);
+    setBBitassetData(null);
   }
 
   function _resetOrders() {
@@ -233,38 +322,19 @@ export default function Market(properties) {
   }, [assetA, assetB, usr, orderBookItr]);
 
   useEffect(() => {
-    async function fetchAssetA() {
-      const fetchedAssetA = await fetch(
-        `http://localhost:8080/cache/asset/${usr.chain}/${assetA}`,
-        { method: "GET" }
-      );
-
-      if (!fetchedAssetA.ok) {
-        console.log("Failed to fetch asset A");
-        return;
-      }
-
-      const assetAJSON = await fetchedAssetA.json();
-
-      if (assetAJSON && assetAJSON.result) {
-        console.log("Fetched asset A data");
-        setAssetAData(assetAJSON.result);
-        addAssetsToCache([assetAJSON.result]);
-      }
-    }
-
     if (assetA && usr && usr.chain) {
       _resetA();
       _resetMarketData();
 
       if (!assets || !assets.length) {
-        fetchAssetA();
+        cachedAsset(usr.chain, assetA, setAssetAData);
         return;
       }
 
       const foundAsset = assets.find((asset) => asset.s === assetA);
       if (!foundAsset) {
-        fetchAssetA();
+        cachedAsset(usr.chain, assetA, setAssetAData);
+        return;
       }
 
       console.log("Retrieved asset A from cache");
@@ -273,96 +343,52 @@ export default function Market(properties) {
   }, [assetA, usr]);
 
   useEffect(() => {
-    async function fetchDynamicData() {
-      const fetchedDynamicData = await fetch(
-        `http://localhost:8080/cache/dynamic/${
-          usr.chain
-        }/${assetAData.id.replace("1.3.", "2.3.")}`,
-        { method: "GET" }
-      );
-
-      if (!fetchedDynamicData.ok) {
-        console.log(`Failed to fetch ${assetA} dynamic data`);
-        return;
-      }
-
-      const dynamicDataJSON = await fetchedDynamicData.json();
-
-      if (dynamicDataJSON && dynamicDataJSON.result) {
-        console.log(`Fetched ${assetA} dynamic data`);
-        setAssetADetails(dynamicDataJSON.result);
-      }
-    }
-
-    if (assetAData && usr && usr.chain) {
-      fetchDynamicData();
-    }
-  }, [assetAData]);
-
-  useEffect(() => {
-    async function fetchAssetB() {
-      const fetchedAssetB = await fetch(
-        `http://localhost:8080/cache/asset/${usr.chain}/${assetB}`,
-        { method: "GET" }
-      );
-
-      if (!fetchedAssetB.ok) {
-        console.log("Failed to fetch asset B");
-        return;
-      }
-
-      const assetBJSON = await fetchedAssetB.json();
-
-      if (assetBJSON && assetBJSON.result) {
-        console.log("Fetched asset B data");
-        setAssetBData(assetBJSON.result);
-        addAssetsToCache([assetBJSON.result]);
-      }
-    }
-
     if (assetB && usr && usr.chain) {
       _resetB();
       _resetMarketData();
 
       if (!assets || !assets.length) {
-        fetchAssetB();
+        // No cache exists
+        cachedAsset(usr.chain, assetB, setAssetBData);
         return;
       }
 
       const foundAsset = assets.find((asset) => asset.s === assetB);
       if (!foundAsset) {
-        fetchAssetB();
+        // Asset doesn't exist in cache
+        cachedAsset(usr.chain, assetB, setAssetBData);
+        return;
       }
 
+      // Asset exists in cache
       console.log("Retrieved asset B from cache");
       setAssetBData(foundAsset);
     }
   }, [assetB, usr]);
 
   useEffect(() => {
-    async function fetchDynamicData() {
-      const fetchedDynamicData = await fetch(
-        `http://localhost:8080/cache/dynamic/${
-          usr.chain
-        }/${assetBData.id.replace("1.3.", "2.3.")}`,
-        { method: "GET" }
-      );
-
-      if (!fetchedDynamicData.ok) {
-        console.log(`Failed to fetch ${assetB} dynamic data`);
-        return;
-      }
-
-      const dynamicDataJSON = await fetchedDynamicData.json();
-
-      if (dynamicDataJSON && dynamicDataJSON.result) {
-        console.log(`Fetched ${assetB} dynamic data`);
-        setAssetBDetails(dynamicDataJSON.result);
+    if (assetAData && usr && usr.chain) {
+      fetchDynamicData(usr.chain, assetAData.id, setAssetADetails);
+      if (assetAData.bitasset_data_id) {
+        fetchBitassetData(
+          usr.chain,
+          assetAData.bitasset_data_id,
+          setABitassetData
+        );
       }
     }
+  }, [assetAData]);
 
+  useEffect(() => {
     if (assetBData && usr && usr.chain) {
-      fetchDynamicData();
+      fetchDynamicData(usr.chain, assetBData.id, setAssetBDetails);
+      if (assetBData.bitasset_data_id) {
+        fetchBitassetData(
+          usr.chain,
+          assetBData.bitasset_data_id,
+          setBBitassetData
+        );
+      }
     }
   }, [assetBData]);
 
@@ -378,9 +404,9 @@ export default function Market(properties) {
 
       if (!fetchedMarketHistory.ok) {
         console.log("Failed to fetch market history");
-        if (marketItr < 5) {
+        setTimeout(() => {
           setMarketItr(marketItr + 1); // retrying the query
-        }
+        }, 2000);
         return;
       }
 
@@ -433,76 +459,237 @@ export default function Market(properties) {
     <>
       <div className="container mx-auto mt-5 mb-5">
         <div className="grid grid-cols-2 gap-5">
-          <Tabs defaultValue="buy" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 gap-2">
-              {!assetAData || !assetBData ? (
-                <>
-                  <TabsTrigger disabled value="buy" style={activeTabStyle}>
-                    Buy
-                  </TabsTrigger>
-                  <TabsTrigger disabled value="sell">
-                    Sell
-                  </TabsTrigger>
-                </>
-              ) : null}
-              {assetAData && assetBData && activeLimitCard === "buy" ? (
-                <>
-                  <TabsTrigger value="buy" style={activeTabStyle}>
-                    Buy
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="sell"
-                    onClick={() => setActiveLimitCard("sell")}
-                  >
-                    Sell
-                  </TabsTrigger>
-                </>
-              ) : null}
-              {assetAData && assetBData && activeLimitCard === "sell" ? (
-                <>
-                  <TabsTrigger
-                    value="buy"
-                    onClick={() => setActiveLimitCard("buy")}
-                  >
-                    Buy
-                  </TabsTrigger>
-                  <TabsTrigger value="sell" style={activeTabStyle}>
-                    Sell
-                  </TabsTrigger>
-                </>
-              ) : null}
-            </TabsList>
-            <TabsContent value="buy">
-              <LimitOrderCard
-                usr={usr}
-                thisAssetA={assetA}
-                thisAssetB={assetB}
-                assetAData={assetAData}
-                assetBData={assetBData}
-                buyOrders={buyOrders}
-                sellOrders={sellOrders}
-                usrBalances={usrBalances}
-                orderType="buy"
-                key="buyLimit"
-                marketSearch={marketSearch}
-              />
-            </TabsContent>
-            <TabsContent value="sell">
-              <LimitOrderCard
-                usr={usr}
-                thisAssetA={assetA}
-                thisAssetB={assetB}
-                assetAData={assetAData}
-                assetBData={assetBData}
-                buyOrders={buyOrders}
-                sellOrders={sellOrders}
-                usrBalances={usrBalances}
-                orderType="sell"
-                key="sellLimit"
-                marketSearch={marketSearch}
-              />
-            </TabsContent>
-          </Tabs>
+          <div className="col-span-1">
+            <Tabs defaultValue="buy" className="w-full">
+              <TabsList className="grid w-full grid-cols-2 gap-2">
+                {!assetAData || !assetBData ? (
+                  <>
+                    <TabsTrigger disabled value="buy" style={activeTabStyle}>
+                      Buy
+                    </TabsTrigger>
+                    <TabsTrigger disabled value="sell">
+                      Sell
+                    </TabsTrigger>
+                  </>
+                ) : null}
+                {assetAData && assetBData && activeLimitCard === "buy" ? (
+                  <>
+                    <TabsTrigger value="buy" style={activeTabStyle}>
+                      Buy
+                    </TabsTrigger>
+                    <TabsTrigger
+                      value="sell"
+                      onClick={() => setActiveLimitCard("sell")}
+                    >
+                      Sell
+                    </TabsTrigger>
+                  </>
+                ) : null}
+                {assetAData && assetBData && activeLimitCard === "sell" ? (
+                  <>
+                    <TabsTrigger
+                      value="buy"
+                      onClick={() => setActiveLimitCard("buy")}
+                    >
+                      Buy
+                    </TabsTrigger>
+                    <TabsTrigger value="sell" style={activeTabStyle}>
+                      Sell
+                    </TabsTrigger>
+                  </>
+                ) : null}
+              </TabsList>
+              <TabsContent value="buy">
+                <LimitOrderCard
+                  usr={usr}
+                  thisAssetA={assetA}
+                  thisAssetB={assetB}
+                  assetAData={assetAData}
+                  assetBData={assetBData}
+                  buyOrders={buyOrders}
+                  sellOrders={sellOrders}
+                  usrBalances={usrBalances}
+                  orderType="buy"
+                  key="buyLimit"
+                  marketSearch={marketSearch}
+                />
+              </TabsContent>
+              <TabsContent value="sell">
+                <LimitOrderCard
+                  usr={usr}
+                  thisAssetA={assetA}
+                  thisAssetB={assetB}
+                  assetAData={assetAData}
+                  assetBData={assetBData}
+                  buyOrders={buyOrders}
+                  sellOrders={sellOrders}
+                  usrBalances={usrBalances}
+                  orderType="sell"
+                  key="sellLimit"
+                  marketSearch={marketSearch}
+                />
+              </TabsContent>
+            </Tabs>
+
+            <HoverCard>
+              <HoverCardTrigger asChild style={{ position: "relative" }}>
+                <Card className="mt-5">
+                  <CardHeader className="pt-4 pb-2">
+                    <CardTitle>Market summary</CardTitle>
+                    <CardDescription className="text-lg">
+                      {activeLimitCard === "buy" ? `${assetA}/${assetB}` : null}
+                      {activeLimitCard === "sell"
+                        ? `${assetB}/${assetA}`
+                        : null}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="text-sm pb-4">
+                    <div className="grid grid-cols-1 gap-2">
+                      <div className="grid grid-cols-5">
+                        <div className="col-span-2">Latest price:</div>
+                        <div className="col-span-3">
+                          <Badge variant="outline" className="ml-2 mb-1">
+                            {tickerData && assetAData
+                              ? trimPrice(
+                                  tickerData.latest,
+                                  assetAData.precision
+                                )
+                              : "?"}
+                          </Badge>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-5">
+                        <div className="col-span-2">24Hr change:</div>
+                        <div className="col-span-3">
+                          <Badge variant="outline" className="ml-2 mb-1">
+                            {tickerData ? tickerData.percent_change : "?"}
+                          </Badge>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-5">
+                        <div className="col-span-2">24Hr base volume:</div>
+                        <div className="col-span-3">
+                          <Badge variant="outline" className="ml-2 mb-1">
+                            {!tickerData ? "?" : null}
+                            {activeLimitCard === "buy" && tickerData
+                              ? tickerData.base_volume
+                              : null}
+                            {activeLimitCard === "sell" && tickerData
+                              ? tickerData.quote_volume
+                              : null}
+                          </Badge>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-5">
+                        <div className="col-span-2">24Hr quote volume:</div>
+                        <div className="col-span-3">
+                          <Badge variant="outline" className="ml-2 mb-1">
+                            {!tickerData ? "?" : null}
+                            {activeLimitCard === "buy" && tickerData
+                              ? tickerData.quote_volume
+                              : null}
+                            {activeLimitCard === "sell" && tickerData
+                              ? tickerData.base_volume
+                              : null}
+                          </Badge>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-5">
+                        <div className="col-span-2">Lowest ask:</div>
+                        <div className="col-span-3">
+                          <Badge variant="outline" className="ml-2 mb-1">
+                            {tickerData && assetAData
+                              ? trimPrice(
+                                  tickerData.lowest_ask,
+                                  assetAData.precision
+                                )
+                              : "?"}
+                          </Badge>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-5">
+                        <div className="col-span-2">Highest bid:</div>
+                        <div className="col-span-3">
+                          <Badge variant="outline" className="ml-2">
+                            {tickerData && assetAData
+                              ? trimPrice(
+                                  tickerData.highest_bid,
+                                  assetAData.precision
+                                )
+                              : "?"}
+                          </Badge>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </HoverCardTrigger>
+              <HoverCardContent className="w-80 text-sm text-center">
+                <b>
+                  {assetA}/{assetB} External market links
+                </b>
+                <br />
+                <a
+                  href={
+                    usr.chain === "bitshares"
+                      ? `https://blocksights.info/#/markets/${
+                          activeLimitCard === "buy" ? assetA : assetB
+                        }/${activeLimitCard === "buy" ? assetB : assetA}`
+                      : `https://blocksights.info/#/markets/${
+                          activeLimitCard === "buy" ? assetA : assetB
+                        }/${
+                          activeLimitCard === "buy" ? assetB : assetA
+                        }?network=testnet`
+                  }
+                  target="_blank"
+                >
+                  <Button variant="outline" className="mb-2 mt-2">
+                    🔎 Blocksights market explorer
+                  </Button>
+                </a>
+                {usr.chain === "bitshares" ? (
+                  <>
+                    <a
+                      href={
+                        activeLimitCard === "buy"
+                          ? `https://bts.exchange/#/market/${assetA}_${assetB}?r=nftprofessional1`
+                          : `https://bts.exchange/#/market/${assetB}_${assetA}?r=nftprofessional1`
+                      }
+                      target="_blank"
+                    >
+                      <Button variant="outline" className="ml-2">
+                        🔗 BTS.Exchange
+                      </Button>
+                    </a>
+                    <a
+                      href={
+                        activeLimitCard === "buy"
+                          ? `https://wallet.btwty.com/market/${assetA}_${assetB}?r=nftprofessional1`
+                          : `https://wallet.btwty.com/market/${assetB}_${assetA}?r=nftprofessional1`
+                      }
+                      target="_blank"
+                    >
+                      <Button variant="outline" className="ml-2">
+                        🔗 BTWTY
+                      </Button>
+                    </a>
+                    <a
+                      href={
+                        activeLimitCard === "buy"
+                          ? `https://ex.xbts.io/market/${assetA}_${assetB}?r=nftprofessional1`
+                          : `https://ex.xbts.io/market/${assetB}_${assetA}?r=nftprofessional1`
+                      }
+                      target="_blank"
+                    >
+                      <Button variant="outline" className="ml-2 mt-2">
+                        🔗 XBTS
+                      </Button>
+                    </a>
+                  </>
+                ) : null}
+              </HoverCardContent>
+            </HoverCard>
+          </div>
           <div className="col-span-1">
             <div className="grid grid-cols-1 gap-y-2">
               <div className="flex-grow">
@@ -565,175 +752,14 @@ export default function Market(properties) {
                 </Card>
               </div>
 
-              <div className="flex-grow">
-                <HoverCard>
-                  <HoverCardTrigger asChild style={{ position: "relative" }}>
-                    <Card>
-                      <CardHeader className="pt-4 pb-2">
-                        <CardTitle>Market summary</CardTitle>
-                        <CardDescription className="text-lg">
-                          {activeLimitCard === "buy"
-                            ? `${assetA}/${assetB}`
-                            : null}
-                          {activeLimitCard === "sell"
-                            ? `${assetB}/${assetA}`
-                            : null}
-                        </CardDescription>
-                      </CardHeader>
-                      <CardContent className="text-sm pb-4">
-                        <div className="grid grid-cols-1 gap-2">
-                          <div className="grid grid-cols-5">
-                            <div className="col-span-2">Latest price:</div>
-                            <div className="col-span-3">
-                              <Badge variant="outline" className="ml-2 mb-1">
-                                {tickerData && assetAData
-                                  ? trimPrice(
-                                      tickerData.latest,
-                                      assetAData.precision
-                                    )
-                                  : "?"}
-                              </Badge>
-                            </div>
-                          </div>
-                          <div className="grid grid-cols-5">
-                            <div className="col-span-2">24Hr change:</div>
-                            <div className="col-span-3">
-                              <Badge variant="outline" className="ml-2 mb-1">
-                                {tickerData ? tickerData.percent_change : "?"}
-                              </Badge>
-                            </div>
-                          </div>
-                          <div className="grid grid-cols-5">
-                            <div className="col-span-2">24Hr base volume:</div>
-                            <div className="col-span-3">
-                              <Badge variant="outline" className="ml-2 mb-1">
-                                {!tickerData ? "?" : null}
-                                {activeLimitCard === "buy" && tickerData
-                                  ? tickerData.base_volume
-                                  : null}
-                                {activeLimitCard === "sell" && tickerData
-                                  ? tickerData.quote_volume
-                                  : null}
-                              </Badge>
-                            </div>
-                          </div>
-                          <div className="grid grid-cols-5">
-                            <div className="col-span-2">24Hr quote volume:</div>
-                            <div className="col-span-3">
-                              <Badge variant="outline" className="ml-2 mb-1">
-                                {!tickerData ? "?" : null}
-                                {activeLimitCard === "buy" && tickerData
-                                  ? tickerData.quote_volume
-                                  : null}
-                                {activeLimitCard === "sell" && tickerData
-                                  ? tickerData.base_volume
-                                  : null}
-                              </Badge>
-                            </div>
-                          </div>
-                          <div className="grid grid-cols-5">
-                            <div className="col-span-2">Lowest ask:</div>
-                            <div className="col-span-3">
-                              <Badge variant="outline" className="ml-2 mb-1">
-                                {tickerData && assetAData
-                                  ? trimPrice(
-                                      tickerData.lowest_ask,
-                                      assetAData.precision
-                                    )
-                                  : "?"}
-                              </Badge>
-                            </div>
-                          </div>
-                          <div className="grid grid-cols-5">
-                            <div className="col-span-2">Highest bid::</div>
-                            <div className="col-span-3">
-                              <Badge variant="outline" className="ml-2">
-                                {tickerData && assetAData
-                                  ? trimPrice(
-                                      tickerData.highest_bid,
-                                      assetAData.precision
-                                    )
-                                  : "?"}
-                              </Badge>
-                            </div>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </HoverCardTrigger>
-                  <HoverCardContent className="w-80 text-sm text-center">
-                    <b>
-                      {assetA}/{assetB} External market links
-                    </b>
-                    <br />
-                    <a
-                      href={
-                        usr.chain === "bitshares"
-                          ? `https://blocksights.info/#/markets/${
-                              activeLimitCard === "buy" ? assetA : assetB
-                            }/${activeLimitCard === "buy" ? assetB : assetA}`
-                          : `https://blocksights.info/#/markets/${
-                              activeLimitCard === "buy" ? assetA : assetB
-                            }/${
-                              activeLimitCard === "buy" ? assetB : assetA
-                            }?network=testnet`
-                      }
-                      target="_blank"
-                    >
-                      <Button variant="outline" className="mb-2 mt-2">
-                        🔎 Blocksights market explorer
-                      </Button>
-                    </a>
-                    {usr.chain === "bitshares" ? (
-                      <>
-                        <a
-                          href={
-                            activeLimitCard === "buy"
-                              ? `https://bts.exchange/#/market/${assetA}_${assetB}?r=nftprofessional1`
-                              : `https://bts.exchange/#/market/${assetB}_${assetA}?r=nftprofessional1`
-                          }
-                          target="_blank"
-                        >
-                          <Button variant="outline" className="ml-2">
-                            🔗 BTS.Exchange
-                          </Button>
-                        </a>
-                        <a
-                          href={
-                            activeLimitCard === "buy"
-                              ? `https://wallet.btwty.com/market/${assetA}_${assetB}?r=nftprofessional1`
-                              : `https://wallet.btwty.com/market/${assetB}_${assetA}?r=nftprofessional1`
-                          }
-                          target="_blank"
-                        >
-                          <Button variant="outline" className="ml-2">
-                            🔗 BTWTY
-                          </Button>
-                        </a>
-                        <a
-                          href={
-                            activeLimitCard === "buy"
-                              ? `https://ex.xbts.io/market/${assetA}_${assetB}?r=nftprofessional1`
-                              : `https://ex.xbts.io/market/${assetB}_${assetA}?r=nftprofessional1`
-                          }
-                          target="_blank"
-                        >
-                          <Button variant="outline" className="ml-2 mt-2">
-                            🔗 XBTS
-                          </Button>
-                        </a>
-                      </>
-                    ) : null}
-                  </HoverCardContent>
-                </HoverCard>
-              </div>
-
               <div className="flex-grow" style={{ paddingBottom: "0px" }}>
                 {assetADetails ? (
                   <MarketAssetCard
                     asset={assetA}
                     assetData={assetAData}
+                    tradingPairData={assetBData}
                     assetDetails={assetADetails}
+                    bitassetData={aBitassetData}
                     marketSearch={marketSearch}
                     chain={usr.chain}
                     usrBalances={usrBalances}
@@ -768,7 +794,9 @@ export default function Market(properties) {
                   <MarketAssetCard
                     asset={assetB}
                     assetData={assetBData}
+                    tradingPairData={assetAData}
                     assetDetails={assetBDetails}
+                    bitassetData={bBitassetData}
                     marketSearch={marketSearch}
                     chain={usr.chain}
                     usrBalances={usrBalances}
