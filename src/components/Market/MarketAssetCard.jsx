@@ -133,10 +133,27 @@ export default function MarketAssetCard(properties) {
       <CardHeader className="pb-2 pt-4">
         <CardTitle>
           {asset} {assetData ? `(${assetData.id})` : ""}
+        </CardTitle>
+        <CardDescription className="text-lg">
+          {type === "buy" ? (
+            <>
+              <span>Quote asset</span> -<span className="text-sm"> Buying</span>
+            </>
+          ) : null}
+          {type === "sell" ? (
+            <>
+              <span>Base asset</span> -<span className="text-sm"> Selling</span>
+            </>
+          ) : null}
+          {type === "pool" ? <span>Pool stake asset</span> : null}
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="text-sm pb-2">
+        <div className="grid grid-cols-2 gap-3 mb-3 w-full">
           <Dialog>
-            <DialogTrigger asChild className="ml-2">
+            <DialogTrigger asChild>
               <Button variant="outline" className="h-6">
-                Info
+                Asset info
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[400px] bg-white">
@@ -189,9 +206,13 @@ export default function MarketAssetCard(properties) {
             </DialogContent>
           </Dialog>
           <Dialog>
-            <DialogTrigger asChild className="ml-2">
-              <Button variant="outline" className="h-6">
-                JSON
+            <DialogTrigger asChild>
+              <Button
+                variant="outline"
+                className="h-6"
+                style={{ marginLeft: "3px" }}
+              >
+                Asset JSON
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[600px] bg-white">
@@ -216,22 +237,7 @@ export default function MarketAssetCard(properties) {
               </div>
             </DialogContent>
           </Dialog>
-        </CardTitle>
-        <CardDescription className="text-lg">
-          {type === "buy" ? (
-            <>
-              <span>Quote asset</span> -<span className="text-sm"> Buying</span>
-            </>
-          ) : null}
-          {type === "sell" ? (
-            <>
-              <span>Base asset</span> -<span className="text-sm"> Selling</span>
-            </>
-          ) : null}
-          {type === "pool" ? <span>Pool stake asset</span> : null}
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="text-sm pb-2">
+        </div>
         {assetDetails && assetData && marketSearch && marketSearch.length ? (
           <div className="grid grid-cols-1 gap-1 w-full">
             <CardRow
@@ -552,7 +558,7 @@ export default function MarketAssetCard(properties) {
                         {asset}
                       </>
                     }
-                    dialogtitle={""}
+                    dialogtitle={"Individual settlement debt info"}
                     dialogdescription={
                       <ul className="ml-2 list-disc [&>li]:mt-2">
                         <li>
@@ -592,7 +598,7 @@ export default function MarketAssetCard(properties) {
                         {asset}
                       </>
                     }
-                    dialogtitle={""}
+                    dialogtitle={"Individual settlement fund info"}
                     dialogdescription={
                       <ul className="ml-2 list-disc [&>li]:mt-2">
                         <li>
@@ -614,7 +620,7 @@ export default function MarketAssetCard(properties) {
                         mins
                       </>
                     }
-                    dialogtitle={""}
+                    dialogtitle={"Force settlement delay info"}
                     dialogdescription={
                       <ul className="ml-2 list-disc [&>li]:mt-2">
                         <li>
@@ -636,7 +642,7 @@ export default function MarketAssetCard(properties) {
                       %
                     </>
                   }
-                  dialogtitle={""}
+                  dialogtitle={"Force settlement offset info"}
                   dialogdescription={
                     <ul className="ml-2 list-disc [&>li]:mt-2">
                       <li>
@@ -656,7 +662,7 @@ export default function MarketAssetCard(properties) {
                       %
                     </>
                   }
-                  dialogtitle={""}
+                  dialogtitle={"Max force settlement volume info"}
                   dialogdescription={
                     <ul className="ml-2 list-disc [&>li]:mt-2">
                       <li>
@@ -674,7 +680,9 @@ export default function MarketAssetCard(properties) {
                     button={
                       bitassetData.options.extensions.black_swan_response_method
                     }
-                    dialogtitle={""}
+                    dialogtitle={
+                      "Global settlement response (BSRM) method info"
+                    }
                     dialogdescription={
                       <ul className="ml-2 list-disc [&>li]:mt-2">
                         <li>
@@ -703,7 +711,7 @@ export default function MarketAssetCard(properties) {
                         %
                       </>
                     }
-                    dialogtitle={""}
+                    dialogtitle={"Maintenance collateral ratio info"}
                     dialogdescription={
                       <ul className="ml-2 list-disc [&>li]:mt-2">
                         <li>
@@ -734,7 +742,7 @@ export default function MarketAssetCard(properties) {
                         %
                       </>
                     }
-                    dialogtitle={""}
+                    dialogtitle={"Initial collateral ratio info"}
                     dialogdescription={
                       <ul className="ml-2 list-disc [&>li]:mt-2">
                         <li>
@@ -762,7 +770,7 @@ export default function MarketAssetCard(properties) {
                         %
                       </>
                     }
-                    dialogtitle={""}
+                    dialogtitle={"Maximum short squeeze ratio info"}
                     dialogdescription={
                       <ul className="ml-2 list-disc [&>li]:mt-2">
                         <li>
@@ -786,7 +794,7 @@ export default function MarketAssetCard(properties) {
                         %
                       </>
                     }
-                    dialogtitle={""}
+                    dialogtitle={"Margin call fee ratio info"}
                     dialogdescription={
                       <ul className="ml-2 list-disc [&>li]:mt-2">
                         <li>
@@ -810,7 +818,7 @@ export default function MarketAssetCard(properties) {
                         %
                       </>
                     }
-                    dialogtitle={""}
+                    dialogtitle={"Force settle fee percent info"}
                     dialogdescription={
                       <ul className="ml-2 list-disc [&>li]:mt-2">
                         <li>
