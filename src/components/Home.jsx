@@ -95,7 +95,10 @@ export default function Home(properties) {
             </HoverCardTrigger>
             <HoverCardContent className="w-80 text-sm pt-1">
               <ul className="ml-2 list-disc [&>li]:mt-2">
-                <li>Transfer assets to anyone in seconds.</li>
+                <li>
+                  Transfer assets to anyone on the Bitshares blockchain in
+                  seconds.
+                </li>
                 <li>Optional encrypted memos.</li>
               </ul>
             </HoverCardContent>

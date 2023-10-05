@@ -815,14 +815,8 @@ export default function LimitOrderCard(properties) {
                         </div>
                       </div>
                     </FormLabel>
-                    <FormControl>
-                      <Input
-                        value={price}
-                        disabled
-                        placeholder={price}
-                        className="mb-3"
-                      />
-                    </FormControl>
+
+                    <Input disabled className="mb-3" />
                     <FormDescription>Your price per ? in ?</FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -844,14 +838,7 @@ export default function LimitOrderCard(properties) {
                         </div>
                       </div>
                     </FormLabel>
-                    <FormControl>
-                      <Input
-                        value={amount}
-                        placeholder={amount}
-                        disabled
-                        className="mb-3"
-                      />
-                    </FormControl>
+                    <Input disabled className="mb-3" />
                     <FormDescription>
                       {orderType === "buy"
                         ? `The amount of ? you want to buy`
@@ -877,13 +864,7 @@ export default function LimitOrderCard(properties) {
                         </div>
                       </div>
                     </FormLabel>
-                    <FormControl>
-                      <Input
-                        value={total}
-                        placeholder={total}
-                        className="mb-3"
-                      />
-                    </FormControl>
+                    <Input disabled className="mb-3" />
                     <FormDescription>
                       {orderType === "buy"
                         ? `The total ? you will have to spend`
@@ -899,24 +880,11 @@ export default function LimitOrderCard(properties) {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Limit order expriration</FormLabel>
-                    <FormControl>
-                      <Select disabled>
-                        <SelectTrigger className="mb-3">
-                          <SelectValue placeholder="1hr" />
-                        </SelectTrigger>
-                        <SelectContent className="bg-white">
-                          <SelectItem value="1hr">1 hour</SelectItem>
-                          <SelectItem value="12hr">12 hours</SelectItem>
-                          <SelectItem value="24hr">24 hours</SelectItem>
-                          <SelectItem value="7d">7 days</SelectItem>
-                          <SelectItem value="30d">30 days</SelectItem>
-                          <SelectItem value="specific">
-                            Specific date
-                          </SelectItem>
-                          <SelectItem value="fkill">Fill or kill</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
+                    <Select disabled>
+                      <SelectTrigger className="mb-3">
+                        <SelectValue placeholder="1hr" />
+                      </SelectTrigger>
+                    </Select>
                     <FormDescription>Time till expiration...</FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -930,14 +898,7 @@ export default function LimitOrderCard(properties) {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Fee</FormLabel>
-                    <FormControl>
-                      <Input
-                        disabled
-                        label={`fees`}
-                        value={`0.4826 BTS`}
-                        placeholder={1}
-                      />
-                    </FormControl>
+                    <Input disabled label={`fees`} />
                     <FormDescription>
                       The network fee to broadcast this operation
                     </FormDescription>
