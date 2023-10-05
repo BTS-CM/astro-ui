@@ -308,7 +308,13 @@ export default function LimitOrderCard(properties) {
                           {(orderType === "buy" && !sellOrders) ||
                           (sellOrders && !sellOrders.length) ||
                           (orderType === "sell" && !buyOrders) ||
-                          (buyOrders && !buyOrders.length) ? null : (
+                          (buyOrders && !buyOrders.length) ? (
+                            <Badge disabled>
+                              {orderType === "buy"
+                                ? `Use lowest ask`
+                                : `Use highest bid`}
+                            </Badge>
+                          ) : (
                             <span
                               variant="link"
                               onClick={(event) => {
@@ -792,7 +798,173 @@ export default function LimitOrderCard(properties) {
             </form>
           </Form>
         ) : (
-          "Loading market data..."
+          <Form {...form}>
+            <form>
+              <FormField
+                control={form.control}
+                name="sellPrice"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      <div className="grid grid-cols-2 mt-3">
+                        <div className="mt-1">Price</div>
+                        <div className="text-gray-500 text-right">
+                          <span variant="link">
+                            <Badge>Use lowest ask</Badge>
+                          </span>
+                        </div>
+                      </div>
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        value={price}
+                        disabled
+                        placeholder={price}
+                        className="mb-3"
+                      />
+                    </FormControl>
+                    <FormDescription>Your price per ? in ?</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="sellAmount"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      <div className="grid grid-cols-2 mt-3">
+                        <div className="mt-1">Amount</div>
+                        <div className="text-gray-500 text-right">
+                          {orderType === "sell" && assetABalance ? (
+                            <Badge>Use balance</Badge>
+                          ) : null}
+                        </div>
+                      </div>
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        value={amount}
+                        placeholder={amount}
+                        disabled
+                        className="mb-3"
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      {orderType === "buy"
+                        ? `The amount of ? you want to buy`
+                        : `The amount of ? you will have to spend`}
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="sellTotal"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      <div className="grid grid-cols-2 mt-3">
+                        <div className="mt-1">Total</div>
+                        <div className="text-gray-500 text-right">
+                          {orderType === "buy" && assetBBalance ? (
+                            <Badge>Use balance</Badge>
+                          ) : null}
+                        </div>
+                      </div>
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        value={total}
+                        placeholder={total}
+                        className="mb-3"
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      {orderType === "buy"
+                        ? `The total ? you will have to spend`
+                        : `The total ? you will receive`}
+                    </FormDescription>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="expiry"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Limit order expriration</FormLabel>
+                    <FormControl>
+                      <Select disabled>
+                        <SelectTrigger className="mb-3">
+                          <SelectValue placeholder="1hr" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-white">
+                          <SelectItem value="1hr">1 hour</SelectItem>
+                          <SelectItem value="12hr">12 hours</SelectItem>
+                          <SelectItem value="24hr">24 hours</SelectItem>
+                          <SelectItem value="7d">7 days</SelectItem>
+                          <SelectItem value="30d">30 days</SelectItem>
+                          <SelectItem value="specific">
+                            Specific date
+                          </SelectItem>
+                          <SelectItem value="fkill">Fill or kill</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormDescription>Time till expiration...</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                disabled
+                name="fee"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Fee</FormLabel>
+                    <FormControl>
+                      <Input
+                        disabled
+                        label={`fees`}
+                        value={`0.4826 BTS`}
+                        placeholder={1}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      The network fee to broadcast this operation
+                    </FormDescription>
+                    {expiryType === "fkill" || usr.id === usr.referrer ? (
+                      <FormMessage>
+                        {expiryType === "fkill"
+                          ? `Unfilled rebate: ${1 * 0.4826} BTS (instant)`
+                          : null}
+                        {usr.id === usr.referrer
+                          ? `LTM rebate: ${0.8 * 0.4826} BTS (vesting)`
+                          : null}
+                      </FormMessage>
+                    ) : null}
+                  </FormItem>
+                )}
+              />
+
+              <Button
+                disabled
+                className="mt-7 mb-1"
+                variant="outline"
+                type="submit"
+              >
+                Submit
+              </Button>
+            </form>
+          </Form>
         )}
         {showDialog && data && deeplink && (
           <Dialog

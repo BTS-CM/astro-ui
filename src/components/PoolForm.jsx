@@ -1301,8 +1301,8 @@ export default function PoolForm() {
                       </CardDescription>
                     </CardHeader>
                     <CardContent className="text-sm pb-2">
-                      Consider earning yield over time by owning a stake in the
-                      pool without staking any assets in the pool.
+                      Receive swap fee yield over time by owning a stake in the
+                      pool via a market limit order.
                     </CardContent>
                   </Card>
                 </a>
@@ -1329,7 +1329,8 @@ export default function PoolForm() {
                       </CardDescription>
                     </CardHeader>
                     <CardContent className="text-sm pb-2">
-                      Borrow from DEX participants, with user defined rates.
+                      DEX users lend assets at user defined rates. Borrow from
+                      DEX participants, with user defined rates.
                     </CardContent>
                   </Card>
                 </a>

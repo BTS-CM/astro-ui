@@ -148,5 +148,9 @@ export default function AssetDropDown(properties) {
         </>
       </DialogContent>
     </Dialog>
-  ) : null;
+  ) : (
+    <Button variant="outline" className="h-5 p-3" disabled>
+      ?
+    </Button>
+  );
 }

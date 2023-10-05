@@ -581,86 +581,83 @@ export default function Market(properties) {
                         </CardDescription>
                       </CardHeader>
                       <CardContent className="text-sm pb-4">
-                        {tickerData && assetAData ? (
-                          <>
-                            Latest price:
-                            <Badge variant="outline" className="ml-2 mb-1">
-                              {trimPrice(
-                                tickerData.latest,
-                                assetAData.precision
-                              )}
-                            </Badge>
-                            <br />
-                          </>
-                        ) : (
-                          <Skeleton className="h-4 w-[125px] mt-1" />
-                        )}
-                        {tickerData ? (
-                          <>
-                            24Hr change:
-                            <Badge variant="outline" className="ml-2 mb-1">
-                              {tickerData.percent_change}
-                            </Badge>
-                            <br />
-                          </>
-                        ) : (
-                          <Skeleton className="h-4 w-[125px] mt-1" />
-                        )}
-                        {tickerData ? (
-                          <>
-                            24Hr base volume:
-                            <Badge variant="outline" className="ml-2 mb-1">
-                              {activeLimitCard === "buy"
-                                ? tickerData.base_volume
-                                : tickerData.quote_volume}
-                            </Badge>
-                            <br />
-                          </>
-                        ) : (
-                          <Skeleton className="h-4 w-[125px] mt-1" />
-                        )}
-                        {tickerData ? (
-                          <>
-                            24Hr quote volume:
-                            <Badge variant="outline" className="ml-2 mb-1">
-                              {activeLimitCard === "sell"
-                                ? tickerData.base_volume
-                                : tickerData.quote_volume}
-                            </Badge>
-                            <br />
-                          </>
-                        ) : (
-                          <Skeleton className="h-4 w-[125px] mt-1" />
-                        )}
-                        {tickerData && assetAData ? (
-                          <>
-                            Lowest ask:
-                            <Badge variant="outline" className="ml-2 mb-1">
-                              {trimPrice(
-                                tickerData.lowest_ask,
-                                assetAData.precision
-                              )}
-                            </Badge>
-                            <br />
-                          </>
-                        ) : (
-                          <>
-                            <Skeleton className="h-4 w-[125px] mt-1" />
-                          </>
-                        )}
-                        {tickerData && assetAData ? (
-                          <>
-                            Highest bid:
-                            <Badge variant="outline" className="ml-2">
-                              {trimPrice(
-                                tickerData.highest_bid,
-                                assetAData.precision
-                              )}
-                            </Badge>
-                          </>
-                        ) : (
-                          <Skeleton className="h-4 w-[125px] mt-1" />
-                        )}
+                        <div className="grid grid-cols-1 gap-2">
+                          <div className="grid grid-cols-5">
+                            <div className="col-span-2">Latest price:</div>
+                            <div className="col-span-3">
+                              <Badge variant="outline" className="ml-2 mb-1">
+                                {tickerData && assetAData
+                                  ? trimPrice(
+                                      tickerData.latest,
+                                      assetAData.precision
+                                    )
+                                  : "?"}
+                              </Badge>
+                            </div>
+                          </div>
+                          <div className="grid grid-cols-5">
+                            <div className="col-span-2">24Hr change:</div>
+                            <div className="col-span-3">
+                              <Badge variant="outline" className="ml-2 mb-1">
+                                {tickerData ? tickerData.percent_change : "?"}
+                              </Badge>
+                            </div>
+                          </div>
+                          <div className="grid grid-cols-5">
+                            <div className="col-span-2">24Hr base volume:</div>
+                            <div className="col-span-3">
+                              <Badge variant="outline" className="ml-2 mb-1">
+                                {!tickerData ? "?" : null}
+                                {activeLimitCard === "buy" && tickerData
+                                  ? tickerData.base_volume
+                                  : null}
+                                {activeLimitCard === "sell" && tickerData
+                                  ? tickerData.quote_volume
+                                  : null}
+                              </Badge>
+                            </div>
+                          </div>
+                          <div className="grid grid-cols-5">
+                            <div className="col-span-2">24Hr quote volume:</div>
+                            <div className="col-span-3">
+                              <Badge variant="outline" className="ml-2 mb-1">
+                                {!tickerData ? "?" : null}
+                                {activeLimitCard === "buy" && tickerData
+                                  ? tickerData.quote_volume
+                                  : null}
+                                {activeLimitCard === "sell" && tickerData
+                                  ? tickerData.base_volume
+                                  : null}
+                              </Badge>
+                            </div>
+                          </div>
+                          <div className="grid grid-cols-5">
+                            <div className="col-span-2">Lowest ask:</div>
+                            <div className="col-span-3">
+                              <Badge variant="outline" className="ml-2 mb-1">
+                                {tickerData && assetAData
+                                  ? trimPrice(
+                                      tickerData.lowest_ask,
+                                      assetAData.precision
+                                    )
+                                  : "?"}
+                              </Badge>
+                            </div>
+                          </div>
+                          <div className="grid grid-cols-5">
+                            <div className="col-span-2">Highest bid::</div>
+                            <div className="col-span-3">
+                              <Badge variant="outline" className="ml-2">
+                                {tickerData && assetAData
+                                  ? trimPrice(
+                                      tickerData.highest_bid,
+                                      assetAData.precision
+                                    )
+                                  : "?"}
+                              </Badge>
+                            </div>
+                          </div>
+                        </div>
                       </CardContent>
                     </Card>
                   </HoverCardTrigger>
