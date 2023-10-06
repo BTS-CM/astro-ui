@@ -719,6 +719,7 @@ export default function LimitOrderCard(properties) {
                         {expiryType === "fkill"
                           ? `Unfilled rebate: ${1 * 0.4826} BTS (instant)`
                           : null}
+                        <br />
                         {usr.id === usr.referrer
                           ? `LTM rebate: ${0.8 * 0.4826} BTS (vesting)`
                           : null}

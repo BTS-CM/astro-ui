@@ -42,89 +42,11 @@ import CurrentUser from "./common/CurrentUser.jsx";
 
 import { humanReadableFloat, trimPrice } from "../lib/common";
 
-/**
- * Fetching the dynamic data from api cache
- * @param {string} chain
- * @param {string} id
- * @param {setState} setDynamic
- * @returns
- */
-async function fetchDynamicData(chain, id, setDynamic) {
-  const replacedID = id.replace("1.3.", "2.3.");
-  const fetchedDynamicData = await fetch(
-    `http://localhost:8080/cache/dynamic/${chain}/${replacedID}`,
-    { method: "GET" }
-  );
-
-  if (!fetchedDynamicData.ok) {
-    console.log(`Failed to fetch ${replacedID} dynamic data`);
-    return;
-  }
-
-  const dynamicDataJSON = await fetchedDynamicData.json();
-
-  if (dynamicDataJSON && dynamicDataJSON.result) {
-    console.log(`Fetched ${replacedID} dynamic data`);
-    setDynamic(dynamicDataJSON.result);
-  }
-}
-
-/**
- * Retrieving bitasset data from the API
- * @param {string} chain
- * @param {string} id
- * @param {setState} setBitassetData
- * @returns
- */
-async function fetchBitassetData(chain, id, setBitassetData) {
-  const response = await fetch(
-    `http://localhost:8080/api/getObjects/${chain}`,
-    { method: "POST", body: JSON.stringify([id]) }
-  );
-
-  if (!response.ok) {
-    console.log("Failed to fetch bitasset data");
-    return;
-  }
-
-  const responseContents = await response.json();
-
-  if (
-    responseContents &&
-    responseContents.result &&
-    responseContents.result.length
-  ) {
-    const finalResult = responseContents.result[0];
-
-    setBitassetData(finalResult);
-  }
-}
-
-/**
- * Retrieve basic asset details from the API
- * @param {strign} chain
- * @param {string} assetID
- * @param {setState} setAssetData
- */
-async function cachedAsset(chain, assetID, setAssetData) {
-  const fetchedAsset = await fetch(
-    `http://localhost:8080/cache/asset/${chain}/${assetID}`,
-    { method: "GET" }
-  );
-
-  if (!fetchedAsset.ok) {
-    console.log(`Failed to fetch asset: ${assetID}`);
-    return;
-  }
-
-  const assetJSON = await fetchedAsset.json();
-
-  if (assetJSON && assetJSON.result) {
-    console.log("Fetched asset data");
-    setAssetData(assetJSON.result);
-    addAssetsToCache([assetJSON.result]);
-  }
-}
+import {
+  fetchDynamicData,
+  fetchBitassetData,
+  cachedAsset,
+} from "../effects/Market.ts";
 
 export default function Market(properties) {
   const [usr, setUsr] = useState();
@@ -757,7 +679,6 @@ export default function Market(properties) {
                   <MarketAssetCard
                     asset={assetA}
                     assetData={assetAData}
-                    tradingPairData={assetBData}
                     assetDetails={assetADetails}
                     bitassetData={aBitassetData}
                     marketSearch={marketSearch}
@@ -794,7 +715,6 @@ export default function Market(properties) {
                   <MarketAssetCard
                     asset={assetB}
                     assetData={assetBData}
-                    tradingPairData={assetAData}
                     assetDetails={assetBDetails}
                     bitassetData={bBitassetData}
                     marketSearch={marketSearch}

@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Avatar } from "@/components/Avatar.tsx";
-
-import { setCurrentUser, $userStorage, removeUser } from "../stores/users.ts";
+import * as fflate from "fflate";
 
 import {
   $globalParamsCache,
@@ -9,6 +7,7 @@ import {
   $marketSearchCache,
   addMarketSearchesToCache,
   addPoolsToCache,
+  addAssetsToCache,
 } from "../stores/cache.ts";
 
 import {
@@ -28,6 +27,9 @@ import {
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Avatar } from "@/components/Avatar.tsx";
+
+import { setCurrentUser, $userStorage, removeUser } from "../stores/users.ts";
 
 export default function AccountSelect(properties) {
   const [chain, setChain] = useState();
@@ -51,17 +53,53 @@ export default function AccountSelect(properties) {
       const cachedMarketAssets = await fetch(
         `http://localhost:8080/cache/marketSearch/${chain}`,
         { method: "GET" }
-      );
+      ).catch((err) => console.log({ err, loc: "cachedMarketAssets" }));
 
       if (!cachedMarketAssets.ok) {
-        console.log("Failed to fetch cached data");
+        console.log("Failed to fetch market search data");
         return;
       }
 
-      const assetJSON = await cachedMarketAssets.json();
+      const responseContents = await cachedMarketAssets.json();
 
-      if (assetJSON && assetJSON.result) {
-        addMarketSearchesToCache(assetJSON.result);
+      if (!responseContents || !responseContents.result) {
+        console.log("Failed to fetch market search data");
+        return;
+      }
+
+      const decompressed = fflate.decompressSync(
+        fflate.strToU8(responseContents.result, true)
+      );
+      const originalString = fflate.strFromU8(decompressed);
+      const parsedJSON = JSON.parse(originalString);
+      addMarketSearchesToCache(parsedJSON);
+    }
+
+    async function getAllAssets() {
+      const response = await fetch(
+        `http://localhost:8080/cache/allassets/${chain}`,
+        { method: "GET" }
+      );
+
+      if (!response.ok) {
+        console.log("Failed to fetch all assets");
+        return;
+      }
+
+      const responseContents = await response.json();
+
+      if (!responseContents || !responseContents.result) {
+        console.log("Failed to fetch all assets");
+        return;
+      }
+
+      const decompressed = fflate.decompressSync(
+        fflate.strToU8(responseContents.result, true)
+      );
+      const originalString = fflate.strFromU8(decompressed);
+      const parsedJSON = JSON.parse(originalString);
+      if (parsedJSON) {
+        addAssetsToCache(parsedJSON);
       }
     }
 
@@ -71,21 +109,25 @@ export default function AccountSelect(properties) {
     async function retrievePools() {
       const poolResponse = await fetch(
         `http://localhost:8080/cache/pools/${chain}`,
-        { method: "GET" }
-      );
+        {
+          method: "GET",
+        }
+      ).catch((err) => console.log({ err, loc: "retrievePools" }));
 
-      if (!poolResponse.ok) {
-        console.log({
-          error: new Error(`${response.status} ${response.statusText}`),
-          msg: "Couldn't generate deeplink.",
-        });
+      const responseContents = await poolResponse.json();
+
+      if (!responseContents || !responseContents.result) {
+        console.log("Failed to fetch pool cache.");
         return;
       }
 
-      const poolJSON = await poolResponse.json();
-
-      if (poolJSON) {
-        addPoolsToCache(poolJSON);
+      const decompressed = fflate.decompressSync(
+        fflate.strToU8(responseContents.result, true)
+      );
+      const originalString = fflate.strFromU8(decompressed);
+      const parsedJSON = JSON.parse(originalString);
+      if (parsedJSON) {
+        addPoolsToCache(parsedJSON);
       }
     }
 
@@ -116,6 +158,7 @@ export default function AccountSelect(properties) {
       fetchMarketSearches();
       retrievePools();
       lookupFees();
+      getAllAssets();
     }
   }, [chain]);
 

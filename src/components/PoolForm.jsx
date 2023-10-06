@@ -58,7 +58,14 @@ import {
   $poolCache,
   $marketSearchCache,
   $globalParamsCache,
+  $assetCache,
 } from "../stores/cache.ts";
+
+import {
+  fetchDynamicData,
+  fetchBitassetData,
+  cachedAsset,
+} from "../effects/Market.ts";
 
 import AccountSelect from "./AccountSelect.jsx";
 import PoolDialogs from "./Market/PoolDialogs.jsx";
@@ -74,7 +81,6 @@ export default function PoolForm() {
 
   const [data, setData] = useState(""); // form data container
   const [pool, setPool] = useState(""); // dropdown selected pool
-  const [assetData, setAssetData] = useState(); // assets retrieved from api
 
   const [usr, setUsr] = useState();
   useEffect(() => {
@@ -101,6 +107,14 @@ export default function PoolForm() {
     });
     return unsubscribe;
   }, [$poolCache]);
+
+  const [assets, setAssetCache] = useState([]);
+  useEffect(() => {
+    const unsubscribe = $assetCache.subscribe((value) => {
+      setAssetCache(value);
+    });
+    return unsubscribe;
+  }, [$assetCache]);
 
   // Search dialog
 
@@ -202,36 +216,6 @@ export default function PoolForm() {
     }
   }, [pools]);
 
-  useEffect(() => {
-    /**
-     * Retrieves the assets from the api
-     */
-    async function retrieve() {
-      const assetResponse = await fetch(
-        `http://localhost:8080/cache/poolAssets/${usr.chain}`,
-        { method: "GET" }
-      );
-
-      if (!assetResponse.ok) {
-        console.log({
-          error: new Error(`${response.status} ${response.statusText}`),
-          msg: "Couldn't generate deeplink.",
-        });
-        return;
-      }
-
-      const dataResponse = await assetResponse.json();
-
-      if (dataResponse) {
-        setAssetData(dataResponse);
-      }
-    }
-
-    if (usr && usr.chain) {
-      retrieve();
-    }
-  }, [usr]);
-
   const [sellAmount, setSellAmount] = useState(0);
   const [buyAmount, setBuyAmount] = useState(0);
 
@@ -240,16 +224,16 @@ export default function PoolForm() {
   const [assetB, setAssetB] = useState("");
   useEffect(() => {
     // Setting various react states as the user interacts with the form
-    if (pools && pool && assetData) {
+    if (pools && pool && assets) {
       const currentPool = pools.find((x) => x.id === pool);
       setFoundPool(currentPool);
-      const foundA = assetData.find((x) => x.id === currentPool.asset_a_id);
-      const foundB = assetData.find((x) => x.id === currentPool.asset_b_id);
+      const foundA = assets.find((x) => x.id === currentPool.asset_a_id);
+      const foundB = assets.find((x) => x.id === currentPool.asset_b_id);
       setAssetA(foundA);
       setAssetB(foundB);
       setSellAmount(1);
     }
-  }, [pool, assetData]);
+  }, [pool, assets]);
 
   const [foundPoolDetails, setFoundPoolDetails] = useState();
   useEffect(() => {
@@ -288,63 +272,44 @@ export default function PoolForm() {
           finalResult.balance_b,
           assetB.precision
         )} ${assetB.symbol}`;
-        finalResult["share_asset_details"] = assetData.find(
+        finalResult["share_asset_details"] = assets.find(
           (x) => x.id === finalResult.share_asset
         );
 
         setFoundPoolDetails(finalResult);
       }
     }
-    if (foundPool) {
+    if (usr && usr.chain && foundPool) {
       lookupPool(usr.chain);
     }
-  }, [foundPool]);
+  }, [usr, foundPool]);
 
   const [assetADetails, setAssetADetails] = useState(null);
   const [assetBDetails, setAssetBDetails] = useState(null);
-  //const [shareAssetDetails, setShareAssetDetails] = useState(null);
+
+  const [aBitassetData, setABitassetData] = useState(null);
+  const [bBitassetData, setBBitassetData] = useState(null);
+
   useEffect(() => {
-    async function fetchDynamicData(chain, symbol, dynamicID, storeValue) {
-      const fetchedDynamicData = await fetch(
-        `http://localhost:8080/cache/dynamic/${chain}/${dynamicID}`,
-        { method: "GET" }
-      );
-
-      if (!fetchedDynamicData.ok) {
-        console.log(`Failed to fetch ${symbol} dynamic data`);
-        return;
-      }
-
-      const dynamicDataJSON = await fetchedDynamicData.json();
-
-      if (dynamicDataJSON && dynamicDataJSON.result) {
-        console.log(`Fetched ${symbol}'s dynamic data`);
-        storeValue(dynamicDataJSON.result);
-      }
-    }
-
-    if (usr && assetA && assetB) {
+    if (usr && usr.id && assetA && assetB) {
       fetchDynamicData(
         usr.chain,
-        assetA.symbol,
         assetA.id.replace("1.3.", "2.3."),
         setAssetADetails
       );
       fetchDynamicData(
         usr.chain,
-        assetB.symbol,
         assetB.id.replace("1.3.", "2.3."),
         setAssetBDetails
       );
 
-      /*
-      fetchDynamicData(
-        usr.chain,
-        foundPoolDetails.share_asset_symbol,
-        foundPoolDetails.share_asset.replace("1.3.", "2.3."),
-        setShareAssetDetails
-      );
-      */
+      if (assetA.bitasset_data_id) {
+        fetchBitassetData(usr.chain, assetA.bitasset_data_id, setABitassetData);
+      }
+
+      if (assetB.bitasset_data_id) {
+        fetchBitassetData(usr.chain, assetB.bitasset_data_id, setBBitassetData);
+      }
     }
   }, [usr, assetA, assetB, foundPool]);
 
@@ -369,7 +334,7 @@ export default function PoolForm() {
       }
     }
 
-    if (usr && assetA && assetB) {
+    if (usr && usr.id && assetA && assetB) {
       fetchBalances(usr.chain, usr.id);
     }
   }, [usr, assetA, assetB]);
@@ -605,8 +570,8 @@ export default function PoolForm() {
             </CardHeader>
             <CardContent>
               {!pools ? <p>Loading pool data</p> : null}
-              {!assetData ? <p>Loading asset data</p> : null}
-              {pools && assetData ? (
+              {!assets ? <p>Loading asset data</p> : null}
+              {pools && assets ? (
                 <>
                   <Form {...form}>
                     <form
@@ -1190,6 +1155,7 @@ export default function PoolForm() {
                     asset={assetB.symbol}
                     assetData={assetB}
                     assetDetails={assetBDetails}
+                    bitassetData={bBitassetData}
                     marketSearch={marketSearch}
                     chain={usr.chain}
                     usrBalances={usrBalances}
@@ -1199,19 +1165,11 @@ export default function PoolForm() {
                     asset={assetA.symbol}
                     assetData={assetA}
                     assetDetails={assetADetails}
+                    bitassetData={aBitassetData}
                     marketSearch={marketSearch}
                     chain={usr.chain}
                     usrBalances={usrBalances}
                     type="sell"
-                  />
-                  <MarketAssetCard
-                    asset={foundPoolDetails.share_asset_symbol}
-                    assetData={foundPoolDetails.share_asset_details}
-                    assetDetails={{}}
-                    marketSearch={marketSearch}
-                    chain={usr.chain}
-                    usrBalances={usrBalances}
-                    type="pool"
                   />
                 </>
               ) : (
@@ -1235,22 +1193,6 @@ export default function PoolForm() {
                   <Card>
                     <CardHeader className="pb-2 pt-4">
                       <CardTitle>Base asset</CardTitle>
-                      <CardDescription className="text-lg">
-                        Loading...
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-2">
-                        <Skeleton className="h-4 w-[250px]" />
-                        <Skeleton className="h-4 w-[200px]" />
-                        <Skeleton className="h-4 w-[250px]" />
-                        <Skeleton className="h-4 w-[200px]" />
-                      </div>
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardHeader className="pb-2 pt-4">
-                      <CardTitle>Pool share asset</CardTitle>
                       <CardDescription className="text-lg">
                         Loading...
                       </CardDescription>
@@ -1334,6 +1276,36 @@ export default function PoolForm() {
                     </CardContent>
                   </Card>
                 </a>
+
+                {foundPoolDetails && marketSearch && usrBalances ? (
+                  <MarketAssetCard
+                    asset={foundPoolDetails.share_asset_symbol}
+                    assetData={foundPoolDetails.share_asset_details}
+                    assetDetails={{}}
+                    bitassetData={null}
+                    marketSearch={marketSearch}
+                    chain={usr.chain}
+                    usrBalances={usrBalances}
+                    type="pool"
+                  />
+                ) : (
+                  <Card>
+                    <CardHeader className="pb-2 pt-4">
+                      <CardTitle>Pool share asset</CardTitle>
+                      <CardDescription className="text-lg">
+                        Loading...
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-2">
+                        <Skeleton className="h-4 w-[250px]" />
+                        <Skeleton className="h-4 w-[200px]" />
+                        <Skeleton className="h-4 w-[250px]" />
+                        <Skeleton className="h-4 w-[200px]" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
               </>
             ) : null}
           </div>
@@ -1348,7 +1320,7 @@ export default function PoolForm() {
             setData("");
             setPool("");
             setPools();
-            setAssetData();
+            //setAssetData();
             setSellAmount(0);
             setBuyAmount(0);
             setFoundPool();
