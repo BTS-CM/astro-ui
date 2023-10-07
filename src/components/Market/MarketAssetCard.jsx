@@ -33,6 +33,20 @@ import { humanReadableFloat } from "../../lib/common";
 
 const CardRow = (properties) => {
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [tooltipOpen, setTooltipOpen] = useState(false);
+
+  const handleTooltipClick = (e) => {
+    e.stopPropagation();
+    if (!dialogOpen) {
+      setDialogOpen(true);
+    }
+  };
+
+  const handleDialogClose = () => {
+    setTooltipOpen(false);
+    setDialogOpen(false);
+  };
+
   return (
     <div className="col-span-1">
       <div className="grid grid-cols-10">
@@ -47,33 +61,39 @@ const CardRow = (properties) => {
             <Dialog
               open={dialogOpen}
               onOpenChange={(open) => {
+                console.log("Dialog");
                 setDialogOpen(open);
+                setTooltipOpen(false);
               }}
             >
               <DialogContent className="sm:max-w-[400px] bg-white">
                 <DialogHeader>
                   <DialogTitle>{properties.dialogtitle}</DialogTitle>
-                  <DialogDescription>
-                    {properties.dialogdescription}
-                  </DialogDescription>
+                  {properties.dialogdescription}
                 </DialogHeader>
               </DialogContent>
               <Tooltip>
-                {!dialogOpen && (
-                  <TooltipTrigger asChild>
-                    <DialogTrigger asChild>
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        className="h-6 w-6 text-gray-400"
-                        onClick={() => setDialogOpen(true)}
-                      >
-                        ?
-                      </Button>
-                    </DialogTrigger>
-                  </TooltipTrigger>
+                <TooltipTrigger
+                  asChild
+                  open={tooltipOpen}
+                  onMouseOver={() => {
+                    setTooltipOpen(true);
+                  }}
+                >
+                  <DialogTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="h-6 w-6 text-gray-400"
+                      onClick={handleTooltipClick}
+                    >
+                      ?
+                    </Button>
+                  </DialogTrigger>
+                </TooltipTrigger>
+                {tooltipOpen && (
+                  <TooltipContent>{properties.tooltip}</TooltipContent>
                 )}
-                <TooltipContent>{properties.tooltip}</TooltipContent>
               </Tooltip>
             </Dialog>
           </TooltipProvider>
