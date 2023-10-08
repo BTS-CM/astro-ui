@@ -54,11 +54,14 @@ import {
 
 import { $currentUser, eraseCurrentUser } from "../stores/users.ts";
 
+import { usrCache } from "../effects/Cache.ts";
+
 import {
   $poolCache,
   $marketSearchCache,
   $globalParamsCache,
   $assetCache,
+  resetCache,
 } from "../stores/cache.ts";
 
 import {
@@ -83,13 +86,7 @@ export default function PoolForm() {
   const [pool, setPool] = useState(""); // dropdown selected pool
 
   const [usr, setUsr] = useState();
-  useEffect(() => {
-    // Subscribes to the user nanostore state
-    const unsubscribe = $currentUser.subscribe((value) => {
-      setUsr(value);
-    });
-    return unsubscribe;
-  }, [$currentUser]);
+  usrCache(setUsr);
 
   const [marketSearch, setMarketSearchCache] = useState([]);
   useEffect(() => {
@@ -286,12 +283,13 @@ export default function PoolForm() {
 
   const [assetADetails, setAssetADetails] = useState(null);
   const [assetBDetails, setAssetBDetails] = useState(null);
+  const [poolShareDetails, setPoolShareDetails] = useState(null);
 
   const [aBitassetData, setABitassetData] = useState(null);
   const [bBitassetData, setBBitassetData] = useState(null);
 
   useEffect(() => {
-    if (usr && usr.id && assetA && assetB) {
+    if (usr && usr.id && assetA && assetB && foundPool) {
       fetchDynamicData(
         usr.chain,
         assetA.id.replace("1.3.", "2.3."),
@@ -301,6 +299,13 @@ export default function PoolForm() {
         usr.chain,
         assetB.id.replace("1.3.", "2.3."),
         setAssetBDetails
+      );
+      fetchDynamicData(
+        usr.chain,
+        assets
+          .find((x) => x.symbol === foundPool.share_asset_symbol)
+          .id.replace("1.3.", "2.3."),
+        setPoolShareDetails
       );
 
       if (assetA.bitasset_data_id) {
@@ -537,7 +542,7 @@ export default function PoolForm() {
   const [showDialog, setShowDialog] = useState(false);
   const [poolKey, setPoolKey] = useState("default_pool_key");
   useEffect(() => {
-    if (pool) {
+    if (pool && pool.length) {
       window.history.replaceState({}, "", `?pool=${pool}`); // updating the url parameters
     }
     setPoolKey(`pool_key${Date.now()}`);
@@ -864,7 +869,7 @@ export default function PoolForm() {
                         ) : null}
                       </div>
 
-                      {pool ? (
+                      {pool && pool.length ? (
                         <>
                           <FormField
                             control={form.control}
@@ -1281,7 +1286,7 @@ export default function PoolForm() {
                   <MarketAssetCard
                     asset={foundPoolDetails.share_asset_symbol}
                     assetData={foundPoolDetails.share_asset_details}
-                    assetDetails={{}}
+                    assetDetails={poolShareDetails}
                     bitassetData={null}
                     marketSearch={marketSearch}
                     chain={usr.chain}
@@ -1319,8 +1324,10 @@ export default function PoolForm() {
             eraseCurrentUser();
             setData("");
             setPool("");
-            setPools();
-            //setAssetData();
+            setFoundPool();
+            setFoundPoolDetails();
+            window.history.replaceState({}, "", "/pool/index.html");
+            resetCache();
             setSellAmount(0);
             setBuyAmount(0);
             setFoundPool();

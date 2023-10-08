@@ -21,15 +21,7 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 
-import { $currentUser, eraseCurrentUser } from "../stores/users.ts";
-
-import {
-  $poolCache,
-  $marketSearchCache,
-  $globalParamsCache,
-} from "../stores/cache.ts";
-
-import { $assetCache, addAssetsToCache } from "../stores/cache.ts";
+import { eraseCurrentUser } from "../stores/users.ts";
 
 import AccountSelect from "./AccountSelect.jsx";
 import LimitOrderCard from "./Market/LimitOrderCard.jsx";
@@ -41,6 +33,12 @@ import PoolDialogs from "./Market/PoolDialogs.jsx";
 import CurrentUser from "./common/CurrentUser.jsx";
 
 import { humanReadableFloat, trimPrice } from "../lib/common";
+import {
+  usrCache,
+  assetCache,
+  marketSearchCache,
+  globalParamsCache,
+} from "../effects/Cache.ts";
 
 import {
   fetchDynamicData,
@@ -50,38 +48,18 @@ import {
 
 export default function Market(properties) {
   const [usr, setUsr] = useState();
-  useEffect(() => {
-    const unsubscribe = $currentUser.subscribe((value) => {
-      setUsr(value);
-    });
-    return unsubscribe;
-  }, [$currentUser]);
+  usrCache(setUsr); // useEffect function
 
   const [assets, setAssetCache] = useState([]);
-  useEffect(() => {
-    const unsubscribe = $assetCache.subscribe((value) => {
-      setAssetCache(value);
-    });
-    return unsubscribe;
-  }, [$assetCache]);
+  assetCache(setAssetCache); // useEffect function
 
   const [marketSearch, setMarketSearchCache] = useState([]);
-  useEffect(() => {
-    const unsubscribe = $marketSearchCache.subscribe((value) => {
-      setMarketSearchCache(value);
-    });
-    return unsubscribe;
-  }, [$marketSearchCache]);
+  marketSearchCache(setMarketSearchCache); // useEffect function
 
   /*
   // Fees
   const [globalParamsCache, setGlobalParamsCache] = useState(null);
-  useEffect(() => {
-    const unsubscribe = $globalParamsCache.subscribe((value) => {
-      setGlobalParamsCache(value);
-    });
-    return unsubscribe;
-  }, [$globalParamsCache]);
+  globalParamsCache(setGlobalParamsCache);
   */
 
   const [assetA, setAssetA] = useState(!window.location.search ? "BTS" : null);

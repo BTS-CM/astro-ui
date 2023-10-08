@@ -4,6 +4,7 @@ import { InView } from "react-intersection-observer";
 import { Avatar } from "@/components/Avatar";
 import { Button } from "@/components/ui/button";
 import { $currentUser } from "../../stores/users";
+import { usrCache } from "../../effects/Cache.ts";
 
 import {
   Card,
@@ -17,12 +18,7 @@ export default function CurrentUser(properties) {
   const { resetCallback } = properties;
 
   const [usr, setUsr] = useState();
-  useEffect(() => {
-    const unsubscribe = $currentUser.subscribe((value) => {
-      setUsr(value);
-    });
-    return unsubscribe;
-  }, [$currentUser]);
+  usrCache(setUsr);
 
   const [inView, setInView] = React.useState(false);
   if (!usr || !usr.id || !usr.id.length) {

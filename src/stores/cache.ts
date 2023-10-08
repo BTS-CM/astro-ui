@@ -156,6 +156,16 @@ function setGlobalParams(params: GlobalParameters) {
   $globalParamsCache.set(params);
 }
 
+/**
+ * Reset temp cache when the user switches blockchain
+ */
+function resetCache() {
+  $assetCache.set([]);
+  $poolCache.set([]);
+  $marketSearchCache.set([]);
+  $globalParamsCache.set(null);
+}
+
 export {
   $assetCache,
   addAssetsToCache,
@@ -165,4 +175,5 @@ export {
   addMarketSearchesToCache,
   $globalParamsCache,
   setGlobalParams,
+  resetCache,
 };

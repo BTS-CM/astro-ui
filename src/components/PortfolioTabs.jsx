@@ -25,6 +25,8 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 import { $currentUser, eraseCurrentUser } from "../stores/users.ts";
+import { usrCache } from "../effects/Cache.ts";
+
 import AccountSelect from "./AccountSelect.jsx";
 import CurrentUser from "./common/CurrentUser.jsx";
 
@@ -33,12 +35,7 @@ import { opTypes } from "../lib/opTypes";
 
 export default function PortfolioTabs(properties) {
   const [usr, setUsr] = useState();
-  useEffect(() => {
-    const unsubscribe = $currentUser.subscribe((value) => {
-      setUsr(value);
-    });
-    return unsubscribe;
-  }, [$currentUser]);
+  usrCache(setUsr);
 
   const activeTabStyle = {
     backgroundColor: "#252526",

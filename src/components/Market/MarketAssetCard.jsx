@@ -61,7 +61,6 @@ const CardRow = (properties) => {
             <Dialog
               open={dialogOpen}
               onOpenChange={(open) => {
-                console.log("Dialog");
                 setDialogOpen(open);
                 setTooltipOpen(false);
               }}
@@ -177,11 +176,11 @@ export default function MarketAssetCard(properties) {
         </CardDescription>
       </CardHeader>
       <CardContent className="text-sm pb-2">
-        <div className="grid grid-cols-2 gap-3 mb-3 w-full">
+        <div className="grid grid-cols-3 gap-3 mb-3 w-full">
           <Dialog>
             <DialogTrigger asChild>
               <Button variant="outline" className="h-6">
-                Asset info
+                Info
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[400px] bg-white">
@@ -219,18 +218,6 @@ export default function MarketAssetCard(properties) {
                   {asset} in confidential supply
                 </DialogDescription>
               </DialogHeader>
-              <DialogFooter>
-                <a
-                  target="_blank"
-                  href={
-                    chain === "bitshares"
-                      ? `https://blocksights.info/#/assets/${asset}`
-                      : `https://blocksights.info/#/assets/${asset}?network=testnet`
-                  }
-                >
-                  <Button variant="outline">🔗 Blocksights</Button>
-                </a>
-              </DialogFooter>
             </DialogContent>
           </Dialog>
           <Dialog>
@@ -240,7 +227,93 @@ export default function MarketAssetCard(properties) {
                 className="h-6"
                 style={{ marginLeft: "3px" }}
               >
-                Asset JSON
+                Links
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[600px] bg-white">
+              <DialogHeader>
+                <DialogTitle>{asset} external links</DialogTitle>
+                <DialogDescription>
+                  The buttons below link directly to external {asset} resources.
+                  <br />
+                  User discretion is advised when interacting with external
+                  resources.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="grid grid-cols-1 gap-2">
+                <div>
+                  <b>Explorers</b>
+                </div>
+                <div>
+                  <a
+                    target="_blank"
+                    href={
+                      chain === "bitshares"
+                        ? `https://blocksights.info/#/assets/${asset}`
+                        : `https://blocksights.info/#/assets/${asset}?network=testnet`
+                    }
+                  >
+                    <Button variant="outline">Blocksights.info</Button>
+                  </a>
+                  {chain === "bitshares" ? (
+                    <a
+                      target="_blank"
+                      href={`https://kibana.bts.mobi/app/dashboards#/view/c767fb10-5c58-11eb-a22a-3fca5c3996eb?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1M,to:now))&_a=(filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:'55c28590-5c51-11eb-a22a-3fca5c3996eb',key:operation_type,negate:!t,params:(query:19),type:phrase),query:(match_phrase:(operation_type:19))),('$state':(store:appState),meta:(alias:!n,disabled:!f,index:'55c28590-5c51-11eb-a22a-3fca5c3996eb',key:operation_type,negate:!t,params:(query:2),type:phrase),query:(match_phrase:(operation_type:2)))),query:(language:kuery,query:'${assetData.id}'))`}
+                    >
+                      <Button variant="outline" className="ml-2">
+                        Kibana.bts.mobi
+                      </Button>
+                    </a>
+                  ) : null}
+                  {chain === "bitshares" ? (
+                    <a
+                      target="_blank"
+                      href={`https://www.bitsharescan.info/asset/${asset}`}
+                    >
+                      <Button variant="outline" className="ml-2">
+                        Bitsharescan.info (cn)
+                      </Button>
+                    </a>
+                  ) : null}
+                </div>
+                <div>
+                  <b>Web wallets</b>
+                </div>
+                <div>
+                  <a
+                    target="_blank"
+                    href={`https://bts.exchange/#/asset/${asset}?r=nftprofessional1`}
+                  >
+                    <Button variant="outline">BTS.exchange</Button>
+                  </a>
+                  <a
+                    target="_blank"
+                    href={`https://wallet.btwty.com/asset/${asset}?r=nftprofessional1`}
+                  >
+                    <Button variant="outline" className="ml-2">
+                      BTWTY.com
+                    </Button>
+                  </a>
+                  <a
+                    target="_blank"
+                    href={`https://ex.xbts.io/#/asset/${asset}?r=nftprofessional1`}
+                  >
+                    <Button variant="outline" className="ml-2">
+                      XBTS.io
+                    </Button>
+                  </a>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button
+                variant="outline"
+                className="h-6"
+                style={{ marginLeft: "3px" }}
+              >
+                JSON
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[600px] bg-white">
@@ -252,7 +325,7 @@ export default function MarketAssetCard(properties) {
               </DialogHeader>
               <div className="grid grid-cols-1">
                 <div className="col-span-1">
-                  <ScrollArea className="h-72 rounded-md border">
+                  <ScrollArea className="h-72 rounded-md border text-sm">
                     <pre>
                       {JSON.stringify(
                         { assetData, assetDetails, bitassetData },
@@ -274,8 +347,22 @@ export default function MarketAssetCard(properties) {
               dialogtitle={`${asset} (${
                 assetData ? assetData.id : "?"
               }) balance`}
-              dialogdescription={`This is how much ${asset} you have available in your
-          account.`}
+              dialogdescription={
+                <ul className="ml-2 list-disc [&>li]:mt-2">
+                  <li>
+                    This is how much {asset} you have available in your account.
+                  </li>
+                  <li>
+                    You can use this balance to place limit orders in this
+                    market.
+                  </li>
+                  <li>
+                    To get more {asset}, you can create a limit order, swap
+                    assets via a liquidity pool, or receive a transfer from
+                    another account.
+                  </li>
+                </ul>
+              }
               tooltip={"More about your balance"}
             />
 
@@ -292,19 +379,130 @@ export default function MarketAssetCard(properties) {
                     : null}
                 </>
               }
-              dialogtitle={"Asset type info"}
+              dialogtitle={`
+                ${!bitassetData ? "User Issued Asset type summary" : ""}
+                ${
+                  bitassetData && bitassetData.is_prediction_market
+                    ? "Prediction Market Asset type summary"
+                    : ""
+                }
+                ${
+                  bitassetData && !bitassetData.is_prediction_market
+                    ? "Smartcoin asset type summary"
+                    : ""
+                }
+              `}
               dialogdescription={
-                <ul className="ml-2 list-disc [&>li]:mt-2">
-                  <li>
-                    {!bitassetData ? "User Issued Asset description" : null}
-                    {bitassetData && bitassetData.is_prediction_market
-                      ? "Prediction market description"
-                      : null}
-                    {bitassetData && !bitassetData.is_prediction_market
-                      ? "Smartcoin description"
-                      : null}
-                  </li>
-                </ul>
+                <>
+                  {!bitassetData ? (
+                    <ScrollArea className="h-72 rounded-md border text-sm">
+                      <ul className="ml-2 list-disc [&>li]:mt-2 pl-5 pr-5">
+                        <li>
+                          User Issued Assets (UIA) are user created blockchain
+                          assets.
+                        </li>
+                        <li>
+                          Since they're user defined, they each have unique
+                          names, settings, descriptions and purposes.
+                        </li>
+                        <li>
+                          UIA which are used by Exchanges/Gateways to issue user
+                          deposited funds are called Exchange Backed Assets
+                          (EBA).
+                        </li>
+                        <li>
+                          UIA can be non-fungible tokens (NFTs) containing a
+                          variety of multimedia.
+                        </li>
+                        <li>
+                          UIA are used for liquidity pool share assets too.
+                        </li>
+                        <li>
+                          Always evaluate UIA settings, description and issuer
+                          before utilizing them on the DEX to reduce your risk
+                          exposure.
+                        </li>
+                      </ul>
+                    </ScrollArea>
+                  ) : null}
+
+                  {bitassetData && bitassetData.is_prediction_market ? (
+                    <ScrollArea className="h-72 rounded-md border text-sm">
+                      <ul className="ml-2 list-disc [&>li]:mt-2 pl-5 pr-5">
+                        <li>
+                          A Prediction Market Asset (PMA) is a specialized
+                          BitAsset such that total debt and total collateral are
+                          always equal amounts (although asset IDs differ).
+                        </li>
+                        <li>
+                          No margin calls or force settlements may be performed
+                          on a prediction market asset.
+                        </li>
+                        <li>
+                          A prediction market is globally settled by the issuer
+                          after the event being predicted resolves, thus a
+                          prediction market must always have the global_settle
+                          permission enabled.
+                        </li>
+                        <li>
+                          The maximum price for global settlement or short sale
+                          of a prediction market asset is 1-to-1.
+                        </li>
+                        <li>
+                          Given that the prediction market oracle is the issuer,
+                          the PMA issuer must be a trusted party. PMA
+                          participants are exposed to both the risk of the bet
+                          and the oracle fulfiling their role truthly.
+                        </li>
+                      </ul>
+                    </ScrollArea>
+                  ) : null}
+
+                  {bitassetData && !bitassetData.is_prediction_market ? (
+                    <ScrollArea className="h-72 rounded-md border text-sm">
+                      <ul className="ml-2 list-disc [&>li]:mt-2 pl-5 pr-5">
+                        <li>
+                          A smartcoin is an asset which has backing collateral,
+                          an external reference feed price and self-issuance.
+                        </li>
+                        <li>
+                          Anyone can create a smartcoin, and anyone can issue
+                          smartcoins to their own account given sufficient
+                          backing collateral assets.
+                        </li>
+                        <li>
+                          Smartcoins are used by the committee-account owned
+                          bitassets; bitassets (like USD, CNY, EUR) are
+                          committee branded market pegged assets (MPAs) which
+                          reference external FIAT currency price feeds and are
+                          backed by BTS (1.3.0) core token.
+                        </li>
+                        <li>
+                          Users can create their own privatized bitassets
+                          (smartcoins) which reference an external feed of their
+                          selection and often have highly unique backing
+                          collateral requirements and recovery mechanisms
+                          implemented.
+                        </li>
+                        <li>
+                          If you borrow smartcoins into existence, stay vigilant
+                          maintaining your personal risk exposure and spend some
+                          time researching the smartcoin, its options and issuer
+                          before doing so. Debt holders positions are exposed to
+                          both the reference asset and backing asset price
+                          volatilities; their collateral is at risk.
+                        </li>
+                        <li>
+                          Smartcoin holders are exposed to the risk of the debt
+                          holder's backing collateral falling below required
+                          minimum levels, however each smartcoin has a different
+                          risk profile given their different backing collateral
+                          configurations.
+                        </li>
+                      </ul>
+                    </ScrollArea>
+                  ) : null}
+                </>
               }
               tooltip={"More about asset type"}
             />
@@ -315,13 +513,23 @@ export default function MarketAssetCard(properties) {
               dialogtitle={`${assetData.symbol}'s issuer`}
               dialogdescription={
                 <ul className="ml-2 list-disc [&>li]:mt-2">
-                  This is the blockchain account which created this asset. Pay
-                  attention to such a detail to understand what it is you're
-                  buying and from whom.
-                  <br />
-                  In this case the issuer is:
-                  <br />
-                  <b>{marketSearch.find((x) => x.id === assetData.id).u}</b>
+                  <li>
+                    This is the blockchain account which created this asset. Pay
+                    attention to such a detail to understand what it is you're
+                    buying and from whom.
+                  </li>
+                  <li>
+                    Asset issuer can change over time as the issuer can easily
+                    transfer ownership.
+                  </li>
+                  <li>
+                    Committee account owned assets are usually the core
+                    bitassets maintained by the committee.
+                  </li>
+                  <li>
+                    If the issuer is 'null-account' then the ownership of the
+                    asset has effectively been burned.
+                  </li>
                 </ul>
               }
               tooltip={"More about asset issuer"}
@@ -386,14 +594,18 @@ export default function MarketAssetCard(properties) {
                     dialogtitle={"Backing asset info"}
                     dialogdescription={
                       <ul className="ml-2 list-disc [&>li]:mt-2">
-                        Smartcoins (bitassets & stablecoins) require backing
-                        collateral to be lent into existence.
-                        <br />
-                        The backing asset is used as collateral to back the
-                        smartcoin.
-                        <br />
-                        The backing asset is chosen by the smartcoin's issuer
-                        and can't be changed once users hold it.
+                        <li>
+                          Smartcoins (bitassets & stablecoins) require backing
+                          collateral to be lent into existence.
+                        </li>
+                        <li>
+                          The backing asset is used as collateral to back the
+                          smartcoin.
+                        </li>
+                        <li>
+                          The backing asset is chosen by the smartcoin's issuer
+                          and can't be changed once users hold it.
+                        </li>
                       </ul>
                     }
                     tooltip={"More about backing asset"}
@@ -508,7 +720,8 @@ export default function MarketAssetCard(properties) {
                             quoteAsset.p
                           )
                         ).toFixed(backingAsset.p)}{" "}
-                        {baseAsset.s}/{backingAsset.s}
+                        {type === "buy" ? quoteAsset.s : baseAsset.s}/
+                        {backingAsset.s}
                       </>
                     }
                     dialogtitle={"Feed price info"}
@@ -677,8 +890,10 @@ export default function MarketAssetCard(properties) {
                             dialogtitle={"Smartcoin ID"}
                             dialogdescription={
                               <ul className="ml-2 list-disc [&>li]:mt-2">
-                                The ID required to fetch the bitasset details
-                                like the feed price, settlement price, etc.
+                                <li>
+                                  The ID required to fetch the bitasset details
+                                  like the feed price, settlement price, etc.
+                                </li>
                               </ul>
                             }
                             tooltip={"More about Smartcoin ID"}

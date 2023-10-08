@@ -9,21 +9,14 @@ import {
 } from "@/components/ui/card";
 
 import { $currentUser, eraseCurrentUser } from "../stores/users.ts";
+import { usrCache } from "../effects/Cache.ts";
+
 import AccountSelect from "./AccountSelect.jsx";
 import CurrentUser from "./common/CurrentUser.jsx";
 
 export default function CreditBorrow(properties) {
   const [usr, setUsr] = useState();
-  useEffect(() => {
-    const unsubscribe = $currentUser.subscribe((value) => {
-      setUsr(value);
-    });
-    return unsubscribe;
-  }, [$currentUser]);
-
-  if (!usr || !usr.id || !usr.id.length) {
-    return <AccountSelect />;
-  }
+  usrCache(setUsr);
 
   return (
     <>
