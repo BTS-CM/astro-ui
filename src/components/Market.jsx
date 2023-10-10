@@ -39,16 +39,18 @@ import {
   marketSearchCache,
   globalParamsCache,
 } from "../effects/Cache.ts";
+import { useInitCache } from "../effects/Init.ts";
 
 import {
   fetchDynamicData,
   fetchBitassetData,
-  cachedAsset,
+  fetchCachedAsset,
 } from "../effects/Market.ts";
 
 export default function Market(properties) {
   const [usr, setUsr] = useState();
   usrCache(setUsr); // useEffect function
+  useInitCache(usr && usr.chain ? usr.chain : "bitshares");
 
   const [assets, setAssetCache] = useState([]);
   assetCache(setAssetCache); // useEffect function
@@ -227,13 +229,13 @@ export default function Market(properties) {
       _resetMarketData();
 
       if (!assets || !assets.length) {
-        cachedAsset(usr.chain, assetA, setAssetAData);
+        fetchCachedAsset(usr.chain, assetA, setAssetAData);
         return;
       }
 
       const foundAsset = assets.find((asset) => asset.s === assetA);
       if (!foundAsset) {
-        cachedAsset(usr.chain, assetA, setAssetAData);
+        fetchCachedAsset(usr.chain, assetA, setAssetAData);
         return;
       }
 
@@ -249,14 +251,14 @@ export default function Market(properties) {
 
       if (!assets || !assets.length) {
         // No cache exists
-        cachedAsset(usr.chain, assetB, setAssetBData);
+        fetchCachedAsset(usr.chain, assetB, setAssetBData);
         return;
       }
 
       const foundAsset = assets.find((asset) => asset.s === assetB);
       if (!foundAsset) {
         // Asset doesn't exist in cache
-        cachedAsset(usr.chain, assetB, setAssetBData);
+        fetchCachedAsset(usr.chain, assetB, setAssetBData);
         return;
       }
 
@@ -611,6 +613,7 @@ export default function Market(properties) {
                         otherAsset={assetB}
                         marketSearch={marketSearch}
                         type={activeLimitCard === "buy" ? "quote" : "base"}
+                        size="small"
                       />
                       <HoverCard>
                         <HoverCardTrigger
@@ -646,6 +649,7 @@ export default function Market(properties) {
                         otherAsset={assetA}
                         marketSearch={marketSearch}
                         type={activeLimitCard === "sell" ? "quote" : "base"}
+                        size="small"
                       />
                     </div>
                   </CardContent>

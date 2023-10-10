@@ -20,12 +20,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
-
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
@@ -44,14 +38,19 @@ export default function AssetDropDown(properties) {
     otherAsset,
     marketSearch,
     type,
+    size,
   } = properties;
 
-  const marketSearchContents =
-    marketSearch && marketSearch.length
+  let marketSearchContents;
+  if (!marketSearch || !marketSearch.length) {
+    marketSearchContents = [];
+  } else {
+    marketSearchContents = otherAsset
       ? marketSearch.filter(
           (asset) => asset.s !== otherAsset && asset.s !== assetSymbol
         )
-      : [];
+      : marketSearch.filter((asset) => asset.s !== assetSymbol);
+  }
 
   const fuse = new Fuse(marketSearchContents, {
     includeScore: true,
@@ -95,7 +94,7 @@ export default function AssetDropDown(properties) {
     );
   };
 
-  return assetSymbol && assetData ? (
+  return (
     <Dialog
       open={dialogOpen}
       onOpenChange={(open) => {
@@ -109,21 +108,26 @@ export default function AssetDropDown(properties) {
       <DialogTrigger asChild>
         <Button
           variant="outline"
-          className="h-5 p-3"
+          className={`${size && size === "small" ? "h-5 " : ""}p-3`}
           onClick={() => setDialogOpen(true)}
         >
-          {assetSymbol.length < 12 ? assetSymbol : assetData.id}
+          {!assetSymbol ? "Select an asset" : null}
+          {!size && assetSymbol ? "Change asset" : null}
+          {size && assetSymbol && assetSymbol.length < 12 ? assetSymbol : null}
+          {size && assetSymbol && assetSymbol.length > 12 ? assetData.id : null}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] bg-white">
         <>
           <h3 className="text-2xl font-extrabold tracking-tight">
-            Replacing {assetSymbol}
+            {assetSymbol ? `Replacing ${assetSymbol}` : `Selecting a new asset`}
           </h3>
           <h4 className="text-md font-bold tracking-tight">
-            {type === "base"
-              ? `Please select a new base asset`
-              : `Please select a new quote asset`}
+            {!type ? `Please search for an asset below` : null}
+            {type && type === "base" ? `Please select a new base asset` : null}
+            {type && type === "quote"
+              ? `Please select a new quote asset`
+              : null}
           </h4>
           <Input
             name="assetSearch"
@@ -148,9 +152,5 @@ export default function AssetDropDown(properties) {
         </>
       </DialogContent>
     </Dialog>
-  ) : (
-    <Button variant="outline" className="h-5 p-3" disabled>
-      ?
-    </Button>
   );
 }

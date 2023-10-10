@@ -10,12 +10,14 @@ import {
 
 import { $currentUser, eraseCurrentUser } from "../stores/users.ts";
 import { usrCache } from "../effects/Cache.ts";
+import { useInitCache } from "../effects/Init.ts";
 import AccountSelect from "./AccountSelect.jsx";
 import CurrentUser from "./common/CurrentUser.jsx";
 
 export default function CheckDeals(properties) {
   const [usr, setUsr] = useState();
   usrCache(setUsr);
+  useInitCache(usr && usr.chain ? usr.chain : "bitshares");
 
   return (
     <>

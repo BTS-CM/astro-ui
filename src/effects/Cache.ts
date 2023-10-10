@@ -4,6 +4,7 @@ import {
   $assetCache,
   $marketSearchCache,
   $globalParamsCache,
+  $poolCache,
 } from "../stores/cache.ts";
 
 function usrCache(setUsr) {
@@ -43,4 +44,19 @@ function globalParamsCache(setGlobalParamsCache) {
   }, [$globalParamsCache]);
 }
 
-export { usrCache, assetCache, marketSearchCache, globalParamsCache };
+function poolsCache(setPoolsCache) {
+  useEffect(() => {
+    const unsubscribe = $poolCache.subscribe((value) => {
+      setPoolsCache(value);
+    });
+    return unsubscribe;
+  }, [$poolCache]);
+}
+
+export {
+  usrCache,
+  assetCache,
+  marketSearchCache,
+  globalParamsCache,
+  poolsCache,
+};

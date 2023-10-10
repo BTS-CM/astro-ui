@@ -164,6 +164,7 @@ function generateData(
 
 export const Avatar = ({
   name,
+  extra,
   colors,
   size,
   title,
@@ -204,7 +205,7 @@ export const Avatar = ({
   useEffect(() => {
     function calculate() {
       const avatar = document.querySelector(
-        `#avatar_${name.replace(".", "")}`
+        `#avatar_${name.replace(".", "")}${extra}`
       ) as HTMLElement;
 
       const { left, top, width, height } = avatar.getBoundingClientRect();
@@ -359,7 +360,7 @@ export const Avatar = ({
           rx={SIZE}
         />
         <g
-          id={`avatar_${name.replace(".", "")}`}
+          id={`avatar_${name.replace(".", "")}${extra}`}
           transform={`rotate(${
             direction === "left" ? adjustedDegrees + 65 : adjustedDegrees - 65
           }, ${SIZE / 2} ${SIZE / 2})`}
@@ -400,6 +401,7 @@ type ExpressionProps = {
 
 type AvatarProps = {
   name?: string;
+  extra?: string;
   colors?: string[];
   size?: string | number;
   title?: string;

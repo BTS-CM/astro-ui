@@ -45,123 +45,6 @@ export default function AccountSelect(properties) {
     return unsubscribe;
   }, [$userStorage]);
 
-  useEffect(() => {
-    /**
-     * Retrieves search data
-     */
-    async function fetchMarketSearches() {
-      const cachedMarketAssets = await fetch(
-        `http://localhost:8080/cache/marketSearch/${chain}`,
-        { method: "GET" }
-      ).catch((err) => console.log({ err, loc: "cachedMarketAssets" }));
-
-      if (!cachedMarketAssets.ok) {
-        console.log("Failed to fetch market search data");
-        return;
-      }
-
-      const responseContents = await cachedMarketAssets.json();
-
-      if (!responseContents || !responseContents.result) {
-        console.log("Failed to fetch market search data");
-        return;
-      }
-
-      const decompressed = fflate.decompressSync(
-        fflate.strToU8(responseContents.result, true)
-      );
-      const originalString = fflate.strFromU8(decompressed);
-      const parsedJSON = JSON.parse(originalString);
-      addMarketSearchesToCache(parsedJSON);
-    }
-
-    async function getAllAssets() {
-      const response = await fetch(
-        `http://localhost:8080/cache/allassets/${chain}`,
-        { method: "GET" }
-      );
-
-      if (!response.ok) {
-        console.log("Failed to fetch all assets");
-        return;
-      }
-
-      const responseContents = await response.json();
-
-      if (!responseContents || !responseContents.result) {
-        console.log("Failed to fetch all assets");
-        return;
-      }
-
-      const decompressed = fflate.decompressSync(
-        fflate.strToU8(responseContents.result, true)
-      );
-      const originalString = fflate.strFromU8(decompressed);
-      const parsedJSON = JSON.parse(originalString);
-      if (parsedJSON) {
-        addAssetsToCache(parsedJSON);
-      }
-    }
-
-    /**
-     * Retrieves the pools from the api
-     */
-    async function retrievePools() {
-      const poolResponse = await fetch(
-        `http://localhost:8080/cache/pools/${chain}`,
-        {
-          method: "GET",
-        }
-      ).catch((err) => console.log({ err, loc: "retrievePools" }));
-
-      const responseContents = await poolResponse.json();
-
-      if (!responseContents || !responseContents.result) {
-        console.log("Failed to fetch pool cache.");
-        return;
-      }
-
-      const decompressed = fflate.decompressSync(
-        fflate.strToU8(responseContents.result, true)
-      );
-      const originalString = fflate.strFromU8(decompressed);
-      const parsedJSON = JSON.parse(originalString);
-      if (parsedJSON) {
-        addPoolsToCache(parsedJSON);
-      }
-    }
-
-    async function lookupFees() {
-      const response = await fetch(
-        `http://localhost:8080/api/getObjects/${chain}`,
-        { method: "POST", body: JSON.stringify(["2.0.0"]) }
-      );
-
-      if (!response.ok) {
-        console.log("Failed to fetch fee data");
-        return;
-      }
-
-      const responseContents = await response.json();
-
-      if (
-        responseContents &&
-        responseContents.result &&
-        responseContents.result.length
-      ) {
-        const finalResult = responseContents.result[0];
-        setGlobalParams(finalResult);
-      }
-    }
-
-    if (chain) {
-      fetchMarketSearches();
-      retrievePools();
-      lookupFees();
-      getAllAssets();
-    }
-  }, [chain]);
-
   const [inProgress, setInProgress] = useState(false);
   const [searchResponse, setSearchResponse] = useState();
   async function lookupAccount() {
@@ -317,6 +200,7 @@ export default function AccountSelect(properties) {
                       <Avatar
                         size={40}
                         name={searchResponse.name}
+                        extra=""
                         expression={{
                           eye: "normal",
                           mouth: "open",
@@ -397,6 +281,7 @@ export default function AccountSelect(properties) {
                                     <Avatar
                                       size={40}
                                       name={user.username}
+                                      extra=""
                                       expression={{
                                         eye: "normal",
                                         mouth: "open",

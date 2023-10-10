@@ -26,6 +26,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 
 import { $currentUser, eraseCurrentUser } from "../stores/users.ts";
 import { usrCache } from "../effects/Cache.ts";
+import { useInitCache } from "../effects/Init.ts";
 
 import AccountSelect from "./AccountSelect.jsx";
 import CurrentUser from "./common/CurrentUser.jsx";
@@ -36,6 +37,7 @@ import { opTypes } from "../lib/opTypes";
 export default function PortfolioTabs(properties) {
   const [usr, setUsr] = useState();
   usrCache(setUsr);
+  useInitCache(usr && usr.chain ? usr.chain : "bitshares");
 
   const activeTabStyle = {
     backgroundColor: "#252526",

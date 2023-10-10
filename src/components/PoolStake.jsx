@@ -10,6 +10,7 @@ import {
 
 import { $currentUser, eraseCurrentUser } from "../stores/users.ts";
 import { usrCache } from "../effects/Cache.ts";
+import { useInitCache } from "../effects/Init.ts";
 
 import AccountSelect from "./AccountSelect.jsx";
 import CurrentUser from "./common/CurrentUser.jsx";
@@ -17,6 +18,7 @@ import CurrentUser from "./common/CurrentUser.jsx";
 export default function PoolStake(properties) {
   const [usr, setUsr] = useState();
   usrCache(setUsr);
+  useInitCache(usr && usr.chain ? usr.chain : "bitshares");
 
   if (!usr || !usr.id || !usr.id.length) {
     return <AccountSelect />;

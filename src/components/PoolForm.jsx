@@ -54,8 +54,6 @@ import {
 
 import { $currentUser, eraseCurrentUser } from "../stores/users.ts";
 
-import { usrCache } from "../effects/Cache.ts";
-
 import {
   $poolCache,
   $marketSearchCache,
@@ -67,8 +65,16 @@ import {
 import {
   fetchDynamicData,
   fetchBitassetData,
-  cachedAsset,
+  fetchCachedAsset,
 } from "../effects/Market.ts";
+
+import {
+  usrCache,
+  poolsCache,
+  marketSearchCache,
+  assetCache,
+} from "../effects/Cache.ts";
+import { useInitCache } from "../effects/Init.ts";
 
 import AccountSelect from "./AccountSelect.jsx";
 import PoolDialogs from "./Market/PoolDialogs.jsx";
@@ -87,31 +93,16 @@ export default function PoolForm() {
 
   const [usr, setUsr] = useState();
   usrCache(setUsr);
+  useInitCache(usr && usr.chain ? usr.chain : "bitshares");
 
   const [marketSearch, setMarketSearchCache] = useState([]);
-  useEffect(() => {
-    // Subscribes to the cache nanostore state
-    const unsubscribe = $marketSearchCache.subscribe((value) => {
-      setMarketSearchCache(value);
-    });
-    return unsubscribe;
-  }, [$marketSearchCache]);
+  marketSearchCache(setMarketSearchCache);
 
-  const [pools, setPoolCache] = useState();
-  useEffect(() => {
-    const unsubscribe = $poolCache.subscribe((value) => {
-      setPoolCache(value);
-    });
-    return unsubscribe;
-  }, [$poolCache]);
+  const [pools, setPoolsCache] = useState();
+  poolsCache(setPoolsCache);
 
-  const [assets, setAssetCache] = useState([]);
-  useEffect(() => {
-    const unsubscribe = $assetCache.subscribe((value) => {
-      setAssetCache(value);
-    });
-    return unsubscribe;
-  }, [$assetCache]);
+  const [assets, setAssetsCache] = useState([]);
+  assetCache(setAssetsCache);
 
   // Search dialog
 

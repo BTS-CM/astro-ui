@@ -5,6 +5,7 @@ import { Avatar } from "@/components/Avatar";
 import { Button } from "@/components/ui/button";
 import { $currentUser } from "../../stores/users";
 import { usrCache } from "../../effects/Cache.ts";
+import { useInitCache } from "../../effects/Init.ts";
 
 import {
   Card,
@@ -48,6 +49,7 @@ export default function CurrentUser(properties) {
                       <Avatar
                         size={50}
                         name={usr.username}
+                        extra=""
                         expression={{
                           eye: "normal",
                           mouth: "open",

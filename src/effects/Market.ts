@@ -66,7 +66,11 @@ async function fetchBitassetData(
  * @param assetID
  * @param setAssetData
  */
-async function cachedAsset(chain: string, assetID: string, setAssetData: any) {
+async function fetchCachedAsset(
+  chain: string,
+  assetID: string,
+  setAssetData: any
+) {
   const fetchedAsset = await fetch(
     `http://localhost:8080/cache/asset/${chain}/${assetID}`,
     { method: "GET" }
@@ -86,4 +90,4 @@ async function cachedAsset(chain: string, assetID: string, setAssetData: any) {
   }
 }
 
-export { fetchDynamicData, fetchBitassetData, cachedAsset };
+export { fetchDynamicData, fetchBitassetData, fetchCachedAsset };
