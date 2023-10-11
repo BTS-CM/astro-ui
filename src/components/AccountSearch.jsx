@@ -127,7 +127,7 @@ export default function AccountSearch(properties) {
                     <Avatar
                       size={40}
                       name={searchResponse.name}
-                      extra="1"
+                      extra="AS"
                       expression={{
                         eye: "normal",
                         mouth: "open",

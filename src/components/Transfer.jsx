@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useSyncExternalStore } from "react";
 import { useForm } from "react-hook-form";
 import {
   Card,
@@ -28,8 +28,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Avatar as Av,
   AvatarFallback,
@@ -43,11 +41,21 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-import { eraseCurrentUser } from "../stores/users.ts";
-import { usrCache, assetCache, marketSearchCache } from "../effects/Cache.ts";
-import { useInitCache } from "../effects/Init.ts";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
-import AccountSelect from "./AccountSelect.jsx";
+import { useInitCache } from "../effects/Init.ts";
+import { $currentUser } from "../stores/users.ts";
+
+import {
+  $assetCache,
+  $marketSearchCache,
+  $globalParamsCache,
+  $poolCache,
+} from "../stores/cache.ts";
+
+import { humanReadableFloat, trimPrice } from "../lib/common";
+
 import { Avatar } from "./Avatar.tsx";
 import AccountSearch from "./AccountSearch.jsx";
 import CurrentUser from "./common/CurrentUser.jsx";
@@ -69,15 +77,40 @@ export default function Transfer(properties) {
   const [data, setData] = useState(false);
   const [deepLinkInProgress, setDeepLinkInProgress] = useState(false);
 
-  const [usr, setUsr] = useState();
-  usrCache(setUsr);
+  const usr = useSyncExternalStore(
+    $currentUser.subscribe,
+    $currentUser.get,
+    () => true
+  );
+
+  const assets = useSyncExternalStore(
+    $assetCache.subscribe,
+    $assetCache.get,
+    () => true
+  );
+
+  const marketSearch = useSyncExternalStore(
+    $marketSearchCache.subscribe,
+    $marketSearchCache.get,
+    () => true
+  );
+
+  const globalParams = useSyncExternalStore(
+    $globalParamsCache.subscribe,
+    $globalParamsCache.get,
+    () => true
+  );
+
+  const [fee, setFee] = useState(0);
+  useEffect(() => {
+    if (globalParams && globalParams.parameters) {
+      const current_fees = globalParams.parameters.current_fees.parameters;
+      const foundFee = current_fees.find((x) => x[0] === 0);
+      setFee(humanReadableFloat(foundFee[1].fee, 5));
+    }
+  }, [globalParams]);
+
   useInitCache(usr && usr.chain ? usr.chain : "bitshares");
-
-  const [assets, setAssetCache] = useState([]);
-  assetCache(setAssetCache); // useEffect function
-
-  const [marketSearch, setMarketSearchCache] = useState([]);
-  marketSearchCache(setMarketSearchCache); // useEffect function
 
   const [balanceCounter, setBalanceCoutner] = useState(0);
   const [balances, setBalances] = useState();
@@ -117,8 +150,6 @@ export default function Transfer(properties) {
     }
   }, [selectedAsset]);
 
-  const [sendingAccountDialogOpen, setSendingAccountDialogOpen] =
-    useState(false);
   const [targetUserDialogOpen, setTargetUserDialogOpen] = useState(false);
 
   useEffect(() => {
@@ -134,10 +165,6 @@ export default function Transfer(properties) {
       setTargetUserDialogOpen(false);
     }
   }, [targetUser]);
-
-  if (!usr || !usr.id || !usr.id.length) {
-    return <AccountSelect />;
-  }
 
   return (
     <>
@@ -171,8 +198,8 @@ export default function Transfer(properties) {
                             <div className="col-span-1 ml-5">
                               <Avatar
                                 size={40}
-                                name={usr.username}
-                                extra="1"
+                                name={usr && usr.username ? usr.username : "x"}
+                                extra="Sender"
                                 expression={{
                                   eye: "normal",
                                   mouth: "open",
@@ -186,57 +213,15 @@ export default function Transfer(properties) {
                                 ]}
                               />
                             </div>
-                            <div className="col-span-5">
+                            <div className="col-span-7">
                               <Input
                                 disabled
                                 placeholder="Bitshares account (1.2.x)"
                                 className="mb-1 mt-1"
-                                value={`${usr.username} (${usr.id})`}
+                                value={`${
+                                  usr && usr.username ? usr.username : "?"
+                                } (${usr && usr.id ? usr.id : "?"})`}
                               />
-                            </div>
-                            <div className="col-span-2">
-                              <Dialog
-                                open={sendingAccountDialogOpen}
-                                onOpenChange={(open) => {
-                                  setSendingAccountDialogOpen(open);
-                                }}
-                              >
-                                <DialogTrigger asChild>
-                                  <Button
-                                    variant="outline"
-                                    className="ml-1 mt-1"
-                                  >
-                                    Change sender
-                                  </Button>
-                                </DialogTrigger>
-                                <DialogContent className="sm:max-w-[420px] bg-white">
-                                  <DialogHeader>
-                                    <DialogTitle>
-                                      {usr.chain === "bitshares"
-                                        ? "Bitshares (BTS) account search"
-                                        : "Bitshares testnet (TEST) account search"}
-                                    </DialogTitle>
-                                    <DialogDescription>
-                                      <div className="grid grid-cols-1 gap-3">
-                                        <div className="col-span-1">
-                                          Which account would you like to send
-                                          assets from?
-                                        </div>
-                                        <div className="col-span-1">
-                                          If your account has permissions set to
-                                          control other accounts, you can change
-                                          this sender account.
-                                        </div>
-                                      </div>
-                                    </DialogDescription>
-                                  </DialogHeader>
-                                  <AccountSearch
-                                    chain={usr.chain}
-                                    excludedUsers={[usr] || []}
-                                    setChosenAccount={setSenderUser}
-                                  />
-                                </DialogContent>
-                              </Dialog>
                             </div>
                           </div>
                         </FormControl>
@@ -262,7 +247,7 @@ export default function Transfer(properties) {
                                 <Avatar
                                   size={40}
                                   name={targetUser.name}
-                                  extra="1"
+                                  extra="Target"
                                   expression={{
                                     eye: "normal",
                                     mouth: "open",
@@ -312,9 +297,15 @@ export default function Transfer(properties) {
                                 <DialogContent className="sm:max-w-[375px] bg-white">
                                   <DialogHeader>
                                     <DialogTitle>
-                                      {usr.chain === "bitshares"
+                                      {!usr || !usr.chain
+                                        ? "Bitshares account search"
+                                        : null}
+                                      {usr && usr.chain === "bitshares"
                                         ? "Bitshares (BTS) account search"
-                                        : "Bitshares testnet (TEST) account search"}
+                                        : null}
+                                      {usr && usr.chain !== "bitshares"
+                                        ? "Bitshares testnet (TEST) account search"
+                                        : null}
                                     </DialogTitle>
                                     <DialogDescription>
                                       Searching for an account to transfer
@@ -322,8 +313,14 @@ export default function Transfer(properties) {
                                     </DialogDescription>
                                   </DialogHeader>
                                   <AccountSearch
-                                    chain={usr.chain}
-                                    excludedUsers={[usr] || []}
+                                    chain={
+                                      usr && usr.chain ? usr.chain : "bitshares"
+                                    }
+                                    excludedUsers={
+                                      usr && usr.username && usr.username.length
+                                        ? [usr]
+                                        : []
+                                    }
                                     setChosenAccount={setTargetUser}
                                   />
                                 </DialogContent>
@@ -478,6 +475,31 @@ export default function Transfer(properties) {
                     />
                   ) : null}
 
+                  {selectedAsset && targetUser ? (
+                    <FormField
+                      control={form.control}
+                      name="networkFee"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Network fee</FormLabel>
+                          <FormControl>
+                            <Input
+                              disabled
+                              placeholder={`${fee} BTS`}
+                              className="mb-3 mt-3"
+                            />
+                          </FormControl>
+                          {usr.id === usr.referrer ? (
+                            <FormMessage>
+                              Rebate: {trimPrice(fee * 0.8, 5)} BTS (vesting)
+                            </FormMessage>
+                          ) : null}
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  ) : null}
+
                   {!transferAmount || deepLinkInProgress !== false ? (
                     <Button
                       className="mt-5 mb-3"
@@ -565,8 +587,8 @@ export default function Transfer(properties) {
           ) : null}
         </div>
         <div className="grid grid-cols-1 mt-5">
-          {usr ? (
-            <CurrentUser usr={usr} resetCallback={eraseCurrentUser} />
+          {usr && usr.username && usr.username.length ? (
+            <CurrentUser usr={usr} />
           ) : null}
         </div>
       </div>

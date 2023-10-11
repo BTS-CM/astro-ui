@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useSyncExternalStore } from "react";
 import {
   Card,
   CardContent,
@@ -8,16 +8,19 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import { $currentUser, eraseCurrentUser } from "../stores/users.ts";
-import { usrCache } from "../effects/Cache.ts";
+import { eraseCurrentUser } from "../stores/users.ts";
 import { useInitCache } from "../effects/Init.ts";
+import { $currentUser } from "../stores/users.ts";
 
-import AccountSelect from "./AccountSelect.jsx";
 import CurrentUser from "./common/CurrentUser.jsx";
 
 export default function Featured(properties) {
-  const [usr, setUsr] = useState();
-  usrCache(setUsr);
+  const usr = useSyncExternalStore(
+    $currentUser.subscribe,
+    $currentUser.get,
+    () => true
+  );
+
   useInitCache(usr && usr.chain ? usr.chain : "bitshares");
 
   const [retrievedMarkets, setRetrievedMarkets] = useState();
@@ -44,7 +47,7 @@ export default function Featured(properties) {
       }
     }
 
-    if (usr && usr.chain) {
+    if (usr && usr.chain && usr.chain.length) {
       getMarkets(usr.chain);
     }
   }, [usr]);
@@ -67,10 +70,6 @@ export default function Featured(properties) {
       );
     }
   }, [retrievedMarkets]);
-
-  if (!usr || !usr.id || !usr.id.length) {
-    return <AccountSelect />;
-  }
 
   return (
     <>
@@ -113,8 +112,8 @@ export default function Featured(properties) {
           </Card>
         </div>
         <div className="grid grid-cols-1 mt-5">
-          {usr ? (
-            <CurrentUser usr={usr} resetCallback={eraseCurrentUser} />
+          {usr && usr.username && usr.username.length ? (
+            <CurrentUser usr={usr} />
           ) : null}
         </div>
       </div>

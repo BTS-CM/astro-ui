@@ -133,7 +133,6 @@ export default function AssetDropDown(properties) {
             name="assetSearch"
             placeholder="Search for an asset"
             onChange={(event) => {
-              console.log("input changed");
               setThisInput(event.target.value);
             }}
           />

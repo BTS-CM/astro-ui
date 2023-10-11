@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useSyncExternalStore } from "react";
 import { FixedSizeList as List } from "react-window";
 
 import {
@@ -24,19 +24,22 @@ import {
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-import { $currentUser, eraseCurrentUser } from "../stores/users.ts";
-import { usrCache } from "../effects/Cache.ts";
+import { eraseCurrentUser } from "../stores/users.ts";
 import { useInitCache } from "../effects/Init.ts";
+import { $currentUser } from "../stores/users.ts";
 
-import AccountSelect from "./AccountSelect.jsx";
 import CurrentUser from "./common/CurrentUser.jsx";
 
 import { humanReadableFloat } from "../lib/common";
 import { opTypes } from "../lib/opTypes";
 
 export default function PortfolioTabs(properties) {
-  const [usr, setUsr] = useState();
-  usrCache(setUsr);
+  const usr = useSyncExternalStore(
+    $currentUser.subscribe,
+    $currentUser.get,
+    () => true
+  );
+
   useInitCache(usr && usr.chain ? usr.chain : "bitshares");
 
   const activeTabStyle = {
@@ -214,10 +217,6 @@ export default function PortfolioTabs(properties) {
   }, [deepLinkTrigger, orderID]);
 
   const [showDialog, setShowDialog] = useState(false);
-
-  if (!usr || !usr.id || !usr.id.length) {
-    return <AccountSelect />;
-  }
 
   const BalanceRow = ({ index, style }) => {
     const currentBalance =

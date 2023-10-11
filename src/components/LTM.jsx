@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useSyncExternalStore } from "react";
 import {
   Card,
   CardContent,
@@ -8,21 +8,21 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import { $currentUser, eraseCurrentUser } from "../stores/users.ts";
-import { usrCache } from "../effects/Cache.ts";
+import { eraseCurrentUser } from "../stores/users.ts";
 import { useInitCache } from "../effects/Init.ts";
+import { $currentUser } from "../stores/users.ts";
 
 import AccountSelect from "./AccountSelect.jsx";
 import CurrentUser from "./common/CurrentUser.jsx";
 
 export default function LTM(properties) {
-  const [usr, setUsr] = useState();
-  usrCache(setUsr);
-  useInitCache(usr && usr.chain ? usr.chain : "bitshares");
+  const usr = useSyncExternalStore(
+    $currentUser.subscribe,
+    $currentUser.get,
+    () => true
+  );
 
-  if (!usr || !usr.id || !usr.id.length) {
-    return <AccountSelect />;
-  }
+  useInitCache(usr && usr.chain ? usr.chain : "bitshares");
 
   return (
     <>
@@ -37,8 +37,8 @@ export default function LTM(properties) {
           </Card>
         </div>
         <div className="grid grid-cols-1 mt-5">
-          {usr ? (
-            <CurrentUser usr={usr} resetCallback={eraseCurrentUser} />
+          {usr && usr.username && usr.username.length ? (
+            <CurrentUser usr={usr} />
           ) : null}
         </div>
       </div>

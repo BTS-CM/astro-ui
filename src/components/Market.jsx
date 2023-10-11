@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useSyncExternalStore } from "react";
 
 import {
   Card,
@@ -23,7 +23,6 @@ import {
 
 import { eraseCurrentUser } from "../stores/users.ts";
 
-import AccountSelect from "./AccountSelect.jsx";
 import LimitOrderCard from "./Market/LimitOrderCard.jsx";
 import MarketOrderCard from "./Market/MarketOrderCard.jsx";
 import AssetDropDown from "./Market/AssetDropDownCard.jsx";
@@ -33,13 +32,15 @@ import PoolDialogs from "./Market/PoolDialogs.jsx";
 import CurrentUser from "./common/CurrentUser.jsx";
 
 import { humanReadableFloat, trimPrice } from "../lib/common";
-import {
-  usrCache,
-  assetCache,
-  marketSearchCache,
-  globalParamsCache,
-} from "../effects/Cache.ts";
 import { useInitCache } from "../effects/Init.ts";
+
+import { $currentUser } from "../stores/users.ts";
+import {
+  $assetCache,
+  $marketSearchCache,
+  $globalParamsCache,
+  $poolCache,
+} from "../stores/cache.ts";
 
 import {
   fetchDynamicData,
@@ -48,21 +49,42 @@ import {
 } from "../effects/Market.ts";
 
 export default function Market(properties) {
-  const [usr, setUsr] = useState();
-  usrCache(setUsr); // useEffect function
+  // Initializing
+  const usr = useSyncExternalStore(
+    $currentUser.subscribe,
+    $currentUser.get,
+    () => true
+  );
+
+  const assets = useSyncExternalStore(
+    $assetCache.subscribe,
+    $assetCache.get,
+    () => true
+  );
+
+  const marketSearch = useSyncExternalStore(
+    $marketSearchCache.subscribe,
+    $marketSearchCache.get,
+    () => true
+  );
+
+  const globalParams = useSyncExternalStore(
+    $globalParamsCache.subscribe,
+    $globalParamsCache.get,
+    () => true
+  );
+
+  const [limitOrderFee, setLimitOrderFee] = useState(0);
+  useEffect(() => {
+    if (globalParams && globalParams.parameters) {
+      const current_fees = globalParams.parameters.current_fees.parameters;
+      const foundFee = current_fees.find((x) => x[0] === 1);
+      setLimitOrderFee(humanReadableFloat(foundFee[1].fee, 5));
+    }
+  }, [globalParams]);
+
   useInitCache(usr && usr.chain ? usr.chain : "bitshares");
-
-  const [assets, setAssetCache] = useState([]);
-  assetCache(setAssetCache); // useEffect function
-
-  const [marketSearch, setMarketSearchCache] = useState([]);
-  marketSearchCache(setMarketSearchCache); // useEffect function
-
-  /*
-  // Fees
-  const [globalParamsCache, setGlobalParamsCache] = useState(null);
-  globalParamsCache(setGlobalParamsCache);
-  */
+  // End of init
 
   const [assetA, setAssetA] = useState(!window.location.search ? "BTS" : null);
   const [assetB, setAssetB] = useState(!window.location.search ? "USD" : null);
@@ -348,10 +370,6 @@ export default function Market(properties) {
     }
   }, [assetA, assetB, usr]);
 
-  if (!usr || !usr.id || !usr.id.length) {
-    return <AccountSelect />;
-  }
-
   const activeTabStyle = {
     backgroundColor: "#252526",
     color: "white",
@@ -414,6 +432,7 @@ export default function Market(properties) {
                   orderType="buy"
                   key="buyLimit"
                   marketSearch={marketSearch}
+                  fee={limitOrderFee}
                 />
               </TabsContent>
               <TabsContent value="sell">
@@ -429,6 +448,7 @@ export default function Market(properties) {
                   orderType="sell"
                   key="sellLimit"
                   marketSearch={marketSearch}
+                  fee={limitOrderFee}
                 />
               </TabsContent>
             </Tabs>
@@ -822,7 +842,9 @@ export default function Market(properties) {
           />
         ) : null}
       </div>
-      {usr ? <CurrentUser usr={usr} resetCallback={eraseCurrentUser} /> : null}
+      {usr && usr.username && usr.username.length ? (
+        <CurrentUser usr={usr} />
+      ) : null}{" "}
     </>
   );
 }

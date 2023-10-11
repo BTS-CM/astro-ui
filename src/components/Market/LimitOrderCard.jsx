@@ -71,6 +71,7 @@ export default function LimitOrderCard(properties) {
     orderType,
     marketSearch,
     usrBalances,
+    fee,
   } = properties;
 
   const { buyOrders, sellOrders } = properties;
@@ -707,7 +708,7 @@ export default function LimitOrderCard(properties) {
                       <Input
                         disabled
                         label={`fees`}
-                        value={`0.4826 BTS`}
+                        value={`${fee} BTS`}
                         placeholder={1}
                       />
                     </FormControl>
@@ -717,11 +718,11 @@ export default function LimitOrderCard(properties) {
                     {expiryType === "fkill" || usr.id === usr.referrer ? (
                       <FormMessage>
                         {expiryType === "fkill"
-                          ? `Unfilled rebate: ${1 * 0.4826} BTS (instant)`
+                          ? `Unfilled rebate: ${fee} BTS (instant)`
                           : null}
                         <br />
                         {usr.id === usr.referrer
-                          ? `LTM rebate: ${0.8 * 0.4826} BTS (vesting)`
+                          ? `LTM rebate: ${0.8 * fee} BTS (vesting)`
                           : null}
                       </FormMessage>
                     ) : null}

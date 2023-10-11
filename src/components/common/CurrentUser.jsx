@@ -3,9 +3,6 @@ import { InView } from "react-intersection-observer";
 
 import { Avatar } from "@/components/Avatar";
 import { Button } from "@/components/ui/button";
-import { $currentUser } from "../../stores/users";
-import { usrCache } from "../../effects/Cache.ts";
-import { useInitCache } from "../../effects/Init.ts";
 
 import {
   Card,
@@ -15,16 +12,32 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-export default function CurrentUser(properties) {
-  const { resetCallback } = properties;
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
-  const [usr, setUsr] = useState();
-  usrCache(setUsr);
+import { eraseCurrentUser } from "../../stores/users.ts";
+import AccountSelect from "../AccountSelect.jsx";
+
+export default function CurrentUser(properties) {
+  const { usr } = properties;
 
   const [inView, setInView] = React.useState(false);
   if (!usr || !usr.id || !usr.id.length) {
     return null;
   }
+
+  const [open, setOpen] = useState(false);
+  useEffect(() => {
+    if (usr && usr.id && usr.id.length) {
+      setOpen(false);
+    }
+  }, [usr]);
 
   return (
     <div className="flex justify-center">
@@ -78,14 +91,26 @@ export default function CurrentUser(properties) {
             </CardTitle>
           </CardHeader>
         </Card>
-        <Button
-          className="mt-1"
-          onClick={() => {
-            resetCallback();
+
+        <Dialog
+          open={open}
+          onOpenChange={(o) => {
+            setOpen(o);
           }}
         >
-          Switch account/chain
-        </Button>
+          <DialogTrigger asChild>
+            <Button className="h-5 p-3">Switch account/chain</Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[500px] bg-white">
+            <DialogHeader>
+              <DialogTitle>Replacing current user</DialogTitle>
+              <DialogDescription>
+                Select a chain and account to proceed
+              </DialogDescription>
+            </DialogHeader>
+            <AccountSelect />
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );

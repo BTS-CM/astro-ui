@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useSyncExternalStore } from "react";
 import Fuse from "fuse.js";
 import { useForm } from "react-hook-form";
 import { FixedSizeList as List } from "react-window";
@@ -52,8 +52,7 @@ import {
   humanReadableFloat,
 } from "../lib/common";
 
-import { $currentUser, eraseCurrentUser } from "../stores/users.ts";
-
+import { eraseCurrentUser } from "../stores/users.ts";
 import {
   $poolCache,
   $marketSearchCache,
@@ -68,13 +67,8 @@ import {
   fetchCachedAsset,
 } from "../effects/Market.ts";
 
-import {
-  usrCache,
-  poolsCache,
-  marketSearchCache,
-  assetCache,
-} from "../effects/Cache.ts";
 import { useInitCache } from "../effects/Init.ts";
+import { $currentUser } from "../stores/users.ts";
 
 import AccountSelect from "./AccountSelect.jsx";
 import PoolDialogs from "./Market/PoolDialogs.jsx";
@@ -91,18 +85,46 @@ export default function PoolForm() {
   const [data, setData] = useState(""); // form data container
   const [pool, setPool] = useState(""); // dropdown selected pool
 
-  const [usr, setUsr] = useState();
-  usrCache(setUsr);
+  const usr = useSyncExternalStore(
+    $currentUser.subscribe,
+    $currentUser.get,
+    () => true
+  );
+
   useInitCache(usr && usr.chain ? usr.chain : "bitshares");
 
-  const [marketSearch, setMarketSearchCache] = useState([]);
-  marketSearchCache(setMarketSearchCache);
+  const assets = useSyncExternalStore(
+    $assetCache.subscribe,
+    $assetCache.get,
+    () => true
+  );
 
-  const [pools, setPoolsCache] = useState();
-  poolsCache(setPoolsCache);
+  const pools = useSyncExternalStore(
+    $poolCache.subscribe,
+    $poolCache.get,
+    () => true
+  );
 
-  const [assets, setAssetsCache] = useState([]);
-  assetCache(setAssetsCache);
+  const marketSearch = useSyncExternalStore(
+    $marketSearchCache.subscribe,
+    $marketSearchCache.get,
+    () => true
+  );
+
+  const globalParams = useSyncExternalStore(
+    $globalParamsCache.subscribe,
+    $globalParamsCache.get,
+    () => true
+  );
+
+  const [fee, setFee] = useState(0);
+  useEffect(() => {
+    if (globalParams && globalParams.parameters) {
+      const current_fees = globalParams.parameters.current_fees.parameters;
+      const foundFee = current_fees.find((x) => x[0] === 63);
+      setFee(humanReadableFloat(foundFee[1].fee, 5));
+    }
+  }, [globalParams]);
 
   // Search dialog
 
@@ -188,7 +210,7 @@ export default function PoolForm() {
           return;
         }
 
-        const poolIds = pools.map((x) => x.id);
+        const poolIds = pools && pools.length ? pools.map((x) => x.id) : [];
         if (!poolIds.includes(poolParameter)) {
           console.log("Replacing unknown pool with first pool in list");
           setPool("1.19.0");
@@ -539,10 +561,6 @@ export default function PoolForm() {
     setPoolKey(`pool_key${Date.now()}`);
   }, [pool]);
 
-  if (!usr || !usr.id || !usr.id.length) {
-    return <AccountSelect />;
-  }
-
   const Row = ({ index, style }) => {
     const pool = pools[index];
     return (
@@ -674,7 +692,6 @@ export default function PoolForm() {
                                               placeholder="Enter search text"
                                               className="mb-3 max-w-[400px]"
                                               onChange={(event) => {
-                                                console.log("input changed");
                                                 setThisInput(
                                                   event.target.value
                                                 );
@@ -774,17 +791,20 @@ export default function PoolForm() {
                                   />
                                 </SelectTrigger>
                                 <SelectContent className="bg-white">
-                                  <List
-                                    height={150}
-                                    itemCount={pools.length}
-                                    itemSize={35}
-                                    className="w-full"
-                                    initialScrollOffset={
-                                      pools.map((x) => x.id).indexOf(pool) * 35
-                                    }
-                                  >
-                                    {Row}
-                                  </List>
+                                  {pools && pools.length ? (
+                                    <List
+                                      height={150}
+                                      itemCount={pools.length}
+                                      itemSize={35}
+                                      className="w-full"
+                                      initialScrollOffset={
+                                        pools.map((x) => x.id).indexOf(pool) *
+                                        35
+                                      }
+                                    >
+                                      {Row}
+                                    </List>
+                                  ) : null}
                                 </SelectContent>
                               </Select>
                             </FormControl>
@@ -938,14 +958,13 @@ export default function PoolForm() {
                               <FormControl>
                                 <Input
                                   disabled
-                                  placeholder="1 BTS"
+                                  placeholder={`${fee} BTS`}
                                   className="mb-3 mt-3"
-                                  value="1 BTS"
                                 />
                               </FormControl>
                               {usr.id === usr.referrer ? (
                                 <FormMessage>
-                                  Rebate: 0.8 BTS (vesting)
+                                  Rebate: {fee * 0.8} BTS (vesting)
                                 </FormMessage>
                               ) : null}
                               <FormMessage />
@@ -1308,7 +1327,7 @@ export default function PoolForm() {
         </div>
       </div>
 
-      {usr ? (
+      {usr && usr.username && usr.username.length ? (
         <CurrentUser
           usr={usr}
           resetCallback={() => {
