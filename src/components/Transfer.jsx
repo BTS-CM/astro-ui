@@ -1,4 +1,9 @@
-import React, { useState, useEffect, useSyncExternalStore } from "react";
+import React, {
+  useState,
+  useEffect,
+  useSyncExternalStore,
+  useMemo,
+} from "react";
 import { useForm } from "react-hook-form";
 import {
   Card,
@@ -34,13 +39,6 @@ import {
   AvatarImage,
 } from "@/components/ui/avatar";
 
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -54,11 +52,12 @@ import {
   $poolCache,
 } from "../stores/cache.ts";
 
-import { humanReadableFloat, trimPrice } from "../lib/common";
+import { humanReadableFloat, trimPrice, blockchainFloat } from "../lib/common";
 
 import { Avatar } from "./Avatar.tsx";
 import AccountSearch from "./AccountSearch.jsx";
 import CurrentUser from "./common/CurrentUser.jsx";
+import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
 import AssetDropDown from "./Market/AssetDropDownCard.jsx";
 
 export default function Transfer(properties) {
@@ -68,14 +67,13 @@ export default function Transfer(properties) {
     },
   });
 
+  const [showDialog, setShowDialog] = useState(false);
+
   const [senderUser, setSenderUser] = useState();
   const [targetUser, setTargetUser] = useState();
   const [selectedAsset, setSelectedAsset] = useState();
   const [transferAmount, setTransferAmount] = useState(0);
   const [memoContents, setMemoContents] = useState();
-
-  const [data, setData] = useState(false);
-  const [deepLinkInProgress, setDeepLinkInProgress] = useState(false);
 
   const usr = useSyncExternalStore(
     $currentUser.subscribe,
@@ -141,14 +139,18 @@ export default function Transfer(properties) {
   }, [usr, balanceCounter]);
 
   const [foundAsset, setFoundAsset] = useState();
-  useEffect(() => {
+  const found = useMemo(() => {
     if (selectedAsset) {
-      const found = assets.filter((asset) => asset.symbol === selectedAsset);
-      if (found && found.length) {
-        setFoundAsset(found[0]);
-      }
+      return assets.filter((asset) => asset.symbol === selectedAsset);
     }
-  }, [selectedAsset]);
+    return [];
+  }, [selectedAsset, assets]);
+
+  useEffect(() => {
+    if (found && found.length) {
+      setFoundAsset(found[0]);
+    }
+  }, [found]);
 
   const [targetUserDialogOpen, setTargetUserDialogOpen] = useState(false);
 
@@ -166,6 +168,40 @@ export default function Transfer(properties) {
     }
   }, [targetUser]);
 
+  /*
+    {selectedAsset && targetUser ? (
+      <FormField
+        control={form.control}
+        name="memoField"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Optional memo</FormLabel>
+            <FormControl
+              onChange={(event) => {
+                const input = event.target.value;
+                setMemoContents(input);
+              }}
+            >
+              <Input
+                label={`Memo field`}
+                value={memoContents}
+                placeholder={memoContents}
+                className="mb-1"
+              />
+            </FormControl>
+            <FormDescription>
+              An encrypted message for {targetUser.name}'s eyes
+              only.
+              <br /> Often used by exchanges and 3rd party
+              services.
+            </FormDescription>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+    ) : null}
+  */
+
   return (
     <>
       <div className="container mx-auto mt-5 mb-5">
@@ -182,7 +218,6 @@ export default function Transfer(properties) {
               <Form {...form}>
                 <form
                   onSubmit={() => {
-                    setData(true);
                     setShowDialog(true);
                     event.preventDefault();
                   }}
@@ -446,38 +481,6 @@ export default function Transfer(properties) {
                   {selectedAsset && targetUser ? (
                     <FormField
                       control={form.control}
-                      name="memoField"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Optional memo</FormLabel>
-                          <FormControl
-                            onChange={(event) => {
-                              const input = event.target.value;
-                              setMemoContents(input);
-                            }}
-                          >
-                            <Input
-                              label={`Memo field`}
-                              value={memoContents}
-                              placeholder={memoContents}
-                              className="mb-1"
-                            />
-                          </FormControl>
-                          <FormDescription>
-                            An encrypted message for {targetUser.name}'s eyes
-                            only.
-                            <br /> Often used by exchanges and 3rd party
-                            services.
-                          </FormDescription>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  ) : null}
-
-                  {selectedAsset && targetUser ? (
-                    <FormField
-                      control={form.control}
                       name="networkFee"
                       render={({ field }) => (
                         <FormItem>
@@ -500,7 +503,7 @@ export default function Transfer(properties) {
                     />
                   ) : null}
 
-                  {!transferAmount || deepLinkInProgress !== false ? (
+                  {!transferAmount ? (
                     <Button
                       className="mt-5 mb-3"
                       variant="outline"
@@ -520,6 +523,36 @@ export default function Transfer(properties) {
                   )}
                 </form>
               </Form>
+              {showDialog ? (
+                <DeepLinkDialog
+                  operationName="transfer"
+                  username={usr.username}
+                  usrChain={usr.chain}
+                  userID={usr.id}
+                  dismissCallback={setShowDialog}
+                  key={`Sending${transferAmount}${selectedAsset}to${targetUser.name}from${usr.username}`}
+                  headerText={`Sending ${transferAmount} ${foundAsset.symbol} (${foundAsset.id}) to ${targetUser.name} from ${usr.username}`}
+                  trxJSON={[
+                    {
+                      fee: {
+                        amount: 0,
+                        asset_id: "1.3.0",
+                      },
+                      from: usr.id,
+                      to: targetUser.id,
+                      amount: {
+                        amount: blockchainFloat(
+                          transferAmount,
+                          foundAsset.precision
+                        ).toFixed(0),
+                        asset_id: foundAsset.id,
+                      },
+                      //memo: null,
+                      extensions: [],
+                    },
+                  ]}
+                />
+              ) : null}
             </CardContent>
           </Card>
         </div>

@@ -1,4 +1,9 @@
-import React, { useState, useEffect, useSyncExternalStore } from "react";
+import React, {
+  useState,
+  useEffect,
+  useSyncExternalStore,
+  useMemo,
+} from "react";
 
 import {
   Card,
@@ -86,6 +91,15 @@ export default function Market(properties) {
   useInitCache(usr && usr.chain ? usr.chain : "bitshares");
   // End of init
 
+  const searchSymbols = useMemo(
+    () => marketSearch.map((asset) => asset.s),
+    [marketSearch]
+  );
+  const searchIds = useMemo(
+    () => marketSearch.map((asset) => asset.id),
+    [marketSearch]
+  );
+
   const [assetA, setAssetA] = useState(!window.location.search ? "BTS" : null);
   const [assetB, setAssetB] = useState(!window.location.search ? "USD" : null);
   useEffect(() => {
@@ -103,9 +117,6 @@ export default function Market(properties) {
           asset_b = asset_a === "BTS" ? "USD" : "BTS";
           console.log("Invalid market parameters - replaced quote asset.");
         }
-
-        const searchSymbols = marketSearch.map((asset) => asset.s);
-        const searchIds = marketSearch.map((asset) => asset.id);
 
         if (
           !asset_a ||
@@ -603,7 +614,10 @@ export default function Market(properties) {
               </TabsContent>
             </Tabs>
 
-            {assetAData && assetBData && (aBitassetData || bBitassetData)
+            {tickerData &&
+            assetAData &&
+            assetBData &&
+            (aBitassetData || bBitassetData)
               ? marketHoverCard
               : null}
           </div>
@@ -671,7 +685,11 @@ export default function Market(properties) {
                 </Card>
               </div>
 
-              {assetAData && !aBitassetData && assetBData && !bBitassetData
+              {tickerData &&
+              assetAData &&
+              !aBitassetData &&
+              assetBData &&
+              !bBitassetData
                 ? marketHoverCard
                 : null}
 

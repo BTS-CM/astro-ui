@@ -136,7 +136,7 @@ export default function DeepLinkDialog(properties) {
             ) : (
               <a
                 href={`data:text/json;charset=utf-8,${deeplink}`}
-                download={`pool_exchange.json`}
+                download={`${operationName}.json`}
                 target="_blank"
                 rel="noreferrer"
                 onClick={handleDownloadClick}
