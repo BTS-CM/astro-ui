@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
@@ -57,6 +57,7 @@ import {
   blockchainFloat,
 } from "@/lib/common.js";
 import { opTypes } from "@/lib/opTypes";
+import DeepLinkDialog from "../common/DeepLinkDialog";
 
 /**
  * Creating a market card component for buy and sell limit orders
@@ -79,9 +80,10 @@ export default function LimitOrderCard(properties) {
   const [amount, setAmount] = useState(0.0);
   const [price, setPrice] = useState(0.0);
   const [total, setTotal] = useState(0);
-  const [marketFees, setMarketFees] = useState(0.0);
 
-  useEffect(() => {
+  const marketFees = useMemo(() => {
+    let calculatedMarketFee = 0.0;
+
     if (amount && price && total) {
       if (
         orderType === "buy" &&
@@ -89,9 +91,9 @@ export default function LimitOrderCard(properties) {
         assetAData.market_fee_percent &&
         assetAData.market_fee_percent > 0
       ) {
-        const calculatedMarketFee =
+        calculatedMarketFee =
           parseFloat(amount) * (assetAData.market_fee_percent / 100);
-        setMarketFees(calculatedMarketFee.toFixed(assetAData.precision));
+        return calculatedMarketFee.toFixed(assetAData.precision);
       }
 
       if (
@@ -100,12 +102,14 @@ export default function LimitOrderCard(properties) {
         assetBData.market_fee_percent &&
         assetBData.market_fee_percent > 0
       ) {
-        const calculatedMarketFee =
+        calculatedMarketFee =
           parseFloat(total) * (assetBData.market_fee_percent / 100);
-        setMarketFees(calculatedMarketFee.toFixed(assetBData.precision));
+        return calculatedMarketFee.toFixed(assetBData.precision);
       }
     }
-  }, [amount, price, total]);
+
+    return calculatedMarketFee;
+  }, [amount, price, total, orderType, assetAData, assetBData]);
 
   const [expiryType, setExpiryType] = useState("1hr");
   const [expiry, setExpiry] = useState(() => {
@@ -130,146 +134,32 @@ export default function LimitOrderCard(properties) {
     },
   });
 
-  const [deeplink, setDeeplink] = useState("");
-  const [trxJSON, setTRXJSON] = useState();
-  const [deepLinkInProgress, setDeepLinkInProgress] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
-  const [data, setData] = useState(false);
-  useEffect(() => {
-    if (data) {
-      /**
-       * Generates a deeplink for the pool exchange operation
-       */
-      async function generate() {
-        setDeepLinkInProgress(true);
 
-        var opExpiry = new Date();
-        opExpiry.setMinutes(opExpiry.getMinutes() + 60); // TODO: make this configurable
+  function getReadableBalance(assetData, balances) {
+    const id = assetData.id;
+    const foundBalance = balances.find((x) => x.asset_id === id);
+    return foundBalance
+      ? humanReadableFloat(
+          foundBalance.amount,
+          assetData.precision
+        ).toLocaleString(undefined, {
+          minimumFractionDigits: assetData.precision,
+        })
+      : 0;
+  }
 
-        const opJSON =
-          orderType === "buy"
-            ? [
-                {
-                  seller: usr.id,
-                  amount_to_sell: {
-                    amount: blockchainFloat(
-                      total,
-                      assetBData.precision
-                    ).toFixed(0),
-                    asset_id: marketSearch.find(
-                      (asset) => asset.s === thisAssetB
-                    ).id,
-                  },
-                  min_to_receive: {
-                    amount: blockchainFloat(
-                      amount,
-                      assetAData.precision
-                    ).toFixed(0),
-                    asset_id: marketSearch.find(
-                      (asset) => asset.s === thisAssetA
-                    ).id,
-                  },
-                  expiration: expiry,
-                  fill_or_kill: false,
-                  extensions: [],
-                },
-              ]
-            : [
-                {
-                  seller: usr.id,
-                  amount_to_sell: {
-                    amount: blockchainFloat(
-                      amount,
-                      assetAData.precision
-                    ).toFixed(0),
-                    asset_id: marketSearch.find(
-                      (asset) => asset.s === thisAssetA
-                    ).id,
-                  },
-                  min_to_receive: {
-                    amount: blockchainFloat(
-                      total,
-                      assetBData.precision
-                    ).toFixed(0),
-                    asset_id: marketSearch.find(
-                      (asset) => asset.s === thisAssetB
-                    ).id,
-                  },
-                  expiration: expiry,
-                  fill_or_kill: false,
-                  extensions: [],
-                },
-              ];
+  const assetABalance = useMemo(() => {
+    return assetAData && usrBalances
+      ? getReadableBalance(assetAData, usrBalances)
+      : 0;
+  }, [assetAData, usrBalances]);
 
-        setTRXJSON(opJSON);
-
-        const response = await fetch(
-          `http://localhost:8080/api/deeplink/${usr.chain}/limit_order_create`,
-          {
-            method: "POST",
-            body: JSON.stringify(opJSON),
-          }
-        );
-
-        if (!response.ok) {
-          console.log("Failed to generate deeplink");
-          return;
-        }
-
-        const deeplinkValue = await response.json();
-
-        if (
-          deeplinkValue &&
-          deeplinkValue.result &&
-          deeplinkValue.result.generatedDeepLink
-        ) {
-          setDeeplink(deeplinkValue.result.generatedDeepLink);
-        }
-        setDeepLinkInProgress(false);
-      }
-
-      if (marketSearch) {
-        generate();
-      }
-    }
-  }, [data, thisAssetA, thisAssetB, marketSearch]);
-
-  const [downloadClicked, setDownloadClicked] = useState(false);
-  const handleDownloadClick = () => {
-    if (!downloadClicked) {
-      setDownloadClicked(true);
-      setTimeout(() => {
-        setDownloadClicked(false);
-      }, 10000);
-    }
-  };
-
-  const [assetABalance, setAssetABalance] = useState(0);
-  const [assetBBalance, setAssetBBalance] = useState(0);
-  useEffect(() => {
-    function getReadableBalance(assetData) {
-      const id = assetData.id;
-      const foundBalance = usrBalances.find((x) => x.asset_id === id);
-      return foundBalance
-        ? humanReadableFloat(
-            foundBalance.amount,
-            assetData.precision
-          ).toLocaleString(undefined, {
-            minimumFractionDigits: assetData.precision,
-          })
-        : 0;
-    }
-
-    if (assetAData && usrBalances) {
-      const aBalance = getReadableBalance(assetAData);
-      setAssetABalance(aBalance);
-    }
-
-    if (assetBData && usrBalances) {
-      const bBalance = getReadableBalance(assetBData);
-      setAssetBBalance(bBalance);
-    }
-  }, [assetAData, assetBData, usrBalances]);
+  const assetBBalance = useMemo(() => {
+    return assetBData && usrBalances
+      ? getReadableBalance(assetBData, usrBalances)
+      : 0;
+  }, [assetBData, usrBalances]);
 
   return (
     <Card>
@@ -292,7 +182,6 @@ export default function LimitOrderCard(properties) {
           <Form {...form}>
             <form
               onSubmit={(event) => {
-                setData(true);
                 setShowDialog(true);
                 event.preventDefault();
               }}
@@ -783,7 +672,7 @@ export default function LimitOrderCard(properties) {
                 />
               ) : null}
 
-              {!amount || !price || !expiry || deepLinkInProgress !== false ? (
+              {!amount || !price || !expiry ? (
                 <Button
                   className="mt-7 mb-1"
                   variant="outline"
@@ -929,72 +818,80 @@ export default function LimitOrderCard(properties) {
             </form>
           </Form>
         )}
-        {showDialog && data && deeplink && (
-          <Dialog
-            open={showDialog}
-            onOpenChange={(open) => {
-              if (!open) {
-                // Clearing generated deeplink
-                setData("");
-                setDeeplink("");
-                setTRXJSON();
-              }
-              setShowDialog(open);
-            }}
-          >
-            <DialogContent className="sm:max-w-[425px] bg-white">
-              <>
-                <h1 className="scroll-m-20 text-2xl font-extrabold tracking-tight">
-                  {orderType === "buy"
-                    ? `Buying ${amount} ${thisAssetA} for ${total} ${thisAssetB}`
-                    : `Selling ${amount} ${thisAssetA} for ${total} ${thisAssetB}`}
-                </h1>
-                <h3 className="scroll-m-20 text-1xl font-semibold tracking-tight mb-3 mt-1">
-                  With the account: {usr.username} ({usr.id})<br />
-                  Your Bitshares create limit order operation is ready!
-                  <br />
-                  Use the links below to interact with the Beet wallet.
-                </h3>
-                <div className="grid grid-cols-1 gap-3">
-                  <Button
-                    color="gray"
-                    className="w-full"
-                    onClick={() => {
-                      copyToClipboard(JSON.stringify(trxJSON, null, 4));
-                    }}
-                    variant="outline"
-                  >
-                    Copy operation JSON
-                  </Button>
-
-                  {downloadClicked ? (
-                    <Button variant="outline" disabled>
-                      Downloading...
-                    </Button>
-                  ) : (
-                    <a
-                      href={`data:text/json;charset=utf-8,${deeplink}`}
-                      download={`pool_exchange.json`}
-                      target="_blank"
-                      rel="noreferrer"
-                      onClick={handleDownloadClick}
-                    >
-                      <Button variant="outline" className="w-full">
-                        Download Beet operation JSON
-                      </Button>
-                    </a>
-                  )}
-
-                  <a href={`rawbeet://api?chain=BTS&request=${deeplink}`}>
-                    <Button variant="outline" className="w-full">
-                      Trigger raw Beet deeplink
-                    </Button>
-                  </a>
-                </div>
-              </>
-            </DialogContent>
-          </Dialog>
-        )}
+        {showDialog ? (
+          <DeepLinkDialog
+            operationName="limit_order_create"
+            username={usr.username}
+            usrChain={usr.chain}
+            userID={usr.id}
+            dismissCallback={setShowDialog}
+            key={
+              orderType === "buy"
+                ? `Buying${amount}${thisAssetA}for${total}${thisAssetB}`
+                : `Selling${amount}${thisAssetA}for${total}${thisAssetB}`
+            }
+            headerText={
+              orderType === "buy"
+                ? `Buying ${amount} ${thisAssetA} for ${total} ${thisAssetB}`
+                : `Selling ${amount} ${thisAssetA} for ${total} ${thisAssetB}`
+            }
+            trxJSON={
+              orderType === "buy"
+                ? [
+                    {
+                      seller: usr.id,
+                      amount_to_sell: {
+                        amount: blockchainFloat(
+                          total,
+                          assetBData.precision
+                        ).toFixed(0),
+                        asset_id: marketSearch.find(
+                          (asset) => asset.s === thisAssetB
+                        ).id,
+                      },
+                      min_to_receive: {
+                        amount: blockchainFloat(
+                          amount,
+                          assetAData.precision
+                        ).toFixed(0),
+                        asset_id: marketSearch.find(
+                          (asset) => asset.s === thisAssetA
+                        ).id,
+                      },
+                      expiration: expiry,
+                      fill_or_kill: false,
+                      extensions: [],
+                    },
+                  ]
+                : [
+                    {
+                      seller: usr.id,
+                      amount_to_sell: {
+                        amount: blockchainFloat(
+                          amount,
+                          assetAData.precision
+                        ).toFixed(0),
+                        asset_id: marketSearch.find(
+                          (asset) => asset.s === thisAssetA
+                        ).id,
+                      },
+                      min_to_receive: {
+                        amount: blockchainFloat(
+                          total,
+                          assetBData.precision
+                        ).toFixed(0),
+                        asset_id: marketSearch.find(
+                          (asset) => asset.s === thisAssetB
+                        ).id,
+                      },
+                      expiration: expiry,
+                      fill_or_kill: false,
+                      extensions: [],
+                    },
+                  ]
+            }
+          />
+        ) : null}
       </CardContent>
     </Card>
   );

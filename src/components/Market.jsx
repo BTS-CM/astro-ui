@@ -375,6 +375,156 @@ export default function Market(properties) {
     color: "white",
   };
 
+  const marketHoverCard = (
+    <HoverCard>
+      <HoverCardTrigger asChild style={{ position: "relative" }}>
+        <Card className="mt-5">
+          <CardHeader className="pt-4 pb-2">
+            <CardTitle>Market summary</CardTitle>
+            <CardDescription className="text-lg">
+              {activeLimitCard === "buy" ? `${assetA}/${assetB}` : null}
+              {activeLimitCard === "sell" ? `${assetB}/${assetA}` : null}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="text-sm pb-4">
+            <div className="grid grid-cols-1 gap-2">
+              <div className="grid grid-cols-5">
+                <div className="col-span-2">Latest price:</div>
+                <div className="col-span-3">
+                  <Badge variant="outline" className="ml-2 mb-1">
+                    {tickerData && assetAData
+                      ? trimPrice(tickerData.latest, assetAData.precision)
+                      : "?"}
+                  </Badge>
+                </div>
+              </div>
+              <div className="grid grid-cols-5">
+                <div className="col-span-2">24Hr change:</div>
+                <div className="col-span-3">
+                  <Badge variant="outline" className="ml-2 mb-1">
+                    {tickerData ? tickerData.percent_change : "?"}
+                  </Badge>
+                </div>
+              </div>
+              <div className="grid grid-cols-5">
+                <div className="col-span-2">24Hr base volume:</div>
+                <div className="col-span-3">
+                  <Badge variant="outline" className="ml-2 mb-1">
+                    {!tickerData ? "?" : null}
+                    {activeLimitCard === "buy" && tickerData
+                      ? tickerData.base_volume
+                      : null}
+                    {activeLimitCard === "sell" && tickerData
+                      ? tickerData.quote_volume
+                      : null}
+                  </Badge>
+                </div>
+              </div>
+              <div className="grid grid-cols-5">
+                <div className="col-span-2">24Hr quote volume:</div>
+                <div className="col-span-3">
+                  <Badge variant="outline" className="ml-2 mb-1">
+                    {!tickerData ? "?" : null}
+                    {activeLimitCard === "buy" && tickerData
+                      ? tickerData.quote_volume
+                      : null}
+                    {activeLimitCard === "sell" && tickerData
+                      ? tickerData.base_volume
+                      : null}
+                  </Badge>
+                </div>
+              </div>
+              <div className="grid grid-cols-5">
+                <div className="col-span-2">Lowest ask:</div>
+                <div className="col-span-3">
+                  <Badge variant="outline" className="ml-2 mb-1">
+                    {tickerData && assetAData
+                      ? trimPrice(tickerData.lowest_ask, assetAData.precision)
+                      : "?"}
+                  </Badge>
+                </div>
+              </div>
+              <div className="grid grid-cols-5">
+                <div className="col-span-2">Highest bid:</div>
+                <div className="col-span-3">
+                  <Badge variant="outline" className="ml-2">
+                    {tickerData && assetAData
+                      ? trimPrice(tickerData.highest_bid, assetAData.precision)
+                      : "?"}
+                  </Badge>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </HoverCardTrigger>
+      <HoverCardContent className="w-80 text-sm text-center">
+        <b>
+          {assetA}/{assetB} External market links
+        </b>
+        <br />
+        <a
+          href={
+            usr.chain === "bitshares"
+              ? `https://blocksights.info/#/markets/${
+                  activeLimitCard === "buy" ? assetA : assetB
+                }/${activeLimitCard === "buy" ? assetB : assetA}`
+              : `https://blocksights.info/#/markets/${
+                  activeLimitCard === "buy" ? assetA : assetB
+                }/${
+                  activeLimitCard === "buy" ? assetB : assetA
+                }?network=testnet`
+          }
+          target="_blank"
+        >
+          <Button variant="outline" className="mb-2 mt-2">
+            🔎 Blocksights market explorer
+          </Button>
+        </a>
+        {usr.chain === "bitshares" ? (
+          <>
+            <a
+              href={
+                activeLimitCard === "buy"
+                  ? `https://bts.exchange/#/market/${assetA}_${assetB}?r=nftprofessional1`
+                  : `https://bts.exchange/#/market/${assetB}_${assetA}?r=nftprofessional1`
+              }
+              target="_blank"
+            >
+              <Button variant="outline" className="ml-2">
+                🔗 BTS.Exchange
+              </Button>
+            </a>
+            <a
+              href={
+                activeLimitCard === "buy"
+                  ? `https://wallet.btwty.com/market/${assetA}_${assetB}?r=nftprofessional1`
+                  : `https://wallet.btwty.com/market/${assetB}_${assetA}?r=nftprofessional1`
+              }
+              target="_blank"
+            >
+              <Button variant="outline" className="ml-2">
+                🔗 BTWTY
+              </Button>
+            </a>
+            <a
+              href={
+                activeLimitCard === "buy"
+                  ? `https://ex.xbts.io/market/${assetA}_${assetB}?r=nftprofessional1`
+                  : `https://ex.xbts.io/market/${assetB}_${assetA}?r=nftprofessional1`
+              }
+              target="_blank"
+            >
+              <Button variant="outline" className="ml-2 mt-2">
+                🔗 XBTS
+              </Button>
+            </a>
+          </>
+        ) : null}
+      </HoverCardContent>
+    </HoverCard>
+  );
+
   return (
     <>
       <div className="container mx-auto mt-5 mb-5">
@@ -453,164 +603,9 @@ export default function Market(properties) {
               </TabsContent>
             </Tabs>
 
-            <HoverCard>
-              <HoverCardTrigger asChild style={{ position: "relative" }}>
-                <Card className="mt-5">
-                  <CardHeader className="pt-4 pb-2">
-                    <CardTitle>Market summary</CardTitle>
-                    <CardDescription className="text-lg">
-                      {activeLimitCard === "buy" ? `${assetA}/${assetB}` : null}
-                      {activeLimitCard === "sell"
-                        ? `${assetB}/${assetA}`
-                        : null}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="text-sm pb-4">
-                    <div className="grid grid-cols-1 gap-2">
-                      <div className="grid grid-cols-5">
-                        <div className="col-span-2">Latest price:</div>
-                        <div className="col-span-3">
-                          <Badge variant="outline" className="ml-2 mb-1">
-                            {tickerData && assetAData
-                              ? trimPrice(
-                                  tickerData.latest,
-                                  assetAData.precision
-                                )
-                              : "?"}
-                          </Badge>
-                        </div>
-                      </div>
-                      <div className="grid grid-cols-5">
-                        <div className="col-span-2">24Hr change:</div>
-                        <div className="col-span-3">
-                          <Badge variant="outline" className="ml-2 mb-1">
-                            {tickerData ? tickerData.percent_change : "?"}
-                          </Badge>
-                        </div>
-                      </div>
-                      <div className="grid grid-cols-5">
-                        <div className="col-span-2">24Hr base volume:</div>
-                        <div className="col-span-3">
-                          <Badge variant="outline" className="ml-2 mb-1">
-                            {!tickerData ? "?" : null}
-                            {activeLimitCard === "buy" && tickerData
-                              ? tickerData.base_volume
-                              : null}
-                            {activeLimitCard === "sell" && tickerData
-                              ? tickerData.quote_volume
-                              : null}
-                          </Badge>
-                        </div>
-                      </div>
-                      <div className="grid grid-cols-5">
-                        <div className="col-span-2">24Hr quote volume:</div>
-                        <div className="col-span-3">
-                          <Badge variant="outline" className="ml-2 mb-1">
-                            {!tickerData ? "?" : null}
-                            {activeLimitCard === "buy" && tickerData
-                              ? tickerData.quote_volume
-                              : null}
-                            {activeLimitCard === "sell" && tickerData
-                              ? tickerData.base_volume
-                              : null}
-                          </Badge>
-                        </div>
-                      </div>
-                      <div className="grid grid-cols-5">
-                        <div className="col-span-2">Lowest ask:</div>
-                        <div className="col-span-3">
-                          <Badge variant="outline" className="ml-2 mb-1">
-                            {tickerData && assetAData
-                              ? trimPrice(
-                                  tickerData.lowest_ask,
-                                  assetAData.precision
-                                )
-                              : "?"}
-                          </Badge>
-                        </div>
-                      </div>
-                      <div className="grid grid-cols-5">
-                        <div className="col-span-2">Highest bid:</div>
-                        <div className="col-span-3">
-                          <Badge variant="outline" className="ml-2">
-                            {tickerData && assetAData
-                              ? trimPrice(
-                                  tickerData.highest_bid,
-                                  assetAData.precision
-                                )
-                              : "?"}
-                          </Badge>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </HoverCardTrigger>
-              <HoverCardContent className="w-80 text-sm text-center">
-                <b>
-                  {assetA}/{assetB} External market links
-                </b>
-                <br />
-                <a
-                  href={
-                    usr.chain === "bitshares"
-                      ? `https://blocksights.info/#/markets/${
-                          activeLimitCard === "buy" ? assetA : assetB
-                        }/${activeLimitCard === "buy" ? assetB : assetA}`
-                      : `https://blocksights.info/#/markets/${
-                          activeLimitCard === "buy" ? assetA : assetB
-                        }/${
-                          activeLimitCard === "buy" ? assetB : assetA
-                        }?network=testnet`
-                  }
-                  target="_blank"
-                >
-                  <Button variant="outline" className="mb-2 mt-2">
-                    🔎 Blocksights market explorer
-                  </Button>
-                </a>
-                {usr.chain === "bitshares" ? (
-                  <>
-                    <a
-                      href={
-                        activeLimitCard === "buy"
-                          ? `https://bts.exchange/#/market/${assetA}_${assetB}?r=nftprofessional1`
-                          : `https://bts.exchange/#/market/${assetB}_${assetA}?r=nftprofessional1`
-                      }
-                      target="_blank"
-                    >
-                      <Button variant="outline" className="ml-2">
-                        🔗 BTS.Exchange
-                      </Button>
-                    </a>
-                    <a
-                      href={
-                        activeLimitCard === "buy"
-                          ? `https://wallet.btwty.com/market/${assetA}_${assetB}?r=nftprofessional1`
-                          : `https://wallet.btwty.com/market/${assetB}_${assetA}?r=nftprofessional1`
-                      }
-                      target="_blank"
-                    >
-                      <Button variant="outline" className="ml-2">
-                        🔗 BTWTY
-                      </Button>
-                    </a>
-                    <a
-                      href={
-                        activeLimitCard === "buy"
-                          ? `https://ex.xbts.io/market/${assetA}_${assetB}?r=nftprofessional1`
-                          : `https://ex.xbts.io/market/${assetB}_${assetA}?r=nftprofessional1`
-                      }
-                      target="_blank"
-                    >
-                      <Button variant="outline" className="ml-2 mt-2">
-                        🔗 XBTS
-                      </Button>
-                    </a>
-                  </>
-                ) : null}
-              </HoverCardContent>
-            </HoverCard>
+            {assetAData && assetBData && (aBitassetData || bBitassetData)
+              ? marketHoverCard
+              : null}
           </div>
           <div className="col-span-1">
             <div className="grid grid-cols-1 gap-y-2">
@@ -675,6 +670,10 @@ export default function Market(properties) {
                   </CardContent>
                 </Card>
               </div>
+
+              {assetAData && !aBitassetData && assetBData && !bBitassetData
+                ? marketHoverCard
+                : null}
 
               <div className="flex-grow" style={{ paddingBottom: "0px" }}>
                 {assetADetails ? (
