@@ -210,8 +210,15 @@ export default function Transfer(properties) {
             <CardHeader>
               <CardTitle>Transfer assets</CardTitle>
               <CardDescription>
-                Send funds from an account you control to another BitShares
-                account holder.
+                <p>
+                  Send funds from an account you control to another BitShares
+                  account holder.
+                </p>
+                <p>
+                  Doesn't yet support a memo, so avoid using this form for
+                  sending to external services. Use for transfering between your
+                  own accounts.
+                </p>
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -547,7 +554,6 @@ export default function Transfer(properties) {
                         ).toFixed(0),
                         asset_id: foundAsset.id,
                       },
-                      //memo: null,
                       extensions: [],
                     },
                   ]}
