@@ -61,8 +61,10 @@ export default function LTM(properties) {
                     Want to purchase a lifetime membership for your account?
                   </h3>
 
-                  <h4>Lifetime members receive the following benefits:</h4>
-                  <ul className="ml-2 list-disc [&>li]:mt-2">
+                  <h4 className="text-lg">
+                    Lifetime members receive the following benefits:
+                  </h4>
+                  <ul className="ml-2 list-disc [&>li]:mt-2 pl-3 text-sm">
                     <li>
                       They receive an 80% rebate on all spent fees, in a vesting
                       balance form.
@@ -77,6 +79,7 @@ export default function LTM(properties) {
                   </ul>
 
                   <Button
+                    className="mt-3"
                     onClick={() => {
                       setShowDialog(true);
                     }}

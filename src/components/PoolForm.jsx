@@ -1,4 +1,9 @@
-import React, { useState, useEffect, useSyncExternalStore } from "react";
+import React, {
+  useState,
+  useEffect,
+  useSyncExternalStore,
+  useMemo,
+} from "react";
 import Fuse from "fuse.js";
 import { useForm } from "react-hook-form";
 import { FixedSizeList as List } from "react-window";
@@ -62,10 +67,15 @@ import {
 } from "../stores/cache.ts";
 
 import {
-  fetchDynamicData,
-  fetchBitassetData,
-  fetchCachedAsset,
+  createBitassetDataStore,
+  createCachedAssetStore,
+  createDynamicDataStore,
 } from "../effects/Market.ts";
+
+import {
+  createPoolDetailsStore,
+  createUserBalancesStore,
+} from "../effects/Pools.ts";
 
 import { useInitCache } from "../effects/Init.ts";
 import { $currentUser } from "../stores/users.ts";
@@ -82,7 +92,6 @@ export default function PoolForm() {
     },
   });
 
-  const [data, setData] = useState(""); // form data container
   const [pool, setPool] = useState(""); // dropdown selected pool
 
   const usr = useSyncExternalStore(
@@ -199,12 +208,16 @@ export default function PoolForm() {
         const poolParameter = params && params.pool ? params.pool : null;
 
         if (!poolParameter || !poolParameter.length) {
-          console.log("No pool parameter found");
+          console.log("Invalid pool parameters");
           setPool("1.19.0");
           return;
         }
 
-        if (poolParameter & !poolParameter.includes("1.9.")) {
+        if (
+          poolParameter &&
+          poolParameter.length &&
+          !poolParameter.includes("1.19.")
+        ) {
           console.log("Invalid pool parameters");
           setPool("1.19.0");
           return;
@@ -227,7 +240,6 @@ export default function PoolForm() {
   }, [pools]);
 
   const [sellAmount, setSellAmount] = useState(0);
-  const [buyAmount, setBuyAmount] = useState(0);
 
   const [foundPool, setFoundPool] = useState();
   const [assetA, setAssetA] = useState("");
@@ -247,52 +259,48 @@ export default function PoolForm() {
 
   const [foundPoolDetails, setFoundPoolDetails] = useState();
   useEffect(() => {
-    async function lookupPool(chain) {
-      const response = await fetch(
-        `http://localhost:8080/api/getObjects/${chain}`,
-        { method: "POST", body: JSON.stringify([foundPool.id]) }
-      );
+    let unsubscribePoolDetails;
 
-      if (!response.ok) {
-        console.log("Failed to fetch fee data");
-        return;
-      }
-
-      const responseContents = await response.json();
-
-      if (
-        responseContents &&
-        responseContents.result &&
-        responseContents.result.length
-      ) {
-        let finalResult = responseContents.result[0];
-        finalResult["asset_a_symbol"] = assetA.symbol;
-        finalResult["asset_a_precision"] = assetA.precision;
-
-        finalResult["asset_b_symbol"] = assetB.symbol;
-        finalResult["asset_b_precision"] = assetB.precision;
-
-        finalResult["share_asset_symbol"] = foundPool.share_asset_symbol;
-
-        finalResult["readable_balance_a"] = `${humanReadableFloat(
-          finalResult.balance_a,
-          assetA.precision
-        )} ${assetA.symbol}`;
-        finalResult["readable_balance_b"] = `${humanReadableFloat(
-          finalResult.balance_b,
-          assetB.precision
-        )} ${assetB.symbol}`;
-        finalResult["share_asset_details"] = assets.find(
-          (x) => x.id === finalResult.share_asset
-        );
-
-        setFoundPoolDetails(finalResult);
-      }
-    }
     if (usr && usr.chain && foundPool) {
-      lookupPool(usr.chain);
+      const poolDetailsStore = createPoolDetailsStore([
+        usr.chain,
+        foundPool.id,
+      ]);
+
+      unsubscribePoolDetails = poolDetailsStore.subscribe(
+        ({ data, error, loading }) => {
+          if (data && !error && !loading) {
+            let finalResult = data;
+            finalResult["asset_a_symbol"] = assetA.symbol;
+            finalResult["asset_a_precision"] = assetA.precision;
+
+            finalResult["asset_b_symbol"] = assetB.symbol;
+            finalResult["asset_b_precision"] = assetB.precision;
+
+            finalResult["share_asset_symbol"] = foundPool.share_asset_symbol;
+
+            finalResult["readable_balance_a"] = `${humanReadableFloat(
+              finalResult.balance_a,
+              assetA.precision
+            )} ${assetA.symbol}`;
+            finalResult["readable_balance_b"] = `${humanReadableFloat(
+              finalResult.balance_b,
+              assetB.precision
+            )} ${assetB.symbol}`;
+            finalResult["share_asset_details"] = assets.find(
+              (x) => x.id === finalResult.share_asset
+            );
+
+            setFoundPoolDetails(finalResult);
+          }
+        }
+      );
     }
-  }, [usr, foundPool]);
+
+    return () => {
+      if (unsubscribePoolDetails) unsubscribePoolDetails();
+    };
+  }, [usr, foundPool, assetA, assetB, assets]);
 
   const [assetADetails, setAssetADetails] = useState(null);
   const [assetBDetails, setAssetBDetails] = useState(null);
@@ -302,62 +310,112 @@ export default function PoolForm() {
   const [bBitassetData, setBBitassetData] = useState(null);
 
   useEffect(() => {
+    let unsubscribeADetails;
+    let unsubscribeBDetails;
+    let unsubscribePoolShareDetails;
+    let unsubscribeABitassetData;
+    let unsubscribeBBitassetData;
+
     if (usr && usr.id && assetA && assetB && foundPool) {
-      fetchDynamicData(
+      const dynamicDataStoreA = createDynamicDataStore([
         usr.chain,
         assetA.id.replace("1.3.", "2.3."),
-        setAssetADetails
+      ]);
+      unsubscribeADetails = dynamicDataStoreA.subscribe(
+        ({ data, error, loading }) => {
+          if (data && !error && !loading) {
+            setAssetADetails(data);
+          }
+        }
       );
-      fetchDynamicData(
+
+      const dynamicDataStoreB = createDynamicDataStore([
         usr.chain,
         assetB.id.replace("1.3.", "2.3."),
-        setAssetBDetails
+      ]);
+      unsubscribeBDetails = dynamicDataStoreB.subscribe(
+        ({ data, error, loading }) => {
+          if (data && !error && !loading) {
+            setAssetBDetails(data);
+          }
+        }
       );
-      fetchDynamicData(
+
+      const poolAsset = assets.find(
+        (x) => x.symbol === foundPool.share_asset_symbol
+      );
+      const dynamicDataStorePool = createDynamicDataStore([
         usr.chain,
-        assets
-          .find((x) => x.symbol === foundPool.share_asset_symbol)
-          .id.replace("1.3.", "2.3."),
-        setPoolShareDetails
+        poolAsset.id.replace("1.3.", "2.3."),
+      ]);
+      unsubscribePoolShareDetails = dynamicDataStorePool.subscribe(
+        ({ data, error, loading }) => {
+          if (data && !error && !loading) {
+            setPoolShareDetails(data);
+          }
+        }
       );
 
       if (assetA.bitasset_data_id) {
-        fetchBitassetData(usr.chain, assetA.bitasset_data_id, setABitassetData);
+        const bitassetDataStoreA = createBitassetDataStore([
+          usr.chain,
+          assetA.bitasset_data_id,
+        ]);
+        unsubscribeABitassetData = bitassetDataStoreA.subscribe(
+          ({ data, error, loading }) => {
+            if (data && !error && !loading) {
+              setABitassetData(data);
+            }
+          }
+        );
       }
 
       if (assetB.bitasset_data_id) {
-        fetchBitassetData(usr.chain, assetB.bitasset_data_id, setBBitassetData);
+        const bitassetDataStoreB = createBitassetDataStore([
+          usr.chain,
+          assetB.bitasset_data_id,
+        ]);
+        unsubscribeBBitassetData = bitassetDataStoreB.subscribe(
+          ({ data, error, loading }) => {
+            if (data && !error && !loading) {
+              setBBitassetData(data);
+            }
+          }
+        );
       }
     }
-  }, [usr, assetA, assetB, foundPool]);
+
+    return () => {
+      if (unsubscribeADetails) unsubscribeADetails();
+      if (unsubscribeBDetails) unsubscribeBDetails();
+      if (unsubscribePoolShareDetails) unsubscribePoolShareDetails();
+      if (unsubscribeABitassetData) unsubscribeABitassetData();
+      if (unsubscribeBBitassetData) unsubscribeBBitassetData();
+    };
+  }, [usr, assetA, assetB, foundPool, assets]);
 
   const [usrBalances, setUsrBalances] = useState();
   useEffect(() => {
-    async function fetchBalances(chain, accountID) {
-      const retrievedBalances = await fetch(
-        `http://localhost:8080/api/getAccountBalances/${chain}/${accountID}`,
-        { method: "GET" }
-      );
-
-      if (!retrievedBalances.ok) {
-        console.log(`Failed to retrieve user balances`);
-        return;
-      }
-
-      const balanceJSON = await retrievedBalances.json();
-
-      if (balanceJSON && balanceJSON.result) {
-        console.log(`Fetched user balances`);
-        setUsrBalances(balanceJSON.result);
-      }
-    }
+    let unsubscribeUserBalances;
 
     if (usr && usr.id && assetA && assetB) {
-      fetchBalances(usr.chain, usr.id);
+      const userBalancesStore = createUserBalancesStore([usr.chain, usr.id]);
+
+      unsubscribeUserBalances = userBalancesStore.subscribe(
+        ({ data, error, loading }) => {
+          if (data && !error && !loading) {
+            setUsrBalances(data);
+          }
+        }
+      );
     }
+
+    return () => {
+      if (unsubscribeUserBalances) unsubscribeUserBalances();
+    };
   }, [usr, assetA, assetB]);
 
-  useEffect(() => {
+  const buyAmount = useMemo(() => {
     // Calculating the amount the user can buy
     if (assetA && assetB && foundPoolDetails) {
       console.log("Calculating the amount the user can buy");
@@ -471,79 +529,9 @@ export default function PoolForm() {
           Number(poolamountap);
       }
 
-      setBuyAmount(result);
+      return result;
     }
   }, [sellAmount, assetA, assetB, foundPoolDetails]);
-
-  const [downloadClicked, setDownloadClicked] = useState(false);
-
-  const handleDownloadClick = () => {
-    if (!downloadClicked) {
-      setDownloadClicked(true);
-      setTimeout(() => {
-        setDownloadClicked(false);
-      }, 10000);
-    }
-  };
-
-  const [deeplink, setDeeplink] = useState("");
-  const [trxJSON, setTRXJSON] = useState();
-  const [deepLinkInProgress, setDeepLinkInProgress] = useState(false);
-  useEffect(() => {
-    if (data) {
-      /**
-       * Generates a deeplink for the pool exchange operation
-       */
-      async function generate() {
-        setDeepLinkInProgress(true);
-        const opJSON = [
-          {
-            account: usr.id,
-            pool: pool,
-            amount_to_sell: {
-              amount: blockchainFloat(sellAmount, assetA.precision),
-              asset_id: assetA.id,
-            },
-            min_to_receive: {
-              amount: blockchainFloat(buyAmount, assetB.precision),
-              asset_id: assetB.id,
-            },
-            extensions: [],
-          },
-        ];
-        setTRXJSON(opJSON);
-
-        const response = await fetch(
-          `http://localhost:8080/api/deeplink/${usr.chain}/liquidity_pool_exchange`,
-          {
-            method: "POST",
-            body: JSON.stringify(opJSON),
-          }
-        );
-
-        if (!response.ok) {
-          console.log({
-            error: new Error(`${response.status} ${response.statusText}`),
-            msg: "Couldn't generate deeplink.",
-          });
-          return;
-        }
-
-        const deeplinkValue = await response.json();
-
-        if (
-          deeplinkValue &&
-          deeplinkValue.result &&
-          deeplinkValue.result.generatedDeepLink
-        ) {
-          setDeeplink(deeplinkValue.result.generatedDeepLink);
-        }
-        setDeepLinkInProgress(false);
-      }
-
-      generate();
-    }
-  }, [data, assetA, assetB]);
 
   const [buyAmountInput, setBuyAmountInput] = useState();
   useEffect(() => {
@@ -590,7 +578,6 @@ export default function PoolForm() {
                   <Form {...form}>
                     <form
                       onSubmit={() => {
-                        setData(true);
                         setShowDialog(true);
                         event.preventDefault();
                       }}
@@ -994,7 +981,7 @@ export default function PoolForm() {
                       {!pool ||
                       !sellAmount ||
                       !buyAmount ||
-                      deepLinkInProgress !== false ? (
+                      showDialog !== false ? (
                         <Button
                           className="mt-5 mb-3"
                           variant="outline"
@@ -1014,81 +1001,39 @@ export default function PoolForm() {
                       )}
                     </form>
                   </Form>
-                  {showDialog && data && deeplink && (
-                    <Dialog
-                      open={showDialog}
-                      onOpenChange={(open) => {
-                        if (!open) {
-                          // Clearing generated deeplink
-                          setData("");
-                          setDeeplink("");
-                          setTRXJSON();
-                          // Clearing form data
-                          setPool("");
-                          setSellAmount(0);
-                          setBuyAmount(0);
-                          setFoundPool();
-                          setAssetA("");
-                          setAssetB("");
-                          // Clearing keys
-                          setPoolKey(`pool_key${Date.now()}`);
-                        }
-                        setShowDialog(open);
-                      }}
-                    >
-                      <DialogContent className="sm:max-w-[425px] bg-white">
-                        <>
-                          <h1 className="scroll-m-20 text-2xl font-extrabold tracking-tight">
-                            Exchanging {sellAmount} {assetA.symbol} for{" "}
-                            {buyAmount} {assetB.symbol}
-                          </h1>
-                          <h3 className="scroll-m-20 text-1xl font-semibold tracking-tight mb-3 mt-1">
-                            Your requested Bitshares pool exchange operation is
-                            ready!
-                          </h3>
-                          <div className="grid grid-cols-1 gap-3">
-                            <Button
-                              color="gray"
-                              className="w-full"
-                              onClick={() => {
-                                copyToClipboard(JSON.stringify(trxJSON));
-                              }}
-                              variant="outline"
-                            >
-                              Copy operation JSON
-                            </Button>
-
-                            {downloadClicked ? (
-                              <Button variant="outline" disabled>
-                                Downloading...
-                              </Button>
-                            ) : (
-                              <a
-                                href={`data:text/json;charset=utf-8,${deeplink}`}
-                                download={`pool_exchange.json`}
-                                target="_blank"
-                                rel="noreferrer"
-                                onClick={handleDownloadClick}
-                              >
-                                <Button variant="outline" className="w-full">
-                                  Download Beet operation JSON
-                                </Button>
-                              </a>
-                            )}
-
-                            <a
-                              href={`rawbeet://api?chain=BTS&request=${deeplink}`}
-                            >
-                              <Button variant="outline" className="w-full">
-                                Trigger raw Beet deeplink
-                              </Button>
-                            </a>
-                          </div>
-                        </>
-                      </DialogContent>
-                    </Dialog>
-                  )}
-                  {pool && !deepLinkInProgress ? (
+                  {showDialog ? (
+                    <DeepLinkDialog
+                      operationName="liquidity_pool_exchange"
+                      username={usr.username}
+                      usrChain={usr.chain}
+                      userID={usr.id}
+                      dismissCallback={setShowDialog}
+                      key={`Exchanging${sellAmount}${assetA.symbol}for${buyAmount}${assetB.symbol}`}
+                      headerText={`Exchanging ${sellAmount} ${assetA.symbol} for ${buyAmount} ${assetB.symbol}`}
+                      trxJSON={[
+                        {
+                          account: usr.id,
+                          pool: pool,
+                          amount_to_sell: {
+                            amount: blockchainFloat(
+                              sellAmount,
+                              assetA.precision
+                            ),
+                            asset_id: assetA.id,
+                          },
+                          min_to_receive: {
+                            amount: blockchainFloat(
+                              buyAmount,
+                              assetB.precision
+                            ),
+                            asset_id: assetB.id,
+                          },
+                          extensions: [],
+                        },
+                      ]}
+                    />
+                  ) : null}
+                  {pool && !showDialog ? (
                     <Button
                       variant="outline"
                       mt="xl"
@@ -1102,7 +1047,7 @@ export default function PoolForm() {
                       Swap buy/sell
                     </Button>
                   ) : null}
-                  {pool && deepLinkInProgress ? (
+                  {pool && showDialog ? (
                     <Button variant="outline" mt="xl" disabled>
                       Swap buy/sell
                     </Button>
@@ -1332,20 +1277,17 @@ export default function PoolForm() {
           usr={usr}
           resetCallback={() => {
             eraseCurrentUser();
-            setData("");
             setPool("");
             setFoundPool();
             setFoundPoolDetails();
             window.history.replaceState({}, "", "/pool/index.html");
             resetCache();
             setSellAmount(0);
-            setBuyAmount(0);
             setFoundPool();
             setAssetA("");
             setAssetB("");
             setDeeplink("");
             setTRXJSON();
-            setDeepLinkInProgress(false);
             setBuyAmountInput();
           }}
         />

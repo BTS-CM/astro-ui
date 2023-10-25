@@ -26,7 +26,7 @@ export default function MarketOrderCard(properties) {
     assetBData,
     buyOrders,
     sellOrders,
-    marketInProgress,
+    marketOrdersLoading,
     orderBookItr,
     setOrderBookItr,
     _resetOrders,
@@ -34,7 +34,7 @@ export default function MarketOrderCard(properties) {
 
   return (
     <>
-      {marketInProgress ? (
+      {marketOrdersLoading ? (
         <Card>
           <CardHeader>
             <CardTitle>Loading market orders</CardTitle>
@@ -68,7 +68,7 @@ export default function MarketOrderCard(properties) {
       ) : null}
       {((cardType === "buy" && !buyOrders) ||
         (cardType === "sell" && !sellOrders)) &&
-      !marketInProgress ? (
+      !marketOrdersLoading ? (
         <Card>
           <CardHeader>
             <CardTitle>Loading market orders</CardTitle>
@@ -87,7 +87,7 @@ export default function MarketOrderCard(properties) {
       ) : null}
       {((cardType === "buy" && buyOrders) ||
         (cardType === "sell" && sellOrders)) &&
-      !marketInProgress ? (
+      !marketOrdersLoading ? (
         <Card>
           <CardHeader>
             <CardTitle>

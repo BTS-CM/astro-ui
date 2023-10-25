@@ -8,11 +8,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import { eraseCurrentUser } from "../stores/users.ts";
 import { useInitCache } from "../effects/Init.ts";
 import { $currentUser } from "../stores/users.ts";
 
 import CurrentUser from "./common/CurrentUser.jsx";
+
+import { createMarketsStore } from "../effects/Market.ts";
 
 export default function Featured(properties) {
   const usr = useSyncExternalStore(
@@ -25,39 +26,34 @@ export default function Featured(properties) {
 
   const [retrievedMarkets, setRetrievedMarkets] = useState();
   useEffect(() => {
-    async function getMarkets(chain) {
-      const response = await fetch(
-        `http://localhost:8080/api/getFeaturedMarkets/${chain}`,
-        { method: "GET" }
-      );
-
-      if (!response.ok) {
-        console.log("Failed to fetch featured market data");
-        return;
-      }
-
-      const responseContents = await response.json();
-
-      if (
-        responseContents &&
-        responseContents.result &&
-        responseContents.result.length
-      ) {
-        setRetrievedMarkets(responseContents.result);
-      }
-    }
+    let unsubscribeMarkets;
 
     if (usr && usr.chain && usr.chain.length) {
-      getMarkets(usr.chain);
+      const marketsStore = createMarketsStore(usr.chain);
+
+      unsubscribeMarkets = marketsStore.subscribe(
+        ({ data, loading, error }) => {
+          if (data && !error && !loading) {
+            setRetrievedMarkets(data);
+          }
+        }
+      );
     }
-  }, [usr]);
+
+    return () => {
+      if (unsubscribeMarkets) unsubscribeMarkets();
+    };
+  }, [usr, createMarketsStore]);
 
   const [marketRows, setMarketRows] = useState();
   useEffect(() => {
     if (retrievedMarkets && retrievedMarkets.length) {
       setMarketRows(
         retrievedMarkets.map((market) => (
-          <a href={`/dex/index.html?market=${market.pair.replace("/", "_")}`}>
+          <a
+            href={`/dex/index.html?market=${market.pair.replace("/", "_")}`}
+            key={market.pair.replace("/", "_")}
+          >
             <div className="col-span-1 border-b-2">
               <div className="grid grid-cols-3 gap-1">
                 <div className="col-span-1">{market.pair}</div>

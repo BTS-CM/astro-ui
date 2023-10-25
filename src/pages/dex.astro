@@ -1,6 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Market from '../components/Market';
+import MarketOverlay from '../components/MarketOverlay';
 ---
 
 <Layout title="Bitshares pool tool">
@@ -11,7 +11,7 @@ import Market from '../components/Market';
 			Designed for use with the <a class="text-gradient" href="https://github.com/bitshares/beet">Bitshares Beet multiwallet</a>.<br/><br/>
 			<a class="text-gradient" href="../index.html">Go back</a>
 		</h3>
-		<Market client:only />
+		<MarketOverlay client:only />
 	</main>
 </Layout>
 

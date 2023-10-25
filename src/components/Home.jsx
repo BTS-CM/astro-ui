@@ -132,7 +132,7 @@ export default function Home(properties) {
               >
                 <Card>
                   <CardHeader>
-                    <CardTitle>🪙 Borrow bitassets</CardTitle>
+                    <CardTitle>🪙 Create debt</CardTitle>
                     <CardDescription>Issue collateralized debt</CardDescription>
                   </CardHeader>
                 </Card>

@@ -79,7 +79,9 @@ export default function AssetDropDown(properties) {
           key={`acard-${res.item.id}`}
           style={{ marginBottom: "2px" }}
           onClick={() => {
-            storeCallback(res.item.s);
+            setTimeout(() => {
+              storeCallback(res.item.s);
+            }, 0);
             setDialogOpen(false);
           }}
         >

@@ -54,6 +54,8 @@ import {
 
 import { humanReadableFloat, trimPrice, blockchainFloat } from "../lib/common";
 
+import { createUserBalancesStore } from "../effects/Pools.ts";
+
 import { Avatar } from "./Avatar.tsx";
 import AccountSearch from "./AccountSearch.jsx";
 import CurrentUser from "./common/CurrentUser.jsx";
@@ -113,29 +115,23 @@ export default function Transfer(properties) {
   const [balanceCounter, setBalanceCoutner] = useState(0);
   const [balances, setBalances] = useState();
   useEffect(() => {
-    async function fetchBalances() {
-      const accountBalances = await fetch(
-        `http://localhost:8080/api/getAccountBalances/${usr.chain}/${usr.id}`,
-        { method: "GET" }
+    let unsubscribeUserBalances;
+
+    if (usr && usr.id) {
+      const userBalancesStore = createUserBalancesStore([usr.chain, usr.id]);
+
+      unsubscribeUserBalances = userBalancesStore.subscribe(
+        ({ data, error, loading }) => {
+          if (data && !error && !loading) {
+            setBalances(data);
+          }
+        }
       );
-
-      if (!accountBalances.ok) {
-        console.log("Issues whilst fetching");
-        return;
-      }
-
-      const profileContents = await accountBalances.json();
-
-      if (profileContents && profileContents.result) {
-        const finalResult = profileContents.result;
-        console.log("Fetched account balances");
-        setBalances(finalResult);
-      }
     }
 
-    if (usr && usr.id && usr.id.length) {
-      fetchBalances();
-    }
+    return () => {
+      if (unsubscribeUserBalances) unsubscribeUserBalances();
+    };
   }, [usr, balanceCounter]);
 
   const [foundAsset, setFoundAsset] = useState();
@@ -214,10 +210,10 @@ export default function Transfer(properties) {
                   Send funds from an account you control to another BitShares
                   account holder.
                 </p>
-                <p>
-                  Doesn't yet support a memo, so avoid using this form for
-                  sending to external services. Use for transfering between your
-                  own accounts.
+                <p className="mt-1">
+                  ⛔ Doesn't yet support a memo, so don't use this form when
+                  transfering to external services.
+                  <br />✅ Use for simple transfers between accounts.
                 </p>
               </CardDescription>
             </CardHeader>
@@ -457,6 +453,47 @@ export default function Transfer(properties) {
                       name="transferAmount"
                       render={({ field }) => (
                         <FormItem>
+                          {console.log({ foundAsset, balances })}
+                          <FormLabel>{`Amount of ${
+                            selectedAsset ?? "???"
+                          } available to transfer`}</FormLabel>
+                          <FormControl>
+                            <Input
+                              disabled
+                              label={`Amount available to transfer`}
+                              value={
+                                foundAsset &&
+                                balances &&
+                                balances.find(
+                                  (x) => x.asset_id === foundAsset.id
+                                )
+                                  ? `${humanReadableFloat(
+                                      balances.find(
+                                        (x) => x.asset_id === foundAsset.id
+                                      ).amount,
+                                      foundAsset.precision
+                                    )} ${foundAsset.symbol}`
+                                  : "0"
+                              }
+                              className="mb-1"
+                            />
+                          </FormControl>
+                          <FormDescription>
+                            This is the maximum amount of {selectedAsset} you
+                            can transfer.
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  ) : null}
+
+                  {selectedAsset && targetUser ? (
+                    <FormField
+                      control={form.control}
+                      name="transferAmount"
+                      render={({ field }) => (
+                        <FormItem>
                           <FormLabel>{`Amount of ${
                             selectedAsset ?? "???"
                           } to transfer`}</FormLabel>
@@ -613,7 +650,7 @@ export default function Transfer(properties) {
                     </li>
                     <li>
                       Asset transfer operations are permanent and the majority
-                      of assets are irrecoverable if missent.
+                      of assets are irrecoverable if erroneously transferred.
                     </li>
                     <li>
                       If something sounds too good to be true, then it likely

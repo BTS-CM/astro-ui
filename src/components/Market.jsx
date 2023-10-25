@@ -5,6 +5,9 @@ import React, {
   useMemo,
 } from "react";
 
+import { nanoquery } from "@nanostores/query";
+import { useStore } from "@nanostores/react";
+
 import {
   Card,
   CardContent,
@@ -26,46 +29,38 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 
-import { eraseCurrentUser } from "../stores/users.ts";
-
 import LimitOrderCard from "./Market/LimitOrderCard.jsx";
 import MarketOrderCard from "./Market/MarketOrderCard.jsx";
 import AssetDropDown from "./Market/AssetDropDownCard.jsx";
 import MarketAssetCard from "./Market/MarketAssetCard.jsx";
 import MarketSummaryTabs from "./Market/MarketSummaryTabs.jsx";
 import PoolDialogs from "./Market/PoolDialogs.jsx";
-import CurrentUser from "./common/CurrentUser.jsx";
 
-import { humanReadableFloat, trimPrice } from "../lib/common";
-import { useInitCache } from "../effects/Init.ts";
+import { trimPrice } from "../lib/common";
 
-import { $currentUser } from "../stores/users.ts";
-import {
-  $assetCache,
-  $marketSearchCache,
-  $globalParamsCache,
-  $poolCache,
-} from "../stores/cache.ts";
+import { $marketSearchCache } from "../stores/cache.ts";
 
 import {
-  fetchDynamicData,
-  fetchBitassetData,
-  fetchCachedAsset,
+  createMarketHistoryStore,
+  createMarketOrdersStore,
 } from "../effects/Market.ts";
 
 export default function Market(properties) {
-  // Initializing
-  const usr = useSyncExternalStore(
-    $currentUser.subscribe,
-    $currentUser.get,
-    () => true
-  );
-
-  const assets = useSyncExternalStore(
-    $assetCache.subscribe,
-    $assetCache.get,
-    () => true
-  );
+  const {
+    usr,
+    assetA,
+    assetB,
+    assetAData,
+    assetADetails,
+    assetABitassetData,
+    assetBData,
+    assetBDetails,
+    assetBBitassetData,
+    limitOrderFee,
+    //
+    setAssetA,
+    setAssetB,
+  } = properties;
 
   const marketSearch = useSyncExternalStore(
     $marketSearchCache.subscribe,
@@ -73,302 +68,90 @@ export default function Market(properties) {
     () => true
   );
 
-  const globalParams = useSyncExternalStore(
-    $globalParamsCache.subscribe,
-    $globalParamsCache.get,
-    () => true
-  );
-
-  const [limitOrderFee, setLimitOrderFee] = useState(0);
-  useEffect(() => {
-    if (globalParams && globalParams.parameters) {
-      const current_fees = globalParams.parameters.current_fees.parameters;
-      const foundFee = current_fees.find((x) => x[0] === 1);
-      setLimitOrderFee(humanReadableFloat(foundFee[1].fee, 5));
-    }
-  }, [globalParams]);
-
-  useInitCache(usr && usr.chain ? usr.chain : "bitshares");
   // End of init
 
-  const searchSymbols = useMemo(
-    () => marketSearch.map((asset) => asset.s),
-    [marketSearch]
-  );
-  const searchIds = useMemo(
-    () => marketSearch.map((asset) => asset.id),
-    [marketSearch]
-  );
+  const [buyOrders, setBuyOrders] = useState(null);
+  const [sellOrders, setSellOrders] = useState(null);
 
-  const [assetA, setAssetA] = useState(!window.location.search ? "BTS" : null);
-  const [assetB, setAssetB] = useState(!window.location.search ? "USD" : null);
-  useEffect(() => {
-    async function parseUrlAssets() {
-      if (window.location.search) {
-        console.log("Parsing market parameters");
-        const urlSearchParams = new URLSearchParams(window.location.search);
-        const params = Object.fromEntries(urlSearchParams.entries());
-        const market = params.market;
-        let asset_a = market.split("_")[0].toUpperCase();
-        let asset_b = market.split("_")[1].toUpperCase();
+  const [usrBalances, setUsrBalances] = useState(null);
+  const [usrLimitOrders, setUsrLimitOrders] = useState(null);
+  const [publicMarketHistory, setPublicMarketHistory] = useState(null);
+  const [usrHistory, setUsrHistory] = useState(null);
+  const [tickerData, setTickerData] = useState(null);
 
-        if (asset_a && asset_b && asset_b.length && asset_a === asset_b) {
-          // Avoid invalid duplicate asset market pairs
-          asset_b = asset_a === "BTS" ? "USD" : "BTS";
-          console.log("Invalid market parameters - replaced quote asset.");
-        }
-
-        if (
-          !asset_a ||
-          !asset_a.length ||
-          (!searchSymbols.includes(asset_a) && !searchIds.includes(asset_a))
-        ) {
-          console.log("Asset A replaced with default.");
-          setAssetA("BTS");
-        }
-
-        if (!assetA) {
-          const foundAssetA = marketSearch.find(
-            (asset) => asset.id === asset_a || asset.s === asset_a
-          );
-          if (foundAssetA) {
-            console.log("Setting asset A.");
-            setAssetA(foundAssetA.s);
-          } else {
-            console.log("Setting default asset A");
-            setAssetA("BTS");
-          }
-        }
-
-        if (
-          !asset_b ||
-          !asset_b.length ||
-          (!searchSymbols.includes(asset_b) && !searchIds.includes(asset_b))
-        ) {
-          console.log("Asset B replaced with default.");
-          setAssetB(assetA !== "USD" ? "USD" : "BTS");
-        }
-
-        if (!assetB) {
-          const foundAssetB = marketSearch.find(
-            (asset) => asset.id === asset_b || asset.s === asset_b
-          );
-          if (foundAssetB) {
-            console.log("Setting asset B.");
-            setAssetB(foundAssetB.s);
-            return;
-          } else {
-            console.log("Setting default asset B");
-            setAssetB(asset_a !== "BTS" && asset_a !== "1.3.0" ? "BTS" : "USD");
-          }
-        }
-      }
-    }
-
-    if (marketSearch && marketSearch.length) {
-      parseUrlAssets();
-    }
-  }, [marketSearch]);
-
-  const [buyOrders, setBuyOrders] = useState([]);
-  const [sellOrders, setSellOrders] = useState([]);
-  const [orderBookItr, setOrderBookItr] = useState(0);
-  const [marketInProgress, setMarketInProgress] = useState(false);
-
-  const [assetAData, setAssetAData] = useState(null);
-  const [assetBData, setAssetBData] = useState(null);
-
-  const [assetADetails, setAssetADetails] = useState(null);
-  const [assetBDetails, setAssetBDetails] = useState(null);
-
-  const [aBitassetData, setABitassetData] = useState(null);
-  const [bBitassetData, setBBitassetData] = useState(null);
-
-  const [usrBalances, setUsrBalances] = useState();
-  const [usrLimitOrders, setUsrLimitOrders] = useState();
-  const [usrHistory, setUsrHistory] = useState();
-  const [publicMarketHistory, setPublicMarketHistory] = useState();
-  const [tickerData, setTickerData] = useState();
   const [marketItr, setMarketItr] = useState(0);
+  const [orderBookItr, setOrderBookItr] = useState(0);
 
   // style states
   const [activeLimitCard, setActiveLimitCard] = useState("buy");
   const [activeMOC, setActiveMOC] = useState("buy");
 
-  function _resetA() {
-    setAssetAData(null);
-    setAssetADetails(null);
-    setABitassetData(null);
-  }
-
-  function _resetB() {
-    setAssetBData(null);
-    setAssetBDetails(null);
-    setBBitassetData(null);
-  }
-
   function _resetOrders() {
-    setBuyOrders();
-    setSellOrders();
+    setBuyOrders(null);
+    setSellOrders(null);
   }
 
   function _resetMarketData() {
     // If either asset changes then several states need to be erased
-    setUsrBalances();
-    setUsrLimitOrders();
-    setUsrHistory();
-    setPublicMarketHistory();
-    setTickerData();
+    setUsrBalances(null);
+    setUsrLimitOrders(null);
+    setPublicMarketHistory(null);
+    setUsrHistory(null);
+    setTickerData(null);
   }
 
-  useEffect(() => {
-    async function fetchMarketData() {
-      const fetchedMarketOrders = await fetch(
-        `http://localhost:8080/api/orderBook/${usr.chain}/${assetA}/${assetB}`,
-        { method: "GET" }
-      );
+  // Use the store
+  const marketOrdersStore = useMemo(() => {
+    return createMarketOrdersStore([usr.chain, assetA, assetB, usr.id]);
+  }, [usr, assetA, assetB, orderBookItr]);
 
-      if (!fetchedMarketOrders.ok) {
-        console.log("Failed to fetch market orders");
-        setMarketInProgress(false);
-        if (orderBookItr < 5) {
-          setOrderBookItr(orderBookItr + 1); // retrying the query
-        }
-        return;
-      }
-
-      const marketOrdersJSON = await fetchedMarketOrders.json();
-
-      if (marketOrdersJSON && marketOrdersJSON.result) {
-        console.log(`Fetched market data for ${assetA}_${assetB}`);
-        setBuyOrders(marketOrdersJSON.result.asks);
-        setSellOrders(marketOrdersJSON.result.bids);
-      }
-
-      setMarketInProgress(false);
-    }
-
-    if (assetA && assetB && usr && usr.chain) {
-      // Fetching the required market orders
-      setMarketInProgress(true);
-      window.history.replaceState({}, "", `?market=${assetA}_${assetB}`); // updating the url parameters
-      fetchMarketData(); // updating market data
-    }
-  }, [assetA, assetB, usr, orderBookItr]);
+  const {
+    data: marketOrdersData,
+    loading: marketOrdersLoading,
+    error: marketOrdersError,
+  } = useStore(marketOrdersStore);
 
   useEffect(() => {
-    if (assetA && usr && usr.chain) {
-      _resetA();
-      _resetMarketData();
-
-      if (!assets || !assets.length) {
-        fetchCachedAsset(usr.chain, assetA, setAssetAData);
-        return;
-      }
-
-      const foundAsset = assets.find((asset) => asset.s === assetA);
-      if (!foundAsset) {
-        fetchCachedAsset(usr.chain, assetA, setAssetAData);
-        return;
-      }
-
-      console.log("Retrieved asset A from cache");
-      setAssetAData(foundAsset);
+    if (marketOrdersData && !marketOrdersLoading && !marketOrdersError) {
+      setBuyOrders(marketOrdersData.asks);
+      setSellOrders(marketOrdersData.bids);
+    } else {
+      setBuyOrders(null);
+      setSellOrders(null);
     }
-  }, [assetA, usr]);
+  }, [marketOrdersData, marketOrdersLoading, marketOrdersError]);
+
+  // Use the store
+  const marketHistoryStore = useMemo(() => {
+    return createMarketHistoryStore([
+      usr.chain,
+      assetAData.id,
+      assetBData.id,
+      usr.id,
+    ]);
+  }, [usr, assetAData, assetBData, marketItr]);
+
+  const {
+    data: marketHistoryData,
+    loading: marketHistoryLoading,
+    error: marketHistoryError,
+  } = useStore(marketHistoryStore);
 
   useEffect(() => {
-    if (assetB && usr && usr.chain) {
-      _resetB();
-      _resetMarketData();
-
-      if (!assets || !assets.length) {
-        // No cache exists
-        fetchCachedAsset(usr.chain, assetB, setAssetBData);
-        return;
-      }
-
-      const foundAsset = assets.find((asset) => asset.s === assetB);
-      if (!foundAsset) {
-        // Asset doesn't exist in cache
-        fetchCachedAsset(usr.chain, assetB, setAssetBData);
-        return;
-      }
-
-      // Asset exists in cache
-      console.log("Retrieved asset B from cache");
-      setAssetBData(foundAsset);
+    if (marketHistoryData && !marketHistoryLoading && !marketHistoryError) {
+      setUsrBalances(marketHistoryData.balances);
+      setUsrLimitOrders(marketHistoryData.accountLimitOrders);
+      setPublicMarketHistory(marketHistoryData.marketHistory);
+      setUsrHistory(marketHistoryData.usrTrades);
+      setTickerData(marketHistoryData.ticker);
+    } else {
+      setUsrBalances(null);
+      setUsrLimitOrders(null);
+      setPublicMarketHistory(null);
+      setUsrHistory(null);
+      setTickerData(null);
     }
-  }, [assetB, usr]);
-
-  useEffect(() => {
-    if (assetAData && usr && usr.chain) {
-      fetchDynamicData(usr.chain, assetAData.id, setAssetADetails);
-      if (assetAData.bitasset_data_id) {
-        fetchBitassetData(
-          usr.chain,
-          assetAData.bitasset_data_id,
-          setABitassetData
-        );
-      }
-    }
-  }, [assetAData]);
-
-  useEffect(() => {
-    if (assetBData && usr && usr.chain) {
-      fetchDynamicData(usr.chain, assetBData.id, setAssetBDetails);
-      if (assetBData.bitasset_data_id) {
-        fetchBitassetData(
-          usr.chain,
-          assetBData.bitasset_data_id,
-          setBBitassetData
-        );
-      }
-    }
-  }, [assetBData]);
-
-  useEffect(() => {
-    async function fetchMarketHistory() {
-      // Fetching the data for the market summary tabs component
-      console.log("Fetching market history");
-
-      const fetchedMarketHistory = await fetch(
-        `http://localhost:8080/api/getMarketHistory/${usr.chain}/${assetAData.id}/${assetBData.id}/${usr.id}`,
-        { method: "GET" }
-      );
-
-      if (!fetchedMarketHistory.ok) {
-        console.log("Failed to fetch market history");
-        setTimeout(() => {
-          setMarketItr(marketItr + 1); // retrying the query
-        }, 2000);
-        return;
-      }
-
-      const marketHistoryJSON = await fetchedMarketHistory.json();
-
-      if (marketHistoryJSON && marketHistoryJSON.result) {
-        console.log("Fetched market history");
-        const { result } = marketHistoryJSON;
-        const {
-          balances,
-          marketHistory,
-          accountLimitOrders,
-          usrTrades,
-          ticker,
-        } = result;
-        setUsrBalances(balances);
-        setUsrLimitOrders(accountLimitOrders);
-        setPublicMarketHistory(marketHistory);
-        setUsrHistory(usrTrades);
-        setTickerData(ticker);
-      }
-    }
-
-    if (assetAData && assetBData) {
-      fetchMarketHistory();
-    }
-  }, [assetAData, assetBData, usr, marketItr]);
+  }, [marketHistoryData, marketHistoryLoading, marketHistoryError]);
 
   useEffect(() => {
     if (assetA && assetB && usr && usr.chain) {
@@ -617,7 +400,7 @@ export default function Market(properties) {
             {tickerData &&
             assetAData &&
             assetBData &&
-            (aBitassetData || bBitassetData)
+            (assetABitassetData || assetBBitassetData)
               ? marketHoverCard
               : null}
           </div>
@@ -654,8 +437,6 @@ export default function Market(properties) {
                             className="h-5 ml-1 mr-1 p-3"
                             onClick={() => {
                               // Erasing data
-                              _resetA();
-                              _resetB();
                               _resetOrders();
                               _resetMarketData();
                               // Swapping asset A for B
@@ -687,9 +468,9 @@ export default function Market(properties) {
 
               {tickerData &&
               assetAData &&
-              !aBitassetData &&
+              !assetABitassetData &&
               assetBData &&
-              !bBitassetData
+              !assetBBitassetData
                 ? marketHoverCard
                 : null}
 
@@ -699,7 +480,7 @@ export default function Market(properties) {
                     asset={assetA}
                     assetData={assetAData}
                     assetDetails={assetADetails}
-                    bitassetData={aBitassetData}
+                    bitassetData={assetABitassetData}
                     marketSearch={marketSearch}
                     chain={usr.chain}
                     usrBalances={usrBalances}
@@ -735,7 +516,7 @@ export default function Market(properties) {
                     asset={assetB}
                     assetData={assetBData}
                     assetDetails={assetBDetails}
-                    bitassetData={bBitassetData}
+                    bitassetData={assetBBitassetData}
                     marketSearch={marketSearch}
                     chain={usr.chain}
                     usrBalances={usrBalances}
@@ -817,7 +598,7 @@ export default function Market(properties) {
                     assetBData={assetBData}
                     buyOrders={buyOrders}
                     sellOrders={sellOrders}
-                    marketInProgress={marketInProgress}
+                    marketOrdersLoading={marketOrdersLoading}
                     orderBookItr={orderBookItr}
                     setOrderBookItr={setOrderBookItr}
                     _resetOrders={_resetOrders}
@@ -833,7 +614,7 @@ export default function Market(properties) {
                     assetBData={assetBData}
                     buyOrders={buyOrders}
                     sellOrders={sellOrders}
-                    marketInProgress={marketInProgress}
+                    marketOrdersLoading={marketOrdersLoading}
                     orderBookItr={orderBookItr}
                     setOrderBookItr={setOrderBookItr}
                     _resetOrders={_resetOrders}
@@ -859,9 +640,6 @@ export default function Market(properties) {
           />
         ) : null}
       </div>
-      {usr && usr.username && usr.username.length ? (
-        <CurrentUser usr={usr} />
-      ) : null}{" "}
     </>
   );
 }
