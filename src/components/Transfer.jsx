@@ -453,7 +453,6 @@ export default function Transfer(properties) {
                       name="transferAmount"
                       render={({ field }) => (
                         <FormItem>
-                          {console.log({ foundAsset, balances })}
                           <FormLabel>{`Amount of ${
                             selectedAsset ?? "???"
                           } available to transfer`}</FormLabel>

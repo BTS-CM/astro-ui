@@ -125,6 +125,26 @@ function addPoolsToCache(pools: Pool[]) {
 }
 
 /**
+ * Declaring the offers cache map nanostore
+ */
+const $offersCache = map<Pool[]>([]);
+
+/**
+ * Function to add an array of offers to the offers cache
+ * @param offers The array of offers to add to the cache
+ */
+function addOffersToCache(offers: Pool[]) {
+  const existingOffers = $offersCache.get();
+  const newOffers =
+    existingOffers && existingOffers.length
+      ? offers.filter((offer) => !existingOffers.some((o) => o.id === offer.id))
+      : offers;
+  if (newOffers.length > 0) {
+    $offersCache.set([...existingOffers, ...newOffers]);
+  }
+}
+
+/**
  * Declaring the market search cache map nanostore
  */
 const $marketSearchCache = map<MarketSearch[]>([]);
@@ -171,6 +191,8 @@ export {
   addAssetsToCache,
   $poolCache,
   addPoolsToCache,
+  $offersCache,
+  addOffersToCache,
   $marketSearchCache,
   addMarketSearchesToCache,
   $globalParamsCache,

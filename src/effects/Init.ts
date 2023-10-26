@@ -10,6 +10,7 @@ import {
   addMarketSearchesToCache,
   $poolCache,
   addPoolsToCache,
+  addOffersToCache,
   $assetCache,
   addAssetsToCache,
 } from "../stores/cache.ts";
@@ -36,6 +37,9 @@ const [createFetcherStore] = nanoquery({
       fetch(`http://localhost:8080/api/getObjects/${chain}`, {
         method: "POST",
         body: JSON.stringify(["2.0.0"]),
+      }),
+      fetch(`http://localhost:8080/cache/offers/${chain}`, {
+        method: "GET",
       }),
     ];
 
@@ -76,6 +80,9 @@ const [createFetcherStore] = nanoquery({
               const finalResult = responseContents.result[0];
               setGlobalParams(finalResult);
             }
+            break;
+          case 4:
+            addOffersToCache(parsedJSON);
             break;
           default:
             break;

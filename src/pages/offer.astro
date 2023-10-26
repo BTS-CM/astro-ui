@@ -1,17 +1,17 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import CreditBorrow from '../components/CreditBorrow.jsx';
+import CreditOffer from '../components/CreditOffer.jsx';
 ---
 
 <Layout title="Bitshares pool exchange form">
 	<main>
 		<h2><span class="text-gradient">Bitshares Beet Astro</span> UI</h2>
 		<h3 class="mb-5">
-			Use the form below to plan and create credit offer deals on the Bitshares DEX.<br /><br />
+			The form below is for accepting a credit offer on the Bitshares DEX.<br /><br />
 			Designed for use with the <a class="text-gradient" href="https://github.com/bitshares/beet">Bitshares Beet multiwallet</a>.<br/><br/>
 			<a class="text-gradient" href="../index.html">Go back</a>
 		</h3>
-		<CreditBorrow client:load />
+		<CreditOffer client:only />
 	</main>
 </Layout>
 
