@@ -34,9 +34,8 @@ const [createFetcherStore] = nanoquery({
       fetch(`http://localhost:8080/cache/pools/${chain}`, {
         method: "GET",
       }),
-      fetch(`http://localhost:8080/api/getObjects/${chain}`, {
-        method: "POST",
-        body: JSON.stringify(["2.0.0"]),
+      fetch(`http://localhost:8080/cache/feeSchedule/${chain}`, {
+        method: "GET",
       }),
       fetch(`http://localhost:8080/cache/offers/${chain}`, {
         method: "GET",
@@ -76,10 +75,7 @@ const [createFetcherStore] = nanoquery({
             addPoolsToCache(parsedJSON);
             break;
           case 3:
-            if (responseContents.result && responseContents.result.length) {
-              const finalResult = responseContents.result[0];
-              setGlobalParams(finalResult);
-            }
+            setGlobalParams(parsedJSON);
             break;
           case 4:
             addOffersToCache(parsedJSON);

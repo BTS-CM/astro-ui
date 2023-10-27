@@ -54,7 +54,7 @@ import {
 
 import { humanReadableFloat, trimPrice, blockchainFloat } from "../lib/common";
 
-import { createUserBalancesStore } from "../effects/Pools.ts";
+import { createUserBalancesStore } from "../effects/User.ts";
 
 import { Avatar } from "./Avatar.tsx";
 import AccountSearch from "./AccountSearch.jsx";
@@ -104,9 +104,9 @@ export default function Transfer(properties) {
   const [fee, setFee] = useState(0);
   useEffect(() => {
     if (globalParams && globalParams.parameters) {
-      const current_fees = globalParams.parameters.current_fees.parameters;
-      const foundFee = current_fees.find((x) => x[0] === 0);
-      setFee(humanReadableFloat(foundFee[1].fee, 5));
+      const foundFee = globalParams.find((x) => x[0] === 0);
+      const finalFee = humanReadableFloat(foundFee[1].fee, 5);
+      setFee(finalFee);
     }
   }, [globalParams]);
 
@@ -391,7 +391,7 @@ export default function Transfer(properties) {
                                 </Av>
                               ) : null}
                               {foundAsset ? (
-                                <Av onClick={() => console.log("Clicked")}>
+                                <Av>
                                   <AvatarFallback>
                                     <div className="text-sm">
                                       {foundAsset.bitasset_data_id

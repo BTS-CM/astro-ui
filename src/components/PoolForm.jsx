@@ -70,17 +70,15 @@ import {
   createBitassetDataStore,
   createCachedAssetStore,
   createDynamicDataStore,
-} from "../effects/Market.ts";
+} from "../effects/Assets.ts";
 
-import {
-  createPoolDetailsStore,
-  createUserBalancesStore,
-} from "../effects/Pools.ts";
+import { createPoolDetailsStore } from "../effects/Pools.ts";
+
+import { createUserBalancesStore } from "../effects/User.ts";
 
 import { useInitCache } from "../effects/Init.ts";
 import { $currentUser } from "../stores/users.ts";
 
-import AccountSelect from "./AccountSelect.jsx";
 import PoolDialogs from "./Market/PoolDialogs.jsx";
 import MarketAssetCard from "./Market/MarketAssetCard.jsx";
 import CurrentUser from "./common/CurrentUser.jsx";
@@ -129,9 +127,9 @@ export default function PoolForm() {
   const [fee, setFee] = useState(0);
   useEffect(() => {
     if (globalParams && globalParams.parameters) {
-      const current_fees = globalParams.parameters.current_fees.parameters;
-      const foundFee = current_fees.find((x) => x[0] === 63);
-      setFee(humanReadableFloat(foundFee[1].fee, 5));
+      const foundFee = globalParams.find((x) => x[0] === 63);
+      const finalFee = humanReadableFloat(foundFee[1].fee, 5);
+      setFee(finalFee);
     }
   }, [globalParams]);
 

@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useSyncExternalStore } from "react";
+import { FixedSizeList as List } from "react-window";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
 
 import {
   Card,
@@ -10,18 +12,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { FixedSizeList as List } from "react-window";
-
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 
 import { useInitCache } from "../effects/Init.ts";
 import { $currentUser } from "../stores/users.ts";
 import { $offersCache, $assetCache } from "../stores/cache.ts";
+import { humanReadableFloat } from "@/lib/common.js";
 
 import CurrentUser from "./common/CurrentUser.jsx";
-import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
-import { humanReadableFloat } from "@/lib/common.js";
 
 function hoursTillExpiration(expirationTime) {
   // Parse the expiration time
@@ -68,9 +65,11 @@ export default function CreditBorrow(properties) {
 
   const OfferRow = ({ index, style }) => {
     const res = offers[index];
-    const [showDialog, setShowDialog] = useState(false);
-
     const foundAsset = assets.find((x) => x.id === res.asset_type);
+
+    if (!res || !foundAsset) {
+      return null;
+    }
 
     return (
       <div style={{ ...style }} key={`acard-${res.id}`}>

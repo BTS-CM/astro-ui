@@ -23,7 +23,7 @@ import {
   createBitassetDataStore,
   createCachedAssetStore,
   createDynamicDataStore,
-} from "../effects/Market.ts";
+} from "../effects/Assets.ts";
 
 export default function MarketOverlay(properties) {
   // Initializing
@@ -54,9 +54,9 @@ export default function MarketOverlay(properties) {
   const [limitOrderFee, setLimitOrderFee] = useState(0);
   useEffect(() => {
     if (globalParams && globalParams.parameters) {
-      const current_fees = globalParams.parameters.current_fees.parameters;
-      const foundFee = current_fees.find((x) => x[0] === 1);
-      setLimitOrderFee(humanReadableFloat(foundFee[1].fee, 5));
+      const foundFee = globalParams.find((x) => x[0] === 1);
+      const finalFee = humanReadableFloat(foundFee[1].fee, 5);
+      setLimitOrderFee(finalFee);
     }
   }, [globalParams]);
 

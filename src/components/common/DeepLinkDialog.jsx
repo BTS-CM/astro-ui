@@ -129,29 +129,33 @@ export default function DeepLinkDialog(properties) {
               Copy operation JSON
             </Button>
 
-            {downloadClicked ? (
-              <Button variant="outline" disabled>
-                Downloading...
-              </Button>
-            ) : (
-              <a
-                href={`data:text/json;charset=utf-8,${deeplink}`}
-                download={`${operationName}.json`}
-                target="_blank"
-                rel="noreferrer"
-                onClick={handleDownloadClick}
-              >
-                <Button variant="outline" className="w-full">
-                  Download Beet operation JSON
-                </Button>
-              </a>
-            )}
+            {!loading ? (
+              <>
+                {downloadClicked ? (
+                  <Button variant="outline" disabled>
+                    Downloading...
+                  </Button>
+                ) : (
+                  <a
+                    href={`data:text/json;charset=utf-8,${deeplink}`}
+                    download={`${operationName}.json`}
+                    target="_blank"
+                    rel="noreferrer"
+                    onClick={handleDownloadClick}
+                  >
+                    <Button variant="outline" className="w-full">
+                      Download Beet operation JSON
+                    </Button>
+                  </a>
+                )}
 
-            <a href={`rawbeet://api?chain=BTS&request=${deeplink}`}>
-              <Button variant="outline" className="w-full">
-                Trigger raw Beet deeplink
-              </Button>
-            </a>
+                <a href={`rawbeet://api?chain=BTS&request=${deeplink}`}>
+                  <Button variant="outline" className="w-full">
+                    Trigger raw Beet deeplink
+                  </Button>
+                </a>
+              </>
+            ) : null}
           </div>
         </>
       </DialogContent>

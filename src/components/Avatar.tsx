@@ -118,14 +118,23 @@ const mouthTypes = {
   ),
 };
 
+const randomHexColor = (rng: any) => {
+  let color = "#";
+  for (let i = 0; i < 6; i++) {
+    const random = Math.floor(rng.nextUnit(16, false));
+    color += random.toString(16);
+  }
+  return color;
+};
+
 function generateData(
   name?: string,
   colors = DEFAULT_COLORS,
   expression: ExpressionProps = {}
 ): AvatarData {
-  let numFromName = hashCode(name ?? crypto.randomUUID());
+  let numFromName = hashCode(name);
   const rng = new RNG(numFromName);
-  const wrapperColor = rng?.nextChoice(colors) ?? colors[0];
+  const wrapperColor = rng ? randomHexColor(rng) : colors[0];
 
   const preTranslateX = rng.nextUnit(10, true);
   const wrapperTranslateX =
