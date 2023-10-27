@@ -6,7 +6,6 @@ import React, {
 } from "react";
 import { useForm } from "react-hook-form";
 import { FixedSizeList as List } from "react-window";
-
 import {
   Card,
   CardContent,
@@ -221,7 +220,7 @@ export default function CreditBorrow(properties) {
     }
   }, [relevantOffer, foundAsset]);
 
-  const [inputValue, setInputValue] = useState(0);
+  const [inputValue, setInputValue] = useState(minAmount ?? 1);
   const [debouncedInputValue, setDebouncedInputValue] = useState(0);
   const [finalBorrowAmount, setFinalBorrowAmount] = useState();
 
@@ -263,7 +262,7 @@ export default function CreditBorrow(properties) {
   }, [debouncedInputValue, availableAmount]);
 
   const collateralInfo = useMemo(() => {
-    if (chosenCollateral && balanceAssetIDs) {
+    if (chosenCollateral && balanceAssetIDs && assets && usrBalances) {
       const collateralAsset = assets.find(
         (asset) => asset.id === chosenCollateral
       );
@@ -285,7 +284,7 @@ export default function CreditBorrow(properties) {
         isBitasset: collateralAsset.bitasset_data_id ? true : false,
       };
     }
-  }, [chosenCollateral, balanceAssetIDs]);
+  }, [chosenCollateral, balanceAssetIDs, assets, usrBalances]);
 
   const offerRepayPeriod = useMemo(() => {
     if (relevantOffer) {
@@ -348,7 +347,6 @@ export default function CreditBorrow(properties) {
 
   const [showDialog, setShowDialog] = useState(false);
   const [repayPeriod, setRepayPeriod] = useState();
-
   const repayType = useMemo(() => {
     if (repayPeriod) {
       if (repayPeriod === "no_auto_repayment") {
@@ -458,7 +456,23 @@ export default function CreditBorrow(properties) {
                         name="lenderAccount"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Lending account</FormLabel>
+                            <FormLabel>
+                              <div className="grid grid-cols-2 mt-4">
+                                <div className="col-span-1">
+                                  Lending account
+                                </div>
+                                <div className="col-span-1 text-right">
+                                  {relevantOffer ? (
+                                    <a
+                                      href={`https://blocksights.info/#/accounts/${relevantOffer.owner_name}`}
+                                      target="_blank"
+                                    >
+                                      View {relevantOffer.owner_name}'s account
+                                    </a>
+                                  ) : null}
+                                </div>
+                              </div>
+                            </FormLabel>
                             <FormControl>
                               <div className="grid grid-cols-8 mt-4">
                                 <div className="col-span-1 ml-5">
@@ -967,7 +981,14 @@ export default function CreditBorrow(properties) {
               </div>
             </CardContent>
             <CardFooter>
-              <Button onClick={() => setShowDialog(true)}>Submit</Button>
+              {(collateralInfo && !collateralInfo.holding) ||
+              (collateralInfo &&
+                collateralInfo.holding &&
+                collateralInfo.amount < requiredCollateralAmount) ? (
+                <Button disabled>Submit</Button>
+              ) : (
+                <Button onClick={() => setShowDialog(true)}>Submit</Button>
+              )}
             </CardFooter>
           </Card>
         </div>
@@ -1007,6 +1028,47 @@ export default function CreditBorrow(properties) {
             ]}
           />
         ) : null}
+        <div className="grid grid-cols-1 mt-5">
+          <Card>
+            <CardHeader>
+              <CardTitle>Risks of Peer-to-Peer Loans</CardTitle>
+            </CardHeader>
+            <CardContent className="text-sm">
+              Peer-to-peer lending involves certain risks, including:
+              <ul className="ml-2 list-disc [&>li]:mt-2 pl-2">
+                <li>
+                  Collateral Risk: As a borrower, you may fail to repay the loan
+                  on time, forfeiting the loan collateral in full.
+                </li>
+                <li>
+                  Liquidity Risk: If you sell the assets you borrow, it may not
+                  be possible to re-acquire the assets in time to repay the
+                  loan, or you may do so at a loss.
+                </li>
+                <li>
+                  Platform Risk: If an asset's owner company goes out of
+                  business and ceases an exchange backed asset's operation, you
+                  could lose funds.
+                </li>
+                <li>
+                  User Risk: As credit offers are fully user generated, you
+                  could be interacting with untrustworthy assets or users who
+                  put funds at risk.
+                </li>
+                <li>
+                  Network Risk: Whilst blockchain downtime is very rare, it's a
+                  risk to consider when creating credit deals which span a
+                  period of time. Auto loan repay methods are available to
+                  offset such risk.
+                </li>
+              </ul>
+            </CardContent>
+            <CardFooter className="text-sm">
+              Please consider these risks and thoroughly evaluate the terms of
+              offers before proceeding with a credit deal.
+            </CardFooter>
+          </Card>
+        </div>
         <div className="grid grid-cols-1 mt-5">
           {usr && usr.username && usr.username.length ? (
             <CurrentUser usr={usr} />
