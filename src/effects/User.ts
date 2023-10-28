@@ -22,4 +22,26 @@ const [createUserBalancesStore] = nanoquery({
   },
 });
 
-export { createUserBalancesStore };
+// Create fetcher store for user credit deals
+const [createUserCreditDealsStore] = nanoquery({
+  fetcher: async (chain: string, accountID: string) => {
+    const response = await fetch(
+      `http://localhost:8080/api/fetchCreditDeals/${chain}/${accountID}`,
+      { method: "GET" }
+    );
+
+    if (!response.ok) {
+      console.log(`Failed to fetch user credit deals`);
+      return;
+    }
+
+    const userCreditDealsJSON = await response.json();
+
+    if (userCreditDealsJSON && userCreditDealsJSON.result) {
+      console.log(`Fetched user credit deals`);
+      return userCreditDealsJSON.result;
+    }
+  },
+});
+
+export { createUserBalancesStore, createUserCreditDealsStore };

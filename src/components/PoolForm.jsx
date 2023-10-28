@@ -82,6 +82,7 @@ import { $currentUser } from "../stores/users.ts";
 import PoolDialogs from "./Market/PoolDialogs.jsx";
 import MarketAssetCard from "./Market/MarketAssetCard.jsx";
 import CurrentUser from "./common/CurrentUser.jsx";
+import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
 
 export default function PoolForm() {
   const form = useForm({
