@@ -127,7 +127,7 @@ export default function PoolForm() {
 
   const [fee, setFee] = useState(0);
   useEffect(() => {
-    if (globalParams && globalParams.parameters) {
+    if (globalParams && globalParams.length) {
       const foundFee = globalParams.find((x) => x[0] === 63);
       const finalFee = humanReadableFloat(foundFee[1].fee, 5);
       setFee(finalFee);

@@ -103,7 +103,7 @@ export default function Transfer(properties) {
 
   const [fee, setFee] = useState(0);
   useEffect(() => {
-    if (globalParams && globalParams.parameters) {
+    if (globalParams && globalParams.length) {
       const foundFee = globalParams.find((x) => x[0] === 0);
       const finalFee = humanReadableFloat(foundFee[1].fee, 5);
       setFee(finalFee);

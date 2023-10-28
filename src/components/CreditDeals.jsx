@@ -42,8 +42,12 @@ import { Input } from "@/components/ui/input";
 
 import { $currentUser } from "../stores/users.ts";
 import { $globalParamsCache, $assetCache } from "../stores/cache.ts";
+
 import { useInitCache } from "../effects/Init.ts";
-import { createUserCreditDealsStore } from "../effects/User.ts";
+import {
+  createUserCreditDealsStore,
+  createUserBalancesStore,
+} from "../effects/User.ts";
 
 import { blockchainFloat, humanReadableFloat } from "../lib/common.js";
 
@@ -79,12 +83,33 @@ export default function CreditDeals(properties) {
 
   const [fee, setFee] = useState(0);
   useEffect(() => {
-    if (globalParams && globalParams.parameters) {
+    if (globalParams && globalParams.length) {
       const foundFee = globalParams.find((x) => x[0] === 73);
       const finalFee = humanReadableFloat(foundFee[1].fee, 5);
       setFee(finalFee);
     }
   }, [globalParams]);
+
+  const [usrBalances, setUsrBalances] = useState();
+  useEffect(() => {
+    let unsubscribeUserBalances;
+
+    if (usr && usr.id) {
+      const userBalancesStore = createUserBalancesStore([usr.chain, usr.id]);
+
+      unsubscribeUserBalances = userBalancesStore.subscribe(
+        ({ data, error, loading }) => {
+          if (data && !error && !loading) {
+            setUsrBalances(data);
+          }
+        }
+      );
+    }
+
+    return () => {
+      if (unsubscribeUserBalances) unsubscribeUserBalances();
+    };
+  }, [usr]);
 
   const [usrCreditDeals, setUsrCreditDeals] = useState(); // { borrowerDeals, ownerDeals, }
   useEffect(() => {
@@ -147,30 +172,84 @@ export default function CreditDeals(properties) {
     const [openRepay, setOpenRepay] = useState(false);
     const [showDialog, setShowDialog] = useState(false);
 
-    const [repayAmount, setRepayAmount] = useState(borrowedAmount ?? 0);
+    //const [repayAmount, setRepayAmount] = useState(borrowedAmount ?? 0);
+    const [finalRepayAmount, setFinalRepayAmount] = useState();
+
     const redeemCollateral = useMemo(() => {
-      if (repayAmount && borrowedAmount && collateralAmount) {
-        return (repayAmount / borrowedAmount) * collateralAmount;
+      if (finalRepayAmount && borrowedAmount && collateralAmount) {
+        return (finalRepayAmount / borrowedAmount) * collateralAmount;
       }
-    }, [repayAmount, borrowedAmount, collateralAmount]);
+    }, [finalRepayAmount, borrowedAmount, collateralAmount]);
 
     const loanFee = useMemo(() => {
-      if (repayAmount && res && debtAsset) {
-        return ((repayAmount / 100) * (res.fee_rate / 10000)).toFixed(
+      if (finalRepayAmount && res && debtAsset) {
+        return ((finalRepayAmount / 100) * (res.fee_rate / 10000)).toFixed(
           debtAsset.precision
         );
       }
       return 0;
-    }, [repayAmount, res, debtAsset]);
+    }, [finalRepayAmount, res, debtAsset]);
 
     const finalRepayment = useMemo(() => {
-      if (repayAmount && loanFee && debtAsset) {
-        return (parseFloat(repayAmount) + parseFloat(loanFee)).toFixed(
+      if (finalRepayAmount && loanFee && debtAsset) {
+        return (parseFloat(finalRepayAmount) + parseFloat(loanFee)).toFixed(
           debtAsset.precision
         );
       }
       return 0;
-    }, [repayAmount, loanFee, debtAsset]);
+    }, [finalRepayAmount, loanFee, debtAsset]);
+
+    const debtAssetBalance = useMemo(() => {
+      if (usrBalances && usrBalances.length && debtAsset) {
+        const foundBalance = usrBalances.find(
+          (x) => x.asset_id === debtAsset.id
+        );
+        if (foundBalance) {
+          return humanReadableFloat(foundBalance.amount, debtAsset.precision);
+        }
+      }
+      return 0;
+    }, [usrBalances, debtAsset]);
+
+    const [inputValue, setInputValue] = useState();
+    const [debouncedInputValue, setDebouncedInputValue] = useState();
+
+    // Update debouncedInputValue after user stops typing for 1 second
+    useEffect(() => {
+      const timer = setTimeout(() => {
+        setDebouncedInputValue(inputValue);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }, [inputValue]);
+
+    // Calculate finalRepayAmount when debouncedInputValue or borrowedAmount changes
+    useEffect(() => {
+      if (!debouncedInputValue || !borrowedAmount || !debtAsset) {
+        return;
+      }
+
+      const minAmount = humanReadableFloat(1, debtAsset.precision);
+
+      if (debouncedInputValue > borrowedAmount) {
+        setFinalRepayAmount(borrowedAmount);
+        setInputValue(borrowedAmount); // Set value to maximum available amount
+      } else if (debouncedInputValue < minAmount) {
+        setFinalRepayAmount(minAmount);
+        setInputValue(minAmount); // Set value to minimum accepted amount
+      } else if (
+        debouncedInputValue.toString().split(".").length > 1 &&
+        debouncedInputValue.toString().split(".")[1].length >
+          debtAsset.precision
+      ) {
+        const fixedValue = parseFloat(debouncedInputValue).toFixed(
+          debtAsset.precision
+        );
+        setFinalRepayAmount(fixedValue);
+        setInputValue(fixedValue); // Set value to minimum accepted amount
+      } else {
+        setFinalRepayAmount(debouncedInputValue);
+      }
+    }, [debouncedInputValue, borrowedAmount, debtAsset]);
 
     return (
       <div style={{ ...style }} key={`acard-${res.id}`}>
@@ -239,6 +318,13 @@ export default function CreditDeals(properties) {
           {type === "borrower" ? (
             <CardFooter className="pb-0 mt-2">
               <Button onClick={() => setOpenRepay(true)}>Repay loan</Button>
+              <a
+                href={`/dex/index.html?market=${debtAsset.symbol}_${collateralAsset.symbol}`}
+              >
+                <Button className="ml-2">
+                  Trade {debtAsset.symbol} on DEX
+                </Button>
+              </a>
               {openRepay ? (
                 <Dialog
                   open={openRepay}
@@ -249,18 +335,16 @@ export default function CreditDeals(properties) {
                   <DialogContent className="sm:max-w-[900px] bg-white">
                     <DialogHeader>
                       <DialogTitle>Repaying loan #{res.id}</DialogTitle>
-                      <DialogDescription>test</DialogDescription>
-                      Remaining debt: {borrowedAmount} {debtAsset.symbol}
-                      <br />
-                      Remaining collateral: {collateralAmount}{" "}
-                      {collateralAsset.symbol}
-                      <br />
+                      <DialogDescription>
+                        Use this form to control your credit deal repayments.
+                      </DialogDescription>
                       <Form {...form}>
                         <form
                           onSubmit={() => {
                             setShowDialog(true);
                             event.preventDefault();
                           }}
+                          className="gaps-5"
                         >
                           <FormField
                             control={form.control}
@@ -271,6 +355,7 @@ export default function CreditDeals(properties) {
                                 <FormControl>
                                   <Input
                                     disabled
+                                    readOnly
                                     placeholder="Bitshares account (1.2.x)"
                                     className="mb-3 mt-3"
                                     value={`${usr.username} (${usr.id})`}
@@ -283,23 +368,97 @@ export default function CreditDeals(properties) {
 
                           <FormField
                             control={form.control}
+                            name="balance"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>
+                                  Your current {debtAsset.symbol} balance
+                                </FormLabel>
+                                <FormControl>
+                                  <Input
+                                    disabled
+                                    readOnly
+                                    className="mb-3 mt-3"
+                                    value={`${debtAssetBalance} ${debtAsset.symbol}`}
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+
+                          <FormField
+                            control={form.control}
                             name="repayAmount"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>{`Amount of ${debtAsset.symbol} to repay`}</FormLabel>
+                                <FormLabel>
+                                  <div className="grid grid-cols-2 gap-2 mt-2">
+                                    <div className="col-span-1">
+                                      {`Amount of ${debtAsset.symbol} to repay`}
+                                    </div>
+                                    <div className="col-span-1 text-right">
+                                      {`Remaining debt: ${borrowedAmount} ${debtAsset.symbol}`}
+                                    </div>
+                                  </div>
+                                </FormLabel>
+                                <FormDescription>
+                                  To get back all your collateral back, repay
+                                  the debt in full.
+                                </FormDescription>
                                 <FormControl
                                   onChange={(event) => {
                                     const input = event.target.value;
                                     const regex = /^[0-9]*\.?[0-9]*$/; // regular expression to match numbers and a single period
                                     if (regex.test(input)) {
-                                      setRepayAmount(input);
+                                      setInputValue(input);
                                     }
                                   }}
                                 >
                                   <Input
                                     label={`Amount of ${debtAsset.symbol} to repay`}
-                                    value={repayAmount}
-                                    placeholder={repayAmount}
+                                    className="mb-3"
+                                    value={inputValue ?? ""}
+                                    placeholder={borrowedAmount}
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+
+                          <FormField
+                            control={form.control}
+                            name="collateralRedemtionAmount"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>
+                                  <div className="grid grid-cols-2 gap-2 mt-2">
+                                    <div className="col-span-1">
+                                      Redeem collateral
+                                    </div>
+                                    <div className="col-span-1 text-right">
+                                      {`Remaining collateral: ${collateralAmount} ${collateralAsset.symbol}`}
+                                    </div>
+                                  </div>
+                                </FormLabel>
+                                <FormDescription>{`Amount of ${collateralAsset.symbol} backing collateral you'll redeem`}</FormDescription>
+                                <FormControl>
+                                  <Input
+                                    label={`Amount of ${debtAsset.symbol} to repay`}
+                                    value={
+                                      redeemCollateral && collateralAmount
+                                        ? `${redeemCollateral ?? "?"} ${
+                                            collateralAsset.symbol
+                                          } (${(
+                                            (redeemCollateral /
+                                              collateralAmount) *
+                                            100
+                                          ).toFixed(2)}%)`
+                                        : "0"
+                                    }
+                                    disabled
+                                    readOnly
                                     className="mb-3"
                                   />
                                 </FormControl>
@@ -308,13 +467,20 @@ export default function CreditDeals(properties) {
                             )}
                           />
 
-                          {repayAmount ? (
+                          {finalRepayAmount ? (
                             <FormField
                               control={form.control}
                               name="loanFee"
                               render={({ field }) => (
                                 <FormItem>
-                                  <FormLabel>Estimated loan fee</FormLabel>
+                                  <FormLabel>
+                                    <div className="mt-2">
+                                      Estimated loan fee
+                                    </div>
+                                  </FormLabel>
+                                  <FormDescription>
+                                    This is the fee you'll pay to the lender.
+                                  </FormDescription>
                                   <FormControl>
                                     <Input
                                       disabled
@@ -322,9 +488,7 @@ export default function CreditDeals(properties) {
                                       className="mb-3 mt-3"
                                       value={`${loanFee} (${
                                         debtAsset.symbol
-                                      }) (${res.fee_rate / 10000}% fee) (${
-                                        res.fee_rate
-                                      })`}
+                                      }) (${res.fee_rate / 10000}% fee)`}
                                     />
                                   </FormControl>
                                   <FormMessage />
@@ -333,13 +497,15 @@ export default function CreditDeals(properties) {
                             />
                           ) : null}
 
-                          {repayAmount ? (
+                          {finalRepayAmount ? (
                             <FormField
                               control={form.control}
                               name="finalRepayment"
                               render={({ field }) => (
                                 <FormItem>
-                                  <FormLabel>Final repayment</FormLabel>
+                                  <FormLabel>
+                                    <div className="mt-2">Final repayment</div>
+                                  </FormLabel>
                                   <FormDescription>
                                     Once repaid in full, your{" "}
                                     {collateralAsset.symbol} collateral will be
@@ -355,7 +521,11 @@ export default function CreditDeals(properties) {
                                       }) (debt + ${res.fee_rate / 10000}% fee)`}
                                     />
                                   </FormControl>
-                                  <FormMessage />
+                                  {debtAssetBalance < finalRepayment ? (
+                                    <FormMessage>
+                                      Insufficient {debtAsset.symbol} balance
+                                    </FormMessage>
+                                  ) : null}
                                 </FormItem>
                               )}
                             />
@@ -366,7 +536,13 @@ export default function CreditDeals(properties) {
                             name="networkFee"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>Network fee</FormLabel>
+                                <FormLabel>
+                                  <div className="mt-2">Network fee</div>
+                                </FormLabel>
+                                <FormDescription>
+                                  This is the fee to broadcast your credit deal
+                                  repayment operation onto the blockchain.
+                                </FormDescription>
                                 <FormControl>
                                   <Input
                                     disabled
@@ -384,26 +560,9 @@ export default function CreditDeals(properties) {
                             )}
                           />
 
-                          {redeemCollateral ? (
-                            <>
-                              <FormField
-                                control={form.control}
-                                name="collateralRedemtionAmount"
-                                render={({ field }) => (
-                                  <FormItem>
-                                    <FormLabel>Redeem collateral</FormLabel>
-                                    <FormDescription>{`Amount of ${collateralAsset.symbol} backing collateral you'll redeem`}</FormDescription>
-                                    <FormControl>{`${redeemCollateral ?? "?"} ${
-                                      collateralAsset.symbol
-                                    }`}</FormControl>
-                                    <FormMessage />
-                                  </FormItem>
-                                )}
-                              />
-                            </>
-                          ) : null}
-
-                          {!redeemCollateral || !repayAmount ? (
+                          {!redeemCollateral ||
+                          !finalRepayAmount ||
+                          debtAssetBalance < finalRepayment ? (
                             <Button
                               className="mt-5 mb-3"
                               variant="outline"
@@ -430,15 +589,15 @@ export default function CreditDeals(properties) {
                           usrChain={usr.chain}
                           userID={usr.id}
                           dismissCallback={setShowDialog}
-                          key={`Repaying${repayAmount}${debtAsset.symbol}toclaimback${collateralAsset.symbol}`}
-                          headerText={`Repaying ${repayAmount} ${debtAsset.symbol}, to claim back ${collateralAsset.symbol}`}
+                          key={`Repaying${finalRepayAmount}${debtAsset.symbol}toclaimback${collateralAsset.symbol}`}
+                          headerText={`Repaying ${finalRepayAmount} ${debtAsset.symbol}, to claim back ${collateralAsset.symbol}`}
                           trxJSON={[
                             {
                               account: usr.id,
                               deal_id: res.id,
                               repay_amount: {
                                 amount: blockchainFloat(
-                                  repayAmount,
+                                  finalRepayAmount,
                                   debtAsset.precision
                                 ),
                                 asset_id: debtAsset.id,
@@ -577,6 +736,86 @@ export default function CreditDeals(properties) {
                     : null}
                 </TabsContent>
               </Tabs>
+            </CardContent>
+          </Card>
+        </div>
+        <div className="grid grid-cols-1 gap-3 mt-5">
+          <Card>
+            <CardHeader className="pb-0">
+              <CardTitle>
+                {activeTab === "borrowings"
+                  ? `Borrower Risk Warning`
+                  : `Lender Risk Warning`}
+              </CardTitle>
+              <CardDescription>
+                Important information about your responsibilities and risks
+                associated with credit deals.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="text-sm">
+              <ul className="ml-2 list-disc [&>li]:mt-2 pl-2">
+                {activeTab === "borrowings" ? (
+                  <li>
+                    You ( <b>{usr?.username}</b> ) are responsible for managing
+                    your credit deals and repaying them in a timely manner,
+                    noone else. Consider using an automatic repayment method to
+                    avoid missing the repayment deadline if you might forget the
+                    deadline.
+                  </li>
+                ) : (
+                  <li>
+                    You ( <b>{usr?.username}</b> ) are responsible for managing
+                    your credit offers, their parameters and their risk
+                    exposure, noone else. Consider creating automated scripts to
+                    manage the state of your credit offers.
+                  </li>
+                )}
+                {activeTab === "borrowings" ? (
+                  <li>
+                    Be aware of your exposure to external volatilities during
+                    the credit deal repay period; the value of your borrowed
+                    assets and your backing collateral will fluctuate, you
+                    should consider such volatility exposure when deciding on
+                    how/when you'll repay the credit deal.
+                  </li>
+                ) : (
+                  <li>
+                    Be aware of your exposure to external volatilities during
+                    the credit deal repay period; the value of the assets you
+                    lended to other users and the backing collateral they
+                    provided will fluctuate, you should consider your personal
+                    risk tollerance when deciding on your credit offer
+                    parameters. You should actively manage your credit offers as
+                    markets fluctuate to minimize your risk exposure.
+                  </li>
+                )}
+                {activeTab === "lendings" ? (
+                  <li>
+                    As a lender, once a credit deal exists, you ({" "}
+                    {usr?.username} ) cannot cancel it, the borrower is
+                    responsible for the duration of the deal within the
+                    repayment period. A credit deal's repayment date can also
+                    exceed your credit offer's expiration date.
+                  </li>
+                ) : null}
+                {activeTab === "borrowings" ? (
+                  <li>
+                    Failure to repay a credit deal will result in the loss of
+                    remaining backing collateral assets. There isn't a credit
+                    score system which punishes defaulting borrowers; the agreed
+                    terms of the credit deal will be honoured.
+                  </li>
+                ) : (
+                  <li>
+                    If borrowers fail to repay their credit deals, their backing
+                    collateral assets will be forfeit to you. There isn't a
+                    credit score system which punishes borrowers for defaulting;
+                    the agreed terms of the credit deal will always be honoured,
+                    so plan your credit offers accordingly to your personal risk
+                    tollerance.
+                  </li>
+                )}
+              </ul>
             </CardContent>
           </Card>
         </div>
