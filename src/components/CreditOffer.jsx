@@ -119,6 +119,7 @@ export default function CreditBorrow(properties) {
     () => true
   );
 
+  const [error, setError] = useState(false);
   const [foundAsset, setFoundAsset] = useState(null);
   const [relevantOffer, setRelevantOffer] = useState(null);
   useEffect(() => {
@@ -129,26 +130,31 @@ export default function CreditBorrow(properties) {
       const id = params.id;
 
       if (!id) {
-        console.log("No market parameters found.");
-        return offers[0];
+        console.log("Credit offer parameter not found");
+        return null;
       } else {
         const foundOffer = offers.find((offer) => offer.id === id);
 
-        if (foundOffer) {
-          console.log({ msg: "Setting found offer.", foundOffer });
-          return foundOffer;
-        } else {
+        if (!foundOffer) {
           console.log("Setting default first offer");
-          return offers[0];
+          return null;
         }
+
+        console.log("Found offer");
+        return foundOffer;
       }
     }
 
     if (offers && offers.length) {
       parseUrlAssets().then((foundOffer) => {
+        if (!foundOffer) {
+          setError(true);
+          return;
+        }
         const foundAsset = assets.find(
           (asset) => asset.id === foundOffer.asset_type
         );
+        setError(false);
         setFoundAsset(foundAsset);
         setRelevantOffer(foundOffer);
       });
@@ -369,630 +375,662 @@ export default function CreditBorrow(properties) {
     <>
       <div className="container mx-auto mt-5 mb-5">
         <div className="grid grid-cols-1 gap-3">
-          <Card>
-            <CardHeader className="pb-1">
-              <CardTitle>
-                {relevantOffer ? (
-                  <>
-                    🏦 Viewing offer #{relevantOffer.id} created by{" "}
-                    {relevantOffer.owner_name ?? "?"} (
-                    {relevantOffer.owner_account})
-                  </>
-                ) : (
-                  "loading terms of offer..."
-                )}
-              </CardTitle>
-              <CardDescription>
-                This is an user created credit offer on the Bitshares DEX.
-                <br />
-                Thoroughly read the terms of the offer before proceeding to
-                Beet.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 gap-2 mt-3">
-                <div className="col-span-1">
-                  <Form {...form}>
-                    <form
-                      onSubmit={() => {
-                        setShowDialog(true);
-                        event.preventDefault();
-                      }}
-                    >
-                      <FormField
-                        control={form.control}
-                        name="borrowerAccount"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Borrowing account</FormLabel>
-                            <FormControl>
-                              <div className="grid grid-cols-8 mt-4">
-                                <div className="col-span-1 ml-5">
-                                  {usr && usr.username ? (
-                                    <Avatar
-                                      size={40}
-                                      name={usr.username}
-                                      extra="Target"
-                                      expression={{
-                                        eye: "normal",
-                                        mouth: "open",
-                                      }}
-                                      colors={[
-                                        "#92A1C6",
-                                        "#146A7C",
-                                        "#F0AB3D",
-                                        "#C271B4",
-                                        "#C20D90",
-                                      ]}
-                                    />
-                                  ) : (
-                                    <Av>
-                                      <AvatarFallback>?</AvatarFallback>
-                                    </Av>
-                                  )}
-                                </div>
-                                <div className="col-span-7">
-                                  <Input
-                                    disabled
-                                    placeholder="Bitshares account (1.2.x)"
-                                    className="mb-1 mt-1"
-                                    value={
-                                      usr ? `${usr.username} (${usr.id})` : ""
-                                    }
-                                    readOnly
-                                  />
-                                </div>
-                              </div>
-                            </FormControl>
-                            <FormDescription>
-                              The account which will broadcast the credit offer
-                              accept operation.
-                            </FormDescription>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name="lenderAccount"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>
-                              <div className="grid grid-cols-2 mt-4">
-                                <div className="col-span-1">
-                                  Lending account
-                                </div>
-                                <div className="col-span-1 text-right">
-                                  {relevantOffer ? (
-                                    <ExternalLink
-                                      classNameContents="text-blue-500"
-                                      type="text"
-                                      text={`View ${relevantOffer.owner_name}'s account`}
-                                      hyperlink={`https://blocksights.info/#/accounts/${relevantOffer.owner_name}`}
-                                    />
-                                  ) : null}
-                                </div>
-                              </div>
-                            </FormLabel>
-                            <FormControl>
-                              <div className="grid grid-cols-8 mt-4">
-                                <div className="col-span-1 ml-5">
-                                  {relevantOffer && relevantOffer.owner_name ? (
-                                    <Avatar
-                                      size={40}
-                                      name={relevantOffer.owner_name}
-                                      extra="Target"
-                                      expression={{
-                                        eye: "normal",
-                                        mouth: "open",
-                                      }}
-                                      colors={[
-                                        "#92A1C6",
-                                        "#146A7C",
-                                        "#F0AB3D",
-                                        "#C271B4",
-                                        "#C20D90",
-                                      ]}
-                                    />
-                                  ) : (
-                                    <Av>
-                                      <AvatarFallback>?</AvatarFallback>
-                                    </Av>
-                                  )}
-                                </div>
-                                <div className="col-span-7">
-                                  <Input
-                                    disabled
-                                    placeholder="Bitshares account (1.2.x)"
-                                    className="mb-1 mt-1"
-                                    value={
-                                      relevantOffer
-                                        ? `${relevantOffer.owner_name} (${relevantOffer.owner_account})`
-                                        : ""
-                                    }
-                                    readOnly
-                                  />
-                                </div>
-                              </div>
-                            </FormControl>
-                            <FormDescription>
-                              {`This is the user from whom you'll be borrowing ${foundAsset?.symbol} from.`}
-                            </FormDescription>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name="amountAvailable"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>
-                              {foundAsset && relevantOffer
-                                ? `Amount of ${foundAsset.symbol} (
-                                      ${relevantOffer.asset_type}) available to
-                                      borrow from this lender`
-                                : "loading..."}
-                            </FormLabel>
-                            <FormControl>
-                              <div className="grid grid-cols-8 mt-4">
-                                <div className="col-span-1 ml-5">
-                                  {foundAsset ? (
-                                    <Av>
-                                      <AvatarFallback>
-                                        <div className="text-sm">
-                                          {foundAsset.bitasset_data_id
-                                            ? "MPA"
-                                            : "UIA"}
-                                        </div>
-                                      </AvatarFallback>
-                                    </Av>
-                                  ) : (
-                                    <Av>
-                                      <AvatarFallback>?</AvatarFallback>
-                                    </Av>
-                                  )}
-                                </div>
-                                <div className="col-span-7">
-                                  <Input
-                                    disabled
-                                    placeholder="Bitshares account (1.2.x)"
-                                    className="mb-1 mt-1"
-                                    value={
-                                      relevantOffer && foundAsset
-                                        ? `${humanReadableFloat(
-                                            relevantOffer.current_balance,
-                                            foundAsset.precision
-                                          )} ${foundAsset.symbol}`
-                                        : `loading...`
-                                    }
-                                    readOnly
-                                  />
-                                </div>
-                              </div>
-                            </FormControl>
-                            <FormDescription>
-                              {`${relevantOffer?.owner_name} is generously offering to lend you this much ${foundAsset?.symbol}, assuming you agree to their terms.`}
-                            </FormDescription>
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name="backingCollateral"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>
-                              <div className="grid grid-cols-2 mt-3">
-                                <div className="mt-1">
-                                  Backing collateral for credit deal
-                                </div>
-                              </div>
-                            </FormLabel>
-                            <FormControl>
-                              <div className="grid grid-cols-8">
-                                <div className="col-span-1 ml-5 mt-1">
-                                  {foundAsset ? (
-                                    <Av>
-                                      <AvatarFallback>
-                                        <div className="text-sm">
-                                          {!collateralInfo ? "?" : null}
-                                          {collateralInfo &&
-                                          collateralInfo.isBitasset
-                                            ? "MPA"
-                                            : null}
-                                          {collateralInfo &&
-                                          !collateralInfo.isBitasset
-                                            ? "UIA"
-                                            : null}
-                                        </div>
-                                      </AvatarFallback>
-                                    </Av>
-                                  ) : (
-                                    <Av>
-                                      <AvatarFallback>?</AvatarFallback>
-                                    </Av>
-                                  )}
-                                </div>
-                                <div className="col-span-7 mt-2">
-                                  <Select
-                                    onValueChange={(collateral) => {
-                                      setChosenCollateral(collateral);
-                                    }}
-                                  >
-                                    <SelectTrigger className="mb-1">
-                                      <SelectValue
-                                        placeholder={
-                                          collateralInfo
-                                            ? `${collateralInfo.symbol} (${collateralInfo.id})`
-                                            : "Select your backing collateral.."
-                                        }
-                                      />
-                                    </SelectTrigger>
-                                    <SelectContent className="bg-white">
-                                      {acceptedCollateral &&
-                                      acceptedCollateral.length ? (
-                                        <List
-                                          height={100}
-                                          itemCount={acceptedCollateral.length}
-                                          itemSize={35}
-                                          className="w-full"
-                                          initialScrollOffset={
-                                            chosenCollateral
-                                              ? acceptedCollateral
-                                                  .map((x) => x.id)
-                                                  .indexOf(
-                                                    chosenCollateral.id
-                                                  ) * 35
-                                              : 0
-                                          }
-                                        >
-                                          {Row}
-                                        </List>
-                                      ) : null}
-                                    </SelectContent>
-                                  </Select>
-                                </div>
-                              </div>
-                            </FormControl>
-                            <FormDescription>
-                              {`To borrow ${collateralInfo?.symbol} from ${relevantOffer?.owner_name}, choose between the above accepted backing collateral assets.`}
-                            </FormDescription>
-                            {balanceAssetIDs &&
-                            chosenCollateral &&
-                            !balanceAssetIDs.includes(chosenCollateral) ? (
-                              <FormMessage>
-                                Account doesn't hold this backing collateral
-                                asset.
-                              </FormMessage>
-                            ) : null}
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name="borrowAmount"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>
-                              <div className="grid grid-cols-2 gap-1 mt-5">
-                                <div className="col-span-1">
-                                  {`Amount of ${
-                                    foundAsset ? foundAsset.symbol : "?"
-                                  } you plan on borrowing`}
-                                </div>
-                                <div className="col-span-1 text-right">
-                                  {`Available: ${minAmount ?? "?"} to ${
-                                    availableAmount ?? "?"
-                                  } ${foundAsset?.symbol}`}
-                                </div>
-                              </div>
-                            </FormLabel>
-                            {!availableAmount ? (
-                              <FormControl>
-                                <Input
-                                  disabled
-                                  value={0}
-                                  className="mb-3"
-                                  readOnly
-                                />
-                              </FormControl>
-                            ) : (
-                              <FormControl
-                                onChange={(event) => {
-                                  const input = event.target.value;
-                                  const regex = /^[0-9]*\.?[0-9]*$/; // regular expression to match numbers and a single period
-                                  if (regex.test(input)) {
-                                    setInputValue(input);
-                                  }
-                                }}
-                              >
-                                <Input value={inputValue} className="mb-3" />
-                              </FormControl>
-                            )}
-
-                            <FormDescription>
-                              {`Input the amount of ${foundAsset?.symbol} you'd like to borrow from ${relevantOffer?.owner_name}.`}
-                            </FormDescription>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name="repayMethod"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>
-                              <div className="grid grid-cols-2 mt-3">
-                                <div className="mt-1">
-                                  Credit offer repay method
-                                </div>
-                              </div>
-                            </FormLabel>
-                            <FormControl>
-                              <Select
-                                onValueChange={(period) => {
-                                  setRepayPeriod(period);
-                                }}
-                              >
-                                <SelectTrigger className="mb-1">
-                                  <SelectValue
-                                    placeholder={"Select your repay method.."}
-                                  />
-                                </SelectTrigger>
-                                <SelectContent className="bg-white">
-                                  <SelectItem value={"no_auto_repayment"}>
-                                    No auto repayment
-                                  </SelectItem>
-                                  <SelectItem value={"only_full_repayment"}>
-                                    Only full repayment
-                                  </SelectItem>
-                                  <SelectItem value={"allow_partial_repayment"}>
-                                    Allow partial repayment
-                                  </SelectItem>
-                                </SelectContent>
-                              </Select>
-                            </FormControl>
-                            <FormDescription>
-                              Select between the different repayment methods.
-                            </FormDescription>
-                            {repayPeriod ? (
-                              <FormMessage>
-                                {repayPeriod === "no_auto_repayment"
-                                  ? "You will not automatically repay this loan."
-                                  : null}
-                                {repayPeriod === "only_full_repayment"
-                                  ? "You will automatically repay this loan in full when your account balance is sufficient."
-                                  : null}
-                                {repayPeriod === "allow_partial_repayment"
-                                  ? "You will automatically repay this loan as much as possible using your available account balance."
-                                  : null}
-                              </FormMessage>
-                            ) : null}
-                          </FormItem>
-                        )}
-                      />
-
-                      {chosenCollateral ? (
+          {error ? (
+            <Card>
+              <CardHeader className="pb-1 mb-3 mt-3">
+                <CardTitle>
+                  Sorry, couldn't find your requested credit offer
+                </CardTitle>
+                <CardDescription className="pt-2">
+                  The credit offer is either not active, or doesn't exist.
+                  <br />
+                  Check your URL parameters and try again.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <a href="/offers/index.html">
+                  <Button variant="" className="h-6">
+                    Return to credit offer overview
+                  </Button>
+                </a>
+              </CardContent>
+            </Card>
+          ) : null}
+          {!error ? (
+            <Card>
+              <CardHeader className="pb-1">
+                <CardTitle>
+                  {relevantOffer ? (
+                    <>
+                      🏦 Viewing offer #{relevantOffer.id} created by{" "}
+                      {relevantOffer.owner_name ?? "?"} (
+                      {relevantOffer.owner_account})
+                    </>
+                  ) : (
+                    "loading terms of offer..."
+                  )}
+                </CardTitle>
+                <CardDescription>
+                  This is an user created credit offer on the Bitshares DEX.
+                  <br />
+                  Thoroughly read the terms of the offer before proceeding to
+                  Beet.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 gap-2 mt-3">
+                  <div className="col-span-1">
+                    <Form {...form}>
+                      <form
+                        onSubmit={() => {
+                          setShowDialog(true);
+                          event.preventDefault();
+                        }}
+                      >
                         <FormField
                           control={form.control}
-                          name="requiredCollateralAmount"
+                          name="borrowerAccount"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Borrowing account</FormLabel>
+                              <FormControl>
+                                <div className="grid grid-cols-8 mt-4">
+                                  <div className="col-span-1 ml-5">
+                                    {usr && usr.username ? (
+                                      <Avatar
+                                        size={40}
+                                        name={usr.username}
+                                        extra="Target"
+                                        expression={{
+                                          eye: "normal",
+                                          mouth: "open",
+                                        }}
+                                        colors={[
+                                          "#92A1C6",
+                                          "#146A7C",
+                                          "#F0AB3D",
+                                          "#C271B4",
+                                          "#C20D90",
+                                        ]}
+                                      />
+                                    ) : (
+                                      <Av>
+                                        <AvatarFallback>?</AvatarFallback>
+                                      </Av>
+                                    )}
+                                  </div>
+                                  <div className="col-span-7">
+                                    <Input
+                                      disabled
+                                      placeholder="Bitshares account (1.2.x)"
+                                      className="mb-1 mt-1"
+                                      value={
+                                        usr ? `${usr.username} (${usr.id})` : ""
+                                      }
+                                      readOnly
+                                    />
+                                  </div>
+                                </div>
+                              </FormControl>
+                              <FormDescription>
+                                The account which will broadcast the credit
+                                offer accept operation.
+                              </FormDescription>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="lenderAccount"
                           render={({ field }) => (
                             <FormItem>
                               <FormLabel>
-                                <div className="grid grid-cols-2 gap-1 mt-5">
+                                <div className="grid grid-cols-2 mt-4">
                                   <div className="col-span-1">
-                                    {`Required collateral`}
+                                    Lending account
                                   </div>
                                   <div className="col-span-1 text-right">
-                                    {collateralInfo
-                                      ? `Your current balance: ${collateralInfo.amount} ${collateralInfo.symbol}`
-                                      : "Loading balance..."}
+                                    {relevantOffer ? (
+                                      <ExternalLink
+                                        classNameContents="text-blue-500"
+                                        type="text"
+                                        text={`View ${relevantOffer.owner_name}'s account`}
+                                        hyperlink={`https://blocksights.info/#/accounts/${relevantOffer.owner_name}`}
+                                      />
+                                    ) : null}
                                   </div>
                                 </div>
                               </FormLabel>
-
                               <FormControl>
-                                <Input
-                                  disabled
-                                  value={`${requiredCollateralAmount ?? "0"} ${
-                                    collateralInfo ? collateralInfo.symbol : ""
-                                  }`}
-                                  className="mb-3"
-                                  readOnly
-                                />
+                                <div className="grid grid-cols-8 mt-4">
+                                  <div className="col-span-1 ml-5">
+                                    {relevantOffer &&
+                                    relevantOffer.owner_name ? (
+                                      <Avatar
+                                        size={40}
+                                        name={relevantOffer.owner_name}
+                                        extra="Target"
+                                        expression={{
+                                          eye: "normal",
+                                          mouth: "open",
+                                        }}
+                                        colors={[
+                                          "#92A1C6",
+                                          "#146A7C",
+                                          "#F0AB3D",
+                                          "#C271B4",
+                                          "#C20D90",
+                                        ]}
+                                      />
+                                    ) : (
+                                      <Av>
+                                        <AvatarFallback>?</AvatarFallback>
+                                      </Av>
+                                    )}
+                                  </div>
+                                  <div className="col-span-7">
+                                    <Input
+                                      disabled
+                                      placeholder="Bitshares account (1.2.x)"
+                                      className="mb-1 mt-1"
+                                      value={
+                                        relevantOffer
+                                          ? `${relevantOffer.owner_name} (${relevantOffer.owner_account})`
+                                          : ""
+                                      }
+                                      readOnly
+                                    />
+                                  </div>
+                                </div>
                               </FormControl>
                               <FormDescription>
-                                {finalBorrowAmount && foundAsset
-                                  ? `In order to borrow ${
-                                      finalBorrowAmount ?? ""
-                                    } ${
-                                      foundAsset ? foundAsset.symbol : ""
-                                    } you'll
-                                need to provide the following amount of collateral to
-                                secure the deal.`
-                                  : "Enter a valid borrow amount to calculate required collateral."}
+                                {`This is the user from whom you'll be borrowing ${foundAsset?.symbol} from.`}
                               </FormDescription>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
 
-                              {collateralInfo &&
-                              collateralInfo.holding &&
-                              collateralInfo.amount <
-                                requiredCollateralAmount ? (
-                                <FormMessage>
-                                  {`Your account has an insufficient ${
-                                    collateralInfo.symbol
-                                  } balance. You'll need at least ${(
-                                    requiredCollateralAmount -
-                                    collateralInfo.amount
-                                  ).toFixed(collateralInfo.precision)} more ${
-                                    collateralInfo.symbol
-                                  }.`}
-                                </FormMessage>
-                              ) : null}
+                        <FormField
+                          control={form.control}
+                          name="amountAvailable"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>
+                                {foundAsset && relevantOffer
+                                  ? `Amount of ${foundAsset.symbol} (
+                                      ${relevantOffer.asset_type}) available to
+                                      borrow from this lender`
+                                  : "loading..."}
+                              </FormLabel>
+                              <FormControl>
+                                <div className="grid grid-cols-8 mt-4">
+                                  <div className="col-span-1 ml-5">
+                                    {foundAsset ? (
+                                      <Av>
+                                        <AvatarFallback>
+                                          <div className="text-sm">
+                                            {foundAsset.bitasset_data_id
+                                              ? "MPA"
+                                              : "UIA"}
+                                          </div>
+                                        </AvatarFallback>
+                                      </Av>
+                                    ) : (
+                                      <Av>
+                                        <AvatarFallback>?</AvatarFallback>
+                                      </Av>
+                                    )}
+                                  </div>
+                                  <div className="col-span-7">
+                                    <Input
+                                      disabled
+                                      placeholder="Bitshares account (1.2.x)"
+                                      className="mb-1 mt-1"
+                                      value={
+                                        relevantOffer && foundAsset
+                                          ? `${humanReadableFloat(
+                                              relevantOffer.current_balance,
+                                              foundAsset.precision
+                                            )} ${foundAsset.symbol}`
+                                          : `loading...`
+                                      }
+                                      readOnly
+                                    />
+                                  </div>
+                                </div>
+                              </FormControl>
+                              <FormDescription>
+                                {`${relevantOffer?.owner_name} is generously offering to lend you this much ${foundAsset?.symbol}, assuming you agree to their terms.`}
+                              </FormDescription>
+                            </FormItem>
+                          )}
+                        />
 
-                              {collateralInfo && !collateralInfo.holding ? (
+                        <FormField
+                          control={form.control}
+                          name="backingCollateral"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>
+                                <div className="grid grid-cols-2 mt-3">
+                                  <div className="mt-1">
+                                    Backing collateral for credit deal
+                                  </div>
+                                </div>
+                              </FormLabel>
+                              <FormControl>
+                                <div className="grid grid-cols-8">
+                                  <div className="col-span-1 ml-5 mt-1">
+                                    {foundAsset ? (
+                                      <Av>
+                                        <AvatarFallback>
+                                          <div className="text-sm">
+                                            {!collateralInfo ? "?" : null}
+                                            {collateralInfo &&
+                                            collateralInfo.isBitasset
+                                              ? "MPA"
+                                              : null}
+                                            {collateralInfo &&
+                                            !collateralInfo.isBitasset
+                                              ? "UIA"
+                                              : null}
+                                          </div>
+                                        </AvatarFallback>
+                                      </Av>
+                                    ) : (
+                                      <Av>
+                                        <AvatarFallback>?</AvatarFallback>
+                                      </Av>
+                                    )}
+                                  </div>
+                                  <div className="col-span-7 mt-2">
+                                    <Select
+                                      onValueChange={(collateral) => {
+                                        setChosenCollateral(collateral);
+                                      }}
+                                    >
+                                      <SelectTrigger className="mb-1">
+                                        <SelectValue
+                                          placeholder={
+                                            collateralInfo
+                                              ? `${collateralInfo.symbol} (${collateralInfo.id})`
+                                              : "Select your backing collateral.."
+                                          }
+                                        />
+                                      </SelectTrigger>
+                                      <SelectContent className="bg-white">
+                                        {acceptedCollateral &&
+                                        acceptedCollateral.length ? (
+                                          <List
+                                            height={100}
+                                            itemCount={
+                                              acceptedCollateral.length
+                                            }
+                                            itemSize={35}
+                                            className="w-full"
+                                            initialScrollOffset={
+                                              chosenCollateral
+                                                ? acceptedCollateral
+                                                    .map((x) => x.id)
+                                                    .indexOf(
+                                                      chosenCollateral.id
+                                                    ) * 35
+                                                : 0
+                                            }
+                                          >
+                                            {Row}
+                                          </List>
+                                        ) : null}
+                                      </SelectContent>
+                                    </Select>
+                                  </div>
+                                </div>
+                              </FormControl>
+                              <FormDescription>
+                                {`To borrow ${collateralInfo?.symbol} from ${relevantOffer?.owner_name}, choose between the above accepted backing collateral assets.`}
+                              </FormDescription>
+                              {balanceAssetIDs &&
+                              chosenCollateral &&
+                              !balanceAssetIDs.includes(chosenCollateral) ? (
                                 <FormMessage>
-                                  Your account does not hold this asset. Try
-                                  another form of backing collateral if
-                                  possible.
+                                  Account doesn't hold this backing collateral
+                                  asset.
                                 </FormMessage>
                               ) : null}
                             </FormItem>
                           )}
                         />
-                      ) : null}
 
-                      <FormField
-                        control={form.control}
-                        name="repayPeriod"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>
-                              <div className="grid grid-cols-2 gap-1 mt-5">
-                                <div className="col-span-1">
-                                  {`Repay period`}
+                        <FormField
+                          control={form.control}
+                          name="borrowAmount"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>
+                                <div className="grid grid-cols-2 gap-1 mt-5">
+                                  <div className="col-span-1">
+                                    {`Amount of ${
+                                      foundAsset ? foundAsset.symbol : "?"
+                                    } you plan on borrowing`}
+                                  </div>
+                                  <div className="col-span-1 text-right">
+                                    {`Available: ${minAmount ?? "?"} to ${
+                                      availableAmount ?? "?"
+                                    } ${foundAsset?.symbol}`}
+                                  </div>
                                 </div>
-                              </div>
-                            </FormLabel>
-                            <FormControl>
-                              <Input
-                                disabled
-                                value={offerRepayPeriod ?? "loading..."}
-                                className="mb-3"
-                                readOnly
-                              />
-                            </FormControl>
-                            <FormDescription>
-                              The maximum duration of the credit deal; repay the
-                              loan within this period to avoid loss of
-                              collateral.
-                            </FormDescription>
-                          </FormItem>
-                        )}
-                      />
+                              </FormLabel>
+                              {!availableAmount ? (
+                                <FormControl>
+                                  <Input
+                                    disabled
+                                    value={0}
+                                    className="mb-3"
+                                    readOnly
+                                  />
+                                </FormControl>
+                              ) : (
+                                <FormControl
+                                  onChange={(event) => {
+                                    const input = event.target.value;
+                                    const regex = /^[0-9]*\.?[0-9]*$/; // regular expression to match numbers and a single period
+                                    if (regex.test(input)) {
+                                      setInputValue(input);
+                                    }
+                                  }}
+                                >
+                                  <Input value={inputValue} className="mb-3" />
+                                </FormControl>
+                              )}
 
-                      <FormField
-                        control={form.control}
-                        name="offerValidity"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>
-                              <div className="grid grid-cols-2 gap-1 mt-5">
-                                <div className="col-span-1">
-                                  {`Credit offer expiry`}
-                                </div>
-                              </div>
-                            </FormLabel>
-                            <FormControl>
-                              <Input
-                                disabled
-                                value={offerExpiration ?? "Loading..."}
-                                className="mb-3"
-                                readOnly
-                              />
-                            </FormControl>
-                            <FormDescription>
-                              When this offer will no longer exist.
-                            </FormDescription>
-                          </FormItem>
-                        )}
-                      />
+                              <FormDescription>
+                                {`Input the amount of ${foundAsset?.symbol} you'd like to borrow from ${relevantOffer?.owner_name}.`}
+                              </FormDescription>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
 
-                      <FormField
-                        control={form.control}
-                        name="estimatedFee"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>
-                              <div className="grid grid-cols-2 gap-1 mt-5">
-                                <div className="col-span-1">
-                                  Estimated borrow fee
+                        <FormField
+                          control={form.control}
+                          name="repayMethod"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>
+                                <div className="grid grid-cols-2 mt-3">
+                                  <div className="mt-1">
+                                    Credit offer repay method
+                                  </div>
                                 </div>
-                                <div className="col-span-1 text-right">
-                                  {relevantOffer
-                                    ? `${
-                                        relevantOffer.fee_rate / 10000
-                                      }% of borrowed
+                              </FormLabel>
+                              <FormControl>
+                                <Select
+                                  onValueChange={(period) => {
+                                    setRepayPeriod(period);
+                                  }}
+                                >
+                                  <SelectTrigger className="mb-1">
+                                    <SelectValue
+                                      placeholder={"Select your repay method.."}
+                                    />
+                                  </SelectTrigger>
+                                  <SelectContent className="bg-white">
+                                    <SelectItem value={"no_auto_repayment"}>
+                                      No auto repayment
+                                    </SelectItem>
+                                    <SelectItem value={"only_full_repayment"}>
+                                      Only full repayment
+                                    </SelectItem>
+                                    <SelectItem
+                                      value={"allow_partial_repayment"}
+                                    >
+                                      Allow partial repayment
+                                    </SelectItem>
+                                  </SelectContent>
+                                </Select>
+                              </FormControl>
+                              <FormDescription>
+                                Select between the different repayment methods.
+                              </FormDescription>
+                              {repayPeriod ? (
+                                <FormMessage>
+                                  {repayPeriod === "no_auto_repayment"
+                                    ? "You will not automatically repay this loan."
+                                    : null}
+                                  {repayPeriod === "only_full_repayment"
+                                    ? "You will automatically repay this loan in full when your account balance is sufficient."
+                                    : null}
+                                  {repayPeriod === "allow_partial_repayment"
+                                    ? "You will automatically repay this loan as much as possible using your available account balance."
+                                    : null}
+                                </FormMessage>
+                              ) : null}
+                            </FormItem>
+                          )}
+                        />
+
+                        {chosenCollateral ? (
+                          <FormField
+                            control={form.control}
+                            name="requiredCollateralAmount"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>
+                                  <div className="grid grid-cols-2 gap-1 mt-5">
+                                    <div className="col-span-1">
+                                      {`Required collateral`}
+                                    </div>
+                                    <div className="col-span-1 text-right">
+                                      {collateralInfo
+                                        ? `Your current balance: ${collateralInfo.amount} ${collateralInfo.symbol}`
+                                        : "Loading balance..."}
+                                    </div>
+                                  </div>
+                                </FormLabel>
+
+                                <FormControl>
+                                  <Input
+                                    disabled
+                                    value={`${
+                                      requiredCollateralAmount ?? "0"
+                                    } ${
+                                      collateralInfo
+                                        ? collateralInfo.symbol
+                                        : ""
+                                    }`}
+                                    className="mb-3"
+                                    readOnly
+                                  />
+                                </FormControl>
+                                <FormDescription>
+                                  {finalBorrowAmount && foundAsset
+                                    ? `In order to borrow ${
+                                        finalBorrowAmount ?? ""
+                                      } ${
+                                        foundAsset ? foundAsset.symbol : ""
+                                      } you'll
+                                need to provide the following amount of collateral to
+                                secure the deal.`
+                                    : "Enter a valid borrow amount to calculate required collateral."}
+                                </FormDescription>
+
+                                {collateralInfo &&
+                                collateralInfo.holding &&
+                                collateralInfo.amount <
+                                  requiredCollateralAmount ? (
+                                  <FormMessage>
+                                    {`Your account has an insufficient ${
+                                      collateralInfo.symbol
+                                    } balance. You'll need at least ${(
+                                      requiredCollateralAmount -
+                                      collateralInfo.amount
+                                    ).toFixed(collateralInfo.precision)} more ${
+                                      collateralInfo.symbol
+                                    }.`}
+                                  </FormMessage>
+                                ) : null}
+
+                                {collateralInfo && !collateralInfo.holding ? (
+                                  <FormMessage>
+                                    Your account does not hold this asset. Try
+                                    another form of backing collateral if
+                                    possible.
+                                  </FormMessage>
+                                ) : null}
+                              </FormItem>
+                            )}
+                          />
+                        ) : null}
+
+                        <FormField
+                          control={form.control}
+                          name="repayPeriod"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>
+                                <div className="grid grid-cols-2 gap-1 mt-5">
+                                  <div className="col-span-1">
+                                    {`Repay period`}
+                                  </div>
+                                </div>
+                              </FormLabel>
+                              <FormControl>
+                                <Input
+                                  disabled
+                                  value={offerRepayPeriod ?? "loading..."}
+                                  className="mb-3"
+                                  readOnly
+                                />
+                              </FormControl>
+                              <FormDescription>
+                                The maximum duration of the credit deal; repay
+                                the loan within this period to avoid loss of
+                                collateral.
+                              </FormDescription>
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="offerValidity"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>
+                                <div className="grid grid-cols-2 gap-1 mt-5">
+                                  <div className="col-span-1">
+                                    {`Credit offer expiry`}
+                                  </div>
+                                </div>
+                              </FormLabel>
+                              <FormControl>
+                                <Input
+                                  disabled
+                                  value={offerExpiration ?? "Loading..."}
+                                  className="mb-3"
+                                  readOnly
+                                />
+                              </FormControl>
+                              <FormDescription>
+                                When this offer will no longer exist.
+                              </FormDescription>
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="estimatedFee"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>
+                                <div className="grid grid-cols-2 gap-1 mt-5">
+                                  <div className="col-span-1">
+                                    Estimated borrow fee
+                                  </div>
+                                  <div className="col-span-1 text-right">
+                                    {relevantOffer
+                                      ? `${
+                                          relevantOffer.fee_rate / 10000
+                                        }% of borrowed
                                     amount`
-                                    : "Loading borrow fee.."}
+                                      : "Loading borrow fee.."}
+                                  </div>
                                 </div>
-                              </div>
-                            </FormLabel>
-                            <FormControl>
+                              </FormLabel>
+                              <FormControl>
+                                <Input
+                                  disabled
+                                  value={
+                                    finalBorrowAmount
+                                      ? `${finalBorrowAmount * 0.01} ${
+                                          foundAsset ? foundAsset.symbol : "?"
+                                        }`
+                                      : `0 ${
+                                          foundAsset ? foundAsset.symbol : "?"
+                                        }`
+                                  }
+                                  className="mb-3"
+                                  readOnly
+                                />
+                              </FormControl>
+                              <FormDescription>
+                                {`This is how much ${
+                                  foundAsset ? foundAsset.symbol : "?"
+                                } that ${
+                                  relevantOffer ? relevantOffer.owner_name : "?"
+                                } will earn once this deal has completed.`}
+                              </FormDescription>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          disabled
+                          name="fee"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Network fee</FormLabel>
                               <Input
                                 disabled
-                                value={
-                                  finalBorrowAmount
-                                    ? `${finalBorrowAmount * 0.01} ${
-                                        foundAsset ? foundAsset.symbol : "?"
-                                      }`
-                                    : `0 ${
-                                        foundAsset ? foundAsset.symbol : "?"
-                                      }`
-                                }
-                                className="mb-3"
+                                value={`${fee ?? "?"} BTS`}
+                                label={`fees`}
                                 readOnly
                               />
-                            </FormControl>
-                            <FormDescription>
-                              {`This is how much ${
-                                foundAsset ? foundAsset.symbol : "?"
-                              } that ${
-                                relevantOffer ? relevantOffer.owner_name : "?"
-                              } will earn once this deal has completed.`}
-                            </FormDescription>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        disabled
-                        name="fee"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Network fee</FormLabel>
-                            <Input
-                              disabled
-                              value={`${fee ?? "?"} BTS`}
-                              label={`fees`}
-                              readOnly
-                            />
-                            <FormDescription>
-                              The cost to broadcast your credit deal operation
-                              onto the network.
-                            </FormDescription>
-                            {usr && usr.id === usr.referrer ? (
-                              <FormMessage>
-                                LTM rebate: {0.8 * fee} BTS (vesting)
-                              </FormMessage>
-                            ) : null}
-                          </FormItem>
-                        )}
-                      />
-                    </form>
-                  </Form>
+                              <FormDescription>
+                                The cost to broadcast your credit deal operation
+                                onto the network.
+                              </FormDescription>
+                              {usr && usr.id === usr.referrer ? (
+                                <FormMessage>
+                                  LTM rebate: {0.8 * fee} BTS (vesting)
+                                </FormMessage>
+                              ) : null}
+                            </FormItem>
+                          )}
+                        />
+                      </form>
+                    </Form>
+                  </div>
                 </div>
-              </div>
-            </CardContent>
-            <CardFooter>
-              {(collateralInfo && !collateralInfo.holding) ||
-              (collateralInfo &&
-                collateralInfo.holding &&
-                collateralInfo.amount < requiredCollateralAmount) ? (
-                <Button disabled>Submit</Button>
-              ) : (
-                <Button onClick={() => setShowDialog(true)}>Submit</Button>
-              )}
-            </CardFooter>
-          </Card>
+              </CardContent>
+              <CardFooter>
+                {(collateralInfo && !collateralInfo.holding) ||
+                (collateralInfo &&
+                  collateralInfo.holding &&
+                  collateralInfo.amount < requiredCollateralAmount) ? (
+                  <Button disabled>Submit</Button>
+                ) : (
+                  <Button onClick={() => setShowDialog(true)}>Submit</Button>
+                )}
+              </CardFooter>
+            </Card>
+          ) : null}
         </div>
         {showDialog ? (
           <DeepLinkDialog
