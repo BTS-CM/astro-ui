@@ -36,6 +36,8 @@ import MarketAssetCard from "./Market/MarketAssetCard.jsx";
 import MarketSummaryTabs from "./Market/MarketSummaryTabs.jsx";
 import PoolDialogs from "./Market/PoolDialogs.jsx";
 
+import ExternalLink from "./common/ExternalLink.jsx";
+
 import { trimPrice } from "../lib/common";
 
 import { $marketSearchCache } from "../stores/cache.ts";
@@ -139,6 +141,7 @@ export default function Market(properties) {
 
   useEffect(() => {
     if (marketHistoryData && !marketHistoryLoading && !marketHistoryError) {
+      console.log({ marketHistoryData });
       setUsrBalances(marketHistoryData.balances);
       setUsrLimitOrders(marketHistoryData.accountLimitOrders);
       setPublicMarketHistory(marketHistoryData.marketHistory);
@@ -257,8 +260,12 @@ export default function Market(properties) {
           {assetA}/{assetB} External market links
         </b>
         <br />
-        <a
-          href={
+        <ExternalLink
+          variant="outline"
+          classNameContents="mb-2 mt-2"
+          type="button"
+          text={`🔎 Blocksights market explorer`}
+          hyperlink={
             usr.chain === "bitshares"
               ? `https://blocksights.info/#/markets/${
                   activeLimitCard === "buy" ? assetA : assetB
@@ -269,50 +276,42 @@ export default function Market(properties) {
                   activeLimitCard === "buy" ? assetB : assetA
                 }?network=testnet`
           }
-          target="_blank"
-        >
-          <Button variant="outline" className="mb-2 mt-2">
-            🔎 Blocksights market explorer
-          </Button>
-        </a>
+        />
         {usr.chain === "bitshares" ? (
           <>
-            <a
-              href={
+            <ExternalLink
+              variant="outline"
+              classNameContents="ml-2"
+              type="button"
+              text={`🔗 BTS.Exchange`}
+              hyperlink={
                 activeLimitCard === "buy"
                   ? `https://bts.exchange/#/market/${assetA}_${assetB}?r=nftprofessional1`
                   : `https://bts.exchange/#/market/${assetB}_${assetA}?r=nftprofessional1`
               }
-              target="_blank"
-            >
-              <Button variant="outline" className="ml-2">
-                🔗 BTS.Exchange
-              </Button>
-            </a>
-            <a
-              href={
+            />
+            <ExternalLink
+              variant="outline"
+              classNameContents="ml-2"
+              type="button"
+              text={`🔗 BTWTY`}
+              hyperlink={
                 activeLimitCard === "buy"
                   ? `https://wallet.btwty.com/market/${assetA}_${assetB}?r=nftprofessional1`
                   : `https://wallet.btwty.com/market/${assetB}_${assetA}?r=nftprofessional1`
               }
-              target="_blank"
-            >
-              <Button variant="outline" className="ml-2">
-                🔗 BTWTY
-              </Button>
-            </a>
-            <a
-              href={
+            />
+            <ExternalLink
+              variant="outline"
+              classNameContents="ml-2 mt-2"
+              type="button"
+              text={`🔗 XBTS`}
+              hyperlink={
                 activeLimitCard === "buy"
                   ? `https://ex.xbts.io/market/${assetA}_${assetB}?r=nftprofessional1`
                   : `https://ex.xbts.io/market/${assetB}_${assetA}?r=nftprofessional1`
               }
-              target="_blank"
-            >
-              <Button variant="outline" className="ml-2 mt-2">
-                🔗 XBTS
-              </Button>
-            </a>
+            />
           </>
         ) : null}
       </HoverCardContent>

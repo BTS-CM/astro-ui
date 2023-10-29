@@ -53,6 +53,7 @@ import { blockchainFloat, humanReadableFloat } from "../lib/common.js";
 
 import CurrentUser from "./common/CurrentUser.jsx";
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
+import ExternalLink from "./common/ExternalLink.jsx";
 
 export default function CreditDeals(properties) {
   const form = useForm({
@@ -257,48 +258,44 @@ export default function CreditDeals(properties) {
           <CardHeader className="pb-1">
             <CardTitle>
               Deal #
-              <a
-                target="_blank"
-                className="text-blue-500"
-                href={`https://blocksights.info/#/objects/${res.id}`}
-              >
-                {res.id.replace("1.22.", "")}
-              </a>{" "}
+              <ExternalLink
+                classNameContents="text-blue-500"
+                type="text"
+                text={res.id.replace("1.22.", "")}
+                hyperlink={`https://blocksights.info/#/objects/${res.id}`}
+              />{" "}
               with{" "}
-              <a
-                target="_blank"
-                className="text-blue-500"
-                href={`https://blocksights.info/#/accounts/${
+              <ExternalLink
+                classNameContents="text-blue-500"
+                type="text"
+                text={type === "borrower" ? res.offer_owner : res.borrower}
+                hyperlink={`https://blocksights.info/#/accounts/${
                   type === "borrower" ? res.offer_owner : res.borrower
                 }`}
-              >
-                {type === "borrower" ? res.offer_owner : res.borrower}
-              </a>
+              />
             </CardTitle>
             <CardDescription>
               {type === "borrower" ? "You borrowed" : "They borrowed"}:
               <b>
                 {` ${borrowedAmount} ${debtAsset.symbol}`} (
-                <a
-                  target="_blank"
-                  className="text-blue-500"
-                  href={`https://blocksights.info/#/assets/${res.debt_asset}`}
-                >
-                  {res.debt_asset}
-                </a>
+                <ExternalLink
+                  classNameContents="text-blue-500"
+                  type="text"
+                  text={res.debt_asset}
+                  hyperlink={`https://blocksights.info/#/assets/${res.debt_asset}`}
+                />
                 )
               </b>
               <br />
               Loan collateral:
               <b>
                 {` ${collateralAmount} ${collateralAsset.symbol}`} (
-                <a
-                  target="_blank"
-                  className="text-blue-500"
-                  href={`https://blocksights.info/#/assets/${res.collateral_asset}`}
-                >
-                  {res.collateral_asset}
-                </a>
+                <ExternalLink
+                  classNameContents="text-blue-500"
+                  type="text"
+                  text={res.collateral_asset}
+                  hyperlink={`https://blocksights.info/#/assets/${res.collateral_asset}`}
+                />
                 )
               </b>
               <br />

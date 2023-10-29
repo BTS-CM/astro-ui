@@ -57,6 +57,8 @@ import { useInitCache } from "../effects/Init.ts";
 
 import CurrentUser from "./common/CurrentUser.jsx";
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
+import ExternalLink from "./common/ExternalLink.jsx";
+
 import { Avatar } from "./Avatar.tsx";
 
 function hoursTillExpiration(expirationTime) {
@@ -463,12 +465,12 @@ export default function CreditBorrow(properties) {
                                 </div>
                                 <div className="col-span-1 text-right">
                                   {relevantOffer ? (
-                                    <a
-                                      href={`https://blocksights.info/#/accounts/${relevantOffer.owner_name}`}
-                                      target="_blank"
-                                    >
-                                      View {relevantOffer.owner_name}'s account
-                                    </a>
+                                    <ExternalLink
+                                      classNameContents="text-blue-500"
+                                      type="text"
+                                      text={`View ${relevantOffer.owner_name}'s account`}
+                                      hyperlink={`https://blocksights.info/#/accounts/${relevantOffer.owner_name}`}
+                                    />
                                   ) : null}
                                 </div>
                               </div>

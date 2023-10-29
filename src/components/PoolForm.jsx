@@ -81,8 +81,10 @@ import { $currentUser } from "../stores/users.ts";
 
 import PoolDialogs from "./Market/PoolDialogs.jsx";
 import MarketAssetCard from "./Market/MarketAssetCard.jsx";
+
 import CurrentUser from "./common/CurrentUser.jsx";
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
+import ExternalLink from "./common/ExternalLink.jsx";
 
 export default function PoolForm() {
   const form = useForm({
@@ -1052,16 +1054,15 @@ export default function PoolForm() {
                     </Button>
                   ) : null}
                   {pool ? (
-                    <a
-                      href={`https://blocksights.info/#/pools/${pool}${
+                    <ExternalLink
+                      variant="outline"
+                      classNameContents="ml-2"
+                      type="button"
+                      text={`Blocksights pool explorer`}
+                      hyperlink={`https://blocksights.info/#/pools/${pool}${
                         usr.chain !== "bitshares" ? "?network=testnet" : ""
                       }`}
-                      target="_blank"
-                    >
-                      <Button variant="outline" className="ml-2">
-                        Blocksights pool explorer
-                      </Button>
-                    </a>
+                    />
                   ) : null}
                   {foundPoolDetails ? (
                     <Dialog>

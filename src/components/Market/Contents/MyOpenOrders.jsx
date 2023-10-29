@@ -61,7 +61,7 @@ export default function MyOpenOrders(properties) {
             <Skeleton className="h-4 w-full mt-1" />
           </>
         ) : null}
-        {usrHistory && usrHistory.length && !marketHistoryInProgress ? (
+        {usrLimitOrders && usrLimitOrders.length && !marketHistoryInProgress ? (
           <MyOrderSummary
             type={type}
             assetAData={assetAData}

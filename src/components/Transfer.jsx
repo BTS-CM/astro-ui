@@ -58,8 +58,11 @@ import { createUserBalancesStore } from "../effects/User.ts";
 
 import { Avatar } from "./Avatar.tsx";
 import AccountSearch from "./AccountSearch.jsx";
+
 import CurrentUser from "./common/CurrentUser.jsx";
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
+import ExternalLink from "./common/ExternalLink.jsx";
+
 import AssetDropDown from "./Market/AssetDropDownCard.jsx";
 
 export default function Transfer(properties) {
@@ -601,34 +604,34 @@ export default function Transfer(properties) {
         <div className="grid grid-cols-2 mt-5 gap-5">
           {targetUser && targetUser.name ? (
             <div className="col-span-1">
-              <a
-                href={`https://blocksights.info/#/accounts/${targetUser.name}`}
-                target="_blank"
-              >
-                <Card>
-                  <CardHeader className="pb-0 mb-0">
-                    <CardTitle>Double check the above details!</CardTitle>
-                    <CardDescription>
-                      Avoid heartbreak, check your inputs!
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="text-sm">
-                    <ul className="ml-2 list-disc [&>li]:mt-2">
-                      <li>
-                        Before you proceed, please double check the form inputs.
-                      </li>
-                      <li>
-                        Validate the entire Beet prompt contents before you
-                        broadcast the transaction.
-                      </li>
-                      <li>
-                        Click here to view {targetUser.name}'s account on the
-                        Blocksights blockchain explorer.
-                      </li>
-                    </ul>
-                  </CardContent>
-                </Card>
-              </a>
+              <Card>
+                <CardHeader className="pb-0 mb-0">
+                  <CardTitle>Double check the above details!</CardTitle>
+                  <CardDescription>
+                    Avoid heartbreak, check your inputs!
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="text-sm">
+                  <ul className="ml-2 list-disc [&>li]:mt-2">
+                    <li>
+                      Before you proceed, please double check the form inputs.
+                    </li>
+                    <li>
+                      Validate the entire Beet prompt contents before you
+                      broadcast the transaction.
+                    </li>
+                    <li>
+                      <ExternalLink
+                        type="text"
+                        classNameContents=""
+                        hyperlink={`https://blocksights.info/#/accounts/${targetUser.name}`}
+                        text={`Click here to view ${targetUser.name}'s account on the
+                        Blocksights blockchain explorer.`}
+                      />
+                    </li>
+                  </ul>
+                </CardContent>
+              </Card>
             </div>
           ) : null}
           {targetUser && targetUser.name ? (

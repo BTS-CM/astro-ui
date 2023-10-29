@@ -40,6 +40,7 @@ import { $globalParamsCache, $assetCache } from "../stores/cache.ts";
 
 import CurrentUser from "./common/CurrentUser.jsx";
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
+import ExternalLink from "./common/ExternalLink.jsx";
 
 import { humanReadableFloat } from "../lib/common";
 import { opTypes } from "../lib/opTypes";
@@ -206,14 +207,13 @@ export default function PortfolioTabs(properties) {
                 </Button>
               </a>
 
-              <a
-                href={`https://blocksights.info/#/assets/${currentBalance.symbol}`}
-                target="_blank"
-              >
-                <Button variant="outline" className="mt-2">
-                  Asset info
-                </Button>
-              </a>
+              <ExternalLink
+                variant="outline"
+                classNameContents="mt-2"
+                type="button"
+                text={`Asset info`}
+                hyperlink={`https://blocksights.info/#/assets/${currentBalance.symbol}`}
+              />
             </div>
           </div>
         </Card>
@@ -275,13 +275,12 @@ export default function PortfolioTabs(properties) {
                   {sellPriceQuoteAssetId}
                   <br />
                   Order ID:
-                  <a
-                    href={`https://blocksights.info/#/objects/${orderId}`}
-                    target="_blank"
-                    className="text-blue-500"
-                  >
-                    {` ${orderId}`}
-                  </a>
+                  <ExternalLink
+                    classNameContents="text-blue-500"
+                    type="text"
+                    text={` ${orderId}`}
+                    hyperlink={`https://blocksights.info/#/objects/${orderId}`}
+                  />
                   <br />
                   Expires: {timeDiffString}
                 </CardDescription>
@@ -355,22 +354,20 @@ export default function PortfolioTabs(properties) {
                 </CardTitle>
                 <CardDescription>
                   Operation ID:
-                  <a
-                    href={`https://blocksights.info/#/objects/${activityItem.account_history.operation_id}`}
-                    target="_blank"
-                    className="text-blue-500"
-                  >
-                    {` ${activityItem.account_history.operation_id}`}
-                  </a>
+                  <ExternalLink
+                    classNameContents="text-blue-500"
+                    type="text"
+                    text={` ${activityItem.account_history.operation_id}`}
+                    hyperlink={`https://blocksights.info/#/objects/${activityItem.account_history.operation_id}`}
+                  />
                   <br />
                   Block number:
-                  <a
-                    href={`https://blocksights.info/#/blocks/${activityItem.block_data.block_num}`}
-                    target="_blank"
-                    className="text-blue-500"
-                  >
-                    {` ${activityItem.block_data.block_num}`}
-                  </a>
+                  <ExternalLink
+                    classNameContents="text-blue-500"
+                    type="text"
+                    text={` ${activityItem.block_data.block_num}`}
+                    hyperlink={`https://blocksights.info/#/blocks/${activityItem.block_data.block_num}`}
+                  />
                   <br />
                   Time since broadcast: {timeDiffString}
                 </CardDescription>

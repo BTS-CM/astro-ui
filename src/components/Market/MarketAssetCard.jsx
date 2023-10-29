@@ -31,6 +31,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { humanReadableFloat } from "../../lib/common";
 
+import ExternalLink from "../common/ExternalLink.jsx";
+
 const CardRow = (properties) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [tooltipOpen, setTooltipOpen] = useState(false);
@@ -245,63 +247,61 @@ export default function MarketAssetCard(properties) {
                   <b>Explorers</b>
                 </div>
                 <div>
-                  <a
-                    target="_blank"
-                    href={
+                  <ExternalLink
+                    variant="outline"
+                    classNameContents=""
+                    type="button"
+                    text={`Blocksights.info`}
+                    hyperlink={
                       chain === "bitshares"
                         ? `https://blocksights.info/#/assets/${asset}`
                         : `https://blocksights.info/#/assets/${asset}?network=testnet`
                     }
-                  >
-                    <Button variant="outline">Blocksights.info</Button>
-                  </a>
+                  />
                   {chain === "bitshares" ? (
-                    <a
-                      target="_blank"
-                      href={`https://kibana.bts.mobi/app/dashboards#/view/c767fb10-5c58-11eb-a22a-3fca5c3996eb?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1M,to:now))&_a=(filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:'55c28590-5c51-11eb-a22a-3fca5c3996eb',key:operation_type,negate:!t,params:(query:19),type:phrase),query:(match_phrase:(operation_type:19))),('$state':(store:appState),meta:(alias:!n,disabled:!f,index:'55c28590-5c51-11eb-a22a-3fca5c3996eb',key:operation_type,negate:!t,params:(query:2),type:phrase),query:(match_phrase:(operation_type:2)))),query:(language:kuery,query:'${assetData.id}'))`}
-                    >
-                      <Button variant="outline" className="ml-2">
-                        Kibana.bts.mobi
-                      </Button>
-                    </a>
+                    <ExternalLink
+                      variant="outline"
+                      classNameContents="ml-2"
+                      type="button"
+                      text={`Kibana.bts.mobi`}
+                      hyperlink={`https://kibana.bts.mobi/app/dashboards#/view/c767fb10-5c58-11eb-a22a-3fca5c3996eb?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1M,to:now))&_a=(filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:'55c28590-5c51-11eb-a22a-3fca5c3996eb',key:operation_type,negate:!t,params:(query:19),type:phrase),query:(match_phrase:(operation_type:19))),('$state':(store:appState),meta:(alias:!n,disabled:!f,index:'55c28590-5c51-11eb-a22a-3fca5c3996eb',key:operation_type,negate:!t,params:(query:2),type:phrase),query:(match_phrase:(operation_type:2)))),query:(language:kuery,query:'${assetData.id}'))`}
+                    />
                   ) : null}
                   {chain === "bitshares" ? (
-                    <a
-                      target="_blank"
-                      href={`https://www.bitsharescan.info/asset/${asset}`}
-                    >
-                      <Button variant="outline" className="ml-2">
-                        Bitsharescan.info (cn)
-                      </Button>
-                    </a>
+                    <ExternalLink
+                      variant="outline"
+                      classNameContents="ml-2"
+                      type="button"
+                      text={`Bitsharescan.info (cn)`}
+                      hyperlink={`https://www.bitsharescan.info/asset/${asset}`}
+                    />
                   ) : null}
                 </div>
                 <div>
                   <b>Web wallets</b>
                 </div>
                 <div>
-                  <a
-                    target="_blank"
-                    href={`https://bts.exchange/#/asset/${asset}?r=nftprofessional1`}
-                  >
-                    <Button variant="outline">BTS.exchange</Button>
-                  </a>
-                  <a
-                    target="_blank"
-                    href={`https://wallet.btwty.com/asset/${asset}?r=nftprofessional1`}
-                  >
-                    <Button variant="outline" className="ml-2">
-                      BTWTY.com
-                    </Button>
-                  </a>
-                  <a
-                    target="_blank"
-                    href={`https://ex.xbts.io/#/asset/${asset}?r=nftprofessional1`}
-                  >
-                    <Button variant="outline" className="ml-2">
-                      XBTS.io
-                    </Button>
-                  </a>
+                  <ExternalLink
+                    classNameContents=""
+                    variant="outline"
+                    type="button"
+                    text={`BTS.exchange`}
+                    hyperlink={`https://bts.exchange/#/asset/${asset}?r=nftprofessional1`}
+                  />
+                  <ExternalLink
+                    classNameContents="ml-2"
+                    variant="outline"
+                    type="button"
+                    text={`BTWTY.com`}
+                    hyperlink={`https://wallet.btwty.com/asset/${asset}?r=nftprofessional1`}
+                  />
+                  <ExternalLink
+                    classNameContents="ml-2"
+                    variant="outline"
+                    type="button"
+                    text={`XBTS.io`}
+                    hyperlink={`https://ex.xbts.io/#/asset/${asset}?r=nftprofessional1`}
+                  />
                 </div>
               </div>
             </DialogContent>
