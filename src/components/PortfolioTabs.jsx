@@ -1,4 +1,9 @@
-import React, { useState, useEffect, useSyncExternalStore } from "react";
+import React, {
+  useState,
+  useEffect,
+  useSyncExternalStore,
+  useMemo,
+} from "react";
 import { FixedSizeList as List } from "react-window";
 
 import {
@@ -24,11 +29,17 @@ import {
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-import { eraseCurrentUser } from "../stores/users.ts";
 import { useInitCache } from "../effects/Init.ts";
+import {
+  createUserPortfolioStore,
+  createUserHistoryStore,
+} from "../effects/User.ts";
+
 import { $currentUser } from "../stores/users.ts";
+import { $globalParamsCache, $assetCache } from "../stores/cache.ts";
 
 import CurrentUser from "./common/CurrentUser.jsx";
+import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
 
 import { humanReadableFloat } from "../lib/common";
 import { opTypes } from "../lib/opTypes";
@@ -40,7 +51,30 @@ export default function PortfolioTabs(properties) {
     () => true
   );
 
+  const assets = useSyncExternalStore(
+    $assetCache.subscribe,
+    $assetCache.get,
+    () => true
+  );
+
   useInitCache(usr && usr.chain ? usr.chain : "bitshares");
+
+  /*
+  const globalParams = useSyncExternalStore(
+    $globalParamsCache.subscribe,
+    $globalParamsCache.get,
+    () => true
+  );
+
+  const [fee, setFee] = useState(0);
+  useEffect(() => {
+    if (globalParams && globalParams.length) {
+      const foundFee = globalParams.find((x) => x[0] === 2);
+      const finalFee = humanReadableFloat(foundFee[1].fee, 5);
+      setFee(finalFee);
+    }
+  }, [globalParams]);
+  */
 
   const activeTabStyle = {
     backgroundColor: "#252526",
@@ -53,184 +87,94 @@ export default function PortfolioTabs(properties) {
   const [balances, setBalances] = useState();
   const [openOrders, setOpenOrders] = useState();
   useEffect(() => {
-    async function fetchPortfolio() {
-      const fetchedProfile = await fetch(
-        `http://localhost:8080/api/getPortfolio/${usr.chain}/${usr.id}`,
-        { method: "GET" }
+    let unsubscribeUserPortfolioStore;
+
+    if (usr && usr.id) {
+      const userPortfolioStore = createUserPortfolioStore([usr.chain, usr.id]);
+
+      unsubscribeUserPortfolioStore = userPortfolioStore.subscribe(
+        ({ data, error, loading }) => {
+          if (data && !error && !loading) {
+            console.log("Successfully fetched user portfolio");
+            setBalances(data.balances);
+            setOpenOrders(data.limitOrders);
+          }
+        }
       );
-
-      if (!fetchedProfile.ok) {
-        console.log("Issues whilst fetching");
-        return;
-      }
-
-      const profileContents = await fetchedProfile.json();
-
-      if (profileContents && profileContents.result) {
-        const finalResult = profileContents.result;
-        console.log("Successfully fetched profile");
-        setBalances(finalResult.balances);
-        setOpenOrders(finalResult.limitOrders);
-      }
     }
 
-    if (usr && usr.id && usr.id.length) {
-      fetchPortfolio();
-    }
+    return () => {
+      if (unsubscribeUserPortfolioStore) unsubscribeUserPortfolioStore();
+    };
   }, [usr, balanceCounter]);
 
   const [activityCounter, setActivityCounter] = useState(0);
   const [activity, setActivity] = useState();
   useEffect(() => {
-    async function fetchActivity() {
-      const historyData = await fetch(
-        `http://localhost:8080/api/getAccountHistory/${usr.chain}/${usr.id}`,
-        {
-          method: "GET",
+    let unsubscribeUserHistoryStore;
+
+    if (usr && usr.id) {
+      const userHistoryStore = createUserHistoryStore([usr.chain, usr.id]);
+
+      unsubscribeUserHistoryStore = userHistoryStore.subscribe(
+        ({ data, error, loading }) => {
+          if (data && !error && !loading) {
+            console.log("Successfully fetched history");
+            setActivity(data);
+          }
         }
       );
-
-      if (!historyData.ok) {
-        console.log("Issues whilst fetching");
-        return;
-      }
-
-      const historyContents = await historyData.json();
-      if (historyContents && historyContents.result) {
-        console.log("Successfully fetched history");
-        setActivity(historyContents.result);
-      }
     }
 
-    if (usr && usr.id && usr.id.length) {
-      fetchActivity();
-    }
+    return () => {
+      if (unsubscribeUserHistoryStore) unsubscribeUserHistoryStore();
+    };
   }, [usr, activityCounter]);
 
-  const [retrievedBalanceAssets, setRetrievedBalanceAssets] = useState();
-  useEffect(() => {
-    async function retrieveHeldAssets() {
-      let assetIDs = [];
-      for (let i = 0; i < openOrders.length; i++) {
-        const baseID = openOrders[i].sell_price.base.asset_id;
-        const quoteID = openOrders[i].sell_price.quote.asset_id;
-        if (!assetIDs.includes(baseID)) {
-          assetIDs.push(baseID);
-        }
-        if (!assetIDs.includes(quoteID)) {
-          assetIDs.push(quoteID);
-        }
+  const retrievedBalanceAssets = useMemo(() => {
+    if (!assets || !balances) {
+      return [];
+    }
+    let assetIDs = [];
+    for (let i = 0; i < (openOrders?.length || 0); i++) {
+      const baseID = openOrders[i].sell_price.base.asset_id;
+      const quoteID = openOrders[i].sell_price.quote.asset_id;
+      if (!assetIDs.includes(baseID)) {
+        assetIDs.push(baseID);
       }
-
-      for (let i = 0; i < balances.length; i++) {
-        const assetID = balances[i].asset_id;
-        if (!assetIDs.includes(assetID)) {
-          assetIDs.push(assetID);
-        }
-      }
-
-      const response = await fetch(
-        `http://localhost:8080/cache/assets/${usr.chain}`,
-        {
-          method: "POST",
-          body: JSON.stringify(assetIDs),
-        }
-      );
-
-      if (!response.ok) {
-        console.log({
-          error: new Error(`${response.status} ${response.statusText}`),
-          msg: "Couldn't generate deeplink.",
-        });
-        return;
-      }
-
-      const filteredBalances = await response.json();
-
-      if (filteredBalances && filteredBalances.result) {
-        setRetrievedBalanceAssets(filteredBalances.result);
+      if (!assetIDs.includes(quoteID)) {
+        assetIDs.push(quoteID);
       }
     }
 
-    if (balances && balances.length && openOrders && openOrders.length) {
-      retrieveHeldAssets();
+    for (let i = 0; i < (balances?.length || 0); i++) {
+      const assetID = balances[i].asset_id;
+      if (!assetIDs.includes(assetID)) {
+        assetIDs.push(assetID);
+      }
     }
-  }, [balances, openOrders]);
 
-  const [downloadClicked, setDownloadClicked] = useState(false);
-
-  const handleDownloadClick = () => {
-    if (!downloadClicked) {
-      setDownloadClicked(true);
-      setTimeout(() => {
-        setDownloadClicked(false);
-      }, 10000);
-    }
-  };
+    return assets.filter((asset) => assetIDs.includes(asset.id));
+  }, [balances, openOrders, assets]);
 
   const [orderID, setOrderID] = useState();
-  const [deeplink, setDeeplink] = useState("");
-  const [trxJSON, setTRXJSON] = useState();
-  const [deepLinkTrigger, setDeepLinkTrigger] = useState(0);
-
-  useEffect(() => {
-    async function generate() {
-      const opJSON = [
-        {
-          fee_paying_account: usr.id,
-          order: orderID, // order id to change
-          extensions: [],
-        },
-      ];
-      setTRXJSON(opJSON);
-
-      const response = await fetch(
-        `http://localhost:8080/api/deeplink/${usr.chain}/limit_order_cancel`,
-        {
-          method: "POST",
-          body: JSON.stringify(opJSON),
-        }
-      );
-
-      if (!response.ok) {
-        console.log({
-          error: new Error(`${response.status} ${response.statusText}`),
-          msg: "Couldn't generate deeplink.",
-        });
-        return;
-      }
-
-      const deeplinkValue = await response.json();
-
-      if (
-        deeplinkValue &&
-        deeplinkValue.result &&
-        deeplinkValue.result.generatedDeepLink
-      ) {
-        setDeeplink(deeplinkValue.result.generatedDeepLink);
-      }
-    }
-
-    if (deepLinkTrigger > 0 && orderID) {
-      generate();
-    }
-  }, [deepLinkTrigger, orderID]);
-
   const [showDialog, setShowDialog] = useState(false);
 
   const BalanceRow = ({ index, style }) => {
+    const rowBalance = balances[index];
+
     const currentBalance =
       retrievedBalanceAssets && Array.isArray(retrievedBalanceAssets)
         ? retrievedBalanceAssets.find(
-            (asset) => asset.id === balances[index].asset_id
+            (asset) => asset.id === rowBalance.asset_id
           )
         : {
-            symbol: balances[index].asset_id,
+            symbol: rowBalance.asset_id,
             precision: 5,
           };
 
     const readableBalance = humanReadableFloat(
-      balances[index].amount,
+      rowBalance.amount,
       currentBalance.precision
     ).toLocaleString(undefined, {
       minimumFractionDigits: currentBalance.precision,
@@ -261,44 +205,20 @@ export default function PortfolioTabs(properties) {
                   Trade
                 </Button>
               </a>
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button variant="outline" className="mt-2">
-                    Asset info
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-[425px] bg-white">
-                  <DialogHeader>
-                    <DialogTitle>
-                      Additional information on {currentBalance.symbol}
-                    </DialogTitle>
-                    <DialogDescription>JSON properties</DialogDescription>
-                  </DialogHeader>
-                  <div className="grid grid-cols-1">
-                    <div className="col-span-1">
-                      <ScrollArea className="h-72 rounded-md border">
-                        <pre>{JSON.stringify(currentBalance, null, 2)}</pre>
-                      </ScrollArea>
-                    </div>
-                  </div>
-                </DialogContent>
-              </Dialog>
+
+              <a
+                href={`https://blocksights.info/#/assets/${currentBalance.symbol}`}
+                target="_blank"
+              >
+                <Button variant="outline" className="mt-2">
+                  Asset info
+                </Button>
+              </a>
             </div>
           </div>
         </Card>
       </div>
     );
-  };
-
-  const copyToClipboard = (text) => {
-    navigator.clipboard
-      .writeText(text)
-      .then(() => {
-        console.log("Text copied to clipboard");
-      })
-      .catch((err) => {
-        console.error("Error copying text: ", err);
-      });
   };
 
   const OpenOrdersRow = ({ index, style }) => {
@@ -354,7 +274,14 @@ export default function PortfolioTabs(properties) {
                   Trading pair: {sellPriceBaseAssetId} for{" "}
                   {sellPriceQuoteAssetId}
                   <br />
-                  Order ID: {orderId}
+                  Order ID:
+                  <a
+                    href={`https://blocksights.info/#/objects/${orderId}`}
+                    target="_blank"
+                    className="text-blue-500"
+                  >
+                    {` ${orderId}`}
+                  </a>
                   <br />
                   Expires: {timeDiffString}
                 </CardDescription>
@@ -375,76 +302,28 @@ export default function PortfolioTabs(properties) {
                   onClick={() => {
                     setShowDialog(true);
                     setOrderID(orderId);
-                    setDeepLinkTrigger(deepLinkTrigger + 1);
                   }}
                 >
                   Cancel
                 </Button>
-                {showDialog && orderId === orderID && deeplink && (
-                  <Dialog
-                    open={showDialog}
-                    onOpenChange={(open) => {
-                      if (!open) {
-                        setDeeplink();
-                        setTRXJSON();
-                      }
-                      setShowDialog(open);
-                    }}
-                  >
-                    <DialogContent className="sm:max-w-[425px] bg-white">
-                      <>
-                        <h3 className="scroll-m-20 text-1xl font-semibold tracking-tight mt-1">
-                          Your requested limit order cancellation is ready!
-                        </h3>
-                        Cancelling offer of {readableBaseAmount}{" "}
-                        {sellAsset.symbol} for {readableQuoteAmount}{" "}
-                        {buyAsset.symbol}
-                        <br />
-                        Order ID: {orderId}
-                        <br />
-                        Account: {usr.id}
-                        <div className="grid grid-cols-1 gap-3">
-                          <Button
-                            color="gray"
-                            className="w-full"
-                            onClick={() => {
-                              copyToClipboard(JSON.stringify(trxJSON));
-                            }}
-                            variant="outline"
-                          >
-                            Copy operation JSON
-                          </Button>
-
-                          {downloadClicked ? (
-                            <Button variant="outline" disabled>
-                              Downloading...
-                            </Button>
-                          ) : (
-                            <a
-                              href={`data:text/json;charset=utf-8,${deeplink}`}
-                              download={`limit_order_cancel.json`}
-                              target="_blank"
-                              rel="noreferrer"
-                              onClick={handleDownloadClick}
-                            >
-                              <Button variant="outline" className="w-full">
-                                Download Beet operation JSON
-                              </Button>
-                            </a>
-                          )}
-
-                          <a
-                            href={`rawbeet://api?chain=BTS&request=${deeplink}`}
-                          >
-                            <Button variant="outline" className="w-full">
-                              Trigger raw Beet deeplink
-                            </Button>
-                          </a>
-                        </div>
-                      </>
-                    </DialogContent>
-                  </Dialog>
-                )}
+                {showDialog && orderId === orderID ? (
+                  <DeepLinkDialog
+                    operationName="limit_order_cancel"
+                    username={usr.username}
+                    usrChain={usr.chain}
+                    userID={usr.id}
+                    dismissCallback={setShowDialog}
+                    key={`Cancelling${readableBaseAmount}${sellAsset.symbol}for${readableQuoteAmount}${buyAsset.symbol}`}
+                    headerText={`Cancelling offer of ${readableBaseAmount} ${sellAsset.symbol} for ${readableQuoteAmount} ${buyAsset.symbol}`}
+                    trxJSON={[
+                      {
+                        fee_paying_account: usr.id,
+                        order: orderID, // order id to change
+                        extensions: [],
+                      },
+                    ]}
+                  />
+                ) : null}
               </>
             </div>
           </div>
@@ -475,9 +354,23 @@ export default function PortfolioTabs(properties) {
                   {opTypes[activityItem.operation_type.toString()]}
                 </CardTitle>
                 <CardDescription>
-                  Operation ID: {activityItem.account_history.operation_id}
+                  Operation ID:
+                  <a
+                    href={`https://blocksights.info/#/objects/${activityItem.account_history.operation_id}`}
+                    target="_blank"
+                    className="text-blue-500"
+                  >
+                    {` ${activityItem.account_history.operation_id}`}
+                  </a>
                   <br />
-                  Block number: {activityItem.block_data.block_num}
+                  Block number:
+                  <a
+                    href={`https://blocksights.info/#/blocks/${activityItem.block_data.block_num}`}
+                    target="_blank"
+                    className="text-blue-500"
+                  >
+                    {` ${activityItem.block_data.block_num}`}
+                  </a>
                   <br />
                   Time since broadcast: {timeDiffString}
                 </CardDescription>
@@ -596,7 +489,7 @@ export default function PortfolioTabs(properties) {
                   retrievedBalanceAssets &&
                   retrievedBalanceAssets.length ? (
                     <List
-                      height={300}
+                      height={500}
                       itemCount={balances.length}
                       itemSize={100}
                       className="gaps-2"
@@ -633,7 +526,7 @@ export default function PortfolioTabs(properties) {
                   retrievedBalanceAssets &&
                   retrievedBalanceAssets.length ? (
                     <List
-                      height={300}
+                      height={500}
                       itemCount={openOrders.length}
                       itemSize={145}
                     >
@@ -666,7 +559,7 @@ export default function PortfolioTabs(properties) {
                 <CardContent className="space-y-2">
                   {activity && activity.length ? (
                     <List
-                      height={300}
+                      height={500}
                       itemCount={activity.length}
                       itemSize={145}
                     >
@@ -691,17 +584,11 @@ export default function PortfolioTabs(properties) {
           </Tabs>
         </div>
       </div>
-      {usr ? (
-        <CurrentUser
-          resetCallback={() => {
-            eraseCurrentUser();
-            setBalances();
-            setOpenOrders();
-            setActivity();
-            setRetrievedBalanceAssets();
-          }}
-        />
-      ) : null}
+      <div className="grid grid-cols-1 mt-5">
+        {usr && usr.username && usr.username.length ? (
+          <CurrentUser usr={usr} />
+        ) : null}
+      </div>
     </>
   );
 }

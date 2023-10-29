@@ -660,7 +660,8 @@ export default function CreditDeals(properties) {
             <CardHeader>
               <CardTitle>💱 Check your active credit deals</CardTitle>
               <CardDescription>
-                Avoid missing deadlines, keep on top of your credit deals.
+                From here you can both monitor active credit deals and manage
+                repayments.
               </CardDescription>
             </CardHeader>
             <CardContent>

@@ -44,4 +44,52 @@ const [createUserCreditDealsStore] = nanoquery({
   },
 });
 
-export { createUserBalancesStore, createUserCreditDealsStore };
+// Create fetcher store for user balances + open orders
+const [createUserPortfolioStore] = nanoquery({
+  fetcher: async (chain: string, accountID: string) => {
+    const response = await fetch(
+      `http://localhost:8080/api/getPortfolio/${chain}/${accountID}`,
+      { method: "GET" }
+    );
+
+    if (!response.ok) {
+      console.log(`Failed to fetch user portfolio`);
+      return;
+    }
+
+    const userPortfolioJSON = await response.json();
+
+    if (userPortfolioJSON && userPortfolioJSON.result) {
+      //console.log(`Fetched user portfolio`);
+      //console.log({ userPortfolioJSON });
+      return userPortfolioJSON.result;
+    }
+  },
+});
+
+const [createUserHistoryStore] = nanoquery({
+  fetcher: async (chain: string, accountID: string) => {
+    const response = await fetch(
+      `http://localhost:8080/api/getAccountHistory/${chain}/${accountID}`,
+      { method: "GET" }
+    );
+
+    if (!response.ok) {
+      console.log(`Failed to fetch user history`);
+      return;
+    }
+
+    const userHistoryJSON = await response.json();
+
+    if (userHistoryJSON && userHistoryJSON.result) {
+      return userHistoryJSON.result;
+    }
+  },
+});
+
+export {
+  createUserBalancesStore,
+  createUserCreditDealsStore,
+  createUserPortfolioStore,
+  createUserHistoryStore,
+};
