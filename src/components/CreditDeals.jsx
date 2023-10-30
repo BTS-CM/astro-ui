@@ -74,13 +74,16 @@ export default function CreditDeals(properties) {
     () => true
   );
 
-  useInitCache(usr && usr.chain ? usr.chain : "bitshares");
-
   const globalParams = useSyncExternalStore(
     $globalParamsCache.subscribe,
     $globalParamsCache.get,
     () => true
   );
+
+  useInitCache(usr && usr.chain ? usr.chain : "bitshares", [
+    "assets",
+    "globalParams",
+  ]);
 
   const [fee, setFee] = useState(0);
   useEffect(() => {

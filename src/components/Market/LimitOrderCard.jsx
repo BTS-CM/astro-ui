@@ -23,15 +23,6 @@ import {
 } from "@/components/ui/form";
 
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-
-import {
   Select,
   SelectContent,
   SelectItem,
@@ -51,12 +42,10 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
-  copyToClipboard,
   trimPrice,
   humanReadableFloat,
   blockchainFloat,
 } from "@/lib/common.js";
-import { opTypes } from "@/lib/opTypes";
 import DeepLinkDialog from "../common/DeepLinkDialog";
 
 /**

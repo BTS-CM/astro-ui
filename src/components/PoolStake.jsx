@@ -22,7 +22,7 @@ export default function PoolStake(properties) {
     () => true
   );
 
-  useInitCache(usr && usr.chain ? usr.chain : "bitshares");
+  //useInitCache(usr && usr.chain ? usr.chain : "bitshares");
 
   return (
     <>

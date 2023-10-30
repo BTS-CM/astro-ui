@@ -101,7 +101,12 @@ export default function PoolForm() {
     () => true
   );
 
-  useInitCache(usr && usr.chain ? usr.chain : "bitshares");
+  useInitCache(usr && usr.chain ? usr.chain : "bitshares", [
+    "marketSearch",
+    "allassets",
+    "pools",
+    "feeSchedule",
+  ]);
 
   const assets = useSyncExternalStore(
     $assetCache.subscribe,

@@ -58,8 +58,6 @@ export default function PortfolioTabs(properties) {
     () => true
   );
 
-  useInitCache(usr && usr.chain ? usr.chain : "bitshares");
-
   /*
   const globalParams = useSyncExternalStore(
     $globalParamsCache.subscribe,
@@ -76,6 +74,11 @@ export default function PortfolioTabs(properties) {
     }
   }, [globalParams]);
   */
+
+  useInitCache(usr && usr.chain ? usr.chain : "bitshares", [
+    "assets",
+    //"globalParams",
+  ]);
 
   const activeTabStyle = {
     backgroundColor: "#252526",

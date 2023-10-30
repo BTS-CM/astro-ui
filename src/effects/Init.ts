@@ -13,6 +13,7 @@ import {
   addOffersToCache,
   $assetCache,
   addAssetsToCache,
+  setBitassetData,
 } from "../stores/cache.ts";
 import {
   $userStorage,
@@ -23,29 +24,49 @@ import {
 
 // Create fetcher store
 const [createFetcherStore] = nanoquery({
-  fetcher: async (chain) => {
+  fetcher: async (chain: string, endpoints: string) => {
+    const _endpoints = endpoints ? endpoints.split(",") : [];
     const fetches = [
-      fetch(`http://localhost:8080/cache/marketSearch/${chain}`, {
-        method: "GET",
-      }),
-      fetch(`http://localhost:8080/cache/allassets/${chain}`, {
-        method: "GET",
-      }),
-      fetch(`http://localhost:8080/cache/pools/${chain}`, {
-        method: "GET",
-      }),
-      fetch(`http://localhost:8080/cache/feeSchedule/${chain}`, {
-        method: "GET",
-      }),
-      fetch(`http://localhost:8080/cache/offers/${chain}`, {
-        method: "GET",
-      }),
+      _endpoints.includes("marketSearch")
+        ? fetch(`http://localhost:8080/cache/marketSearch/${chain}`, {
+            method: "GET",
+          })
+        : null,
+      _endpoints.includes("assets")
+        ? fetch(`http://localhost:8080/cache/allassets/${chain}`, {
+            method: "GET",
+          })
+        : null,
+      _endpoints.includes("pools")
+        ? fetch(`http://localhost:8080/cache/pools/${chain}`, {
+            method: "GET",
+          })
+        : null,
+      _endpoints.includes("globalParams")
+        ? fetch(`http://localhost:8080/cache/feeSchedule/${chain}`, {
+            method: "GET",
+          })
+        : null,
+      _endpoints.includes("offers")
+        ? fetch(`http://localhost:8080/cache/offers/${chain}`, {
+            method: "GET",
+          })
+        : null,
+      _endpoints.includes("bitAssetData")
+        ? fetch(`http://localhost:8080/cache/bitassets/${chain}`, {
+            method: "GET",
+          })
+        : null,
     ];
 
     const responses = await Promise.all(fetches);
 
     const parsedResponses = await Promise.all(
       responses.map(async (response, index) => {
+        if (!response) {
+          return;
+        }
+
         if (!response.ok) {
           console.log("Failed to fetch data");
           return;
@@ -80,6 +101,9 @@ const [createFetcherStore] = nanoquery({
           case 4:
             addOffersToCache(parsedJSON);
             break;
+          case 5:
+            setBitassetData(parsedJSON);
+            break;
           default:
             break;
         }
@@ -90,9 +114,9 @@ const [createFetcherStore] = nanoquery({
   },
 });
 
-function useInitCache(chain) {
+function useInitCache(chain, endpoints) {
   const cacheStore = useMemo(() => {
-    return createFetcherStore([chain]);
+    return createFetcherStore([chain, endpoints.join(",")]);
   }, [chain]);
 
   const { data, loading, error } = useStore(cacheStore);

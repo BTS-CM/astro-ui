@@ -23,7 +23,7 @@ export default function LTM(properties) {
     () => true
   );
 
-  useInitCache(usr && usr.chain ? usr.chain : "bitshares");
+  //useInitCache(usr && usr.chain ? usr.chain : "bitshares");
   const [showDialog, setShowDialog] = useState(false);
 
   return (

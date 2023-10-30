@@ -22,7 +22,7 @@ export default function Featured(properties) {
     () => true
   );
 
-  useInitCache(usr && usr.chain ? usr.chain : "bitshares");
+  //useInitCache(usr && usr.chain ? usr.chain : "bitshares", []);
 
   const [retrievedMarkets, setRetrievedMarkets] = useState();
   useEffect(() => {

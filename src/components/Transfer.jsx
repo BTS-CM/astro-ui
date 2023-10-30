@@ -92,17 +92,23 @@ export default function Transfer(properties) {
     () => true
   );
 
+  const globalParams = useSyncExternalStore(
+    $globalParamsCache.subscribe,
+    $globalParamsCache.get,
+    () => true
+  );
+
   const marketSearch = useSyncExternalStore(
     $marketSearchCache.subscribe,
     $marketSearchCache.get,
     () => true
   );
 
-  const globalParams = useSyncExternalStore(
-    $globalParamsCache.subscribe,
-    $globalParamsCache.get,
-    () => true
-  );
+  useInitCache(usr && usr.chain ? usr.chain : "bitshares", [
+    "assets",
+    "globalParams",
+    "marketSearch",
+  ]);
 
   const [fee, setFee] = useState(0);
   useEffect(() => {
@@ -112,8 +118,6 @@ export default function Transfer(properties) {
       setFee(finalFee);
     }
   }, [globalParams]);
-
-  useInitCache(usr && usr.chain ? usr.chain : "bitshares");
 
   const [balanceCounter, setBalanceCoutner] = useState(0);
   const [balances, setBalances] = useState();

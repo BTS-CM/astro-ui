@@ -141,7 +141,6 @@ export default function Market(properties) {
 
   useEffect(() => {
     if (marketHistoryData && !marketHistoryLoading && !marketHistoryError) {
-      console.log({ marketHistoryData });
       setUsrBalances(marketHistoryData.balances);
       setUsrLimitOrders(marketHistoryData.accountLimitOrders);
       setPublicMarketHistory(marketHistoryData.marketHistory);
@@ -395,6 +394,63 @@ export default function Market(properties) {
                 />
               </TabsContent>
             </Tabs>
+
+            {!tickerData || !assetAData || !assetBData ? (
+              <Card className="mt-5">
+                <CardHeader className="pt-4 pb-2">
+                  <CardTitle>Market summary</CardTitle>
+                  <CardDescription className="text-lg">❔/❔</CardDescription>
+                </CardHeader>
+                <CardContent className="text-sm pb-4">
+                  <div className="grid grid-cols-1 gap-2">
+                    <div className="grid grid-cols-5">
+                      <div className="col-span-2">Latest price:</div>
+                      <div className="col-span-3">
+                        <Badge variant="outline" className="ml-2 mb-1">
+                          ❔
+                        </Badge>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-5">
+                      <div className="col-span-2">24Hr change:</div>
+                      <div className="col-span-3">❔</div>
+                    </div>
+                    <div className="grid grid-cols-5">
+                      <div className="col-span-2">24Hr base volume:</div>
+                      <div className="col-span-3">
+                        <Badge variant="outline" className="ml-2 mb-1">
+                          ❔
+                        </Badge>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-5">
+                      <div className="col-span-2">24Hr quote volume:</div>
+                      <div className="col-span-3">
+                        <Badge variant="outline" className="ml-2 mb-1">
+                          ❔
+                        </Badge>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-5">
+                      <div className="col-span-2">Lowest ask:</div>
+                      <div className="col-span-3">
+                        <Badge variant="outline" className="ml-2 mb-1">
+                          ❔
+                        </Badge>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-5">
+                      <div className="col-span-2">Highest bid:</div>
+                      <div className="col-span-3">
+                        <Badge variant="outline" className="ml-2">
+                          ❔
+                        </Badge>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ) : null}
 
             {tickerData &&
             assetAData &&

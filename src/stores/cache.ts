@@ -10,6 +10,21 @@ type Asset = {
   max_supply: string;
 };
 
+type BitassetData = {
+  id: string;
+  assetID: string;
+  issuer: {
+    id: string;
+    ltm: boolean;
+    name: string;
+  };
+  feeds: string[];
+  collateral: string;
+  mcr: number;
+  mssr: number;
+  icr: number;
+};
+
 type Pool = {
   id: string;
   asset_a_id: string;
@@ -177,10 +192,24 @@ function setGlobalParams(params: GlobalParameters) {
 }
 
 /**
+ * Declaring the BitAssetData cache nanostore
+ */
+const $bitAssetDataCache = map<BitassetData[]>([]);
+
+/**
+ * Function to add an array of BitAssetData to the BitAssetData cache
+ * @param bitAssetData The array of BitAssetData to add to the cache
+ */
+function setBitassetData(params: BitassetData[]) {
+  $bitAssetDataCache.set(params);
+}
+
+/**
  * Reset temp cache when the user switches blockchain
  */
 function resetCache() {
   $assetCache.set([]);
+  $bitAssetDataCache.set([]);
   $poolCache.set([]);
   $marketSearchCache.set([]);
   $globalParamsCache.set(null);
@@ -197,5 +226,7 @@ export {
   addMarketSearchesToCache,
   $globalParamsCache,
   setGlobalParams,
+  $bitAssetDataCache,
+  setBitassetData,
   resetCache,
 };

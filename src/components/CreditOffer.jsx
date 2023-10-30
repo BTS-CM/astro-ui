@@ -90,8 +90,6 @@ export default function CreditBorrow(properties) {
     () => true
   );
 
-  useInitCache(usr && usr.chain ? usr.chain : "bitshares");
-
   const assets = useSyncExternalStore(
     $assetCache.subscribe,
     $assetCache.get,
@@ -104,6 +102,18 @@ export default function CreditBorrow(properties) {
     () => true
   );
 
+  const offers = useSyncExternalStore(
+    $offersCache.subscribe,
+    $offersCache.get,
+    () => true
+  );
+
+  useInitCache(usr && usr.chain ? usr.chain : "bitshares", [
+    "assets",
+    "globalParams",
+    "offers",
+  ]);
+
   const [fee, setFee] = useState(0);
   useEffect(() => {
     if (globalParams && globalParams.length) {
@@ -112,12 +122,6 @@ export default function CreditBorrow(properties) {
       setFee(finalFee);
     }
   }, [globalParams]);
-
-  const offers = useSyncExternalStore(
-    $offersCache.subscribe,
-    $offersCache.get,
-    () => true
-  );
 
   const [error, setError] = useState(false);
   const [foundAsset, setFoundAsset] = useState(null);

@@ -59,13 +59,16 @@ export default function CreditBorrow(properties) {
     () => true
   );
 
-  useInitCache(usr && usr.chain ? usr.chain : "bitshares");
-
   const offers = useSyncExternalStore(
     $offersCache.subscribe,
     $offersCache.get,
     () => true
   );
+
+  useInitCache(usr && usr.chain ? usr.chain : "bitshares", [
+    "assets",
+    "offers",
+  ]);
 
   const [usrBalances, setUsrBalances] = useState();
   const [balanceAssetIDs, setBalanceAssetIDs] = useState([]);

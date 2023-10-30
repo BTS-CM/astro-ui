@@ -6,6 +6,7 @@ import React, {
 } from "react";
 
 import Market from "./Market";
+import MarketPlaceholder from "./MarketPlaceholder";
 import CurrentUser from "./common/CurrentUser.jsx";
 
 import { humanReadableFloat, trimPrice } from "../lib/common";
@@ -39,17 +40,23 @@ export default function MarketOverlay(properties) {
     () => true
   );
 
+  const globalParams = useSyncExternalStore(
+    $globalParamsCache.subscribe,
+    $globalParamsCache.get,
+    () => true
+  );
+
   const marketSearch = useSyncExternalStore(
     $marketSearchCache.subscribe,
     $marketSearchCache.get,
     () => true
   );
 
-  const globalParams = useSyncExternalStore(
-    $globalParamsCache.subscribe,
-    $globalParamsCache.get,
-    () => true
-  );
+  useInitCache(usr && usr.chain ? usr.chain : "bitshares", [
+    "assets",
+    "globalParams",
+    "marketSearch",
+  ]);
 
   const [limitOrderFee, setLimitOrderFee] = useState(0);
   useEffect(() => {
@@ -60,7 +67,6 @@ export default function MarketOverlay(properties) {
     }
   }, [globalParams]);
 
-  useInitCache(usr && usr.chain ? usr.chain : "bitshares");
   // End of init
 
   const searchSymbols = useMemo(
@@ -339,7 +345,9 @@ export default function MarketOverlay(properties) {
               key={`Market_${assetA}_${assetB}`}
             />
           </>
-        ) : null}
+        ) : (
+          <MarketPlaceholder />
+        )}
       </div>
       {usr && usr.username && usr.username.length ? (
         <CurrentUser usr={usr} />

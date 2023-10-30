@@ -25,6 +25,7 @@ export default function ExternalLink(properties) {
     "https://ex.xbts.io/",
     "https://kibana.bts.mobi/",
     "https://www.bitsharescan.info/",
+    "https://github.com/bitshares/beet",
   ]; // Crude counter-xss measure
 
   if (!allowedDomains.some((domain) => hyperlink.startsWith(domain))) {

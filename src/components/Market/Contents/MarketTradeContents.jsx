@@ -35,16 +35,14 @@ export default function MarketTradeContents(properties) {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-2">
-        {(!publicMarketHistory || !publicMarketHistory.length) &&
-        !marketHistoryInProgress ? (
-          type === "buy" ? (
-            <>No recently completed purchases found</>
-          ) : (
-            <>No recently completed sales found</>
-          )
-        ) : null}
-        {(!publicMarketHistory || !publicMarketHistory.length) &&
-        marketHistoryInProgress ? (
+        {publicMarketHistory && publicMarketHistory.length ? (
+          <MarketSummary
+            type={type}
+            publicMarketHistory={publicMarketHistory}
+            assetAData={assetAData}
+            assetBData={assetBData}
+          />
+        ) : (
           <>
             <Skeleton className="h-4 w-full mt-1" />
             <Skeleton className="h-4 w-full mt-1" />
@@ -59,15 +57,7 @@ export default function MarketTradeContents(properties) {
             <Skeleton className="h-4 w-full mt-1" />
             <Skeleton className="h-4 w-full mt-1" />
           </>
-        ) : null}
-        {publicMarketHistory && publicMarketHistory.length ? (
-          <MarketSummary
-            type={type}
-            publicMarketHistory={publicMarketHistory}
-            assetAData={assetAData}
-            assetBData={assetBData}
-          />
-        ) : null}
+        )}
       </CardContent>
       <CardFooter>
         <Button onClick={reset}>Refresh market trades</Button>
