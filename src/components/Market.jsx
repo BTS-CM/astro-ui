@@ -441,12 +441,7 @@ export default function Market(properties) {
               </Card>
             ) : null}
 
-            {tickerData &&
-            assetAData &&
-            assetBData &&
-            (assetABitassetData || assetBBitassetData)
-              ? marketHoverCard
-              : null}
+            {tickerData && assetAData && assetBData ? marketHoverCard : null}
           </div>
           <div className="col-span-1">
             <div className="grid grid-cols-1 gap-y-2">
@@ -509,14 +504,6 @@ export default function Market(properties) {
                   </CardContent>
                 </Card>
               </div>
-
-              {tickerData &&
-              assetAData &&
-              !assetABitassetData &&
-              assetBData &&
-              !assetBBitassetData
-                ? marketHoverCard
-                : null}
 
               <div className="flex-grow" style={{ paddingBottom: "0px" }}>
                 {assetADetails ? (
