@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useSyncExternalStore } from "react";
 import { FixedSizeList as List } from "react-window";
 
 import {
@@ -30,13 +30,11 @@ import { $poolCache } from "../../stores/cache.ts";
 export default function PoolDialogs(properties) {
   const { assetA, assetB, assetAData, assetBData } = properties;
 
-  const [pools, setPoolCache] = useState([]);
-  useEffect(() => {
-    const unsubscribe = $poolCache.subscribe((value) => {
-      setPoolCache(value);
-    });
-    return unsubscribe;
-  }, [$poolCache]);
+  const pools = useSyncExternalStore(
+    $poolCache.subscribe,
+    $poolCache.get,
+    () => true
+  );
 
   const [assetAPools, setAssetAPools] = useState();
   const [assetBPools, setAssetBPools] = useState();

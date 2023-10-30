@@ -155,17 +155,6 @@ export default function Market(properties) {
     }
   }, [marketHistoryData, marketHistoryLoading, marketHistoryError]);
 
-  useEffect(() => {
-    if (assetA && assetB && usr && usr.chain) {
-      const interval = setInterval(() => {
-        // Fetching data from the API every 30 seconds
-        setMarketItr(marketItr + 1);
-        setOrderBookItr(orderBookItr + 1);
-      }, 30000);
-      return () => clearInterval(interval);
-    }
-  }, [assetA, assetB, usr]);
-
   const activeTabStyle = {
     backgroundColor: "#252526",
     color: "white",

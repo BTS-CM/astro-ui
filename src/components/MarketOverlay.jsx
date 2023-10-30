@@ -56,6 +56,7 @@ export default function MarketOverlay(properties) {
     "assets",
     "globalParams",
     "marketSearch",
+    "pools",
   ]);
 
   const [limitOrderFee, setLimitOrderFee] = useState(0);

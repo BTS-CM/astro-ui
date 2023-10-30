@@ -20,6 +20,7 @@ const [createUserBalancesStore] = nanoquery({
       return userBalancesJSON.result;
     }
   },
+  refetchInterval: 60000,
 });
 
 // Create fetcher store for user credit deals
@@ -42,6 +43,7 @@ const [createUserCreditDealsStore] = nanoquery({
       return userCreditDealsJSON.result;
     }
   },
+  refetchInterval: 60000,
 });
 
 // Create fetcher store for user balances + open orders
@@ -65,6 +67,7 @@ const [createUserPortfolioStore] = nanoquery({
       return userPortfolioJSON.result;
     }
   },
+  refetchInterval: 60000,
 });
 
 const [createUserHistoryStore] = nanoquery({
@@ -85,6 +88,7 @@ const [createUserHistoryStore] = nanoquery({
       return userHistoryJSON.result;
     }
   },
+  refetchInterval: 60000,
 });
 
 export {

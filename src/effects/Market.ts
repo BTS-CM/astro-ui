@@ -25,6 +25,7 @@ const [createMarketHistoryStore] = nanoquery({
 
     throw new Error("No market history data");
   },
+  refetchInterval: 30000,
 });
 
 // Create fetcher store for market orders
@@ -52,6 +53,7 @@ const [createMarketOrdersStore] = nanoquery({
 
     throw new Error("No market orders data");
   },
+  refetchInterval: 30000,
 });
 
 const [createMarketsStore] = nanoquery({
@@ -76,6 +78,7 @@ const [createMarketsStore] = nanoquery({
       return responseContents.result;
     }
   },
+  refetchInterval: 60000,
 });
 
 export {
