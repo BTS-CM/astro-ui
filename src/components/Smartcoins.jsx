@@ -98,6 +98,20 @@ export default function Smartcoins(properties) {
     }
   }, [usrBalances, bitAssetData, marketSearch]);
 
+  const heldSmartcoins = useMemo(() => {
+    if (usrBalances && bitAssetData && marketSearch) {
+      const _smartcoins = bitAssetData.filter((bitasset) => {
+        const debtAssetBalance = usrBalances.find(
+          (x) => x.asset_id === bitasset.assetID
+        );
+
+        return debtAssetBalance ? true : false;
+      });
+
+      return _smartcoins;
+    }
+  }, [usrBalances, bitAssetData, marketSearch]);
+
   const [activeTab, setActiveTab] = useState("all");
   const [activeSearch, setActiveSearch] = useState("borrow");
 
@@ -206,7 +220,7 @@ export default function Smartcoins(properties) {
             <Badge className="mr-2">ICR: {bitasset.icr / 10} %</Badge>
           </CardContent>
           <CardFooter className="pb-5">
-            <a href={`/smartcoin/index.html?id=${bitasset.id}`}>
+            <a href={`/smartcoin/index.html?id=${bitasset.assetID}`}>
               <Button className="h-8">
                 Proceed to borrow {thisBitassetData.s}
               </Button>
@@ -223,15 +237,23 @@ export default function Smartcoins(properties) {
       bitasset = bitAssetData[index];
     } else if (activeTab === "compatible") {
       bitasset = compatibleSmartcoins[index];
+    } else if (activeTab === "holdings") {
+      bitasset = heldSmartcoins[index];
     }
 
-    const thisBitassetData = marketSearch.find(
-      (x) => x.id === bitasset.assetID
-    );
+    const thisBitassetData =
+      bitasset && marketSearch
+        ? marketSearch.find((x) => x.id === bitasset.assetID)
+        : null;
 
-    const thisCollateralAssetData = marketSearch.find(
-      (x) => x.id === bitasset.collateral
-    );
+    const thisCollateralAssetData =
+      bitasset && marketSearch
+        ? marketSearch.find((x) => x.id === bitasset.collateral)
+        : null;
+
+    if (!bitasset || !thisBitassetData || !thisCollateralAssetData) {
+      return null;
+    }
 
     return (
       <CommonRow
@@ -285,7 +307,7 @@ export default function Smartcoins(properties) {
             <CardContent>
               {bitAssetData && bitAssetData.length && usrBalances ? (
                 <Tabs defaultValue="all" className="w-full">
-                  <TabsList className="grid w-full grid-cols-3 gap-2">
+                  <TabsList className="grid w-full grid-cols-4 gap-2">
                     {activeTab === "all" ? (
                       <TabsTrigger value="all" style={activeTabStyle}>
                         Viewing all assets
@@ -300,14 +322,26 @@ export default function Smartcoins(properties) {
                     )}
                     {activeTab === "compatible" ? (
                       <TabsTrigger value="compatible" style={activeTabStyle}>
-                        Viewing compatible assets
+                        Viewing compatible
                       </TabsTrigger>
                     ) : (
                       <TabsTrigger
                         value="compatible"
                         onClick={() => setActiveTab("compatible")}
                       >
-                        View compatible assets
+                        View compatible
+                      </TabsTrigger>
+                    )}
+                    {activeTab === "holdings" ? (
+                      <TabsTrigger value="holdings" style={activeTabStyle}>
+                        Viewing holdings
+                      </TabsTrigger>
+                    ) : (
+                      <TabsTrigger
+                        value="holdings"
+                        onClick={() => setActiveTab("holdings")}
+                      >
+                        View holdings
                       </TabsTrigger>
                     )}
                     {activeTab === "search" ? (
@@ -344,6 +378,20 @@ export default function Smartcoins(properties) {
                     <List
                       height={500}
                       itemCount={compatibleSmartcoins.length}
+                      itemSize={200}
+                      className="w-full"
+                    >
+                      {BitassetRow}
+                    </List>
+                  </TabsContent>
+                  <TabsContent value="holdings">
+                    <h5 className="mb-2 text-center">
+                      Listing {heldSmartcoins ? heldSmartcoins.length : 0} held
+                      smartcoins
+                    </h5>
+                    <List
+                      height={500}
+                      itemCount={heldSmartcoins ? heldSmartcoins.length : 0}
                       itemSize={200}
                       className="w-full"
                     >
