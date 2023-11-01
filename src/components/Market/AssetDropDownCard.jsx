@@ -116,7 +116,9 @@ export default function AssetDropDown(properties) {
           {!assetSymbol ? "Select an asset" : null}
           {!size && assetSymbol ? "Change asset" : null}
           {size && assetSymbol && assetSymbol.length < 12 ? assetSymbol : null}
-          {size && assetSymbol && assetSymbol.length > 12 ? assetData.id : null}
+          {size && assetSymbol && assetSymbol.length >= 12
+            ? assetData.id
+            : null}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] bg-white">

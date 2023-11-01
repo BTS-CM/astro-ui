@@ -26,18 +26,16 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
 
 import { useInitCache } from "../effects/Init.ts";
 import { createUserBalancesStore } from "../effects/User.ts";
-import {
-  createSmartcoinDataStore,
-  createBitassetDataStore,
-  createCachedAssetStore,
-} from "../effects/Assets.ts";
+import { createSmartcoinDataStore } from "../effects/Assets.ts";
 
 import { $currentUser } from "../stores/users.ts";
 import {
@@ -51,6 +49,11 @@ import DeepLinkDialog from "./common/DeepLinkDialog";
 
 import { humanReadableFloat } from "../lib/common.js";
 import ExternalLink from "./common/ExternalLink.jsx";
+
+const activeTabStyle = {
+  backgroundColor: "#252526",
+  color: "white",
+};
 
 export default function Smartcoin(properties) {
   const form = useForm({
@@ -166,23 +169,44 @@ export default function Smartcoin(properties) {
     return null;
   }, [parsedAsset, bitAssetData]);
 
+  const parsedCollateralAsset = useMemo(() => {
+    if (parsedBitasset && bitAssetData) {
+      const foundAsset = marketSearch.find(
+        (x) => x.id === parsedBitasset.collateral
+      );
+      return foundAsset;
+    }
+    return null;
+  }, [parsedBitasset, bitAssetData]);
+
   const [finalAsset, setFinalAsset] = useState();
   const [finalBitasset, setFinalBitasset] = useState();
+  const [usrMarginPositions, setUsrMarginPositions] = useState();
+  const [assetCallOrders, setAssetCallOrders] = useState();
+  const [assetSettleOrders, setAssetSettleOrders] = useState();
+  const [buyOrders, setBuyOrders] = useState();
+  const [sellOrders, setSellOrders] = useState();
 
   useEffect(() => {
     let unsub;
 
     if (parsedBitasset && parsedBitasset && usr && usr.chain) {
-      const bitassetDataStore = createSmartcoinDataStore([
+      const smartcoinDataStore = createSmartcoinDataStore([
         usr.chain,
         parsedAsset.id,
+        parsedBitasset.collateral,
         parsedBitasset.id,
+        usr.id,
       ]);
-      unsub = bitassetDataStore.subscribe(({ data }) => {
+      unsub = smartcoinDataStore.subscribe(({ data }) => {
         if (data && !data.error && !data.loading) {
-          console.log({ data });
           setFinalAsset(data[0]);
           setFinalBitasset(data[1]);
+          setUsrMarginPositions(data[2]);
+          setAssetCallOrders(data[3]);
+          setAssetSettleOrders(data[4]);
+          setBuyOrders(data[5].asks);
+          setSellOrders(data[5].bids);
         }
       });
     }
@@ -192,13 +216,44 @@ export default function Smartcoin(properties) {
     };
   }, [parsedAsset, parsedBitasset, usr]);
 
-  console.log({ finalAsset, finalBitasset });
-
+  const [activeOrderTab, setActiveOrderTab] = useState("buy");
   const [showDialog, setShowDialog] = useState(false);
 
   const [debtAmount, setDebtAmount] = useState(0);
   const [collateralAmount, setCollateralAmount] = useState(0);
   const [ratioValue, setRatioValue] = useState(0);
+
+  const OrderRow = ({ index, style }) => {
+    let reference;
+    let res;
+    let precision;
+    if (activeOrderTab === "buy") {
+      reference = buyOrders;
+      res = buyOrders[index];
+      precision = parsedAsset.p;
+    } else {
+      reference = sellOrders;
+      res = sellOrders[index];
+      precision = parsedCollateralAsset.p;
+    }
+
+    return (
+      <div className="grid grid-cols-4 text-sm" style={style}>
+        <div className="col-span-1">
+          {parseFloat(res.price).toFixed(precision)}
+        </div>
+        <div className="col-span-1">{res.base}</div>
+        <div className="col-span-1">{res.quote}</div>
+        <div className="col-span-1">
+          {reference
+            .slice(0, index + 1)
+            .map((x) => parseFloat(x.base))
+            .reduce((acc, curr) => acc + curr, 0)
+            .toFixed(precision)}
+        </div>
+      </div>
+    );
+  };
 
   return (
     <>
@@ -495,8 +550,8 @@ export default function Smartcoin(properties) {
               usrChain={usr.chain}
               userID={usr.id}
               dismissCallback={setShowDialog}
-              key={`HeaderText`}
-              headerText={`HeaderText`}
+              key={`Borrowing${parsedAsset.s}with${parsedCollateralAsset.s}backingcollateral`}
+              headerText={`Borrowing ${parsedAsset.s} with ${parsedCollateralAsset.s} backing collateral`}
               trxJSON={[
                 {
                   funding_account: usr.id,
@@ -513,6 +568,115 @@ export default function Smartcoin(properties) {
               ]}
             />
           ) : null}
+        </div>
+        <div className="grid grid-cols-1 mt-5">
+          <Card>
+            <CardHeader className="pb-3">
+              <div className="grid grid-cols-2">
+                <div className="col-span-1">
+                  <CardTitle>
+                    {parsedAsset && parsedCollateralAsset
+                      ? `Order book for ${parsedAsset.s}/${parsedCollateralAsset.s}`
+                      : "Order book loading..."}
+                  </CardTitle>
+                  <CardDescription>Note: Only showing top 10</CardDescription>
+                </div>
+                <div className="col-span-1 text-right">
+                  <a
+                    href={
+                      parsedAsset && parsedCollateralAsset
+                        ? `/dex/index.html?market=${parsedAsset.s}_${parsedCollateralAsset.s}`
+                        : ""
+                    }
+                  >
+                    <Button>Go to market</Button>
+                  </a>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <Tabs defaultValue="buy" className="w-full">
+                <TabsList className="grid w-full grid-cols-2 gap-2">
+                  {activeOrderTab === "buy" ? (
+                    <TabsTrigger value="buy" style={activeTabStyle}>
+                      Viewing buy orders
+                    </TabsTrigger>
+                  ) : (
+                    <TabsTrigger
+                      value="buy"
+                      onClick={() => setActiveOrderTab("buy")}
+                    >
+                      View buy orders
+                    </TabsTrigger>
+                  )}
+                  {activeOrderTab === "sell" ? (
+                    <TabsTrigger value="sell" style={activeTabStyle}>
+                      Viewing sell orders
+                    </TabsTrigger>
+                  ) : (
+                    <TabsTrigger
+                      value="sell"
+                      onClick={() => setActiveOrderTab("sell")}
+                    >
+                      View sell orders
+                    </TabsTrigger>
+                  )}
+                </TabsList>
+                <TabsContent value="buy">
+                  {buyOrders && buyOrders.length ? (
+                    <>
+                      <div className="grid grid-cols-4">
+                        <div className="col-span-1">Price</div>
+                        <div className="col-span-1">
+                          {parsedCollateralAsset.s}
+                        </div>
+                        <div className="col-span-1">{parsedAsset.s}</div>
+                        <div className="col-span-1">Total</div>
+                      </div>
+                      <List
+                        height={260}
+                        itemCount={buyOrders.length}
+                        itemSize={25}
+                        className="w-full"
+                      >
+                        {OrderRow}
+                      </List>
+                    </>
+                  ) : null}
+                  {buyOrders && !buyOrders.length
+                    ? "No buy orders found"
+                    : null}
+                  {!buyOrders ? "Loading..." : null}
+                </TabsContent>
+                <TabsContent value="sell">
+                  {sellOrders && sellOrders.length ? (
+                    <>
+                      <div className="grid grid-cols-4">
+                        <div className="col-span-1">Price</div>
+                        <div className="col-span-1">{parsedAsset.s}</div>
+                        <div className="col-span-1">
+                          {parsedCollateralAsset.s}
+                        </div>
+                        <div className="col-span-1">Total</div>
+                      </div>
+                      <List
+                        height={260}
+                        itemCount={sellOrders.length}
+                        itemSize={25}
+                        className="w-full"
+                      >
+                        {OrderRow}
+                      </List>
+                    </>
+                  ) : null}
+                  {sellOrders && !sellOrders.length
+                    ? "No sell orders found"
+                    : null}
+                  {!sellOrders ? "Loading..." : null}
+                </TabsContent>
+              </Tabs>
+            </CardContent>
+          </Card>
         </div>
         <div className="grid grid-cols-1 mt-5">
           {usr && usr.username && usr.username.length ? (

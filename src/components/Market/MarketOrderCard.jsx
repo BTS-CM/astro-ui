@@ -91,22 +91,7 @@ export default function MarketOrderCard(properties) {
         <Card>
           <CardHeader>
             <CardTitle>
-              <div className="grid grid-cols-2">
-                <div>{cardType === "buy" ? "Buy" : "Sell"} orders</div>
-                <div className="text-right">
-                  Market depth:{" "}
-                  {cardType === "buy"
-                    ? buyOrders
-                        .map((x) => parseFloat(x.quote))
-                        .reduce((acc, curr) => acc + curr, 0)
-                        .toFixed(assetBData.precision)
-                    : sellOrders
-                        .map((x) => parseFloat(x.quote))
-                        .reduce((acc, curr) => acc + curr, 0)
-                        .toFixed(assetAData.precision)}{" "}
-                  ({cardType === "buy" ? assetBData.symbol : assetAData.symbol})
-                </div>
-              </div>
+              {cardType === "buy" ? "Buy orders" : "Sell orders"}
             </CardTitle>
             <CardDescription>
               {cardType === "buy"
@@ -123,10 +108,44 @@ export default function MarketOrderCard(properties) {
                 <div className="grid grid-cols-4">
                   <div className="col-span-1 pl-3">Price</div>
                   <div className="col-span-1 pl-3 text-md">
-                    {cardType === "buy" ? "Buying" : "Selling"}
+                    {cardType === "buy" && assetA && assetA.length < 12
+                      ? assetA
+                      : null}
+                    {cardType === "buy" &&
+                    assetA &&
+                    assetA.length >= 12 &&
+                    assetAData
+                      ? assetAData.id
+                      : null}
+                    {cardType === "sell" && assetB && assetB.length < 12
+                      ? assetB
+                      : null}
+                    {cardType === "sell" &&
+                    assetB &&
+                    assetB.length >= 12 &&
+                    assetBData
+                      ? assetBData.id
+                      : null}
                   </div>
                   <div className="col-span-1 pl-3">
-                    {cardType === "buy" ? "Selling" : "Buying"}
+                    {cardType === "buy" && assetB && assetB.length < 12
+                      ? assetB
+                      : null}
+                    {cardType === "buy" &&
+                    assetB &&
+                    assetB.length >= 12 &&
+                    assetBData
+                      ? assetBData.id
+                      : null}
+                    {cardType === "sell" && assetA && assetA.length < 12
+                      ? assetA
+                      : null}
+                    {cardType === "sell" &&
+                    assetA &&
+                    assetA.length >= 12 &&
+                    assetAData
+                      ? assetAData.id
+                      : null}
                   </div>
                   <div className="col-span-1 pl-3">Total</div>
                 </div>
