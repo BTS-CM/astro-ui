@@ -24,6 +24,27 @@ const [createDynamicDataStore] = nanoquery({
   },
 });
 
+// Create fetcher store for live full smartcoin data (asset + bitasset data)
+const [createSmartcoinDataStore] = nanoquery({
+  fetcher: async (chain: string, assetID: string, bitassetID: string) => {
+    const response = await fetch(
+      `http://localhost:8080/api/fullSmartcoin/${chain}`,
+      { method: "POST", body: JSON.stringify([assetID, bitassetID]) }
+    );
+
+    if (!response.ok) {
+      console.log("Failed to fetch bitasset data");
+      return;
+    }
+
+    const responseContents = await response.json();
+
+    if (responseContents && responseContents.result) {
+      return responseContents.result;
+    }
+  },
+});
+
 // Create fetcher store for bitasset data
 const [createBitassetDataStore] = nanoquery({
   fetcher: async (chain: string, id: string) => {
@@ -73,6 +94,7 @@ const [createCachedAssetStore] = nanoquery({
 });
 
 export {
+  createSmartcoinDataStore,
   createBitassetDataStore,
   createCachedAssetStore,
   createDynamicDataStore,
