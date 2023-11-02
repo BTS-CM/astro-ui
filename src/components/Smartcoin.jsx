@@ -47,7 +47,7 @@ import {
 import CurrentUser from "./common/CurrentUser.jsx";
 import DeepLinkDialog from "./common/DeepLinkDialog";
 
-import { humanReadableFloat } from "../lib/common.js";
+import { humanReadableFloat, getFlagBooleans } from "../lib/common.js";
 import ExternalLink from "./common/ExternalLink.jsx";
 
 const activeTabStyle = {
@@ -179,8 +179,36 @@ export default function Smartcoin(properties) {
     return null;
   }, [parsedBitasset, bitAssetData]);
 
+  const debtAssetHoldings = useMemo(() => {
+    if (parsedAsset && usrBalances && usrBalances.length) {
+      const foundAsset = usrBalances.find((x) => x.asset_id === parsedAsset.id);
+      if (!foundAsset) {
+        return 0;
+      }
+      const finalAmount = humanReadableFloat(foundAsset.amount, parsedAsset.p);
+      return finalAmount;
+    }
+  }, [parsedAsset, usrBalances]);
+
+  const collateralAssetHoldings = useMemo(() => {
+    if (parsedCollateralAsset && usrBalances && usrBalances.length) {
+      const foundAsset = usrBalances.find(
+        (x) => x.asset_id === parsedCollateralAsset.id
+      );
+      if (!foundAsset) {
+        return 0;
+      }
+      const finalAmount = humanReadableFloat(
+        foundAsset.amount,
+        parsedCollateralAsset.p
+      );
+      return finalAmount;
+    }
+  }, [parsedCollateralAsset, usrBalances]);
+
   const [finalAsset, setFinalAsset] = useState();
   const [finalBitasset, setFinalBitasset] = useState();
+  const [finalCollateralAsset, setFinalCollateralAsset] = useState();
   const [usrMarginPositions, setUsrMarginPositions] = useState();
   const [assetCallOrders, setAssetCallOrders] = useState();
   const [assetSettleOrders, setAssetSettleOrders] = useState();
@@ -201,12 +229,13 @@ export default function Smartcoin(properties) {
       unsub = smartcoinDataStore.subscribe(({ data }) => {
         if (data && !data.error && !data.loading) {
           setFinalAsset(data[0]);
-          setFinalBitasset(data[1]);
-          setUsrMarginPositions(data[2]);
-          setAssetCallOrders(data[3]);
-          setAssetSettleOrders(data[4]);
-          setBuyOrders(data[5].asks);
-          setSellOrders(data[5].bids);
+          setFinalCollateralAsset(data[1]);
+          setFinalBitasset(data[2]);
+          setUsrMarginPositions(data[3]);
+          setAssetCallOrders(data[4]);
+          setAssetSettleOrders(data[5]);
+          setBuyOrders(data[6].asks);
+          setSellOrders(data[6].bids);
         }
       });
     }
@@ -216,12 +245,109 @@ export default function Smartcoin(properties) {
     };
   }, [parsedAsset, parsedBitasset, usr]);
 
+  const settlementFund = useMemo(() => {
+    if (finalAsset && parsedAsset && parsedCollateralAsset) {
+      const finalSettlementFund = humanReadableFloat(
+        parseInt(finalBitasset.settlement_fund),
+        parsedCollateralAsset.p
+      );
+
+      const finalSettlementPrice = parseFloat(
+        (
+          1 /
+          (humanReadableFloat(
+            finalBitasset.settlement_price.quote.amount,
+            parsedCollateralAsset.p
+          ) /
+            humanReadableFloat(
+              finalBitasset.settlement_price.base.amount,
+              parsedAsset.p
+            ))
+        ).toFixed(parsedAsset.p)
+      );
+
+      return { finalSettlementFund, finalSettlementPrice };
+    }
+  }, [finalBitasset, parsedAsset, parsedCollateralAsset]);
+
+  const parsedAssetFlags = useMemo(() => {
+    if (finalAsset) {
+      const obj = getFlagBooleans(finalAsset.options.flags);
+      return Object.keys(obj).map((key) => (
+        <Badge className="mr-2">{key}</Badge>
+      ));
+    }
+  }, [finalAsset]);
+
+  const collateralFlags = useMemo(() => {
+    if (finalCollateralAsset) {
+      const obj = getFlagBooleans(finalCollateralAsset.options.flags);
+      return Object.keys(obj).map((key) => (
+        <Badge className="mr-2">{key}</Badge>
+      ));
+    }
+  }, [finalCollateralAsset]);
+
+  const parsedIsserPermissions = useMemo(() => {
+    if (finalAsset) {
+      const obj = getFlagBooleans(finalAsset.options.issuer_permissions);
+      return Object.keys(obj).map((key) => (
+        <Badge className="mr-2">{key}</Badge>
+      ));
+    }
+  }, [finalAsset]);
+
+  const collateralPermissions = useMemo(() => {
+    if (finalCollateralAsset) {
+      const obj = getFlagBooleans(
+        finalCollateralAsset.options.issuer_permissions
+      );
+      return Object.keys(obj).map((key) => (
+        <Badge className="mr-2">{key}</Badge>
+      ));
+    }
+  }, [finalCollateralAsset]);
+
   const [activeOrderTab, setActiveOrderTab] = useState("buy");
   const [showDialog, setShowDialog] = useState(false);
 
   const [debtAmount, setDebtAmount] = useState(0);
   const [collateralAmount, setCollateralAmount] = useState(0);
   const [ratioValue, setRatioValue] = useState(0);
+
+  const MarginPositionRow = ({ index, style }) => {
+    const res = assetCallOrders[index];
+    const collateralAmount = humanReadableFloat(
+      res.collateral,
+      parsedCollateralAsset.p
+    );
+    const debtAmount = humanReadableFloat(res.debt, parsedAsset.p);
+    const callPrice = (
+      humanReadableFloat(res.call_price.quote.amount, parsedAsset.p) /
+      humanReadableFloat(res.call_price.base.amount, parsedCollateralAsset.p)
+    ).toFixed(parsedAsset.p);
+    const tcr = res.target_collateral_ratio
+      ? `${res.target_collateral_ratio / 10}%`
+      : `0%`;
+    const ratio = (collateralAmount / debtAmount / 100).toFixed(3);
+    return (
+      <div className="grid grid-cols-6 text-sm" style={style}>
+        <div className="col-span-1">
+          <ExternalLink
+            classNameContents="text-blue-500"
+            type="text"
+            text={res.borrower}
+            hyperlink={`https://blocksights.info/#/accounts/${res.borrower}`}
+          />
+        </div>
+        <div className="col-span-1">{collateralAmount}</div>
+        <div className="col-span-1">{debtAmount}</div>
+        <div className="col-span-1">{callPrice}</div>
+        <div className="col-span-1">{tcr}</div>
+        <div className="col-span-1">{ratio}</div>
+      </div>
+    );
+  };
 
   const OrderRow = ({ index, style }) => {
     let reference;
@@ -255,6 +381,17 @@ export default function Smartcoin(properties) {
     );
   };
 
+  const SettlementRow = ({ index, style }) => {
+    let res = assetSettleOrders[index];
+    return (
+      <div className="grid grid-cols-3 text-sm" style={style}>
+        <div className="col-span-1">{res.account_id_type ?? "?"}</div>
+        <div className="col-span-1">{res.asset ?? "?"}</div>
+        <div className="col-span-1">{res.time_point_sec ?? "?"}</div>
+      </div>
+    );
+  };
+
   return (
     <>
       <div className="container mx-auto mt-5 mb-5">
@@ -277,6 +414,7 @@ export default function Smartcoin(properties) {
               </CardContent>
             </Card>
           ) : null}
+
           {parsedBitasset ? (
             <Card>
               <CardHeader>
@@ -328,39 +466,6 @@ export default function Smartcoin(properties) {
                         </FormItem>
                       )}
                     />
-
-                    <Label>
-                      {parsedBitasset.issuer.id === "1.2.0"
-                        ? "Bitasset"
-                        : "Smartcoin"}{" "}
-                      info
-                      {parsedAsset ? (
-                        <>
-                          {" ("}
-                          <ExternalLink
-                            classNameContents="text-blue-500"
-                            type="text"
-                            text="More info"
-                            hyperlink={`https://blocksights.info/#/assets/${parsedAsset.id}`}
-                          />
-                          {")"}
-                        </>
-                      ) : null}
-                    </Label>
-                    <br />
-                    <Badge className="mr-2 mt-2">
-                      Feed qty:{" "}
-                      {parsedBitasset ? parsedBitasset.feeds.length : 0}
-                    </Badge>
-                    <Badge className="mr-2">
-                      MCR: {parsedBitasset ? parsedBitasset.mcr / 10 : 0} %
-                    </Badge>
-                    <Badge className="mr-2">
-                      MSSR: {parsedBitasset ? parsedBitasset.mssr / 10 : 0} %
-                    </Badge>
-                    <Badge className="mr-2">
-                      ICR: {parsedBitasset ? parsedBitasset.icr / 10 : 0} %
-                    </Badge>
 
                     <FormField
                       control={form.control}
@@ -432,7 +537,8 @@ export default function Smartcoin(properties) {
                             <div className="grid grid-cols-2 mt-2">
                               <div className="col-span-1 mt-1">Debt amount</div>
                               <div className="col-span-1 text-right">
-                                Available:
+                                Available: {debtAssetHoldings ?? 0}{" "}
+                                {parsedAsset ? parsedAsset.s : "?"}
                               </div>
                             </div>
                           </FormLabel>
@@ -468,7 +574,10 @@ export default function Smartcoin(properties) {
                                 Collateral amount
                               </div>
                               <div className="col-span-1 text-right">
-                                Available:
+                                Available: {collateralAssetHoldings ?? 0}{" "}
+                                {parsedCollateralAsset
+                                  ? parsedCollateralAsset.s
+                                  : "?"}
                               </div>
                             </div>
                           </FormLabel>
@@ -543,6 +652,200 @@ export default function Smartcoin(properties) {
             </Card>
           ) : null}
 
+          {parsedCollateralAsset &&
+          parsedAsset &&
+          settlementFund &&
+          settlementFund.finalSettlementFund &&
+          settlementFund.finalSettlementFund > 0 ? (
+            <>
+              <div className="grid grid-cols-1 mt-2 mb-2">
+                <Card>
+                  <CardHeader className="pb-3">
+                    <CardTitle>{finalAsset.symbol} settlement fund</CardTitle>
+                    <CardDescription>
+                      This smartcoin currently has a settlement fund and so is
+                      likely in a form of global settlement.
+                      <br />
+                      Borrowing may be unavailable until settlement is complete.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-3">
+                      <div className="col-span-1">
+                        Fund
+                        <br />
+                        <span className="text-md">
+                          {settlementFund.finalSettlementFund}{" "}
+                          {parsedCollateralAsset.s}
+                        </span>
+                      </div>
+                      <div className="col-span-1">
+                        Price
+                        <br />
+                        <span className="text-md">
+                          {settlementFund.finalSettlementPrice} {parsedAsset.s}/
+                          {parsedCollateralAsset.s}
+                        </span>
+                      </div>
+                      <div className="col-span-1">
+                        Fund collateral ratio
+                        <br />
+                        <span className="text-md">
+                          {settlementFund.finalSettlementPrice} {parsedAsset.s}/
+                          {parsedCollateralAsset.s}
+                        </span>
+                      </div>
+                    </div>
+                    <a href="/bid/index.html">
+                      <Button className="mt-3 pb-2">
+                        Bid on {finalAsset.symbol}'s settlement fund
+                      </Button>
+                    </a>
+                  </CardContent>
+                </Card>
+              </div>
+            </>
+          ) : null}
+
+          {finalAsset && parsedAsset && parsedBitasset ? (
+            <Card className="mt-2">
+              <CardHeader className="pb-2">
+                <CardTitle>
+                  About the{" "}
+                  {parsedBitasset.issuer.id === "1.2.0"
+                    ? "Bitasset"
+                    : "Smartcoin"}{" "}
+                  {parsedAsset.s} ({parsedAsset.id})
+                </CardTitle>
+                <CardDescription>
+                  Use this information to improve your understanding of{" "}
+                  {parsedAsset.s}.<br />
+                  Thoroughly do your own research before proceeding to borrow
+                  any smartcoins.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Label>
+                  General asset info
+                  {" ("}
+                  <ExternalLink
+                    classNameContents="text-blue-500"
+                    type="text"
+                    text="More info"
+                    hyperlink={`https://blocksights.info/#/assets/${parsedAsset.id}`}
+                  />
+                  {")"}
+                </Label>
+                <br />
+                <Badge className="mr-2 mt-2">Issuer: {parsedAsset.u}</Badge>
+                <Badge className="mr-2">
+                  Market fee: {finalAsset.options.market_fee_percent / 100}%
+                </Badge>
+
+                <br />
+
+                <Label>
+                  {parsedBitasset.issuer.id === "1.2.0"
+                    ? "Bitasset info"
+                    : "Smartcoin info"}
+                  {" ("}
+                  <ExternalLink
+                    classNameContents="text-blue-500"
+                    type="text"
+                    text="More info"
+                    hyperlink={`https://blocksights.info/#/objects/${parsedBitasset.id}`}
+                  />
+                  {")"}
+                </Label>
+                <br />
+                <Badge className="mr-2">
+                  Feed qty: {parsedBitasset ? parsedBitasset.feeds.length : 0}
+                </Badge>
+                <Badge className="mr-2">
+                  MCR: {parsedBitasset ? parsedBitasset.mcr / 10 : 0} %
+                </Badge>
+                <Badge className="mr-2">
+                  MSSR: {parsedBitasset ? parsedBitasset.mssr / 10 : 0} %
+                </Badge>
+                <Badge className="mr-2">
+                  ICR: {parsedBitasset ? parsedBitasset.icr / 10 : 0} %
+                </Badge>
+                <Badge className="mr-2">
+                  Collateral:{" "}
+                  {parsedCollateralAsset ? parsedCollateralAsset.s : "?"}
+                </Badge>
+                <br />
+                <Label className="pb-0">Asset flags</Label>
+                <br />
+                {parsedAssetFlags}
+                <br />
+                <Label>Asset permissions</Label>
+                <br />
+                {parsedIsserPermissions}
+              </CardContent>
+            </Card>
+          ) : null}
+
+          {finalCollateralAsset && parsedCollateralAsset ? (
+            <Card className="mt-2">
+              <CardHeader className="pb-2">
+                <CardTitle>
+                  About the backing collateral {parsedCollateralAsset.s} (
+                  {parsedCollateralAsset.id})
+                </CardTitle>
+                <CardDescription>
+                  Use this information to improve your understanding of{" "}
+                  {parsedCollateralAsset.s}.<br />
+                  Thoroughly do your own research before proceeding to borrow
+                  any smartcoins.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Label>
+                  General asset info
+                  {" ("}
+                  <ExternalLink
+                    classNameContents="text-blue-500"
+                    type="text"
+                    text="More info"
+                    hyperlink={`https://blocksights.info/#/assets/${parsedCollateralAsset.id}`}
+                  />
+                  {")"}
+                </Label>
+                <br />
+                <Badge className="mr-2 mt-2">
+                  Issuer: {parsedCollateralAsset.u}
+                </Badge>
+                <Badge className="mr-2">
+                  Market fee:{" "}
+                  {finalCollateralAsset.options.market_fee_percent / 100}%
+                </Badge>
+                <Badge className="mr-2">
+                  Asset type:
+                  {finalCollateralAsset.bitasset_data_id
+                    ? " Smartcoin"
+                    : " UIA"}
+                </Badge>
+                <br />
+                <Label className="pb-0">Asset flags</Label>
+                <br />
+                {collateralFlags && collateralFlags.length ? (
+                  collateralFlags
+                ) : (
+                  <span className="text-sm">No flags enabled</span>
+                )}
+                <br />
+                <Label>Asset permissions</Label>
+                <br />
+                {collateralPermissions && collateralPermissions.length ? (
+                  collateralPermissions
+                ) : (
+                  <span className="text-sm">No permissions activated</span>
+                )}
+              </CardContent>
+            </Card>
+          ) : null}
+
           {showDialog ? (
             <DeepLinkDialog
               operationName="call_order_update"
@@ -579,7 +882,9 @@ export default function Smartcoin(properties) {
                       ? `Order book for ${parsedAsset.s}/${parsedCollateralAsset.s}`
                       : "Order book loading..."}
                   </CardTitle>
-                  <CardDescription>Note: Only showing top 10</CardDescription>
+                  <CardDescription>
+                    Note: Only displaying the top 10 buy/sell orders
+                  </CardDescription>
                 </div>
                 <div className="col-span-1 text-right">
                   <a
@@ -675,6 +980,84 @@ export default function Smartcoin(properties) {
                   {!sellOrders ? "Loading..." : null}
                 </TabsContent>
               </Tabs>
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="grid grid-cols-1 mt-5">
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle>
+                {parsedAsset && parsedCollateralAsset
+                  ? `${parsedAsset.s} call orders`
+                  : "Call orders loading..."}
+              </CardTitle>
+              <CardDescription>
+                Check out other users margin positions on the dex
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {assetCallOrders && assetCallOrders.length ? (
+                <>
+                  <div className="grid grid-cols-6">
+                    <div className="col-span-1">Borrower</div>
+                    <div className="col-span-1">Collateral</div>
+                    <div className="col-span-1">Debt</div>
+                    <div className="col-span-1">Call price</div>
+                    <div className="col-span-1">TCR</div>
+                    <div className="col-span-1">Ratio</div>
+                  </div>
+                  <List
+                    height={260}
+                    itemCount={assetCallOrders.length}
+                    itemSize={25}
+                    className="w-full"
+                  >
+                    {MarginPositionRow}
+                  </List>
+                </>
+              ) : null}
+              {assetCallOrders && !assetCallOrders.length
+                ? "No call orders found"
+                : null}
+              {!assetCallOrders ? "Loading..." : null}
+            </CardContent>
+          </Card>
+        </div>
+        <div className="grid grid-cols-1 mt-5">
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle>
+                {parsedAsset && parsedCollateralAsset
+                  ? `${parsedAsset.s} settle orders`
+                  : "Settle orders loading..."}
+              </CardTitle>
+              <CardDescription>
+                Check out other users settle orders on the dex
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {assetSettleOrders && assetSettleOrders.length ? (
+                <>
+                  <div className="grid grid-cols-6">
+                    <div className="col-span-1">Owner</div>
+                    <div className="col-span-1">Balance</div>
+                    <div className="col-span-1">Settlement date</div>
+                  </div>
+                  <List
+                    height={260}
+                    itemCount={assetSettleOrders.length}
+                    itemSize={25}
+                    className="w-full"
+                  >
+                    {SettlementRow}
+                  </List>
+                </>
+              ) : null}
+              {assetSettleOrders && !assetSettleOrders.length
+                ? "No settle orders found"
+                : null}
+              {!assetSettleOrders ? "Loading..." : null}
             </CardContent>
           </Card>
         </div>
