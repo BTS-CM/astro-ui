@@ -103,7 +103,7 @@ export default function PoolForm() {
 
   useInitCache(usr && usr.chain ? usr.chain : "bitshares", [
     "marketSearch",
-    "allassets",
+    "assets",
     "pools",
     "feeSchedule",
   ]);
@@ -807,7 +807,7 @@ export default function PoolForm() {
                       />
 
                       <div className="grid grid-cols-2 gap-5 mt-5 mb-5">
-                        {pool ? (
+                        {pool && foundPoolDetails && assetA && assetB ? (
                           <>
                             <Card>
                               <CardContent>
@@ -817,7 +817,14 @@ export default function PoolForm() {
                                   render={({ field }) => (
                                     <FormItem>
                                       <FormLabel>
-                                        Swappable {assetA.symbol} ({assetA.id})
+                                        Swappable {assetA.symbol} (
+                                        <ExternalLink
+                                          classNameContents="text-blue-500"
+                                          type="text"
+                                          text={assetA.id}
+                                          hyperlink={`https://blocksights.info/#/assets/${assetA.id}`}
+                                        />
+                                        )
                                       </FormLabel>
                                       <FormControl>
                                         {foundPoolDetails ? (
@@ -847,7 +854,14 @@ export default function PoolForm() {
                                   render={({ field }) => (
                                     <FormItem>
                                       <FormLabel>
-                                        Swappable {assetB.symbol} ({assetB.id})
+                                        Swappable {assetB.symbol} (
+                                        <ExternalLink
+                                          classNameContents="text-blue-500"
+                                          type="text"
+                                          text={assetB.id}
+                                          hyperlink={`https://blocksights.info/#/assets/${assetB.id}`}
+                                        />
+                                        )
                                       </FormLabel>
                                       <FormControl>
                                         {foundPoolDetails ? (
