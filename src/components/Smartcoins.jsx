@@ -288,6 +288,36 @@ export default function Smartcoins(properties) {
     );
   };
 
+  useEffect(() => {
+    if (assetSearch) {
+      console.log("Parsing url params");
+      const urlSearchParams = new URLSearchParams(window.location.search);
+      const params = Object.fromEntries(urlSearchParams.entries());
+
+      if (params && params.tab) {
+        if (!["all", "compatible", "holdings", "search"].includes(params.tab)) {
+          return;
+        }
+        setActiveTab(params.tab);
+      } else {
+        window.history.replaceState({}, "", `?tab=all`);
+      }
+      if (params && params.searchTab) {
+        if (!["borrow", "collateral", "issuer"].includes(params.searchTab)) {
+          return;
+        }
+        setActiveSearch(params.searchTab);
+      }
+      if (params && params.searchText) {
+        const isValid = (str) => /^[a-zA-Z0-9.-]+$/.test(str);
+        if (!isValid(params.searchText)) {
+          return;
+        }
+        setThisInput(params.searchText);
+      }
+    }
+  }, [assetSearch]);
+
   return (
     <>
       <div className="container mx-auto mt-5 mb-5">
@@ -306,7 +336,7 @@ export default function Smartcoins(properties) {
             </CardHeader>
             <CardContent>
               {bitAssetData && bitAssetData.length && usrBalances ? (
-                <Tabs defaultValue="all" className="w-full">
+                <Tabs defaultValue={activeTab ?? "all"} className="w-full">
                   <TabsList className="grid w-full grid-cols-4 gap-2">
                     {activeTab === "all" ? (
                       <TabsTrigger value="all" style={activeTabStyle}>
@@ -315,7 +345,10 @@ export default function Smartcoins(properties) {
                     ) : (
                       <TabsTrigger
                         value="all"
-                        onClick={() => setActiveTab("all")}
+                        onClick={() => {
+                          setActiveTab("all");
+                          window.history.replaceState({}, "", `?tab=all`);
+                        }}
                       >
                         View all assets
                       </TabsTrigger>
@@ -327,7 +360,14 @@ export default function Smartcoins(properties) {
                     ) : (
                       <TabsTrigger
                         value="compatible"
-                        onClick={() => setActiveTab("compatible")}
+                        onClick={() => {
+                          setActiveTab("compatible");
+                          window.history.replaceState(
+                            {},
+                            "",
+                            `?tab=compatible`
+                          );
+                        }}
                       >
                         View compatible
                       </TabsTrigger>
@@ -339,7 +379,10 @@ export default function Smartcoins(properties) {
                     ) : (
                       <TabsTrigger
                         value="holdings"
-                        onClick={() => setActiveTab("holdings")}
+                        onClick={() => {
+                          setActiveTab("holdings");
+                          window.history.replaceState({}, "", `?tab=holdings`);
+                        }}
                       >
                         View holdings
                       </TabsTrigger>
@@ -351,7 +394,14 @@ export default function Smartcoins(properties) {
                     ) : (
                       <TabsTrigger
                         value="search"
-                        onClick={() => setActiveTab("search")}
+                        onClick={() => {
+                          setActiveTab("search");
+                          window.history.replaceState(
+                            {},
+                            "",
+                            `?tab=search&searchTab=borrow`
+                          );
+                        }}
                       >
                         Search
                       </TabsTrigger>
@@ -402,7 +452,10 @@ export default function Smartcoins(properties) {
                     <h5 className="mb-2 text-center">
                       How do you want to search?
                     </h5>
-                    <Tabs defaultValue="borrow" className="w-full">
+                    <Tabs
+                      defaultValue={activeSearch ?? "borrow"}
+                      className="w-full"
+                    >
                       <TabsList className="grid w-full grid-cols-3 gap-2">
                         {activeSearch === "borrow" ? (
                           <TabsTrigger value="borrow" style={activeTabStyle}>
@@ -411,7 +464,14 @@ export default function Smartcoins(properties) {
                         ) : (
                           <TabsTrigger
                             value="borrow"
-                            onClick={() => setActiveSearch("borrow")}
+                            onClick={() => {
+                              setActiveSearch("borrow");
+                              window.history.replaceState(
+                                {},
+                                "",
+                                `?tab=search&searchTab=borrow`
+                              );
+                            }}
                           >
                             Search by borrowable asset
                           </TabsTrigger>
@@ -426,7 +486,14 @@ export default function Smartcoins(properties) {
                         ) : (
                           <TabsTrigger
                             value="collateral"
-                            onClick={() => setActiveSearch("collateral")}
+                            onClick={() => {
+                              setActiveSearch("collateral");
+                              window.history.replaceState(
+                                {},
+                                "",
+                                `?tab=search&searchTab=collateral`
+                              );
+                            }}
                           >
                             Search by collateral assets
                           </TabsTrigger>
@@ -438,7 +505,14 @@ export default function Smartcoins(properties) {
                         ) : (
                           <TabsTrigger
                             value="issuer"
-                            onClick={() => setActiveSearch("issuer")}
+                            onClick={() => {
+                              setActiveSearch("issuer");
+                              window.history.replaceState(
+                                {},
+                                "",
+                                `?tab=search&searchTab=issuer`
+                              );
+                            }}
                           >
                             Search by issuer
                           </TabsTrigger>
@@ -447,10 +521,15 @@ export default function Smartcoins(properties) {
 
                       <Input
                         name="searchInput"
-                        placeholder="Enter search text"
+                        placeholder={thisInput ?? "Enter search text"}
                         className="mb-3 mt-3 w-full"
                         onChange={(event) => {
                           setThisInput(event.target.value);
+                          window.history.replaceState(
+                            {},
+                            "",
+                            `?tab=search&searchTab=${activeSearch}&searchText=${event.target.value}`
+                          );
                         }}
                       />
 
