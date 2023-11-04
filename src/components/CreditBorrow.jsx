@@ -46,6 +46,11 @@ function hoursTillExpiration(expirationTime) {
   return hours;
 }
 
+const activeTabStyle = {
+  backgroundColor: "#252526",
+  color: "white",
+};
+
 export default function CreditBorrow(properties) {
   const usr = useSyncExternalStore(
     $currentUser.subscribe,
@@ -69,6 +74,11 @@ export default function CreditBorrow(properties) {
     "assets",
     "offers",
   ]);
+
+  const [activeTab, setActiveTab] = useState("allOffers");
+  const [activeSearch, setActiveSearch] = useState("borrow"); // borrow, collateral, owner_name
+  const [thisInput, setThisInput] = useState();
+  const [thisResult, setThisResult] = useState();
 
   const [usrBalances, setUsrBalances] = useState();
   const [balanceAssetIDs, setBalanceAssetIDs] = useState([]);
@@ -103,8 +113,6 @@ export default function CreditBorrow(properties) {
     });
   }, [offers, balanceAssetIDs]);
 
-  const [activeSearch, setActiveSearch] = useState("borrow"); // borrow, collateral, owner_name
-
   const offerSearch = useMemo(() => {
     if (!offers || !offers.length || !assets || !assets.length) {
       return;
@@ -137,11 +145,64 @@ export default function CreditBorrow(properties) {
     });
   }, [offers, assets, activeSearch]);
 
-  const [thisInput, setThisInput] = useState();
-  const [thisResult, setThisResult] = useState();
+  useEffect(() => {
+    if (offerSearch) {
+      console.log("Parsing url params");
+      const urlSearchParams = new URLSearchParams(window.location.search);
+      const params = Object.fromEntries(urlSearchParams.entries());
+
+      if (params && params.tab) {
+        if (
+          !["allOffers", "availableOffers", "searchOffers"].includes(params.tab)
+        ) {
+          return;
+        }
+        setActiveTab(params.tab);
+        console.log("Setting active tab", params.tab);
+      } else {
+        window.history.replaceState({}, "", `?tab=allOffers`);
+      }
+
+      if (params && params.searchTab) {
+        if (
+          !["borrow", "collateral", "owner_name"].includes(params.searchTab)
+        ) {
+          return;
+        }
+        setActiveSearch(params.searchTab);
+        console.log("Setting active search tab", params.searchTab);
+      } else {
+        window.history.replaceState(
+          {},
+          "",
+          `?tab=searchOffers&searchTab=borrow`
+        );
+      }
+
+      if (params && params.searchText) {
+        const isValid = (str) => /^[a-zA-Z0-9.-]+$/.test(str);
+        if (!isValid(params.searchText)) {
+          return;
+        }
+        setThisInput(params.searchText);
+        console.log("Setting search text", params.searchText);
+      }
+    }
+  }, [offerSearch]);
 
   useEffect(() => {
     if (offerSearch && thisInput) {
+      const isValid = (str) => /^[a-zA-Z0-9.-]+$/.test(str);
+      if (!isValid(thisInput)) {
+        return;
+      }
+      window.history.replaceState(
+        {},
+        "",
+        `?tab=searchOffers&searchTab=${activeSearch}${
+          thisInput ? `&searchText=${thisInput}` : ""
+        }`
+      );
       const result = offerSearch.search(thisInput);
       setThisResult(result);
     }
@@ -264,12 +325,6 @@ export default function CreditBorrow(properties) {
     );
   };
 
-  const [activeTab, setActiveTab] = useState("allOffers");
-  const activeTabStyle = {
-    backgroundColor: "#252526",
-    color: "white",
-  };
-
   return (
     <>
       <div className="container mx-auto mt-5 mb-5">
@@ -285,7 +340,11 @@ export default function CreditBorrow(properties) {
             <CardContent>
               {offers && offers.length ? (
                 <>
-                  <Tabs defaultValue="allOffers" className="w-full">
+                  <Tabs
+                    key={`top_tab_${activeTab}`}
+                    defaultValue={activeTab}
+                    className="w-full"
+                  >
                     <TabsList className="grid w-full grid-cols-3 gap-2">
                       {activeTab === "allOffers" ? (
                         <TabsTrigger value="allOffers" style={activeTabStyle}>
@@ -294,7 +353,14 @@ export default function CreditBorrow(properties) {
                       ) : (
                         <TabsTrigger
                           value="allOffers"
-                          onClick={() => setActiveTab("allOffers")}
+                          onClick={(event) => {
+                            setActiveTab("allOffers");
+                            window.history.replaceState(
+                              {},
+                              "",
+                              `?tab=allOffers`
+                            );
+                          }}
                         >
                           View all offers
                         </TabsTrigger>
@@ -309,7 +375,14 @@ export default function CreditBorrow(properties) {
                       ) : (
                         <TabsTrigger
                           value="availableOffers"
-                          onClick={() => setActiveTab("availableOffers")}
+                          onClick={(event) => {
+                            setActiveTab("availableOffers");
+                            window.history.replaceState(
+                              {},
+                              "",
+                              `?tab=availableOffers`
+                            );
+                          }}
                         >
                           View compatible orders
                         </TabsTrigger>
@@ -324,7 +397,16 @@ export default function CreditBorrow(properties) {
                       ) : (
                         <TabsTrigger
                           value="searchOffers"
-                          onClick={() => setActiveTab("searchOffers")}
+                          onClick={(event) => {
+                            setActiveTab("searchOffers");
+                            window.history.replaceState(
+                              {},
+                              "",
+                              `?tab=searchOffers&searchTab=${activeSearch}&searchText=${
+                                thisInput ?? ""
+                              }`
+                            );
+                          }}
                         >
                           Search
                         </TabsTrigger>
@@ -366,7 +448,10 @@ export default function CreditBorrow(properties) {
                       <h5 className="mb-2 text-center">
                         How do you want to search?
                       </h5>
-                      <Tabs defaultValue="borrow" className="w-full">
+                      <Tabs
+                        defaultValue={activeSearch ?? "borrow"}
+                        className="w-full"
+                      >
                         <TabsList className="grid w-full grid-cols-3 gap-2">
                           {activeSearch === "borrow" ? (
                             <TabsTrigger value="borrow" style={activeTabStyle}>
@@ -375,7 +460,16 @@ export default function CreditBorrow(properties) {
                           ) : (
                             <TabsTrigger
                               value="borrow"
-                              onClick={() => setActiveSearch("borrow")}
+                              onClick={() => {
+                                setActiveSearch("borrow");
+                                window.history.replaceState(
+                                  {},
+                                  "",
+                                  `?tab=searchOffers&searchTab=borrow${
+                                    thisInput ? `&searchText=${thisInput}` : ""
+                                  }`
+                                );
+                              }}
                             >
                               Search by borrowable asset
                             </TabsTrigger>
@@ -390,7 +484,16 @@ export default function CreditBorrow(properties) {
                           ) : (
                             <TabsTrigger
                               value="collateral"
-                              onClick={() => setActiveSearch("collateral")}
+                              onClick={() => {
+                                setActiveSearch("collateral");
+                                window.history.replaceState(
+                                  {},
+                                  "",
+                                  `?tab=searchOffers&searchTab=collateral${
+                                    thisInput ? `&searchText=${thisInput}` : ""
+                                  }`
+                                );
+                              }}
                             >
                               Search by collateral assets
                             </TabsTrigger>
@@ -405,22 +508,29 @@ export default function CreditBorrow(properties) {
                           ) : (
                             <TabsTrigger
                               value="owner_name"
-                              onClick={() => setActiveSearch("owner_name")}
+                              onClick={() => {
+                                setActiveSearch("owner_name");
+                                window.history.replaceState(
+                                  {},
+                                  "",
+                                  `?tab=searchOffers&searchTab=owner_name${
+                                    thisInput ? `&searchText=${thisInput}` : ""
+                                  }`
+                                );
+                              }}
                             >
                               Search by owner name
                             </TabsTrigger>
                           )}
                         </TabsList>
-
                         <Input
                           name="searchInput"
-                          placeholder="Enter search text"
+                          placeholder={thisInput ?? "Enter search text"}
                           className="mb-3 mt-3 w-full"
                           onChange={(event) => {
                             setThisInput(event.target.value);
                           }}
                         />
-
                         <TabsContent value="borrow">
                           {thisResult && thisResult.length ? (
                             <List
