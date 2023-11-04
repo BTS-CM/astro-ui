@@ -8,6 +8,8 @@ import Fuse from "fuse.js";
 import { useForm } from "react-hook-form";
 import { FixedSizeList as List } from "react-window";
 
+import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -1241,20 +1243,43 @@ export default function PoolForm() {
                     </CardContent>
                   </Card>
                 </a>
-                <a href="/borrow/index.html">
-                  <Card>
-                    <CardHeader className="pb-2 pt-4">
-                      <CardTitle>Need to borrow some assets?</CardTitle>
-                      <CardDescription className="text-sm">
-                        Borrow {assetA.symbol} or {assetB.symbol}
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="text-sm pb-2">
-                      DEX users lend assets at user defined rates. Borrow from
-                      DEX participants, with user defined rates.
-                    </CardContent>
-                  </Card>
-                </a>
+
+                <Card>
+                  <CardHeader className="pb-2 pt-4">
+                    <CardTitle>Need to borrow some assets?</CardTitle>
+                    <CardDescription className="text-sm">
+                      DEX users lend assets at user defined rates. You could
+                      borrow from DEX participants, at their defined rates.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="text-sm pb-3">
+                    <Label>Search by borrowable assets</Label>
+                    <br />
+                    <a
+                      href={`/borrow/index.html?tab=searchOffers&searchTab=borrow&searchText=${assetA.symbol}`}
+                    >
+                      <Badge>{assetA.symbol}</Badge>
+                    </a>
+                    <a
+                      href={`/borrow/index.html?tab=searchOffers&searchTab=borrow&searchText=${assetB.symbol}`}
+                    >
+                      <Badge className="ml-2 mt-1 mb-1">{assetB.symbol}</Badge>
+                    </a>
+                    <br />
+                    <Label>Search by accepted collateral</Label>
+                    <br />
+                    <a
+                      href={`/borrow/index.html?tab=searchOffers&searchTab=collateral&searchText=${assetA.symbol}`}
+                    >
+                      <Badge>{assetA.symbol}</Badge>
+                    </a>
+                    <a
+                      href={`/borrow/index.html?tab=searchOffers&searchTab=collateral&searchText=${assetB.symbol}`}
+                    >
+                      <Badge className="ml-2 mt-1">{assetB.symbol}</Badge>
+                    </a>
+                  </CardContent>
+                </Card>
 
                 {foundPoolDetails && marketSearch && usrBalances ? (
                   <MarketAssetCard
