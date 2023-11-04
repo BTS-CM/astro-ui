@@ -1317,24 +1317,7 @@ export default function PoolForm() {
       </div>
 
       {usr && usr.username && usr.username.length ? (
-        <CurrentUser
-          usr={usr}
-          resetCallback={() => {
-            eraseCurrentUser();
-            setPool("");
-            setFoundPool();
-            setFoundPoolDetails();
-            window.history.replaceState({}, "", "/pool/index.html");
-            resetCache();
-            setSellAmount(0);
-            setFoundPool();
-            setAssetA("");
-            setAssetB("");
-            setDeeplink("");
-            setTRXJSON();
-            setBuyAmountInput();
-          }}
-        />
+        <CurrentUser usr={usr} />
       ) : null}
     </>
   );
