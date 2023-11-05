@@ -231,6 +231,33 @@ export default function Smartcoins(properties) {
     );
   }
 
+  const PlaceholderRow = ({ index, style }) => {
+    return (
+      <div style={{ ...style }} key={`acard-${index}`}>
+        <Card className="ml-2 mr-2">
+          <CardHeader className="pb-1">
+            <CardTitle>
+              Smartcoin "..." (1.3.x) created by ... (1.2.x)
+            </CardTitle>
+            <CardDescription>
+              Backing collateral:
+              <b>{` ... (1.3.x)`}</b>
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="text-sm pb-3">
+            <Badge className="mr-2 mt-2">Feed qty: ?</Badge>
+            <Badge className="mr-2">MCR: ? %</Badge>
+            <Badge className="mr-2">MSSR: ? %</Badge>
+            <Badge className="mr-2">ICR: ? %</Badge>
+          </CardContent>
+          <CardFooter className="pb-5">
+            <Button className="h-8">Proceed to borrow ?</Button>
+          </CardFooter>
+        </Card>
+      </div>
+    );
+  };
+
   const BitassetRow = ({ index, style }) => {
     let bitasset;
     if (activeTab === "all") {
@@ -581,7 +608,33 @@ export default function Smartcoins(properties) {
                     </Tabs>
                   </TabsContent>
                 </Tabs>
-              ) : null}
+              ) : (
+                <Tabs defaultValue={"all"} className="w-full">
+                  <TabsList className="grid w-full grid-cols-4 gap-2">
+                    <TabsTrigger value="all" style={activeTabStyle}>
+                      Viewing all assets
+                    </TabsTrigger>
+                    <TabsTrigger value="compatible">
+                      View compatible
+                    </TabsTrigger>
+                    <TabsTrigger value="holdings">View holdings</TabsTrigger>
+                    <TabsTrigger value="search">Search</TabsTrigger>
+                  </TabsList>
+                  <TabsContent value="all">
+                    <h5 className="mb-2 text-center">
+                      Listing ... (all) smartcoins
+                    </h5>
+                    <List
+                      height={500}
+                      itemCount={3}
+                      itemSize={200}
+                      className="w-full"
+                    >
+                      {PlaceholderRow}
+                    </List>
+                  </TabsContent>
+                </Tabs>
+              )}
             </CardContent>
           </Card>
         </div>
