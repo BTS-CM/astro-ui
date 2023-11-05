@@ -34,6 +34,7 @@ import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Toggle } from "@/components/ui/toggle";
 
 import { useInitCache } from "../effects/Init.ts";
 import { createUserBalancesStore } from "../effects/User.ts";
@@ -280,7 +281,7 @@ export default function Smartcoin(properties) {
             parseInt(finalBitasset.current_feed.settlement_price.base.amount),
             parsedAsset.p
           )
-        ).toFixed(parsedAsset.p)
+        ).toFixed(parsedCollateralAsset.p)
       );
     }
   }, [finalBitasset, parsedAsset, parsedCollateralAsset]);
@@ -356,6 +357,10 @@ export default function Smartcoin(properties) {
   const [ratioValue, setRatioValue] = useState(0);
   const [tcrEnabled, setTCREnabled] = useState(false);
   const [tcrValue, setTCRValue] = useState(0);
+
+  const [debtLock, setDebtLock] = useState(false);
+  const [collateralLock, setCollateralLock] = useState(false);
+  const [ratioLock, setRatioLock] = useState(false);
 
   const MarginPositionRow = ({ index, style }) => {
     const res = assetCallOrders[index];
@@ -586,7 +591,18 @@ export default function Smartcoin(properties) {
                             <Input
                               disabled
                               className="mb-3 mt-3"
-                              value={`feed price placeholder`}
+                              value={
+                                currentFeedSettlementPrice
+                                  ? `${currentFeedSettlementPrice} ${
+                                      parsedCollateralAsset.s
+                                    } (${(
+                                      1 / currentFeedSettlementPrice
+                                    ).toFixed(parsedAsset.p)} ${
+                                      parsedAsset.s
+                                    }/${parsedCollateralAsset.s})`
+                                  : `0 ${parsedCollateralAsset.s}`
+                              }
+                              readOnly
                             />
                           </FormControl>
                           <FormMessage />
@@ -620,15 +636,22 @@ export default function Smartcoin(properties) {
                       name="debtAmount"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>
-                            <div className="grid grid-cols-2 mt-2">
-                              <div className="col-span-1 mt-1">Debt amount</div>
+                          <FormLabel>Debt amount</FormLabel>
+                          <FormDescription
+                            style={{ marginTop: 0, paddingTop: 0 }}
+                          >
+                            <div className="grid grid-cols-3 mt-0 pt-0">
+                              <div className="col-span-2 mt-0 pt-0">
+                                The amount of{" "}
+                                {parsedAsset ? parsedAsset.s : "?"} you intend
+                                to borrow into existence.
+                              </div>
                               <div className="col-span-1 text-right">
                                 Available: {debtAssetHoldings ?? 0}{" "}
                                 {parsedAsset ? parsedAsset.s : "?"}
                               </div>
                             </div>
-                          </FormLabel>
+                          </FormDescription>
                           <FormControl
                             onChange={(event) => {
                               const input = event.target.value;
@@ -638,12 +661,30 @@ export default function Smartcoin(properties) {
                               }
                             }}
                           >
-                            <Input
-                              label={`Amount of debt to issue`}
-                              value={debtAmount}
-                              placeholder={debtAmount}
-                              className="mb-3"
-                            />
+                            <div className="grid grid-cols-12">
+                              <div className="col-span-1">
+                                <Toggle
+                                  variant="outline"
+                                  onClick={() => {
+                                    if (!debtLock) {
+                                      setRatioLock(false);
+                                      setCollateralLock(false);
+                                    }
+                                    setDebtLock(!debtLock);
+                                  }}
+                                >
+                                  {debtLock ? "🔒" : "🔓"}
+                                </Toggle>
+                              </div>
+                              <div className="col-span-11">
+                                <Input
+                                  label={`Amount of debt to issue`}
+                                  value={debtAmount}
+                                  placeholder={debtAmount}
+                                  className="mb-3"
+                                />
+                              </div>
+                            </div>
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -655,10 +696,14 @@ export default function Smartcoin(properties) {
                       name="collateralAmount"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>
-                            <div className="grid grid-cols-2 mt-2">
-                              <div className="col-span-1 mt-1">
-                                Collateral amount
+                          <FormLabel>Collateral amount</FormLabel>
+                          <FormDescription
+                            style={{ marginTop: 0, paddingTop: 0 }}
+                          >
+                            <div className="grid grid-cols-3 mt-0 pt-0">
+                              <div className="col-span-2 mt-0 pt-0">
+                                The amount of {parsedCollateralAsset.s} backing
+                                collateral you'll need to provide.
                               </div>
                               <div className="col-span-1 text-right">
                                 Available: {collateralAssetHoldings ?? 0}{" "}
@@ -667,7 +712,7 @@ export default function Smartcoin(properties) {
                                   : "?"}
                               </div>
                             </div>
-                          </FormLabel>
+                          </FormDescription>
                           <FormControl
                             onChange={(event) => {
                               const input = event.target.value;
@@ -677,12 +722,30 @@ export default function Smartcoin(properties) {
                               }
                             }}
                           >
-                            <Input
-                              label={`Amount of collateral to commit`}
-                              value={collateralAmount}
-                              placeholder={collateralAmount}
-                              className="mb-3"
-                            />
+                            <div className="grid grid-cols-12">
+                              <div className="col-span-1">
+                                <Toggle
+                                  variant="outline"
+                                  onClick={() => {
+                                    if (!collateralLock) {
+                                      setRatioLock(false);
+                                      setDebtLock(false);
+                                    }
+                                    setCollateralLock(!collateralLock);
+                                  }}
+                                >
+                                  {collateralLock ? "🔒" : "🔓"}
+                                </Toggle>
+                              </div>
+                              <div className="col-span-11">
+                                <Input
+                                  label={`Amount of collateral to commit`}
+                                  value={collateralAmount}
+                                  placeholder={collateralAmount}
+                                  className="mb-3"
+                                />
+                              </div>
+                            </div>
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -704,18 +767,35 @@ export default function Smartcoin(properties) {
                               }
                             }}
                           >
-                            <Input
-                              label={`Ratio of collateral to debt`}
-                              value={ratioValue}
-                              placeholder={ratioValue}
-                              className="mb-3"
-                            />
+                            <div className="grid grid-cols-12">
+                              <div className="col-span-1">
+                                <Toggle
+                                  variant="outline"
+                                  onClick={() => {
+                                    if (!ratioLock) {
+                                      setDebtLock(false);
+                                      setCollateralLock(false);
+                                    }
+                                    setRatioLock(!ratioLock);
+                                  }}
+                                >
+                                  {ratioLock ? "🔒" : "🔓"}
+                                </Toggle>
+                              </div>
+                              <div className="col-span-11">
+                                <Input
+                                  label={`Ratio of collateral to debt`}
+                                  value={ratioValue}
+                                  placeholder={ratioValue}
+                                  className="mb-3"
+                                />
+                              </div>
+                            </div>
                           </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
-                    <br />
                     <Slider
                       defaultValue={[ratioValue ?? 2]}
                       max={20}
@@ -769,15 +849,14 @@ export default function Smartcoin(properties) {
                                   label={`Ratio of collateral to debt`}
                                   value={tcrValue}
                                   placeholder={tcrValue}
-                                  className="mb-3"
                                 />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
                           )}
                         />
-                        <br />
                         <Slider
+                          className="mt-3"
                           defaultValue={[tcrValue ?? 2]}
                           max={20}
                           min={parsedBitasset.mcr / 1000}
@@ -829,7 +908,7 @@ export default function Smartcoin(properties) {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="grid grid-cols-3">
+                    <div className="grid grid-cols-4">
                       <div className="col-span-1">
                         Fund
                         <br />
@@ -840,7 +919,7 @@ export default function Smartcoin(properties) {
                         </span>
                       </div>
                       <div className="col-span-1">
-                        Price
+                        Settlement price
                         <br />
                         <span className="text-sm">
                           {settlementFund.finalSettlementPrice}
@@ -849,7 +928,18 @@ export default function Smartcoin(properties) {
                         </span>
                       </div>
                       <div className="col-span-1">
-                        Fund collateral ratio
+                        Current price
+                        <br />
+                        <span className="text-sm">
+                          {(1 / currentFeedSettlementPrice).toFixed(
+                            parsedAsset.p
+                          )}
+                          <br />
+                          {parsedAsset.s}/{parsedCollateralAsset.s}
+                        </span>
+                      </div>
+                      <div className="col-span-1">
+                        Funding ratio
                         <br />
                         <span className="text-sm">
                           {(
