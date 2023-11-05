@@ -31,7 +31,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Slider } from "@/components/ui/slider";
 import { Separator } from "@/components/ui/separator";
+import { Checkbox } from "@/components/ui/checkbox";
 
 import { useInitCache } from "../effects/Init.ts";
 import { createUserBalancesStore } from "../effects/User.ts";
@@ -54,6 +56,22 @@ const activeTabStyle = {
   backgroundColor: "#252526",
   color: "white",
 };
+
+function timeAgo(dateString) {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffInMilliseconds = now - date;
+  const diffInDays = Math.floor(diffInMilliseconds / (1000 * 60 * 60 * 24));
+
+  if (diffInDays < 1) {
+    return "today";
+  } else if (diffInDays < 30) {
+    return diffInDays + " days ago";
+  } else {
+    const diffInMonths = Math.floor(diffInDays / 30);
+    return diffInMonths + " months ago";
+  }
+}
 
 export default function Smartcoin(properties) {
   const form = useForm({
@@ -245,6 +263,28 @@ export default function Smartcoin(properties) {
     };
   }, [parsedAsset, parsedBitasset, usr]);
 
+  const currentFeedSettlementPrice = useMemo(() => {
+    if (
+      finalBitasset &&
+      finalBitasset.current_feed &&
+      parsedCollateralAsset &&
+      parsedAsset
+    ) {
+      return parseFloat(
+        (
+          humanReadableFloat(
+            parseInt(finalBitasset.current_feed.settlement_price.quote.amount),
+            parsedCollateralAsset.p
+          ) /
+          humanReadableFloat(
+            parseInt(finalBitasset.current_feed.settlement_price.base.amount),
+            parsedAsset.p
+          )
+        ).toFixed(parsedAsset.p)
+      );
+    }
+  }, [finalBitasset, parsedAsset, parsedCollateralAsset]);
+
   const settlementFund = useMemo(() => {
     if (finalAsset && parsedAsset && parsedCollateralAsset) {
       const finalSettlementFund = humanReadableFloat(
@@ -314,6 +354,8 @@ export default function Smartcoin(properties) {
   const [debtAmount, setDebtAmount] = useState(0);
   const [collateralAmount, setCollateralAmount] = useState(0);
   const [ratioValue, setRatioValue] = useState(0);
+  const [tcrEnabled, setTCREnabled] = useState(false);
+  const [tcrValue, setTCRValue] = useState(0);
 
   const MarginPositionRow = ({ index, style }) => {
     const res = assetCallOrders[index];
@@ -322,14 +364,33 @@ export default function Smartcoin(properties) {
       parsedCollateralAsset.p
     );
     const debtAmount = humanReadableFloat(res.debt, parsedAsset.p);
-    const callPrice = (
-      humanReadableFloat(res.call_price.quote.amount, parsedAsset.p) /
-      humanReadableFloat(res.call_price.base.amount, parsedCollateralAsset.p)
-    ).toFixed(parsedAsset.p);
+
     const tcr = res.target_collateral_ratio
       ? `${res.target_collateral_ratio / 10}%`
       : `0%`;
-    const ratio = (collateralAmount / debtAmount / 100).toFixed(3);
+
+    const _ratio =
+      1 / ((currentFeedSettlementPrice * debtAmount) / collateralAmount);
+    const ratio = parseFloat(_ratio.toFixed(3));
+
+    const callPrice = res.target_collateral_ratio
+      ? parseFloat(
+          (
+            currentFeedSettlementPrice *
+            (collateralAmount /
+              (debtAmount *
+                (currentFeedSettlementPrice *
+                  (res.target_collateral_ratio / 1000))))
+          ).toFixed(parsedCollateralAsset.p)
+        )
+      : parseFloat(
+          (
+            currentFeedSettlementPrice *
+            (collateralAmount /
+              (debtAmount * (currentFeedSettlementPrice * 1.4)))
+          ).toFixed(parsedCollateralAsset.p)
+        );
+
     return (
       <div className="grid grid-cols-6 text-sm" style={style}>
         <div className="col-span-1">
@@ -388,6 +449,32 @@ export default function Smartcoin(properties) {
         <div className="col-span-1">{res.account_id_type ?? "?"}</div>
         <div className="col-span-1">{res.asset ?? "?"}</div>
         <div className="col-span-1">{res.time_point_sec ?? "?"}</div>
+      </div>
+    );
+  };
+
+  const PriceFeedRow = ({ index, style }) => {
+    let res = finalBitasset.feeds[index];
+    const userID = res[0];
+    const date = res[1][0];
+    const feedObj = res[1][1];
+
+    return (
+      <div className="grid grid-cols-11 text-sm" style={style}>
+        <div className="col-span-2 mr-1">
+          <ExternalLink
+            classNameContents="text-blue-500"
+            type="text"
+            text={userID}
+            hyperlink={`https://blocksights.info/#/accounts/${userID}`}
+          />
+        </div>
+        <div className="col-span-2 ml-1">{timeAgo(date)}</div>
+        <div className="col-span-2">CER</div>
+        <div className="col-span-2">price</div>
+        <div className="col-span-1">{feedObj.initial_collateral_ratio}</div>
+        <div className="col-span-1">{feedObj.maintenance_collateral_ratio}</div>
+        <div className="col-span-1">{feedObj.maximum_short_squeeze_ratio}</div>
       </div>
     );
   };
@@ -628,7 +715,79 @@ export default function Smartcoin(properties) {
                         </FormItem>
                       )}
                     />
-
+                    <br />
+                    <Slider
+                      defaultValue={[ratioValue ?? 2]}
+                      max={20}
+                      min={parsedBitasset.mcr / 1000}
+                      step={0.1}
+                      onValueChange={(value) => {
+                        setRatioValue(value[0]);
+                      }}
+                    />
+                    <br />
+                    <div className="items-top flex space-x-2">
+                      <Checkbox
+                        id="terms1"
+                        onClick={() => {
+                          setTCREnabled(!tcrEnabled);
+                        }}
+                      />
+                      <div className="grid gap-1.5 leading-none">
+                        <label
+                          htmlFor="terms1"
+                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        >
+                          Enable Target Collateral Ratio
+                        </label>
+                      </div>
+                    </div>
+                    {tcrEnabled ? (
+                      <>
+                        <FormField
+                          control={form.control}
+                          name="tcrValue"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>
+                                Target collateral ratio value
+                              </FormLabel>
+                              <FormDescription>
+                                Provide a ratio for the blockchain to
+                                automatically maintain through collateral sales.
+                              </FormDescription>
+                              <FormControl
+                                onChange={(event) => {
+                                  const input = event.target.value;
+                                  const regex = /^[0-9]*\.?[0-9]*$/; // regular expression to match numbers and a single period
+                                  if (regex.test(input)) {
+                                    setTCRValue(input);
+                                  }
+                                }}
+                              >
+                                <Input
+                                  label={`Ratio of collateral to debt`}
+                                  value={tcrValue}
+                                  placeholder={tcrValue}
+                                  className="mb-3"
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <br />
+                        <Slider
+                          defaultValue={[tcrValue ?? 2]}
+                          max={20}
+                          min={parsedBitasset.mcr / 1000}
+                          step={0.1}
+                          onValueChange={(value) => {
+                            setTCRValue(value[0]);
+                          }}
+                        />
+                      </>
+                    ) : null}
                     {!debtAmount ||
                     !collateralAmount ||
                     !ratioValue ||
@@ -674,25 +833,44 @@ export default function Smartcoin(properties) {
                       <div className="col-span-1">
                         Fund
                         <br />
-                        <span className="text-md">
-                          {settlementFund.finalSettlementFund}{" "}
+                        <span className="text-sm">
+                          {settlementFund.finalSettlementFund}
+                          <br />
                           {parsedCollateralAsset.s}
                         </span>
                       </div>
                       <div className="col-span-1">
                         Price
                         <br />
-                        <span className="text-md">
-                          {settlementFund.finalSettlementPrice} {parsedAsset.s}/
-                          {parsedCollateralAsset.s}
+                        <span className="text-sm">
+                          {settlementFund.finalSettlementPrice}
+                          <br />
+                          {parsedAsset.s}/{parsedCollateralAsset.s}
                         </span>
                       </div>
                       <div className="col-span-1">
                         Fund collateral ratio
                         <br />
-                        <span className="text-md">
-                          {settlementFund.finalSettlementPrice} {parsedAsset.s}/
-                          {parsedCollateralAsset.s}
+                        <span className="text-sm">
+                          {(
+                            (1 /
+                              currentFeedSettlementPrice /
+                              settlementFund.finalSettlementPrice) *
+                            100
+                          ).toFixed(2)}
+                          {" % ("}
+                          <span className="text-red-500">
+                            {"-"}
+                            {100 -
+                              (
+                                (1 /
+                                  currentFeedSettlementPrice /
+                                  settlementFund.finalSettlementPrice) *
+                                100
+                              ).toFixed(2)}
+                            {" %"}
+                          </span>
+                          {")"}
                         </span>
                       </div>
                     </div>
@@ -774,6 +952,26 @@ export default function Smartcoin(properties) {
                   Collateral:{" "}
                   {parsedCollateralAsset ? parsedCollateralAsset.s : "?"}
                 </Badge>
+                {finalBitasset &&
+                finalBitasset.options.extensions &&
+                finalBitasset.options.extensions.force_settle_fee_percent ? (
+                  <Badge className="mr-2">
+                    Force settle fee:{" "}
+                    {finalBitasset.options.extensions.force_settle_fee_percent /
+                      100}{" "}
+                    %
+                  </Badge>
+                ) : null}
+                {finalBitasset &&
+                finalBitasset.options.extensions &&
+                finalBitasset.options.extensions.margin_call_fee_ratio ? (
+                  <Badge className="mr-2">
+                    Margin call fee:{" "}
+                    {finalBitasset.options.extensions.margin_call_fee_ratio /
+                      100}{" "}
+                    %
+                  </Badge>
+                ) : null}
                 <br />
                 <Label className="pb-0">Asset flags</Label>
                 <br />
@@ -826,6 +1024,29 @@ export default function Smartcoin(properties) {
                     ? " Smartcoin"
                     : " UIA"}
                 </Badge>
+
+                {finalCollateralAsset &&
+                finalCollateralAsset.options.extensions &&
+                finalCollateralAsset.options.extensions
+                  .force_settle_fee_percent ? (
+                  <Badge className="mr-2">
+                    Force settle fee:{" "}
+                    {finalCollateralAsset.options.extensions
+                      .force_settle_fee_percent / 100}{" "}
+                    %
+                  </Badge>
+                ) : null}
+                {finalCollateralAsset &&
+                finalCollateralAsset.options.extensions &&
+                finalCollateralAsset.options.extensions
+                  .margin_call_fee_ratio ? (
+                  <Badge className="mr-2">
+                    Margin call fee:{" "}
+                    {finalCollateralAsset.options.extensions
+                      .margin_call_fee_ratio / 100}{" "}
+                    %
+                  </Badge>
+                ) : null}
                 <br />
                 <Label className="pb-0">Asset flags</Label>
                 <br />
@@ -1024,6 +1245,7 @@ export default function Smartcoin(properties) {
             </CardContent>
           </Card>
         </div>
+
         <div className="grid grid-cols-1 mt-5">
           <Card>
             <CardHeader className="pb-3">
@@ -1061,6 +1283,49 @@ export default function Smartcoin(properties) {
             </CardContent>
           </Card>
         </div>
+
+        <div className="grid grid-cols-1 mt-5">
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle>
+                {parsedAsset && parsedCollateralAsset
+                  ? `${parsedAsset.s} price feeds`
+                  : "Price feeds loading..."}
+              </CardTitle>
+              <CardDescription>
+                Check out the latest published price feeds for this smartcoin
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {finalBitasset && finalBitasset.feeds ? (
+                <>
+                  <div className="grid grid-cols-11">
+                    <div className="col-span-2">User</div>
+                    <div className="col-span-2">Date</div>
+                    <div className="col-span-2">CER</div>
+                    <div className="col-span-2">Settlement</div>
+                    <div className="col-span-1">ICR</div>
+                    <div className="col-span-1">MCR</div>
+                    <div className="col-span-1">MSSR</div>
+                  </div>
+                  <List
+                    height={260}
+                    itemCount={finalBitasset.feeds.length}
+                    itemSize={25}
+                    className="w-full"
+                  >
+                    {PriceFeedRow}
+                  </List>
+                </>
+              ) : null}
+              {finalBitasset && !finalBitasset.feeds.length
+                ? "No smartcoin feeds found..."
+                : null}
+              {!finalBitasset ? "Loading..." : null}
+            </CardContent>
+          </Card>
+        </div>
+
         <div className="grid grid-cols-1 mt-5">
           {usr && usr.username && usr.username.length ? (
             <CurrentUser usr={usr} />

@@ -21,7 +21,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-import { eraseCurrentUser } from "../../stores/users.ts";
 import AccountSelect from "../AccountSelect.jsx";
 
 export default function CurrentUser(properties) {
