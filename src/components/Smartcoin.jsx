@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import { FixedSizeList as List } from "react-window";
 import { useForm } from "react-hook-form";
+import { LockOpen2Icon, LockClosedIcon } from "@radix-ui/react-icons";
 
 import {
   Card,
@@ -349,7 +350,9 @@ export default function Smartcoin(properties) {
     if (finalAsset) {
       const obj = getFlagBooleans(finalAsset.options.flags);
       return Object.keys(obj).map((key) => (
-        <Badge className="mr-2">{key}</Badge>
+        <Badge className="mr-2" key={`${key}_debtFlags`}>
+          {key}
+        </Badge>
       ));
     }
   }, [finalAsset]);
@@ -358,7 +361,9 @@ export default function Smartcoin(properties) {
     if (finalCollateralAsset) {
       const obj = getFlagBooleans(finalCollateralAsset.options.flags);
       return Object.keys(obj).map((key) => (
-        <Badge className="mr-2">{key}</Badge>
+        <Badge className="mr-2" key={`${key}_collateralFlags`}>
+          {key}
+        </Badge>
       ));
     }
   }, [finalCollateralAsset]);
@@ -367,7 +372,9 @@ export default function Smartcoin(properties) {
     if (finalAsset) {
       const obj = getFlagBooleans(finalAsset.options.issuer_permissions);
       return Object.keys(obj).map((key) => (
-        <Badge className="mr-2">{key}</Badge>
+        <Badge className="mr-2" key={`${key}_debtPermissions`}>
+          {key}
+        </Badge>
       ));
     }
   }, [finalAsset]);
@@ -378,7 +385,9 @@ export default function Smartcoin(properties) {
         finalCollateralAsset.options.issuer_permissions
       );
       return Object.keys(obj).map((key) => (
-        <Badge className="mr-2">{key}</Badge>
+        <Badge className="mr-2" key={`${key}_collateralPermissions`}>
+          {key}
+        </Badge>
       ));
     }
   }, [finalCollateralAsset]);
@@ -386,9 +395,9 @@ export default function Smartcoin(properties) {
   const [activeOrderTab, setActiveOrderTab] = useState("buy");
   const [showDialog, setShowDialog] = useState(false);
 
-  const [debtLock, setDebtLock] = useState(false);
-  const [collateralLock, setCollateralLock] = useState(false);
-  const [ratioLock, setRatioLock] = useState(false);
+  const [debtLock, setDebtLock] = useState("editable");
+  const [collateralLock, setCollateralLock] = useState("editable");
+  const [ratioLock, setRatioLock] = useState("locked");
 
   const [debtAmount, setDebtAmount] = useState(0);
   const [collateralAmount, setCollateralAmount] = useState(0);
@@ -399,21 +408,47 @@ export default function Smartcoin(properties) {
 
   const debouncedSetRatioValue = useCallback(
     // Throttle slider
-    debounce((value) => setRatioValue(value), 100),
+    debounce((value) => setRatioValue(value), 75),
+    []
+  );
+
+  const debouncedManualRatioValue = useCallback(
+    debounce((input) => {
+      const regex = /^[0-9]*\.?[0-9]*$/; // regular expression to match numbers and a single period
+      if (regex.test(input)) {
+        if (input < parsedBitasset.mcr / 1000) {
+          setRatioValue(parsedBitasset.mcr / 1000);
+        } else if (input > 20) {
+          setRatioValue(20);
+        } else {
+          setRatioValue(input);
+        }
+      }
+    }, 100),
+    []
+  );
+
+  const debouncedManualTCRValue = useCallback(
+    debounce((input) => {
+      const regex = /^[0-9]*\.?[0-9]*$/; // regular expression to match numbers and a single period
+      if (regex.test(input)) {
+        if (input < parsedBitasset.mcr / 1000) {
+          setTCRValue(parsedBitasset.mcr / 1000);
+        } else if (input > 20) {
+          setTCRValue(20);
+        } else {
+          setTCRValue(input);
+        }
+      }
+    }, 100),
     []
   );
 
   const debouncedSetTCRValue = useCallback(
     // Throttle slider
-    debounce((value) => setTCRValue(value), 100),
+    debounce((value) => setTCRValue(value), 75),
     []
   );
-
-  useEffect(() => {
-    if (ratioValue) {
-      console.log({ ratioValue });
-    }
-  }, [ratioValue]);
 
   const MarginPositionRow = ({ index, style }) => {
     const res = assetCallOrders[index];
@@ -606,16 +641,16 @@ export default function Smartcoin(properties) {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>
-                            <div className="grid grid-cols-2 mt-2">
-                              <div className="col-span-1 mt-1">
+                            <span className="grid grid-cols-2 mt-2">
+                              <span className="col-span-1 mt-1">
                                 Asset to borrow
-                              </div>
-                              <div className="col-span-1 text-right">
+                              </span>
+                              <span className="col-span-1 text-right">
                                 <a href="/smartcoins/index.html">
                                   <Badge>Change asset</Badge>
                                 </a>
-                              </div>
-                            </div>
+                              </span>
+                            </span>
                           </FormLabel>
                           <FormControl>
                             <Input
@@ -696,17 +731,17 @@ export default function Smartcoin(properties) {
                           <FormDescription
                             style={{ marginTop: 0, paddingTop: 0 }}
                           >
-                            <div className="grid grid-cols-3 mt-0 pt-0">
-                              <div className="col-span-2 mt-0 pt-0">
+                            <span className="grid grid-cols-3 mt-0 pt-0">
+                              <span className="col-span-2 mt-0 pt-0">
                                 The amount of{" "}
                                 {parsedAsset ? parsedAsset.s : "?"} you intend
                                 to borrow into existence.
-                              </div>
-                              <div className="col-span-1 text-right">
+                              </span>
+                              <span className="col-span-1 text-right">
                                 Available: {debtAssetHoldings ?? 0}{" "}
                                 {parsedAsset ? parsedAsset.s : "?"}
-                              </div>
-                            </div>
+                              </span>
+                            </span>
                           </FormDescription>
                           <FormControl
                             onChange={(event) => {
@@ -717,37 +752,52 @@ export default function Smartcoin(properties) {
                               }
                             }}
                           >
-                            <div className="grid grid-cols-12">
-                              <div className="col-span-1">
+                            <span className="grid grid-cols-12">
+                              <span className="col-span-1">
                                 <Toggle
                                   variant="outline"
                                   onClick={() => {
-                                    if (!debtLock) {
-                                      setRatioLock(false);
-                                      setCollateralLock(false);
+                                    if (debtLock === "editable") {
+                                      setDebtLock("locked");
+                                      setRatioLock("editable");
+                                      setCollateralLock("editable");
                                     }
-                                    setDebtLock(!debtLock);
                                   }}
                                 >
-                                  {debtLock ? "🔒" : "🔓"}
+                                  {debtLock === "editable" ? (
+                                    <LockOpen2Icon className="h-4 w-4" />
+                                  ) : (
+                                    <LockClosedIcon className="h-4 w-4" />
+                                  )}
                                 </Toggle>
-                              </div>
-                              <div className="col-span-11">
-                                <Input
-                                  label={`Amount of debt to issue`}
-                                  value={debtAmount}
-                                  placeholder={debtAmount}
-                                  onChange={(event) => {
-                                    const input = event.target.value;
-                                    const regex = /^[0-9]*\.?[0-9]*$/; // regular expression to match numbers and a single period
-                                    if (regex.test(input)) {
-                                      setDebtAmount(input);
-                                    }
-                                  }}
-                                  className="mb-3"
-                                />
-                              </div>
-                            </div>
+                              </span>
+                              <span className="col-span-11">
+                                {debtLock === "editable" ? (
+                                  <Input
+                                    label={`Amount of debt to issue`}
+                                    value={debtAmount}
+                                    placeholder={debtAmount}
+                                    onChange={(event) => {
+                                      const input = event.target.value;
+                                      const regex = /^[0-9]*\.?[0-9]*$/; // regular expression to match numbers and a single period
+                                      if (regex.test(input)) {
+                                        setDebtAmount(input);
+                                      }
+                                    }}
+                                    className="mb-3"
+                                  />
+                                ) : (
+                                  <Input
+                                    label={`Amount of debt to issue`}
+                                    value={debtAmount}
+                                    placeholder={debtAmount}
+                                    disabled
+                                    readOnly
+                                    className="mb-3"
+                                  />
+                                )}
+                              </span>
+                            </span>
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -763,18 +813,18 @@ export default function Smartcoin(properties) {
                           <FormDescription
                             style={{ marginTop: 0, paddingTop: 0 }}
                           >
-                            <div className="grid grid-cols-3 mt-0 pt-0">
-                              <div className="col-span-2 mt-0 pt-0">
+                            <span className="grid grid-cols-3 mt-0 pt-0">
+                              <span className="col-span-2 mt-0 pt-0">
                                 The amount of {parsedCollateralAsset.s} backing
                                 collateral you'll need to provide.
-                              </div>
-                              <div className="col-span-1 text-right">
+                              </span>
+                              <span className="col-span-1 text-right">
                                 Available: {collateralAssetHoldings ?? 0}{" "}
                                 {parsedCollateralAsset
                                   ? parsedCollateralAsset.s
                                   : "?"}
-                              </div>
-                            </div>
+                              </span>
+                            </span>
                           </FormDescription>
                           <FormControl
                             onChange={(event) => {
@@ -785,30 +835,45 @@ export default function Smartcoin(properties) {
                               }
                             }}
                           >
-                            <div className="grid grid-cols-12">
-                              <div className="col-span-1">
+                            <span className="grid grid-cols-12">
+                              <span className="col-span-1">
                                 <Toggle
                                   variant="outline"
                                   onClick={() => {
-                                    if (!collateralLock) {
-                                      setRatioLock(false);
-                                      setDebtLock(false);
+                                    if (collateralLock === "editable") {
+                                      setDebtLock("editable");
+                                      setRatioLock("editable");
+                                      setCollateralLock("locked");
                                     }
-                                    setCollateralLock(!collateralLock);
                                   }}
                                 >
-                                  {collateralLock ? "🔒" : "🔓"}
+                                  {collateralLock === "editable" ? (
+                                    <LockOpen2Icon className="h-4 w-4" />
+                                  ) : (
+                                    <LockClosedIcon className="h-4 w-4" />
+                                  )}
                                 </Toggle>
-                              </div>
-                              <div className="col-span-11">
-                                <Input
-                                  label={`Amount of collateral to commit`}
-                                  value={collateralAmount}
-                                  placeholder={collateralAmount}
-                                  className="mb-3"
-                                />
-                              </div>
-                            </div>
+                              </span>
+                              <span className="col-span-11">
+                                {collateralLock === "editable" ? (
+                                  <Input
+                                    label={`Amount of collateral to commit`}
+                                    value={collateralAmount}
+                                    placeholder={collateralAmount}
+                                    className="mb-3"
+                                  />
+                                ) : (
+                                  <Input
+                                    label={`Amount of collateral to commit`}
+                                    value={collateralAmount}
+                                    placeholder={collateralAmount}
+                                    disabled
+                                    readOnly
+                                    className="mb-3"
+                                  />
+                                )}
+                              </span>
+                            </span>
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -823,75 +888,98 @@ export default function Smartcoin(properties) {
                           <FormLabel>Ratio of collateral to debt</FormLabel>
                           <FormControl
                             onChange={(event) => {
-                              const input = event.target.value;
-                              const regex = /^[0-9]*\.?[0-9]*$/; // regular expression to match numbers and a single period
-                              if (regex.test(input)) {
-                                setRatioValue(input);
-                              }
+                              const input = parseFloat(event.target.value);
+                              debouncedManualRatioValue(input);
                             }}
                           >
-                            <div className="grid grid-cols-12">
-                              <div className="col-span-1">
+                            <span className="grid grid-cols-12">
+                              <span className="col-span-1">
                                 <Toggle
                                   variant="outline"
                                   onClick={() => {
-                                    if (!ratioLock) {
-                                      setDebtLock(false);
-                                      setCollateralLock(false);
+                                    if (ratioLock === "editable") {
+                                      setDebtLock("editable");
+                                      setRatioLock("locked");
+                                      setCollateralLock("editable");
+                                    } else {
+                                      setDebtLock("editable");
+                                      setRatioLock("editable");
+                                      setCollateralLock("locked");
                                     }
-                                    setRatioLock(!ratioLock);
                                   }}
                                 >
-                                  {ratioLock ? "🔒" : "🔓"}
+                                  {ratioLock === "editable" ? (
+                                    <LockOpen2Icon className="h-4 w-4" />
+                                  ) : (
+                                    <LockClosedIcon className="h-4 w-4" />
+                                  )}
                                 </Toggle>
-                              </div>
-                              <div className="col-span-11">
-                                <Input
-                                  label={`Ratio of collateral to debt`}
-                                  value={ratioValue}
-                                  placeholder={ratioValue}
-                                  className="mb-3"
-                                />
-                              </div>
-                            </div>
+                              </span>
+                              <span className="col-span-11">
+                                {ratioLock === "editable" ? (
+                                  <Input
+                                    label={`Ratio of collateral to debt`}
+                                    value={ratioValue}
+                                    placeholder={ratioValue}
+                                    className="mb-3"
+                                  />
+                                ) : (
+                                  <Input
+                                    label={`Ratio of collateral to debt`}
+                                    value={ratioValue}
+                                    placeholder={ratioValue}
+                                    disabled
+                                    readOnly
+                                    className="mb-3"
+                                  />
+                                )}
+                              </span>
+                            </span>
                           </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
-                    <Slider
-                      defaultValue={[ratioValue ?? 2]}
-                      max={20}
-                      min={parsedBitasset.mcr / 1000}
-                      step={0.1}
-                      onValueChange={(value) => {
-                        debouncedSetRatioValue(value[0]);
-                      }}
-                    />
-                    <br />
-                    <div className="items-top flex space-x-2">
-                      <Checkbox
-                        id="terms1"
-                        onClick={() => {
-                          setTCREnabled(!tcrEnabled);
+                    {ratioLock === "editable" ? (
+                      <Slider
+                        defaultValue={[ratioValue ?? 2]}
+                        max={20}
+                        min={parsedBitasset.mcr / 1000}
+                        step={0.01}
+                        onValueChange={(value) => {
+                          debouncedSetRatioValue(value[0]);
                         }}
                       />
-                      <div className="grid gap-1.5 leading-none">
-                        <label
-                          htmlFor="terms1"
-                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                        >
-                          Enable Target Collateral Ratio
-                        </label>
-                      </div>
-                    </div>
+                    ) : null}
+                    <br />
+                    <FormField
+                      control={form.control}
+                      name="tcrValue"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <>
+                              <Checkbox
+                                id="terms1"
+                                className="mr-2"
+                                onClick={() => {
+                                  setTCREnabled(!tcrEnabled);
+                                }}
+                              />
+                              Enable Target Collateral Ratio
+                            </>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                     {tcrEnabled ? (
                       <div className="ml-6">
                         <FormField
                           control={form.control}
                           name="tcrValue"
                           render={({ field }) => (
-                            <FormItem>
+                            <FormItem className="mt-0">
                               <FormLabel>
                                 Target collateral ratio value
                               </FormLabel>
@@ -901,11 +989,8 @@ export default function Smartcoin(properties) {
                               </FormDescription>
                               <FormControl
                                 onChange={(event) => {
-                                  const input = event.target.value;
-                                  const regex = /^[0-9]*\.?[0-9]*$/; // regular expression to match numbers and a single period
-                                  if (regex.test(input)) {
-                                    setTCRValue(input);
-                                  }
+                                  const input = parseFloat(event.target.value);
+                                  debouncedManualTCRValue(input);
                                 }}
                               >
                                 <Input
@@ -975,6 +1060,7 @@ export default function Smartcoin(properties) {
               </CardContent>
             </Card>
           ) : null}
+
           {!invalidUrlParams && !parsedBitasset ? (
             <Card>
               <CardHeader>
@@ -1014,14 +1100,14 @@ export default function Smartcoin(properties) {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>
-                            <div className="grid grid-cols-2 mt-2">
-                              <div className="col-span-1 mt-1">
+                            <span className="grid grid-cols-2 mt-2">
+                              <span className="col-span-1 mt-1">
                                 Asset to borrow
-                              </div>
-                              <div className="col-span-1 text-right">
+                              </span>
+                              <span className="col-span-1 text-right">
                                 <Badge>Change asset</Badge>
-                              </div>
-                            </div>
+                              </span>
+                            </span>
                           </FormLabel>
                           <FormControl>
                             <Input
@@ -1082,29 +1168,31 @@ export default function Smartcoin(properties) {
                           <FormDescription
                             style={{ marginTop: 0, paddingTop: 0 }}
                           >
-                            <div className="grid grid-cols-3 mt-0 pt-0">
-                              <div className="col-span-2 mt-0 pt-0 text-sm">
+                            <span className="grid grid-cols-3 mt-0 pt-0">
+                              <span className="col-span-2 mt-0 pt-0 text-sm">
                                 The amount of ? you intend to borrow into
                                 existence.
-                              </div>
-                              <div className="col-span-1 text-right text-sm">
+                              </span>
+                              <span className="col-span-1 text-right text-sm">
                                 Available: 0 ?
-                              </div>
-                            </div>
+                              </span>
+                            </span>
                           </FormDescription>
                           <FormControl>
-                            <div className="grid grid-cols-12">
-                              <div className="col-span-1">
-                                <Toggle variant="outline">🔓</Toggle>
-                              </div>
-                              <div className="col-span-11">
+                            <span className="grid grid-cols-12">
+                              <span className="col-span-1">
+                                <Toggle variant="outline">
+                                  <LockOpen2Icon className="h-4 w-4" />
+                                </Toggle>
+                              </span>
+                              <span className="col-span-11">
                                 <Input
                                   label={`Amount of debt to issue`}
                                   placeholder="0"
                                   className="mb-3"
                                 />
-                              </div>
-                            </div>
+                              </span>
+                            </span>
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -1120,29 +1208,31 @@ export default function Smartcoin(properties) {
                           <FormDescription
                             style={{ marginTop: 0, paddingTop: 0 }}
                           >
-                            <div className="grid grid-cols-3 mt-0 pt-0">
-                              <div className="col-span-2 mt-0 pt-0 text-sm">
+                            <span className="grid grid-cols-3 mt-0 pt-0">
+                              <span className="col-span-2 mt-0 pt-0 text-sm">
                                 The amount of ? backing collateral you'll need
                                 to provide.
-                              </div>
-                              <div className="col-span-1 text-right text-sm">
+                              </span>
+                              <span className="col-span-1 text-right text-sm">
                                 Available: 0 ?
-                              </div>
-                            </div>
+                              </span>
+                            </span>
                           </FormDescription>
                           <FormControl>
-                            <div className="grid grid-cols-12">
-                              <div className="col-span-1">
-                                <Toggle variant="outline">🔓</Toggle>
-                              </div>
-                              <div className="col-span-11">
+                            <span className="grid grid-cols-12">
+                              <span className="col-span-1">
+                                <Toggle variant="outline">
+                                  <LockOpen2Icon className="h-4 w-4" />
+                                </Toggle>
+                              </span>
+                              <span className="col-span-11">
                                 <Input
                                   label={`Amount of collateral to commit`}
                                   placeholder="0"
                                   className="mb-3"
                                 />
-                              </div>
-                            </div>
+                              </span>
+                            </span>
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -1156,43 +1246,40 @@ export default function Smartcoin(properties) {
                         <FormItem>
                           <FormLabel>Ratio of collateral to debt</FormLabel>
                           <FormControl>
-                            <div className="grid grid-cols-12">
-                              <div className="col-span-1">
-                                <Toggle variant="outline">🔓</Toggle>
-                              </div>
-                              <div className="col-span-11">
+                            <span className="grid grid-cols-12">
+                              <span className="col-span-1">
+                                <Toggle variant="outline">
+                                  <LockOpen2Icon className="h-4 w-4" />
+                                </Toggle>
+                              </span>
+                              <span className="col-span-11">
                                 <Input
                                   label={`Ratio of collateral to debt`}
                                   placeholder="0"
                                   className="mb-3"
-                                  onChange={(event) => {
-                                    const input = event.target.value;
-                                    const regex = /^[0-9]*\.?[0-9]*$/; // regular expression to match numbers and a single period
-                                    if (regex.test(input)) {
-                                      setRatioValue(input);
-                                    }
-                                  }}
+                                  disabled
+                                  readOnly
                                 />
-                              </div>
-                            </div>
+                              </span>
+                            </span>
                           </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
-                    <Slider defaultValue={[2]} max={20} min={1.4} step={0.1} />
+                    <Slider defaultValue={[2]} max={20} min={1.4} step={0.01} />
                     <br />
-                    <div className="items-top flex space-x-2">
+                    <span className="items-top flex space-x-2">
                       <Checkbox id="terms1" />
-                      <div className="grid gap-1.5 leading-none">
+                      <span className="grid gap-1.5 leading-none">
                         <label
                           htmlFor="terms1"
                           className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                         >
                           Enable Target Collateral Ratio
                         </label>
-                      </div>
-                    </div>
+                      </span>
+                    </span>
 
                     <FormField
                       control={form.control}
@@ -1425,38 +1512,24 @@ export default function Smartcoin(properties) {
                   <div className="col-span-5">
                     <div className="grid grid-cols-1 gap-1 w-full text-sm">
                       <CardRow
-                        title={"Feed qty"}
+                        title={"Collateral asset"}
                         button={
-                          parsedBitasset ? parsedBitasset.feeds.length : 0
+                          parsedCollateralAsset ? parsedCollateralAsset.s : "?"
                         }
-                        dialogtitle={`${parsedAsset.s} smartcoin price feed quantity`}
+                        dialogtitle={`${parsedAsset.s} smartcoin backing collateral asset`}
                         dialogdescription={
                           <ul className="ml-2 list-disc [&>li]:mt-2">
                             <li>
-                              This is the quantity of unique recently published
-                              price feeds.
-                            </li>
-                            <li>
-                              The more feeds, the more decentralized the price
-                              feed arguably is.
-                            </li>
-                            <li>
-                              Some assets are fed by the committee or the
-                              witnesses, such as the bitassets.
-                            </li>
-                            <li>
-                              Private smartcoins can be fed by custom price feed
-                              publishers.
-                            </li>
-                            <li>
-                              You should verify the correctness and the
-                              trustworthiness of price feeds to reduce your risk
-                              exposure.
+                              This is the asset which is used as collateral for
+                              issuing this smartcoin.
                             </li>
                           </ul>
                         }
-                        tooltip={"More about smartcoin price feed quantities"}
+                        tooltip={
+                          "More about smartcoin backing collateral assets"
+                        }
                       />
+
                       <CardRow
                         title={"MCR"}
                         button={`${
@@ -1517,22 +1590,37 @@ export default function Smartcoin(properties) {
                       />
 
                       <CardRow
-                        title={"Collateral asset"}
+                        title={"Feed qty"}
                         button={
-                          parsedCollateralAsset ? parsedCollateralAsset.s : "?"
+                          parsedBitasset ? parsedBitasset.feeds.length : 0
                         }
-                        dialogtitle={`${parsedAsset.s} smartcoin backing collateral asset`}
+                        dialogtitle={`${parsedAsset.s} smartcoin price feed quantity`}
                         dialogdescription={
                           <ul className="ml-2 list-disc [&>li]:mt-2">
                             <li>
-                              This is the asset which is used as collateral for
-                              issuing this smartcoin.
+                              This is the quantity of unique recently published
+                              price feeds.
+                            </li>
+                            <li>
+                              The more feeds, the more decentralized the price
+                              feed arguably is.
+                            </li>
+                            <li>
+                              Some assets are fed by the committee or the
+                              witnesses, such as the bitassets.
+                            </li>
+                            <li>
+                              Private smartcoins can be fed by custom price feed
+                              publishers.
+                            </li>
+                            <li>
+                              You should verify the correctness and the
+                              trustworthiness of price feeds to reduce your risk
+                              exposure.
                             </li>
                           </ul>
                         }
-                        tooltip={
-                          "More about smartcoin backing collateral assets"
-                        }
+                        tooltip={"More about smartcoin price feed quantities"}
                       />
                     </div>
                   </div>

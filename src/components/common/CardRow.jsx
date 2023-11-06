@@ -1,18 +1,8 @@
-import React, { useState, useEffect } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import React, { useState } from "react";
 
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -25,12 +15,8 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { humanReadableFloat } from "../../lib/common";
-
-import ExternalLink from "../common/ExternalLink.jsx";
 
 export default function CardRow(properties) {
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -44,7 +30,7 @@ export default function CardRow(properties) {
   };
 
   return (
-    <div className="col-span-1">
+    <div className="col-span-1" key={`${properties.dialogtitle}`}>
       <div className="grid grid-cols-10">
         <div className="col-span-4">{properties.title}:</div>
         <div className="col-span-5 mr-2">
