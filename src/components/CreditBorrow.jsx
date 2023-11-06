@@ -51,6 +51,8 @@ const activeTabStyle = {
   color: "white",
 };
 
+const isValid = (str) => /^[a-zA-Z0-9.-]+$/.test(str);
+
 export default function CreditBorrow(properties) {
   const usr = useSyncExternalStore(
     $currentUser.subscribe,
@@ -104,7 +106,7 @@ export default function CreditBorrow(properties) {
   }, [usr]);
 
   const compatibleOffers = useMemo(() => {
-    if (!offers || !usrBalances) return [];
+    if (!offers || !balanceAssetIDs) return [];
 
     return offers.filter((offer) => {
       return offer.acceptable_collateral.some((x) => {
@@ -121,16 +123,24 @@ export default function CreditBorrow(properties) {
     let adjustedOffers = [];
     for (let i = 0; i < offers.length; i++) {
       const offer = offers[i];
-      offer["collateral_symbols"] = offer.acceptable_collateral.map((asset) => {
-        return assets.find((x) => x.id === asset[0]).symbol;
-      });
+      if (!offer) {
+        continue;
+      }
+      if (offer.acceptable_collateral) {
+        offer["collateral_symbols"] = offer.acceptable_collateral
+          .map((asset) => {
+            const searched = assets.find((x) => x.id === asset[0]);
+            return searched?.symbol;
+          })
+          .filter((x) => x);
+      }
       offer["offer_symbols"] = [
         assets.find((x) => x.id === offer.asset_type).symbol,
       ];
       adjustedOffers.push(offer);
     }
 
-    let keys;
+    let keys = []; // Initialize keys as an empty array
     if (activeSearch === "borrow") {
       keys = ["offer_symbols"];
     } else if (activeSearch === "collateral") {
@@ -146,60 +156,76 @@ export default function CreditBorrow(properties) {
   }, [offers, assets, activeSearch]);
 
   useEffect(() => {
-    if (offerSearch) {
-      console.log("Parsing url params");
-      const urlSearchParams = new URLSearchParams(window.location.search);
-      const params = Object.fromEntries(urlSearchParams.entries());
+    console.log("Parsing url params");
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const params = Object.fromEntries(urlSearchParams.entries());
 
-      if (params && params.tab) {
-        if (
-          !["allOffers", "availableOffers", "searchOffers"].includes(params.tab)
-        ) {
-          return;
-        }
-        setActiveTab(params.tab);
-        console.log("Setting active tab", params.tab);
-      } else {
-        window.history.replaceState({}, "", `?tab=allOffers`);
-      }
+    let finalTab = "";
+    let finalSearchTab = "";
+    let searchInput = "";
+    let finalURL = "?";
+    if (
+      params &&
+      params.tab &&
+      ["allOffers", "availableOffers", "searchOffers"].includes(params.tab)
+    ) {
+      finalTab = params.tab;
+      finalURL += `tab=${params.tab}`;
+      console.log("Setting active tab", params.tab);
+    } else {
+      finalTab = "allOffers";
+      finalURL += "tab=allOffers";
+    }
 
-      if (params && params.searchTab) {
-        if (
-          !["borrow", "collateral", "owner_name"].includes(params.searchTab)
-        ) {
-          return;
-        }
-        setActiveSearch(params.searchTab);
+    if (
+      params &&
+      params.tab &&
+      params.tab === "searchOffers" &&
+      params.searchTab
+    ) {
+      if (["borrow", "collateral", "owner_name"].includes(params.searchTab)) {
+        finalSearchTab = params.searchTab;
+        finalURL += `&searchTab=${params.searchTab}`;
         console.log("Setting active search tab", params.searchTab);
       } else {
-        window.history.replaceState(
-          {},
-          "",
-          `?tab=searchOffers&searchTab=borrow`
-        );
-      }
-
-      if (params && params.searchText) {
-        const isValid = (str) => /^[a-zA-Z0-9.-]+$/.test(str);
-        if (!isValid(params.searchText)) {
-          return;
-        }
-        setThisInput(params.searchText);
-        console.log("Setting search text", params.searchText);
+        finalSearchTab = "borrow";
+        finalURL += "&searchTab=borrow";
       }
     }
-  }, [offerSearch]);
+
+    if (
+      params &&
+      params.tab &&
+      params.searchTab &&
+      params.tab === "searchOffers" &&
+      params.searchText &&
+      params.searchText.length
+    ) {
+      if (isValid(params.searchText)) {
+        searchInput = params.searchText;
+        finalURL += `&searchText=${params.searchText}`;
+        console.log("Setting search text", params.searchText);
+      } else {
+        searchInput = "";
+        finalURL += "&searchText=bts";
+      }
+    }
+
+    setActiveTab(finalTab);
+    setActiveSearch(finalSearchTab);
+    setThisInput(searchInput);
+    window.history.replaceState({}, "", finalURL);
+  }, []);
 
   useEffect(() => {
     if (offerSearch && thisInput) {
-      const isValid = (str) => /^[a-zA-Z0-9.-]+$/.test(str);
       if (!isValid(thisInput)) {
         return;
       }
       window.history.replaceState(
         {},
         "",
-        `?tab=searchOffers&searchTab=${activeSearch}${
+        `?tab=searchOffers&searchTab=${activeSearch ?? "borrow"}${
           thisInput ? `&searchText=${thisInput}` : ""
         }`
       );
@@ -228,12 +254,15 @@ export default function CreditBorrow(properties) {
               <br />
               Accepting
               <b>
-                {` ${res.acceptable_collateral
-                  .map((asset) => asset[0])
-                  .map((x) => {
-                    return assets.find((y) => y.id === x).symbol;
-                  })
-                  .join(", ")}`}
+                {assets && assets.length
+                  ? ` ${res.acceptable_collateral
+                      .map((asset) => asset[0])
+                      .map((x) => {
+                        return assets.find((y) => y.id === x)?.symbol;
+                      })
+                      .map((x) => x)
+                      .join(", ")}`
+                  : "loading..."}
               </b>
             </CardDescription>
           </CardHeader>
@@ -338,7 +367,7 @@ export default function CreditBorrow(properties) {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              {offers && offers.length ? (
+              {offers && offers.length && activeTab ? (
                 <>
                   <Tabs
                     key={`top_tab_${activeTab}`}
@@ -462,6 +491,7 @@ export default function CreditBorrow(properties) {
                               value="borrow"
                               onClick={() => {
                                 setActiveSearch("borrow");
+
                                 window.history.replaceState(
                                   {},
                                   "",

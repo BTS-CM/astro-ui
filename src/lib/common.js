@@ -117,7 +117,24 @@ function getFlagBooleans(mask) {
   return booleans;
 }
 
+/**
+ * Delaying the execution of the function until the user stops typing
+ * @param {function} func
+ * @param {number} delay
+ * @returns {function}
+ */
+function debounce(func, delay) {
+  let timerId;
+  return (...args) => {
+    if (timerId) clearTimeout(timerId);
+    timerId = setTimeout(() => {
+      func(...args);
+    }, delay);
+  };
+}
+
 export {
+  debounce,
   blockchainFloat,
   copyToClipboard,
   humanReadableFloat,

@@ -53,22 +53,16 @@ import DeepLinkDialog from "./common/DeepLinkDialog";
 import ExternalLink from "./common/ExternalLink.jsx";
 import CardRow from "./common/CardRow.jsx";
 
-import { humanReadableFloat, getFlagBooleans } from "../lib/common.js";
+import {
+  humanReadableFloat,
+  getFlagBooleans,
+  debounce,
+} from "../lib/common.js";
 
 const activeTabStyle = {
   backgroundColor: "#252526",
   color: "white",
 };
-
-function debounce(func, delay) {
-  let timerId;
-  return (...args) => {
-    if (timerId) clearTimeout(timerId);
-    timerId = setTimeout(() => {
-      func(...args);
-    }, delay);
-  };
-}
 
 function timeAgo(dateString) {
   const date = new Date(dateString);

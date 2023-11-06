@@ -3,6 +3,7 @@ import React, {
   useEffect,
   useSyncExternalStore,
   useMemo,
+  useCallback,
 } from "react";
 import { FixedSizeList as List } from "react-window";
 import Fuse from "fuse.js";
@@ -21,6 +22,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+
+import { debounce } from "../lib/common.js";
 
 import { useInitCache } from "../effects/Init.ts";
 import { createUserBalancesStore } from "../effects/User.ts";
@@ -166,6 +169,19 @@ export default function Smartcoins(properties) {
       setThisResult(result);
     }
   }, [assetSearch, thisInput]);
+
+  const debouncedSetSearchInput = useCallback(
+    // Throttle slider
+    debounce((event) => {
+      setThisInput(event.target.value);
+      window.history.replaceState(
+        {},
+        "",
+        `?tab=search&searchTab=${activeSearch}&searchText=${event.target.value}`
+      );
+    }, 500),
+    []
+  );
 
   function CommonRow({
     index,
@@ -363,7 +379,13 @@ export default function Smartcoins(properties) {
             </CardHeader>
             <CardContent>
               {bitAssetData && bitAssetData.length && usrBalances ? (
-                <Tabs defaultValue={activeTab ?? "all"} className="w-full">
+                <Tabs
+                  key={`Tabs_${activeTab ?? ""}${activeSearch ?? ""}${
+                    thisInput ?? ""
+                  }`}
+                  defaultValue={activeTab ?? "all"}
+                  className="w-full"
+                >
                   <TabsList className="grid w-full grid-cols-4 gap-2">
                     {activeTab === "all" ? (
                       <TabsTrigger value="all" style={activeTabStyle}>
@@ -550,14 +572,7 @@ export default function Smartcoins(properties) {
                         name="searchInput"
                         placeholder={thisInput ?? "Enter search text"}
                         className="mb-3 mt-3 w-full"
-                        onChange={(event) => {
-                          setThisInput(event.target.value);
-                          window.history.replaceState(
-                            {},
-                            "",
-                            `?tab=search&searchTab=${activeSearch}&searchText=${event.target.value}`
-                          );
-                        }}
+                        onChange={(event) => debouncedSetSearchInput(event)}
                       />
 
                       <TabsContent value="borrow">
