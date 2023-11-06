@@ -3,6 +3,7 @@ import React, {
   useEffect,
   useSyncExternalStore,
   useMemo,
+  useCallback,
 } from "react";
 import { FixedSizeList as List } from "react-window";
 import { useForm } from "react-hook-form";
@@ -49,14 +50,25 @@ import {
 
 import CurrentUser from "./common/CurrentUser.jsx";
 import DeepLinkDialog from "./common/DeepLinkDialog";
+import ExternalLink from "./common/ExternalLink.jsx";
+import CardRow from "./common/CardRow.jsx";
 
 import { humanReadableFloat, getFlagBooleans } from "../lib/common.js";
-import ExternalLink from "./common/ExternalLink.jsx";
 
 const activeTabStyle = {
   backgroundColor: "#252526",
   color: "white",
 };
+
+function debounce(func, delay) {
+  let timerId;
+  return (...args) => {
+    if (timerId) clearTimeout(timerId);
+    timerId = setTimeout(() => {
+      func(...args);
+    }, delay);
+  };
+}
 
 function timeAgo(dateString) {
   const date = new Date(dateString);
@@ -167,6 +179,34 @@ export default function Smartcoin(properties) {
       }
 
       return foundParamter;
+    }
+  }, [marketSearch]);
+
+  const invalidUrlParams = useMemo(() => {
+    if (marketSearch && marketSearch.length && window.location.search) {
+      const urlSearchParams = new URLSearchParams(window.location.search);
+      const params = Object.fromEntries(urlSearchParams.entries());
+      const foundParamter = params && params.id ? params.id : null;
+
+      if (
+        !foundParamter ||
+        !foundParamter.length ||
+        (foundParamter && !foundParamter.includes("1.3."))
+      ) {
+        console.log("Invalid parameter");
+        return true;
+      }
+
+      const poolIds =
+        marketSearch && marketSearch.length
+          ? marketSearch.map((x) => x.id)
+          : [];
+      if (!poolIds.includes(foundParamter)) {
+        console.log("Invalid parameter");
+        return true;
+      }
+
+      return false;
     }
   }, [marketSearch]);
 
@@ -352,15 +392,34 @@ export default function Smartcoin(properties) {
   const [activeOrderTab, setActiveOrderTab] = useState("buy");
   const [showDialog, setShowDialog] = useState(false);
 
-  const [debtAmount, setDebtAmount] = useState(0);
-  const [collateralAmount, setCollateralAmount] = useState(0);
-  const [ratioValue, setRatioValue] = useState(0);
-  const [tcrEnabled, setTCREnabled] = useState(false);
-  const [tcrValue, setTCRValue] = useState(0);
-
   const [debtLock, setDebtLock] = useState(false);
   const [collateralLock, setCollateralLock] = useState(false);
   const [ratioLock, setRatioLock] = useState(false);
+
+  const [debtAmount, setDebtAmount] = useState(0);
+  const [collateralAmount, setCollateralAmount] = useState(0);
+  const [ratioValue, setRatioValue] = useState(0);
+
+  const [tcrEnabled, setTCREnabled] = useState(false);
+  const [tcrValue, setTCRValue] = useState(0);
+
+  const debouncedSetRatioValue = useCallback(
+    // Throttle slider
+    debounce((value) => setRatioValue(value), 100),
+    []
+  );
+
+  const debouncedSetTCRValue = useCallback(
+    // Throttle slider
+    debounce((value) => setTCRValue(value), 100),
+    []
+  );
+
+  useEffect(() => {
+    if (ratioValue) {
+      console.log({ ratioValue });
+    }
+  }, [ratioValue]);
 
   const MarginPositionRow = ({ index, style }) => {
     const res = assetCallOrders[index];
@@ -488,7 +547,7 @@ export default function Smartcoin(properties) {
     <>
       <div className="container mx-auto mt-5 mb-5">
         <div className="grid grid-cols-1 gap-3">
-          {!parsedUrlParams || !parsedAsset || !parsedBitasset ? (
+          {marketSearch && invalidUrlParams ? (
             <Card>
               <CardHeader>
                 <CardTitle>⚠️ Invalid smartcoin id provided</CardTitle>
@@ -507,7 +566,7 @@ export default function Smartcoin(properties) {
             </Card>
           ) : null}
 
-          {parsedBitasset ? (
+          {!invalidUrlParams && parsedBitasset ? (
             <Card>
               <CardHeader>
                 <CardTitle>💵 Collateral debt position form</CardTitle>
@@ -527,6 +586,26 @@ export default function Smartcoin(properties) {
                       event.preventDefault();
                     }}
                   >
+                    <FormField
+                      control={form.control}
+                      name="account"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Account</FormLabel>
+                          <FormControl>
+                            <Input
+                              disabled
+                              placeholder="Bitshares account (1.2.x)"
+                              className="mb-3 mt-3"
+                              value={`${usr.username} (${usr.id})`}
+                              readOnly
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
                     <FormField
                       control={form.control}
                       name="borrowAsset"
@@ -552,25 +631,7 @@ export default function Smartcoin(properties) {
                               value={`${parsedAsset ? parsedAsset.s : "?"} (${
                                 parsedAsset ? parsedAsset.id : "?"
                               })`}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="account"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Account</FormLabel>
-                          <FormControl>
-                            <Input
-                              disabled
-                              placeholder="Bitshares account (1.2.x)"
-                              className="mb-3 mt-3"
-                              value={`${usr.username} (${usr.id})`}
+                              readOnly
                             />
                           </FormControl>
                           <FormMessage />
@@ -624,6 +685,7 @@ export default function Smartcoin(properties) {
                               disabled
                               className="mb-3 mt-3"
                               value={`call price placeholder`}
+                              readOnly
                             />
                           </FormControl>
                           <FormMessage />
@@ -681,6 +743,13 @@ export default function Smartcoin(properties) {
                                   label={`Amount of debt to issue`}
                                   value={debtAmount}
                                   placeholder={debtAmount}
+                                  onChange={(event) => {
+                                    const input = event.target.value;
+                                    const regex = /^[0-9]*\.?[0-9]*$/; // regular expression to match numbers and a single period
+                                    if (regex.test(input)) {
+                                      setDebtAmount(input);
+                                    }
+                                  }}
                                   className="mb-3"
                                 />
                               </div>
@@ -802,7 +871,7 @@ export default function Smartcoin(properties) {
                       min={parsedBitasset.mcr / 1000}
                       step={0.1}
                       onValueChange={(value) => {
-                        setRatioValue(value[0]);
+                        debouncedSetRatioValue(value[0]);
                       }}
                     />
                     <br />
@@ -823,7 +892,7 @@ export default function Smartcoin(properties) {
                       </div>
                     </div>
                     {tcrEnabled ? (
-                      <>
+                      <div className="ml-6">
                         <FormField
                           control={form.control}
                           name="tcrValue"
@@ -857,16 +926,39 @@ export default function Smartcoin(properties) {
                         />
                         <Slider
                           className="mt-3"
-                          defaultValue={[tcrValue ?? 2]}
+                          defaultValue={[tcrValue ?? parsedBitasset.mcr / 1000]}
                           max={20}
                           min={parsedBitasset.mcr / 1000}
                           step={0.1}
                           onValueChange={(value) => {
-                            setTCRValue(value[0]);
+                            debouncedSetTCRValue(value[0]);
                           }}
                         />
-                      </>
+                      </div>
                     ) : null}
+
+                    <FormField
+                      control={form.control}
+                      name="networkFee"
+                      render={({ field }) => (
+                        <FormItem className="mb-1 mt-3">
+                          <FormLabel>Network broadcast fee</FormLabel>
+                          <FormDescription>
+                            The fee required to broadcast your call order update
+                            operation onto the blockchain
+                          </FormDescription>
+                          <FormControl>
+                            <Input
+                              disabled
+                              value={`${fee ?? "?"} BTS`}
+                              readOnly
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
                     {!debtAmount ||
                     !collateralAmount ||
                     !ratioValue ||
@@ -889,8 +981,259 @@ export default function Smartcoin(properties) {
               </CardContent>
             </Card>
           ) : null}
+          {!invalidUrlParams && !parsedBitasset ? (
+            <Card>
+              <CardHeader>
+                <CardTitle>💵 Collateral debt position form</CardTitle>
+                <CardDescription>
+                  You can use this form to borrow this smartcoin into existence,
+                  given sufficient collateral.
+                  <br />
+                  Thoroughly research assets before continuing, know your risk
+                  exposure and tolerances.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Form {...form}>
+                  <form>
+                    <FormField
+                      control={form.control}
+                      name="account"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Account</FormLabel>
+                          <FormControl>
+                            <Input
+                              disabled
+                              placeholder="Bitshares account (1.2.x)"
+                              className="mb-3 mt-3"
+                              readOnly
+                            />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
 
-          {parsedCollateralAsset &&
+                    <FormField
+                      control={form.control}
+                      name="borrowAsset"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>
+                            <div className="grid grid-cols-2 mt-2">
+                              <div className="col-span-1 mt-1">
+                                Asset to borrow
+                              </div>
+                              <div className="col-span-1 text-right">
+                                <Badge>Change asset</Badge>
+                              </div>
+                            </div>
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              disabled
+                              placeholder="Bitshares smartcoin (1.3.x)"
+                              className="mb-3 mt-3"
+                              readOnly
+                            />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="feedPrice"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>current feed price</FormLabel>
+                          <FormControl>
+                            <Input
+                              disabled
+                              className="mb-3 mt-3"
+                              placeholder="?"
+                              readOnly
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="callPrice"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Your margin call price</FormLabel>
+                          <FormControl>
+                            <Input
+                              disabled
+                              className="mb-3 mt-3"
+                              value={`call price placeholder`}
+                              readOnly
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="debtAmount"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Debt amount</FormLabel>
+                          <FormDescription
+                            style={{ marginTop: 0, paddingTop: 0 }}
+                          >
+                            <div className="grid grid-cols-3 mt-0 pt-0">
+                              <div className="col-span-2 mt-0 pt-0 text-sm">
+                                The amount of ? you intend to borrow into
+                                existence.
+                              </div>
+                              <div className="col-span-1 text-right text-sm">
+                                Available: 0 ?
+                              </div>
+                            </div>
+                          </FormDescription>
+                          <FormControl>
+                            <div className="grid grid-cols-12">
+                              <div className="col-span-1">
+                                <Toggle variant="outline">🔓</Toggle>
+                              </div>
+                              <div className="col-span-11">
+                                <Input
+                                  label={`Amount of debt to issue`}
+                                  placeholder="0"
+                                  className="mb-3"
+                                />
+                              </div>
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="collateralAmount"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Collateral amount</FormLabel>
+                          <FormDescription
+                            style={{ marginTop: 0, paddingTop: 0 }}
+                          >
+                            <div className="grid grid-cols-3 mt-0 pt-0">
+                              <div className="col-span-2 mt-0 pt-0 text-sm">
+                                The amount of ? backing collateral you'll need
+                                to provide.
+                              </div>
+                              <div className="col-span-1 text-right text-sm">
+                                Available: 0 ?
+                              </div>
+                            </div>
+                          </FormDescription>
+                          <FormControl>
+                            <div className="grid grid-cols-12">
+                              <div className="col-span-1">
+                                <Toggle variant="outline">🔓</Toggle>
+                              </div>
+                              <div className="col-span-11">
+                                <Input
+                                  label={`Amount of collateral to commit`}
+                                  placeholder="0"
+                                  className="mb-3"
+                                />
+                              </div>
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="ratioValue"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Ratio of collateral to debt</FormLabel>
+                          <FormControl>
+                            <div className="grid grid-cols-12">
+                              <div className="col-span-1">
+                                <Toggle variant="outline">🔓</Toggle>
+                              </div>
+                              <div className="col-span-11">
+                                <Input
+                                  label={`Ratio of collateral to debt`}
+                                  placeholder="0"
+                                  className="mb-3"
+                                  onChange={(event) => {
+                                    const input = event.target.value;
+                                    const regex = /^[0-9]*\.?[0-9]*$/; // regular expression to match numbers and a single period
+                                    if (regex.test(input)) {
+                                      setRatioValue(input);
+                                    }
+                                  }}
+                                />
+                              </div>
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <Slider defaultValue={[2]} max={20} min={1.4} step={0.1} />
+                    <br />
+                    <div className="items-top flex space-x-2">
+                      <Checkbox id="terms1" />
+                      <div className="grid gap-1.5 leading-none">
+                        <label
+                          htmlFor="terms1"
+                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        >
+                          Enable Target Collateral Ratio
+                        </label>
+                      </div>
+                    </div>
+
+                    <FormField
+                      control={form.control}
+                      name="networkFee"
+                      render={({ field }) => (
+                        <FormItem className="mb-1 mt-3">
+                          <FormLabel>Network broadcast fee</FormLabel>
+                          <FormDescription>
+                            The fee required to broadcast your call order update
+                            operation onto the blockchain
+                          </FormDescription>
+                          <FormControl>
+                            <Input disabled value={`? BTS`} readOnly />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <Button
+                      className="mt-5 mb-3"
+                      variant="outline"
+                      disabled
+                      type="submit"
+                    >
+                      Submit
+                    </Button>
+                  </form>
+                </Form>
+              </CardContent>
+            </Card>
+          ) : null}
+
+          {!invalidUrlParams &&
+          parsedCollateralAsset &&
           parsedAsset &&
           settlementFund &&
           settlementFund.finalSettlementFund &&
@@ -975,7 +1318,7 @@ export default function Smartcoin(properties) {
             </>
           ) : null}
 
-          {finalAsset && parsedAsset && parsedBitasset ? (
+          {!invalidUrlParams && finalAsset && parsedAsset && parsedBitasset ? (
             <Card className="mt-2">
               <CardHeader className="pb-2">
                 <CardTitle>
@@ -1005,12 +1348,70 @@ export default function Smartcoin(properties) {
                   {")"}
                 </Label>
                 <br />
-                <Badge className="mr-2 mt-2">Issuer: {parsedAsset.u}</Badge>
-                <Badge className="mr-2">
-                  Market fee: {finalAsset.options.market_fee_percent / 100}%
-                </Badge>
-
-                <br />
+                <div className="grid grid-cols-11 gap-1 w-full text-sm">
+                  <div className="col-span-5">
+                    <div className="grid grid-cols-1 gap-1 w-full text-sm">
+                      <CardRow
+                        title={"Issuer"}
+                        button={parsedAsset.u.split(" ")[0]}
+                        dialogtitle={`${parsedAsset.s}'s issuer`}
+                        dialogdescription={
+                          <ul className="ml-2 list-disc [&>li]:mt-2">
+                            <li>
+                              This is the blockchain account which created this
+                              asset. Pay attention to such a detail to
+                              understand what it is you're buying and from whom.
+                            </li>
+                            <li>
+                              Asset issuer can change over time as the issuer
+                              can easily transfer ownership.
+                            </li>
+                            <li>
+                              Committee account owned assets are usually the
+                              core bitassets maintained by the committee.
+                            </li>
+                            <li>
+                              If the issuer is 'null-account' then the ownership
+                              of the asset has effectively been burned.
+                            </li>
+                          </ul>
+                        }
+                        tooltip={"More about asset issuer"}
+                      />
+                    </div>
+                  </div>
+                  <div className="col-span-1 flex justify-center items-center">
+                    <Separator orientation="vertical" />
+                  </div>
+                  <div className="col-span-5">
+                    <div className="grid grid-cols-1 gap-1 w-full text-sm">
+                      <CardRow
+                        title={"Market fee"}
+                        button={`${
+                          finalAsset.options.market_fee_percent / 100
+                        }%`}
+                        dialogtitle={`${parsedAsset.s}'s market fee`}
+                        dialogdescription={
+                          <ul className="ml-2 list-disc [&>li]:mt-2">
+                            <li>
+                              Asset creators can introduce market fees to
+                              passively earn as trades occur.
+                            </li>
+                            <li>
+                              The market fee only applies to one side of the
+                              trade.
+                            </li>
+                            <li>
+                              Make sure that the market fee is reasonable before
+                              proceeding.
+                            </li>
+                          </ul>
+                        }
+                        tooltip={"More about asset issuer"}
+                      />
+                    </div>
+                  </div>
+                </div>
 
                 <Label>
                   {parsedBitasset.issuer.id === "1.2.0"
@@ -1025,44 +1426,180 @@ export default function Smartcoin(properties) {
                   />
                   {")"}
                 </Label>
-                <br />
-                <Badge className="mr-2">
-                  Feed qty: {parsedBitasset ? parsedBitasset.feeds.length : 0}
-                </Badge>
-                <Badge className="mr-2">
-                  MCR: {parsedBitasset ? parsedBitasset.mcr / 10 : 0} %
-                </Badge>
-                <Badge className="mr-2">
-                  MSSR: {parsedBitasset ? parsedBitasset.mssr / 10 : 0} %
-                </Badge>
-                <Badge className="mr-2">
-                  ICR: {parsedBitasset ? parsedBitasset.icr / 10 : 0} %
-                </Badge>
-                <Badge className="mr-2">
-                  Collateral:{" "}
-                  {parsedCollateralAsset ? parsedCollateralAsset.s : "?"}
-                </Badge>
-                {finalBitasset &&
-                finalBitasset.options.extensions &&
-                finalBitasset.options.extensions.force_settle_fee_percent ? (
-                  <Badge className="mr-2">
-                    Force settle fee:{" "}
-                    {finalBitasset.options.extensions.force_settle_fee_percent /
-                      100}{" "}
-                    %
-                  </Badge>
-                ) : null}
-                {finalBitasset &&
-                finalBitasset.options.extensions &&
-                finalBitasset.options.extensions.margin_call_fee_ratio ? (
-                  <Badge className="mr-2">
-                    Margin call fee:{" "}
-                    {finalBitasset.options.extensions.margin_call_fee_ratio /
-                      100}{" "}
-                    %
-                  </Badge>
-                ) : null}
-                <br />
+
+                <div className="grid grid-cols-11 gap-1 w-full text-sm">
+                  <div className="col-span-5">
+                    <div className="grid grid-cols-1 gap-1 w-full text-sm">
+                      <CardRow
+                        title={"Feed qty"}
+                        button={
+                          parsedBitasset ? parsedBitasset.feeds.length : 0
+                        }
+                        dialogtitle={`${parsedAsset.s} smartcoin price feed quantity`}
+                        dialogdescription={
+                          <ul className="ml-2 list-disc [&>li]:mt-2">
+                            <li>
+                              This is the quantity of unique recently published
+                              price feeds.
+                            </li>
+                            <li>
+                              The more feeds, the more decentralized the price
+                              feed arguably is.
+                            </li>
+                            <li>
+                              Some assets are fed by the committee or the
+                              witnesses, such as the bitassets.
+                            </li>
+                            <li>
+                              Private smartcoins can be fed by custom price feed
+                              publishers.
+                            </li>
+                            <li>
+                              You should verify the correctness and the
+                              trustworthiness of price feeds to reduce your risk
+                              exposure.
+                            </li>
+                          </ul>
+                        }
+                        tooltip={"More about smartcoin price feed quantities"}
+                      />
+                      <CardRow
+                        title={"MCR"}
+                        button={`${
+                          parsedBitasset ? parsedBitasset.mcr / 10 : 0
+                        } %`}
+                        dialogtitle={`${parsedAsset.s} minimum collateral requirements`}
+                        dialogdescription={
+                          <ul className="ml-2 list-disc [&>li]:mt-2">
+                            <li>
+                              The minimum collateral requirement is set by the
+                              issuer, any margin position which fails to
+                              maintain a backing collateral ratio above this
+                              value will face margin call.
+                            </li>
+                          </ul>
+                        }
+                        tooltip={
+                          "More about smartcoin minimum collateral requirements"
+                        }
+                      />
+
+                      <CardRow
+                        title={"MSSR"}
+                        button={`${
+                          parsedBitasset ? parsedBitasset.mssr / 10 : 0
+                        } %`}
+                        dialogtitle={`${parsedAsset.s} maximum Short Squeeze Ratio`}
+                        dialogdescription={
+                          <ul className="ml-2 list-disc [&>li]:mt-2">
+                            <li>
+                              Maximum Short Squeeze Ratio (MSSR): Max.
+                              liquidation penalty.
+                            </li>
+                          </ul>
+                        }
+                        tooltip={
+                          "More about smartcoin Maximum Short Squeeze Ratio"
+                        }
+                      />
+
+                      <CardRow
+                        title={"ICR"}
+                        button={`${
+                          parsedBitasset ? parsedBitasset.icr / 10 : 0
+                        } %`}
+                        dialogtitle={`${parsedAsset.s} Initial Collateral Ratio`}
+                        dialogdescription={
+                          <ul className="ml-2 list-disc [&>li]:mt-2">
+                            <li>
+                              Initial Collateral Ratio (ICR): Minimum CR for
+                              updating margin position.
+                            </li>
+                          </ul>
+                        }
+                        tooltip={
+                          "More about smartcoin Initial Collateral Ratio"
+                        }
+                      />
+
+                      <CardRow
+                        title={"Collateral asset"}
+                        button={
+                          parsedCollateralAsset ? parsedCollateralAsset.s : "?"
+                        }
+                        dialogtitle={`${parsedAsset.s} smartcoin backing collateral asset`}
+                        dialogdescription={
+                          <ul className="ml-2 list-disc [&>li]:mt-2">
+                            <li>
+                              This is the asset which is used as collateral for
+                              issuing this smartcoin.
+                            </li>
+                          </ul>
+                        }
+                        tooltip={
+                          "More about smartcoin backing collateral assets"
+                        }
+                      />
+                    </div>
+                  </div>
+                  <div className="col-span-1 flex justify-center items-center">
+                    <Separator orientation="vertical" />
+                  </div>
+                  <div className="col-span-5">
+                    <div className="grid grid-cols-1 gap-1 w-full text-sm">
+                      {finalBitasset &&
+                      finalBitasset.options.extensions &&
+                      finalBitasset.options.extensions
+                        .force_settle_fee_percent ? (
+                        <CardRow
+                          title={"Force settle fee"}
+                          button={`${
+                            finalBitasset.options.extensions
+                              .force_settle_fee_percent / 100
+                          }%`}
+                          dialogtitle={`${parsedAsset.s} force settlement fee`}
+                          dialogdescription={
+                            <ul className="ml-2 list-disc [&>li]:mt-2">
+                              <li>
+                                If you choose to force settle a smartcoin in
+                                return for its backing collateral, you will pay
+                                this fee.
+                              </li>
+                            </ul>
+                          }
+                          tooltip={"More about smartcoin force settlement fees"}
+                        />
+                      ) : null}
+
+                      {finalBitasset &&
+                      finalBitasset.options.extensions &&
+                      finalBitasset.options.extensions.margin_call_fee_ratio ? (
+                        <CardRow
+                          title={"Margin call fee"}
+                          button={`${
+                            finalBitasset.options.extensions
+                              .margin_call_fee_ratio / 100
+                          }%`}
+                          dialogtitle={`${parsedAsset.s} margin call fee`}
+                          dialogdescription={
+                            <ul className="ml-2 list-disc [&>li]:mt-2">
+                              <li>
+                                If your call order is margin called, this fee
+                                will be applied.
+                              </li>
+                              <li>
+                                Bear such a fee in mind before you enter into a
+                                margin position.
+                              </li>
+                            </ul>
+                          }
+                          tooltip={"More about smartcoin margin call fees"}
+                        />
+                      ) : null}
+                    </div>
+                  </div>
+                </div>
+
                 <Label className="pb-0">Asset flags</Label>
                 <br />
                 {parsedAssetFlags}
@@ -1074,7 +1611,41 @@ export default function Smartcoin(properties) {
             </Card>
           ) : null}
 
-          {finalCollateralAsset && parsedCollateralAsset ? (
+          {!invalidUrlParams &&
+          (!finalAsset || !parsedAsset || !parsedBitasset) ? (
+            <Card className="mt-2">
+              <CardHeader className="pb-2">
+                <CardTitle>About this asset (1.3.x)</CardTitle>
+                <CardDescription>
+                  Use this information to improve your understanding
+                  <br />
+                  Thoroughly do your own research before proceeding to borrow
+                  any smartcoins.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Label>General asset info (more info)</Label>
+                <br />
+                Loading...
+                <br />
+                <Label>Smartcoin info (more info)</Label>
+                <br />
+                Loading...
+                <br />
+                <Label>Asset flags</Label>
+                <br />
+                Loading...
+                <br />
+                <Label>Asset permissions</Label>
+                <br />
+                Loading...
+              </CardContent>
+            </Card>
+          ) : null}
+
+          {!invalidUrlParams &&
+          finalCollateralAsset &&
+          parsedCollateralAsset ? (
             <Card className="mt-2">
               <CardHeader className="pb-2">
                 <CardTitle>
@@ -1101,14 +1672,14 @@ export default function Smartcoin(properties) {
                   {")"}
                 </Label>
                 <br />
-                <Badge className="mr-2 mt-2">
+                <Badge variant="outline" className="mr-2 mt-2">
                   Issuer: {parsedCollateralAsset.u}
                 </Badge>
-                <Badge className="mr-2">
+                <Badge variant="outline" className="mr-2">
                   Market fee:{" "}
                   {finalCollateralAsset.options.market_fee_percent / 100}%
                 </Badge>
-                <Badge className="mr-2">
+                <Badge variant="outline" className="mr-2">
                   Asset type:
                   {finalCollateralAsset.bitasset_data_id
                     ? " Smartcoin"
@@ -1157,6 +1728,34 @@ export default function Smartcoin(properties) {
             </Card>
           ) : null}
 
+          {!invalidUrlParams &&
+          (!finalCollateralAsset || !parsedCollateralAsset) ? (
+            <Card className="mt-2">
+              <CardHeader className="pb-2">
+                <CardTitle>About the backing collateral ? (1.3.x)</CardTitle>
+                <CardDescription>
+                  Use this information to improve your understanding of ?.
+                  <br />
+                  Thoroughly do your own research before proceeding to borrow
+                  any smartcoins.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Label>General asset info (more info)</Label>
+                <br />
+                Loading...
+                <br />
+                <Label className="pb-0">Asset flags</Label>
+                <br />
+                Loading...
+                <br />
+                <Label>Asset permissions</Label>
+                <br />
+                Loading...
+              </CardContent>
+            </Card>
+          ) : null}
+
           {showDialog ? (
             <DeepLinkDialog
               operationName="call_order_update"
@@ -1183,238 +1782,247 @@ export default function Smartcoin(properties) {
             />
           ) : null}
         </div>
-        <div className="grid grid-cols-1 mt-5">
-          <Card>
-            <CardHeader className="pb-3">
-              <div className="grid grid-cols-2">
-                <div className="col-span-1">
-                  <CardTitle>
-                    {parsedAsset && parsedCollateralAsset
-                      ? `Order book for ${parsedAsset.s}/${parsedCollateralAsset.s}`
-                      : "Order book loading..."}
-                  </CardTitle>
-                  <CardDescription>
-                    Note: Only displaying the top 10 buy/sell orders
-                  </CardDescription>
-                </div>
-                <div className="col-span-1 text-right">
-                  <a
-                    href={
-                      parsedAsset && parsedCollateralAsset
-                        ? `/dex/index.html?market=${parsedAsset.s}_${parsedCollateralAsset.s}`
-                        : ""
-                    }
-                  >
-                    <Button>Go to market</Button>
-                  </a>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <Tabs defaultValue="buy" className="w-full">
-                <TabsList className="grid w-full grid-cols-2 gap-2">
-                  {activeOrderTab === "buy" ? (
-                    <TabsTrigger value="buy" style={activeTabStyle}>
-                      Viewing buy orders
-                    </TabsTrigger>
-                  ) : (
-                    <TabsTrigger
-                      value="buy"
-                      onClick={() => setActiveOrderTab("buy")}
+
+        {!invalidUrlParams ? (
+          <div className="grid grid-cols-1 mt-5">
+            <Card>
+              <CardHeader className="pb-3">
+                <div className="grid grid-cols-2">
+                  <div className="col-span-1">
+                    <CardTitle>
+                      {parsedAsset && parsedCollateralAsset
+                        ? `Order book for ${parsedAsset.s}/${parsedCollateralAsset.s}`
+                        : "Order book loading..."}
+                    </CardTitle>
+                    <CardDescription>
+                      Note: Only displaying the top 10 buy/sell orders
+                    </CardDescription>
+                  </div>
+                  <div className="col-span-1 text-right">
+                    <a
+                      href={
+                        parsedAsset && parsedCollateralAsset
+                          ? `/dex/index.html?market=${parsedAsset.s}_${parsedCollateralAsset.s}`
+                          : ""
+                      }
                     >
-                      View buy orders
-                    </TabsTrigger>
-                  )}
-                  {activeOrderTab === "sell" ? (
-                    <TabsTrigger value="sell" style={activeTabStyle}>
-                      Viewing sell orders
-                    </TabsTrigger>
-                  ) : (
-                    <TabsTrigger
-                      value="sell"
-                      onClick={() => setActiveOrderTab("sell")}
+                      <Button>Go to market</Button>
+                    </a>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <Tabs defaultValue="buy" className="w-full">
+                  <TabsList className="grid w-full grid-cols-2 gap-2">
+                    {activeOrderTab === "buy" ? (
+                      <TabsTrigger value="buy" style={activeTabStyle}>
+                        Viewing buy orders
+                      </TabsTrigger>
+                    ) : (
+                      <TabsTrigger
+                        value="buy"
+                        onClick={() => setActiveOrderTab("buy")}
+                      >
+                        View buy orders
+                      </TabsTrigger>
+                    )}
+                    {activeOrderTab === "sell" ? (
+                      <TabsTrigger value="sell" style={activeTabStyle}>
+                        Viewing sell orders
+                      </TabsTrigger>
+                    ) : (
+                      <TabsTrigger
+                        value="sell"
+                        onClick={() => setActiveOrderTab("sell")}
+                      >
+                        View sell orders
+                      </TabsTrigger>
+                    )}
+                  </TabsList>
+                  <TabsContent value="buy">
+                    {buyOrders && buyOrders.length ? (
+                      <>
+                        <div className="grid grid-cols-4">
+                          <div className="col-span-1">Price</div>
+                          <div className="col-span-1">
+                            {parsedCollateralAsset.s}
+                          </div>
+                          <div className="col-span-1">{parsedAsset.s}</div>
+                          <div className="col-span-1">Total</div>
+                        </div>
+                        <List
+                          height={260}
+                          itemCount={buyOrders.length}
+                          itemSize={25}
+                          className="w-full"
+                        >
+                          {OrderRow}
+                        </List>
+                      </>
+                    ) : null}
+                    {buyOrders && !buyOrders.length
+                      ? "No buy orders found"
+                      : null}
+                    {!buyOrders ? "Loading..." : null}
+                  </TabsContent>
+                  <TabsContent value="sell">
+                    {sellOrders && sellOrders.length ? (
+                      <>
+                        <div className="grid grid-cols-4">
+                          <div className="col-span-1">Price</div>
+                          <div className="col-span-1">{parsedAsset.s}</div>
+                          <div className="col-span-1">
+                            {parsedCollateralAsset.s}
+                          </div>
+                          <div className="col-span-1">Total</div>
+                        </div>
+                        <List
+                          height={260}
+                          itemCount={sellOrders.length}
+                          itemSize={25}
+                          className="w-full"
+                        >
+                          {OrderRow}
+                        </List>
+                      </>
+                    ) : null}
+                    {sellOrders && !sellOrders.length
+                      ? "No sell orders found"
+                      : null}
+                    {!sellOrders ? "Loading..." : null}
+                  </TabsContent>
+                </Tabs>
+              </CardContent>
+            </Card>
+          </div>
+        ) : null}
+
+        {!invalidUrlParams ? (
+          <div className="grid grid-cols-1 mt-5">
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle>
+                  {parsedAsset && parsedCollateralAsset
+                    ? `${parsedAsset.s} call orders`
+                    : "Call orders loading..."}
+                </CardTitle>
+                <CardDescription>
+                  Check out other users margin positions on the dex
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {assetCallOrders && assetCallOrders.length ? (
+                  <>
+                    <div className="grid grid-cols-6">
+                      <div className="col-span-1">Borrower</div>
+                      <div className="col-span-1">Collateral</div>
+                      <div className="col-span-1">Debt</div>
+                      <div className="col-span-1">Call price</div>
+                      <div className="col-span-1">TCR</div>
+                      <div className="col-span-1">Ratio</div>
+                    </div>
+                    <List
+                      height={260}
+                      itemCount={assetCallOrders.length}
+                      itemSize={25}
+                      className="w-full"
                     >
-                      View sell orders
-                    </TabsTrigger>
-                  )}
-                </TabsList>
-                <TabsContent value="buy">
-                  {buyOrders && buyOrders.length ? (
-                    <>
-                      <div className="grid grid-cols-4">
-                        <div className="col-span-1">Price</div>
-                        <div className="col-span-1">
-                          {parsedCollateralAsset.s}
-                        </div>
-                        <div className="col-span-1">{parsedAsset.s}</div>
-                        <div className="col-span-1">Total</div>
-                      </div>
-                      <List
-                        height={260}
-                        itemCount={buyOrders.length}
-                        itemSize={25}
-                        className="w-full"
-                      >
-                        {OrderRow}
-                      </List>
-                    </>
-                  ) : null}
-                  {buyOrders && !buyOrders.length
-                    ? "No buy orders found"
-                    : null}
-                  {!buyOrders ? "Loading..." : null}
-                </TabsContent>
-                <TabsContent value="sell">
-                  {sellOrders && sellOrders.length ? (
-                    <>
-                      <div className="grid grid-cols-4">
-                        <div className="col-span-1">Price</div>
-                        <div className="col-span-1">{parsedAsset.s}</div>
-                        <div className="col-span-1">
-                          {parsedCollateralAsset.s}
-                        </div>
-                        <div className="col-span-1">Total</div>
-                      </div>
-                      <List
-                        height={260}
-                        itemCount={sellOrders.length}
-                        itemSize={25}
-                        className="w-full"
-                      >
-                        {OrderRow}
-                      </List>
-                    </>
-                  ) : null}
-                  {sellOrders && !sellOrders.length
-                    ? "No sell orders found"
-                    : null}
-                  {!sellOrders ? "Loading..." : null}
-                </TabsContent>
-              </Tabs>
-            </CardContent>
-          </Card>
-        </div>
+                      {MarginPositionRow}
+                    </List>
+                  </>
+                ) : null}
+                {assetCallOrders && !assetCallOrders.length
+                  ? "No call orders found"
+                  : null}
+                {!assetCallOrders ? "Loading..." : null}
+              </CardContent>
+            </Card>
+          </div>
+        ) : null}
 
-        <div className="grid grid-cols-1 mt-5">
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle>
-                {parsedAsset && parsedCollateralAsset
-                  ? `${parsedAsset.s} call orders`
-                  : "Call orders loading..."}
-              </CardTitle>
-              <CardDescription>
-                Check out other users margin positions on the dex
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              {assetCallOrders && assetCallOrders.length ? (
-                <>
-                  <div className="grid grid-cols-6">
-                    <div className="col-span-1">Borrower</div>
-                    <div className="col-span-1">Collateral</div>
-                    <div className="col-span-1">Debt</div>
-                    <div className="col-span-1">Call price</div>
-                    <div className="col-span-1">TCR</div>
-                    <div className="col-span-1">Ratio</div>
-                  </div>
-                  <List
-                    height={260}
-                    itemCount={assetCallOrders.length}
-                    itemSize={25}
-                    className="w-full"
-                  >
-                    {MarginPositionRow}
-                  </List>
-                </>
-              ) : null}
-              {assetCallOrders && !assetCallOrders.length
-                ? "No call orders found"
-                : null}
-              {!assetCallOrders ? "Loading..." : null}
-            </CardContent>
-          </Card>
-        </div>
+        {!invalidUrlParams ? (
+          <div className="grid grid-cols-1 mt-5">
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle>
+                  {parsedAsset && parsedCollateralAsset
+                    ? `${parsedAsset.s} settle orders`
+                    : "Settle orders loading..."}
+                </CardTitle>
+                <CardDescription>
+                  Check out other users settle orders on the dex
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {assetSettleOrders && assetSettleOrders.length ? (
+                  <>
+                    <div className="grid grid-cols-6">
+                      <div className="col-span-1">Owner</div>
+                      <div className="col-span-1">Balance</div>
+                      <div className="col-span-1">Settlement date</div>
+                    </div>
+                    <List
+                      height={260}
+                      itemCount={assetSettleOrders.length}
+                      itemSize={25}
+                      className="w-full"
+                    >
+                      {SettlementRow}
+                    </List>
+                  </>
+                ) : null}
+                {assetSettleOrders && !assetSettleOrders.length
+                  ? "No settle orders found"
+                  : null}
+                {!assetSettleOrders ? "Loading..." : null}
+              </CardContent>
+            </Card>
+          </div>
+        ) : null}
 
-        <div className="grid grid-cols-1 mt-5">
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle>
-                {parsedAsset && parsedCollateralAsset
-                  ? `${parsedAsset.s} settle orders`
-                  : "Settle orders loading..."}
-              </CardTitle>
-              <CardDescription>
-                Check out other users settle orders on the dex
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              {assetSettleOrders && assetSettleOrders.length ? (
-                <>
-                  <div className="grid grid-cols-6">
-                    <div className="col-span-1">Owner</div>
-                    <div className="col-span-1">Balance</div>
-                    <div className="col-span-1">Settlement date</div>
-                  </div>
-                  <List
-                    height={260}
-                    itemCount={assetSettleOrders.length}
-                    itemSize={25}
-                    className="w-full"
-                  >
-                    {SettlementRow}
-                  </List>
-                </>
-              ) : null}
-              {assetSettleOrders && !assetSettleOrders.length
-                ? "No settle orders found"
-                : null}
-              {!assetSettleOrders ? "Loading..." : null}
-            </CardContent>
-          </Card>
-        </div>
-
-        <div className="grid grid-cols-1 mt-5">
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle>
-                {parsedAsset && parsedCollateralAsset
-                  ? `${parsedAsset.s} price feeds`
-                  : "Price feeds loading..."}
-              </CardTitle>
-              <CardDescription>
-                Check out the latest published price feeds for this smartcoin
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              {finalBitasset && finalBitasset.feeds ? (
-                <>
-                  <div className="grid grid-cols-11">
-                    <div className="col-span-2">User</div>
-                    <div className="col-span-2">Date</div>
-                    <div className="col-span-2">CER</div>
-                    <div className="col-span-2">Settlement</div>
-                    <div className="col-span-1">ICR</div>
-                    <div className="col-span-1">MCR</div>
-                    <div className="col-span-1">MSSR</div>
-                  </div>
-                  <List
-                    height={260}
-                    itemCount={finalBitasset.feeds.length}
-                    itemSize={25}
-                    className="w-full"
-                  >
-                    {PriceFeedRow}
-                  </List>
-                </>
-              ) : null}
-              {finalBitasset && !finalBitasset.feeds.length
-                ? "No smartcoin feeds found..."
-                : null}
-              {!finalBitasset ? "Loading..." : null}
-            </CardContent>
-          </Card>
-        </div>
+        {!invalidUrlParams ? (
+          <div className="grid grid-cols-1 mt-5">
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle>
+                  {parsedAsset && parsedCollateralAsset
+                    ? `${parsedAsset.s} price feeds`
+                    : "Price feeds loading..."}
+                </CardTitle>
+                <CardDescription>
+                  Check out the latest published price feeds for this smartcoin
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {finalBitasset && finalBitasset.feeds ? (
+                  <>
+                    <div className="grid grid-cols-11">
+                      <div className="col-span-2">User</div>
+                      <div className="col-span-2">Date</div>
+                      <div className="col-span-2">CER</div>
+                      <div className="col-span-2">Settlement</div>
+                      <div className="col-span-1">ICR</div>
+                      <div className="col-span-1">MCR</div>
+                      <div className="col-span-1">MSSR</div>
+                    </div>
+                    <List
+                      height={260}
+                      itemCount={finalBitasset.feeds.length}
+                      itemSize={25}
+                      className="w-full"
+                    >
+                      {PriceFeedRow}
+                    </List>
+                  </>
+                ) : null}
+                {finalBitasset && !finalBitasset.feeds.length
+                  ? "No smartcoin feeds found..."
+                  : null}
+                {!finalBitasset ? "Loading..." : null}
+              </CardContent>
+            </Card>
+          </div>
+        ) : null}
 
         <div className="grid grid-cols-1 mt-5">
           {usr && usr.username && usr.username.length ? (

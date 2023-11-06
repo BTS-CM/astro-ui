@@ -614,11 +614,9 @@ export default function Smartcoins(properties) {
                     <TabsTrigger value="all" style={activeTabStyle}>
                       Viewing all assets
                     </TabsTrigger>
-                    <TabsTrigger value="compatible">
-                      View compatible
-                    </TabsTrigger>
-                    <TabsTrigger value="holdings">View holdings</TabsTrigger>
-                    <TabsTrigger value="search">Search</TabsTrigger>
+                    <TabsTrigger value="all">View compatible</TabsTrigger>
+                    <TabsTrigger value="all">View holdings</TabsTrigger>
+                    <TabsTrigger value="all">Search</TabsTrigger>
                   </TabsList>
                   <TabsContent value="all">
                     <h5 className="mb-2 text-center">

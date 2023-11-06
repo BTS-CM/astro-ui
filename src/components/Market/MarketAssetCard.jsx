@@ -32,77 +32,7 @@ import { Badge } from "@/components/ui/badge";
 import { humanReadableFloat } from "../../lib/common";
 
 import ExternalLink from "../common/ExternalLink.jsx";
-
-const CardRow = (properties) => {
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [tooltipOpen, setTooltipOpen] = useState(false);
-
-  const handleTooltipClick = (e) => {
-    e.stopPropagation();
-    if (!dialogOpen) {
-      setDialogOpen(true);
-    }
-  };
-
-  const handleDialogClose = () => {
-    setTooltipOpen(false);
-    setDialogOpen(false);
-  };
-
-  return (
-    <div className="col-span-1">
-      <div className="grid grid-cols-10">
-        <div className="col-span-9">
-          {properties.title}:
-          <Badge variant="outline" className="ml-2 mb-1">
-            {properties.button}
-          </Badge>
-        </div>
-        <div className="col-span-1">
-          <TooltipProvider>
-            <Dialog
-              open={dialogOpen}
-              onOpenChange={(open) => {
-                setDialogOpen(open);
-                setTooltipOpen(false);
-              }}
-            >
-              <DialogContent className="sm:max-w-[400px] bg-white">
-                <DialogHeader>
-                  <DialogTitle>{properties.dialogtitle}</DialogTitle>
-                  {properties.dialogdescription}
-                </DialogHeader>
-              </DialogContent>
-              <Tooltip>
-                <TooltipTrigger
-                  asChild
-                  open={tooltipOpen}
-                  onMouseOver={() => {
-                    setTooltipOpen(true);
-                  }}
-                >
-                  <DialogTrigger asChild>
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      className="h-6 w-6 text-gray-400"
-                      onClick={handleTooltipClick}
-                    >
-                      ?
-                    </Button>
-                  </DialogTrigger>
-                </TooltipTrigger>
-                {tooltipOpen && (
-                  <TooltipContent>{properties.tooltip}</TooltipContent>
-                )}
-              </Tooltip>
-            </Dialog>
-          </TooltipProvider>
-        </div>
-      </div>
-    </div>
-  );
-};
+import CardRow from "../common/CardRow.jsx";
 
 export default function MarketAssetCard(properties) {
   const {
@@ -343,7 +273,7 @@ export default function MarketAssetCard(properties) {
           <div className="grid grid-cols-1 gap-1 w-full">
             <CardRow
               title={"Your balance"}
-              button={`${assetBalance} ${asset}`}
+              button={`${assetBalance}`}
               dialogtitle={`${asset} (${
                 assetData ? assetData.id : "?"
               }) balance`}
@@ -670,8 +600,7 @@ export default function MarketAssetCard(properties) {
                           backingAsset.p
                         ).toLocaleString(undefined, {
                           minimumFractionDigits: backingAsset.p,
-                        })}{" "}
-                        {backingAsset.s}
+                        })}
                       </>
                     }
                     dialogtitle={"Settlement fund info"}
