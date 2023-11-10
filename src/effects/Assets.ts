@@ -31,15 +31,28 @@ const [createSmartcoinDataStore] = nanoquery({
     assetID: string,
     collateralAssetID: string,
     bitassetID: string,
+    collateralBitassetID: string,
     userID: string
   ) => {
-    const response = await fetch(
-      `http://localhost:8080/api/fullSmartcoin/${chain}`,
-      {
-        method: "POST",
-        body: JSON.stringify([assetID, collateralAssetID, bitassetID, userID]),
-      }
-    );
+    let response;
+    try {
+      response = await fetch(
+        `http://localhost:8080/api/fullSmartcoin/${chain}`,
+        {
+          method: "POST",
+          body: JSON.stringify([
+            assetID,
+            collateralAssetID,
+            bitassetID,
+            collateralBitassetID,
+            userID,
+          ]),
+        }
+      );
+    } catch (error) {
+      console.log("Failed to fetch smartcoin data");
+      return;
+    }
 
     if (!response.ok) {
       console.log("Failed to fetch bitasset data");
@@ -47,7 +60,6 @@ const [createSmartcoinDataStore] = nanoquery({
     }
 
     const responseContents = await response.json();
-
     if (responseContents && responseContents.result) {
       return responseContents.result;
     }

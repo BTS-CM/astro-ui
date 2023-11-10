@@ -34,11 +34,7 @@ const [createFetcherStore] = nanoquery({
         return parsedJSON;
       })
       .then((deeplinkValue) => {
-        if (
-          deeplinkValue &&
-          deeplinkValue.result &&
-          deeplinkValue.result.generatedDeepLink
-        ) {
+        if (deeplinkValue && deeplinkValue.result && deeplinkValue.result.generatedDeepLink) {
           return deeplinkValue.result.generatedDeepLink;
         }
         throw new Error("No deep link generated");
@@ -63,15 +59,8 @@ import { copyToClipboard, blockchainFloat } from "@/lib/common.js";
  * Buttons link to the Beet multiwallet
  */
 export default function DeepLinkDialog(properties) {
-  const {
-    trxJSON,
-    operationName,
-    usrChain,
-    headerText,
-    dismissCallback,
-    username,
-    userID,
-  } = properties;
+  const { trxJSON, operationName, usrChain, headerText, dismissCallback, username, userID } =
+    properties;
 
   const deepLinkStore = useMemo(() => {
     refJSON = trxJSON;
@@ -101,17 +90,14 @@ export default function DeepLinkDialog(properties) {
     >
       <DialogContent className="sm:max-w-[800px] bg-white">
         <DialogHeader>
-          <DialogTitle>
-            {loading ? <>Generating deeplink...</> : <>{headerText}</>}
-          </DialogTitle>
+          <DialogTitle>{loading ? <>Generating deeplink...</> : <>{headerText}</>}</DialogTitle>
           <DialogDescription>
             With the account: {username} ({userID})<br />
             {!loading ? (
               <>
-                Your Bitshares create limit order operation is ready!
+                Your Bitshares Beet operation is ready to broadcast!
                 <br />
-                Choose from the methods below to broadcast your transaction via
-                the
+                Choose from the methods below to broadcast your transaction via the
                 <ExternalLink
                   classNameContents="text-blue-500"
                   type="text"
@@ -121,22 +107,14 @@ export default function DeepLinkDialog(properties) {
                 .
               </>
             ) : null}
-            {error ? (
-              <>
-                An error occurred, sorry. Please close this dialog and try
-                again.
-              </>
-            ) : null}
-            <hr className="mt-3" />
+            {error ? <>An error occurred, sorry. Please close this dialog and try again.</> : null}
           </DialogDescription>
         </DialogHeader>
         <>
+          <hr className="mt-3" />
           <div className="grid grid-cols-1 gap-3">
             <Tabs defaultValue="object" className="w-full">
-              <TabsList
-                key={`${activeTab}_TabList`}
-                className="grid w-full grid-cols-3 gap-2"
-              >
+              <TabsList key={`${activeTab}_TabList`} className="grid w-full grid-cols-3 gap-2">
                 {activeTab === "object" ? (
                   <TabsTrigger key="activeTRXTab" value="object">
                     View TRX Object
@@ -164,11 +142,7 @@ export default function DeepLinkDialog(properties) {
                   </TabsTrigger>
                 )}
                 {activeTab === "localJSON" ? (
-                  <TabsTrigger
-                    key="activeJSONTab"
-                    value="localJSON"
-                    className="bg-muted"
-                  >
+                  <TabsTrigger key="activeJSONTab" value="localJSON" className="bg-muted">
                     Local JSON file
                   </TabsTrigger>
                 ) : (
@@ -184,13 +158,12 @@ export default function DeepLinkDialog(properties) {
               <TabsContent value="object">
                 <div className="grid w-full gap-1.5 mb-3">
                   <Label className="text-left">Transaction object JSON</Label>
-                  <span className="text-left text-sm">
-                    Operation type: {operationName}
-                  </span>
+                  <span className="text-left text-sm">Operation type: {operationName}</span>
                   <Textarea
                     value={JSON.stringify(trxJSON, null, 4)}
                     className="min-h-[250px]"
                     id="trxJSON"
+                    readOnly
                   />
                 </div>
                 <Button
@@ -207,28 +180,24 @@ export default function DeepLinkDialog(properties) {
                 </Label>
                 <ol className="ml-4">
                   <li type="1">
-                    Launch the BEET wallet and navigate to '<b>Raw Link</b>' in
-                    the menu, the wallet has to remain unlocked for the duration
-                    of the broadcast.
+                    Launch the BEET wallet and navigate to '<b>Raw Link</b>' in the menu, the wallet
+                    has to remain unlocked for the duration of the broadcast.
                   </li>
                   <li type="1">
-                    From this page you can either allow all operations, or
-                    solely allow operation '<b>{operationName}</b>' (then click
-                    save).
+                    From this page you can either allow all operations, or solely allow operation '
+                    <b>{operationName}</b>' (then click save).
                   </li>
                   <li type="1">
-                    Once 'Ready for raw links' shows in Beet, then you can click
-                    the button below to proceed.
+                    Once 'Ready for raw links' shows in Beet, then you can click the button below to
+                    proceed.
                   </li>
                   <li type="1">
-                    A BEET prompt will display, verify the contents, optionally
-                    request a Beet receipt, and then broadcast the transaction
-                    onto the blockchain.
+                    A BEET prompt will display, verify the contents, optionally request a Beet
+                    receipt, and then broadcast the transaction onto the blockchain.
                   </li>
                   <li type="1">
-                    You won't receive a confirmation in this window, but your
-                    operation will be processed within seconds on the
-                    blockchain.
+                    You won't receive a confirmation in this window, but your operation will be
+                    processed within seconds on the blockchain.
                   </li>
                 </ol>
                 {!loading ? (
@@ -238,31 +207,26 @@ export default function DeepLinkDialog(properties) {
                 ) : null}
               </TabsContent>
               <TabsContent value="localJSON">
-                <Label className="text-left">
-                  Via local file upload - ready to proceed
-                </Label>
+                <Label className="text-left">Via local file upload - ready to proceed</Label>
 
                 <ol className="ml-4">
                   <li type="1">
-                    Launch the BEET wallet and navigate to '<b>Local</b>' in the
-                    menu.
+                    Launch the BEET wallet and navigate to '<b>Local</b>' in the menu.
                   </li>
                   <li type="1">
-                    At this page either allow all, or allow just operation '
-                    <b>{operationName}</b>'.
+                    At this page either allow all, or allow just operation '<b>{operationName}</b>'.
                   </li>
                   <li type="1">
-                    Once at the local upload page, click the button below to
-                    download the JSON file to your computer.
+                    Once at the local upload page, click the button below to download the JSON file
+                    to your computer.
                   </li>
                   <li type="1">
-                    From the BEET Local page, upload the JSON file, a prompt
-                    should then appear.
+                    From the BEET Local page, upload the JSON file, a prompt should then appear.
                   </li>
                   <li type="1">
-                    Thoroughly verify the prompt's contents before approving any
-                    operation, also consider toggling the optional receipt for
-                    post broadcast analysis and verification purposes.
+                    Thoroughly verify the prompt's contents before approving any operation, also
+                    consider toggling the optional receipt for post broadcast analysis and
+                    verification purposes.
                   </li>
                 </ol>
 
@@ -279,9 +243,7 @@ export default function DeepLinkDialog(properties) {
                     rel="noreferrer"
                     onClick={handleDownloadClick}
                   >
-                    <Button className="mt-4">
-                      Download Beet operation JSON
-                    </Button>
+                    <Button className="mt-4">Download Beet operation JSON</Button>
                   </a>
                 ) : null}
               </TabsContent>
