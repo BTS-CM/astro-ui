@@ -62,6 +62,7 @@ import CurrentUser from "./common/CurrentUser.jsx";
 import DeepLinkDialog from "./common/DeepLinkDialog";
 import ExternalLink from "./common/ExternalLink.jsx";
 import CardRow from "./common/CardRow.jsx";
+import EmptyRow from "./common/EmptyRow.jsx";
 
 import { humanReadableFloat, getFlagBooleans, debounce, blockchainFloat } from "../lib/common.js";
 
@@ -1182,7 +1183,7 @@ export default function Smartcoin(properties) {
                   <div className="grid grid-cols-1 gap-1 w-full text-sm">
                     <CardRow
                       title={"Collateral asset"}
-                      button={parsedCollateralAsset ? parsedCollateralAsset.s : "?"}
+                      button={parsedCollateralAsset ? parsedCollateralAsset.s : ""}
                       dialogtitle={`${assetInfo.s} smartcoin backing collateral asset`}
                       dialogdescription={
                         <ul className="ml-2 list-disc [&>li]:mt-2">
@@ -1547,9 +1548,9 @@ export default function Smartcoin(properties) {
     let res = assetSettleOrders[index];
     return (
       <div className="grid grid-cols-3 text-sm" style={style}>
-        <div className="col-span-1">{res.account_id_type ?? "?"}</div>
-        <div className="col-span-1">{res.asset ?? "?"}</div>
-        <div className="col-span-1">{res.time_point_sec ?? "?"}</div>
+        <div className="col-span-1">{res.account_id_type ?? ""}</div>
+        <div className="col-span-1">{res.asset ?? ""}</div>
+        <div className="col-span-1">{res.time_point_sec ?? ""}</div>
       </div>
     );
   };
@@ -1689,8 +1690,8 @@ export default function Smartcoin(properties) {
                                 disabled
                                 placeholder="Bitshares smartcoin (1.3.x)"
                                 className="mb-1"
-                                value={`${parsedAsset ? parsedAsset.s : "?"} (${
-                                  parsedAsset ? parsedAsset.id : "?"
+                                value={`${parsedAsset ? parsedAsset.s : ""} (${
+                                  parsedAsset ? parsedAsset.id : ""
                                 })`}
                                 readOnly
                               />
@@ -1711,88 +1712,97 @@ export default function Smartcoin(properties) {
 
                   <div className="grid grid-cols-2 gap-3 mt-3">
                     <Card>
+                      <CardHeader className="pb-3">
+                        <CardTitle>Current feed price</CardTitle>
+                        <CardDescription>Calculated from multiple feeds</CardDescription>
+                      </CardHeader>
                       <CardContent>
-                        <FormField
-                          control={form.control}
-                          name="feedPrice"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>
-                                {parsedAsset ? `${parsedAsset.s}'s` : ""} current feed price
-                              </FormLabel>
-                              <FormDescription>
-                                The price determined by the recently published price feeds
-                              </FormDescription>
-                              <FormControl>
-                                <span>
-                                  <Input
-                                    disabled
-                                    className="mb-3 mt-3"
-                                    value={
-                                      currentFeedSettlementPrice
-                                        ? `${currentFeedSettlementPrice} ${parsedCollateralAsset.s}/${parsedAsset.s}`
-                                        : `?`
-                                    }
-                                    readOnly
-                                  />
-                                  <Input
-                                    disabled
-                                    className="mt-3"
-                                    value={
-                                      currentFeedSettlementPrice
-                                        ? `${(1 / currentFeedSettlementPrice).toFixed(
-                                            parsedAsset.p
-                                          )} ${parsedAsset.s}/${parsedCollateralAsset.s}`
-                                        : `?`
-                                    }
-                                    readOnly
-                                  />
-                                </span>
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
+                        <span className="grid grid-cols-2">
+                          <span className="col-span-1">
+                            <HoverCard key="feedPrice1">
+                              <HoverCardTrigger asChild>
+                                <Input
+                                  disabled
+                                  className="mr-1"
+                                  value={currentFeedSettlementPrice ?? ""}
+                                  readOnly
+                                />
+                              </HoverCardTrigger>
+                              <HoverCardContent className="w-40 text-sm text-center pt-1 pb-1">
+                                {parsedCollateralAsset.s}/{parsedAsset.s}
+                              </HoverCardContent>
+                            </HoverCard>
+                          </span>
+                          <span className="col-span-1">
+                            <HoverCard key="feedPrice2">
+                              <HoverCardTrigger asChild>
+                                <Input
+                                  disabled
+                                  className="ml-1"
+                                  value={
+                                    currentFeedSettlementPrice
+                                      ? (1 / currentFeedSettlementPrice).toFixed(parsedAsset.p)
+                                      : ""
+                                  }
+                                  readOnly
+                                />
+                              </HoverCardTrigger>
+                              <HoverCardContent className="w-40 text-sm text-center pt-1 pb-1">
+                                {parsedAsset.s}/{parsedCollateralAsset.s}
+                              </HoverCardContent>
+                            </HoverCard>
+                          </span>
+                        </span>
                       </CardContent>
                     </Card>
                     <Card>
+                      <CardHeader className="pb-3">
+                        <CardTitle>Your margin call price</CardTitle>
+                        <CardDescription>
+                          Your calculated collateral liquidation rate
+                        </CardDescription>
+                      </CardHeader>
                       <CardContent>
-                        <FormField
-                          control={form.control}
-                          name="callPrice"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>
-                                Your {parsedAsset ? parsedAsset.s : ""} margin call price
-                              </FormLabel>
-                              <FormDescription>
-                                The price at which your margin position will be called if
-                                undercollateralized
-                              </FormDescription>
-                              <FormControl>
-                                <span>
-                                  <Input
-                                    disabled
-                                    className="mb-3 mt-3"
-                                    value={`${formCallPrice.toFixed(parsedCollateralAsset.p)} ${
-                                      parsedCollateralAsset.s
-                                    }/${parsedAsset.s}`}
-                                    readOnly
-                                  />
-                                  <Input
-                                    disabled
-                                    className="mt-3"
-                                    value={`${(1 / formCallPrice).toFixed(parsedAsset.p)} ${
-                                      parsedAsset.s
-                                    }/${parsedCollateralAsset.s}`}
-                                    readOnly
-                                  />
-                                </span>
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
+                        <span className="grid grid-cols-2">
+                          <span className="col-span-1">
+                            <HoverCard key="feedPrice1">
+                              <HoverCardTrigger asChild>
+                                <Input
+                                  disabled
+                                  className="mr-1"
+                                  value={
+                                    formCallPrice && parsedCollateralAsset
+                                      ? formCallPrice.toFixed(parsedCollateralAsset.p)
+                                      : ""
+                                  }
+                                  readOnly
+                                />
+                              </HoverCardTrigger>
+                              <HoverCardContent className="w-40 text-sm text-center pt-1 pb-1">
+                                {parsedCollateralAsset.s}/{parsedAsset.s}
+                              </HoverCardContent>
+                            </HoverCard>
+                          </span>
+                          <span className="col-span-1">
+                            <HoverCard key="feedPrice2">
+                              <HoverCardTrigger asChild>
+                                <Input
+                                  disabled
+                                  className="ml-1"
+                                  value={
+                                    formCallPrice && parsedAsset
+                                      ? (1 / formCallPrice).toFixed(parsedAsset.p)
+                                      : ""
+                                  }
+                                  readOnly
+                                />
+                              </HoverCardTrigger>
+                              <HoverCardContent className="w-40 text-sm text-center pt-1 pb-1">
+                                {parsedAsset.s}/{parsedCollateralAsset.s}
+                              </HoverCardContent>
+                            </HoverCard>
+                          </span>
+                        </span>
                       </CardContent>
                     </Card>
                   </div>
@@ -1810,7 +1820,7 @@ export default function Smartcoin(properties) {
                               into existence.
                             </span>
                             <span className="col-span-1 text-right">
-                              Balance: {debtAssetHoldings ?? 0} {parsedAsset ? parsedAsset.s : "?"}
+                              Balance: {debtAssetHoldings ?? ""} {parsedAsset ? parsedAsset.s : ""}
                             </span>
                           </span>
                         </FormDescription>
@@ -1915,7 +1925,7 @@ export default function Smartcoin(properties) {
                             </span>
                             <span className="col-span-1 text-right">
                               Balance: {collateralAssetHoldings ?? 0}{" "}
-                              {parsedCollateralAsset ? parsedCollateralAsset.s : "?"}
+                              {parsedCollateralAsset ? parsedCollateralAsset.s : ""}
                             </span>
                           </span>
                         </FormDescription>
@@ -1951,7 +1961,11 @@ export default function Smartcoin(properties) {
                             <span className="col-span-7">
                               <Input
                                 label={`Amount of collateral to commit`}
-                                placeholder={`${collateralAmount} ${parsedCollateralAsset.s}`}
+                                placeholder={
+                                  collateralAmount && collateralAmount > 0
+                                    ? `${collateralAmount} ${parsedCollateralAsset.s}`
+                                    : `? ${parsedCollateralAsset.s}`
+                                }
                                 readOnly
                                 disabled
                                 className="mb-3"
@@ -2069,29 +2083,27 @@ export default function Smartcoin(properties) {
                                   readOnly
                                 />
                               )}
-                              {ratioValue && parsedBitasset && currentFeedSettlementPrice ? (
-                                <Slider
-                                  defaultValue={[ratioValue]}
-                                  value={[ratioValue]}
-                                  max={20}
-                                  min={parsedBitasset.mcr / 1000}
-                                  step={0.01}
-                                  onValueChange={(value) => {
-                                    debouncedSetRatioValue(
-                                      value[0],
-                                      currentFeedSettlementPrice,
-                                      debtAmount,
-                                      collateralAmount,
-                                      parsedBitasset.mcr,
-                                      parsedAsset.p,
-                                      parsedCollateralAsset.p,
-                                      debtLock,
-                                      collateralLock,
-                                      ratioLock
-                                    );
-                                  }}
-                                />
-                              ) : null}
+                              <Slider
+                                defaultValue={[ratioValue]}
+                                value={[ratioValue]}
+                                max={20}
+                                min={parsedBitasset.mcr / 1000}
+                                step={0.01}
+                                onValueChange={(value) => {
+                                  debouncedSetRatioValue(
+                                    value[0],
+                                    currentFeedSettlementPrice,
+                                    debtAmount,
+                                    collateralAmount,
+                                    parsedBitasset.mcr,
+                                    parsedAsset.p,
+                                    parsedCollateralAsset.p,
+                                    debtLock,
+                                    collateralLock,
+                                    ratioLock
+                                  );
+                                }}
+                              />
                             </span>
                             <span className="col-span-4 ml-3">
                               <Popover>
@@ -2253,25 +2265,16 @@ export default function Smartcoin(properties) {
                           blockchain
                         </FormDescription>
                         <FormControl>
-                          <Input disabled placeholder={`${fee ?? "?"} BTS`} readOnly />
+                          <Input disabled placeholder={fee ? `${fee} BTS` : ""} readOnly />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
 
-                  {!debtAmount ||
-                  !collateralAmount ||
-                  !ratioValue ||
-                  ratioValue < parsedBitasset.mcr / 1000 ? (
-                    <Button className="mt-5 mb-3" variant="outline" disabled type="submit">
-                      Submit
-                    </Button>
-                  ) : (
-                    <Button className="mt-5 mb-3" type="submit">
-                      Submit
-                    </Button>
-                  )}
+                  <Button className="mt-5 mb-3" type="submit">
+                    Submit
+                  </Button>
                 </form>
               </Form>
             </CardContent>
@@ -2343,7 +2346,7 @@ export default function Smartcoin(properties) {
                       <FormItem>
                         <FormLabel>current feed price</FormLabel>
                         <FormControl>
-                          <Input disabled className="mb-3 mt-3" placeholder="?" readOnly />
+                          <Input disabled className="mb-3 mt-3" placeholder="" readOnly />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -2688,29 +2691,93 @@ export default function Smartcoin(properties) {
         {!invalidUrlParams && (!finalAsset || !parsedAsset || !parsedBitasset) ? (
           <Card className="mt-2">
             <CardHeader className="pb-2">
-              <CardTitle>About this asset (1.3.x)</CardTitle>
+              <CardTitle>
+                <div className="grid grid-cols-8">
+                  <div className="col-span-6">About smartcoin asset</div>
+                  <div className="col-span-2 text-right">
+                    <Button variant="outline" className="h-5">
+                      View JSON
+                    </Button>
+                  </div>
+                </div>
+              </CardTitle>
               <CardDescription>
                 Use this information to improve your understanding
                 <br />
-                Thoroughly do your own research before proceeding to borrow any smartcoins.
+                Thoroughly do your own research before proceeding
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Label>General asset info (more info)</Label>
+              <div className="grid grid-cols-2">
+                <div className="col-span-1">
+                  <Label>General asset info</Label>
+                </div>
+                <div className="col-span-1 text-right">
+                  <Button variant="outline" classNameContents="h-5 mb-2">
+                    View asset on blocksights.info
+                  </Button>
+                </div>
+              </div>
+              <div className="grid grid-cols-11 gap-1 w-full text-sm">
+                <div className="col-span-5">
+                  <div className="grid grid-cols-1 gap-1 w-full text-sm">
+                    <EmptyRow title={"Issuer"} button="" />
+                    <EmptyRow title={"Maximum supply"} button="" />
+                    <EmptyRow title={"Min quantity"} button="" />
+                    <EmptyRow title={"Precision"} button="" />
+                  </div>
+                </div>
+                <div className="col-span-1 flex justify-center items-center">
+                  <Separator orientation="vertical" />
+                </div>
+                <div className="col-span-5">
+                  <div className="grid grid-cols-1 gap-1 w-full text-sm">
+                    <EmptyRow title={"Market fee"} button="" />
+                    <EmptyRow title={"Taker fee percent"} button="" />
+                    <EmptyRow title={"Reward percent"} button="" />
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2">
+                <div className="col-span-1">
+                  <Label>Smartcoin info</Label>
+                </div>
+                <div className="col-span-1 text-right">
+                  <Button variant="outline" classNameContents="h-5 mb-2">
+                    View bitasset on blocksights.info
+                  </Button>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-11 gap-1 w-full text-sm">
+                <div className="col-span-5">
+                  <div className="grid grid-cols-1 gap-1 w-full text-sm">
+                    <EmptyRow title={"Collateral asset"} button="" />
+                    <EmptyRow title={"MCR"} button="" />
+                    <EmptyRow title={"MSSR"} button="" />
+                    <EmptyRow title={"ICR"} button="" />
+                    <EmptyRow title={"Feed qty"} button="" />
+                    <EmptyRow title={"Settlement offset"} button="" />
+                  </div>
+                </div>
+                <div className="col-span-1 flex justify-center items-center">
+                  <Separator orientation="vertical" />
+                </div>
+                <div className="col-span-5">
+                  <div className="grid grid-cols-1 gap-1 w-full text-sm">
+                    <EmptyRow title={"Market fee"} button="" />
+                  </div>
+                </div>
+              </div>
+
+              <Label className="pb-0">Asset flags</Label>
               <br />
-              Loading...
-              <br />
-              <Label>Smartcoin info (more info)</Label>
-              <br />
-              Loading...
-              <br />
-              <Label>Asset flags</Label>
-              <br />
-              Loading...
+              <span className="text-sm"> </span>
               <br />
               <Label>Asset permissions</Label>
               <br />
-              Loading...
+              <span className="text-sm"> </span>
             </CardContent>
           </Card>
         ) : null}
@@ -2730,25 +2797,63 @@ export default function Smartcoin(properties) {
         {!invalidUrlParams && (!finalCollateralAsset || !parsedCollateralAsset) ? (
           <Card className="mt-2">
             <CardHeader className="pb-2">
-              <CardTitle>About the backing collateral ? (1.3.x)</CardTitle>
+              <CardTitle>
+                <div className="grid grid-cols-8">
+                  <div className="col-span-6">About</div>
+                  <div className="col-span-2 text-right">
+                    <Button variant="outline" className="h-5">
+                      View JSON
+                    </Button>
+                  </div>
+                </div>
+              </CardTitle>
               <CardDescription>
-                Use this information to improve your understanding of ?.
+                Use this information to improve your understanding
                 <br />
-                Thoroughly do your own research before proceeding to borrow any smartcoins.
+                Thoroughly do your own research before proceeding
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Label>General asset info (more info)</Label>
+              <div className="grid grid-cols-2">
+                <div className="col-span-1">
+                  <Label>General asset info</Label>
+                </div>
+                <div className="col-span-1 text-right">
+                  <Button variant="outline" classNameContents="h-5 mb-2">
+                    View asset on blocksights.info
+                  </Button>
+                </div>
+              </div>
+              <div className="grid grid-cols-11 gap-1 w-full text-sm">
+                <div className="col-span-5">
+                  <div className="grid grid-cols-1 gap-1 w-full text-sm">
+                    <EmptyRow title={"Issuer"} button="" />
+                    <EmptyRow title={"Maximum supply"} button="" />
+                    <EmptyRow title={"Min quantity"} button="" />
+                    <EmptyRow title={"Precision"} button="" />
+                  </div>
+                </div>
+                <div className="col-span-1 flex justify-center items-center">
+                  <Separator orientation="vertical" />
+                </div>
+                <div className="col-span-5">
+                  <div className="grid grid-cols-1 gap-1 w-full text-sm">
+                    <EmptyRow title={"Market fee"} button="" />
+                    <EmptyRow title={"Taker fee percent"} button="" />
+                    <EmptyRow title={"Reward percent"} button="" />
+                  </div>
+                </div>
+              </div>
+
               <br />
-              Loading...
-              <br />
+
               <Label className="pb-0">Asset flags</Label>
               <br />
-              Loading...
+              <span className="text-sm"> </span>
               <br />
               <Label>Asset permissions</Label>
               <br />
-              Loading...
+              <span className="text-sm"> </span>
             </CardContent>
           </Card>
         ) : null}
