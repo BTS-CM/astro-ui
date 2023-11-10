@@ -13,21 +13,13 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function MarketTradeContents(properties) {
-  const {
-    type,
-    publicMarketHistory,
-    marketHistoryInProgress,
-    reset,
-    assetAData,
-    assetBData,
-  } = properties;
+  const { type, publicMarketHistory, marketHistoryInProgress, reset, assetAData, assetBData } =
+    properties;
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>
-          {type === "buy" ? `Completed buy orders` : `Completed sell orders`}
-        </CardTitle>
+        <CardTitle>{type === "buy" ? `Completed buy orders` : `Completed sell orders`}</CardTitle>
         <CardDescription>
           {type === "buy"
             ? `Recently completed buy orders on the Bitshares DEX`

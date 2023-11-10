@@ -1,9 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  useMemo,
-  useSyncExternalStore,
-} from "react";
+import React, { useState, useEffect, useMemo, useSyncExternalStore } from "react";
 import { useForm } from "react-hook-form";
 import { FixedSizeList as List } from "react-window";
 import {
@@ -33,11 +28,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import {
-  Avatar as Av,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar";
+import { Avatar as Av, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -46,11 +37,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { blockchainFloat, humanReadableFloat } from "@/lib/common.js";
 
 import { $currentUser } from "../stores/users.ts";
-import {
-  $offersCache,
-  $assetCache,
-  $globalParamsCache,
-} from "../stores/cache.ts";
+import { $offersCache, $assetCache, $globalParamsCache } from "../stores/cache.ts";
 
 import { createUserBalancesStore } from "../effects/User.ts";
 import { useInitCache } from "../effects/Init.ts";
@@ -84,17 +71,9 @@ export default function CreditBorrow(properties) {
     },
   });
 
-  const usr = useSyncExternalStore(
-    $currentUser.subscribe,
-    $currentUser.get,
-    () => true
-  );
+  const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
 
-  const assets = useSyncExternalStore(
-    $assetCache.subscribe,
-    $assetCache.get,
-    () => true
-  );
+  const assets = useSyncExternalStore($assetCache.subscribe, $assetCache.get, () => true);
 
   const globalParams = useSyncExternalStore(
     $globalParamsCache.subscribe,
@@ -102,17 +81,9 @@ export default function CreditBorrow(properties) {
     () => true
   );
 
-  const offers = useSyncExternalStore(
-    $offersCache.subscribe,
-    $offersCache.get,
-    () => true
-  );
+  const offers = useSyncExternalStore($offersCache.subscribe, $offersCache.get, () => true);
 
-  useInitCache(usr && usr.chain ? usr.chain : "bitshares", [
-    "assets",
-    "globalParams",
-    "offers",
-  ]);
+  useInitCache(usr && usr.chain ? usr.chain : "bitshares", ["assets", "globalParams", "offers"]);
 
   const [fee, setFee] = useState(0);
   useEffect(() => {
@@ -155,9 +126,7 @@ export default function CreditBorrow(properties) {
           setError(true);
           return;
         }
-        const foundAsset = assets.find(
-          (asset) => asset.id === foundOffer.asset_type
-        );
+        const foundAsset = assets.find((asset) => asset.id === foundOffer.asset_type);
         setError(false);
         setFoundAsset(foundAsset);
         setRelevantOffer(foundOffer);
@@ -173,14 +142,12 @@ export default function CreditBorrow(properties) {
     if (usr && usr.id) {
       const userBalancesStore = createUserBalancesStore([usr.chain, usr.id]);
 
-      unsubscribeUserBalances = userBalancesStore.subscribe(
-        ({ data, error, loading }) => {
-          if (data && !error && !loading) {
-            setBalanceAssetIDs(data.map((x) => x.asset_id));
-            setUsrBalances(data);
-          }
+      unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
+        if (data && !error && !loading) {
+          setBalanceAssetIDs(data.map((x) => x.asset_id));
+          setUsrBalances(data);
         }
-      );
+      });
     }
 
     return () => {
@@ -212,10 +179,7 @@ export default function CreditBorrow(properties) {
 
   const availableAmount = useMemo(() => {
     if (relevantOffer && foundAsset) {
-      return humanReadableFloat(
-        relevantOffer.current_balance,
-        foundAsset.precision
-      );
+      return humanReadableFloat(relevantOffer.current_balance, foundAsset.precision);
     } else {
       return 0;
     }
@@ -223,10 +187,7 @@ export default function CreditBorrow(properties) {
 
   const minAmount = useMemo(() => {
     if (relevantOffer && foundAsset) {
-      return humanReadableFloat(
-        relevantOffer.min_deal_amount,
-        foundAsset.precision
-      );
+      return humanReadableFloat(relevantOffer.min_deal_amount, foundAsset.precision);
     } else {
       return 1;
     }
@@ -263,9 +224,7 @@ export default function CreditBorrow(properties) {
       debouncedInputValue.toString().split(".").length > 1 &&
       debouncedInputValue.toString().split(".")[1].length > foundAsset.precision
     ) {
-      const fixedValue = parseFloat(debouncedInputValue).toFixed(
-        foundAsset.precision
-      );
+      const fixedValue = parseFloat(debouncedInputValue).toFixed(foundAsset.precision);
       setFinalBorrowAmount(fixedValue);
       setInputValue(fixedValue); // Set value to minimum accepted amount
     } else {
@@ -275,19 +234,14 @@ export default function CreditBorrow(properties) {
 
   const collateralInfo = useMemo(() => {
     if (chosenCollateral && balanceAssetIDs && assets && usrBalances) {
-      const collateralAsset = assets.find(
-        (asset) => asset.id === chosenCollateral
-      );
+      const collateralAsset = assets.find((asset) => asset.id === chosenCollateral);
       const collateralBalance = usrBalances.find(
         (balance) => balance.asset_id === chosenCollateral
       );
 
       return {
         amount: collateralBalance
-          ? humanReadableFloat(
-              collateralBalance.amount,
-              collateralAsset.precision
-            )
+          ? humanReadableFloat(collateralBalance.amount, collateralAsset.precision)
           : 0,
         holding: balanceAssetIDs.includes(chosenCollateral),
         symbol: collateralAsset.symbol,
@@ -311,9 +265,7 @@ export default function CreditBorrow(properties) {
       if (hours > 24) {
         return `${Math.floor(hours / 24)} days (due by ${formattedDate})`;
       } else {
-        return `${hours.toFixed(
-          hours < 1 ? 2 : 0
-        )} hours (due by ${formattedDate})`;
+        return `${hours.toFixed(hours < 1 ? 2 : 0)} hours (due by ${formattedDate})`;
       }
     }
   }, [relevantOffer]);
@@ -322,16 +274,12 @@ export default function CreditBorrow(properties) {
     if (relevantOffer) {
       const hours = hoursTillExpiration(relevantOffer.auto_disable_time);
       let date = new Date(relevantOffer.auto_disable_time);
-      let formattedDate = `${date.getDate()}/${
-        date.getMonth() + 1
-      }/${date.getFullYear()}`;
+      let formattedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
 
       if (hours > 24) {
         return `${Math.floor(hours / 24)} days (on ${formattedDate})`;
       } else {
-        return `${hours.toFixed(
-          hours < 1 ? 2 : 0
-        )} hours (on ${formattedDate})`;
+        return `${hours.toFixed(hours < 1 ? 2 : 0)} hours (on ${formattedDate})`;
       }
     }
   }, [relevantOffer]);
@@ -347,10 +295,7 @@ export default function CreditBorrow(properties) {
       if (quote.asset_id === collateralInfo.id) {
         const ratio =
           humanReadableFloat(quote.amount, collateralInfo.precision) /
-          humanReadableFloat(
-            base.amount,
-            assets.find((x) => x.id === base.asset_id).precision
-          );
+          humanReadableFloat(base.amount, assets.find((x) => x.id === base.asset_id).precision);
         calculatedAmount += finalBorrowAmount * ratio;
       }
       return calculatedAmount.toFixed(collateralInfo.precision);
@@ -382,9 +327,7 @@ export default function CreditBorrow(properties) {
           {error ? (
             <Card>
               <CardHeader className="pb-1 mb-3 mt-3">
-                <CardTitle>
-                  Sorry, couldn't find your requested credit offer
-                </CardTitle>
+                <CardTitle>Sorry, couldn't find your requested credit offer</CardTitle>
                 <CardDescription className="pt-2">
                   The credit offer is either not active, or doesn't exist.
                   <br />
@@ -407,8 +350,7 @@ export default function CreditBorrow(properties) {
                   {relevantOffer ? (
                     <>
                       🏦 Viewing offer #{relevantOffer.id} created by{" "}
-                      {relevantOffer.owner_name ?? "?"} (
-                      {relevantOffer.owner_account})
+                      {relevantOffer.owner_name ?? "?"} ({relevantOffer.owner_account})
                     </>
                   ) : (
                     "loading terms of offer..."
@@ -417,8 +359,7 @@ export default function CreditBorrow(properties) {
                 <CardDescription>
                   This is an user created credit offer on the Bitshares DEX.
                   <br />
-                  Thoroughly read the terms of the offer before proceeding to
-                  Beet.
+                  Thoroughly read the terms of the offer before proceeding to Beet.
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -468,17 +409,14 @@ export default function CreditBorrow(properties) {
                                       disabled
                                       placeholder="Bitshares account (1.2.x)"
                                       className="mb-1 mt-1"
-                                      value={
-                                        usr ? `${usr.username} (${usr.id})` : ""
-                                      }
+                                      value={usr ? `${usr.username} (${usr.id})` : ""}
                                       readOnly
                                     />
                                   </div>
                                 </div>
                               </FormControl>
                               <FormDescription>
-                                The account which will broadcast the credit
-                                offer accept operation.
+                                The account which will broadcast the credit offer accept operation.
                               </FormDescription>
                               <FormMessage />
                             </FormItem>
@@ -492,9 +430,7 @@ export default function CreditBorrow(properties) {
                             <FormItem>
                               <FormLabel>
                                 <div className="grid grid-cols-2 mt-4">
-                                  <div className="col-span-1">
-                                    Lending account
-                                  </div>
+                                  <div className="col-span-1">Lending account</div>
                                   <div className="col-span-1 text-right">
                                     {relevantOffer ? (
                                       <ExternalLink
@@ -510,8 +446,7 @@ export default function CreditBorrow(properties) {
                               <FormControl>
                                 <div className="grid grid-cols-8 mt-4">
                                   <div className="col-span-1 ml-5">
-                                    {relevantOffer &&
-                                    relevantOffer.owner_name ? (
+                                    {relevantOffer && relevantOffer.owner_name ? (
                                       <Avatar
                                         size={40}
                                         name={relevantOffer.owner_name}
@@ -576,9 +511,7 @@ export default function CreditBorrow(properties) {
                                       <Av>
                                         <AvatarFallback>
                                           <div className="text-sm">
-                                            {foundAsset.bitasset_data_id
-                                              ? "MPA"
-                                              : "UIA"}
+                                            {foundAsset.bitasset_data_id ? "MPA" : "UIA"}
                                           </div>
                                         </AvatarFallback>
                                       </Av>
@@ -620,9 +553,7 @@ export default function CreditBorrow(properties) {
                             <FormItem>
                               <FormLabel>
                                 <div className="grid grid-cols-2 mt-3">
-                                  <div className="mt-1">
-                                    Backing collateral for credit deal
-                                  </div>
+                                  <div className="mt-1">Backing collateral for credit deal</div>
                                 </div>
                               </FormLabel>
                               <FormControl>
@@ -633,12 +564,10 @@ export default function CreditBorrow(properties) {
                                         <AvatarFallback>
                                           <div className="text-sm">
                                             {!collateralInfo ? "?" : null}
-                                            {collateralInfo &&
-                                            collateralInfo.isBitasset
+                                            {collateralInfo && collateralInfo.isBitasset
                                               ? "MPA"
                                               : null}
-                                            {collateralInfo &&
-                                            !collateralInfo.isBitasset
+                                            {collateralInfo && !collateralInfo.isBitasset
                                               ? "UIA"
                                               : null}
                                           </div>
@@ -666,22 +595,17 @@ export default function CreditBorrow(properties) {
                                         />
                                       </SelectTrigger>
                                       <SelectContent className="bg-white">
-                                        {acceptedCollateral &&
-                                        acceptedCollateral.length ? (
+                                        {acceptedCollateral && acceptedCollateral.length ? (
                                           <List
                                             height={100}
-                                            itemCount={
-                                              acceptedCollateral.length
-                                            }
+                                            itemCount={acceptedCollateral.length}
                                             itemSize={35}
                                             className="w-full"
                                             initialScrollOffset={
                                               chosenCollateral
                                                 ? acceptedCollateral
                                                     .map((x) => x.id)
-                                                    .indexOf(
-                                                      chosenCollateral.id
-                                                    ) * 35
+                                                    .indexOf(chosenCollateral.id) * 35
                                                 : 0
                                             }
                                           >
@@ -700,8 +624,7 @@ export default function CreditBorrow(properties) {
                               chosenCollateral &&
                               !balanceAssetIDs.includes(chosenCollateral) ? (
                                 <FormMessage>
-                                  Account doesn't hold this backing collateral
-                                  asset.
+                                  Account doesn't hold this backing collateral asset.
                                 </FormMessage>
                               ) : null}
                             </FormItem>
@@ -721,20 +644,15 @@ export default function CreditBorrow(properties) {
                                     } you plan on borrowing`}
                                   </div>
                                   <div className="col-span-1 text-right">
-                                    {`Available: ${minAmount ?? "?"} to ${
-                                      availableAmount ?? "?"
-                                    } ${foundAsset?.symbol}`}
+                                    {`Available: ${minAmount ?? "?"} to ${availableAmount ?? "?"} ${
+                                      foundAsset?.symbol
+                                    }`}
                                   </div>
                                 </div>
                               </FormLabel>
                               {!availableAmount ? (
                                 <FormControl>
-                                  <Input
-                                    disabled
-                                    value={0}
-                                    className="mb-3"
-                                    readOnly
-                                  />
+                                  <Input disabled value={0} className="mb-3" readOnly />
                                 </FormControl>
                               ) : (
                                 <FormControl
@@ -765,9 +683,7 @@ export default function CreditBorrow(properties) {
                             <FormItem>
                               <FormLabel>
                                 <div className="grid grid-cols-2 mt-3">
-                                  <div className="mt-1">
-                                    Credit offer repay method
-                                  </div>
+                                  <div className="mt-1">Credit offer repay method</div>
                                 </div>
                               </FormLabel>
                               <FormControl>
@@ -777,9 +693,7 @@ export default function CreditBorrow(properties) {
                                   }}
                                 >
                                   <SelectTrigger className="mb-1">
-                                    <SelectValue
-                                      placeholder={"Select your repay method.."}
-                                    />
+                                    <SelectValue placeholder={"Select your repay method.."} />
                                   </SelectTrigger>
                                   <SelectContent className="bg-white">
                                     <SelectItem value={"no_auto_repayment"}>
@@ -788,9 +702,7 @@ export default function CreditBorrow(properties) {
                                     <SelectItem value={"only_full_repayment"}>
                                       Only full repayment
                                     </SelectItem>
-                                    <SelectItem
-                                      value={"allow_partial_repayment"}
-                                    >
+                                    <SelectItem value={"allow_partial_repayment"}>
                                       Allow partial repayment
                                     </SelectItem>
                                   </SelectContent>
@@ -824,9 +736,7 @@ export default function CreditBorrow(properties) {
                               <FormItem>
                                 <FormLabel>
                                   <div className="grid grid-cols-2 gap-1 mt-5">
-                                    <div className="col-span-1">
-                                      {`Required collateral`}
-                                    </div>
+                                    <div className="col-span-1">{`Required collateral`}</div>
                                     <div className="col-span-1 text-right">
                                       {collateralInfo
                                         ? `Your current balance: ${collateralInfo.amount} ${collateralInfo.symbol}`
@@ -838,12 +748,8 @@ export default function CreditBorrow(properties) {
                                 <FormControl>
                                   <Input
                                     disabled
-                                    value={`${
-                                      requiredCollateralAmount ?? "0"
-                                    } ${
-                                      collateralInfo
-                                        ? collateralInfo.symbol
-                                        : ""
+                                    value={`${requiredCollateralAmount ?? "0"} ${
+                                      collateralInfo ? collateralInfo.symbol : ""
                                     }`}
                                     className="mb-3"
                                     readOnly
@@ -851,9 +757,7 @@ export default function CreditBorrow(properties) {
                                 </FormControl>
                                 <FormDescription>
                                   {finalBorrowAmount && foundAsset
-                                    ? `In order to borrow ${
-                                        finalBorrowAmount ?? ""
-                                      } ${
+                                    ? `In order to borrow ${finalBorrowAmount ?? ""} ${
                                         foundAsset ? foundAsset.symbol : ""
                                       } you'll
                                 need to provide the following amount of collateral to
@@ -863,14 +767,12 @@ export default function CreditBorrow(properties) {
 
                                 {collateralInfo &&
                                 collateralInfo.holding &&
-                                collateralInfo.amount <
-                                  requiredCollateralAmount ? (
+                                collateralInfo.amount < requiredCollateralAmount ? (
                                   <FormMessage>
                                     {`Your account has an insufficient ${
                                       collateralInfo.symbol
                                     } balance. You'll need at least ${(
-                                      requiredCollateralAmount -
-                                      collateralInfo.amount
+                                      requiredCollateralAmount - collateralInfo.amount
                                     ).toFixed(collateralInfo.precision)} more ${
                                       collateralInfo.symbol
                                     }.`}
@@ -879,9 +781,8 @@ export default function CreditBorrow(properties) {
 
                                 {collateralInfo && !collateralInfo.holding ? (
                                   <FormMessage>
-                                    Your account does not hold this asset. Try
-                                    another form of backing collateral if
-                                    possible.
+                                    Your account does not hold this asset. Try another form of
+                                    backing collateral if possible.
                                   </FormMessage>
                                 ) : null}
                               </FormItem>
@@ -896,9 +797,7 @@ export default function CreditBorrow(properties) {
                             <FormItem>
                               <FormLabel>
                                 <div className="grid grid-cols-2 gap-1 mt-5">
-                                  <div className="col-span-1">
-                                    {`Repay period`}
-                                  </div>
+                                  <div className="col-span-1">{`Repay period`}</div>
                                 </div>
                               </FormLabel>
                               <FormControl>
@@ -910,9 +809,8 @@ export default function CreditBorrow(properties) {
                                 />
                               </FormControl>
                               <FormDescription>
-                                The maximum duration of the credit deal; repay
-                                the loan within this period to avoid loss of
-                                collateral.
+                                The maximum duration of the credit deal; repay the loan within this
+                                period to avoid loss of collateral.
                               </FormDescription>
                             </FormItem>
                           )}
@@ -925,9 +823,7 @@ export default function CreditBorrow(properties) {
                             <FormItem>
                               <FormLabel>
                                 <div className="grid grid-cols-2 gap-1 mt-5">
-                                  <div className="col-span-1">
-                                    {`Credit offer expiry`}
-                                  </div>
+                                  <div className="col-span-1">{`Credit offer expiry`}</div>
                                 </div>
                               </FormLabel>
                               <FormControl>
@@ -952,14 +848,10 @@ export default function CreditBorrow(properties) {
                             <FormItem>
                               <FormLabel>
                                 <div className="grid grid-cols-2 gap-1 mt-5">
-                                  <div className="col-span-1">
-                                    Estimated borrow fee
-                                  </div>
+                                  <div className="col-span-1">Estimated borrow fee</div>
                                   <div className="col-span-1 text-right">
                                     {relevantOffer
-                                      ? `${
-                                          relevantOffer.fee_rate / 10000
-                                        }% of borrowed
+                                      ? `${relevantOffer.fee_rate / 10000}% of borrowed
                                     amount`
                                       : "Loading borrow fee.."}
                                   </div>
@@ -973,18 +865,14 @@ export default function CreditBorrow(properties) {
                                       ? `${finalBorrowAmount * 0.01} ${
                                           foundAsset ? foundAsset.symbol : "?"
                                         }`
-                                      : `0 ${
-                                          foundAsset ? foundAsset.symbol : "?"
-                                        }`
+                                      : `0 ${foundAsset ? foundAsset.symbol : "?"}`
                                   }
                                   className="mb-3"
                                   readOnly
                                 />
                               </FormControl>
                               <FormDescription>
-                                {`This is how much ${
-                                  foundAsset ? foundAsset.symbol : "?"
-                                } that ${
+                                {`This is how much ${foundAsset ? foundAsset.symbol : "?"} that ${
                                   relevantOffer ? relevantOffer.owner_name : "?"
                                 } will earn once this deal has completed.`}
                               </FormDescription>
@@ -1000,20 +888,12 @@ export default function CreditBorrow(properties) {
                           render={({ field }) => (
                             <FormItem>
                               <FormLabel>Network fee</FormLabel>
-                              <Input
-                                disabled
-                                value={`${fee ?? "?"} BTS`}
-                                label={`fees`}
-                                readOnly
-                              />
+                              <Input disabled value={`${fee ?? "?"} BTS`} label={`fees`} readOnly />
                               <FormDescription>
-                                The cost to broadcast your credit deal operation
-                                onto the network.
+                                The cost to broadcast your credit deal operation onto the network.
                               </FormDescription>
                               {usr && usr.id === usr.referrer ? (
-                                <FormMessage>
-                                  LTM rebate: {0.8 * fee} BTS (vesting)
-                                </FormMessage>
+                                <FormMessage>LTM rebate: {0.8 * fee} BTS (vesting)</FormMessage>
                               ) : null}
                             </FormItem>
                           )}
@@ -1050,17 +930,11 @@ export default function CreditBorrow(properties) {
                 borrower: usr.id,
                 offer_id: relevantOffer.id,
                 borrow_amount: {
-                  amount: blockchainFloat(
-                    finalBorrowAmount,
-                    foundAsset.precision
-                  ),
+                  amount: blockchainFloat(finalBorrowAmount, foundAsset.precision),
                   asset_id: foundAsset.id,
                 },
                 collateral: {
-                  amount: blockchainFloat(
-                    requiredCollateralAmount,
-                    collateralInfo.precision
-                  ),
+                  amount: blockchainFloat(requiredCollateralAmount, collateralInfo.precision),
                   asset_id: collateralInfo.id,
                 },
                 max_fee_rate: relevantOffer.fee_rate,
@@ -1081,42 +955,36 @@ export default function CreditBorrow(properties) {
               Peer-to-peer lending involves certain risks, including:
               <ul className="ml-2 list-disc [&>li]:mt-2 pl-2">
                 <li>
-                  Collateral Risk: As a borrower, you may fail to repay the loan
-                  on time, forfeiting the loan collateral in full.
+                  Collateral Risk: As a borrower, you may fail to repay the loan on time, forfeiting
+                  the loan collateral in full.
                 </li>
                 <li>
-                  Liquidity Risk: If you sell the assets you borrow, it may not
-                  be possible to re-acquire the assets in time to repay the
-                  loan, or you may do so at a loss.
+                  Liquidity Risk: If you sell the assets you borrow, it may not be possible to
+                  re-acquire the assets in time to repay the loan, or you may do so at a loss.
                 </li>
                 <li>
-                  Platform Risk: If an asset's owner company goes out of
-                  business and ceases an exchange backed asset's operation, you
-                  could lose funds.
+                  Platform Risk: If an asset's owner company goes out of business and ceases an
+                  exchange backed asset's operation, you could lose funds.
                 </li>
                 <li>
-                  User Risk: As credit offers are fully user generated, you
-                  could be interacting with untrustworthy assets or users who
-                  put funds at risk.
+                  User Risk: As credit offers are fully user generated, you could be interacting
+                  with untrustworthy assets or users who put funds at risk.
                 </li>
                 <li>
-                  Network Risk: Whilst blockchain downtime is very rare, it's a
-                  risk to consider when creating credit deals which span a
-                  period of time. Auto loan repay methods are available to
-                  offset such risk.
+                  Network Risk: Whilst blockchain downtime is very rare, it's a risk to consider
+                  when creating credit deals which span a period of time. Auto loan repay methods
+                  are available to offset such risk.
                 </li>
               </ul>
             </CardContent>
             <CardFooter className="text-sm">
-              Please consider these risks and thoroughly evaluate the terms of
-              offers before proceeding with a credit deal.
+              Please consider these risks and thoroughly evaluate the terms of offers before
+              proceeding with a credit deal.
             </CardFooter>
           </Card>
         </div>
         <div className="grid grid-cols-1 mt-5">
-          {usr && usr.username && usr.username.length ? (
-            <CurrentUser usr={usr} />
-          ) : null}
+          {usr && usr.username && usr.username.length ? <CurrentUser usr={usr} /> : null}
         </div>
       </div>
     </>

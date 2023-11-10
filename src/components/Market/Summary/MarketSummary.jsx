@@ -14,27 +14,16 @@ export default function MarketSummary(properties) {
       const splitValue = res.price.split(".");
       const parsedValue =
         assetAData && assetBData && splitValue.length > 1
-          ? trimPrice(
-              res.price,
-              type === "buy" ? assetAData.precision : assetBData.precision
-            )
+          ? trimPrice(res.price, type === "buy" ? assetAData.precision : assetBData.precision)
           : res.price;
 
       return (
         <div className="col-span-4" key={`ms_${index}_${type}`}>
           <div className="grid grid-cols-4 text-sm">
-            <div className="col-span-1 border-r-2 border-b-2 pl-3">
-              {parsedValue}
-            </div>
-            <div className="col-span-1 border-r-2 border-b-2 pl-3">
-              {res.amount}
-            </div>
-            <div className="col-span-1 border-r-2 border-b-2 pl-3">
-              {getTimeSince(res.date)}
-            </div>
-            <div className="col-span-1 border-r-2 border-b-2 pl-3">
-              {res.value}
-            </div>
+            <div className="col-span-1 border-r-2 border-b-2 pl-3">{parsedValue}</div>
+            <div className="col-span-1 border-r-2 border-b-2 pl-3">{res.amount}</div>
+            <div className="col-span-1 border-r-2 border-b-2 pl-3">{getTimeSince(res.date)}</div>
+            <div className="col-span-1 border-r-2 border-b-2 pl-3">{res.value}</div>
           </div>
         </div>
       );
@@ -48,17 +37,14 @@ export default function MarketSummary(properties) {
           <div className="grid grid-cols-1">
             <div className="col-span-1">Price</div>
             <div className="col-span-1 text-sm">
-              {assetAData ? assetAData.symbol : "?"}/
-              {assetBData ? assetBData.symbol : "?"}
+              {assetAData ? assetAData.symbol : "?"}/{assetBData ? assetBData.symbol : "?"}
             </div>
           </div>
         </div>
         <div className="col-span-1">
           <div className="grid grid-cols-1">
             <div className="col-span-1">Amount</div>
-            <div className="col-span-1 text-sm">
-              {assetAData ? assetAData.symbol : "?"}
-            </div>
+            <div className="col-span-1 text-sm">{assetAData ? assetAData.symbol : "?"}</div>
           </div>
         </div>
         <div className="col-span-1">
@@ -70,17 +56,13 @@ export default function MarketSummary(properties) {
         <div className="col-span-1">
           <div className="grid grid-cols-1">
             <div className="col-span-1">Total value</div>
-            <div className="col-span-1 text-sm">
-              {assetBData ? assetBData.symbol : "?"}
-            </div>
+            <div className="col-span-1 text-sm">{assetBData ? assetBData.symbol : "?"}</div>
           </div>
         </div>
       </div>
       <ScrollArea className="h-72 w-full rounded-md border">
         <div className="grid grid-cols-4">
-          {marketHistoryElements.length
-            ? marketHistoryElements
-            : "No recent trades found"}
+          {marketHistoryElements.length ? marketHistoryElements : "No recent trades found"}
         </div>
       </ScrollArea>
     </>

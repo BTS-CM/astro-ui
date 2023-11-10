@@ -17,11 +17,7 @@ import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
 import { Button } from "@/components/ui/button";
 
 export default function LTM(properties) {
-  const usr = useSyncExternalStore(
-    $currentUser.subscribe,
-    $currentUser.get,
-    () => true
-  );
+  const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
 
   //useInitCache(usr && usr.chain ? usr.chain : "bitshares");
   const [showDialog, setShowDialog] = useState(false);
@@ -38,44 +34,29 @@ export default function LTM(properties) {
             <CardContent>
               {usr && usr.id === usr.referrer ? (
                 <>
-                  <h3>
-                    This account already has purchased a lifetime membership!
-                  </h3>
+                  <h3>This account already has purchased a lifetime membership!</h3>
                   <h4>Your active lifetime membership benefits:</h4>
                   <ul className="ml-2 list-disc [&>li]:mt-2">
-                    <li>
-                      Receive an 80% rebate on all fees into your vesting
-                      balance.
-                    </li>
-                    <li>
-                      Passively earn a share of fees spent by your referred
-                      users.
-                    </li>
+                    <li>Receive an 80% rebate on all fees into your vesting balance.</li>
+                    <li>Passively earn a share of fees spent by your referred users.</li>
                     <li>Now able to generate premium account names.</li>
                   </ul>
                 </>
               ) : null}
               {usr && usr.id != usr.referrer ? (
                 <>
-                  <h3>
-                    Want to purchase a lifetime membership for your account?
-                  </h3>
+                  <h3>Want to purchase a lifetime membership for your account?</h3>
 
-                  <h4 className="text-lg">
-                    Lifetime members receive the following benefits:
-                  </h4>
+                  <h4 className="text-lg">Lifetime members receive the following benefits:</h4>
                   <ul className="ml-2 list-disc [&>li]:mt-2 pl-3 text-sm">
                     <li>
-                      They receive an 80% rebate on all spent fees, in a vesting
-                      balance form.
+                      They receive an 80% rebate on all spent fees, in a vesting balance form.
                     </li>
                     <li>
-                      They unlock the ability to passively earn a share of fees
-                      spent by users they refer.
+                      They unlock the ability to passively earn a share of fees spent by users they
+                      refer.
                     </li>
-                    <li>
-                      The ability to generate premium blockchain account names.
-                    </li>
+                    <li>The ability to generate premium blockchain account names.</li>
                   </ul>
 
                   <Button
@@ -110,9 +91,7 @@ export default function LTM(properties) {
           </Card>
         </div>
         <div className="grid grid-cols-1 mt-5">
-          {usr && usr.username && usr.username.length ? (
-            <CurrentUser usr={usr} />
-          ) : null}
+          {usr && usr.username && usr.username.length ? <CurrentUser usr={usr} /> : null}
         </div>
       </div>
     </>

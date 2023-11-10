@@ -38,9 +38,7 @@ export default function MarketOrderCard(properties) {
         <Card>
           <CardHeader>
             <CardTitle>Loading market orders</CardTitle>
-            <CardDescription>
-              Fetching requested market data, please wait...
-            </CardDescription>
+            <CardDescription>Fetching requested market data, please wait...</CardDescription>
             <CardContent>
               <Skeleton className="h-4 w-full mt-1" />
               <Skeleton className="h-4 w-full mt-1" />
@@ -56,18 +54,14 @@ export default function MarketOrderCard(properties) {
               <Skeleton className="h-4 w-full mt-1" />
             </CardContent>
             <CardFooter>
-              <Button
-                className="mt-5"
-                onClick={() => setOrderBookItr(orderBookItr + 1)}
-              >
+              <Button className="mt-5" onClick={() => setOrderBookItr(orderBookItr + 1)}>
                 Retry request
               </Button>
             </CardFooter>
           </CardHeader>
         </Card>
       ) : null}
-      {((cardType === "buy" && !buyOrders) ||
-        (cardType === "sell" && !sellOrders)) &&
+      {((cardType === "buy" && !buyOrders) || (cardType === "sell" && !sellOrders)) &&
       !marketOrdersLoading ? (
         <Card>
           <CardHeader>
@@ -75,24 +69,18 @@ export default function MarketOrderCard(properties) {
             <CardDescription>
               Failed to fetch market data, please try again.
               <br />
-              <Button
-                className="mt-5"
-                onClick={() => setOrderBookItr(orderBookItr + 1)}
-              >
+              <Button className="mt-5" onClick={() => setOrderBookItr(orderBookItr + 1)}>
                 Refresh
               </Button>
             </CardDescription>
           </CardHeader>
         </Card>
       ) : null}
-      {((cardType === "buy" && buyOrders) ||
-        (cardType === "sell" && sellOrders)) &&
+      {((cardType === "buy" && buyOrders) || (cardType === "sell" && sellOrders)) &&
       !marketOrdersLoading ? (
         <Card>
           <CardHeader>
-            <CardTitle>
-              {cardType === "buy" ? "Buy orders" : "Sell orders"}
-            </CardTitle>
+            <CardTitle>{cardType === "buy" ? "Buy orders" : "Sell orders"}</CardTitle>
             <CardDescription>
               {cardType === "buy"
                 ? `The following table displays network offers to purchase ${assetA} with ${assetB}`
@@ -108,42 +96,22 @@ export default function MarketOrderCard(properties) {
                 <div className="grid grid-cols-4">
                   <div className="col-span-1 pl-3">Price</div>
                   <div className="col-span-1 pl-3 text-md">
-                    {cardType === "buy" && assetA && assetA.length < 12
-                      ? assetA
-                      : null}
-                    {cardType === "buy" &&
-                    assetA &&
-                    assetA.length >= 12 &&
-                    assetAData
+                    {cardType === "buy" && assetA && assetA.length < 12 ? assetA : null}
+                    {cardType === "buy" && assetA && assetA.length >= 12 && assetAData
                       ? assetAData.id
                       : null}
-                    {cardType === "sell" && assetB && assetB.length < 12
-                      ? assetB
-                      : null}
-                    {cardType === "sell" &&
-                    assetB &&
-                    assetB.length >= 12 &&
-                    assetBData
+                    {cardType === "sell" && assetB && assetB.length < 12 ? assetB : null}
+                    {cardType === "sell" && assetB && assetB.length >= 12 && assetBData
                       ? assetBData.id
                       : null}
                   </div>
                   <div className="col-span-1 pl-3">
-                    {cardType === "buy" && assetB && assetB.length < 12
-                      ? assetB
-                      : null}
-                    {cardType === "buy" &&
-                    assetB &&
-                    assetB.length >= 12 &&
-                    assetBData
+                    {cardType === "buy" && assetB && assetB.length < 12 ? assetB : null}
+                    {cardType === "buy" && assetB && assetB.length >= 12 && assetBData
                       ? assetBData.id
                       : null}
-                    {cardType === "sell" && assetA && assetA.length < 12
-                      ? assetA
-                      : null}
-                    {cardType === "sell" &&
-                    assetA &&
-                    assetA.length >= 12 &&
-                    assetAData
+                    {cardType === "sell" && assetA && assetA.length < 12 ? assetA : null}
+                    {cardType === "sell" && assetA && assetA.length >= 12 && assetAData
                       ? assetAData.id
                       : null}
                   </div>
@@ -154,22 +122,13 @@ export default function MarketOrderCard(properties) {
                   <div className="grid grid-cols-4">
                     {cardType === "buy"
                       ? buyOrders.map((res, index) => (
-                          <div
-                            className="col-span-4"
-                            key={`moc_${cardType}_${index}`}
-                          >
+                          <div className="col-span-4" key={`moc_${cardType}_${index}`}>
                             <div className="grid grid-cols-4 text-sm">
                               <div className="col-span-1 border-r-2 pl-3">
-                                {parseFloat(res.price).toFixed(
-                                  assetAData.precision
-                                )}
+                                {parseFloat(res.price).toFixed(assetAData.precision)}
                               </div>
-                              <div className="col-span-1 border-r-2 pl-3">
-                                {res.base}
-                              </div>
-                              <div className="col-span-1 border-r-2 pl-3">
-                                {res.quote}
-                              </div>
+                              <div className="col-span-1 border-r-2 pl-3">{res.base}</div>
+                              <div className="col-span-1 border-r-2 pl-3">{res.quote}</div>
                               <div className="col-span-1 pl-3">
                                 {buyOrders
                                   .slice(0, index + 1)
@@ -184,22 +143,13 @@ export default function MarketOrderCard(properties) {
                           </div>
                         ))
                       : sellOrders.map((res, index) => (
-                          <div
-                            className="col-span-4"
-                            key={`moc_${cardType}_${index}`}
-                          >
+                          <div className="col-span-4" key={`moc_${cardType}_${index}`}>
                             <div className="grid grid-cols-4 text-sm">
                               <div className="col-span-1 border-r-2 pl-3">
-                                {parseFloat(res.price).toFixed(
-                                  assetBData.precision
-                                )}
+                                {parseFloat(res.price).toFixed(assetBData.precision)}
                               </div>
-                              <div className="col-span-1 border-r-2 pl-3">
-                                {res.base}
-                              </div>
-                              <div className="col-span-1 border-r-2 pl-3">
-                                {res.quote}
-                              </div>
+                              <div className="col-span-1 border-r-2 pl-3">{res.base}</div>
+                              <div className="col-span-1 border-r-2 pl-3">{res.quote}</div>
                               <div className="col-span-1 pl-3">
                                 {sellOrders
                                   .slice(0, index + 1)

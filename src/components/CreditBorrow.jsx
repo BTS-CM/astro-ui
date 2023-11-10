@@ -1,9 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  useSyncExternalStore,
-  useMemo,
-} from "react";
+import React, { useState, useEffect, useSyncExternalStore, useMemo } from "react";
 import { FixedSizeList as List } from "react-window";
 import Fuse from "fuse.js";
 
@@ -54,28 +49,13 @@ const activeTabStyle = {
 const isValid = (str) => /^[a-zA-Z0-9.-]+$/.test(str);
 
 export default function CreditBorrow(properties) {
-  const usr = useSyncExternalStore(
-    $currentUser.subscribe,
-    $currentUser.get,
-    () => true
-  );
+  const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
 
-  const assets = useSyncExternalStore(
-    $assetCache.subscribe,
-    $assetCache.get,
-    () => true
-  );
+  const assets = useSyncExternalStore($assetCache.subscribe, $assetCache.get, () => true);
 
-  const offers = useSyncExternalStore(
-    $offersCache.subscribe,
-    $offersCache.get,
-    () => true
-  );
+  const offers = useSyncExternalStore($offersCache.subscribe, $offersCache.get, () => true);
 
-  useInitCache(usr && usr.chain ? usr.chain : "bitshares", [
-    "assets",
-    "offers",
-  ]);
+  useInitCache(usr && usr.chain ? usr.chain : "bitshares", ["assets", "offers"]);
 
   const [activeTab, setActiveTab] = useState("allOffers");
   const [activeSearch, setActiveSearch] = useState("borrow"); // borrow, collateral, owner_name
@@ -90,14 +70,12 @@ export default function CreditBorrow(properties) {
     if (usr && usr.id) {
       const userBalancesStore = createUserBalancesStore([usr.chain, usr.id]);
 
-      unsubscribeUserBalances = userBalancesStore.subscribe(
-        ({ data, error, loading }) => {
-          if (data && !error && !loading) {
-            setBalanceAssetIDs(data.map((x) => x.asset_id));
-            setUsrBalances(data);
-          }
+      unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
+        if (data && !error && !loading) {
+          setBalanceAssetIDs(data.map((x) => x.asset_id));
+          setUsrBalances(data);
         }
-      );
+      });
     }
 
     return () => {
@@ -134,9 +112,7 @@ export default function CreditBorrow(properties) {
           })
           .filter((x) => x);
       }
-      offer["offer_symbols"] = [
-        assets.find((x) => x.id === offer.asset_type).symbol,
-      ];
+      offer["offer_symbols"] = [assets.find((x) => x.id === offer.asset_type).symbol];
       adjustedOffers.push(offer);
     }
 
@@ -177,12 +153,7 @@ export default function CreditBorrow(properties) {
       finalURL += "tab=allOffers";
     }
 
-    if (
-      params &&
-      params.tab &&
-      params.tab === "searchOffers" &&
-      params.searchTab
-    ) {
+    if (params && params.tab && params.tab === "searchOffers" && params.searchTab) {
       if (["borrow", "collateral", "owner_name"].includes(params.searchTab)) {
         finalSearchTab = params.searchTab;
         finalURL += `&searchTab=${params.searchTab}`;
@@ -240,16 +211,14 @@ export default function CreditBorrow(properties) {
         <Card className="ml-2 mr-2" onClick={() => {}}>
           <CardHeader className="pb-1">
             <CardTitle>
-              Offer #{res.id.replace("1.21.", "")} by {res.owner_name ?? "?"} (
-              {res.owner_account})
+              Offer #{res.id.replace("1.21.", "")} by {res.owner_name ?? "?"} ({res.owner_account})
             </CardTitle>
             <CardDescription>
               Offering
               <b>
-                {` ${humanReadableFloat(
-                  res.current_balance,
-                  foundAsset.precision
-                )} ${foundAsset.symbol} (${res.asset_type})`}
+                {` ${humanReadableFloat(res.current_balance, foundAsset.precision)} ${
+                  foundAsset.symbol
+                } (${res.asset_type})`}
               </b>
               <br />
               Accepting
@@ -275,22 +244,17 @@ export default function CreditBorrow(properties) {
                 )} hours`}
               </div>
               <div className="col-span-1">
-                {`Offer valid for: ${hoursTillExpiration(
-                  res.auto_disable_time
-                )} hours`}
+                {`Offer valid for: ${hoursTillExpiration(res.auto_disable_time)} hours`}
                 <br />
-                {`Min amount: ${humanReadableFloat(
-                  res.min_deal_amount,
-                  foundAsset.precision
-                )} ${foundAsset.symbol}`}
+                {`Min amount: ${humanReadableFloat(res.min_deal_amount, foundAsset.precision)} ${
+                  foundAsset.symbol
+                }`}
               </div>
             </div>
           </CardContent>
           <CardFooter className="pb-5">
             <a href={`/offer/index.html?id=${res.id}`}>
-              <Button>
-                Proceed with credit offer #{res.id.replace("1.21.", "")}
-              </Button>
+              <Button>Proceed with credit offer #{res.id.replace("1.21.", "")}</Button>
             </a>
           </CardFooter>
         </Card>
@@ -307,14 +271,7 @@ export default function CreditBorrow(properties) {
       return null;
     }
 
-    return (
-      <CommonRow
-        index={index}
-        style={style}
-        res={res}
-        foundAsset={foundAsset}
-      />
-    );
+    return <CommonRow index={index} style={style} res={res} foundAsset={foundAsset} />;
   };
 
   const OfferRow = ({ index, style }) => {
@@ -326,14 +283,7 @@ export default function CreditBorrow(properties) {
       return null;
     }
 
-    return (
-      <CommonRow
-        index={index}
-        style={style}
-        res={res}
-        foundAsset={foundAsset}
-      />
-    );
+    return <CommonRow index={index} style={style} res={res} foundAsset={foundAsset} />;
   };
 
   const SearchRow = ({ index, style }) => {
@@ -344,14 +294,7 @@ export default function CreditBorrow(properties) {
       return null;
     }
 
-    return (
-      <CommonRow
-        index={index}
-        style={style}
-        res={res}
-        foundAsset={foundAsset}
-      />
-    );
+    return <CommonRow index={index} style={style} res={res} foundAsset={foundAsset} />;
   };
 
   return (
@@ -362,18 +305,14 @@ export default function CreditBorrow(properties) {
             <CardHeader className="pb-1">
               <CardTitle>🏦 Viewing available credit offers</CardTitle>
               <CardDescription>
-                Credit offers are user generated, they offer different rates,
-                assets and durations; evaluate terms prior to creating deals.
+                Credit offers are user generated, they offer different rates, assets and durations;
+                evaluate terms prior to creating deals.
               </CardDescription>
             </CardHeader>
             <CardContent>
               {offers && offers.length && activeTab ? (
                 <>
-                  <Tabs
-                    key={`top_tab_${activeTab}`}
-                    defaultValue={activeTab}
-                    className="w-full"
-                  >
+                  <Tabs key={`top_tab_${activeTab}`} defaultValue={activeTab} className="w-full">
                     <TabsList className="grid w-full grid-cols-3 gap-2">
                       {activeTab === "allOffers" ? (
                         <TabsTrigger value="allOffers" style={activeTabStyle}>
@@ -384,21 +323,14 @@ export default function CreditBorrow(properties) {
                           value="allOffers"
                           onClick={(event) => {
                             setActiveTab("allOffers");
-                            window.history.replaceState(
-                              {},
-                              "",
-                              `?tab=allOffers`
-                            );
+                            window.history.replaceState({}, "", `?tab=allOffers`);
                           }}
                         >
                           View all offers
                         </TabsTrigger>
                       )}
                       {activeTab === "availableOffers" ? (
-                        <TabsTrigger
-                          value="availableOffers"
-                          style={activeTabStyle}
-                        >
+                        <TabsTrigger value="availableOffers" style={activeTabStyle}>
                           Viewing compatible orders
                         </TabsTrigger>
                       ) : (
@@ -406,21 +338,14 @@ export default function CreditBorrow(properties) {
                           value="availableOffers"
                           onClick={(event) => {
                             setActiveTab("availableOffers");
-                            window.history.replaceState(
-                              {},
-                              "",
-                              `?tab=availableOffers`
-                            );
+                            window.history.replaceState({}, "", `?tab=availableOffers`);
                           }}
                         >
                           View compatible orders
                         </TabsTrigger>
                       )}
                       {activeTab === "searchOffers" ? (
-                        <TabsTrigger
-                          value="searchOffers"
-                          style={activeTabStyle}
-                        >
+                        <TabsTrigger value="searchOffers" style={activeTabStyle}>
                           Searching
                         </TabsTrigger>
                       ) : (
@@ -443,8 +368,8 @@ export default function CreditBorrow(properties) {
                     </TabsList>
                     <TabsContent value="allOffers">
                       <h5 className="mb-2 text-center">
-                        These credit offers are offering a variety of borrowable
-                        assets at competing rates.
+                        These credit offers are offering a variety of borrowable assets at competing
+                        rates.
                       </h5>
                       {assets && offers && offers.length ? (
                         <List
@@ -459,8 +384,7 @@ export default function CreditBorrow(properties) {
                     </TabsContent>
                     <TabsContent value="availableOffers">
                       <h5 className="mb-2 text-center">
-                        These credit offers are accepting assets you own as loan
-                        backing collateral.
+                        These credit offers are accepting assets you own as loan backing collateral.
                       </h5>
                       {assets && compatibleOffers && compatibleOffers.length ? (
                         <List
@@ -474,13 +398,8 @@ export default function CreditBorrow(properties) {
                       ) : null}
                     </TabsContent>
                     <TabsContent value="searchOffers">
-                      <h5 className="mb-2 text-center">
-                        How do you want to search?
-                      </h5>
-                      <Tabs
-                        defaultValue={activeSearch ?? "borrow"}
-                        className="w-full"
-                      >
+                      <h5 className="mb-2 text-center">How do you want to search?</h5>
+                      <Tabs defaultValue={activeSearch ?? "borrow"} className="w-full">
                         <TabsList className="grid w-full grid-cols-3 gap-2">
                           {activeSearch === "borrow" ? (
                             <TabsTrigger value="borrow" style={activeTabStyle}>
@@ -505,10 +424,7 @@ export default function CreditBorrow(properties) {
                             </TabsTrigger>
                           )}
                           {activeSearch === "collateral" ? (
-                            <TabsTrigger
-                              value="collateral"
-                              style={activeTabStyle}
-                            >
+                            <TabsTrigger value="collateral" style={activeTabStyle}>
                               Searching by collateral assets
                             </TabsTrigger>
                           ) : (
@@ -529,10 +445,7 @@ export default function CreditBorrow(properties) {
                             </TabsTrigger>
                           )}
                           {activeSearch === "owner_name" ? (
-                            <TabsTrigger
-                              value="owner_name"
-                              style={activeTabStyle}
-                            >
+                            <TabsTrigger value="owner_name" style={activeTabStyle}>
                               Searching by owner name
                             </TabsTrigger>
                           ) : (
@@ -617,9 +530,7 @@ export default function CreditBorrow(properties) {
           </Card>
         </div>
         <div className="grid grid-cols-1 mt-5">
-          {usr && usr.username && usr.username.length ? (
-            <CurrentUser usr={usr} />
-          ) : null}
+          {usr && usr.username && usr.username.length ? <CurrentUser usr={usr} /> : null}
         </div>
       </div>
     </>

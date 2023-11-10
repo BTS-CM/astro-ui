@@ -19,22 +19,14 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 
 import { $poolCache } from "../../stores/cache.ts";
 
 export default function PoolDialogs(properties) {
   const { assetA, assetB, assetAData, assetBData } = properties;
 
-  const pools = useSyncExternalStore(
-    $poolCache.subscribe,
-    $poolCache.get,
-    () => true
-  );
+  const pools = useSyncExternalStore($poolCache.subscribe, $poolCache.get, () => true);
 
   const [assetAPools, setAssetAPools] = useState();
   const [assetBPools, setAssetBPools] = useState();
@@ -44,8 +36,7 @@ export default function PoolDialogs(properties) {
     function fetchAssetAPools() {
       console.log("Processing asset A pools");
       const foundPools = pools.filter(
-        (pool) =>
-          pool.asset_a_symbol === assetA || pool.asset_b_symbol === assetA
+        (pool) => pool.asset_a_symbol === assetA || pool.asset_b_symbol === assetA
       );
       setAssetAPools(foundPools);
     }
@@ -58,8 +49,7 @@ export default function PoolDialogs(properties) {
     function fetchAssetBPools() {
       console.log("Processing asset B pools");
       const foundPools = pools.filter(
-        (pool) =>
-          pool.asset_a_symbol === assetB || pool.asset_b_symbol === assetB
+        (pool) => pool.asset_a_symbol === assetB || pool.asset_b_symbol === assetB
       );
       setAssetBPools(foundPools);
     }
@@ -86,12 +76,7 @@ export default function PoolDialogs(properties) {
     }
   }, [pools, assetA, assetB]);
 
-  function RowHyperlink({
-    id,
-    share_asset_symbol,
-    asset_a_symbol,
-    asset_b_symbol,
-  }) {
+  function RowHyperlink({ id, share_asset_symbol, asset_a_symbol, asset_b_symbol }) {
     return (
       <div className="grid grid-cols-10">
         <div className="col-span-1">
@@ -113,11 +98,7 @@ export default function PoolDialogs(properties) {
   const PoolRowA = ({ index, style }) => {
     const pool = assetAPools[index];
     return (
-      <a
-        style={style}
-        href={`/pool/index.html?pool=${pool.id}`}
-        key={`a_${pool.id}`}
-      >
+      <a style={style} href={`/pool/index.html?pool=${pool.id}`} key={`a_${pool.id}`}>
         <RowHyperlink
           id={pool.id}
           share_asset_symbol={pool.share_asset_symbol}
@@ -131,11 +112,7 @@ export default function PoolDialogs(properties) {
   const PoolRowB = ({ index, style }) => {
     const pool = assetBPools[index];
     return (
-      <a
-        style={style}
-        href={`/pool/index.html?pool=${pool.id}`}
-        key={`a_${pool.id}`}
-      >
+      <a style={style} href={`/pool/index.html?pool=${pool.id}`} key={`a_${pool.id}`}>
         <RowHyperlink
           id={pool.id}
           share_asset_symbol={pool.share_asset_symbol}
@@ -149,11 +126,7 @@ export default function PoolDialogs(properties) {
   const PoolRowMarket = ({ index, style }) => {
     const pool = assetMarketPools[index];
     return (
-      <a
-        style={style}
-        href={`/pool/index.html?pool=${pool.id}`}
-        key={`a_${pool.id}`}
-      >
+      <a style={style} href={`/pool/index.html?pool=${pool.id}`} key={`a_${pool.id}`}>
         <RowHyperlink
           id={pool.id}
           share_asset_symbol={pool.share_asset_symbol}
@@ -164,13 +137,7 @@ export default function PoolDialogs(properties) {
     );
   };
 
-  function PoolDialog({
-    title,
-    poolArray,
-    dialogTitle,
-    dialogDescription,
-    type,
-  }) {
+  function PoolDialog({ title, poolArray, dialogTitle, dialogDescription, type }) {
     if (!poolArray) {
       return (
         <Card>
@@ -207,9 +174,7 @@ export default function PoolDialogs(properties) {
           <Card>
             <CardHeader className="pb-3 pt-3">
               <CardTitle>{title}</CardTitle>
-              <CardDescription>
-                {poolArray && poolArray.length} pools found
-              </CardDescription>
+              <CardDescription>{poolArray && poolArray.length} pools found</CardDescription>
             </CardHeader>
           </Card>
         </DialogTrigger>
@@ -225,12 +190,7 @@ export default function PoolDialogs(properties) {
               <div className="col-span-3">Asset A</div>
               <div className="col-span-3">Asset B</div>
             </div>
-            <List
-              height={300}
-              itemCount={poolArray.length}
-              itemSize={35}
-              className="w-full"
-            >
+            <List height={300} itemCount={poolArray.length} itemSize={35} className="w-full">
               {PoolRow}
             </List>
           </div>
@@ -245,9 +205,7 @@ export default function PoolDialogs(properties) {
         <HoverCardTrigger asChild>
           <div>
             <PoolDialog
-              title={`${
-                assetA && assetA.length < 12 ? assetA : assetAData.id
-              } Pools`}
+              title={`${assetA && assetA.length < 12 ? assetA : assetAData.id} Pools`}
               poolArray={assetAPools}
               dialogTitle={`${assetA} Pools`}
               dialogDescription={`These Bitshares pools use ${assetA} (${assetAData.id}) as one of the assets.`}
@@ -279,9 +237,7 @@ export default function PoolDialogs(properties) {
         <HoverCardTrigger asChild>
           <div>
             <PoolDialog
-              title={`${
-                assetB && assetB.length < 12 ? assetB : assetBData.id
-              } Pools`}
+              title={`${assetB && assetB.length < 12 ? assetB : assetBData.id} Pools`}
               poolArray={assetBPools}
               dialogTitle={`${assetB} Pools`}
               dialogDescription={`These Bitshares pools use ${assetB} (${assetBData.id})  as one of the assets.`}

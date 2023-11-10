@@ -15,12 +15,7 @@ import {
   addAssetsToCache,
   setBitassetData,
 } from "../stores/cache.ts";
-import {
-  $userStorage,
-  addUser,
-  setCurrentUser,
-  $currentUser,
-} from "../stores/users.ts";
+import { $userStorage, addUser, setCurrentUser, $currentUser } from "../stores/users.ts";
 
 // Create fetcher store
 const [createFetcherStore] = nanoquery({
@@ -79,9 +74,7 @@ const [createFetcherStore] = nanoquery({
           return;
         }
 
-        const decompressed = fflate.decompressSync(
-          fflate.strToU8(responseContents.result, true)
-        );
+        const decompressed = fflate.decompressSync(fflate.strToU8(responseContents.result, true));
         const originalString = fflate.strFromU8(decompressed);
         const parsedJSON = JSON.parse(originalString);
 

@@ -1,9 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  useSyncExternalStore,
-  useMemo,
-} from "react";
+import React, { useState, useEffect, useSyncExternalStore, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import {
   Card,
@@ -33,11 +28,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-import {
-  Avatar as Av,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar";
+import { Avatar as Av, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -80,17 +71,9 @@ export default function Transfer(properties) {
   const [transferAmount, setTransferAmount] = useState(0);
   const [memoContents, setMemoContents] = useState();
 
-  const usr = useSyncExternalStore(
-    $currentUser.subscribe,
-    $currentUser.get,
-    () => true
-  );
+  const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
 
-  const assets = useSyncExternalStore(
-    $assetCache.subscribe,
-    $assetCache.get,
-    () => true
-  );
+  const assets = useSyncExternalStore($assetCache.subscribe, $assetCache.get, () => true);
 
   const globalParams = useSyncExternalStore(
     $globalParamsCache.subscribe,
@@ -127,13 +110,11 @@ export default function Transfer(properties) {
     if (usr && usr.id) {
       const userBalancesStore = createUserBalancesStore([usr.chain, usr.id]);
 
-      unsubscribeUserBalances = userBalancesStore.subscribe(
-        ({ data, error, loading }) => {
-          if (data && !error && !loading) {
-            setBalances(data);
-          }
+      unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
+        if (data && !error && !loading) {
+          setBalances(data);
         }
-      );
+      });
     }
 
     return () => {
@@ -213,13 +194,10 @@ export default function Transfer(properties) {
             <CardHeader>
               <CardTitle>Transfer assets</CardTitle>
               <CardDescription>
-                <p>
-                  Send funds from an account you control to another BitShares
-                  account holder.
-                </p>
+                <p>Send funds from an account you control to another BitShares account holder.</p>
                 <p className="mt-1">
-                  ⛔ Doesn't yet support a memo, so don't use this form when
-                  transfering to external services.
+                  ⛔ Doesn't yet support a memo, so don't use this form when transfering to external
+                  services.
                   <br />✅ Use for simple transfers between accounts.
                 </p>
               </CardDescription>
@@ -249,13 +227,7 @@ export default function Transfer(properties) {
                                   eye: "normal",
                                   mouth: "open",
                                 }}
-                                colors={[
-                                  "#92A1C6",
-                                  "#146A7C",
-                                  "#F0AB3D",
-                                  "#C271B4",
-                                  "#C20D90",
-                                ]}
+                                colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]}
                               />
                             </div>
                             <div className="col-span-7">
@@ -263,16 +235,16 @@ export default function Transfer(properties) {
                                 disabled
                                 placeholder="Bitshares account (1.2.x)"
                                 className="mb-1 mt-1"
-                                value={`${
-                                  usr && usr.username ? usr.username : "?"
-                                } (${usr && usr.id ? usr.id : "?"})`}
+                                value={`${usr && usr.username ? usr.username : "?"} (${
+                                  usr && usr.id ? usr.id : "?"
+                                })`}
                               />
                             </div>
                           </div>
                         </FormControl>
                         <FormDescription>
-                          This is the account which will transfer the assets to
-                          the target recipient.
+                          This is the account which will transfer the assets to the target
+                          recipient.
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -297,13 +269,7 @@ export default function Transfer(properties) {
                                     eye: "normal",
                                     mouth: "open",
                                   }}
-                                  colors={[
-                                    "#92A1C6",
-                                    "#146A7C",
-                                    "#F0AB3D",
-                                    "#C271B4",
-                                    "#C20D90",
-                                  ]}
+                                  colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]}
                                 />
                               ) : (
                                 <Av>
@@ -330,21 +296,14 @@ export default function Transfer(properties) {
                                 }}
                               >
                                 <DialogTrigger asChild>
-                                  <Button
-                                    variant="outline"
-                                    className="ml-3 mt-1"
-                                  >
-                                    {targetUser
-                                      ? "Change target"
-                                      : "Provide target"}
+                                  <Button variant="outline" className="ml-3 mt-1">
+                                    {targetUser ? "Change target" : "Provide target"}
                                   </Button>
                                 </DialogTrigger>
                                 <DialogContent className="sm:max-w-[375px] bg-white">
                                   <DialogHeader>
                                     <DialogTitle>
-                                      {!usr || !usr.chain
-                                        ? "Bitshares account search"
-                                        : null}
+                                      {!usr || !usr.chain ? "Bitshares account search" : null}
                                       {usr && usr.chain === "bitshares"
                                         ? "Bitshares (BTS) account search"
                                         : null}
@@ -353,18 +312,13 @@ export default function Transfer(properties) {
                                         : null}
                                     </DialogTitle>
                                     <DialogDescription>
-                                      Searching for an account to transfer
-                                      assets to.
+                                      Searching for an account to transfer assets to.
                                     </DialogDescription>
                                   </DialogHeader>
                                   <AccountSearch
-                                    chain={
-                                      usr && usr.chain ? usr.chain : "bitshares"
-                                    }
+                                    chain={usr && usr.chain ? usr.chain : "bitshares"}
                                     excludedUsers={
-                                      usr && usr.username && usr.username.length
-                                        ? [usr]
-                                        : []
+                                      usr && usr.username && usr.username.length ? [usr] : []
                                     }
                                     setChosenAccount={setTargetUser}
                                   />
@@ -401,9 +355,7 @@ export default function Transfer(properties) {
                                 <Av>
                                   <AvatarFallback>
                                     <div className="text-sm">
-                                      {foundAsset.bitasset_data_id
-                                        ? "MPA"
-                                        : "UIA"}
+                                      {foundAsset.bitasset_data_id ? "MPA" : "UIA"}
                                     </div>
                                   </AvatarFallback>
                                 </Av>
@@ -438,15 +390,12 @@ export default function Transfer(properties) {
                           </div>
                         </FormControl>
                         <FormDescription>
-                          This is the asset which will be transferred to the
-                          target account.
+                          This is the asset which will be transferred to the target account.
                         </FormDescription>
                         <FormMessage>
                           {foundAsset &&
                           balances &&
-                          !balances
-                            .map((x) => x.asset_id)
-                            .includes(foundAsset.id)
+                          !balances.map((x) => x.asset_id).includes(foundAsset.id)
                             ? `Unable to proceed, your account "${usr.username}" doesn't hold any of this asset.`
                             : null}
                         </FormMessage>
@@ -470,13 +419,9 @@ export default function Transfer(properties) {
                               value={
                                 foundAsset &&
                                 balances &&
-                                balances.find(
-                                  (x) => x.asset_id === foundAsset.id
-                                )
+                                balances.find((x) => x.asset_id === foundAsset.id)
                                   ? `${humanReadableFloat(
-                                      balances.find(
-                                        (x) => x.asset_id === foundAsset.id
-                                      ).amount,
+                                      balances.find((x) => x.asset_id === foundAsset.id).amount,
                                       foundAsset.precision
                                     )} ${foundAsset.symbol}`
                                   : "0"
@@ -485,8 +430,7 @@ export default function Transfer(properties) {
                             />
                           </FormControl>
                           <FormDescription>
-                            This is the maximum amount of {selectedAsset} you
-                            can transfer.
+                            This is the maximum amount of {selectedAsset} you can transfer.
                           </FormDescription>
                           <FormMessage />
                         </FormItem>
@@ -500,9 +444,7 @@ export default function Transfer(properties) {
                       name="transferAmount"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>{`Amount of ${
-                            selectedAsset ?? "???"
-                          } to transfer`}</FormLabel>
+                          <FormLabel>{`Amount of ${selectedAsset ?? "???"} to transfer`}</FormLabel>
                           <FormControl
                             onChange={(event) => {
                               const input = event.target.value;
@@ -536,11 +478,7 @@ export default function Transfer(properties) {
                         <FormItem>
                           <FormLabel>Network fee</FormLabel>
                           <FormControl>
-                            <Input
-                              disabled
-                              placeholder={`${fee} BTS`}
-                              className="mb-3 mt-3"
-                            />
+                            <Input disabled placeholder={`${fee} BTS`} className="mb-3 mt-3" />
                           </FormControl>
                           {usr.id === usr.referrer ? (
                             <FormMessage>
@@ -554,20 +492,11 @@ export default function Transfer(properties) {
                   ) : null}
 
                   {!transferAmount ? (
-                    <Button
-                      className="mt-5 mb-3"
-                      variant="outline"
-                      disabled
-                      type="submit"
-                    >
+                    <Button className="mt-5 mb-3" variant="outline" disabled type="submit">
                       Submit
                     </Button>
                   ) : (
-                    <Button
-                      className="mt-5 mb-3"
-                      variant="outline"
-                      type="submit"
-                    >
+                    <Button className="mt-5 mb-3" variant="outline" type="submit">
                       Submit
                     </Button>
                   )}
@@ -591,10 +520,7 @@ export default function Transfer(properties) {
                       from: usr.id,
                       to: targetUser.id,
                       amount: {
-                        amount: blockchainFloat(
-                          transferAmount,
-                          foundAsset.precision
-                        ).toFixed(0),
+                        amount: blockchainFloat(transferAmount, foundAsset.precision).toFixed(0),
                         asset_id: foundAsset.id,
                       },
                       extensions: [],
@@ -611,18 +537,13 @@ export default function Transfer(properties) {
               <Card>
                 <CardHeader className="pb-0 mb-0">
                   <CardTitle>Double check the above details!</CardTitle>
-                  <CardDescription>
-                    Avoid heartbreak, check your inputs!
-                  </CardDescription>
+                  <CardDescription>Avoid heartbreak, check your inputs!</CardDescription>
                 </CardHeader>
                 <CardContent className="text-sm">
                   <ul className="ml-2 list-disc [&>li]:mt-2">
+                    <li>Before you proceed, please double check the form inputs.</li>
                     <li>
-                      Before you proceed, please double check the form inputs.
-                    </li>
-                    <li>
-                      Validate the entire Beet prompt contents before you
-                      broadcast the transaction.
+                      Validate the entire Beet prompt contents before you broadcast the transaction.
                     </li>
                     <li>
                       <ExternalLink
@@ -643,24 +564,21 @@ export default function Transfer(properties) {
               <Card>
                 <CardHeader className="pb-0 mb-0">
                   <CardTitle>Beware! Don't fall for scams!</CardTitle>
-                  <CardDescription>
-                    Be vigilant against scammers!
-                  </CardDescription>
+                  <CardDescription>Be vigilant against scammers!</CardDescription>
                 </CardHeader>
                 <CardContent className="text-sm">
                   <ul className="ml-2 list-disc [&>li]:mt-2">
                     <li>
-                      Crypto exchanges will NEVER direct message you in with
-                      special transfer instructions to follow for deposits nor
-                      withdrawals.
+                      Crypto exchanges will NEVER direct message you in with special transfer
+                      instructions to follow for deposits nor withdrawals.
                     </li>
                     <li>
-                      Asset transfer operations are permanent and the majority
-                      of assets are irrecoverable if erroneously transferred.
+                      Asset transfer operations are permanent and the majority of assets are
+                      irrecoverable if erroneously transferred.
                     </li>
                     <li>
-                      If something sounds too good to be true, then it likely
-                      is, don't fall victim to scammers tricks.
+                      If something sounds too good to be true, then it likely is, don't fall victim
+                      to scammers tricks.
                     </li>
                   </ul>
                 </CardContent>
@@ -669,9 +587,7 @@ export default function Transfer(properties) {
           ) : null}
         </div>
         <div className="grid grid-cols-1 mt-5">
-          {usr && usr.username && usr.username.length ? (
-            <CurrentUser usr={usr} />
-          ) : null}
+          {usr && usr.username && usr.username.length ? <CurrentUser usr={usr} /> : null}
         </div>
       </div>
     </>

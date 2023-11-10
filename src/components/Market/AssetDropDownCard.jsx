@@ -31,24 +31,15 @@ import { Button } from "@/components/ui/button";
  * @returns {JSX.Element}
  */
 export default function AssetDropDown(properties) {
-  const {
-    assetSymbol,
-    assetData,
-    storeCallback,
-    otherAsset,
-    marketSearch,
-    type,
-    size,
-  } = properties;
+  const { assetSymbol, assetData, storeCallback, otherAsset, marketSearch, type, size } =
+    properties;
 
   let marketSearchContents;
   if (!marketSearch || !marketSearch.length) {
     marketSearchContents = [];
   } else {
     marketSearchContents = otherAsset
-      ? marketSearch.filter(
-          (asset) => asset.s !== otherAsset && asset.s !== assetSymbol
-        )
+      ? marketSearch.filter((asset) => asset.s !== otherAsset && asset.s !== assetSymbol)
       : marketSearch.filter((asset) => asset.s !== assetSymbol);
   }
 
@@ -116,9 +107,7 @@ export default function AssetDropDown(properties) {
           {!assetSymbol ? "Select an asset" : null}
           {!size && assetSymbol ? "Change asset" : null}
           {size && assetSymbol && assetSymbol.length < 12 ? assetSymbol : null}
-          {size && assetSymbol && assetSymbol.length >= 12
-            ? assetData.id
-            : null}
+          {size && assetSymbol && assetSymbol.length >= 12 ? assetData.id : null}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] bg-white">
@@ -129,9 +118,7 @@ export default function AssetDropDown(properties) {
           <h4 className="text-md font-bold tracking-tight">
             {!type ? `Please search for an asset below` : null}
             {type && type === "base" ? `Please select a new base asset` : null}
-            {type && type === "quote"
-              ? `Please select a new quote asset`
-              : null}
+            {type && type === "quote" ? `Please select a new quote asset` : null}
           </h4>
           <Input
             name="assetSearch"
@@ -142,12 +129,7 @@ export default function AssetDropDown(properties) {
           />
           {thisResult && thisResult.length ? (
             <>
-              <List
-                height={200}
-                itemCount={thisResult.length}
-                itemSize={70}
-                className="w-full"
-              >
+              <List height={200} itemCount={thisResult.length} itemSize={70} className="w-full">
                 {Row}
               </List>
             </>

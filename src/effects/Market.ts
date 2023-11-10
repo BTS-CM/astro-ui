@@ -58,10 +58,9 @@ const [createMarketOrdersStore] = nanoquery({
 
 const [createMarketsStore] = nanoquery({
   fetcher: async (chain) => {
-    const response = await fetch(
-      `http://localhost:8080/api/getFeaturedMarkets/${chain}`,
-      { method: "GET" }
-    );
+    const response = await fetch(`http://localhost:8080/api/getFeaturedMarkets/${chain}`, {
+      method: "GET",
+    });
 
     if (!response.ok) {
       console.log("Failed to fetch featured market data");
@@ -70,11 +69,7 @@ const [createMarketsStore] = nanoquery({
 
     const responseContents = await response.json();
 
-    if (
-      responseContents &&
-      responseContents.result &&
-      responseContents.result.length
-    ) {
+    if (responseContents && responseContents.result && responseContents.result.length) {
       return responseContents.result;
     }
   },

@@ -1,9 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  useSyncExternalStore,
-  useMemo,
-} from "react";
+import React, { useState, useEffect, useSyncExternalStore, useMemo } from "react";
 
 import Market from "./Market";
 import MarketPlaceholder from "./MarketPlaceholder";
@@ -28,17 +23,9 @@ import {
 
 export default function MarketOverlay(properties) {
   // Initializing
-  const usr = useSyncExternalStore(
-    $currentUser.subscribe,
-    $currentUser.get,
-    () => true
-  );
+  const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
 
-  const assets = useSyncExternalStore(
-    $assetCache.subscribe,
-    $assetCache.get,
-    () => true
-  );
+  const assets = useSyncExternalStore($assetCache.subscribe, $assetCache.get, () => true);
 
   const globalParams = useSyncExternalStore(
     $globalParamsCache.subscribe,
@@ -70,14 +57,8 @@ export default function MarketOverlay(properties) {
 
   // End of init
 
-  const searchSymbols = useMemo(
-    () => marketSearch.map((asset) => asset.s),
-    [marketSearch]
-  );
-  const searchIds = useMemo(
-    () => marketSearch.map((asset) => asset.id),
-    [marketSearch]
-  );
+  const searchSymbols = useMemo(() => marketSearch.map((asset) => asset.s), [marketSearch]);
+  const searchIds = useMemo(() => marketSearch.map((asset) => asset.id), [marketSearch]);
 
   const handleAssetAChange = (newAssetA) => {
     setAssetA(newAssetA);
@@ -153,8 +134,7 @@ export default function MarketOverlay(properties) {
             finalAssetB = foundAssetB.s;
           } else {
             console.log("Setting default asset B");
-            finalAssetB =
-              asset_a !== "BTS" && asset_a !== "1.3.0" ? "BTS" : "USD";
+            finalAssetB = asset_a !== "BTS" && asset_a !== "1.3.0" ? "BTS" : "USD";
           }
         }
       }
@@ -255,10 +235,7 @@ export default function MarketOverlay(properties) {
     let unsubscribeBitassetA;
 
     if (assetAData && usr && usr.chain) {
-      const dynamicDataStoreA = createDynamicDataStore([
-        usr.chain,
-        assetAData.id,
-      ]);
+      const dynamicDataStoreA = createDynamicDataStore([usr.chain, assetAData.id]);
       unsubscribeA = dynamicDataStoreA.subscribe(({ data }) => {
         if (data && !data.error && !data.loading) {
           setAssetADetails(data);
@@ -289,10 +266,7 @@ export default function MarketOverlay(properties) {
     let unsubscribeBitassetB;
 
     if (assetBData && usr && usr.chain) {
-      const dynamicDataStoreB = createDynamicDataStore([
-        usr.chain,
-        assetBData.id,
-      ]);
+      const dynamicDataStoreB = createDynamicDataStore([usr.chain, assetBData.id]);
       unsubscribeB = dynamicDataStoreB.subscribe(({ data }) => {
         if (data && !data.error && !data.loading) {
           setAssetBDetails(data);
@@ -350,9 +324,7 @@ export default function MarketOverlay(properties) {
           <MarketPlaceholder />
         )}
       </div>
-      {usr && usr.username && usr.username.length ? (
-        <CurrentUser usr={usr} />
-      ) : null}{" "}
+      {usr && usr.username && usr.username.length ? <CurrentUser usr={usr} /> : null}{" "}
     </>
   );
 }

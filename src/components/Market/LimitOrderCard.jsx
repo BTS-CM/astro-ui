@@ -32,20 +32,12 @@ import {
 
 import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import {
-  trimPrice,
-  humanReadableFloat,
-  blockchainFloat,
-} from "@/lib/common.js";
+import { trimPrice, humanReadableFloat, blockchainFloat } from "@/lib/common.js";
 import DeepLinkDialog from "../common/DeepLinkDialog";
 
 /**
@@ -80,8 +72,7 @@ export default function LimitOrderCard(properties) {
         assetAData.market_fee_percent &&
         assetAData.market_fee_percent > 0
       ) {
-        calculatedMarketFee =
-          parseFloat(amount) * (assetAData.market_fee_percent / 100);
+        calculatedMarketFee = parseFloat(amount) * (assetAData.market_fee_percent / 100);
         return calculatedMarketFee.toFixed(assetAData.precision);
       }
 
@@ -91,8 +82,7 @@ export default function LimitOrderCard(properties) {
         assetBData.market_fee_percent &&
         assetBData.market_fee_percent > 0
       ) {
-        calculatedMarketFee =
-          parseFloat(total) * (assetBData.market_fee_percent / 100);
+        calculatedMarketFee = parseFloat(total) * (assetBData.market_fee_percent / 100);
         return calculatedMarketFee.toFixed(assetBData.precision);
       }
     }
@@ -107,9 +97,7 @@ export default function LimitOrderCard(properties) {
     return new Date(now.getTime() + oneHour);
   });
 
-  const [date, setDate] = useState(
-    new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
-  ); // Solely for the calendar component to display a date string
+  const [date, setDate] = useState(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)); // Solely for the calendar component to display a date string
 
   useEffect(() => {
     if (expiryType === "specific" && date) {
@@ -129,25 +117,18 @@ export default function LimitOrderCard(properties) {
     const id = assetData.id;
     const foundBalance = balances.find((x) => x.asset_id === id);
     return foundBalance
-      ? humanReadableFloat(
-          foundBalance.amount,
-          assetData.precision
-        ).toLocaleString(undefined, {
+      ? humanReadableFloat(foundBalance.amount, assetData.precision).toLocaleString(undefined, {
           minimumFractionDigits: assetData.precision,
         })
       : 0;
   }
 
   const assetABalance = useMemo(() => {
-    return assetAData && usrBalances
-      ? getReadableBalance(assetAData, usrBalances)
-      : 0;
+    return assetAData && usrBalances ? getReadableBalance(assetAData, usrBalances) : 0;
   }, [assetAData, usrBalances]);
 
   const assetBBalance = useMemo(() => {
-    return assetBData && usrBalances
-      ? getReadableBalance(assetBData, usrBalances)
-      : 0;
+    return assetBData && usrBalances ? getReadableBalance(assetBData, usrBalances) : 0;
   }, [assetBData, usrBalances]);
 
   return (
@@ -158,16 +139,10 @@ export default function LimitOrderCard(properties) {
             ? `Buying ${thisAssetA} with ${thisAssetB}`
             : `Selling ${thisAssetA} for ${thisAssetB}`}
         </CardTitle>
-        <CardDescription>
-          Use this form to create a limit order operation.
-        </CardDescription>
+        <CardDescription>Use this form to create a limit order operation.</CardDescription>
       </CardHeader>
       <CardContent>
-        {thisAssetA &&
-        thisAssetB &&
-        marketSearch &&
-        assetAData &&
-        assetBData ? (
+        {thisAssetA && thisAssetB && marketSearch && assetAData && assetBData ? (
           <Form {...form}>
             <form
               onSubmit={(event) => {
@@ -189,9 +164,7 @@ export default function LimitOrderCard(properties) {
                           (orderType === "sell" && !buyOrders) ||
                           (buyOrders && !buyOrders.length) ? (
                             <Badge disabled>
-                              {orderType === "buy"
-                                ? `Use lowest ask`
-                                : `Use highest bid`}
+                              {orderType === "buy" ? `Use lowest ask` : `Use highest bid`}
                             </Badge>
                           ) : (
                             <span
@@ -199,24 +172,14 @@ export default function LimitOrderCard(properties) {
                               onClick={(event) => {
                                 event.preventDefault();
                                 let finalPrice;
-                                if (
-                                  orderType === "buy" &&
-                                  sellOrders &&
-                                  sellOrders.length > 0
-                                ) {
-                                  finalPrice = trimPrice(
-                                    sellOrders[0].price,
-                                    assetBData.precision
-                                  );
+                                if (orderType === "buy" && sellOrders && sellOrders.length > 0) {
+                                  finalPrice = trimPrice(sellOrders[0].price, assetBData.precision);
                                 } else if (
                                   orderType === "sell" &&
                                   buyOrders &&
                                   buyOrders.length > 0
                                 ) {
-                                  finalPrice = trimPrice(
-                                    buyOrders[0].price,
-                                    assetBData.precision
-                                  );
+                                  finalPrice = trimPrice(buyOrders[0].price, assetBData.precision);
                                 }
 
                                 if (finalPrice) {
@@ -230,19 +193,16 @@ export default function LimitOrderCard(properties) {
 
                                   if (amount) {
                                     setTotal(
-                                      (
-                                        parseFloat(finalPrice) *
-                                        parseFloat(amount)
-                                      ).toFixed(assetBData.precision)
+                                      (parseFloat(finalPrice) * parseFloat(amount)).toFixed(
+                                        assetBData.precision
+                                      )
                                     );
                                   }
                                 }
                               }}
                             >
                               <Badge>
-                                {orderType === "buy"
-                                  ? `Use lowest ask`
-                                  : `Use highest bid`}
+                                {orderType === "buy" ? `Use lowest ask` : `Use highest bid`}
                               </Badge>
                             </span>
                           )}
@@ -254,23 +214,17 @@ export default function LimitOrderCard(properties) {
                         const input = event.target.value;
                         const regex = /^[0-9,]*\.?[0-9]*$/;
                         if (regex.test(input)) {
-                          const parsedInput = parseFloat(
-                            input.replaceAll(",", "")
-                          );
+                          const parsedInput = parseFloat(input.replaceAll(",", ""));
                           if (parsedInput) {
                             setPrice(
                               parsedInput.toFixed(
-                                orderType === "buy"
-                                  ? assetBData.precision
-                                  : assetAData.precision
+                                orderType === "buy" ? assetBData.precision : assetAData.precision
                               )
                             );
                             if (amount) {
                               setTotal(
                                 (parsedInput * amount).toFixed(
-                                  orderType === "buy"
-                                    ? assetBData.precision
-                                    : assetAData.precision
+                                  orderType === "buy" ? assetBData.precision : assetAData.precision
                                 )
                               );
                             }
@@ -278,11 +232,7 @@ export default function LimitOrderCard(properties) {
                         }
                       }}
                     >
-                      <Input
-                        value={price}
-                        placeholder={price}
-                        className="mb-3"
-                      />
+                      <Input value={price} placeholder={price} className="mb-3" />
                     </FormControl>
                     <FormDescription>
                       {orderType === "buy"
@@ -306,19 +256,11 @@ export default function LimitOrderCard(properties) {
                           {orderType === "sell" && assetABalance ? (
                             <Badge
                               onClick={() => {
-                                let parsedAmount = parseFloat(
-                                  assetABalance.replaceAll(",", "")
-                                );
+                                let parsedAmount = parseFloat(assetABalance.replaceAll(",", ""));
                                 if (parsedAmount) {
-                                  setAmount(
-                                    parsedAmount.toFixed(assetAData.precision)
-                                  );
+                                  setAmount(parsedAmount.toFixed(assetAData.precision));
                                   if (price) {
-                                    setTotal(
-                                      (parsedAmount * price).toFixed(
-                                        assetBData.precision
-                                      )
-                                    );
+                                    setTotal((parsedAmount * price).toFixed(assetBData.precision));
                                   }
                                 }
                               }}
@@ -334,30 +276,18 @@ export default function LimitOrderCard(properties) {
                         const input = event.target.value;
                         const regex = /^[0-9,]*\.?[0-9]*$/;
                         if (regex.test(input)) {
-                          const parsedInput = parseFloat(
-                            input.replaceAll(",", "")
-                          );
+                          const parsedInput = parseFloat(input.replaceAll(",", ""));
                           if (parsedInput) {
-                            setAmount(
-                              parsedInput.toFixed(assetAData.precision)
-                            );
+                            setAmount(parsedInput.toFixed(assetAData.precision));
 
                             if (price) {
-                              setTotal(
-                                (parsedInput * price).toFixed(
-                                  assetBData.precision
-                                )
-                              );
+                              setTotal((parsedInput * price).toFixed(assetBData.precision));
                             }
                           }
                         }
                       }}
                     >
-                      <Input
-                        value={amount}
-                        placeholder={amount}
-                        className="mb-3"
-                      />
+                      <Input value={amount} placeholder={amount} className="mb-3" />
                     </FormControl>
                     <FormDescription>
                       {orderType === "buy"
@@ -381,19 +311,11 @@ export default function LimitOrderCard(properties) {
                           {orderType === "buy" && assetBBalance ? (
                             <Badge
                               onClick={() => {
-                                let parsedAmount = parseFloat(
-                                  assetBBalance.replaceAll(",", "")
-                                );
+                                let parsedAmount = parseFloat(assetBBalance.replaceAll(",", ""));
                                 if (parsedAmount) {
-                                  setTotal(
-                                    parsedAmount.toFixed(assetBData.precision)
-                                  );
+                                  setTotal(parsedAmount.toFixed(assetBData.precision));
                                   if (price) {
-                                    setAmount(
-                                      (parsedAmount / price).toFixed(
-                                        assetAData.precision
-                                      )
-                                    );
+                                    setAmount((parsedAmount / price).toFixed(assetAData.precision));
                                   }
                                 }
                               }}
@@ -409,27 +331,17 @@ export default function LimitOrderCard(properties) {
                         const input = event.target.value;
                         const regex = /^[0-9,]*\.?[0-9]*$/;
                         if (regex.test(input)) {
-                          const parsedFloat = parseFloat(
-                            input.replaceAll(",", "")
-                          );
+                          const parsedFloat = parseFloat(input.replaceAll(",", ""));
                           if (parsedFloat) {
                             setTotal(parsedFloat.toFixed(assetBData.precision));
                             if (price) {
-                              setAmount(
-                                (parsedFloat / price).toFixed(
-                                  assetAData.precision
-                                )
-                              );
+                              setAmount((parsedFloat / price).toFixed(assetAData.precision));
                             }
                           }
                         }
                       }}
                     >
-                      <Input
-                        value={total}
-                        placeholder={total}
-                        className="mb-3"
-                      />
+                      <Input value={total} placeholder={total} className="mb-3" />
                     </FormControl>
                     <FormDescription>
                       {orderType === "buy"
@@ -439,11 +351,9 @@ export default function LimitOrderCard(properties) {
 
                     {orderType === "buy" &&
                     assetBBalance &&
-                    parseFloat(assetBBalance.replaceAll(",", "")).toFixed(
-                      assetBData.precision
-                    ) < amount &&
-                    total - parseFloat(assetBBalance.replaceAll(",", "")) >
-                      0 ? (
+                    parseFloat(assetBBalance.replaceAll(",", "")).toFixed(assetBData.precision) <
+                      amount &&
+                    total - parseFloat(assetBBalance.replaceAll(",", "")) > 0 ? (
                       <FormMessage>
                         A further{" "}
                         {total -
@@ -468,10 +378,7 @@ export default function LimitOrderCard(properties) {
                         setExpiryType(selectedExpiry);
                         const oneHour = 60 * 60 * 1000;
                         const oneDay = 24 * oneHour;
-                        if (
-                          selectedExpiry !== "specific" &&
-                          selectedExpiry !== "fkill"
-                        ) {
+                        if (selectedExpiry !== "specific" && selectedExpiry !== "fkill") {
                           const now = new Date();
                           let expiryDate;
                           if (selectedExpiry === "1hr") {
@@ -513,9 +420,7 @@ export default function LimitOrderCard(properties) {
                           <SelectItem value="24hr">24 hours</SelectItem>
                           <SelectItem value="7d">7 days</SelectItem>
                           <SelectItem value="30d">30 days</SelectItem>
-                          <SelectItem value="specific">
-                            Specific date
-                          </SelectItem>
+                          <SelectItem value="specific">Specific date</SelectItem>
                           <SelectItem value="fkill">Fill or kill</SelectItem>
                         </SelectContent>
                       </Select>
@@ -532,11 +437,7 @@ export default function LimitOrderCard(properties) {
                               )}
                             >
                               <CalendarIcon className="mr-2 h-4 w-4" />
-                              {date ? (
-                                format(date, "PPP")
-                              ) : (
-                                <span>Pick a date</span>
-                              )}
+                              {date ? format(date, "PPP") : <span>Pick a date</span>}
                             </Button>
                           </PopoverTrigger>
                           <PopoverContent className="w-auto p-0" align="start">
@@ -548,11 +449,7 @@ export default function LimitOrderCard(properties) {
                                 const now = new Date();
                                 if (parsedDate < now) {
                                   console.log("Not a valid date");
-                                  setDate(
-                                    new Date(
-                                      Date.now() + 1 * 24 * 60 * 60 * 1000
-                                    )
-                                  );
+                                  setDate(new Date(Date.now() + 1 * 24 * 60 * 60 * 1000));
                                   return;
                                 }
                                 console.log("Setting expiry date");
@@ -583,25 +480,14 @@ export default function LimitOrderCard(properties) {
                   <FormItem>
                     <FormLabel>Fee</FormLabel>
                     <FormControl>
-                      <Input
-                        disabled
-                        label={`fees`}
-                        value={`${fee} BTS`}
-                        placeholder={1}
-                      />
+                      <Input disabled label={`fees`} value={`${fee} BTS`} placeholder={1} />
                     </FormControl>
-                    <FormDescription>
-                      The network fee to broadcast this operation
-                    </FormDescription>
+                    <FormDescription>The network fee to broadcast this operation</FormDescription>
                     {expiryType === "fkill" || usr.id === usr.referrer ? (
                       <FormMessage>
-                        {expiryType === "fkill"
-                          ? `Unfilled rebate: ${fee} BTS (instant)`
-                          : null}
+                        {expiryType === "fkill" ? `Unfilled rebate: ${fee} BTS (instant)` : null}
                         <br />
-                        {usr.id === usr.referrer
-                          ? `LTM rebate: ${0.8 * fee} BTS (vesting)`
-                          : null}
+                        {usr.id === usr.referrer ? `LTM rebate: ${0.8 * fee} BTS (vesting)` : null}
                       </FormMessage>
                     ) : null}
                   </FormItem>
@@ -626,9 +512,7 @@ export default function LimitOrderCard(properties) {
                           placeholder={`${marketFees} ${assetAData.symbol}`}
                         />
                       </FormControl>
-                      <FormDescription>
-                        The market fee applied by asset issuer
-                      </FormDescription>
+                      <FormDescription>The market fee applied by asset issuer</FormDescription>
                     </FormItem>
                   )}
                 />
@@ -653,21 +537,14 @@ export default function LimitOrderCard(properties) {
                         />
                       </FormControl>
                       <FormMessage />
-                      <FormDescription>
-                        The market fee applied by asset issuer
-                      </FormDescription>
+                      <FormDescription>The market fee applied by asset issuer</FormDescription>
                     </FormItem>
                   )}
                 />
               ) : null}
 
               {!amount || !price || !expiry ? (
-                <Button
-                  className="mt-7 mb-1"
-                  variant="outline"
-                  disabled
-                  type="submit"
-                >
+                <Button className="mt-7 mb-1" variant="outline" disabled type="submit">
                   Submit
                 </Button>
               ) : (
@@ -738,9 +615,7 @@ export default function LimitOrderCard(properties) {
                       <div className="grid grid-cols-2 mt-3">
                         <div className="mt-1">Total</div>
                         <div className="text-gray-500 text-right">
-                          {orderType === "buy" && assetBBalance ? (
-                            <Badge>Use balance</Badge>
-                          ) : null}
+                          {orderType === "buy" && assetBBalance ? <Badge>Use balance</Badge> : null}
                         </div>
                       </div>
                     </FormLabel>
@@ -779,9 +654,7 @@ export default function LimitOrderCard(properties) {
                   <FormItem>
                     <FormLabel>Fee</FormLabel>
                     <Input disabled label={`fees`} />
-                    <FormDescription>
-                      The network fee to broadcast this operation
-                    </FormDescription>
+                    <FormDescription>The network fee to broadcast this operation</FormDescription>
                     {expiryType === "fkill" || usr.id === usr.referrer ? (
                       <FormMessage>
                         {expiryType === "fkill"
@@ -796,12 +669,7 @@ export default function LimitOrderCard(properties) {
                 )}
               />
 
-              <Button
-                disabled
-                className="mt-7 mb-1"
-                variant="outline"
-                type="submit"
-              >
+              <Button disabled className="mt-7 mb-1" variant="outline" type="submit">
                 Submit
               </Button>
             </form>
@@ -830,22 +698,12 @@ export default function LimitOrderCard(properties) {
                     {
                       seller: usr.id,
                       amount_to_sell: {
-                        amount: blockchainFloat(
-                          total,
-                          assetBData.precision
-                        ).toFixed(0),
-                        asset_id: marketSearch.find(
-                          (asset) => asset.s === thisAssetB
-                        ).id,
+                        amount: blockchainFloat(total, assetBData.precision).toFixed(0),
+                        asset_id: marketSearch.find((asset) => asset.s === thisAssetB).id,
                       },
                       min_to_receive: {
-                        amount: blockchainFloat(
-                          amount,
-                          assetAData.precision
-                        ).toFixed(0),
-                        asset_id: marketSearch.find(
-                          (asset) => asset.s === thisAssetA
-                        ).id,
+                        amount: blockchainFloat(amount, assetAData.precision).toFixed(0),
+                        asset_id: marketSearch.find((asset) => asset.s === thisAssetA).id,
                       },
                       expiration: expiry,
                       fill_or_kill: false,
@@ -856,22 +714,12 @@ export default function LimitOrderCard(properties) {
                     {
                       seller: usr.id,
                       amount_to_sell: {
-                        amount: blockchainFloat(
-                          amount,
-                          assetAData.precision
-                        ).toFixed(0),
-                        asset_id: marketSearch.find(
-                          (asset) => asset.s === thisAssetA
-                        ).id,
+                        amount: blockchainFloat(amount, assetAData.precision).toFixed(0),
+                        asset_id: marketSearch.find((asset) => asset.s === thisAssetA).id,
                       },
                       min_to_receive: {
-                        amount: blockchainFloat(
-                          total,
-                          assetBData.precision
-                        ).toFixed(0),
-                        asset_id: marketSearch.find(
-                          (asset) => asset.s === thisAssetB
-                        ).id,
+                        amount: blockchainFloat(total, assetBData.precision).toFixed(0),
+                        asset_id: marketSearch.find((asset) => asset.s === thisAssetB).id,
                       },
                       expiration: expiry,
                       fill_or_kill: false,

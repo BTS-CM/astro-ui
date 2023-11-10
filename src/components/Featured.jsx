@@ -16,11 +16,7 @@ import CurrentUser from "./common/CurrentUser.jsx";
 import { createMarketsStore } from "../effects/Market.ts";
 
 export default function Featured(properties) {
-  const usr = useSyncExternalStore(
-    $currentUser.subscribe,
-    $currentUser.get,
-    () => true
-  );
+  const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
 
   //useInitCache(usr && usr.chain ? usr.chain : "bitshares", []);
 
@@ -31,13 +27,11 @@ export default function Featured(properties) {
     if (usr && usr.chain && usr.chain.length) {
       const marketsStore = createMarketsStore(usr.chain);
 
-      unsubscribeMarkets = marketsStore.subscribe(
-        ({ data, loading, error }) => {
-          if (data && !error && !loading) {
-            setRetrievedMarkets(data);
-          }
+      unsubscribeMarkets = marketsStore.subscribe(({ data, loading, error }) => {
+        if (data && !error && !loading) {
+          setRetrievedMarkets(data);
         }
-      );
+      });
     }
 
     return () => {
@@ -75,8 +69,7 @@ export default function Featured(properties) {
             <CardHeader>
               <CardTitle>Featured market trading pairs</CardTitle>
               <CardDescription>
-                These market trading pairs are the highest volume in the last 24
-                hours.
+                These market trading pairs are the highest volume in the last 24 hours.
                 <br />
                 Click on a market trading pair below to go to its market page.
               </CardDescription>
@@ -99,18 +92,14 @@ export default function Featured(properties) {
                       </div>
                     </div>
                   </div>
-                  <div className="grid grid-cols-1 gap-2 text-center">
-                    {marketRows}
-                  </div>
+                  <div className="grid grid-cols-1 gap-2 text-center">{marketRows}</div>
                 </>
               ) : null}
             </CardContent>
           </Card>
         </div>
         <div className="grid grid-cols-1 mt-5">
-          {usr && usr.username && usr.username.length ? (
-            <CurrentUser usr={usr} />
-          ) : null}
+          {usr && usr.username && usr.username.length ? <CurrentUser usr={usr} /> : null}
         </div>
       </div>
     </>

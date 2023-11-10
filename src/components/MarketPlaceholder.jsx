@@ -71,9 +71,7 @@ export default function MarketPlaceholder(properties) {
                       <div className="col-span-1">
                         <Input disabled className="mb-2" />
                       </div>
-                      <div className="col-span-1 text-sm">
-                        Your price per ? in ?
-                      </div>
+                      <div className="col-span-1 text-sm">Your price per ? in ?</div>
                       <div className="grid grid-cols-2 mt-2">
                         <div className="text-sm mt-1">Amount</div>
                         <div className="text-gray-500 text-right">?</div>
@@ -81,9 +79,7 @@ export default function MarketPlaceholder(properties) {
                       <div className="col-span-1">
                         <Input disabled className="mb-2" />
                       </div>
-                      <div className="col-span-1 text-sm">
-                        The amount of ? you ......
-                      </div>
+                      <div className="col-span-1 text-sm">The amount of ? you ......</div>
 
                       <div className="grid grid-cols-2 mt-2">
                         <div className="text-sm mt-1">Total</div>
@@ -92,13 +88,9 @@ export default function MarketPlaceholder(properties) {
                       <div className="col-span-1">
                         <Input disabled className="mb-2" />
                       </div>
-                      <div className="col-span-1 text-sm">
-                        The total ? you will ...
-                      </div>
+                      <div className="col-span-1 text-sm">The total ? you will ...</div>
 
-                      <div className="text-sm col-span-1 mt-2">
-                        Limit order expriration
-                      </div>
+                      <div className="text-sm col-span-1 mt-2">Limit order expriration</div>
                       <div className="col-span-1">
                         <Select disabled>
                           <SelectTrigger className="mb-3">
@@ -106,25 +98,16 @@ export default function MarketPlaceholder(properties) {
                           </SelectTrigger>
                         </Select>
                       </div>
-                      <div className="col-span-1 text-sm">
-                        Time till expiration...
-                      </div>
+                      <div className="col-span-1 text-sm">Time till expiration...</div>
 
                       <div className="text-sm col-span-1">Fee</div>
                       <div className="col-span-1">
                         <Input disabled label={`fees`} />
                       </div>
-                      <div className="col-span-1 text-sm">
-                        The network fee...
-                      </div>
+                      <div className="col-span-1 text-sm">The network fee...</div>
 
                       <div className="col-span-1">
-                        <Button
-                          disabled
-                          className="mt-4 mb-1"
-                          variant="outline"
-                          type="submit"
-                        >
+                        <Button disabled className="mt-4 mb-1" variant="outline" type="submit">
                           Submit
                         </Button>
                       </div>
@@ -194,9 +177,7 @@ export default function MarketPlaceholder(properties) {
               <div className="flex-grow">
                 <Card>
                   <CardHeader className="pt-2 pb-2">
-                    <CardTitle className="text-center text-lg">
-                      DEX Market controls
-                    </CardTitle>
+                    <CardTitle className="text-center text-lg">DEX Market controls</CardTitle>
                   </CardHeader>
                   <CardContent className="pb-3">
                     <div className="grid grid-cols-3 gap-1">
@@ -218,9 +199,7 @@ export default function MarketPlaceholder(properties) {
                 <Card>
                   <CardHeader className="pb-2 pt-4">
                     <CardTitle>? asset</CardTitle>
-                    <CardDescription className="text-lg">
-                      Loading...
-                    </CardDescription>
+                    <CardDescription className="text-lg">Loading...</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-2">
@@ -237,9 +216,7 @@ export default function MarketPlaceholder(properties) {
                 <Card>
                   <CardHeader className="pb-2 pt-4">
                     <CardTitle>? asset</CardTitle>
-                    <CardDescription className="text-lg">
-                      Loading...
-                    </CardDescription>
+                    <CardDescription className="text-lg">Loading...</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-2">
@@ -288,9 +265,7 @@ export default function MarketPlaceholder(properties) {
               <Card>
                 <CardHeader>
                   <CardTitle>Loading market orders</CardTitle>
-                  <CardDescription>
-                    Fetching requested market data, please wait...
-                  </CardDescription>
+                  <CardDescription>Fetching requested market data, please wait...</CardDescription>
                   <CardContent>
                     <Skeleton className="h-4 w-full mt-1" />
                     <Skeleton className="h-4 w-full mt-1" />

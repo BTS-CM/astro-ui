@@ -1,9 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  useSyncExternalStore,
-  useMemo,
-} from "react";
+import React, { useState, useEffect, useSyncExternalStore, useMemo } from "react";
 import { FixedSizeList as List } from "react-window";
 import { useForm } from "react-hook-form";
 
@@ -44,10 +39,7 @@ import { $currentUser } from "../stores/users.ts";
 import { $globalParamsCache, $assetCache } from "../stores/cache.ts";
 
 import { useInitCache } from "../effects/Init.ts";
-import {
-  createUserCreditDealsStore,
-  createUserBalancesStore,
-} from "../effects/User.ts";
+import { createUserCreditDealsStore, createUserBalancesStore } from "../effects/User.ts";
 
 import { blockchainFloat, humanReadableFloat } from "../lib/common.js";
 
@@ -62,17 +54,9 @@ export default function CreditDeals(properties) {
     },
   });
 
-  const usr = useSyncExternalStore(
-    $currentUser.subscribe,
-    $currentUser.get,
-    () => true
-  );
+  const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
 
-  const assets = useSyncExternalStore(
-    $assetCache.subscribe,
-    $assetCache.get,
-    () => true
-  );
+  const assets = useSyncExternalStore($assetCache.subscribe, $assetCache.get, () => true);
 
   const globalParams = useSyncExternalStore(
     $globalParamsCache.subscribe,
@@ -80,10 +64,7 @@ export default function CreditDeals(properties) {
     () => true
   );
 
-  useInitCache(usr && usr.chain ? usr.chain : "bitshares", [
-    "assets",
-    "globalParams",
-  ]);
+  useInitCache(usr && usr.chain ? usr.chain : "bitshares", ["assets", "globalParams"]);
 
   const [fee, setFee] = useState(0);
   useEffect(() => {
@@ -101,13 +82,11 @@ export default function CreditDeals(properties) {
     if (usr && usr.id) {
       const userBalancesStore = createUserBalancesStore([usr.chain, usr.id]);
 
-      unsubscribeUserBalances = userBalancesStore.subscribe(
-        ({ data, error, loading }) => {
-          if (data && !error && !loading) {
-            setUsrBalances(data);
-          }
+      unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
+        if (data && !error && !loading) {
+          setUsrBalances(data);
         }
-      );
+      });
     }
 
     return () => {
@@ -120,18 +99,13 @@ export default function CreditDeals(properties) {
     let unsubscribeUserCreditDeals;
 
     if (usr && usr.id) {
-      const userCreditDealsStore = createUserCreditDealsStore([
-        usr.chain,
-        usr.id,
-      ]);
+      const userCreditDealsStore = createUserCreditDealsStore([usr.chain, usr.id]);
 
-      unsubscribeUserCreditDeals = userCreditDealsStore.subscribe(
-        ({ data, error, loading }) => {
-          if (data && !error && !loading) {
-            setUsrCreditDeals(data);
-          }
+      unsubscribeUserCreditDeals = userCreditDealsStore.subscribe(({ data, error, loading }) => {
+        if (data && !error && !loading) {
+          setUsrCreditDeals(data);
         }
-      );
+      });
     }
 
     return () => {
@@ -143,15 +117,9 @@ export default function CreditDeals(properties) {
     const debtAsset = assets.find((x) => x.id === res.debt_asset);
     const collateralAsset = assets.find((x) => x.id === res.collateral_asset);
 
-    const borrowedAmount = humanReadableFloat(
-      res.debt_amount,
-      debtAsset.precision
-    );
+    const borrowedAmount = humanReadableFloat(res.debt_amount, debtAsset.precision);
 
-    const collateralAmount = humanReadableFloat(
-      res.collateral_amount,
-      collateralAsset.precision
-    );
+    const collateralAmount = humanReadableFloat(res.collateral_amount, collateralAsset.precision);
 
     // Assuming latest_repay_time is in ISO format
     const latestRepayTime = new Date(res?.latest_repay_time);
@@ -165,12 +133,9 @@ export default function CreditDeals(properties) {
     } else {
       const fracturedTime = (diffInHours / 24).toString().split(".");
       const days = fracturedTime[0];
-      const hours =
-        parseFloat(`0.${(diffInHours / 24).toString().split(".")[1]}`) * 24;
+      const hours = parseFloat(`0.${(diffInHours / 24).toString().split(".")[1]}`) * 24;
       const minutes = parseFloat(`0.${hours.toString().split(".")[1]}`) * 60;
-      remainingTime = ` ${days} days ${hours.toFixed(
-        0
-      )} hours ${minutes.toFixed(0)} mins`;
+      remainingTime = ` ${days} days ${hours.toFixed(0)} hours ${minutes.toFixed(0)} mins`;
     }
 
     const [openRepay, setOpenRepay] = useState(false);
@@ -187,27 +152,21 @@ export default function CreditDeals(properties) {
 
     const loanFee = useMemo(() => {
       if (finalRepayAmount && res && debtAsset) {
-        return ((finalRepayAmount / 100) * (res.fee_rate / 10000)).toFixed(
-          debtAsset.precision
-        );
+        return ((finalRepayAmount / 100) * (res.fee_rate / 10000)).toFixed(debtAsset.precision);
       }
       return 0;
     }, [finalRepayAmount, res, debtAsset]);
 
     const finalRepayment = useMemo(() => {
       if (finalRepayAmount && loanFee && debtAsset) {
-        return (parseFloat(finalRepayAmount) + parseFloat(loanFee)).toFixed(
-          debtAsset.precision
-        );
+        return (parseFloat(finalRepayAmount) + parseFloat(loanFee)).toFixed(debtAsset.precision);
       }
       return 0;
     }, [finalRepayAmount, loanFee, debtAsset]);
 
     const debtAssetBalance = useMemo(() => {
       if (usrBalances && usrBalances.length && debtAsset) {
-        const foundBalance = usrBalances.find(
-          (x) => x.asset_id === debtAsset.id
-        );
+        const foundBalance = usrBalances.find((x) => x.asset_id === debtAsset.id);
         if (foundBalance) {
           return humanReadableFloat(foundBalance.amount, debtAsset.precision);
         }
@@ -242,12 +201,9 @@ export default function CreditDeals(properties) {
         setInputValue(minAmount); // Set value to minimum accepted amount
       } else if (
         debouncedInputValue.toString().split(".").length > 1 &&
-        debouncedInputValue.toString().split(".")[1].length >
-          debtAsset.precision
+        debouncedInputValue.toString().split(".")[1].length > debtAsset.precision
       ) {
-        const fixedValue = parseFloat(debouncedInputValue).toFixed(
-          debtAsset.precision
-        );
+        const fixedValue = parseFloat(debouncedInputValue).toFixed(debtAsset.precision);
         setFinalRepayAmount(fixedValue);
         setInputValue(fixedValue); // Set value to minimum accepted amount
       } else {
@@ -304,9 +260,9 @@ export default function CreditDeals(properties) {
               <br />
               {type === "borrower" ? "Borrow fee" : "Earnings"}:
               <b>
-                {` ${borrowedAmount * (res.fee_rate / 10000)} ${
-                  debtAsset.symbol
-                } (${res.fee_rate / 10000}%)`}
+                {` ${borrowedAmount * (res.fee_rate / 10000)} ${debtAsset.symbol} (${
+                  res.fee_rate / 10000
+                }%)`}
               </b>
               <br />
               Remaining time:
@@ -318,12 +274,8 @@ export default function CreditDeals(properties) {
           {type === "borrower" ? (
             <CardFooter className="pb-0 mt-2">
               <Button onClick={() => setOpenRepay(true)}>Repay loan</Button>
-              <a
-                href={`/dex/index.html?market=${debtAsset.symbol}_${collateralAsset.symbol}`}
-              >
-                <Button className="ml-2">
-                  Trade {debtAsset.symbol} on DEX
-                </Button>
+              <a href={`/dex/index.html?market=${debtAsset.symbol}_${collateralAsset.symbol}`}>
+                <Button className="ml-2">Trade {debtAsset.symbol} on DEX</Button>
               </a>
               {openRepay ? (
                 <Dialog
@@ -371,9 +323,7 @@ export default function CreditDeals(properties) {
                             name="balance"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>
-                                  Your current {debtAsset.symbol} balance
-                                </FormLabel>
+                                <FormLabel>Your current {debtAsset.symbol} balance</FormLabel>
                                 <FormControl>
                                   <Input
                                     disabled
@@ -403,8 +353,7 @@ export default function CreditDeals(properties) {
                                   </div>
                                 </FormLabel>
                                 <FormDescription>
-                                  To get back all your collateral back, repay
-                                  the debt in full.
+                                  To get back all your collateral back, repay the debt in full.
                                 </FormDescription>
                                 <FormControl
                                   onChange={(event) => {
@@ -434,9 +383,7 @@ export default function CreditDeals(properties) {
                               <FormItem>
                                 <FormLabel>
                                   <div className="grid grid-cols-2 gap-2 mt-2">
-                                    <div className="col-span-1">
-                                      Redeem collateral
-                                    </div>
+                                    <div className="col-span-1">Redeem collateral</div>
                                     <div className="col-span-1 text-right">
                                       {`Remaining collateral: ${collateralAmount} ${collateralAsset.symbol}`}
                                     </div>
@@ -448,11 +395,8 @@ export default function CreditDeals(properties) {
                                     label={`Amount of ${debtAsset.symbol} to repay`}
                                     value={
                                       redeemCollateral && collateralAmount
-                                        ? `${redeemCollateral ?? "?"} ${
-                                            collateralAsset.symbol
-                                          } (${(
-                                            (redeemCollateral /
-                                              collateralAmount) *
+                                        ? `${redeemCollateral ?? "?"} ${collateralAsset.symbol} (${(
+                                            (redeemCollateral / collateralAmount) *
                                             100
                                           ).toFixed(2)}%)`
                                         : "0"
@@ -474,9 +418,7 @@ export default function CreditDeals(properties) {
                               render={({ field }) => (
                                 <FormItem>
                                   <FormLabel>
-                                    <div className="mt-2">
-                                      Estimated loan fee
-                                    </div>
+                                    <div className="mt-2">Estimated loan fee</div>
                                   </FormLabel>
                                   <FormDescription>
                                     This is the fee you'll pay to the lender.
@@ -486,9 +428,9 @@ export default function CreditDeals(properties) {
                                       disabled
                                       placeholder="0"
                                       className="mb-3 mt-3"
-                                      value={`${loanFee} (${
-                                        debtAsset.symbol
-                                      }) (${res.fee_rate / 10000}% fee)`}
+                                      value={`${loanFee} (${debtAsset.symbol}) (${
+                                        res.fee_rate / 10000
+                                      }% fee)`}
                                     />
                                   </FormControl>
                                   <FormMessage />
@@ -507,18 +449,17 @@ export default function CreditDeals(properties) {
                                     <div className="mt-2">Final repayment</div>
                                   </FormLabel>
                                   <FormDescription>
-                                    Once repaid in full, your{" "}
-                                    {collateralAsset.symbol} collateral will be
-                                    returned to you.
+                                    Once repaid in full, your {collateralAsset.symbol} collateral
+                                    will be returned to you.
                                   </FormDescription>
                                   <FormControl>
                                     <Input
                                       disabled
                                       placeholder="0"
                                       className="mb-3 mt-3"
-                                      value={`${finalRepayment} (${
-                                        debtAsset.symbol
-                                      }) (debt + ${res.fee_rate / 10000}% fee)`}
+                                      value={`${finalRepayment} (${debtAsset.symbol}) (debt + ${
+                                        res.fee_rate / 10000
+                                      }% fee)`}
                                     />
                                   </FormControl>
                                   {debtAssetBalance < finalRepayment ? (
@@ -540,8 +481,8 @@ export default function CreditDeals(properties) {
                                   <div className="mt-2">Network fee</div>
                                 </FormLabel>
                                 <FormDescription>
-                                  This is the fee to broadcast your credit deal
-                                  repayment operation onto the blockchain.
+                                  This is the fee to broadcast your credit deal repayment operation
+                                  onto the blockchain.
                                 </FormDescription>
                                 <FormControl>
                                   <Input
@@ -551,9 +492,7 @@ export default function CreditDeals(properties) {
                                   />
                                 </FormControl>
                                 {usr.id === usr.referrer ? (
-                                  <FormMessage>
-                                    Rebate: {fee * 0.8} BTS (vesting)
-                                  </FormMessage>
+                                  <FormMessage>Rebate: {fee * 0.8} BTS (vesting)</FormMessage>
                                 ) : null}
                                 <FormMessage />
                               </FormItem>
@@ -563,20 +502,11 @@ export default function CreditDeals(properties) {
                           {!redeemCollateral ||
                           !finalRepayAmount ||
                           debtAssetBalance < finalRepayment ? (
-                            <Button
-                              className="mt-5 mb-3"
-                              variant="outline"
-                              disabled
-                              type="submit"
-                            >
+                            <Button className="mt-5 mb-3" variant="outline" disabled type="submit">
                               Submit
                             </Button>
                           ) : (
-                            <Button
-                              className="mt-5 mb-3"
-                              variant="outline"
-                              type="submit"
-                            >
+                            <Button className="mt-5 mb-3" variant="outline" type="submit">
                               Submit
                             </Button>
                           )}
@@ -596,17 +526,11 @@ export default function CreditDeals(properties) {
                               account: usr.id,
                               deal_id: res.id,
                               repay_amount: {
-                                amount: blockchainFloat(
-                                  finalRepayAmount,
-                                  debtAsset.precision
-                                ),
+                                amount: blockchainFloat(finalRepayAmount, debtAsset.precision),
                                 asset_id: debtAsset.id,
                               },
                               credit_fee: {
-                                amount: blockchainFloat(
-                                  loanFee,
-                                  debtAsset.precision
-                                ),
+                                amount: blockchainFloat(loanFee, debtAsset.precision),
                                 asset_id: debtAsset.id,
                               },
                               extensions: [],
@@ -660,8 +584,7 @@ export default function CreditDeals(properties) {
             <CardHeader>
               <CardTitle>💱 Check your active credit deals</CardTitle>
               <CardDescription>
-                From here you can both monitor active credit deals and manage
-                repayments.
+                From here you can both monitor active credit deals and manage repayments.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -672,10 +595,7 @@ export default function CreditDeals(properties) {
                       Viewing your borrowings
                     </TabsTrigger>
                   ) : (
-                    <TabsTrigger
-                      value="borrowings"
-                      onClick={() => setActiveTab("borrowings")}
-                    >
+                    <TabsTrigger value="borrowings" onClick={() => setActiveTab("borrowings")}>
                       View your borrowings
                     </TabsTrigger>
                   )}
@@ -684,10 +604,7 @@ export default function CreditDeals(properties) {
                       Viewing your lendings
                     </TabsTrigger>
                   ) : (
-                    <TabsTrigger
-                      value="lendings"
-                      onClick={() => setActiveTab("lendings")}
-                    >
+                    <TabsTrigger value="lendings" onClick={() => setActiveTab("lendings")}>
                       View your lendings
                     </TabsTrigger>
                   )}
@@ -710,9 +627,7 @@ export default function CreditDeals(properties) {
                   !usrCreditDeals.borrowerDeals.length
                     ? "No active borrowings found"
                     : null}
-                  {!usrCreditDeals || !usrCreditDeals.borrowerDeals
-                    ? "Loading..."
-                    : null}
+                  {!usrCreditDeals || !usrCreditDeals.borrowerDeals ? "Loading..." : null}
                 </TabsContent>
                 <TabsContent value="lendings">
                   {usrCreditDeals &&
@@ -727,14 +642,10 @@ export default function CreditDeals(properties) {
                       {OwnerRow}
                     </List>
                   ) : null}
-                  {usrCreditDeals &&
-                  usrCreditDeals.ownerDeals &&
-                  !usrCreditDeals.ownerDeals.length
+                  {usrCreditDeals && usrCreditDeals.ownerDeals && !usrCreditDeals.ownerDeals.length
                     ? "No active lendings found"
                     : null}
-                  {!usrCreditDeals || !usrCreditDeals.ownerDeals
-                    ? "Loading..."
-                    : null}
+                  {!usrCreditDeals || !usrCreditDeals.ownerDeals ? "Loading..." : null}
                 </TabsContent>
               </Tabs>
             </CardContent>
@@ -744,75 +655,65 @@ export default function CreditDeals(properties) {
           <Card>
             <CardHeader className="pb-0">
               <CardTitle>
-                {activeTab === "borrowings"
-                  ? `Borrower Risk Warning`
-                  : `Lender Risk Warning`}
+                {activeTab === "borrowings" ? `Borrower Risk Warning` : `Lender Risk Warning`}
               </CardTitle>
               <CardDescription>
-                Important information about your responsibilities and risks
-                associated with credit deals.
+                Important information about your responsibilities and risks associated with credit
+                deals.
               </CardDescription>
             </CardHeader>
             <CardContent className="text-sm">
               <ul className="ml-2 list-disc [&>li]:mt-2 pl-2">
                 {activeTab === "borrowings" ? (
                   <li>
-                    You ( <b>{usr?.username}</b> ) are responsible for managing
-                    your credit deals and repaying them in a timely manner,
-                    noone else. Consider using an automatic repayment method to
-                    avoid missing the repayment deadline if you might forget the
+                    You ( <b>{usr?.username}</b> ) are responsible for managing your credit deals
+                    and repaying them in a timely manner, noone else. Consider using an automatic
+                    repayment method to avoid missing the repayment deadline if you might forget the
                     deadline.
                   </li>
                 ) : (
                   <li>
-                    You ( <b>{usr?.username}</b> ) are responsible for managing
-                    your credit offers, their parameters and their risk
-                    exposure, noone else. Consider creating automated scripts to
-                    manage the state of your credit offers.
+                    You ( <b>{usr?.username}</b> ) are responsible for managing your credit offers,
+                    their parameters and their risk exposure, noone else. Consider creating
+                    automated scripts to manage the state of your credit offers.
                   </li>
                 )}
                 {activeTab === "borrowings" ? (
                   <li>
-                    Be aware of your exposure to external volatilities during
-                    the credit deal repay period; the value of your borrowed
-                    assets and your backing collateral will fluctuate, you
-                    should consider such volatility exposure when deciding on
+                    Be aware of your exposure to external volatilities during the credit deal repay
+                    period; the value of your borrowed assets and your backing collateral will
+                    fluctuate, you should consider such volatility exposure when deciding on
                     how/when you'll repay the credit deal.
                   </li>
                 ) : (
                   <li>
-                    Be aware of your exposure to external volatilities during
-                    the credit deal repay period; the value of the assets you
-                    lended to other users and the backing collateral they
-                    provided will fluctuate, you should consider your personal
-                    risk tollerance when deciding on your credit offer
-                    parameters. You should actively manage your credit offers as
-                    markets fluctuate to minimize your risk exposure.
+                    Be aware of your exposure to external volatilities during the credit deal repay
+                    period; the value of the assets you lended to other users and the backing
+                    collateral they provided will fluctuate, you should consider your personal risk
+                    tollerance when deciding on your credit offer parameters. You should actively
+                    manage your credit offers as markets fluctuate to minimize your risk exposure.
                   </li>
                 )}
                 {activeTab === "lendings" ? (
                   <li>
-                    As a lender, once a credit deal exists, you ({" "}
-                    {usr?.username} ) cannot cancel it, the borrower is
-                    responsible for the duration of the deal within the
-                    repayment period. A credit deal's repayment date can also
-                    exceed your credit offer's expiration date.
+                    As a lender, once a credit deal exists, you ( {usr?.username} ) cannot cancel
+                    it, the borrower is responsible for the duration of the deal within the
+                    repayment period. A credit deal's repayment date can also exceed your credit
+                    offer's expiration date.
                   </li>
                 ) : null}
                 {activeTab === "borrowings" ? (
                   <li>
-                    Failure to repay a credit deal will result in the loss of
-                    remaining backing collateral assets. There isn't a credit
-                    score system which punishes defaulting borrowers; the agreed
-                    terms of the credit deal will be honoured.
+                    Failure to repay a credit deal will result in the loss of remaining backing
+                    collateral assets. There isn't a credit score system which punishes defaulting
+                    borrowers; the agreed terms of the credit deal will be honoured.
                   </li>
                 ) : (
                   <li>
-                    If borrowers fail to repay their credit deals, their backing
-                    collateral assets will be forfeit to you. There isn't a
-                    credit score system which punishes borrowers for defaulting;
-                    the agreed terms of the credit deal will always be honoured,
-                    so plan your credit offers accordingly to your personal risk
+                    If borrowers fail to repay their credit deals, their backing collateral assets
+                    will be forfeit to you. There isn't a credit score system which punishes
+                    borrowers for defaulting; the agreed terms of the credit deal will always be
+                    honoured, so plan your credit offers accordingly to your personal risk
                     tollerance.
                   </li>
                 )}
@@ -821,9 +722,7 @@ export default function CreditDeals(properties) {
           </Card>
         </div>
         <div className="grid grid-cols-1 mt-5">
-          {usr && usr.username && usr.username.length ? (
-            <CurrentUser usr={usr} />
-          ) : null}
+          {usr && usr.username && usr.username.length ? <CurrentUser usr={usr} /> : null}
         </div>
       </div>
     </>

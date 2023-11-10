@@ -10,8 +10,7 @@ export default function MyOrderSummary(properties) {
   );
 
   const filteredUsrLimitOrders = useMemo(
-    () =>
-      usrLimitOrders.filter((x) => x.sell_price.base.asset_id === refAsset.id),
+    () => usrLimitOrders.filter((x) => x.sell_price.base.asset_id === refAsset.id),
     [usrLimitOrders, refAsset]
   );
 
@@ -20,16 +19,12 @@ export default function MyOrderSummary(properties) {
       filteredUsrLimitOrders.map((res, index) => {
         const parsedBaseAmount = humanReadableFloat(
           res.sell_price.base.amount,
-          [assetAData, assetBData].find(
-            (x) => x.id === res.sell_price.base.asset_id
-          )?.precision
+          [assetAData, assetBData].find((x) => x.id === res.sell_price.base.asset_id)?.precision
         );
 
         const parsedQuoteAmount = humanReadableFloat(
           res.sell_price.quote.amount,
-          [assetAData, assetBData].find(
-            (x) => x.id === res.sell_price.quote.asset_id
-          )?.precision
+          [assetAData, assetBData].find((x) => x.id === res.sell_price.quote.asset_id)?.precision
         );
 
         const calculated = parsedQuoteAmount / parsedBaseAmount;
@@ -39,9 +34,7 @@ export default function MyOrderSummary(properties) {
             <div className="grid grid-cols-3 border-b-2 text-sm">
               <div className="col-span-1 border-r-2 pl-3">{calculated}</div>
               <div className="col-span-1 border-r-2 pl-3">{res.for_sale}</div>
-              <div className="col-span-1 border-r-2 pl-3">
-                {res.expiration.replace("T", " ")}
-              </div>
+              <div className="col-span-1 border-r-2 pl-3">{res.expiration.replace("T", " ")}</div>
             </div>
           </div>
         );

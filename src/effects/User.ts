@@ -49,10 +49,9 @@ const [createUserCreditDealsStore] = nanoquery({
 // Create fetcher store for user balances + open orders
 const [createUserPortfolioStore] = nanoquery({
   fetcher: async (chain: string, accountID: string) => {
-    const response = await fetch(
-      `http://localhost:8080/api/getPortfolio/${chain}/${accountID}`,
-      { method: "GET" }
-    );
+    const response = await fetch(`http://localhost:8080/api/getPortfolio/${chain}/${accountID}`, {
+      method: "GET",
+    });
 
     if (!response.ok) {
       console.log(`Failed to fetch user portfolio`);

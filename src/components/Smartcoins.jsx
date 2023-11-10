@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  useSyncExternalStore,
-  useMemo,
-  useCallback,
-} from "react";
+import React, { useState, useEffect, useSyncExternalStore, useMemo, useCallback } from "react";
 import { FixedSizeList as List } from "react-window";
 import Fuse from "fuse.js";
 
@@ -40,11 +34,7 @@ const activeTabStyle = {
 };
 
 export default function Smartcoins(properties) {
-  const usr = useSyncExternalStore(
-    $currentUser.subscribe,
-    $currentUser.get,
-    () => true
-  );
+  const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
 
   const bitAssetData = useSyncExternalStore(
     $bitAssetDataCache.subscribe,
@@ -58,10 +48,7 @@ export default function Smartcoins(properties) {
     () => true
   );
 
-  useInitCache(usr && usr.chain ? usr.chain : "bitshares", [
-    "bitAssetData",
-    "marketSearch",
-  ]);
+  useInitCache(usr && usr.chain ? usr.chain : "bitshares", ["bitAssetData", "marketSearch"]);
 
   const [usrBalances, setUsrBalances] = useState();
   useEffect(() => {
@@ -70,13 +57,11 @@ export default function Smartcoins(properties) {
     if (usr && usr.id) {
       const userBalancesStore = createUserBalancesStore([usr.chain, usr.id]);
 
-      unsubscribeUserBalances = userBalancesStore.subscribe(
-        ({ data, error, loading }) => {
-          if (data && !error && !loading) {
-            setUsrBalances(data);
-          }
+      unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
+        if (data && !error && !loading) {
+          setUsrBalances(data);
         }
-      );
+      });
     }
 
     return () => {
@@ -87,9 +72,7 @@ export default function Smartcoins(properties) {
   const compatibleSmartcoins = useMemo(() => {
     if (usrBalances && bitAssetData && marketSearch) {
       const _smartcoins = bitAssetData.filter((bitasset) => {
-        const collateralAssetBalance = usrBalances.find(
-          (x) => x.asset_id === bitasset.collateral
-        );
+        const collateralAssetBalance = usrBalances.find((x) => x.asset_id === bitasset.collateral);
 
         return !collateralAssetBalance ||
           (collateralAssetBalance && !collateralAssetBalance.amount > 0)
@@ -104,9 +87,7 @@ export default function Smartcoins(properties) {
   const heldSmartcoins = useMemo(() => {
     if (usrBalances && bitAssetData && marketSearch) {
       const _smartcoins = bitAssetData.filter((bitasset) => {
-        const debtAssetBalance = usrBalances.find(
-          (x) => x.asset_id === bitasset.assetID
-        );
+        const debtAssetBalance = usrBalances.find((x) => x.asset_id === bitasset.assetID);
 
         return debtAssetBalance ? true : false;
       });
@@ -119,23 +100,14 @@ export default function Smartcoins(properties) {
   const [activeSearch, setActiveSearch] = useState("borrow");
 
   const assetSearch = useMemo(() => {
-    if (
-      !bitAssetData ||
-      !bitAssetData.length ||
-      !marketSearch ||
-      !marketSearch.length
-    ) {
+    if (!bitAssetData || !bitAssetData.length || !marketSearch || !marketSearch.length) {
       return;
     }
 
     const updatedBitassetData = bitAssetData.map((bitasset) => {
-      const thisBitassetData = marketSearch.find(
-        (x) => x.id === bitasset.assetID
-      );
+      const thisBitassetData = marketSearch.find((x) => x.id === bitasset.assetID);
 
-      const thisCollateralAssetData = marketSearch.find(
-        (x) => x.id === bitasset.collateral
-      );
+      const thisCollateralAssetData = marketSearch.find((x) => x.id === bitasset.collateral);
 
       return {
         ...bitasset,
@@ -183,20 +155,14 @@ export default function Smartcoins(properties) {
     []
   );
 
-  function CommonRow({
-    index,
-    style,
-    bitasset,
-    thisBitassetData,
-    thisCollateralAssetData,
-  }) {
+  function CommonRow({ index, style, bitasset, thisBitassetData, thisCollateralAssetData }) {
     return (
       <div style={{ ...style }} key={`acard-${bitasset.assetID}`}>
         <Card className="ml-2 mr-2" onClick={() => {}}>
           <CardHeader className="pb-1">
             <CardTitle>
-              {bitasset.issuer.id === "1.2.0" ? "Bitasset" : "Smartcoin"} "
-              {thisBitassetData.s}" {"("}
+              {bitasset.issuer.id === "1.2.0" ? "Bitasset" : "Smartcoin"} "{thisBitassetData.s}"{" "}
+              {"("}
               <ExternalLink
                 classNameContents="text-blue-500"
                 type="text"
@@ -228,18 +194,14 @@ export default function Smartcoins(properties) {
             </CardDescription>
           </CardHeader>
           <CardContent className="text-sm pb-3">
-            <Badge className="mr-2 mt-2">
-              Feed qty: {bitasset.feeds?.length ?? 0}
-            </Badge>
+            <Badge className="mr-2 mt-2">Feed qty: {bitasset.feeds?.length ?? 0}</Badge>
             <Badge className="mr-2">MCR: {bitasset.mcr / 10} %</Badge>
             <Badge className="mr-2">MSSR: {bitasset.mssr / 10} %</Badge>
             <Badge className="mr-2">ICR: {bitasset.icr / 10} %</Badge>
           </CardContent>
           <CardFooter className="pb-5">
             <a href={`/smartcoin/index.html?id=${bitasset.assetID}`}>
-              <Button className="h-8">
-                Proceed to borrow {thisBitassetData.s}
-              </Button>
+              <Button className="h-8">Proceed to borrow {thisBitassetData.s}</Button>
             </a>
           </CardFooter>
         </Card>
@@ -252,9 +214,7 @@ export default function Smartcoins(properties) {
       <div style={{ ...style }} key={`acard-${index}`}>
         <Card className="ml-2 mr-2">
           <CardHeader className="pb-1">
-            <CardTitle>
-              Smartcoin "..." (1.3.x) created by ... (1.2.x)
-            </CardTitle>
+            <CardTitle>Smartcoin "..." (1.3.x) created by ... (1.2.x)</CardTitle>
             <CardDescription>
               Backing collateral:
               <b>{` ... (1.3.x)`}</b>
@@ -285,14 +245,10 @@ export default function Smartcoins(properties) {
     }
 
     const thisBitassetData =
-      bitasset && marketSearch
-        ? marketSearch.find((x) => x.id === bitasset.assetID)
-        : null;
+      bitasset && marketSearch ? marketSearch.find((x) => x.id === bitasset.assetID) : null;
 
     const thisCollateralAssetData =
-      bitasset && marketSearch
-        ? marketSearch.find((x) => x.id === bitasset.collateral)
-        : null;
+      bitasset && marketSearch ? marketSearch.find((x) => x.id === bitasset.collateral) : null;
 
     if (!bitasset || !thisBitassetData || !thisCollateralAssetData) {
       return null;
@@ -312,13 +268,9 @@ export default function Smartcoins(properties) {
   const SearchRow = ({ index, style }) => {
     let bitasset = thisResult[index].item;
 
-    const thisBitassetData = marketSearch.find(
-      (x) => x.id === bitasset.assetID
-    );
+    const thisBitassetData = marketSearch.find((x) => x.id === bitasset.assetID);
 
-    const thisCollateralAssetData = marketSearch.find(
-      (x) => x.id === bitasset.collateral
-    );
+    const thisCollateralAssetData = marketSearch.find((x) => x.id === bitasset.collateral);
 
     return (
       <CommonRow
@@ -369,20 +321,18 @@ export default function Smartcoins(properties) {
             <CardHeader>
               <CardTitle>💵 Select a borrowable asset</CardTitle>
               <CardDescription>
-                There are multiple user & committee created smartcoins on the
-                Bitshares blockchain which you can issue yourself, given you
-                provide and maintain sufficient backing collateral.
+                There are multiple user & committee created smartcoins on the Bitshares blockchain
+                which you can issue yourself, given you provide and maintain sufficient backing
+                collateral.
                 <br />
-                Thoroughly research assets before issuing them into existence,
-                know your risk exposure and tolerances.
+                Thoroughly research assets before issuing them into existence, know your risk
+                exposure and tolerances.
               </CardDescription>
             </CardHeader>
             <CardContent>
               {bitAssetData && bitAssetData.length && usrBalances ? (
                 <Tabs
-                  key={`Tabs_${activeTab ?? ""}${activeSearch ?? ""}${
-                    thisInput ?? ""
-                  }`}
+                  key={`Tabs_${activeTab ?? ""}${activeSearch ?? ""}${thisInput ?? ""}`}
                   defaultValue={activeTab ?? "all"}
                   className="w-full"
                 >
@@ -411,11 +361,7 @@ export default function Smartcoins(properties) {
                         value="compatible"
                         onClick={() => {
                           setActiveTab("compatible");
-                          window.history.replaceState(
-                            {},
-                            "",
-                            `?tab=compatible`
-                          );
+                          window.history.replaceState({}, "", `?tab=compatible`);
                         }}
                       >
                         View compatible
@@ -445,11 +391,7 @@ export default function Smartcoins(properties) {
                         value="search"
                         onClick={() => {
                           setActiveTab("search");
-                          window.history.replaceState(
-                            {},
-                            "",
-                            `?tab=search&searchTab=borrow`
-                          );
+                          window.history.replaceState({}, "", `?tab=search&searchTab=borrow`);
                         }}
                       >
                         Search
@@ -471,8 +413,7 @@ export default function Smartcoins(properties) {
                   </TabsContent>
                   <TabsContent value="compatible">
                     <h5 className="mb-2 text-center">
-                      Listing {compatibleSmartcoins.length} smartcoins
-                      compatible with your account
+                      Listing {compatibleSmartcoins.length} smartcoins compatible with your account
                     </h5>
                     <List
                       height={500}
@@ -485,8 +426,7 @@ export default function Smartcoins(properties) {
                   </TabsContent>
                   <TabsContent value="holdings">
                     <h5 className="mb-2 text-center">
-                      Listing {heldSmartcoins ? heldSmartcoins.length : 0} held
-                      smartcoins
+                      Listing {heldSmartcoins ? heldSmartcoins.length : 0} held smartcoins
                     </h5>
                     <List
                       height={500}
@@ -498,13 +438,8 @@ export default function Smartcoins(properties) {
                     </List>
                   </TabsContent>
                   <TabsContent value="search">
-                    <h5 className="mb-2 text-center">
-                      How do you want to search?
-                    </h5>
-                    <Tabs
-                      defaultValue={activeSearch ?? "borrow"}
-                      className="w-full"
-                    >
+                    <h5 className="mb-2 text-center">How do you want to search?</h5>
+                    <Tabs defaultValue={activeSearch ?? "borrow"} className="w-full">
                       <TabsList className="grid w-full grid-cols-3 gap-2">
                         {activeSearch === "borrow" ? (
                           <TabsTrigger value="borrow" style={activeTabStyle}>
@@ -515,21 +450,14 @@ export default function Smartcoins(properties) {
                             value="borrow"
                             onClick={() => {
                               setActiveSearch("borrow");
-                              window.history.replaceState(
-                                {},
-                                "",
-                                `?tab=search&searchTab=borrow`
-                              );
+                              window.history.replaceState({}, "", `?tab=search&searchTab=borrow`);
                             }}
                           >
                             Search by borrowable asset
                           </TabsTrigger>
                         )}
                         {activeSearch === "collateral" ? (
-                          <TabsTrigger
-                            value="collateral"
-                            style={activeTabStyle}
-                          >
+                          <TabsTrigger value="collateral" style={activeTabStyle}>
                             Searching by collateral assets
                           </TabsTrigger>
                         ) : (
@@ -556,11 +484,7 @@ export default function Smartcoins(properties) {
                             value="issuer"
                             onClick={() => {
                               setActiveSearch("issuer");
-                              window.history.replaceState(
-                                {},
-                                "",
-                                `?tab=search&searchTab=issuer`
-                              );
+                              window.history.replaceState({}, "", `?tab=search&searchTab=issuer`);
                             }}
                           >
                             Search by issuer
@@ -634,15 +558,8 @@ export default function Smartcoins(properties) {
                     <TabsTrigger value="all">Search</TabsTrigger>
                   </TabsList>
                   <TabsContent value="all">
-                    <h5 className="mb-2 text-center">
-                      Listing ... (all) smartcoins
-                    </h5>
-                    <List
-                      height={500}
-                      itemCount={3}
-                      itemSize={200}
-                      className="w-full"
-                    >
+                    <h5 className="mb-2 text-center">Listing ... (all) smartcoins</h5>
+                    <List height={500} itemCount={3} itemSize={200} className="w-full">
                       {PlaceholderRow}
                     </List>
                   </TabsContent>
@@ -652,9 +569,7 @@ export default function Smartcoins(properties) {
           </Card>
         </div>
         <div className="grid grid-cols-1 mt-5">
-          {usr && usr.username && usr.username.length ? (
-            <CurrentUser usr={usr} />
-          ) : null}
+          {usr && usr.username && usr.username.length ? <CurrentUser usr={usr} /> : null}
         </div>
       </div>
     </>

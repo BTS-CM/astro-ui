@@ -40,11 +40,7 @@ export default function ExternalLink(properties) {
           {text}
         </span>
       ) : (
-        <Button
-          variant={variant}
-          onClick={() => setOpen(true)}
-          className={classNameContents}
-        >
+        <Button variant={variant} onClick={() => setOpen(true)} className={classNameContents}>
           {text}
         </Button>
       )}
@@ -57,9 +53,7 @@ export default function ExternalLink(properties) {
         <DialogContent className="sm:max-w-[500px] bg-white">
           <DialogHeader>
             <DialogTitle>⚠️ You are about to leave this app!</DialogTitle>
-            <DialogDescription>
-              You are about to nagivate to an external website.
-            </DialogDescription>
+            <DialogDescription>You are about to nagivate to an external website.</DialogDescription>
           </DialogHeader>
           <h3 className="scroll-m-20 text-1xl font-semibold tracking-tight mb-3 mt-1">
             Do you want to proceed to the following URL?

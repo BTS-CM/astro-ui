@@ -5,10 +5,9 @@ import { nanoquery } from "@nanostores/query";
 const [createDynamicDataStore] = nanoquery({
   fetcher: async (chain: string, id: string) => {
     const replacedID = id.replace("1.3.", "2.3.");
-    const response = await fetch(
-      `http://localhost:8080/cache/dynamic/${chain}/${replacedID}`,
-      { method: "GET" }
-    );
+    const response = await fetch(`http://localhost:8080/cache/dynamic/${chain}/${replacedID}`, {
+      method: "GET",
+    });
 
     if (!response.ok) {
       console.log(`Failed to fetch ${replacedID} dynamic data`);
@@ -36,19 +35,16 @@ const [createSmartcoinDataStore] = nanoquery({
   ) => {
     let response;
     try {
-      response = await fetch(
-        `http://localhost:8080/api/fullSmartcoin/${chain}`,
-        {
-          method: "POST",
-          body: JSON.stringify([
-            assetID,
-            collateralAssetID,
-            bitassetID,
-            collateralBitassetID,
-            userID,
-          ]),
-        }
-      );
+      response = await fetch(`http://localhost:8080/api/fullSmartcoin/${chain}`, {
+        method: "POST",
+        body: JSON.stringify([
+          assetID,
+          collateralAssetID,
+          bitassetID,
+          collateralBitassetID,
+          userID,
+        ]),
+      });
     } catch (error) {
       console.log("Failed to fetch smartcoin data");
       return;
@@ -69,10 +65,10 @@ const [createSmartcoinDataStore] = nanoquery({
 // Create fetcher store for bitasset data
 const [createBitassetDataStore] = nanoquery({
   fetcher: async (chain: string, id: string) => {
-    const response = await fetch(
-      `http://localhost:8080/api/getObjects/${chain}`,
-      { method: "POST", body: JSON.stringify([id]) }
-    );
+    const response = await fetch(`http://localhost:8080/api/getObjects/${chain}`, {
+      method: "POST",
+      body: JSON.stringify([id]),
+    });
 
     if (!response.ok) {
       console.log("Failed to fetch bitasset data");
@@ -81,11 +77,7 @@ const [createBitassetDataStore] = nanoquery({
 
     const responseContents = await response.json();
 
-    if (
-      responseContents &&
-      responseContents.result &&
-      responseContents.result.length
-    ) {
+    if (responseContents && responseContents.result && responseContents.result.length) {
       const finalResult = responseContents.result[0];
       return finalResult;
     }
@@ -94,10 +86,9 @@ const [createBitassetDataStore] = nanoquery({
 
 const [createCachedAssetStore] = nanoquery({
   fetcher: async (chain: string, assetID: string) => {
-    const response = await fetch(
-      `http://localhost:8080/cache/asset/${chain}/${assetID}`,
-      { method: "GET" }
-    );
+    const response = await fetch(`http://localhost:8080/cache/asset/${chain}/${assetID}`, {
+      method: "GET",
+    });
 
     if (!response.ok) {
       console.log(`Failed to fetch asset: ${assetID}`);

@@ -10,11 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 
 import { Button } from "@/components/ui/button";
 
@@ -25,11 +21,7 @@ import AccountSelect from "./AccountSelect.jsx";
 import CurrentUser from "./common/CurrentUser.jsx";
 
 export default function Home(properties) {
-  const usr = useSyncExternalStore(
-    $currentUser.subscribe,
-    $currentUser.get,
-    () => true
-  );
+  const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
 
   //useInitCache(usr && usr.chain ? usr.chain : "bitshares");
 
@@ -63,9 +55,7 @@ export default function Home(properties) {
                 <Card>
                   <CardHeader>
                     <CardTitle>📈 DEX limit orders</CardTitle>
-                    <CardDescription>
-                      Trade on the Bitshares DEX
-                    </CardDescription>
+                    <CardDescription>Trade on the Bitshares DEX</CardDescription>
                   </CardHeader>
                 </Card>
               </a>
@@ -86,19 +76,14 @@ export default function Home(properties) {
                 <Card>
                   <CardHeader>
                     <CardTitle>💸 Transfer assets</CardTitle>
-                    <CardDescription>
-                      Send assets to other users
-                    </CardDescription>
+                    <CardDescription>Send assets to other users</CardDescription>
                   </CardHeader>
                 </Card>
               </a>
             </HoverCardTrigger>
             <HoverCardContent className="w-80 text-sm pt-1">
               <ul className="ml-2 list-disc [&>li]:mt-2">
-                <li>
-                  Transfer assets to anyone on the Bitshares blockchain in
-                  seconds.
-                </li>
+                <li>Transfer assets to anyone on the Bitshares blockchain in seconds.</li>
                 <li>Optional encrypted memos.</li>
               </ul>
             </HoverCardContent>
@@ -126,10 +111,7 @@ export default function Home(properties) {
 
           <HoverCard key="smartcoins">
             <HoverCardTrigger asChild>
-              <a
-                href="/smartcoins/index.html"
-                style={{ textDecoration: "none" }}
-              >
+              <a href="/smartcoins/index.html" style={{ textDecoration: "none" }}>
                 <Card>
                   <CardHeader>
                     <CardTitle>💵 Create debt</CardTitle>
@@ -141,20 +123,16 @@ export default function Home(properties) {
             <HoverCardContent className="w-80 text-sm pt-1">
               <ul className="ml-2 list-disc [&>li]:mt-2">
                 <li>
-                  Bitassets like USD, CNY and EUR are committee created
-                  stablecoins (smartcoins) backed with BTS.
+                  Bitassets like USD, CNY and EUR are committee created stablecoins (smartcoins)
+                  backed with BTS.
                 </li>
                 <li>
-                  User created smartcoins can be backed with any asset and
-                  reference any external feed.
+                  User created smartcoins can be backed with any asset and reference any external
+                  feed.
                 </li>
+                <li>External settlement prices are derived from configured feed producers.</li>
                 <li>
-                  External settlement prices are derived from configured feed
-                  producers.
-                </li>
-                <li>
-                  Exposure to external price feeds can pose a risk to
-                  collateralized debt positions.
+                  Exposure to external price feeds can pose a risk to collateralized debt positions.
                 </li>
               </ul>
             </HoverCardContent>
@@ -173,15 +151,9 @@ export default function Home(properties) {
             </HoverCardTrigger>
             <HoverCardContent className="w-80 text-sm pt-1">
               <ul className="ml-2 list-disc [&>li]:mt-2">
-                <li>
-                  There are multiple benefits to becoming a lifetime member.
-                </li>
-                <li>
-                  Lifetime members receive a 80% vesting balance rebate on fees.
-                </li>
-                <li>
-                  Lifetime members can create premium Bitshares account names.
-                </li>
+                <li>There are multiple benefits to becoming a lifetime member.</li>
+                <li>Lifetime members receive a 80% vesting balance rebate on fees.</li>
+                <li>Lifetime members can create premium Bitshares account names.</li>
                 <li>Lifetime members can earn through the referral system.</li>
               </ul>
             </HoverCardContent>
@@ -189,10 +161,7 @@ export default function Home(properties) {
 
           <HoverCard key="portfolio">
             <HoverCardTrigger asChild>
-              <a
-                href="/portfolio/index.html"
-                style={{ textDecoration: "none" }}
-              >
+              <a href="/portfolio/index.html" style={{ textDecoration: "none" }}>
                 <Card>
                   <CardHeader>
                     <CardTitle>💰 Portfolio</CardTitle>
@@ -250,9 +219,7 @@ export default function Home(properties) {
           </HoverCard>
         </div>
         <div className="grid grid-cols-1 mt-5">
-          {usr && usr.username && usr.username.length ? (
-            <CurrentUser usr={usr} />
-          ) : null}
+          {usr && usr.username && usr.username.length ? <CurrentUser usr={usr} /> : null}
         </div>
       </div>
     </>

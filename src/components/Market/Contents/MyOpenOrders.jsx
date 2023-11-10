@@ -26,9 +26,7 @@ export default function MyOpenOrders(properties) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>
-          {type === "buy" ? `My open buy orders` : `My open sell orders`}
-        </CardTitle>
+        <CardTitle>{type === "buy" ? `My open buy orders` : `My open sell orders`}</CardTitle>
         <CardDescription>
           {type === "buy"
             ? `Your open buy limit orders for the market ${assetAData.symbol}/${assetBData.symbol}`
@@ -36,16 +34,14 @@ export default function MyOpenOrders(properties) {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-2">
-        {(!usrLimitOrders || !usrLimitOrders.length) &&
-        !marketHistoryInProgress ? (
+        {(!usrLimitOrders || !usrLimitOrders.length) && !marketHistoryInProgress ? (
           type === "buy" ? (
             <>No open buy orders found</>
           ) : (
             <>No open sell orders found</>
           )
         ) : null}
-        {(!usrLimitOrders || !usrLimitOrders.length) &&
-        marketHistoryInProgress ? (
+        {(!usrLimitOrders || !usrLimitOrders.length) && marketHistoryInProgress ? (
           <>
             <Skeleton className="h-4 w-full mt-1" />
             <Skeleton className="h-4 w-full mt-1" />
@@ -69,16 +65,10 @@ export default function MyOpenOrders(properties) {
             usrLimitOrders={usrLimitOrders}
           />
         ) : null}
-        {usrHistory &&
-        !usrHistory.length &&
-        !marketHistoryInProgress &&
-        type === "buy"
+        {usrHistory && !usrHistory.length && !marketHistoryInProgress && type === "buy"
           ? `You have no open buy orders in this market`
           : null}
-        {usrHistory &&
-        !usrHistory.length &&
-        !marketHistoryInProgress &&
-        type === "sell"
+        {usrHistory && !usrHistory.length && !marketHistoryInProgress && type === "sell"
           ? `You have no open sell orders in this market`
           : null}
       </CardContent>

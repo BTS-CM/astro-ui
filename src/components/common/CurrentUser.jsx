@@ -4,13 +4,7 @@ import { InView } from "react-intersection-observer";
 import { Avatar } from "@/components/Avatar";
 import { Button } from "@/components/ui/button";
 
-import {
-  Card,
-  CardDescription,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardDescription, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 import {
   Dialog,
@@ -41,11 +35,7 @@ export default function CurrentUser(properties) {
   return (
     <div className="flex justify-center">
       <div className="grid grid-cols-1 mt-3">
-        <Card
-          key={usr.id}
-          className="w-full"
-          style={{ transform: "scale(0.75)" }}
-        >
+        <Card key={usr.id} className="w-full" style={{ transform: "scale(0.75)" }}>
           <CardHeader>
             <CardTitle
               style={{
@@ -66,13 +56,7 @@ export default function CurrentUser(properties) {
                           eye: "normal",
                           mouth: "open",
                         }}
-                        colors={[
-                          "#92A1C6",
-                          "#146A7C",
-                          "#F0AB3D",
-                          "#C271B4",
-                          "#C20D90",
-                        ]}
+                        colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]}
                       />
                     ) : null}
                   </InView>
@@ -103,9 +87,7 @@ export default function CurrentUser(properties) {
           <DialogContent className="sm:max-w-[500px] bg-white">
             <DialogHeader>
               <DialogTitle>Replacing current user</DialogTitle>
-              <DialogDescription>
-                Select a chain and account to proceed
-              </DialogDescription>
+              <DialogDescription>Select a chain and account to proceed</DialogDescription>
             </DialogHeader>
             <AccountSelect />
           </DialogContent>

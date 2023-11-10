@@ -1,9 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  useSyncExternalStore,
-  useMemo,
-} from "react";
+import React, { useState, useEffect, useSyncExternalStore, useMemo } from "react";
 
 import { nanoquery } from "@nanostores/query";
 import { useStore } from "@nanostores/react";
@@ -23,11 +18,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 
 import LimitOrderCard from "./Market/LimitOrderCard.jsx";
 import MarketOrderCard from "./Market/MarketOrderCard.jsx";
@@ -42,10 +33,7 @@ import { trimPrice } from "../lib/common";
 
 import { $marketSearchCache } from "../stores/cache.ts";
 
-import {
-  createMarketHistoryStore,
-  createMarketOrdersStore,
-} from "../effects/Market.ts";
+import { createMarketHistoryStore, createMarketOrdersStore } from "../effects/Market.ts";
 
 export default function Market(properties) {
   const {
@@ -125,12 +113,7 @@ export default function Market(properties) {
 
   // Use the store
   const marketHistoryStore = useMemo(() => {
-    return createMarketHistoryStore([
-      usr.chain,
-      assetAData.id,
-      assetBData.id,
-      usr.id,
-    ]);
+    return createMarketHistoryStore([usr.chain, assetAData.id, assetBData.id, usr.id]);
   }, [usr, assetAData, assetBData, marketItr]);
 
   const {
@@ -196,12 +179,8 @@ export default function Market(properties) {
                 <div className="col-span-3">
                   <Badge variant="outline" className="ml-2 mb-1">
                     {!tickerData ? "?" : null}
-                    {activeLimitCard === "buy" && tickerData
-                      ? tickerData.base_volume
-                      : null}
-                    {activeLimitCard === "sell" && tickerData
-                      ? tickerData.quote_volume
-                      : null}
+                    {activeLimitCard === "buy" && tickerData ? tickerData.base_volume : null}
+                    {activeLimitCard === "sell" && tickerData ? tickerData.quote_volume : null}
                   </Badge>
                 </div>
               </div>
@@ -210,12 +189,8 @@ export default function Market(properties) {
                 <div className="col-span-3">
                   <Badge variant="outline" className="ml-2 mb-1">
                     {!tickerData ? "?" : null}
-                    {activeLimitCard === "buy" && tickerData
-                      ? tickerData.quote_volume
-                      : null}
-                    {activeLimitCard === "sell" && tickerData
-                      ? tickerData.base_volume
-                      : null}
+                    {activeLimitCard === "buy" && tickerData ? tickerData.quote_volume : null}
+                    {activeLimitCard === "sell" && tickerData ? tickerData.base_volume : null}
                   </Badge>
                 </div>
               </div>
@@ -260,9 +235,7 @@ export default function Market(properties) {
                 }/${activeLimitCard === "buy" ? assetB : assetA}`
               : `https://blocksights.info/#/markets/${
                   activeLimitCard === "buy" ? assetA : assetB
-                }/${
-                  activeLimitCard === "buy" ? assetB : assetA
-                }?network=testnet`
+                }/${activeLimitCard === "buy" ? assetB : assetA}?network=testnet`
           }
         />
         {usr.chain === "bitshares" ? (
@@ -328,20 +301,14 @@ export default function Market(properties) {
                     <TabsTrigger value="buy" style={activeTabStyle}>
                       Buy
                     </TabsTrigger>
-                    <TabsTrigger
-                      value="sell"
-                      onClick={() => setActiveLimitCard("sell")}
-                    >
+                    <TabsTrigger value="sell" onClick={() => setActiveLimitCard("sell")}>
                       Sell
                     </TabsTrigger>
                   </>
                 ) : null}
                 {assetAData && assetBData && activeLimitCard === "sell" ? (
                   <>
-                    <TabsTrigger
-                      value="buy"
-                      onClick={() => setActiveLimitCard("buy")}
-                    >
+                    <TabsTrigger value="buy" onClick={() => setActiveLimitCard("buy")}>
                       Buy
                     </TabsTrigger>
                     <TabsTrigger value="sell" style={activeTabStyle}>
@@ -449,10 +416,8 @@ export default function Market(properties) {
                 <Card>
                   <CardHeader className="pt-2 pb-2">
                     <CardTitle className="text-center text-lg">
-                      {usr.chain === "bitshares"
-                        ? "Bitshares"
-                        : "Bitshares (Testnet)"}{" "}
-                      DEX Market controls
+                      {usr.chain === "bitshares" ? "Bitshares" : "Bitshares (Testnet)"} DEX Market
+                      controls
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="pb-3">
@@ -467,10 +432,7 @@ export default function Market(properties) {
                         size="small"
                       />
                       <HoverCard>
-                        <HoverCardTrigger
-                          asChild
-                          style={{ position: "relative" }}
-                        >
+                        <HoverCardTrigger asChild style={{ position: "relative" }}>
                           <Button
                             variant="outline"
                             className="h-5 ml-1 mr-1 p-3"
@@ -521,13 +483,9 @@ export default function Market(properties) {
                   <Card>
                     <CardHeader className="pb-2 pt-4">
                       <CardTitle>
-                        {activeLimitCard === "buy"
-                          ? "Quote asset"
-                          : "Base asset"}
+                        {activeLimitCard === "buy" ? "Quote asset" : "Base asset"}
                       </CardTitle>
-                      <CardDescription className="text-lg">
-                        Loading...
-                      </CardDescription>
+                      <CardDescription className="text-lg">Loading...</CardDescription>
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-2">
@@ -557,13 +515,9 @@ export default function Market(properties) {
                   <Card>
                     <CardHeader className="pb-2 pt-4">
                       <CardTitle>
-                        {activeLimitCard === "sell"
-                          ? "Base asset"
-                          : "Quote asset"}
+                        {activeLimitCard === "sell" ? "Base asset" : "Quote asset"}
                       </CardTitle>
-                      <CardDescription className="text-lg">
-                        Loading...
-                      </CardDescription>
+                      <CardDescription className="text-lg">Loading...</CardDescription>
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-2">
@@ -599,10 +553,7 @@ export default function Market(properties) {
                       Buy
                     </TabsTrigger>
                   ) : (
-                    <TabsTrigger
-                      value="buy"
-                      onClick={() => setActiveMOC("buy")}
-                    >
+                    <TabsTrigger value="buy" onClick={() => setActiveMOC("buy")}>
                       Buy
                     </TabsTrigger>
                   )}
@@ -611,10 +562,7 @@ export default function Market(properties) {
                       Sell
                     </TabsTrigger>
                   ) : (
-                    <TabsTrigger
-                      value="sell"
-                      onClick={() => setActiveMOC("sell")}
-                    >
+                    <TabsTrigger value="sell" onClick={() => setActiveMOC("sell")}>
                       Sell
                     </TabsTrigger>
                   )}

@@ -1,9 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  useSyncExternalStore,
-  useMemo,
-} from "react";
+import React, { useState, useEffect, useSyncExternalStore, useMemo } from "react";
 import Fuse from "fuse.js";
 import { useForm } from "react-hook-form";
 import { FixedSizeList as List } from "react-window";
@@ -53,11 +48,7 @@ import {
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import {
-  blockchainFloat,
-  copyToClipboard,
-  humanReadableFloat,
-} from "../lib/common";
+import { blockchainFloat, copyToClipboard, humanReadableFloat } from "../lib/common";
 
 import { eraseCurrentUser } from "../stores/users.ts";
 import {
@@ -97,11 +88,7 @@ export default function PoolForm() {
 
   const [pool, setPool] = useState(""); // dropdown selected pool
 
-  const usr = useSyncExternalStore(
-    $currentUser.subscribe,
-    $currentUser.get,
-    () => true
-  );
+  const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
 
   useInitCache(usr && usr.chain ? usr.chain : "bitshares", [
     "marketSearch",
@@ -110,17 +97,9 @@ export default function PoolForm() {
     "feeSchedule",
   ]);
 
-  const assets = useSyncExternalStore(
-    $assetCache.subscribe,
-    $assetCache.get,
-    () => true
-  );
+  const assets = useSyncExternalStore($assetCache.subscribe, $assetCache.get, () => true);
 
-  const pools = useSyncExternalStore(
-    $poolCache.subscribe,
-    $poolCache.get,
-    () => true
-  );
+  const pools = useSyncExternalStore($poolCache.subscribe, $poolCache.get, () => true);
 
   const marketSearch = useSyncExternalStore(
     $marketSearchCache.subscribe,
@@ -154,10 +133,7 @@ export default function PoolForm() {
     const _poolSearch = new Fuse(pools ?? [], {
       includeScore: true,
       threshold: 0.2,
-      keys:
-        activeTab === "asset"
-          ? ["asset_a_symbol", "asset_b_symbol"]
-          : ["share_asset_symbol"],
+      keys: activeTab === "asset" ? ["asset_a_symbol", "asset_b_symbol"] : ["share_asset_symbol"],
     });
     setPoolSearch(_poolSearch);
   }, [pools, activeTab]);
@@ -221,11 +197,7 @@ export default function PoolForm() {
           return;
         }
 
-        if (
-          poolParameter &&
-          poolParameter.length &&
-          !poolParameter.includes("1.19.")
-        ) {
+        if (poolParameter && poolParameter.length && !poolParameter.includes("1.19.")) {
           console.log("Invalid pool parameters");
           setPool("1.19.0");
           return;
@@ -270,39 +242,32 @@ export default function PoolForm() {
     let unsubscribePoolDetails;
 
     if (usr && usr.chain && foundPool) {
-      const poolDetailsStore = createPoolDetailsStore([
-        usr.chain,
-        foundPool.id,
-      ]);
+      const poolDetailsStore = createPoolDetailsStore([usr.chain, foundPool.id]);
 
-      unsubscribePoolDetails = poolDetailsStore.subscribe(
-        ({ data, error, loading }) => {
-          if (data && !error && !loading) {
-            let finalResult = data;
-            finalResult["asset_a_symbol"] = assetA.symbol;
-            finalResult["asset_a_precision"] = assetA.precision;
+      unsubscribePoolDetails = poolDetailsStore.subscribe(({ data, error, loading }) => {
+        if (data && !error && !loading) {
+          let finalResult = data;
+          finalResult["asset_a_symbol"] = assetA.symbol;
+          finalResult["asset_a_precision"] = assetA.precision;
 
-            finalResult["asset_b_symbol"] = assetB.symbol;
-            finalResult["asset_b_precision"] = assetB.precision;
+          finalResult["asset_b_symbol"] = assetB.symbol;
+          finalResult["asset_b_precision"] = assetB.precision;
 
-            finalResult["share_asset_symbol"] = foundPool.share_asset_symbol;
+          finalResult["share_asset_symbol"] = foundPool.share_asset_symbol;
 
-            finalResult["readable_balance_a"] = `${humanReadableFloat(
-              finalResult.balance_a,
-              assetA.precision
-            )} ${assetA.symbol}`;
-            finalResult["readable_balance_b"] = `${humanReadableFloat(
-              finalResult.balance_b,
-              assetB.precision
-            )} ${assetB.symbol}`;
-            finalResult["share_asset_details"] = assets.find(
-              (x) => x.id === finalResult.share_asset
-            );
+          finalResult["readable_balance_a"] = `${humanReadableFloat(
+            finalResult.balance_a,
+            assetA.precision
+          )} ${assetA.symbol}`;
+          finalResult["readable_balance_b"] = `${humanReadableFloat(
+            finalResult.balance_b,
+            assetB.precision
+          )} ${assetB.symbol}`;
+          finalResult["share_asset_details"] = assets.find((x) => x.id === finalResult.share_asset);
 
-            setFoundPoolDetails(finalResult);
-          }
+          setFoundPoolDetails(finalResult);
         }
-      );
+      });
     }
 
     return () => {
@@ -329,67 +294,49 @@ export default function PoolForm() {
         usr.chain,
         assetA.id.replace("1.3.", "2.3."),
       ]);
-      unsubscribeADetails = dynamicDataStoreA.subscribe(
-        ({ data, error, loading }) => {
-          if (data && !error && !loading) {
-            setAssetADetails(data);
-          }
+      unsubscribeADetails = dynamicDataStoreA.subscribe(({ data, error, loading }) => {
+        if (data && !error && !loading) {
+          setAssetADetails(data);
         }
-      );
+      });
 
       const dynamicDataStoreB = createDynamicDataStore([
         usr.chain,
         assetB.id.replace("1.3.", "2.3."),
       ]);
-      unsubscribeBDetails = dynamicDataStoreB.subscribe(
-        ({ data, error, loading }) => {
-          if (data && !error && !loading) {
-            setAssetBDetails(data);
-          }
+      unsubscribeBDetails = dynamicDataStoreB.subscribe(({ data, error, loading }) => {
+        if (data && !error && !loading) {
+          setAssetBDetails(data);
         }
-      );
+      });
 
-      const poolAsset = assets.find(
-        (x) => x.symbol === foundPool.share_asset_symbol
-      );
+      const poolAsset = assets.find((x) => x.symbol === foundPool.share_asset_symbol);
       const dynamicDataStorePool = createDynamicDataStore([
         usr.chain,
         poolAsset.id.replace("1.3.", "2.3."),
       ]);
-      unsubscribePoolShareDetails = dynamicDataStorePool.subscribe(
-        ({ data, error, loading }) => {
-          if (data && !error && !loading) {
-            setPoolShareDetails(data);
-          }
+      unsubscribePoolShareDetails = dynamicDataStorePool.subscribe(({ data, error, loading }) => {
+        if (data && !error && !loading) {
+          setPoolShareDetails(data);
         }
-      );
+      });
 
       if (assetA.bitasset_data_id) {
-        const bitassetDataStoreA = createBitassetDataStore([
-          usr.chain,
-          assetA.bitasset_data_id,
-        ]);
-        unsubscribeABitassetData = bitassetDataStoreA.subscribe(
-          ({ data, error, loading }) => {
-            if (data && !error && !loading) {
-              setABitassetData(data);
-            }
+        const bitassetDataStoreA = createBitassetDataStore([usr.chain, assetA.bitasset_data_id]);
+        unsubscribeABitassetData = bitassetDataStoreA.subscribe(({ data, error, loading }) => {
+          if (data && !error && !loading) {
+            setABitassetData(data);
           }
-        );
+        });
       }
 
       if (assetB.bitasset_data_id) {
-        const bitassetDataStoreB = createBitassetDataStore([
-          usr.chain,
-          assetB.bitasset_data_id,
-        ]);
-        unsubscribeBBitassetData = bitassetDataStoreB.subscribe(
-          ({ data, error, loading }) => {
-            if (data && !error && !loading) {
-              setBBitassetData(data);
-            }
+        const bitassetDataStoreB = createBitassetDataStore([usr.chain, assetB.bitasset_data_id]);
+        unsubscribeBBitassetData = bitassetDataStoreB.subscribe(({ data, error, loading }) => {
+          if (data && !error && !loading) {
+            setBBitassetData(data);
           }
-        );
+        });
       }
     }
 
@@ -409,13 +356,11 @@ export default function PoolForm() {
     if (usr && usr.id && assetA && assetB) {
       const userBalancesStore = createUserBalancesStore([usr.chain, usr.id]);
 
-      unsubscribeUserBalances = userBalancesStore.subscribe(
-        ({ data, error, loading }) => {
-          if (data && !error && !loading) {
-            setUsrBalances(data);
-          }
+      unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
+        if (data && !error && !loading) {
+          setUsrBalances(data);
         }
-      );
+      });
     }
 
     return () => {
@@ -475,16 +420,10 @@ export default function PoolForm() {
       }
 
       function taker_market_fee_percenta() {
-        if (
-          typeof taker_fee_percenta == "undefined" &&
-          maker_market_fee_percenta > 0
-        ) {
+        if (typeof taker_fee_percenta == "undefined" && maker_market_fee_percenta > 0) {
           return Number(maker_market_fee_percenta) / 10000;
         }
-        if (
-          typeof taker_fee_percenta == "undefined" &&
-          maker_market_fee_percenta === 0
-        ) {
+        if (typeof taker_fee_percenta == "undefined" && maker_market_fee_percenta === 0) {
           return 0;
         } else {
           return Number(taker_fee_percenta) / 10000;
@@ -498,8 +437,7 @@ export default function PoolForm() {
           Number(poolamountb) -
           Math.ceil(
             (Number(poolamountb) * Number(poolamounta)) /
-              (Number(poolamounta) +
-                (Number(sellAmount) * Number(poolamountap) - Number(flagsa())))
+              (Number(poolamounta) + (Number(sellAmount) * Number(poolamountap) - Number(flagsa())))
           );
         let tmp_b = (Number(tmp_delta_b) * Number(taker_fee_percenta)) / 10000;
         result =
@@ -508,9 +446,7 @@ export default function PoolForm() {
             Math.ceil(
               Math.min(
                 Number(max_market_feeb),
-                Math.ceil(
-                  Number(tmp_delta_b) * Number(taker_market_fee_percent_a)
-                )
+                Math.ceil(Number(tmp_delta_b) * Number(taker_market_fee_percent_a))
               )
             )) /
           Number(poolamountbp);
@@ -519,8 +455,7 @@ export default function PoolForm() {
           Number(poolamounta) -
           Math.ceil(
             (Number(poolamounta) * Number(poolamountb)) /
-              (Number(poolamountb) +
-                (Number(sellAmount) * Number(poolamountbp) - Number(flagsb())))
+              (Number(poolamountb) + (Number(sellAmount) * Number(poolamountbp) - Number(flagsb())))
           );
         let tmp_a = (Number(tmp_delta_a) * Number(taker_fee_percenta)) / 10000;
         result =
@@ -529,9 +464,7 @@ export default function PoolForm() {
             Math.ceil(
               Math.min(
                 Number(max_market_feea),
-                Math.ceil(
-                  Number(tmp_delta_a) * Number(taker_market_fee_percent_a)
-                )
+                Math.ceil(Number(tmp_delta_a) * Number(taker_market_fee_percent_a))
               )
             )) /
           Number(poolamountap);
@@ -543,9 +476,7 @@ export default function PoolForm() {
 
   const [buyAmountInput, setBuyAmountInput] = useState();
   useEffect(() => {
-    setBuyAmountInput(
-      <Input value={buyAmount ?? 0} disabled className="mb-3" />
-    );
+    setBuyAmountInput(<Input value={buyAmount ?? 0} disabled className="mb-3" />);
   }, [buyAmount]);
 
   const [showDialog, setShowDialog] = useState(false);
@@ -574,8 +505,8 @@ export default function PoolForm() {
             <CardHeader>
               <CardTitle>Bitshares Liquidity Pool Exchange</CardTitle>
               <CardDescription>
-                Easily swap between Bitshares assets using one of these user
-                created liquidity pools.
+                Easily swap between Bitshares assets using one of these user created liquidity
+                pools.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -628,18 +559,14 @@ export default function PoolForm() {
                                     }}
                                   >
                                     <DialogTrigger asChild>
-                                      <Button className="h-5 p-3">
-                                        Search
-                                      </Button>
+                                      <Button className="h-5 p-3">Search</Button>
                                     </DialogTrigger>
                                     <DialogContent className="sm:max-w-[900px] bg-white">
                                       <DialogHeader>
-                                        <DialogTitle>
-                                          Search for a liquidity pool
-                                        </DialogTitle>
+                                        <DialogTitle>Search for a liquidity pool</DialogTitle>
                                         <DialogDescription>
-                                          Select a search result to proceed with
-                                          your desired asset swap.
+                                          Select a search result to proceed with your desired asset
+                                          swap.
                                         </DialogDescription>
                                       </DialogHeader>
                                       <div className="grid grid-cols-1">
@@ -647,35 +574,25 @@ export default function PoolForm() {
                                           <Tabs defaultValue="asset">
                                             <TabsList className="grid max-w-[400px] grid-cols-2 mb-1 gap-3">
                                               {activeTab === "asset" ? (
-                                                <TabsTrigger
-                                                  style={activeTabStyle}
-                                                  value="asset"
-                                                >
+                                                <TabsTrigger style={activeTabStyle} value="asset">
                                                   Swappable assets
                                                 </TabsTrigger>
                                               ) : (
                                                 <TabsTrigger
                                                   value="asset"
-                                                  onClick={() =>
-                                                    setActiveTab("asset")
-                                                  }
+                                                  onClick={() => setActiveTab("asset")}
                                                 >
                                                   Swappable assets
                                                 </TabsTrigger>
                                               )}
                                               {activeTab === "share" ? (
-                                                <TabsTrigger
-                                                  style={activeTabStyle}
-                                                  value="share"
-                                                >
+                                                <TabsTrigger style={activeTabStyle} value="share">
                                                   Pool share asset
                                                 </TabsTrigger>
                                               ) : (
                                                 <TabsTrigger
                                                   value="share"
-                                                  onClick={() =>
-                                                    setActiveTab("share")
-                                                  }
+                                                  onClick={() => setActiveTab("share")}
                                                 >
                                                   Pool share asset
                                                 </TabsTrigger>
@@ -687,38 +604,25 @@ export default function PoolForm() {
                                               placeholder="Enter search text"
                                               className="mb-3 max-w-[400px]"
                                               onChange={(event) => {
-                                                setThisInput(
-                                                  event.target.value
-                                                );
+                                                setThisInput(event.target.value);
                                               }}
                                             />
 
                                             <TabsContent value="share">
-                                              {thisResult &&
-                                              thisResult.length ? (
+                                              {thisResult && thisResult.length ? (
                                                 <>
                                                   <div className="grid grid-cols-12">
-                                                    <div className="col-span-2">
-                                                      ID
-                                                    </div>
+                                                    <div className="col-span-2">ID</div>
                                                     <div className="col-span-3">
                                                       <b>Share asset</b>
                                                     </div>
-                                                    <div className="col-span-3">
-                                                      Asset A
-                                                    </div>
-                                                    <div className="col-span-3">
-                                                      Asset B
-                                                    </div>
-                                                    <div className="col-span-1">
-                                                      Taker Fee
-                                                    </div>
+                                                    <div className="col-span-3">Asset A</div>
+                                                    <div className="col-span-3">Asset B</div>
+                                                    <div className="col-span-1">Taker Fee</div>
                                                   </div>
                                                   <List
                                                     height={400}
-                                                    itemCount={
-                                                      thisResult.length
-                                                    }
+                                                    itemCount={thisResult.length}
                                                     itemSize={45}
                                                     className="w-full"
                                                   >
@@ -729,31 +633,22 @@ export default function PoolForm() {
                                             </TabsContent>
 
                                             <TabsContent value="asset">
-                                              {thisResult &&
-                                              thisResult.length ? (
+                                              {thisResult && thisResult.length ? (
                                                 <>
                                                   <div className="grid grid-cols-12">
-                                                    <div className="col-span-2">
-                                                      ID
-                                                    </div>
-                                                    <div className="col-span-3">
-                                                      Share asset
-                                                    </div>
+                                                    <div className="col-span-2">ID</div>
+                                                    <div className="col-span-3">Share asset</div>
                                                     <div className="col-span-3">
                                                       <b>Asset A</b>
                                                     </div>
                                                     <div className="col-span-3">
                                                       <b>Asset B</b>
                                                     </div>
-                                                    <div className="col-span-1">
-                                                      Taker Fee
-                                                    </div>
+                                                    <div className="col-span-1">Taker Fee</div>
                                                   </div>
                                                   <List
                                                     height={400}
-                                                    itemCount={
-                                                      thisResult.length
-                                                    }
+                                                    itemCount={thisResult.length}
                                                     itemSize={45}
                                                     className="w-full"
                                                   >
@@ -793,8 +688,7 @@ export default function PoolForm() {
                                       itemSize={35}
                                       className="w-full"
                                       initialScrollOffset={
-                                        pools.map((x) => x.id).indexOf(pool) *
-                                        35
+                                        pools.map((x) => x.id).indexOf(pool) * 35
                                       }
                                     >
                                       {Row}
@@ -834,9 +728,7 @@ export default function PoolForm() {
                                             disabled
                                             placeholder="0"
                                             className="mb-3 mt-3"
-                                            value={
-                                              foundPoolDetails.readable_balance_a
-                                            }
+                                            value={foundPoolDetails.readable_balance_a}
                                           />
                                         ) : (
                                           <Skeleton className="h-4 w-[250px]" />
@@ -871,9 +763,7 @@ export default function PoolForm() {
                                             disabled
                                             placeholder="0"
                                             className="mb-3 mt-3"
-                                            value={
-                                              foundPoolDetails.readable_balance_b
-                                            }
+                                            value={foundPoolDetails.readable_balance_b}
                                           />
                                         ) : (
                                           <Skeleton className="h-4 w-[250px]" />
@@ -909,9 +799,7 @@ export default function PoolForm() {
                                   }}
                                 >
                                   <Input
-                                    label={`Amount of ${
-                                      assetA ? assetA.symbol : "???"
-                                    } to swap`}
+                                    label={`Amount of ${assetA ? assetA.symbol : "???"} to swap`}
                                     value={sellAmount}
                                     placeholder={sellAmount}
                                     className="mb-3"
@@ -924,9 +812,7 @@ export default function PoolForm() {
                         </>
                       ) : null}
 
-                      {sellAmount &&
-                      foundPoolDetails &&
-                      foundPoolDetails.taker_fee_percent ? (
+                      {sellAmount && foundPoolDetails && foundPoolDetails.taker_fee_percent ? (
                         <>
                           <FormField
                             control={form.control}
@@ -940,12 +826,9 @@ export default function PoolForm() {
                                     placeholder="0"
                                     className="mb-3 mt-3"
                                     value={`${(
-                                      (foundPoolDetails.taker_fee_percent /
-                                        10000) *
+                                      (foundPoolDetails.taker_fee_percent / 10000) *
                                       sellAmount
-                                    ).toFixed(assetA.precision)} (${
-                                      assetA.symbol
-                                    }) (${
+                                    ).toFixed(assetA.precision)} (${assetA.symbol}) (${
                                       foundPoolDetails.taker_fee_percent / 100
                                     }% fee)`}
                                   />
@@ -965,16 +848,10 @@ export default function PoolForm() {
                             <FormItem>
                               <FormLabel>Network fee</FormLabel>
                               <FormControl>
-                                <Input
-                                  disabled
-                                  placeholder={`${fee} BTS`}
-                                  className="mb-3 mt-3"
-                                />
+                                <Input disabled placeholder={`${fee} BTS`} className="mb-3 mt-3" />
                               </FormControl>
                               {usr.id === usr.referrer ? (
-                                <FormMessage>
-                                  Rebate: {fee * 0.8} BTS (vesting)
-                                </FormMessage>
+                                <FormMessage>Rebate: {fee * 0.8} BTS (vesting)</FormMessage>
                               ) : null}
                               <FormMessage />
                             </FormItem>
@@ -1000,24 +877,12 @@ export default function PoolForm() {
                         </>
                       ) : null}
 
-                      {!pool ||
-                      !sellAmount ||
-                      !buyAmount ||
-                      showDialog !== false ? (
-                        <Button
-                          className="mt-5 mb-3"
-                          variant="outline"
-                          disabled
-                          type="submit"
-                        >
+                      {!pool || !sellAmount || !buyAmount || showDialog !== false ? (
+                        <Button className="mt-5 mb-3" variant="outline" disabled type="submit">
                           Submit
                         </Button>
                       ) : (
-                        <Button
-                          className="mt-5 mb-3"
-                          variant="outline"
-                          type="submit"
-                        >
+                        <Button className="mt-5 mb-3" variant="outline" type="submit">
                           Submit
                         </Button>
                       )}
@@ -1037,17 +902,11 @@ export default function PoolForm() {
                           account: usr.id,
                           pool: pool,
                           amount_to_sell: {
-                            amount: blockchainFloat(
-                              sellAmount,
-                              assetA.precision
-                            ),
+                            amount: blockchainFloat(sellAmount, assetA.precision),
                             asset_id: assetA.id,
                           },
                           min_to_receive: {
-                            amount: blockchainFloat(
-                              buyAmount,
-                              assetB.precision
-                            ),
+                            amount: blockchainFloat(buyAmount, assetB.precision),
                             asset_id: assetB.id,
                           },
                           extensions: [],
@@ -1096,16 +955,13 @@ export default function PoolForm() {
                         <DialogHeader>
                           <DialogTitle>Liquidity Pool JSON</DialogTitle>
                           <DialogDescription>
-                            Check out the details returned by the network for
-                            this pool
+                            Check out the details returned by the network for this pool
                           </DialogDescription>
                         </DialogHeader>
                         <div className="grid grid-cols-1">
                           <div className="col-span-1">
                             <ScrollArea className="h-72 rounded-md border">
-                              <pre>
-                                {JSON.stringify(foundPoolDetails, null, 2)}
-                              </pre>
+                              <pre>{JSON.stringify(foundPoolDetails, null, 2)}</pre>
                             </ScrollArea>
                           </div>
                         </div>
@@ -1158,9 +1014,7 @@ export default function PoolForm() {
                   <Card>
                     <CardHeader className="pb-2 pt-4">
                       <CardTitle>Quote asset</CardTitle>
-                      <CardDescription className="text-lg">
-                        Loading...
-                      </CardDescription>
+                      <CardDescription className="text-lg">Loading...</CardDescription>
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-2">
@@ -1174,9 +1028,7 @@ export default function PoolForm() {
                   <Card>
                     <CardHeader className="pb-2 pt-4">
                       <CardTitle>Base asset</CardTitle>
-                      <CardDescription className="text-lg">
-                        Loading...
-                      </CardDescription>
+                      <CardDescription className="text-lg">Loading...</CardDescription>
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-2">
@@ -1195,9 +1047,7 @@ export default function PoolForm() {
           <div className="grid grid-cols-1 gap-3">
             {pool && assetA && assetB ? (
               <>
-                <a
-                  href={`/dex/index.html?market=${assetA.symbol}_${assetB.symbol}`}
-                >
+                <a href={`/dex/index.html?market=${assetA.symbol}_${assetB.symbol}`}>
                   <Card>
                     <CardHeader className="pb-2 pt-4">
                       <CardTitle>Trade on the Dex instead?</CardTitle>
@@ -1206,15 +1056,15 @@ export default function PoolForm() {
                       </CardDescription>
                     </CardHeader>
                     <CardContent className="text-sm pb-2">
-                      You can manually create limit orders for trading pairs of
-                      your choice on the Bitshares DEX
+                      You can manually create limit orders for trading pairs of your choice on the
+                      Bitshares DEX
                     </CardContent>
                   </Card>
                 </a>
                 <a
-                  href={`/dex/index.html?market=${
-                    foundPool?.share_asset_symbol
-                  }_${assetA.symbol !== "BTS" ? "BTS" : assetA.symbol}`}
+                  href={`/dex/index.html?market=${foundPool?.share_asset_symbol}_${
+                    assetA.symbol !== "BTS" ? "BTS" : assetA.symbol
+                  }`}
                 >
                   <Card>
                     <CardHeader className="pb-2 pt-4">
@@ -1224,8 +1074,8 @@ export default function PoolForm() {
                       </CardDescription>
                     </CardHeader>
                     <CardContent className="text-sm pb-2">
-                      Receive swap fee yield over time by owning a stake in the
-                      pool via a market limit order.
+                      Receive swap fee yield over time by owning a stake in the pool via a market
+                      limit order.
                     </CardContent>
                   </Card>
                 </a>
@@ -1238,8 +1088,8 @@ export default function PoolForm() {
                       </CardDescription>
                     </CardHeader>
                     <CardContent className="text-sm pb-2">
-                      Earn swap fees on assets staked in liquidity pools minus a
-                      small pool defined withdrawal fee.
+                      Earn swap fees on assets staked in liquidity pools minus a small pool defined
+                      withdrawal fee.
                     </CardContent>
                   </Card>
                 </a>
@@ -1248,8 +1098,8 @@ export default function PoolForm() {
                   <CardHeader className="pb-2 pt-4">
                     <CardTitle>Need to borrow some assets?</CardTitle>
                     <CardDescription className="text-sm">
-                      DEX users lend assets at user defined rates. You could
-                      borrow from DEX participants, at their defined rates.
+                      DEX users lend assets at user defined rates. You could borrow from DEX
+                      participants, at their defined rates.
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="text-sm pb-3">
@@ -1296,9 +1146,7 @@ export default function PoolForm() {
                   <Card>
                     <CardHeader className="pb-2 pt-4">
                       <CardTitle>Pool share asset</CardTitle>
-                      <CardDescription className="text-lg">
-                        Loading...
-                      </CardDescription>
+                      <CardDescription className="text-lg">Loading...</CardDescription>
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-2">
@@ -1316,9 +1164,7 @@ export default function PoolForm() {
         </div>
       </div>
 
-      {usr && usr.username && usr.username.length ? (
-        <CurrentUser usr={usr} />
-      ) : null}
+      {usr && usr.username && usr.username.length ? <CurrentUser usr={usr} /> : null}
     </>
   );
 }

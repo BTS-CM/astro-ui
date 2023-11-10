@@ -18,9 +18,7 @@ export default function MyCompletedTrades(properties) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>
-          {type === "buy" ? `Completed buy orders` : `Completed sell orders`}
-        </CardTitle>
+        <CardTitle>{type === "buy" ? `Completed buy orders` : `Completed sell orders`}</CardTitle>
         <CardDescription>
           {type === "buy"
             ? `Your recently completed buy orders`

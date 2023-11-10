@@ -25,12 +25,7 @@ const $currentUser = map<User>({
  * @param referrer
  * @param chain
  */
-function setCurrentUser(
-  username: string,
-  id: string,
-  referrer: string,
-  chain: string
-) {
+function setCurrentUser(username: string, id: string, referrer: string, chain: string) {
   $currentUser.set({
     username,
     id,
@@ -89,12 +84,7 @@ const $userStorage = persistentMap<StoredUsers>(
  * @param id
  * @param chain
  */
-function addUser(
-  username: string,
-  id: string,
-  referrer: string,
-  chain: string
-) {
+function addUser(username: string, id: string, referrer: string, chain: string) {
   const users = $userStorage.get().users;
   const user = { username, id, referrer, chain };
   $userStorage.setKey("lastAccount", [user]);
@@ -121,11 +111,4 @@ function removeUser(id: string) {
   }
 }
 
-export {
-  $currentUser,
-  setCurrentUser,
-  eraseCurrentUser,
-  $userStorage,
-  addUser,
-  removeUser,
-};
+export { $currentUser, setCurrentUser, eraseCurrentUser, $userStorage, addUser, removeUser };

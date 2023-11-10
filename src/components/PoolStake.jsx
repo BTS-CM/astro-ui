@@ -16,11 +16,7 @@ import { useInitCache } from "../effects/Init.ts";
 import CurrentUser from "./common/CurrentUser.jsx";
 
 export default function PoolStake(properties) {
-  const usr = useSyncExternalStore(
-    $currentUser.subscribe,
-    $currentUser.get,
-    () => true
-  );
+  const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
 
   //useInitCache(usr && usr.chain ? usr.chain : "bitshares");
 
@@ -39,9 +35,7 @@ export default function PoolStake(properties) {
           </Card>
         </div>
         <div className="grid grid-cols-1 mt-5">
-          {usr && usr.username && usr.username.length ? (
-            <CurrentUser usr={usr} />
-          ) : null}
+          {usr && usr.username && usr.username.length ? <CurrentUser usr={usr} /> : null}
         </div>
       </div>
     </>

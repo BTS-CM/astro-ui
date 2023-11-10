@@ -25,10 +25,7 @@ export default function AccountSearch(properties) {
     const excludedUsernames = excludedUsers.map((user) => user.username);
     const excludedIds = excludedUsers.map((user) => user.id);
 
-    if (
-      excludedUsernames.includes(accountInput) ||
-      excludedIds.includes(accountInput)
-    ) {
+    if (excludedUsernames.includes(accountInput) || excludedIds.includes(accountInput)) {
       setInProgress(false);
       setErrorMessage("Cannot transfer assets to this account.");
       return;
@@ -66,9 +63,7 @@ export default function AccountSearch(properties) {
       <div className="grid grid-cols-1 gap-3">
         {!searchResponse ? (
           <>
-            <div className="col-span-1">
-              Please enter a blockchain account name
-            </div>
+            <div className="col-span-1">Please enter a blockchain account name</div>
             <div className="col-span-1">
               {" "}
               <Input
@@ -90,9 +85,7 @@ export default function AccountSearch(properties) {
                 }}
               />
               {errorMessage ? (
-                <p className="text-red-500 text-xs italic">
-                  {errorMessage || "ERROR"}
-                </p>
+                <p className="text-red-500 text-xs italic">{errorMessage || "ERROR"}</p>
               ) : null}
             </div>
             <div className="col-span-1">
@@ -132,13 +125,7 @@ export default function AccountSearch(properties) {
                         eye: "normal",
                         mouth: "open",
                       }}
-                      colors={[
-                        "#92A1C6",
-                        "#146A7C",
-                        "#F0AB3D",
-                        "#C271B4",
-                        "#C20D90",
-                      ]}
+                      colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]}
                     />
                   </div>
                   <div className="col-span-3">

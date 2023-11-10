@@ -19,11 +19,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -81,17 +77,13 @@ export default function AccountSelect(properties) {
         <Card>
           <CardHeader>
             <CardTitle>⚙️ Select a blockchain to continue</CardTitle>
-            <CardDescription>
-              Which blockchain do you want to use?
-            </CardDescription>
+            <CardDescription>Which blockchain do you want to use?</CardDescription>
           </CardHeader>
           <CardContent>
             <Button className="mr-2" onClick={() => setChain("bitshares")}>
               Bitshares (BTS)
             </Button>
-            <Button onClick={() => setChain("bitshares_testnet")}>
-              Bitshares testnet (TEST)
-            </Button>
+            <Button onClick={() => setChain("bitshares_testnet")}>Bitshares testnet (TEST)</Button>
           </CardContent>
         </Card>
       ) : null}
@@ -99,8 +91,7 @@ export default function AccountSelect(properties) {
         <Card>
           <CardHeader>
             <CardTitle>
-              Use a new or existing{" "}
-              {chain === "bitshares" ? "Bitshares" : "Bitshares testnet"}{" "}
+              Use a new or existing {chain === "bitshares" ? "Bitshares" : "Bitshares testnet"}{" "}
               account?
             </CardTitle>
             <CardDescription>How do you want to proceed?</CardDescription>
@@ -109,9 +100,7 @@ export default function AccountSelect(properties) {
             <Button className="mr-2" onClick={() => setMode("new")}>
               New account
             </Button>
-            <Button onClick={() => setMode("existing")}>
-              Existing account
-            </Button>
+            <Button onClick={() => setMode("existing")}>Existing account</Button>
             <br />
             <Button className="mt-2" onClick={() => setChain(null)}>
               Back
@@ -123,9 +112,7 @@ export default function AccountSelect(properties) {
         <Card>
           <CardHeader>
             <CardTitle>
-              {chain === "bitshares"
-                ? "🔐 Bitshares (BTS)"
-                : "🔐 Bitshares testnet (TEST)"}
+              {chain === "bitshares" ? "🔐 Bitshares (BTS)" : "🔐 Bitshares testnet (TEST)"}
             </CardTitle>
             <CardDescription>Enter your Bitshares account name</CardDescription>
           </CardHeader>
@@ -149,9 +136,7 @@ export default function AccountSelect(properties) {
               }}
             />
             {errorMessage ? (
-              <p className="text-red-500 text-xs italic">
-                {errorMessage || "ERROR"}
-              </p>
+              <p className="text-red-500 text-xs italic">{errorMessage || "ERROR"}</p>
             ) : null}
           </CardContent>
           <CardFooter>
@@ -174,9 +159,7 @@ export default function AccountSelect(properties) {
                 ? "🔐 Bitshares (BTS) account selection"
                 : "🔐 Bitshares testnet (TEST) account selection"}
             </CardTitle>
-            <CardDescription>
-              Proceed with the following account?
-            </CardDescription>
+            <CardDescription>Proceed with the following account?</CardDescription>
           </CardHeader>
           <CardContent>
             <Card
@@ -201,13 +184,7 @@ export default function AccountSelect(properties) {
                       eye: "normal",
                       mouth: "open",
                     }}
-                    colors={[
-                      "#92A1C6",
-                      "#146A7C",
-                      "#F0AB3D",
-                      "#C271B4",
-                      "#C20D90",
-                    ]}
+                    colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]}
                   />
                 </div>
                 <div className="col-span-3">
@@ -245,13 +222,9 @@ export default function AccountSelect(properties) {
         <Card>
           <CardHeader>
             <CardTitle>
-              {chain === "bitshares"
-                ? "Bitshares (BTS)"
-                : "Bitshares testnet (TEST)"}
+              {chain === "bitshares" ? "Bitshares (BTS)" : "Bitshares testnet (TEST)"}
             </CardTitle>
-            <CardDescription>
-              Select one of your previously used accounts
-            </CardDescription>
+            <CardDescription>Select one of your previously used accounts</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-2 gap-5">
@@ -264,12 +237,7 @@ export default function AccountSelect(properties) {
                         <HoverCardTrigger asChild>
                           <Card
                             onClick={() => {
-                              setCurrentUser(
-                                user.username,
-                                user.id,
-                                user.referrer,
-                                user.chain
-                              );
+                              setCurrentUser(user.username, user.id, user.referrer, user.chain);
                             }}
                           >
                             <div className="grid grid-cols-4">
@@ -282,13 +250,7 @@ export default function AccountSelect(properties) {
                                     eye: "normal",
                                     mouth: "open",
                                   }}
-                                  colors={[
-                                    "#92A1C6",
-                                    "#146A7C",
-                                    "#F0AB3D",
-                                    "#C271B4",
-                                    "#C20D90",
-                                  ]}
+                                  colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]}
                                 />
                               </div>
                               <div className="col-span-3">
@@ -325,9 +287,7 @@ export default function AccountSelect(properties) {
                     );
                   })
               ) : (
-                <p className="text-red-500 text-xs italic">
-                  No accounts found.
-                </p>
+                <p className="text-red-500 text-xs italic">No accounts found.</p>
               )}
             </div>
           </CardContent>

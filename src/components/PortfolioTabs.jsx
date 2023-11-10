@@ -1,9 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  useSyncExternalStore,
-  useMemo,
-} from "react";
+import React, { useState, useEffect, useSyncExternalStore, useMemo } from "react";
 import { FixedSizeList as List } from "react-window";
 
 import {
@@ -30,10 +25,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 import { useInitCache } from "../effects/Init.ts";
-import {
-  createUserPortfolioStore,
-  createUserHistoryStore,
-} from "../effects/User.ts";
+import { createUserPortfolioStore, createUserHistoryStore } from "../effects/User.ts";
 
 import { $currentUser } from "../stores/users.ts";
 import { $globalParamsCache, $assetCache } from "../stores/cache.ts";
@@ -46,17 +38,9 @@ import { humanReadableFloat } from "../lib/common";
 import { opTypes } from "../lib/opTypes";
 
 export default function PortfolioTabs(properties) {
-  const usr = useSyncExternalStore(
-    $currentUser.subscribe,
-    $currentUser.get,
-    () => true
-  );
+  const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
 
-  const assets = useSyncExternalStore(
-    $assetCache.subscribe,
-    $assetCache.get,
-    () => true
-  );
+  const assets = useSyncExternalStore($assetCache.subscribe, $assetCache.get, () => true);
 
   /*
   const globalParams = useSyncExternalStore(
@@ -96,15 +80,13 @@ export default function PortfolioTabs(properties) {
     if (usr && usr.id) {
       const userPortfolioStore = createUserPortfolioStore([usr.chain, usr.id]);
 
-      unsubscribeUserPortfolioStore = userPortfolioStore.subscribe(
-        ({ data, error, loading }) => {
-          if (data && !error && !loading) {
-            console.log("Successfully fetched user portfolio");
-            setBalances(data.balances);
-            setOpenOrders(data.limitOrders);
-          }
+      unsubscribeUserPortfolioStore = userPortfolioStore.subscribe(({ data, error, loading }) => {
+        if (data && !error && !loading) {
+          console.log("Successfully fetched user portfolio");
+          setBalances(data.balances);
+          setOpenOrders(data.limitOrders);
         }
-      );
+      });
     }
 
     return () => {
@@ -120,14 +102,12 @@ export default function PortfolioTabs(properties) {
     if (usr && usr.id) {
       const userHistoryStore = createUserHistoryStore([usr.chain, usr.id]);
 
-      unsubscribeUserHistoryStore = userHistoryStore.subscribe(
-        ({ data, error, loading }) => {
-          if (data && !error && !loading) {
-            console.log("Successfully fetched history");
-            setActivity(data);
-          }
+      unsubscribeUserHistoryStore = userHistoryStore.subscribe(({ data, error, loading }) => {
+        if (data && !error && !loading) {
+          console.log("Successfully fetched history");
+          setActivity(data);
         }
-      );
+      });
     }
 
     return () => {
@@ -169,9 +149,7 @@ export default function PortfolioTabs(properties) {
 
     const currentBalance =
       retrievedBalanceAssets && Array.isArray(retrievedBalanceAssets)
-        ? retrievedBalanceAssets.find(
-            (asset) => asset.id === rowBalance.asset_id
-          )
+        ? retrievedBalanceAssets.find((asset) => asset.id === rowBalance.asset_id)
         : {
             symbol: rowBalance.asset_id,
             precision: 5,
@@ -234,16 +212,12 @@ export default function PortfolioTabs(properties) {
 
     const sellAsset =
       retrievedBalanceAssets && retrievedBalanceAssets.length
-        ? retrievedBalanceAssets.find(
-            (asset) => asset.id === sellPriceBaseAssetId
-          )
+        ? retrievedBalanceAssets.find((asset) => asset.id === sellPriceBaseAssetId)
         : null;
 
     const buyAsset =
       retrievedBalanceAssets && retrievedBalanceAssets.length
-        ? retrievedBalanceAssets.find(
-            (asset) => asset.id === sellPriceQuoteAssetId
-          )
+        ? retrievedBalanceAssets.find((asset) => asset.id === sellPriceQuoteAssetId)
         : null;
 
     const readableBaseAmount = sellAsset
@@ -270,12 +244,11 @@ export default function PortfolioTabs(properties) {
             <div className="col-span-5">
               <CardHeader>
                 <CardTitle>
-                  Selling {readableBaseAmount} {sellAsset.symbol} for{" "}
-                  {readableQuoteAmount} {buyAsset.symbol}
+                  Selling {readableBaseAmount} {sellAsset.symbol} for {readableQuoteAmount}{" "}
+                  {buyAsset.symbol}
                 </CardTitle>
                 <CardDescription>
-                  Trading pair: {sellPriceBaseAssetId} for{" "}
-                  {sellPriceQuoteAssetId}
+                  Trading pair: {sellPriceBaseAssetId} for {sellPriceQuoteAssetId}
                   <br />
                   Order ID:
                   <ExternalLink
@@ -290,9 +263,7 @@ export default function PortfolioTabs(properties) {
               </CardHeader>
             </div>
             <div className="col-span-1 pt-7">
-              <a
-                href={`/dex/index.html?market=${sellAsset.symbol}_${buyAsset.symbol}`}
-              >
+              <a href={`/dex/index.html?market=${sellAsset.symbol}_${buyAsset.symbol}`}>
                 <Button variant="outline" className="mb-2">
                   Trade
                 </Button>
@@ -352,9 +323,7 @@ export default function PortfolioTabs(properties) {
           <div className="grid grid-cols-7">
             <div className="col-span-5">
               <CardHeader>
-                <CardTitle>
-                  {opTypes[activityItem.operation_type.toString()]}
-                </CardTitle>
+                <CardTitle>{opTypes[activityItem.operation_type.toString()]}</CardTitle>
                 <CardDescription>
                   Operation ID:
                   <ExternalLink
@@ -384,19 +353,13 @@ export default function PortfolioTabs(properties) {
                 <DialogContent className="sm:max-w-[425px] bg-white">
                   <DialogHeader>
                     <DialogTitle>Operation JSON</DialogTitle>
-                    <DialogDescription>
-                      Check out the contents of this operation
-                    </DialogDescription>
+                    <DialogDescription>Check out the contents of this operation</DialogDescription>
                   </DialogHeader>
                   <div className="grid grid-cols-1">
                     <div className="col-span-1">
                       <ScrollArea className="h-72 rounded-md border">
                         <pre>
-                          {JSON.stringify(
-                            activityItem.operation_history.op_object,
-                            null,
-                            2
-                          )}
+                          {JSON.stringify(activityItem.operation_history.op_object, null, 2)}
                         </pre>
                       </ScrollArea>
                     </div>
@@ -412,9 +375,7 @@ export default function PortfolioTabs(properties) {
                 <DialogContent className="sm:max-w-[425px] bg-white">
                   <DialogHeader>
                     <DialogTitle>Full operation contents</DialogTitle>
-                    <DialogDescription>
-                      Exhaustive info regarding this operation
-                    </DialogDescription>
+                    <DialogDescription>Exhaustive info regarding this operation</DialogDescription>
                   </DialogHeader>
                   <div className="grid grid-cols-1">
                     <div className="col-span-1">
@@ -443,10 +404,7 @@ export default function PortfolioTabs(properties) {
                   Balances
                 </TabsTrigger>
               ) : (
-                <TabsTrigger
-                  value="balances"
-                  onClick={() => setActivePortfolioTab("balances")}
-                >
+                <TabsTrigger value="balances" onClick={() => setActivePortfolioTab("balances")}>
                   Balances
                 </TabsTrigger>
               )}
@@ -455,10 +413,7 @@ export default function PortfolioTabs(properties) {
                   Open orders
                 </TabsTrigger>
               ) : (
-                <TabsTrigger
-                  value="openOrders"
-                  onClick={() => setActivePortfolioTab("openOrders")}
-                >
+                <TabsTrigger value="openOrders" onClick={() => setActivePortfolioTab("openOrders")}>
                   Open orders
                 </TabsTrigger>
               )}
@@ -467,10 +422,7 @@ export default function PortfolioTabs(properties) {
                   Activity
                 </TabsTrigger>
               ) : (
-                <TabsTrigger
-                  value="activity"
-                  onClick={() => setActivePortfolioTab("activity")}
-                >
+                <TabsTrigger value="activity" onClick={() => setActivePortfolioTab("activity")}>
                   Activity
                 </TabsTrigger>
               )}
@@ -479,9 +431,7 @@ export default function PortfolioTabs(properties) {
               <Card>
                 <CardHeader>
                   <CardTitle>{usr.username}'s account balances</CardTitle>
-                  <CardDescription>
-                    The assets held within your account
-                  </CardDescription>
+                  <CardDescription>The assets held within your account</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-2">
                   {balances &&
@@ -516,20 +466,14 @@ export default function PortfolioTabs(properties) {
               <Card>
                 <CardHeader>
                   <CardTitle>Open orders</CardTitle>
-                  <CardDescription>
-                    Your currently open limit orders on the DEX
-                  </CardDescription>
+                  <CardDescription>Your currently open limit orders on the DEX</CardDescription>
                 </CardHeader>
                 <CardContent>
                   {openOrders &&
                   openOrders.length &&
                   retrievedBalanceAssets &&
                   retrievedBalanceAssets.length ? (
-                    <List
-                      height={500}
-                      itemCount={openOrders.length}
-                      itemSize={145}
-                    >
+                    <List height={500} itemCount={openOrders.length} itemSize={145}>
                       {OpenOrdersRow}
                     </List>
                   ) : (
@@ -552,17 +496,11 @@ export default function PortfolioTabs(properties) {
               <Card>
                 <CardHeader>
                   <CardTitle>Recent blockchain activity</CardTitle>
-                  <CardDescription>
-                    Your recent blockchain activity
-                  </CardDescription>
+                  <CardDescription>Your recent blockchain activity</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-2">
                   {activity && activity.length ? (
-                    <List
-                      height={500}
-                      itemCount={activity.length}
-                      itemSize={145}
-                    >
+                    <List height={500} itemCount={activity.length} itemSize={145}>
                       {RecentActivityRow}
                     </List>
                   ) : (
@@ -585,9 +523,7 @@ export default function PortfolioTabs(properties) {
         </div>
       </div>
       <div className="grid grid-cols-1 mt-5">
-        {usr && usr.username && usr.username.length ? (
-          <CurrentUser usr={usr} />
-        ) : null}
+        {usr && usr.username && usr.username.length ? <CurrentUser usr={usr} /> : null}
       </div>
     </>
   );
