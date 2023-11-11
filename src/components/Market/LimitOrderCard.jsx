@@ -35,8 +35,13 @@ import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Slider } from "@/components/ui/slider";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Separator } from "@/components/ui/separator";
+
 import { trimPrice, humanReadableFloat, blockchainFloat } from "@/lib/common.js";
 import DeepLinkDialog from "../common/DeepLinkDialog";
 
@@ -131,6 +136,12 @@ export default function LimitOrderCard(properties) {
     return assetBData && usrBalances ? getReadableBalance(assetBData, usrBalances) : 0;
   }, [assetBData, usrBalances]);
 
+  const [osoEnabled, setOSOEnabled] = useState(false);
+  const [spreadPercent, setSpreadPercent] = useState(0);
+  const [sizePercent, setSizePercent] = useState(100);
+  const [expirationSeconds, setExpirationSeconds] = useState(0);
+  const [repeat, setRepeat] = useState(false);
+
   return (
     <Card>
       <CardHeader className="pb-2">
@@ -152,93 +163,121 @@ export default function LimitOrderCard(properties) {
             >
               <FormField
                 control={form.control}
-                name="sellPrice"
+                name="priceAmount"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      <div className="grid grid-cols-2 mt-3">
-                        <div className="mt-1">Price</div>
-                        <div className="text-gray-500 text-right">
-                          {(orderType === "buy" && !sellOrders) ||
-                          (sellOrders && !sellOrders.length) ||
-                          (orderType === "sell" && !buyOrders) ||
-                          (buyOrders && !buyOrders.length) ? (
-                            <Badge disabled>
-                              {orderType === "buy" ? `Use lowest ask` : `Use highest bid`}
-                            </Badge>
-                          ) : (
-                            <span
-                              variant="link"
-                              onClick={(event) => {
-                                event.preventDefault();
-                                let finalPrice;
-                                if (orderType === "buy" && sellOrders && sellOrders.length > 0) {
-                                  finalPrice = trimPrice(sellOrders[0].price, assetBData.precision);
-                                } else if (
-                                  orderType === "sell" &&
-                                  buyOrders &&
-                                  buyOrders.length > 0
-                                ) {
-                                  finalPrice = trimPrice(buyOrders[0].price, assetBData.precision);
-                                }
-
-                                if (finalPrice) {
-                                  setPrice(
-                                    parseFloat(finalPrice).toFixed(
-                                      orderType === "buy"
-                                        ? assetBData.precision
-                                        : assetAData.precision
-                                    )
-                                  );
-
-                                  if (amount) {
-                                    setTotal(
-                                      (parseFloat(finalPrice) * parseFloat(amount)).toFixed(
-                                        assetBData.precision
-                                      )
-                                    );
-                                  }
-                                }
-                              }}
-                            >
-                              <Badge>
-                                {orderType === "buy" ? `Use lowest ask` : `Use highest bid`}
-                              </Badge>
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    </FormLabel>
-                    <FormControl
-                      onChange={(event) => {
-                        const input = event.target.value;
-                        const regex = /^[0-9,]*\.?[0-9]*$/;
-                        if (regex.test(input)) {
-                          const parsedInput = parseFloat(input.replaceAll(",", ""));
-                          if (parsedInput) {
-                            setPrice(
-                              parsedInput.toFixed(
-                                orderType === "buy" ? assetBData.precision : assetAData.precision
-                              )
-                            );
-                            if (amount) {
-                              setTotal(
-                                (parsedInput * amount).toFixed(
-                                  orderType === "buy" ? assetBData.precision : assetAData.precision
-                                )
-                              );
-                            }
-                          }
-                        }
-                      }}
-                    >
-                      <Input value={price} placeholder={price} className="mb-3" />
-                    </FormControl>
+                  <FormItem className="mt-4 text-xs">
+                    <FormLabel>Price</FormLabel>
                     <FormDescription>
                       {orderType === "buy"
                         ? `Your price per ${thisAssetA} in ${thisAssetB}`
                         : `Your price per ${thisAssetB} in ${thisAssetA}`}
                     </FormDescription>
+                    <FormControl>
+                      <span className="grid grid-cols-12">
+                        <span className="col-span-9">
+                          <Input label={`Price`} placeholder={price} disabled readOnly />
+                        </span>
+                        <span className="col-span-3 ml-3 text-center">
+                          <Popover>
+                            <PopoverTrigger>
+                              <span className="inline-block border border-grey rounded pl-4 pb-1 pr-4 text-lg">
+                                <Label>Edit</Label>
+                              </span>
+                            </PopoverTrigger>
+                            <PopoverContent>
+                              <Label>Provide a new price</Label>
+                              <Input
+                                placeholder={price}
+                                className="mb-2 mt-1"
+                                onChange={(event) => {
+                                  const input = event.target.value;
+                                  const regex = /^[0-9,]*\.?[0-9]*$/;
+                                  if (input && input.length && regex.test(input)) {
+                                    const parsedInput = parseFloat(input.replaceAll(",", ""));
+                                    if (parsedInput) {
+                                      setPrice(
+                                        parsedInput.toFixed(
+                                          orderType === "buy"
+                                            ? assetBData.precision
+                                            : assetAData.precision
+                                        )
+                                      );
+                                      if (amount) {
+                                        setTotal(
+                                          (parsedInput * amount).toFixed(
+                                            orderType === "buy"
+                                              ? assetBData.precision
+                                              : assetAData.precision
+                                          )
+                                        );
+                                      }
+                                    }
+                                  }
+                                }}
+                              />
+
+                              {(orderType === "buy" && !sellOrders) ||
+                              (sellOrders && !sellOrders.length) ||
+                              (orderType === "sell" && !buyOrders) ||
+                              (buyOrders && !buyOrders.length) ? (
+                                <Badge disabled>
+                                  {orderType === "buy" ? `Use lowest ask` : `Use highest bid`}
+                                </Badge>
+                              ) : (
+                                <span
+                                  variant="link"
+                                  onClick={(event) => {
+                                    event.preventDefault();
+                                    let finalPrice;
+                                    if (
+                                      orderType === "buy" &&
+                                      sellOrders &&
+                                      sellOrders.length > 0
+                                    ) {
+                                      finalPrice = trimPrice(
+                                        sellOrders[0].price,
+                                        assetBData.precision
+                                      );
+                                    } else if (
+                                      orderType === "sell" &&
+                                      buyOrders &&
+                                      buyOrders.length > 0
+                                    ) {
+                                      finalPrice = trimPrice(
+                                        buyOrders[0].price,
+                                        assetBData.precision
+                                      );
+                                    }
+
+                                    if (finalPrice) {
+                                      setPrice(
+                                        parseFloat(finalPrice).toFixed(
+                                          orderType === "buy"
+                                            ? assetBData.precision
+                                            : assetAData.precision
+                                        )
+                                      );
+
+                                      if (amount) {
+                                        setTotal(
+                                          (parseFloat(finalPrice) * parseFloat(amount)).toFixed(
+                                            assetBData.precision
+                                          )
+                                        );
+                                      }
+                                    }
+                                  }}
+                                >
+                                  <Badge>
+                                    {orderType === "buy" ? `Use lowest ask` : `Use highest bid`}
+                                  </Badge>
+                                </span>
+                              )}
+                            </PopoverContent>
+                          </Popover>
+                        </span>
+                      </span>
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -248,52 +287,70 @@ export default function LimitOrderCard(properties) {
                 control={form.control}
                 name="sellAmount"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      <div className="grid grid-cols-2 mt-3">
-                        <div className="mt-1">Amount</div>
-                        <div className="text-gray-500 text-right">
-                          {orderType === "sell" && assetABalance ? (
-                            <Badge
-                              onClick={() => {
-                                let parsedAmount = parseFloat(assetABalance.replaceAll(",", ""));
-                                if (parsedAmount) {
-                                  setAmount(parsedAmount.toFixed(assetAData.precision));
-                                  if (price) {
-                                    setTotal((parsedAmount * price).toFixed(assetBData.precision));
-                                  }
-                                }
-                              }}
-                            >
-                              Use balance
-                            </Badge>
-                          ) : null}
-                        </div>
-                      </div>
-                    </FormLabel>
-                    <FormControl
-                      onChange={(event) => {
-                        const input = event.target.value;
-                        const regex = /^[0-9,]*\.?[0-9]*$/;
-                        if (regex.test(input)) {
-                          const parsedInput = parseFloat(input.replaceAll(",", ""));
-                          if (parsedInput) {
-                            setAmount(parsedInput.toFixed(assetAData.precision));
-
-                            if (price) {
-                              setTotal((parsedInput * price).toFixed(assetBData.precision));
-                            }
-                          }
-                        }
-                      }}
-                    >
-                      <Input value={amount} placeholder={amount} className="mb-3" />
-                    </FormControl>
+                  <FormItem className="mt-4 text-xs">
+                    <FormLabel>Amount</FormLabel>
                     <FormDescription>
                       {orderType === "buy"
                         ? `The amount of ${thisAssetA} you want to buy`
                         : `The amount of ${thisAssetA} you will have to spend`}
                     </FormDescription>
+                    <FormControl>
+                      <span className="grid grid-cols-12">
+                        <span className="col-span-9">
+                          <Input label={`Amount`} placeholder={amount} disabled readOnly />
+                        </span>
+                        <span className="col-span-3 ml-3 text-center">
+                          <Popover>
+                            <PopoverTrigger>
+                              <span className="inline-block border border-grey rounded pl-4 pb-1 pr-4 text-lg">
+                                <Label>Edit</Label>
+                              </span>
+                            </PopoverTrigger>
+                            <PopoverContent>
+                              <Label>Provide a new amount</Label>
+                              <Input
+                                placeholder={amount}
+                                className="mb-2 mt-1"
+                                onChange={(event) => {
+                                  const input = event.target.value;
+                                  const regex = /^[0-9,]*\.?[0-9]*$/;
+                                  if (input && input.length && regex.test(input)) {
+                                    const parsedInput = parseFloat(input.replaceAll(",", ""));
+                                    if (parsedInput) {
+                                      setAmount(parsedInput.toFixed(assetAData.precision));
+                                      if (price) {
+                                        setTotal(
+                                          (parsedInput * price).toFixed(assetBData.precision)
+                                        );
+                                      }
+                                    }
+                                  }
+                                }}
+                              />
+                              {orderType === "sell" && assetABalance ? (
+                                <Badge
+                                  onClick={() => {
+                                    let parsedAmount = parseFloat(
+                                      assetABalance.replaceAll(",", "")
+                                    );
+                                    if (parsedAmount) {
+                                      setAmount(parsedAmount.toFixed(assetAData.precision));
+                                      if (price) {
+                                        setTotal(
+                                          (parsedAmount * price).toFixed(assetBData.precision)
+                                        );
+                                      }
+                                    }
+                                  }}
+                                >
+                                  Use balance
+                                </Badge>
+                              ) : null}
+                            </PopoverContent>
+                          </Popover>
+                        </span>
+                      </span>
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -303,66 +360,84 @@ export default function LimitOrderCard(properties) {
                 control={form.control}
                 name="sellTotal"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      <div className="grid grid-cols-2 mt-3">
-                        <div className="mt-1">Total</div>
-                        <div className="text-gray-500 text-right">
-                          {orderType === "buy" && assetBBalance ? (
-                            <Badge
-                              onClick={() => {
-                                let parsedAmount = parseFloat(assetBBalance.replaceAll(",", ""));
-                                if (parsedAmount) {
-                                  setTotal(parsedAmount.toFixed(assetBData.precision));
-                                  if (price) {
-                                    setAmount((parsedAmount / price).toFixed(assetAData.precision));
-                                  }
-                                }
-                              }}
-                            >
-                              Use balance
-                            </Badge>
-                          ) : null}
-                        </div>
-                      </div>
-                    </FormLabel>
-                    <FormControl
-                      onChange={(event) => {
-                        const input = event.target.value;
-                        const regex = /^[0-9,]*\.?[0-9]*$/;
-                        if (regex.test(input)) {
-                          const parsedFloat = parseFloat(input.replaceAll(",", ""));
-                          if (parsedFloat) {
-                            setTotal(parsedFloat.toFixed(assetBData.precision));
-                            if (price) {
-                              setAmount((parsedFloat / price).toFixed(assetAData.precision));
-                            }
-                          }
-                        }
-                      }}
-                    >
-                      <Input value={total} placeholder={total} className="mb-3" />
-                    </FormControl>
+                  <FormItem className="mt-4 text-xs">
+                    <FormLabel>Total</FormLabel>
                     <FormDescription>
                       {orderType === "buy"
                         ? `The total ${thisAssetB} you will have to spend`
                         : `The total ${thisAssetB} you will receive`}
                     </FormDescription>
-
-                    {orderType === "buy" &&
-                    assetBBalance &&
-                    parseFloat(assetBBalance.replaceAll(",", "")).toFixed(assetBData.precision) <
-                      amount &&
-                    total - parseFloat(assetBBalance.replaceAll(",", "")) > 0 ? (
-                      <FormMessage>
-                        A further{" "}
-                        {total -
-                          parseFloat(assetBBalance.replaceAll(",", "")).toFixed(
-                            assetBData.precision
-                          )}{" "}
-                        {thisAssetB} is required
-                      </FormMessage>
-                    ) : null}
+                    <FormControl>
+                      <span className="grid grid-cols-12">
+                        <span className="col-span-9">
+                          <Input label={`Total`} placeholder={total} disabled readOnly />
+                        </span>
+                        <span className="col-span-3 ml-3 text-center">
+                          <Popover>
+                            <PopoverTrigger>
+                              <span className="inline-block border border-grey rounded pl-4 pb-1 pr-4 text-lg">
+                                <Label>Edit</Label>
+                              </span>
+                            </PopoverTrigger>
+                            <PopoverContent>
+                              <Label>Provide a new total</Label>
+                              <Input
+                                placeholder={total}
+                                className="mb-2 mt-1"
+                                onChange={(event) => {
+                                  const input = event.target.value;
+                                  const regex = /^[0-9,]*\.?[0-9]*$/;
+                                  if (input && input.length && regex.test(input)) {
+                                    const parsedFloat = parseFloat(input.replaceAll(",", ""));
+                                    if (parsedFloat) {
+                                      setTotal(parsedFloat.toFixed(assetBData.precision));
+                                      if (price) {
+                                        setAmount(
+                                          (parsedFloat / price).toFixed(assetAData.precision)
+                                        );
+                                      }
+                                    }
+                                  }
+                                }}
+                              />
+                              {orderType === "buy" && assetBBalance ? (
+                                <Badge
+                                  onClick={() => {
+                                    let parsedAmount = parseFloat(
+                                      assetBBalance.replaceAll(",", "")
+                                    );
+                                    if (parsedAmount) {
+                                      setTotal(parsedAmount.toFixed(assetBData.precision));
+                                      if (price) {
+                                        setAmount(
+                                          (parsedAmount / price).toFixed(assetAData.precision)
+                                        );
+                                      }
+                                    }
+                                  }}
+                                >
+                                  Use balance
+                                </Badge>
+                              ) : null}
+                            </PopoverContent>
+                          </Popover>
+                        </span>
+                      </span>
+                    </FormControl>
+                    <FormMessage>
+                      {orderType === "buy" &&
+                      assetBBalance &&
+                      parseFloat(assetBBalance.replaceAll(",", "")).toFixed(assetBData.precision) <
+                        amount &&
+                      total - parseFloat(assetBBalance.replaceAll(",", "")) > 0
+                        ? `A further ${
+                            total -
+                            parseFloat(assetBBalance.replaceAll(",", "")).toFixed(
+                              assetBData.precision
+                            )
+                          } ${thisAssetB} is required`
+                        : null}
+                    </FormMessage>
                   </FormItem>
                 )}
               />
@@ -472,6 +547,201 @@ export default function LimitOrderCard(properties) {
                 )}
               />
 
+              <Separator className="mb-2 mt-2" />
+
+              <FormField
+                control={form.control}
+                name="osoValue"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <>
+                        <Checkbox
+                          id="terms1"
+                          className="mr-2"
+                          checked={osoEnabled}
+                          onClick={() => {
+                            setOSOEnabled(!osoEnabled);
+                          }}
+                        />
+                        <span
+                          onClick={() => {
+                            setOSOEnabled(!osoEnabled);
+                          }}
+                        >
+                          Enable Order Sends Order
+                        </span>
+                      </>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {osoEnabled ? (
+                <>
+                  <FormField
+                    control={form.control}
+                    name="osoSpread"
+                    render={({ field }) => (
+                      <FormItem className="mt-2 text-xs">
+                        <FormLabel className="text-sm">Spread percent</FormLabel>
+                        <FormDescription>
+                          How far the price of the take profit order differs from the original order
+                        </FormDescription>
+                        <FormControl>
+                          <span className="grid grid-cols-12">
+                            <span className="col-span-9">
+                              <Input
+                                label={`Spread percent`}
+                                placeholder={spreadPercent}
+                                disabled
+                                readOnly
+                              />
+                              <Slider
+                                className="mt-3"
+                                defaultValue={[spreadPercent]}
+                                max={100}
+                                min={0}
+                                step={0.01}
+                                onValueChange={(value) => {
+                                  setSpreadPercent(value[0]);
+                                }}
+                              />
+                            </span>
+
+                            <span className="col-span-3 ml-3 text-center">
+                              <Popover>
+                                <PopoverTrigger>
+                                  <span
+                                    onClick={() => {
+                                      event.preventDefault();
+                                    }}
+                                    className="inline-block border border-grey rounded pl-4 pb-1 pr-4 text-lg"
+                                  >
+                                    <Label>Edit</Label>
+                                  </span>
+                                </PopoverTrigger>
+                                <PopoverContent>
+                                  <Label>Provide a new spread percent</Label>
+                                  <Input
+                                    placeholder={spreadPercent}
+                                    className="mb-2 mt-1"
+                                    onChange={(event) => {
+                                      const input = event.target.value;
+                                      const regex = /^[0-9]*\.?[0-9]*$/;
+                                      if (input && input.length && regex.test(input)) {
+                                        if (input >= 0 && input <= 100) {
+                                          setSpreadPercent(input);
+                                        }
+                                      }
+                                    }}
+                                  />
+                                </PopoverContent>
+                              </Popover>
+                            </span>
+                          </span>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="osoSize"
+                    render={({ field }) => (
+                      <FormItem className="mt-4 text-xs">
+                        <FormLabel className="text-sm">Size percent</FormLabel>
+                        <FormDescription>
+                          Percentage to sell in the take profit order
+                        </FormDescription>
+                        <FormControl>
+                          <span className="grid grid-cols-12">
+                            <span className="col-span-9">
+                              <Input
+                                label={`Size percent`}
+                                placeholder={sizePercent}
+                                disabled
+                                readOnly
+                              />
+                              <Slider
+                                className="mt-3"
+                                defaultValue={[sizePercent]}
+                                max={100}
+                                min={0}
+                                step={0.01}
+                                onValueChange={(value) => {
+                                  setSizePercent(value[0]);
+                                }}
+                              />
+                            </span>
+
+                            <span className="col-span-3 ml-3 text-center">
+                              <Popover>
+                                <PopoverTrigger>
+                                  <span
+                                    onClick={() => {
+                                      event.preventDefault();
+                                    }}
+                                    className="inline-block border border-grey rounded pl-4 pb-1 pr-4 text-lg"
+                                  >
+                                    <Label>Edit</Label>
+                                  </span>
+                                </PopoverTrigger>
+                                <PopoverContent>
+                                  <Label>Provide a new size percent</Label>
+                                  <Input
+                                    placeholder={sizePercent}
+                                    className="mb-2 mt-1"
+                                    onChange={(event) => {
+                                      const input = event.target.value;
+                                      const regex = /^[0-9]*\.?[0-9]*$/;
+                                      if (input && input.length && regex.test(input)) {
+                                        if (input >= 0 && input <= 100) {
+                                          setSizePercent(input);
+                                        }
+                                      }
+                                    }}
+                                  />
+                                </PopoverContent>
+                              </Popover>
+                            </span>
+                          </span>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="repeatValue"
+                    render={({ field }) => (
+                      <FormItem className="mt-4 text-xs">
+                        <FormLabel className="text-sm">Set OSO to automatically repeat?</FormLabel>
+                        <FormDescription>Automates repeated OSO based limit orders</FormDescription>
+                        <FormControl>
+                          <>
+                            <Checkbox
+                              id="terms2"
+                              className="mr-2"
+                              checked={repeat}
+                              onClick={() => {
+                                setRepeat(!repeat);
+                              }}
+                            />
+                            {repeat ? `OSO configured to repeat` : `OSO configured not to repeat`}
+                          </>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </>
+              ) : null}
+
+              <Separator className="mb-2 mt-2" />
+
               <FormField
                 control={form.control}
                 disabled
@@ -493,7 +763,6 @@ export default function LimitOrderCard(properties) {
                   </FormItem>
                 )}
               />
-
               {orderType === "buy" &&
               assetAData &&
               assetAData.market_fee_percent &&
@@ -517,7 +786,6 @@ export default function LimitOrderCard(properties) {
                   )}
                 />
               ) : null}
-
               {orderType === "sell" &&
               assetBData &&
               assetBData.market_fee_percent &&
@@ -542,7 +810,6 @@ export default function LimitOrderCard(properties) {
                   )}
                 />
               ) : null}
-
               {!amount || !price || !expiry ? (
                 <Button className="mt-7 mb-1" variant="outline" disabled type="submit">
                   Submit
@@ -595,12 +862,12 @@ export default function LimitOrderCard(properties) {
                         </div>
                       </div>
                     </FormLabel>
-                    <Input disabled className="mb-3" />
                     <FormDescription>
                       {orderType === "buy"
                         ? `The amount of ? you want to buy`
                         : `The amount of ? you will have to spend`}
                     </FormDescription>
+                    <Input disabled className="mb-3" />
                     <FormMessage />
                   </FormItem>
                 )}
@@ -619,12 +886,12 @@ export default function LimitOrderCard(properties) {
                         </div>
                       </div>
                     </FormLabel>
-                    <Input disabled className="mb-3" />
                     <FormDescription>
                       {orderType === "buy"
                         ? `The total ? you will have to spend`
                         : `The total ? you will receive`}
                     </FormDescription>
+                    <Input disabled className="mb-3" />
                   </FormItem>
                 )}
               />
@@ -635,12 +902,12 @@ export default function LimitOrderCard(properties) {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Limit order expriration</FormLabel>
+                    <FormDescription>Time till expiration...</FormDescription>
                     <Select disabled>
                       <SelectTrigger className="mb-3">
                         <SelectValue placeholder="1hr" />
                       </SelectTrigger>
                     </Select>
-                    <FormDescription>Time till expiration...</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -707,7 +974,17 @@ export default function LimitOrderCard(properties) {
                       },
                       expiration: expiry,
                       fill_or_kill: false,
-                      extensions: [],
+                      extensions: osoEnabled
+                        ? {
+                            limit_order_auto_action: {
+                              fee_asset_id: "1.3.0",
+                              spread_percent: spreadPercent ? spreadPercent * 100 : 0,
+                              size_percent: sizePercent ? sizePercent * 100 : 0,
+                              expiration_seconds: 0,
+                              repeat: repeat,
+                            },
+                          }
+                        : {},
                     },
                   ]
                 : [
@@ -723,7 +1000,17 @@ export default function LimitOrderCard(properties) {
                       },
                       expiration: expiry,
                       fill_or_kill: false,
-                      extensions: [],
+                      extensions: osoEnabled
+                        ? {
+                            limit_order_auto_action: {
+                              fee_asset_id: "1.3.0",
+                              spread_percent: spreadPercent,
+                              size_percent: sizePercent,
+                              expiration_seconds: 0,
+                              repeat: repeat,
+                            },
+                          }
+                        : {},
                     },
                   ]
             }

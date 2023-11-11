@@ -241,7 +241,7 @@ export default function PortfolioTabs(properties) {
       <div style={{ ...style }}>
         <Card>
           <div className="grid grid-cols-6">
-            <div className="col-span-5">
+            <div className="col-span-4">
               <CardHeader>
                 <CardTitle>
                   Selling {readableBaseAmount} {sellAsset.symbol} for {readableQuoteAmount}{" "}
@@ -262,16 +262,18 @@ export default function PortfolioTabs(properties) {
                 </CardDescription>
               </CardHeader>
             </div>
-            <div className="col-span-1 pt-7">
+            <div className="col-span-2 pt-6">
               <a href={`/dex/index.html?market=${sellAsset.symbol}_${buyAsset.symbol}`}>
-                <Button variant="outline" className="mb-2">
-                  Trade
+                <Button variant="outline">Trade</Button>
+              </a>
+              <a href={`/order/index.html?id=${orderId}`}>
+                <Button variant="outline" className="mb-3 ml-3">
+                  Update
                 </Button>
               </a>
               <>
                 <Button
                   variant="outline"
-                  className="mt-2"
                   onClick={() => {
                     setShowDialog(true);
                     setOrderID(orderId);

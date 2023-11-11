@@ -2167,7 +2167,7 @@ export default function Smartcoin(properties) {
                             <Checkbox
                               id="terms1"
                               className="mr-2"
-                              value={tcrEnabled}
+                              checked={tcrEnabled}
                               onClick={() => {
                                 setTCREnabled(!tcrEnabled);
                               }}
