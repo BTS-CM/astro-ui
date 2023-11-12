@@ -13,6 +13,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Label } from "@/components/ui/label";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 
 import { humanReadableFloat } from "../../lib/common";
 
@@ -122,46 +124,121 @@ export default function MarketOrderCard(properties) {
                   <div className="grid grid-cols-4">
                     {cardType === "buy"
                       ? buyOrders.map((res, index) => (
-                          <div className="col-span-4" key={`moc_${cardType}_${index}`}>
-                            <div className="grid grid-cols-4 text-sm">
-                              <div className="col-span-1 border-r-2 pl-3">
-                                {parseFloat(res.price).toFixed(assetAData.precision)}
+                          <HoverCard key="poolExchange">
+                            <HoverCardTrigger asChild>
+                              <div className="col-span-4" key={`moc_${cardType}_${index}`}>
+                                <div className="grid grid-cols-4 text-sm">
+                                  <div className="col-span-1 border-r-2 pl-3">
+                                    {parseFloat(res.price).toFixed(assetAData.precision)}
+                                  </div>
+                                  <div className="col-span-1 border-r-2 pl-3">{res.base}</div>
+                                  <div className="col-span-1 border-r-2 pl-3">{res.quote}</div>
+                                  <div className="col-span-1 pl-3">
+                                    {buyOrders
+                                      .slice(0, index + 1)
+                                      .map((x) => parseFloat(x.base))
+                                      .reduce((acc, curr) => acc + curr, 0)
+                                      .toFixed(assetAData.precision)}
+                                  </div>
+                                  <div className="col-span-4">
+                                    <Separator />
+                                  </div>
+                                </div>
                               </div>
-                              <div className="col-span-1 border-r-2 pl-3">{res.base}</div>
-                              <div className="col-span-1 border-r-2 pl-3">{res.quote}</div>
-                              <div className="col-span-1 pl-3">
-                                {buyOrders
-                                  .slice(0, index + 1)
-                                  .map((x) => parseFloat(x.base))
-                                  .reduce((acc, curr) => acc + curr, 0)
-                                  .toFixed(assetAData.precision)}
-                              </div>
-                              <div className="col-span-4">
-                                <Separator />
-                              </div>
-                            </div>
-                          </div>
+                            </HoverCardTrigger>
+                            <HoverCardContent className="w-80 text-sm pt-3">
+                              <>
+                                <span className="pt-5">
+                                  {`Buy ${buyOrders
+                                    .slice(0, index + 1)
+                                    .map((x) => parseFloat(x.quote))
+                                    .reduce((acc, curr) => acc + curr, 0)
+                                    .toFixed(assetAData.precision)} ${assetB} for ${buyOrders
+                                    .slice(0, index + 1)
+                                    .map((x) => parseFloat(x.base))
+                                    .reduce((acc, curr) => acc + curr, 0)
+                                    .toFixed(assetAData.precision)} ${assetA}?`}
+                                </span>
+                                <br />
+                                <a
+                                  href={
+                                    `/dex/index.html?market=${assetA}_${assetB}&type=sell` +
+                                    `&price=${(
+                                      1 /
+                                      parseFloat(
+                                        parseFloat(buyOrders[index].price).toFixed(
+                                          assetAData.precision
+                                        )
+                                      )
+                                    ).toFixed(assetAData.precision)}` +
+                                    `&amount=${buyOrders
+                                      .slice(0, index + 1)
+                                      .map((x) => parseFloat(x.base))
+                                      .reduce((acc, curr) => acc + curr, 0)
+                                      .toFixed(assetAData.precision)}`
+                                  }
+                                >
+                                  <Button className="mt-2 h-6">Proceed</Button>
+                                </a>
+                              </>
+                            </HoverCardContent>
+                          </HoverCard>
                         ))
                       : sellOrders.map((res, index) => (
-                          <div className="col-span-4" key={`moc_${cardType}_${index}`}>
-                            <div className="grid grid-cols-4 text-sm">
-                              <div className="col-span-1 border-r-2 pl-3">
-                                {parseFloat(res.price).toFixed(assetBData.precision)}
+                          <HoverCard key="poolExchange">
+                            <HoverCardTrigger asChild>
+                              <div className="col-span-4" key={`moc_${cardType}_${index}`}>
+                                <div className="grid grid-cols-4 text-sm">
+                                  <div className="col-span-1 border-r-2 pl-3">
+                                    {parseFloat(res.price).toFixed(assetBData.precision)}
+                                  </div>
+                                  <div className="col-span-1 border-r-2 pl-3">{res.base}</div>
+                                  <div className="col-span-1 border-r-2 pl-3">{res.quote}</div>
+                                  <div className="col-span-1 pl-3">
+                                    {sellOrders
+                                      .slice(0, index + 1)
+                                      .map((x) => parseFloat(x.base))
+                                      .reduce((acc, curr) => acc + curr, 0)
+                                      .toFixed(assetAData.precision)}
+                                  </div>
+                                  <div className="col-span-4">
+                                    <Separator />
+                                  </div>
+                                </div>
                               </div>
-                              <div className="col-span-1 border-r-2 pl-3">{res.base}</div>
-                              <div className="col-span-1 border-r-2 pl-3">{res.quote}</div>
-                              <div className="col-span-1 pl-3">
-                                {sellOrders
-                                  .slice(0, index + 1)
-                                  .map((x) => parseFloat(x.base))
-                                  .reduce((acc, curr) => acc + curr, 0)
-                                  .toFixed(assetAData.precision)}
-                              </div>
-                              <div className="col-span-4">
-                                <Separator />
-                              </div>
-                            </div>
-                          </div>
+                            </HoverCardTrigger>
+                            <HoverCardContent className="w-80 text-sm pt-3">
+                              <>
+                                <span className="pt-5">
+                                  {`Buy ${sellOrders
+                                    .slice(0, index + 1)
+                                    .map((x) => parseFloat(x.base))
+                                    .reduce((acc, curr) => acc + curr, 0)
+                                    .toFixed(assetBData.precision)} ${assetB} for ${sellOrders
+                                    .slice(0, index + 1)
+                                    .map((x) => parseFloat(x.quote))
+                                    .reduce((acc, curr) => acc + curr, 0)
+                                    .toFixed(assetAData.precision)} ${assetA}?`}
+                                </span>
+                                <br />
+                                <a
+                                  href={
+                                    `/dex/index.html?market=${assetA}_${assetB}&type=buy` +
+                                    `&price=${parseFloat(sellOrders[index].price).toFixed(
+                                      assetBData.precision
+                                    )}` +
+                                    `&amount=${sellOrders
+                                      .slice(0, index + 1)
+                                      .map((x) => parseFloat(x.quote))
+                                      .reduce((acc, curr) => acc + curr, 0)
+                                      .toFixed(assetBData.precision)}`
+                                  }
+                                >
+                                  <Button className="mt-2 h-6">Proceed</Button>
+                                </a>
+                              </>
+                            </HoverCardContent>
+                          </HoverCard>
                         ))}
                   </div>
                 </ScrollArea>

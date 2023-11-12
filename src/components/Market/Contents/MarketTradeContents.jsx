@@ -27,6 +27,7 @@ export default function MarketTradeContents(properties) {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-2">
+        {marketHistoryInProgress ? <Skeleton count={5} /> : null}
         {publicMarketHistory && publicMarketHistory.length ? (
           <MarketSummary
             type={type}
@@ -35,20 +36,7 @@ export default function MarketTradeContents(properties) {
             assetBData={assetBData}
           />
         ) : (
-          <>
-            <Skeleton className="h-4 w-full mt-1" />
-            <Skeleton className="h-4 w-full mt-1" />
-            <Skeleton className="h-4 w-full mt-1" />
-            <Skeleton className="h-4 w-full mt-1" />
-            <Skeleton className="h-4 w-full mt-1" />
-            <Skeleton className="h-4 w-full mt-1" />
-            <Skeleton className="h-4 w-full mt-1" />
-            <Skeleton className="h-4 w-full mt-1" />
-            <Skeleton className="h-4 w-full mt-1" />
-            <Skeleton className="h-4 w-full mt-1" />
-            <Skeleton className="h-4 w-full mt-1" />
-            <Skeleton className="h-4 w-full mt-1" />
-          </>
+          "No market history found"
         )}
       </CardContent>
       <CardFooter>

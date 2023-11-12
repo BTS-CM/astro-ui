@@ -76,6 +76,29 @@ export default function Market(properties) {
   const [activeLimitCard, setActiveLimitCard] = useState("buy");
   const [activeMOC, setActiveMOC] = useState("buy");
 
+  useEffect(() => {
+    async function parseURL() {
+      const urlSearchParams = new URLSearchParams(window.location.search);
+      const params = Object.fromEntries(urlSearchParams.entries());
+      const _type = params.type;
+
+      let finalType = activeLimitCard;
+      if (_type === "buy" || _type === "sell") {
+        finalType = _type;
+      }
+
+      return {
+        finalType,
+      };
+    }
+
+    parseURL().then(({ finalType }) => {
+      if (finalType !== activeLimitCard) {
+        setActiveLimitCard(finalType);
+      }
+    });
+  }, []);
+
   function _resetOrders() {
     setBuyOrders(null);
     setSellOrders(null);
@@ -284,7 +307,7 @@ export default function Market(properties) {
       <div className="container mx-auto mt-5 mb-5">
         <div className="grid grid-cols-2 gap-5">
           <div className="col-span-1">
-            <Tabs defaultValue="buy" className="w-full">
+            <Tabs defaultValue={activeLimitCard} value={activeLimitCard} className="w-full">
               <TabsList className="grid w-full grid-cols-2 gap-2">
                 {!assetAData || !assetBData ? (
                   <>

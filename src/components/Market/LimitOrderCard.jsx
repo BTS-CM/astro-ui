@@ -454,7 +454,7 @@ export default function LimitOrderCard(properties) {
                                       buyOrders.length > 0
                                     ) {
                                       finalPrice = trimPrice(
-                                        buyOrders[0].price,
+                                        1 / parseFloat(buyOrders[0].price),
                                         assetBData.precision
                                       );
                                     }
