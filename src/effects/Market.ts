@@ -47,7 +47,6 @@ const [createMarketOrdersStore] = nanoquery({
 
     if (marketOrdersJSON && marketOrdersJSON.result) {
       console.log(`Fetched market data for ${keys[1]}_${keys[2]}`);
-      window.history.replaceState({}, "", `?market=${keys[1]}_${keys[2]}`); // updating the url parameters
       return marketOrdersJSON.result;
     }
 

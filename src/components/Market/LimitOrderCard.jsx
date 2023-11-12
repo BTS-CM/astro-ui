@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
@@ -42,7 +42,7 @@ import { Slider } from "@/components/ui/slider";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
 
-import { trimPrice, humanReadableFloat, blockchainFloat } from "@/lib/common.js";
+import { trimPrice, humanReadableFloat, blockchainFloat, debounce } from "@/lib/common.js";
 import DeepLinkDialog from "../common/DeepLinkDialog";
 
 /**
@@ -142,6 +142,215 @@ export default function LimitOrderCard(properties) {
   const [expirationSeconds, setExpirationSeconds] = useState(0);
   const [repeat, setRepeat] = useState(false);
 
+  useEffect(() => {
+    async function parseURL() {
+      console.log("Parsing market parameters");
+      const urlSearchParams = new URLSearchParams(window.location.search);
+      const params = Object.fromEntries(urlSearchParams.entries());
+      const _amount = params.amount;
+      const _price = params.price;
+      const _oso = params.oso;
+      const _spreadPercent = params.spreadPercent;
+      const _sizePercent = params.sizePercent;
+      const _expirationSeconds = params.expirationSeconds;
+      const _repeat = params.repeat;
+
+      let finalAmount = amount;
+      let finalPrice = price;
+      let finalTotal = total;
+      let finalOSO = osoEnabled;
+      let finalSpreadPercent = spreadPercent;
+      let finalSizePercent = sizePercent;
+      let finalExpirationSeconds = expirationSeconds;
+      let finalRepeat = repeat;
+
+      const minAssetA = humanReadableFloat(1, assetAData.precision);
+      const minAssetB = humanReadableFloat(1, assetBData.precision);
+
+      if (_amount) {
+        const _parsedAmount = parseFloat(_amount);
+        if (_parsedAmount) {
+          finalAmount = _parsedAmount >= minAssetA ? _parsedAmount : minAssetA;
+        }
+      }
+
+      if (_price) {
+        const _parsedPrice = parseFloat(_price);
+        if (_parsedPrice) {
+          finalPrice = _parsedPrice >= minAssetB ? _parsedPrice : minAssetB;
+        }
+      }
+
+      if (finalAmount && finalPrice) {
+        const _calculatedTotal = parseFloat(
+          (finalAmount * finalPrice).toFixed(assetBData.precision)
+        );
+
+        finalTotal = _calculatedTotal >= minAssetB ? _calculatedTotal : minAssetB;
+      }
+
+      if (_oso) {
+        const _parsedOSO = _oso === "true";
+        if (_parsedOSO) {
+          finalOSO = _parsedOSO;
+        }
+      }
+
+      if (_spreadPercent) {
+        const _parsedSpreadPercent = parseFloat(_spreadPercent);
+        if (_parsedSpreadPercent && _parsedSpreadPercent >= 0 && _parsedSpreadPercent <= 100) {
+          finalSpreadPercent = parseFloat(_parsedSpreadPercent.toFixed(3));
+        } else if (_parsedSpreadPercent && _parsedSpreadPercent > 100) {
+          finalSpreadPercent = 100;
+        } else if (_parsedSpreadPercent && _parsedSpreadPercent < 0) {
+          finalSpreadPercent = 0;
+        }
+      }
+
+      if (_sizePercent) {
+        const _parsedSizePercent = parseFloat(_sizePercent);
+        if (_parsedSizePercent && _parsedSizePercent >= 0 && _parsedSizePercent <= 100) {
+          finalSizePercent = parseFloat(_parsedSizePercent.toFixed(3));
+        } else if (_parsedSizePercent && _parsedSizePercent > 100) {
+          finalSizePercent = 100;
+        } else if (_parsedSizePercent && _parsedSizePercent < 0) {
+          finalSizePercent = 0;
+        }
+      }
+
+      if (_expirationSeconds) {
+        const _parsedExpirationSeconds = parseFloat(_expirationSeconds);
+        if (_parsedExpirationSeconds) {
+          finalExpirationSeconds = _parsedExpirationSeconds;
+        }
+      }
+
+      if (_repeat) {
+        const _parsedRepeat = _repeat === "true";
+        if (_parsedRepeat) {
+          finalRepeat = _parsedRepeat;
+        }
+      }
+
+      // Return the final assets
+      return {
+        finalAmount,
+        finalPrice,
+        finalTotal,
+        finalOSO,
+        finalSpreadPercent,
+        finalSizePercent,
+        finalExpirationSeconds,
+        finalRepeat,
+      };
+    }
+
+    if (marketSearch && marketSearch.length && window.location.search) {
+      parseURL().then(
+        ({
+          finalAmount,
+          finalPrice,
+          finalTotal,
+          finalOSO,
+          finalSpreadPercent,
+          finalSizePercent,
+          finalExpirationSeconds,
+          finalRepeat,
+        }) => {
+          if (finalAmount !== amount) {
+            setAmount(finalAmount);
+          }
+          if (finalPrice !== price) {
+            setPrice(finalPrice);
+          }
+          if (finalTotal !== total) {
+            setTotal(finalTotal);
+          }
+          if (finalOSO !== osoEnabled) {
+            setOSOEnabled(finalOSO);
+          }
+          if (finalSpreadPercent !== spreadPercent) {
+            setSpreadPercent(finalSpreadPercent);
+          }
+          if (finalSizePercent !== sizePercent) {
+            setSizePercent(finalSizePercent);
+          }
+          if (finalExpirationSeconds !== expirationSeconds) {
+            setExpirationSeconds(finalExpirationSeconds);
+          }
+          if (finalRepeat !== repeat) {
+            setRepeat(finalRepeat);
+          }
+
+          let finalUrlParams =
+            `?market=${thisAssetA}_${thisAssetB}` +
+            `&type=${orderType}` +
+            `&price=${finalPrice}` +
+            `&amount=${finalAmount}`;
+
+          if (finalOSO) {
+            finalUrlParams +=
+              `&oso=${finalOSO}` +
+              `&spreadPercent=${finalSpreadPercent}` +
+              `&sizePercent=${finalSizePercent}` +
+              `&expirationSeconds=${finalExpirationSeconds}` +
+              `&repeat=${finalRepeat}`;
+          }
+
+          window.history.replaceState({}, "", finalUrlParams);
+        }
+      );
+    }
+  }, []);
+
+  const [inputChars, setInputChars] = useState(0);
+  useEffect(() => {
+    if (inputChars > 0) {
+      let finalUrlParams =
+        `?market=${thisAssetA}_${thisAssetB}` +
+        `&type=${orderType}` +
+        `&price=${price}` +
+        `&amount=${amount}`;
+
+      if (osoEnabled) {
+        finalUrlParams +=
+          `&oso=${osoEnabled}` +
+          `&spreadPercent=${spreadPercent}` +
+          `&sizePercent=${sizePercent}` +
+          `&expirationSeconds=${expirationSeconds}` +
+          `&repeat=${repeat}`;
+      }
+
+      window.history.replaceState({}, "", finalUrlParams);
+    }
+  }, [amount, price, total, osoEnabled, spreadPercent, sizePercent, expirationSeconds, repeat]);
+
+  const debouncedSetSpreadPercent = useCallback(
+    debounce((input, mcr) => {
+      const regex = /^[0-9]*\.?[0-9]*$/;
+      if (regex.test(input)) {
+        if (input >= 0 && input <= 100) {
+          setSpreadPercent(input);
+          setInputChars(inputChars + 1);
+        }
+      }
+    }, 25),
+    []
+  );
+
+  const debouncedSetSizePercent = useCallback(
+    debounce((input, mcr) => {
+      const regex = /^[0-9]*\.?[0-9]*$/;
+      if (regex.test(input)) {
+        if (input >= 0 && input <= 100) {
+          setSizePercent(input);
+          setInputChars(inputChars + 1);
+        }
+      }
+    }, 25),
+    []
+  );
+
   return (
     <Card>
       <CardHeader className="pb-2">
@@ -211,6 +420,7 @@ export default function LimitOrderCard(properties) {
                                           )
                                         );
                                       }
+                                      setInputChars(inputChars + 1);
                                     }
                                   }
                                 }}
@@ -265,6 +475,7 @@ export default function LimitOrderCard(properties) {
                                           )
                                         );
                                       }
+                                      setInputChars(inputChars + 1);
                                     }
                                   }}
                                 >
@@ -323,6 +534,7 @@ export default function LimitOrderCard(properties) {
                                           (parsedInput * price).toFixed(assetBData.precision)
                                         );
                                       }
+                                      setInputChars(inputChars + 1);
                                     }
                                   }
                                 }}
@@ -340,6 +552,7 @@ export default function LimitOrderCard(properties) {
                                           (parsedAmount * price).toFixed(assetBData.precision)
                                         );
                                       }
+                                      setInputChars(inputChars + 1);
                                     }
                                   }}
                                 >
@@ -351,7 +564,6 @@ export default function LimitOrderCard(properties) {
                         </span>
                       </span>
                     </FormControl>
-                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -396,6 +608,7 @@ export default function LimitOrderCard(properties) {
                                           (parsedFloat / price).toFixed(assetAData.precision)
                                         );
                                       }
+                                      setInputChars(inputChars + 1);
                                     }
                                   }
                                 }}
@@ -413,6 +626,7 @@ export default function LimitOrderCard(properties) {
                                           (parsedAmount / price).toFixed(assetAData.precision)
                                         );
                                       }
+                                      setInputChars(inputChars + 1);
                                     }
                                   }}
                                 >
@@ -424,20 +638,21 @@ export default function LimitOrderCard(properties) {
                         </span>
                       </span>
                     </FormControl>
-                    <FormMessage>
-                      {orderType === "buy" &&
-                      assetBBalance &&
-                      parseFloat(assetBBalance.replaceAll(",", "")).toFixed(assetBData.precision) <
-                        amount &&
-                      total - parseFloat(assetBBalance.replaceAll(",", "")) > 0
-                        ? `A further ${
+                    {amount &&
+                    price &&
+                    assetBBalance &&
+                    parseFloat(assetBBalance.replaceAll(",", "")) < parseFloat(total) ? (
+                      <FormMessage>
+                        {`You require 
+                          ${
                             total -
                             parseFloat(assetBBalance.replaceAll(",", "")).toFixed(
                               assetBData.precision
                             )
-                          } ${thisAssetB} is required`
-                        : null}
-                    </FormMessage>
+                          }
+                          more ${thisAssetB}`}
+                      </FormMessage>
+                    ) : null}
                   </FormItem>
                 )}
               />
@@ -483,6 +698,7 @@ export default function LimitOrderCard(properties) {
                           // Setting a default date expiry
                           setExpiry();
                         }
+                        setInputChars(inputChars + 1);
                       }}
                     >
                       <Select>
@@ -555,25 +771,26 @@ export default function LimitOrderCard(properties) {
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <>
+                      <div className="flex items-center space-x-2">
                         <Checkbox
                           id="terms1"
-                          className="mr-2"
                           checked={osoEnabled}
                           onClick={() => {
                             setOSOEnabled(!osoEnabled);
+                            setInputChars(inputChars + 1);
                           }}
                         />
-                        <span
-                          onClick={() => {
-                            setOSOEnabled(!osoEnabled);
-                          }}
+                        <label
+                          htmlFor="terms1"
+                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                         >
-                          Enable Order Sends Order
-                        </span>
-                      </>
+                          {osoEnabled ? "Order Sends Order Enabled" : "Enable Order Sends Order"}
+                        </label>
+                      </div>
                     </FormControl>
-                    <FormMessage />
+                    {osoEnabled ? (
+                      <FormDescription>Automatic OSO function will be active</FormDescription>
+                    ) : null}
                   </FormItem>
                 )}
               />
@@ -605,7 +822,7 @@ export default function LimitOrderCard(properties) {
                                 min={0}
                                 step={0.01}
                                 onValueChange={(value) => {
-                                  setSpreadPercent(value[0]);
+                                  debouncedSetSpreadPercent(value[0]);
                                 }}
                               />
                             </span>
@@ -633,6 +850,7 @@ export default function LimitOrderCard(properties) {
                                       if (input && input.length && regex.test(input)) {
                                         if (input >= 0 && input <= 100) {
                                           setSpreadPercent(input);
+                                          setInputChars(inputChars + 1);
                                         }
                                       }
                                     }}
@@ -671,7 +889,7 @@ export default function LimitOrderCard(properties) {
                                 min={0}
                                 step={0.01}
                                 onValueChange={(value) => {
-                                  setSizePercent(value[0]);
+                                  debouncedSetSizePercent(value[0]);
                                 }}
                               />
                             </span>
@@ -699,6 +917,7 @@ export default function LimitOrderCard(properties) {
                                       if (input && input.length && regex.test(input)) {
                                         if (input >= 0 && input <= 100) {
                                           setSizePercent(input);
+                                          setInputChars(inputChars + 1);
                                         }
                                       }
                                     }}
@@ -721,17 +940,22 @@ export default function LimitOrderCard(properties) {
                         <FormLabel className="text-sm">Set OSO to automatically repeat?</FormLabel>
                         <FormDescription>Automates repeated OSO based limit orders</FormDescription>
                         <FormControl>
-                          <>
+                          <div className="flex items-center space-x-2">
                             <Checkbox
                               id="terms2"
-                              className="mr-2"
                               checked={repeat}
                               onClick={() => {
                                 setRepeat(!repeat);
+                                setInputChars(inputChars + 1);
                               }}
                             />
-                            {repeat ? `OSO configured to repeat` : `OSO configured not to repeat`}
-                          </>
+                            <label
+                              htmlFor="terms2"
+                              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                            >
+                              {repeat ? `OSO configured to repeat` : `OSO configured not to repeat`}
+                            </label>
+                          </div>
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -740,7 +964,7 @@ export default function LimitOrderCard(properties) {
                 </>
               ) : null}
 
-              <Separator className="mb-2 mt-2" />
+              <Separator className="mt-3" />
 
               <FormField
                 control={form.control}
@@ -749,10 +973,10 @@ export default function LimitOrderCard(properties) {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Fee</FormLabel>
+                    <FormDescription>The network fee to broadcast this operation</FormDescription>
                     <FormControl>
                       <Input disabled label={`fees`} value={`${fee} BTS`} placeholder={1} />
                     </FormControl>
-                    <FormDescription>The network fee to broadcast this operation</FormDescription>
                     {expiryType === "fkill" || usr.id === usr.referrer ? (
                       <FormMessage>
                         {expiryType === "fkill" ? `Unfilled rebate: ${fee} BTS (instant)` : null}

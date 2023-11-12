@@ -894,7 +894,7 @@ export default function Smartcoin(properties) {
           {tcr ? (
             <>
               <br />
-              Target collateral ratio:
+              {"Target collateral ratio: "}
               <b>{tcr}</b>
             </>
           ) : null}
