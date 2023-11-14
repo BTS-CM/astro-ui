@@ -982,12 +982,14 @@ export default function Smartcoin(properties) {
           <CardDescription>
             {type === "debt" ? (
               <>
-                Use this information to improve your understanding of {assetInfo.s}.<br />
+                Use this information to improve your understanding of {assetInfo.s}.
+                <br />
                 Thoroughly do your own research before proceeding to borrow any smartcoins.
               </>
             ) : (
               <>
-                Use this information to improve your understanding of {assetInfo.s}.<br />
+                Use this information to improve your understanding of {assetInfo.s}.
+                <br />
                 Thoroughly do your own research before using this asset as smartcoin backing
                 collateral.
               </>
@@ -1827,7 +1829,7 @@ export default function Smartcoin(properties) {
                         <FormControl>
                           <span className="grid grid-cols-12">
                             <span className="col-span-1">
-                              <HoverCard key="poolExchange">
+                              <HoverCard key="debtLockCard">
                                 <HoverCardTrigger asChild>
                                   <Toggle
                                     variant="outline"
@@ -1932,7 +1934,7 @@ export default function Smartcoin(properties) {
                         <FormControl>
                           <span className="grid grid-cols-12">
                             <span className="col-span-1">
-                              <HoverCard key="poolExchange">
+                              <HoverCard key="collateralLockCard">
                                 <HoverCardTrigger asChild>
                                   <Toggle
                                     variant="outline"
@@ -2036,7 +2038,7 @@ export default function Smartcoin(properties) {
                         <FormControl>
                           <span className="grid grid-cols-12">
                             <span className="col-span-1">
-                              <HoverCard key="poolExchange">
+                              <HoverCard key="ratioLockCard">
                                 <HoverCardTrigger asChild>
                                   <Toggle
                                     variant="outline"

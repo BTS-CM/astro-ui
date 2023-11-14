@@ -28,12 +28,12 @@ const [createFetcherStore] = nanoquery({
           })
         : null,
       _endpoints.includes("assets")
-        ? fetch(`http://localhost:8080/cache/allassets/${chain}`, {
+        ? fetch(`http://localhost:8080/cache/minAssets/${chain}`, {
             method: "GET",
           })
         : null,
       _endpoints.includes("pools")
-        ? fetch(`http://localhost:8080/cache/pools/${chain}`, {
+        ? fetch(`http://localhost:8080/cache/minPools/${chain}`, {
             method: "GET",
           })
         : null,
@@ -83,10 +83,36 @@ const [createFetcherStore] = nanoquery({
             addMarketSearchesToCache(parsedJSON);
             break;
           case 1:
-            addAssetsToCache(parsedJSON);
+            addAssetsToCache(
+              parsedJSON.map((_asset) => {
+                return {
+                  id: _asset.id,
+                  symbol: _asset.s,
+                  precision: _asset.p,
+                  issuer: _asset.i,
+                  market_fee_percent: _asset.mfp,
+                  max_market_fee: _asset.mmf,
+                  max_supply: _asset.ms,
+                };
+              })
+            );
             break;
           case 2:
-            addPoolsToCache(parsedJSON);
+            addPoolsToCache(
+              parsedJSON.map((_pool) => {
+                return {
+                  id: _pool.id,
+                  asset_a_id: _pool.a,
+                  asset_a_symbol: _pool.as,
+                  asset_b_id: _pool.b,
+                  asset_b_symbol: _pool.bs,
+                  share_asset_symbol: _pool.sa,
+                  balance_a: _pool.ba,
+                  balance_b: _pool.bb,
+                  taker_fee_percent: _pool.tfp,
+                };
+              })
+            );
             break;
           case 3:
             setGlobalParams(parsedJSON);

@@ -1,4 +1,5 @@
 import { nanoquery } from "@nanostores/query";
+import * as fflate from "fflate";
 
 // Create fetcher store for pool details
 const [createPoolDetailsStore] = nanoquery({
@@ -26,9 +27,11 @@ const [createPoolDetailsStore] = nanoquery({
       return;
     }
 
-    if (poolDetailsJSON && poolDetailsJSON.result && poolDetailsJSON.result.length) {
+    if (poolDetailsJSON && poolDetailsJSON.result) {
       console.log(`Fetched pool details`);
-      return poolDetailsJSON.result[0];
+      const decompressed = fflate.decompressSync(fflate.strToU8(poolDetailsJSON.result, true));
+      const pool = JSON.parse(fflate.strFromU8(decompressed));
+      return pool && pool.length ? pool[0] : null;
     }
   },
 });

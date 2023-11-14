@@ -1,5 +1,7 @@
-import { addAssetsToCache } from "../stores/cache.ts";
 import { nanoquery } from "@nanostores/query";
+import * as fflate from "fflate";
+
+import { addAssetsToCache } from "../stores/cache.ts";
 
 // Create fetcher store for market history
 const [createMarketHistoryStore] = nanoquery({
@@ -20,7 +22,9 @@ const [createMarketHistoryStore] = nanoquery({
 
     if (marketHistoryJSON && marketHistoryJSON.result) {
       console.log("Fetched market history");
-      return marketHistoryJSON.result;
+      const decompressed = fflate.decompressSync(fflate.strToU8(marketHistoryJSON.result, true));
+      const history = JSON.parse(fflate.strFromU8(decompressed));
+      return history;
     }
 
     throw new Error("No market history data");
@@ -47,7 +51,9 @@ const [createMarketOrdersStore] = nanoquery({
 
     if (marketOrdersJSON && marketOrdersJSON.result) {
       console.log(`Fetched market data for ${keys[1]}_${keys[2]}`);
-      return marketOrdersJSON.result;
+      const decompressed = fflate.decompressSync(fflate.strToU8(marketOrdersJSON.result, true));
+      const orders = JSON.parse(fflate.strFromU8(decompressed));
+      return orders;
     }
 
     throw new Error("No market orders data");
@@ -68,8 +74,10 @@ const [createMarketsStore] = nanoquery({
 
     const responseContents = await response.json();
 
-    if (responseContents && responseContents.result && responseContents.result.length) {
-      return responseContents.result;
+    if (responseContents && responseContents.result) {
+      const decompressed = fflate.decompressSync(fflate.strToU8(responseContents.result, true));
+      const markets = JSON.parse(fflate.strFromU8(decompressed));
+      return markets;
     }
   },
   refetchInterval: 60000,

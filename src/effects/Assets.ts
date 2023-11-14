@@ -1,5 +1,7 @@
-import { addAssetsToCache } from "../stores/cache.ts";
 import { nanoquery } from "@nanostores/query";
+import * as fflate from "fflate";
+
+import { addAssetsToCache } from "../stores/cache.ts";
 
 // Create fetcher store for dynamic data
 const [createDynamicDataStore] = nanoquery({
@@ -18,7 +20,9 @@ const [createDynamicDataStore] = nanoquery({
 
     if (dynamicDataJSON && dynamicDataJSON.result) {
       console.log(`Fetched ${replacedID} dynamic data`);
-      return dynamicDataJSON.result;
+      const decompressed = fflate.decompressSync(fflate.strToU8(dynamicDataJSON.result, true));
+      const finalResult = fflate.strFromU8(decompressed);
+      return JSON.parse(finalResult);
     }
   },
 });
@@ -57,7 +61,9 @@ const [createSmartcoinDataStore] = nanoquery({
 
     const responseContents = await response.json();
     if (responseContents && responseContents.result) {
-      return responseContents.result;
+      const decompressed = fflate.decompressSync(fflate.strToU8(responseContents.result, true));
+      const finalResult = fflate.strFromU8(decompressed);
+      return JSON.parse(finalResult);
     }
   },
 });
@@ -78,7 +84,9 @@ const [createBitassetDataStore] = nanoquery({
     const responseContents = await response.json();
 
     if (responseContents && responseContents.result && responseContents.result.length) {
-      const finalResult = responseContents.result[0];
+      const decompressed = fflate.decompressSync(fflate.strToU8(responseContents.result, true));
+      const _parsed = JSON.parse(fflate.strFromU8(decompressed));
+      const finalResult = _parsed[0];
       return finalResult;
     }
   },
@@ -99,8 +107,10 @@ const [createCachedAssetStore] = nanoquery({
 
     if (assetJSON && assetJSON.result) {
       console.log("Fetched asset data");
-      addAssetsToCache([assetJSON.result]);
-      return assetJSON.result;
+      const decompressed = fflate.decompressSync(fflate.strToU8(assetJSON.result, true));
+      const finalResult = JSON.parse(fflate.strFromU8(decompressed));
+      addAssetsToCache([finalResult]);
+      return finalResult;
     }
   },
 });

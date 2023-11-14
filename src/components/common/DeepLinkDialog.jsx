@@ -34,8 +34,13 @@ const [createFetcherStore] = nanoquery({
         return parsedJSON;
       })
       .then((deeplinkValue) => {
-        if (deeplinkValue && deeplinkValue.result && deeplinkValue.result.generatedDeepLink) {
-          return deeplinkValue.result.generatedDeepLink;
+        if (deeplinkValue && deeplinkValue.result) {
+          const decompressed = fflate.decompressSync(fflate.strToU8(deeplinkValue.result, true));
+          const finalResult = fflate.strFromU8(decompressed);
+
+          if (finalResult.generatedDeepLink) {
+            return finalResult.generatedDeepLink;
+          }
         }
         throw new Error("No deep link generated");
       });

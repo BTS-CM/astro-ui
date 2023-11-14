@@ -124,7 +124,7 @@ export default function MarketOrderCard(properties) {
                   <div className="grid grid-cols-4">
                     {cardType === "buy"
                       ? buyOrders.map((res, index) => (
-                          <HoverCard key="poolExchange">
+                          <HoverCard key={`buyOrderHoverCard${index}`}>
                             <HoverCardTrigger asChild>
                               <div className="col-span-4" key={`moc_${cardType}_${index}`}>
                                 <div className="grid grid-cols-4 text-sm">
@@ -185,7 +185,7 @@ export default function MarketOrderCard(properties) {
                           </HoverCard>
                         ))
                       : sellOrders.map((res, index) => (
-                          <HoverCard key="poolExchange">
+                          <HoverCard key={`sellHoverCard${index}`}>
                             <HoverCardTrigger asChild>
                               <div className="col-span-4" key={`moc_${cardType}_${index}`}>
                                 <div className="grid grid-cols-4 text-sm">

@@ -61,7 +61,8 @@ export default function AccountSelect(properties) {
     const responseContents = await response.json();
 
     if (responseContents && responseContents.result) {
-      const finalResult = responseContents.result;
+      const decompressed = fflate.decompressSync(fflate.strToU8(responseContents.result, true));
+      const finalResult = fflate.strFromU8(decompressed);
       setInProgress(false);
       setSearchResponse(finalResult);
       return;

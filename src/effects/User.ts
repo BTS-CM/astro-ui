@@ -1,4 +1,5 @@
 import { nanoquery } from "@nanostores/query";
+import * as fflate from "fflate";
 
 // Create fetcher store for user balances
 const [createUserBalancesStore] = nanoquery({
@@ -16,8 +17,10 @@ const [createUserBalancesStore] = nanoquery({
     const userBalancesJSON = await response.json();
 
     if (userBalancesJSON && userBalancesJSON.result) {
-      console.log(`Fetched user balances`);
-      return userBalancesJSON.result;
+      //console.log(`Fetched user balances`);
+      const decompressed = fflate.decompressSync(fflate.strToU8(userBalancesJSON.result, true));
+      const usrBalances = JSON.parse(fflate.strFromU8(decompressed));
+      return usrBalances;
     }
   },
   refetchInterval: 60000,
@@ -39,8 +42,10 @@ const [createUserCreditDealsStore] = nanoquery({
     const userCreditDealsJSON = await response.json();
 
     if (userCreditDealsJSON && userCreditDealsJSON.result) {
-      console.log(`Fetched user credit deals`);
-      return userCreditDealsJSON.result;
+      //console.log(`Fetched user credit deals`);
+      const decompressed = fflate.decompressSync(fflate.strToU8(userCreditDealsJSON.result, true));
+      const usrCreditDeals = JSON.parse(fflate.strFromU8(decompressed));
+      return usrCreditDeals;
     }
   },
   refetchInterval: 60000,
@@ -62,8 +67,9 @@ const [createUserPortfolioStore] = nanoquery({
 
     if (userPortfolioJSON && userPortfolioJSON.result) {
       //console.log(`Fetched user portfolio`);
-      //console.log({ userPortfolioJSON });
-      return userPortfolioJSON.result;
+      const decompressed = fflate.decompressSync(fflate.strToU8(userPortfolioJSON.result, true));
+      const usrPortfolio = JSON.parse(fflate.strFromU8(decompressed));
+      return usrPortfolio;
     }
   },
   refetchInterval: 60000,
@@ -84,7 +90,10 @@ const [createUserHistoryStore] = nanoquery({
     const userHistoryJSON = await response.json();
 
     if (userHistoryJSON && userHistoryJSON.result) {
-      return userHistoryJSON.result;
+      //console.log(`Fetched user history`);
+      const decompressed = fflate.decompressSync(fflate.strToU8(userHistoryJSON.result, true));
+      const usrHistory = JSON.parse(fflate.strFromU8(decompressed));
+      return usrHistory;
     }
   },
   refetchInterval: 60000,
