@@ -548,7 +548,7 @@ export default function Transfer(properties) {
                     <li>
                       <ExternalLink
                         type="text"
-                        classNameContents=""
+                        classnamecontents=""
                         hyperlink={`https://blocksights.info/#/accounts/${targetUser.name}`}
                         text={`Click here to view ${targetUser.name}'s account on the
                         Blocksights blockchain explorer.`}

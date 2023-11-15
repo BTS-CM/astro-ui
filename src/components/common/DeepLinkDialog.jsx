@@ -104,7 +104,7 @@ export default function DeepLinkDialog(properties) {
                 <br />
                 Choose from the methods below to broadcast your transaction via the
                 <ExternalLink
-                  classNameContents="text-blue-500"
+                  classnamecontents="text-blue-500"
                   type="text"
                   text=" Bitshares BEET multiwallet"
                   hyperlink="https://github.com/bitshares/beet"

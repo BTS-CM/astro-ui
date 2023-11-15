@@ -1,8 +1,6 @@
 import { nanoquery } from "@nanostores/query";
 import * as fflate from "fflate";
 
-import { addAssetsToCache } from "../stores/cache.ts";
-
 // Create fetcher store for market history
 const [createMarketHistoryStore] = nanoquery({
   fetcher: async (...keys) => {
@@ -21,7 +19,7 @@ const [createMarketHistoryStore] = nanoquery({
     const marketHistoryJSON = await response.json();
 
     if (marketHistoryJSON && marketHistoryJSON.result) {
-      console.log("Fetched market history");
+      // console.log("Fetched market history");
       const decompressed = fflate.decompressSync(fflate.strToU8(marketHistoryJSON.result, true));
       const history = JSON.parse(fflate.strFromU8(decompressed));
       return history;
@@ -50,7 +48,7 @@ const [createMarketOrdersStore] = nanoquery({
     const marketOrdersJSON = await response.json();
 
     if (marketOrdersJSON && marketOrdersJSON.result) {
-      console.log(`Fetched market data for ${keys[1]}_${keys[2]}`);
+      //console.log(`Fetched market data for ${keys[1]}_${keys[2]}`);
       const decompressed = fflate.decompressSync(fflate.strToU8(marketOrdersJSON.result, true));
       const orders = JSON.parse(fflate.strFromU8(decompressed));
       return orders;
@@ -63,9 +61,15 @@ const [createMarketOrdersStore] = nanoquery({
 
 const [createMarketsStore] = nanoquery({
   fetcher: async (chain) => {
-    const response = await fetch(`http://localhost:8080/api/getFeaturedMarkets/${chain}`, {
-      method: "GET",
-    });
+    let response;
+    try {
+      response = await fetch(`http://localhost:8080/api/getFeaturedMarkets/${chain}`, {
+        method: "GET",
+      });
+    } catch (error) {
+      console.log({ error });
+      return;
+    }
 
     if (!response.ok) {
       console.log("Failed to fetch featured market data");
@@ -73,8 +77,8 @@ const [createMarketsStore] = nanoquery({
     }
 
     const responseContents = await response.json();
-
     if (responseContents && responseContents.result) {
+      // console.log("Fetched featured market data");
       const decompressed = fflate.decompressSync(fflate.strToU8(responseContents.result, true));
       const markets = JSON.parse(fflate.strFromU8(decompressed));
       return markets;

@@ -434,7 +434,7 @@ export default function CreditBorrow(properties) {
                                   <div className="col-span-1 text-right">
                                     {relevantOffer ? (
                                       <ExternalLink
-                                        classNameContents="text-blue-500"
+                                        classnamecontents="text-blue-500"
                                         type="text"
                                         text={`View ${relevantOffer.owner_name}'s account`}
                                         hyperlink={`https://blocksights.info/#/accounts/${relevantOffer.owner_name}`}

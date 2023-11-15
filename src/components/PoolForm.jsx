@@ -124,28 +124,24 @@ export default function PoolForm() {
 
   // Search dialog
 
-  const [poolSearch, setPoolSearch] = useState();
   const [activeTab, setActiveTab] = useState("asset");
-  useEffect(() => {
+  const poolSearch = useMemo(() => {
     if (!pools || !pools.length) {
-      return;
+      return null;
     }
-    const _poolSearch = new Fuse(pools ?? [], {
+    return new Fuse(pools, {
       includeScore: true,
       threshold: 0.2,
       keys: activeTab === "asset" ? ["asset_a_symbol", "asset_b_symbol"] : ["share_asset_symbol"],
     });
-    setPoolSearch(_poolSearch);
   }, [pools, activeTab]);
 
-  const [thisInput, setThisInput] = useState();
-  const [thisResult, setThisResult] = useState();
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  useEffect(() => {
+  const [thisInput, setThisInput] = useState();
+  const thisResult = useMemo(() => {
     if (poolSearch && thisInput) {
-      const result = poolSearch.search(thisInput);
-      setThisResult(result);
+      return poolSearch.search(thisInput);
     }
   }, [poolSearch, thisInput]);
 
@@ -226,16 +222,18 @@ export default function PoolForm() {
   const [assetB, setAssetB] = useState("");
   useEffect(() => {
     // Setting various react states as the user interacts with the form
+    console.log({ pools, pool, assets });
     if (pools && pool && assets) {
       const currentPool = pools.find((x) => x.id === pool);
       setFoundPool(currentPool);
       const foundA = assets.find((x) => x.id === currentPool.asset_a_id);
       const foundB = assets.find((x) => x.id === currentPool.asset_b_id);
+      console.log({ foundA, foundB });
       setAssetA(foundA);
       setAssetB(foundB);
       setSellAmount(1);
     }
-  }, [pool, assets]);
+  }, [pool, pools, assets]);
 
   const [foundPoolDetails, setFoundPoolDetails] = useState();
   useEffect(() => {
@@ -715,7 +713,7 @@ export default function PoolForm() {
                                       <FormLabel>
                                         Swappable {assetA.symbol} (
                                         <ExternalLink
-                                          classNameContents="text-blue-500"
+                                          classnamecontents="text-blue-500"
                                           type="text"
                                           text={assetA.id}
                                           hyperlink={`https://blocksights.info/#/assets/${assetA.id}`}
@@ -750,7 +748,7 @@ export default function PoolForm() {
                                       <FormLabel>
                                         Swappable {assetB.symbol} (
                                         <ExternalLink
-                                          classNameContents="text-blue-500"
+                                          classnamecontents="text-blue-500"
                                           type="text"
                                           text={assetB.id}
                                           hyperlink={`https://blocksights.info/#/assets/${assetB.id}`}
@@ -936,7 +934,7 @@ export default function PoolForm() {
                   {pool ? (
                     <ExternalLink
                       variant="outline"
-                      classNameContents="ml-2"
+                      classnamecontents="ml-2"
                       type="button"
                       text={`Blocksights pool explorer`}
                       hyperlink={`https://blocksights.info/#/pools/${pool}${

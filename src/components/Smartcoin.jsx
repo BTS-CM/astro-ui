@@ -283,8 +283,6 @@ export default function Smartcoin(properties) {
   const [buyOrders, setBuyOrders] = useState();
   const [sellOrders, setSellOrders] = useState();
 
-  const [activeRisksTab, setActiveRisksTab] = useState("internal");
-
   useEffect(() => {
     let unsub;
 
@@ -629,10 +627,6 @@ export default function Smartcoin(properties) {
         const _minCollateral = humanReadableFloat(1, collateralPrecision);
 
         const existingDebtAmount = parseFloat(current_debt_amount);
-        const existingCollateralAmount = parseFloat(current_collateral_amount);
-
-        //const existingRatio =
-        //  1 / ((current_feed_price * existingDebtAmount) / existingCollateralAmount);
 
         let parsedCollateralAmount = Math.max(
           parseFloat(parseFloat(input).toFixed(collateralPrecision)),
@@ -658,8 +652,6 @@ export default function Smartcoin(properties) {
           const updatedRatio = parseFloat(
             (1 / ((current_feed_price * existingDebtAmount) / parsedCollateralAmount)).toFixed(3)
           );
-
-          console.log({ updatedRatio });
 
           setRatioValue(updatedRatio);
         }
@@ -706,11 +698,6 @@ export default function Smartcoin(properties) {
           const newCollateralAmount = parseFloat(
             (_debtAmount * current_feed_price * parsedRatioAmount).toFixed(collateralPrecision)
           );
-          console.log({
-            before: _debtAmount * current_feed_price * parsedRatioAmount,
-            newCollateralAmount,
-            collateralPrecision,
-          });
           setCollateralAmount(newCollateralAmount);
         }
 
@@ -1003,7 +990,7 @@ export default function Smartcoin(properties) {
             </div>
             <div className="col-span-1 text-right">
               <ExternalLink
-                classNameContents="h-5 mb-2"
+                classnamecontents="h-5 mb-2"
                 variant="outline"
                 type="button"
                 text="View asset on blocksights.info"
@@ -1037,7 +1024,7 @@ export default function Smartcoin(properties) {
                         effectively been burned.
                       </li>
                       <ExternalLink
-                        classNameContents="h-8 mb-2 mt-3"
+                        classnamecontents="h-8 mb-2 mt-3"
                         type="button"
                         text="View issuer on blocksights.info"
                         hyperlink={`https://blocksights.info/#/accounts/${
@@ -1171,7 +1158,7 @@ export default function Smartcoin(properties) {
                 </div>
                 <div className="col-span-1 text-right">
                   <ExternalLink
-                    classNameContents="h-5 mb-2"
+                    classnamecontents="h-5 mb-2"
                     variant="outline"
                     type="button"
                     text="View bitasset on blocksights.info"
@@ -1501,7 +1488,7 @@ export default function Smartcoin(properties) {
       <div className="grid grid-cols-6 text-sm" style={style}>
         <div className="col-span-1">
           <ExternalLink
-            classNameContents="text-blue-500"
+            classnamecontents="text-blue-500"
             type="text"
             text={res.borrower}
             hyperlink={`https://blocksights.info/#/accounts/${res.borrower}`}
@@ -1579,7 +1566,7 @@ export default function Smartcoin(properties) {
       <div className="grid grid-cols-11 text-sm" style={style}>
         <div className="col-span-2 mr-1">
           <ExternalLink
-            classNameContents="text-blue-500"
+            classnamecontents="text-blue-500"
             type="text"
             text={userID}
             hyperlink={`https://blocksights.info/#/accounts/${userID}`}
@@ -2715,7 +2702,7 @@ export default function Smartcoin(properties) {
                   <Label>General asset info</Label>
                 </div>
                 <div className="col-span-1 text-right">
-                  <Button variant="outline" classNameContents="h-5 mb-2">
+                  <Button variant="outline" classnamecontents="h-5 mb-2">
                     View asset on blocksights.info
                   </Button>
                 </div>
@@ -2746,7 +2733,7 @@ export default function Smartcoin(properties) {
                   <Label>Smartcoin info</Label>
                 </div>
                 <div className="col-span-1 text-right">
-                  <Button variant="outline" classNameContents="h-5 mb-2">
+                  <Button variant="outline" classnamecontents="h-5 mb-2">
                     View bitasset on blocksights.info
                   </Button>
                 </div>
@@ -2821,7 +2808,7 @@ export default function Smartcoin(properties) {
                   <Label>General asset info</Label>
                 </div>
                 <div className="col-span-1 text-right">
-                  <Button variant="outline" classNameContents="h-5 mb-2">
+                  <Button variant="outline" classnamecontents="h-5 mb-2">
                     View asset on blocksights.info
                   </Button>
                 </div>

@@ -164,14 +164,14 @@ export default function Smartcoins(properties) {
               {bitasset.issuer.id === "1.2.0" ? "Bitasset" : "Smartcoin"} "{thisBitassetData.s}"{" "}
               {"("}
               <ExternalLink
-                classNameContents="text-blue-500"
+                classnamecontents="text-blue-500"
                 type="text"
                 text={thisBitassetData.id}
                 hyperlink={`https://blocksights.info/#/assets/${thisBitassetData.id}`}
               />
               {")"} created by {bitasset.issuer.name} {"("}
               <ExternalLink
-                classNameContents="text-blue-500"
+                classnamecontents="text-blue-500"
                 type="text"
                 text={bitasset.issuer.id}
                 hyperlink={`https://blocksights.info/#/accounts/${bitasset.issuer.id}`}
@@ -184,7 +184,7 @@ export default function Smartcoins(properties) {
                 {` ${thisCollateralAssetData.s} `}
                 {"("}
                 <ExternalLink
-                  classNameContents="text-blue-500"
+                  classnamecontents="text-blue-500"
                   type="text"
                   text={thisCollateralAssetData.id}
                   hyperlink={`https://blocksights.info/#/assets/${thisCollateralAssetData.id}`}

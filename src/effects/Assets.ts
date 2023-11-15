@@ -19,7 +19,7 @@ const [createDynamicDataStore] = nanoquery({
     const dynamicDataJSON = await response.json();
 
     if (dynamicDataJSON && dynamicDataJSON.result) {
-      console.log(`Fetched ${replacedID} dynamic data`);
+      //console.log(`Fetched ${replacedID} dynamic data`);
       const decompressed = fflate.decompressSync(fflate.strToU8(dynamicDataJSON.result, true));
       const finalResult = fflate.strFromU8(decompressed);
       return JSON.parse(finalResult);
@@ -61,6 +61,7 @@ const [createSmartcoinDataStore] = nanoquery({
 
     const responseContents = await response.json();
     if (responseContents && responseContents.result) {
+      //console.log("Fetched bitasset data");
       const decompressed = fflate.decompressSync(fflate.strToU8(responseContents.result, true));
       const finalResult = fflate.strFromU8(decompressed);
       return JSON.parse(finalResult);
@@ -84,6 +85,7 @@ const [createBitassetDataStore] = nanoquery({
     const responseContents = await response.json();
 
     if (responseContents && responseContents.result && responseContents.result.length) {
+      //console.log("Fetched bitasset data");
       const decompressed = fflate.decompressSync(fflate.strToU8(responseContents.result, true));
       const _parsed = JSON.parse(fflate.strFromU8(decompressed));
       const finalResult = _parsed[0];
@@ -106,7 +108,7 @@ const [createCachedAssetStore] = nanoquery({
     const assetJSON = await response.json();
 
     if (assetJSON && assetJSON.result) {
-      console.log("Fetched asset data");
+      //console.log("Fetched asset data");
       const decompressed = fflate.decompressSync(fflate.strToU8(assetJSON.result, true));
       const finalResult = JSON.parse(fflate.strFromU8(decompressed));
       addAssetsToCache([finalResult]);

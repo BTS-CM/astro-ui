@@ -86,10 +86,10 @@ const [createFetcherStore] = nanoquery({
             addAssetsToCache(
               parsedJSON.map((_asset) => {
                 return {
-                  id: _asset.id,
+                  id: `1.3.${_asset.id}`,
                   symbol: _asset.s,
                   precision: _asset.p,
-                  issuer: _asset.i,
+                  issuer: `1.2.${_asset.i}`,
                   market_fee_percent: _asset.mfp,
                   max_market_fee: _asset.mmf,
                   max_supply: _asset.ms,
@@ -101,10 +101,10 @@ const [createFetcherStore] = nanoquery({
             addPoolsToCache(
               parsedJSON.map((_pool) => {
                 return {
-                  id: _pool.id,
-                  asset_a_id: _pool.a,
+                  id: `1.19.${_pool.id}`,
+                  asset_a_id: `1.3.${_pool.a}`,
                   asset_a_symbol: _pool.as,
-                  asset_b_id: _pool.b,
+                  asset_b_id: `1.3.${_pool.b}`,
                   asset_b_symbol: _pool.bs,
                   share_asset_symbol: _pool.sa,
                   balance_a: _pool.ba,

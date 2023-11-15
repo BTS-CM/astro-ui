@@ -248,7 +248,7 @@ export default function Market(properties) {
         <br />
         <ExternalLink
           variant="outline"
-          classNameContents="mb-2 mt-2"
+          classnamecontents="mb-2 mt-2"
           type="button"
           text={`🔎 Blocksights market explorer`}
           hyperlink={
@@ -265,7 +265,7 @@ export default function Market(properties) {
           <>
             <ExternalLink
               variant="outline"
-              classNameContents="ml-2"
+              classnamecontents="ml-2"
               type="button"
               text={`🔗 BTS.Exchange`}
               hyperlink={
@@ -276,7 +276,7 @@ export default function Market(properties) {
             />
             <ExternalLink
               variant="outline"
-              classNameContents="ml-2"
+              classnamecontents="ml-2"
               type="button"
               text={`🔗 BTWTY`}
               hyperlink={
@@ -287,7 +287,7 @@ export default function Market(properties) {
             />
             <ExternalLink
               variant="outline"
-              classNameContents="ml-2 mt-2"
+              classnamecontents="ml-2 mt-2"
               type="button"
               text={`🔗 XBTS`}
               hyperlink={

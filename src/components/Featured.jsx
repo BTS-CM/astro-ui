@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useSyncExternalStore } from "react";
+import React, { useState, useEffect, useSyncExternalStore, useMemo } from "react";
 import {
   Card,
   CardContent,
@@ -18,46 +18,51 @@ import { createMarketsStore } from "../effects/Market.ts";
 export default function Featured(properties) {
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
 
-  //useInitCache(usr && usr.chain ? usr.chain : "bitshares", []);
+  useInitCache(usr && usr.chain ? usr.chain : "bitshares", []);
 
   const [retrievedMarkets, setRetrievedMarkets] = useState();
   useEffect(() => {
     let unsubscribeMarkets;
 
     if (usr && usr.chain && usr.chain.length) {
-      const marketsStore = createMarketsStore(usr.chain);
+      let marketsStore;
+      try {
+        marketsStore = createMarketsStore(usr.chain);
+      } catch (e) {
+        console.log(e);
+        return;
+      }
 
-      unsubscribeMarkets = marketsStore.subscribe(({ data, loading, error }) => {
-        if (data && !error && !loading) {
-          setRetrievedMarkets(data);
-        }
-      });
+      unsubscribeMarkets = marketsStore
+        ? marketsStore.subscribe(({ data, loading, error }) => {
+            if (data && !error && !loading) {
+              setRetrievedMarkets(data);
+            }
+          })
+        : null;
     }
 
     return () => {
       if (unsubscribeMarkets) unsubscribeMarkets();
     };
-  }, [usr, createMarketsStore]);
+  }, [usr]);
 
-  const [marketRows, setMarketRows] = useState();
-  useEffect(() => {
+  const marketRows = useMemo(() => {
     if (retrievedMarkets && retrievedMarkets.length) {
-      setMarketRows(
-        retrievedMarkets.map((market) => (
-          <a
-            href={`/dex/index.html?market=${market.pair.replace("/", "_")}`}
-            key={market.pair.replace("/", "_")}
-          >
-            <div className="col-span-1 border-b-2">
-              <div className="grid grid-cols-3 gap-1">
-                <div className="col-span-1">{market.pair}</div>
-                <div className="col-span-1">{market["24h_volume"]}</div>
-                <div className="col-span-1">{market.nb_operations}</div>
-              </div>
+      return retrievedMarkets.map((market) => (
+        <a
+          href={`/dex/index.html?market=${market.pair.replace("/", "_")}`}
+          key={market.pair.replace("/", "_")}
+        >
+          <div className="col-span-1 border-b-2">
+            <div className="grid grid-cols-3 gap-1">
+              <div className="col-span-1">{market.pair}</div>
+              <div className="col-span-1">{market["24h_volume"]}</div>
+              <div className="col-span-1">{market.nb_operations}</div>
             </div>
-          </a>
-        ))
-      );
+          </div>
+        </a>
+      ));
     }
   }, [retrievedMarkets]);
 

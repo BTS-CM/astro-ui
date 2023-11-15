@@ -190,7 +190,7 @@ export default function PortfolioTabs(properties) {
 
               <ExternalLink
                 variant="outline"
-                classNameContents="mt-2"
+                classnamecontents="mt-2"
                 type="button"
                 text={`Asset info`}
                 hyperlink={`https://blocksights.info/#/assets/${currentBalance.symbol}`}
@@ -252,7 +252,7 @@ export default function PortfolioTabs(properties) {
                   <br />
                   Order ID:
                   <ExternalLink
-                    classNameContents="text-blue-500"
+                    classnamecontents="text-blue-500"
                     type="text"
                     text={` ${orderId}`}
                     hyperlink={`https://blocksights.info/#/objects/${orderId}`}
@@ -329,7 +329,7 @@ export default function PortfolioTabs(properties) {
                 <CardDescription>
                   Operation ID:
                   <ExternalLink
-                    classNameContents="text-blue-500"
+                    classnamecontents="text-blue-500"
                     type="text"
                     text={` ${activityItem.account_history.operation_id}`}
                     hyperlink={`https://blocksights.info/#/objects/${activityItem.account_history.operation_id}`}
@@ -337,7 +337,7 @@ export default function PortfolioTabs(properties) {
                   <br />
                   Block number:
                   <ExternalLink
-                    classNameContents="text-blue-500"
+                    classnamecontents="text-blue-500"
                     type="text"
                     text={` ${activityItem.block_data.block_num}`}
                     hyperlink={`https://blocksights.info/#/blocks/${activityItem.block_data.block_num}`}

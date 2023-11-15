@@ -218,14 +218,14 @@ export default function CreditDeals(properties) {
             <CardTitle>
               Deal #
               <ExternalLink
-                classNameContents="text-blue-500"
+                classnamecontents="text-blue-500"
                 type="text"
                 text={res.id.replace("1.22.", "")}
                 hyperlink={`https://blocksights.info/#/objects/${res.id}`}
               />{" "}
               with{" "}
               <ExternalLink
-                classNameContents="text-blue-500"
+                classnamecontents="text-blue-500"
                 type="text"
                 text={type === "borrower" ? res.offer_owner : res.borrower}
                 hyperlink={`https://blocksights.info/#/accounts/${
@@ -238,7 +238,7 @@ export default function CreditDeals(properties) {
               <b>
                 {` ${borrowedAmount} ${debtAsset.symbol}`} (
                 <ExternalLink
-                  classNameContents="text-blue-500"
+                  classnamecontents="text-blue-500"
                   type="text"
                   text={res.debt_asset}
                   hyperlink={`https://blocksights.info/#/assets/${res.debt_asset}`}
@@ -250,7 +250,7 @@ export default function CreditDeals(properties) {
               <b>
                 {` ${collateralAmount} ${collateralAsset.symbol}`} (
                 <ExternalLink
-                  classNameContents="text-blue-500"
+                  classnamecontents="text-blue-500"
                   type="text"
                   text={res.collateral_asset}
                   hyperlink={`https://blocksights.info/#/assets/${res.collateral_asset}`}

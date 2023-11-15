@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button";
  * Launches a dialog prompt, prompting the user to verify their intent to launch a new tab to an external web resource
  */
 export default function ExternalLink(properties) {
-  const { hyperlink, type, text, variant, classNameContents } = properties;
+  const { hyperlink, type, text, variant, classnamecontents } = properties;
 
   const [open, setOpen] = useState(false);
 
@@ -36,11 +36,11 @@ export default function ExternalLink(properties) {
   return (
     <>
       {type === "text" ? (
-        <span onClick={() => setOpen(true)} className={classNameContents}>
+        <span onClick={() => setOpen(true)} className={classnamecontents}>
           {text}
         </span>
       ) : (
-        <Button variant={variant} onClick={() => setOpen(true)} className={classNameContents}>
+        <Button variant={variant} onClick={() => setOpen(true)} className={classnamecontents}>
           {text}
         </Button>
       )}
