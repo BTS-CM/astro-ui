@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Toggle } from "@/components/ui/toggle";
 
 import {
   Card,
@@ -48,9 +49,11 @@ import {
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
+import { Avatar as Av, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar } from "@/components/Avatar.tsx";
+
 import { blockchainFloat, copyToClipboard, humanReadableFloat } from "../lib/common";
 
-import { eraseCurrentUser } from "../stores/users.ts";
 import {
   $poolCache,
   $marketSearchCache,
@@ -94,7 +97,7 @@ export default function PoolForm() {
     "marketSearch",
     "assets",
     "pools",
-    "feeSchedule",
+    "globalParams",
   ]);
 
   const assets = useSyncExternalStore($assetCache.subscribe, $assetCache.get, () => true);
@@ -113,7 +116,7 @@ export default function PoolForm() {
     () => true
   );
 
-  const [fee, setFee] = useState(0);
+  const [fee, setFee] = useState();
   useEffect(() => {
     if (globalParams && globalParams.length) {
       const foundFee = globalParams.find((x) => x[0] === 63);
@@ -139,21 +142,27 @@ export default function PoolForm() {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const [thisInput, setThisInput] = useState();
-  const thisResult = useMemo(() => {
+  const [thisResult, setThisResult] = useState();
+  useEffect(() => {
     if (poolSearch && thisInput) {
-      return poolSearch.search(thisInput);
+      const searchResult = poolSearch.search(thisInput);
+      console.log({ searchResult });
+      setThisResult(searchResult);
     }
   }, [poolSearch, thisInput]);
 
   const PoolRow = ({ index, style }) => {
     const res = thisResult[index].item;
-
+    if (!res) {
+      return null;
+    }
     return (
       <div
         style={{ ...style }}
         className="grid grid-cols-12"
         key={`acard-${res.id}`}
         onClick={() => {
+          console.log("AAA");
           setPool(res.id);
           setDialogOpen(false);
           setThisResult();
@@ -220,11 +229,25 @@ export default function PoolForm() {
   const [foundPool, setFoundPool] = useState();
   const [assetA, setAssetA] = useState("");
   const [assetB, setAssetB] = useState("");
+
+  const [isRotating, setIsRotating] = useState(false);
+
+  const rotateStyle = isRotating
+    ? {
+        transition: "transform 0.5s",
+        transform: "rotate(360deg)",
+      }
+    : {};
+
   useEffect(() => {
     // Setting various react states as the user interacts with the form
-    console.log({ pools, pool, assets });
     if (pools && pool && assets) {
       const currentPool = pools.find((x) => x.id === pool);
+      console.log({ pools, pool, assets, currentPool });
+      if (!currentPool) {
+        console.log("Invalid pool");
+        return;
+      }
       setFoundPool(currentPool);
       const foundA = assets.find((x) => x.id === currentPool.asset_a_id);
       const foundB = assets.find((x) => x.id === currentPool.asset_b_id);
@@ -430,7 +453,7 @@ export default function PoolForm() {
       let taker_market_fee_percent_a = Number(taker_market_fee_percenta());
 
       let result;
-      if (assetA.id === foundPool.asset_a_id) {
+      if (assetA && foundPool && assetA.id === foundPool.asset_a_id) {
         let tmp_delta_b =
           Number(poolamountb) -
           Math.ceil(
@@ -526,12 +549,40 @@ export default function PoolForm() {
                           <FormItem>
                             <FormLabel>Account</FormLabel>
                             <FormControl>
-                              <Input
-                                disabled
-                                placeholder="Bitshares account (1.2.x)"
-                                className="mb-3 mt-3"
-                                value={`${usr.username} (${usr.id})`}
-                              />
+                              <div className="grid grid-cols-8">
+                                <div className="col-span-1 ml-5">
+                                  {usr && usr.username ? (
+                                    <Avatar
+                                      size={40}
+                                      name={usr.username}
+                                      extra="Target"
+                                      expression={{
+                                        eye: "normal",
+                                        mouth: "open",
+                                      }}
+                                      colors={[
+                                        "#92A1C6",
+                                        "#146A7C",
+                                        "#F0AB3D",
+                                        "#C271B4",
+                                        "#C20D90",
+                                      ]}
+                                    />
+                                  ) : (
+                                    <Av>
+                                      <AvatarFallback>?</AvatarFallback>
+                                    </Av>
+                                  )}
+                                </div>
+                                <div className="col-span-7">
+                                  <Input
+                                    disabled
+                                    placeholder="Bitshares account (1.2.x)"
+                                    className="mb-3 mt-1"
+                                    value={`${usr.username} (${usr.id})`}
+                                  />
+                                </div>
+                              </div>
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -542,22 +593,60 @@ export default function PoolForm() {
                         name="pool"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>
-                              <div className="grid grid-cols-2 mt-3">
-                                <div className="mt-1">Liquidity pool</div>
-                                <div className="text-gray-500 text-right">
+                            <FormLabel>Liquidity pool</FormLabel>
+                            <FormDescription style={{ marginTop: "0px" }}>
+                              {foundPoolDetails
+                                ? "This is the liquidity pool you have chosen for your asset swap"
+                                : "Select a liquidity pool to continue with your asset swap"}
+                            </FormDescription>
+                            <FormControl
+                              onChange={(event) => {
+                                setPool(event.target.value);
+                              }}
+                            >
+                              <div className="grid grid-cols-5 mt-3">
+                                <div className="mt-1 col-span-4">
+                                  <Select key={poolKey}>
+                                    <SelectTrigger className="mb-3">
+                                      <SelectValue
+                                        placeholder={
+                                          foundPool
+                                            ? `${foundPool.id} - ${foundPool.share_asset_symbol} - ${foundPool.asset_a_symbol}:${foundPool.asset_b_symbol}`
+                                            : "Select a pool.."
+                                        }
+                                      />
+                                    </SelectTrigger>
+                                    <SelectContent className="bg-white">
+                                      {pools && pools.length ? (
+                                        <List
+                                          height={150}
+                                          itemCount={pools.length}
+                                          itemSize={35}
+                                          className="w-full"
+                                          initialScrollOffset={
+                                            pools.map((x) => x.id).indexOf(pool) * 35
+                                          }
+                                        >
+                                          {Row}
+                                        </List>
+                                      ) : null}
+                                    </SelectContent>
+                                  </Select>
+                                </div>
+                                <div className="text-gray-500 text-right col-span-1 ml-3">
                                   <Dialog
                                     open={dialogOpen}
                                     onOpenChange={(open) => {
                                       if (!open) {
                                         setThisResult();
                                       }
-
                                       setDialogOpen(open);
                                     }}
                                   >
                                     <DialogTrigger asChild>
-                                      <Button className="h-5 p-3">Search</Button>
+                                      <Button variant="outline" className="h-9 mt-1 p-3 w-full">
+                                        Search
+                                      </Button>
                                     </DialogTrigger>
                                     <DialogContent className="sm:max-w-[900px] bg-white">
                                       <DialogHeader>
@@ -602,7 +691,10 @@ export default function PoolForm() {
                                               placeholder="Enter search text"
                                               className="mb-3 max-w-[400px]"
                                               onChange={(event) => {
+                                                //console.log({ input: event.target.value });
                                                 setThisInput(event.target.value);
+                                                event.preventDefault();
+                                                event.stopPropagation();
                                               }}
                                             />
 
@@ -662,117 +754,80 @@ export default function PoolForm() {
                                   </Dialog>
                                 </div>
                               </div>
-                            </FormLabel>
-                            <FormControl
-                              onValueChange={(chosenPool) => {
-                                setPool(chosenPool);
-                              }}
-                            >
-                              <Select key={poolKey}>
-                                <SelectTrigger className="mb-3">
-                                  <SelectValue
-                                    placeholder={
-                                      foundPool
-                                        ? `${foundPool.id} - ${foundPool.share_asset_symbol} - ${foundPool.asset_a_symbol}:${foundPool.asset_b_symbol}`
-                                        : "Select a pool.."
-                                    }
-                                  />
-                                </SelectTrigger>
-                                <SelectContent className="bg-white">
-                                  {pools && pools.length ? (
-                                    <List
-                                      height={150}
-                                      itemCount={pools.length}
-                                      itemSize={35}
-                                      className="w-full"
-                                      initialScrollOffset={
-                                        pools.map((x) => x.id).indexOf(pool) * 35
-                                      }
-                                    >
-                                      {Row}
-                                    </List>
-                                  ) : null}
-                                </SelectContent>
-                              </Select>
                             </FormControl>
                             <FormMessage />
                           </FormItem>
                         )}
                       />
 
-                      <div className="grid grid-cols-2 gap-5 mt-5 mb-5">
+                      <div className="grid grid-cols-11 gap-5 mt-1 mb-1">
                         {pool && foundPoolDetails && assetA && assetB ? (
                           <>
-                            <Card>
-                              <CardContent>
-                                <FormField
-                                  control={form.control}
-                                  name="balanceA"
-                                  render={({ field }) => (
-                                    <FormItem>
-                                      <FormLabel>
-                                        Swappable {assetA.symbol} (
-                                        <ExternalLink
-                                          classnamecontents="text-blue-500"
-                                          type="text"
-                                          text={assetA.id}
-                                          hyperlink={`https://blocksights.info/#/assets/${assetA.id}`}
-                                        />
-                                        )
-                                      </FormLabel>
-                                      <FormControl>
-                                        {foundPoolDetails ? (
-                                          <Input
-                                            disabled
-                                            placeholder="0"
-                                            className="mb-3 mt-3"
-                                            value={foundPoolDetails.readable_balance_a}
-                                          />
-                                        ) : (
-                                          <Skeleton className="h-4 w-[250px]" />
-                                        )}
-                                      </FormControl>
-                                      <FormMessage />
-                                    </FormItem>
-                                  )}
-                                />
-                              </CardContent>
-                            </Card>
-                            <Card>
-                              <CardContent>
-                                <FormField
-                                  control={form.control}
-                                  name="balanceB"
-                                  render={({ field }) => (
-                                    <FormItem>
-                                      <FormLabel>
-                                        Swappable {assetB.symbol} (
-                                        <ExternalLink
-                                          classnamecontents="text-blue-500"
-                                          type="text"
-                                          text={assetB.id}
-                                          hyperlink={`https://blocksights.info/#/assets/${assetB.id}`}
-                                        />
-                                        )
-                                      </FormLabel>
-                                      <FormControl>
-                                        {foundPoolDetails ? (
-                                          <Input
-                                            disabled
-                                            placeholder="0"
-                                            className="mb-3 mt-3"
-                                            value={foundPoolDetails.readable_balance_b}
-                                          />
-                                        ) : (
-                                          <Skeleton className="h-4 w-[250px]" />
-                                        )}
-                                      </FormControl>
-                                      <FormMessage />
-                                    </FormItem>
-                                  )}
-                                />
-                              </CardContent>
-                            </Card>
+                            <div className="col-span-5">
+                              <Card>
+                                <CardHeader className="pb-0">
+                                  <CardTitle className="text-sm pt-0">
+                                    Swappable{" "}
+                                    <ExternalLink
+                                      classnamecontents="text-blue-500"
+                                      type="text"
+                                      text={assetA.symbol}
+                                      hyperlink={`https://blocksights.info/#/assets/${assetA.id}`}
+                                    />
+                                  </CardTitle>
+                                </CardHeader>
+                                <CardContent className="text-lg mt-0 pt-0">
+                                  {foundPoolDetails.readable_balance_a.split(" ")[0]}
+                                </CardContent>
+                              </Card>
+                            </div>
+                            <div className="col-span-1 text-center mt-8">
+                              <Toggle
+                                variant="outline"
+                                onClick={() => {
+                                  const oldAssetA = assetA;
+                                  const oldAssetB = assetB;
+                                  setAssetA(oldAssetB);
+                                  setAssetB(oldAssetA);
+                                  setIsRotating(true);
+                                  setTimeout(() => setIsRotating(false), 500);
+                                }}
+                              >
+                                <svg
+                                  style={rotateStyle}
+                                  width="15"
+                                  height="15"
+                                  viewBox="0 0 15 15"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M1.90321 7.29677C1.90321 10.341 4.11041 12.4147 6.58893 12.8439C6.87255 12.893 7.06266 13.1627 7.01355 13.4464C6.96444 13.73 6.69471 13.9201 6.41109 13.871C3.49942 13.3668 0.86084 10.9127 0.86084 7.29677C0.860839 5.76009 1.55996 4.55245 2.37639 3.63377C2.96124 2.97568 3.63034 2.44135 4.16846 2.03202L2.53205 2.03202C2.25591 2.03202 2.03205 1.80816 2.03205 1.53202C2.03205 1.25588 2.25591 1.03202 2.53205 1.03202L5.53205 1.03202C5.80819 1.03202 6.03205 1.25588 6.03205 1.53202L6.03205 4.53202C6.03205 4.80816 5.80819 5.03202 5.53205 5.03202C5.25591 5.03202 5.03205 4.80816 5.03205 4.53202L5.03205 2.68645L5.03054 2.68759L5.03045 2.68766L5.03044 2.68767L5.03043 2.68767C4.45896 3.11868 3.76059 3.64538 3.15554 4.3262C2.44102 5.13021 1.90321 6.10154 1.90321 7.29677ZM13.0109 7.70321C13.0109 4.69115 10.8505 2.6296 8.40384 2.17029C8.12093 2.11718 7.93465 1.84479 7.98776 1.56188C8.04087 1.27898 8.31326 1.0927 8.59616 1.14581C11.4704 1.68541 14.0532 4.12605 14.0532 7.70321C14.0532 9.23988 13.3541 10.4475 12.5377 11.3662C11.9528 12.0243 11.2837 12.5586 10.7456 12.968L12.3821 12.968C12.6582 12.968 12.8821 13.1918 12.8821 13.468C12.8821 13.7441 12.6582 13.968 12.3821 13.968L9.38205 13.968C9.10591 13.968 8.88205 13.7441 8.88205 13.468L8.88205 10.468C8.88205 10.1918 9.10591 9.96796 9.38205 9.96796C9.65819 9.96796 9.88205 10.1918 9.88205 10.468L9.88205 12.3135L9.88362 12.3123C10.4551 11.8813 11.1535 11.3546 11.7585 10.6738C12.4731 9.86976 13.0109 8.89844 13.0109 7.70321Z"
+                                    fill="currentColor"
+                                    fillRule="evenodd"
+                                    clipRule="evenodd"
+                                  ></path>
+                                </svg>
+                              </Toggle>
+                            </div>
+                            <div className="col-span-5">
+                              <Card>
+                                <CardHeader className="pb-0">
+                                  <CardTitle className="text-sm pt-0">
+                                    Swappable{" "}
+                                    <ExternalLink
+                                      classnamecontents="text-blue-500"
+                                      type="text"
+                                      text={assetB.symbol}
+                                      hyperlink={`https://blocksights.info/#/assets/${assetB.id}`}
+                                    />
+                                  </CardTitle>
+                                </CardHeader>
+                                <CardContent className="text-lg">
+                                  {foundPoolDetails.readable_balance_b.split(" ")[0]}
+                                </CardContent>
+                              </Card>
+                            </div>
                           </>
                         ) : null}
                       </div>
@@ -787,6 +842,10 @@ export default function PoolForm() {
                                 <FormLabel>{`Amount of ${
                                   assetA ? assetA.symbol : "???"
                                 } to swap`}</FormLabel>
+                                <FormDescription style={{ marginTop: "0px" }}>
+                                  Enter the amount of {assetA ? assetA.symbol : "???"} you want to
+                                  swap for {assetB ? assetB.symbol : "???"}
+                                </FormDescription>
                                 <FormControl
                                   onChange={(event) => {
                                     const input = event.target.value;
@@ -796,12 +855,45 @@ export default function PoolForm() {
                                     }
                                   }}
                                 >
-                                  <Input
-                                    label={`Amount of ${assetA ? assetA.symbol : "???"} to swap`}
-                                    value={sellAmount}
-                                    placeholder={sellAmount}
-                                    className="mb-3"
-                                  />
+                                  <div className="grid grid-cols-2">
+                                    <div className="col-span-1">
+                                      <Input
+                                        label={`Amount of ${
+                                          assetA ? assetA.symbol : "???"
+                                        } to swap`}
+                                        value={sellAmount}
+                                        placeholder={sellAmount}
+                                        className="mb-3"
+                                      />
+                                    </div>
+                                  </div>
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </>
+                      ) : null}
+
+                      {foundPoolDetails ? (
+                        <>
+                          <FormField
+                            control={form.control}
+                            name="buyAmount"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Total amount</FormLabel>
+                                <FormDescription
+                                  style={{ marginTop: "0px" }}
+                                >{`This is the amount of ${
+                                  assetB ? assetB.symbol : "???"
+                                } you'll receive in return for ${
+                                  assetA ? assetA.symbol : "???"
+                                }`}</FormDescription>
+                                <FormControl>
+                                  <div className="grid grid-cols-2 mb-3 mt-3">
+                                    <div className="col-span-1">{buyAmountInput}</div>
+                                  </div>
                                 </FormControl>
                                 <FormMessage />
                               </FormItem>
@@ -814,22 +906,28 @@ export default function PoolForm() {
                         <>
                           <FormField
                             control={form.control}
-                            name="marketFee"
+                            name="poolFee"
                             render={({ field }) => (
                               <FormItem>
                                 <FormLabel>Pool fee</FormLabel>
+                                <FormDescription style={{ marginTop: "0px" }}>
+                                  This is the estimated fee you'll pay to the pool for this swap
+                                </FormDescription>
                                 <FormControl>
-                                  <Input
-                                    disabled
-                                    placeholder="0"
-                                    className="mb-3 mt-3"
-                                    value={`${(
-                                      (foundPoolDetails.taker_fee_percent / 10000) *
-                                      sellAmount
-                                    ).toFixed(assetA.precision)} (${assetA.symbol}) (${
-                                      foundPoolDetails.taker_fee_percent / 100
-                                    }% fee)`}
-                                  />
+                                  <div className="grid grid-cols-2 mb-3 mt-3">
+                                    <div className="col-span-1">
+                                      <Input
+                                        disabled
+                                        placeholder="0"
+                                        value={`${(
+                                          (foundPoolDetails.taker_fee_percent / 10000) *
+                                          sellAmount
+                                        ).toFixed(assetA.precision)} (${assetA.symbol}) (${
+                                          foundPoolDetails.taker_fee_percent / 100
+                                        }% fee)`}
+                                      />
+                                    </div>
+                                  </div>
                                 </FormControl>
                                 <FormMessage />
                               </FormItem>
@@ -845,8 +943,16 @@ export default function PoolForm() {
                           render={({ field }) => (
                             <FormItem>
                               <FormLabel>Network fee</FormLabel>
+                              <FormDescription style={{ marginTop: "0px" }}>
+                                This is the cost to broadcast your pool exchange operation onto the
+                                blockchain
+                              </FormDescription>
                               <FormControl>
-                                <Input disabled placeholder={`${fee} BTS`} className="mb-3 mt-3" />
+                                <div className="grid grid-cols-2 mb-3 mt-3">
+                                  <div className="col-span-1">
+                                    <Input disabled placeholder={`${fee} BTS`} />
+                                  </div>
+                                </div>
                               </FormControl>
                               {usr.id === usr.referrer ? (
                                 <FormMessage>Rebate: {fee * 0.8} BTS (vesting)</FormMessage>
@@ -855,24 +961,6 @@ export default function PoolForm() {
                             </FormItem>
                           )}
                         />
-                      ) : null}
-
-                      {foundPoolDetails ? (
-                        <>
-                          <FormField
-                            control={form.control}
-                            name="buyAmount"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>{`Amount of ${
-                                  assetB ? assetB.symbol : "???"
-                                } you'll receive`}</FormLabel>
-                                <FormControl>{buyAmountInput}</FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                        </>
                       ) : null}
 
                       {!pool || !sellAmount || !buyAmount || showDialog !== false ? (
@@ -921,6 +1009,8 @@ export default function PoolForm() {
                         const oldAssetB = assetB;
                         setAssetA(oldAssetB);
                         setAssetB(oldAssetA);
+                        setIsRotating(true);
+                        setTimeout(() => setIsRotating(false), 500);
                       }}
                     >
                       Swap buy/sell
@@ -960,6 +1050,45 @@ export default function PoolForm() {
                           <div className="col-span-1">
                             <ScrollArea className="h-72 rounded-md border">
                               <pre>{JSON.stringify(foundPoolDetails, null, 2)}</pre>
+                            </ScrollArea>
+                          </div>
+                        </div>
+                      </DialogContent>
+                    </Dialog>
+                  ) : null}
+                  {assetADetails && assetBDetails ? (
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button className="ml-2" variant="outline">
+                          Swappable asset JSON
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-[550px] bg-white">
+                        <DialogHeader>
+                          <DialogTitle>Swappable asset JSON</DialogTitle>
+                          <DialogDescription>
+                            Check out the details returned by the network this pool's swappable
+                            assets
+                          </DialogDescription>
+                        </DialogHeader>
+                        <div className="grid grid-cols-1">
+                          <div className="col-span-1">
+                            <ScrollArea className="h-72 rounded-md border">
+                              <pre>
+                                {JSON.stringify(
+                                  {
+                                    assetA: assetA ?? "",
+                                    assetADetails: assetADetails ?? {},
+                                    aBitassetData: aBitassetData ?? {},
+                                    assetB: assetB ?? "",
+                                    assetBDetails: assetBDetails ?? {},
+                                    bBitassetData: bBitassetData ?? {},
+                                    poolShareDetails: poolShareDetails ?? {},
+                                  },
+                                  null,
+                                  2
+                                )}
+                              </pre>
                             </ScrollArea>
                           </div>
                         </div>
@@ -1113,6 +1242,11 @@ export default function PoolForm() {
                     >
                       <Badge className="ml-2 mt-1 mb-1">{assetB.symbol}</Badge>
                     </a>
+                    <a
+                      href={`/borrow/index.html?tab=searchOffers&searchTab=borrow&searchText=${foundPool?.share_asset_symbol}`}
+                    >
+                      <Badge className="ml-2 mt-1 mb-1">{foundPool?.share_asset_symbol}</Badge>
+                    </a>
                     <br />
                     <Label>Search by accepted collateral</Label>
                     <br />
@@ -1125,6 +1259,11 @@ export default function PoolForm() {
                       href={`/borrow/index.html?tab=searchOffers&searchTab=collateral&searchText=${assetB.symbol}`}
                     >
                       <Badge className="ml-2 mt-1">{assetB.symbol}</Badge>
+                    </a>
+                    <a
+                      href={`/borrow/index.html?tab=searchOffers&searchTab=collateral&searchText=${foundPool?.share_asset_symbol}`}
+                    >
+                      <Badge className="ml-2 mt-1">{foundPool?.share_asset_symbol}</Badge>
                     </a>
                   </CardContent>
                 </Card>
@@ -1160,6 +1299,65 @@ export default function PoolForm() {
             ) : null}
           </div>
         </div>
+      </div>
+
+      <div className="grid grid-cols-1 mt-5 ml-8 mr-8">
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle>Risks associated with liquidity pool exchanges</CardTitle>
+            <CardDescription>
+              Please do your own research into liquidity pools and their swappable assets before
+              proceeding.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <span className="text-sm">
+              <Label className="mb-0 pb-0 text-lg">Liquidity pool risks</Label>
+              <ul className="ml-2 list-disc [&>li]:mt-1 pl-2">
+                <li>
+                  As liquidity pools are user configured they have highly unique properties and
+                  different owners; as such, they have unique risk profiles. Check that the pool fee
+                  and pool exchange rate are reasonable before proceeding with asset swap.
+                </li>
+                <li>
+                  As anyone can stake funds into both sides of the pool, pool liquidity is dynamic.
+                  If you make a swap, the opportunity to perform a reverse swap may not be available
+                  at a later time at the same price.
+                </li>
+              </ul>
+            </span>
+            <span className="text-sm">
+              <Label className="mb-0 pb-0 text-lg">Swappable asset risks</Label>
+              <ul className="ml-2 list-disc [&>li]:mt-1 pl-2">
+                <li>
+                  As the liquidity pool assets can be user owned & configured, they have their own
+                  unique risk profiles; Check each asset's flags, permissions, market fee and
+                  issuers to gauge risk.
+                </li>
+                <li>
+                  If you try to swap assets in excess of available swappable assets your swap price
+                  will greatly suffer. You should instead swap small amounts and await pool balance
+                  replenishment. If you want to swap a larger amount you should consider{" "}
+                  <a
+                    href={`/dex/index.html?market=${foundPool?.share_asset_symbol}_${
+                      assetA.symbol !== "BTS" ? "BTS" : assetA.symbol
+                    }`}
+                    className="text-blue-500"
+                  >
+                    creating a limit order on the DEX
+                  </a>{" "}
+                  instead.
+                </li>
+                <li>
+                  The value of the swappable assets themselves can fluctuate based on external
+                  factors (external cex volume) as well as internal factors (asset issuer & price
+                  feed publisher actions). Make sure you trust a pool's swappable assets before
+                  performing a swap.
+                </li>
+              </ul>
+            </span>
+          </CardContent>
+        </Card>
       </div>
 
       {usr && usr.username && usr.username.length ? <CurrentUser usr={usr} /> : null}
