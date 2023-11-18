@@ -146,16 +146,12 @@ export default function PoolForm() {
   useEffect(() => {
     if (poolSearch && thisInput) {
       const searchResult = poolSearch.search(thisInput);
-      console.log({ searchResult });
       setThisResult(searchResult);
     }
   }, [poolSearch, thisInput]);
 
   const PoolRow = ({ index, style }) => {
     const res = thisResult[index].item;
-    if (!res) {
-      return null;
-    }
     return (
       <div
         style={{ ...style }}
@@ -243,7 +239,6 @@ export default function PoolForm() {
     // Setting various react states as the user interacts with the form
     if (pools && pool && assets) {
       const currentPool = pools.find((x) => x.id === pool);
-      console.log({ pools, pool, assets, currentPool });
       if (!currentPool) {
         console.log("Invalid pool");
         return;
@@ -251,7 +246,6 @@ export default function PoolForm() {
       setFoundPool(currentPool);
       const foundA = assets.find((x) => x.id === currentPool.asset_a_id);
       const foundB = assets.find((x) => x.id === currentPool.asset_b_id);
-      console.log({ foundA, foundB });
       setAssetA(foundA);
       setAssetB(foundB);
       setSellAmount(1);
@@ -497,7 +491,7 @@ export default function PoolForm() {
 
   const [buyAmountInput, setBuyAmountInput] = useState();
   useEffect(() => {
-    setBuyAmountInput(<Input value={buyAmount ?? 0} disabled className="mb-3" />);
+    setBuyAmountInput(<Input readOnly value={buyAmount ?? 0} disabled className="mb-3" />);
   }, [buyAmount]);
 
   const [showDialog, setShowDialog] = useState(false);
@@ -577,6 +571,7 @@ export default function PoolForm() {
                                 <div className="col-span-7">
                                   <Input
                                     disabled
+                                    readOnly
                                     placeholder="Bitshares account (1.2.x)"
                                     className="mb-3 mt-1"
                                     value={`${usr.username} (${usr.id})`}
@@ -691,7 +686,6 @@ export default function PoolForm() {
                                               placeholder="Enter search text"
                                               className="mb-3 max-w-[400px]"
                                               onChange={(event) => {
-                                                //console.log({ input: event.target.value });
                                                 setThisInput(event.target.value);
                                                 event.preventDefault();
                                                 event.stopPropagation();
@@ -918,6 +912,7 @@ export default function PoolForm() {
                                     <div className="col-span-1">
                                       <Input
                                         disabled
+                                        readOnly
                                         placeholder="0"
                                         value={`${(
                                           (foundPoolDetails.taker_fee_percent / 10000) *
@@ -950,7 +945,7 @@ export default function PoolForm() {
                               <FormControl>
                                 <div className="grid grid-cols-2 mb-3 mt-3">
                                   <div className="col-span-1">
-                                    <Input disabled placeholder={`${fee} BTS`} />
+                                    <Input disabled readOnly placeholder={`${fee} BTS`} />
                                   </div>
                                 </div>
                               </FormControl>

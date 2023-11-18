@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useSyncExternalStore, useMemo } from "react";
 
-import { nanoquery } from "@nanostores/query";
 import { useStore } from "@nanostores/react";
 
 import {
@@ -62,6 +61,9 @@ export default function Market(properties) {
 
   const [buyOrders, setBuyOrders] = useState(null);
   const [sellOrders, setSellOrders] = useState(null);
+
+  const [previousBuyOrders, setPreviousBuyOrders] = useState([]);
+  const [previousSellOrders, setPreviousSellOrders] = useState([]);
 
   const [usrBalances, setUsrBalances] = useState(null);
   const [usrLimitOrders, setUsrLimitOrders] = useState(null);
@@ -128,6 +130,8 @@ export default function Market(properties) {
     if (marketOrdersData && !marketOrdersLoading && !marketOrdersError) {
       setBuyOrders(marketOrdersData.asks);
       setSellOrders(marketOrdersData.bids);
+      setPreviousBuyOrders(marketOrdersData.asks);
+      setPreviousSellOrders(marketOrdersData.bids);
     } else {
       setBuyOrders(null);
       setSellOrders(null);
@@ -599,7 +603,9 @@ export default function Market(properties) {
                     assetB={assetB}
                     assetBData={assetBData}
                     buyOrders={buyOrders}
+                    previousBuyOrders={previousBuyOrders}
                     sellOrders={sellOrders}
+                    previousSellOrders={previousSellOrders}
                     marketOrdersLoading={marketOrdersLoading}
                     orderBookItr={orderBookItr}
                     setOrderBookItr={setOrderBookItr}
@@ -615,7 +621,9 @@ export default function Market(properties) {
                     assetB={assetB}
                     assetBData={assetBData}
                     buyOrders={buyOrders}
+                    previousBuyOrders={previousBuyOrders}
                     sellOrders={sellOrders}
+                    previousSellOrders={previousSellOrders}
                     marketOrdersLoading={marketOrdersLoading}
                     orderBookItr={orderBookItr}
                     setOrderBookItr={setOrderBookItr}
