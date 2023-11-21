@@ -1,11 +1,12 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import CreditBorrow from '../components/CreditBorrow.jsx';
+import PageHeader from '../components/PageHeader';
 ---
 
 <Layout title="Bitshares credit offer listings">
 	<main>
-		<h2><span class="text-gradient">Bitshares Beet Astro</span> UI</h2>
+		<PageHeader client:only />
 		<h3 class="mb-5">
 			Use this page to locate prospective credit offers<br /><br />
 			Designed for use with the <a class="text-gradient" href="https://github.com/bitshares/beet">Bitshares Beet multiwallet</a>.<br/><br/>

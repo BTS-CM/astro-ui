@@ -1,11 +1,12 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Transfer from '../components/Transfer.jsx';
+import PageHeader from '../components/PageHeader';
 ---
 
 <Layout title="Bitshares asset transfer form">
 	<main>
-		<h2><span class="text-gradient">Bitshares Beet Astro</span> UI</h2>
+		<PageHeader client:only />
 		<h3>
 			Use the form below to transfer assets to other blockchain users<br /><br/>
 			Designed for use with the <a class="text-gradient" href="https://github.com/bitshares/beet">Bitshares Beet multiwallet</a>.<br/><br/>

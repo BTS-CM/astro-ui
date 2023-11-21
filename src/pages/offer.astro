@@ -1,11 +1,12 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import CreditOffer from '../components/CreditOffer.jsx';
+import PageHeader from '../components/PageHeader';
 ---
 
 <Layout title="Bitshares credit deal">
 	<main>
-		<h2><span class="text-gradient">Bitshares Beet Astro</span> UI</h2>
+		<PageHeader client:only />
 		<h3 class="mb-5">
 			The form below is for accepting a credit offer on the Bitshares DEX.<br /><br />
 			Designed for use with the <a class="text-gradient" href="https://github.com/bitshares/beet">Bitshares Beet multiwallet</a>.<br/><br/>

@@ -1,11 +1,12 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Smartcoins from '../components/Smartcoins.jsx';
+import PageHeader from '../components/PageHeader';
 ---
 
 <Layout title="Bitshares smartcoins - Find a smartcoin to borrow">
 	<main>
-		<h2><span class="text-gradient">Bitshares Beet Astro</span> UI</h2>
+		<PageHeader client:only />
 		<h3 class="mb-5">
 			Use the interface below to locate an asset to borrow into existence<br /><br/>
 			<a class="text-gradient" href="../index.html">Go back</a>

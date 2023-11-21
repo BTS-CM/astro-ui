@@ -1,11 +1,12 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Featured from '../components/Featured.jsx';
+import PageHeader from '../components/PageHeader';
 ---
 
 <Layout title="Featured Bitshares markets - listing the highest traded market pairs">
 	<main>
-		<h2><span class="text-gradient">Bitshares Beet Astro</span> UI</h2>
+		<PageHeader client:only />
 		<h3 class="mb-5">
 			Check out some of these featured markets<br /><br/>
 			<a class="text-gradient" href="../index.html">Go back</a>

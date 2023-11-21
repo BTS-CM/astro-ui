@@ -1,11 +1,12 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import PoolStake from '../components/PoolStake.jsx';
+import PageHeader from '../components/PageHeader';
 ---
 
 <Layout title="Bitshares pool staking form">
 	<main>
-		<h2><span class="text-gradient">Bitshares Beet Astro</span> UI</h2>
+		<PageHeader client:only />
 		<h3 class="mb-5">
 			Stake<br /><br/>
 			<a class="text-gradient" href="../index.html">Go back</a>

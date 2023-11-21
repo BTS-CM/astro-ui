@@ -1,11 +1,12 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import PoolForm from '../components/PoolForm.jsx';
+import PageHeader from '../components/PageHeader';
 ---
 
 <Layout title="Bitshares pool exchange form">
 	<main>
-		<h2><span class="text-gradient">Bitshares Beet Astro</span> UI</h2>
+		<PageHeader client:only />
 		<h3 class="mb-5">
 			Use the form below to create a Bitshares liquidity pool exchange.<br /><br/>
 			Designed for use with the <a class="text-gradient" href="https://github.com/bitshares/beet">Bitshares Beet multiwallet</a>.<br/><br/>

@@ -1,12 +1,12 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Home from '../components/Home.jsx';
-import CurrentUser from '../components/common/CurrentUser';
+import PageHeader from '../components/PageHeader';
 ---
 
 <Layout title="Bitshares Beet Astro UI - index">
 	<main>
-		<h2>Welcome to the <span class="text-gradient">Bitshares Beet Astro</span> UI</h2>
+		<PageHeader client:only />
 		<h3>
 			This <a class="text-gradient" href="https://github.com/BTS-CM/astro-pool">open-source tool</a> can craft multiple Bitshares operations. <br/>
 		</h3>

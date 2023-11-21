@@ -1,11 +1,12 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Smartcoin from '../components/Smartcoin.jsx';
+import PageHeader from '../components/PageHeader';
 ---
 
 <Layout title="Bitshares smartcoin issuance form">
 	<main>
-		<h2><span class="text-gradient">Bitshares Beet Astro</span> UI</h2>
+		<PageHeader client:only />
 		<h3 class="mb-5">
 			Use the form below to issue collateralized debt into existence<br /><br/>
 			Designed for use with the <a class="text-gradient" href="https://github.com/bitshares/beet">Bitshares Beet multiwallet</a>.<br/><br/>
