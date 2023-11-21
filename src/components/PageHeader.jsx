@@ -8,6 +8,7 @@ import {
   PersonIcon,
   RocketIcon,
   HamburgerMenuIcon,
+  ReloadIcon,
 } from "@radix-ui/react-icons";
 
 import {
@@ -35,7 +36,7 @@ import { Button } from "@/components/ui/button";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 
 function MenuRow(properties) {
-  const { url, text, icon, shortcut } = properties;
+  const { url, text, icon } = properties;
 
   const [hover, setHover] = useState(false);
   const [isCurrentPage, setIsCurrentPage] = useState(false);
@@ -44,8 +45,15 @@ function MenuRow(properties) {
     setIsCurrentPage(window.location.pathname === url);
   }, [url]);
 
+  const [clicked, setClicked] = useState(false);
+
   return (
-    <a href={url}>
+    <a
+      href={url}
+      onClick={() => {
+        setClicked(true);
+      }}
+    >
       <CommandItem
         onMouseEnter={() => {
           setHover(true);
@@ -57,9 +65,13 @@ function MenuRow(properties) {
           backgroundColor: hover || isCurrentPage ? "#F1F1F1" : "",
         }}
       >
-        {icon}
-        <span className="ml-1">{text}</span>
-        {shortcut ? <CommandShortcut>⌘{shortcut}</CommandShortcut> : ""}
+        <span className="grid grid-cols-8 w-full">
+          <span className="col-span-1">{icon}</span>
+          <span className="col-span-6">{text}</span>
+          <span className="col-span-1 text-right">
+            {clicked ? <ReloadIcon className="ml-2 mt-1 animate-spin" /> : ""}
+          </span>
+        </span>
       </CommandItem>
     </a>
   );
