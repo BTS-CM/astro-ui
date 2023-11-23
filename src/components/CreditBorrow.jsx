@@ -19,7 +19,12 @@ import { createUserBalancesStore } from "../effects/User.ts";
 import { useInitCache } from "../effects/Init.ts";
 
 import { $currentUser } from "../stores/users.ts";
-import { $offersCache, $assetCache } from "../stores/cache.ts";
+import {
+  $assetCacheBTS,
+  $assetCacheTEST,
+  $offersCacheBTS,
+  $offersCacheTEST,
+} from "../stores/cache.ts";
 
 import { humanReadableFloat } from "@/lib/common.js";
 
@@ -51,11 +56,46 @@ const isValid = (str) => /^[a-zA-Z0-9.-]+$/.test(str);
 export default function CreditBorrow(properties) {
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
 
-  const assets = useSyncExternalStore($assetCache.subscribe, $assetCache.get, () => true);
+  const _assetsBTS = useSyncExternalStore($assetCacheBTS.subscribe, $assetCacheBTS.get, () => true);
+  const _assetsTEST = useSyncExternalStore(
+    $assetCacheTEST.subscribe,
+    $assetCacheTEST.get,
+    () => true
+  );
 
-  const offers = useSyncExternalStore($offersCache.subscribe, $offersCache.get, () => true);
+  const _offersBTS = useSyncExternalStore(
+    $offersCacheBTS.subscribe,
+    $offersCacheBTS.get,
+    () => true
+  );
+  const _offersTEST = useSyncExternalStore(
+    $offersCacheTEST.subscribe,
+    $offersCacheTEST.get,
+    () => true
+  );
 
-  useInitCache(usr && usr.chain ? usr.chain : "bitshares", ["assets", "offers"]);
+  const _chain = useMemo(() => {
+    if (usr && usr.chain) {
+      return usr.chain;
+    }
+    return "bitshares";
+  }, [usr]);
+
+  useInitCache(_chain ?? "bitshares", ["assets", "offers"]);
+
+  const assets = useMemo(() => {
+    if (_chain && (_assetsBTS || _assetsTEST)) {
+      return _chain === "bitshares" ? _assetsBTS : _assetsTEST;
+    }
+    return [];
+  }, [_assetsBTS, _assetsTEST, _chain]);
+
+  const offers = useMemo(() => {
+    if (_chain && (_offersBTS || _offersTEST)) {
+      return _chain === "bitshares" ? _offersBTS : _offersTEST;
+    }
+    return [];
+  }, [_offersBTS, _offersTEST, _chain]);
 
   const [activeTab, setActiveTab] = useState("allOffers");
   const [activeSearch, setActiveSearch] = useState("borrow"); // borrow, collateral, owner_name
@@ -132,7 +172,7 @@ export default function CreditBorrow(properties) {
   }, [offers, assets, activeSearch]);
 
   useEffect(() => {
-    console.log("Parsing url params");
+    //console.log("Parsing url params");
     const urlSearchParams = new URLSearchParams(window.location.search);
     const params = Object.fromEntries(urlSearchParams.entries());
 
@@ -147,7 +187,6 @@ export default function CreditBorrow(properties) {
     ) {
       finalTab = params.tab;
       finalURL += `tab=${params.tab}`;
-      console.log("Setting active tab", params.tab);
     } else {
       finalTab = "allOffers";
       finalURL += "tab=allOffers";
@@ -157,7 +196,6 @@ export default function CreditBorrow(properties) {
       if (["borrow", "collateral", "owner_name"].includes(params.searchTab)) {
         finalSearchTab = params.searchTab;
         finalURL += `&searchTab=${params.searchTab}`;
-        console.log("Setting active search tab", params.searchTab);
       } else {
         finalSearchTab = "borrow";
         finalURL += "&searchTab=borrow";
@@ -175,7 +213,6 @@ export default function CreditBorrow(properties) {
       if (isValid(params.searchText)) {
         searchInput = params.searchText;
         finalURL += `&searchText=${params.searchText}`;
-        console.log("Setting search text", params.searchText);
       } else {
         searchInput = "";
         finalURL += "&searchText=bts";

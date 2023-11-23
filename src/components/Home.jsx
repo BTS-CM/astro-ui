@@ -23,7 +23,7 @@ import CurrentUser from "./common/CurrentUser.jsx";
 export default function Home(properties) {
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
 
-  //useInitCache(usr && usr.chain ? usr.chain : "bitshares");
+  useInitCache(usr && usr.chain ? usr.chain : "bitshares", []);
 
   return (
     <>

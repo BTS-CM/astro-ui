@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
+import * as fflate from "fflate";
 
 import { nanoquery } from "@nanostores/query";
 import { useStore } from "@nanostores/react";
@@ -36,8 +37,8 @@ const [createFetcherStore] = nanoquery({
       .then((deeplinkValue) => {
         if (deeplinkValue && deeplinkValue.result) {
           const decompressed = fflate.decompressSync(fflate.strToU8(deeplinkValue.result, true));
-          const finalResult = JSON.parse(fflate.strFromU8(decompressed));
-
+          const _parsed = fflate.strFromU8(decompressed);
+          const finalResult = JSON.parse(_parsed);
           if (finalResult.generatedDeepLink) {
             return finalResult.generatedDeepLink;
           }
@@ -206,7 +207,11 @@ export default function DeepLinkDialog(properties) {
                   </li>
                 </ol>
                 {!loading ? (
-                  <a href={`rawbeet://api?chain=BTS&request=${deeplink}`}>
+                  <a
+                    href={`rawbeet://api?chain=${
+                      usrChain === "bitshares" ? "BTS" : "BTS_TEST"
+                    }&request=${deeplink}`}
+                  >
                     <Button className="mt-4">Trigger raw Beet deeplink</Button>
                   </a>
                 ) : null}

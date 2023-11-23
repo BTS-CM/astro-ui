@@ -89,7 +89,7 @@ function addUser(username: string, id: string, referrer: string, chain: string) 
   const user = { username, id, referrer, chain };
   $userStorage.setKey("lastAccount", [user]);
   if (users.find((user) => user.id === id)) {
-    console.log("Using existing user");
+    //console.log("Using existing user");
     return;
   }
   const newUsers = [...users, user];

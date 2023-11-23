@@ -62,7 +62,7 @@ export default function MarketAssetCard(properties) {
       );
       setBackingAsset(marketSearch.find((x) => x.id === bitassetData.options.short_backing_asset));
     }
-  }, [bitassetData]);
+  }, [bitassetData, marketSearch]);
 
   return (
     <Card>
@@ -370,7 +370,7 @@ export default function MarketAssetCard(properties) {
 
             <CardRow
               title={"Issuer"}
-              button={marketSearch.find((x) => x.id === assetData.id).u}
+              button={marketSearch ? marketSearch.find((x) => x.id === assetData.id).u : "?"}
               dialogtitle={`${assetData.symbol}'s issuer`}
               dialogdescription={
                 <ul className="ml-2 list-disc [&>li]:mt-2">

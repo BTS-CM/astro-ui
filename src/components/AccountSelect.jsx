@@ -1,14 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useSyncExternalStore } from "react";
 import * as fflate from "fflate";
-
-import {
-  $globalParamsCache,
-  setGlobalParams,
-  $marketSearchCache,
-  addMarketSearchesToCache,
-  addPoolsToCache,
-  addAssetsToCache,
-} from "../stores/cache.ts";
 
 import {
   Card,
@@ -25,9 +16,11 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/Avatar.tsx";
 
-import { setCurrentUser, $userStorage, removeUser } from "../stores/users.ts";
+import { $currentUser, setCurrentUser, $userStorage, removeUser } from "../stores/users.ts";
 
 export default function AccountSelect(properties) {
+  const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
+
   const [chain, setChain] = useState();
   const [mode, setMode] = useState();
   const [accountInput, setAccountInput] = useState();
@@ -71,6 +64,101 @@ export default function AccountSelect(properties) {
     setInProgress(false);
     setErrorMessage("Couldn't find account.");
   }
+
+  const firstResponse = searchResponse ? (
+    <Card
+      key={searchResponse.id}
+      className="w-1/4"
+      onClick={() => {
+        setCurrentUser(searchResponse.name, searchResponse.id, searchResponse.referrer, chain);
+      }}
+    >
+      <div className="grid grid-cols-4">
+        <div className="col-span-1 pt-6 pl-4">
+          <Avatar
+            size={40}
+            name={searchResponse.name}
+            extra=""
+            expression={{
+              eye: "normal",
+              mouth: "open",
+            }}
+            colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]}
+          />
+        </div>
+        <div className="col-span-3">
+          <CardHeader>
+            <CardTitle
+              style={{
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+            >
+              {searchResponse.name}
+            </CardTitle>
+            <CardDescription>{searchResponse.id}</CardDescription>
+          </CardHeader>
+        </div>
+      </div>
+    </Card>
+  ) : null;
+
+  const SecondResponse = ({ user }) => {
+    return (
+      <HoverCard key={user.id}>
+        <HoverCardTrigger asChild>
+          <Card
+            onClick={() => {
+              setCurrentUser(user.username, user.id, user.referrer, user.chain);
+            }}
+          >
+            <div className="grid grid-cols-4">
+              <div className="col-span-1 pt-6 pl-2">
+                <Avatar
+                  size={40}
+                  name={user.username}
+                  extra=""
+                  expression={{
+                    eye: "normal",
+                    mouth: "open",
+                  }}
+                  colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]}
+                />
+              </div>
+              <div className="col-span-3">
+                <CardHeader>
+                  <CardTitle
+                    style={{
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                    }}
+                  >
+                    {user.username}
+                  </CardTitle>
+                  <CardDescription>{user.id}</CardDescription>
+                </CardHeader>
+              </div>
+            </div>
+          </Card>
+        </HoverCardTrigger>
+        <HoverCardContent className="w-80">
+          Account: {user.username}
+          <br />
+          <Button
+            className="w-full mt-2 text-bold text-white"
+            variant="destructive"
+            onClick={() => {
+              removeUser(user.id);
+            }}
+          >
+            Forget this account
+          </Button>
+        </HoverCardContent>
+      </HoverCard>
+    );
+  };
 
   return (
     <div className="grid grid-cols-1">
@@ -163,47 +251,11 @@ export default function AccountSelect(properties) {
             <CardDescription>Proceed with the following account?</CardDescription>
           </CardHeader>
           <CardContent>
-            <Card
-              key={searchResponse.id}
-              className="w-1/3"
-              onClick={() => {
-                setCurrentUser(
-                  searchResponse.name,
-                  searchResponse.id,
-                  searchResponse.referrer,
-                  chain
-                );
-              }}
-            >
-              <div className="grid grid-cols-4">
-                <div className="col-span-1 pt-6 pl-4">
-                  <Avatar
-                    size={40}
-                    name={searchResponse.name}
-                    extra=""
-                    expression={{
-                      eye: "normal",
-                      mouth: "open",
-                    }}
-                    colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]}
-                  />
-                </div>
-                <div className="col-span-3">
-                  <CardHeader>
-                    <CardTitle
-                      style={{
-                        whiteSpace: "nowrap",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                      }}
-                    >
-                      {searchResponse.name}
-                    </CardTitle>
-                    <CardDescription>{searchResponse.id}</CardDescription>
-                  </CardHeader>
-                </div>
-              </div>
-            </Card>
+            {usr && chain !== usr.chain ? (
+              <a href={window.location.pathname}>{firstResponse}</a>
+            ) : (
+              firstResponse
+            )}
           </CardContent>
           <CardFooter>
             <Button
@@ -228,63 +280,17 @@ export default function AccountSelect(properties) {
             <CardDescription>Select one of your previously used accounts</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-2 gap-5">
+            <div className="grid grid-cols-3 gap-3">
               {users.filter((user) => user.chain === chain).length ? (
                 users
                   .filter((user) => user.chain === chain)
                   .map((user) => {
-                    return (
-                      <HoverCard key={user.id}>
-                        <HoverCardTrigger asChild>
-                          <Card
-                            onClick={() => {
-                              setCurrentUser(user.username, user.id, user.referrer, user.chain);
-                            }}
-                          >
-                            <div className="grid grid-cols-4">
-                              <div className="col-span-1 pt-6 pl-2">
-                                <Avatar
-                                  size={40}
-                                  name={user.username}
-                                  extra=""
-                                  expression={{
-                                    eye: "normal",
-                                    mouth: "open",
-                                  }}
-                                  colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]}
-                                />
-                              </div>
-                              <div className="col-span-3">
-                                <CardHeader>
-                                  <CardTitle
-                                    style={{
-                                      whiteSpace: "nowrap",
-                                      overflow: "hidden",
-                                      textOverflow: "ellipsis",
-                                    }}
-                                  >
-                                    {user.username}
-                                  </CardTitle>
-                                  <CardDescription>{user.id}</CardDescription>
-                                </CardHeader>
-                              </div>
-                            </div>
-                          </Card>
-                        </HoverCardTrigger>
-                        <HoverCardContent className="w-80">
-                          Account: {user.username}
-                          <br />
-                          <Button
-                            className="w-full mt-2 text-bold text-white"
-                            variant="destructive"
-                            onClick={() => {
-                              removeUser(user.id);
-                            }}
-                          >
-                            Forget this account
-                          </Button>
-                        </HoverCardContent>
-                      </HoverCard>
+                    return usr && chain !== usr.chain ? (
+                      <a href={window.location.pathname}>
+                        <SecondResponse user={user} />
+                      </a>
+                    ) : (
+                      <SecondResponse user={user} />
                     );
                   })
               ) : (

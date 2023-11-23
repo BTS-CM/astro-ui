@@ -55,18 +55,17 @@ import { Avatar } from "@/components/Avatar.tsx";
 import { blockchainFloat, copyToClipboard, humanReadableFloat } from "../lib/common";
 
 import {
-  $poolCache,
-  $marketSearchCache,
-  $globalParamsCache,
-  $assetCache,
-  resetCache,
+  $assetCacheBTS,
+  $assetCacheTEST,
+  $poolCacheBTS,
+  $poolCacheTEST,
+  $marketSearchCacheBTS,
+  $marketSearchCacheTEST,
+  $globalParamsCacheBTS,
+  $globalParamsCacheTEST,
 } from "../stores/cache.ts";
 
-import {
-  createBitassetDataStore,
-  createCachedAssetStore,
-  createDynamicDataStore,
-} from "../effects/Assets.ts";
+import { createBitassetDataStore, createDynamicDataStore } from "../effects/Assets.ts";
 
 import { createPoolDetailsStore } from "../effects/Pools.ts";
 
@@ -93,28 +92,76 @@ export default function PoolForm() {
 
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
 
-  useInitCache(usr && usr.chain ? usr.chain : "bitshares", [
-    "marketSearch",
-    "assets",
-    "pools",
-    "globalParams",
-  ]);
-
-  const assets = useSyncExternalStore($assetCache.subscribe, $assetCache.get, () => true);
-
-  const pools = useSyncExternalStore($poolCache.subscribe, $poolCache.get, () => true);
-
-  const marketSearch = useSyncExternalStore(
-    $marketSearchCache.subscribe,
-    $marketSearchCache.get,
+  const _assetsBTS = useSyncExternalStore($assetCacheBTS.subscribe, $assetCacheBTS.get, () => true);
+  const _assetsTEST = useSyncExternalStore(
+    $assetCacheTEST.subscribe,
+    $assetCacheTEST.get,
     () => true
   );
 
-  const globalParams = useSyncExternalStore(
-    $globalParamsCache.subscribe,
-    $globalParamsCache.get,
+  const _poolsBTS = useSyncExternalStore($poolCacheBTS.subscribe, $poolCacheBTS.get, () => true);
+  const _poolsTEST = useSyncExternalStore($poolCacheTEST.subscribe, $poolCacheTEST.get, () => true);
+
+  const _marketSearchBTS = useSyncExternalStore(
+    $marketSearchCacheBTS.subscribe,
+    $marketSearchCacheBTS.get,
     () => true
   );
+
+  const _marketSearchTEST = useSyncExternalStore(
+    $marketSearchCacheTEST.subscribe,
+    $marketSearchCacheTEST.get,
+    () => true
+  );
+
+  const _globalParamsBTS = useSyncExternalStore(
+    $globalParamsCacheBTS.subscribe,
+    $globalParamsCacheBTS.get,
+    () => true
+  );
+
+  const _globalParamsTEST = useSyncExternalStore(
+    $globalParamsCacheTEST.subscribe,
+    $globalParamsCacheTEST.get,
+    () => true
+  );
+
+  const _chain = useMemo(() => {
+    if (usr && usr.chain) {
+      return usr.chain;
+    }
+    return "bitshares";
+  }, [usr]);
+
+  useInitCache(_chain ?? "bitshares", ["marketSearch", "assets", "pools", "globalParams"]);
+
+  const assets = useMemo(() => {
+    if (_chain && (_assetsBTS || _assetsTEST)) {
+      return _chain === "bitshares" ? _assetsBTS : _assetsTEST;
+    }
+    return [];
+  }, [_assetsBTS, _assetsTEST, _chain]);
+
+  const pools = useMemo(() => {
+    if (_chain && (_poolsBTS || _poolsTEST)) {
+      return _chain === "bitshares" ? _poolsBTS : _poolsTEST;
+    }
+    return [];
+  }, [_poolsBTS, _poolsTEST, _chain]);
+
+  const marketSearch = useMemo(() => {
+    if (_chain && (_marketSearchBTS || _marketSearchTEST)) {
+      return _chain === "bitshares" ? _marketSearchBTS : _marketSearchTEST;
+    }
+    return [];
+  }, [_marketSearchBTS, _marketSearchTEST, _chain]);
+
+  const globalParams = useMemo(() => {
+    if (_chain && (_globalParamsBTS || _globalParamsTEST)) {
+      return _chain === "bitshares" ? _globalParamsBTS : _globalParamsTEST;
+    }
+    return [];
+  }, [_globalParamsBTS, _globalParamsTEST, _chain]);
 
   const [fee, setFee] = useState();
   useEffect(() => {
@@ -126,7 +173,6 @@ export default function PoolForm() {
   }, [globalParams]);
 
   // Search dialog
-
   const [activeTab, setActiveTab] = useState("asset");
   const poolSearch = useMemo(() => {
     if (!pools || !pools.length) {
@@ -158,7 +204,6 @@ export default function PoolForm() {
         className="grid grid-cols-12"
         key={`acard-${res.id}`}
         onClick={() => {
-          console.log("AAA");
           setPool(res.id);
           setDialogOpen(false);
           setThisResult();
@@ -187,7 +232,7 @@ export default function PoolForm() {
   useEffect(() => {
     async function parseUrlParams() {
       if (window.location.search) {
-        console.log("Parsing url params");
+        //console.log("Parsing url params");
         const urlSearchParams = new URLSearchParams(window.location.search);
         const params = Object.fromEntries(urlSearchParams.entries());
         const poolParameter = params && params.pool ? params.pool : null;
@@ -256,7 +301,7 @@ export default function PoolForm() {
   useEffect(() => {
     let unsubscribePoolDetails;
 
-    if (usr && usr.chain && foundPool) {
+    if (usr && usr.chain && foundPool && assetA && assetB && assets) {
       const poolDetailsStore = createPoolDetailsStore([usr.chain, foundPool.id]);
 
       unsubscribePoolDetails = poolDetailsStore.subscribe(({ data, error, loading }) => {
@@ -304,7 +349,7 @@ export default function PoolForm() {
     let unsubscribeABitassetData;
     let unsubscribeBBitassetData;
 
-    if (usr && usr.id && assetA && assetB && foundPool) {
+    if (usr && usr.id && assets && assetA && assetB && foundPool) {
       const dynamicDataStoreA = createDynamicDataStore([
         usr.chain,
         assetA.id.replace("1.3.", "2.3."),
@@ -386,8 +431,6 @@ export default function PoolForm() {
   const buyAmount = useMemo(() => {
     // Calculating the amount the user can buy
     if (assetA && assetB && foundPoolDetails) {
-      console.log("Calculating the amount the user can buy");
-
       let poolamounta = Number(foundPoolDetails.balance_a);
       let poolamountap = Number(10 ** assetA.precision);
 
@@ -1102,6 +1145,7 @@ export default function PoolForm() {
             assetAData={assetA}
             assetB={assetB.symbol}
             assetBData={assetB}
+            chain={usr.chain}
           />
         ) : null}
 

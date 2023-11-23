@@ -84,7 +84,7 @@ export default function CurrentUser(properties) {
           <DialogTrigger asChild>
             <Button className="h-5 p-3">Switch account/chain</Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[500px] bg-white">
+          <DialogContent className="sm:max-w-[600px] bg-white">
             <DialogHeader>
               <DialogTitle>Replacing current user</DialogTitle>
               <DialogDescription>Select a chain and account to proceed</DialogDescription>

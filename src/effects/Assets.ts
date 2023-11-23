@@ -1,8 +1,6 @@
 import { nanoquery } from "@nanostores/query";
 import * as fflate from "fflate";
 
-import { addAssetsToCache } from "../stores/cache.ts";
-
 // Create fetcher store for dynamic data
 const [createDynamicDataStore] = nanoquery({
   fetcher: async (chain: string, id: string) => {
@@ -94,6 +92,9 @@ const [createBitassetDataStore] = nanoquery({
   },
 });
 
+/**
+ * Retrieving a single cached asset
+ */
 const [createCachedAssetStore] = nanoquery({
   fetcher: async (chain: string, assetID: string) => {
     const response = await fetch(`http://localhost:8080/cache/asset/${chain}/${assetID}`, {
@@ -111,7 +112,6 @@ const [createCachedAssetStore] = nanoquery({
       //console.log("Fetched asset data");
       const decompressed = fflate.decompressSync(fflate.strToU8(assetJSON.result, true));
       const finalResult = JSON.parse(fflate.strFromU8(decompressed));
-      addAssetsToCache([finalResult]);
       return finalResult;
     }
   },

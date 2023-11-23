@@ -19,7 +19,8 @@ import { Button } from "@/components/ui/button";
 export default function LTM(properties) {
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
 
-  //useInitCache(usr && usr.chain ? usr.chain : "bitshares");
+  useInitCache(usr && usr.chain ? usr.chain : "bitshares", []);
+
   const [showDialog, setShowDialog] = useState(false);
 
   return (

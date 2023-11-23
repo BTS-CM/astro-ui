@@ -102,131 +102,145 @@ type GlobalParameters = {
 /**
  * Declaring the asset cache map nanostore
  */
-const $assetCache = map<Asset[]>([]);
+const $assetCacheBTS = map<Asset[]>([]);
+const $assetCacheTEST = map<Asset[]>([]);
+
+function mappedAssets(data: any) {
+  return data.map((_asset) => {
+    return {
+      id: `1.3.${_asset.id}`,
+      symbol: _asset.s,
+      precision: _asset.p,
+      issuer: `1.2.${_asset.i}`,
+      market_fee_percent: _asset.mfp,
+      max_market_fee: _asset.mmf,
+      max_supply: _asset.ms,
+    };
+  });
+}
 
 /**
  * Function to add an array of assets to the asset cache
  * @param assets The array of assets to add to the cache
  */
-function addAssetsToCache(assets: Asset[]) {
-  const existingAssets = $assetCache.get();
-  const newAssets =
-    assets & assets.length
-      ? assets.filter((asset) => !existingAssets.some((a) => a.id === asset.id))
-      : assets;
-  if (newAssets.length > 0) {
-    $assetCache.set([...existingAssets, ...newAssets]);
+function addAssetsToCache(assets: any) {
+  const existingBTS = $assetCacheBTS.get();
+  if (!existingBTS || !existingBTS.length) {
+    $assetCacheBTS.set(mappedAssets(assets.bitshares));
+  }
+
+  const existingTEST = $assetCacheTEST.get();
+  if (!existingTEST || !existingTEST.length) {
+    $assetCacheTEST.set(mappedAssets(assets.bitshares_testnet));
   }
 }
 
-/**
- * Declaring the pool cache map nanostore
- */
-const $poolCache = map<Pool[]>([]);
+// Pool Cache
+const $poolCacheBTS = map<Pool[]>([]);
+const $poolCacheTEST = map<Pool[]>([]);
 
-/**
- * Function to add an array of pools to the pool cache
- * @param pools The array of pools to add to the cache
- */
-function addPoolsToCache(pools: Pool[]) {
-  const existingPools = $poolCache.get();
-  const newPools =
-    existingPools && existingPools.length
-      ? pools.filter((pool) => !existingPools.some((p) => p.id === pool.id))
-      : pools;
-  if (newPools.length > 0) {
-    $poolCache.set([...existingPools, ...newPools]);
+function mappedPool(data: any) {
+  return data.map((_pool) => {
+    return {
+      id: `1.19.${_pool.id}`,
+      asset_a_id: `1.3.${_pool.a}`,
+      asset_a_symbol: _pool.as,
+      asset_b_id: `1.3.${_pool.b}`,
+      asset_b_symbol: _pool.bs,
+      share_asset_symbol: _pool.sa,
+      balance_a: _pool.ba,
+      balance_b: _pool.bb,
+      taker_fee_percent: _pool.tfp,
+    };
+  });
+}
+
+function addPoolsToCache(pools: any) {
+  const existingBTS = $poolCacheBTS.get();
+  if (!existingBTS || !existingBTS.length) {
+    // Empty cache to set
+    const btsPools = mappedPool(pools.bitshares);
+    $poolCacheBTS.set(btsPools);
+  }
+
+  const existingTEST = $poolCacheTEST.get();
+  if (!existingTEST || !existingTEST.length) {
+    const testPools = mappedPool(pools.bitshares_testnet);
+    $poolCacheTEST.set(testPools);
   }
 }
 
-/**
- * Declaring the offers cache map nanostore
- */
-const $offersCache = map<Pool[]>([]);
+// Offers Cache
+const $offersCacheBTS = map<Pool[]>([]);
+const $offersCacheTEST = map<Pool[]>([]);
 
-/**
- * Function to add an array of offers to the offers cache
- * @param offers The array of offers to add to the cache
- */
-function addOffersToCache(offers: Pool[]) {
-  const existingOffers = $offersCache.get();
-  const newOffers =
-    existingOffers && existingOffers.length
-      ? offers.filter((offer) => !existingOffers.some((o) => o.id === offer.id))
-      : offers;
-  if (newOffers.length > 0) {
-    $offersCache.set([...existingOffers, ...newOffers]);
+function addOffersToCache(offers: any) {
+  const existingBTS = $offersCacheBTS.get();
+  if (!existingBTS || !existingBTS.length) {
+    // Empty cache to set
+    const btsOffers = offers.bitshares;
+    $offersCacheBTS.set(btsOffers);
+  }
+
+  const existingTEST = $offersCacheTEST.get();
+  if (!existingTEST || !existingTEST.length) {
+    const testOffers = offers.bitshares_testnet;
+    $offersCacheTEST.set(testOffers);
   }
 }
 
-/**
- * Declaring the market search cache map nanostore
- */
-const $marketSearchCache = map<MarketSearch[]>([]);
+// Market Search Cache
+const $marketSearchCacheBTS = map<MarketSearch[]>([]);
+const $marketSearchCacheTEST = map<MarketSearch[]>([]);
 
-/**
- * Function to add an array of market searches to the market search cache
- * @param marketSearches The array of market searches to add to the cache
- */
-function addMarketSearchesToCache(marketSearches: MarketSearch[]) {
-  const existingMarketSearches = $marketSearchCache.get();
-  const newMarketSearches = marketSearches.filter(
-    (ms) => !existingMarketSearches.some((e) => e.id === ms.id)
-  );
-  if (newMarketSearches.length > 0) {
-    $marketSearchCache.set([...existingMarketSearches, ...newMarketSearches]);
+function addMarketSearchesToCache(marketSearches: any) {
+  const existingBTS = $marketSearchCacheBTS.get();
+  if (!existingBTS || !existingBTS.length) {
+    // Empty cache to set
+    $marketSearchCacheBTS.set(marketSearches.bitshares);
+  }
+
+  const existingTEST = $marketSearchCacheTEST.get();
+  if (!existingTEST || !existingTEST.length) {
+    $marketSearchCacheTEST.set(marketSearches.bitshares_testnet);
   }
 }
 
-/**
- * Declaring the global parameters cache nanostore
- */
-const $globalParamsCache = map<GlobalParameters | null>(null);
+// Global Parameters Cache
+const $globalParamsCacheBTS = map<GlobalParameters>(null);
+const $globalParamsCacheTEST = map<GlobalParameters>(null);
 
-/**
- * Function to set the global parameters in the global parameters cache
- * @param params The global parameters to set in the cache
- */
-function setGlobalParams(params: GlobalParameters) {
-  $globalParamsCache.set(params);
+function setGlobalParams(params: any) {
+  $globalParamsCacheBTS.set(params.bitshares);
+  $globalParamsCacheTEST.set(params.bitshares_testnet);
 }
 
-/**
- * Declaring the BitAssetData cache nanostore
- */
-const $bitAssetDataCache = map<BitassetData[]>([]);
+// BitAssetData Cache
+const $bitAssetDataCacheBTS = map<BitassetData[]>([]);
+const $bitAssetDataCacheTEST = map<BitassetData[]>([]);
 
-/**
- * Function to add an array of BitAssetData to the BitAssetData cache
- * @param bitAssetData The array of BitAssetData to add to the cache
- */
-function setBitassetData(params: BitassetData[]) {
-  $bitAssetDataCache.set(params);
-}
-
-/**
- * Reset temp cache when the user switches blockchain
- */
-function resetCache() {
-  $assetCache.set([]);
-  $bitAssetDataCache.set([]);
-  $poolCache.set([]);
-  $marketSearchCache.set([]);
-  $globalParamsCache.set(null);
+function setBitassetData(params: any) {
+  $bitAssetDataCacheBTS.set(params.bitshares);
+  $bitAssetDataCacheTEST.set(params.bitshares_testnet);
 }
 
 export {
-  $assetCache,
+  $assetCacheBTS,
+  $assetCacheTEST,
   addAssetsToCache,
-  $poolCache,
+  $poolCacheBTS,
+  $poolCacheTEST,
   addPoolsToCache,
-  $offersCache,
+  $offersCacheBTS,
+  $offersCacheTEST,
   addOffersToCache,
-  $marketSearchCache,
+  $marketSearchCacheBTS,
+  $marketSearchCacheTEST,
   addMarketSearchesToCache,
-  $globalParamsCache,
+  $globalParamsCacheBTS,
+  $globalParamsCacheTEST,
   setGlobalParams,
-  $bitAssetDataCache,
+  $bitAssetDataCacheBTS,
+  $bitAssetDataCacheTEST,
   setBitassetData,
-  resetCache,
 };

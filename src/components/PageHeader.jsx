@@ -33,7 +33,6 @@ import {
 } from "@/components/ui/command";
 
 import { Button } from "@/components/ui/button";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 
 function MenuRow(properties) {
   const { url, text, icon } = properties;
@@ -69,7 +68,7 @@ function MenuRow(properties) {
           <span className="col-span-1">{icon}</span>
           <span className="col-span-6">{text}</span>
           <span className="col-span-1 text-right">
-            {clicked ? <ReloadIcon className="ml-2 mt-1 animate-spin" /> : ""}
+            {clicked && !isCurrentPage ? <ReloadIcon className="ml-2 mt-1 animate-spin" /> : ""}
           </span>
         </span>
       </CommandItem>
@@ -78,15 +77,13 @@ function MenuRow(properties) {
 }
 
 export default function PageHeader(properties) {
-  const [cardOpen, setCardOpen] = useState(false);
-
   return (
     <>
       <div className="container mx-auto mb-3">
         <div className="grid grid-cols-12">
           <div className="col-span-3">
             <DropdownMenu>
-              <DropdownMenuTrigger>
+              <DropdownMenuTrigger asChild>
                 <Button>
                   <HamburgerMenuIcon />
                 </Button>

@@ -28,7 +28,13 @@ import { useInitCache } from "../effects/Init.ts";
 import { createUserPortfolioStore, createUserHistoryStore } from "../effects/User.ts";
 
 import { $currentUser } from "../stores/users.ts";
-import { $globalParamsCache, $assetCache } from "../stores/cache.ts";
+
+import {
+  $assetCacheBTS,
+  $assetCacheTEST,
+  $globalParamsCacheBTS,
+  $globalParamsCacheTEST,
+} from "../stores/cache.ts";
 
 import CurrentUser from "./common/CurrentUser.jsx";
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
@@ -40,14 +46,46 @@ import { opTypes } from "../lib/opTypes";
 export default function PortfolioTabs(properties) {
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
 
-  const assets = useSyncExternalStore($assetCache.subscribe, $assetCache.get, () => true);
-
-  /*
-  const globalParams = useSyncExternalStore(
-    $globalParamsCache.subscribe,
-    $globalParamsCache.get,
+  const _assetsBTS = useSyncExternalStore($assetCacheBTS.subscribe, $assetCacheBTS.get, () => true);
+  const _assetsTEST = useSyncExternalStore(
+    $assetCacheTEST.subscribe,
+    $assetCacheTEST.get,
     () => true
   );
+
+  const _chain = useMemo(() => {
+    if (usr && usr.chain) {
+      return usr.chain;
+    }
+    return "bitshares";
+  }, [usr]);
+
+  const assets = useMemo(() => {
+    if (_chain && (_assetsBTS || _assetsTEST)) {
+      return _chain === "bitshares" ? _assetsBTS : _assetsTEST;
+    }
+    return [];
+  }, [_assetsBTS, _assetsTEST, _chain]);
+
+  /*
+  const _globalParamsBTS = useSyncExternalStore(
+    $globalParamsCacheBTS.subscribe,
+    $globalParamsCacheBTS.get,
+    () => true
+  );
+
+  const _globalParamsTEST = useSyncExternalStore(
+    $globalParamsCacheTEST.subscribe,
+    $globalParamsCacheTEST.get,
+    () => true
+  );
+
+  const globalParams = useMemo(() => {
+    if (_chain && (_globalParamsBTS || _globalParamsTEST)) {
+      return _chain === "bitshares" ? _globalParamsBTS : _globalParamsTEST;
+    }
+    return [];
+  }, [_globalParamsBTS, _globalParamsTEST, _chain]);
 
   const [fee, setFee] = useState(0);
   useEffect(() => {
@@ -59,7 +97,7 @@ export default function PortfolioTabs(properties) {
   }, [globalParams]);
   */
 
-  useInitCache(usr && usr.chain ? usr.chain : "bitshares", [
+  useInitCache(_chain ?? "bitshares", [
     "assets",
     //"globalParams",
   ]);

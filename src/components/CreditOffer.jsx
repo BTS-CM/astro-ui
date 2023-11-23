@@ -37,7 +37,14 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { blockchainFloat, humanReadableFloat } from "@/lib/common.js";
 
 import { $currentUser } from "../stores/users.ts";
-import { $offersCache, $assetCache, $globalParamsCache } from "../stores/cache.ts";
+import {
+  $assetCacheBTS,
+  $assetCacheTEST,
+  $offersCacheBTS,
+  $offersCacheTEST,
+  $globalParamsCacheBTS,
+  $globalParamsCacheTEST,
+} from "../stores/cache.ts";
 
 import { createUserBalancesStore } from "../effects/User.ts";
 import { useInitCache } from "../effects/Init.ts";
@@ -73,17 +80,66 @@ export default function CreditBorrow(properties) {
 
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
 
-  const assets = useSyncExternalStore($assetCache.subscribe, $assetCache.get, () => true);
-
-  const globalParams = useSyncExternalStore(
-    $globalParamsCache.subscribe,
-    $globalParamsCache.get,
+  const _assetsBTS = useSyncExternalStore($assetCacheBTS.subscribe, $assetCacheBTS.get, () => true);
+  const _assetsTEST = useSyncExternalStore(
+    $assetCacheTEST.subscribe,
+    $assetCacheTEST.get,
     () => true
   );
 
-  const offers = useSyncExternalStore($offersCache.subscribe, $offersCache.get, () => true);
+  const _globalParamsBTS = useSyncExternalStore(
+    $globalParamsCacheBTS.subscribe,
+    $globalParamsCacheBTS.get,
+    () => true
+  );
 
-  useInitCache(usr && usr.chain ? usr.chain : "bitshares", ["assets", "globalParams", "offers"]);
+  const _globalParamsTEST = useSyncExternalStore(
+    $globalParamsCacheTEST.subscribe,
+    $globalParamsCacheTEST.get,
+    () => true
+  );
+
+  const _offersBTS = useSyncExternalStore(
+    $offersCacheBTS.subscribe,
+    $offersCacheBTS.get,
+    () => true
+  );
+
+  const _offersTEST = useSyncExternalStore(
+    $offersCacheTEST.subscribe,
+    $offersCacheTEST.get,
+    () => true
+  );
+
+  const _chain = useMemo(() => {
+    if (usr && usr.chain) {
+      return usr.chain;
+    }
+    return "bitshares";
+  }, [usr]);
+
+  useInitCache(_chain ?? "bitshares", ["assets", "globalParams", "offers"]);
+
+  const assets = useMemo(() => {
+    if (_chain && (_assetsBTS || _assetsTEST)) {
+      return _chain === "bitshares" ? _assetsBTS : _assetsTEST;
+    }
+    return [];
+  }, [_assetsBTS, _assetsTEST, _chain]);
+
+  const globalParams = useMemo(() => {
+    if (_chain && (_globalParamsBTS || _globalParamsTEST)) {
+      return _chain === "bitshares" ? _globalParamsBTS : _globalParamsTEST;
+    }
+    return [];
+  }, [_globalParamsBTS, _globalParamsTEST, _chain]);
+
+  const offers = useMemo(() => {
+    if (_chain && (_offersBTS || _offersTEST)) {
+      return _chain === "bitshares" ? _offersBTS : _offersTEST;
+    }
+    return [];
+  }, [_offersBTS, _offersTEST, _chain]);
 
   const [fee, setFee] = useState(0);
   useEffect(() => {
@@ -99,7 +155,7 @@ export default function CreditBorrow(properties) {
   const [relevantOffer, setRelevantOffer] = useState(null);
   useEffect(() => {
     async function parseUrlAssets() {
-      console.log("Parsing url parameters");
+      //console.log("Parsing url parameters");
       const urlSearchParams = new URLSearchParams(window.location.search);
       const params = Object.fromEntries(urlSearchParams.entries());
       const id = params.id;
@@ -111,11 +167,10 @@ export default function CreditBorrow(properties) {
         const foundOffer = offers.find((offer) => offer.id === id);
 
         if (!foundOffer) {
-          console.log("Setting default first offer");
           return null;
         }
 
-        console.log("Found offer");
+        //console.log("Found offer");
         return foundOffer;
       }
     }

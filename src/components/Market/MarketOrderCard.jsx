@@ -10,6 +10,15 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -70,6 +79,44 @@ export default function MarketOrderCard(properties) {
     const href = `/dex/index.html?market=${assetA}_${assetB}&type=sell&price=${(1 / price).toFixed(
       assetAData.precision
     )}&amount=${totalBase}`;
+
+    return (
+      <div style={style}>
+        <Dialog key={`${cardType}Dialog${index}`}>
+          <DialogTrigger asChild>
+            <div className="col-span-4" key={`moc_${cardType}_${index}`}>
+              <div className="grid grid-cols-4 text-sm">
+                <div className="col-span-1 border-l-2 border-r-2 pl-3">{price}</div>
+                <div className="col-span-1 border-r-2 pl-3">{base}</div>
+                <div className="col-span-1 border-r-2 pl-3">{quote}</div>
+                <div className="col-span-1 pl-3">{totalBase}</div>
+                <div className="col-span-4">
+                  <Separator />
+                </div>
+              </div>
+            </div>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[800px] bg-white">
+            <DialogHeader>
+              <DialogTitle>
+                Apply the following market order data to the above limit order form?
+              </DialogTitle>
+              <DialogDescription>
+                <>
+                  <span className="pt-5">
+                    {`Buy ${totalQuote} ${assetB} for ${totalBase} ${assetA}?`}
+                  </span>
+                  <br />
+                  <a href={href}>
+                    <Button className="mt-2 h-6">Proceed</Button>
+                  </a>
+                </>
+              </DialogDescription>
+            </DialogHeader>
+          </DialogContent>
+        </Dialog>
+      </div>
+    );
 
     return (
       <div style={style}>

@@ -28,7 +28,7 @@ const [createPoolDetailsStore] = nanoquery({
     }
 
     if (poolDetailsJSON && poolDetailsJSON.result) {
-      console.log(`Fetched pool details`);
+      //console.log(`Fetched pool details`);
       const decompressed = fflate.decompressSync(fflate.strToU8(poolDetailsJSON.result, true));
       const pool = JSON.parse(fflate.strFromU8(decompressed));
       return pool && pool.length ? pool[0] : null;

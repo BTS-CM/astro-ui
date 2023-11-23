@@ -36,7 +36,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 import { $currentUser } from "../stores/users.ts";
-import { $globalParamsCache, $assetCache } from "../stores/cache.ts";
+import {
+  $assetCacheBTS,
+  $assetCacheTEST,
+  $globalParamsCacheBTS,
+  $globalParamsCacheTEST,
+} from "../stores/cache.ts";
 
 import { useInitCache } from "../effects/Init.ts";
 import { createUserCreditDealsStore, createUserBalancesStore } from "../effects/User.ts";
@@ -56,15 +61,46 @@ export default function CreditDeals(properties) {
 
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
 
-  const assets = useSyncExternalStore($assetCache.subscribe, $assetCache.get, () => true);
-
-  const globalParams = useSyncExternalStore(
-    $globalParamsCache.subscribe,
-    $globalParamsCache.get,
+  const _assetsBTS = useSyncExternalStore($assetCacheBTS.subscribe, $assetCacheBTS.get, () => true);
+  const _assetsTEST = useSyncExternalStore(
+    $assetCacheTEST.subscribe,
+    $assetCacheTEST.get,
     () => true
   );
 
-  useInitCache(usr && usr.chain ? usr.chain : "bitshares", ["assets", "globalParams"]);
+  const _globalParamsBTS = useSyncExternalStore(
+    $globalParamsCacheBTS.subscribe,
+    $globalParamsCacheBTS.get,
+    () => true
+  );
+  const _globalParamsTEST = useSyncExternalStore(
+    $globalParamsCacheTEST.subscribe,
+    $globalParamsCacheTEST.get,
+    () => true
+  );
+
+  const _chain = useMemo(() => {
+    if (usr && usr.chain) {
+      return usr.chain;
+    }
+    return "bitshares";
+  }, [usr]);
+
+  useInitCache(_chain ?? "bitshares", ["assets", "globalParams"]);
+
+  const assets = useMemo(() => {
+    if (_chain && (_assetsBTS || _assetsTEST)) {
+      return _chain === "bitshares" ? _assetsBTS : _assetsTEST;
+    }
+    return [];
+  }, [_assetsBTS, _assetsTEST, _chain]);
+
+  const globalParams = useMemo(() => {
+    if (_chain && (_globalParamsBTS || _globalParamsTEST)) {
+      return _chain === "bitshares" ? _globalParamsBTS : _globalParamsTEST;
+    }
+    return [];
+  }, [_globalParamsBTS, _globalParamsTEST, _chain]);
 
   const [fee, setFee] = useState(0);
   useEffect(() => {

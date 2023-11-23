@@ -137,14 +137,14 @@ export default function LimitOrderCard(properties) {
   }, [assetBData, usrBalances]);
 
   const [osoEnabled, setOSOEnabled] = useState(false);
-  const [spreadPercent, setSpreadPercent] = useState(0);
+  const [spreadPercent, setSpreadPercent] = useState(1);
   const [sizePercent, setSizePercent] = useState(100);
-  const [expirationSeconds, setExpirationSeconds] = useState(0);
+  const [expirationSeconds, setExpirationSeconds] = useState(1000000);
   const [repeat, setRepeat] = useState(false);
 
   useEffect(() => {
     async function parseURL() {
-      console.log("Parsing market parameters");
+      //console.log("Parsing market parameters");
       const urlSearchParams = new URLSearchParams(window.location.search);
       const params = Object.fromEntries(urlSearchParams.entries());
       const _amount = params.amount;
@@ -739,11 +739,11 @@ export default function LimitOrderCard(properties) {
                                 const parsedDate = new Date(e);
                                 const now = new Date();
                                 if (parsedDate < now) {
-                                  console.log("Not a valid date");
+                                  //console.log("Not a valid date");
                                   setDate(new Date(Date.now() + 1 * 24 * 60 * 60 * 1000));
                                   return;
                                 }
-                                console.log("Setting expiry date");
+                                //console.log("Setting expiry date");
                                 setDate(e);
                               }}
                               initialFocus
@@ -819,7 +819,7 @@ export default function LimitOrderCard(properties) {
                                 className="mt-3"
                                 defaultValue={[spreadPercent]}
                                 max={100}
-                                min={0}
+                                min={1}
                                 step={0.01}
                                 onValueChange={(value) => {
                                   debouncedSetSpreadPercent(value[0]);
@@ -848,7 +848,7 @@ export default function LimitOrderCard(properties) {
                                       const input = event.target.value;
                                       const regex = /^[0-9]*\.?[0-9]*$/;
                                       if (input && input.length && regex.test(input)) {
-                                        if (input >= 0 && input <= 100) {
+                                        if (input >= 1 && input <= 100) {
                                           setSpreadPercent(input);
                                           setInputChars(inputChars + 1);
                                         }
@@ -1197,16 +1197,21 @@ export default function LimitOrderCard(properties) {
                         asset_id: marketSearch.find((asset) => asset.s === thisAssetA).id,
                       },
                       expiration: expiry,
-                      fill_or_kill: false,
+                      fill_or_kill: expiryType === "fkill" ? true : false,
                       extensions: osoEnabled
                         ? {
-                            limit_order_auto_action: {
-                              fee_asset_id: "1.3.0",
-                              spread_percent: spreadPercent ? spreadPercent * 100 : 0,
-                              size_percent: sizePercent ? sizePercent * 100 : 0,
-                              expiration_seconds: 0,
-                              repeat: repeat,
-                            },
+                            on_fill: [
+                              [
+                                0,
+                                {
+                                  fee_asset_id: "1.3.0",
+                                  spread_percent: spreadPercent ? spreadPercent * 100 : 0,
+                                  size_percent: sizePercent ? sizePercent * 100 : 0,
+                                  expiration_seconds: 1000000000,
+                                  repeat: repeat,
+                                },
+                              ],
+                            ],
                           }
                         : {},
                     },
@@ -1223,16 +1228,21 @@ export default function LimitOrderCard(properties) {
                         asset_id: marketSearch.find((asset) => asset.s === thisAssetB).id,
                       },
                       expiration: expiry,
-                      fill_or_kill: false,
+                      fill_or_kill: expiryType === "fkill" ? true : false,
                       extensions: osoEnabled
                         ? {
-                            limit_order_auto_action: {
-                              fee_asset_id: "1.3.0",
-                              spread_percent: spreadPercent,
-                              size_percent: sizePercent,
-                              expiration_seconds: 0,
-                              repeat: repeat,
-                            },
+                            on_fill: [
+                              [
+                                0,
+                                {
+                                  fee_asset_id: "1.3.0",
+                                  spread_percent: spreadPercent,
+                                  size_percent: sizePercent,
+                                  expiration_seconds: 1000000000,
+                                  repeat: repeat,
+                                },
+                              ],
+                            ],
                           }
                         : {},
                     },

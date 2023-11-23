@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useSyncExternalStore } from "react";
+import React, { useState, useEffect, useSyncExternalStore, useMemo } from "react";
 import { FixedSizeList as List } from "react-window";
 
 import {
@@ -21,12 +21,20 @@ import {
 
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 
-import { $poolCache } from "../../stores/cache.ts";
+import { $poolCacheBTS, $poolCacheTEST } from "../../stores/cache.ts";
 
 export default function PoolDialogs(properties) {
-  const { assetA, assetB, assetAData, assetBData } = properties;
+  const { assetA, assetB, assetAData, assetBData, chain } = properties;
 
-  const pools = useSyncExternalStore($poolCache.subscribe, $poolCache.get, () => true);
+  const _poolsBTS = useSyncExternalStore($poolCacheBTS.subscribe, $poolCacheBTS.get, () => true);
+  const _poolsTEST = useSyncExternalStore($poolCacheTEST.subscribe, $poolCacheTEST.get, () => true);
+
+  const pools = useMemo(() => {
+    if (chain && (_poolsBTS || _poolsTEST)) {
+      return chain === "bitshares" ? _poolsBTS : _poolsTEST;
+    }
+    return [];
+  }, [_poolsBTS, _poolsTEST, chain]);
 
   const [assetAPools, setAssetAPools] = useState();
   const [assetBPools, setAssetBPools] = useState();
@@ -34,7 +42,7 @@ export default function PoolDialogs(properties) {
 
   useEffect(() => {
     function fetchAssetAPools() {
-      console.log("Processing asset A pools");
+      //console.log("Processing asset A pools");
       const foundPools = pools.filter(
         (pool) => pool.asset_a_symbol === assetA || pool.asset_b_symbol === assetA
       );
@@ -47,7 +55,7 @@ export default function PoolDialogs(properties) {
 
   useEffect(() => {
     function fetchAssetBPools() {
-      console.log("Processing asset B pools");
+      //console.log("Processing asset B pools");
       const foundPools = pools.filter(
         (pool) => pool.asset_a_symbol === assetB || pool.asset_b_symbol === assetB
       );
@@ -62,7 +70,7 @@ export default function PoolDialogs(properties) {
   useEffect(() => {
     function fetchAssetMarketPools() {
       // Searching for market matching pools
-      console.log("Processing asset market pools");
+      //console.log("Processing asset market pools");
       const foundPools = pools.filter(
         (pool) =>
           (pool.asset_a_symbol === assetA && pool.asset_b_symbol === assetB) ||

@@ -31,7 +31,7 @@ import { Button } from "@/components/ui/button";
  * @returns {JSX.Element}
  */
 export default function AssetDropDown(properties) {
-  const { assetSymbol, assetData, storeCallback, otherAsset, marketSearch, type, size } =
+  const { assetSymbol, assetData, storeCallback, otherAsset, marketSearch, type, size, chain } =
     properties;
 
   let marketSearchContents;

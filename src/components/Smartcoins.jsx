@@ -23,7 +23,12 @@ import { useInitCache } from "../effects/Init.ts";
 import { createUserBalancesStore } from "../effects/User.ts";
 
 import { $currentUser } from "../stores/users.ts";
-import { $bitAssetDataCache, $marketSearchCache } from "../stores/cache.ts";
+import {
+  $marketSearchCacheBTS,
+  $marketSearchCacheTEST,
+  $bitAssetDataCacheBTS,
+  $bitAssetDataCacheTEST,
+} from "../stores/cache.ts";
 
 import CurrentUser from "./common/CurrentUser.jsx";
 import ExternalLink from "./common/ExternalLink.jsx";
@@ -36,19 +41,52 @@ const activeTabStyle = {
 export default function Smartcoins(properties) {
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
 
-  const bitAssetData = useSyncExternalStore(
-    $bitAssetDataCache.subscribe,
-    $bitAssetDataCache.get,
+  const bitAssetDataBTS = useSyncExternalStore(
+    $bitAssetDataCacheBTS.subscribe,
+    $bitAssetDataCacheBTS.get,
     () => true
   );
 
-  const marketSearch = useSyncExternalStore(
-    $marketSearchCache.subscribe,
-    $marketSearchCache.get,
+  const bitAssetDataTEST = useSyncExternalStore(
+    $bitAssetDataCacheTEST.subscribe,
+    $bitAssetDataCacheTEST.get,
     () => true
   );
 
-  useInitCache(usr && usr.chain ? usr.chain : "bitshares", ["bitAssetData", "marketSearch"]);
+  const _marketSearchBTS = useSyncExternalStore(
+    $marketSearchCacheBTS.subscribe,
+    $marketSearchCacheBTS.get,
+    () => true
+  );
+
+  const _marketSearchTEST = useSyncExternalStore(
+    $marketSearchCacheTEST.subscribe,
+    $marketSearchCacheTEST.get,
+    () => true
+  );
+
+  const _chain = useMemo(() => {
+    if (usr && usr.chain) {
+      return usr.chain;
+    }
+    return "bitshares";
+  }, [usr]);
+
+  useInitCache(_chain ?? "bitshares", ["bitAssetData", "marketSearch"]);
+
+  const bitAssetData = useMemo(() => {
+    if (_chain && (bitAssetDataBTS || bitAssetDataTEST)) {
+      return _chain === "bitshares" ? bitAssetDataBTS : bitAssetDataTEST;
+    }
+    return [];
+  }, [bitAssetDataBTS, bitAssetDataTEST, _chain]);
+
+  const marketSearch = useMemo(() => {
+    if (_chain && (_marketSearchBTS || _marketSearchTEST)) {
+      return _chain === "bitshares" ? _marketSearchBTS : _marketSearchTEST;
+    }
+    return [];
+  }, [_marketSearchBTS, _marketSearchTEST, _chain]);
 
   const [usrBalances, setUsrBalances] = useState();
   useEffect(() => {
@@ -285,7 +323,7 @@ export default function Smartcoins(properties) {
 
   useEffect(() => {
     if (assetSearch) {
-      console.log("Parsing url params");
+      //console.log("Parsing url params");
       const urlSearchParams = new URLSearchParams(window.location.search);
       const params = Object.fromEntries(urlSearchParams.entries());
 

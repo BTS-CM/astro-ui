@@ -30,7 +30,7 @@ import ExternalLink from "./common/ExternalLink.jsx";
 
 import { trimPrice } from "../lib/common";
 
-import { $marketSearchCache } from "../stores/cache.ts";
+import { $marketSearchCacheBTS, $marketSearchCacheTEST } from "../stores/cache.ts";
 
 import { createMarketHistoryStore, createMarketOrdersStore } from "../effects/Market.ts";
 
@@ -51,12 +51,24 @@ export default function Market(properties) {
     setAssetB,
   } = properties;
 
-  const marketSearch = useSyncExternalStore(
-    $marketSearchCache.subscribe,
-    $marketSearchCache.get,
+  const _marketSearchBTS = useSyncExternalStore(
+    $marketSearchCacheBTS.subscribe,
+    $marketSearchCacheBTS.get,
     () => true
   );
 
+  const _marketSearchTEST = useSyncExternalStore(
+    $marketSearchCacheTEST.subscribe,
+    $marketSearchCacheTEST.get,
+    () => true
+  );
+
+  const marketSearch = useMemo(() => {
+    if (usr && usr.chain && (_marketSearchBTS || _marketSearchTEST)) {
+      return usr.chain === "bitshares" ? _marketSearchBTS : _marketSearchTEST;
+    }
+    return [];
+  }, [_marketSearchBTS, _marketSearchTEST, usr]);
   // End of init
 
   const [buyOrders, setBuyOrders] = useState(null);
@@ -567,6 +579,7 @@ export default function Market(properties) {
             assetAData={assetAData}
             assetB={assetB}
             assetBData={assetBData}
+            chain={usr.chain}
           />
         ) : null}
 
