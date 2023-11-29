@@ -133,6 +133,18 @@ function debounce(func, delay) {
   };
 }
 
+/**
+ * Checks the current order of the base and quote assets and returns a boolean identifying the order
+ * @param {string} _baseID
+ * @param {string} _quoteID
+ * @returns {boolean}
+ */
+function isInvertedMarket(_baseID, _quoteID) {
+  const baseID = parseInt(_baseID.split(".")[2], 10);
+  const quoteID = parseInt(_quoteID.split(".")[2], 10);
+  return baseID > quoteID;
+}
+
 export {
   debounce,
   blockchainFloat,
@@ -141,4 +153,5 @@ export {
   trimPrice,
   getTimeSince,
   getFlagBooleans,
+  isInvertedMarket,
 };

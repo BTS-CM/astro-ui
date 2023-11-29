@@ -67,7 +67,7 @@ export default function MarketOverlay(properties) {
     return "bitshares";
   }, [usr]);
 
-  useInitCache(_chain ?? "bitshares", ["assets", "globalParams", "marketSearch"]);
+  useInitCache(_chain ?? "bitshares", ["assets", "globalParams", "marketSearch", "pools"]);
 
   const assets = useMemo(() => {
     if (_chain && (_assetsBTS || _assetsTEST)) {

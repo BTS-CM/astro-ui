@@ -28,7 +28,7 @@ import PoolDialogs from "./Market/PoolDialogs.jsx";
 
 import ExternalLink from "./common/ExternalLink.jsx";
 
-import { trimPrice } from "../lib/common";
+import { trimPrice, isInvertedMarket } from "../lib/common";
 
 import { $marketSearchCacheBTS, $marketSearchCacheTEST } from "../stores/cache.ts";
 
@@ -90,6 +90,10 @@ export default function Market(properties) {
   const [activeLimitCard, setActiveLimitCard] = useState("buy");
   const [activeMOC, setActiveMOC] = useState("buy");
 
+  const invertedMarket = useMemo(() => {
+    return isInvertedMarket(assetAData.id, assetBData.id);
+  }, [assetAData, assetBData]);
+
   useEffect(() => {
     async function parseURL() {
       const urlSearchParams = new URLSearchParams(window.location.search);
@@ -140,10 +144,10 @@ export default function Market(properties) {
 
   useEffect(() => {
     if (marketOrdersData && !marketOrdersLoading && !marketOrdersError) {
-      setBuyOrders(marketOrdersData.asks);
-      setSellOrders(marketOrdersData.bids);
-      setPreviousBuyOrders(marketOrdersData.asks);
-      setPreviousSellOrders(marketOrdersData.bids);
+      setBuyOrders(marketOrdersData.bids);
+      setSellOrders(marketOrdersData.asks);
+      setPreviousBuyOrders(marketOrdersData.bids);
+      setPreviousSellOrders(marketOrdersData.asks);
     } else {
       setBuyOrders(null);
       setSellOrders(null);
@@ -370,6 +374,7 @@ export default function Market(properties) {
                   key="buyLimit"
                   marketSearch={marketSearch}
                   fee={limitOrderFee}
+                  invertedMarket={invertedMarket}
                 />
               </TabsContent>
               <TabsContent value="sell">
@@ -386,6 +391,7 @@ export default function Market(properties) {
                   key="sellLimit"
                   marketSearch={marketSearch}
                   fee={limitOrderFee}
+                  invertedMarket={invertedMarket}
                 />
               </TabsContent>
             </Tabs>
@@ -590,20 +596,20 @@ export default function Market(properties) {
                 <TabsList className="grid w-full grid-cols-2 gap-1">
                   {activeMOC === "buy" ? (
                     <TabsTrigger value="buy" style={activeTabStyle}>
-                      Buy
+                      Buy orders (bids)
                     </TabsTrigger>
                   ) : (
                     <TabsTrigger value="buy" onClick={() => setActiveMOC("buy")}>
-                      Buy
+                      Buy orders (bids)
                     </TabsTrigger>
                   )}
                   {activeMOC === "sell" ? (
                     <TabsTrigger value="sell" style={activeTabStyle}>
-                      Sell
+                      Sell orders (asks)
                     </TabsTrigger>
                   ) : (
                     <TabsTrigger value="sell" onClick={() => setActiveMOC("sell")}>
-                      Sell
+                      Sell orders (asks)
                     </TabsTrigger>
                   )}
                 </TabsList>
@@ -623,6 +629,7 @@ export default function Market(properties) {
                     orderBookItr={orderBookItr}
                     setOrderBookItr={setOrderBookItr}
                     _resetOrders={_resetOrders}
+                    invertedMarket={invertedMarket}
                   />
                 </TabsContent>
                 <TabsContent value="sell">
@@ -641,6 +648,7 @@ export default function Market(properties) {
                     orderBookItr={orderBookItr}
                     setOrderBookItr={setOrderBookItr}
                     _resetOrders={_resetOrders}
+                    invertedMarket={invertedMarket}
                   />
                 </TabsContent>
               </Tabs>

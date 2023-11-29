@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { FixedSizeList as List } from "react-window";
 
 import {
@@ -19,14 +19,10 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Label } from "@/components/ui/label";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
-
-import { humanReadableFloat } from "../../lib/common";
 
 export default function MarketOrderCard(properties) {
   const {
@@ -44,6 +40,7 @@ export default function MarketOrderCard(properties) {
     orderBookItr,
     setOrderBookItr,
     _resetOrders,
+    invertedMarket,
   } = properties;
 
   const Row = ({ index, style }) => {
@@ -60,7 +57,7 @@ export default function MarketOrderCard(properties) {
 
     const order = refOrders[index];
 
-    const price = parseFloat(order.price).toFixed(assetAData.precision);
+    const price = parseFloat(order.price).toFixed(assetBData.precision);
     const base = parseFloat(order.base);
     const quote = parseFloat(order.quote);
 
@@ -68,7 +65,7 @@ export default function MarketOrderCard(properties) {
       .slice(0, index + 1)
       .map((x) => parseFloat(x.base))
       .reduce((acc, curr) => acc + curr, 0)
-      .toFixed(assetAData.precision);
+      .toFixed(assetBData.precision);
 
     const totalQuote = refOrders
       .slice(0, index + 1)
@@ -76,9 +73,11 @@ export default function MarketOrderCard(properties) {
       .reduce((acc, curr) => acc + curr, 0)
       .toFixed(assetAData.precision);
 
-    const href = `/dex/index.html?market=${assetA}_${assetB}&type=sell&price=${(1 / price).toFixed(
-      assetAData.precision
-    )}&amount=${totalBase}`;
+    const href = useMemo(() => {
+      return cardType === "buy"
+        ? `/dex/index.html?market=${assetA}_${assetB}&type=sell&price=${price}&amount=${totalQuote}`
+        : `/dex/index.html?market=${assetA}_${assetB}&type=sell&price=${price}&amount=${totalBase}`;
+    }, [assetA, assetB, price, assetAData.precision, totalBase, totalQuote]);
 
     return (
       <div style={style}>
@@ -87,8 +86,12 @@ export default function MarketOrderCard(properties) {
             <div className="col-span-4" key={`moc_${cardType}_${index}`}>
               <div className="grid grid-cols-4 text-sm">
                 <div className="col-span-1 border-l-2 border-r-2 pl-3">{price}</div>
-                <div className="col-span-1 border-r-2 pl-3">{base}</div>
-                <div className="col-span-1 border-r-2 pl-3">{quote}</div>
+                <div className="col-span-1 border-r-2 pl-3">
+                  {cardType === "buy" ? base : quote}
+                </div>
+                <div className="col-span-1 border-r-2 pl-3">
+                  {cardType === "buy" ? quote : base}
+                </div>
                 <div className="col-span-1 pl-3">{totalBase}</div>
                 <div className="col-span-4">
                   <Separator />
@@ -99,53 +102,24 @@ export default function MarketOrderCard(properties) {
           <DialogContent className="sm:max-w-[800px] bg-white">
             <DialogHeader>
               <DialogTitle>
-                Apply the following market order data to the above limit order form?
+                Would you like to proceed with the following limit order data?
               </DialogTitle>
               <DialogDescription>
-                <>
-                  <span className="pt-5">
-                    {`Buy ${totalQuote} ${assetB} for ${totalBase} ${assetA}?`}
-                  </span>
-                  <br />
-                  <a href={href}>
-                    <Button className="mt-2 h-6">Proceed</Button>
-                  </a>
-                </>
+                The {cardType === "buy" ? "sell" : "buy"} limit order form above will be filled out
+                with the following market order data.
               </DialogDescription>
             </DialogHeader>
+            <span className="pt-3">
+              {cardType === "buy"
+                ? `Selling ${totalQuote} ${assetA} in exchange for at least ${totalBase} ${assetB}`
+                : `Selling ${totalBase} ${assetB} in exchange for at least ${totalQuote} ${assetA}`}
+            </span>
+            <span>{`Price: ${price} ${assetB} per 1 ${assetA}`}</span>
+            <a href={href}>
+              <Button className="mt-2 h-6">Proceed</Button>
+            </a>
           </DialogContent>
         </Dialog>
-      </div>
-    );
-
-    return (
-      <div style={style}>
-        <HoverCard key={`${cardType}OrderHoverCard${index}`}>
-          <HoverCardTrigger asChild>
-            <div className="col-span-4" key={`moc_${cardType}_${index}`}>
-              <div className="grid grid-cols-4 text-sm">
-                <div className="col-span-1 border-l-2 border-r-2 pl-3">{price}</div>
-                <div className="col-span-1 border-r-2 pl-3">{base}</div>
-                <div className="col-span-1 border-r-2 pl-3">{quote}</div>
-                <div className="col-span-1 pl-3">{totalBase}</div>
-                <div className="col-span-4">
-                  <Separator />
-                </div>
-              </div>
-            </div>
-          </HoverCardTrigger>
-          <HoverCardContent className="w-80 text-sm pt-3">
-            <>
-              <span className="pt-5">
-                {`Buy ${totalQuote} ${assetB} for ${totalBase} ${assetA}?`}
-              </span>
-              <br />
-              <a href={href}>
-                <Button className="mt-2 h-6">Proceed</Button>
-              </a>
-            </>
-          </HoverCardContent>
-        </HoverCard>
       </div>
     );
   };
@@ -244,26 +218,29 @@ export default function MarketOrderCard(properties) {
         <div className="grid grid-cols-4">
           <div className="col-span-1 pl-3">Price</div>
           <div className="col-span-1 pl-3 text-md">
-            {cardType === "buy" && assetA && assetA.length < 12 ? assetA : null}
-            {cardType === "buy" && assetA && assetA.length >= 12 && assetAData
-              ? assetAData.id
-              : null}
-            {cardType === "sell" && assetB && assetB.length < 12 ? assetB : null}
-            {cardType === "sell" && assetB && assetB.length >= 12 && assetBData
-              ? assetBData.id
-              : null}
-          </div>
-          <div className="col-span-1 pl-3">
-            {cardType === "buy" && assetB && assetB.length < 12 ? assetB : null}
-            {cardType === "buy" && assetB && assetB.length >= 12 && assetBData
-              ? assetBData.id
-              : null}
             {cardType === "sell" && assetA && assetA.length < 12 ? assetA : null}
             {cardType === "sell" && assetA && assetA.length >= 12 && assetAData
               ? assetAData.id
               : null}
+            {cardType === "buy" && assetB && assetB.length < 12 ? assetB : null}
+            {cardType === "buy" && assetB && assetB.length >= 12 && assetBData
+              ? assetBData.id
+              : null}
           </div>
-          <div className="col-span-1 pl-3">Total</div>
+          <div className="col-span-1 pl-3">
+            {cardType === "sell" && assetB && assetB.length < 12 ? assetB : null}
+            {cardType === "sell" && assetB && assetB.length >= 12 && assetBData
+              ? assetBData.id
+              : null}
+            {cardType === "buy" && assetA && assetA.length < 12 ? assetA : null}
+            {cardType === "buy" && assetA && assetA.length >= 12 && assetAData
+              ? assetAData.id
+              : null}
+          </div>
+          <div className="col-span-1 pl-3">
+            {assetB && assetB.length < 7 ? `Total (${assetB})` : null}
+            {assetB && assetB.length >= 7 && assetBData ? `Total (${assetBData.id})` : null}
+          </div>
         </div>
 
         <List

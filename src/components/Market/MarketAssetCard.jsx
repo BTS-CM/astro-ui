@@ -694,7 +694,7 @@ export default function MarketAssetCard(properties) {
                     More smartcoin info
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="sm:max-w-[450px] bg-white">
+                <DialogContent className="sm:max-w-[600px] bg-white">
                   <DialogHeader>
                     <DialogTitle>Additional bitasset info</DialogTitle>
                     <DialogDescription>
