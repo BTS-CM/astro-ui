@@ -11,6 +11,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
+import { ReloadIcon } from "@radix-ui/react-icons";
+
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -186,6 +188,8 @@ export default function Market(properties) {
     color: "white",
   };
 
+  const [clicked, setClicked] = useState(false);
+
   const marketHoverCard = (
     <HoverCard>
       <HoverCardTrigger asChild style={{ position: "relative" }}>
@@ -344,14 +348,41 @@ export default function Market(properties) {
                     <TabsTrigger value="buy" style={activeTabStyle}>
                       Buy
                     </TabsTrigger>
-                    <TabsTrigger value="sell" onClick={() => setActiveLimitCard("sell")}>
+                    <TabsTrigger
+                      value="sell"
+                      onClick={() => {
+                        setActiveLimitCard("sell");
+                        window.history.replaceState(
+                          {},
+                          "",
+                          `${window.location.pathname}?${new URLSearchParams({
+                            ...new URLSearchParams(window.location.search),
+                            price: 0,
+                          }).toString()}`
+                        );
+                      }}
+                    >
                       Sell
                     </TabsTrigger>
                   </>
                 ) : null}
                 {assetAData && assetBData && activeLimitCard === "sell" ? (
                   <>
-                    <TabsTrigger value="buy" onClick={() => setActiveLimitCard("buy")}>
+                    <TabsTrigger
+                      value="buy"
+                      onClick={() => {
+                        setActiveLimitCard("buy");
+                        window.history.replaceState(
+                          {},
+                          "",
+                          `${window.location.pathname}?${new URLSearchParams({
+                            ...new URLSearchParams(window.location.search),
+                            price: 0,
+                            amount: 0,
+                          }).toString()}`
+                        );
+                      }}
+                    >
                       Buy
                     </TabsTrigger>
                     <TabsTrigger value="sell" style={activeTabStyle}>
@@ -476,28 +507,17 @@ export default function Market(properties) {
                         type={activeLimitCard === "buy" ? "quote" : "base"}
                         size="small"
                       />
-                      <HoverCard>
-                        <HoverCardTrigger asChild style={{ position: "relative" }}>
-                          <Button
-                            variant="outline"
-                            className="h-5 ml-1 mr-1 p-3"
-                            onClick={() => {
-                              // Erasing data
-                              _resetOrders();
-                              _resetMarketData();
-                              // Swapping asset A for B
-                              const tmp = assetA;
-                              setAssetA(assetB);
-                              setAssetB(tmp);
-                            }}
-                          >
-                            ⇄
-                          </Button>
-                        </HoverCardTrigger>
-                        <HoverCardContent className="w-40 text-md text-center">
-                          Swap asset order
-                        </HoverCardContent>
-                      </HoverCard>
+
+                      <a
+                        style={{ lineHeight: 1 }}
+                        href={`/dex/index.html?market=${assetB}_${assetA}`}
+                        onClick={() => setClicked(true)}
+                      >
+                        <Button variant="outline" className="w-full h-7">
+                          {clicked ? <ReloadIcon className="animate-spin" /> : <ReloadIcon />}
+                        </Button>
+                      </a>
+
                       <AssetDropDown
                         assetSymbol={assetB}
                         assetData={assetBData}

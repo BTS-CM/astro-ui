@@ -59,6 +59,7 @@ export default function LimitOrderCard(properties) {
     marketSearch,
     usrBalances,
     fee,
+    invertedMarket,
   } = properties;
 
   const { buyOrders, sellOrders } = properties;
@@ -377,9 +378,7 @@ export default function LimitOrderCard(properties) {
                   <FormItem className="mt-4 text-xs">
                     <FormLabel>Price</FormLabel>
                     <FormDescription>
-                      {orderType === "buy"
-                        ? `Your price per ${thisAssetA} in ${thisAssetB}`
-                        : `Your price per ${thisAssetB} in ${thisAssetA}`}
+                      The price of {thisAssetA} in {thisAssetB}
                     </FormDescription>
                     <FormControl>
                       <span className="grid grid-cols-12">
@@ -445,7 +444,7 @@ export default function LimitOrderCard(properties) {
                                       sellOrders.length > 0
                                     ) {
                                       finalPrice = trimPrice(
-                                        sellOrders[0].price,
+                                        parseFloat(sellOrders[0].price),
                                         assetBData.precision
                                       );
                                     } else if (
@@ -454,18 +453,14 @@ export default function LimitOrderCard(properties) {
                                       buyOrders.length > 0
                                     ) {
                                       finalPrice = trimPrice(
-                                        1 / parseFloat(buyOrders[0].price),
+                                        parseFloat(buyOrders[0].price),
                                         assetBData.precision
                                       );
                                     }
 
                                     if (finalPrice) {
                                       setPrice(
-                                        parseFloat(finalPrice).toFixed(
-                                          orderType === "buy"
-                                            ? assetBData.precision
-                                            : assetAData.precision
-                                        )
+                                        parseFloat(finalPrice).toFixed(assetBData.precision)
                                       );
 
                                       if (amount) {
@@ -502,8 +497,8 @@ export default function LimitOrderCard(properties) {
                     <FormLabel>Amount</FormLabel>
                     <FormDescription>
                       {orderType === "buy"
-                        ? `The amount of ${thisAssetA} you want to buy`
-                        : `The amount of ${thisAssetA} you will have to spend`}
+                        ? `The amount of ${thisAssetA} you plan on buying`
+                        : `The amount of ${thisAssetA} you plan on selling`}
                     </FormDescription>
                     <FormControl>
                       <span className="grid grid-cols-12">
@@ -576,7 +571,7 @@ export default function LimitOrderCard(properties) {
                     <FormLabel>Total</FormLabel>
                     <FormDescription>
                       {orderType === "buy"
-                        ? `The total ${thisAssetB} you will have to spend`
+                        ? `The total ${thisAssetB} you plan on selling`
                         : `The total ${thisAssetB} you will receive`}
                     </FormDescription>
                     <FormControl>
@@ -1088,8 +1083,8 @@ export default function LimitOrderCard(properties) {
                     </FormLabel>
                     <FormDescription>
                       {orderType === "buy"
-                        ? `The amount of ? you want to buy`
-                        : `The amount of ? you will have to spend`}
+                        ? `The amount of ? you plan on buying`
+                        : `The amount of ? you plan on selling`}
                     </FormDescription>
                     <Input disabled className="mb-3" />
                     <FormMessage />
@@ -1112,7 +1107,7 @@ export default function LimitOrderCard(properties) {
                     </FormLabel>
                     <FormDescription>
                       {orderType === "buy"
-                        ? `The total ? you will have to spend`
+                        ? `The total ? you plan on selling`
                         : `The total ? you will receive`}
                     </FormDescription>
                     <Input disabled className="mb-3" />

@@ -76,8 +76,8 @@ export default function MarketOrderCard(properties) {
     const href = useMemo(() => {
       return cardType === "buy"
         ? `/dex/index.html?market=${assetA}_${assetB}&type=sell&price=${price}&amount=${totalQuote}`
-        : `/dex/index.html?market=${assetA}_${assetB}&type=sell&price=${price}&amount=${totalBase}`;
-    }, [assetA, assetB, price, assetAData.precision, totalBase, totalQuote]);
+        : `/dex/index.html?market=${assetA}_${assetB}&type=buy&price=${price}&amount=${totalQuote}`;
+    }, [assetA, assetB, price, totalBase, totalQuote]);
 
     return (
       <div style={style}>
@@ -195,7 +195,7 @@ export default function MarketOrderCard(properties) {
     cardListContents = LoadingRow;
     cardListCount = 10;
   } else {
-    cardTitle = cardType === "buy" ? "Buy orders" : "Sell orders";
+    cardTitle = cardType === "buy" ? "Open buy limit orders" : "Open sell limit orders";
     cardDescription =
       cardType === "buy"
         ? `The following table displays network offers to purchase ${assetA} with ${assetB}`
@@ -251,16 +251,6 @@ export default function MarketOrderCard(properties) {
           {cardListContents}
         </List>
       </CardContent>
-      <CardFooter>
-        <Button
-          onClick={() => {
-            _resetOrders();
-            setOrderBookItr(orderBookItr + 1);
-          }}
-        >
-          Refresh
-        </Button>
-      </CardFooter>
     </Card>
   );
 }

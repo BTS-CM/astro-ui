@@ -7,15 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { ReloadIcon } from "@radix-ui/react-icons";
 
 import {
   Select,
@@ -184,8 +176,8 @@ export default function MarketPlaceholder(properties) {
                       <Button variant="outline" className={`h-5 p-3`}>
                         ❔
                       </Button>
-                      <Button variant="outline" className="h-5 ml-1 mr-1 p-3">
-                        ⇄
+                      <Button variant="outline" className="w-full h-5 p-3">
+                        <ReloadIcon />
                       </Button>
                       <Button variant="outline" className={`h-5 p-3`}>
                         ❔
@@ -315,9 +307,6 @@ export default function MarketPlaceholder(properties) {
                       <Skeleton className="h-4 w-full mt-1" />
                       <Skeleton className="h-4 w-full mt-1" />
                     </CardContent>
-                    <CardFooter>
-                      <Button>Refresh market trades</Button>
-                    </CardFooter>
                   </Card>
                 </TabsContent>
               </Tabs>

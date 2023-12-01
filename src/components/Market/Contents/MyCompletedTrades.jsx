@@ -13,16 +13,20 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function MyCompletedTrades(properties) {
-  const { type, usrHistory, marketHistoryInProgress, reset } = properties;
+  const { type, usrHistory, marketHistoryInProgress, reset, assetAData, assetBData } = properties;
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{type === "buy" ? `Completed buy orders` : `Completed sell orders`}</CardTitle>
-        <CardDescription>
+        <CardTitle>
           {type === "buy"
             ? `Your recently completed buy orders`
             : `Your recently completed sell orders`}
+        </CardTitle>
+        <CardDescription>
+          {type === "buy"
+            ? `The table below lists your recently completed buy orders`
+            : `The table below lists your recently completed sell orders`}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-2">
@@ -33,22 +37,6 @@ export default function MyCompletedTrades(properties) {
             <>No recently completed sales found</>
           )
         ) : null}
-        {(!usrHistory || !usrHistory.length) && marketHistoryInProgress ? (
-          <>
-            <Skeleton className="h-4 w-full mt-1" />
-            <Skeleton className="h-4 w-full mt-1" />
-            <Skeleton className="h-4 w-full mt-1" />
-            <Skeleton className="h-4 w-full mt-1" />
-            <Skeleton className="h-4 w-full mt-1" />
-            <Skeleton className="h-4 w-full mt-1" />
-            <Skeleton className="h-4 w-full mt-1" />
-            <Skeleton className="h-4 w-full mt-1" />
-            <Skeleton className="h-4 w-full mt-1" />
-            <Skeleton className="h-4 w-full mt-1" />
-            <Skeleton className="h-4 w-full mt-1" />
-            <Skeleton className="h-4 w-full mt-1" />
-          </>
-        ) : null}
         {usrHistory && usrHistory.length ? (
           <MyTradeSummary
             type={type}
@@ -58,9 +46,6 @@ export default function MyCompletedTrades(properties) {
           />
         ) : null}
       </CardContent>
-      <CardFooter>
-        <Button onClick={reset}>Refresh my open orders</Button>
-      </CardFooter>
     </Card>
   );
 }

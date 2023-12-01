@@ -39,6 +39,18 @@ export default function MarketSummaryTabs(properties) {
     color: "white",
   };
 
+  /*
+    {activeTab === "usrHistory" ? (
+      <TabsTrigger value="usrHistory" style={activeTabStyle}>
+        Your trades
+      </TabsTrigger>
+    ) : (
+      <TabsTrigger value="usrHistory" onClick={() => setActiveTab("usrHistory")}>
+        Your trades
+      </TabsTrigger>
+    )}
+  */
+
   return (
     <>
       <div className="grid grid-cols-1 mt-5">
@@ -51,15 +63,6 @@ export default function MarketSummaryTabs(properties) {
             ) : (
               <TabsTrigger value="marketTrades" onClick={() => setActiveTab("marketTrades")}>
                 Market trades
-              </TabsTrigger>
-            )}
-            {activeTab === "usrHistory" ? (
-              <TabsTrigger value="usrHistory" style={activeTabStyle}>
-                Your trades
-              </TabsTrigger>
-            ) : (
-              <TabsTrigger value="usrHistory" onClick={() => setActiveTab("usrHistory")}>
-                Your trades
               </TabsTrigger>
             )}
             {activeTab === "usrLimitOrders" ? (
@@ -129,26 +132,28 @@ export default function MarketSummaryTabs(properties) {
               <TabsList className="grid w-full grid-cols-2 gap-2">
                 {activeUsrHistoryTab === "buy" ? (
                   <TabsTrigger value="buy" style={activeTabStyle}>
-                    Your purchases
+                    Buy orders
                   </TabsTrigger>
                 ) : (
                   <TabsTrigger value="buy" onClick={() => setActiveUsrHistoryTab("buy")}>
-                    Your purchases
+                    Buy orders
                   </TabsTrigger>
                 )}
                 {activeUsrHistoryTab === "sell" ? (
                   <TabsTrigger value="sell" style={activeTabStyle}>
-                    Your sales
+                    Sell orders
                   </TabsTrigger>
                 ) : (
                   <TabsTrigger value="sell" onClick={() => setActiveUsrHistoryTab("sell")}>
-                    Your sales
+                    Sell orders
                   </TabsTrigger>
                 )}
               </TabsList>
               <TabsContent value="buy">
                 <MyCompletedTrades
                   type="buy"
+                  assetAData={assetAData}
+                  assetBData={assetBData}
                   usrHistory={usrHistory}
                   marketHistoryInProgress={marketHistoryInProgress}
                   reset={() => {
@@ -161,6 +166,8 @@ export default function MarketSummaryTabs(properties) {
               <TabsContent value="sell">
                 <MyCompletedTrades
                   type="sell"
+                  assetAData={assetAData}
+                  assetBData={assetBData}
                   usrHistory={usrHistory}
                   marketHistoryInProgress={marketHistoryInProgress}
                   reset={() => {

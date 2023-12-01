@@ -19,11 +19,15 @@ export default function MarketTradeContents(properties) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{type === "buy" ? `Completed buy orders` : `Completed sell orders`}</CardTitle>
+        <CardTitle>
+          {type === "buy"
+            ? `Recently completed market buy orders`
+            : `Recently completed market sell orders`}
+        </CardTitle>
         <CardDescription>
           {type === "buy"
-            ? `Recently completed buy orders on the Bitshares DEX`
-            : `Recently completed sell orders on the Bitshares DEX`}
+            ? `The table below lists recently completed buy orders on the Bitshares DEX`
+            : `The table below lists recently completed sell orders on the Bitshares DEX`}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-2">
@@ -39,9 +43,6 @@ export default function MarketTradeContents(properties) {
           "No market history found"
         )}
       </CardContent>
-      <CardFooter>
-        <Button onClick={reset}>Refresh market trades</Button>
-      </CardFooter>
     </Card>
   );
 }

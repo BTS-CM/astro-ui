@@ -62,7 +62,7 @@ export default function MarketSummary(properties) {
       </div>
       <ScrollArea className="h-72 w-full rounded-md border">
         <div className="grid grid-cols-4">
-          {marketHistoryElements.length ? marketHistoryElements : "No recent trades found"}
+          {marketHistoryElements.length ? marketHistoryElements : null}
         </div>
       </ScrollArea>
     </>
