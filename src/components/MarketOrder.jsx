@@ -97,6 +97,7 @@ export default function MarketOrder(properties) {
   const [existingQuoteAmount, setExistingQuoteAmount] = useState(0);
   const [existingBaseAmount, setExistingBaseAmount] = useState(0);
   const [existingPrice, setExistingPrice] = useState(0);
+  const [existingExpiry, setExistingExpiry] = useState();
 
   const [priceLock, setPriceLock] = useState("locked");
   const [amountLock, setAmountLock] = useState("locked");
@@ -180,13 +181,6 @@ export default function MarketOrder(properties) {
     return [];
   }, [_globalParamsBTS, _globalParamsTEST, _chain]);
 
-  const pools = useMemo(() => {
-    if (_chain && (_poolsBTS || _poolsTEST)) {
-      return _chain === "bitshares" ? _poolsBTS : _poolsTEST;
-    }
-    return [];
-  }, [_poolsBTS, _poolsTEST, _chain]);
-
   const [fee, setFee] = useState(0);
   useEffect(() => {
     if (globalParams && globalParams.length) {
@@ -195,25 +189,6 @@ export default function MarketOrder(properties) {
       setFee(finalFee);
     }
   }, [globalParams]);
-
-  const [balances, setBalances] = useState();
-  useEffect(() => {
-    let unsubscribeUserBalances;
-
-    if (usr && usr.id) {
-      const userBalancesStore = createUserBalancesStore([usr.chain, usr.id]);
-
-      unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
-        if (data && !error && !loading) {
-          setBalances(data);
-        }
-      });
-    }
-
-    return () => {
-      if (unsubscribeUserBalances) unsubscribeUserBalances();
-    };
-  }, [usr]);
 
   const [limitOrderID, setLimitOrderID] = useState();
   useEffect(() => {
@@ -244,32 +219,6 @@ export default function MarketOrder(properties) {
       const limitOrderStore = createLimitOrderStore([usr.chain, limitOrderID]);
       unsubscribeLimitOrder = limitOrderStore.subscribe(({ data }) => {
         if (data && !data.error && !data.loading) {
-          /*
-            {
-              "id": "1.7.456286605",
-              "expiration": "2026-01-30T15:44:44",
-              "seller": "1.2.986325",
-              "for_sale": 100000,
-              "sell_price": {
-                "base": {
-                  "amount": 100000,
-                  "asset_id": "1.3.0"
-                },
-                "quote": {
-                  "amount": "100000000000",
-                  "asset_id": "1.3.5649"
-                }
-              },
-              "filled_amount": "0",
-              "deferred_fee": 48260,
-              "deferred_paid_fee": {
-                "amount": 0,
-                "asset_id": "1.3.0"
-              },
-              "is_settled_debt": false,
-              "on_fill": []
-            }
-          */
           setCurrentLimitOrder(data);
 
           const foundQuoteAsset = assets.find((x) => x.id === data.sell_price.quote.asset_id);
@@ -291,6 +240,7 @@ export default function MarketOrder(properties) {
           setExistingQuoteAmount(_quoteAmount);
           setExistingBaseAmount(_baseAmount);
           setExistingPrice(!isInverted ? _baseAmount * _quoteAmount : _baseAmount / _quoteAmount);
+          setExistingExpiry(data.expiration);
 
           //////
           setAmount(_baseAmount);
@@ -315,25 +265,32 @@ export default function MarketOrder(properties) {
     };
   }, [limitOrderID, usr]);
 
-  const baseBalance = useMemo(() => {
-    if (balances && balances.length && baseAsset) {
-      const foundBalance = balances.find((x) => x.asset_id === baseAsset.id);
-      if (foundBalance) {
-        return humanReadableFloat(foundBalance.amount, baseAsset.precision);
-      }
-    }
-    return 0;
-  }, [balances, baseAsset]);
+  const [balances, setBalances] = useState();
+  const [quoteBalance, setQuoteBalance] = useState(0);
+  const [baseBalance, setBaseBalance] = useState(0);
+  useEffect(() => {
+    let unsubscribeUserBalances;
 
-  const quoteBalance = useMemo(() => {
-    if (balances && balances.length && quoteAsset) {
-      const foundBalance = balances.find((x) => x.asset_id === quoteAsset.id);
-      if (foundBalance) {
-        return humanReadableFloat(foundBalance.amount, quoteAsset.precision);
-      }
+    if (usr && usr.id && currentLimitOrder && baseAsset && quoteAsset) {
+      const userBalancesStore = createUserBalancesStore([usr.chain, usr.id]);
+
+      unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
+        if (data && !error && !loading) {
+          setBalances(data);
+          const foundBase = data.find((x) => x.asset_id === baseAsset.id);
+          const foundQuote = data.find((x) => x.asset_id === quoteAsset.id);
+          setBaseBalance(foundBase ? humanReadableFloat(foundBase.amount, baseAsset.precision) : 0);
+          setQuoteBalance(
+            foundQuote ? humanReadableFloat(foundQuote.amount, quoteAsset.precision) : 0
+          );
+        }
+      });
     }
-    return 0;
-  }, [balances, quoteAsset]);
+
+    return () => {
+      if (unsubscribeUserBalances) unsubscribeUserBalances();
+    };
+  }, [usr, currentLimitOrder, baseAsset, quoteAsset]);
 
   const debouncedSetSpreadPercent = useCallback(
     debounce((input, mcr) => {
@@ -370,21 +327,36 @@ export default function MarketOrder(properties) {
         },
         account_id_type: usr.id,
         limit_order_id_type: limitOrderID,
+        new_price:
+          priceLock === "editable"
+            ? {
+                base: {
+                  amount: blockchainFloat(amount, baseAsset.precision),
+                  asset_id: baseAsset.id,
+                },
+                quote: {
+                  amount: blockchainFloat(total, quoteAsset.precision),
+                  asset_id: quoteAsset.id,
+                },
+              }
+            : undefined,
+        new_expiration: expirationLock === "editable" ? date : undefined,
+        on_fill: osoEnabled
+          ? [
+              [
+                0,
+                {
+                  fee_asset_id: "1.3.0",
+                  spread_percent: spreadPercent ? spreadPercent * 100 : 0,
+                  size_percent: sizePercent ? sizePercent * 100 : 0,
+                  expiration_seconds: 1000000000,
+                  repeat: repeat,
+                },
+              ],
+            ]
+          : undefined,
         extensions: [],
       };
-
-      if (priceLock === "editable") {
-        baseOperation.new_price = {
-          base: {
-            amount: blockchainFloat(amount, baseAsset.precision),
-            asset_id: baseAsset.id,
-          },
-          quote: {
-            amount: blockchainFloat(total, quoteAsset.precision),
-            asset_id: quoteAsset.id,
-          },
-        };
-      }
 
       if (amountLock === "editable") {
         const deltaAmount = parseFloat(amount - existingBaseAmount);
@@ -394,25 +366,8 @@ export default function MarketOrder(properties) {
             asset_id: baseAsset.id,
           };
         }
-      }
-
-      if (expirationLock === "editable") {
-        baseOperation.new_expiration = date;
-      }
-
-      if (osoEnabled) {
-        baseOperation.on_fill = [
-          [
-            0,
-            {
-              fee_asset_id: "1.3.0",
-              spread_percent: spreadPercent ? spreadPercent * 100 : 0,
-              size_percent: sizePercent ? sizePercent * 100 : 0,
-              expiration_seconds: 1000000000,
-              repeat: repeat,
-            },
-          ],
-        ];
+      } else {
+        baseOperation.delta_amount_to_sell = undefined;
       }
 
       return baseOperation;
@@ -478,12 +433,7 @@ export default function MarketOrder(properties) {
             </CardHeader>
             <CardContent>
               <Form {...form}>
-                <form
-                  onSubmit={() => {
-                    setShowDialog(true);
-                    event.preventDefault();
-                  }}
-                >
+                <form>
                   <FormField
                     control={form.control}
                     name="account"
@@ -901,6 +851,7 @@ export default function MarketOrder(properties) {
                                   onClick={() => {
                                     if (expirationLock === "editable") {
                                       setExpirationLock("locked");
+                                      setDate(new Date(existingExpiry));
                                     } else {
                                       setExpirationLock("editable");
                                     }
@@ -1271,7 +1222,14 @@ export default function MarketOrder(properties) {
                     )}
                   />
 
-                  <Button className="mt-5 mb-3" variant="outline" type="submit">
+                  <Button
+                    className="mt-5 mb-3"
+                    variant="outline"
+                    onClick={(event) => {
+                      setShowDialog(true);
+                      event.preventDefault();
+                    }}
+                  >
                     Submit limit order changes
                   </Button>
                 </form>
@@ -1295,7 +1253,7 @@ export default function MarketOrder(properties) {
             <Card>
               <CardHeader className="pb-0">
                 <CardTitle>
-                  {quoteAsset ? quoteAsset.symbol : "?"} ({quoteAsset ? quoteAsset.id : "?"})
+                  {quoteAsset ? quoteAsset.symbol : "?"} ({quoteAsset ? quoteAsset.id : "1.3.x"})
                   balance
                 </CardTitle>
                 <CardDescription>Limit order quote asset</CardDescription>
@@ -1307,7 +1265,8 @@ export default function MarketOrder(properties) {
             <Card>
               <CardHeader className="pb-0">
                 <CardTitle>
-                  {baseAsset ? baseAsset.symbol : "?"} ({baseAsset ? baseAsset.id : "?"}) balance
+                  {baseAsset ? baseAsset.symbol : "?"} ({baseAsset ? baseAsset.id : "1.3.x"})
+                  balance
                 </CardTitle>
                 <CardDescription>Limit order base asset</CardDescription>
               </CardHeader>
