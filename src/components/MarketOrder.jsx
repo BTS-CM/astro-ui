@@ -110,6 +110,8 @@ export default function MarketOrder(properties) {
   const [price, setPrice] = useState(0.0);
   const [total, setTotal] = useState(0);
 
+  const [marketInverted, setMarketInverted] = useState(false);
+
   const [expiryType, setExpiryType] = useState("1hr");
   const [expiry, setExpiry] = useState(() => {
     const now = new Date();
@@ -284,6 +286,7 @@ export default function MarketOrder(properties) {
             foundBaseAsset.precision
           );
           const isInverted = isInvertedMarket(foundBaseAsset.id, foundQuoteAsset.id);
+          setMarketInverted(isInverted);
 
           setExistingQuoteAmount(_quoteAmount);
           setExistingBaseAmount(_baseAmount);
@@ -358,8 +361,6 @@ export default function MarketOrder(properties) {
     []
   );
 
-  //const [deltaAmount, setDeltaAmount] = useState(0);
-
   const operationContents = useMemo(() => {
     if (usr && usr.id && limitOrderID && baseAsset && quoteAsset) {
       const baseOperation = {
@@ -374,23 +375,29 @@ export default function MarketOrder(properties) {
 
       if (priceLock === "editable") {
         baseOperation.new_price = {
-          amount: blockchainFloat(price, quoteAsset.precision),
-          asset_id: quoteAsset.id,
+          base: {
+            amount: blockchainFloat(amount, baseAsset.precision),
+            asset_id: baseAsset.id,
+          },
+          quote: {
+            amount: blockchainFloat(total, quoteAsset.precision),
+            asset_id: quoteAsset.id,
+          },
         };
       }
 
       if (amountLock === "editable") {
-        const deltaAmount = parseFloat(total) - existingBaseAmount;
-        if (deltaAmount !== 0) {
+        const deltaAmount = parseFloat(amount - existingBaseAmount);
+        if ((deltaAmount && deltaAmount < 0) || (deltaAmount && deltaAmount > 0)) {
           baseOperation.delta_amount_to_sell = {
-            amount: deltaAmount,
+            amount: blockchainFloat(deltaAmount, baseAsset.precision),
             asset_id: baseAsset.id,
           };
         }
       }
 
       if (expirationLock === "editable") {
-        baseOperation.new_expiration = expiry;
+        baseOperation.new_expiration = date;
       }
 
       if (osoEnabled) {
@@ -583,11 +590,9 @@ export default function MarketOrder(properties) {
                             </FormLabel>
                             <FormDescription>
                               {priceLock === "editable"
-                                ? `The existing price: ${
-                                    existingQuoteAmount / existingBaseAmount
-                                  } ${quoteAsset ? quoteAsset.symbol : "?"}/${
-                                    baseAsset ? baseAsset.symbol : "?"
-                                  }`
+                                ? `The existing price: ${existingPrice} ${
+                                    quoteAsset ? quoteAsset.symbol : "?"
+                                  }/${baseAsset ? baseAsset.symbol : "?"}`
                                 : "Click the unlock button to begin setting a new price"}
                             </FormDescription>
                           </span>
@@ -630,9 +635,15 @@ export default function MarketOrder(properties) {
                                   if (input && input.length && regex.test(input)) {
                                     const parsedInput = parseFloat(input.replaceAll(",", ""));
                                     if (parsedInput) {
+                                      setPrice(parsedInput);
                                       if (amount && totalLock === "editable") {
                                         setTotal(
-                                          (parsedInput * amount).toFixed(quoteAsset.precision)
+                                          parseFloat(
+                                            (
+                                              amount *
+                                              (marketInverted ? 1 / parsedInput : parsedInput)
+                                            ).toFixed(quoteAsset.precision)
+                                          )
                                         );
                                       }
                                       setInputChars(inputChars + 1);
@@ -740,7 +751,12 @@ export default function MarketOrder(properties) {
                                             setAmount(parsedInput.toFixed(baseAsset.precision));
                                             if (price) {
                                               setTotal(
-                                                (parsedInput * price).toFixed(quoteAsset.precision)
+                                                parseFloat(
+                                                  (
+                                                    parsedInput *
+                                                    (marketInverted ? 1 / price : price)
+                                                  ).toFixed(quoteAsset.precision)
+                                                )
                                               );
                                             }
                                             setInputChars(inputChars + 1);
@@ -1277,25 +1293,27 @@ export default function MarketOrder(properties) {
 
           <div className="grid grid-cols-2 mt-3 gap-5">
             <Card>
-              <CardHeader>
+              <CardHeader className="pb-0">
                 <CardTitle>
                   {quoteAsset ? quoteAsset.symbol : "?"} ({quoteAsset ? quoteAsset.id : "?"})
                   balance
                 </CardTitle>
-                <CardDescription>
-                  {quoteBalance} {quoteAsset ? quoteAsset.symbol : "?"}
-                </CardDescription>
+                <CardDescription>Limit order quote asset</CardDescription>
               </CardHeader>
+              <CardContent>
+                {quoteBalance} {quoteAsset ? quoteAsset.symbol : "?"}
+              </CardContent>
             </Card>
             <Card>
-              <CardHeader>
+              <CardHeader className="pb-0">
                 <CardTitle>
                   {baseAsset ? baseAsset.symbol : "?"} ({baseAsset ? baseAsset.id : "?"}) balance
                 </CardTitle>
-                <CardDescription>
-                  {baseBalance} {baseAsset ? baseAsset.symbol : "?"}
-                </CardDescription>
+                <CardDescription>Limit order base asset</CardDescription>
               </CardHeader>
+              <CardContent>
+                {baseBalance} {baseAsset ? baseAsset.symbol : "?"}
+              </CardContent>
             </Card>
           </div>
 
