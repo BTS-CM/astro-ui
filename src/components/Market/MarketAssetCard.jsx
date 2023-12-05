@@ -21,10 +21,11 @@ import {
 
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
-import { humanReadableFloat } from "../../lib/common";
 
 import ExternalLink from "../common/ExternalLink.jsx";
 import CardRow from "../common/CardRow.jsx";
+
+import { humanReadableFloat } from "../../lib/common";
 
 export default function MarketAssetCard(properties) {
   const { asset, assetData, assetDetails, bitassetData, marketSearch, chain, usrBalances, type } =
@@ -903,11 +904,13 @@ export default function MarketAssetCard(properties) {
                 </Dialog>
               ) : null}
 
-              <a href={`/smartcoin/index.html?id=${assetData.id}`}>
-                <Button variant="outline" className="h-5 p-3 w-full">
-                  Borrow
-                </Button>
-              </a>
+              {bitassetData ? (
+                <a href={`/smartcoin/index.html?id=${assetData.id}`}>
+                  <Button variant="outline" className="h-5 p-3 w-full">
+                    Borrow
+                  </Button>
+                </a>
+              ) : null}
             </span>
           </div>
         ) : null}

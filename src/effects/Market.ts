@@ -87,9 +87,34 @@ const [createMarketsStore] = nanoquery({
   refetchInterval: 60000,
 });
 
+// Create fetcher store for retrieving existing limit orders
+const [createLimitOrderStore] = nanoquery({
+  fetcher: async (chain: string, id: string) => {
+    const response = await fetch(`http://localhost:8080/api/getObjects/${chain}`, {
+      method: "POST",
+      body: JSON.stringify([id]), // 1.7.x existing limit order
+    });
+
+    if (!response.ok) {
+      console.log("Failed to fetch limit order data");
+      return;
+    }
+
+    const responseContents = await response.json();
+
+    if (responseContents && responseContents.result && responseContents.result.length) {
+      const decompressed = fflate.decompressSync(fflate.strToU8(responseContents.result, true));
+      const _parsed = JSON.parse(fflate.strFromU8(decompressed));
+      const finalResult = _parsed[0];
+      return finalResult;
+    }
+  },
+});
+
 export {
   createMarketHistoryStore,
   createMarketOrdersStore,
   //
   createMarketsStore,
+  createLimitOrderStore,
 };

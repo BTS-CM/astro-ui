@@ -208,7 +208,7 @@ export default function PoolDialogs(properties) {
   }
 
   return (
-    <div className="grid grid-cols-3 gap-5 mt-5">
+    <div className="grid grid-cols-3 gap-5 mt-3">
       <HoverCard key="hover_a">
         <HoverCardTrigger asChild>
           <div>

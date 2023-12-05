@@ -2,6 +2,22 @@ import React, { useMemo } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { humanReadableFloat, isInvertedMarket } from "../../../lib/common";
 
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+
+import ExternalLink from "@/components/common/ExternalLink.jsx";
+
 export default function MyOrderSummary(properties) {
   const { type, assetAData, assetBData, usrLimitOrders } = properties;
 
@@ -33,43 +49,35 @@ export default function MyOrderSummary(properties) {
           let parsedBaseAmount = humanReadableFloat(res.sell_price.base.amount, basePrecision);
           let parsedQuoteAmount = humanReadableFloat(res.sell_price.quote.amount, quotePrecision);
 
-          let calculatedPrice = parseFloat(
+          let price = parseFloat(
             !isInverted
               ? parsedBaseAmount * parsedQuoteAmount
               : parsedBaseAmount / parsedQuoteAmount
           );
 
-          let receivingAmount = 0;
-          let payingAmount = 0;
-          let price = 0;
+          let receiving = 0;
+          let paying = 0;
+          const _paying = humanReadableFloat(res.for_sale, basePrecision);
 
           if (type === "buy" && !isInverted) {
-            const paying = humanReadableFloat(res.for_sale, basePrecision);
-            payingAmount = (calculatedPrice * paying).toFixed(quotePrecision);
-            receivingAmount = paying.toFixed(basePrecision);
-            price = calculatedPrice.toFixed(quotePrecision);
+            paying = (price * _paying).toFixed(quotePrecision);
+            receiving = _paying.toFixed(basePrecision);
           } else if (type === "buy" && isInverted) {
-            const paying = humanReadableFloat(res.for_sale, basePrecision);
-            receivingAmount = (calculatedPrice * paying).toFixed(basePrecision);
-            payingAmount = paying.toFixed(quotePrecision);
-            price = calculatedPrice.toFixed(quotePrecision);
+            receiving = (price * _paying).toFixed(basePrecision);
+            paying = _paying.toFixed(quotePrecision);
           } else if (type === "sell" && !isInverted) {
-            const paying = humanReadableFloat(res.for_sale, basePrecision);
-            receivingAmount = paying.toFixed(quotePrecision);
-            payingAmount = (calculatedPrice * paying).toFixed(basePrecision);
-            price = calculatedPrice.toFixed(basePrecision);
+            receiving = _paying.toFixed(quotePrecision);
+            paying = (price * _paying).toFixed(basePrecision);
           } else if (type === "sell" && isInverted) {
-            const paying = humanReadableFloat(res.for_sale, basePrecision);
-            receivingAmount = (paying / calculatedPrice).toFixed(quotePrecision);
-            payingAmount = paying.toFixed(basePrecision);
-            price = calculatedPrice.toFixed(basePrecision);
+            receiving = (_paying / price).toFixed(quotePrecision);
+            paying = _paying.toFixed(basePrecision);
           }
 
           return {
             ...res,
-            price: price,
-            paying: payingAmount,
-            receiving: receivingAmount,
+            price,
+            paying,
+            receiving,
             basePrecision,
             quotePrecision,
           };
@@ -85,22 +93,76 @@ export default function MyOrderSummary(properties) {
       filteredUsrLimitOrders.map((res, index) => {
         const minBaseAmount = humanReadableFloat(1, res.basePrecision);
         const minQuoteAmount = humanReadableFloat(1, res.quotePrecision);
-        let finalPrice = res.price;
-        if (type === "buy" && res.price < minQuoteAmount) {
-          finalPrice = `< ${minQuoteAmount}`;
-        } else if (type === "sell" && res.price < minBaseAmount) {
-          finalPrice = `< ${minBaseAmount}`;
-        }
 
         return (
-          <div className="col-span-3" key={`mos_${index}_${type}`}>
-            <div className="grid grid-cols-4 border-b-2 text-sm">
-              <div className="col-span-1 border-r-2 pl-3">{finalPrice}</div>
-              <div className="col-span-1 border-r-2 pl-3">{res.receiving}</div>
-              <div className="col-span-1 border-r-2 pl-3">{res.paying}</div>
-              <div className="col-span-1 border-r-2 pl-3">{res.expiration.replace("T", " ")}</div>
-            </div>
-          </div>
+          <Dialog key={`${type}Dialog${index}`}>
+            <DialogTrigger asChild>
+              <div className="col-span-3" key={`mos_${index}_${type}`}>
+                <div className="grid grid-cols-4 border-b-2 text-sm">
+                  <div className="col-span-1 border-r-2 pl-3">
+                    {type === "buy" && res.price < minQuoteAmount ? (
+                      <HoverCard key={`hover_less_than_min_${res.id.replace("1.7.", "")}`}>
+                        <HoverCardTrigger>{`< ${minQuoteAmount}`}</HoverCardTrigger>
+                        <HoverCardContent className={`w-${res.quotePrecision * 5}`}>
+                          {res.price}
+                        </HoverCardContent>
+                      </HoverCard>
+                    ) : null}
+                    {type === "sell" && res.price < minBaseAmount ? (
+                      <HoverCard key={`hover_less_than_min_${res.id.replace("1.7.", "")}`}>
+                        <HoverCardTrigger>{`< ${minBaseAmount}`}</HoverCardTrigger>
+                        <HoverCardContent className={`w-${res.basePrecision * 5}`}>
+                          {res.price}
+                        </HoverCardContent>
+                      </HoverCard>
+                    ) : null}
+                    {type === "buy" && res.price >= minQuoteAmount
+                      ? res.price.toFixed(res.quotePrecision)
+                      : null}
+                    {type === "sell" && res.price >= minBaseAmount
+                      ? res.price.toFixed(res.basePrecision)
+                      : null}
+                  </div>
+
+                  <div className="col-span-1 border-r-2 pl-3">{res.receiving}</div>
+                  <div className="col-span-1 border-r-2 pl-3">{res.paying}</div>
+                  <div className="col-span-1 border-r-2 pl-3">
+                    {res.expiration.replace("T", " ")}
+                  </div>
+                </div>
+              </div>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[600px] bg-white">
+              <DialogHeader>
+                <DialogTitle>Want to edit this limit order?</DialogTitle>
+                <DialogDescription>
+                  Limit orders can now be updated, save on fees by updating limit orders.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="grid grid-cols-1">
+                <div className="col-span-1">
+                  Selected open order's data:
+                  <ScrollArea className="h-72 rounded-md border text-sm">
+                    <pre>{JSON.stringify(res, null, 2)}</pre>
+                  </ScrollArea>
+                </div>
+                <div className="col-span-1 text-left mt-5">
+                  <a href={`/order/index.html?id=${res.id}`}>
+                    <Button variant="outline" className="mt-2 mr-2">
+                      Proceed to update this open limit order
+                    </Button>
+                  </a>
+                  <ExternalLink
+                    variant="outline"
+                    classnamecontents=""
+                    type="button"
+                    text={`View object on blocksights.info`}
+                    hyperlink={`https://blocksights.info/#/objects/${res.id}`}
+                  />
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
         );
       }),
     [filteredUsrLimitOrders, assetAData, assetBData, type]

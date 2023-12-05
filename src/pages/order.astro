@@ -1,0 +1,52 @@
+---
+import Layout from '../layouts/Layout.astro';
+import MarketOrder from '../components/MarketOrder';
+import PageHeader from '../components/PageHeader';
+---
+
+<Layout title="Bitshares decentralized cryptocurrency exchange - limit order update page">
+	<main>
+		<PageHeader client:only />
+		<h3 class="mb-5">
+			Use the form below to update your existing limit order on the Bitshares DEX.<br /><br />
+			Designed for use with the <a class="text-gradient" href="https://github.com/bitshares/beet">Bitshares Beet multiwallet</a>.<br/><br/>
+			<a class="text-gradient" href="../index.html">Go back</a>
+		</h3>
+		<MarketOrder  client:only />
+		<h4 class="text-center">
+			<a class="text-gradient" href="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/dex.astro">MIT Licensed code</a> built with <a class="text-gradient" href="https://astro.build/">Astro</a>, <a class="text-gradient" href="https://react.dev/">React</a>, <a class="text-gradient" href="https://elysiajs.com/">ElysiaJS</a> and <a class="text-gradient" href="https://bun.sh/">Bun</a>.
+		</h4>
+	</main>
+</Layout>
+
+<style>
+	main {
+		margin: auto;
+		padding: 1rem;
+		width: 900px;
+		max-width: calc(100% - 2rem);
+		color: white;
+		font-size: 20px;
+		line-height: 1.6;
+		min-height: 100vh;
+	}
+	h2 {
+		font-weight: 700;
+		line-height: 1;
+		text-align: center;
+		margin-bottom: 1em;
+	}
+	h3 {
+		font-weight: 300;
+		line-height: 0.9;
+		text-align: center;
+		margin-bottom: 1em;
+	}
+	.text-gradient {
+		background-image: var(--accent-gradient);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-size: 400%;
+		background-position: 0%;
+	}
+</style>
