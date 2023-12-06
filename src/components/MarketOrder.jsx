@@ -325,8 +325,8 @@ export default function MarketOrder(properties) {
           amount: 0,
           asset_id: "1.3.0",
         },
-        account_id_type: usr.id,
-        limit_order_id_type: limitOrderID,
+        seller: usr.id,
+        order: limitOrderID,
         new_price:
           priceLock === "editable"
             ? {
