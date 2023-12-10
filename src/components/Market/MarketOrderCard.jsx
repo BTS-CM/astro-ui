@@ -24,6 +24,8 @@ import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 
+import { humanReadableFloat } from "../../lib/common";
+
 export default function MarketOrderCard(properties) {
   const {
     cardType,

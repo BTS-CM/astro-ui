@@ -67,8 +67,8 @@ export default function AccountSelect(properties) {
 
   const firstResponse = searchResponse ? (
     <Card
+      className="w-1/2"
       key={searchResponse.id}
-      className="w-1/4"
       onClick={() => {
         setCurrentUser(searchResponse.name, searchResponse.id, searchResponse.referrer, chain);
       }}

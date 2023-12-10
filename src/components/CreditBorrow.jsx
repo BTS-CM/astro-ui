@@ -92,7 +92,9 @@ export default function CreditBorrow(properties) {
 
   const offers = useMemo(() => {
     if (_chain && (_offersBTS || _offersTEST)) {
-      return _chain === "bitshares" ? _offersBTS : _offersTEST;
+      return _chain === "bitshares"
+        ? _offersBTS.filter((x) => hoursTillExpiration(x.auto_disable_time) >= 0)
+        : _offersTEST.filter((x) => hoursTillExpiration(x.auto_disable_time) >= 0);
     }
     return [];
   }, [_offersBTS, _offersTEST, _chain]);
