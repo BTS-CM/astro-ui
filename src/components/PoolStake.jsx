@@ -1,4 +1,18 @@
-import React, { useState, useEffect, useSyncExternalStore } from "react";
+import React, { useState, useEffect, useSyncExternalStore, useMemo } from "react";
+import Fuse from "fuse.js";
+import { useForm } from "react-hook-form";
+import { FixedSizeList as List } from "react-window";
+
+import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Toggle } from "@/components/ui/toggle";
+
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
 import {
   Card,
   CardContent,
@@ -8,36 +22,1259 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+import { Avatar as Av, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar } from "@/components/Avatar.tsx";
+
+import { blockchainFloat, copyToClipboard, humanReadableFloat } from "../lib/common";
+
+import {
+  $assetCacheBTS,
+  $assetCacheTEST,
+  $poolCacheBTS,
+  $poolCacheTEST,
+  $marketSearchCacheBTS,
+  $marketSearchCacheTEST,
+  $globalParamsCacheBTS,
+  $globalParamsCacheTEST,
+} from "../stores/cache.ts";
+
+import { createBitassetDataStore, createDynamicDataStore } from "../effects/Assets.ts";
+
+import { createPoolDetailsStore, createPoolShareAssetDataStore } from "../effects/Pools.ts";
+
+import { createUserBalancesStore } from "../effects/User.ts";
+
+import { useInitCache } from "../effects/Init.ts";
 import { $currentUser } from "../stores/users.ts";
 
-import { eraseCurrentUser } from "../stores/users.ts";
-import { useInitCache } from "../effects/Init.ts";
+import MarketAssetCard from "./Market/MarketAssetCard.jsx";
 
 import CurrentUser from "./common/CurrentUser.jsx";
+import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
+import ExternalLink from "./common/ExternalLink.jsx";
 
-export default function PoolStake(properties) {
+export default function PoolForm() {
+  const form = useForm({
+    defaultValues: {
+      account: "",
+    },
+  });
+
+  const [pool, setPool] = useState(""); // dropdown selected pool
+
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
 
-  //useInitCache(usr && usr.chain ? usr.chain : "bitshares");
+  const _assetsBTS = useSyncExternalStore($assetCacheBTS.subscribe, $assetCacheBTS.get, () => true);
+  const _assetsTEST = useSyncExternalStore(
+    $assetCacheTEST.subscribe,
+    $assetCacheTEST.get,
+    () => true
+  );
+
+  const _poolsBTS = useSyncExternalStore($poolCacheBTS.subscribe, $poolCacheBTS.get, () => true);
+  const _poolsTEST = useSyncExternalStore($poolCacheTEST.subscribe, $poolCacheTEST.get, () => true);
+
+  const _marketSearchBTS = useSyncExternalStore(
+    $marketSearchCacheBTS.subscribe,
+    $marketSearchCacheBTS.get,
+    () => true
+  );
+
+  const _marketSearchTEST = useSyncExternalStore(
+    $marketSearchCacheTEST.subscribe,
+    $marketSearchCacheTEST.get,
+    () => true
+  );
+
+  const _globalParamsBTS = useSyncExternalStore(
+    $globalParamsCacheBTS.subscribe,
+    $globalParamsCacheBTS.get,
+    () => true
+  );
+
+  const _globalParamsTEST = useSyncExternalStore(
+    $globalParamsCacheTEST.subscribe,
+    $globalParamsCacheTEST.get,
+    () => true
+  );
+
+  const _chain = useMemo(() => {
+    if (usr && usr.chain) {
+      return usr.chain;
+    }
+    return "bitshares";
+  }, [usr]);
+
+  useInitCache(_chain ?? "bitshares", ["marketSearch", "assets", "pools", "globalParams"]);
+
+  const assets = useMemo(() => {
+    if (_chain && (_assetsBTS || _assetsTEST)) {
+      return _chain === "bitshares" ? _assetsBTS : _assetsTEST;
+    }
+    return [];
+  }, [_assetsBTS, _assetsTEST, _chain]);
+
+  const pools = useMemo(() => {
+    if (_chain && (_poolsBTS || _poolsTEST)) {
+      return _chain === "bitshares" ? _poolsBTS : _poolsTEST;
+    }
+    return [];
+  }, [_poolsBTS, _poolsTEST, _chain]);
+
+  const marketSearch = useMemo(() => {
+    if (_chain && (_marketSearchBTS || _marketSearchTEST)) {
+      return _chain === "bitshares" ? _marketSearchBTS : _marketSearchTEST;
+    }
+    return [];
+  }, [_marketSearchBTS, _marketSearchTEST, _chain]);
+
+  const globalParams = useMemo(() => {
+    if (_chain && (_globalParamsBTS || _globalParamsTEST)) {
+      return _chain === "bitshares" ? _globalParamsBTS : _globalParamsTEST;
+    }
+    return [];
+  }, [_globalParamsBTS, _globalParamsTEST, _chain]);
+
+  const [fee, setFee] = useState();
+  useEffect(() => {
+    if (globalParams && globalParams.length) {
+      const foundFee = globalParams.find((x) => x[0] === 63);
+      const finalFee = humanReadableFloat(foundFee[1].fee, 5);
+      setFee(finalFee);
+    }
+  }, [globalParams]);
+
+  // Search dialog
+  const [activeTab, setActiveTab] = useState("asset");
+  const [stakeTab, setStakeTab] = useState("stake");
+  const poolSearch = useMemo(() => {
+    if (!pools || !pools.length) {
+      return null;
+    }
+    return new Fuse(pools, {
+      includeScore: true,
+      threshold: 0.2,
+      keys: activeTab === "asset" ? ["asset_a_symbol", "asset_b_symbol"] : ["share_asset_symbol"],
+    });
+  }, [pools, activeTab]);
+
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const [thisInput, setThisInput] = useState();
+  const [thisResult, setThisResult] = useState();
+  useEffect(() => {
+    if (poolSearch && thisInput) {
+      const searchResult = poolSearch.search(thisInput);
+      setThisResult(searchResult);
+    }
+  }, [poolSearch, thisInput]);
+
+  const PoolRow = ({ index, style }) => {
+    const res = thisResult[index].item;
+    return (
+      <div
+        style={{ ...style }}
+        className="grid grid-cols-12"
+        key={`acard-${res.id}`}
+        onClick={() => {
+          setPool(res.id);
+          setDialogOpen(false);
+          setThisResult();
+        }}
+      >
+        <div className="col-span-2">{res.id}</div>
+        <div className="col-span-3">{res.share_asset_symbol}</div>
+        <div className="col-span-3">
+          {res.asset_a_symbol} ({res.asset_a_id})
+        </div>
+        <div className="col-span-3">
+          {res.asset_b_symbol} ({res.asset_b_id})
+        </div>
+        <div className="col-span-1">{res.taker_fee_percent / 100}%</div>
+      </div>
+    );
+  };
+
+  const activeTabStyle = {
+    backgroundColor: "#252526",
+    color: "white",
+  };
+
+  // End of Search dialog
+
+  useEffect(() => {
+    async function parseUrlParams() {
+      if (window.location.search) {
+        //console.log("Parsing url params");
+        const urlSearchParams = new URLSearchParams(window.location.search);
+        const params = Object.fromEntries(urlSearchParams.entries());
+        const poolParameter = params && params.pool ? params.pool : null;
+
+        if (!poolParameter || !poolParameter.length) {
+          console.log("Invalid pool parameters");
+          setPool("1.19.0");
+          return;
+        }
+
+        if (poolParameter && poolParameter.length && !poolParameter.includes("1.19.")) {
+          console.log("Invalid pool parameters");
+          setPool("1.19.0");
+          return;
+        }
+
+        const poolIds = pools && pools.length ? pools.map((x) => x.id) : [];
+        if (!poolIds.includes(poolParameter)) {
+          console.log("Replacing unknown pool with first pool in list");
+          setPool("1.19.0");
+          return;
+        }
+
+        setPool(poolParameter);
+      }
+    }
+
+    if (pools && pools.length) {
+      parseUrlParams();
+    }
+  }, [pools]);
+
+  const [sellAmount, setSellAmount] = useState(0);
+
+  const [foundPool, setFoundPool] = useState();
+  const [assetA, setAssetA] = useState("");
+  const [assetB, setAssetB] = useState("");
+
+  useEffect(() => {
+    // Setting various react states as the user interacts with the form
+    if (pools && pool && assets) {
+      const currentPool = pools.find((x) => x.id === pool);
+      if (!currentPool) {
+        console.log("Invalid pool");
+        return;
+      }
+      setFoundPool(currentPool);
+      const foundA = assets.find((x) => x.id === currentPool.asset_a_id);
+      const foundB = assets.find((x) => x.id === currentPool.asset_b_id);
+      setAssetA(foundA);
+      setAssetB(foundB);
+      setSellAmount(1);
+    }
+  }, [pool, pools, assets]);
+
+  const [foundPoolDetails, setFoundPoolDetails] = useState();
+  useEffect(() => {
+    let unsubscribePoolDetails;
+
+    if (usr && usr.chain && foundPool && assetA && assetB && assets) {
+      const poolDetailsStore = createPoolDetailsStore([usr.chain, foundPool.id]);
+
+      unsubscribePoolDetails = poolDetailsStore.subscribe(({ data, error, loading }) => {
+        if (data && !error && !loading) {
+          let finalResult = data;
+          finalResult["asset_a_symbol"] = assetA.symbol;
+          finalResult["asset_a_precision"] = assetA.precision;
+
+          finalResult["asset_b_symbol"] = assetB.symbol;
+          finalResult["asset_b_precision"] = assetB.precision;
+
+          finalResult["share_asset_symbol"] = foundPool.share_asset_symbol;
+
+          finalResult["readable_balance_a"] = `${humanReadableFloat(
+            finalResult.balance_a,
+            assetA.precision
+          )} ${assetA.symbol}`;
+          finalResult["readable_balance_b"] = `${humanReadableFloat(
+            finalResult.balance_b,
+            assetB.precision
+          )} ${assetB.symbol}`;
+          finalResult["share_asset_details"] = assets.find((x) => x.id === finalResult.share_asset);
+
+          setFoundPoolDetails(finalResult);
+        }
+      });
+    }
+
+    return () => {
+      if (unsubscribePoolDetails) unsubscribePoolDetails();
+    };
+  }, [usr, foundPool, assetA, assetB, assets]);
+
+  const [foundPoolShareAssetDetails, setFoundPoolShareAssetDetails] = useState();
+  useEffect(() => {
+    let unsubscribePoolDetails;
+
+    if (foundPoolDetails) {
+      const poolDetailsStore = createPoolShareAssetDataStore([
+        usr.chain,
+        foundPoolDetails.share_asset.replace("1.", "2."),
+      ]);
+
+      unsubscribePoolDetails = poolDetailsStore.subscribe(({ data, error, loading }) => {
+        if (data && !error && !loading) {
+          setFoundPoolShareAssetDetails(data);
+        }
+      });
+    }
+
+    return () => {
+      if (unsubscribePoolDetails) unsubscribePoolDetails();
+    };
+  }, [foundPoolDetails]);
+
+  const [assetADetails, setAssetADetails] = useState(null);
+  const [assetBDetails, setAssetBDetails] = useState(null);
+  const [poolShareDetails, setPoolShareDetails] = useState(null);
+
+  const [aBitassetData, setABitassetData] = useState(null);
+  const [bBitassetData, setBBitassetData] = useState(null);
+
+  useEffect(() => {
+    let unsubscribeADetails;
+    let unsubscribeBDetails;
+    let unsubscribePoolShareDetails;
+    let unsubscribeABitassetData;
+    let unsubscribeBBitassetData;
+
+    if (usr && usr.id && assets && assetA && assetB && foundPool) {
+      const dynamicDataStoreA = createDynamicDataStore([
+        usr.chain,
+        assetA.id.replace("1.3.", "2.3."),
+      ]);
+      unsubscribeADetails = dynamicDataStoreA.subscribe(({ data, error, loading }) => {
+        if (data && !error && !loading) {
+          setAssetADetails(data);
+        }
+      });
+
+      const dynamicDataStoreB = createDynamicDataStore([
+        usr.chain,
+        assetB.id.replace("1.3.", "2.3."),
+      ]);
+      unsubscribeBDetails = dynamicDataStoreB.subscribe(({ data, error, loading }) => {
+        if (data && !error && !loading) {
+          setAssetBDetails(data);
+        }
+      });
+
+      const poolAsset = assets.find((x) => x.symbol === foundPool.share_asset_symbol);
+      const dynamicDataStorePool = createDynamicDataStore([
+        usr.chain,
+        poolAsset.id.replace("1.3.", "2.3."),
+      ]);
+      unsubscribePoolShareDetails = dynamicDataStorePool.subscribe(({ data, error, loading }) => {
+        if (data && !error && !loading) {
+          setPoolShareDetails(data);
+        }
+      });
+
+      if (assetA.bitasset_data_id) {
+        const bitassetDataStoreA = createBitassetDataStore([usr.chain, assetA.bitasset_data_id]);
+        unsubscribeABitassetData = bitassetDataStoreA.subscribe(({ data, error, loading }) => {
+          if (data && !error && !loading) {
+            setABitassetData(data);
+          }
+        });
+      }
+
+      if (assetB.bitasset_data_id) {
+        const bitassetDataStoreB = createBitassetDataStore([usr.chain, assetB.bitasset_data_id]);
+        unsubscribeBBitassetData = bitassetDataStoreB.subscribe(({ data, error, loading }) => {
+          if (data && !error && !loading) {
+            setBBitassetData(data);
+          }
+        });
+      }
+    }
+
+    return () => {
+      if (unsubscribeADetails) unsubscribeADetails();
+      if (unsubscribeBDetails) unsubscribeBDetails();
+      if (unsubscribePoolShareDetails) unsubscribePoolShareDetails();
+      if (unsubscribeABitassetData) unsubscribeABitassetData();
+      if (unsubscribeBBitassetData) unsubscribeBBitassetData();
+    };
+  }, [usr, assetA, assetB, foundPool, assets]);
+
+  const [usrBalances, setUsrBalances] = useState();
+  useEffect(() => {
+    let unsubscribeUserBalances;
+
+    if (usr && usr.id && assetA && assetB) {
+      const userBalancesStore = createUserBalancesStore([usr.chain, usr.id]);
+
+      unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
+        if (data && !error && !loading) {
+          setUsrBalances(data);
+        }
+      });
+    }
+
+    return () => {
+      if (unsubscribeUserBalances) unsubscribeUserBalances();
+    };
+  }, [usr, assetA, assetB]);
+
+  const [aStake, setAStake] = useState(0);
+  const [bStake, setBStake] = useState(0);
+  const [totalReceiving, setTotalReceiving] = useState(0);
+
+  /**
+   *
+   * @param {string} stakeInputValue
+   * @param {any} foundPoolDetails
+   * @param {string} assetType
+   * @returns amount & share asset amount
+   */
+  const calculateShareAssetAmount = (stakeInputValue, foundPoolDetails, assetType) => {
+    if (stakeInputValue > 0 && foundPoolDetails) {
+      const precision =
+        assetType === "A" ? foundPoolDetails.asset_a_precision : foundPoolDetails.asset_b_precision;
+
+      const _supply = foundPoolShareAssetDetails.current_supply;
+      const balance =
+        assetType === "A" ? Number(foundPoolDetails.balance_a) : Number(foundPoolDetails.balance_b);
+
+      const otherAssetAmount = assetType === "A" ? bStake : aStake;
+      const otherAssetPrecision =
+        assetType === "A" ? foundPoolDetails.asset_b_precision : foundPoolDetails.asset_a_precision;
+
+      const shareAssetAmountA = (_supply * blockchainFloat(stakeInputValue, precision)) / balance;
+      const shareAssetAmountB =
+        (_supply * blockchainFloat(otherAssetAmount, otherAssetPrecision)) / balance;
+
+      const shareAssetAmount = Math.min(shareAssetAmountA, shareAssetAmountB);
+
+      console.log({
+        _supply,
+        balance,
+        shareAssetAmountA,
+        shareAssetAmountB,
+        shareAssetAmount,
+        otherAssetAmount,
+      });
+
+      return {
+        amount:
+          assetType === "A"
+            ? (stakeInputValue *
+                humanReadableFloat(
+                  Number(foundPoolDetails.balance_a),
+                  foundPoolDetails.asset_a_precision
+                )) /
+              foundPoolDetails.readable_balance_b
+            : (stakeInputValue *
+                humanReadableFloat(
+                  Number(foundPoolDetails.balance_b),
+                  foundPoolDetails.asset_b_precision
+                )) /
+              foundPoolDetails.readable_balance_a,
+        shareAssetAmount,
+      };
+    }
+  };
+
+  useEffect(() => {
+    if (foundPoolDetails && foundPoolShareAssetDetails && aStake > 0) {
+      const result = calculateShareAssetAmount(parseFloat(aStake), foundPoolDetails, "A");
+      if (result) {
+        setBStake(result.amount);
+        setTotalReceiving(result.shareAssetAmount);
+      }
+    }
+  }, [aStake, foundPoolDetails, foundPoolShareAssetDetails]);
+
+  useEffect(() => {
+    if (foundPoolDetails && foundPoolShareAssetDetails && bStake > 0) {
+      const result = calculateShareAssetAmount(parseFloat(bStake), foundPoolDetails, "B");
+      if (result) {
+        setAStake(result.amount);
+        setTotalReceiving(result.shareAssetAmount);
+      }
+    }
+  }, [bStake, foundPoolDetails, foundPoolShareAssetDetails]);
+
+  const [showDialog, setShowDialog] = useState(false);
+  const [poolKey, setPoolKey] = useState("default_pool_key");
+  useEffect(() => {
+    if (pool && pool.length) {
+      window.history.replaceState({}, "", `?pool=${pool}`); // updating the url parameters
+    }
+    setPoolKey(`pool_key${Date.now()}`);
+  }, [pool]);
+
+  const Row = ({ index, style }) => {
+    const pool = pools[index];
+    return (
+      <SelectItem value={pool.id} style={style}>
+        {`${pool.id} - ${pool.share_asset_symbol} - ${pool.asset_a_symbol}:${pool.asset_b_symbol}`}
+      </SelectItem>
+    );
+  };
 
   return (
     <>
       <div className="container mx-auto mt-5 mb-5">
         <div className="grid grid-cols-1 gap-3">
-          <Card>
+          <Card className="p-2">
             <CardHeader>
-              <CardTitle>🫰 Pool stake</CardTitle>
+              <CardTitle>Bitshares Liquidity Pool Exchange</CardTitle>
               <CardDescription>
-                Stake funds into a liquidity pool to passively earn swap fees.
+                Easily swap between Bitshares assets using one of these user created liquidity
+                pools.
               </CardDescription>
             </CardHeader>
-            <CardContent>create form here</CardContent>
+            <CardContent>
+              {!pools ? <p>Loading pool data</p> : null}
+              {!assets ? <p>Loading asset data</p> : null}
+              {pools && assets ? (
+                <>
+                  <Form {...form}>
+                    <form
+                      onSubmit={() => {
+                        setShowDialog(true);
+                        event.preventDefault();
+                      }}
+                    >
+                      <FormField
+                        control={form.control}
+                        name="account"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Account</FormLabel>
+                            <FormControl>
+                              <div className="grid grid-cols-8">
+                                <div className="col-span-1 ml-5">
+                                  {usr && usr.username ? (
+                                    <Avatar
+                                      size={40}
+                                      name={usr.username}
+                                      extra="Target"
+                                      expression={{
+                                        eye: "normal",
+                                        mouth: "open",
+                                      }}
+                                      colors={[
+                                        "#92A1C6",
+                                        "#146A7C",
+                                        "#F0AB3D",
+                                        "#C271B4",
+                                        "#C20D90",
+                                      ]}
+                                    />
+                                  ) : (
+                                    <Av>
+                                      <AvatarFallback>?</AvatarFallback>
+                                    </Av>
+                                  )}
+                                </div>
+                                <div className="col-span-7">
+                                  <Input
+                                    disabled
+                                    readOnly
+                                    placeholder="Bitshares account (1.2.x)"
+                                    className="mb-3 mt-1"
+                                    value={`${usr.username} (${usr.id})`}
+                                  />
+                                </div>
+                              </div>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="pool"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Liquidity pool</FormLabel>
+                            <FormDescription style={{ marginTop: "0px" }}>
+                              {foundPoolDetails
+                                ? "This is the liquidity pool you have chosen for your asset swap"
+                                : "Select a liquidity pool to continue with your asset swap"}
+                            </FormDescription>
+                            <FormControl
+                              onChange={(event) => {
+                                setPool(event.target.value);
+                              }}
+                            >
+                              <div className="grid grid-cols-5 mt-3">
+                                <div className="mt-1 col-span-4">
+                                  <Select key={poolKey}>
+                                    <SelectTrigger className="mb-3">
+                                      <SelectValue
+                                        placeholder={
+                                          foundPool
+                                            ? `${foundPool.id} - ${foundPool.share_asset_symbol} - ${foundPool.asset_a_symbol}:${foundPool.asset_b_symbol}`
+                                            : "Select a pool.."
+                                        }
+                                      />
+                                    </SelectTrigger>
+                                    <SelectContent className="bg-white">
+                                      {pools && pools.length ? (
+                                        <List
+                                          height={150}
+                                          itemCount={pools.length}
+                                          itemSize={35}
+                                          className="w-full"
+                                          initialScrollOffset={
+                                            pools.map((x) => x.id).indexOf(pool) * 35
+                                          }
+                                        >
+                                          {Row}
+                                        </List>
+                                      ) : null}
+                                    </SelectContent>
+                                  </Select>
+                                </div>
+                                <div className="text-gray-500 text-right col-span-1 ml-3">
+                                  <Dialog
+                                    open={dialogOpen}
+                                    onOpenChange={(open) => {
+                                      if (!open) {
+                                        setThisResult();
+                                      }
+                                      setDialogOpen(open);
+                                    }}
+                                  >
+                                    <DialogTrigger asChild>
+                                      <Button variant="outline" className="h-9 mt-1 p-3 w-full">
+                                        Search
+                                      </Button>
+                                    </DialogTrigger>
+                                    <DialogContent className="sm:max-w-[900px] bg-white">
+                                      <DialogHeader>
+                                        <DialogTitle>Search for a liquidity pool</DialogTitle>
+                                        <DialogDescription>
+                                          Select a search result to proceed with staking assets
+                                        </DialogDescription>
+                                      </DialogHeader>
+                                      <div className="grid grid-cols-1">
+                                        <div className="col-span-1">
+                                          <Tabs defaultValue="asset">
+                                            <TabsList className="grid max-w-[400px] grid-cols-2 mb-1 gap-3">
+                                              {activeTab === "asset" ? (
+                                                <TabsTrigger style={activeTabStyle} value="asset">
+                                                  Swappable assets
+                                                </TabsTrigger>
+                                              ) : (
+                                                <TabsTrigger
+                                                  value="asset"
+                                                  onClick={() => setActiveTab("asset")}
+                                                >
+                                                  Swappable assets
+                                                </TabsTrigger>
+                                              )}
+                                              {activeTab === "share" ? (
+                                                <TabsTrigger style={activeTabStyle} value="share">
+                                                  Pool share asset
+                                                </TabsTrigger>
+                                              ) : (
+                                                <TabsTrigger
+                                                  value="share"
+                                                  onClick={() => setActiveTab("share")}
+                                                >
+                                                  Pool share asset
+                                                </TabsTrigger>
+                                              )}
+                                            </TabsList>
+
+                                            <Input
+                                              name="assetSearch"
+                                              placeholder="Enter search text"
+                                              className="mb-3 max-w-[400px]"
+                                              onChange={(event) => {
+                                                setThisInput(event.target.value);
+                                                event.preventDefault();
+                                                event.stopPropagation();
+                                              }}
+                                            />
+
+                                            <TabsContent value="share">
+                                              {thisResult && thisResult.length ? (
+                                                <>
+                                                  <div className="grid grid-cols-12">
+                                                    <div className="col-span-2">ID</div>
+                                                    <div className="col-span-3">
+                                                      <b>Share asset</b>
+                                                    </div>
+                                                    <div className="col-span-3">Asset A</div>
+                                                    <div className="col-span-3">Asset B</div>
+                                                    <div className="col-span-1">Taker Fee</div>
+                                                  </div>
+                                                  <List
+                                                    height={400}
+                                                    itemCount={thisResult.length}
+                                                    itemSize={45}
+                                                    className="w-full"
+                                                  >
+                                                    {PoolRow}
+                                                  </List>
+                                                </>
+                                              ) : null}
+                                            </TabsContent>
+
+                                            <TabsContent value="asset">
+                                              {thisResult && thisResult.length ? (
+                                                <>
+                                                  <div className="grid grid-cols-12">
+                                                    <div className="col-span-2">ID</div>
+                                                    <div className="col-span-3">Share asset</div>
+                                                    <div className="col-span-3">
+                                                      <b>Asset A</b>
+                                                    </div>
+                                                    <div className="col-span-3">
+                                                      <b>Asset B</b>
+                                                    </div>
+                                                    <div className="col-span-1">Taker Fee</div>
+                                                  </div>
+                                                  <List
+                                                    height={400}
+                                                    itemCount={thisResult.length}
+                                                    itemSize={45}
+                                                    className="w-full"
+                                                  >
+                                                    {PoolRow}
+                                                  </List>
+                                                </>
+                                              ) : null}
+                                            </TabsContent>
+                                          </Tabs>
+                                        </div>
+                                      </div>
+                                    </DialogContent>
+                                  </Dialog>
+                                </div>
+                              </div>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <div className="grid grid-cols-10 gap-5 mt-1 mb-1">
+                        {pool && foundPoolDetails && assetA && assetB ? (
+                          <>
+                            <div className="col-span-5">
+                              <Card>
+                                <CardHeader className="pb-0">
+                                  <CardTitle className="text-sm pt-0">
+                                    Asset A:{" "}
+                                    <ExternalLink
+                                      classnamecontents="text-blue-500"
+                                      type="text"
+                                      text={assetA.symbol}
+                                      hyperlink={`https://blocksights.info/#/assets/${assetA.id}`}
+                                    />
+                                  </CardTitle>
+                                  <CardDescription>Current total amount in pool</CardDescription>
+                                </CardHeader>
+                                <CardContent className="text-lg mt-0 pt-0">
+                                  {foundPoolDetails.readable_balance_a.split(" ")[0]}
+                                </CardContent>
+                              </Card>
+                            </div>
+                            <div className="col-span-5">
+                              <Card>
+                                <CardHeader className="pb-0">
+                                  <CardTitle className="text-sm pt-0">
+                                    Asset B:{" "}
+                                    <ExternalLink
+                                      classnamecontents="text-blue-500"
+                                      type="text"
+                                      text={assetB.symbol}
+                                      hyperlink={`https://blocksights.info/#/assets/${assetB.id}`}
+                                    />
+                                  </CardTitle>
+                                  <CardDescription>Current total amount in pool</CardDescription>
+                                </CardHeader>
+                                <CardContent className="text-lg">
+                                  {foundPoolDetails.readable_balance_b.split(" ")[0]}
+                                </CardContent>
+                              </Card>
+                            </div>
+                          </>
+                        ) : null}
+                      </div>
+
+                      {pool && pool.length ? (
+                        <Tabs
+                          key={`staking_${stakeTab}`}
+                          defaultValue={stakeTab}
+                          className="w-full"
+                        >
+                          <TabsList className="grid w-full grid-cols-3 gap-2">
+                            {stakeTab === "stake" ? (
+                              <TabsTrigger value="stake" style={activeTabStyle}>
+                                Stake assets
+                              </TabsTrigger>
+                            ) : (
+                              <TabsTrigger
+                                value="stake"
+                                onClick={(event) => {
+                                  setStakeTab("stake");
+                                }}
+                              >
+                                View all offers
+                              </TabsTrigger>
+                            )}
+                            {stakeTab === "unstake" ? (
+                              <TabsTrigger value="unstake" style={activeTabStyle}>
+                                Unstake
+                              </TabsTrigger>
+                            ) : (
+                              <TabsTrigger
+                                value="unstake"
+                                onClick={(event) => {
+                                  setStakeTab("unstake");
+                                }}
+                              >
+                                View compatible orders
+                              </TabsTrigger>
+                            )}
+                          </TabsList>
+                          <TabsContent value="stake">
+                            <div className="grid grid-cols-1 gap-2">
+                              <FormField
+                                control={form.control}
+                                name="stakeA"
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel>{`How much ${
+                                      assetA ? assetA.symbol : "???"
+                                    } do you want to stake?`}</FormLabel>
+                                    <FormDescription style={{ marginTop: "0px" }}>
+                                      The amount you're currently staking in this pool: 0
+                                    </FormDescription>
+                                    <FormControl
+                                      onChange={(event) => {
+                                        const input = event.target.value;
+                                        const regex = /^[0-9]*\.?[0-9]*$/; // regular expression to match numbers and a single period
+                                        if (regex.test(input)) {
+                                          setAStake(input);
+                                        }
+                                      }}
+                                    >
+                                      <div className="grid grid-cols-2">
+                                        <div className="col-span-1">
+                                          <Input
+                                            value={aStake}
+                                            placeholder={aStake}
+                                            className="mb-3"
+                                          />
+                                        </div>
+                                      </div>
+                                    </FormControl>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+                              <FormField
+                                control={form.control}
+                                name="stakeB"
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel>{`How much ${
+                                      assetB ? assetB.symbol : "???"
+                                    } do you want to stake?`}</FormLabel>
+                                    <FormDescription style={{ marginTop: "0px" }}>
+                                      The amount you're currently staking in this pool: 0
+                                    </FormDescription>
+                                    <FormControl
+                                      onChange={(event) => {
+                                        const input = event.target.value;
+                                        const regex = /^[0-9]*\.?[0-9]*$/; // regular expression to match numbers and a single period
+                                        if (regex.test(input)) {
+                                          setBStake(input);
+                                        }
+                                      }}
+                                    >
+                                      <div className="grid grid-cols-2">
+                                        <div className="col-span-1">
+                                          <Input
+                                            label={`Amount of ${
+                                              assetB ? assetB.symbol : "???"
+                                            } to swap`}
+                                            value={bStake}
+                                            placeholder={bStake}
+                                            className="mb-3"
+                                          />
+                                        </div>
+                                      </div>
+                                    </FormControl>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+                              <FormField
+                                control={form.control}
+                                name="buyAmount"
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel>
+                                      Total {foundPoolDetails?.share_asset_symbol} you'll receive
+                                    </FormLabel>
+                                    <FormDescription style={{ marginTop: "0px" }}>
+                                      Existing liquidity pool share assets in balance: 0
+                                    </FormDescription>
+                                    <FormControl>
+                                      <div className="grid grid-cols-2 mb-3 mt-3">
+                                        <Input
+                                          disabled
+                                          readOnly
+                                          placeholder={`${totalReceiving} ${foundPoolDetails?.share_asset_symbol}`}
+                                        />
+                                      </div>
+                                    </FormControl>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+                            </div>
+                          </TabsContent>
+                          <TabsContent value="unstake">unstaking...</TabsContent>
+                        </Tabs>
+                      ) : null}
+
+                      {foundPool ? (
+                        <FormField
+                          control={form.control}
+                          name="networkFee"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Network fee</FormLabel>
+                              <FormDescription style={{ marginTop: "0px" }}>
+                                This is the cost to broadcast your pool exchange operation onto the
+                                blockchain
+                              </FormDescription>
+                              <FormControl>
+                                <div className="grid grid-cols-2 mb-3 mt-3">
+                                  <div className="col-span-1">
+                                    <Input disabled readOnly placeholder={`${fee} BTS`} />
+                                  </div>
+                                </div>
+                              </FormControl>
+                              {usr.id === usr.referrer ? (
+                                <FormMessage>Rebate: {fee * 0.8} BTS (vesting)</FormMessage>
+                              ) : null}
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      ) : null}
+
+                      {pool ? (
+                        <Button className="mt-5 mb-3" variant="outline" disabled type="submit">
+                          Submit
+                        </Button>
+                      ) : null}
+                    </form>
+                  </Form>
+                  {showDialog ? (
+                    <DeepLinkDialog
+                      operationName="liquidity_pool_exchange"
+                      username={usr.username}
+                      usrChain={usr.chain}
+                      userID={usr.id}
+                      dismissCallback={setShowDialog}
+                      key={`Exchanging${sellAmount}${assetA.symbol}for${buyAmount}${assetB.symbol}`}
+                      headerText={`Exchanging ${sellAmount} ${assetA.symbol} for ${buyAmount} ${assetB.symbol}`}
+                      trxJSON={[
+                        {
+                          account: usr.id,
+                          pool: pool,
+                          amount_to_sell: {
+                            amount: blockchainFloat(sellAmount, assetA.precision),
+                            asset_id: assetA.id,
+                          },
+                          min_to_receive: {
+                            amount: blockchainFloat(buyAmount, assetB.precision),
+                            asset_id: assetB.id,
+                          },
+                          extensions: [],
+                        },
+                      ]}
+                    />
+                  ) : null}
+                  {pool ? (
+                    <ExternalLink
+                      variant="outline"
+                      classnamecontents="ml-2"
+                      type="button"
+                      text={`Blocksights pool explorer`}
+                      hyperlink={`https://blocksights.info/#/pools/${pool}${
+                        usr.chain !== "bitshares" ? "?network=testnet" : ""
+                      }`}
+                    />
+                  ) : null}
+                  {foundPoolDetails && foundPoolShareAssetDetails ? (
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button className="ml-2" variant="outline">
+                          Pool JSON
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-[550px] bg-white">
+                        <DialogHeader>
+                          <DialogTitle>Liquidity Pool JSON</DialogTitle>
+                          <DialogDescription>
+                            Check out the details returned by the network for this pool
+                          </DialogDescription>
+                        </DialogHeader>
+                        <div className="grid grid-cols-1">
+                          <div className="col-span-1">
+                            <ScrollArea className="h-72 rounded-md border">
+                              <pre>
+                                {JSON.stringify(
+                                  [foundPoolDetails, foundPoolShareAssetDetails],
+                                  null,
+                                  2
+                                )}
+                              </pre>
+                            </ScrollArea>
+                          </div>
+                        </div>
+                      </DialogContent>
+                    </Dialog>
+                  ) : null}
+                  {assetADetails && assetBDetails ? (
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button className="ml-2" variant="outline">
+                          Swappable asset JSON
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-[550px] bg-white">
+                        <DialogHeader>
+                          <DialogTitle>Swappable asset JSON</DialogTitle>
+                          <DialogDescription>
+                            Check out the details returned by the network this pool's swappable
+                            assets
+                          </DialogDescription>
+                        </DialogHeader>
+                        <div className="grid grid-cols-1">
+                          <div className="col-span-1">
+                            <ScrollArea className="h-72 rounded-md border">
+                              <pre>
+                                {JSON.stringify(
+                                  {
+                                    assetA: assetA ?? "",
+                                    assetADetails: assetADetails ?? {},
+                                    aBitassetData: aBitassetData ?? {},
+                                    assetB: assetB ?? "",
+                                    assetBDetails: assetBDetails ?? {},
+                                    bBitassetData: bBitassetData ?? {},
+                                    poolShareDetails: poolShareDetails ?? {},
+                                  },
+                                  null,
+                                  2
+                                )}
+                              </pre>
+                            </ScrollArea>
+                          </div>
+                        </div>
+                      </DialogContent>
+                    </Dialog>
+                  ) : null}
+                </>
+              ) : null}
+            </CardContent>
           </Card>
         </div>
-        <div className="grid grid-cols-1 mt-5">
-          {usr && usr.username && usr.username.length ? <CurrentUser usr={usr} /> : null}
+
+        <div className="grid grid-cols-2 gap-5 mt-5">
+          {pool ? (
+            <div className="grid grid-cols-1 gap-3">
+              {usrBalances && foundPoolDetails ? (
+                <>
+                  <MarketAssetCard
+                    asset={assetB.symbol}
+                    assetData={assetB}
+                    assetDetails={assetBDetails}
+                    bitassetData={bBitassetData}
+                    marketSearch={marketSearch}
+                    chain={usr.chain}
+                    usrBalances={usrBalances}
+                    type="buy"
+                  />
+                  <MarketAssetCard
+                    asset={assetA.symbol}
+                    assetData={assetA}
+                    assetDetails={assetADetails}
+                    bitassetData={aBitassetData}
+                    marketSearch={marketSearch}
+                    chain={usr.chain}
+                    usrBalances={usrBalances}
+                    type="sell"
+                  />
+                </>
+              ) : (
+                <>
+                  <Card>
+                    <CardHeader className="pb-2 pt-4">
+                      <CardTitle>Quote asset</CardTitle>
+                      <CardDescription className="text-lg">Loading...</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-2">
+                        <Skeleton className="h-4 w-[250px]" />
+                        <Skeleton className="h-4 w-[200px]" />
+                        <Skeleton className="h-4 w-[250px]" />
+                        <Skeleton className="h-4 w-[200px]" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardHeader className="pb-2 pt-4">
+                      <CardTitle>Base asset</CardTitle>
+                      <CardDescription className="text-lg">Loading...</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-2">
+                        <Skeleton className="h-4 w-[250px]" />
+                        <Skeleton className="h-4 w-[200px]" />
+                        <Skeleton className="h-4 w-[250px]" />
+                        <Skeleton className="h-4 w-[200px]" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                </>
+              )}
+            </div>
+          ) : null}
+
+          <div className="grid grid-cols-1 gap-3">
+            {pool && assetA && assetB ? (
+              <>
+                <Card>
+                  <CardHeader className="pb-2 pt-4">
+                    <CardTitle>Need to borrow some assets?</CardTitle>
+                    <CardDescription className="text-sm">
+                      DEX users lend assets at user defined rates. You could borrow from DEX
+                      participants, at their defined rates.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="text-sm pb-3">
+                    <Label>Search by borrowable assets</Label>
+                    <br />
+                    <a
+                      href={`/borrow/index.html?tab=searchOffers&searchTab=borrow&searchText=${assetA.symbol}`}
+                    >
+                      <Badge>{assetA.symbol}</Badge>
+                    </a>
+                    <a
+                      href={`/borrow/index.html?tab=searchOffers&searchTab=borrow&searchText=${assetB.symbol}`}
+                    >
+                      <Badge className="ml-2 mt-1 mb-1">{assetB.symbol}</Badge>
+                    </a>
+                    <a
+                      href={`/borrow/index.html?tab=searchOffers&searchTab=borrow&searchText=${foundPool?.share_asset_symbol}`}
+                    >
+                      <Badge className="ml-2 mt-1 mb-1">{foundPool?.share_asset_symbol}</Badge>
+                    </a>
+                    <br />
+                    <Label>Search by accepted collateral</Label>
+                    <br />
+                    <a
+                      href={`/borrow/index.html?tab=searchOffers&searchTab=collateral&searchText=${assetA.symbol}`}
+                    >
+                      <Badge>{assetA.symbol}</Badge>
+                    </a>
+                    <a
+                      href={`/borrow/index.html?tab=searchOffers&searchTab=collateral&searchText=${assetB.symbol}`}
+                    >
+                      <Badge className="ml-2 mt-1">{assetB.symbol}</Badge>
+                    </a>
+                    <a
+                      href={`/borrow/index.html?tab=searchOffers&searchTab=collateral&searchText=${foundPool?.share_asset_symbol}`}
+                    >
+                      <Badge className="ml-2 mt-1">{foundPool?.share_asset_symbol}</Badge>
+                    </a>
+                  </CardContent>
+                </Card>
+
+                {foundPoolDetails && marketSearch && usrBalances ? (
+                  <MarketAssetCard
+                    asset={foundPoolDetails.share_asset_symbol}
+                    assetData={foundPoolDetails.share_asset_details}
+                    assetDetails={poolShareDetails}
+                    bitassetData={null}
+                    marketSearch={marketSearch}
+                    chain={usr.chain}
+                    usrBalances={usrBalances}
+                    type="pool"
+                  />
+                ) : (
+                  <Card>
+                    <CardHeader className="pb-2 pt-4">
+                      <CardTitle>Pool share asset</CardTitle>
+                      <CardDescription className="text-lg">Loading...</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-2">
+                        <Skeleton className="h-4 w-[250px]" />
+                        <Skeleton className="h-4 w-[200px]" />
+                        <Skeleton className="h-4 w-[250px]" />
+                        <Skeleton className="h-4 w-[200px]" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+              </>
+            ) : null}
+          </div>
         </div>
       </div>
+
+      <div className="grid grid-cols-1 mt-5 ml-8 mr-8">
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle>Risks associated with liquidity pool staking</CardTitle>
+            <CardDescription>
+              Please do your own research into liquidity pools before staking any assets.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <span className="text-sm">
+              <Label className="mb-0 pb-0 text-lg">Liquidity pool risks</Label>
+              <ul className="ml-2 list-disc [&>li]:mt-1 pl-2">
+                <li>aaaaaa</li>
+              </ul>
+            </span>
+          </CardContent>
+        </Card>
+      </div>
+
+      {usr && usr.username && usr.username.length ? <CurrentUser usr={usr} /> : null}
     </>
   );
 }
