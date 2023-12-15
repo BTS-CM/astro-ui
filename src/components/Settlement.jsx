@@ -290,7 +290,6 @@ export default function Settlement(properties) {
       ]);
       unsub = smartcoinDataStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
-          console.log({ data });
           setFinalAsset(data[0]);
           setFinalCollateralAsset(data[1]);
           setFinalBitasset(data[2]);
@@ -312,7 +311,6 @@ export default function Settlement(properties) {
 
       unsub = collateralBidsStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
-          console.log({ data });
           setCollateralBids(data);
         }
       });
@@ -322,10 +320,6 @@ export default function Settlement(properties) {
       if (unsub) unsub();
     };
   }, [parsedAsset, usr]);
-
-  if (collateralBids) {
-    console.log({ collateralBids });
-  }
 
   const collateralBiddingDisabled = useMemo(() => {
     if (finalAsset) {
