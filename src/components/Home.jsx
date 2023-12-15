@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useSyncExternalStore } from "react";
+import { useTranslation } from "react-i18next";
+
+import { i18n as i18nInstance } from "../lib/i18n.js";
 
 import {
   Card,
@@ -12,15 +15,14 @@ import {
 
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 
-import { Button } from "@/components/ui/button";
-
 import { useInitCache } from "../effects/Init.ts";
 import { $currentUser } from "../stores/users.ts";
 
-import AccountSelect from "./AccountSelect.jsx";
 import CurrentUser from "./common/CurrentUser.jsx";
 
 export default function Home(properties) {
+  const { t, i18n } = useTranslation("en", { i18n: i18nInstance });
+
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
 
   useInitCache(usr && usr.chain ? usr.chain : "bitshares", []);
@@ -34,17 +36,17 @@ export default function Home(properties) {
               <a href="/pool/index.html" style={{ textDecoration: "none" }}>
                 <Card>
                   <CardHeader>
-                    <CardTitle>💱 Pool exchange</CardTitle>
-                    <CardDescription>Swap assets via a pool</CardDescription>
+                    <CardTitle>{t("index:pool.title")}</CardTitle>
+                    <CardDescription>{t("index:pool.subtitle")}</CardDescription>
                   </CardHeader>
                 </Card>
               </a>
             </HoverCardTrigger>
             <HoverCardContent className="w-80 text-sm pt-1">
               <ul className="ml-2 list-disc [&>li]:mt-2">
-                <li>Swap assets via user created liquidity pools.</li>
-                <li>Pools have different trading pairs and fees.</li>
-                <li>Simpler but more costly than a limit order.</li>
+                <li>{t("index:pool.hover1")}</li>
+                <li>{t("index:pool.hover2")}</li>
+                <li>{t("index:pool.hover3")}</li>
               </ul>
             </HoverCardContent>
           </HoverCard>
@@ -54,18 +56,18 @@ export default function Home(properties) {
               <a href="/dex/index.html" style={{ textDecoration: "none" }}>
                 <Card>
                   <CardHeader>
-                    <CardTitle>📈 DEX limit orders</CardTitle>
-                    <CardDescription>Trade on the Bitshares DEX</CardDescription>
+                    <CardTitle>{t("index:dex.title")}</CardTitle>
+                    <CardDescription>{t("index:dex.subtitle")}</CardDescription>
                   </CardHeader>
                 </Card>
               </a>
             </HoverCardTrigger>
             <HoverCardContent className="w-80 text-sm pt-1">
               <ul className="ml-2 list-disc [&>li]:mt-2">
-                <li>Manually craft limit orders.</li>
-                <li>Use any asset trading pair.</li>
-                <li>Specify order expiration dates.</li>
-                <li>More complex but cheaper than pool swaps.</li>
+                <li>{t("index:dex.hover1")}</li>
+                <li>{t("index:dex.hover2")}</li>
+                <li>{t("index:dex.hover3")}</li>
+                <li>{t("index:dex.hover4")}</li>
               </ul>
             </HoverCardContent>
           </HoverCard>
@@ -75,16 +77,15 @@ export default function Home(properties) {
               <a href="/transfer/index.html" style={{ textDecoration: "none" }}>
                 <Card>
                   <CardHeader>
-                    <CardTitle>💸 Transfer assets</CardTitle>
-                    <CardDescription>Send assets to other users</CardDescription>
+                    <CardTitle>{t("index:transfer.title")}</CardTitle>
+                    <CardDescription>{t("index:transfer.subtitle")}</CardDescription>
                   </CardHeader>
                 </Card>
               </a>
             </HoverCardTrigger>
             <HoverCardContent className="w-80 text-sm pt-1">
               <ul className="ml-2 list-disc [&>li]:mt-2">
-                <li>Transfer assets to anyone on the Bitshares blockchain in seconds.</li>
-                <li>Optional encrypted memos.</li>
+                <li>{t("index:transfer.hover1")}</li>
               </ul>
             </HoverCardContent>
           </HoverCard>
@@ -94,17 +95,17 @@ export default function Home(properties) {
               <a href="/borrow/index.html" style={{ textDecoration: "none" }}>
                 <Card>
                   <CardHeader>
-                    <CardTitle>🏦 Borrow funds</CardTitle>
-                    <CardDescription>Borrow from other users</CardDescription>
+                    <CardTitle>{t("index:borrow.title")}</CardTitle>
+                    <CardDescription>{t("index:borrow.subtitle")}</CardDescription>
                   </CardHeader>
                 </Card>
               </a>
             </HoverCardTrigger>
             <HoverCardContent className="w-80 text-sm pt-1">
               <ul className="ml-2 list-disc [&>li]:mt-2">
-                <li>Browse the active user created credit offers.</li>
-                <li>Borrow assets from them at their desired rate.</li>
-                <li>Use requested collateral to secure your loan.</li>
+                <li>{t("index:borrow.hover1")}</li>
+                <li>{t("index:borrow.hover2")}</li>
+                <li>{t("index:borrow.hover3")}</li>
               </ul>
             </HoverCardContent>
           </HoverCard>
@@ -114,26 +115,18 @@ export default function Home(properties) {
               <a href="/smartcoins/index.html" style={{ textDecoration: "none" }}>
                 <Card>
                   <CardHeader>
-                    <CardTitle>💵 Create debt</CardTitle>
-                    <CardDescription>Issue collateralized debt</CardDescription>
+                    <CardTitle>{t("index:smartcoins.title")}</CardTitle>
+                    <CardDescription>{t("index:smartcoins.subtitle")}</CardDescription>
                   </CardHeader>
                 </Card>
               </a>
             </HoverCardTrigger>
             <HoverCardContent className="w-80 text-sm pt-1">
               <ul className="ml-2 list-disc [&>li]:mt-2">
-                <li>
-                  Bitassets like USD, CNY and EUR are committee created stablecoins (smartcoins)
-                  backed with BTS.
-                </li>
-                <li>
-                  User created smartcoins can be backed with any asset and reference any external
-                  feed.
-                </li>
-                <li>External settlement prices are derived from configured feed producers.</li>
-                <li>
-                  Exposure to external price feeds can pose a risk to collateralized debt positions.
-                </li>
+                <li>{t("index:smartcoins.hover1")}</li>
+                <li>{t("index:smartcoins.hover2")}</li>
+                <li>{t("index:smartcoins.hover3")}</li>
+                <li>{t("index:smartcoins.hover4")}</li>
               </ul>
             </HoverCardContent>
           </HoverCard>
@@ -143,18 +136,18 @@ export default function Home(properties) {
               <a href="/ltm/index.html" style={{ textDecoration: "none" }}>
                 <Card>
                   <CardHeader>
-                    <CardTitle>🏅 Buy LTM</CardTitle>
-                    <CardDescription>Buy a lifetime membership</CardDescription>
+                    <CardTitle>{t("index:ltm.title")}</CardTitle>
+                    <CardDescription>{t("index:ltm.subtitle")}</CardDescription>
                   </CardHeader>
                 </Card>
               </a>
             </HoverCardTrigger>
             <HoverCardContent className="w-80 text-sm pt-1">
               <ul className="ml-2 list-disc [&>li]:mt-2">
-                <li>There are multiple benefits to becoming a lifetime member.</li>
-                <li>Lifetime members receive a 80% vesting balance rebate on fees.</li>
-                <li>Lifetime members can create premium Bitshares account names.</li>
-                <li>Lifetime members can earn through the referral system.</li>
+                <li>{t("index:ltm.hover1")}</li>
+                <li>{t("index:ltm.hover2")}</li>
+                <li>{t("index:ltm.hover3")}</li>
+                <li>{t("index:ltm.hover4")}</li>
               </ul>
             </HoverCardContent>
           </HoverCard>
@@ -164,17 +157,17 @@ export default function Home(properties) {
               <a href="/portfolio/index.html" style={{ textDecoration: "none" }}>
                 <Card>
                   <CardHeader>
-                    <CardTitle>💰 Portfolio</CardTitle>
-                    <CardDescription>View your portfolio</CardDescription>
+                    <CardTitle>{t("index:portfolio.title")}</CardTitle>
+                    <CardDescription>{t("index:portfolio.subtitle")}</CardDescription>
                   </CardHeader>
                 </Card>
               </a>
             </HoverCardTrigger>
             <HoverCardContent className="w-80 text-sm pt-1">
               <ul className="ml-2 list-disc [&>li]:mt-2">
-                <li>Check your balances.</li>
-                <li>Monitor your open orders.</li>
-                <li>Analyze your recent account activity.</li>
+                <li>{t("index:portfolio.hover1")}</li>
+                <li>{t("index:portfolio.hover2")}</li>
+                <li>{t("index:portfolio.hover3")}</li>
               </ul>
             </HoverCardContent>
           </HoverCard>
@@ -184,17 +177,17 @@ export default function Home(properties) {
               <a href="/featured/index.html" style={{ textDecoration: "none" }}>
                 <Card>
                   <CardHeader>
-                    <CardTitle>🏆 Top markets</CardTitle>
-                    <CardDescription>View most active markets</CardDescription>
+                    <CardTitle>{t("index:featured.title")}</CardTitle>
+                    <CardDescription>{t("index:featured.subtitle")}</CardDescription>
                   </CardHeader>
                 </Card>
               </a>
             </HoverCardTrigger>
             <HoverCardContent className="w-80 text-sm pt-1">
               <ul className="ml-2 list-disc [&>li]:mt-2">
-                <li>Navigate to the most active trading pairs.</li>
-                <li>Compare market trading volume and value.</li>
-                <li>Compare quantity of market trades.</li>
+                <li>{t("index:featured.hover1")}</li>
+                <li>{t("index:featured.hover2")}</li>
+                <li>{t("index:featured.hover3")}</li>
               </ul>
             </HoverCardContent>
           </HoverCard>
@@ -204,16 +197,16 @@ export default function Home(properties) {
               <a href="/deals/index.html" style={{ textDecoration: "none" }}>
                 <Card>
                   <CardHeader>
-                    <CardTitle>ℹ️ Credit deals</CardTitle>
-                    <CardDescription>Check your credit deals</CardDescription>
+                    <CardTitle>{t("index:deals.title")}</CardTitle>
+                    <CardDescription>{t("index:deals.subtitle")}</CardDescription>
                   </CardHeader>
                 </Card>
               </a>
             </HoverCardTrigger>
             <HoverCardContent className="w-80 text-sm pt-1">
               <ul className="ml-2 list-disc [&>li]:mt-2">
-                <li>Monitor your active credit deals.</li>
-                <li>Manage the state of your credit deals.</li>
+                <li>{t("index:deals.hover1")}</li>
+                <li>{t("index:deals.hover2")}</li>
               </ul>
             </HoverCardContent>
           </HoverCard>

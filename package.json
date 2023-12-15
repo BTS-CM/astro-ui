@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@astrojs/react": "^3.0.7",
-    "@astrojs/tailwind": "^5.0.2",
+    "@astrojs/tailwind": "^5.0.3",
     "@hookform/resolvers": "^3.3.2",
     "@nanostores/persistent": "^0.9.1",
     "@nanostores/query": "^0.2.8",
@@ -33,10 +33,9 @@
     "@radix-ui/react-toggle": "^1.0.3",
     "@radix-ui/react-tooltip": "^1.0.7",
     "@react-hook/throttle": "^2.2.0",
-    "@types/react": "^18.2.42",
+    "@types/react": "^18.2.45",
     "@types/react-dom": "^18.2.17",
-    "astro": "^4.0.0",
-    "astro-compress": "^2.2.3",
+    "astro": "^4.0.5",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "cmdk": "^0.2.0",
@@ -47,12 +46,16 @@
     "react": "^18.2.0",
     "react-day-picker": "^8.9.1",
     "react-dom": "^18.2.0",
-    "react-hook-form": "^7.48.2",
+    "react-hook-form": "^7.49.2",
+    "react-i18next": "^13.5.0",
     "react-intersection-observer": "^9.5.3",
     "react-window": "^1.8.10",
     "tailwind-merge": "^2.1.0",
     "tailwindcss": "^3.3.6",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "astro-compress": "github:astro-community/AstroCompress#no-sharp"
   }
 }
