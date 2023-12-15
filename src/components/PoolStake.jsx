@@ -11,8 +11,6 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Toggle } from "@/components/ui/toggle";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
 import {
   Card,
   CardContent,
@@ -830,12 +828,12 @@ export default function PoolForm() {
                         <Tabs
                           key={`staking_${stakeTab}`}
                           defaultValue={stakeTab}
-                          className="w-full"
+                          className="w-full mt-5"
                         >
-                          <TabsList className="grid w-full grid-cols-3 gap-2">
+                          <TabsList className="grid w-full grid-cols-2 gap-2">
                             {stakeTab === "stake" ? (
                               <TabsTrigger value="stake" style={activeTabStyle}>
-                                Stake assets
+                                Staking assets
                               </TabsTrigger>
                             ) : (
                               <TabsTrigger
@@ -844,12 +842,12 @@ export default function PoolForm() {
                                   setStakeTab("stake");
                                 }}
                               >
-                                View all offers
+                                Stake assets
                               </TabsTrigger>
                             )}
                             {stakeTab === "unstake" ? (
                               <TabsTrigger value="unstake" style={activeTabStyle}>
-                                Unstake
+                                Unstaking assets
                               </TabsTrigger>
                             ) : (
                               <TabsTrigger
@@ -858,7 +856,7 @@ export default function PoolForm() {
                                   setStakeTab("unstake");
                                 }}
                               >
-                                View compatible orders
+                                Unstake assets
                               </TabsTrigger>
                             )}
                           </TabsList>

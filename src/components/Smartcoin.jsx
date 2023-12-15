@@ -90,6 +90,7 @@ const tips = {
     "This market-issued asset can have its price feeds supplied by Bitshares witnesses.",
   committee_fed_asset:
     "This market-issued asset can have its price feeds supplied by Bitshares committee members.",
+  disable_collateral_bidding: "The issuer of this asset can disable collateral bidding.",
 };
 
 function timeAgo(dateString) {
@@ -2626,7 +2627,7 @@ export default function Smartcoin(properties) {
                       </span>
                     </div>
                   </div>
-                  <a href="/bid/index.html">
+                  <a href={`/settlement/index.html?id=${finalAsset.id}`}>
                     <Button className="mt-3 pb-2">
                       Bid on {finalAsset.symbol}'s settlement fund
                     </Button>
@@ -2700,7 +2701,7 @@ export default function Smartcoin(properties) {
                       </span>
                     </div>
                   </div>
-                  <a href="/bid/index.html">
+                  <a href={`/settlement/index.html?id=${finalAsset.id}`}>
                     <Button className="mt-3 pb-2">
                       Bid on {finalAsset.symbol}'s settlement fund
                     </Button>
