@@ -1,8 +1,9 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import { persistentAtom } from "@nanostores/persistent";
+import * as fflate from "fflate";
 
-const languages = ["en"];
+const languages = ["en", "de"];
 const pages = [
   "AccountSearch",
   "AccountSelect",
@@ -39,42 +40,46 @@ const pages = [
   "Smartcoins",
   "Transfer",
 ];
-
-async function fetchLocales() {
-  const translations = {};
-  for (const language of languages) {
-    const localPages = {};
-    for (const page of pages) {
-      const response = await fetch(`/locales/${language}/${page}.json`);
-      if (response.ok) {
-        const pageContents = await response.json();
-        localPages[page] = pageContents;
-      } else {
-        console.error(`Failed to fetch: /locales/${language}/${page}.json`);
-      }
-    }
-    translations[language] = localPages;
-  }
-  console.log({ translations });
-  return translations;
-}
-
 const locale = persistentAtom("locale", "en");
 
-i18n.use(initReactI18next).init(
-  {
-    resources: await fetchLocales(),
-    lng: "en",
-    defaultNS: pages,
-    fallbackLng: ["en"],
-    ns: pages,
-  },
-  (err, t) => {
-    if (err) {
-      console.log("something went wrong loading", err);
+async function fetchTranslations() {
+  const response = await fetch(`http://localhost:8080/cache/translations/${locale.get()}`);
+  if (response.ok) {
+    const pageContents = await response.json();
+
+    if (pageContents && pageContents.result) {
+      const decompressed = fflate.decompressSync(fflate.strToU8(pageContents.result, true));
+      const history = JSON.parse(fflate.strFromU8(decompressed));
+      const translations = {};
+      translations[locale.get()] = history;
+      return translations;
     }
+  } else {
+    console.error(`Failed to fetch translation cache`);
   }
-);
+  return;
+}
+
+async function initialize() {
+  const resources = await fetchTranslations();
+
+  i18n.use(initReactI18next).init(
+    {
+      resources,
+      lng: "en",
+      defaultNS: pages,
+      fallbackLng: ["en", "de"],
+      ns: pages,
+    },
+    (err, t) => {
+      if (err) {
+        console.log("something went wrong loading", err);
+      }
+    }
+  );
+}
+
+initialize();
 
 /*
 function setLocale(newLocale) {

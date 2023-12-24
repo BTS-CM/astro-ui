@@ -1,6 +1,0 @@
-{
-  "openBuyOrdersTitle": "My open buy orders",
-  "openSellOrdersTitle": "My open sell orders",
-  "openBuyOrdersDescription": "Your open buy limit orders for the market {{assetA}}/{{assetB}}",
-  "openSellOrdersDescription": "Your open sell limit orders for the market {{assetA}}/{{assetB}}"
-}

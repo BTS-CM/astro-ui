@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useSyncExternalStore, useMemo } from "react";
 import { FixedSizeList as List } from "react-window";
 import { useTranslation } from "react-i18next";
-import { i18n as i18nInstance } from "@/lib/i18n.js";
+import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
 import {
   Card,
@@ -27,7 +27,7 @@ import { $poolCacheBTS, $poolCacheTEST } from "../../stores/cache.ts";
 
 export default function PoolDialogs(properties) {
   const { assetA, assetB, assetAData, assetBData, chain } = properties;
-  const { t, i18n } = useTranslation("en", { i18n: i18nInstance });
+  const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
 
   const _poolsBTS = useSyncExternalStore($poolCacheBTS.subscribe, $poolCacheBTS.get, () => true);
   const _poolsTEST = useSyncExternalStore($poolCacheTEST.subscribe, $poolCacheTEST.get, () => true);

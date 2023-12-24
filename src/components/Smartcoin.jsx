@@ -3,7 +3,7 @@ import { FixedSizeList as List } from "react-window";
 import { useForm } from "react-hook-form";
 import { LockOpen2Icon, LockClosedIcon } from "@radix-ui/react-icons";
 import { useTranslation } from "react-i18next";
-import { i18n as i18nInstance } from "@/lib/i18n.js";
+import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
 import {
   Card,
@@ -96,7 +96,7 @@ function timeAgo(dateString, t) {
 }
 
 export default function Smartcoin(properties) {
-  const { t, i18n } = useTranslation("en", { i18n: i18nInstance });
+  const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
   const form = useForm({
     defaultValues: {
       account: "",

@@ -1,13 +1,13 @@
 import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { i18n as i18nInstance } from "@/lib/i18n.js";
+import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { getTimeSince, trimPrice } from "../../../lib/common";
 
 export default function MarketSummary(properties) {
   const { type, publicMarketHistory, assetAData, assetBData } = properties;
-  const { t, i18n } = useTranslation("en", { i18n: i18nInstance });
+  const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
 
   const filteredMarketHistory = useMemo(() => {
     return publicMarketHistory.filter((x) => x.type === type);

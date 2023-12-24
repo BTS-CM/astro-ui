@@ -1,9 +1,0 @@
-{
-  "dialogContent": {
-    "leaveApp": "⚠️ You are about to leave this app!",
-    "navigateToExternal": "You are about to navigate to an external website.",
-    "proceedToURL": "Do you want to proceed to the following URL?",
-    "checkingLeave": "Just checking - are you sure you want to leave?",
-    "openLink": "Open Link"
-  }
-}
