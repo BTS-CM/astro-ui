@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useSyncExternalStore, useMemo, useCallback } from "react";
 import { FixedSizeList as List } from "react-window";
 import Fuse from "fuse.js";
+import { useTranslation } from "react-i18next";
+import { i18n as i18nInstance } from "@/lib/i18n.js";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -39,6 +41,7 @@ const activeTabStyle = {
 };
 
 export default function Smartcoins(properties) {
+  const { t, i18n } = useTranslation("en", { i18n: i18nInstance });
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
 
   const bitAssetDataBTS = useSyncExternalStore(
@@ -207,7 +210,7 @@ export default function Smartcoins(properties) {
                 text={thisBitassetData.id}
                 hyperlink={`https://blocksights.info/#/assets/${thisBitassetData.id}`}
               />
-              {")"} created by {bitasset.issuer.name} {"("}
+              {")"} {t("Smartcoins:createdBy")} {bitasset.issuer.name} {"("}
               <ExternalLink
                 classnamecontents="text-blue-500"
                 type="text"
@@ -217,7 +220,7 @@ export default function Smartcoins(properties) {
               {")"}
             </CardTitle>
             <CardDescription>
-              Backing collateral:
+              {t("Smartcoins:backingCollateral")}:
               <b>
                 {` ${thisCollateralAssetData.s} `}
                 {"("}
@@ -232,14 +235,18 @@ export default function Smartcoins(properties) {
             </CardDescription>
           </CardHeader>
           <CardContent className="text-sm pb-3">
-            <Badge className="mr-2 mt-2">Feed qty: {bitasset.feeds?.length ?? 0}</Badge>
-            <Badge className="mr-2">MCR: {bitasset.mcr / 10} %</Badge>
-            <Badge className="mr-2">MSSR: {bitasset.mssr / 10} %</Badge>
-            <Badge className="mr-2">ICR: {bitasset.icr / 10} %</Badge>
+            <Badge className="mr-2 mt-2">
+              {t("Smartcoins:feedQty", { qty: bitasset.feeds?.length ?? 0 })}
+            </Badge>
+            <Badge className="mr-2">{t("Smartcoins:mcr", { mcr: bitasset.mcr / 10 })}</Badge>
+            <Badge className="mr-2">{t("Smartcoins:mssr", { mssr: bitasset.mssr / 10 })}</Badge>
+            <Badge className="mr-2">{t("Smartcoins:icr", { icr: bitasset.icr / 10 })}</Badge>
           </CardContent>
           <CardFooter className="pb-5">
             <a href={`/smartcoin/index.html?id=${bitasset.assetID}`}>
-              <Button className="h-8">Proceed to borrow {thisBitassetData.s}</Button>
+              <Button className="h-8">
+                {t("Smartcoins:proceedToBorrow", { asset: thisBitassetData.s })}
+              </Button>
             </a>
           </CardFooter>
         </Card>
@@ -252,20 +259,20 @@ export default function Smartcoins(properties) {
       <div style={{ ...style }} key={`acard-${index}`}>
         <Card className="ml-2 mr-2">
           <CardHeader className="pb-1">
-            <CardTitle>Smartcoin "..." (1.3.x) created by ... (1.2.x)</CardTitle>
+            <CardTitle>{t("Smartcoins:placeholderSmartcoinCreated")}</CardTitle>
             <CardDescription>
-              Backing collateral:
+              {t("Smartcoins:placeholderBackingCollateral")}
               <b>{` ... (1.3.x)`}</b>
             </CardDescription>
           </CardHeader>
           <CardContent className="text-sm pb-3">
-            <Badge className="mr-2 mt-2">Feed qty: ?</Badge>
-            <Badge className="mr-2">MCR: ? %</Badge>
-            <Badge className="mr-2">MSSR: ? %</Badge>
-            <Badge className="mr-2">ICR: ? %</Badge>
+            <Badge className="mr-2 mt-2">{t("Smartcoins:placeholderFeedQty")}</Badge>
+            <Badge className="mr-2">{t("Smartcoins:placeholderMCR")}</Badge>
+            <Badge className="mr-2">{t("Smartcoins:placeholderMSSR")}</Badge>
+            <Badge className="mr-2">{t("Smartcoins:placeholderICR")}</Badge>
           </CardContent>
           <CardFooter className="pb-5">
-            <Button className="h-8">Proceed to borrow ?</Button>
+            <Button className="h-8">{t("Smartcoins:placeholderProceedToBorrow")}</Button>
           </CardFooter>
         </Card>
       </div>
@@ -357,15 +364,8 @@ export default function Smartcoins(properties) {
         <div className="grid grid-cols-1 gap-3">
           <Card>
             <CardHeader>
-              <CardTitle>💵 Select a borrowable asset</CardTitle>
-              <CardDescription>
-                There are multiple user & committee created smartcoins on the Bitshares blockchain
-                which you can issue yourself, given you provide and maintain sufficient backing
-                collateral.
-                <br />
-                Thoroughly research assets before issuing them into existence, know your risk
-                exposure and tolerances.
-              </CardDescription>
+              <CardTitle>{t("Smartcoins:selectBorrowableAsset")}</CardTitle>
+              <CardDescription>{t("Smartcoins:smartcoinDescription")}</CardDescription>
             </CardHeader>
             <CardContent>
               {bitAssetData && bitAssetData.length && usrBalances ? (
@@ -377,7 +377,7 @@ export default function Smartcoins(properties) {
                   <TabsList className="grid w-full grid-cols-4 gap-2">
                     {activeTab === "all" ? (
                       <TabsTrigger value="all" style={activeTabStyle}>
-                        Viewing all assets
+                        {t("Smartcoins:viewingAllAssets")}
                       </TabsTrigger>
                     ) : (
                       <TabsTrigger
@@ -387,12 +387,12 @@ export default function Smartcoins(properties) {
                           window.history.replaceState({}, "", `?tab=all`);
                         }}
                       >
-                        View all assets
+                        {t("Smartcoins:viewAllAssets")}
                       </TabsTrigger>
                     )}
                     {activeTab === "compatible" ? (
                       <TabsTrigger value="compatible" style={activeTabStyle}>
-                        Viewing compatible
+                        {t("Smartcoins:viewingCompatible")}
                       </TabsTrigger>
                     ) : (
                       <TabsTrigger
@@ -402,12 +402,12 @@ export default function Smartcoins(properties) {
                           window.history.replaceState({}, "", `?tab=compatible`);
                         }}
                       >
-                        View compatible
+                        {t("Smartcoins:viewCompatible")}
                       </TabsTrigger>
                     )}
                     {activeTab === "holdings" ? (
                       <TabsTrigger value="holdings" style={activeTabStyle}>
-                        Viewing holdings
+                        {t("Smartcoins:viewingHoldings")}
                       </TabsTrigger>
                     ) : (
                       <TabsTrigger
@@ -417,12 +417,12 @@ export default function Smartcoins(properties) {
                           window.history.replaceState({}, "", `?tab=holdings`);
                         }}
                       >
-                        View holdings
+                        {t("Smartcoins:viewHoldings")}
                       </TabsTrigger>
                     )}
                     {activeTab === "search" ? (
                       <TabsTrigger value="search" style={activeTabStyle}>
-                        Searching
+                        {t("Smartcoins:searching")}
                       </TabsTrigger>
                     ) : (
                       <TabsTrigger
@@ -432,13 +432,13 @@ export default function Smartcoins(properties) {
                           window.history.replaceState({}, "", `?tab=search&searchTab=borrow`);
                         }}
                       >
-                        Search
+                        {t("Smartcoins:search")}
                       </TabsTrigger>
                     )}
                   </TabsList>
                   <TabsContent value="all">
                     <h5 className="mb-2 text-center">
-                      Listing {bitAssetData.length} (all) smartcoins
+                      {t("Smartcoins:listingAllSmartcoins", { count: bitAssetData.length })}
                     </h5>
                     <List
                       height={500}
@@ -451,7 +451,9 @@ export default function Smartcoins(properties) {
                   </TabsContent>
                   <TabsContent value="compatible">
                     <h5 className="mb-2 text-center">
-                      Listing {compatibleSmartcoins.length} smartcoins compatible with your account
+                      {t("Smartcoins:listingCompatibleSmartcoins", {
+                        count: compatibleSmartcoins.length,
+                      })}
                     </h5>
                     <List
                       height={500}
@@ -464,7 +466,9 @@ export default function Smartcoins(properties) {
                   </TabsContent>
                   <TabsContent value="holdings">
                     <h5 className="mb-2 text-center">
-                      Listing {heldSmartcoins ? heldSmartcoins.length : 0} held smartcoins
+                      {t("Smartcoins:listingHeldSmartcoins", {
+                        count: heldSmartcoins ? heldSmartcoins.length : 0,
+                      })}
                     </h5>
                     <List
                       height={500}
@@ -476,12 +480,12 @@ export default function Smartcoins(properties) {
                     </List>
                   </TabsContent>
                   <TabsContent value="search">
-                    <h5 className="mb-2 text-center">How do you want to search?</h5>
+                    <h5 className="mb-2 text-center">{t("Smartcoins:howToSearch")}</h5>{" "}
                     <Tabs defaultValue={activeSearch ?? "borrow"} className="w-full">
                       <TabsList className="grid w-full grid-cols-3 gap-2">
                         {activeSearch === "borrow" ? (
                           <TabsTrigger value="borrow" style={activeTabStyle}>
-                            Searching by borrowable asset
+                            {t("Smartcoins:searchingByBorrowable")}
                           </TabsTrigger>
                         ) : (
                           <TabsTrigger
@@ -491,12 +495,12 @@ export default function Smartcoins(properties) {
                               window.history.replaceState({}, "", `?tab=search&searchTab=borrow`);
                             }}
                           >
-                            Search by borrowable asset
+                            {t("Smartcoins:searchByBorrowable")}
                           </TabsTrigger>
                         )}
                         {activeSearch === "collateral" ? (
                           <TabsTrigger value="collateral" style={activeTabStyle}>
-                            Searching by collateral assets
+                            {t("Smartcoins:searchingByCollateral")}
                           </TabsTrigger>
                         ) : (
                           <TabsTrigger
@@ -510,12 +514,12 @@ export default function Smartcoins(properties) {
                               );
                             }}
                           >
-                            Search by collateral assets
+                            {t("Smartcoins:searchByCollateral")}
                           </TabsTrigger>
                         )}
                         {activeSearch === "issuer" ? (
                           <TabsTrigger value="issuer" style={activeTabStyle}>
-                            Searching by issuer
+                            {t("Smartcoins:searchingByIssuer")}
                           </TabsTrigger>
                         ) : (
                           <TabsTrigger
@@ -525,14 +529,14 @@ export default function Smartcoins(properties) {
                               window.history.replaceState({}, "", `?tab=search&searchTab=issuer`);
                             }}
                           >
-                            Search by issuer
+                            {t("Smartcoins:searchByIssuer")}
                           </TabsTrigger>
                         )}
                       </TabsList>
 
                       <Input
                         name="searchInput"
-                        placeholder={thisInput ?? "Enter search text"}
+                        placeholder={thisInput ?? t("Smartcoins:enterSearchText")}
                         className="mb-3 mt-3 w-full"
                         onChange={(event) => debouncedSetSearchInput(event)}
                       />
@@ -549,7 +553,7 @@ export default function Smartcoins(properties) {
                           </List>
                         ) : null}
                         {thisInput && thisResult && !thisResult.length ? (
-                          <>No results found</>
+                          <>{t("Smartcoins:noResultsFound")}</>
                         ) : null}
                       </TabsContent>
                       <TabsContent value="collateral">
@@ -564,7 +568,7 @@ export default function Smartcoins(properties) {
                           </List>
                         ) : null}
                         {thisInput && thisResult && !thisResult.length ? (
-                          <>No results found</>
+                          <>{t("Smartcoins:noResultsFound")}</>
                         ) : null}
                       </TabsContent>
                       <TabsContent value="issuer">
@@ -579,7 +583,7 @@ export default function Smartcoins(properties) {
                           </List>
                         ) : null}
                         {thisInput && thisResult && !thisResult.length ? (
-                          <>No results found</>
+                          <>{t("Smartcoins:noResultsFound")}</>
                         ) : null}
                       </TabsContent>
                     </Tabs>
@@ -589,14 +593,16 @@ export default function Smartcoins(properties) {
                 <Tabs defaultValue={"all"} className="w-full">
                   <TabsList className="grid w-full grid-cols-4 gap-2">
                     <TabsTrigger value="all" style={activeTabStyle}>
-                      Viewing all assets
+                      {t("Smartcoins:viewingAllAssets")}
                     </TabsTrigger>
-                    <TabsTrigger value="all">View compatible</TabsTrigger>
-                    <TabsTrigger value="all">View holdings</TabsTrigger>
-                    <TabsTrigger value="all">Search</TabsTrigger>
+                    <TabsTrigger value="all">{t("Smartcoins:viewCompatible")}</TabsTrigger>
+                    <TabsTrigger value="all">{t("Smartcoins:viewHoldings")}</TabsTrigger>
+                    <TabsTrigger value="all">{t("Smartcoins:search")}</TabsTrigger>
                   </TabsList>
                   <TabsContent value="all">
-                    <h5 className="mb-2 text-center">Listing ... (all) smartcoins</h5>
+                    <h5 className="mb-2 text-center">
+                      {t("Smartcoins:listingAllSmartcoins", { count: "..." })}
+                    </h5>
                     <List height={500} itemCount={3} itemSize={200} className="w-full">
                       {PlaceholderRow}
                     </List>

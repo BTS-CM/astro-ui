@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+import { i18n as i18nInstance } from "@/lib/i18n.js";
 import MarketSummary from "../Summary/MarketSummary";
 
 import {
@@ -15,19 +17,20 @@ import { Skeleton } from "@/components/ui/skeleton";
 export default function MarketTradeContents(properties) {
   const { type, publicMarketHistory, marketHistoryInProgress, reset, assetAData, assetBData } =
     properties;
+  const { t, i18n } = useTranslation("en", { i18n: i18nInstance });
 
   return (
     <Card>
       <CardHeader>
         <CardTitle>
           {type === "buy"
-            ? `Recently completed market buy orders`
-            : `Recently completed market sell orders`}
+            ? t("MarketTradeContents:recentlyCompletedBuyOrdersTitle")
+            : t("MarketTradeContents:recentlyCompletedSellOrdersTitle")}
         </CardTitle>
         <CardDescription>
           {type === "buy"
-            ? `The table below lists recently completed buy orders on the Bitshares DEX`
-            : `The table below lists recently completed sell orders on the Bitshares DEX`}
+            ? t("MarketTradeContents:recentlyCompletedBuyOrdersDescription")
+            : t("MarketTradeContents:recentlyCompletedSellOrdersDescription")}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-2">
@@ -40,7 +43,7 @@ export default function MarketTradeContents(properties) {
             assetBData={assetBData}
           />
         ) : (
-          "No market history found"
+          t("MarketTradeContents:noMarketHistoryFound")
         )}
       </CardContent>
     </Card>

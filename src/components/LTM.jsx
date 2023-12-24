@@ -1,4 +1,7 @@
 import React, { useState, useEffect, useSyncExternalStore } from "react";
+import { useTranslation } from "react-i18next";
+import { i18n as i18nInstance } from "@/lib/i18n.js";
+
 import {
   Card,
   CardContent,
@@ -17,6 +20,7 @@ import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
 import { Button } from "@/components/ui/button";
 
 export default function LTM(properties) {
+  const { t, i18n } = useTranslation("en", { i18n: i18nInstance });
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
 
   useInitCache(usr && usr.chain ? usr.chain : "bitshares", []);
@@ -29,44 +33,37 @@ export default function LTM(properties) {
         <div className="grid grid-cols-1 gap-3">
           <Card>
             <CardHeader>
-              <CardTitle>💱 LTM membership</CardTitle>
-              <CardDescription>Purchase a lifetime membership</CardDescription>
+              <CardTitle>{t("LTM:cardTitle")}</CardTitle>
+              <CardDescription>{t("LTM:cardDescription")}</CardDescription>
             </CardHeader>
             <CardContent>
               {usr && usr.id === usr.referrer ? (
                 <>
-                  <h3>This account already has purchased a lifetime membership!</h3>
-                  <h4>Your active lifetime membership benefits:</h4>
+                  <h3>{t("LTM:alreadyMember")}</h3>
+                  <h4>{t("LTM:benefitsTitle")}</h4>
                   <ul className="ml-2 list-disc [&>li]:mt-2">
-                    <li>Receive an 80% rebate on all fees into your vesting balance.</li>
-                    <li>Passively earn a share of fees spent by your referred users.</li>
-                    <li>Now able to generate premium account names.</li>
+                    <li>{t("LTM:benefit1")}</li>
+                    <li>{t("LTM:benefit2")}</li>
+                    <li>{t("LTM:benefit3")}</li>
                   </ul>
                 </>
               ) : null}
               {usr && usr.id != usr.referrer ? (
                 <>
-                  <h3>Want to purchase a lifetime membership for your account?</h3>
-
-                  <h4 className="text-lg">Lifetime members receive the following benefits:</h4>
+                  <h3>{t("LTM:wantToPurchase")}</h3>
+                  <h4 className="text-lg">{t("LTM:benefitsTitle")}</h4>
                   <ul className="ml-2 list-disc [&>li]:mt-2 pl-3 text-sm">
-                    <li>
-                      They receive an 80% rebate on all spent fees, in a vesting balance form.
-                    </li>
-                    <li>
-                      They unlock the ability to passively earn a share of fees spent by users they
-                      refer.
-                    </li>
-                    <li>The ability to generate premium blockchain account names.</li>
+                    <li>{t("LTM:benefit1")}</li>
+                    <li>{t("LTM:benefit2")}</li>
+                    <li>{t("LTM:benefit3")}</li>
                   </ul>
-
                   <Button
                     className="mt-3"
                     onClick={() => {
                       setShowDialog(true);
                     }}
                   >
-                    Purchase LTM
+                    {t("LTM:purchaseButton")}
                   </Button>
                 </>
               ) : null}
@@ -78,7 +75,7 @@ export default function LTM(properties) {
                   userID={usr.id}
                   dismissCallback={setShowDialog}
                   key={`BuyLTM${usr.id}`}
-                  headerText={`Purchasing a lifetime membership for ${usr.username}`}
+                  headerText={t("LTM:headerText", { username: usr.username })}
                   trxJSON={[
                     {
                       account_to_upgrade: usr.id,

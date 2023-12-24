@@ -2,6 +2,8 @@ import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
+import { useTranslation } from "react-i18next";
+import { i18n as i18nInstance } from "@/lib/i18n.js";
 
 import {
   Card,
@@ -61,6 +63,7 @@ export default function LimitOrderCard(properties) {
     fee,
     invertedMarket,
   } = properties;
+  const { t, i18n } = useTranslation("en", { i18n: i18nInstance });
 
   const { buyOrders, sellOrders } = properties;
 
@@ -357,10 +360,10 @@ export default function LimitOrderCard(properties) {
       <CardHeader className="pb-2">
         <CardTitle>
           {orderType === "buy"
-            ? `Buying ${thisAssetA} with ${thisAssetB}`
-            : `Selling ${thisAssetA} for ${thisAssetB}`}
+            ? t("LimitOrderCard:buyingWith", { assetA: thisAssetA, assetB: thisAssetB })
+            : t("LimitOrderCard:sellingFor", { assetA: thisAssetA, assetB: thisAssetB })}
         </CardTitle>
-        <CardDescription>Use this form to create a limit order operation.</CardDescription>
+        <CardDescription>{t("LimitOrderCard:createLimitOrder")}</CardDescription>
       </CardHeader>
       <CardContent>
         {thisAssetA && thisAssetB && marketSearch && assetAData && assetBData ? (
@@ -376,9 +379,12 @@ export default function LimitOrderCard(properties) {
                 name="priceAmount"
                 render={({ field }) => (
                   <FormItem className="mt-4 text-xs">
-                    <FormLabel>Price</FormLabel>
+                    <FormLabel>{t("LimitOrderCard:priceAmount.label")}</FormLabel>
                     <FormDescription>
-                      The price of {thisAssetA} in {thisAssetB}
+                      {t("LimitOrderCard:priceAmount.description", {
+                        assetA: thisAssetA,
+                        assetB: thisAssetB,
+                      })}
                     </FormDescription>
                     <FormControl>
                       <span className="grid grid-cols-12">
@@ -389,11 +395,11 @@ export default function LimitOrderCard(properties) {
                           <Popover>
                             <PopoverTrigger>
                               <span className="inline-block border border-grey rounded pl-4 pb-1 pr-4 text-lg">
-                                <Label>Edit</Label>
+                                <Label>{t("LimitOrderCard:editLabel")}</Label>
                               </span>
                             </PopoverTrigger>
                             <PopoverContent>
-                              <Label>Provide a new price</Label>
+                              <Label>{t("LimitOrderCard:priceAmount.provideNewLabel")}</Label>{" "}
                               <Input
                                 placeholder={price}
                                 className="mb-2 mt-1"
@@ -424,13 +430,14 @@ export default function LimitOrderCard(properties) {
                                   }
                                 }}
                               />
-
                               {(orderType === "buy" && !sellOrders) ||
                               (sellOrders && !sellOrders.length) ||
                               (orderType === "sell" && !buyOrders) ||
                               (buyOrders && !buyOrders.length) ? (
                                 <Badge disabled>
-                                  {orderType === "buy" ? `Use lowest ask` : `Use highest bid`}
+                                  {orderType === "buy"
+                                    ? t("LimitOrderCard:priceAmount.useLowestAsk")
+                                    : t("LimitOrderCard:priceAmount.useHighestBid")}
                                 </Badge>
                               ) : (
                                 <span
@@ -475,7 +482,9 @@ export default function LimitOrderCard(properties) {
                                   }}
                                 >
                                   <Badge>
-                                    {orderType === "buy" ? `Use lowest ask` : `Use highest bid`}
+                                    {orderType === "buy"
+                                      ? t("LimitOrderCard:priceAmount.useLowestAsk")
+                                      : t("LimitOrderCard:priceAmount.useHighestBid")}
                                   </Badge>
                                 </span>
                               )}
@@ -494,11 +503,11 @@ export default function LimitOrderCard(properties) {
                 name="sellAmount"
                 render={({ field }) => (
                   <FormItem className="mt-4 text-xs">
-                    <FormLabel>Amount</FormLabel>
+                    <FormLabel>{t("LimitOrderCard:sellAmount.label")}</FormLabel>
                     <FormDescription>
                       {orderType === "buy"
-                        ? `The amount of ${thisAssetA} you plan on buying`
-                        : `The amount of ${thisAssetA} you plan on selling`}
+                        ? t("LimitOrderCard:sellAmount.buyDescription", { asset: thisAssetA })
+                        : t("LimitOrderCard:sellAmount.sellDescription", { asset: thisAssetA })}
                     </FormDescription>
                     <FormControl>
                       <span className="grid grid-cols-12">
@@ -509,11 +518,11 @@ export default function LimitOrderCard(properties) {
                           <Popover>
                             <PopoverTrigger>
                               <span className="inline-block border border-grey rounded pl-4 pb-1 pr-4 text-lg">
-                                <Label>Edit</Label>
+                                <Label>{t("LimitOrderCard:editLabel")}</Label>
                               </span>
                             </PopoverTrigger>
                             <PopoverContent>
-                              <Label>Provide a new amount</Label>
+                              <Label>{t("LimitOrderCard:sellAmount.provideNewLabel")}</Label>{" "}
                               <Input
                                 placeholder={amount}
                                 className="mb-2 mt-1"
@@ -551,7 +560,7 @@ export default function LimitOrderCard(properties) {
                                     }
                                   }}
                                 >
-                                  Use balance
+                                  {t("LimitOrderCard:useBalance")}
                                 </Badge>
                               ) : null}
                             </PopoverContent>
@@ -568,11 +577,11 @@ export default function LimitOrderCard(properties) {
                 name="sellTotal"
                 render={({ field }) => (
                   <FormItem className="mt-4 text-xs">
-                    <FormLabel>Total</FormLabel>
+                    <FormLabel>{t("LimitOrderCard:sellTotal.label")}</FormLabel>
                     <FormDescription>
                       {orderType === "buy"
-                        ? `The total ${thisAssetB} you plan on selling`
-                        : `The total ${thisAssetB} you will receive`}
+                        ? t("LimitOrderCard:sellTotal.buyDescription", { asset: thisAssetB })
+                        : t("LimitOrderCard:sellTotal.sellDescription", { asset: thisAssetB })}
                     </FormDescription>
                     <FormControl>
                       <span className="grid grid-cols-12">
@@ -583,11 +592,11 @@ export default function LimitOrderCard(properties) {
                           <Popover>
                             <PopoverTrigger>
                               <span className="inline-block border border-grey rounded pl-4 pb-1 pr-4 text-lg">
-                                <Label>Edit</Label>
+                                <Label>{t("LimitOrderCard:editLabel")}</Label>
                               </span>
                             </PopoverTrigger>
                             <PopoverContent>
-                              <Label>Provide a new total</Label>
+                              <Label>{t("LimitOrderCard:sellTotal.provideNewLabel")}</Label>
                               <Input
                                 placeholder={total}
                                 className="mb-2 mt-1"
@@ -625,7 +634,7 @@ export default function LimitOrderCard(properties) {
                                     }
                                   }}
                                 >
-                                  Use balance
+                                  {t("LimitOrderCard:useBalance")}
                                 </Badge>
                               ) : null}
                             </PopoverContent>
@@ -638,14 +647,14 @@ export default function LimitOrderCard(properties) {
                     assetBBalance &&
                     parseFloat(assetBBalance.replaceAll(",", "")) < parseFloat(total) ? (
                       <FormMessage>
-                        {`You require 
-                          ${
+                        {t("LimitOrderCard:sellTotal.requireMore", {
+                          requiredAmount:
                             total -
                             parseFloat(assetBBalance.replaceAll(",", "")).toFixed(
                               assetBData.precision
-                            )
-                          }
-                          more ${thisAssetB}`}
+                            ),
+                          asset: thisAssetB,
+                        })}
                       </FormMessage>
                     ) : null}
                   </FormItem>
@@ -657,7 +666,7 @@ export default function LimitOrderCard(properties) {
                 name="expiry"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Limit order expriration</FormLabel>
+                    <FormLabel>{t("LimitOrderCard:expiry.label")}</FormLabel>
                     <FormControl
                       onValueChange={(selectedExpiry) => {
                         setExpiryType(selectedExpiry);
@@ -701,13 +710,15 @@ export default function LimitOrderCard(properties) {
                           <SelectValue placeholder="1hr" />
                         </SelectTrigger>
                         <SelectContent className="bg-white">
-                          <SelectItem value="1hr">1 hour</SelectItem>
-                          <SelectItem value="12hr">12 hours</SelectItem>
-                          <SelectItem value="24hr">24 hours</SelectItem>
-                          <SelectItem value="7d">7 days</SelectItem>
-                          <SelectItem value="30d">30 days</SelectItem>
-                          <SelectItem value="specific">Specific date</SelectItem>
-                          <SelectItem value="fkill">Fill or kill</SelectItem>
+                          <SelectItem value="1hr">{t("LimitOrderCard:expiry.1hr")}</SelectItem>
+                          <SelectItem value="12hr">{t("LimitOrderCard:expiry.12hr")}</SelectItem>
+                          <SelectItem value="24hr">{t("LimitOrderCard:expiry.24hr")}</SelectItem>
+                          <SelectItem value="7d">{t("LimitOrderCard:expiry.7d")}</SelectItem>
+                          <SelectItem value="30d">{t("LimitOrderCard:expiry.30d")}</SelectItem>
+                          <SelectItem value="specific">
+                            {t("LimitOrderCard:expiry.specific")}
+                          </SelectItem>
+                          <SelectItem value="fkill">{t("LimitOrderCard:expiry.fkill")}</SelectItem>
                         </SelectContent>
                       </Select>
                     </FormControl>
@@ -723,7 +734,11 @@ export default function LimitOrderCard(properties) {
                               )}
                             >
                               <CalendarIcon className="mr-2 h-4 w-4" />
-                              {date ? format(date, "PPP") : <span>Pick a date</span>}
+                              {date ? (
+                                format(date, "PPP")
+                              ) : (
+                                <span>{t("LimitOrderCard:expiry.pickDate")}</span>
+                              )}
                             </Button>
                           </PopoverTrigger>
                           <PopoverContent className="w-auto p-0" align="start">
@@ -746,11 +761,9 @@ export default function LimitOrderCard(properties) {
                           </PopoverContent>
                         </Popover>
                       ) : null}
-                      {expiryType === "fkill"
-                        ? `This order immediately expires if not fillable`
-                        : null}
+                      {expiryType === "fkill" ? t("LimitOrderCard:expiry.fkillDescription") : null}
                       {expiryType !== "specific" && expiryType !== "fkill"
-                        ? `This limit order will expire ${expiryType} after broadcast`
+                        ? t("LimitOrderCard:expiry.generalDescription", { expiryType })
                         : null}
                     </FormDescription>
                     <FormMessage />
@@ -779,12 +792,14 @@ export default function LimitOrderCard(properties) {
                           htmlFor="terms1"
                           className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                         >
-                          {osoEnabled ? "Order Sends Order Enabled" : "Enable Order Sends Order"}
+                          {osoEnabled
+                            ? t("LimitOrderCard:osoValue.enabled")
+                            : t("LimitOrderCard:osoValue.enable")}
                         </label>
                       </div>
                     </FormControl>
                     {osoEnabled ? (
-                      <FormDescription>Automatic OSO function will be active</FormDescription>
+                      <FormDescription>{t("LimitOrderCard:osoValue.description")}</FormDescription>
                     ) : null}
                   </FormItem>
                 )}
@@ -797,15 +812,17 @@ export default function LimitOrderCard(properties) {
                     name="osoSpread"
                     render={({ field }) => (
                       <FormItem className="mt-2 text-xs">
-                        <FormLabel className="text-sm">Spread percent</FormLabel>
+                        <FormLabel className="text-sm">
+                          {t("LimitOrderCard:osoEnabled.spreadPercentLabel")}
+                        </FormLabel>
                         <FormDescription>
-                          How far the price of the take profit order differs from the original order
+                          {t("LimitOrderCard:osoEnabled.spreadPercentDescription")}
                         </FormDescription>
                         <FormControl>
                           <span className="grid grid-cols-12">
                             <span className="col-span-9">
                               <Input
-                                label={`Spread percent`}
+                                label={t("LimitOrderCard:osoEnabled.spreadPercentLabel")}
                                 placeholder={spreadPercent}
                                 disabled
                                 readOnly
@@ -831,11 +848,13 @@ export default function LimitOrderCard(properties) {
                                     }}
                                     className="inline-block border border-grey rounded pl-4 pb-1 pr-4 text-lg"
                                   >
-                                    <Label>Edit</Label>
+                                    <Label>{t("LimitOrderCard:editLabel")}</Label>
                                   </span>
                                 </PopoverTrigger>
                                 <PopoverContent>
-                                  <Label>Provide a new spread percent</Label>
+                                  <Label>
+                                    {t("LimitOrderCard:osoEnabled.provideNewSpreadPercent")}
+                                  </Label>
                                   <Input
                                     placeholder={spreadPercent}
                                     className="mb-2 mt-1"
@@ -864,15 +883,17 @@ export default function LimitOrderCard(properties) {
                     name="osoSize"
                     render={({ field }) => (
                       <FormItem className="mt-4 text-xs">
-                        <FormLabel className="text-sm">Size percent</FormLabel>
+                        <FormLabel className="text-sm">
+                          {t("LimitOrderCard:osoSize.sizePercentLabel")}
+                        </FormLabel>
                         <FormDescription>
-                          Percentage to sell in the take profit order
+                          {t("LimitOrderCard:osoSize.sizePercentDescription")}
                         </FormDescription>
                         <FormControl>
                           <span className="grid grid-cols-12">
                             <span className="col-span-9">
                               <Input
-                                label={`Size percent`}
+                                label={t("LimitOrderCard:osoSize.sizePercentLabel")}
                                 placeholder={sizePercent}
                                 disabled
                                 readOnly
@@ -898,11 +919,11 @@ export default function LimitOrderCard(properties) {
                                     }}
                                     className="inline-block border border-grey rounded pl-4 pb-1 pr-4 text-lg"
                                   >
-                                    <Label>Edit</Label>
+                                    <Label>{t("LimitOrderCard:editLabel")}</Label>
                                   </span>
                                 </PopoverTrigger>
                                 <PopoverContent>
-                                  <Label>Provide a new size percent</Label>
+                                  <Label>{t("LimitOrderCard:osoSize.provideNewSizePercent")}</Label>
                                   <Input
                                     placeholder={sizePercent}
                                     className="mb-2 mt-1"
@@ -932,8 +953,12 @@ export default function LimitOrderCard(properties) {
                     name="repeatValue"
                     render={({ field }) => (
                       <FormItem className="mt-4 text-xs">
-                        <FormLabel className="text-sm">Set OSO to automatically repeat?</FormLabel>
-                        <FormDescription>Automates repeated OSO based limit orders</FormDescription>
+                        <FormLabel className="text-sm">
+                          {t("LimitOrderCard:repeatValue.label")}
+                        </FormLabel>
+                        <FormDescription>
+                          {t("LimitOrderCard:repeatValue.description")}
+                        </FormDescription>
                         <FormControl>
                           <div className="flex items-center space-x-2">
                             <Checkbox
@@ -948,7 +973,9 @@ export default function LimitOrderCard(properties) {
                               htmlFor="terms2"
                               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             >
-                              {repeat ? `OSO configured to repeat` : `OSO configured not to repeat`}
+                              {repeat
+                                ? t("LimitOrderCard:repeatValue.enabled")
+                                : t("LimitOrderCard:repeatValue.disabled")}
                             </label>
                           </div>
                         </FormControl>
@@ -967,16 +994,25 @@ export default function LimitOrderCard(properties) {
                 name="fee"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Fee</FormLabel>
-                    <FormDescription>The network fee to broadcast this operation</FormDescription>
+                    <FormLabel>{t("LimitOrderCard:fee.label")}</FormLabel>
+                    <FormDescription>{t("LimitOrderCard:fee.description")}</FormDescription>
                     <FormControl>
-                      <Input disabled label={`fees`} value={`${fee} BTS`} placeholder={1} />
+                      <Input
+                        disabled
+                        label={t("LimitOrderCard:fee.label")}
+                        value={`${fee} BTS`}
+                        placeholder={1}
+                      />
                     </FormControl>
                     {expiryType === "fkill" || usr.id === usr.referrer ? (
                       <FormMessage>
-                        {expiryType === "fkill" ? `Unfilled rebate: ${fee} BTS (instant)` : null}
+                        {expiryType === "fkill"
+                          ? t("LimitOrderCard:fee.unfilledRebate", { fee })
+                          : null}
                         <br />
-                        {usr.id === usr.referrer ? `LTM rebate: ${0.8 * fee} BTS (vesting)` : null}
+                        {usr.id === usr.referrer
+                          ? t("LimitOrderCard:fee.ltmRebate", { rebate: 0.8 * fee })
+                          : null}
                       </FormMessage>
                     ) : null}
                   </FormItem>
@@ -992,7 +1028,7 @@ export default function LimitOrderCard(properties) {
                   name="marketFees"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Market fee</FormLabel>
+                      <FormLabel>{t("LimitOrderCard:marketFees.label")}</FormLabel>
                       <FormControl>
                         <Input
                           disabled
@@ -1000,7 +1036,9 @@ export default function LimitOrderCard(properties) {
                           placeholder={`${marketFees} ${assetAData.symbol}`}
                         />
                       </FormControl>
-                      <FormDescription>The market fee applied by asset issuer</FormDescription>
+                      <FormDescription>
+                        {t("LimitOrderCard:marketFees.description")}
+                      </FormDescription>
                     </FormItem>
                   )}
                 />
@@ -1015,7 +1053,7 @@ export default function LimitOrderCard(properties) {
                   name="marketFees"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Market fee</FormLabel>
+                      <FormLabel>{t("LimitOrderCard:marketFees.label")}</FormLabel>
                       <FormControl>
                         <Input
                           disabled
@@ -1024,18 +1062,20 @@ export default function LimitOrderCard(properties) {
                         />
                       </FormControl>
                       <FormMessage />
-                      <FormDescription>The market fee applied by asset issuer</FormDescription>
+                      <FormDescription>
+                        {t("LimitOrderCard:marketFees.description")}
+                      </FormDescription>
                     </FormItem>
                   )}
                 />
               ) : null}
               {!amount || !price || !expiry ? (
                 <Button className="mt-7 mb-1" variant="outline" disabled type="submit">
-                  Submit
+                  {t("LimitOrderCard:submit")}
                 </Button>
               ) : (
                 <Button className="mt-7 mb-1" variant="outline" type="submit">
-                  Submit
+                  {t("LimitOrderCard:submit")}
                 </Button>
               )}
             </form>
@@ -1050,17 +1090,17 @@ export default function LimitOrderCard(properties) {
                   <FormItem>
                     <FormLabel>
                       <div className="grid grid-cols-2 mt-3">
-                        <div className="mt-1">Price</div>
+                        <div className="mt-1">{t("LimitOrderCard:sellPrice.label")}</div>
                         <div className="text-gray-500 text-right">
                           <span variant="link">
-                            <Badge>Use lowest ask</Badge>
+                            <Badge>{t("LimitOrderCard:sellPrice.useLowestAsk")}</Badge>
                           </span>
                         </div>
                       </div>
                     </FormLabel>
 
                     <Input disabled className="mb-3" />
-                    <FormDescription>Your price per ? in ?</FormDescription>
+                    <FormDescription>{t("LimitOrderCard:sellPrice.description")}</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -1073,18 +1113,18 @@ export default function LimitOrderCard(properties) {
                   <FormItem>
                     <FormLabel>
                       <div className="grid grid-cols-2 mt-3">
-                        <div className="mt-1">Amount</div>
+                        <div className="mt-1">{t("LimitOrderCard:sellAmount2.label")}</div>
                         <div className="text-gray-500 text-right">
                           {orderType === "sell" && assetABalance ? (
-                            <Badge>Use balance</Badge>
+                            <Badge>{t("LimitOrderCard:useBalance")}</Badge>
                           ) : null}
                         </div>
                       </div>
                     </FormLabel>
                     <FormDescription>
                       {orderType === "buy"
-                        ? `The amount of ? you plan on buying`
-                        : `The amount of ? you plan on selling`}
+                        ? t("LimitOrderCard:sellAmount2.buyDescription")
+                        : t("LimitOrderCard:sellAmount2.sellDescription")}
                     </FormDescription>
                     <Input disabled className="mb-3" />
                     <FormMessage />
@@ -1099,16 +1139,18 @@ export default function LimitOrderCard(properties) {
                   <FormItem>
                     <FormLabel>
                       <div className="grid grid-cols-2 mt-3">
-                        <div className="mt-1">Total</div>
+                        <div className="mt-1">{t("LimitOrderCard:sellTotal2.label")}</div>
                         <div className="text-gray-500 text-right">
-                          {orderType === "buy" && assetBBalance ? <Badge>Use balance</Badge> : null}
+                          {orderType === "buy" && assetBBalance ? (
+                            <Badge>{t("LimitOrderCard:useBalance")}</Badge>
+                          ) : null}
                         </div>
                       </div>
                     </FormLabel>
                     <FormDescription>
                       {orderType === "buy"
-                        ? `The total ? you plan on selling`
-                        : `The total ? you will receive`}
+                        ? t("LimitOrderCard:sellTotal2.buyDescription")
+                        : t("LimitOrderCard:sellTotal2.sellDescription")}
                     </FormDescription>
                     <Input disabled className="mb-3" />
                   </FormItem>
@@ -1120,8 +1162,8 @@ export default function LimitOrderCard(properties) {
                 name="expiry"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Limit order expriration</FormLabel>
-                    <FormDescription>Time till expiration...</FormDescription>
+                    <FormLabel>{t("LimitOrderCard:expiry2.label")}</FormLabel>
+                    <FormDescription>{t("LimitOrderCard:expiry2.description")}</FormDescription>
                     <Select disabled>
                       <SelectTrigger className="mb-3">
                         <SelectValue placeholder="1hr" />
@@ -1138,16 +1180,16 @@ export default function LimitOrderCard(properties) {
                 name="fee"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Fee</FormLabel>
-                    <Input disabled label={`fees`} />
-                    <FormDescription>The network fee to broadcast this operation</FormDescription>
+                    <FormLabel>{t("LimitOrderCard:fee.label")}</FormLabel>
+                    <Input disabled label={t("LimitOrderCard:fee.label")} />
+                    <FormDescription>{t("LimitOrderCard:fee.description")}</FormDescription>
                     {expiryType === "fkill" || usr.id === usr.referrer ? (
                       <FormMessage>
                         {expiryType === "fkill"
-                          ? `Unfilled rebate: ${1 * 0.4826} BTS (instant)`
+                          ? t("LimitOrderCard:fee.unfilledRebate", { rebate: 1 * 0.4826 })
                           : null}
                         {usr.id === usr.referrer
-                          ? `LTM rebate: ${0.8 * 0.4826} BTS (vesting)`
+                          ? t("LimitOrderCard:fee.ltmRebate", { rebate: 0.8 * 0.4826 })
                           : null}
                       </FormMessage>
                     ) : null}
@@ -1156,7 +1198,7 @@ export default function LimitOrderCard(properties) {
               />
 
               <Button disabled className="mt-7 mb-1" variant="outline" type="submit">
-                Submit
+                {t("LimitOrderCard:submit")}
               </Button>
             </form>
           </Form>
@@ -1175,8 +1217,8 @@ export default function LimitOrderCard(properties) {
             }
             headerText={
               orderType === "buy"
-                ? `Buying ${amount} ${thisAssetA} for ${total} ${thisAssetB}`
-                : `Selling ${amount} ${thisAssetA} for ${total} ${thisAssetB}`
+                ? t("LimitOrderCard:headerText.buying", { amount, thisAssetA, total, thisAssetB })
+                : t("LimitOrderCard:headerText.selling", { amount, thisAssetA, total, thisAssetB })
             }
             trxJSON={
               orderType === "buy"

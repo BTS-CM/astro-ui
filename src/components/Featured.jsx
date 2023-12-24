@@ -1,4 +1,7 @@
 import React, { useState, useEffect, useSyncExternalStore, useMemo } from "react";
+import { useTranslation } from "react-i18next";
+import { i18n as i18nInstance } from "@/lib/i18n.js";
+
 import {
   Card,
   CardContent,
@@ -16,6 +19,7 @@ import CurrentUser from "./common/CurrentUser.jsx";
 import { createMarketsStore } from "../effects/Market.ts";
 
 export default function Featured(properties) {
+  const { t, i18n } = useTranslation("en", { i18n: i18nInstance });
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
 
   useInitCache(usr && usr.chain ? usr.chain : "bitshares", []);
@@ -72,12 +76,8 @@ export default function Featured(properties) {
         <div className="grid grid-cols-1 gap-3">
           <Card>
             <CardHeader>
-              <CardTitle>Featured market trading pairs</CardTitle>
-              <CardDescription>
-                These market trading pairs are the highest volume in the last 24 hours.
-                <br />
-                Click on a market trading pair below to go to its market page.
-              </CardDescription>
+              <CardTitle>{t("Featured:cardTitle")}</CardTitle>
+              <CardDescription>{t("Featured:cardDescription")}</CardDescription>
             </CardHeader>
             <CardContent>
               {marketRows && marketRows.length ? (
@@ -86,13 +86,13 @@ export default function Featured(properties) {
                     <div className="col-span-1">
                       <div className="grid grid-cols-3 gap-1 text-center border-b-2">
                         <div className="col-span-1">
-                          <b>Market trading pair</b>
+                          <b>{t("Featured:marketTradingPair")}</b>
                         </div>
                         <div className="col-span-1">
-                          <b>24 Hour volume</b>
+                          <b>{t("Featured:hourVolume")}</b>
                         </div>
                         <div className="col-span-1">
-                          <b>Trades</b>
+                          <b>{t("Featured:trades")}</b>
                         </div>
                       </div>
                     </div>

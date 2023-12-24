@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { FixedSizeList as List } from "react-window";
+import { useTranslation } from "react-i18next";
+import { i18n as i18nInstance } from "@/lib/i18n.js";
 
 import {
   Card,
@@ -44,6 +46,7 @@ export default function MarketOrderCard(properties) {
     _resetOrders,
     invertedMarket,
   } = properties;
+  const { t, i18n } = useTranslation("en", { i18n: i18nInstance });
 
   const Row = ({ index, style }) => {
     let refOrders;
@@ -103,22 +106,33 @@ export default function MarketOrderCard(properties) {
           </DialogTrigger>
           <DialogContent className="sm:max-w-[800px] bg-white">
             <DialogHeader>
-              <DialogTitle>
-                Would you like to proceed with the following limit order data?
-              </DialogTitle>
+              <DialogTitle>{t("MarketOrderCard:proceedLimitOrderDataTitle")}</DialogTitle>
               <DialogDescription>
-                The {cardType === "buy" ? "sell" : "buy"} limit order form above will be filled out
-                with the following market order data.
+                {t("MarketOrderCard:proceedLimitOrderDataDescription", {
+                  cardType: cardType === "buy" ? "sell" : "buy",
+                })}
               </DialogDescription>
             </DialogHeader>
             <span className="pt-3">
               {cardType === "buy"
-                ? `Selling ${totalQuote} ${assetA} in exchange for at least ${totalBase} ${assetB}`
-                : `Selling ${totalBase} ${assetB} in exchange for at least ${totalQuote} ${assetA}`}
+                ? t("MarketOrderCard:sellingQuoteForBase", {
+                    totalQuote: totalQuote,
+                    assetA: assetA,
+                    totalBase: totalBase,
+                    assetB: assetB,
+                  })
+                : t("MarketOrderCard:sellingBaseForQuote", {
+                    totalBase: totalBase,
+                    assetB: assetB,
+                    totalQuote: totalQuote,
+                    assetA: assetA,
+                  })}
             </span>
-            <span>{`Price: ${price} ${assetB} per 1 ${assetA}`}</span>
+            <span>
+              {t("MarketOrderCard:pricePerAsset", { price: price, assetB: assetB, assetA: assetA })}
+            </span>
             <a href={href}>
-              <Button className="mt-2 h-6">Proceed</Button>
+              <Button className="mt-2 h-6">{t("MarketOrderCard:proceedButton")}</Button>
             </a>
           </DialogContent>
         </Dialog>
@@ -168,7 +182,7 @@ export default function MarketOrderCard(properties) {
             </div>
           </HoverCardTrigger>
           <HoverCardContent className="w-80 text-sm pt-3">
-            Market data is refreshing, please wait...
+            {t("MarketOrderCard:marketDataRefreshing")}
             <br />
             <Skeleton className="h-4 w-full" />
           </HoverCardContent>
@@ -192,16 +206,20 @@ export default function MarketOrderCard(properties) {
     !previousSellOrders &&
     !previousSellOrders.length
   ) {
-    cardTitle = "Loading market orders";
-    cardDescription = "Fetching requested market data, please wait...";
+    cardTitle = t("MarketOrderCard:loadingMarketOrdersTitle");
+    cardDescription = t("MarketOrderCard:loadingMarketOrdersDescription");
     cardListContents = LoadingRow;
     cardListCount = 10;
   } else {
-    cardTitle = cardType === "buy" ? "Open buy limit orders" : "Open sell limit orders";
+    cardTitle =
+      cardType === "buy"
+        ? t("MarketOrderCard:openBuyLimitOrdersTitle")
+        : t("MarketOrderCard:openSellLimitOrdersTitle");
     cardDescription =
       cardType === "buy"
-        ? `The following table displays network offers to purchase ${assetA} with ${assetB}`
-        : `The following table displays network offers to sell ${assetA} for ${assetB}`;
+        ? t("MarketOrderCard:buyLimitOrdersDescription", { assetA: assetA, assetB: assetB })
+        : t("MarketOrderCard:sellLimitOrdersDescription", { assetA: assetA, assetB: assetB });
+
     cardListContents = Row;
     if (cardType === "buy") {
       cardListCount = buyOrders ? buyOrders.length : previousBuyOrders.length;

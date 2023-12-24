@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useSyncExternalStore } from "react";
 import * as fflate from "fflate";
+import { useTranslation } from "react-i18next";
+import { i18n as i18nInstance } from "@/lib/i18n.js";
 
 import {
   Card,
@@ -19,6 +21,7 @@ import { Avatar } from "@/components/Avatar.tsx";
 import { $currentUser, setCurrentUser, $userStorage, removeUser } from "../stores/users.ts";
 
 export default function AccountSelect(properties) {
+  const { t, i18n } = useTranslation("en", { i18n: i18nInstance });
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
 
   const [chain, setChain] = useState();
@@ -45,7 +48,7 @@ export default function AccountSelect(properties) {
     if (!response.ok) {
       console.log({
         error: new Error(`${response.status} ${response.statusText}`),
-        msg: "Couldn't find account.",
+        msg: t("AccountSelect:noAccount"),
       });
       setInProgress(false);
       return;
@@ -62,7 +65,7 @@ export default function AccountSelect(properties) {
     }
 
     setInProgress(false);
-    setErrorMessage("Couldn't find account.");
+    setErrorMessage(t("AccountSelect:noAccount"));
   }
 
   const firstResponse = searchResponse ? (
@@ -144,7 +147,7 @@ export default function AccountSelect(properties) {
           </Card>
         </HoverCardTrigger>
         <HoverCardContent className="w-80">
-          Account: {user.username}
+          {t("AccountSelect:forgetPrompt", { user: user.username })}
           <br />
           <Button
             className="w-full mt-2 text-bold text-white"
@@ -153,7 +156,7 @@ export default function AccountSelect(properties) {
               removeUser(user.id);
             }}
           >
-            Forget this account
+            {t("AccountSelect:forgetButton")}
           </Button>
         </HoverCardContent>
       </HoverCard>
@@ -165,14 +168,16 @@ export default function AccountSelect(properties) {
       {!chain ? (
         <Card>
           <CardHeader>
-            <CardTitle>⚙️ Select a blockchain to continue</CardTitle>
-            <CardDescription>Which blockchain do you want to use?</CardDescription>
+            <CardTitle>{t("AccountSelect:noChain.title")}</CardTitle>
+            <CardDescription>{t("AccountSelect:noChain.description")}</CardDescription>
           </CardHeader>
           <CardContent>
             <Button className="mr-2" onClick={() => setChain("bitshares")}>
               Bitshares (BTS)
             </Button>
-            <Button onClick={() => setChain("bitshares_testnet")}>Bitshares testnet (TEST)</Button>
+            <Button onClick={() => setChain("bitshares_testnet")}>
+              Bitshares {t("AccountSelect:noChain.testnet")} (TEST)
+            </Button>
           </CardContent>
         </Card>
       ) : null}
@@ -180,19 +185,22 @@ export default function AccountSelect(properties) {
         <Card>
           <CardHeader>
             <CardTitle>
-              Use a new or existing {chain === "bitshares" ? "Bitshares" : "Bitshares testnet"}{" "}
-              account?
+              {chain === "bitshares"
+                ? t("AccountSelect:noMode.titleBTS")
+                : t("AccountSelect:noMode.titleTEST")}
             </CardTitle>
-            <CardDescription>How do you want to proceed?</CardDescription>
+            <CardDescription>{t("AccountSelect:noMode.description")}</CardDescription>
           </CardHeader>
           <CardContent>
             <Button className="mr-2" onClick={() => setMode("new")}>
-              New account
+              {t("AccountSelect:noMode.new")}
             </Button>
-            <Button onClick={() => setMode("existing")}>Existing account</Button>
+            <Button onClick={() => setMode("existing")}>
+              {t("AccountSelect:noMode.existing")}
+            </Button>
             <br />
             <Button className="mt-2" onClick={() => setChain(null)}>
-              Back
+              {t("AccountSelect:noMode.back")}
             </Button>
           </CardContent>
         </Card>
@@ -203,7 +211,7 @@ export default function AccountSelect(properties) {
             <CardTitle>
               {chain === "bitshares" ? "🔐 Bitshares (BTS)" : "🔐 Bitshares testnet (TEST)"}
             </CardTitle>
-            <CardDescription>Enter your Bitshares account name</CardDescription>
+            <CardDescription>{t("AccountSelect:new.initDesc")}</CardDescription>
           </CardHeader>
           <CardContent>
             <Input
@@ -230,12 +238,12 @@ export default function AccountSelect(properties) {
           </CardContent>
           <CardFooter>
             <Button className="mr-2" onClick={() => setMode(null)}>
-              Back
+              {t("AccountSelect:new.back")}
             </Button>
             {accountInput && !inProgress ? (
-              <Button onClick={() => lookupAccount()}>Continue</Button>
+              <Button onClick={() => lookupAccount()}>{t("AccountSelect:new.continue")}</Button>
             ) : (
-              <Button disabled>Continue</Button>
+              <Button disabled>{t("AccountSelect:new.continue")}</Button>
             )}
           </CardFooter>
         </Card>
@@ -244,11 +252,10 @@ export default function AccountSelect(properties) {
         <Card>
           <CardHeader>
             <CardTitle>
-              {chain === "bitshares"
-                ? "🔐 Bitshares (BTS) account selection"
-                : "🔐 Bitshares testnet (TEST) account selection"}
+              {chain === "bitshares" ? "🔐 Bitshares (BTS) " : "🔐 Bitshares testnet (TEST) "}
+              {t("AccountSelect:new.title")}
             </CardTitle>
-            <CardDescription>Proceed with the following account?</CardDescription>
+            <CardDescription>{t("AccountSelect:new.description")}</CardDescription>
           </CardHeader>
           <CardContent>
             {usr && chain !== usr.chain ? (
@@ -266,7 +273,7 @@ export default function AccountSelect(properties) {
                 setSearchResponse();
               }}
             >
-              Go back
+              {t("AccountSelect:new.back")}
             </Button>
           </CardFooter>
         </Card>
@@ -277,7 +284,7 @@ export default function AccountSelect(properties) {
             <CardTitle>
               {chain === "bitshares" ? "Bitshares (BTS)" : "Bitshares testnet (TEST)"}
             </CardTitle>
-            <CardDescription>Select one of your previously used accounts</CardDescription>
+            <CardDescription>{t("AccountSelect:existing.description")}</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-3 gap-3">
@@ -294,13 +301,13 @@ export default function AccountSelect(properties) {
                     );
                   })
               ) : (
-                <p className="text-red-500 text-xs italic">No accounts found.</p>
+                <p className="text-red-500 text-xs italic">{t("AccountSelect:existing.none")}</p>
               )}
             </div>
           </CardContent>
           <CardFooter>
             <Button className="mr-2" onClick={() => setMode(null)}>
-              Back
+              {t("AccountSelect:noMode.back")}
             </Button>
           </CardFooter>
         </Card>

@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useSyncExternalStore, useMemo } from "react";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
+import { i18n as i18nInstance } from "@/lib/i18n.js";
+
 import {
   Card,
   CardContent,
@@ -61,6 +64,7 @@ import ExternalLink from "./common/ExternalLink.jsx";
 import AssetDropDown from "./Market/AssetDropDownCard.jsx";
 
 export default function Transfer(properties) {
+  const { t, i18n } = useTranslation("en", { i18n: i18nInstance });
   const form = useForm({
     defaultValues: {
       account: "",
@@ -224,7 +228,7 @@ export default function Transfer(properties) {
               <br /> Often used by exchanges and 3rd party
               services.
             </FormDescription>
-            <FormMessage />
+            
           </FormItem>
         )}
       />
@@ -237,14 +241,10 @@ export default function Transfer(properties) {
         <div className="grid grid-cols-1 gap-3">
           <Card>
             <CardHeader>
-              <CardTitle>Transfer assets</CardTitle>
+              <CardTitle>{t("Transfer:transferAssets")}</CardTitle>
               <CardDescription>
-                <p>Send funds from an account you control to another BitShares account holder.</p>
-                <p className="mt-1">
-                  ⛔ Doesn't yet support a memo, so don't use this form when transfering to external
-                  services.
-                  <br />✅ Use for simple transfers between accounts.
-                </p>
+                <p>{t("Transfer:sendFundsDescription")}</p>
+                <p className="mt-1">{t("Transfer:transferLimitations")}</p>
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -260,7 +260,7 @@ export default function Transfer(properties) {
                     name="account"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Sending account</FormLabel>
+                        <FormLabel>{t("Transfer:sendingAccount")}</FormLabel>
                         <FormControl>
                           <div className="grid grid-cols-8 gap-2">
                             <div className="col-span-1 ml-5">
@@ -278,7 +278,6 @@ export default function Transfer(properties) {
                             <div className="col-span-7">
                               <Input
                                 disabled
-                                placeholder="Bitshares account (1.2.x)"
                                 className="mb-1 mt-1"
                                 value={`${usr && usr.username ? usr.username : "?"} (${
                                   usr && usr.id ? usr.id : "?"
@@ -287,11 +286,7 @@ export default function Transfer(properties) {
                             </div>
                           </div>
                         </FormControl>
-                        <FormDescription>
-                          This is the account which will transfer the assets to the target
-                          recipient.
-                        </FormDescription>
-                        <FormMessage />
+                        <FormDescription>{t("Transfer:sendingAccountDescription")}</FormDescription>
                       </FormItem>
                     )}
                   />
@@ -301,7 +296,7 @@ export default function Transfer(properties) {
                     name="targetAccount"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Target account</FormLabel>
+                        <FormLabel>{t("Transfer:targetAccount")}</FormLabel>
                         <FormControl>
                           <div className="grid grid-cols-8 mt-4">
                             <div className="col-span-1 ml-5">
@@ -342,22 +337,26 @@ export default function Transfer(properties) {
                               >
                                 <DialogTrigger asChild>
                                   <Button variant="outline" className="ml-3 mt-1">
-                                    {targetUser ? "Change target" : "Provide target"}
+                                    {targetUser
+                                      ? t("Transfer:changeTarget")
+                                      : t("Transfer:provideTarget")}
                                   </Button>
                                 </DialogTrigger>
                                 <DialogContent className="sm:max-w-[375px] bg-white">
                                   <DialogHeader>
                                     <DialogTitle>
-                                      {!usr || !usr.chain ? "Bitshares account search" : null}
+                                      {!usr || !usr.chain
+                                        ? t("Transfer:bitsharesAccountSearch")
+                                        : null}
                                       {usr && usr.chain === "bitshares"
-                                        ? "Bitshares (BTS) account search"
+                                        ? t("Transfer:bitsharesAccountSearchBTS")
                                         : null}
                                       {usr && usr.chain !== "bitshares"
-                                        ? "Bitshares testnet (TEST) account search"
+                                        ? t("Transfer:bitsharesAccountSearchTEST")
                                         : null}
                                     </DialogTitle>
                                     <DialogDescription>
-                                      Searching for an account to transfer assets to.
+                                      {t("Transfer:searchingForAccount")}
                                     </DialogDescription>
                                   </DialogHeader>
                                   <AccountSearch
@@ -374,10 +373,11 @@ export default function Transfer(properties) {
                         </FormControl>
                         <FormDescription>
                           {!targetUser || !targetUser.name
-                            ? "This is the account which will receive your transfer."
-                            : `The user ${targetUser.name} will receive your transfer.`}
+                            ? t("Transfer:targetAccountDescription")
+                            : t("Transfer:targetAccountDescriptionWithName", {
+                                name: targetUser.name,
+                              })}
                         </FormDescription>
-                        <FormMessage></FormMessage>
                       </FormItem>
                     )}
                   />
@@ -387,7 +387,7 @@ export default function Transfer(properties) {
                     name="targetAsset"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Asset to transfer</FormLabel>
+                        <FormLabel>{t("Transfer:assetToTransfer")}</FormLabel>
                         <FormControl>
                           <div className="grid grid-cols-8 mt-4">
                             <div className="col-span-1 ml-5">
@@ -435,13 +435,13 @@ export default function Transfer(properties) {
                           </div>
                         </FormControl>
                         <FormDescription>
-                          This is the asset which will be transferred to the target account.
+                          {t("Transfer:assetToTransferDescription")}
                         </FormDescription>
                         <FormMessage>
                           {foundAsset &&
                           balances &&
                           !balances.map((x) => x.asset_id).includes(foundAsset.id)
-                            ? `Unable to proceed, your account "${usr.username}" doesn't hold any of this asset.`
+                            ? t("Transfer:noAssetInAccount", { username: usr.username })
                             : null}
                         </FormMessage>
                       </FormItem>
@@ -454,13 +454,15 @@ export default function Transfer(properties) {
                       name="transferAmount"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>{`Amount of ${
-                            selectedAsset ?? "???"
-                          } available to transfer`}</FormLabel>
+                          <FormLabel>
+                            {t("Transfer:amountAvailableToTransfer", {
+                              asset: selectedAsset ?? "???",
+                            })}
+                          </FormLabel>
                           <FormControl>
                             <Input
                               disabled
-                              label={`Amount available to transfer`}
+                              label={t("Transfer:amountAvailableToTransferLabel")}
                               value={
                                 foundAsset &&
                                 balances &&
@@ -475,9 +477,8 @@ export default function Transfer(properties) {
                             />
                           </FormControl>
                           <FormDescription>
-                            This is the maximum amount of {selectedAsset} you can transfer.
+                            {t("Transfer:maximumAmountDescription", { asset: selectedAsset })}
                           </FormDescription>
-                          <FormMessage />
                         </FormItem>
                       )}
                     />
@@ -489,7 +490,9 @@ export default function Transfer(properties) {
                       name="transferAmount"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>{`Amount of ${selectedAsset ?? "???"} to transfer`}</FormLabel>
+                          <FormLabel>
+                            {t("Transfer:amountToTransfer", { asset: selectedAsset ?? "???" })}
+                          </FormLabel>
                           <FormControl
                             onChange={(event) => {
                               const input = event.target.value;
@@ -500,16 +503,15 @@ export default function Transfer(properties) {
                             }}
                           >
                             <Input
-                              label={`Amount to transfer`}
+                              label={t("Transfer:amountToTransferLabel")}
                               value={transferAmount}
                               placeholder={transferAmount}
                               className="mb-1"
                             />
                           </FormControl>
                           <FormDescription>
-                            How much you're going to send to the target account.
+                            {t("Transfer:amountToTransferDescription")}
                           </FormDescription>
-                          <FormMessage />
                         </FormItem>
                       )}
                     />
@@ -521,16 +523,19 @@ export default function Transfer(properties) {
                       name="networkFee"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Network fee</FormLabel>
+                          <FormLabel>{t("Transfer:networkFee")}</FormLabel>
                           <FormControl>
-                            <Input disabled placeholder={`${fee} BTS`} className="mb-3 mt-3" />
+                            <Input
+                              disabled
+                              placeholder={`${t("Transfer:networkFeePlaceholder", { fee: fee })}`}
+                              className="mb-3 mt-3"
+                            />
                           </FormControl>
                           {usr.id === usr.referrer ? (
                             <FormMessage>
-                              Rebate: {trimPrice(fee * 0.8, 5)} BTS (vesting)
+                              {t("Transfer:rebate", { rebate: trimPrice(fee * 0.8, 5) })}
                             </FormMessage>
                           ) : null}
-                          <FormMessage />
                         </FormItem>
                       )}
                     />
@@ -538,11 +543,11 @@ export default function Transfer(properties) {
 
                   {!transferAmount ? (
                     <Button className="mt-5 mb-3" variant="outline" disabled type="submit">
-                      Submit
+                      {t("Transfer:submit")}
                     </Button>
                   ) : (
                     <Button className="mt-5 mb-3" variant="outline" type="submit">
-                      Submit
+                      {t("Transfer:submit")}
                     </Button>
                   )}
                 </form>
@@ -555,7 +560,13 @@ export default function Transfer(properties) {
                   userID={usr.id}
                   dismissCallback={setShowDialog}
                   key={`Sending${transferAmount}${selectedAsset}to${targetUser.name}from${usr.username}`}
-                  headerText={`Sending ${transferAmount} ${foundAsset.symbol} (${foundAsset.id}) to ${targetUser.name} from ${usr.username}`}
+                  headerText={t("Transfer:sendingHeader", {
+                    amount: transferAmount,
+                    symbol: foundAsset.symbol,
+                    id: foundAsset.id,
+                    target: targetUser.name,
+                    user: usr.username,
+                  })}
                   trxJSON={[
                     {
                       fee: {
@@ -581,22 +592,19 @@ export default function Transfer(properties) {
             <div className="col-span-1">
               <Card>
                 <CardHeader className="pb-0 mb-0">
-                  <CardTitle>Double check the above details!</CardTitle>
-                  <CardDescription>Avoid heartbreak, check your inputs!</CardDescription>
+                  <CardTitle>{t("Transfer:doubleCheckTitle")}</CardTitle>
+                  <CardDescription>{t("Transfer:doubleCheckDescription")}</CardDescription>
                 </CardHeader>
                 <CardContent className="text-sm">
                   <ul className="ml-2 list-disc [&>li]:mt-2">
-                    <li>Before you proceed, please double check the form inputs.</li>
-                    <li>
-                      Validate the entire Beet prompt contents before you broadcast the transaction.
-                    </li>
+                    <li>{t("Transfer:doubleCheckFormInputs")}</li>
+                    <li>{t("Transfer:validateBeetPrompt")}</li>
                     <li>
                       <ExternalLink
                         type="text"
                         classnamecontents=""
                         hyperlink={`https://blocksights.info/#/accounts/${targetUser.name}`}
-                        text={`Click here to view ${targetUser.name}'s account on the
-                        Blocksights blockchain explorer.`}
+                        text={t("Transfer:blocksightsLink", { name: targetUser.name })}
                       />
                     </li>
                   </ul>
@@ -608,23 +616,14 @@ export default function Transfer(properties) {
             <div className="col-span-1">
               <Card>
                 <CardHeader className="pb-0 mb-0">
-                  <CardTitle>Beware! Don't fall for scams!</CardTitle>
-                  <CardDescription>Be vigilant against scammers!</CardDescription>
+                  <CardTitle>{t("Transfer:scamAlertTitle")}</CardTitle>
+                  <CardDescription>{t("Transfer:scamAlertDescription")}</CardDescription>
                 </CardHeader>
                 <CardContent className="text-sm">
                   <ul className="ml-2 list-disc [&>li]:mt-2">
-                    <li>
-                      Crypto exchanges will NEVER direct message you in with special transfer
-                      instructions to follow for deposits nor withdrawals.
-                    </li>
-                    <li>
-                      Asset transfer operations are permanent and the majority of assets are
-                      irrecoverable if erroneously transferred.
-                    </li>
-                    <li>
-                      If something sounds too good to be true, then it likely is, don't fall victim
-                      to scammers tricks.
-                    </li>
+                    <li>{t("Transfer:scamAlertPoint1")}</li>
+                    <li>{t("Transfer:scamAlertPoint2")}</li>
+                    <li>{t("Transfer:scamAlertPoint3")}</li>
                   </ul>
                 </CardContent>
               </Card>

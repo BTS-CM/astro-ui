@@ -2,6 +2,8 @@ import React, { useState, useEffect, useSyncExternalStore, useMemo } from "react
 import Fuse from "fuse.js";
 import { useForm } from "react-hook-form";
 import { FixedSizeList as List } from "react-window";
+import { useTranslation } from "react-i18next";
+import { i18n as i18nInstance } from "@/lib/i18n.js";
 
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
@@ -81,6 +83,7 @@ import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
 import ExternalLink from "./common/ExternalLink.jsx";
 
 export default function PoolForm() {
+  const { t, i18n } = useTranslation("en", { i18n: i18nInstance });
   const form = useForm({
     defaultValues: {
       account: "",
@@ -471,6 +474,7 @@ export default function PoolForm() {
 
       const shareAssetAmount = Math.min(shareAssetAmountA, shareAssetAmountB);
 
+      /*
       console.log({
         _supply,
         balance,
@@ -479,6 +483,7 @@ export default function PoolForm() {
         shareAssetAmount,
         otherAssetAmount,
       });
+      */
 
       return {
         amount:
@@ -544,15 +549,14 @@ export default function PoolForm() {
         <div className="grid grid-cols-1 gap-3">
           <Card className="p-2">
             <CardHeader>
-              <CardTitle>Bitshares Liquidity Pool Exchange</CardTitle>
+              <CardTitle>{t("PoolStake:bitsharesLiquidityPoolExchange")}</CardTitle>
               <CardDescription>
-                Easily swap between Bitshares assets using one of these user created liquidity
-                pools.
+                {t("PoolStake:bitsharesLiquidityPoolExchangeDescription")}
               </CardDescription>
             </CardHeader>
             <CardContent>
-              {!pools ? <p>Loading pool data</p> : null}
-              {!assets ? <p>Loading asset data</p> : null}
+              {!pools ? <p>{t("PoolStake:loadingPoolData")}</p> : null}
+              {!assets ? <p>{t("PoolStake:loadingAssetData")}</p> : null}
               {pools && assets ? (
                 <>
                   <Form {...form}>
@@ -567,7 +571,7 @@ export default function PoolForm() {
                         name="account"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Account</FormLabel>
+                            <FormLabel>{t("PoolStake:account")}</FormLabel>
                             <FormControl>
                               <div className="grid grid-cols-8">
                                 <div className="col-span-1 ml-5">
@@ -614,11 +618,11 @@ export default function PoolForm() {
                         name="pool"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Liquidity pool</FormLabel>
+                            <FormLabel>{t("PoolStake:liquidityPool")}</FormLabel>
                             <FormDescription style={{ marginTop: "0px" }}>
                               {foundPoolDetails
-                                ? "This is the liquidity pool you have chosen for your asset swap"
-                                : "Select a liquidity pool to continue with your asset swap"}
+                                ? t("PoolStake:liquidityPoolChosen")
+                                : t("PoolStake:selectLiquidityPool")}
                             </FormDescription>
                             <FormControl
                               onChange={(event) => {
@@ -633,7 +637,7 @@ export default function PoolForm() {
                                         placeholder={
                                           foundPool
                                             ? `${foundPool.id} - ${foundPool.share_asset_symbol} - ${foundPool.asset_a_symbol}:${foundPool.asset_b_symbol}`
-                                            : "Select a pool.."
+                                            : t("PoolStake:selectPoolPlaceholder")
                                         }
                                       />
                                     </SelectTrigger>
@@ -666,14 +670,16 @@ export default function PoolForm() {
                                   >
                                     <DialogTrigger asChild>
                                       <Button variant="outline" className="h-9 mt-1 p-3 w-full">
-                                        Search
+                                        {t("PoolStake:searchButton")}
                                       </Button>
                                     </DialogTrigger>
                                     <DialogContent className="sm:max-w-[900px] bg-white">
                                       <DialogHeader>
-                                        <DialogTitle>Search for a liquidity pool</DialogTitle>
+                                        <DialogTitle>
+                                          {t("PoolStake:searchDialogTitle")}
+                                        </DialogTitle>
                                         <DialogDescription>
-                                          Select a search result to proceed with staking assets
+                                          {t("PoolStake:searchDialogDescription")}
                                         </DialogDescription>
                                       </DialogHeader>
                                       <div className="grid grid-cols-1">
@@ -682,33 +688,33 @@ export default function PoolForm() {
                                             <TabsList className="grid max-w-[400px] grid-cols-2 mb-1 gap-3">
                                               {activeTab === "asset" ? (
                                                 <TabsTrigger style={activeTabStyle} value="asset">
-                                                  Swappable assets
+                                                  {t("PoolStake:swappableAssets")}
                                                 </TabsTrigger>
                                               ) : (
                                                 <TabsTrigger
                                                   value="asset"
                                                   onClick={() => setActiveTab("asset")}
                                                 >
-                                                  Swappable assets
+                                                  {t("PoolStake:swappableAssets")}
                                                 </TabsTrigger>
                                               )}
                                               {activeTab === "share" ? (
                                                 <TabsTrigger style={activeTabStyle} value="share">
-                                                  Pool share asset
+                                                  {t("PoolStake:poolShareAsset")}
                                                 </TabsTrigger>
                                               ) : (
                                                 <TabsTrigger
                                                   value="share"
                                                   onClick={() => setActiveTab("share")}
                                                 >
-                                                  Pool share asset
+                                                  {t("PoolStake:poolShareAsset")}
                                                 </TabsTrigger>
                                               )}
                                             </TabsList>
 
                                             <Input
                                               name="assetSearch"
-                                              placeholder="Enter search text"
+                                              placeholder={t("PoolStake:searchPlaceholder")}
                                               className="mb-3 max-w-[400px]"
                                               onChange={(event) => {
                                                 setThisInput(event.target.value);
@@ -721,13 +727,21 @@ export default function PoolForm() {
                                               {thisResult && thisResult.length ? (
                                                 <>
                                                   <div className="grid grid-cols-12">
-                                                    <div className="col-span-2">ID</div>
-                                                    <div className="col-span-3">
-                                                      <b>Share asset</b>
+                                                    <div className="col-span-2">
+                                                      {t("PoolStake:id")}
                                                     </div>
-                                                    <div className="col-span-3">Asset A</div>
-                                                    <div className="col-span-3">Asset B</div>
-                                                    <div className="col-span-1">Taker Fee</div>
+                                                    <div className="col-span-3">
+                                                      <b>{t("PoolStake:shareAsset")}</b>
+                                                    </div>
+                                                    <div className="col-span-3">
+                                                      {t("PoolStake:assetA")}
+                                                    </div>
+                                                    <div className="col-span-3">
+                                                      {t("PoolStake:assetB")}
+                                                    </div>
+                                                    <div className="col-span-1">
+                                                      {t("PoolStake:takerFee")}
+                                                    </div>
                                                   </div>
                                                   <List
                                                     height={400}
@@ -745,15 +759,21 @@ export default function PoolForm() {
                                               {thisResult && thisResult.length ? (
                                                 <>
                                                   <div className="grid grid-cols-12">
-                                                    <div className="col-span-2">ID</div>
-                                                    <div className="col-span-3">Share asset</div>
-                                                    <div className="col-span-3">
-                                                      <b>Asset A</b>
+                                                    <div className="col-span-2">
+                                                      {t("PoolStake:id")}
                                                     </div>
                                                     <div className="col-span-3">
-                                                      <b>Asset B</b>
+                                                      {t("PoolStake:shareAsset")}
                                                     </div>
-                                                    <div className="col-span-1">Taker Fee</div>
+                                                    <div className="col-span-3">
+                                                      <b>{t("PoolStake:assetA")}</b>
+                                                    </div>
+                                                    <div className="col-span-3">
+                                                      <b>{t("PoolStake:assetB")}</b>
+                                                    </div>
+                                                    <div className="col-span-1">
+                                                      {t("PoolStake:takerFee")}
+                                                    </div>
                                                   </div>
                                                   <List
                                                     height={400}
@@ -786,7 +806,7 @@ export default function PoolForm() {
                               <Card>
                                 <CardHeader className="pb-0">
                                   <CardTitle className="text-sm pt-0">
-                                    Asset A:{" "}
+                                    {t("PoolStake:assetA")}:{" "}
                                     <ExternalLink
                                       classnamecontents="text-blue-500"
                                       type="text"
@@ -794,7 +814,9 @@ export default function PoolForm() {
                                       hyperlink={`https://blocksights.info/#/assets/${assetA.id}`}
                                     />
                                   </CardTitle>
-                                  <CardDescription>Current total amount in pool</CardDescription>
+                                  <CardDescription>
+                                    {t("PoolStake:currentTotalAmountInPool")}
+                                  </CardDescription>
                                 </CardHeader>
                                 <CardContent className="text-lg mt-0 pt-0">
                                   {foundPoolDetails.readable_balance_a.split(" ")[0]}
@@ -805,7 +827,7 @@ export default function PoolForm() {
                               <Card>
                                 <CardHeader className="pb-0">
                                   <CardTitle className="text-sm pt-0">
-                                    Asset B:{" "}
+                                    {t("PoolStake:assetB")}:{" "}
                                     <ExternalLink
                                       classnamecontents="text-blue-500"
                                       type="text"
@@ -813,7 +835,9 @@ export default function PoolForm() {
                                       hyperlink={`https://blocksights.info/#/assets/${assetB.id}`}
                                     />
                                   </CardTitle>
-                                  <CardDescription>Current total amount in pool</CardDescription>
+                                  <CardDescription>
+                                    {t("PoolStake:currentTotalAmountInPool")}
+                                  </CardDescription>
                                 </CardHeader>
                                 <CardContent className="text-lg">
                                   {foundPoolDetails.readable_balance_b.split(" ")[0]}
@@ -833,7 +857,7 @@ export default function PoolForm() {
                           <TabsList className="grid w-full grid-cols-2 gap-2">
                             {stakeTab === "stake" ? (
                               <TabsTrigger value="stake" style={activeTabStyle}>
-                                Staking assets
+                                {t("PoolStake:stakingAssets")}
                               </TabsTrigger>
                             ) : (
                               <TabsTrigger
@@ -842,12 +866,12 @@ export default function PoolForm() {
                                   setStakeTab("stake");
                                 }}
                               >
-                                Stake assets
+                                {t("PoolStake:stakeAssets")}
                               </TabsTrigger>
                             )}
                             {stakeTab === "unstake" ? (
                               <TabsTrigger value="unstake" style={activeTabStyle}>
-                                Unstaking assets
+                                {t("PoolStake:unstakingAssets")}
                               </TabsTrigger>
                             ) : (
                               <TabsTrigger
@@ -856,7 +880,7 @@ export default function PoolForm() {
                                   setStakeTab("unstake");
                                 }}
                               >
-                                Unstake assets
+                                {t("PoolStake:unstakeAssets")}
                               </TabsTrigger>
                             )}
                           </TabsList>
@@ -867,11 +891,13 @@ export default function PoolForm() {
                                 name="stakeA"
                                 render={({ field }) => (
                                   <FormItem>
-                                    <FormLabel>{`How much ${
-                                      assetA ? assetA.symbol : "???"
-                                    } do you want to stake?`}</FormLabel>
+                                    <FormLabel>
+                                      {t("PoolStake:howMuchToStake", {
+                                        symbol: assetA ? assetA.symbol : "???",
+                                      })}
+                                    </FormLabel>
                                     <FormDescription style={{ marginTop: "0px" }}>
-                                      The amount you're currently staking in this pool: 0
+                                      {t("PoolStake:currentStakingAmount")}
                                     </FormDescription>
                                     <FormControl
                                       onChange={(event) => {
@@ -901,11 +927,13 @@ export default function PoolForm() {
                                 name="stakeB"
                                 render={({ field }) => (
                                   <FormItem>
-                                    <FormLabel>{`How much ${
-                                      assetB ? assetB.symbol : "???"
-                                    } do you want to stake?`}</FormLabel>
+                                    <FormLabel>
+                                      {t("PoolStake:howMuchToStake", {
+                                        symbol: assetB ? assetB.symbol : "???",
+                                      })}
+                                    </FormLabel>
                                     <FormDescription style={{ marginTop: "0px" }}>
-                                      The amount you're currently staking in this pool: 0
+                                      {t("PoolStake:currentStakingAmount")}
                                     </FormDescription>
                                     <FormControl
                                       onChange={(event) => {
@@ -919,9 +947,9 @@ export default function PoolForm() {
                                       <div className="grid grid-cols-2">
                                         <div className="col-span-1">
                                           <Input
-                                            label={`Amount of ${
-                                              assetB ? assetB.symbol : "???"
-                                            } to swap`}
+                                            label={t("PoolStake:howMuchToStake", {
+                                              symbol: assetB ? assetB.symbol : "???",
+                                            })}
                                             value={bStake}
                                             placeholder={bStake}
                                             className="mb-3"
@@ -939,10 +967,12 @@ export default function PoolForm() {
                                 render={({ field }) => (
                                   <FormItem>
                                     <FormLabel>
-                                      Total {foundPoolDetails?.share_asset_symbol} you'll receive
+                                      {t("PoolStake:totalShareAssetReceive", {
+                                        symbol: foundPoolDetails?.share_asset_symbol,
+                                      })}
                                     </FormLabel>
                                     <FormDescription style={{ marginTop: "0px" }}>
-                                      Existing liquidity pool share assets in balance: 0
+                                      {t("PoolStake:existingPoolShareAssets")}
                                     </FormDescription>
                                     <FormControl>
                                       <div className="grid grid-cols-2 mb-3 mt-3">
@@ -959,7 +989,7 @@ export default function PoolForm() {
                               />
                             </div>
                           </TabsContent>
-                          <TabsContent value="unstake">unstaking...</TabsContent>
+                          <TabsContent value="unstake">{t("PoolStake:unstaking")}</TabsContent>
                         </Tabs>
                       ) : null}
 
@@ -969,10 +999,9 @@ export default function PoolForm() {
                           name="networkFee"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Network fee</FormLabel>
+                              <FormLabel>{t("PoolStake:networkFee")}</FormLabel>
                               <FormDescription style={{ marginTop: "0px" }}>
-                                This is the cost to broadcast your pool exchange operation onto the
-                                blockchain
+                                {t("PoolStake:networkFeeDescription")}
                               </FormDescription>
                               <FormControl>
                                 <div className="grid grid-cols-2 mb-3 mt-3">
@@ -982,17 +1011,18 @@ export default function PoolForm() {
                                 </div>
                               </FormControl>
                               {usr.id === usr.referrer ? (
-                                <FormMessage>Rebate: {fee * 0.8} BTS (vesting)</FormMessage>
+                                <FormMessage>
+                                  {t("PoolStake:rebate", { rebate: fee * 0.8 })}
+                                </FormMessage>
                               ) : null}
                               <FormMessage />
                             </FormItem>
                           )}
                         />
                       ) : null}
-
                       {pool ? (
                         <Button className="mt-5 mb-3" variant="outline" disabled type="submit">
-                          Submit
+                          {t("PoolStake:submit")}
                         </Button>
                       ) : null}
                     </form>
@@ -1005,7 +1035,12 @@ export default function PoolForm() {
                       userID={usr.id}
                       dismissCallback={setShowDialog}
                       key={`Exchanging${sellAmount}${assetA.symbol}for${buyAmount}${assetB.symbol}`}
-                      headerText={`Exchanging ${sellAmount} ${assetA.symbol} for ${buyAmount} ${assetB.symbol}`}
+                      headerText={t("PoolStake:exchangingAssets", {
+                        sellAmount,
+                        assetASymbol: assetA.symbol,
+                        buyAmount,
+                        assetBSymbol: assetB.symbol,
+                      })}
                       trxJSON={[
                         {
                           account: usr.id,
@@ -1028,7 +1063,7 @@ export default function PoolForm() {
                       variant="outline"
                       classnamecontents="ml-2"
                       type="button"
-                      text={`Blocksights pool explorer`}
+                      text={t("PoolStake:blocksightsPoolExplorer")}
                       hyperlink={`https://blocksights.info/#/pools/${pool}${
                         usr.chain !== "bitshares" ? "?network=testnet" : ""
                       }`}
@@ -1038,15 +1073,13 @@ export default function PoolForm() {
                     <Dialog>
                       <DialogTrigger asChild>
                         <Button className="ml-2" variant="outline">
-                          Pool JSON
+                          {t("PoolStake:poolJson")}
                         </Button>
                       </DialogTrigger>
                       <DialogContent className="sm:max-w-[550px] bg-white">
                         <DialogHeader>
-                          <DialogTitle>Liquidity Pool JSON</DialogTitle>
-                          <DialogDescription>
-                            Check out the details returned by the network for this pool
-                          </DialogDescription>
+                          <DialogTitle>{t("PoolStake:liquidityPoolJson")}</DialogTitle>
+                          <DialogDescription>{t("PoolStake:checkPoolDetails")}</DialogDescription>
                         </DialogHeader>
                         <div className="grid grid-cols-1">
                           <div className="col-span-1">
@@ -1068,15 +1101,14 @@ export default function PoolForm() {
                     <Dialog>
                       <DialogTrigger asChild>
                         <Button className="ml-2" variant="outline">
-                          Swappable asset JSON
+                          {t("PoolStake:swappableAssetJson")}
                         </Button>
                       </DialogTrigger>
                       <DialogContent className="sm:max-w-[550px] bg-white">
                         <DialogHeader>
-                          <DialogTitle>Swappable asset JSON</DialogTitle>
+                          <DialogTitle>{t("PoolStake:swappableAssetJson")}</DialogTitle>
                           <DialogDescription>
-                            Check out the details returned by the network this pool's swappable
-                            assets
+                            {t("PoolStake:checkSwappableAssetsDetails")}
                           </DialogDescription>
                         </DialogHeader>
                         <div className="grid grid-cols-1">
@@ -1139,8 +1171,10 @@ export default function PoolForm() {
                 <>
                   <Card>
                     <CardHeader className="pb-2 pt-4">
-                      <CardTitle>Quote asset</CardTitle>
-                      <CardDescription className="text-lg">Loading...</CardDescription>
+                      <CardTitle>{t("PoolStake:quoteAsset")}</CardTitle>
+                      <CardDescription className="text-lg">
+                        {t("PoolStake:loading")}
+                      </CardDescription>
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-2">
@@ -1153,8 +1187,10 @@ export default function PoolForm() {
                   </Card>
                   <Card>
                     <CardHeader className="pb-2 pt-4">
-                      <CardTitle>Base asset</CardTitle>
-                      <CardDescription className="text-lg">Loading...</CardDescription>
+                      <CardTitle>{t("PoolStake:baseAsset")}</CardTitle>
+                      <CardDescription className="text-lg">
+                        {t("PoolStake:loading")}
+                      </CardDescription>
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-2">
@@ -1175,14 +1211,13 @@ export default function PoolForm() {
               <>
                 <Card>
                   <CardHeader className="pb-2 pt-4">
-                    <CardTitle>Need to borrow some assets?</CardTitle>
+                    <CardTitle>{t("PoolStake:borrowAssets")}</CardTitle>
                     <CardDescription className="text-sm">
-                      DEX users lend assets at user defined rates. You could borrow from DEX
-                      participants, at their defined rates.
+                      {t("PoolStake:borrowAssetsDescription")}
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="text-sm pb-3">
-                    <Label>Search by borrowable assets</Label>
+                    <Label>{t("PoolStake:searchBorrowableAssets")}</Label>
                     <br />
                     <a
                       href={`/borrow/index.html?tab=searchOffers&searchTab=borrow&searchText=${assetA.symbol}`}
@@ -1200,7 +1235,7 @@ export default function PoolForm() {
                       <Badge className="ml-2 mt-1 mb-1">{foundPool?.share_asset_symbol}</Badge>
                     </a>
                     <br />
-                    <Label>Search by accepted collateral</Label>
+                    <Label>{t("PoolStake:searchByAcceptedCollateral")}</Label>
                     <br />
                     <a
                       href={`/borrow/index.html?tab=searchOffers&searchTab=collateral&searchText=${assetA.symbol}`}
@@ -1234,8 +1269,10 @@ export default function PoolForm() {
                 ) : (
                   <Card>
                     <CardHeader className="pb-2 pt-4">
-                      <CardTitle>Pool share asset</CardTitle>
-                      <CardDescription className="text-lg">Loading...</CardDescription>
+                      <CardTitle>{t("PoolStake:poolShareAsset")}</CardTitle>
+                      <CardDescription className="text-lg">
+                        {t("PoolStake:loading")}
+                      </CardDescription>
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-2">
@@ -1256,16 +1293,18 @@ export default function PoolForm() {
       <div className="grid grid-cols-1 mt-5 ml-8 mr-8">
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle>Risks associated with liquidity pool staking</CardTitle>
-            <CardDescription>
-              Please do your own research into liquidity pools before staking any assets.
-            </CardDescription>
+            <CardTitle>{t("PoolStake:risksAssociated")}</CardTitle>
+            <CardDescription>{t("PoolStake:doYourOwnResearch")}</CardDescription>
           </CardHeader>
           <CardContent>
             <span className="text-sm">
-              <Label className="mb-0 pb-0 text-lg">Liquidity pool risks</Label>
+              <Label className="mb-0 pb-0 text-lg">{t("PoolStake:liquidityPoolRisks")}</Label>
               <ul className="ml-2 list-disc [&>li]:mt-1 pl-2">
-                <li>aaaaaa</li>
+                <li>{t("PoolStake:risk1")}</li>
+                <li>{t("PoolStake:risk2")}</li>
+                <li>{t("PoolStake:risk3")}</li>
+                <li>{t("PoolStake:risk4")}</li>
+                <li>{t("PoolStake:risk5")}</li>
               </ul>
             </span>
           </CardContent>

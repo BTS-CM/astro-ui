@@ -2,6 +2,8 @@ import React, { useState, useEffect, useMemo } from "react";
 import { useSyncExternalStore } from "react";
 import { useForm } from "react-hook-form";
 import { FixedSizeList as List } from "react-window";
+import { useTranslation } from "react-i18next";
+import { i18n as i18nInstance } from "@/lib/i18n.js";
 
 import {
   Card,
@@ -21,20 +23,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Avatar as Av, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar as Av, AvatarFallback } from "@/components/ui/avatar";
 import { Avatar } from "@/components/Avatar.tsx";
 
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Slider } from "@/components/ui/slider";
-import { Separator } from "@/components/ui/separator";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Toggle } from "@/components/ui/toggle";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 import { useInitCache } from "../effects/Init.ts";
 import { createUserBalancesStore } from "../effects/User.ts";
@@ -55,11 +50,11 @@ import {
 
 import CurrentUser from "./common/CurrentUser.jsx";
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
-import ExternalLink from "./common/ExternalLink.jsx";
 
-import { humanReadableFloat, getFlagBooleans, debounce, blockchainFloat } from "../lib/common.js";
+import { humanReadableFloat, getFlagBooleans, blockchainFloat } from "../lib/common.js";
 
 export default function Settlement(properties) {
+  const { t, i18n } = useTranslation("en", { i18n: i18nInstance });
   const form = useForm({
     defaultValues: {
       account: "",
@@ -361,11 +356,11 @@ export default function Settlement(properties) {
         <div className="grid grid-cols-1 gap-3">
           <Card>
             <CardHeader>
-              <CardTitle>🏦 Smartcoin settlement form</CardTitle>
+              <CardTitle>{t("Settlement:smartcoinSettlementFormTitle")}</CardTitle>
               <CardDescription>
                 {settlementFund && settlementFund.finalSettlementFund
-                  ? "Bid on global settlement funds with the following form"
-                  : "Force settle assets for individual settlement funds"}
+                  ? t("Settlement:bidOnGlobalSettlementFundsDescription")
+                  : t("Settlement:forceSettleAssetsDescription")}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -384,8 +379,8 @@ export default function Settlement(properties) {
                       <FormItem>
                         <FormLabel>
                           {settlementFund && settlementFund.finalSettlementFund
-                            ? "Bidding account"
-                            : "Asset settling account"}
+                            ? t("Settlement:biddingAccount")
+                            : t("Settlement:assetSettlingAccount")}
                         </FormLabel>
                         <FormControl>
                           <div className="grid grid-cols-8 mt-4">
@@ -428,7 +423,7 @@ export default function Settlement(properties) {
                     name="selectedAsset"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Selected asset</FormLabel>
+                        <FormLabel>{t("Settlement:selectedAsset")}</FormLabel>
                         <FormControl>
                           <span className="grid grid-cols-8">
                             <span className="col-span-6">
@@ -454,7 +449,7 @@ export default function Settlement(properties) {
                     name="currentFeedPrice"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Current feed price</FormLabel>
+                        <FormLabel>{t("Settlement:currentFeedPrice")}</FormLabel>{" "}
                         <FormControl>
                           <span className="grid grid-cols-8">
                             <span className="col-span-6">
@@ -489,7 +484,7 @@ export default function Settlement(properties) {
                         name="settlementPrice"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Final settlement price</FormLabel>
+                            <FormLabel>{t("Settlement:finalSettlementPrice")}</FormLabel>{" "}
                             <FormControl>
                               <span className="grid grid-cols-8">
                                 <span className="col-span-6">
@@ -511,7 +506,7 @@ export default function Settlement(properties) {
                         name="fundsAvailable"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Settlement funds available</FormLabel>
+                            <FormLabel>{t("Settlement:settlementFundsAvailable")}</FormLabel>{" "}
                             <FormControl>
                               <span className="grid grid-cols-8">
                                 <span className="col-span-6">
@@ -533,7 +528,7 @@ export default function Settlement(properties) {
                         name="fundingRatio1"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Funding ratio</FormLabel>
+                            <FormLabel>{t("Settlement:fundingRatio")}</FormLabel>
                             <FormControl>
                               <span className="grid grid-cols-8">
                                 <span className="col-span-2 mb-1">
@@ -573,10 +568,11 @@ export default function Settlement(properties) {
                         name="additionalCollateral"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Additional collateral</FormLabel>
+                            <FormLabel>{t("Settlement:additionalCollateral")}</FormLabel>
                             <FormDescription>
-                              The amount of additional collateral you're willing to provide in
-                              return for global settled {parsedAsset.s}
+                              {t("Settlement:additionalCollateralDescription", {
+                                asset: parsedAsset.s,
+                              })}
                             </FormDescription>
                             <FormControl>
                               <span className="grid grid-cols-12">
@@ -596,11 +592,11 @@ export default function Settlement(properties) {
                                   <Popover>
                                     <PopoverTrigger>
                                       <span className="inline-block border border-grey rounded pl-4 pb-1 pr-4">
-                                        <Label>Change amount</Label>
+                                        <Label>{t("Settlement:changeAmount")}</Label>
                                       </span>
                                     </PopoverTrigger>
                                     <PopoverContent>
-                                      <Label>Provide a new amount of additional collateral</Label>
+                                      <Label>{t("Settlement:provideNewAmount")}</Label>
                                       <Input
                                         placeholder={additionalCollateral}
                                         className="mb-2 mt-1"
@@ -627,10 +623,9 @@ export default function Settlement(properties) {
                         name="debtCovered"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Total debt covered by bid</FormLabel>
+                            <FormLabel>{t("Settlement:totalDebtCoveredByBid")}</FormLabel>
                             <FormDescription>
-                              In return for bidding the above additional collateral this is the debt
-                              you'll cover
+                              {t("Settlement:totalDebtCoveredByBidDescription")}
                             </FormDescription>
                             <FormControl>
                               <span className="grid grid-cols-12">
@@ -650,11 +645,11 @@ export default function Settlement(properties) {
                                   <Popover>
                                     <PopoverTrigger>
                                       <span className="inline-block border border-grey rounded pl-4 pb-1 pr-4">
-                                        <Label>Change total</Label>
+                                        <Label>{t("Settlement:changeTotal")}</Label>
                                       </span>
                                     </PopoverTrigger>
                                     <PopoverContent>
-                                      <Label>Provide a new total debt covered</Label>
+                                      <Label>{t("Settlement:provideNewTotal")}</Label>
                                       <Input
                                         placeholder={debtCovered}
                                         className="mb-2 mt-1"
@@ -687,7 +682,7 @@ export default function Settlement(properties) {
                         name="isd"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Individual settlement debt</FormLabel>
+                            <FormLabel>{t("Settlement:individualSettlementDebt")}</FormLabel>{" "}
                             <FormControl>
                               <span className="grid grid-cols-8">
                                 <span className="col-span-6">
@@ -709,7 +704,7 @@ export default function Settlement(properties) {
                         name="isf"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Individual settlement fund</FormLabel>
+                            <FormLabel>{t("Settlement:individualSettlementFund")}</FormLabel>{" "}
                             <FormControl>
                               <span className="grid grid-cols-8">
                                 <span className="col-span-6">
@@ -731,7 +726,7 @@ export default function Settlement(properties) {
                         name="fundingRatio2"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Funding ratio</FormLabel>
+                            <FormLabel>{t("Settlement:fundingRatio")}</FormLabel>
                             <FormControl>
                               <span className="grid grid-cols-8">
                                 <span className="col-span-2 mb-1">
@@ -770,16 +765,15 @@ export default function Settlement(properties) {
                         name="ForceSettleAmount"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Force settle amount</FormLabel>
+                            <FormLabel>{t("Settlement:forceSettleAmount")}</FormLabel>
                             <FormDescription>
-                              The amount of individual settlement fund backing collateral you wish
-                              to claim
+                              {t("Settlement:forceSettleAmountDescription")}
                             </FormDescription>
+
                             <FormControl>
                               <span className="grid grid-cols-12">
                                 <span className="col-span-8">
                                   <Input
-                                    label={`Amount of ${parsedCollateralAsset.s} to force settle`}
                                     placeholder={
                                       forceSettleAmount
                                         ? `${forceSettleAmount} ${parsedAsset.s}`
@@ -794,11 +788,11 @@ export default function Settlement(properties) {
                                   <Popover>
                                     <PopoverTrigger>
                                       <span className="inline-block border border-grey rounded pl-4 pb-1 pr-4">
-                                        <Label>Change amount</Label>
+                                        <Label>{t("Settlement:changeAmount")}</Label>
                                       </span>
                                     </PopoverTrigger>
                                     <PopoverContent>
-                                      <Label>Provide a new force settle amount</Label>
+                                      <Label>{t("Settlement:provideNewForceSettleAmount")}</Label>
                                       <Input
                                         placeholder={forceSettleAmount}
                                         className="mb-2 mt-1"
@@ -829,8 +823,7 @@ export default function Settlement(properties) {
                             individualSettlementFund._debt &&
                             forceSettleAmount > individualSettlementFund._debt ? (
                               <FormMessage>
-                                Unable to force settle a greater amount than the individual
-                                settlement debt
+                                {t("Settlement:forceSettleAmountExceedsDebt")}
                               </FormMessage>
                             ) : null}
                           </FormItem>
@@ -841,10 +834,11 @@ export default function Settlement(properties) {
                         name="totalReceiving"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Total amount you'll receive</FormLabel>
+                            <FormLabel>{t("Settlement:totalAmountReceive")}</FormLabel>
                             <FormDescription>
-                              In return for force settling {parsedAsset.s} you'll receive the
-                              following
+                              {t("Settlement:totalAmountReceiveDescription", {
+                                asset: parsedAsset.s,
+                              })}
                             </FormDescription>
                             <FormControl>
                               <span className="grid grid-cols-12">
@@ -864,11 +858,11 @@ export default function Settlement(properties) {
                                   <Popover>
                                     <PopoverTrigger>
                                       <span className="inline-block border border-grey rounded pl-4 pb-1 pr-4">
-                                        <Label>Change total</Label>
+                                        <Label>{t("Settlement:changeTotal")}</Label>
                                       </span>
                                     </PopoverTrigger>
                                     <PopoverContent>
-                                      <Label>Provide a new total amount</Label>
+                                      <Label>{t("Settlement:provideNewTotalAmount")}</Label>
                                       <Input
                                         placeholder={totalReceiving}
                                         className="mb-2 mt-1"
@@ -894,14 +888,14 @@ export default function Settlement(properties) {
                             </FormControl>
 
                             <FormMessage>
-                              Paying a{" "}
-                              {(
-                                100 -
-                                ((individualSettlementFund._debt * currentFeedSettlementPrice) /
-                                  individualSettlementFund._fund) *
-                                  100
-                              ).toFixed(2)}
-                              % premium
+                              {t("Settlement:payingPremium", {
+                                premium: (
+                                  100 -
+                                  ((individualSettlementFund._debt * currentFeedSettlementPrice) /
+                                    individualSettlementFund._fund) *
+                                    100
+                                ).toFixed(2),
+                              })}
                             </FormMessage>
                           </FormItem>
                         )}
@@ -914,10 +908,12 @@ export default function Settlement(properties) {
                     name="fee"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Network fee</FormLabel>
+                        <FormLabel>{t("Settlement:networkFee")}</FormLabel>
                         <FormDescription>
-                          Operation:{" "}
-                          {settlementFund && settlementFund.finalSettlementFund ? 45 : 17}
+                          {t("Settlement:operation", {
+                            operation:
+                              settlementFund && settlementFund.finalSettlementFund ? 45 : 17,
+                          })}
                         </FormDescription>
                         <FormControl>
                           <span className="grid grid-cols-8">
@@ -929,7 +925,7 @@ export default function Settlement(properties) {
                                   settlementFund && settlementFund.finalSettlementFund
                                     ? bidFee
                                     : settleFee
-                                } BTS`}
+                                } ${usr.chain === "Bitshares" ? "BTS" : "TEST"}`}
                                 readOnly
                               />
                             </span>
@@ -942,20 +938,18 @@ export default function Settlement(properties) {
 
                   {finalBitasset && finalBitasset.options.extensions.force_settle_fee_percent ? (
                     <FormMessage>
-                      Additional force settlement fee:{" "}
-                      {finalBitasset.options.extensions.force_settle_fee_percent / 100} %
+                      {t("Settlement:additionalForceSettlementFee", {
+                        fee: finalBitasset.options.extensions.force_settle_fee_percent / 100,
+                      })}
                     </FormMessage>
                   ) : null}
 
                   <Button className="mt-5 mb-3" type="submit">
-                    Submit
+                    {t("Settlement:submit")}
                   </Button>
 
                   {collateralBiddingDisabled ? (
-                    <FormMessage>
-                      Collateral bidding has been disabled for this asset; this operation will be
-                      rejected.
-                    </FormMessage>
+                    <FormMessage>{t("Settlement:collateralBiddingDisabled")}</FormMessage>
                   ) : null}
                 </form>
               </Form>
@@ -972,19 +966,18 @@ export default function Settlement(properties) {
           {collateralBids && collateralBids.length ? (
             <Card>
               <CardHeader>
-                <CardTitle>Existing collateral bids</CardTitle>
+                <CardTitle>{t("Settlement:existingCollateralBids")}</CardTitle>
                 <CardDescription>
-                  These collateral bids have been created by other users who are interested in the
-                  global settled funds
+                  {t("Settlement:existingCollateralBidsDescription")}
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-5">
-                  <div className="col-span-1">Bidder</div>
-                  <div className="col-span-1">Collateral</div>
-                  <div className="col-span-1">Debt</div>
-                  <div className="col-span-1">Bid price</div>
-                  <div className="col-span-1">Ratio</div>
+                  <div className="col-span-1">{t("Settlement:bidder")}</div>
+                  <div className="col-span-1">{t("Settlement:collateral")}</div>
+                  <div className="col-span-1">{t("Settlement:debt")}</div>
+                  <div className="col-span-1">{t("Settlement:bidPrice")}</div>
+                  <div className="col-span-1">{t("Settlement:ratio")}</div>
                 </div>
                 <List
                   height={500}
@@ -1016,8 +1009,16 @@ export default function Settlement(properties) {
               }
               headerText={
                 settlementFund && settlementFund.finalSettlementFund
-                  ? `Bidding on ${parsedAsset.s} debt with ${parsedCollateralAsset.s} collateral`
-                  : `Settling ${forceSettleAmount} ${parsedAsset.s} for ${totalReceiving} ${parsedCollateralAsset.s}`
+                  ? t("Settlement:biddingOnDebt", {
+                      asset: parsedAsset.s,
+                      collateral: parsedCollateralAsset.s,
+                    })
+                  : t("Settlement:settlingFor", {
+                      forceSettleAmount: forceSettleAmount,
+                      asset: parsedAsset.s,
+                      totalReceiving: totalReceiving,
+                      collateral: parsedCollateralAsset.s,
+                    })
               }
               trxJSON={[
                 settlementFund && settlementFund.finalSettlementFund

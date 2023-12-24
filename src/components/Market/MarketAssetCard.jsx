@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { i18n as i18nInstance } from "@/lib/i18n.js";
 
 import {
   Card,
@@ -30,6 +32,7 @@ import { humanReadableFloat } from "../../lib/common";
 export default function MarketAssetCard(properties) {
   const { asset, assetData, assetDetails, bitassetData, marketSearch, chain, usrBalances, type } =
     properties;
+  const { t, i18n } = useTranslation("en", { i18n: i18nInstance });
 
   const [assetBalance, setAssetBalance] = useState(0);
   useEffect(() => {
@@ -73,15 +76,17 @@ export default function MarketAssetCard(properties) {
         <CardDescription className="text-lg">
           {type === "buy" ? (
             <>
-              <span>Quote asset</span> -<span className="text-sm"> Buying</span>
+              <span>{t("MarketAssetCard:quoteAsset")}</span> -
+              <span className="text-sm"> {t("MarketAssetCard:buying")}</span>
             </>
           ) : null}
           {type === "sell" ? (
             <>
-              <span>Base asset</span> -<span className="text-sm"> Selling</span>
+              <span>{t("MarketAssetCard:baseAsset")}</span> -
+              <span className="text-sm"> {t("MarketAssetCard:selling")}</span>
             </>
           ) : null}
-          {type === "pool" ? <span>Pool stake asset</span> : null}
+          {type === "pool" ? <span>{t("MarketAssetCard:poolStakeAsset")}</span> : null}
         </CardDescription>
       </CardHeader>
       <CardContent className="text-sm pb-2">
@@ -89,13 +94,13 @@ export default function MarketAssetCard(properties) {
           <Dialog>
             <DialogTrigger asChild>
               <Button variant="outline" className="h-6">
-                Supply
+                {t("MarketAssetCard:supply")}
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[400px] bg-white">
               <DialogHeader>
                 <DialogTitle>
-                  {asset} {assetData ? `(${assetData.id})` : ""} supply info
+                  {asset} {assetData ? `(${assetData.id})` : ""} {t("MarketAssetCard:supplyInfo")}
                 </DialogTitle>
                 <DialogDescription>
                   {assetDetails && assetData
@@ -106,7 +111,7 @@ export default function MarketAssetCard(properties) {
                         minimumFractionDigits: assetData.precision,
                       })
                     : "???"}{" "}
-                  {asset} in total circulation
+                  {t("MarketAssetCard:totalCirculation", { asset: asset })}
                   <br />
                   {assetDetails && assetData
                     ? humanReadableFloat(assetData.max_supply, assetData.precision).toLocaleString(
@@ -116,12 +121,12 @@ export default function MarketAssetCard(properties) {
                         }
                       )
                     : "???"}{" "}
-                  maximum supply
+                  {t("MarketAssetCard:maximumSupply")}
                   <br />
                   {assetDetails && assetData
                     ? humanReadableFloat(assetDetails.confidential_supply, assetData.precision)
                     : "???"}{" "}
-                  {asset} in confidential supply
+                  {t("MarketAssetCard:confidentialSupply", { asset: asset })}
                 </DialogDescription>
               </DialogHeader>
             </DialogContent>
@@ -134,16 +139,14 @@ export default function MarketAssetCard(properties) {
             </DialogTrigger>
             <DialogContent className="sm:max-w-[600px] bg-white">
               <DialogHeader>
-                <DialogTitle>{asset} external links</DialogTitle>
+                <DialogTitle>{t("MarketAssetCard:externalLinks", { asset: asset })}</DialogTitle>
                 <DialogDescription>
-                  The buttons below link directly to external {asset} resources.
-                  <br />
-                  User discretion is advised when interacting with external resources.
+                  {t("MarketAssetCard:externalLinksDescription", { asset: asset })}
                 </DialogDescription>
               </DialogHeader>
               <div className="grid grid-cols-1 gap-2">
                 <div>
-                  <b>Explorers</b>
+                  <b>{t("MarketAssetCard:explorers")}</b>
                 </div>
                 <div>
                   <ExternalLink
@@ -177,7 +180,7 @@ export default function MarketAssetCard(properties) {
                   ) : null}
                 </div>
                 <div>
-                  <b>Web wallets</b>
+                  <b>{t("MarketAssetCard:webWallets")}</b>
                 </div>
                 <div>
                   <ExternalLink
@@ -208,14 +211,14 @@ export default function MarketAssetCard(properties) {
           <Dialog>
             <DialogTrigger asChild>
               <Button variant="outline" className="h-6" style={{ marginLeft: "3px" }}>
-                JSON
+                {t("MarketAssetCard:json")}
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[600px] bg-white">
               <DialogHeader>
-                <DialogTitle>{asset} JSON summary data</DialogTitle>
+                <DialogTitle>{t("MarketAssetCard:jsonSummaryData", { asset: asset })}</DialogTitle>
                 <DialogDescription>
-                  The data used for generating {asset} limit orders.
+                  {t("MarketAssetCard:jsonSummaryDataDescription", { asset: asset })}
                 </DialogDescription>
               </DialogHeader>
               <div className="grid grid-cols-1">
@@ -231,41 +234,45 @@ export default function MarketAssetCard(properties) {
         {assetDetails && assetData && marketSearch && marketSearch.length ? (
           <div className="grid grid-cols-1 gap-1 w-full">
             <CardRow
-              title={"Your balance"}
+              title={t("MarketAssetCard:yourBalance")}
               button={`${assetBalance}`}
-              dialogtitle={`${asset} (${assetData ? assetData.id : "?"}) balance`}
+              dialogtitle={t("MarketAssetCard:assetBalance", {
+                asset: asset,
+                id: assetData ? assetData.id : "?",
+              })}
               dialogdescription={
                 <ul className="ml-2 list-disc [&>li]:mt-2">
-                  <li>This is how much {asset} you have available in your account.</li>
-                  <li>You can use this balance to place limit orders in this market.</li>
-                  <li>
-                    To get more {asset}, you can create a limit order, swap assets via a liquidity
-                    pool, or receive a transfer from another account.
-                  </li>
+                  <li>{t("MarketAssetCard:balanceDescription1", { asset: asset })}</li>
+                  <li>{t("MarketAssetCard:balanceDescription2")}</li>
+                  <li>{t("MarketAssetCard:balanceDescription3", { asset: asset })}</li>
                 </ul>
               }
-              tooltip={"More about your balance"}
+              tooltip={t("MarketAssetCard:balanceTooltip")}
             />
 
             <CardRow
-              title={"Asset type"}
+              title={t("MarketAssetCard:assetType")}
               button={
                 <>
-                  {!bitassetData ? "User Issued Asset" : null}
-                  {bitassetData && bitassetData.is_prediction_market ? "Prediction market" : null}
-                  {bitassetData && !bitassetData.is_prediction_market ? "Smartcoin" : null}
+                  {!bitassetData ? t("MarketAssetCard:userIssuedAsset") : null}
+                  {bitassetData && bitassetData.is_prediction_market
+                    ? t("MarketAssetCard:predictionMarket")
+                    : null}
+                  {bitassetData && !bitassetData.is_prediction_market
+                    ? t("MarketAssetCard:smartcoin")
+                    : null}
                 </>
               }
               dialogtitle={`
-                ${!bitassetData ? "User Issued Asset type summary" : ""}
+                ${!bitassetData ? t("MarketAssetCard:userIssuedAssetSummary") : ""}
                 ${
                   bitassetData && bitassetData.is_prediction_market
-                    ? "Prediction Market Asset type summary"
+                    ? t("MarketAssetCard:predictionMarketSummary")
                     : ""
                 }
                 ${
                   bitassetData && !bitassetData.is_prediction_market
-                    ? "Smartcoin asset type summary"
+                    ? t("MarketAssetCard:smartcoinSummary")
                     : ""
                 }
               `}
@@ -274,23 +281,12 @@ export default function MarketAssetCard(properties) {
                   {!bitassetData ? (
                     <ScrollArea className="h-72 rounded-md border text-sm">
                       <ul className="ml-2 list-disc [&>li]:mt-2 pl-5 pr-5">
-                        <li>User Issued Assets (UIA) are user created blockchain assets.</li>
-                        <li>
-                          Since they're user defined, they each have unique names, settings,
-                          descriptions and purposes.
-                        </li>
-                        <li>
-                          UIA which are used by Exchanges/Gateways to issue user deposited funds are
-                          called Exchange Backed Assets (EBA).
-                        </li>
-                        <li>
-                          UIA can be non-fungible tokens (NFTs) containing a variety of multimedia.
-                        </li>
-                        <li>UIA are used for liquidity pool share assets too.</li>
-                        <li>
-                          Always evaluate UIA settings, description and issuer before utilizing them
-                          on the DEX to reduce your risk exposure.
-                        </li>
+                        <li>{t("MarketAssetCard:userIssuedAssetDescription1")}</li>
+                        <li>{t("MarketAssetCard:userIssuedAssetDescription2")}</li>
+                        <li>{t("MarketAssetCard:userIssuedAssetDescription3")}</li>
+                        <li>{t("MarketAssetCard:userIssuedAssetDescription4")}</li>
+                        <li>{t("MarketAssetCard:userIssuedAssetDescription5")}</li>
+                        <li>{t("MarketAssetCard:userIssuedAssetDescription6")}</li>
                       </ul>
                     </ScrollArea>
                   ) : null}
@@ -298,29 +294,11 @@ export default function MarketAssetCard(properties) {
                   {bitassetData && bitassetData.is_prediction_market ? (
                     <ScrollArea className="h-72 rounded-md border text-sm">
                       <ul className="ml-2 list-disc [&>li]:mt-2 pl-5 pr-5">
-                        <li>
-                          A Prediction Market Asset (PMA) is a specialized BitAsset such that total
-                          debt and total collateral are always equal amounts (although asset IDs
-                          differ).
-                        </li>
-                        <li>
-                          No margin calls or force settlements may be performed on a prediction
-                          market asset.
-                        </li>
-                        <li>
-                          A prediction market is globally settled by the issuer after the event
-                          being predicted resolves, thus a prediction market must always have the
-                          global_settle permission enabled.
-                        </li>
-                        <li>
-                          The maximum price for global settlement or short sale of a prediction
-                          market asset is 1-to-1.
-                        </li>
-                        <li>
-                          Given that the prediction market oracle is the issuer, the PMA issuer must
-                          be a trusted party. PMA participants are exposed to both the risk of the
-                          bet and the oracle fulfiling their role truthly.
-                        </li>
+                        <li>{t("MarketAssetCard:predictionMarketDescription1")}</li>
+                        <li>{t("MarketAssetCard:predictionMarketDescription2")}</li>
+                        <li>{t("MarketAssetCard:predictionMarketDescription3")}</li>
+                        <li>{t("MarketAssetCard:predictionMarketDescription4")}</li>
+                        <li>{t("MarketAssetCard:predictionMarketDescription5")}</li>
                       </ul>
                     </ScrollArea>
                   ) : null}
@@ -328,104 +306,67 @@ export default function MarketAssetCard(properties) {
                   {bitassetData && !bitassetData.is_prediction_market ? (
                     <ScrollArea className="h-72 rounded-md border text-sm">
                       <ul className="ml-2 list-disc [&>li]:mt-2 pl-5 pr-5">
-                        <li>
-                          A smartcoin is an asset which has backing collateral, an external
-                          reference feed price and self-issuance.
-                        </li>
-                        <li>
-                          Anyone can create a smartcoin, and anyone can issue smartcoins to their
-                          own account given sufficient backing collateral assets.
-                        </li>
-                        <li>
-                          Smartcoins are used by the committee-account owned bitassets; bitassets
-                          (like USD, CNY, EUR) are committee branded market pegged assets (MPAs)
-                          which reference external FIAT currency price feeds and are backed by BTS
-                          (1.3.0) core token.
-                        </li>
-                        <li>
-                          Users can create their own privatized bitassets (smartcoins) which
-                          reference an external feed of their selection and often have highly unique
-                          backing collateral requirements and recovery mechanisms implemented.
-                        </li>
-                        <li>
-                          If you borrow smartcoins into existence, stay vigilant maintaining your
-                          personal risk exposure and spend some time researching the smartcoin, its
-                          options and issuer before doing so. Debt holders positions are exposed to
-                          both the reference asset and backing asset price volatilities; their
-                          collateral is at risk.
-                        </li>
-                        <li>
-                          Smartcoin holders are exposed to the risk of the debt holder's backing
-                          collateral falling below required minimum levels, however each smartcoin
-                          has a different risk profile given their different backing collateral
-                          configurations.
-                        </li>
+                        <li>{t("MarketAssetCard:smartcoinDescription1")}</li>
+                        <li>{t("MarketAssetCard:smartcoinDescription2")}</li>
+                        <li>{t("MarketAssetCard:smartcoinDescription3")}</li>
+                        <li>{t("MarketAssetCard:smartcoinDescription4")}</li>
+                        <li>{t("MarketAssetCard:smartcoinDescription5")}</li>
+                        <li>{t("MarketAssetCard:smartcoinDescription6")}</li>
                       </ul>
                     </ScrollArea>
                   ) : null}
                 </>
               }
-              tooltip={"More about asset type"}
+              tooltip={t("MarketAssetCard:moreAboutAssetType")}
             />
 
             <CardRow
-              title={"Issuer"}
+              title={t("MarketAssetCard:issuer")}
               button={marketSearch ? marketSearch.find((x) => x.id === assetData.id).u : "?"}
-              dialogtitle={`${assetData.symbol}'s issuer`}
+              dialogtitle={t("MarketAssetCard:assetIssuer", { asset: assetData.symbol })}
               dialogdescription={
                 <ul className="ml-2 list-disc [&>li]:mt-2">
-                  <li>
-                    This is the blockchain account which created this asset. Pay attention to such a
-                    detail to understand what it is you're buying and from whom.
-                  </li>
-                  <li>
-                    Asset issuer can change over time as the issuer can easily transfer ownership.
-                  </li>
-                  <li>
-                    Committee account owned assets are usually the core bitassets maintained by the
-                    committee.
-                  </li>
-                  <li>
-                    If the issuer is 'null-account' then the ownership of the asset has effectively
-                    been burned.
-                  </li>
+                  <li>{t("MarketAssetCard:issuerDescription1")}</li>
+                  <li>{t("MarketAssetCard:issuerDescription2")}</li>
+                  <li>{t("MarketAssetCard:issuerDescription3")}</li>
+                  <li>{t("MarketAssetCard:issuerDescription4")}</li>
                 </ul>
               }
-              tooltip={"More about asset issuer"}
+              tooltip={t("MarketAssetCard:moreAboutAssetIssuer")}
             />
 
             <CardRow
-              title={"Precision"}
+              title={t("MarketAssetCard:precision")}
               button={assetData.precision}
-              dialogtitle={"Asset precision info"}
+              dialogtitle={t("MarketAssetCard:assetPrecisionInfo")}
               dialogdescription={
                 <ul className="ml-2 list-disc [&>li]:mt-2">
-                  <li>The precision of an asset is the quantity of decimal places it has.</li>
+                  <li>{t("MarketAssetCard:precisionDescription1")}</li>
                   <li>
-                    For example {assetData.symbol} with a precision of {assetData.precision} can be
-                    traded in quantities of {humanReadableFloat(1, assetData.precision)}{" "}
-                    {assetData.symbol}.
+                    {t("MarketAssetCard:precisionDescription2", {
+                      asset: assetData.symbol,
+                      precision: assetData.precision,
+                      quantity: humanReadableFloat(1, assetData.precision),
+                    })}
                   </li>
                 </ul>
               }
-              tooltip={"More about asset precision"}
+              tooltip={t("MarketAssetCard:moreAboutAssetPrecision")}
             />
 
             {assetData.market_fee_percent ? (
               <CardRow
-                title={"Market fee"}
+                title={t("MarketAssetCard:marketFee")}
                 button={`${assetData.market_fee_percent / 100} %`}
-                dialogtitle={"Info on asset market fees"}
+                dialogtitle={t("MarketAssetCard:infoOnAssetMarketFees")}
                 dialogdescription={
                   <ul className="ml-2 list-disc [&>li]:mt-2">
-                    <li>
-                      Asset creators can introduce market fees to passively earn as trades occur.
-                    </li>
-                    <li>The market fee only applies to one side of the trade.</li>
-                    <li>Make sure that the market fee is reasonable before proceeding.</li>
+                    <li>{t("MarketAssetCard:marketFeeDescription1")}</li>
+                    <li>{t("MarketAssetCard:marketFeeDescription2")}</li>
+                    <li>{t("MarketAssetCard:marketFeeDescription3")}</li>
                   </ul>
                 }
-                tooltip={"More about market fees"}
+                tooltip={t("MarketAssetCard:moreAboutMarketFees")}
               />
             ) : null}
 
@@ -433,68 +374,57 @@ export default function MarketAssetCard(properties) {
               <>
                 {backingAsset ? (
                   <CardRow
-                    title={"Backing asset"}
+                    title={t("MarketAssetCard:backingAsset")}
                     button={
                       <>
                         {backingAsset.s} ({bitassetData.options.short_backing_asset})
                       </>
                     }
-                    dialogtitle={"Backing asset info"}
+                    dialogtitle={t("MarketAssetCard:backingAssetInfo")}
                     dialogdescription={
                       <ul className="ml-2 list-disc [&>li]:mt-2">
-                        <li>
-                          Smartcoins (bitassets & stablecoins) require backing collateral to be lent
-                          into existence.
-                        </li>
-                        <li>The backing asset is used as collateral to back the smartcoin.</li>
-                        <li>
-                          The backing asset is chosen by the smartcoin's issuer and can't be changed
-                          once users hold it.
-                        </li>
+                        <li>{t("MarketAssetCard:backingAssetDescription1")}</li>
+                        <li>{t("MarketAssetCard:backingAssetDescription2")}</li>
+                        <li>{t("MarketAssetCard:backingAssetDescription3")}</li>
                       </ul>
                     }
-                    tooltip={"More about backing asset"}
+                    tooltip={t("MarketAssetCard:moreAboutBackingAsset")}
                   />
                 ) : null}
 
                 {bitassetData.options.extensions.margin_call_fee_ratio ? (
                   <CardRow
-                    title={"Margin call fee ratio"}
+                    title={t("MarketAssetCard:marginCallFeeRatio")}
                     button={<>{bitassetData.options.extensions.margin_call_fee_ratio / 100} %</>}
-                    dialogtitle={"Margin call fee ratio info"}
+                    dialogtitle={t("MarketAssetCard:marginCallFeeRatioInfo")}
                     dialogdescription={
                       <ul className="ml-2 list-disc [&>li]:mt-2">
-                        <li>
-                          Enables the asset issuer to charge a fee against margin call trading.
-                        </li>
-                        <li>Configured by the asset issuer.</li>
+                        <li>{t("MarketAssetCard:marginCallFeeRatioDescription1")}</li>
+                        <li>{t("MarketAssetCard:marginCallFeeRatioDescription2")}</li>
                       </ul>
                     }
-                    tooltip={"More about the margin call fee ratio"}
+                    tooltip={t("MarketAssetCard:moreAboutMarginCallFeeRatio")}
                   />
                 ) : null}
 
                 {bitassetData.options.extensions.force_settle_fee_percent ? (
                   <CardRow
-                    title={"Force settle fee percent"}
+                    title={t("MarketAssetCard:forceSettleFeePercent")}
                     button={<>{bitassetData.options.extensions.force_settle_fee_percent / 100} %</>}
-                    dialogtitle={"Force settle fee percent info"}
+                    dialogtitle={t("MarketAssetCard:forceSettleFeePercentInfo")}
                     dialogdescription={
                       <ul className="ml-2 list-disc [&>li]:mt-2">
-                        <li>
-                          Enables the asset issuer to charge a fee against force settlement
-                          operations.
-                        </li>
-                        <li>Configured by the asset issuer.</li>
+                        <li>{t("MarketAssetCard:forceSettleFeePercentDescription1")}</li>
+                        <li>{t("MarketAssetCard:forceSettleFeePercentDescription2")}</li>
                       </ul>
                     }
-                    tooltip={"More about the force settle fee percent"}
+                    tooltip={t("MarketAssetCard:moreAboutForceSettleFeePercent")}
                   />
                 ) : null}
 
                 {bitassetData.settlement_fund && backingAsset ? (
                   <CardRow
-                    title={"Settlement fund"}
+                    title={t("MarketAssetCard:settlementFund")}
                     button={
                       <>
                         {humanReadableFloat(
@@ -505,25 +435,15 @@ export default function MarketAssetCard(properties) {
                         })}
                       </>
                     }
-                    dialogtitle={"Settlement fund info"}
+                    dialogtitle={t("MarketAssetCard:settlementFundInfo")}
                     dialogdescription={
                       <ul className="ml-2 list-disc [&>li]:mt-2">
-                        <li>
-                          A settlement fund is the backing collateral held aside during global
-                          settlement conditions.
-                        </li>
-                        <li>
-                          Smartcoin holders can claim their share of the settlement fund if they
-                          force/instant settle their smartcoins.
-                        </li>
-                        <li>
-                          On creation of the settlement fund the debt holders have 100% backing set
-                          aside in the fund, and the rest (above 100% collateral) returned to their
-                          account.
-                        </li>
+                        <li>{t("MarketAssetCard:settlementFundDescription1")}</li>
+                        <li>{t("MarketAssetCard:settlementFundDescription2")}</li>
+                        <li>{t("MarketAssetCard:settlementFundDescription3")}</li>
                       </ul>
                     }
-                    tooltip={"More about settlement funds"}
+                    tooltip={t("MarketAssetCard:moreAboutSettlementFunds")}
                   />
                 ) : null}
 
@@ -535,7 +455,7 @@ export default function MarketAssetCard(properties) {
                 quoteAsset &&
                 backingAsset ? (
                   <CardRow
-                    title={"Feed price"}
+                    title={t("MarketAssetCard:feedPrice")}
                     button={
                       <>
                         {(
@@ -550,29 +470,16 @@ export default function MarketAssetCard(properties) {
                         ).toFixed(backingAsset.p)}
                       </>
                     }
-                    dialogtitle={"Feed price info"}
+                    dialogtitle={t("MarketAssetCard:feedPriceInfo")}
                     dialogdescription={
                       <ul className="ml-2 list-disc [&>li]:mt-2">
-                        <li>
-                          Feed producers are chosen by the asset issuer; each producer contributes
-                          price feeds for the asset.
-                        </li>
-                        <li>
-                          These price feeds are used to determine the smartcoin variables, such as
-                          the settlement price, so it constantly tracks the price of the backing
-                          asset.
-                        </li>
-                        <li>
-                          Bitassets are price fed by witnesses, however user created smartcoins can
-                          allow any pre-approved bitshares account to provide price feeds.
-                        </li>
-                        <li>
-                          Checking the price feed quality can help reduce your risk exposure when
-                          trading/holding smartcoins.
-                        </li>
+                        <li>{t("MarketAssetCard:feedProducerDescription1")}</li>
+                        <li>{t("MarketAssetCard:feedProducerDescription2")}</li>
+                        <li>{t("MarketAssetCard:feedProducerDescription3")}</li>
+                        <li>{t("MarketAssetCard:feedProducerDescription4")}</li>
                       </ul>
                     }
-                    tooltip={"More about feed prices"}
+                    tooltip={t("MarketAssetCard:moreAboutFeedPrices")}
                   />
                 ) : null}
 
@@ -583,7 +490,7 @@ export default function MarketAssetCard(properties) {
                 quoteAsset &&
                 backingAsset ? (
                   <CardRow
-                    title={"Settlement price"}
+                    title={t("MarketAssetCard:settlementPrice")}
                     button={
                       <>
                         {(
@@ -599,30 +506,21 @@ export default function MarketAssetCard(properties) {
                         {baseAsset.s}/{backingAsset.s}
                       </>
                     }
-                    dialogtitle={"Settlement price info"}
+                    dialogtitle={t("MarketAssetCard:settlementPriceInfo")}
                     dialogdescription={
                       <ul className="ml-2 list-disc [&>li]:mt-2">
-                        <li>
-                          The rate at which you'll receive backing collateral if you force/instant
-                          settle smartcoins.
-                        </li>
-                        <li>
-                          Whilst a smartcoin is in global settlement conditions, new issuance is
-                          halted until conditions resolve.
-                        </li>
-                        <li>
-                          Depending on the global settlement recovery mechanism configured by the
-                          smartcoin asset issuer, the feed price may be below the settlement price.
-                        </li>
+                        <li>{t("MarketAssetCard:settlementPriceDescription1")}</li>
+                        <li>{t("MarketAssetCard:settlementPriceDescription2")}</li>
+                        <li>{t("MarketAssetCard:settlementPriceDescription3")}</li>
                       </ul>
                     }
-                    tooltip={"More about this settlement price"}
+                    tooltip={t("MarketAssetCard:moreAboutSettlementPrice")}
                   />
                 ) : null}
 
                 {bitassetData.individual_settlement_debt && backingAsset ? (
                   <CardRow
-                    title={"Ind. Settlement debt"}
+                    title={t("MarketAssetCard:individualSettlementDebt")}
                     button={
                       <>
                         {humanReadableFloat(
@@ -634,32 +532,22 @@ export default function MarketAssetCard(properties) {
                         {asset}
                       </>
                     }
-                    dialogtitle={"Individual settlement debt info"}
+                    dialogtitle={t("MarketAssetCard:individualSettlementDebtInfo")}
                     dialogdescription={
                       <ul className="ml-2 list-disc [&>li]:mt-2">
-                        <li>
-                          The individual settlement pool. In the event of individual settlements (to
-                          fund or to order), debt and collateral of the margin positions which got
-                          settled are moved here.
-                        </li>
-                        <li>
-                          For individual settlement to fund, collateral assets in the pool can only
-                          be retrieved through forced settlements.
-                        </li>
-                        <li>
-                          For individual settlement to order, collateral assets in the pool can only
-                          be retrieved through limit orders.
-                        </li>
-                        <li>Amount of debt due to individual settlements</li>
+                        <li>{t("MarketAssetCard:individualSettlementDebtDescription1")}</li>
+                        <li>{t("MarketAssetCard:individualSettlementDebtDescription2")}</li>
+                        <li>{t("MarketAssetCard:individualSettlementDebtDescription3")}</li>
+                        <li>{t("MarketAssetCard:individualSettlementDebtDescription4")}</li>
                       </ul>
                     }
-                    tooltip={"More about individual settlement debt"}
+                    tooltip={t("MarketAssetCard:moreAboutIndividualSettlementDebt")}
                   />
                 ) : null}
 
                 {bitassetData.individual_settlement_fund && backingAsset ? (
                   <CardRow
-                    title={"Ind. Settlement fund"}
+                    title={t("MarketAssetCard:individualSettlementFund")}
                     button={
                       <>
                         {humanReadableFloat(
@@ -671,16 +559,13 @@ export default function MarketAssetCard(properties) {
                         {asset}
                       </>
                     }
-                    dialogtitle={"Individual settlement fund info"}
+                    dialogtitle={t("MarketAssetCard:individualSettlementFundInfo")}
                     dialogdescription={
                       <ul className="ml-2 list-disc [&>li]:mt-2">
-                        <li>
-                          The amount of collateral (backing asset) collected due to individual
-                          settlements.
-                        </li>
+                        <li>{t("MarketAssetCard:individualSettlementFundDescription")}</li>
                       </ul>
                     }
-                    tooltip={"More about individual settlement funds"}
+                    tooltip={t("MarketAssetCard:moreAboutIndividualSettlementFunds")}
                   />
                 ) : null}
               </>
@@ -691,14 +576,14 @@ export default function MarketAssetCard(properties) {
                 <Dialog>
                   <DialogTrigger asChild>
                     <Button variant="outline" className="h-5 p-3">
-                      Smartcoin info
+                      {t("MarketAssetCard:smartcoinInfoButton")}
                     </Button>
                   </DialogTrigger>
                   <DialogContent className="sm:max-w-[600px] bg-white">
                     <DialogHeader>
-                      <DialogTitle>Additional bitasset info</DialogTitle>
+                      <DialogTitle>{t("MarketAssetCard:additionalBitassetInfoTitle")}</DialogTitle>
                       <DialogDescription>
-                        These values don't freuqently change value but do affect traders.
+                        {t("MarketAssetCard:additionalBitassetInfoDescription")}
                       </DialogDescription>
                     </DialogHeader>
                     <div className="grid grid-cols-1">
@@ -706,120 +591,107 @@ export default function MarketAssetCard(properties) {
                         {bitassetData && !bitassetData.is_prediction_market ? (
                           <>
                             <CardRow
-                              title={"Smartcoin ID"}
+                              title={t("MarketAssetCard:smartcoinID")}
                               button={bitassetData.id}
-                              dialogtitle={"Smartcoin ID"}
+                              dialogtitle={t("MarketAssetCard:smartcoinIDInfo")}
                               dialogdescription={
                                 <ul className="ml-2 list-disc [&>li]:mt-2">
-                                  <li>
-                                    The ID required to fetch the bitasset details like the feed
-                                    price, settlement price, etc.
-                                  </li>
+                                  <li>{t("MarketAssetCard:smartcoinIDDescription")}</li>
                                 </ul>
                               }
-                              tooltip={"More about Smartcoin ID"}
+                              tooltip={t("MarketAssetCard:moreAboutSmartcoinID")}
                             />
 
                             <CardRow
-                              title={"Feed quantity"}
+                              title={t("MarketAssetCard:feedQuantity")}
                               button={bitassetData.feeds.length}
-                              dialogtitle={"Smartcoin feed quantity info"}
+                              dialogtitle={t("MarketAssetCard:feedQuantityInfo")}
                               dialogdescription={
                                 <ul className="ml-2 list-disc [&>li]:mt-2">
-                                  <li>
-                                    The quantity of feed producers contributing reference feed data
-                                    for this smartcoin to track the true value of the reference
-                                    asset.
-                                  </li>
-                                  <li>
-                                    There can be as few as 1 feed producer for a smartcoin to
-                                    operate, however the greater the quantity of feed producers the
-                                    more stable it becomes.
-                                  </li>
-                                  <li>
-                                    If a smartcoin is fed by witnesses or comittee, the quantity of
-                                    feed producers cannot exceed the pool of active witnesses and
-                                    committee members.
-                                  </li>
+                                  <li>{t("MarketAssetCard:feedQuantityDescription1")}</li>
+                                  <li>{t("MarketAssetCard:feedQuantityDescription2")}</li>
+                                  <li>{t("MarketAssetCard:feedQuantityDescription3")}</li>
                                 </ul>
                               }
-                              tooltip={"More about feed quantities"}
+                              tooltip={t("MarketAssetCard:moreAboutFeedQuantities")}
                             />
 
                             {bitassetData.options.force_settlement_delay_sec ? (
                               <CardRow
-                                title={"Force settlement delay"}
+                                title={t("MarketAssetCard:forceSettlementDelay")}
                                 button={
                                   <>{bitassetData.options.force_settlement_delay_sec / 60} mins</>
                                 }
-                                dialogtitle={"Force settlement delay info"}
+                                dialogtitle={t("MarketAssetCard:forceSettlementDelayInfo")}
                                 dialogdescription={
                                   <ul className="ml-2 list-disc [&>li]:mt-2">
-                                    <li>
-                                      The amount of time which the blockchain will wait before
-                                      processing your force settlement operation.
-                                    </li>
+                                    <li>{t("MarketAssetCard:forceSettlementDelayDescription")}</li>
                                   </ul>
                                 }
-                                tooltip={"More about force settlement delays"}
+                                tooltip={t("MarketAssetCard:moreAboutForceSettlementDelays")}
                               />
                             ) : null}
 
                             <CardRow
-                              title={"Force settlement offset"}
+                              title={t("MarketAssetCard:forceSettlementOffset")}
                               button={
                                 <>{bitassetData.options.force_settlement_offset_percent / 100}%</>
                               }
-                              dialogtitle={"Force settlement offset info"}
+                              dialogtitle={t("MarketAssetCard:forceSettlementOffsetInfo")}
                               dialogdescription={
                                 <ul className="ml-2 list-disc [&>li]:mt-2">
-                                  <li>A percentage offset from the price feed for settlement</li>
+                                  <li>{t("MarketAssetCard:forceSettlementOffsetDescription")}</li>
                                 </ul>
                               }
-                              tooltip={"More about force settlement offset"}
+                              tooltip={t("MarketAssetCard:moreAboutForceSettlementOffset")}
                             />
 
                             <CardRow
-                              title={"Max force settlement volume"}
+                              title={t("MarketAssetCard:maxForceSettlementVolume")}
                               button={
                                 <>{bitassetData.options.maximum_force_settlement_volume / 100} %</>
                               }
-                              dialogtitle={"Max force settlement volume info"}
+                              dialogtitle={t("MarketAssetCard:maxForceSettlementVolumeInfo")}
                               dialogdescription={
                                 <ul className="ml-2 list-disc [&>li]:mt-2">
                                   <li>
-                                    Maximum percentage of the supply that can be settled per day
+                                    {t("MarketAssetCard:maxForceSettlementVolumeDescription")}
                                   </li>
                                 </ul>
                               }
-                              tooltip={"More about force settlement offset"}
+                              tooltip={t("MarketAssetCard:moreAboutMaxForceSettlementVolume")}
                             />
 
                             {bitassetData.options.extensions.black_swan_response_method ? (
                               <CardRow
-                                title={"Global settlement response method"}
+                                title={t("MarketAssetCard:globalSettlementResponseMethod")}
                                 button={bitassetData.options.extensions.black_swan_response_method}
-                                dialogtitle={"Global settlement response (BSRM) method info"}
+                                dialogtitle={t(
+                                  "MarketAssetCard:globalSettlementResponseMethodInfo"
+                                )}
                                 dialogdescription={
                                   <ul className="ml-2 list-disc [&>li]:mt-2">
                                     <li>
-                                      Specifies the asset issuer configured global settlement
-                                      response method (BSRM)
+                                      {t(
+                                        "MarketAssetCard:globalSettlementResponseMethodDescription1"
+                                      )}
                                     </li>
                                     <li>
-                                      Global settlement response methods handle how issuance and
-                                      settlement occur, specifically during highly volatile market
-                                      activity.
+                                      {t(
+                                        "MarketAssetCard:globalSettlementResponseMethodDescription2"
+                                      )}
                                     </li>
                                   </ul>
                                 }
-                                tooltip={"More about global settlement response methods"}
+                                tooltip={t(
+                                  "MarketAssetCard:moreAboutGlobalSettlementResponseMethods"
+                                )}
                               />
                             ) : null}
 
                             {bitassetData.options.extensions.maintenance_collateral_ratio ? (
                               <CardRow
-                                title={"Maintenance collateral ratio"}
+                                title={t("MarketAssetCard:maintenanceCollateralRatio")}
                                 button={
                                   <>
                                     {bitassetData.options.extensions.maintenance_collateral_ratio /
@@ -827,56 +699,51 @@ export default function MarketAssetCard(properties) {
                                     %
                                   </>
                                 }
-                                dialogtitle={"Maintenance collateral ratio info"}
+                                dialogtitle={t("MarketAssetCard:maintenanceCollateralRatioInfo")}
                                 dialogdescription={
                                   <ul className="ml-2 list-disc [&>li]:mt-2">
                                     <li>
-                                      The minimum collateral ratio (MCR) specified by the asset
-                                      issuer.
+                                      {t("MarketAssetCard:maintenanceCollateralRatioDescription1")}
                                     </li>
                                     <li>
-                                      If your debt position drops below this ratio then you're
-                                      likely to be margin called.
+                                      {t("MarketAssetCard:maintenanceCollateralRatioDescription2")}
                                     </li>
                                     <li>
-                                      If your debt position is margin called, you will lose the
-                                      collateral plus the offset percent.
+                                      {t("MarketAssetCard:maintenanceCollateralRatioDescription3")}
                                     </li>
                                   </ul>
                                 }
-                                tooltip={"More about the maintenance collateral ratio"}
+                                tooltip={t("MarketAssetCard:moreAboutMaintenanceCollateralRatio")}
                               />
                             ) : null}
 
                             {bitassetData.options.extensions.initial_collateral_ratio ? (
                               <CardRow
-                                title={"Initial collateral ratio"}
+                                title={t("MarketAssetCard:initialCollateralRatio")}
                                 button={
                                   <>
                                     {bitassetData.options.extensions.initial_collateral_ratio / 10}{" "}
                                     %
                                   </>
                                 }
-                                dialogtitle={"Initial collateral ratio info"}
+                                dialogtitle={t("MarketAssetCard:initialCollateralRatioInfo")}
                                 dialogdescription={
                                   <ul className="ml-2 list-disc [&>li]:mt-2">
                                     <li>
-                                      The initial collateral ratio (ICR) is the minimum ratio
-                                      required when creating a debt position.
+                                      {t("MarketAssetCard:initialCollateralRatioDescription1")}
                                     </li>
                                     <li>
-                                      Your debt position margin ratio can fall below this ICR ratio,
-                                      but it must stay above the MCR to avoid margin call.
+                                      {t("MarketAssetCard:initialCollateralRatioDescription2")}
                                     </li>
                                   </ul>
                                 }
-                                tooltip={"More about the initial collateral ratio"}
+                                tooltip={t("MarketAssetCard:moreAboutInitialCollateralRatio")}
                               />
                             ) : null}
 
                             {bitassetData.options.extensions.maximum_short_squeeze_ratio ? (
                               <CardRow
-                                title={"Maximum short squeeze ratio"}
+                                title={t("MarketAssetCard:maximumShortSqueezeRatio")}
                                 button={
                                   <>
                                     {bitassetData.options.extensions.maximum_short_squeeze_ratio /
@@ -884,16 +751,15 @@ export default function MarketAssetCard(properties) {
                                     %
                                   </>
                                 }
-                                dialogtitle={"Maximum short squeeze ratio info"}
+                                dialogtitle={t("MarketAssetCard:maximumShortSqueezeRatioInfo")}
                                 dialogdescription={
                                   <ul className="ml-2 list-disc [&>li]:mt-2">
                                     <li>
-                                      The max short squeeze ratio is the maximum ratio which a debt
-                                      position will be protected against short squeezes.
+                                      {t("MarketAssetCard:maximumShortSqueezeRatioDescription")}
                                     </li>
                                   </ul>
                                 }
-                                tooltip={"More about the max short squeeze ratio"}
+                                tooltip={t("MarketAssetCard:moreAboutMaximumShortSqueezeRatio")}
                               />
                             ) : null}
                           </>
@@ -907,7 +773,7 @@ export default function MarketAssetCard(properties) {
               {bitassetData ? (
                 <a href={`/smartcoin/index.html?id=${assetData.id}`}>
                   <Button variant="outline" className="h-5 p-3 w-full">
-                    Borrow
+                    {t("MarketAssetCard:borrowButton")}
                   </Button>
                 </a>
               ) : null}

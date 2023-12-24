@@ -2,6 +2,8 @@ import React, { useState, useEffect, useSyncExternalStore, useMemo } from "react
 import Fuse from "fuse.js";
 import { useForm } from "react-hook-form";
 import { FixedSizeList as List } from "react-window";
+import { useTranslation } from "react-i18next";
+import { i18n as i18nInstance } from "@/lib/i18n.js";
 
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
@@ -82,6 +84,7 @@ import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
 import ExternalLink from "./common/ExternalLink.jsx";
 
 export default function PoolForm() {
+  const { t, i18n } = useTranslation("en", { i18n: i18nInstance });
   const form = useForm({
     defaultValues: {
       account: "",
@@ -561,15 +564,12 @@ export default function PoolForm() {
         <div className="grid grid-cols-1 gap-3">
           <Card className="p-2">
             <CardHeader>
-              <CardTitle>Bitshares Liquidity Pool Exchange</CardTitle>
-              <CardDescription>
-                Easily swap between Bitshares assets using one of these user created liquidity
-                pools.
-              </CardDescription>
+              <CardTitle>{t("PoolForm:title")}</CardTitle>
+              <CardDescription>{t("PoolForm:description")}</CardDescription>
             </CardHeader>
             <CardContent>
-              {!pools ? <p>Loading pool data</p> : null}
-              {!assets ? <p>Loading asset data</p> : null}
+              {!pools ? <p>{t("PoolForm:loadingPoolData")}</p> : null}
+              {!assets ? <p>{t("PoolForm:loadingAssetData")}</p> : null}
               {pools && assets ? (
                 <>
                   <Form {...form}>
@@ -584,7 +584,7 @@ export default function PoolForm() {
                         name="account"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Account</FormLabel>
+                            <FormLabel>{t("PoolForm:accountLabel")}</FormLabel>{" "}
                             <FormControl>
                               <div className="grid grid-cols-8">
                                 <div className="col-span-1 ml-5">
@@ -622,7 +622,6 @@ export default function PoolForm() {
                                 </div>
                               </div>
                             </FormControl>
-                            <FormMessage />
                           </FormItem>
                         )}
                       />
@@ -631,11 +630,11 @@ export default function PoolForm() {
                         name="pool"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Liquidity pool</FormLabel>
+                            <FormLabel>{t("PoolForm:liquidityPoolLabel")}</FormLabel>
                             <FormDescription style={{ marginTop: "0px" }}>
                               {foundPoolDetails
-                                ? "This is the liquidity pool you have chosen for your asset swap"
-                                : "Select a liquidity pool to continue with your asset swap"}
+                                ? t("PoolForm:foundPoolDetails")
+                                : t("PoolForm:noPoolDetails")}
                             </FormDescription>
                             <FormControl
                               onChange={(event) => {
@@ -650,7 +649,7 @@ export default function PoolForm() {
                                         placeholder={
                                           foundPool
                                             ? `${foundPool.id} - ${foundPool.share_asset_symbol} - ${foundPool.asset_a_symbol}:${foundPool.asset_b_symbol}`
-                                            : "Select a pool.."
+                                            : t("PoolForm:selectPoolPlaceholder")
                                         }
                                       />
                                     </SelectTrigger>
@@ -683,15 +682,14 @@ export default function PoolForm() {
                                   >
                                     <DialogTrigger asChild>
                                       <Button variant="outline" className="h-9 mt-1 p-3 w-full">
-                                        Search
+                                        {t("PoolForm:searchButton")}
                                       </Button>
                                     </DialogTrigger>
                                     <DialogContent className="sm:max-w-[900px] bg-white">
                                       <DialogHeader>
-                                        <DialogTitle>Search for a liquidity pool</DialogTitle>
+                                        <DialogTitle>{t("PoolForm:searchDialogTitle")}</DialogTitle>
                                         <DialogDescription>
-                                          Select a search result to proceed with your desired asset
-                                          swap.
+                                          {t("PoolForm:searchDialogDescription")}
                                         </DialogDescription>
                                       </DialogHeader>
                                       <div className="grid grid-cols-1">
@@ -700,26 +698,26 @@ export default function PoolForm() {
                                             <TabsList className="grid max-w-[400px] grid-cols-2 mb-1 gap-3">
                                               {activeTab === "asset" ? (
                                                 <TabsTrigger style={activeTabStyle} value="asset">
-                                                  Swappable assets
+                                                  {t("PoolForm:swappableAssetsTab")}
                                                 </TabsTrigger>
                                               ) : (
                                                 <TabsTrigger
                                                   value="asset"
                                                   onClick={() => setActiveTab("asset")}
                                                 >
-                                                  Swappable assets
+                                                  {t("PoolForm:swappableAssetsTab")}
                                                 </TabsTrigger>
                                               )}
                                               {activeTab === "share" ? (
                                                 <TabsTrigger style={activeTabStyle} value="share">
-                                                  Pool share asset
+                                                  {t("PoolForm:poolShareAssetTab")}
                                                 </TabsTrigger>
                                               ) : (
                                                 <TabsTrigger
                                                   value="share"
                                                   onClick={() => setActiveTab("share")}
                                                 >
-                                                  Pool share asset
+                                                  {t("PoolForm:poolShareAssetTab")}
                                                 </TabsTrigger>
                                               )}
                                             </TabsList>
@@ -739,13 +737,21 @@ export default function PoolForm() {
                                               {thisResult && thisResult.length ? (
                                                 <>
                                                   <div className="grid grid-cols-12">
-                                                    <div className="col-span-2">ID</div>
-                                                    <div className="col-span-3">
-                                                      <b>Share asset</b>
+                                                    <div className="col-span-2">
+                                                      {t("PoolForm:idColumnTitle")}
                                                     </div>
-                                                    <div className="col-span-3">Asset A</div>
-                                                    <div className="col-span-3">Asset B</div>
-                                                    <div className="col-span-1">Taker Fee</div>
+                                                    <div className="col-span-3">
+                                                      <b>{t("PoolForm:shareAssetColumnTitle")}</b>
+                                                    </div>
+                                                    <div className="col-span-3">
+                                                      {t("PoolForm:assetAColumnTitle")}
+                                                    </div>
+                                                    <div className="col-span-3">
+                                                      {t("PoolForm:assetBColumnTitle")}
+                                                    </div>
+                                                    <div className="col-span-1">
+                                                      {t("PoolForm:takerFeeColumnTitle")}
+                                                    </div>
                                                   </div>
                                                   <List
                                                     height={400}
@@ -763,15 +769,21 @@ export default function PoolForm() {
                                               {thisResult && thisResult.length ? (
                                                 <>
                                                   <div className="grid grid-cols-12">
-                                                    <div className="col-span-2">ID</div>
-                                                    <div className="col-span-3">Share asset</div>
-                                                    <div className="col-span-3">
-                                                      <b>Asset A</b>
+                                                    <div className="col-span-2">
+                                                      {t("PoolForm:idColumnTitle")}
                                                     </div>
                                                     <div className="col-span-3">
-                                                      <b>Asset B</b>
+                                                      {t("PoolForm:shareAssetColumnTitle")}
                                                     </div>
-                                                    <div className="col-span-1">Taker Fee</div>
+                                                    <div className="col-span-3">
+                                                      <b>{t("PoolForm:assetAColumnTitle")}</b>
+                                                    </div>
+                                                    <div className="col-span-3">
+                                                      <b>{t("PoolForm:assetBColumnTitle")}</b>
+                                                    </div>
+                                                    <div className="col-span-1">
+                                                      {t("PoolForm:takerFeeColumnTitle")}
+                                                    </div>
                                                   </div>
                                                   <List
                                                     height={400}
@@ -792,7 +804,6 @@ export default function PoolForm() {
                                 </div>
                               </div>
                             </FormControl>
-                            <FormMessage />
                           </FormItem>
                         )}
                       />
@@ -804,7 +815,7 @@ export default function PoolForm() {
                               <Card>
                                 <CardHeader className="pb-0">
                                   <CardTitle className="text-sm pt-0">
-                                    Swappable{" "}
+                                    {t("PoolForm:swappable")}{" "}
                                     <ExternalLink
                                       classnamecontents="text-blue-500"
                                       type="text"
@@ -851,7 +862,7 @@ export default function PoolForm() {
                               <Card>
                                 <CardHeader className="pb-0">
                                   <CardTitle className="text-sm pt-0">
-                                    Swappable{" "}
+                                    {t("PoolForm:swappable")}{" "}
                                     <ExternalLink
                                       classnamecontents="text-blue-500"
                                       type="text"
@@ -871,44 +882,42 @@ export default function PoolForm() {
 
                       {pool && pool.length ? (
                         <>
-                          <FormField
-                            control={form.control}
-                            name="sellAmount"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>{`Amount of ${
-                                  assetA ? assetA.symbol : "???"
-                                } to swap`}</FormLabel>
-                                <FormDescription style={{ marginTop: "0px" }}>
-                                  Enter the amount of {assetA ? assetA.symbol : "???"} you want to
-                                  swap for {assetB ? assetB.symbol : "???"}
-                                </FormDescription>
-                                <FormControl
-                                  onChange={(event) => {
-                                    const input = event.target.value;
-                                    const regex = /^[0-9]*\.?[0-9]*$/; // regular expression to match numbers and a single period
-                                    if (regex.test(input)) {
-                                      setSellAmount(input);
-                                    }
-                                  }}
-                                >
-                                  <div className="grid grid-cols-2">
-                                    <div className="col-span-1">
-                                      <Input
-                                        label={`Amount of ${
-                                          assetA ? assetA.symbol : "???"
-                                        } to swap`}
-                                        value={sellAmount}
-                                        placeholder={sellAmount}
-                                        className="mb-3"
-                                      />
-                                    </div>
-                                  </div>
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
+                          <FormItem>
+                            <FormLabel>
+                              {t("PoolForm:amountToSwap", {
+                                symbol: assetA ? assetA.symbol : "???",
+                              })}
+                            </FormLabel>
+                            <FormDescription style={{ marginTop: "0px" }}>
+                              {t("PoolForm:enterAmountToSwap", {
+                                symbolA: assetA ? assetA.symbol : "???",
+                                symbolB: assetB ? assetB.symbol : "???",
+                              })}
+                            </FormDescription>
+                            <FormControl
+                              onChange={(event) => {
+                                const input = event.target.value;
+                                const regex = /^[0-9]*\.?[0-9]*$/; // regular expression to match numbers and a single period
+                                if (regex.test(input)) {
+                                  setSellAmount(input);
+                                }
+                              }}
+                            >
+                              <div className="grid grid-cols-2">
+                                <div className="col-span-1">
+                                  <Input
+                                    label={t("PoolForm:amountToSwap", {
+                                      symbol: assetA ? assetA.symbol : "???",
+                                    })}
+                                    value={sellAmount}
+                                    placeholder={sellAmount}
+                                    className="mb-3"
+                                  />
+                                </div>
+                              </div>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
                         </>
                       ) : null}
 
@@ -919,14 +928,13 @@ export default function PoolForm() {
                             name="buyAmount"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>Total amount</FormLabel>
-                                <FormDescription
-                                  style={{ marginTop: "0px" }}
-                                >{`This is the amount of ${
-                                  assetB ? assetB.symbol : "???"
-                                } you'll receive in return for ${
-                                  assetA ? assetA.symbol : "???"
-                                }`}</FormDescription>
+                                <FormLabel>{t("PoolForm:totalAmount")}</FormLabel>
+                                <FormDescription style={{ marginTop: "0px" }}>
+                                  {t("PoolForm:totalAmountDescription", {
+                                    symbolA: assetA ? assetA.symbol : "???",
+                                    symbolB: assetB ? assetB.symbol : "???",
+                                  })}
+                                </FormDescription>
                                 <FormControl>
                                   <div className="grid grid-cols-2 mb-3 mt-3">
                                     <div className="col-span-1">{buyAmountInput}</div>
@@ -946,9 +954,9 @@ export default function PoolForm() {
                             name="poolFee"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>Pool fee</FormLabel>
+                                <FormLabel>{t("PoolForm:poolFee")}</FormLabel>
                                 <FormDescription style={{ marginTop: "0px" }}>
-                                  This is the estimated fee you'll pay to the pool for this swap
+                                  {t("PoolForm:poolFeeDescription")}
                                 </FormDescription>
                                 <FormControl>
                                   <div className="grid grid-cols-2 mb-3 mt-3">
@@ -962,7 +970,7 @@ export default function PoolForm() {
                                           sellAmount
                                         ).toFixed(assetA.precision)} (${assetA.symbol}) (${
                                           foundPoolDetails.taker_fee_percent / 100
-                                        }% fee)`}
+                                        }% ${t("PoolForm:fee")})`}
                                       />
                                     </div>
                                   </div>
@@ -980,20 +988,25 @@ export default function PoolForm() {
                           name="networkFee"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Network fee</FormLabel>
+                              <FormLabel>{t("PoolForm:networkFee")}</FormLabel>
                               <FormDescription style={{ marginTop: "0px" }}>
-                                This is the cost to broadcast your pool exchange operation onto the
-                                blockchain
+                                {t("PoolForm:networkFeeDescription")}
                               </FormDescription>
                               <FormControl>
                                 <div className="grid grid-cols-2 mb-3 mt-3">
                                   <div className="col-span-1">
-                                    <Input disabled readOnly placeholder={`${fee} BTS`} />
+                                    <Input
+                                      disabled
+                                      readOnly
+                                      placeholder={`${fee} ${t("PoolForm:feeCurrency")}`}
+                                    />
                                   </div>
                                 </div>
                               </FormControl>
                               {usr.id === usr.referrer ? (
-                                <FormMessage>Rebate: {fee * 0.8} BTS (vesting)</FormMessage>
+                                <FormMessage>
+                                  {t("PoolForm:rebate", { rebate: fee * 0.8, currency: "BTS" })}
+                                </FormMessage>
                               ) : null}
                               <FormMessage />
                             </FormItem>
@@ -1003,11 +1016,11 @@ export default function PoolForm() {
 
                       {!pool || !sellAmount || !buyAmount || showDialog !== false ? (
                         <Button className="mt-5 mb-3" variant="outline" disabled type="submit">
-                          Submit
+                          {t("PoolForm:submit")}
                         </Button>
                       ) : (
                         <Button className="mt-5 mb-3" variant="outline" type="submit">
-                          Submit
+                          {t("PoolForm:submit")}
                         </Button>
                       )}
                     </form>
@@ -1020,7 +1033,12 @@ export default function PoolForm() {
                       userID={usr.id}
                       dismissCallback={setShowDialog}
                       key={`Exchanging${sellAmount}${assetA.symbol}for${buyAmount}${assetB.symbol}`}
-                      headerText={`Exchanging ${sellAmount} ${assetA.symbol} for ${buyAmount} ${assetB.symbol}`}
+                      headerText={t("PoolForm:exchangeHeader", {
+                        sellAmount: sellAmount,
+                        symbolA: assetA.symbol,
+                        buyAmount: buyAmount,
+                        symbolB: assetB.symbol,
+                      })}
                       trxJSON={[
                         {
                           account: usr.id,
@@ -1051,12 +1069,12 @@ export default function PoolForm() {
                         setTimeout(() => setIsRotating(false), 500);
                       }}
                     >
-                      Swap buy/sell
+                      {t("PoolForm:swapBuySell")}
                     </Button>
                   ) : null}
                   {pool && showDialog ? (
                     <Button variant="outline" mt="xl" disabled>
-                      Swap buy/sell
+                      {t("PoolForm:swapBuySell")}
                     </Button>
                   ) : null}
                   {pool ? (
@@ -1064,7 +1082,7 @@ export default function PoolForm() {
                       variant="outline"
                       classnamecontents="ml-2"
                       type="button"
-                      text={`Blocksights pool explorer`}
+                      text={t("PoolForm:blocksightsPoolExplorer")}
                       hyperlink={`https://blocksights.info/#/pools/${pool}${
                         usr.chain !== "bitshares" ? "?network=testnet" : ""
                       }`}
@@ -1074,14 +1092,14 @@ export default function PoolForm() {
                     <Dialog>
                       <DialogTrigger asChild>
                         <Button className="ml-2" variant="outline">
-                          Pool JSON
+                          {t("PoolForm:poolJsonButton")}
                         </Button>
                       </DialogTrigger>
                       <DialogContent className="sm:max-w-[550px] bg-white">
                         <DialogHeader>
-                          <DialogTitle>Liquidity Pool JSON</DialogTitle>
+                          <DialogTitle>{t("PoolForm:liquidityPoolJsonTitle")}</DialogTitle>
                           <DialogDescription>
-                            Check out the details returned by the network for this pool
+                            {t("PoolForm:liquidityPoolJsonDescription")}
                           </DialogDescription>
                         </DialogHeader>
                         <div className="grid grid-cols-1">
@@ -1098,15 +1116,14 @@ export default function PoolForm() {
                     <Dialog>
                       <DialogTrigger asChild>
                         <Button className="ml-2" variant="outline">
-                          Swappable asset JSON
+                          {t("PoolForm:swappableAssetJsonButton")}
                         </Button>
                       </DialogTrigger>
                       <DialogContent className="sm:max-w-[550px] bg-white">
                         <DialogHeader>
-                          <DialogTitle>Swappable asset JSON</DialogTitle>
+                          <DialogTitle>{t("PoolForm:swappableAssetJsonTitle")}</DialogTitle>
                           <DialogDescription>
-                            Check out the details returned by the network this pool's swappable
-                            assets
+                            {t("PoolForm:swappableAssetJsonDescription")}
                           </DialogDescription>
                         </DialogHeader>
                         <div className="grid grid-cols-1">
@@ -1179,8 +1196,8 @@ export default function PoolForm() {
                 <>
                   <Card>
                     <CardHeader className="pb-2 pt-4">
-                      <CardTitle>Quote asset</CardTitle>
-                      <CardDescription className="text-lg">Loading...</CardDescription>
+                      <CardTitle>{t("PoolForm:quoteAsset")}</CardTitle>
+                      <CardDescription className="text-lg">{t("PoolForm:loading")}</CardDescription>
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-2">
@@ -1193,8 +1210,8 @@ export default function PoolForm() {
                   </Card>
                   <Card>
                     <CardHeader className="pb-2 pt-4">
-                      <CardTitle>Base asset</CardTitle>
-                      <CardDescription className="text-lg">Loading...</CardDescription>
+                      <CardTitle>{t("PoolForm:baseAsset")}</CardTitle>
+                      <CardDescription className="text-lg">{t("PoolForm:loading")}</CardDescription>
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-2">
@@ -1216,14 +1233,13 @@ export default function PoolForm() {
                 <a href={`/dex/index.html?market=${assetA.symbol}_${assetB.symbol}`}>
                   <Card>
                     <CardHeader className="pb-2 pt-4">
-                      <CardTitle>Trade on the Dex instead?</CardTitle>
+                      <CardTitle>{t("PoolForm:tradeOnDex")}</CardTitle>
                       <CardDescription className="text-sm">
-                        Market: {assetA.symbol}/{assetB.symbol}
+                        {t("PoolForm:market", { symbolA: assetA.symbol, symbolB: assetB.symbol })}
                       </CardDescription>
                     </CardHeader>
                     <CardContent className="text-sm pb-2">
-                      You can manually create limit orders for trading pairs of your choice on the
-                      Bitshares DEX
+                      {t("PoolForm:tradeOnDexDescription")}
                     </CardContent>
                   </Card>
                 </a>
@@ -1234,42 +1250,39 @@ export default function PoolForm() {
                 >
                   <Card>
                     <CardHeader className="pb-2 pt-4">
-                      <CardTitle>Purchase stake in this pool?</CardTitle>
+                      <CardTitle>{t("PoolForm:purchaseStake")}</CardTitle>
                       <CardDescription className="text-sm">
-                        Share asset: {foundPool?.share_asset_symbol}
+                        {t("PoolForm:shareAsset", { shareAsset: foundPool?.share_asset_symbol })}
                       </CardDescription>
                     </CardHeader>
                     <CardContent className="text-sm pb-2">
-                      Receive swap fee yield over time by owning a stake in the pool via a market
-                      limit order.
+                      {t("PoolForm:purchaseStakeDescription")}
                     </CardContent>
                   </Card>
                 </a>
                 <a href={`/stake/index.html?pool=${pool}`}>
                   <Card>
                     <CardHeader className="pb-2 pt-4">
-                      <CardTitle>Stake assets in this pool?</CardTitle>
+                      <CardTitle>{t("PoolForm:stakeAssets")}</CardTitle>
                       <CardDescription className="text-sm">
-                        Share asset: {foundPool?.share_asset_symbol}
+                        {t("PoolForm:shareAsset", { shareAsset: foundPool?.share_asset_symbol })}
                       </CardDescription>
                     </CardHeader>
                     <CardContent className="text-sm pb-2">
-                      Earn swap fees on assets staked in liquidity pools minus a small pool defined
-                      withdrawal fee.
+                      {t("PoolForm:stakeAssetsDescription")}
                     </CardContent>
                   </Card>
                 </a>
 
                 <Card>
                   <CardHeader className="pb-2 pt-4">
-                    <CardTitle>Need to borrow some assets?</CardTitle>
+                    <CardTitle>{t("PoolForm:borrowAssets")}</CardTitle>
                     <CardDescription className="text-sm">
-                      DEX users lend assets at user defined rates. You could borrow from DEX
-                      participants, at their defined rates.
+                      {t("PoolForm:borrowAssetsDescription")}
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="text-sm pb-3">
-                    <Label>Search by borrowable assets</Label>
+                    <Label>{t("PoolForm:searchBorrowableAssets")}</Label>
                     <br />
                     <a
                       href={`/borrow/index.html?tab=searchOffers&searchTab=borrow&searchText=${assetA.symbol}`}
@@ -1287,7 +1300,7 @@ export default function PoolForm() {
                       <Badge className="ml-2 mt-1 mb-1">{foundPool?.share_asset_symbol}</Badge>
                     </a>
                     <br />
-                    <Label>Search by accepted collateral</Label>
+                    <Label>{t("PoolForm:searchAcceptedCollateral")}</Label>
                     <br />
                     <a
                       href={`/borrow/index.html?tab=searchOffers&searchTab=collateral&searchText=${assetA.symbol}`}
@@ -1321,8 +1334,8 @@ export default function PoolForm() {
                 ) : (
                   <Card>
                     <CardHeader className="pb-2 pt-4">
-                      <CardTitle>Pool share asset</CardTitle>
-                      <CardDescription className="text-lg">Loading...</CardDescription>
+                      <CardTitle>{t("PoolForm:poolShareAsset")}</CardTitle>
+                      <CardDescription className="text-lg">{t("PoolForm:loading")}</CardDescription>
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-2">
@@ -1343,56 +1356,27 @@ export default function PoolForm() {
       <div className="grid grid-cols-1 mt-5 ml-8 mr-8">
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle>Risks associated with liquidity pool exchanges</CardTitle>
-            <CardDescription>
-              Please do your own research into liquidity pools and their swappable assets before
-              proceeding.
-            </CardDescription>
+            <CardTitle>{t("PoolForm:risksTitle")}</CardTitle>
+            <CardDescription>{t("PoolForm:risksDescription")}</CardDescription>
           </CardHeader>
           <CardContent>
             <span className="text-sm">
-              <Label className="mb-0 pb-0 text-lg">Liquidity pool risks</Label>
+              <Label className="mb-0 pb-0 text-lg">{t("PoolForm:liquidityPoolRisks")}</Label>
               <ul className="ml-2 list-disc [&>li]:mt-1 pl-2">
-                <li>
-                  As liquidity pools are user configured they have highly unique properties and
-                  different owners; as such, they have unique risk profiles. Check that the pool fee
-                  and pool exchange rate are reasonable before proceeding with asset swap.
-                </li>
-                <li>
-                  As anyone can stake funds into both sides of the pool, pool liquidity is dynamic.
-                  If you make a swap, the opportunity to perform a reverse swap may not be available
-                  at a later time at the same price.
-                </li>
+                <li>{t("PoolForm:liquidityPoolRisk1")}</li>
+                <li>{t("PoolForm:liquidityPoolRisk2")}</li>
               </ul>
             </span>
             <span className="text-sm">
-              <Label className="mb-0 pb-0 text-lg">Swappable asset risks</Label>
+              <Label className="mb-0 pb-0 text-lg">{t("PoolForm:swappableAssetRisks")}</Label>
               <ul className="ml-2 list-disc [&>li]:mt-1 pl-2">
+                <li>{t("PoolForm:swappableAssetRisk1")}</li>
                 <li>
-                  As the liquidity pool assets can be user owned & configured, they have their own
-                  unique risk profiles; Check each asset's flags, permissions, market fee and
-                  issuers to gauge risk.
+                  {t("PoolForm:swappableAssetRisk2", {
+                    symbol: assetA.symbol !== "BTS" ? "BTS" : assetA.symbol,
+                  })}
                 </li>
-                <li>
-                  If you try to swap assets in excess of available swappable assets your swap price
-                  will greatly suffer. You should instead swap small amounts and await pool balance
-                  replenishment. If you want to swap a larger amount you should consider{" "}
-                  <a
-                    href={`/dex/index.html?market=${foundPool?.share_asset_symbol}_${
-                      assetA.symbol !== "BTS" ? "BTS" : assetA.symbol
-                    }`}
-                    className="text-blue-500"
-                  >
-                    creating a limit order on the DEX
-                  </a>{" "}
-                  instead.
-                </li>
-                <li>
-                  The value of the swappable assets themselves can fluctuate based on external
-                  factors (external cex volume) as well as internal factors (asset issuer & price
-                  feed publisher actions). Make sure you trust a pool's swappable assets before
-                  performing a swap.
-                </li>
+                <li>{t("PoolForm:swappableAssetRisk3")}</li>
               </ul>
             </span>
           </CardContent>

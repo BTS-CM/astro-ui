@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { i18n as i18nInstance } from "@/lib/i18n.js";
 
 import {
   Dialog,
@@ -15,6 +17,7 @@ import { Button } from "@/components/ui/button";
  */
 export default function ExternalLink(properties) {
   const { hyperlink, type, text, variant, classnamecontents } = properties;
+  const { t, i18n } = useTranslation("en", { i18n: i18nInstance });
 
   const [open, setOpen] = useState(false);
 
@@ -52,23 +55,25 @@ export default function ExternalLink(properties) {
       >
         <DialogContent className="sm:max-w-[500px] bg-white">
           <DialogHeader>
-            <DialogTitle>⚠️ You are about to leave this app!</DialogTitle>
-            <DialogDescription>You are about to nagivate to an external website.</DialogDescription>
+            <DialogTitle>{t("ExternalLink:dialogContent.leaveApp")}</DialogTitle>
+            <DialogDescription>
+              {t("ExternalLink:dialogContent.navigateToExternal")}
+            </DialogDescription>
           </DialogHeader>
           <h3 className="scroll-m-20 text-1xl font-semibold tracking-tight mb-3 mt-1">
-            Do you want to proceed to the following URL?
+            {t("ExternalLink:dialogContent.proceedToURL")}
           </h3>
           <code className="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold">
             {hyperlink}
           </code>
           <h3 className="scroll-m-20 text-1xl font-semibold tracking-tight mb-3 mt-1">
-            Just checking - are you sure you want to leave?
+            {t("ExternalLink:dialogContent.checkingLeave")}
           </h3>
 
           <div className="grid grid-cols-1 gap-3">
             <a href={hyperlink} target="_blank">
               <Button color="gray" variant="outline">
-                Open Link
+                {t("ExternalLink:dialogContent.openLink")}
               </Button>
             </a>
           </div>

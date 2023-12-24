@@ -2,6 +2,8 @@ import React, { useState, useEffect, useSyncExternalStore, useMemo, useCallback 
 import { useForm } from "react-hook-form";
 import { CalendarIcon, LockOpen2Icon, LockClosedIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
+import { useTranslation } from "react-i18next";
+import { i18n as i18nInstance } from "@/lib/i18n.js";
 
 import { cn } from "@/lib/utils";
 
@@ -86,6 +88,7 @@ import ExternalLink from "./common/ExternalLink.jsx";
 import PoolDialogs from "./Market/PoolDialogs.jsx";
 
 export default function MarketOrder(properties) {
+  const { t, i18n } = useTranslation("en", { i18n: i18nInstance });
   const form = useForm({
     defaultValues: {
       account: "",
@@ -393,17 +396,21 @@ export default function MarketOrder(properties) {
             <CardHeader className="pb-0 mb-0">
               <CardTitle className="mb-2">
                 <span className="grid grid-cols-2">
-                  <span className="col-span-1 text-left">Updating limit order {limitOrderID}</span>
+                  <span className="col-span-1 text-left">
+                    {t("MarketOrder:updatingLimitOrder", { limitOrderID })}
+                  </span>
                   <span className="text-right">
                     <Dialog>
                       <DialogTrigger asChild>
-                        <Button className="h-6">View existing limit order data</Button>
+                        <Button className="h-6">
+                          {t("MarketOrder:viewExistingLimitOrderDataButton")}
+                        </Button>
                       </DialogTrigger>
                       <DialogContent className="sm:max-w-[600px] bg-white">
                         <DialogHeader>
-                          <DialogTitle>Existing limit order data</DialogTitle>
+                          <DialogTitle>{t("MarketOrder:existingLimitOrderDataTitle")}</DialogTitle>
                           <DialogDescription>
-                            This form will update the following JSON data
+                            {t("MarketOrder:existingLimitOrderDataDescription")}
                           </DialogDescription>
                         </DialogHeader>
                         <div className="grid grid-cols-1">
@@ -417,7 +424,7 @@ export default function MarketOrder(properties) {
                               variant="outline"
                               classnamecontents=""
                               type="button"
-                              text={`View object on blocksights.info`}
+                              text={t("MarketOrder:viewObjectOnBlocksightsInfo")}
                               hyperlink={`https://blocksights.info/#/objects/${limitOrderID}`}
                             />
                           </div>
@@ -427,9 +434,7 @@ export default function MarketOrder(properties) {
                   </span>
                 </span>
               </CardTitle>
-              <CardDescription>
-                The Bitshares DEX now supports directly editing open limit orders via this form
-              </CardDescription>
+              <CardDescription>{t("MarketOrder:bitsharesDexSupportDescription")}</CardDescription>
             </CardHeader>
             <CardContent>
               <Form {...form}>
@@ -439,7 +444,7 @@ export default function MarketOrder(properties) {
                     name="account"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Limit order owner</FormLabel>
+                        <FormLabel>{t("MarketOrder:limitOrderOwnerLabel")}</FormLabel>
                         <FormControl>
                           <div className="grid grid-cols-8 gap-2">
                             <div className="col-span-1 ml-5">
@@ -467,7 +472,7 @@ export default function MarketOrder(properties) {
                               {usr && currentLimitOrder ? (
                                 <Input
                                   disabled
-                                  placeholder="Bitshares account (1.2.x)"
+                                  placeholder={t("MarketOrder:bitsharesAccountPlaceholder")}
                                   className="mb-1 mt-1"
                                   value={
                                     usr && usr.id === currentLimitOrder.seller
@@ -480,13 +485,10 @@ export default function MarketOrder(properties) {
                           </div>
                         </FormControl>
                         <FormDescription>
-                          This is the account which owns the market order that is being updated.
+                          {t("MarketOrder:limitOrderOwnerDescription")}
                         </FormDescription>
                         {currentLimitOrder && usr && usr.id !== currentLimitOrder.seller ? (
-                          <FormMessage>
-                            ⚠️ You are not logged in as the Bitshares account which owns this limit
-                            order.
-                          </FormMessage>
+                          <FormMessage>{t("MarketOrder:limitOrderOwnerWarning")}</FormMessage>
                         ) : null}
                       </FormItem>
                     )}
@@ -526,24 +528,28 @@ export default function MarketOrder(properties) {
                               </HoverCardTrigger>
                               <HoverCardContent
                                 className="w-40 text-sm text-center pt-1 pb-1"
-                                derp="Optionally change the limit order price"
+                                derp={t("MarketOrder:priceLockHoverCardDescription")}
                               >
-                                {priceLock === "editable" ? "Editing the price" : "Price is locked"}
+                                {priceLock === "editable"
+                                  ? t("MarketOrder:editingThePrice")
+                                  : t("MarketOrder:priceIsLocked")}
                               </HoverCardContent>
                             </HoverCard>
                           </span>
                           <span className="col-span-10">
                             <FormLabel>
                               {priceLock === "editable"
-                                ? "Updating the price"
-                                : "Want to change the price ?"}
+                                ? t("MarketOrder:updatingThePrice")
+                                : t("MarketOrder:wantToChangeThePrice")}
                             </FormLabel>
                             <FormDescription>
                               {priceLock === "editable"
-                                ? `The existing price: ${existingPrice} ${
-                                    quoteAsset ? quoteAsset.symbol : "?"
-                                  }/${baseAsset ? baseAsset.symbol : "?"}`
-                                : "Click the unlock button to begin setting a new price"}
+                                ? t("MarketOrder:existingPriceDescription", {
+                                    existingPrice: existingPrice,
+                                    quoteAssetSymbol: quoteAsset ? quoteAsset.symbol : "?",
+                                    baseAssetSymbol: baseAsset ? baseAsset.symbol : "?",
+                                  })
+                                : t("MarketOrder:clickToUnlockDescription")}
                             </FormDescription>
                           </span>
                         </span>
@@ -557,7 +563,7 @@ export default function MarketOrder(properties) {
                         <span className="col-span-1"></span>
                         <span className="col-span-7">
                           <Input
-                            label={`Price`}
+                            label={t("MarketOrder:priceLabel")}
                             placeholder={`${price} ${quoteAsset.symbol}/${baseAsset.symbol}`}
                             disabled
                             readOnly
@@ -571,11 +577,11 @@ export default function MarketOrder(properties) {
                                 onClick={() => event.preventDefault()}
                                 variant="outline"
                               >
-                                Set new price
+                                {t("MarketOrder:setNewPriceButton")}
                               </Button>
                             </PopoverTrigger>
                             <PopoverContent>
-                              <Label>Provide a new price</Label>
+                              <Label>{t("MarketOrder:provideNewPriceLabel")}</Label>
                               <Input
                                 placeholder={price}
                                 className="mb-2 mt-1"
@@ -640,27 +646,28 @@ export default function MarketOrder(properties) {
                               </HoverCardTrigger>
                               <HoverCardContent className="w-40 text-sm text-center pt-1 pb-1">
                                 {amountLock === "editable"
-                                  ? "Editing the amount being sold"
-                                  : "Currently locked. Using existing amount being sold"}
+                                  ? t("MarketOrder:editingAmountBeingSold")
+                                  : t("MarketOrder:amountLocked")}
                               </HoverCardContent>
                             </HoverCard>
                           </span>
                           <span className="col-span-11">
                             <FormLabel>
                               {amountLock === "editable"
-                                ? `Updating the amount of ${
-                                    baseAsset ? baseAsset.symbol : "?"
-                                  } being sold`
-                                : `Want to update the amount of ${
-                                    baseAsset ? baseAsset.symbol : "?"
-                                  } being sold ?`}
+                                ? t("MarketOrder:updatingAmountBeingSold", {
+                                    baseAssetSymbol: baseAsset ? baseAsset.symbol : "?",
+                                  })
+                                : t("MarketOrder:wantToUpdateAmountBeingSold", {
+                                    baseAssetSymbol: baseAsset ? baseAsset.symbol : "?",
+                                  })}
                             </FormLabel>
                             <FormDescription>
                               {amountLock === "editable"
-                                ? `The existing amount being sold: ${existingBaseAmount} ${
-                                    baseAsset ? baseAsset.symbol : "?"
-                                  }`
-                                : `Click the unlock button to begin changing the amount you plan on selling`}
+                                ? t("MarketOrder:existingAmountBeingSold", {
+                                    existingBaseAmount: existingBaseAmount,
+                                    baseAssetSymbol: baseAsset ? baseAsset.symbol : "?",
+                                  })
+                                : t("MarketOrder:clickToUnlockAmount")}
                             </FormDescription>
                           </span>
                         </span>
@@ -670,7 +677,7 @@ export default function MarketOrder(properties) {
                               <span className="col-span-1"></span>
                               <span className="col-span-7">
                                 <Input
-                                  label={`Amount`}
+                                  label={t("MarketOrder:amountLabel")}
                                   placeholder={`${amount} ${baseAsset ? baseAsset.symbol : "?"}`}
                                   disabled
                                   readOnly
@@ -684,11 +691,11 @@ export default function MarketOrder(properties) {
                                       onClick={() => event.preventDefault()}
                                       variant="outline"
                                     >
-                                      Set new sell amount
+                                      {t("MarketOrder:setNewSellAmountButton")}
                                     </Button>
                                   </PopoverTrigger>
                                   <PopoverContent>
-                                    <Label>Provide a new amount</Label>
+                                    <Label>{t("MarketOrder:provideNewAmountLabel")}</Label>
                                     <Input
                                       placeholder={amount}
                                       className="mb-2"
@@ -758,27 +765,28 @@ export default function MarketOrder(properties) {
                               </HoverCardTrigger>
                               <HoverCardContent className="w-40 text-sm text-center pt-1 pb-1">
                                 {totalLock === "editable"
-                                  ? "Editing the total amount being sold"
-                                  : "Currently locked. Using existing total amount."}
+                                  ? t("MarketOrder:editingTotalAmountBeingSold")
+                                  : t("MarketOrder:totalAmountLocked")}
                               </HoverCardContent>
                             </HoverCard>
                           </span>
                           <span className="col-span-11">
                             <FormLabel>
                               {amountLock === "editable" || totalLock === "editable"
-                                ? "Updating the total amount being bought"
-                                : `Want to update the total amount of ${
-                                    quoteAsset ? quoteAsset.symbol : "?"
-                                  } being bought ?`}
+                                ? t("MarketOrder:updatingTotalAmountBeingBought")
+                                : t("MarketOrder:wantToUpdateTotalAmountBeingBought", {
+                                    quoteAssetSymbol: quoteAsset ? quoteAsset.symbol : "?",
+                                  })}
                             </FormLabel>
                             <FormDescription>
                               {totalLock === "editable"
-                                ? `The existing total amount being bought: ${existingQuoteAmount} ${
-                                    quoteAsset ? quoteAsset.symbol : "?"
-                                  }`
-                                : `Click the unlock button to begin changing the total amount of ${
-                                    quoteAsset ? quoteAsset.symbol : "?"
-                                  } you plan on buying`}
+                                ? t("MarketOrder:existingTotalAmountBeingBought", {
+                                    existingQuoteAmount: existingQuoteAmount,
+                                    quoteAssetSymbol: quoteAsset ? quoteAsset.symbol : "?",
+                                  })
+                                : t("MarketOrder:clickToUnlockTotalAmount", {
+                                    quoteAssetSymbol: quoteAsset ? quoteAsset.symbol : "?",
+                                  })}
                             </FormDescription>
                           </span>
                         </span>
@@ -788,7 +796,7 @@ export default function MarketOrder(properties) {
                               <span className="col-span-1"></span>
                               <span className="col-span-7">
                                 <Input
-                                  label={`Total`}
+                                  label={t("MarketOrder:totalLabel")}
                                   placeholder={`${total} ${quoteAsset ? quoteAsset.symbol : "?"}`}
                                   disabled
                                   readOnly
@@ -802,11 +810,11 @@ export default function MarketOrder(properties) {
                                       onClick={() => event.preventDefault()}
                                       variant="outline"
                                     >
-                                      Set new total amount
+                                      {t("MarketOrder:setNewTotalAmountButton")}
                                     </Button>
                                   </PopoverTrigger>
                                   <PopoverContent>
-                                    <Label>Provide a new total</Label>
+                                    <Label>{t("MarketOrder:provideNewTotalLabel")}</Label>
                                     <Input
                                       placeholder={total}
                                       className="mb-2 mt-1"
@@ -866,24 +874,26 @@ export default function MarketOrder(properties) {
                               </HoverCardTrigger>
                               <HoverCardContent className="w-40 text-sm text-center pt-1 pb-1">
                                 {expirationLock === "editable"
-                                  ? "Editing the limit order expiration"
-                                  : "Currently locked. Using existing expiration date"}
+                                  ? t("MarketOrder:editingExpiration")
+                                  : t("MarketOrder:expirationLocked")}
                               </HoverCardContent>
                             </HoverCard>
                           </span>
                           <span className="col-span-11">
                             <FormLabel>
                               {expirationLock === "editable"
-                                ? "Updating the limit order expiration"
-                                : "Want to update the limit order expiration ?"}
+                                ? t("MarketOrder:updatingExpiration")
+                                : t("MarketOrder:wantToUpdateExpiration")}
                             </FormLabel>
                             <FormDescription>
                               {expirationLock === "editable"
-                                ? `The existing expiration date: ${currentLimitOrder.expiration.replace(
-                                    "T",
-                                    " "
-                                  )}`
-                                : "Click the unlock button to begin changing the limit order expiration"}
+                                ? t("MarketOrder:existingExpiration", {
+                                    existingExpiration: currentLimitOrder.expiration.replace(
+                                      "T",
+                                      " "
+                                    ),
+                                  })
+                                : t("MarketOrder:clickToUnlockExpiration")}
                             </FormDescription>
                           </span>
                         </span>
@@ -932,12 +942,24 @@ export default function MarketOrder(properties) {
                                       <SelectValue placeholder="1hr" />
                                     </SelectTrigger>
                                     <SelectContent className="bg-white">
-                                      <SelectItem value="1hr">1 hour</SelectItem>
-                                      <SelectItem value="12hr">12 hours</SelectItem>
-                                      <SelectItem value="24hr">24 hours</SelectItem>
-                                      <SelectItem value="7d">7 days</SelectItem>
-                                      <SelectItem value="30d">30 days</SelectItem>
-                                      <SelectItem value="specific">Specific date</SelectItem>
+                                      <SelectItem value="1hr">
+                                        {t("MarketOrder:oneHour")}
+                                      </SelectItem>
+                                      <SelectItem value="12hr">
+                                        {t("MarketOrder:twelveHours")}
+                                      </SelectItem>
+                                      <SelectItem value="24hr">
+                                        {t("MarketOrder:twentyFourHours")}
+                                      </SelectItem>
+                                      <SelectItem value="7d">
+                                        {t("MarketOrder:sevenDays")}
+                                      </SelectItem>
+                                      <SelectItem value="30d">
+                                        {t("MarketOrder:thirtyDays")}
+                                      </SelectItem>
+                                      <SelectItem value="specific">
+                                        {t("MarketOrder:specificDate")}
+                                      </SelectItem>
                                     </SelectContent>
                                   </Select>
                                 </FormControl>
@@ -954,7 +976,11 @@ export default function MarketOrder(properties) {
                                         )}
                                       >
                                         <CalendarIcon className="mr-2 h-4 w-4" />
-                                        {date ? format(date, "PPP") : <span>Pick a date</span>}
+                                        {date ? (
+                                          format(date, "PPP")
+                                        ) : (
+                                          <span>{t("MarketOrder:pickADate")}</span>
+                                        )}
                                       </Button>
                                     </PopoverTrigger>
                                     <PopoverContent className="w-auto p-0" align="start">
@@ -982,7 +1008,7 @@ export default function MarketOrder(properties) {
                               <span className="col-span-11">
                                 <FormDescription>
                                   {expiryType !== "specific"
-                                    ? `This limit order will expire ${expiryType} after broadcast`
+                                    ? t("MarketOrder:limitOrderExpiry", { expiryType: expiryType })
                                     : null}
                                 </FormDescription>
                               </span>
@@ -1015,13 +1041,13 @@ export default function MarketOrder(properties) {
                               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             >
                               {osoEnabled
-                                ? "Order Sends Order Enabled"
-                                : "Enable Order Sends Order"}
+                                ? t("MarketOrder:osoEnabled")
+                                : t("MarketOrder:enableOso")}
                             </label>
                           </div>
                         </FormControl>
                         {osoEnabled ? (
-                          <FormDescription>Automatic OSO function will be active</FormDescription>
+                          <FormDescription>{t("MarketOrder:autoOsoActive")}</FormDescription>
                         ) : null}
                       </FormItem>
                     )}
@@ -1034,16 +1060,17 @@ export default function MarketOrder(properties) {
                         name="osoSpread"
                         render={({ field }) => (
                           <FormItem className="mt-2 text-xs">
-                            <FormLabel className="text-sm">Spread percent</FormLabel>
+                            <FormLabel className="text-sm">
+                              {t("MarketOrder:spreadPercentLabel")}
+                            </FormLabel>
                             <FormDescription>
-                              How far the price of the take profit order differs from the original
-                              order
+                              {t("MarketOrder:spreadPercentDescription")}
                             </FormDescription>
                             <FormControl>
                               <span className="grid grid-cols-12">
                                 <span className="col-span-9">
                                   <Input
-                                    label={`Spread percent`}
+                                    label={t("MarketOrder:spreadPercentInput")}
                                     placeholder={spreadPercent}
                                     disabled
                                     readOnly
@@ -1069,11 +1096,11 @@ export default function MarketOrder(properties) {
                                         }}
                                         className="inline-block border border-grey rounded pl-4 pb-1 pr-4 text-lg"
                                       >
-                                        <Label>Edit spread</Label>
+                                        <Label>{t("MarketOrder:editSpreadLabel")}</Label>
                                       </span>
                                     </PopoverTrigger>
                                     <PopoverContent>
-                                      <Label>Provide a new spread percent</Label>
+                                      <Label>{t("MarketOrder:provideNewSpreadPercentLabel")}</Label>
                                       <Input
                                         placeholder={spreadPercent}
                                         className="mb-2 mt-1"
@@ -1102,15 +1129,17 @@ export default function MarketOrder(properties) {
                         name="osoSize"
                         render={({ field }) => (
                           <FormItem className="mt-4 text-xs">
-                            <FormLabel className="text-sm">Size percent</FormLabel>
+                            <FormLabel className="text-sm">
+                              {t("MarketOrder:sizePercentLabel")}
+                            </FormLabel>
                             <FormDescription>
-                              Percentage to sell in the take profit order
+                              {t("MarketOrder:sizePercentDescription")}
                             </FormDescription>
                             <FormControl>
                               <span className="grid grid-cols-12">
                                 <span className="col-span-9">
                                   <Input
-                                    label={`Size percent`}
+                                    label={t("MarketOrder:sizePercentLabel")}
                                     placeholder={sizePercent}
                                     disabled
                                     readOnly
@@ -1136,11 +1165,11 @@ export default function MarketOrder(properties) {
                                         }}
                                         className="inline-block border border-grey rounded pl-4 pb-1 pr-4 text-lg"
                                       >
-                                        <Label>Edit size</Label>
+                                        <Label>{t("MarketOrder:editSizeLabel")}</Label>
                                       </span>
                                     </PopoverTrigger>
                                     <PopoverContent>
-                                      <Label>Provide a new size percent</Label>
+                                      <Label>{t("MarketOrder:provideNewSizePercentLabel")}</Label>
                                       <Input
                                         placeholder={sizePercent}
                                         className="mb-2 mt-1"
@@ -1171,10 +1200,10 @@ export default function MarketOrder(properties) {
                         render={({ field }) => (
                           <FormItem className="mt-4 text-xs">
                             <FormLabel className="text-sm">
-                              Set OSO to automatically repeat?
+                              {t("MarketOrder:setOsoRepeatLabel")}
                             </FormLabel>
                             <FormDescription>
-                              Automates repeated OSO based limit orders
+                              {t("MarketOrder:osoRepeatDescription")}
                             </FormDescription>
                             <FormControl>
                               <div className="flex items-center space-x-2">
@@ -1191,8 +1220,8 @@ export default function MarketOrder(properties) {
                                   className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                 >
                                   {repeat
-                                    ? `OSO configured to repeat`
-                                    : `OSO configured not to repeat`}
+                                    ? t("MarketOrder:osoConfiguredToRepeat")
+                                    : t("MarketOrder:osoConfiguredNotToRepeat")}
                                 </label>
                               </div>
                             </FormControl>
@@ -1210,12 +1239,14 @@ export default function MarketOrder(properties) {
                     name="networkFee"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Network fee</FormLabel>
+                        <FormLabel>{t("MarketOrder:networkFeeLabel")}</FormLabel>
                         <FormControl>
                           <Input disabled placeholder={`${fee} BTS`} className="mb-3 mt-3" />
                         </FormControl>
                         {usr.id === usr.referrer ? (
-                          <FormMessage>Rebate: {trimPrice(fee * 0.8, 5)} BTS (vesting)</FormMessage>
+                          <FormMessage>
+                            {t("MarketOrder:rebateMessage", { rebate: trimPrice(fee * 0.8, 5) })}
+                          </FormMessage>
                         ) : null}
                         <FormMessage />
                       </FormItem>
@@ -1230,7 +1261,7 @@ export default function MarketOrder(properties) {
                       event.preventDefault();
                     }}
                   >
-                    Submit limit order changes
+                    {t("MarketOrder:submitLimitOrderChangesButton")}
                   </Button>
                 </form>
               </Form>
@@ -1242,7 +1273,9 @@ export default function MarketOrder(properties) {
                   userID={usr.id}
                   dismissCallback={setShowDialog}
                   key={`limit_order_update_${limitOrderID}`}
-                  headerText={`Updating the limit order ${limitOrderID}`}
+                  headerText={t("MarketOrder:updatingLimitOrderHeader", {
+                    limitOrderID: limitOrderID,
+                  })}
                   trxJSON={[operationContents]}
                 />
               ) : null}
@@ -1254,9 +1287,9 @@ export default function MarketOrder(properties) {
               <CardHeader className="pb-0">
                 <CardTitle>
                   {quoteAsset ? quoteAsset.symbol : "?"} ({quoteAsset ? quoteAsset.id : "1.3.x"})
-                  balance
+                  {t("MarketOrder:balance")}
                 </CardTitle>
-                <CardDescription>Limit order quote asset</CardDescription>
+                <CardDescription>{t("MarketOrder:limitOrderQuoteAsset")}</CardDescription>
               </CardHeader>
               <CardContent>
                 {quoteBalance} {quoteAsset ? quoteAsset.symbol : "?"}
@@ -1266,9 +1299,9 @@ export default function MarketOrder(properties) {
               <CardHeader className="pb-0">
                 <CardTitle>
                   {baseAsset ? baseAsset.symbol : "?"} ({baseAsset ? baseAsset.id : "1.3.x"})
-                  balance
+                  {t("MarketOrder:balance")}
                 </CardTitle>
-                <CardDescription>Limit order base asset</CardDescription>
+                <CardDescription>{t("MarketOrder:limitOrderBaseAsset")}</CardDescription>
               </CardHeader>
               <CardContent>
                 {baseBalance} {baseAsset ? baseAsset.symbol : "?"}
@@ -1285,9 +1318,9 @@ export default function MarketOrder(properties) {
                 }}
               >
                 <CardHeader>
-                  <CardTitle>Want to cancel this limit order?</CardTitle>
+                  <CardTitle>{t("MarketOrder:cancelLimitOrderTitle")}</CardTitle>
                   <CardDescription>
-                    Click here to cancel the limit order {limitOrderID}
+                    {t("MarketOrder:cancelLimitOrderDescription", { limitOrderID: limitOrderID })}
                   </CardDescription>
                 </CardHeader>
               </Card>
@@ -1300,7 +1333,9 @@ export default function MarketOrder(properties) {
                   userID={usr.id}
                   dismissCallback={setCancelDialog}
                   key={`CancellingLimitOrder_${limitOrderID}`}
-                  headerText={`Cancelling the limit order ${limitOrderID}`}
+                  headerText={t("MarketOrder:cancellingLimitOrderHeader", {
+                    limitOrderID: limitOrderID,
+                  })}
                   trxJSON={[
                     {
                       fee_paying_account: usr.id,
@@ -1318,14 +1353,14 @@ export default function MarketOrder(properties) {
               >
                 <Card>
                   <CardHeader>
-                    <CardTitle>Trade on the DEX instead?</CardTitle>
+                    <CardTitle>{t("MarketOrder:tradeOnDexTitle")}</CardTitle>
                     <CardDescription>
-                      Market: {quoteAsset ? quoteAsset.symbol : "?"}/
+                      {t("MarketOrder:market")} {quoteAsset ? quoteAsset.symbol : "?"}/
                       {baseAsset ? baseAsset.symbol : "?"}
                       <br />
-                      Need to create a new limit order?
+                      {t("MarketOrder:createNewLimitOrder")}
                       <br />
-                      Or perhaps you seek additional market data?
+                      {t("MarketOrder:seekAdditionalMarketData")}
                     </CardDescription>
                   </CardHeader>
                 </Card>
@@ -1333,14 +1368,16 @@ export default function MarketOrder(properties) {
             </div>
             <Card>
               <CardHeader className="pb-0">
-                <CardTitle>Need to borrow relevant assets?</CardTitle>
+                <CardTitle>{t("MarketOrder:borrowAssetsTitle")}</CardTitle>
                 <CardDescription>
-                  Users may offer to lend you {quoteAsset ? quoteAsset.symbol : "?"} or{" "}
-                  {baseAsset ? baseAsset.symbol : "?"}.<br />
+                  {t("MarketOrder:borrowAssetsDescription", {
+                    quoteAsset: quoteAsset ? quoteAsset.symbol : "?",
+                    baseAsset: baseAsset ? baseAsset.symbol : "?",
+                  })}
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <Label>Search by borrowable assets</Label>
+                <Label>{t("MarketOrder:searchBorrowableAssetsLabel")}</Label>
                 <br />
                 <a
                   href={`/borrow/index.html?tab=searchOffers&searchTab=borrow&searchText=${
@@ -1357,7 +1394,7 @@ export default function MarketOrder(properties) {
                   <Badge className="ml-2 mt-1 mb-1">{baseAsset ? baseAsset.symbol : ""}</Badge>
                 </a>
                 <br />
-                <Label>Search by accepted collateral</Label>
+                <Label>{t("MarketOrder:searchAcceptedCollateralLabel")}</Label>
                 <br />
                 <a
                   href={`/borrow/index.html?tab=searchOffers&searchTab=collateral&searchText=${

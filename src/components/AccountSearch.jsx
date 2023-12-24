@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import * as fflate from "fflate";
+import { useTranslation } from "react-i18next";
+import { i18n as i18nInstance } from "@/lib/i18n.js";
 
 import {
   Card,
@@ -16,6 +18,7 @@ import { Avatar } from "@/components/Avatar.tsx";
 
 export default function AccountSearch(properties) {
   const { chain, excludedUsers, setChosenAccount } = properties;
+  const { t, i18n } = useTranslation("en", { i18n: i18nInstance });
 
   const [accountInput, setAccountInput] = useState();
   const [errorMessage, setErrorMessage] = useState();
@@ -28,7 +31,7 @@ export default function AccountSearch(properties) {
 
     if (excludedUsernames.includes(accountInput) || excludedIds.includes(accountInput)) {
       setInProgress(false);
-      setErrorMessage("Cannot transfer assets to this account.");
+      setErrorMessage(t("AccountSearch:noSearch.selfError"));
       return;
     }
 
@@ -40,7 +43,7 @@ export default function AccountSearch(properties) {
     if (!response.ok) {
       console.log({
         error: new Error(`${response.status} ${response.statusText}`),
-        msg: "Couldn't find account.",
+        msg: t("AccountSearch:noSearch.error"),
       });
       setInProgress(false);
       return;
@@ -57,7 +60,7 @@ export default function AccountSearch(properties) {
     }
 
     setInProgress(false);
-    setErrorMessage("Couldn't find account.");
+    setErrorMessage(t("AccountSearch:noSearch.error"));
   }
 
   return (
@@ -65,12 +68,11 @@ export default function AccountSearch(properties) {
       <div className="grid grid-cols-1 gap-3">
         {!searchResponse ? (
           <>
-            <div className="col-span-1">Please enter a blockchain account name</div>
+            <div className="col-span-1">{t("AccountSearch:noSearch.prompt")}</div>
             <div className="col-span-1">
-              {" "}
               <Input
                 value={accountInput || ""}
-                placeholder="Account name or ID"
+                placeholder={t("AccountSearch:noSearch.placeholder")}
                 onKeyDown={(event) => {
                   if (event.key === "Enter" && !inProgress) {
                     setInProgress(true);
@@ -91,10 +93,12 @@ export default function AccountSearch(properties) {
               ) : null}
             </div>
             <div className="col-span-1">
-              {accountInput && !inProgress ? (
-                <Button onClick={() => lookupAccount()}>Continue</Button>
+              {accountInput ? (
+                <Button onClick={() => lookupAccount()}>
+                  {t("AccountSearch:noSearch.continue")}
+                </Button>
               ) : (
-                <Button disabled>Continue</Button>
+                <Button disabled>{t("AccountSearch:noSearch.continue")}</Button>
               )}
             </div>
           </>
@@ -103,8 +107,8 @@ export default function AccountSearch(properties) {
           <>
             <div className="col-span-1">
               {chain === "bitshares"
-                ? "Proceed with the following Bitshares account?"
-                : "Proceed with the following Bitshares testnet (TEST) account?"}
+                ? t("AccountSearch:searchResponse.promptBTS")
+                : t("AccountSearch:searchResponse.promptTEST")}
             </div>
             <div className="col-span-1">
               <Card
@@ -158,7 +162,7 @@ export default function AccountSearch(properties) {
                       setSearchResponse();
                     }}
                   >
-                    Go back
+                    {t("AccountSearch:searchResponse.back")}
                   </Button>
                 </div>
                 <div className="text-right">
@@ -171,7 +175,7 @@ export default function AccountSearch(properties) {
                       });
                     }}
                   >
-                    Proceed
+                    {t("AccountSearch:searchResponse.proceed")}
                   </Button>
                 </div>
               </div>

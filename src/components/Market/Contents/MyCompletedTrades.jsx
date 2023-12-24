@@ -1,3 +1,6 @@
+import { useTranslation } from "react-i18next";
+import { i18n as i18nInstance } from "@/lib/i18n.js";
+
 import MyTradeSummary from "../Summary/MyTradeSummary";
 
 import {
@@ -9,32 +12,30 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
-
 export default function MyCompletedTrades(properties) {
   const { type, usrHistory, marketHistoryInProgress, reset, assetAData, assetBData } = properties;
+  const { t, i18n } = useTranslation("en", { i18n: i18nInstance });
 
   return (
     <Card>
       <CardHeader>
         <CardTitle>
           {type === "buy"
-            ? `Your recently completed buy orders`
-            : `Your recently completed sell orders`}
+            ? t("MyCompletedTrades:recentlyCompletedBuyOrdersTitle")
+            : t("MyCompletedTrades:recentlyCompletedSellOrdersTitle")}
         </CardTitle>
         <CardDescription>
           {type === "buy"
-            ? `The table below lists your recently completed buy orders`
-            : `The table below lists your recently completed sell orders`}
+            ? t("MyCompletedTrades:recentlyCompletedBuyOrdersDescription")
+            : t("MyCompletedTrades:recentlyCompletedSellOrdersDescription")}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-2">
         {(!usrHistory || !usrHistory.length) && !marketHistoryInProgress ? (
           type === "buy" ? (
-            <>No recently completed purchases found</>
+            <>{t("MyCompletedTrades:noRecentlyCompletedPurchases")}</>
           ) : (
-            <>No recently completed sales found</>
+            <>{t("MyCompletedTrades:noRecentlyCompletedSales")}</>
           )
         ) : null}
         {usrHistory && usrHistory.length ? (

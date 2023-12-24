@@ -1,0 +1,95 @@
+{
+  "buyingWith": "Buying {{assetA}} with {{assetB}}",
+  "sellingFor": "Selling {{assetA}} for {{assetB}}",
+  "createLimitOrder": "Use this form to create a limit order operation.",
+  "editLabel": "Edit",
+  "submit": "Submit",
+  "useBalance": "Use balance",
+  "priceAmount": {
+    "label": "Price Amount",
+    "description": "The price amount of {{assetA}} in {{assetB}}",
+    "provideNewLabel": "Provide a new price",
+    "useLowestAsk": "Use lowest ask",
+    "useHighestBid": "Use highest bid"
+  },
+  "sellAmount": {
+    "label": "Sell Amount",
+    "buyDescription": "The amount of {{asset}} you plan on buying",
+    "sellDescription": "The amount of {{asset}} you plan on selling",
+    "provideNewLabel": "Provide a new amount"
+  },
+  "sellTotal": {
+    "label": "Total",
+    "buyDescription": "The total {{asset}} you plan on selling",
+    "sellDescription": "The total {{asset}} you will receive",
+    "provideNewLabel": "Provide a new total",
+    "requireMore": "You require {{requiredAmount}} more {{asset}}"
+  },
+  "expiry": {
+    "label": "Limit Order Expiration",
+    "1hr": "1 hour",
+    "12hr": "12 hours",
+    "24hr": "24 hours",
+    "7d": "7 days",
+    "30d": "30 days",
+    "specific": "Specific date",
+    "fkill": "Fill or kill",
+    "pickDate": "Pick a date",
+    "fkillDescription": "This order immediately expires if not fillable",
+    "generalDescription": "This limit order will expire {{expiryType}} after broadcast"
+  },
+  "osoValue": {
+    "enabled": "Order Sends Order Enabled",
+    "enable": "Enable Order Sends Order",
+    "description": "Automatic OSO function will be active"
+  },
+  "osoEnabled": {
+    "spreadPercentLabel": "Spread percent",
+    "spreadPercentDescription": "How far the price of the take profit order differs from the original order",
+    "provideNewSpreadPercent": "Provide a new spread percent"
+  },
+  "osoSize": {
+    "sizePercentLabel": "Size percent",
+    "sizePercentDescription": "Percentage to sell in the take profit order",
+    "provideNewSizePercent": "Provide a new size percent"
+  },
+  "repeatValue": {
+    "label": "Set OSO to automatically repeat?",
+    "description": "Automates repeated OSO based limit orders",
+    "enabled": "OSO configured to repeat",
+    "disabled": "OSO configured not to repeat"
+  },
+  "fee": {
+    "label": "Fee",
+    "description": "The network fee to broadcast this operation",
+    "unfilledRebate": "Unfilled rebate: {{fee}} BTS (instant)",
+    "ltmRebate": "LTM rebate: {{rebate}} BTS (vesting)"
+  },
+  "marketFees": {
+    "label": "Market fee",
+    "description": "The market fee applied by asset issuer"
+  },
+  "sellPrice": {
+    "label": "Price",
+    "useLowestAsk": "Use Lowest Ask",
+    "description": "Your price per ? in ?"
+  },
+  "sellAmount2": {
+    "label": "Amount",
+    "buyDescription": "The amount of ? you plan on buying",
+    "sellDescription": "The amount of ? you plan on selling"
+  },
+  "sellTotal2": {
+    "label": "Total",
+    "buyDescription": "The total ? you plan on selling",
+    "sellDescription": "The total ? you will receive"
+  },
+  "expiry2": {
+    "label": "Limit order expiration",
+    "description": "Time till expiration..."
+  },
+  "headerText": {
+    "buying": "Buying {{amount}} {{thisAssetA}} for {{total}} {{thisAssetB}}",
+    "selling": "Selling {{amount}} {{thisAssetA}} for {{total}} {{thisAssetB}}"
+  }
+}

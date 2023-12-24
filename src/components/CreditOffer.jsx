@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useMemo, useSyncExternalStore } from "react";
 import { useForm } from "react-hook-form";
 import { FixedSizeList as List } from "react-window";
+import { useTranslation } from "react-i18next";
+import { i18n as i18nInstance } from "@/lib/i18n.js";
+
 import {
   Card,
   CardContent,
@@ -72,6 +75,7 @@ function hoursTillExpiration(expirationTime) {
 }
 
 export default function CreditBorrow(properties) {
+  const { t, i18n } = useTranslation("en", { i18n: i18nInstance });
   const form = useForm({
     defaultValues: {
       account: "",
@@ -382,17 +386,17 @@ export default function CreditBorrow(properties) {
           {error ? (
             <Card>
               <CardHeader className="pb-1 mb-3 mt-3">
-                <CardTitle>Sorry, couldn't find your requested credit offer</CardTitle>
+                <CardTitle>{t("CreditOffer:errorCard.title")}</CardTitle>
                 <CardDescription className="pt-2">
-                  The credit offer is either not active, or doesn't exist.
+                  {t("CreditOffer:errorCard.description1")}
                   <br />
-                  Check your URL parameters and try again.
+                  {t("CreditOffer:errorCard.description2")}
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <a href="/offers/index.html">
                   <Button variant="" className="h-6">
-                    Return to credit offer overview
+                    {t("CreditOffer:errorCard.buttonLabel")}
                   </Button>
                 </a>
               </CardContent>
@@ -402,19 +406,18 @@ export default function CreditBorrow(properties) {
             <Card>
               <CardHeader className="pb-1">
                 <CardTitle>
-                  {relevantOffer ? (
-                    <>
-                      🏦 Viewing offer #{relevantOffer.id} created by{" "}
-                      {relevantOffer.owner_name ?? "?"} ({relevantOffer.owner_account})
-                    </>
-                  ) : (
-                    "loading terms of offer..."
-                  )}
+                  {relevantOffer
+                    ? t("CreditOffer:offerCardHeader.viewingOffer", {
+                        id: relevantOffer.id,
+                        owner_name: relevantOffer.owner_name ?? "?",
+                        owner_account: relevantOffer.owner_account,
+                      })
+                    : t("CreditOffer:offerCardHeader.loadingOfferTerms")}
                 </CardTitle>
                 <CardDescription>
-                  This is an user created credit offer on the Bitshares DEX.
+                  {t("CreditOffer:offerCardHeader.offerDescription1")}
                   <br />
-                  Thoroughly read the terms of the offer before proceeding to Beet.
+                  {t("CreditOffer:offerCardHeader.offerDescription2")}
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -432,7 +435,7 @@ export default function CreditBorrow(properties) {
                           name="borrowerAccount"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Borrowing account</FormLabel>
+                              <FormLabel>{t("CreditOffer:cardContent.borrowingAccount")}</FormLabel>
                               <FormControl>
                                 <div className="grid grid-cols-8 mt-4">
                                   <div className="col-span-1 ml-5">
@@ -471,7 +474,7 @@ export default function CreditBorrow(properties) {
                                 </div>
                               </FormControl>
                               <FormDescription>
-                                The account which will broadcast the credit offer accept operation.
+                                {t("CreditOffer:cardContent.broadcastDescription")}
                               </FormDescription>
                               <FormMessage />
                             </FormItem>
@@ -485,13 +488,17 @@ export default function CreditBorrow(properties) {
                             <FormItem>
                               <FormLabel>
                                 <div className="grid grid-cols-2 mt-4">
-                                  <div className="col-span-1">Lending account</div>
+                                  <div className="col-span-1">
+                                    {t("CreditOffer:cardContent.lendingAccount")}
+                                  </div>
                                   <div className="col-span-1 text-right">
                                     {relevantOffer ? (
                                       <ExternalLink
                                         classnamecontents="text-blue-500"
                                         type="text"
-                                        text={`View ${relevantOffer.owner_name}'s account`}
+                                        text={t("CreditOffer:cardContent.viewAccount", {
+                                          owner_name: relevantOffer.owner_name,
+                                        })}
                                         hyperlink={`https://blocksights.info/#/accounts/${relevantOffer.owner_name}`}
                                       />
                                     ) : null}
@@ -540,7 +547,9 @@ export default function CreditBorrow(properties) {
                                 </div>
                               </FormControl>
                               <FormDescription>
-                                {`This is the user from whom you'll be borrowing ${foundAsset?.symbol} from.`}
+                                {t("CreditOffer:cardContent.borrowingDescription", {
+                                  symbol: foundAsset?.symbol,
+                                })}
                               </FormDescription>
                               <FormMessage />
                             </FormItem>
@@ -554,10 +563,11 @@ export default function CreditBorrow(properties) {
                             <FormItem>
                               <FormLabel>
                                 {foundAsset && relevantOffer
-                                  ? `Amount of ${foundAsset.symbol} (
-                                      ${relevantOffer.asset_type}) available to
-                                      borrow from this lender`
-                                  : "loading..."}
+                                  ? t("CreditOffer:cardContent.availableAmount", {
+                                      symbol: foundAsset.symbol,
+                                      asset_type: relevantOffer.asset_type,
+                                    })
+                                  : t("CreditOffer:cardContent.loading")}
                               </FormLabel>
                               <FormControl>
                                 <div className="grid grid-cols-8 mt-4">
@@ -587,7 +597,7 @@ export default function CreditBorrow(properties) {
                                               relevantOffer.current_balance,
                                               foundAsset.precision
                                             )} ${foundAsset.symbol}`
-                                          : `loading...`
+                                          : t("CreditOffer:cardContent.loading")
                                       }
                                       readOnly
                                     />
@@ -595,7 +605,10 @@ export default function CreditBorrow(properties) {
                                 </div>
                               </FormControl>
                               <FormDescription>
-                                {`${relevantOffer?.owner_name} is generously offering to lend you this much ${foundAsset?.symbol}, assuming you agree to their terms.`}
+                                {t("CreditOffer:cardContent.offerDescription", {
+                                  owner_name: relevantOffer?.owner_name,
+                                  symbol: foundAsset?.symbol,
+                                })}
                               </FormDescription>
                             </FormItem>
                           )}
@@ -608,7 +621,9 @@ export default function CreditBorrow(properties) {
                             <FormItem>
                               <FormLabel>
                                 <div className="grid grid-cols-2 mt-3">
-                                  <div className="mt-1">Backing collateral for credit deal</div>
+                                  <div className="mt-1">
+                                    {t("CreditOffer:cardContent.backingCollateral")}
+                                  </div>
                                 </div>
                               </FormLabel>
                               <FormControl>
@@ -645,7 +660,7 @@ export default function CreditBorrow(properties) {
                                           placeholder={
                                             collateralInfo
                                               ? `${collateralInfo.symbol} (${collateralInfo.id})`
-                                              : "Select your backing collateral.."
+                                              : t("CreditOffer:cardContent.selectCollateral")
                                           }
                                         />
                                       </SelectTrigger>
@@ -673,13 +688,16 @@ export default function CreditBorrow(properties) {
                                 </div>
                               </FormControl>
                               <FormDescription>
-                                {`To borrow ${collateralInfo?.symbol} from ${relevantOffer?.owner_name}, choose between the above accepted backing collateral assets.`}
+                                {t("CreditOffer:cardContent.borrowDescription", {
+                                  symbol: collateralInfo?.symbol,
+                                  owner_name: relevantOffer?.owner_name,
+                                })}
                               </FormDescription>
                               {balanceAssetIDs &&
                               chosenCollateral &&
                               !balanceAssetIDs.includes(chosenCollateral) ? (
                                 <FormMessage>
-                                  Account doesn't hold this backing collateral asset.
+                                  {t("CreditOffer:cardContent.noCollateralMessage")}
                                 </FormMessage>
                               ) : null}
                             </FormItem>
@@ -694,14 +712,16 @@ export default function CreditBorrow(properties) {
                               <FormLabel>
                                 <div className="grid grid-cols-2 gap-1 mt-5">
                                   <div className="col-span-1">
-                                    {`Amount of ${
-                                      foundAsset ? foundAsset.symbol : "?"
-                                    } you plan on borrowing`}
+                                    {t("CreditOffer:cardContent.borrowAmount", {
+                                      symbol: foundAsset ? foundAsset.symbol : "?",
+                                    })}
                                   </div>
                                   <div className="col-span-1 text-right">
-                                    {`Available: ${minAmount ?? "?"} to ${availableAmount ?? "?"} ${
-                                      foundAsset?.symbol
-                                    }`}
+                                    {t("CreditOffer:cardContent.availableAmountRange", {
+                                      minAmount: minAmount ?? "?",
+                                      availableAmount: availableAmount ?? "?",
+                                      symbol: foundAsset?.symbol,
+                                    })}
                                   </div>
                                 </div>
                               </FormLabel>
@@ -724,7 +744,10 @@ export default function CreditBorrow(properties) {
                               )}
 
                               <FormDescription>
-                                {`Input the amount of ${foundAsset?.symbol} you'd like to borrow from ${relevantOffer?.owner_name}.`}
+                                {t("CreditOffer:cardContent.inputBorrowAmount", {
+                                  symbol: foundAsset?.symbol,
+                                  owner_name: relevantOffer?.owner_name,
+                                })}
                               </FormDescription>
                               <FormMessage />
                             </FormItem>
@@ -738,7 +761,9 @@ export default function CreditBorrow(properties) {
                             <FormItem>
                               <FormLabel>
                                 <div className="grid grid-cols-2 mt-3">
-                                  <div className="mt-1">Credit offer repay method</div>
+                                  <div className="mt-1">
+                                    {t("CreditOffer:cardContent.repayMethod")}
+                                  </div>
                                 </div>
                               </FormLabel>
                               <FormControl>
@@ -748,34 +773,36 @@ export default function CreditBorrow(properties) {
                                   }}
                                 >
                                   <SelectTrigger className="mb-1">
-                                    <SelectValue placeholder={"Select your repay method.."} />
+                                    <SelectValue
+                                      placeholder={t("CreditOffer:cardContent.selectRepayMethod")}
+                                    />
                                   </SelectTrigger>
                                   <SelectContent className="bg-white">
                                     <SelectItem value={"no_auto_repayment"}>
-                                      No auto repayment
+                                      {t("CreditOffer:cardContent.noAutoRepayment")}
                                     </SelectItem>
                                     <SelectItem value={"only_full_repayment"}>
-                                      Only full repayment
+                                      {t("CreditOffer:cardContent.onlyFullRepayment")}
                                     </SelectItem>
                                     <SelectItem value={"allow_partial_repayment"}>
-                                      Allow partial repayment
+                                      {t("CreditOffer:cardContent.allowPartialRepayment")}
                                     </SelectItem>
                                   </SelectContent>
                                 </Select>
                               </FormControl>
                               <FormDescription>
-                                Select between the different repayment methods.
+                                {t("CreditOffer:cardContent.selectRepaymentMethod")}
                               </FormDescription>
                               {repayPeriod ? (
                                 <FormMessage>
                                   {repayPeriod === "no_auto_repayment"
-                                    ? "You will not automatically repay this loan."
+                                    ? t("CreditOffer:cardContent.noAutoRepaymentMessage")
                                     : null}
                                   {repayPeriod === "only_full_repayment"
-                                    ? "You will automatically repay this loan in full when your account balance is sufficient."
+                                    ? t("CreditOffer:cardContent.onlyFullRepaymentMessage")
                                     : null}
                                   {repayPeriod === "allow_partial_repayment"
-                                    ? "You will automatically repay this loan as much as possible using your available account balance."
+                                    ? t("CreditOffer:cardContent.allowPartialRepaymentMessage")
                                     : null}
                                 </FormMessage>
                               ) : null}
@@ -791,11 +818,16 @@ export default function CreditBorrow(properties) {
                               <FormItem>
                                 <FormLabel>
                                   <div className="grid grid-cols-2 gap-1 mt-5">
-                                    <div className="col-span-1">{`Required collateral`}</div>
+                                    <div className="col-span-1">
+                                      {t("CreditOffer:cardContent.requiredCollateral")}
+                                    </div>
                                     <div className="col-span-1 text-right">
                                       {collateralInfo
-                                        ? `Your current balance: ${collateralInfo.amount} ${collateralInfo.symbol}`
-                                        : "Loading balance..."}
+                                        ? t("CreditOffer:cardContent.currentBalance", {
+                                            amount: collateralInfo.amount,
+                                            symbol: collateralInfo.symbol,
+                                          })
+                                        : t("CreditOffer:cardContent.loadingBalance")}
                                     </div>
                                   </div>
                                 </FormLabel>
@@ -812,32 +844,30 @@ export default function CreditBorrow(properties) {
                                 </FormControl>
                                 <FormDescription>
                                   {finalBorrowAmount && foundAsset
-                                    ? `In order to borrow ${finalBorrowAmount ?? ""} ${
-                                        foundAsset ? foundAsset.symbol : ""
-                                      } you'll
-                                need to provide the following amount of collateral to
-                                secure the deal.`
-                                    : "Enter a valid borrow amount to calculate required collateral."}
+                                    ? t("CreditOffer:cardContent.collateralNeeded", {
+                                        borrowAmount: finalBorrowAmount ?? "",
+                                        symbol: foundAsset ? foundAsset.symbol : "",
+                                      })
+                                    : t("CreditOffer:cardContent.enterValidBorrowAmount")}
                                 </FormDescription>
 
                                 {collateralInfo &&
                                 collateralInfo.holding &&
                                 collateralInfo.amount < requiredCollateralAmount ? (
                                   <FormMessage>
-                                    {`Your account has an insufficient ${
-                                      collateralInfo.symbol
-                                    } balance. You'll need at least ${(
-                                      requiredCollateralAmount - collateralInfo.amount
-                                    ).toFixed(collateralInfo.precision)} more ${
-                                      collateralInfo.symbol
-                                    }.`}
+                                    {t("CreditOffer:cardContent.insufficientBalance", {
+                                      symbol: collateralInfo.symbol,
+                                      requiredMore: (
+                                        requiredCollateralAmount - collateralInfo.amount
+                                      ).toFixed(collateralInfo.precision),
+                                      symbol: collateralInfo.symbol,
+                                    })}
                                   </FormMessage>
                                 ) : null}
 
                                 {collateralInfo && !collateralInfo.holding ? (
                                   <FormMessage>
-                                    Your account does not hold this asset. Try another form of
-                                    backing collateral if possible.
+                                    {t("CreditOffer:cardContent.noAssetHeld")}
                                   </FormMessage>
                                 ) : null}
                               </FormItem>
@@ -852,20 +882,21 @@ export default function CreditBorrow(properties) {
                             <FormItem>
                               <FormLabel>
                                 <div className="grid grid-cols-2 gap-1 mt-5">
-                                  <div className="col-span-1">{`Repay period`}</div>
+                                  <div className="col-span-1">
+                                    {t("CreditOffer:cardContent.repayPeriod")}
+                                  </div>
                                 </div>
                               </FormLabel>
                               <FormControl>
                                 <Input
                                   disabled
-                                  value={offerRepayPeriod ?? "loading..."}
+                                  value={offerRepayPeriod ?? t("CreditOffer:cardContent.loading")}
                                   className="mb-3"
                                   readOnly
                                 />
                               </FormControl>
                               <FormDescription>
-                                The maximum duration of the credit deal; repay the loan within this
-                                period to avoid loss of collateral.
+                                {t("CreditOffer:cardContent.repayPeriodDescription")}
                               </FormDescription>
                             </FormItem>
                           )}
@@ -878,19 +909,21 @@ export default function CreditBorrow(properties) {
                             <FormItem>
                               <FormLabel>
                                 <div className="grid grid-cols-2 gap-1 mt-5">
-                                  <div className="col-span-1">{`Credit offer expiry`}</div>
+                                  <div className="col-span-1">
+                                    {t("CreditOffer:cardContent.offerExpiry")}
+                                  </div>
                                 </div>
                               </FormLabel>
                               <FormControl>
                                 <Input
                                   disabled
-                                  value={offerExpiration ?? "Loading..."}
+                                  value={offerExpiration ?? t("CreditOffer:cardContent.loading")}
                                   className="mb-3"
                                   readOnly
                                 />
                               </FormControl>
                               <FormDescription>
-                                When this offer will no longer exist.
+                                {t("CreditOffer:cardContent.offerExpiryDescription")}
                               </FormDescription>
                             </FormItem>
                           )}
@@ -903,12 +936,15 @@ export default function CreditBorrow(properties) {
                             <FormItem>
                               <FormLabel>
                                 <div className="grid grid-cols-2 gap-1 mt-5">
-                                  <div className="col-span-1">Estimated borrow fee</div>
+                                  <div className="col-span-1">
+                                    {t("CreditOffer:cardContent.estimatedFee")}
+                                  </div>
                                   <div className="col-span-1 text-right">
                                     {relevantOffer
-                                      ? `${relevantOffer.fee_rate / 10000}% of borrowed
-                                    amount`
-                                      : "Loading borrow fee.."}
+                                      ? t("CreditOffer:cardContent.borrowFeeRate", {
+                                          feeRate: relevantOffer.fee_rate / 10000,
+                                        })
+                                      : t("CreditOffer:cardContent.loadingFee")}
                                   </div>
                                 </div>
                               </FormLabel>
@@ -917,19 +953,23 @@ export default function CreditBorrow(properties) {
                                   disabled
                                   value={
                                     finalBorrowAmount
-                                      ? `${finalBorrowAmount * 0.01} ${
-                                          foundAsset ? foundAsset.symbol : "?"
-                                        }`
-                                      : `0 ${foundAsset ? foundAsset.symbol : "?"}`
+                                      ? t("CreditOffer:cardContent.feeAmount", {
+                                          feeAmount: finalBorrowAmount * 0.01,
+                                          symbol: foundAsset ? foundAsset.symbol : "?",
+                                        })
+                                      : t("CreditOffer:cardContent.zeroFee", {
+                                          symbol: foundAsset ? foundAsset.symbol : "?",
+                                        })
                                   }
                                   className="mb-3"
                                   readOnly
                                 />
                               </FormControl>
                               <FormDescription>
-                                {`This is how much ${foundAsset ? foundAsset.symbol : "?"} that ${
-                                  relevantOffer ? relevantOffer.owner_name : "?"
-                                } will earn once this deal has completed.`}
+                                {t("CreditOffer:cardContent.feeDescription", {
+                                  symbol: foundAsset ? foundAsset.symbol : "?",
+                                  owner_name: relevantOffer ? relevantOffer.owner_name : "?",
+                                })}
                               </FormDescription>
                               <FormMessage />
                             </FormItem>
@@ -942,13 +982,15 @@ export default function CreditBorrow(properties) {
                           name="fee"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Network fee</FormLabel>
+                              <FormLabel>{t("CreditOffer:cardContent.networkFee")}</FormLabel>
                               <Input disabled value={`${fee ?? "?"} BTS`} label={`fees`} readOnly />
                               <FormDescription>
-                                The cost to broadcast your credit deal operation onto the network.
+                                {t("CreditOffer:cardContent.networkFeeDescription")}
                               </FormDescription>
                               {usr && usr.id === usr.referrer ? (
-                                <FormMessage>LTM rebate: {0.8 * fee} BTS (vesting)</FormMessage>
+                                <FormMessage>
+                                  {t("CreditOffer:cardContent.ltmRebate", { rebate: 0.8 * fee })}
+                                </FormMessage>
                               ) : null}
                             </FormItem>
                           )}
@@ -963,9 +1005,11 @@ export default function CreditBorrow(properties) {
                 (collateralInfo &&
                   collateralInfo.holding &&
                   collateralInfo.amount < requiredCollateralAmount) ? (
-                  <Button disabled>Submit</Button>
+                  <Button disabled>{t("CreditOffer:cardContent.submit")}</Button>
                 ) : (
-                  <Button onClick={() => setShowDialog(true)}>Submit</Button>
+                  <Button onClick={() => setShowDialog(true)}>
+                    {t("CreditOffer:cardContent.submit")}
+                  </Button>
                 )}
               </CardFooter>
             </Card>
@@ -979,7 +1023,12 @@ export default function CreditBorrow(properties) {
             userID={usr.id}
             dismissCallback={setShowDialog}
             key={`Borrowing${finalBorrowAmount}${foundAsset.symbol}from${relevantOffer.owner_name}(${relevantOffer.owner_account})`}
-            headerText={`Borrowing ${finalBorrowAmount} ${foundAsset.symbol} from ${relevantOffer.owner_name} (${relevantOffer.owner_account})`}
+            headerText={t("CreditOffer:dialogContent.borrowing", {
+              finalBorrowAmount: finalBorrowAmount,
+              symbol: foundAsset.symbol,
+              owner_name: relevantOffer.owner_name,
+              owner_account: relevantOffer.owner_account,
+            })}
             trxJSON={[
               {
                 borrower: usr.id,
@@ -1004,38 +1053,19 @@ export default function CreditBorrow(properties) {
         <div className="grid grid-cols-1 mt-5">
           <Card>
             <CardHeader>
-              <CardTitle>Risks of Peer-to-Peer Loans</CardTitle>
+              <CardTitle>{t("CreditOffer:risks.risksTitle")}</CardTitle>
             </CardHeader>
             <CardContent className="text-sm">
-              Peer-to-peer lending involves certain risks, including:
+              {t("CreditOffer:risks.risksDescription")}
               <ul className="ml-2 list-disc [&>li]:mt-2 pl-2">
-                <li>
-                  Collateral Risk: As a borrower, you may fail to repay the loan on time, forfeiting
-                  the loan collateral in full.
-                </li>
-                <li>
-                  Liquidity Risk: If you sell the assets you borrow, it may not be possible to
-                  re-acquire the assets in time to repay the loan, or you may do so at a loss.
-                </li>
-                <li>
-                  Platform Risk: If an asset's owner company goes out of business and ceases an
-                  exchange backed asset's operation, you could lose funds.
-                </li>
-                <li>
-                  User Risk: As credit offers are fully user generated, you could be interacting
-                  with untrustworthy assets or users who put funds at risk.
-                </li>
-                <li>
-                  Network Risk: Whilst blockchain downtime is very rare, it's a risk to consider
-                  when creating credit deals which span a period of time. Auto loan repay methods
-                  are available to offset such risk.
-                </li>
+                <li>{t("CreditOffer:risks.riskCollateral")}</li>
+                <li>{t("CreditOffer:risks.riskLiquidity")}</li>
+                <li>{t("CreditOffer:risks.riskPlatform")}</li>
+                <li>{t("CreditOffer:risks.riskUser")}</li>
+                <li>{t("CreditOffer:risks.riskNetwork")}</li>
               </ul>
             </CardContent>
-            <CardFooter className="text-sm">
-              Please consider these risks and thoroughly evaluate the terms of offers before
-              proceeding with a credit deal.
-            </CardFooter>
+            <CardFooter className="text-sm">{t("CreditOffer:risks.risksFooter")}</CardFooter>
           </Card>
         </div>
         <div className="grid grid-cols-1 mt-5">

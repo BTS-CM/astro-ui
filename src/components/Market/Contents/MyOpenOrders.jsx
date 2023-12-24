@@ -1,4 +1,7 @@
 import React, { useMemo } from "react";
+import { useTranslation } from "react-i18next";
+import { i18n as i18nInstance } from "@/lib/i18n.js";
+
 import MyOrderSummary from "../Summary/MyOrderSummary";
 
 import {
@@ -20,6 +23,7 @@ export default function MyOpenOrders(properties) {
     marketHistoryInProgress,
     reset,
   } = properties;
+  const { t, i18n } = useTranslation("en", { i18n: i18nInstance });
 
   const relevantOpenOrders = useMemo(() => {
     if (usrLimitOrders && usrLimitOrders.length) {
@@ -33,11 +37,21 @@ export default function MyOpenOrders(properties) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{type === "buy" ? `My open buy orders` : `My open sell orders`}</CardTitle>
+        <CardTitle>
+          {type === "buy"
+            ? t("MyOpenOrders:openBuyOrdersTitle")
+            : t("MyOpenOrders:openSellOrdersTitle")}
+        </CardTitle>
         <CardDescription>
           {type === "buy"
-            ? `Your open buy limit orders for the market ${assetAData.symbol}/${assetBData.symbol}`
-            : `Your open sell limit orders for the market ${assetAData.symbol}/${assetBData.symbol}`}
+            ? t("MyOpenOrders:openBuyOrdersDescription", {
+                assetA: assetAData.symbol,
+                assetB: assetBData.symbol,
+              })
+            : t("MyOpenOrders:openSellOrdersDescription", {
+                assetA: assetAData.symbol,
+                assetB: assetBData.symbol,
+              })}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-2">

@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useSyncExternalStore, useMemo } from "react";
 import { FixedSizeList as List } from "react-window";
+import { useTranslation } from "react-i18next";
+import { i18n as i18nInstance } from "@/lib/i18n.js";
 
 import {
   Card,
@@ -44,6 +46,7 @@ import { humanReadableFloat } from "../lib/common";
 import { opTypes } from "../lib/opTypes";
 
 export default function PortfolioTabs(properties) {
+  const { t, i18n } = useTranslation("en", { i18n: i18nInstance });
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
 
   const _assetsBTS = useSyncExternalStore($assetCacheBTS.subscribe, $assetCacheBTS.get, () => true);
@@ -207,11 +210,13 @@ export default function PortfolioTabs(properties) {
             <div className="col-span-4">
               <CardHeader>
                 <CardTitle>
-                  {currentBalance.symbol} ({balances[index].asset_id})
+                  {t("PortfolioTabs:assetTitle", {
+                    symbol: currentBalance.symbol,
+                    assetId: balances[index].asset_id,
+                  })}
                 </CardTitle>
                 <CardDescription>
-                  Liquid amount: {readableBalance}
-                  <br />
+                  {t("PortfolioTabs:liquidAmount", { amount: readableBalance })}
                 </CardDescription>
               </CardHeader>
             </div>
@@ -222,7 +227,7 @@ export default function PortfolioTabs(properties) {
                 }`}
               >
                 <Button variant="outline" className="mr-2">
-                  Trade
+                  {t("PortfolioTabs:tradeButton")}
                 </Button>
               </a>
 
@@ -230,7 +235,7 @@ export default function PortfolioTabs(properties) {
                 variant="outline"
                 classnamecontents="mt-2"
                 type="button"
-                text={`Asset info`}
+                text={t("PortfolioTabs:assetInfoButton")}
                 hyperlink={`https://blocksights.info/#/assets/${currentBalance.symbol}`}
               />
             </div>
@@ -282,13 +287,20 @@ export default function PortfolioTabs(properties) {
             <div className="col-span-4">
               <CardHeader>
                 <CardTitle>
-                  Selling {readableBaseAmount} {sellAsset.symbol} for {readableQuoteAmount}{" "}
-                  {buyAsset.symbol}
+                  {t("PortfolioTabs:sellingFor", {
+                    baseAmount: readableBaseAmount,
+                    baseSymbol: sellAsset.symbol,
+                    quoteAmount: readableQuoteAmount,
+                    quoteSymbol: buyAsset.symbol,
+                  })}
                 </CardTitle>
                 <CardDescription>
-                  Trading pair: {sellPriceBaseAssetId} for {sellPriceQuoteAssetId}
+                  {t("PortfolioTabs:tradingPair", {
+                    baseAssetId: sellPriceBaseAssetId,
+                    quoteAssetId: sellPriceQuoteAssetId,
+                  })}
                   <br />
-                  Order ID:
+                  {t("PortfolioTabs:orderId")}
                   <ExternalLink
                     classnamecontents="text-blue-500"
                     type="text"
@@ -296,17 +308,17 @@ export default function PortfolioTabs(properties) {
                     hyperlink={`https://blocksights.info/#/objects/${orderId}`}
                   />
                   <br />
-                  Expires: {timeDiffString}
+                  {t("PortfolioTabs:expires", { timeDiff: timeDiffString })}
                 </CardDescription>
               </CardHeader>
             </div>
             <div className="col-span-2 pt-6">
               <a href={`/dex/index.html?market=${sellAsset.symbol}_${buyAsset.symbol}`}>
-                <Button variant="outline">Trade</Button>
+                <Button variant="outline">{t("PortfolioTabs:tradeButton")}</Button>
               </a>
               <a href={`/order/index.html?id=${orderId}`}>
                 <Button variant="outline" className="mb-3 ml-3">
-                  Update
+                  {t("PortfolioTabs:updateButton")}
                 </Button>
               </a>
               <>
@@ -317,7 +329,7 @@ export default function PortfolioTabs(properties) {
                     setOrderID(orderId);
                   }}
                 >
-                  Cancel
+                  {t("PortfolioTabs:cancelButton")}
                 </Button>
                 {showDialog && orderId === orderID ? (
                   <DeepLinkDialog
@@ -327,7 +339,12 @@ export default function PortfolioTabs(properties) {
                     userID={usr.id}
                     dismissCallback={setShowDialog}
                     key={`Cancelling${readableBaseAmount}${sellAsset.symbol}for${readableQuoteAmount}${buyAsset.symbol}`}
-                    headerText={`Cancelling offer of ${readableBaseAmount} ${sellAsset.symbol} for ${readableQuoteAmount} ${buyAsset.symbol}`}
+                    headerText={t("PortfolioTabs:cancelOffer", {
+                      baseAmount: readableBaseAmount,
+                      baseSymbol: sellAsset.symbol,
+                      quoteAmount: readableQuoteAmount,
+                      quoteSymbol: buyAsset.symbol,
+                    })}
                     trxJSON={[
                       {
                         fee_paying_account: usr.id,
@@ -365,7 +382,7 @@ export default function PortfolioTabs(properties) {
               <CardHeader>
                 <CardTitle>{opTypes[activityItem.operation_type.toString()]}</CardTitle>
                 <CardDescription>
-                  Operation ID:
+                  {t("PortfolioTabs:operationId")}
                   <ExternalLink
                     classnamecontents="text-blue-500"
                     type="text"
@@ -373,7 +390,7 @@ export default function PortfolioTabs(properties) {
                     hyperlink={`https://blocksights.info/#/objects/${activityItem.account_history.operation_id}`}
                   />
                   <br />
-                  Block number:
+                  {t("PortfolioTabs:blockNumber")}
                   <ExternalLink
                     classnamecontents="text-blue-500"
                     type="text"
@@ -381,19 +398,21 @@ export default function PortfolioTabs(properties) {
                     hyperlink={`https://blocksights.info/#/blocks/${activityItem.block_data.block_num}`}
                   />
                   <br />
-                  Time since broadcast: {timeDiffString}
+                  {t("PortfolioTabs:timeSinceBroadcast", { timeDiff: timeDiffString })}
                 </CardDescription>
               </CardHeader>
             </div>
             <div className="col-span-2 mt-7">
               <Dialog>
                 <DialogTrigger asChild>
-                  <Button variant="outline">View Operation</Button>
+                  <Button variant="outline">{t("PortfolioTabs:viewOperationButton")}</Button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px] bg-white">
                   <DialogHeader>
-                    <DialogTitle>Operation JSON</DialogTitle>
-                    <DialogDescription>Check out the contents of this operation</DialogDescription>
+                    <DialogTitle>{t("PortfolioTabs:operationJsonTitle")}</DialogTitle>
+                    <DialogDescription>
+                      {t("PortfolioTabs:operationJsonDescription")}
+                    </DialogDescription>
                   </DialogHeader>
                   <div className="grid grid-cols-1">
                     <div className="col-span-1">
@@ -409,13 +428,15 @@ export default function PortfolioTabs(properties) {
               <Dialog>
                 <DialogTrigger asChild>
                   <Button variant="outline" className="mt-2">
-                    View all
+                    {t("PortfolioTabs:viewAllButton")}
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px] bg-white">
                   <DialogHeader>
-                    <DialogTitle>Full operation contents</DialogTitle>
-                    <DialogDescription>Exhaustive info regarding this operation</DialogDescription>
+                    <DialogTitle>{t("PortfolioTabs:fullOperationContentsTitle")}</DialogTitle>
+                    <DialogDescription>
+                      {t("PortfolioTabs:fullOperationContentsDescription")}
+                    </DialogDescription>
                   </DialogHeader>
                   <div className="grid grid-cols-1">
                     <div className="col-span-1">
@@ -441,37 +462,39 @@ export default function PortfolioTabs(properties) {
             <TabsList className="grid w-full grid-cols-3">
               {activePortfolioTab === "balances" ? (
                 <TabsTrigger value="balances" style={activeTabStyle}>
-                  Balances
+                  {t("PortfolioTabs:balances")}
                 </TabsTrigger>
               ) : (
                 <TabsTrigger value="balances" onClick={() => setActivePortfolioTab("balances")}>
-                  Balances
+                  {t("PortfolioTabs:balances")}
                 </TabsTrigger>
               )}
               {activePortfolioTab === "openOrders" ? (
                 <TabsTrigger value="openOrders" style={activeTabStyle}>
-                  Open orders
+                  {t("PortfolioTabs:openOrders")}
                 </TabsTrigger>
               ) : (
                 <TabsTrigger value="openOrders" onClick={() => setActivePortfolioTab("openOrders")}>
-                  Open orders
+                  {t("PortfolioTabs:openOrders")}
                 </TabsTrigger>
               )}
               {activePortfolioTab === "activity" ? (
                 <TabsTrigger value="activity" style={activeTabStyle}>
-                  Activity
+                  {t("PortfolioTabs:activity")}
                 </TabsTrigger>
               ) : (
                 <TabsTrigger value="activity" onClick={() => setActivePortfolioTab("activity")}>
-                  Activity
+                  {t("PortfolioTabs:activity")}
                 </TabsTrigger>
               )}
             </TabsList>
             <TabsContent value="balances">
               <Card>
                 <CardHeader>
-                  <CardTitle>{usr.username}'s account balances</CardTitle>
-                  <CardDescription>The assets held within your account</CardDescription>
+                  <CardTitle>
+                    {t("PortfolioTabs:accountBalances", { username: usr.username })}
+                  </CardTitle>
+                  <CardDescription>{t("PortfolioTabs:accountBalancesDescription")}</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-2">
                   {balances &&
@@ -487,7 +510,7 @@ export default function PortfolioTabs(properties) {
                       {BalanceRow}
                     </List>
                   ) : (
-                    <p>No balances found</p>
+                    <p>{t("PortfolioTabs:noBalancesFound")}</p>
                   )}
                 </CardContent>
                 <CardFooter>
@@ -497,7 +520,7 @@ export default function PortfolioTabs(properties) {
                       setBalanceCoutner(balanceCounter + 1);
                     }}
                   >
-                    Refresh balances
+                    {t("PortfolioTabs:refreshBalancesButton")}
                   </Button>
                 </CardFooter>
               </Card>
@@ -505,8 +528,8 @@ export default function PortfolioTabs(properties) {
             <TabsContent value="openOrders">
               <Card>
                 <CardHeader>
-                  <CardTitle>Open orders</CardTitle>
-                  <CardDescription>Your currently open limit orders on the DEX</CardDescription>
+                  <CardTitle>{t("PortfolioTabs:openOrdersTitle")}</CardTitle>
+                  <CardDescription>{t("PortfolioTabs:openOrdersDescription")}</CardDescription>
                 </CardHeader>
                 <CardContent>
                   {openOrders &&
@@ -517,7 +540,7 @@ export default function PortfolioTabs(properties) {
                       {OpenOrdersRow}
                     </List>
                   ) : (
-                    <p>No open orders found</p>
+                    <p>{t("PortfolioTabs:noOpenOrdersFound")}</p>
                   )}
                 </CardContent>
                 <CardFooter>
@@ -527,7 +550,7 @@ export default function PortfolioTabs(properties) {
                       setBalanceCoutner(balanceCounter + 1);
                     }}
                   >
-                    Refresh open orders
+                    {t("PortfolioTabs:refreshOpenOrdersButton")}
                   </Button>
                 </CardFooter>
               </Card>
@@ -535,8 +558,10 @@ export default function PortfolioTabs(properties) {
             <TabsContent value="activity">
               <Card>
                 <CardHeader>
-                  <CardTitle>Recent blockchain activity</CardTitle>
-                  <CardDescription>Your recent blockchain activity</CardDescription>
+                  <CardTitle>{t("PortfolioTabs:recentBlockchainActivityTitle")}</CardTitle>
+                  <CardDescription>
+                    {t("PortfolioTabs:recentBlockchainActivityDescription")}
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-2">
                   {activity && activity.length ? (
@@ -544,7 +569,7 @@ export default function PortfolioTabs(properties) {
                       {RecentActivityRow}
                     </List>
                   ) : (
-                    <p>No recent activity found</p>
+                    <p>{t("PortfolioTabs:noRecentActivityFound")}</p>
                   )}
                 </CardContent>
                 <CardFooter>
@@ -554,7 +579,7 @@ export default function PortfolioTabs(properties) {
                       setActivityCounter(activityCounter + 1);
                     }}
                   >
-                    Refresh recent activity
+                    {t("PortfolioTabs:refreshRecentActivityButton")}
                   </Button>
                 </CardFooter>
               </Card>

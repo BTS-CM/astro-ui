@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useSyncExternalStore, useMemo } from "react";
+import { useTranslation } from "react-i18next";
+import { i18n as i18nInstance } from "@/lib/i18n.js";
 
 import Market from "./Market";
 import MarketPlaceholder from "./MarketPlaceholder";
@@ -26,7 +28,7 @@ import {
 } from "../effects/Assets.ts";
 
 export default function MarketOverlay(properties) {
-  // Initializing
+  const { t, i18n } = useTranslation("en", { i18n: i18nInstance });
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
 
   const _assetsBTS = useSyncExternalStore($assetCacheBTS.subscribe, $assetCacheBTS.get, () => true);

@@ -2,6 +2,8 @@ import React, { useState, useEffect, useSyncExternalStore, useMemo, useCallback 
 import { FixedSizeList as List } from "react-window";
 import { useForm } from "react-hook-form";
 import { LockOpen2Icon, LockClosedIcon } from "@radix-ui/react-icons";
+import { useTranslation } from "react-i18next";
+import { i18n as i18nInstance } from "@/lib/i18n.js";
 
 import {
   Card,
@@ -77,44 +79,42 @@ const activeTabStyle = {
   color: "white",
 };
 
-const tips = {
-  charge_market_fee: "The asset issuer can enable market fees.",
-  white_list: "The asset issuer can create a list of approved markets",
-  override_authority: "The asset issuer can transfer this NFT back to themselves.",
-  transfer_restricted: "This asset may only be transferred to/from the issuer or market orders",
-  disable_force_settle: "Users may request force-settlement of this market-issued asset.",
-  global_settle:
-    "The issuer of this market-issued asset has the ability to globally settle the asset",
-  disable_confidential: "The issuer of this asset can disable stealth transactions.",
-  witness_fed_asset:
-    "This market-issued asset can have its price feeds supplied by Bitshares witnesses.",
-  committee_fed_asset:
-    "This market-issued asset can have its price feeds supplied by Bitshares committee members.",
-  disable_collateral_bidding: "The issuer of this asset can disable collateral bidding.",
-};
-
-function timeAgo(dateString) {
+function timeAgo(dateString, t) {
   const date = new Date(dateString);
   const now = new Date();
   const diffInMilliseconds = now - date;
   const diffInDays = Math.floor(diffInMilliseconds / (1000 * 60 * 60 * 24));
 
   if (diffInDays < 1) {
-    return "today";
+    return t("Smartcoin:today");
   } else if (diffInDays < 30) {
-    return diffInDays + " days ago";
+    return t("Smartcoin:daysAgo", { days: diffInDays });
   } else {
     const diffInMonths = Math.floor(diffInDays / 30);
-    return diffInMonths + " months ago";
+    return t("Smartcoin:monthsAgo", { months: diffInMonths });
   }
 }
 
 export default function Smartcoin(properties) {
+  const { t, i18n } = useTranslation("en", { i18n: i18nInstance });
   const form = useForm({
     defaultValues: {
       account: "",
     },
   });
+
+  const tips = {
+    charge_market_fee: t("Smartcoin:chargeMarketFee"),
+    white_list: t("Smartcoin:whiteList"),
+    override_authority: t("Smartcoin:overrideAuthority"),
+    transfer_restricted: t("Smartcoin:transferRestricted"),
+    disable_force_settle: t("Smartcoin:disableForceSettle"),
+    global_settle: t("Smartcoin:globalSettle"),
+    disable_confidential: t("Smartcoin:disableConfidential"),
+    witness_fed_asset: t("Smartcoin:witnessFedAsset"),
+    committee_fed_asset: t("Smartcoin:committeeFedAsset"),
+    disable_collateral_bidding: t("Smartcoin:disableCollateralBidding"),
+  };
 
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
 
@@ -901,28 +901,33 @@ export default function Smartcoin(properties) {
       <Card className="mt-2">
         <CardHeader className="pb-2">
           <CardTitle>
-            Your current {parsedAsset.s} ({parsedAsset.id}) margin position
+            <Trans
+              i18nKey="Smartcoin:currentMarginPosition"
+              values={{ asset: parsedAsset.s, id: parsedAsset.id }}
+            />
           </CardTitle>
-          <CardDescription>You have an ongoing margin position for this smartcoin.</CardDescription>
+          <CardDescription>
+            <Trans i18nKey="Smartcoin:ongoingMarginPosition" />
+          </CardDescription>
         </CardHeader>
         <CardContent className="text-sm">
-          {"Balance: "}
+          {t("Smartcoin:balance")}
           <b>{debtAssetHoldings ?? 0}</b>
           {parsedAsset ? ` ${parsedAsset.s}` : " ?"}
           <br />
-          {"Debt: "}
+          {t("Smartcoin:debt")}
           <b>{humanReadableFloat(usrMarginPositions[0].debt, parsedAsset.p)}</b> {parsedAsset.s}
           <br />
-          {"Collateral at risk: "}
+          {t("Smartcoin:collateralAtRisk")}
           <b>
             {humanReadableFloat(usrMarginPositions[0].collateral, parsedCollateralAsset.p)}
           </b>{" "}
           {parsedCollateralAsset.s}
           <br />
-          {"Current ratio: "}
+          {t("Smartcoin:currentRatio")}
           <b>{ratio}</b>
           <br />
-          {"Margin call price: "}
+          {t("Smartcoin:marginCallPrice")}
           <b>{callPrice}</b> {parsedCollateralAsset.s}
           {" ("}
           {(1 / callPrice).toFixed(parsedAsset.p)} {parsedAsset.s}/{parsedCollateralAsset.s}
@@ -930,22 +935,22 @@ export default function Smartcoin(properties) {
           {tcr ? (
             <>
               <br />
-              {"Target collateral ratio: "}
+              {t("Smartcoin:targetCollateralRatio")}
               <b>{tcr}</b>
             </>
           ) : null}
           <br />
           <Button className="mt-3 mr-2" onClick={() => setShowClosePositionDialog(true)}>
-            Close position
+            {t("Smartcoin:closePosition")}
           </Button>
           <a
             href={`/borrow/index.html?tab=searchOffers&searchTab=borrow&searchText=${parsedAsset.s}`}
           >
-            <Button className="mr-2">Borrow {parsedAsset.s}</Button>
+            <Button className="mr-2">{t("Smartcoin:borrow", { asset: parsedAsset.s })}</Button>
           </a>
           <a href={`/dex/index.html?market=${parsedAsset.s}_${parsedCollateralAsset.s}`}>
             <Button className="mr-2">
-              Buy {parsedAsset.s} with {parsedCollateralAsset.s}
+              {t("Smartcoin:buyWith", { asset1: parsedAsset.s, asset2: parsedCollateralAsset.s })}
             </Button>
           </a>
           {showClosePositionDialog ? (
@@ -956,7 +961,7 @@ export default function Smartcoin(properties) {
               userID={usr.id}
               dismissCallback={setShowClosePositionDialog}
               key={`Closing${parsedAsset.s}debtposition`}
-              headerText={`Closing your ${parsedAsset.s} debt position`}
+              headerText={t("Smartcoin:closingDebtPosition", { asset: parsedAsset.s })}
               trxJSON={[exitJSON]}
             />
           ) : null}
@@ -980,28 +985,27 @@ export default function Smartcoin(properties) {
           <CardTitle>
             <div className="grid grid-cols-8">
               <div className="col-span-6">
-                {type === "debt" ? (
-                  <>
-                    About the {bitassetInfo.issuer.id === "1.2.0" ? "Bitasset" : "Smartcoin"}{" "}
-                    {assetInfo.s} ({assetInfo.id})
-                  </>
-                ) : (
-                  <>
-                    About the backing collateral {assetInfo.s} ({assetInfo.id})
-                  </>
-                )}
+                {type === "debt"
+                  ? t("Smartcoin:aboutAsset", {
+                      assetType: bitassetInfo.issuer.id === "1.2.0" ? "Bitasset" : "Smartcoin",
+                      asset: assetInfo.s,
+                      id: assetInfo.id,
+                    })
+                  : t("Smartcoin:aboutBackingCollateral", { asset: assetInfo.s, id: assetInfo.id })}
               </div>
               <div className="col-span-2 text-right">
                 <Dialog>
                   <DialogTrigger asChild>
                     <Button variant="outline" className="h-5">
-                      View JSON
+                      {t("Smartcoin:viewJSON")}
                     </Button>
                   </DialogTrigger>
                   <DialogContent className="sm:max-w-[600px] bg-white">
                     <DialogHeader>
-                      <DialogTitle>{assetInfo.s} JSON summary data</DialogTitle>
-                      <DialogDescription>The data used to render this card</DialogDescription>
+                      <DialogTitle>
+                        {t("Smartcoin:jsonSummaryData", { asset: assetInfo.s })}
+                      </DialogTitle>
+                      <DialogDescription>{t("Smartcoin:dataUsedToRender")}</DialogDescription>
                     </DialogHeader>
                     <div className="grid grid-cols-1">
                       <div className="col-span-1">
@@ -1016,33 +1020,22 @@ export default function Smartcoin(properties) {
             </div>
           </CardTitle>
           <CardDescription>
-            {type === "debt" ? (
-              <>
-                Use this information to improve your understanding of {assetInfo.s}.
-                <br />
-                Thoroughly do your own research before proceeding to borrow any smartcoins.
-              </>
-            ) : (
-              <>
-                Use this information to improve your understanding of {assetInfo.s}.
-                <br />
-                Thoroughly do your own research before using this asset as smartcoin backing
-                collateral.
-              </>
-            )}
+            {type === "debt"
+              ? t("Smartcoin:researchBeforeBorrow", { asset: assetInfo.s })
+              : t("Smartcoin:researchBeforeBacking", { asset: assetInfo.s })}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2">
             <div className="col-span-1">
-              <Label>General asset info</Label>
+              <Label>{t("Smartcoin:generalAssetInfo")}</Label>
             </div>
             <div className="col-span-1 text-right">
               <ExternalLink
                 classnamecontents="h-5 mb-2"
                 variant="outline"
                 type="button"
-                text="View asset on blocksights.info"
+                text={t("Smartcoin:viewAssetOnBlocksights")}
                 hyperlink={`https://blocksights.info/#/assets/${assetInfo.id}`}
               />
             </div>
@@ -1051,83 +1044,65 @@ export default function Smartcoin(properties) {
             <div className="col-span-5">
               <div className="grid grid-cols-1 gap-1 w-full text-sm">
                 <CardRow
-                  title={"Issuer"}
+                  title={t("Smartcoin:issuer")}
                   button={assetInfo.u.split(" ")[0]}
-                  dialogtitle={`${assetInfo.s}'s issuer`}
+                  dialogtitle={t("Smartcoin:issuerOfAsset", { asset: assetInfo.s })}
                   dialogdescription={
                     <ul className="ml-2 list-disc [&>li]:mt-2">
-                      <li>
-                        This is the blockchain account which created this asset. Pay attention to
-                        such a detail to understand what it is you're buying and from whom.
-                      </li>
-                      <li>
-                        Asset issuer can change over time as the issuer can easily transfer
-                        ownership.
-                      </li>
-                      <li>
-                        Committee account owned assets are usually the core bitassets maintained by
-                        the committee.
-                      </li>
-                      <li>
-                        If the issuer is 'null-account' then the ownership of the asset has
-                        effectively been burned.
-                      </li>
+                      <li>{t("Smartcoin:issuerDetail1")}</li>
+                      <li>{t("Smartcoin:issuerDetail2")}</li>
+                      <li>{t("Smartcoin:issuerDetail3")}</li>
+                      <li>{t("Smartcoin:issuerDetail4")}</li>
                       <ExternalLink
                         classnamecontents="h-8 mb-2 mt-3"
                         type="button"
-                        text="View issuer on blocksights.info"
+                        text={t("Smartcoin:viewIssuerOnBlocksights")}
                         hyperlink={`https://blocksights.info/#/accounts/${
                           assetInfo.u.split(" ")[0]
                         }`}
                       />
                     </ul>
                   }
-                  tooltip={"More about asset issuer"}
+                  tooltip={t("Smartcoin:moreAboutAssetIssuer")}
                 />
-
                 <CardRow
-                  title={"Maximum supply"}
+                  title={t("Smartcoin:maximumSupply")}
                   button={humanReadableFloat(
                     fullAssetInfo.options.max_supply,
                     fullAssetInfo.precision
                   )}
-                  dialogtitle={`${assetInfo.s}'s maximum supply`}
+                  dialogtitle={t("Smartcoin:maximumSupplyOfAsset", { asset: assetInfo.s })}
                   dialogdescription={
                     <ul className="ml-2 list-disc [&>li]:mt-2">
-                      <li>This is the max supply of this asset</li>
+                      <li>{t("Smartcoin:maximumSupplyDetail")}</li>
                     </ul>
                   }
-                  tooltip={"More info on max supply"}
+                  tooltip={t("Smartcoin:moreInfoOnMaxSupply")}
                 />
 
                 <CardRow
-                  title={"Min quantity"}
+                  title={t("Smartcoin:minQuantity")}
                   button={humanReadableFloat(1, fullAssetInfo.precision)}
-                  dialogtitle={`${assetInfo.s}'s minimum quantity`}
+                  dialogtitle={t("Smartcoin:minQuantityOfAsset", { asset: assetInfo.s })}
                   dialogdescription={
                     <ul className="ml-2 list-disc [&>li]:mt-2">
-                      <li>
-                        This is the smallest amount of this asset that can be borrowed or used as
-                        collateral.
-                      </li>
-                      <li>This is effectively 1 "satoshi" of this asset.</li>
+                      <li>{t("Smartcoin:minQuantityDetail1")}</li>
+                      <li>{t("Smartcoin:minQuantityDetail2")}</li>
                     </ul>
                   }
-                  tooltip={"More about asset precision"}
+                  tooltip={t("Smartcoin:moreAboutMinQuantity")}
                 />
 
                 <CardRow
-                  title={"Precision"}
+                  title={t("Smartcoin:precision")}
                   button={fullAssetInfo.precision}
-                  dialogtitle={`${assetInfo.s}'s precision`}
+                  dialogtitle={t("Smartcoin:precisionOfAsset", { asset: assetInfo.s })}
                   dialogdescription={
                     <ul className="ml-2 list-disc [&>li]:mt-2">
-                      <li>
-                        This is the number of decimal places this asset supports for its quantity.
-                      </li>
+                      <li>{t("Smartcoin:precisionDetail")}</li>
                     </ul>
                   }
-                  tooltip={"More about asset precision"}
+                  tooltip={t("Smartcoin:moreAboutAssetPrecision")}
                 />
               </div>
             </div>
@@ -1137,59 +1112,53 @@ export default function Smartcoin(properties) {
             <div className="col-span-5">
               <div className="grid grid-cols-1 gap-1 w-full text-sm">
                 <CardRow
-                  title={"Market fee"}
+                  title={t("Smartcoin:marketFee")}
                   button={`${
                     fullAssetInfo.options.market_fee_percent
                       ? fullAssetInfo.options.market_fee_percent / 100
                       : 0
                   }%`}
-                  dialogtitle={`${assetInfo.s}'s market fee`}
+                  dialogtitle={t("Smartcoin:marketFeeOfAsset", { asset: assetInfo.s })}
                   dialogdescription={
                     <ul className="ml-2 list-disc [&>li]:mt-2">
-                      <li>
-                        Asset creators can introduce market fees to passively earn as trades occur.
-                      </li>
-                      <li>The market fee only applies to one side of the trade.</li>
-                      <li>Make sure that the market fee is reasonable before proceeding.</li>
+                      <li>{t("Smartcoin:marketFeeDetail1")}</li>
+                      <li>{t("Smartcoin:marketFeeDetail2")}</li>
+                      <li>{t("Smartcoin:marketFeeDetail3")}</li>
                     </ul>
                   }
-                  tooltip={"More about the market fee"}
+                  tooltip={t("Smartcoin:moreAboutMarketFee")}
                 />
 
                 <CardRow
-                  title={"Taker fee percent"}
+                  title={t("Smartcoin:takerFeePercent")}
                   button={`${
                     fullAssetInfo.options.extensions.taker_fee_percent
                       ? fullAssetInfo.options.extensions.taker_fee_percent / 100
                       : 0
                   }%`}
-                  dialogtitle={`${assetInfo.s}'s taker fee percent`}
+                  dialogtitle={t("Smartcoin:takerFeePercentOfAsset", { asset: assetInfo.s })}
                   dialogdescription={
                     <ul className="ml-2 list-disc [&>li]:mt-2">
-                      <li>
-                        This is the number of decimal places this asset supports for its quantity.
-                      </li>
+                      <li>{t("Smartcoin:takerFeePercentDetail")}</li>
                     </ul>
                   }
-                  tooltip={"More about taker fee percent"}
+                  tooltip={t("Smartcoin:moreAboutTakerFeePercent")}
                 />
 
                 <CardRow
-                  title={"Reward percent"}
+                  title={t("Smartcoin:rewardPercent")}
                   button={
                     fullAssetInfo.options.extensions.reward_percent
                       ? fullAssetInfo.options.extensions.reward_percent / 100
                       : 0
                   }
-                  dialogtitle={`${assetInfo.s}'s reward percent`}
+                  dialogtitle={t("Smartcoin:rewardPercentOfAsset", { asset: assetInfo.s })}
                   dialogdescription={
                     <ul className="ml-2 list-disc [&>li]:mt-2">
-                      <li>
-                        This is the share of the market fee that is paid to the account registrar.
-                      </li>
+                      <li>{t("Smartcoin:rewardPercentDetail")}</li>
                     </ul>
                   }
-                  tooltip={"More about asset market fee reward percent"}
+                  tooltip={t("Smartcoin:moreAboutRewardPercent")}
                 />
               </div>
             </div>
@@ -1197,12 +1166,12 @@ export default function Smartcoin(properties) {
 
           {bitassetInfo && bitassetInfo.id ? (
             <>
-              <Label></Label>
-
               <div className="grid grid-cols-2">
                 <div className="col-span-1">
                   <Label>
-                    {bitassetInfo.issuer.id === "1.2.0" ? "Bitasset info" : "Smartcoin info"}
+                    {bitassetInfo.issuer.id === "1.2.0"
+                      ? t("Smartcoin:bitassetInfo")
+                      : t("Smartcoin:smartcoinInfo")}
                   </Label>
                 </div>
                 <div className="col-span-1 text-right">
@@ -1210,7 +1179,7 @@ export default function Smartcoin(properties) {
                     classnamecontents="h-5 mb-2"
                     variant="outline"
                     type="button"
-                    text="View bitasset on blocksights.info"
+                    text={t("Smartcoin:viewBitassetOnBlocksights")}
                     hyperlink={`https://blocksights.info/#/objects/${bitassetInfo.id}`}
                   />
                 </div>
@@ -1220,100 +1189,85 @@ export default function Smartcoin(properties) {
                 <div className="col-span-5">
                   <div className="grid grid-cols-1 gap-1 w-full text-sm">
                     <CardRow
-                      title={"Collateral asset"}
+                      title={t("Smartcoin:collateralAsset")}
                       button={parsedCollateralAsset ? parsedCollateralAsset.s : ""}
-                      dialogtitle={`${assetInfo.s} smartcoin backing collateral asset`}
+                      dialogtitle={t("Smartcoin:collateralAssetOfSmartcoin", {
+                        asset: assetInfo.s,
+                      })}
                       dialogdescription={
                         <ul className="ml-2 list-disc [&>li]:mt-2">
-                          <li>
-                            This is the asset which is used as collateral for issuing this
-                            smartcoin.
-                          </li>
+                          <li>{t("Smartcoin:collateralAssetDetail")}</li>
                         </ul>
                       }
-                      tooltip={"More about smartcoin backing collateral assets"}
+                      tooltip={t("Smartcoin:moreAboutCollateralAsset")}
                     />
 
                     <CardRow
-                      title={"MCR"}
+                      title={t("Smartcoin:MCR")}
                       button={`${bitassetInfo ? bitassetInfo.mcr / 10 : 0} %`}
-                      dialogtitle={`${assetInfo.s} minimum collateral requirements`}
+                      dialogtitle={t("Smartcoin:MCRofAsset", { asset: assetInfo.s })}
                       dialogdescription={
                         <ul className="ml-2 list-disc [&>li]:mt-2">
-                          <li>
-                            The minimum collateral requirement is set by the issuer, any margin
-                            position which fails to maintain a backing collateral ratio above this
-                            value will face margin call.
-                          </li>
+                          <li>{t("Smartcoin:MCRDetail")}</li>
                         </ul>
                       }
-                      tooltip={"More about smartcoin minimum collateral requirements"}
+                      tooltip={t("Smartcoin:moreAboutMCR")}
                     />
 
                     <CardRow
-                      title={"MSSR"}
+                      title={t("Smartcoin:MSSR")}
                       button={`${bitassetInfo ? bitassetInfo.mssr / 10 : 0} %`}
-                      dialogtitle={`${assetInfo.s} maximum Short Squeeze Ratio`}
+                      dialogtitle={t("Smartcoin:MSSROfAsset", { asset: assetInfo.s })}
                       dialogdescription={
                         <ul className="ml-2 list-disc [&>li]:mt-2">
-                          <li>Maximum Short Squeeze Ratio (MSSR): Max. liquidation penalty.</li>
+                          <li>{t("Smartcoin:MSSRDetail")}</li>
                         </ul>
                       }
-                      tooltip={"More about smartcoin Maximum Short Squeeze Ratio"}
+                      tooltip={t("Smartcoin:moreAboutMSSR")}
                     />
 
                     <CardRow
-                      title={"ICR"}
+                      title={t("Smartcoin:ICR")}
                       button={`${bitassetInfo ? bitassetInfo.icr / 10 : 0} %`}
-                      dialogtitle={`${assetInfo.s} Initial Collateral Ratio`}
+                      dialogtitle={t("Smartcoin:ICROfAsset", { asset: assetInfo.s })}
                       dialogdescription={
                         <ul className="ml-2 list-disc [&>li]:mt-2">
-                          <li>
-                            Initial Collateral Ratio (ICR): Minimum CR for updating margin position.
-                          </li>
+                          <li>{t("Smartcoin:ICRDetail")}</li>
                         </ul>
                       }
-                      tooltip={"More about smartcoin Initial Collateral Ratio"}
+                      tooltip={t("Smartcoin:moreAboutICR")}
                     />
 
                     <CardRow
-                      title={"Feed qty"}
+                      title={t("Smartcoin:feedQty")}
                       button={bitassetInfo ? bitassetInfo.feeds.length : 0}
-                      dialogtitle={`${assetInfo.s} smartcoin price feed quantity`}
+                      dialogtitle={t("Smartcoin:feedQtyOfAsset", { asset: assetInfo.s })}
                       dialogdescription={
                         <ul className="ml-2 list-disc [&>li]:mt-2">
-                          <li>This is the quantity of unique recently published price feeds.</li>
-                          <li>
-                            The more feeds, the more decentralized the price feed arguably is.
-                          </li>
-                          <li>
-                            Some assets are fed by the committee or the witnesses, such as the
-                            bitassets.
-                          </li>
-                          <li>Private smartcoins can be fed by custom price feed publishers.</li>
-                          <li>
-                            You should verify the correctness and the trustworthiness of price feeds
-                            to reduce your risk exposure.
-                          </li>
+                          <li>{t("Smartcoin:feedQtyDetail1")}</li>
+                          <li>{t("Smartcoin:feedQtyDetail2")}</li>
+                          <li>{t("Smartcoin:feedQtyDetail3")}</li>
+                          <li>{t("Smartcoin:feedQtyDetail4")}</li>
+                          <li>{t("Smartcoin:feedQtyDetail5")}</li>
                         </ul>
                       }
-                      tooltip={"More about smartcoin price feed quantities"}
+                      tooltip={t("Smartcoin:moreAboutFeedQty")}
                     />
 
                     {fullBitassetInfo &&
                     fullBitassetInfo.options.force_settlement_offset_percent ? (
                       <CardRow
-                        title={"Settlement offset"}
+                        title={t("Smartcoin:settlementOffset")}
                         button={`${
                           fullBitassetInfo.options.force_settlement_offset_percent / 100
                         }%`}
-                        dialogtitle={`${assetInfo.s} force settlement offset`}
+                        dialogtitle={t("Smartcoin:settlementOffsetOfAsset", { asset: assetInfo.s })}
                         dialogdescription={
                           <ul className="ml-2 list-disc [&>li]:mt-2">
-                            <li>How much a force settlement order will be offset by.</li>
+                            <li>{t("Smartcoin:settlementOffsetDetail")}</li>
                           </ul>
                         }
-                        tooltip={"More about force settlement offset"}
+                        tooltip={t("Smartcoin:moreAboutSettlementOffset")}
                       />
                     ) : null}
                   </div>
@@ -1327,20 +1281,17 @@ export default function Smartcoin(properties) {
                     fullBitassetInfo.options.extensions &&
                     fullBitassetInfo.options.extensions.force_settle_fee_percent ? (
                       <CardRow
-                        title={"Settlement fee"}
+                        title={t("Smartcoin:settlementFee")}
                         button={`${
                           fullBitassetInfo.options.extensions.force_settle_fee_percent / 100
                         }%`}
-                        dialogtitle={`${assetInfo.s} force settlement fee`}
+                        dialogtitle={t("Smartcoin:settlementFeeOfAsset", { asset: assetInfo.s })}
                         dialogdescription={
                           <ul className="ml-2 list-disc [&>li]:mt-2">
-                            <li>
-                              If you choose to force settle a smartcoin in return for its backing
-                              collateral, you will pay this fee.
-                            </li>
+                            <li>{t("Smartcoin:settlementFeeDetail")}</li>
                           </ul>
                         }
-                        tooltip={"More about smartcoin force settlement fees"}
+                        tooltip={t("Smartcoin:moreAboutSettlementFee")}
                       />
                     ) : null}
 
@@ -1348,20 +1299,18 @@ export default function Smartcoin(properties) {
                     fullBitassetInfo.options.extensions &&
                     fullBitassetInfo.options.extensions.margin_call_fee_ratio ? (
                       <CardRow
-                        title={"Margin call fee"}
+                        title={t("Smartcoin:marginCallFee")}
                         button={`${
                           fullBitassetInfo.options.extensions.margin_call_fee_ratio / 100
                         }%`}
-                        dialogtitle={`${assetInfo.s} margin call fee`}
+                        dialogtitle={t("Smartcoin:marginCallFeeOfAsset", { asset: assetInfo.s })}
                         dialogdescription={
                           <ul className="ml-2 list-disc [&>li]:mt-2">
-                            <li>If your call order is margin called, this fee will be applied.</li>
-                            <li>
-                              Bear such a fee in mind before you enter into a margin position.
-                            </li>
+                            <li>{t("Smartcoin:marginCallFeeDetail1")}</li>
+                            <li>{t("Smartcoin:marginCallFeeDetail2")}</li>
                           </ul>
                         }
-                        tooltip={"More about smartcoin margin call fees"}
+                        tooltip={t("Smartcoin:moreAboutMarginCallFee")}
                       />
                     ) : null}
 
@@ -1369,63 +1318,37 @@ export default function Smartcoin(properties) {
                     fullBitassetInfo.options.extensions &&
                     fullBitassetInfo.options.extensions.black_swan_response_method ? (
                       <CardRow
-                        title={"BSRM"}
+                        title={t("Smartcoin:BSRM")}
                         button={fullBitassetInfo.options.extensions.black_swan_response_method}
-                        dialogtitle={`${assetInfo.s} black swan response method`}
+                        dialogtitle={t("Smartcoin:BSRMOfAsset", { asset: assetInfo.s })}
                         dialogdescription={
                           <ScrollArea className="h-72">
                             <ul className="ml-2 list-disc [&>li]:mt-2 text-sm">
+                              <li>{t("Smartcoin:BSRMDetail1")}</li>
                               <li>
-                                This is the method chosen by the smartcoin owner for how to handle
-                                "black swan" events, such as the undercollateralization of the
-                                smartcoin.
+                                <b>{t("Smartcoin:globalSettlement")}</b>
+                                <br />
+                                {t("Smartcoin:globalSettlementDetail")}
                               </li>
                               <li>
-                                <b>global_settlement</b> (the default method)
+                                <b>{t("Smartcoin:noSettlement")}</b>
                                 <br />
-                                All debt positions are closed, all or some collateral is moved to a
-                                global-settlement fund.
-                                <br />
-                                Debt asset holders can claim collateral via force-settlement.
-                                <br />
-                                It is not allowed to create new debt positions when the fund is not
-                                empty
+                                {t("Smartcoin:noSettlementDetail")}
                               </li>
                               <li>
-                                <b>no_settlement</b> aka "Global Settlement Protection"
+                                <b>{t("Smartcoin:individualSettlementToFund")}</b>
                                 <br />
-                                No debt position is closed, and the derived settlement price is
-                                dynamically capped at the collateral ratio of the debt position with
-                                the least collateral ratio so that all debt positions are able to
-                                pay off their debt when being margin called or force-settled.
-                                <br />
-                                Able to adjust existing debt positions or create new debt positions.
+                                {t("Smartcoin:individualSettlementToFundDetail")}
                               </li>
                               <li>
-                                <b>individual_settlement_to_fund</b>
+                                <b>{t("Smartcoin:individualSettlementToOrder")}</b>
                                 <br />
-                                Only the undercollateralized debt positions are closed and their
-                                collateral is moved to a fund which can be claimed via
-                                force-settlement. The derived settlement price is capped at the
-                                fund's collateral ratio so that remaining debt positions will not be
-                                margin called or force-settled at a worse price.
-                                <br />
-                                Able to adjust existing debt positions or create new debt positions.
-                              </li>
-                              <li>
-                                <b>individual_settlement_to_order</b>
-                                <br />
-                                Only the undercollateralized debt positions are closed and their
-                                collateral is moved to a limit order on the order book which can be
-                                bought. The derived settlement price is NOT capped, which means
-                                remaining debt positions could be margin called at a worse price.
-                                <br />
-                                Able to adjust existing debt positions or create new debt positions.
+                                {t("Smartcoin:individualSettlementToOrderDetail")}
                               </li>
                             </ul>
                           </ScrollArea>
                         }
-                        tooltip={"More about the black swan response method"}
+                        tooltip={t("Smartcoin:moreAboutBSRM")}
                       />
                     ) : null}
 
@@ -1433,17 +1356,15 @@ export default function Smartcoin(properties) {
                     fullBitassetInfo.options.extensions &&
                     fullBitassetInfo.options.extensions.initial_collateral_ratio ? (
                       <CardRow
-                        title={"Manual ICR"}
+                        title={t("Smartcoin:manualICR")}
                         button={fullBitassetInfo.options.extensions.initial_collateral_ratio}
-                        dialogtitle={`${assetInfo.s} manually configured initial collateral ratio`}
+                        dialogtitle={t("Smartcoin:manualICROfAsset", { asset: assetInfo.s })}
                         dialogdescription={
                           <ul className="ml-2 list-disc [&>li]:mt-2">
-                            <li>
-                              This is the initial collateral ratio (ICR) set by the asset owner.
-                            </li>
+                            <li>{t("Smartcoin:manualICRDetail")}</li>
                           </ul>
                         }
-                        tooltip={"More about manual ICR"}
+                        tooltip={t("Smartcoin:moreAboutManualICR")}
                       />
                     ) : null}
 
@@ -1451,17 +1372,15 @@ export default function Smartcoin(properties) {
                     fullBitassetInfo.options.extensions &&
                     fullBitassetInfo.options.extensions.maintenance_collateral_ratio ? (
                       <CardRow
-                        title={"Manual MCR"}
+                        title={t("Smartcoin:manualMCR")}
                         button={fullBitassetInfo.options.extensions.maintenance_collateral_ratio}
-                        dialogtitle={`${assetInfo.s} manually configured minimum collateral ratio`}
+                        dialogtitle={t("Smartcoin:manualMCROfAsset", { asset: assetInfo.s })}
                         dialogdescription={
                           <ul className="ml-2 list-disc [&>li]:mt-2">
-                            <li>
-                              This is the minimum collateral ratio (MCR) set by the asset owner.
-                            </li>
+                            <li>{t("Smartcoin:manualMCRDetail")}</li>
                           </ul>
                         }
-                        tooltip={"More about manual MCR"}
+                        tooltip={t("Smartcoin:moreAboutManualMCR")}
                       />
                     ) : null}
 
@@ -1469,17 +1388,15 @@ export default function Smartcoin(properties) {
                     fullBitassetInfo.options.extensions &&
                     fullBitassetInfo.options.extensions.maximum_short_squeeze_ratio ? (
                       <CardRow
-                        title={"Manual MSSR"}
+                        title={t("Smartcoin:manualMSSR")}
                         button={fullBitassetInfo.options.extensions.maximum_short_squeeze_ratio}
-                        dialogtitle={`${assetInfo.s} manually configured maximum short squeeze ratio`}
+                        dialogtitle={t("Smartcoin:manualMSSROfAsset", { asset: assetInfo.s })}
                         dialogdescription={
                           <ul className="ml-2 list-disc [&>li]:mt-2">
-                            <li>
-                              This is the maximum short squeeze ratio (MSSR) set by the asset owner.
-                            </li>
+                            <li>{t("Smartcoin:manualMSSRDetail")}</li>
                           </ul>
                         }
-                        tooltip={"More about manual MSSR"}
+                        tooltip={t("Smartcoin:moreAboutManualMSSR")}
                       />
                     ) : null}
                   </div>
@@ -1488,20 +1405,20 @@ export default function Smartcoin(properties) {
             </>
           ) : null}
 
-          <Label className="pb-0">Asset flags</Label>
+          <Label className="pb-0">{t("Smartcoin:assetFlags")}</Label>
           <br />
           {assetInfoFlags && assetInfoFlags.length ? (
             assetInfoFlags
           ) : (
-            <span className="text-sm">No flags enabled</span>
+            <span className="text-sm">{t("Smartcoin:noFlagsEnabled")}</span>
           )}
           <br />
-          <Label>Asset permissions</Label>
+          <Label>{t("Smartcoin:assetPermissions")}</Label>
           <br />
           {assetPermissions && assetPermissions.length ? (
             assetPermissions
           ) : (
-            <span className="text-sm">No permissions enabled</span>
+            <span className="text-sm">{t("Smartcoin:noPermissionsEnabled")}</span>
           )}
         </CardContent>
       </Card>
@@ -1621,7 +1538,7 @@ export default function Smartcoin(properties) {
             hyperlink={`https://blocksights.info/#/accounts/${userID}`}
           />
         </div>
-        <div className="col-span-2 ml-1">{timeAgo(date)}</div>
+        <div className="col-span-2 ml-1">{timeAgo(date, t)}</div>
         <div className="col-span-2">{coreExchangeRate}</div>
         <div className="col-span-2">{feedPrice}</div>
         <div className="col-span-1">{feedObj.initial_collateral_ratio}</div>
@@ -1637,18 +1554,15 @@ export default function Smartcoin(properties) {
         {marketSearch && invalidUrlParams ? (
           <Card>
             <CardHeader>
-              <CardTitle>⚠️ Invalid smartcoin id provided</CardTitle>
-              <CardDescription>
-                Unfortunately an invalid smartcoin id has been provided; unable to proceed with
-                smartcoin issuance.
-              </CardDescription>
+              <CardTitle>{t("Smartcoin:invalidSmartcoinIdTitle")}</CardTitle>
+              <CardDescription>{t("Smartcoin:invalidSmartcoinIdDescription")}</CardDescription>
             </CardHeader>
             <CardContent>
-              Please{" "}
+              {t("Smartcoin:invalidSmartcoinIdContent1")}{" "}
               <a className="text-blue-500" href="/smartcoins/index.html">
-                return to the overview
+                {t("Smartcoin:invalidSmartcoinIdContent2")}
               </a>{" "}
-              and select another bitasset to proceed.
+              {t("Smartcoin:invalidSmartcoinIdContent3")}
             </CardContent>
           </Card>
         ) : null}
@@ -1656,13 +1570,11 @@ export default function Smartcoin(properties) {
         {!invalidUrlParams && parsedBitasset ? (
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle>💵 Collateral debt position form</CardTitle>
+              <CardTitle>{t("Smartcoin:CDPFormTitle")}</CardTitle>
               <CardDescription>
-                You can use this form to borrow this smartcoin into existence, given sufficient
-                collateral.
+                {t("Smartcoin:CDPFormDescription1")}
                 <br />
-                Thoroughly research assets before continuing, know your risk exposure and
-                tolerances.
+                {t("Smartcoin:CDPFormDescription2")}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -1678,7 +1590,7 @@ export default function Smartcoin(properties) {
                     name="account"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Borrowing account</FormLabel>
+                        <FormLabel>{t("Smartcoin:borrowingAccount")}</FormLabel>
                         <FormControl>
                           <div className="grid grid-cols-8 mt-4">
                             <div className="col-span-1 ml-5">
@@ -1710,7 +1622,6 @@ export default function Smartcoin(properties) {
                             </div>
                           </div>
                         </FormControl>
-                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -1720,7 +1631,7 @@ export default function Smartcoin(properties) {
                     name="borrowAsset"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Asset to borrow</FormLabel>
+                        <FormLabel>{t("Smartcoin:assetToBorrow")}</FormLabel>
                         <FormControl>
                           <span className="grid grid-cols-8">
                             <span className="col-span-6">
@@ -1737,13 +1648,12 @@ export default function Smartcoin(properties) {
                             <span className="col-span-2">
                               <a href="/smartcoins/index.html">
                                 <Button className="ml-3" variant="outline">
-                                  Change asset
+                                  {t("Smartcoin:changeAssetButton")}
                                 </Button>
                               </a>
                             </span>
                           </span>
                         </FormControl>
-                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -1751,8 +1661,10 @@ export default function Smartcoin(properties) {
                   <div className="grid grid-cols-2 gap-3 mt-3">
                     <Card>
                       <CardHeader className="pb-3">
-                        <CardTitle>Current feed price</CardTitle>
-                        <CardDescription>Calculated from multiple feeds</CardDescription>
+                        <CardTitle>{t("Smartcoin:currentFeedPriceTitle")}</CardTitle>
+                        <CardDescription>
+                          {t("Smartcoin:currentFeedPriceDescription")}
+                        </CardDescription>
                       </CardHeader>
                       <CardContent>
                         <span className="grid grid-cols-2">
@@ -1795,9 +1707,9 @@ export default function Smartcoin(properties) {
                     </Card>
                     <Card>
                       <CardHeader className="pb-3">
-                        <CardTitle>Your margin call price</CardTitle>
+                        <CardTitle>{t("Smartcoin:marginCallPriceTitle")}</CardTitle>
                         <CardDescription>
-                          Your calculated collateral liquidation rate
+                          {t("Smartcoin:marginCallPriceDescription")}
                         </CardDescription>
                       </CardHeader>
                       <CardContent>
@@ -1850,15 +1762,19 @@ export default function Smartcoin(properties) {
                     name="debtAmount"
                     render={({ field }) => (
                       <FormItem className="mt-2">
-                        <FormLabel>Debt amount</FormLabel>
+                        <FormLabel>{t("Smartcoin:debtAmount")}</FormLabel>
                         <FormDescription style={{ marginTop: 0, paddingTop: 0 }}>
                           <span className="grid grid-cols-3 mt-0 pt-0">
                             <span className="col-span-2 mt-0 pt-0">
-                              The amount of {parsedAsset ? parsedAsset.s : "?"} you intend to borrow
-                              into existence.
+                              {t("Smartcoin:debtAmountDescription", {
+                                asset: parsedAsset ? parsedAsset.s : "?",
+                              })}
                             </span>
                             <span className="col-span-1 text-right">
-                              Balance: {debtAssetHoldings ?? ""} {parsedAsset ? parsedAsset.s : ""}
+                              {t("Smartcoin:debtAmountBalance", {
+                                balance: debtAssetHoldings ?? "",
+                                asset: parsedAsset ? parsedAsset.s : "",
+                              })}
                             </span>
                           </span>
                         </FormDescription>
@@ -1886,14 +1802,14 @@ export default function Smartcoin(properties) {
                                 </HoverCardTrigger>
                                 <HoverCardContent className="w-40 text-sm text-center pt-1 pb-1">
                                   {debtLock === "editable"
-                                    ? "Lock debt amount"
-                                    : "Debt amount locked"}
+                                    ? t("Smartcoin:lockDebtAmount")
+                                    : t("Smartcoin:debtAmountLocked")}
                                 </HoverCardContent>
                               </HoverCard>
                             </span>
                             <span className="col-span-7">
                               <Input
-                                label={`Amount of debt to issue`}
+                                label={t("Smartcoin:amountOfDebtToIssue")}
                                 value={
                                   debtAmount
                                     ? `${debtAmount} ${parsedAsset.s}`
@@ -1913,11 +1829,11 @@ export default function Smartcoin(properties) {
                                     }}
                                     className="inline-block border border-grey rounded pl-4 pb-1 pr-4"
                                   >
-                                    <Label>Change debt amount</Label>
+                                    <Label>{t("Smartcoin:changeDebtAmount")}</Label>
                                   </span>
                                 </PopoverTrigger>
                                 <PopoverContent>
-                                  <Label>Provide a new debt amount</Label>
+                                  <Label>{t("Smartcoin:provideNewDebtAmount")}</Label>{" "}
                                   <Input
                                     placeholder={debtAmount}
                                     className="mb-2 mt-1"
@@ -1944,7 +1860,6 @@ export default function Smartcoin(properties) {
                             </span>
                           </span>
                         </FormControl>
-                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -1954,16 +1869,19 @@ export default function Smartcoin(properties) {
                     name="collateralAmount"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Collateral amount</FormLabel>
+                        <FormLabel>{t("Smartcoin:collateralAmount")}</FormLabel>
                         <FormDescription style={{ marginTop: 0, paddingTop: 0 }}>
                           <span className="grid grid-cols-3 mt-0 pt-0">
                             <span className="col-span-2 mt-0 pt-0">
-                              The amount of {parsedCollateralAsset.s} backing collateral you'll need
-                              to provide.
+                              {t("Smartcoin:collateralAmountDescription", {
+                                asset: parsedCollateralAsset ? parsedCollateralAsset.s : "?",
+                              })}
                             </span>
                             <span className="col-span-1 text-right">
-                              Balance: {collateralAssetHoldings ?? 0}{" "}
-                              {parsedCollateralAsset ? parsedCollateralAsset.s : ""}
+                              {t("Smartcoin:collateralAmountBalance", {
+                                balance: collateralAssetHoldings ?? 0,
+                                asset: parsedCollateralAsset ? parsedCollateralAsset.s : "",
+                              })}
                             </span>
                           </span>
                         </FormDescription>
@@ -1991,14 +1909,14 @@ export default function Smartcoin(properties) {
                                 </HoverCardTrigger>
                                 <HoverCardContent className="w-40 text-sm text-center pt-1 pb-1">
                                   {collateralLock === "editable"
-                                    ? "Lock collateral amount"
-                                    : "Collateral amount locked"}
+                                    ? t("Smartcoin:lockCollateralAmount")
+                                    : t("Smartcoin:collateralAmountLocked")}
                                 </HoverCardContent>
                               </HoverCard>
                             </span>
                             <span className="col-span-7">
                               <Input
-                                label={`Amount of collateral to commit`}
+                                label={t("Smartcoin:amountOfCollateralToCommit")}
                                 placeholder={
                                   collateralAmount && collateralAmount > 0
                                     ? `${collateralAmount} ${parsedCollateralAsset.s}`
@@ -2018,11 +1936,11 @@ export default function Smartcoin(properties) {
                                     }}
                                     className="inline-block border border-grey rounded pl-4 pb-1 pr-4"
                                   >
-                                    <Label>Change collateral amount</Label>
+                                    <Label>{t("Smartcoin:changeCollateralAmount")}</Label>
                                   </span>
                                 </PopoverTrigger>
                                 <PopoverContent>
-                                  <Label>Provide a new collateral amount</Label>
+                                  <Label>{t("Smartcoin:provideNewCollateralAmount")}</Label>{" "}
                                   <Input
                                     placeholder={collateralAmount}
                                     className="mb-2 mt-1"
@@ -2059,15 +1977,16 @@ export default function Smartcoin(properties) {
                     name="ratioValue"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Ratio of collateral to debt</FormLabel>
+                        <FormLabel>{t("Smartcoin:collateralDebtRatio")}</FormLabel>
                         <FormDescription>
                           <span className="grid grid-cols-3 mt-0 pt-0">
                             <span className="col-span-2 mt-0 pt-0">
-                              The level of collateralization you wish to maintain for this margin
-                              position.
+                              {t("Smartcoin:collateralDebtRatioDescription")}
                             </span>
                             <span className="col-span-1 text-right">
-                              Min: {parsedBitasset.mcr / 1000}
+                              {t("Smartcoin:collateralDebtRatioMin", {
+                                min: parsedBitasset.mcr / 1000,
+                              })}
                             </span>
                           </span>
                         </FormDescription>
@@ -2099,15 +2018,15 @@ export default function Smartcoin(properties) {
                                 </HoverCardTrigger>
                                 <HoverCardContent className="w-40 text-sm text-center pt-1 pb-1">
                                   {ratioLock === "editable"
-                                    ? "Lock the ratio value"
-                                    : "Unlock ratio value"}
+                                    ? t("Smartcoin:lockRatioValue")
+                                    : t("Smartcoin:unlockRatioValue")}
                                 </HoverCardContent>
                               </HoverCard>
                             </span>
                             <span className="col-span-7">
                               {ratioValue ? (
                                 <Input
-                                  label={`Ratio of collateral to debt`}
+                                  label={t("Smartcoin:ratioOfCollateralToDebt")}
                                   placeholder={ratioValue}
                                   className="mb-3"
                                   disabled
@@ -2115,7 +2034,7 @@ export default function Smartcoin(properties) {
                                 />
                               ) : (
                                 <Input
-                                  label={`Ratio of collateral to debt`}
+                                  label={t("Smartcoin:ratioOfCollateralToDebt")}
                                   className="mb-3"
                                   disabled
                                   readOnly
@@ -2152,11 +2071,11 @@ export default function Smartcoin(properties) {
                                     }}
                                     className="inline-block border border-grey rounded pl-4 pb-1 pr-4"
                                   >
-                                    <Label>Change ratio value</Label>
+                                    <Label>{t("Smartcoin:changeRatioValue")}</Label>
                                   </span>
                                 </PopoverTrigger>
                                 <PopoverContent>
-                                  <Label>Provide a new ratio</Label>
+                                  <Label>{t("Smartcoin:provideNewRatio")}</Label>{" "}
                                   <Input
                                     placeholder={ratioValue}
                                     className="mb-2 mt-1"
@@ -2186,8 +2105,9 @@ export default function Smartcoin(properties) {
                         </FormControl>
                         {ratioValue && parsedBitasset && ratioValue < parsedBitasset.mcr / 1000 ? (
                           <FormMessage>
-                            Warning: Your debt collateral ratio is below the minimum collateral
-                            ratio of {parsedBitasset.mcr / 1000}
+                            {t("Smartcoin:debtCollateralRatioWarning", {
+                              min: parsedBitasset.mcr / 1000,
+                            })}
                           </FormMessage>
                         ) : null}
                       </FormItem>
@@ -2210,10 +2130,9 @@ export default function Smartcoin(properties) {
                                 setTCREnabled(!tcrEnabled);
                               }}
                             />
-                            Enable Target Collateral Ratio
+                            {t("Smartcoin:enableTargetCollateralRatio")}{" "}
                           </>
                         </FormControl>
-                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -2223,15 +2142,16 @@ export default function Smartcoin(properties) {
                       name="tcrValue"
                       render={({ field }) => (
                         <FormItem className="mt-0">
-                          <FormLabel>Target collateral ratio value</FormLabel>
+                          <FormLabel>{t("Smartcoin:targetCollateralRatioValue")}</FormLabel>
                           <FormDescription>
                             <span className="grid grid-cols-4 mt-0 pt-0">
                               <span className="col-span-3 mt-0 pt-0">
-                                Provide a ratio for the blockchain to automatically maintain through
-                                collateral sales.
+                                {t("Smartcoin:targetCollateralRatioDescription")}
                               </span>
                               <span className="col-span-1 text-right">
-                                Min: {parsedBitasset.mcr / 1000}
+                                {t("Smartcoin:targetCollateralRatioMin", {
+                                  min: parsedBitasset.mcr / 1000,
+                                })}
                               </span>
                             </span>
                           </FormDescription>
@@ -2239,7 +2159,7 @@ export default function Smartcoin(properties) {
                             <span className="grid grid-cols-12">
                               <span className="col-span-8">
                                 <Input
-                                  label={`Ratio of collateral to debt`}
+                                  label={t("Smartcoin:ratioOfCollateralToDebt")}
                                   placeholder={tcrValue}
                                   disabled
                                   readOnly
@@ -2265,11 +2185,11 @@ export default function Smartcoin(properties) {
                                       }}
                                       className="inline-block border border-grey rounded pl-4 pb-1 pr-4"
                                     >
-                                      <Label>Change TCR value</Label>
+                                      <Label>{t("Smartcoin:changeTCRValue")}</Label>
                                     </span>
                                   </PopoverTrigger>
                                   <PopoverContent>
-                                    <Label>Provide a new target collateral ratio</Label>
+                                    <Label>{t("Smartcoin:provideNewTCR")}</Label>
                                     <Input
                                       placeholder={tcrValue}
                                       className="mb-2 mt-1"
@@ -2286,7 +2206,6 @@ export default function Smartcoin(properties) {
                               </span>
                             </span>
                           </FormControl>
-                          <FormMessage />
                         </FormItem>
                       )}
                     />
@@ -2297,21 +2216,19 @@ export default function Smartcoin(properties) {
                     name="networkFee"
                     render={({ field }) => (
                       <FormItem className="mb-1 mt-3">
-                        <FormLabel>Network broadcast fee</FormLabel>
+                        <FormLabel>{t("Smartcoin:networkBroadcastFee")}</FormLabel>
                         <FormDescription>
-                          The fee required to broadcast your call order update operation onto the
-                          blockchain
+                          {t("Smartcoin:networkBroadcastFeeDescription")}
                         </FormDescription>
                         <FormControl>
                           <Input disabled placeholder={fee ? `${fee} BTS` : ""} readOnly />
                         </FormControl>
-                        <FormMessage />
                       </FormItem>
                     )}
                   />
 
                   <Button className="mt-5 mb-3" type="submit">
-                    Submit
+                    {t("Smartcoin:submit")}
                   </Button>
                 </form>
               </Form>
@@ -2322,13 +2239,9 @@ export default function Smartcoin(properties) {
         {!invalidUrlParams && !parsedBitasset ? (
           <Card>
             <CardHeader>
-              <CardTitle>💵 Collateral debt position form</CardTitle>
+              <CardTitle>{t("Smartcoin:collateralDebtPositionFormTitle")}</CardTitle>
               <CardDescription>
-                You can use this form to borrow this smartcoin into existence, given sufficient
-                collateral.
-                <br />
-                Thoroughly research assets before continuing, know your risk exposure and
-                tolerances.
+                {t("Smartcoin:collateralDebtPositionFormDescription")}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -2339,7 +2252,7 @@ export default function Smartcoin(properties) {
                     name="account"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Account</FormLabel>
+                        <FormLabel>{t("Smartcoin:account")}</FormLabel>{" "}
                         <FormControl>
                           <Input
                             disabled
@@ -2359,9 +2272,9 @@ export default function Smartcoin(properties) {
                       <FormItem>
                         <FormLabel>
                           <span className="grid grid-cols-2 mt-2">
-                            <span className="col-span-1 mt-1">Asset to borrow</span>
+                            <span className="col-span-1 mt-1">{t("Smartcoin:assetToBorrow")}</span>
                             <span className="col-span-1 text-right">
-                              <Badge>Change asset</Badge>
+                              <Badge>{t("Smartcoin:changeAsset")}</Badge>
                             </span>
                           </span>
                         </FormLabel>
@@ -2386,7 +2299,6 @@ export default function Smartcoin(properties) {
                         <FormControl>
                           <Input disabled className="mb-3 mt-3" placeholder="" readOnly />
                         </FormControl>
-                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -2396,16 +2308,10 @@ export default function Smartcoin(properties) {
                     name="callPrice"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Your margin call price</FormLabel>
+                        <FormLabel>{t("Smartcoin:yourCallPrice")}</FormLabel>{" "}
                         <FormControl>
-                          <Input
-                            disabled
-                            className="mb-3 mt-3"
-                            value={`call price placeholder`}
-                            readOnly
-                          />
+                          <Input disabled className="mb-3 mt-3" value="" readOnly />
                         </FormControl>
-                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -2419,9 +2325,11 @@ export default function Smartcoin(properties) {
                         <FormDescription style={{ marginTop: 0, paddingTop: 0 }}>
                           <span className="grid grid-cols-3 mt-0 pt-0">
                             <span className="col-span-2 mt-0 pt-0 text-sm">
-                              The amount of ? you intend to borrow into existence.
+                              {t("Smartcoin:amountToBorrowDescription")}
                             </span>
-                            <span className="col-span-1 text-right text-sm">Available: 0 ?</span>
+                            <span className="col-span-1 text-right text-sm">
+                              {t("Smartcoin:availableToBorrow", { available: 0 })}
+                            </span>
                           </span>
                         </FormDescription>
                         <FormControl>
@@ -2432,20 +2340,13 @@ export default function Smartcoin(properties) {
                               </Toggle>
                             </span>
                             <span className="col-span-9">
-                              <Input
-                                label={`Amount of debt to issue`}
-                                placeholder="0"
-                                className="mb-3"
-                                disabled
-                                readOnly
-                              />
+                              <Input placeholder="0" className="mb-3" disabled readOnly />
                             </span>
                             <span className="col-span-2 ml-3">
-                              <Button variant="outline">Change</Button>
+                              <Button variant="outline">{t("Smartcoin:change")}</Button>{" "}
                             </span>
                           </span>
                         </FormControl>
-                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -2455,13 +2356,15 @@ export default function Smartcoin(properties) {
                     name="collateralAmount"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Collateral amount</FormLabel>
-                        <FormDescription style={{ marginTop: 0, paddingTop: 0 }}>
+                        <FormLabel>{t("Smartcoin:collateralAmountPlaceholder")}</FormLabel>
+                        <FormDescription className="mt-0 pt-0">
                           <span className="grid grid-cols-3 mt-0 pt-0">
                             <span className="col-span-2 mt-0 pt-0 text-sm">
-                              The amount of ? backing collateral you'll need to provide.
+                              {t("Smartcoin:collateralAmountDescriptionPlaceholder")}
                             </span>
-                            <span className="col-span-1 text-right text-sm">Available: 0 ?</span>
+                            <span className="col-span-1 text-right text-sm">
+                              {t("Smartcoin:availableCollateral", { available: 0 })}
+                            </span>
                           </span>
                         </FormDescription>
                         <FormControl>
@@ -2472,20 +2375,13 @@ export default function Smartcoin(properties) {
                               </Toggle>
                             </span>
                             <span className="col-span-9">
-                              <Input
-                                label={`Amount of collateral to commit`}
-                                placeholder="0"
-                                className="mb-3"
-                                disabled
-                                readOnly
-                              />
+                              <Input placeholder="0" className="mb-3" disabled readOnly />
                             </span>
                             <span className="col-span-2 ml-3">
-                              <Button variant="outline">Change</Button>
+                              <Button variant="outline">{t("Smartcoin:change")}</Button>
                             </span>
                           </span>
                         </FormControl>
-                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -2495,7 +2391,7 @@ export default function Smartcoin(properties) {
                     name="ratioValue"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Ratio of collateral to debt</FormLabel>
+                        <FormLabel>{t("Smartcoin:ratioOfCollateralToDebt")}</FormLabel>{" "}
                         <FormControl>
                           <span className="grid grid-cols-12">
                             <span className="col-span-1">
@@ -2505,7 +2401,6 @@ export default function Smartcoin(properties) {
                             </span>
                             <span className="col-span-11">
                               <Input
-                                label={`Ratio of collateral to debt`}
                                 value={ratioValue}
                                 placeholder={ratioValue}
                                 className="mb-3"
@@ -2515,7 +2410,6 @@ export default function Smartcoin(properties) {
                             </span>
                           </span>
                         </FormControl>
-                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -2528,7 +2422,7 @@ export default function Smartcoin(properties) {
                         htmlFor="terms1"
                         className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                       >
-                        Enable Target Collateral Ratio
+                        {t("Smartcoin:enableTargetCollateralRatio")}
                       </label>
                     </span>
                   </span>
@@ -2538,15 +2432,13 @@ export default function Smartcoin(properties) {
                     name="networkFee"
                     render={({ field }) => (
                       <FormItem className="mb-1 mt-3">
-                        <FormLabel>Network broadcast fee</FormLabel>
+                        <FormLabel>{t("Smartcoin:networkBroadcastFee")}</FormLabel>
                         <FormDescription>
-                          The fee required to broadcast your call order update operation onto the
-                          blockchain
+                          {t("Smartcoin:networkBroadcastFeeDescription")}
                         </FormDescription>
                         <FormControl>
                           <Input disabled readOnly />
                         </FormControl>
-                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -2570,18 +2462,19 @@ export default function Smartcoin(properties) {
             <div className="grid grid-cols-1 mt-2 mb-2">
               <Card>
                 <CardHeader className="pb-3">
-                  <CardTitle>{finalAsset.symbol} settlement fund</CardTitle>
+                  <CardTitle>
+                    {t("Smartcoin:settlementFundTitle", { symbol: finalAsset.symbol })}
+                  </CardTitle>
                   <CardDescription>
-                    This smartcoin currently has a settlement fund and so is likely in a form of
-                    global settlement.
+                    {t("Smartcoin:settlementFundDescription")}
                     <br />
-                    Borrowing may be unavailable until settlement is complete.
+                    {t("Smartcoin:borrowingUnavailable")}{" "}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-4">
                     <div className="col-span-1">
-                      Fund
+                      {t("Smartcoin:fund")}
                       <br />
                       <span className="text-sm">
                         {settlementFund.finalSettlementFund}
@@ -2590,8 +2483,7 @@ export default function Smartcoin(properties) {
                       </span>
                     </div>
                     <div className="col-span-1">
-                      Settlement price
-                      <br />
+                      {t("Smartcoin:settlementPrice")} <br />
                       <span className="text-sm">
                         {settlementFund.finalSettlementPrice}
                         <br />
@@ -2599,14 +2491,14 @@ export default function Smartcoin(properties) {
                       </span>
                     </div>
                     <div className="col-span-1">
-                      Current price
+                      {t("Smartcoin:currentPrice")}
                       <br />
                       <span className="text-sm">
                         {(1 / currentFeedSettlementPrice).toFixed(parsedAsset.p)}
                       </span>
                     </div>
                     <div className="col-span-1">
-                      Funding ratio
+                      {t("Smartcoin:fundingRatio")}
                       <br />
                       <span className="text-sm">
                         {(
@@ -2629,7 +2521,7 @@ export default function Smartcoin(properties) {
                   </div>
                   <a href={`/settlement/index.html?id=${finalAsset.id}`}>
                     <Button className="mt-3 pb-2">
-                      Bid on {finalAsset.symbol}'s settlement fund
+                      {t("Smartcoin:bidOnSettlementFund", { symbol: finalAsset.symbol })}
                     </Button>
                   </a>
                 </CardContent>
@@ -2643,17 +2535,19 @@ export default function Smartcoin(properties) {
             <div className="grid grid-cols-1 mt-2 mb-2">
               <Card>
                 <CardHeader className="pb-3">
-                  <CardTitle>{finalAsset.symbol} individual settlement fund</CardTitle>
+                  <CardTitle>
+                    {t("Smartcoin:individualSettlementFund", { symbol: finalAsset.symbol })}
+                  </CardTitle>{" "}
                   <CardDescription>
-                    This smartcoin currently has an individual settlement fund.
+                    {t("Smartcoin:individualSettlementFundDescription")}
                     <br />
-                    These funds can be bid on.
+                    {t("Smartcoin:fundsCanBeBidOn")}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-4">
                     <div className="col-span-1">
-                      Fund
+                      {t("Smartcoin:fund")}
                       <br />
                       <span className="text-sm">
                         {individualSettlementFund._fund}
@@ -2662,7 +2556,7 @@ export default function Smartcoin(properties) {
                       </span>
                     </div>
                     <div className="col-span-1">
-                      Debt
+                      {t("Smartcoin:debt2")}
                       <br />
                       <span className="text-sm">
                         {individualSettlementFund._debt}
@@ -2671,14 +2565,14 @@ export default function Smartcoin(properties) {
                       </span>
                     </div>
                     <div className="col-span-1">
-                      Feed price
+                      {t("Smartcoin:feedPrice")}
                       <br />
                       <span className="text-sm">
                         {currentFeedSettlementPrice.toFixed(parsedAsset.p)}
                       </span>
                     </div>
                     <div className="col-span-1">
-                      Funding ratio
+                      {t("Smartcoin:fundingRatio")}
                       <br />
                       <span className="text-sm">
                         {(
@@ -2703,7 +2597,7 @@ export default function Smartcoin(properties) {
                   </div>
                   <a href={`/settlement/index.html?id=${finalAsset.id}`}>
                     <Button className="mt-3 pb-2">
-                      Bid on {finalAsset.symbol}'s settlement fund
+                      {t("Smartcoin:bidOnSettlementFund", { symbol: finalAsset.symbol })}
                     </Button>
                   </a>
                 </CardContent>
@@ -2731,38 +2625,38 @@ export default function Smartcoin(properties) {
             <CardHeader className="pb-2">
               <CardTitle>
                 <div className="grid grid-cols-8">
-                  <div className="col-span-6">About smartcoin asset</div>
+                  <div className="col-span-6">{t("Smartcoin:aboutSmartcoinAsset")}</div>
                   <div className="col-span-2 text-right">
                     <Button variant="outline" className="h-5">
-                      View JSON
+                      {t("Smartcoin:viewJson")}
                     </Button>
                   </div>
                 </div>
               </CardTitle>
               <CardDescription>
-                Use this information to improve your understanding
+                {t("Smartcoin:aboutSmartcoinAssetDescription")}
                 <br />
-                Thoroughly do your own research before proceeding
+                {t("Smartcoin:doYourOwnResearch")}
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2">
                 <div className="col-span-1">
-                  <Label>General asset info</Label>
+                  <Label>{t("Smartcoin:generalAssetInfo")}</Label>
                 </div>
                 <div className="col-span-1 text-right">
                   <Button variant="outline" classnamecontents="h-5 mb-2">
-                    View asset on blocksights.info
+                    {t("Smartcoin:viewAssetOnBlocksights")}
                   </Button>
                 </div>
               </div>
               <div className="grid grid-cols-11 gap-1 w-full text-sm">
                 <div className="col-span-5">
                   <div className="grid grid-cols-1 gap-1 w-full text-sm">
-                    <EmptyRow title={"Issuer"} button="" />
-                    <EmptyRow title={"Maximum supply"} button="" />
-                    <EmptyRow title={"Min quantity"} button="" />
-                    <EmptyRow title={"Precision"} button="" />
+                    <EmptyRow title={t("Smartcoin:issuer")} button="" />
+                    <EmptyRow title={t("Smartcoin:maximumSupply")} button="" />
+                    <EmptyRow title={t("Smartcoin:minQuantity")} button="" />
+                    <EmptyRow title={t("Smartcoin:precision")} button="" />
                   </div>
                 </div>
                 <div className="col-span-1 flex justify-center items-center">
@@ -2770,20 +2664,20 @@ export default function Smartcoin(properties) {
                 </div>
                 <div className="col-span-5">
                   <div className="grid grid-cols-1 gap-1 w-full text-sm">
-                    <EmptyRow title={"Market fee"} button="" />
-                    <EmptyRow title={"Taker fee percent"} button="" />
-                    <EmptyRow title={"Reward percent"} button="" />
+                    <EmptyRow title={t("Smartcoin:marketFee")} button="" />
+                    <EmptyRow title={t("Smartcoin:takerFeePercent")} button="" />
+                    <EmptyRow title={t("Smartcoin:rewardPercent")} button="" />
                   </div>
                 </div>
               </div>
 
               <div className="grid grid-cols-2">
                 <div className="col-span-1">
-                  <Label>Smartcoin info</Label>
+                  <Label>{t("Smartcoin:smartcoinInfo")}</Label>
                 </div>
                 <div className="col-span-1 text-right">
                   <Button variant="outline" classnamecontents="h-5 mb-2">
-                    View bitasset on blocksights.info
+                    {t("Smartcoin:viewBitassetOnBlocksights")}
                   </Button>
                 </div>
               </div>
@@ -2791,12 +2685,12 @@ export default function Smartcoin(properties) {
               <div className="grid grid-cols-11 gap-1 w-full text-sm">
                 <div className="col-span-5">
                   <div className="grid grid-cols-1 gap-1 w-full text-sm">
-                    <EmptyRow title={"Collateral asset"} button="" />
-                    <EmptyRow title={"MCR"} button="" />
-                    <EmptyRow title={"MSSR"} button="" />
-                    <EmptyRow title={"ICR"} button="" />
-                    <EmptyRow title={"Feed qty"} button="" />
-                    <EmptyRow title={"Settlement offset"} button="" />
+                    <EmptyRow title={t("Smartcoin:collateralAsset")} button="" />
+                    <EmptyRow title={t("Smartcoin:mcr")} button="" />
+                    <EmptyRow title={t("Smartcoin:mssr")} button="" />
+                    <EmptyRow title={t("Smartcoin:icr")} button="" />
+                    <EmptyRow title={t("Smartcoin:feedQty")} button="" />
+                    <EmptyRow title={t("Smartcoin:settlementOffset")} button="" />
                   </div>
                 </div>
                 <div className="col-span-1 flex justify-center items-center">
@@ -2804,16 +2698,16 @@ export default function Smartcoin(properties) {
                 </div>
                 <div className="col-span-5">
                   <div className="grid grid-cols-1 gap-1 w-full text-sm">
-                    <EmptyRow title={"Market fee"} button="" />
+                    <EmptyRow title={t("Smartcoin:marketFee")} button="" />{" "}
                   </div>
                 </div>
               </div>
 
-              <Label className="pb-0">Asset flags</Label>
+              <Label className="pb-0">{t("Smartcoin:assetFlags")}</Label>
               <br />
               <span className="text-sm"> </span>
               <br />
-              <Label>Asset permissions</Label>
+              <Label>{t("Smartcoin:assetPermissions")}</Label>
               <br />
               <span className="text-sm"> </span>
             </CardContent>
@@ -2837,38 +2731,38 @@ export default function Smartcoin(properties) {
             <CardHeader className="pb-2">
               <CardTitle>
                 <div className="grid grid-cols-8">
-                  <div className="col-span-6">About</div>
+                  <div className="col-span-6">{t("Smartcoin:about")}</div>
                   <div className="col-span-2 text-right">
                     <Button variant="outline" className="h-5">
-                      View JSON
+                      {t("Smartcoin:viewJson")}
                     </Button>
                   </div>
                 </div>
               </CardTitle>
               <CardDescription>
-                Use this information to improve your understanding
+                {t("Smartcoin:aboutSmartcoinAssetDescription")}
                 <br />
-                Thoroughly do your own research before proceeding
+                {t("Smartcoin:doYourOwnResearch")}
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2">
                 <div className="col-span-1">
-                  <Label>General asset info</Label>
+                  <Label>{t("Smartcoin:generalAssetInfo")}</Label>
                 </div>
                 <div className="col-span-1 text-right">
                   <Button variant="outline" classnamecontents="h-5 mb-2">
-                    View asset on blocksights.info
+                    {t("Smartcoin:viewAssetOnBlocksights")}
                   </Button>
                 </div>
               </div>
               <div className="grid grid-cols-11 gap-1 w-full text-sm">
                 <div className="col-span-5">
                   <div className="grid grid-cols-1 gap-1 w-full text-sm">
-                    <EmptyRow title={"Issuer"} button="" />
-                    <EmptyRow title={"Maximum supply"} button="" />
-                    <EmptyRow title={"Min quantity"} button="" />
-                    <EmptyRow title={"Precision"} button="" />
+                    <EmptyRow title={t("Smartcoin:issuer")} button="" />
+                    <EmptyRow title={t("Smartcoin:maximumSupply")} button="" />
+                    <EmptyRow title={t("Smartcoin:minQuantity")} button="" />
+                    <EmptyRow title={t("Smartcoin:precision")} button="" />
                   </div>
                 </div>
                 <div className="col-span-1 flex justify-center items-center">
@@ -2876,20 +2770,20 @@ export default function Smartcoin(properties) {
                 </div>
                 <div className="col-span-5">
                   <div className="grid grid-cols-1 gap-1 w-full text-sm">
-                    <EmptyRow title={"Market fee"} button="" />
-                    <EmptyRow title={"Taker fee percent"} button="" />
-                    <EmptyRow title={"Reward percent"} button="" />
+                    <EmptyRow title={t("Smartcoin:marketFee")} button="" />
+                    <EmptyRow title={t("Smartcoin:takerFeePercent")} button="" />
+                    <EmptyRow title={t("Smartcoin:rewardPercent")} button="" />
                   </div>
                 </div>
               </div>
 
               <br />
 
-              <Label className="pb-0">Asset flags</Label>
+              <Label className="pb-0">{t("Smartcoin:assetFlags")}</Label>
               <br />
               <span className="text-sm"> </span>
               <br />
-              <Label>Asset permissions</Label>
+              <Label>{t("Smartcoin:assetPermissions")}</Label>
               <br />
               <span className="text-sm"> </span>
             </CardContent>
@@ -2904,7 +2798,10 @@ export default function Smartcoin(properties) {
             userID={usr.id}
             dismissCallback={setShowDialog}
             key={`Borrowing${parsedAsset.s}with${parsedCollateralAsset.s}backingcollateral`}
-            headerText={`Borrowing ${parsedAsset.s} with ${parsedCollateralAsset.s} backing collateral`}
+            headerText={t("Smartcoin:borrowingWithBacking", {
+              asset: parsedAsset.s,
+              collateral: parsedCollateralAsset.s,
+            })}
             trxJSON={[trxJSON]}
           />
         ) : null}
@@ -2918,12 +2815,13 @@ export default function Smartcoin(properties) {
                 <div className="col-span-1">
                   <CardTitle>
                     {parsedAsset && parsedCollateralAsset
-                      ? `Order book for ${parsedAsset.s}/${parsedCollateralAsset.s}`
-                      : "Order book loading..."}
+                      ? t("Smartcoin:orderBookForAssets", {
+                          asset1: parsedAsset.s,
+                          asset2: parsedCollateralAsset.s,
+                        })
+                      : t("Smartcoin:orderBookLoading")}
                   </CardTitle>
-                  <CardDescription>
-                    Note: Only displaying the top 10 buy/sell orders
-                  </CardDescription>
+                  <CardDescription>{t("Smartcoin:orderBookNote")}</CardDescription>
                 </div>
                 <div className="col-span-1 text-right">
                   <a
@@ -2933,7 +2831,7 @@ export default function Smartcoin(properties) {
                         : ""
                     }
                   >
-                    <Button>Go to market</Button>
+                    <Button>{t("Smartcoin:goToMarket")}</Button>
                   </a>
                 </div>
               </div>
@@ -2943,20 +2841,20 @@ export default function Smartcoin(properties) {
                 <TabsList className="grid w-full grid-cols-2 gap-2">
                   {activeOrderTab === "buy" ? (
                     <TabsTrigger value="buy" style={activeTabStyle}>
-                      Viewing buy orders
+                      {t("Smartcoin:viewingBuyOrders")}
                     </TabsTrigger>
                   ) : (
                     <TabsTrigger value="buy" onClick={() => setActiveOrderTab("buy")}>
-                      View buy orders
+                      {t("Smartcoin:viewBuyOrders")}
                     </TabsTrigger>
                   )}
                   {activeOrderTab === "sell" ? (
                     <TabsTrigger value="sell" style={activeTabStyle}>
-                      Viewing sell orders
+                      {t("Smartcoin:viewingSellOrders")}
                     </TabsTrigger>
                   ) : (
                     <TabsTrigger value="sell" onClick={() => setActiveOrderTab("sell")}>
-                      View sell orders
+                      {t("Smartcoin:viewSellOrders")}
                     </TabsTrigger>
                   )}
                 </TabsList>
@@ -2964,10 +2862,10 @@ export default function Smartcoin(properties) {
                   {buyOrders && buyOrders.length ? (
                     <>
                       <div className="grid grid-cols-4">
-                        <div className="col-span-1">Price</div>
+                        <div className="col-span-1">{t("Smartcoin:price")}</div>
                         <div className="col-span-1">{parsedCollateralAsset.s}</div>
                         <div className="col-span-1">{parsedAsset.s}</div>
-                        <div className="col-span-1">Total</div>
+                        <div className="col-span-1">{t("Smartcoin:total")}</div>
                       </div>
                       <List
                         height={260}
@@ -2979,17 +2877,17 @@ export default function Smartcoin(properties) {
                       </List>
                     </>
                   ) : null}
-                  {buyOrders && !buyOrders.length ? "No buy orders found" : null}
-                  {!buyOrders ? "Loading..." : null}
+                  {buyOrders && !buyOrders.length ? t("Smartcoin:noBuyOrdersFound") : null}
+                  {!buyOrders ? t("Smartcoin:loading") : null}
                 </TabsContent>
                 <TabsContent value="sell">
                   {sellOrders && sellOrders.length ? (
                     <>
                       <div className="grid grid-cols-4">
-                        <div className="col-span-1">Price</div>
+                        <div className="col-span-1">{t("Smartcoin:price")}</div>
                         <div className="col-span-1">{parsedAsset.s}</div>
                         <div className="col-span-1">{parsedCollateralAsset.s}</div>
-                        <div className="col-span-1">Total</div>
+                        <div className="col-span-1">{t("Smartcoin:total")}</div>
                       </div>
                       <List
                         height={260}
@@ -3016,21 +2914,24 @@ export default function Smartcoin(properties) {
             <CardHeader className="pb-3">
               <CardTitle>
                 {parsedAsset && parsedCollateralAsset
-                  ? `${parsedAsset.s} call orders`
-                  : "Call orders loading..."}
+                  ? t("Smartcoin:callOrdersForAssets", {
+                      asset1: parsedAsset.s,
+                      asset2: parsedCollateralAsset.s,
+                    })
+                  : t("Smartcoin:callOrdersLoading")}
               </CardTitle>
-              <CardDescription>Check out other users margin positions on the dex</CardDescription>
+              <CardDescription>{t("Smartcoin:checkMarginPositions")}</CardDescription>
             </CardHeader>
             <CardContent>
               {assetCallOrders && assetCallOrders.length ? (
                 <>
                   <div className="grid grid-cols-6">
-                    <div className="col-span-1">Borrower</div>
-                    <div className="col-span-1">Collateral</div>
-                    <div className="col-span-1">Debt</div>
-                    <div className="col-span-1">Call price</div>
-                    <div className="col-span-1">TCR</div>
-                    <div className="col-span-1">Ratio</div>
+                    <div className="col-span-1">{t("Smartcoin:borrower")}</div>
+                    <div className="col-span-1">{t("Smartcoin:collateral")}</div>
+                    <div className="col-span-1">{t("Smartcoin:debt")}</div>
+                    <div className="col-span-1">{t("Smartcoin:callPrice")}</div>
+                    <div className="col-span-1">{t("Smartcoin:tcr")}</div>
+                    <div className="col-span-1">{t("Smartcoin:ratio")}</div>
                   </div>
                   <List
                     height={260}
@@ -3042,8 +2943,8 @@ export default function Smartcoin(properties) {
                   </List>
                 </>
               ) : null}
-              {assetCallOrders && !assetCallOrders.length ? "No call orders found" : null}
-              {!assetCallOrders ? "Loading..." : null}
+              {assetCallOrders && !assetCallOrders.length ? t("Smartcoin:noCallOrdersFound") : null}
+              {!assetCallOrders ? t("Smartcoin:loading") : null}
             </CardContent>
           </Card>
         </div>
@@ -3055,18 +2956,21 @@ export default function Smartcoin(properties) {
             <CardHeader className="pb-3">
               <CardTitle>
                 {parsedAsset && parsedCollateralAsset
-                  ? `${parsedAsset.s} settle orders`
-                  : "Settle orders loading..."}
+                  ? t("Smartcoin:settleOrdersForAssets", {
+                      asset1: parsedAsset.s,
+                      asset2: parsedCollateralAsset.s,
+                    })
+                  : t("Smartcoin:settleOrdersLoading")}
               </CardTitle>
-              <CardDescription>Check out other users settle orders on the dex</CardDescription>
+              <CardDescription>{t("Smartcoin:checkSettleOrders")}</CardDescription>
             </CardHeader>
             <CardContent>
               {assetSettleOrders && assetSettleOrders.length ? (
                 <>
                   <div className="grid grid-cols-6">
-                    <div className="col-span-1">Owner</div>
-                    <div className="col-span-1">Balance</div>
-                    <div className="col-span-1">Settlement date</div>
+                    <div className="col-span-1">{t("Smartcoin:owner")}</div>
+                    <div className="col-span-1">{t("Smartcoin:balance2")}</div>
+                    <div className="col-span-1">{t("Smartcoin:settlementDate")}</div>
                   </div>
                   <List
                     height={260}
@@ -3078,8 +2982,10 @@ export default function Smartcoin(properties) {
                   </List>
                 </>
               ) : null}
-              {assetSettleOrders && !assetSettleOrders.length ? "No settle orders found" : null}
-              {!assetSettleOrders ? "Loading..." : null}
+              {assetSettleOrders && !assetSettleOrders.length
+                ? t("Smartcoin:noSettleOrdersFound")
+                : null}
+              {!assetSettleOrders ? t("Smartcoin:loading") : null}
             </CardContent>
           </Card>
         </div>
@@ -3091,24 +2997,22 @@ export default function Smartcoin(properties) {
             <CardHeader className="pb-3">
               <CardTitle>
                 {parsedAsset && parsedCollateralAsset
-                  ? `${parsedAsset.s} price feeds`
-                  : "Price feeds loading..."}
+                  ? t("Smartcoin:priceFeedsForAsset", { asset: parsedAsset.s })
+                  : t("Smartcoin:priceFeedsLoading")}
               </CardTitle>
-              <CardDescription>
-                Check out the latest published price feeds for this smartcoin
-              </CardDescription>
+              <CardDescription>{t("Smartcoin:checkLatestPriceFeeds")}</CardDescription>
             </CardHeader>
             <CardContent>
               {finalBitasset && finalBitasset.feeds ? (
                 <>
                   <div className="grid grid-cols-11">
-                    <div className="col-span-2">User</div>
-                    <div className="col-span-2">Date</div>
-                    <div className="col-span-2">CER</div>
-                    <div className="col-span-2">Settlement</div>
-                    <div className="col-span-1">ICR</div>
-                    <div className="col-span-1">MCR</div>
-                    <div className="col-span-1">MSSR</div>
+                    <div className="col-span-2">{t("Smartcoin:user")}</div>
+                    <div className="col-span-2">{t("Smartcoin:date")}</div>
+                    <div className="col-span-2">{t("Smartcoin:cer")}</div>
+                    <div className="col-span-2">{t("Smartcoin:settlement")}</div>
+                    <div className="col-span-1">{t("Smartcoin:icr")}</div>
+                    <div className="col-span-1">{t("Smartcoin:mcr")}</div>
+                    <div className="col-span-1">{t("Smartcoin:mssr")}</div>
                   </div>
                   <List
                     height={260}
@@ -3120,8 +3024,10 @@ export default function Smartcoin(properties) {
                   </List>
                 </>
               ) : null}
-              {finalBitasset && !finalBitasset.feeds.length ? "No smartcoin feeds found..." : null}
-              {!finalBitasset ? "Loading..." : null}
+              {finalBitasset && !finalBitasset.feeds.length
+                ? t("Smartcoin:noSmartcoinFeedsFound")
+                : null}
+              {!finalBitasset ? t("Smartcoin:loading") : null}
             </CardContent>
           </Card>
         </div>
@@ -3130,100 +3036,48 @@ export default function Smartcoin(properties) {
       <div className="grid grid-cols-1 mt-5">
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle>Risks associated with collateral debt positions</CardTitle>
-            <CardDescription>
-              Please thouroughly do your own research into smartcoins/bitassets before proceeding.
-            </CardDescription>
+            <CardTitle>{t("Smartcoin:risksAssociated")}</CardTitle>
+            <CardDescription>{t("Smartcoin:doYourOwnResearch2")}</CardDescription>
           </CardHeader>
           <CardContent>
-            Internal risk factors to consider
+            {t("Smartcoin:internalRiskFactors")}
             <br />
             <span className="text-sm">
               <Label className="mb-0 pb-0 text-lg">
-                Risks associated with the debt and collateral assets
+                {t("Smartcoin:risksAssociatedDebtCollateral")}
               </Label>
               <ul className="ml-2 list-disc [&>li]:mt-1 pl-2">
-                <li>
-                  By opening a margin position you accept the risk loss of some or all of your
-                  collateral.
-                </li>
-                <li>
-                  By holding a smartcoin you accept the risk that the backing collateral will fail
-                  to reflect the intended reference feed price, leading to loss of smartcoin value.
-                </li>
-                <li>
-                  These assets can be user created, as such their settings and published price feeds
-                  will be radically different. Thoroughly research each asset using the blocksights
-                  explorer, and through word of mouth, before opening margin positions.
-                </li>
-                <li>
-                  The committee-owned "bitAssets", which are the original branded smartcoins, can be
-                  considered to have a more stable smartcoin settings as a committee of Bitshares
-                  users need to come to an agreement on all configurations. These are elected roles
-                  however, so you should participate in the voting system to ensure the
-                  decentralization of the committee.
-                </li>
-                <li>
-                  Smartcoins which use other smartcoins as backing collateral are possible, however
-                  you should be aware of the additional risks you're exposing yourself to.
-                </li>
-                <li>
-                  If you purchase a smartcoin which uses an exchange backed asset (EBA) as backing
-                  collateral, and then claim the backing collateral, the gateway may impose
-                  additional KYC/AML requirements on you.
-                </li>
+                <li>{t("Smartcoin:riskLossCollateral")}</li>
+                <li>{t("Smartcoin:riskSmartcoinValueLoss")}</li>
+                <li>{t("Smartcoin:researchBeforeMarginPositions")}</li>
+                <li>{t("Smartcoin:committeeOwnedBitAssets")}</li>
+                <li>{t("Smartcoin:riskWithSmartcoinBacking")}</li>
+                <li>{t("Smartcoin:riskWithEBA")}</li>
               </ul>
             </span>
             <br />
-            External risk factors to consider
+            {t("Smartcoin:externalRiskFactors")}
             <br />
             <span className="text-sm">
-              <Label className="mb-0 pb-0 text-lg">Price feed exposure</Label>
+              <Label className="mb-0 pb-0 text-lg">{t("Smartcoin:priceFeedExposure")}</Label>
               <ul className="ml-2 list-disc [&>li]:mt-2 pl-2">
-                <li>
-                  Smartcoin price feed calculations reference the value of an external asset in
-                  terms of backing collateral, as such if either the reference or collateral assets
-                  price fluctuates then you are directly exposed to this risk.
-                </li>
-                <li>
-                  If the reference asset were to cease to exist, then the smartcoin external
-                  reference asset value will become invalid; global settlement could be the
-                  smartcoin owner's response.
-                </li>
-              </ul>
-              <Label className="mb-0 pb-0 text-lg">Price feed publisher activity</Label>
-              <ul className="ml-2 list-disc [&>li]:mt-2 pl-2">
-                <li>
-                  Price feed publishing scripts could run into issues if external asset reference
-                  sources go offline, potentially resulting in a period of price feed inactivity.
-                </li>
-                <li>
-                  Privately owned smartcoins require the development of custom price feed scripts,
-                  such code could be unstable if the smartcoin's price feeding strategy rollout is
-                  rushed. Before creating a margin position, look into the price feed publishing
-                  strategy and feed scripts in use, this will reduce your risk exposure.
-                </li>
-                <li>
-                  Publishing a price feed has an associated fee, which could cause a price feed
-                  publisher to stop publishing if they exhaust their BTS balance, resulting in a
-                  lack of price feeds until they replenish their account's balance.
-                </li>
-                <li>
-                  Price feed publishers may disagree on the how to calculate the price feed,
-                  resulting in unexected price feed volatility. There are several privatized
-                  smartcoins which attempt to use different smartcoin collateralization strategies
-                  for this reason.
-                </li>
+                <li>{t("Smartcoin:riskPriceFluctuation")}</li>
+                <li>{t("Smartcoin:riskReferenceAssetCease")}</li>
               </ul>
               <Label className="mb-0 pb-0 text-lg">
-                Exposure to EBA backing asset blockchain downtime
+                {t("Smartcoin:priceFeedPublisherActivity")}
               </Label>
               <ul className="ml-2 list-disc [&>li]:mt-2 pl-2">
-                <li>
-                  If you've used an EBA as backing collateral and want to close/adjust your margin
-                  position at a later date, if the gateway deposit service is down you may be unable
-                  to deposit sufficient collateral to avoid being margin called.
-                </li>
+                <li>{t("Smartcoin:riskPriceFeedInactivity")}</li>
+                <li>{t("Smartcoin:riskUnstableFeedScripts")}</li>
+                <li>{t("Smartcoin:riskExhaustedBalance")}</li>
+                <li>{t("Smartcoin:riskPriceFeedDisagreement")}</li>
+              </ul>
+              <Label className="mb-0 pb-0 text-lg">
+                {t("Smartcoin:exposureToEBABackAssetBlockchainDowntime")}
+              </Label>
+              <ul className="ml-2 list-disc [&>li]:mt-2 pl-2">
+                <li>{t("Smartcoin:riskGatewayDepositServiceDown")}</li>
               </ul>
             </span>
           </CardContent>

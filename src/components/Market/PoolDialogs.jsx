@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useSyncExternalStore, useMemo } from "react";
 import { FixedSizeList as List } from "react-window";
+import { useTranslation } from "react-i18next";
+import { i18n as i18nInstance } from "@/lib/i18n.js";
 
 import {
   Card,
@@ -25,6 +27,7 @@ import { $poolCacheBTS, $poolCacheTEST } from "../../stores/cache.ts";
 
 export default function PoolDialogs(properties) {
   const { assetA, assetB, assetAData, assetBData, chain } = properties;
+  const { t, i18n } = useTranslation("en", { i18n: i18nInstance });
 
   const _poolsBTS = useSyncExternalStore($poolCacheBTS.subscribe, $poolCacheBTS.get, () => true);
   const _poolsTEST = useSyncExternalStore($poolCacheTEST.subscribe, $poolCacheTEST.get, () => true);
@@ -151,7 +154,7 @@ export default function PoolDialogs(properties) {
         <Card>
           <CardHeader className="pb-2">
             <CardTitle>{title}</CardTitle>
-            <CardDescription>loading...</CardDescription>
+            <CardDescription>{t("PoolDialogs:loadingMessage")}</CardDescription>
           </CardHeader>
         </Card>
       );
@@ -161,7 +164,7 @@ export default function PoolDialogs(properties) {
         <Card>
           <CardHeader className="pb-2">
             <CardTitle>{title}</CardTitle>
-            <CardDescription>0 pools found</CardDescription>
+            <CardDescription>{t("PoolDialogs:noPoolsFoundMessage")}</CardDescription>
           </CardHeader>
         </Card>
       );
@@ -182,7 +185,9 @@ export default function PoolDialogs(properties) {
           <Card>
             <CardHeader className="pb-3 pt-3">
               <CardTitle>{title}</CardTitle>
-              <CardDescription>{poolArray && poolArray.length} pools found</CardDescription>
+              <CardDescription>
+                {t("PoolDialogs:poolsFound", { count: poolArray && poolArray.length })}
+              </CardDescription>
             </CardHeader>
           </Card>
         </DialogTrigger>
@@ -193,10 +198,10 @@ export default function PoolDialogs(properties) {
           </DialogHeader>
           <div className="grid grid-cols-1">
             <div className="grid grid-cols-10">
-              <div className="col-span-1">id</div>
-              <div className="col-span-3">Share asset</div>
-              <div className="col-span-3">Asset A</div>
-              <div className="col-span-3">Asset B</div>
+              <div className="col-span-1">{t("PoolDialogs:idColumnTitle")}</div>
+              <div className="col-span-3">{t("PoolDialogs:shareAssetColumnTitle")}</div>
+              <div className="col-span-3">{t("PoolDialogs:assetAColumnTitle")}</div>
+              <div className="col-span-3">{t("PoolDialogs:assetBColumnTitle")}</div>
             </div>
             <List height={300} itemCount={poolArray.length} itemSize={35} className="w-full">
               {PoolRow}
@@ -213,48 +218,61 @@ export default function PoolDialogs(properties) {
         <HoverCardTrigger asChild>
           <div>
             <PoolDialog
-              title={`${assetA && assetA.length < 12 ? assetA : assetAData.id} Pools`}
+              title={t("PoolDialogs:assetAPoolsTitle", {
+                assetA: assetA && assetA.length < 12 ? assetA : assetAData.id,
+              })}
               poolArray={assetAPools}
-              dialogTitle={`${assetA} Pools`}
-              dialogDescription={`These Bitshares pools use ${assetA} (${assetAData.id}) as one of the assets.`}
+              dialogTitle={t("PoolDialogs:assetAPoolsDialogTitle", { assetA })}
+              dialogDescription={t("PoolDialogs:assetAPoolsDialogDescription", {
+                assetA,
+                assetAId: assetAData.id,
+              })}
               type="A"
             />
           </div>
         </HoverCardTrigger>
         <HoverCardContent className="w-60">
-          Swap {assetA} using one of these liquidity pools
+          {t("PoolDialogs:assetAHoverCardContent", { assetA })}
         </HoverCardContent>
       </HoverCard>
       <HoverCard key="hover_b">
         <HoverCardTrigger asChild>
           <div>
             <PoolDialog
-              title={`Market Pools`}
+              title={t("PoolDialogs:marketPoolsTitle")}
               poolArray={assetMarketPools}
-              dialogTitle={`${assetA}/${assetB} Pools`}
-              dialogDescription={`These pools trade between ${assetA} and ${assetB}.`}
+              dialogTitle={t("PoolDialogs:marketPoolsDialogTitle", { assetA, assetB })}
+              dialogDescription={t("PoolDialogs:marketPoolsDialogDescription", {
+                assetA,
+                assetB,
+              })}
               type="Market"
             />
           </div>
         </HoverCardTrigger>
         <HoverCardContent className="w-60">
-          Swap between {assetA} and {assetB} using one of these liquidity pools
+          {t("PoolDialogs:marketHoverCardContent", { assetA, assetB })}
         </HoverCardContent>
       </HoverCard>
       <HoverCard key="hover_c">
         <HoverCardTrigger asChild>
           <div>
             <PoolDialog
-              title={`${assetB && assetB.length < 12 ? assetB : assetBData.id} Pools`}
+              title={t("PoolDialogs:assetBPoolsTitle", {
+                assetB: assetB && assetB.length < 12 ? assetB : assetBData.id,
+              })}
               poolArray={assetBPools}
-              dialogTitle={`${assetB} Pools`}
-              dialogDescription={`These Bitshares pools use ${assetB} (${assetBData.id})  as one of the assets.`}
+              dialogTitle={t("PoolDialogs:assetBPoolsDialogTitle", { assetB })}
+              dialogDescription={t("PoolDialogs:assetBPoolsDialogDescription", {
+                assetB,
+                assetBId: assetBData.id,
+              })}
               type="B"
             />
           </div>
         </HoverCardTrigger>
         <HoverCardContent className="w-60">
-          Swap {assetB} using one of these liquidity pools
+          {t("PoolDialogs:assetBHoverCardContent", { assetB })}
         </HoverCardContent>
       </HoverCard>
     </div>

@@ -1,11 +1,4 @@
-import React, {
-  type HTMLProps,
-  memo,
-  useMemo,
-  useState,
-  useEffect,
-  useId,
-} from "react";
+import React, { type HTMLProps, memo, useMemo, useState, useEffect, useId } from "react";
 import { useThrottle } from "@react-hook/throttle";
 
 import { getContrast, hashCode, RNG } from "../lib/utilities";
@@ -35,11 +28,9 @@ const eyeTypes = {
   )),
   happy: eyesRendererFactory((props: EyeProps) => (
     <path
-      d={`M${props.x + props.eyeSpread - props.eyeSize},${
-        props.y + props.eyeSize
-      } Q${props.x + props.eyeSpread},${props.y} ${
-        props.x + props.eyeSpread + props.eyeSize
-      },${props.y + props.eyeSize}`}
+      d={`M${props.x + props.eyeSpread - props.eyeSize},${props.y + props.eyeSize} Q${
+        props.x + props.eyeSpread
+      },${props.y} ${props.x + props.eyeSpread + props.eyeSize},${props.y + props.eyeSize}`}
       fill="none"
       stroke={props.eyeColor}
       strokeWidth={1}
@@ -48,11 +39,9 @@ const eyeTypes = {
   )),
   sleepy: eyesRendererFactory((props: EyeProps) => (
     <path
-      d={`M${props.x + props.eyeSpread - props.eyeSize},${props.y} Q${
-        props.x + props.eyeSpread
-      },${props.y + props.eyeSize} ${
-        props.x + props.eyeSpread + props.eyeSize
-      },${props.y}`}
+      d={`M${props.x + props.eyeSpread - props.eyeSize},${props.y} Q${props.x + props.eyeSpread},${
+        props.y + props.eyeSize
+      } ${props.x + props.eyeSpread + props.eyeSize},${props.y}`}
       fill="none"
       stroke={props.eyeColor}
       strokeWidth={1}
@@ -62,9 +51,9 @@ const eyeTypes = {
   mischief: eyesRendererFactory(
     (props: EyeProps) => (
       <path
-        d={`M${props.x + props.eyeSpread},${props.y} l${props.eyeSize},${
+        d={`M${props.x + props.eyeSpread},${props.y} l${props.eyeSize},${props.eyeSize} l-${
           props.eyeSize
-        } l-${props.eyeSize},${props.eyeSize}`}
+        },${props.eyeSize}`}
         fill="none"
         stroke={props.eyeColor}
         strokeWidth={1}
@@ -73,9 +62,9 @@ const eyeTypes = {
     ),
     (props: EyeProps) => (
       <path
-        d={`M${props.x + props.eyeSpread},${props.y} l-${props.eyeSize},${
+        d={`M${props.x + props.eyeSpread},${props.y} l-${props.eyeSize},${props.eyeSize} l${
           props.eyeSize
-        } l${props.eyeSize},${props.eyeSize}`}
+        },${props.eyeSize}`}
         fill="none"
         stroke={props.eyeColor}
         strokeWidth={1}
@@ -87,10 +76,7 @@ const eyeTypes = {
 
 const mouthTypes = {
   smile: (props: MouthProps) => (
-    <path
-      d={`M13,${19 + props.mouthSpread} a1,0.75 0 0,0 10,0`}
-      fill={props.mouthColor}
-    />
+    <path d={`M13,${19 + props.mouthSpread} a1,0.75 0 0,0 10,0`} fill={props.mouthColor} />
   ),
   open: (props: MouthProps) => (
     <path
@@ -101,12 +87,7 @@ const mouthTypes = {
     />
   ),
   surprise: (props: MouthProps) => (
-    <circle
-      cx={20}
-      cy={19 + props.mouthSpread}
-      r={props.mouthSize}
-      fill={props.mouthColor}
-    />
+    <circle cx={20} cy={19 + props.mouthSpread} r={props.mouthSize} fill={props.mouthColor} />
   ),
   unhappy: (props: MouthProps) => (
     <path
@@ -137,19 +118,15 @@ function generateData(
   const wrapperColor = rng ? randomHexColor(rng) : colors[0];
 
   const preTranslateX = rng.nextUnit(10, true);
-  const wrapperTranslateX =
-    preTranslateX < 5 ? preTranslateX + SIZE / 9 : preTranslateX;
+  const wrapperTranslateX = preTranslateX < 5 ? preTranslateX + SIZE / 9 : preTranslateX;
   const preTranslateY = rng.nextUnit(10, true);
-  const wrapperTranslateY =
-    preTranslateY < 5 ? preTranslateY + SIZE / 9 : preTranslateY;
+  const wrapperTranslateY = preTranslateY < 5 ? preTranslateY + SIZE / 9 : preTranslateY;
 
   const eyeType =
-    expression.eye ??
-    (rng?.nextChoice(Object.keys(eyeTypes)) as keyof typeof eyeTypes);
+    expression.eye ?? (rng?.nextChoice(Object.keys(eyeTypes)) as keyof typeof eyeTypes);
 
   const mouthType =
-    expression.mouth ??
-    (rng?.nextChoice(Object.keys(mouthTypes)) as keyof typeof mouthTypes);
+    expression.mouth ?? (rng?.nextChoice(Object.keys(mouthTypes)) as keyof typeof mouthTypes);
 
   return {
     // colours
@@ -181,10 +158,7 @@ export const Avatar = ({
   expression,
   ...props
 }: AvatarProps & Omit<HTMLProps<SVGSVGElement>, keyof AvatarProps>) => {
-  const data = useMemo(
-    () => generateData(name, colors, expression),
-    [name, colors, expression]
-  );
+  const data = useMemo(() => generateData(name, colors, expression), [name, colors, expression]);
   const maskID = useId();
 
   const [mousePosition, setMousePosition] = useThrottle(
@@ -222,11 +196,7 @@ export const Avatar = ({
       const centerY = top + height / 2;
 
       let _angle =
-        (Math.atan2(
-          mousePosition.mouseY - centerY,
-          mousePosition.mouseX - centerX
-        ) *
-          180) /
+        (Math.atan2(mousePosition.mouseY - centerY, mousePosition.mouseX - centerX) * 180) /
           Math.PI +
         90;
 
@@ -245,8 +215,7 @@ export const Avatar = ({
       _angle = parseInt(_angle.toFixed(0));
 
       const _distance = Math.sqrt(
-        Math.pow(mousePosition.mouseX - centerX, 2) +
-          Math.pow(mousePosition.mouseY - centerY, 2)
+        Math.pow(mousePosition.mouseX - centerX, 2) + Math.pow(mousePosition.mouseY - centerY, 2)
       );
 
       setDirection(mousePosition.mouseX <= left ? "left" : "right");
@@ -338,20 +307,8 @@ export const Avatar = ({
       {...props}
     >
       {title && <title>{title}</title>}
-      <mask
-        id={maskID}
-        maskUnits="userSpaceOnUse"
-        x={0}
-        y={0}
-        width={SIZE}
-        height={SIZE}
-      >
-        <rect
-          width={SIZE}
-          height={SIZE}
-          rx={square ? undefined : SIZE * 2}
-          fill="#FFFFFF"
-        />
+      <mask id={maskID} maskUnits="userSpaceOnUse" x={0} y={0} width={SIZE} height={SIZE}>
+        <rect width={SIZE} height={SIZE} rx={square ? undefined : SIZE * 2} fill="#FFFFFF" />
       </mask>
       <g mask={`url(#${maskID})`}>
         <rect width={SIZE} height={SIZE} fill={data.backgroundColor} />
@@ -360,11 +317,9 @@ export const Avatar = ({
           y="0"
           width={SIZE}
           height={SIZE}
-          transform={`translate(${data.wrapperTranslateX} ${
-            data.wrapperTranslateY
-          }) rotate(${data.wrapperRotate} ${SIZE / 2} ${SIZE / 2}) scale(${
-            data.wrapperScale
-          })`}
+          transform={`translate(${data.wrapperTranslateX} ${data.wrapperTranslateY}) rotate(${
+            data.wrapperRotate
+          } ${SIZE / 2} ${SIZE / 2}) scale(${data.wrapperScale})`}
           fill={data.wrapperColor}
           rx={SIZE}
         />
@@ -376,16 +331,14 @@ export const Avatar = ({
         >
           {eyeTypes[activeEyes].leftEye({
             eyeSize: data.eyeSize,
-            eyeSpread:
-              Math.min(distance / 20, 5) * (direction === "left" ? -1 : 1),
+            eyeSpread: Math.min(distance / 20, 5) * (direction === "left" ? -1 : 1),
             eyeColor: data.faceColor,
             x: 20,
             y: 14,
           })}
           {eyeTypes[activeEyes].rightEye({
             eyeSize: data.eyeSize,
-            eyeSpread:
-              Math.min(distance / 20, 5) * (direction === "left" ? -1 : 1),
+            eyeSpread: Math.min(distance / 20, 5) * (direction === "left" ? -1 : 1),
             eyeColor: data.faceColor,
             x: 14,
             y: 14,

@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import * as fflate from "fflate";
+import { useTranslation } from "react-i18next";
+import { i18n as i18nInstance } from "@/lib/i18n.js";
 
 import { nanoquery } from "@nanostores/query";
 import { useStore } from "@nanostores/react";
@@ -67,6 +69,7 @@ import { copyToClipboard, blockchainFloat } from "@/lib/common.js";
 export default function DeepLinkDialog(properties) {
   const { trxJSON, operationName, usrChain, headerText, dismissCallback, username, userID } =
     properties;
+  const { t, i18n } = useTranslation("en", { i18n: i18nInstance });
 
   const deepLinkStore = useMemo(() => {
     refJSON = trxJSON;
@@ -96,24 +99,25 @@ export default function DeepLinkDialog(properties) {
     >
       <DialogContent className="sm:max-w-[800px] bg-white">
         <DialogHeader>
-          <DialogTitle>{loading ? <>Generating deeplink...</> : <>{headerText}</>}</DialogTitle>
+          <DialogTitle>
+            {loading ? t("DeepLinkDialog:dialogContent.generatingDeeplink") : <>{headerText}</>}
+          </DialogTitle>
           <DialogDescription>
-            With the account: {username} ({userID})<br />
+            {t("DeepLinkDialog:dialogContent.withAccount", { username: username, userID: userID })}
             {!loading ? (
               <>
-                Your Bitshares Beet operation is ready to broadcast!
+                {t("DeepLinkDialog:dialogContent.readyToBroadcast")}
                 <br />
-                Choose from the methods below to broadcast your transaction via the
+                {t("DeepLinkDialog:dialogContent.chooseMethod")}
                 <ExternalLink
                   classnamecontents="text-blue-500"
                   type="text"
-                  text=" Bitshares BEET multiwallet"
+                  text={t("DeepLinkDialog:dialogContent.beetWallet")}
                   hyperlink="https://github.com/bitshares/beet"
                 />
-                .
               </>
             ) : null}
-            {error ? <>An error occurred, sorry. Please close this dialog and try again.</> : null}
+            {error ? t("DeepLinkDialog:dialogContent.errorOccurred") : null}
           </DialogDescription>
         </DialogHeader>
         <>
@@ -121,50 +125,30 @@ export default function DeepLinkDialog(properties) {
           <div className="grid grid-cols-1 gap-3">
             <Tabs defaultValue="object" className="w-full">
               <TabsList key={`${activeTab}_TabList`} className="grid w-full grid-cols-3 gap-2">
-                {activeTab === "object" ? (
-                  <TabsTrigger key="activeTRXTab" value="object">
-                    View TRX Object
-                  </TabsTrigger>
-                ) : (
-                  <TabsTrigger
-                    value="object"
-                    key="inactiveTRXTab"
-                    onClick={() => setActiveTab("object")}
-                  >
-                    View TRX Object
-                  </TabsTrigger>
-                )}
-                {activeTab === "deeplink" ? (
-                  <TabsTrigger value="deeplink" key="activeDLTab">
-                    Raw Deeplink
-                  </TabsTrigger>
-                ) : (
-                  <TabsTrigger
-                    value="deeplink"
-                    key="inactiveDLTab"
-                    onClick={() => setActiveTab("deeplink")}
-                  >
-                    Raw Deeplink
-                  </TabsTrigger>
-                )}
-                {activeTab === "localJSON" ? (
-                  <TabsTrigger key="activeJSONTab" value="localJSON" className="bg-muted">
-                    Local JSON file
-                  </TabsTrigger>
-                ) : (
-                  <TabsTrigger
-                    value="localJSON"
-                    key="inactiveJSONTab"
-                    onClick={() => setActiveTab("localJSON")}
-                  >
-                    Local JSON file
-                  </TabsTrigger>
-                )}
+                <TabsTrigger key="TRXTab" value="object" onClick={() => setActiveTab("object")}>
+                  {t("DeepLinkDialog:tabs.viewTRXObject")}
+                </TabsTrigger>
+                <TabsTrigger key="DLTab" value="deeplink" onClick={() => setActiveTab("deeplink")}>
+                  {t("DeepLinkDialog:tabs.rawDeeplink")}
+                </TabsTrigger>
+                <TabsTrigger
+                  key="JSONTab"
+                  value="localJSON"
+                  onClick={() => setActiveTab("localJSON")}
+                >
+                  {t("DeepLinkDialog:tabs.localJSONFile")}
+                </TabsTrigger>
               </TabsList>
               <TabsContent value="object">
                 <div className="grid w-full gap-1.5 mb-3">
-                  <Label className="text-left">Transaction object JSON</Label>
-                  <span className="text-left text-sm">Operation type: {operationName}</span>
+                  <Label className="text-left">
+                    {t("DeepLinkDialog:tabsContent.transactionObjectJSON")}
+                  </Label>
+                  <span className="text-left text-sm">
+                    {t("DeepLinkDialog:tabsContent.operationType", {
+                      operationName: operationName,
+                    })}
+                  </span>
                   <Textarea
                     value={JSON.stringify(trxJSON, null, 4)}
                     className="min-h-[250px]"
@@ -177,34 +161,19 @@ export default function DeepLinkDialog(properties) {
                     copyToClipboard(JSON.stringify(trxJSON, null, 4));
                   }}
                 >
-                  Copy operation JSON
+                  {t("DeepLinkDialog:tabsContent.copyOperationJSON")}
                 </Button>
               </TabsContent>
               <TabsContent value="deeplink">
-                <Label className="text-left">
-                  Using a deeplink to broadcast via the Beet multiwallet
-                </Label>
+                <Label className="text-left">{t("DeepLinkDialog:tabsContent.usingDeeplink")}</Label>
                 <ol className="ml-4">
+                  <li type="1">{t("DeepLinkDialog:tabsContent.step1")}</li>
                   <li type="1">
-                    Launch the BEET wallet and navigate to '<b>Raw Link</b>' in the menu, the wallet
-                    has to remain unlocked for the duration of the broadcast.
+                    {t("DeepLinkDialog:tabsContent.step2", { operationName: operationName })}
                   </li>
-                  <li type="1">
-                    From this page you can either allow all operations, or solely allow operation '
-                    <b>{operationName}</b>' (then click save).
-                  </li>
-                  <li type="1">
-                    Once 'Ready for raw links' shows in Beet, then you can click the button below to
-                    proceed.
-                  </li>
-                  <li type="1">
-                    A BEET prompt will display, verify the contents, optionally request a Beet
-                    receipt, and then broadcast the transaction onto the blockchain.
-                  </li>
-                  <li type="1">
-                    You won't receive a confirmation in this window, but your operation will be
-                    processed within seconds on the blockchain.
-                  </li>
+                  <li type="1">{t("DeepLinkDialog:tabsContent.step3")}</li>
+                  <li type="1">{t("DeepLinkDialog:tabsContent.step4")}</li>
+                  <li type="1">{t("DeepLinkDialog:tabsContent.step5")}</li>
                 </ol>
                 {!loading ? (
                   <a
@@ -212,37 +181,26 @@ export default function DeepLinkDialog(properties) {
                       usrChain === "bitshares" ? "BTS" : "BTS_TEST"
                     }&request=${deeplink}`}
                   >
-                    <Button className="mt-4">Trigger raw Beet deeplink</Button>
+                    <Button className="mt-4">
+                      {t("DeepLinkDialog:tabsContent.triggerRawBeet")}
+                    </Button>
                   </a>
                 ) : null}
               </TabsContent>
               <TabsContent value="localJSON">
-                <Label className="text-left">Via local file upload - ready to proceed</Label>
-
+                <Label className="text-left">{t("DeepLinkDialog:tabsContent.viaLocalFile")}</Label>
                 <ol className="ml-4">
+                  <li type="1">{t("DeepLinkDialog:tabsContent.step1Local")}</li>
                   <li type="1">
-                    Launch the BEET wallet and navigate to '<b>Local</b>' in the menu.
+                    {t("DeepLinkDialog:tabsContent.step2Local", { operationName: operationName })}
                   </li>
-                  <li type="1">
-                    At this page either allow all, or allow just operation '<b>{operationName}</b>'.
-                  </li>
-                  <li type="1">
-                    Once at the local upload page, click the button below to download the JSON file
-                    to your computer.
-                  </li>
-                  <li type="1">
-                    From the BEET Local page, upload the JSON file, a prompt should then appear.
-                  </li>
-                  <li type="1">
-                    Thoroughly verify the prompt's contents before approving any operation, also
-                    consider toggling the optional receipt for post broadcast analysis and
-                    verification purposes.
-                  </li>
+                  <li type="1">{t("DeepLinkDialog:tabsContent.step3Local")}</li>
+                  <li type="1">{t("DeepLinkDialog:tabsContent.step4Local")}</li>
+                  <li type="1">{t("DeepLinkDialog:tabsContent.step5Local")}</li>
                 </ol>
-
                 {!loading && downloadClicked ? (
                   <Button className="mt-4" variant="outline" disabled>
-                    Downloading...
+                    {t("DeepLinkDialog:tabsContent.downloading")}
                   </Button>
                 ) : null}
                 {!loading && !downloadClicked ? (
@@ -253,7 +211,9 @@ export default function DeepLinkDialog(properties) {
                     rel="noreferrer"
                     onClick={handleDownloadClick}
                   >
-                    <Button className="mt-4">Download Beet operation JSON</Button>
+                    <Button className="mt-4">
+                      {t("DeepLinkDialog:tabsContent.downloadBeetOperationJSON")}
+                    </Button>
                   </a>
                 ) : null}
               </TabsContent>

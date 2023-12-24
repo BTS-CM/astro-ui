@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Fuse from "fuse.js";
 import { FixedSizeList as List } from "react-window";
+import { useTranslation } from "react-i18next";
+import { i18n as i18nInstance } from "@/lib/i18n.js";
 
 import {
   Card,
@@ -33,6 +35,7 @@ import { Button } from "@/components/ui/button";
 export default function AssetDropDown(properties) {
   const { assetSymbol, assetData, storeCallback, otherAsset, marketSearch, type, size, chain } =
     properties;
+  const { t, i18n } = useTranslation("en", { i18n: i18nInstance });
 
   let marketSearchContents;
   if (!marketSearch || !marketSearch.length) {
@@ -80,7 +83,7 @@ export default function AssetDropDown(properties) {
             <CardTitle className="h-3">
               {res.item.s} ({res.item.id})
             </CardTitle>
-            <CardDescription>Issued by {res.item.u}</CardDescription>
+            <CardDescription>{t("AssetDropDownCard:issued", { user: res.item.u })}</CardDescription>
           </CardHeader>
         </Card>
       </div>
@@ -104,8 +107,8 @@ export default function AssetDropDown(properties) {
           className={`${size && size === "small" ? "h-5 " : ""}p-3`}
           onClick={() => setDialogOpen(true)}
         >
-          {!assetSymbol ? "Select an asset" : null}
-          {!size && assetSymbol ? "Change asset" : null}
+          {!assetSymbol ? t("AssetDropDownCard:select") : null}
+          {!size && assetSymbol ? t("AssetDropDownCard:change") : null}
           {size && assetSymbol && assetSymbol.length < 12 ? assetSymbol : null}
           {size && assetSymbol && assetSymbol.length >= 12 ? assetData.id : null}
         </Button>
@@ -113,16 +116,18 @@ export default function AssetDropDown(properties) {
       <DialogContent className="sm:max-w-[425px] bg-white">
         <>
           <h3 className="text-2xl font-extrabold tracking-tight">
-            {assetSymbol ? `Replacing ${assetSymbol}` : `Selecting a new asset`}
+            {assetSymbol
+              ? t("AssetDropDownCard:replacing", { assetSymbol: assetSymbol })
+              : t("AssetDropDownCard:selecting")}
           </h3>
           <h4 className="text-md font-bold tracking-tight">
-            {!type ? `Please search for an asset below` : null}
-            {type && type === "base" ? `Please select a new base asset` : null}
-            {type && type === "quote" ? `Please select a new quote asset` : null}
+            {!type ? t("AssetDropDownCard:noType") : null}
+            {type && type === "base" ? t("AssetDropDownCard:baseType") : null}
+            {type && type === "quote" ? t("AssetDropDownCard:quoteType") : null}
           </h4>
           <Input
             name="assetSearch"
-            placeholder="Search for an asset"
+            placeholder={t("AssetDropDownCard:search")}
             onChange={(event) => {
               setThisInput(event.target.value);
             }}

@@ -1,4 +1,7 @@
 import React, { useMemo } from "react";
+import { useTranslation } from "react-i18next";
+import { i18n as i18nInstance } from "@/lib/i18n.js";
+
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { humanReadableFloat, isInvertedMarket } from "../../../lib/common";
 
@@ -20,6 +23,7 @@ import ExternalLink from "@/components/common/ExternalLink.jsx";
 
 export default function MyOrderSummary(properties) {
   const { type, assetAData, assetBData, usrLimitOrders } = properties;
+  const { t, i18n } = useTranslation("en", { i18n: i18nInstance });
 
   const filteredUsrLimitOrders = useMemo(
     () =>
@@ -43,8 +47,8 @@ export default function MyOrderSummary(properties) {
             res.sell_price.quote.asset_id
           );
 
-          const minBaseAmount = humanReadableFloat(1, basePrecision);
-          const minQuoteAmount = humanReadableFloat(1, quotePrecision);
+          //const minBaseAmount = humanReadableFloat(1, basePrecision);
+          //const minQuoteAmount = humanReadableFloat(1, quotePrecision);
 
           let parsedBaseAmount = humanReadableFloat(res.sell_price.base.amount, basePrecision);
           let parsedQuoteAmount = humanReadableFloat(res.sell_price.quote.amount, quotePrecision);
@@ -134,14 +138,14 @@ export default function MyOrderSummary(properties) {
             </DialogTrigger>
             <DialogContent className="sm:max-w-[600px] bg-white">
               <DialogHeader>
-                <DialogTitle>Want to edit this limit order?</DialogTitle>
+                <DialogTitle>{t("MyOrderSummary:editLimitOrderTitle")}</DialogTitle>
                 <DialogDescription>
-                  Limit orders can now be updated, save on fees by updating limit orders.
+                  {t("MyOrderSummary:editLimitOrderDescription")}
                 </DialogDescription>
               </DialogHeader>
               <div className="grid grid-cols-1">
                 <div className="col-span-1">
-                  Selected open order's data:
+                  {t("MyOrderSummary:selectedOpenOrderData")}
                   <ScrollArea className="h-72 rounded-md border text-sm">
                     <pre>{JSON.stringify(res, null, 2)}</pre>
                   </ScrollArea>
@@ -149,14 +153,14 @@ export default function MyOrderSummary(properties) {
                 <div className="col-span-1 text-left mt-5">
                   <a href={`/order/index.html?id=${res.id}`}>
                     <Button variant="outline" className="mt-2 mr-2">
-                      Proceed to update this open limit order
+                      {t("MyOrderSummary:proceedToUpdateButton")}
                     </Button>
                   </a>
                   <ExternalLink
                     variant="outline"
                     classnamecontents=""
                     type="button"
-                    text={`View object on blocksights.info`}
+                    text={t("MyOrderSummary:viewObjectOnBlocksights")}
                     hyperlink={`https://blocksights.info/#/objects/${res.id}`}
                   />
                 </div>
@@ -171,10 +175,10 @@ export default function MyOrderSummary(properties) {
   return (
     <>
       <div className="grid grid-cols-4">
-        <div className="col-span-1 pl-3">Price</div>
+        <div className="col-span-1 pl-3">{t("MyOrderSummary:priceColumnTitle")}</div>
         <div className="col-span-1 pl-3 text-md">{assetAData.symbol}</div>
         <div className="col-span-1 pl-3 text-md">{assetBData.symbol}</div>
-        <div className="col-span-1 pl-3">Expiration date</div>
+        <div className="col-span-1 pl-3">{t("MyOrderSummary:expirationDateColumnTitle")}</div>
       </div>
       <ScrollArea className="h-72 w-full rounded-md border">
         <div className="grid grid-cols-3">{orderElements}</div>

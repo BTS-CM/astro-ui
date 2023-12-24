@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useSyncExternalStore, useMemo } from "react";
-
 import { useStore } from "@nanostores/react";
+import { useTranslation } from "react-i18next";
+import { i18n as i18nInstance } from "@/lib/i18n.js";
 
 import {
   Card,
@@ -52,6 +53,7 @@ export default function Market(properties) {
     setAssetA,
     setAssetB,
   } = properties;
+  const { t, i18n } = useTranslation("en", { i18n: i18nInstance });
 
   const _marketSearchBTS = useSyncExternalStore(
     $marketSearchCacheBTS.subscribe,
@@ -195,7 +197,7 @@ export default function Market(properties) {
       <HoverCardTrigger asChild style={{ position: "relative" }}>
         <Card className="mt-5">
           <CardHeader className="pt-4 pb-2">
-            <CardTitle>Market summary</CardTitle>
+            <CardTitle>{t("Market:marketSummary")}</CardTitle>
             <CardDescription className="text-lg">
               {activeLimitCard === "buy" ? `${assetA}/${assetB}` : null}
               {activeLimitCard === "sell" ? `${assetB}/${assetA}` : null}
@@ -204,7 +206,7 @@ export default function Market(properties) {
           <CardContent className="text-sm pb-4">
             <div className="grid grid-cols-1 gap-2">
               <div className="grid grid-cols-5">
-                <div className="col-span-2">Latest price:</div>
+                <div className="col-span-2">{t("Market:latestPrice")}</div>
                 <div className="col-span-3">
                   <Badge variant="outline" className="ml-2 mb-1">
                     {tickerData && assetAData
@@ -214,7 +216,7 @@ export default function Market(properties) {
                 </div>
               </div>
               <div className="grid grid-cols-5">
-                <div className="col-span-2">24Hr change:</div>
+                <div className="col-span-2">{t("Market:24HrChange")}</div>
                 <div className="col-span-3">
                   <Badge variant="outline" className="ml-2 mb-1">
                     {tickerData ? tickerData.percent_change : "?"}
@@ -222,7 +224,7 @@ export default function Market(properties) {
                 </div>
               </div>
               <div className="grid grid-cols-5">
-                <div className="col-span-2">24Hr base volume:</div>
+                <div className="col-span-2">{t("Market:24HrBaseVolume")}</div>
                 <div className="col-span-3">
                   <Badge variant="outline" className="ml-2 mb-1">
                     {!tickerData ? "?" : null}
@@ -232,7 +234,7 @@ export default function Market(properties) {
                 </div>
               </div>
               <div className="grid grid-cols-5">
-                <div className="col-span-2">24Hr quote volume:</div>
+                <div className="col-span-2">{t("Market:24HrQuoteVolume")}</div>
                 <div className="col-span-3">
                   <Badge variant="outline" className="ml-2 mb-1">
                     {!tickerData ? "?" : null}
@@ -242,7 +244,7 @@ export default function Market(properties) {
                 </div>
               </div>
               <div className="grid grid-cols-5">
-                <div className="col-span-2">Lowest ask:</div>
+                <div className="col-span-2">{t("Market:lowestAsk")}</div>
                 <div className="col-span-3">
                   <Badge variant="outline" className="ml-2 mb-1">
                     {tickerData && assetAData
@@ -252,7 +254,7 @@ export default function Market(properties) {
                 </div>
               </div>
               <div className="grid grid-cols-5">
-                <div className="col-span-2">Highest bid:</div>
+                <div className="col-span-2">{t("Market:highestBid")}</div>
                 <div className="col-span-3">
                   <Badge variant="outline" className="ml-2">
                     {tickerData && assetAData
@@ -267,14 +269,14 @@ export default function Market(properties) {
       </HoverCardTrigger>
       <HoverCardContent className="w-80 text-sm text-center">
         <b>
-          {assetA}/{assetB} External market links
+          {assetA}/{assetB} {t("Market:externalMarketLinks")}
         </b>
         <br />
         <ExternalLink
           variant="outline"
           classnamecontents="mb-2 mt-2"
           type="button"
-          text={`🔎 Blocksights market explorer`}
+          text={t("Market:blocksightsMarketExplorer")}
           hyperlink={
             usr.chain === "bitshares"
               ? `https://blocksights.info/#/markets/${
@@ -336,17 +338,17 @@ export default function Market(properties) {
                 {!assetAData || !assetBData ? (
                   <>
                     <TabsTrigger disabled value="buy" style={activeTabStyle}>
-                      Buy
+                      {t("Market:buy")}
                     </TabsTrigger>
                     <TabsTrigger disabled value="sell">
-                      Sell
+                      {t("Market:sell")}
                     </TabsTrigger>
                   </>
                 ) : null}
                 {assetAData && assetBData && activeLimitCard === "buy" ? (
                   <>
                     <TabsTrigger value="buy" style={activeTabStyle}>
-                      Buy
+                      {t("Market:buy")}
                     </TabsTrigger>
                     <TabsTrigger
                       value="sell"
@@ -362,7 +364,7 @@ export default function Market(properties) {
                         );
                       }}
                     >
-                      Sell
+                      {t("Market:sell")}
                     </TabsTrigger>
                   </>
                 ) : null}
@@ -383,10 +385,10 @@ export default function Market(properties) {
                         );
                       }}
                     >
-                      Buy
+                      {t("Market:buy")}
                     </TabsTrigger>
                     <TabsTrigger value="sell" style={activeTabStyle}>
-                      Sell
+                      {t("Market:sell")}
                     </TabsTrigger>
                   </>
                 ) : null}
@@ -430,13 +432,13 @@ export default function Market(properties) {
             {!tickerData || !assetAData || !assetBData ? (
               <Card className="mt-5">
                 <CardHeader className="pt-4 pb-2">
-                  <CardTitle>Market summary</CardTitle>
+                  <CardTitle>{t("Market:marketSummary")}</CardTitle>
                   <CardDescription className="text-lg">❔/❔</CardDescription>
                 </CardHeader>
                 <CardContent className="text-sm pb-4">
                   <div className="grid grid-cols-1 gap-2">
                     <div className="grid grid-cols-5">
-                      <div className="col-span-2">Latest price:</div>
+                      <div className="col-span-2">{t("Market:latestPrice")}</div>
                       <div className="col-span-3">
                         <Badge variant="outline" className="ml-2 mb-1">
                           ❔
@@ -444,11 +446,11 @@ export default function Market(properties) {
                       </div>
                     </div>
                     <div className="grid grid-cols-5">
-                      <div className="col-span-2">24Hr change:</div>
+                      <div className="col-span-2">{t("Market:24HrChange")}</div>
                       <div className="col-span-3">❔</div>
                     </div>
                     <div className="grid grid-cols-5">
-                      <div className="col-span-2">24Hr base volume:</div>
+                      <div className="col-span-2">{t("Market:24HrBaseVolume")}</div>
                       <div className="col-span-3">
                         <Badge variant="outline" className="ml-2 mb-1">
                           ❔
@@ -456,7 +458,7 @@ export default function Market(properties) {
                       </div>
                     </div>
                     <div className="grid grid-cols-5">
-                      <div className="col-span-2">24Hr quote volume:</div>
+                      <div className="col-span-2">{t("Market:24HrQuoteVolume")}</div>
                       <div className="col-span-3">
                         <Badge variant="outline" className="ml-2 mb-1">
                           ❔
@@ -464,7 +466,7 @@ export default function Market(properties) {
                       </div>
                     </div>
                     <div className="grid grid-cols-5">
-                      <div className="col-span-2">Lowest ask:</div>
+                      <div className="col-span-2">{t("Market:lowestAsk")}</div>
                       <div className="col-span-3">
                         <Badge variant="outline" className="ml-2 mb-1">
                           ❔
@@ -472,7 +474,7 @@ export default function Market(properties) {
                       </div>
                     </div>
                     <div className="grid grid-cols-5">
-                      <div className="col-span-2">Highest bid:</div>
+                      <div className="col-span-2">{t("Market:highestBid")}</div>
                       <div className="col-span-3">
                         <Badge variant="outline" className="ml-2">
                           ❔
@@ -492,8 +494,8 @@ export default function Market(properties) {
                 <Card>
                   <CardHeader className="pt-2 pb-2">
                     <CardTitle className="text-center text-lg">
-                      {usr.chain === "bitshares" ? "Bitshares" : "Bitshares (Testnet)"} DEX Market
-                      controls
+                      {usr.chain === "bitshares" ? "Bitshares " : "Bitshares (Testnet) "}
+                      {t("Market:controls")}
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="pb-3">
@@ -548,9 +550,9 @@ export default function Market(properties) {
                   <Card>
                     <CardHeader className="pb-2 pt-4">
                       <CardTitle>
-                        {activeLimitCard === "buy" ? "Quote asset" : "Base asset"}
+                        {activeLimitCard === "buy" ? t("Market:quoteAsset") : t("Market:baseAsset")}
                       </CardTitle>
-                      <CardDescription className="text-lg">Loading...</CardDescription>
+                      <CardDescription className="text-lg">{t("Market:loading")}</CardDescription>
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-2">
@@ -580,9 +582,11 @@ export default function Market(properties) {
                   <Card>
                     <CardHeader className="pb-2 pt-4">
                       <CardTitle>
-                        {activeLimitCard === "sell" ? "Base asset" : "Quote asset"}
+                        {activeLimitCard === "sell"
+                          ? t("Market:baseAsset")
+                          : t("Market:quoteAsset")}
                       </CardTitle>
-                      <CardDescription className="text-lg">Loading...</CardDescription>
+                      <CardDescription className="text-lg">{t("Market:loading")}</CardDescription>
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-2">
@@ -616,20 +620,20 @@ export default function Market(properties) {
                 <TabsList className="grid w-full grid-cols-2 gap-1">
                   {activeMOC === "buy" ? (
                     <TabsTrigger value="buy" style={activeTabStyle}>
-                      Buy orders (bids)
+                      {t("Market:buyOrders")}
                     </TabsTrigger>
                   ) : (
                     <TabsTrigger value="buy" onClick={() => setActiveMOC("buy")}>
-                      Buy orders (bids)
+                      {t("Market:buyOrders")}
                     </TabsTrigger>
                   )}
                   {activeMOC === "sell" ? (
                     <TabsTrigger value="sell" style={activeTabStyle}>
-                      Sell orders (asks)
+                      {t("Market:sellOrders")}
                     </TabsTrigger>
                   ) : (
                     <TabsTrigger value="sell" onClick={() => setActiveMOC("sell")}>
-                      Sell orders (asks)
+                      {t("Market:sellOrders")}
                     </TabsTrigger>
                   )}
                 </TabsList>

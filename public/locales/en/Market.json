@@ -1,0 +1,19 @@
+{
+  "buyOrders": "Buy orders (bids)",
+  "sellOrders": "Sell orders (asks)",
+  "quoteAsset": "Quote asset",
+  "baseAsset": "Base asset",
+  "loading": "Loading...",
+  "controls": "Market controls",
+  "blocksightsMarketExplorer": "🔎 Blocksights market explorer",
+  "marketSummary": "Market summary",
+  "latestPrice": "Latest price:",
+  "24HrChange": "24Hr change:",
+  "24HrBaseVolume": "24Hr base volume:",
+  "24HrQuoteVolume": "24Hr quote volume:",
+  "lowestAsk": "Lowest ask:",
+  "highestBid": "Highest bid:",
+  "externalMarketLinks": "External market links",
+  "buy": "Buy",
+  "sell": "Sell"
+}

@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { InView } from "react-intersection-observer";
+import { useTranslation } from "react-i18next";
+import { i18n as i18nInstance } from "@/lib/i18n.js";
 
 import { Avatar } from "@/components/Avatar";
 import { Button } from "@/components/ui/button";
@@ -19,6 +21,7 @@ import AccountSelect from "../AccountSelect.jsx";
 
 export default function CurrentUser(properties) {
   const { usr } = properties;
+  const { t, i18n } = useTranslation("en", { i18n: i18nInstance });
 
   const [inView, setInView] = React.useState(false);
   if (!usr || !usr.id || !usr.id.length) {
@@ -82,12 +85,14 @@ export default function CurrentUser(properties) {
           }}
         >
           <DialogTrigger asChild>
-            <Button className="h-5 p-3">Switch account/chain</Button>
+            <Button className="h-5 p-3">{t("CurrentUser:dialogContent.switchAccountChain")}</Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[600px] bg-white">
             <DialogHeader>
-              <DialogTitle>Replacing current user</DialogTitle>
-              <DialogDescription>Select a chain and account to proceed</DialogDescription>
+              <DialogTitle>{t("CurrentUser:dialogContent.replacingUser")}</DialogTitle>
+              <DialogDescription>
+                {t("CurrentUser:dialogContent.selectChainAccount")}
+              </DialogDescription>
             </DialogHeader>
             <AccountSelect />
           </DialogContent>

@@ -1,0 +1,9 @@
+{
+  "editLimitOrderTitle": "Want to edit this limit order?",
+  "editLimitOrderDescription": "Limit orders can now be updated, save on fees by updating limit orders.",
+  "selectedOpenOrderData": "Selected open order's data:",
+  "proceedToUpdateButton": "Proceed to update this open limit order",
+  "viewObjectOnBlocksights": "View object on blocksights.info",
+  "priceColumnTitle": "Price",
+  "expirationDateColumnTitle": "Expiration date"
+}

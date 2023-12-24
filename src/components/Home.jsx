@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useSyncExternalStore } from "react";
-import { useTranslation } from "react-i18next";
 
-import { i18n as i18nInstance } from "../lib/i18n.js";
+import { useTranslation } from "react-i18next";
+import { i18n as i18nInstance } from "@/lib/i18n.js";
 
 import {
   Card,
@@ -36,17 +36,17 @@ export default function Home(properties) {
               <a href="/pool/index.html" style={{ textDecoration: "none" }}>
                 <Card>
                   <CardHeader>
-                    <CardTitle>{t("index:pool.title")}</CardTitle>
-                    <CardDescription>{t("index:pool.subtitle")}</CardDescription>
+                    <CardTitle>{t("Home:pool.title")}</CardTitle>
+                    <CardDescription>{t("Home:pool.subtitle")}</CardDescription>
                   </CardHeader>
                 </Card>
               </a>
             </HoverCardTrigger>
             <HoverCardContent className="w-80 text-sm pt-1">
               <ul className="ml-2 list-disc [&>li]:mt-2">
-                <li>{t("index:pool.hover1")}</li>
-                <li>{t("index:pool.hover2")}</li>
-                <li>{t("index:pool.hover3")}</li>
+                <li>{t("Home:pool.hover1")}</li>
+                <li>{t("Home:pool.hover2")}</li>
+                <li>{t("Home:pool.hover3")}</li>
               </ul>
             </HoverCardContent>
           </HoverCard>
@@ -56,18 +56,18 @@ export default function Home(properties) {
               <a href="/dex/index.html" style={{ textDecoration: "none" }}>
                 <Card>
                   <CardHeader>
-                    <CardTitle>{t("index:dex.title")}</CardTitle>
-                    <CardDescription>{t("index:dex.subtitle")}</CardDescription>
+                    <CardTitle>{t("Home:dex.title")}</CardTitle>
+                    <CardDescription>{t("Home:dex.subtitle")}</CardDescription>
                   </CardHeader>
                 </Card>
               </a>
             </HoverCardTrigger>
             <HoverCardContent className="w-80 text-sm pt-1">
               <ul className="ml-2 list-disc [&>li]:mt-2">
-                <li>{t("index:dex.hover1")}</li>
-                <li>{t("index:dex.hover2")}</li>
-                <li>{t("index:dex.hover3")}</li>
-                <li>{t("index:dex.hover4")}</li>
+                <li>{t("Home:dex.hover1")}</li>
+                <li>{t("Home:dex.hover2")}</li>
+                <li>{t("Home:dex.hover3")}</li>
+                <li>{t("Home:dex.hover4")}</li>
               </ul>
             </HoverCardContent>
           </HoverCard>
@@ -77,15 +77,15 @@ export default function Home(properties) {
               <a href="/transfer/index.html" style={{ textDecoration: "none" }}>
                 <Card>
                   <CardHeader>
-                    <CardTitle>{t("index:transfer.title")}</CardTitle>
-                    <CardDescription>{t("index:transfer.subtitle")}</CardDescription>
+                    <CardTitle>{t("Home:transfer.title")}</CardTitle>
+                    <CardDescription>{t("Home:transfer.subtitle")}</CardDescription>
                   </CardHeader>
                 </Card>
               </a>
             </HoverCardTrigger>
             <HoverCardContent className="w-80 text-sm pt-1">
               <ul className="ml-2 list-disc [&>li]:mt-2">
-                <li>{t("index:transfer.hover1")}</li>
+                <li>{t("Home:transfer.hover1")}</li>
               </ul>
             </HoverCardContent>
           </HoverCard>
@@ -95,17 +95,17 @@ export default function Home(properties) {
               <a href="/borrow/index.html" style={{ textDecoration: "none" }}>
                 <Card>
                   <CardHeader>
-                    <CardTitle>{t("index:borrow.title")}</CardTitle>
-                    <CardDescription>{t("index:borrow.subtitle")}</CardDescription>
+                    <CardTitle>{t("Home:borrow.title")}</CardTitle>
+                    <CardDescription>{t("Home:borrow.subtitle")}</CardDescription>
                   </CardHeader>
                 </Card>
               </a>
             </HoverCardTrigger>
             <HoverCardContent className="w-80 text-sm pt-1">
               <ul className="ml-2 list-disc [&>li]:mt-2">
-                <li>{t("index:borrow.hover1")}</li>
-                <li>{t("index:borrow.hover2")}</li>
-                <li>{t("index:borrow.hover3")}</li>
+                <li>{t("Home:borrow.hover1")}</li>
+                <li>{t("Home:borrow.hover2")}</li>
+                <li>{t("Home:borrow.hover3")}</li>
               </ul>
             </HoverCardContent>
           </HoverCard>
@@ -115,18 +115,18 @@ export default function Home(properties) {
               <a href="/smartcoins/index.html" style={{ textDecoration: "none" }}>
                 <Card>
                   <CardHeader>
-                    <CardTitle>{t("index:smartcoins.title")}</CardTitle>
-                    <CardDescription>{t("index:smartcoins.subtitle")}</CardDescription>
+                    <CardTitle>{t("Home:smartcoins.title")}</CardTitle>
+                    <CardDescription>{t("Home:smartcoins.subtitle")}</CardDescription>
                   </CardHeader>
                 </Card>
               </a>
             </HoverCardTrigger>
             <HoverCardContent className="w-80 text-sm pt-1">
               <ul className="ml-2 list-disc [&>li]:mt-2">
-                <li>{t("index:smartcoins.hover1")}</li>
-                <li>{t("index:smartcoins.hover2")}</li>
-                <li>{t("index:smartcoins.hover3")}</li>
-                <li>{t("index:smartcoins.hover4")}</li>
+                <li>{t("Home:smartcoins.hover1")}</li>
+                <li>{t("Home:smartcoins.hover2")}</li>
+                <li>{t("Home:smartcoins.hover3")}</li>
+                <li>{t("Home:smartcoins.hover4")}</li>
               </ul>
             </HoverCardContent>
           </HoverCard>
@@ -136,18 +136,18 @@ export default function Home(properties) {
               <a href="/ltm/index.html" style={{ textDecoration: "none" }}>
                 <Card>
                   <CardHeader>
-                    <CardTitle>{t("index:ltm.title")}</CardTitle>
-                    <CardDescription>{t("index:ltm.subtitle")}</CardDescription>
+                    <CardTitle>{t("Home:ltm.title")}</CardTitle>
+                    <CardDescription>{t("Home:ltm.subtitle")}</CardDescription>
                   </CardHeader>
                 </Card>
               </a>
             </HoverCardTrigger>
             <HoverCardContent className="w-80 text-sm pt-1">
               <ul className="ml-2 list-disc [&>li]:mt-2">
-                <li>{t("index:ltm.hover1")}</li>
-                <li>{t("index:ltm.hover2")}</li>
-                <li>{t("index:ltm.hover3")}</li>
-                <li>{t("index:ltm.hover4")}</li>
+                <li>{t("Home:ltm.hover1")}</li>
+                <li>{t("Home:ltm.hover2")}</li>
+                <li>{t("Home:ltm.hover3")}</li>
+                <li>{t("Home:ltm.hover4")}</li>
               </ul>
             </HoverCardContent>
           </HoverCard>
@@ -157,17 +157,17 @@ export default function Home(properties) {
               <a href="/portfolio/index.html" style={{ textDecoration: "none" }}>
                 <Card>
                   <CardHeader>
-                    <CardTitle>{t("index:portfolio.title")}</CardTitle>
-                    <CardDescription>{t("index:portfolio.subtitle")}</CardDescription>
+                    <CardTitle>{t("Home:portfolio.title")}</CardTitle>
+                    <CardDescription>{t("Home:portfolio.subtitle")}</CardDescription>
                   </CardHeader>
                 </Card>
               </a>
             </HoverCardTrigger>
             <HoverCardContent className="w-80 text-sm pt-1">
               <ul className="ml-2 list-disc [&>li]:mt-2">
-                <li>{t("index:portfolio.hover1")}</li>
-                <li>{t("index:portfolio.hover2")}</li>
-                <li>{t("index:portfolio.hover3")}</li>
+                <li>{t("Home:portfolio.hover1")}</li>
+                <li>{t("Home:portfolio.hover2")}</li>
+                <li>{t("Home:portfolio.hover3")}</li>
               </ul>
             </HoverCardContent>
           </HoverCard>
@@ -177,17 +177,17 @@ export default function Home(properties) {
               <a href="/featured/index.html" style={{ textDecoration: "none" }}>
                 <Card>
                   <CardHeader>
-                    <CardTitle>{t("index:featured.title")}</CardTitle>
-                    <CardDescription>{t("index:featured.subtitle")}</CardDescription>
+                    <CardTitle>{t("Home:featured.title")}</CardTitle>
+                    <CardDescription>{t("Home:featured.subtitle")}</CardDescription>
                   </CardHeader>
                 </Card>
               </a>
             </HoverCardTrigger>
             <HoverCardContent className="w-80 text-sm pt-1">
               <ul className="ml-2 list-disc [&>li]:mt-2">
-                <li>{t("index:featured.hover1")}</li>
-                <li>{t("index:featured.hover2")}</li>
-                <li>{t("index:featured.hover3")}</li>
+                <li>{t("Home:featured.hover1")}</li>
+                <li>{t("Home:featured.hover2")}</li>
+                <li>{t("Home:featured.hover3")}</li>
               </ul>
             </HoverCardContent>
           </HoverCard>
@@ -197,16 +197,16 @@ export default function Home(properties) {
               <a href="/deals/index.html" style={{ textDecoration: "none" }}>
                 <Card>
                   <CardHeader>
-                    <CardTitle>{t("index:deals.title")}</CardTitle>
-                    <CardDescription>{t("index:deals.subtitle")}</CardDescription>
+                    <CardTitle>{t("Home:deals.title")}</CardTitle>
+                    <CardDescription>{t("Home:deals.subtitle")}</CardDescription>
                   </CardHeader>
                 </Card>
               </a>
             </HoverCardTrigger>
             <HoverCardContent className="w-80 text-sm pt-1">
               <ul className="ml-2 list-disc [&>li]:mt-2">
-                <li>{t("index:deals.hover1")}</li>
-                <li>{t("index:deals.hover2")}</li>
+                <li>{t("Home:deals.hover1")}</li>
+                <li>{t("Home:deals.hover2")}</li>
               </ul>
             </HoverCardContent>
           </HoverCard>

@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { i18n as i18nInstance } from "@/lib/i18n.js";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -21,6 +23,7 @@ export default function MarketSummaryTabs(properties) {
     publicMarketHistory,
     _resetMarketData,
   } = properties;
+  const { t, i18n } = useTranslation("en", { i18n: i18nInstance });
 
   const [marketHistoryInProgress, setMarketHistoryInProgress] = useState(false);
   useEffect(() => {
@@ -58,20 +61,20 @@ export default function MarketSummaryTabs(properties) {
           <TabsList className="grid w-full grid-cols-3 gap-2">
             {activeTab === "marketTrades" ? (
               <TabsTrigger value="marketTrades" style={activeTabStyle}>
-                Market trades
+                {t("MarketSummaryTabs:marketTradesTabTitle")}
               </TabsTrigger>
             ) : (
               <TabsTrigger value="marketTrades" onClick={() => setActiveTab("marketTrades")}>
-                Market trades
+                {t("MarketSummaryTabs:marketTradesTabTitle")}
               </TabsTrigger>
             )}
             {activeTab === "usrLimitOrders" ? (
               <TabsTrigger value="usrLimitOrders" style={activeTabStyle}>
-                Your open orders
+                {t("MarketSummaryTabs:yourOpenOrdersTabTitle")}
               </TabsTrigger>
             ) : (
               <TabsTrigger value="usrLimitOrders" onClick={() => setActiveTab("usrLimitOrders")}>
-                Your open orders
+                {t("MarketSummaryTabs:yourOpenOrdersTabTitle")}
               </TabsTrigger>
             )}
           </TabsList>
@@ -80,20 +83,20 @@ export default function MarketSummaryTabs(properties) {
               <TabsList className="grid w-full grid-cols-2 gap-2">
                 {activeMarketTradesTab === "buy" ? (
                   <TabsTrigger value="buy" style={activeTabStyle}>
-                    Buy orders
+                    {t("MarketSummaryTabs:buyOrdersTabTitle")}
                   </TabsTrigger>
                 ) : (
                   <TabsTrigger value="buy" onClick={() => setActiveMarketTradesTab("buy")}>
-                    Buy orders
+                    {t("MarketSummaryTabs:buyOrdersTabTitle")}
                   </TabsTrigger>
                 )}
                 {activeMarketTradesTab === "sell" ? (
                   <TabsTrigger value="sell" style={activeTabStyle}>
-                    Sell orders
+                    {t("MarketSummaryTabs:sellOrdersTabTitle")}
                   </TabsTrigger>
                 ) : (
                   <TabsTrigger value="sell" onClick={() => setActiveMarketTradesTab("sell")}>
-                    Sell orders
+                    {t("MarketSummaryTabs:sellOrdersTabTitle")}
                   </TabsTrigger>
                 )}
               </TabsList>
@@ -132,20 +135,20 @@ export default function MarketSummaryTabs(properties) {
               <TabsList className="grid w-full grid-cols-2 gap-2">
                 {activeUsrHistoryTab === "buy" ? (
                   <TabsTrigger value="buy" style={activeTabStyle}>
-                    Buy orders
+                    {t("MarketSummaryTabs:buyOrdersTabTitle")}
                   </TabsTrigger>
                 ) : (
                   <TabsTrigger value="buy" onClick={() => setActiveUsrHistoryTab("buy")}>
-                    Buy orders
+                    {t("MarketSummaryTabs:buyOrdersTabTitle")}
                   </TabsTrigger>
                 )}
                 {activeUsrHistoryTab === "sell" ? (
                   <TabsTrigger value="sell" style={activeTabStyle}>
-                    Sell orders
+                    {t("MarketSummaryTabs:sellOrdersTabTitle")}
                   </TabsTrigger>
                 ) : (
                   <TabsTrigger value="sell" onClick={() => setActiveUsrHistoryTab("sell")}>
-                    Sell orders
+                    {t("MarketSummaryTabs:sellOrdersTabTitle")}
                   </TabsTrigger>
                 )}
               </TabsList>
@@ -184,20 +187,20 @@ export default function MarketSummaryTabs(properties) {
               <TabsList className="grid w-full grid-cols-2 gap-2">
                 {activeUsrLimitOrdersTab === "buy" ? (
                   <TabsTrigger value="buy" style={activeTabStyle}>
-                    Your buy orders
+                    {t("MarketSummaryTabs:yourBuyOrdersTabTitle")}
                   </TabsTrigger>
                 ) : (
                   <TabsTrigger value="buy" onClick={() => setActiveUsrLimitOrdersTab("buy")}>
-                    Your buy orders
+                    {t("MarketSummaryTabs:yourBuyOrdersTabTitle")}
                   </TabsTrigger>
                 )}
                 {activeUsrLimitOrdersTab === "sell" ? (
                   <TabsTrigger value="sell" style={activeTabStyle}>
-                    Your sell orders
+                    {t("MarketSummaryTabs:yourSellOrdersTabTitle")}
                   </TabsTrigger>
                 ) : (
                   <TabsTrigger value="sell" onClick={() => setActiveUsrLimitOrdersTab("sell")}>
-                    Your sell orders
+                    {t("MarketSummaryTabs:yourSellOrdersTabTitle")}
                   </TabsTrigger>
                 )}
               </TabsList>
