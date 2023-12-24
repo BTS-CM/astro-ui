@@ -860,7 +860,6 @@ export default function CreditBorrow(properties) {
                                       requiredMore: (
                                         requiredCollateralAmount - collateralInfo.amount
                                       ).toFixed(collateralInfo.precision),
-                                      symbol: collateralInfo.symbol,
                                     })}
                                   </FormMessage>
                                 ) : null}
