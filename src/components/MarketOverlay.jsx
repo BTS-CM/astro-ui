@@ -370,7 +370,6 @@ export default function MarketOverlay(properties) {
           <MarketPlaceholder />
         )}
       </div>
-      {usr && usr.username && usr.username.length ? <CurrentUser usr={usr} /> : null}{" "}
     </>
   );
 }

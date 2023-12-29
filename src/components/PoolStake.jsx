@@ -1310,8 +1310,6 @@ export default function PoolForm() {
           </CardContent>
         </Card>
       </div>
-
-      {usr && usr.username && usr.username.length ? <CurrentUser usr={usr} /> : null}
     </>
   );
 }

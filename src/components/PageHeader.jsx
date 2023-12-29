@@ -105,13 +105,14 @@ function LanguageRow(properties) {
 }
 
 export default function PageHeader(properties) {
+  const { page, backURL } = properties;
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
 
   return (
     <>
-      <div key={`${locale.get()}_header`} className="container mx-auto mb-3">
+      <div key={`header`} className="container mx-auto mb-3">
         <div className="grid grid-cols-12">
-          <div className="col-span-3">
+          <div className="col-span-2">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button>
@@ -180,7 +181,7 @@ export default function PageHeader(properties) {
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
-          <div className="col-span-6">
+          <div className="col-span-8 text-center">
             <h2>
               {t("PageHeader:welcomeMessage")}
               <span
@@ -195,12 +196,61 @@ export default function PageHeader(properties) {
                 {t("PageHeader:uiName")}
               </span>
             </h2>
+            <h3 className="text-muted-foreground">
+              {t(`PageHeader:descText.${page}`)}
+              <br />
+              {t("PageHeader:usage")}{" "}
+              <a
+                style={{
+                  backgroundImage: "var(--accent-gradient)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundSize: "400%",
+                  backgroundPosition: "0%",
+                }}
+                href="https://github.com/bitshares/beet"
+              >
+                Bitshares Beet {t("PageHeader:multiwallet")}
+              </a>
+              .
+            </h3>
+            {backURL ? (
+              <a
+                style={{
+                  backgroundImage: "var(--accent-gradient)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundSize: "400%",
+                  backgroundPosition: "0%",
+                }}
+                href={backURL}
+              >
+                {t("PageHeader:back")}
+              </a>
+            ) : null}
           </div>
-          <div className="col-span-3 text-right">
+          <div className="col-span-2 text-right">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button>
-                  <GearIcon />
+                  <svg viewBox="0 0 512 512" fill="currentColor" height="1em" width="1em">
+                    <path
+                      fill="none"
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={32}
+                      d="M48 112h288M192 64v48M272 448l96-224 96 224M301.5 384h133M281.3 112S257 206 199 277 80 384 80 384"
+                    />
+                    <path
+                      fill="none"
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={32}
+                      d="M256 336s-35-27-72-75-56-85-56-85"
+                    />
+                  </svg>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="mt-10 p-0" side="end">
@@ -210,7 +260,15 @@ export default function PageHeader(properties) {
                     <CommandEmpty>{t("PageHeader:noResultsFound")}</CommandEmpty>
                     <CommandGroup heading={t("PageHeader:exchangingFundsHeading")}>
                       <LanguageRow language="en" i18n={i18n} text={t("PageHeader:english")} />
+                      <LanguageRow language="da" i18n={i18n} text={t("PageHeader:danish")} />
                       <LanguageRow language="de" i18n={i18n} text={t("PageHeader:german")} />
+                      <LanguageRow language="es" i18n={i18n} text={t("PageHeader:spanish")} />
+                      <LanguageRow language="fr" i18n={i18n} text={t("PageHeader:french")} />
+                      <LanguageRow language="it" i18n={i18n} text={t("PageHeader:italian")} />
+                      <LanguageRow language="ja" i18n={i18n} text={t("PageHeader:japanese")} />
+                      <LanguageRow language="ko" i18n={i18n} text={t("PageHeader:korean")} />
+                      <LanguageRow language="pt" i18n={i18n} text={t("PageHeader:portuguese")} />
+                      <LanguageRow language="th" i18n={i18n} text={t("PageHeader:thai")} />
                     </CommandGroup>
                   </CommandList>
                 </Command>

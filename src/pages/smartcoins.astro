@@ -2,19 +2,14 @@
 import Layout from '../layouts/Layout.astro';
 import Smartcoins from '../components/Smartcoins.jsx';
 import PageHeader from '../components/PageHeader';
+import PageFooter from '../components/PageFooter';
 ---
 
 <Layout title="Bitshares smartcoins - Find a smartcoin to borrow">
 	<main>
-		<PageHeader client:only />
-		<h3 class="mb-5">
-			Use the interface below to locate an asset to borrow into existence<br /><br/>
-			<a class="text-gradient" href="../index.html">Go back</a>
-		</h3>
+		<PageHeader client:only page="smartcoins" backURL="../index.html" />
 		<Smartcoins client:only />
-		<h4 class="text-center">
-			<a class="text-gradient" href="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/smartcoins.astro">MIT Licensed code</a> built with <a class="text-gradient" href="https://astro.build/">Astro</a>, <a class="text-gradient" href="https://react.dev/">React</a>, <a class="text-gradient" href="https://elysiajs.com/">ElysiaJS</a> and <a class="text-gradient" href="https://bun.sh/">Bun</a>.
-		</h4>
+		<PageFooter client:only sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/smartcoins.astro" />
 	</main>
 </Layout>
 

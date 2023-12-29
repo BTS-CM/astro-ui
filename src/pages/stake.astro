@@ -2,19 +2,14 @@
 import Layout from '../layouts/Layout.astro';
 import PoolStake from '../components/PoolStake.jsx';
 import PageHeader from '../components/PageHeader';
+import PageFooter from '../components/PageFooter';
 ---
 
 <Layout title="Bitshares pool staking form">
 	<main>
-		<PageHeader client:only />
-		<h3 class="mb-5">
-			Stake<br /><br/>
-			<a class="text-gradient" href="../index.html">Go back</a>
-		</h3>
+		<PageHeader client:only page="stake" backURL="../index.html" />
 		<PoolStake client:only />
-		<h4 class="text-center">
-			<a class="text-gradient" href="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/stake.astro">MIT Licensed code</a> built with <a class="text-gradient" href="https://astro.build/">Astro</a>, <a class="text-gradient" href="https://react.dev/">React</a>, <a class="text-gradient" href="https://elysiajs.com/">ElysiaJS</a> and <a class="text-gradient" href="https://bun.sh/">Bun</a>.
-		</h4>
+		<PageFooter client:only sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/stake.astro" />
 	</main>
 </Layout>
 

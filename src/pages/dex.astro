@@ -2,20 +2,14 @@
 import Layout from '../layouts/Layout.astro';
 import MarketOverlay from '../components/MarketOverlay';
 import PageHeader from '../components/PageHeader';
+import PageFooter from '../components/PageFooter';
 ---
 
 <Layout title="Bitshares decentralized cryptocurrency exchange - limit order page">
 	<main>
-		<PageHeader client:only />
-		<h3 class="mb-5">
-			Use the form below to create a limit order on the Bitshares DEX.<br /><br />
-			Designed for use with the <a class="text-gradient" href="https://github.com/bitshares/beet">Bitshares Beet multiwallet</a>.<br/><br/>
-			<a class="text-gradient" href="../index.html">Go back</a>
-		</h3>
+		<PageHeader client:only page="dex" backURL="../index.html" />
 		<MarketOverlay  client:only />
-		<h4 class="text-center">
-			<a class="text-gradient" href="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/dex.astro">MIT Licensed code</a> built with <a class="text-gradient" href="https://astro.build/">Astro</a>, <a class="text-gradient" href="https://react.dev/">React</a>, <a class="text-gradient" href="https://elysiajs.com/">ElysiaJS</a> and <a class="text-gradient" href="https://bun.sh/">Bun</a>.
-		</h4>
+		<PageFooter client:only sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/dex.astro" />
 	</main>
 </Layout>
 

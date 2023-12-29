@@ -587,9 +587,6 @@ export default function PortfolioTabs(properties) {
           </Tabs>
         </div>
       </div>
-      <div className="grid grid-cols-1 mt-5">
-        {usr && usr.username && usr.username.length ? <CurrentUser usr={usr} /> : null}
-      </div>
     </>
   );
 }

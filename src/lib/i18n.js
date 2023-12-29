@@ -3,7 +3,7 @@ import { initReactI18next } from "react-i18next";
 import { persistentAtom } from "@nanostores/persistent";
 import * as fflate from "fflate";
 
-const languages = ["en", "de"];
+const languages = ["en", "da", "de", "es", "fr", "it", "ja", "ko", "pt", "th"];
 const pages = [
   "AccountSearch",
   "AccountSelect",
@@ -40,9 +40,17 @@ const pages = [
   "Smartcoins",
   "Transfer",
 ];
+
 const locale = persistentAtom("locale", "en");
+const storedLocale = persistentAtom("storedLocale", "");
 
 async function fetchTranslations() {
+  const _stored = storedLocale.get();
+  const _parsed = _stored ? JSON.parse(_stored) : null;
+  if (_parsed && _parsed.locale && _parsed.locale === locale.get()) {
+    console.log(`Using cached ${locale.get()} translations`);
+    return _parsed.translations;
+  }
   const response = await fetch(`http://localhost:8080/cache/translations/${locale.get()}`);
   if (response.ok) {
     const pageContents = await response.json();
@@ -52,6 +60,7 @@ async function fetchTranslations() {
       const history = JSON.parse(fflate.strFromU8(decompressed));
       const translations = {};
       translations[locale.get()] = history;
+      storedLocale.set(JSON.stringify({ translations, locale: locale.get() }));
       return translations;
     }
   } else {
@@ -68,7 +77,7 @@ async function initialize() {
       resources,
       lng: "en",
       defaultNS: pages,
-      fallbackLng: ["en", "de"],
+      fallbackLng: languages,
       ns: pages,
     },
     (err, t) => {
@@ -80,12 +89,5 @@ async function initialize() {
 }
 
 initialize();
-
-/*
-function setLocale(newLocale) {
-  locale.setKey("locale", newLocale);
-  i18next.changeLanguage(newLocale);
-}
-*/
 
 export { i18n, locale };

@@ -24,11 +24,6 @@ export default function Home(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
 
-  console.log({
-    locale: locale.get(),
-    resources: i18nInstance.options.resources,
-  });
-
   useInitCache(usr && usr.chain ? usr.chain : "bitshares", []);
 
   return (
@@ -213,9 +208,6 @@ export default function Home(properties) {
             </ul>
           </HoverCardContent>
         </HoverCard>
-      </div>
-      <div className="grid grid-cols-1 mt-5">
-        {usr && usr.username && usr.username.length ? <CurrentUser usr={usr} /> : null}
       </div>
     </div>
   );

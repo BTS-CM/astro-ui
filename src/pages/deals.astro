@@ -2,19 +2,14 @@
 import Layout from '../layouts/Layout.astro';
 import CreditDeals from '../components/CreditDeals.jsx';
 import PageHeader from '../components/PageHeader';
+import PageFooter from '../components/PageFooter';
 ---
 
 <Layout title="Bitshares credit deal listings">
 	<main>
-		<PageHeader client:only />
-		<h3 class="mb-5">
-			Check out your current deals below!<br /><br/>
-			<a class="text-gradient" href="../index.html">Go back</a>
-		</h3>
+		<PageHeader client:only page="deals" backURL="../index.html" />
 		<CreditDeals client:only />
-		<h4 class="text-center">
-			<a class="text-gradient" href="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/deals.astro">MIT Licensed code</a> built with <a class="text-gradient" href="https://astro.build/">Astro</a>, <a class="text-gradient" href="https://react.dev/">React</a>, <a class="text-gradient" href="https://elysiajs.com/">ElysiaJS</a> and <a class="text-gradient" href="https://bun.sh/">Bun</a>.
-		</h4>
+		<PageFooter client:only sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/deals.astro" />
 	</main>
 </Layout>
 

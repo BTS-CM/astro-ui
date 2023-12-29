@@ -1067,9 +1067,6 @@ export default function CreditBorrow(properties) {
             <CardFooter className="text-sm">{t("CreditOffer:risks.risksFooter")}</CardFooter>
           </Card>
         </div>
-        <div className="grid grid-cols-1 mt-5">
-          {usr && usr.username && usr.username.length ? <CurrentUser usr={usr} /> : null}
-        </div>
       </div>
     </>
   );

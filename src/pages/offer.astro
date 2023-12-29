@@ -2,20 +2,14 @@
 import Layout from '../layouts/Layout.astro';
 import CreditOffer from '../components/CreditOffer.jsx';
 import PageHeader from '../components/PageHeader';
+import PageFooter from '../components/PageFooter';
 ---
 
 <Layout title="Bitshares credit deal">
 	<main>
-		<PageHeader client:only />
-		<h3 class="mb-5">
-			The form below is for accepting a credit offer on the Bitshares DEX.<br /><br />
-			Designed for use with the <a class="text-gradient" href="https://github.com/bitshares/beet">Bitshares Beet multiwallet</a>.<br/><br/>
-			<a class="text-gradient" href="../borrow/index.html">Go back</a>
-		</h3>
+		<PageHeader client:only page="offer" backURL="../borrow/index.html" />
 		<CreditOffer  client:only />
-		<h4 class="text-center">
-			<a class="text-gradient" href="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/offer.astro">MIT Licensed code</a> built with <a class="text-gradient" href="https://astro.build/">Astro</a>, <a class="text-gradient" href="https://react.dev/">React</a>, <a class="text-gradient" href="https://elysiajs.com/">ElysiaJS</a> and <a class="text-gradient" href="https://bun.sh/">Bun</a>.
-		</h4>
+		<PageFooter client:only sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/offer.astro" />
 	</main>
 </Layout>
 

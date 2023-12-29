@@ -2,21 +2,14 @@
 import Layout from '../layouts/Layout.astro';
 import Home from '../components/Home.jsx';
 import PageHeader from '../components/PageHeader';
+import PageFooter from '../components/PageFooter';
 ---
 
 <Layout title="Bitshares Beet Astro UI - index">
 	<main>
-		<PageHeader client:only />
-		<h3>
-			This <a class="text-gradient" href="https://github.com/BTS-CM/astro-pool">open-source tool</a> can craft multiple Bitshares operations. <br/>
-		</h3>
-		<h3>
-			Designed for use with the <a class="text-gradient" href="https://github.com/bitshares/beet">Bitshares Beet multiwallet</a>.<br/><br/>
-		</h3>
+		<PageHeader client:only page="index" backURL="" />
 		<Home client:only />
-		<h4 class="text-center">
-			<a class="text-gradient" href="https://github.com/BTS-CM/astro-ui/blob/main/LICENSE">MIT Licensed</a> code built with <a class="text-gradient" href="https://astro.build/">Astro</a>, <a class="text-gradient" href="https://react.dev/">React</a>, <a class="text-gradient" href="https://elysiajs.com/">ElysiaJS</a> and <a class="text-gradient" href="https://bun.sh/">Bun</a>.
-		</h4>
+		<PageFooter client:only sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/borrow.astro" />
 	</main>
 </Layout>
 
