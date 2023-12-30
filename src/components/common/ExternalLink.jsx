@@ -24,7 +24,6 @@ export default function ExternalLink(properties) {
   const allowedDomains = [
     "https://blocksights.info/",
     "https://bts.exchange/",
-    "https://wallet.btwty.com/",
     "https://ex.xbts.io/",
     "https://kibana.bts.mobi/",
     "https://www.bitsharescan.info/",

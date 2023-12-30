@@ -194,13 +194,6 @@ export default function MarketAssetCard(properties) {
                     classnamecontents="ml-2"
                     variant="outline"
                     type="button"
-                    text={`BTWTY.com`}
-                    hyperlink={`https://wallet.btwty.com/asset/${asset}?r=nftprofessional1`}
-                  />
-                  <ExternalLink
-                    classnamecontents="ml-2"
-                    variant="outline"
-                    type="button"
                     text={`XBTS.io`}
                     hyperlink={`https://ex.xbts.io/#/asset/${asset}?r=nftprofessional1`}
                   />

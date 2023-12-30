@@ -27,7 +27,10 @@ export default function PageHeader(properties) {
 
       <div className="grid grid-cols-1 mt-3">
         <h4 class="text-center">
-          <a style={gradient} href={sourceURL}>
+          <a
+            style={gradient}
+            href={sourceURL && sourceURL.startsWith("https://github.com/") ? sourceURL : "#"}
+          >
             MIT {t("PageFooter:licensed")}
           </a>{" "}
           {t("PageFooter:built")}{" "}

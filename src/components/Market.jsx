@@ -302,17 +302,6 @@ export default function Market(properties) {
             />
             <ExternalLink
               variant="outline"
-              classnamecontents="ml-2"
-              type="button"
-              text={`🔗 BTWTY`}
-              hyperlink={
-                activeLimitCard === "buy"
-                  ? `https://wallet.btwty.com/market/${assetA}_${assetB}?r=nftprofessional1`
-                  : `https://wallet.btwty.com/market/${assetB}_${assetA}?r=nftprofessional1`
-              }
-            />
-            <ExternalLink
-              variant="outline"
               classnamecontents="ml-2 mt-2"
               type="button"
               text={`🔗 XBTS`}
