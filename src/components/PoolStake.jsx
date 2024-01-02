@@ -786,92 +786,94 @@ export default function PoolForm() {
 
                       <div className="grid grid-cols-3 mt-5 text-center">
                         {pool ? (
-                          <ExternalLink
-                            variant="outline"
-                            classnamecontents="ml-2"
-                            type="button"
-                            text={t("PoolStake:blocksightsPoolExplorer")}
-                            hyperlink={`https://blocksights.info/#/pools/${pool}${
-                              usr.chain !== "bitshares" ? "?network=testnet" : ""
-                            }`}
-                          />
-                        ) : null}
-                        {foundPoolDetails && foundPoolShareAssetDetails ? (
-                          <Dialog>
-                            <DialogTrigger asChild>
+                          <>
+                            <ExternalLink
+                              variant="outline"
+                              classnamecontents="ml-2"
+                              type="button"
+                              text={t("PoolStake:blocksightsPoolExplorer")}
+                              hyperlink={`https://blocksights.info/#/pools/${pool}${
+                                usr.chain !== "bitshares" ? "?network=testnet" : ""
+                              }`}
+                            />
+                            {foundPoolDetails && foundPoolShareAssetDetails ? (
+                              <Dialog>
+                                <DialogTrigger asChild>
+                                  <Button className="ml-2" variant="outline">
+                                    {t("PoolStake:poolJson")}
+                                  </Button>
+                                </DialogTrigger>
+                                <DialogContent className="sm:max-w-[550px] bg-white">
+                                  <DialogHeader>
+                                    <DialogTitle>{t("PoolStake:liquidityPoolJson")}</DialogTitle>
+                                    <DialogDescription>
+                                      {t("PoolStake:checkPoolDetails")}
+                                    </DialogDescription>
+                                  </DialogHeader>
+                                  <div className="grid grid-cols-1">
+                                    <div className="col-span-1">
+                                      <ScrollArea className="h-72 rounded-md border">
+                                        <pre>
+                                          {JSON.stringify(
+                                            [foundPoolDetails, foundPoolShareAssetDetails],
+                                            null,
+                                            2
+                                          )}
+                                        </pre>
+                                      </ScrollArea>
+                                    </div>
+                                  </div>
+                                </DialogContent>
+                              </Dialog>
+                            ) : (
                               <Button className="ml-2" variant="outline">
                                 {t("PoolStake:poolJson")}
                               </Button>
-                            </DialogTrigger>
-                            <DialogContent className="sm:max-w-[550px] bg-white">
-                              <DialogHeader>
-                                <DialogTitle>{t("PoolStake:liquidityPoolJson")}</DialogTitle>
-                                <DialogDescription>
-                                  {t("PoolStake:checkPoolDetails")}
-                                </DialogDescription>
-                              </DialogHeader>
-                              <div className="grid grid-cols-1">
-                                <div className="col-span-1">
-                                  <ScrollArea className="h-72 rounded-md border">
-                                    <pre>
-                                      {JSON.stringify(
-                                        [foundPoolDetails, foundPoolShareAssetDetails],
-                                        null,
-                                        2
-                                      )}
-                                    </pre>
-                                  </ScrollArea>
-                                </div>
-                              </div>
-                            </DialogContent>
-                          </Dialog>
-                        ) : (
-                          <Button className="ml-2" variant="outline">
-                            {t("PoolStake:poolJson")}
-                          </Button>
-                        )}
-                        {assetADetails && assetBDetails ? (
-                          <Dialog>
-                            <DialogTrigger asChild>
+                            )}
+                            {assetADetails && assetBDetails ? (
+                              <Dialog>
+                                <DialogTrigger asChild>
+                                  <Button className="ml-2" variant="outline">
+                                    {t("PoolStake:swappableAssetJson")}
+                                  </Button>
+                                </DialogTrigger>
+                                <DialogContent className="sm:max-w-[550px] bg-white">
+                                  <DialogHeader>
+                                    <DialogTitle>{t("PoolStake:swappableAssetJson")}</DialogTitle>
+                                    <DialogDescription>
+                                      {t("PoolStake:checkSwappableAssetsDetails")}
+                                    </DialogDescription>
+                                  </DialogHeader>
+                                  <div className="grid grid-cols-1">
+                                    <div className="col-span-1">
+                                      <ScrollArea className="h-72 rounded-md border">
+                                        <pre>
+                                          {JSON.stringify(
+                                            {
+                                              assetA: assetA ?? "",
+                                              assetADetails: assetADetails ?? {},
+                                              aBitassetData: aBitassetData ?? {},
+                                              assetB: assetB ?? "",
+                                              assetBDetails: assetBDetails ?? {},
+                                              bBitassetData: bBitassetData ?? {},
+                                              poolShareDetails: poolShareDetails ?? {},
+                                            },
+                                            null,
+                                            2
+                                          )}
+                                        </pre>
+                                      </ScrollArea>
+                                    </div>
+                                  </div>
+                                </DialogContent>
+                              </Dialog>
+                            ) : (
                               <Button className="ml-2" variant="outline">
                                 {t("PoolStake:swappableAssetJson")}
                               </Button>
-                            </DialogTrigger>
-                            <DialogContent className="sm:max-w-[550px] bg-white">
-                              <DialogHeader>
-                                <DialogTitle>{t("PoolStake:swappableAssetJson")}</DialogTitle>
-                                <DialogDescription>
-                                  {t("PoolStake:checkSwappableAssetsDetails")}
-                                </DialogDescription>
-                              </DialogHeader>
-                              <div className="grid grid-cols-1">
-                                <div className="col-span-1">
-                                  <ScrollArea className="h-72 rounded-md border">
-                                    <pre>
-                                      {JSON.stringify(
-                                        {
-                                          assetA: assetA ?? "",
-                                          assetADetails: assetADetails ?? {},
-                                          aBitassetData: aBitassetData ?? {},
-                                          assetB: assetB ?? "",
-                                          assetBDetails: assetBDetails ?? {},
-                                          bBitassetData: bBitassetData ?? {},
-                                          poolShareDetails: poolShareDetails ?? {},
-                                        },
-                                        null,
-                                        2
-                                      )}
-                                    </pre>
-                                  </ScrollArea>
-                                </div>
-                              </div>
-                            </DialogContent>
-                          </Dialog>
-                        ) : (
-                          <Button className="ml-2" variant="outline">
-                            {t("PoolStake:swappableAssetJson")}
-                          </Button>
-                        )}
+                            )}
+                          </>
+                        ) : null}
                       </div>
 
                       {pool && pool.length ? (
@@ -1155,11 +1157,7 @@ export default function PoolForm() {
                                 name="poolShareAssetAmount"
                                 render={({ field }) => (
                                   <FormItem>
-                                    <FormLabel>
-                                      {t("PoolStake:totalShareAssetReceive", {
-                                        symbol: foundPoolDetails?.share_asset_symbol,
-                                      })}
-                                    </FormLabel>
+                                    <FormLabel>{t("PoolStake:totalShareAssetReceive")}</FormLabel>
                                     <FormControl>
                                       <div className="grid grid-cols-2 mb-3 mt-3">
                                         <Input

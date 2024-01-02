@@ -22,7 +22,7 @@ export default function MarketAssetCard(properties) {
   return (
     <Card>
       <CardHeader className="pb-2 pt-4">
-        <CardTitle>? (1.2.x)</CardTitle>
+        <CardTitle>1.3.x</CardTitle>
         <CardDescription className="text-lg">
           {type === "buy" ? (
             <>
