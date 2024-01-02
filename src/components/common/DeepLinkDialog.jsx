@@ -108,7 +108,7 @@ export default function DeepLinkDialog(properties) {
               <>
                 {t("DeepLinkDialog:dialogContent.readyToBroadcast")}
                 <br />
-                {t("DeepLinkDialog:dialogContent.chooseMethod")}
+                {t("DeepLinkDialog:dialogContent.chooseMethod")}{" "}
                 <ExternalLink
                   classnamecontents="text-blue-500"
                   type="text"

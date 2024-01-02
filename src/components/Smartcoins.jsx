@@ -32,7 +32,6 @@ import {
   $bitAssetDataCacheTEST,
 } from "../stores/cache.ts";
 
-import CurrentUser from "./common/CurrentUser.jsx";
 import ExternalLink from "./common/ExternalLink.jsx";
 
 const activeTabStyle = {

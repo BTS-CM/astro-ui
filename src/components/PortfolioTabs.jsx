@@ -38,7 +38,6 @@ import {
   $globalParamsCacheTEST,
 } from "../stores/cache.ts";
 
-import CurrentUser from "./common/CurrentUser.jsx";
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
 import ExternalLink from "./common/ExternalLink.jsx";
 

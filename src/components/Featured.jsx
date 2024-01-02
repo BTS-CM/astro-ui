@@ -12,11 +12,8 @@ import {
 } from "@/components/ui/card";
 
 import { useInitCache } from "../effects/Init.ts";
-import { $currentUser } from "../stores/users.ts";
-
-import CurrentUser from "./common/CurrentUser.jsx";
-
 import { createMarketsStore } from "../effects/Market.ts";
+import { $currentUser } from "../stores/users.ts";
 
 export default function Featured(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });

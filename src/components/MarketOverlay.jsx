@@ -4,7 +4,6 @@ import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
 import Market from "./Market";
 import MarketPlaceholder from "./MarketPlaceholder";
-import CurrentUser from "./common/CurrentUser.jsx";
 
 import { humanReadableFloat, trimPrice } from "../lib/common";
 import { useInitCache } from "../effects/Init.ts";

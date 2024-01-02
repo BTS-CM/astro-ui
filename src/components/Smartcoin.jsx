@@ -66,7 +66,6 @@ import {
   $bitAssetDataCacheTEST,
 } from "../stores/cache.ts";
 
-import CurrentUser from "./common/CurrentUser.jsx";
 import DeepLinkDialog from "./common/DeepLinkDialog";
 import ExternalLink from "./common/ExternalLink.jsx";
 import CardRow from "./common/CardRow.jsx";

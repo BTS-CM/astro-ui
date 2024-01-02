@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Toggle } from "@/components/ui/toggle";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 import {
   Card,
@@ -78,7 +78,6 @@ import { $currentUser } from "../stores/users.ts";
 
 import MarketAssetCard from "./Market/MarketAssetCard.jsx";
 
-import CurrentUser from "./common/CurrentUser.jsx";
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
 import ExternalLink from "./common/ExternalLink.jsx";
 
@@ -165,12 +164,21 @@ export default function PoolForm() {
     return [];
   }, [_globalParamsBTS, _globalParamsTEST, _chain]);
 
-  const [fee, setFee] = useState();
+  const [fee, setFee] = useState(); // staking deposit fee
   useEffect(() => {
     if (globalParams && globalParams.length) {
-      const foundFee = globalParams.find((x) => x[0] === 63);
+      const foundFee = globalParams.find((x) => x[0] === 61);
       const finalFee = humanReadableFloat(foundFee[1].fee, 5);
       setFee(finalFee);
+    }
+  }, [globalParams]);
+
+  const [unstakeFee, setUnstakeFee] = useState(); // staking withdraw fee
+  useEffect(() => {
+    if (globalParams && globalParams.length) {
+      const foundFee = globalParams.find((x) => x[0] === 62);
+      const finalFee = humanReadableFloat(foundFee[1].fee, 5);
+      setUnstakeFee(finalFee);
     }
   }, [globalParams]);
 
@@ -448,82 +456,9 @@ export default function PoolForm() {
   const [bStake, setBStake] = useState(0);
   const [totalReceiving, setTotalReceiving] = useState(0);
 
-  /**
-   *
-   * @param {string} stakeInputValue
-   * @param {any} foundPoolDetails
-   * @param {string} assetType
-   * @returns amount & share asset amount
-   */
-  const calculateShareAssetAmount = (stakeInputValue, foundPoolDetails, assetType) => {
-    if (stakeInputValue > 0 && foundPoolDetails) {
-      const precision =
-        assetType === "A" ? foundPoolDetails.asset_a_precision : foundPoolDetails.asset_b_precision;
-
-      const _supply = foundPoolShareAssetDetails.current_supply;
-      const balance =
-        assetType === "A" ? Number(foundPoolDetails.balance_a) : Number(foundPoolDetails.balance_b);
-
-      const otherAssetAmount = assetType === "A" ? bStake : aStake;
-      const otherAssetPrecision =
-        assetType === "A" ? foundPoolDetails.asset_b_precision : foundPoolDetails.asset_a_precision;
-
-      const shareAssetAmountA = (_supply * blockchainFloat(stakeInputValue, precision)) / balance;
-      const shareAssetAmountB =
-        (_supply * blockchainFloat(otherAssetAmount, otherAssetPrecision)) / balance;
-
-      const shareAssetAmount = Math.min(shareAssetAmountA, shareAssetAmountB);
-
-      /*
-      console.log({
-        _supply,
-        balance,
-        shareAssetAmountA,
-        shareAssetAmountB,
-        shareAssetAmount,
-        otherAssetAmount,
-      });
-      */
-
-      return {
-        amount:
-          assetType === "A"
-            ? (stakeInputValue *
-                humanReadableFloat(
-                  Number(foundPoolDetails.balance_a),
-                  foundPoolDetails.asset_a_precision
-                )) /
-              foundPoolDetails.readable_balance_b
-            : (stakeInputValue *
-                humanReadableFloat(
-                  Number(foundPoolDetails.balance_b),
-                  foundPoolDetails.asset_b_precision
-                )) /
-              foundPoolDetails.readable_balance_a,
-        shareAssetAmount,
-      };
-    }
-  };
-
-  useEffect(() => {
-    if (foundPoolDetails && foundPoolShareAssetDetails && aStake > 0) {
-      const result = calculateShareAssetAmount(parseFloat(aStake), foundPoolDetails, "A");
-      if (result) {
-        setBStake(result.amount);
-        setTotalReceiving(result.shareAssetAmount);
-      }
-    }
-  }, [aStake, foundPoolDetails, foundPoolShareAssetDetails]);
-
-  useEffect(() => {
-    if (foundPoolDetails && foundPoolShareAssetDetails && bStake > 0) {
-      const result = calculateShareAssetAmount(parseFloat(bStake), foundPoolDetails, "B");
-      if (result) {
-        setAStake(result.amount);
-        setTotalReceiving(result.shareAssetAmount);
-      }
-    }
-  }, [bStake, foundPoolDetails, foundPoolShareAssetDetails]);
+  const [withdrawAmount, setWithdrawAmount] = useState(0);
+  const [withdrawingA, setWithdrawingA] = useState(0);
+  const [withdrawingB, setWithdrawingB] = useState(0);
 
   const [showDialog, setShowDialog] = useState(false);
   const [poolKey, setPoolKey] = useState("default_pool_key");
@@ -549,10 +484,8 @@ export default function PoolForm() {
         <div className="grid grid-cols-1 gap-3">
           <Card className="p-2">
             <CardHeader>
-              <CardTitle>{t("PoolStake:bitsharesLiquidityPoolExchange")}</CardTitle>
-              <CardDescription>
-                {t("PoolStake:bitsharesLiquidityPoolExchangeDescription")}
-              </CardDescription>
+              <CardTitle>{t("PoolStake:title")}</CardTitle>
+              <CardDescription>{t("PoolStake:description")}</CardDescription>
             </CardHeader>
             <CardContent>
               {!pools ? <p>{t("PoolStake:loadingPoolData")}</p> : null}
@@ -609,7 +542,6 @@ export default function PoolForm() {
                                 </div>
                               </div>
                             </FormControl>
-                            <FormMessage />
                           </FormItem>
                         )}
                       />
@@ -794,7 +726,6 @@ export default function PoolForm() {
                                 </div>
                               </div>
                             </FormControl>
-                            <FormMessage />
                           </FormItem>
                         )}
                       />
@@ -848,6 +779,96 @@ export default function PoolForm() {
                         ) : null}
                       </div>
 
+                      <div className="grid grid-cols-3 mt-5 text-center">
+                        {pool ? (
+                          <ExternalLink
+                            variant="outline"
+                            classnamecontents="ml-2"
+                            type="button"
+                            text={t("PoolStake:blocksightsPoolExplorer")}
+                            hyperlink={`https://blocksights.info/#/pools/${pool}${
+                              usr.chain !== "bitshares" ? "?network=testnet" : ""
+                            }`}
+                          />
+                        ) : null}
+                        {foundPoolDetails && foundPoolShareAssetDetails ? (
+                          <Dialog>
+                            <DialogTrigger asChild>
+                              <Button className="ml-2" variant="outline">
+                                {t("PoolStake:poolJson")}
+                              </Button>
+                            </DialogTrigger>
+                            <DialogContent className="sm:max-w-[550px] bg-white">
+                              <DialogHeader>
+                                <DialogTitle>{t("PoolStake:liquidityPoolJson")}</DialogTitle>
+                                <DialogDescription>
+                                  {t("PoolStake:checkPoolDetails")}
+                                </DialogDescription>
+                              </DialogHeader>
+                              <div className="grid grid-cols-1">
+                                <div className="col-span-1">
+                                  <ScrollArea className="h-72 rounded-md border">
+                                    <pre>
+                                      {JSON.stringify(
+                                        [foundPoolDetails, foundPoolShareAssetDetails],
+                                        null,
+                                        2
+                                      )}
+                                    </pre>
+                                  </ScrollArea>
+                                </div>
+                              </div>
+                            </DialogContent>
+                          </Dialog>
+                        ) : (
+                          <Button className="ml-2" variant="outline" disabled>
+                            {t("PoolStake:poolJson")}
+                          </Button>
+                        )}
+                        {assetADetails && assetBDetails ? (
+                          <Dialog>
+                            <DialogTrigger asChild>
+                              <Button className="ml-2" variant="outline">
+                                {t("PoolStake:swappableAssetJson")}
+                              </Button>
+                            </DialogTrigger>
+                            <DialogContent className="sm:max-w-[550px] bg-white">
+                              <DialogHeader>
+                                <DialogTitle>{t("PoolStake:swappableAssetJson")}</DialogTitle>
+                                <DialogDescription>
+                                  {t("PoolStake:checkSwappableAssetsDetails")}
+                                </DialogDescription>
+                              </DialogHeader>
+                              <div className="grid grid-cols-1">
+                                <div className="col-span-1">
+                                  <ScrollArea className="h-72 rounded-md border">
+                                    <pre>
+                                      {JSON.stringify(
+                                        {
+                                          assetA: assetA ?? "",
+                                          assetADetails: assetADetails ?? {},
+                                          aBitassetData: aBitassetData ?? {},
+                                          assetB: assetB ?? "",
+                                          assetBDetails: assetBDetails ?? {},
+                                          bBitassetData: bBitassetData ?? {},
+                                          poolShareDetails: poolShareDetails ?? {},
+                                        },
+                                        null,
+                                        2
+                                      )}
+                                    </pre>
+                                  </ScrollArea>
+                                </div>
+                              </div>
+                            </DialogContent>
+                          </Dialog>
+                        ) : (
+                          <Button className="ml-2" variant="outline" disabled>
+                            {t("PoolStake:swappableAssetJson")}
+                          </Button>
+                        )}
+                      </div>
+
                       {pool && pool.length ? (
                         <Tabs
                           key={`staking_${stakeTab}`}
@@ -884,8 +905,9 @@ export default function PoolForm() {
                               </TabsTrigger>
                             )}
                           </TabsList>
+
                           <TabsContent value="stake">
-                            <div className="grid grid-cols-1 gap-2">
+                            <div className="grid grid-cols-1">
                               <FormField
                                 control={form.control}
                                 name="stakeA"
@@ -896,29 +918,115 @@ export default function PoolForm() {
                                         symbol: assetA ? assetA.symbol : "???",
                                       })}
                                     </FormLabel>
-                                    <FormDescription style={{ marginTop: "0px" }}>
-                                      {t("PoolStake:currentStakingAmount")}
-                                    </FormDescription>
-                                    <FormControl
-                                      onChange={(event) => {
-                                        const input = event.target.value;
-                                        const regex = /^[0-9]*\.?[0-9]*$/; // regular expression to match numbers and a single period
-                                        if (regex.test(input)) {
-                                          setAStake(input);
-                                        }
-                                      }}
-                                    >
-                                      <div className="grid grid-cols-2">
-                                        <div className="col-span-1">
+                                    <FormControl>
+                                      <div className="grid grid-cols-12">
+                                        <div className="col-span-8">
                                           <Input
-                                            value={aStake}
-                                            placeholder={aStake}
-                                            className="mb-3"
+                                            disabled
+                                            readOnly
+                                            value={
+                                              assetA && aStake
+                                                ? `${aStake} ${assetA.symbol}`
+                                                : `0 ${assetA.symbol}`
+                                            }
+                                            onChange={(event) => {
+                                              const input = event.target.value;
+                                              const regex = /^[0-9]*\.?[0-9]*$/; // regular expression to match numbers and a single period
+                                              if (regex.test(input)) {
+                                                setAStake(input);
+                                              }
+                                            }}
                                           />
+                                        </div>
+                                        <div className="col-span-4 ml-3">
+                                          <Popover>
+                                            <PopoverTrigger>
+                                              <span
+                                                onClick={() => {
+                                                  event.preventDefault();
+                                                }}
+                                                className="inline-block border border-grey rounded pl-4 pb-1 pr-4"
+                                              >
+                                                <Label>{t("PoolStake:changeAmount")}</Label>
+                                              </span>
+                                            </PopoverTrigger>
+                                            <PopoverContent>
+                                              <Label>{t("PoolStake:newAmount")}</Label>{" "}
+                                              <Input
+                                                placeholder={aStake}
+                                                className="mb-2 mt-1"
+                                                onChange={(event) => {
+                                                  const input = event.target.value;
+                                                  const regex = /^[0-9]*\.?[0-9]*$/; // regular expression to match numbers and a single period
+                                                  if (input && input.length && regex.test(input)) {
+                                                    setAStake(input);
+
+                                                    if (
+                                                      foundPoolDetails.balance_a &&
+                                                      foundPoolDetails.balance_b
+                                                    ) {
+                                                      const _aAmount = parseFloat(input);
+                                                      const _bAmount = parseFloat(
+                                                        (
+                                                          _aAmount *
+                                                          (humanReadableFloat(
+                                                            Number(foundPoolDetails.balance_b),
+                                                            foundPoolDetails.asset_b_precision
+                                                          ) /
+                                                            humanReadableFloat(
+                                                              Number(foundPoolDetails.balance_a),
+                                                              foundPoolDetails.asset_a_precision
+                                                            ))
+                                                        ).toFixed(
+                                                          foundPoolDetails.asset_a_precision
+                                                        )
+                                                      );
+
+                                                      setBStake(_bAmount);
+
+                                                      const _supply = humanReadableFloat(
+                                                        foundPoolShareAssetDetails.current_supply,
+                                                        foundPoolDetails.share_asset_details
+                                                          .precision
+                                                      );
+
+                                                      const balanceA = humanReadableFloat(
+                                                        Number(foundPoolDetails.balance_a),
+                                                        foundPoolDetails.asset_a_precision
+                                                      );
+
+                                                      const balanceB = humanReadableFloat(
+                                                        Number(foundPoolDetails.balance_b),
+                                                        foundPoolDetails.asset_b_precision
+                                                      );
+
+                                                      const shareAssetAmountA =
+                                                        (_aAmount / balanceA) * _supply;
+                                                      const shareAssetAmountB =
+                                                        (_bAmount / balanceB) * _supply;
+
+                                                      const shareAssetAmount = Math.min(
+                                                        shareAssetAmountA,
+                                                        shareAssetAmountB
+                                                      );
+
+                                                      setTotalReceiving(
+                                                        parseFloat(
+                                                          shareAssetAmount.toFixed(
+                                                            foundPoolDetails.share_asset_details
+                                                              .precision
+                                                          )
+                                                        )
+                                                      );
+                                                    }
+                                                  }
+                                                }}
+                                              />
+                                            </PopoverContent>
+                                          </Popover>
                                         </div>
                                       </div>
                                     </FormControl>
-                                    <FormMessage />
                                   </FormItem>
                                 )}
                               />
@@ -932,38 +1040,114 @@ export default function PoolForm() {
                                         symbol: assetB ? assetB.symbol : "???",
                                       })}
                                     </FormLabel>
-                                    <FormDescription style={{ marginTop: "0px" }}>
-                                      {t("PoolStake:currentStakingAmount")}
-                                    </FormDescription>
-                                    <FormControl
-                                      onChange={(event) => {
-                                        const input = event.target.value;
-                                        const regex = /^[0-9]*\.?[0-9]*$/; // regular expression to match numbers and a single period
-                                        if (regex.test(input)) {
-                                          setBStake(input);
-                                        }
-                                      }}
-                                    >
-                                      <div className="grid grid-cols-2">
-                                        <div className="col-span-1">
+                                    <FormControl>
+                                      <div className="grid grid-cols-12">
+                                        <div className="col-span-8">
                                           <Input
-                                            label={t("PoolStake:howMuchToStake", {
-                                              symbol: assetB ? assetB.symbol : "???",
-                                            })}
-                                            value={bStake}
-                                            placeholder={bStake}
-                                            className="mb-3"
+                                            disabled
+                                            readOnly
+                                            value={
+                                              assetB && bStake
+                                                ? `${bStake} ${assetB.symbol}`
+                                                : `0 ${assetB.symbol}`
+                                            }
                                           />
+                                        </div>
+                                        <div className="col-span-4 ml-3">
+                                          <Popover>
+                                            <PopoverTrigger>
+                                              <span
+                                                onClick={() => {
+                                                  event.preventDefault();
+                                                }}
+                                                className="inline-block border border-grey rounded pl-4 pb-1 pr-4"
+                                              >
+                                                <Label>{t("PoolStake:changeAmount")}</Label>
+                                              </span>
+                                            </PopoverTrigger>
+                                            <PopoverContent>
+                                              <Label>{t("PoolStake:newAmount")}</Label>{" "}
+                                              <Input
+                                                placeholder={bStake}
+                                                className="mb-2 mt-1"
+                                                onChange={(event) => {
+                                                  const input = event.target.value;
+                                                  const regex = /^[0-9]*\.?[0-9]*$/; // regular expression to match numbers and a single period
+                                                  if (input && input.length && regex.test(input)) {
+                                                    setBStake(input);
+
+                                                    if (
+                                                      foundPoolDetails.balance_a &&
+                                                      foundPoolDetails.balance_b
+                                                    ) {
+                                                      const _bAmount = parseFloat(input);
+                                                      const _aAmount = parseFloat(
+                                                        (
+                                                          _bAmount *
+                                                          (humanReadableFloat(
+                                                            Number(foundPoolDetails.balance_a),
+                                                            foundPoolDetails.asset_a_precision
+                                                          ) /
+                                                            humanReadableFloat(
+                                                              Number(foundPoolDetails.balance_b),
+                                                              foundPoolDetails.asset_b_precision
+                                                            ))
+                                                        ).toFixed(
+                                                          foundPoolDetails.asset_a_precision
+                                                        )
+                                                      );
+
+                                                      setAStake(_aAmount);
+
+                                                      const _supply = humanReadableFloat(
+                                                        foundPoolShareAssetDetails.current_supply,
+                                                        foundPoolDetails.share_asset_details
+                                                          .precision
+                                                      );
+
+                                                      const balanceA = humanReadableFloat(
+                                                        Number(foundPoolDetails.balance_a),
+                                                        foundPoolDetails.asset_a_precision
+                                                      );
+
+                                                      const balanceB = humanReadableFloat(
+                                                        Number(foundPoolDetails.balance_b),
+                                                        foundPoolDetails.asset_b_precision
+                                                      );
+
+                                                      const shareAssetAmountA =
+                                                        (_aAmount / balanceA) * _supply;
+                                                      const shareAssetAmountB =
+                                                        (_bAmount / balanceB) * _supply;
+
+                                                      const shareAssetAmount = Math.min(
+                                                        shareAssetAmountA,
+                                                        shareAssetAmountB
+                                                      );
+
+                                                      setTotalReceiving(
+                                                        parseFloat(
+                                                          shareAssetAmount.toFixed(
+                                                            foundPoolDetails.share_asset_details
+                                                              .precision
+                                                          )
+                                                        )
+                                                      );
+                                                    }
+                                                  }
+                                                }}
+                                              />
+                                            </PopoverContent>
+                                          </Popover>
                                         </div>
                                       </div>
                                     </FormControl>
-                                    <FormMessage />
                                   </FormItem>
                                 )}
                               />
                               <FormField
                                 control={form.control}
-                                name="buyAmount"
+                                name="poolShareAssetAmount"
                                 render={({ field }) => (
                                   <FormItem>
                                     <FormLabel>
@@ -971,9 +1155,6 @@ export default function PoolForm() {
                                         symbol: foundPoolDetails?.share_asset_symbol,
                                       })}
                                     </FormLabel>
-                                    <FormDescription style={{ marginTop: "0px" }}>
-                                      {t("PoolStake:existingPoolShareAssets")}
-                                    </FormDescription>
                                     <FormControl>
                                       <div className="grid grid-cols-2 mb-3 mt-3">
                                         <Input
@@ -983,13 +1164,154 @@ export default function PoolForm() {
                                         />
                                       </div>
                                     </FormControl>
-                                    <FormMessage />
                                   </FormItem>
                                 )}
                               />
                             </div>
                           </TabsContent>
-                          <TabsContent value="unstake">{t("PoolStake:unstaking")}</TabsContent>
+                          <TabsContent value="unstake">
+                            <div className="grid grid-cols-1">
+                              <FormField
+                                control={form.control}
+                                name="withdrawalAmount"
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel>
+                                      {t("PoolStake:withdrawLabel", {
+                                        symbol: foundPoolDetails.share_asset_symbol,
+                                      })}
+                                    </FormLabel>
+                                    <FormDescription>{t("PoolStake:withdrawDesc")}</FormDescription>
+                                    <FormControl>
+                                      <div className="grid grid-cols-12">
+                                        <div className="col-span-8">
+                                          <Input
+                                            disabled
+                                            readOnly
+                                            value={
+                                              withdrawAmount
+                                                ? `${withdrawAmount} ${foundPoolDetails.share_asset_symbol}`
+                                                : `0 ${foundPoolDetails.share_asset_symbol}`
+                                            }
+                                          />
+                                        </div>
+                                        <div className="col-span-4 ml-3">
+                                          <Popover>
+                                            <PopoverTrigger>
+                                              <span
+                                                onClick={() => {
+                                                  event.preventDefault();
+                                                }}
+                                                className="inline-block border border-grey rounded pl-4 pb-1 pr-4"
+                                              >
+                                                <Label>{t("PoolStake:changeAmount")}</Label>
+                                              </span>
+                                            </PopoverTrigger>
+                                            <PopoverContent>
+                                              <Label>{t("PoolStake:newAmount")}</Label>{" "}
+                                              <Input
+                                                placeholder={withdrawAmount}
+                                                className="mb-2 mt-1"
+                                                onChange={(event) => {
+                                                  const input = event.target.value;
+                                                  const regex = /^[0-9]*\.?[0-9]*$/;
+                                                  if (input && input.length && regex.test(input)) {
+                                                    const _input = parseFloat(
+                                                      Number(input).toFixed(
+                                                        foundPoolDetails.share_asset_details
+                                                          .precision
+                                                      )
+                                                    );
+
+                                                    setWithdrawAmount(_input);
+
+                                                    const _supply = humanReadableFloat(
+                                                      foundPoolShareAssetDetails.current_supply,
+                                                      foundPoolDetails.share_asset_details.precision
+                                                    );
+
+                                                    const _balanceA = humanReadableFloat(
+                                                      Number(foundPoolDetails.balance_a),
+                                                      foundPoolDetails.asset_a_precision
+                                                    );
+
+                                                    const _balanceB = humanReadableFloat(
+                                                      Number(foundPoolDetails.balance_b),
+                                                      foundPoolDetails.asset_b_precision
+                                                    );
+
+                                                    const _withdrawRatio = _input / _supply;
+                                                    const _allocatedA = parseFloat(
+                                                      (_balanceA * _withdrawRatio).toFixed(
+                                                        foundPoolDetails.asset_a_precision
+                                                      )
+                                                    );
+                                                    const _allocatedB = parseFloat(
+                                                      (_balanceB * _withdrawRatio).toFixed(
+                                                        foundPoolDetails.asset_b_precision
+                                                      )
+                                                    );
+
+                                                    setWithdrawingA(_allocatedA);
+                                                    setWithdrawingB(_allocatedB);
+                                                  }
+                                                }}
+                                              />
+                                            </PopoverContent>
+                                          </Popover>
+                                        </div>
+                                      </div>
+                                    </FormControl>
+                                  </FormItem>
+                                )}
+                              />
+
+                              <FormField
+                                control={form.control}
+                                name="withdrawingA"
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel>
+                                      {t("PoolStake:withdrawingA", {
+                                        symbol: assetA.symbol,
+                                      })}
+                                    </FormLabel>
+                                    <FormControl>
+                                      <div className="grid grid-cols-2 mb-3 mt-3">
+                                        <Input
+                                          disabled
+                                          readOnly
+                                          placeholder={`${withdrawingA} ${assetA.symbol}`}
+                                        />
+                                      </div>
+                                    </FormControl>
+                                  </FormItem>
+                                )}
+                              />
+                              <FormField
+                                control={form.control}
+                                name="withdrawingB"
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel>
+                                      {t("PoolStake:withdrawingB", {
+                                        symbol: assetB.symbol,
+                                      })}
+                                    </FormLabel>
+                                    <FormControl>
+                                      <div className="grid grid-cols-2 mb-3 mt-3">
+                                        <Input
+                                          disabled
+                                          readOnly
+                                          placeholder={`${withdrawingB} ${assetB.symbol}`}
+                                        />
+                                      </div>
+                                    </FormControl>
+                                  </FormItem>
+                                )}
+                              />
+                            </div>
+                          </TabsContent>
                         </Tabs>
                       ) : null}
 
@@ -1001,56 +1323,67 @@ export default function PoolForm() {
                             <FormItem>
                               <FormLabel>{t("PoolStake:networkFee")}</FormLabel>
                               <FormDescription style={{ marginTop: "0px" }}>
-                                {t("PoolStake:networkFeeDescription")}
+                                {t(
+                                  `PoolStake:networkFeeDescription${
+                                    stakeTab === "stake" ? "1" : "2"
+                                  }`
+                                )}
                               </FormDescription>
                               <FormControl>
                                 <div className="grid grid-cols-2 mb-3 mt-3">
                                   <div className="col-span-1">
-                                    <Input disabled readOnly placeholder={`${fee} BTS`} />
+                                    <Input
+                                      disabled
+                                      readOnly
+                                      placeholder={`${stakeTab === "stake" ? fee : unstakeFee} BTS`}
+                                    />
                                   </div>
                                 </div>
                               </FormControl>
                               {usr.id === usr.referrer ? (
                                 <FormMessage>
-                                  {t("PoolStake:rebate", { rebate: fee * 0.8 })}
+                                  {t("PoolStake:rebate", {
+                                    rebate:
+                                      stakeTab === "stake"
+                                        ? (fee * 0.8).toFixed(5)
+                                        : (unstakeFee * 0.8).toFixed(5),
+                                  })}
                                 </FormMessage>
                               ) : null}
-                              <FormMessage />
                             </FormItem>
                           )}
                         />
                       ) : null}
-                      {pool ? (
-                        <Button className="mt-5 mb-3" variant="outline" disabled type="submit">
-                          {t("PoolStake:submit")}
-                        </Button>
-                      ) : null}
+                      <Button className="mt-5 mb-3" variant="outline" type="submit">
+                        {t("PoolStake:submit")}
+                      </Button>
                     </form>
                   </Form>
-                  {showDialog ? (
+                  {showDialog && stakeTab === "stake" ? (
                     <DeepLinkDialog
-                      operationName="liquidity_pool_exchange"
+                      operationName="liquidity_pool_deposit"
                       username={usr.username}
                       usrChain={usr.chain}
                       userID={usr.id}
                       dismissCallback={setShowDialog}
-                      key={`Exchanging${sellAmount}${assetA.symbol}for${buyAmount}${assetB.symbol}`}
-                      headerText={t("PoolStake:exchangingAssets", {
-                        sellAmount,
+                      key={`Staking${aStake}${assetA.symbol}and${bStake}${assetB.symbol}`}
+                      headerText={t("PoolStake:stakingAssetsDesc", {
+                        aStake,
                         assetASymbol: assetA.symbol,
-                        buyAmount,
+                        bStake,
                         assetBSymbol: assetB.symbol,
+                        poolId: pool,
                       })}
                       trxJSON={[
                         {
                           account: usr.id,
                           pool: pool,
-                          amount_to_sell: {
-                            amount: blockchainFloat(sellAmount, assetA.precision),
+                          amount_a: {
+                            amount: blockchainFloat(aStake, assetA.precision),
                             asset_id: assetA.id,
                           },
-                          min_to_receive: {
-                            amount: blockchainFloat(buyAmount, assetB.precision),
+                          amount_b: {
+                            amount: blockchainFloat(bStake, assetB.precision),
                             asset_id: assetB.id,
                           },
                           extensions: [],
@@ -1058,82 +1391,31 @@ export default function PoolForm() {
                       ]}
                     />
                   ) : null}
-                  {pool ? (
-                    <ExternalLink
-                      variant="outline"
-                      classnamecontents="ml-2"
-                      type="button"
-                      text={t("PoolStake:blocksightsPoolExplorer")}
-                      hyperlink={`https://blocksights.info/#/pools/${pool}${
-                        usr.chain !== "bitshares" ? "?network=testnet" : ""
-                      }`}
+                  {showDialog && stakeTab === "unstake" ? (
+                    <DeepLinkDialog
+                      operationName="liquidity_pool_withdraw"
+                      username={usr.username}
+                      usrChain={usr.chain}
+                      userID={usr.id}
+                      dismissCallback={setShowDialog}
+                      key={`Withdrawing`}
+                      headerText={t("PoolStake:unstakingDesc", {
+                        amount: withdrawAmount,
+                        symbol: foundPoolDetails.share_asset_symbol,
+                        poolId: pool,
+                      })}
+                      trxJSON={[
+                        {
+                          account: usr.id,
+                          pool: pool,
+                          share_amount: {
+                            amount: 1,
+                            asset_id: foundPoolDetails.share_asset,
+                          },
+                          extensions: [],
+                        },
+                      ]}
                     />
-                  ) : null}
-                  {foundPoolDetails && foundPoolShareAssetDetails ? (
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <Button className="ml-2" variant="outline">
-                          {t("PoolStake:poolJson")}
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent className="sm:max-w-[550px] bg-white">
-                        <DialogHeader>
-                          <DialogTitle>{t("PoolStake:liquidityPoolJson")}</DialogTitle>
-                          <DialogDescription>{t("PoolStake:checkPoolDetails")}</DialogDescription>
-                        </DialogHeader>
-                        <div className="grid grid-cols-1">
-                          <div className="col-span-1">
-                            <ScrollArea className="h-72 rounded-md border">
-                              <pre>
-                                {JSON.stringify(
-                                  [foundPoolDetails, foundPoolShareAssetDetails],
-                                  null,
-                                  2
-                                )}
-                              </pre>
-                            </ScrollArea>
-                          </div>
-                        </div>
-                      </DialogContent>
-                    </Dialog>
-                  ) : null}
-                  {assetADetails && assetBDetails ? (
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <Button className="ml-2" variant="outline">
-                          {t("PoolStake:swappableAssetJson")}
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent className="sm:max-w-[550px] bg-white">
-                        <DialogHeader>
-                          <DialogTitle>{t("PoolStake:swappableAssetJson")}</DialogTitle>
-                          <DialogDescription>
-                            {t("PoolStake:checkSwappableAssetsDetails")}
-                          </DialogDescription>
-                        </DialogHeader>
-                        <div className="grid grid-cols-1">
-                          <div className="col-span-1">
-                            <ScrollArea className="h-72 rounded-md border">
-                              <pre>
-                                {JSON.stringify(
-                                  {
-                                    assetA: assetA ?? "",
-                                    assetADetails: assetADetails ?? {},
-                                    aBitassetData: aBitassetData ?? {},
-                                    assetB: assetB ?? "",
-                                    assetBDetails: assetBDetails ?? {},
-                                    bBitassetData: bBitassetData ?? {},
-                                    poolShareDetails: poolShareDetails ?? {},
-                                  },
-                                  null,
-                                  2
-                                )}
-                              </pre>
-                            </ScrollArea>
-                          </div>
-                        </div>
-                      </DialogContent>
-                    </Dialog>
                   ) : null}
                 </>
               ) : null}
@@ -1298,13 +1580,14 @@ export default function PoolForm() {
           </CardHeader>
           <CardContent>
             <span className="text-sm">
-              <Label className="mb-0 pb-0 text-lg">{t("PoolStake:liquidityPoolRisks")}</Label>
               <ul className="ml-2 list-disc [&>li]:mt-1 pl-2">
                 <li>{t("PoolStake:risk1")}</li>
                 <li>{t("PoolStake:risk2")}</li>
                 <li>{t("PoolStake:risk3")}</li>
                 <li>{t("PoolStake:risk4")}</li>
                 <li>{t("PoolStake:risk5")}</li>
+                <li>{t("PoolStake:risk6")}</li>
+                <li>{t("PoolStake:risk7")}</li>
               </ul>
             </span>
           </CardContent>

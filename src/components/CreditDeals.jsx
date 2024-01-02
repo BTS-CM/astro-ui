@@ -50,7 +50,6 @@ import { createUserCreditDealsStore, createUserBalancesStore } from "../effects/
 
 import { blockchainFloat, humanReadableFloat } from "../lib/common.js";
 
-import CurrentUser from "./common/CurrentUser.jsx";
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
 import ExternalLink from "./common/ExternalLink.jsx";
 

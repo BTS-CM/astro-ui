@@ -18,8 +18,6 @@ import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/h
 import { useInitCache } from "../effects/Init.ts";
 import { $currentUser } from "../stores/users.ts";
 
-import CurrentUser from "./common/CurrentUser.jsx";
-
 export default function Home(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);

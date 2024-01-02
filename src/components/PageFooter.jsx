@@ -26,7 +26,7 @@ export default function PageHeader(properties) {
       </div>
 
       <div className="grid grid-cols-1 mt-3">
-        <h4 class="text-center">
+        <h4 className="text-center">
           <a
             style={gradient}
             href={sourceURL && sourceURL.startsWith("https://github.com/") ? sourceURL : "#"}

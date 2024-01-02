@@ -38,11 +38,24 @@ export default function ExternalLink(properties) {
   return (
     <>
       {type === "text" ? (
-        <span onClick={() => setOpen(true)} className={classnamecontents}>
+        <span
+          onClick={(event) => {
+            setOpen(true);
+            event.preventDefault();
+          }}
+          className={classnamecontents}
+        >
           {text}
         </span>
       ) : (
-        <Button variant={variant} onClick={() => setOpen(true)} className={classnamecontents}>
+        <Button
+          variant={variant}
+          onClick={(event) => {
+            setOpen(true);
+            event.preventDefault();
+          }}
+          className={classnamecontents}
+        >
           {text}
         </Button>
       )}

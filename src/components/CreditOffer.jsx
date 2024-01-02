@@ -52,7 +52,6 @@ import {
 import { createUserBalancesStore } from "../effects/User.ts";
 import { useInitCache } from "../effects/Init.ts";
 
-import CurrentUser from "./common/CurrentUser.jsx";
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
 import ExternalLink from "./common/ExternalLink.jsx";
 

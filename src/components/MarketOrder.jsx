@@ -82,7 +82,6 @@ import { createLimitOrderStore } from "../effects/Market.ts";
 
 import { Avatar } from "./Avatar.tsx";
 
-import CurrentUser from "./common/CurrentUser.jsx";
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
 import ExternalLink from "./common/ExternalLink.jsx";
 import PoolDialogs from "./Market/PoolDialogs.jsx";

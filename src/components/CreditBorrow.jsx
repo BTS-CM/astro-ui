@@ -30,8 +30,6 @@ import {
 
 import { humanReadableFloat } from "@/lib/common.js";
 
-import CurrentUser from "./common/CurrentUser.jsx";
-
 function hoursTillExpiration(expirationTime) {
   // Parse the expiration time
   var expirationDate = new Date(expirationTime);
