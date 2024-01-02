@@ -1409,7 +1409,10 @@ export default function PoolForm() {
                           account: usr.id,
                           pool: pool,
                           share_amount: {
-                            amount: 1,
+                            amount: blockchainFloat(
+                              withdrawAmount,
+                              foundPoolDetails.share_asset_details.precision
+                            ),
                             asset_id: foundPoolDetails.share_asset,
                           },
                           extensions: [],
