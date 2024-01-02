@@ -135,6 +135,7 @@ export default function PageHeader(properties) {
                         text={t("PageHeader:poolExchange")}
                         icon="💱"
                       />
+                      <MenuRow url="/stake/index.html" text={t("PageHeader:poolStake")} icon="🔒" />
                       <MenuRow
                         url="/transfer/index.html"
                         text={t("PageHeader:transferAssets")}
