@@ -134,7 +134,7 @@ export default function MarketAssetCard(properties) {
           <Dialog>
             <DialogTrigger asChild>
               <Button variant="outline" className="h-6" style={{ marginLeft: "3px" }}>
-                Links
+                {t("MarketAssetCard:links")}
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[600px] bg-white">

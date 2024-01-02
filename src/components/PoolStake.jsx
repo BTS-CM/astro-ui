@@ -77,6 +77,7 @@ import { useInitCache } from "../effects/Init.ts";
 import { $currentUser } from "../stores/users.ts";
 
 import MarketAssetCard from "./Market/MarketAssetCard.jsx";
+import MarketAssetCardPlaceholder from "./Market/MarketAssetCardPlaceholder.jsx";
 
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
 import ExternalLink from "./common/ExternalLink.jsx";
@@ -552,7 +553,7 @@ export default function PoolForm() {
                           <FormItem>
                             <FormLabel>{t("PoolStake:liquidityPool")}</FormLabel>
                             <FormDescription style={{ marginTop: "0px" }}>
-                              {foundPoolDetails
+                              {pool
                                 ? t("PoolStake:liquidityPoolChosen")
                                 : t("PoolStake:selectLiquidityPool")}
                             </FormDescription>
@@ -752,7 +753,7 @@ export default function PoolForm() {
                                 <CardContent className="text-lg mt-0 pt-0">
                                   {foundPoolDetails
                                     ? foundPoolDetails.readable_balance_a.split(" ")[0]
-                                    : "?"}
+                                    : "0"}
                                 </CardContent>
                               </Card>
                             </div>
@@ -775,7 +776,7 @@ export default function PoolForm() {
                                 <CardContent className="text-lg">
                                   {foundPoolDetails
                                     ? foundPoolDetails.readable_balance_b.split(" ")[0]
-                                    : "?"}
+                                    : "0"}
                                 </CardContent>
                               </Card>
                             </div>
@@ -825,7 +826,7 @@ export default function PoolForm() {
                             </DialogContent>
                           </Dialog>
                         ) : (
-                          <Button className="ml-2" variant="outline" disabled>
+                          <Button className="ml-2" variant="outline">
                             {t("PoolStake:poolJson")}
                           </Button>
                         )}
@@ -867,7 +868,7 @@ export default function PoolForm() {
                             </DialogContent>
                           </Dialog>
                         ) : (
-                          <Button className="ml-2" variant="outline" disabled>
+                          <Button className="ml-2" variant="outline">
                             {t("PoolStake:swappableAssetJson")}
                           </Button>
                         )}
@@ -1164,7 +1165,11 @@ export default function PoolForm() {
                                         <Input
                                           disabled
                                           readOnly
-                                          placeholder={`${totalReceiving} ${foundPoolDetails?.share_asset_symbol}`}
+                                          placeholder={
+                                            foundPoolDetails
+                                              ? `${totalReceiving} ${foundPoolDetails?.share_asset_symbol}`
+                                              : "0"
+                                          }
                                         />
                                       </div>
                                     </FormControl>
@@ -1458,38 +1463,8 @@ export default function PoolForm() {
                 </>
               ) : (
                 <>
-                  <Card>
-                    <CardHeader className="pb-2 pt-4">
-                      <CardTitle>{t("PoolStake:quoteAsset")}</CardTitle>
-                      <CardDescription className="text-lg">
-                        {t("PoolStake:loading")}
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-2">
-                        <Skeleton className="h-4 w-[250px]" />
-                        <Skeleton className="h-4 w-[200px]" />
-                        <Skeleton className="h-4 w-[250px]" />
-                        <Skeleton className="h-4 w-[200px]" />
-                      </div>
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardHeader className="pb-2 pt-4">
-                      <CardTitle>{t("PoolStake:baseAsset")}</CardTitle>
-                      <CardDescription className="text-lg">
-                        {t("PoolStake:loading")}
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-2">
-                        <Skeleton className="h-4 w-[250px]" />
-                        <Skeleton className="h-4 w-[200px]" />
-                        <Skeleton className="h-4 w-[250px]" />
-                        <Skeleton className="h-4 w-[200px]" />
-                      </div>
-                    </CardContent>
-                  </Card>
+                  <MarketAssetCardPlaceholder type="buy" />
+                  <MarketAssetCardPlaceholder type="sell" />
                 </>
               )}
             </div>
@@ -1556,22 +1531,7 @@ export default function PoolForm() {
                     type="pool"
                   />
                 ) : (
-                  <Card>
-                    <CardHeader className="pb-2 pt-4">
-                      <CardTitle>{t("PoolStake:poolShareAsset")}</CardTitle>
-                      <CardDescription className="text-lg">
-                        {t("PoolStake:loading")}
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-2">
-                        <Skeleton className="h-4 w-[250px]" />
-                        <Skeleton className="h-4 w-[200px]" />
-                        <Skeleton className="h-4 w-[250px]" />
-                        <Skeleton className="h-4 w-[200px]" />
-                      </div>
-                    </CardContent>
-                  </Card>
+                  <MarketAssetCardPlaceholder type="pool" />
                 )}
               </>
             ) : null}
