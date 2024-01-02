@@ -731,7 +731,7 @@ export default function PoolForm() {
                       />
 
                       <div className="grid grid-cols-10 gap-5 mt-1 mb-1">
-                        {pool && foundPoolDetails && assetA && assetB ? (
+                        {pool && assetA && assetB ? (
                           <>
                             <div className="col-span-5">
                               <Card>
@@ -750,7 +750,9 @@ export default function PoolForm() {
                                   </CardDescription>
                                 </CardHeader>
                                 <CardContent className="text-lg mt-0 pt-0">
-                                  {foundPoolDetails.readable_balance_a.split(" ")[0]}
+                                  {foundPoolDetails
+                                    ? foundPoolDetails.readable_balance_a.split(" ")[0]
+                                    : "?"}
                                 </CardContent>
                               </Card>
                             </div>
@@ -771,7 +773,9 @@ export default function PoolForm() {
                                   </CardDescription>
                                 </CardHeader>
                                 <CardContent className="text-lg">
-                                  {foundPoolDetails.readable_balance_b.split(" ")[0]}
+                                  {foundPoolDetails
+                                    ? foundPoolDetails.readable_balance_b.split(" ")[0]
+                                    : "?"}
                                 </CardContent>
                               </Card>
                             </div>
