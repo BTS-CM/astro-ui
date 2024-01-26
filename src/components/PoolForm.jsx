@@ -896,7 +896,7 @@ export default function PoolForm() {
                             <FormControl
                               onChange={(event) => {
                                 const input = event.target.value;
-                                const regex = /^[0-9]*\.?[0-9]*$/; // regular expression to match numbers and a single period
+                                const regex = /^[0-9]*\.?[0-9]*$/;
                                 if (regex.test(input)) {
                                   setSellAmount(input);
                                 }

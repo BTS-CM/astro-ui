@@ -6,7 +6,7 @@ import { $currentUser } from "../stores/users.ts";
 
 import CurrentUser from "./common/CurrentUser.jsx";
 
-export default function PageHeader(properties) {
+export default function PageFooter(properties) {
   const { sourceURL } = properties;
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);

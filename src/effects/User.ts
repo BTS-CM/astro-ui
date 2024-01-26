@@ -99,9 +99,35 @@ const [createUserHistoryStore] = nanoquery({
   refetchInterval: 60000,
 });
 
+// Create fetcher store for user account
+const [createUsernameStore] = nanoquery({
+  fetcher: async (chain: string, identities: any) => {
+    const response = await fetch(`http://localhost:8080/api/getNames/${chain}`, {
+      method: "POST",
+      body: JSON.stringify(identities),
+    });
+
+    if (!response.ok) {
+      console.log("Failed to fetch user data");
+      return;
+    }
+
+    const responseContents = await response.json();
+
+    if (responseContents && responseContents.result && responseContents.result.length) {
+      //console.log("Fetched bitasset data");
+      const decompressed = fflate.decompressSync(fflate.strToU8(responseContents.result, true));
+      const _parsed = JSON.parse(fflate.strFromU8(decompressed));
+      const finalResult = _parsed[0];
+      return finalResult;
+    }
+  },
+});
+
 export {
   createUserBalancesStore,
   createUserCreditDealsStore,
   createUserPortfolioStore,
   createUserHistoryStore,
+  createUsernameStore,
 };

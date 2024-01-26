@@ -938,7 +938,7 @@ export default function PoolForm() {
                                             }
                                             onChange={(event) => {
                                               const input = event.target.value;
-                                              const regex = /^[0-9]*\.?[0-9]*$/; // regular expression to match numbers and a single period
+                                              const regex = /^[0-9]*\.?[0-9]*$/;
                                               if (regex.test(input)) {
                                                 setAStake(input);
                                               }
@@ -964,7 +964,7 @@ export default function PoolForm() {
                                                 className="mb-2 mt-1"
                                                 onChange={(event) => {
                                                   const input = event.target.value;
-                                                  const regex = /^[0-9]*\.?[0-9]*$/; // regular expression to match numbers and a single period
+                                                  const regex = /^[0-9]*\.?[0-9]*$/;
                                                   if (input && input.length && regex.test(input)) {
                                                     setAStake(input);
 
@@ -1079,7 +1079,7 @@ export default function PoolForm() {
                                                 className="mb-2 mt-1"
                                                 onChange={(event) => {
                                                   const input = event.target.value;
-                                                  const regex = /^[0-9]*\.?[0-9]*$/; // regular expression to match numbers and a single period
+                                                  const regex = /^[0-9]*\.?[0-9]*$/;
                                                   if (input && input.length && regex.test(input)) {
                                                     setBStake(input);
 

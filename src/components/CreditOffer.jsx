@@ -360,6 +360,22 @@ export default function CreditBorrow(properties) {
     }
   }, [finalBorrowAmount, collateralInfo, relevantOffer]);
 
+  const requiredCollateralPrice = useMemo(() => {
+    if (finalBorrowAmount && collateralInfo && relevantOffer) {
+      const data = relevantOffer.acceptable_collateral.find((x) => {
+        return x[0] === collateralInfo.id;
+      });
+      const base = data[1].base;
+      const quote = data[1].quote;
+      if (quote.asset_id === collateralInfo.id) {
+        const ratio =
+          humanReadableFloat(quote.amount, collateralInfo.precision) /
+          humanReadableFloat(base.amount, assets.find((x) => x.id === base.asset_id).precision);
+        return ratio;
+      }
+    }
+  }, [finalBorrowAmount, collateralInfo, relevantOffer]);
+
   const [showDialog, setShowDialog] = useState(false);
   const [repayPeriod, setRepayPeriod] = useState();
   const repayType = useMemo(() => {
@@ -687,10 +703,16 @@ export default function CreditBorrow(properties) {
                                 </div>
                               </FormControl>
                               <FormDescription>
-                                {t("CreditOffer:cardContent.borrowDescription", {
-                                  symbol: collateralInfo?.symbol,
-                                  owner_name: relevantOffer?.owner_name,
-                                })}
+                                {!collateralInfo
+                                  ? t("CreditOffer:cardContent.borrowDescription", {
+                                      symbol: foundAsset?.symbol,
+                                      owner_name: relevantOffer?.owner_name,
+                                    })
+                                  : t("CreditOffer:cardContent.borrowDescription2", {
+                                      price: requiredCollateralPrice, // TODO: REPLACE PRICE
+                                      base: foundAsset?.symbol,
+                                      quote: collateralInfo.symbol,
+                                    })}
                               </FormDescription>
                               {balanceAssetIDs &&
                               chosenCollateral &&
@@ -732,7 +754,7 @@ export default function CreditBorrow(properties) {
                                 <FormControl
                                   onChange={(event) => {
                                     const input = event.target.value;
-                                    const regex = /^[0-9]*\.?[0-9]*$/; // regular expression to match numbers and a single period
+                                    const regex = /^[0-9]*\.?[0-9]*$/;
                                     if (regex.test(input)) {
                                       setInputValue(input);
                                     }

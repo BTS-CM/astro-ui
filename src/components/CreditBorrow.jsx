@@ -2,6 +2,8 @@ import React, { useState, useEffect, useSyncExternalStore, useMemo } from "react
 import { FixedSizeList as List } from "react-window";
 import Fuse from "fuse.js";
 import { useTranslation } from "react-i18next";
+import { GearIcon } from "@radix-ui/react-icons";
+
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -306,6 +308,13 @@ export default function CreditBorrow(properties) {
             <a href={`/offer/index.html?id=${res.id}`}>
               <Button>
                 {t("CreditBorrow:common.proceed", { offerID: res.id.replace("1.21.", "") })}
+              </Button>
+            </a>
+            <a href={`/offer-editor/index.html?id=${res.id}`}>
+              <Button className="ml-2">
+                {t(`CreditBorrow:common.${usr.id === res.owner_account ? "edit" : "view"}`, {
+                  offerID: res.id.replace("1.21.", ""),
+                })}
               </Button>
             </a>
           </CardFooter>

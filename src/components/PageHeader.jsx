@@ -150,6 +150,11 @@ export default function PageHeader(properties) {
                         icon="🏦"
                       />
                       <MenuRow
+                        url="/offer-editor/index.html"
+                        text={t("PageHeader:createOffer")}
+                        icon="📝"
+                      />
+                      <MenuRow
                         url="/smartcoins/index.html"
                         text={t("PageHeader:createDebt")}
                         icon="💵"

@@ -758,7 +758,7 @@ export default function Smartcoin(properties) {
 
   const debouncedSetTCRValue = useCallback(
     debounce((input, mcr) => {
-      const regex = /^[0-9]*\.?[0-9]*$/; // regular expression to match numbers and a single period
+      const regex = /^[0-9]*\.?[0-9]*$/;
       if (regex.test(input)) {
         if (input < mcr / 1000) {
           setTCRValue(mcr / 1000);
