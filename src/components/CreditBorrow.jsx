@@ -310,7 +310,7 @@ export default function CreditBorrow(properties) {
                 {t("CreditBorrow:common.proceed", { offerID: res.id.replace("1.21.", "") })}
               </Button>
             </a>
-            <a href={`/offer-editor/index.html?id=${res.id}`}>
+            <a href={`/lend/index.html?id=${res.id}`}>
               <Button className="ml-2">
                 {t(`CreditBorrow:common.${usr.id === res.owner_account ? "edit" : "view"}`, {
                   offerID: res.id.replace("1.21.", ""),

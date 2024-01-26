@@ -150,7 +150,7 @@ export default function PageHeader(properties) {
                         icon="🏦"
                       />
                       <MenuRow
-                        url="/offer-editor/index.html"
+                        url="/lend/index.html"
                         text={t("PageHeader:createOffer")}
                         icon="📝"
                       />
