@@ -1,1 +1,0 @@
-import{j as s,c as a}from"./utils.CoSl1RWq.js";function t({className:r,...t}){return s.jsx("div",{className:a("animate-pulse rounded-md bg-primary/10",r),...t})}export{t as S};
