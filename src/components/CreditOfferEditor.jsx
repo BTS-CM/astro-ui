@@ -423,11 +423,9 @@ export default function CreditOfferEditor(properties) {
 
     _operation["offer_id"] = offerID;
     if (_lendingAmount !== offerJSON.total_balance) {
+      const absDiff = Math.abs(_lendingAmount - offerJSON.total_balance);
       _operation["delta_amount"] = {
-        amount:
-          _lendingAmount > offerJSON.total_balance
-            ? _lendingAmount - offerJSON.total_balance
-            : offerJSON.total_balance - _lendingAmount,
+        amount: _lendingAmount > offerJSON.total_balance ? absDiff : -absDiff,
         asset_id: foundAsset.id,
       };
     }
@@ -1197,16 +1195,12 @@ export default function CreditOfferEditor(properties) {
         </Card>
         {transactionJSON && showDialog ? (
           <DeepLinkDialog
+            trxJSON={transactionJSON ?? []}
             operationName={!offerID ? "credit_offer_create" : "credit_offer_update"}
             username={usr.username}
             usrChain={usr.chain}
             userID={usr.id}
             dismissCallback={setShowDialog}
-            key={
-              !offerID
-                ? `CreatingCreditOffer${lendingAmount}${foundAsset.symbol}`
-                : `UpdatingCreditOffer${offerID}`
-            }
             headerText={
               !offerID
                 ? t("CreditOfferEditor:creatingCreditOffer", {
@@ -1215,7 +1209,6 @@ export default function CreditOfferEditor(properties) {
                   })
                 : t("CreditOfferEditor:updatingCreditOffer", { offerID })
             }
-            trxJSON={transactionJSON ?? []}
           />
         ) : null}
       </div>
