@@ -36,9 +36,18 @@ function evaluateTradingPair(real, base, basePrecision, quote, quotePrecision) {
       numRatio = 1;
     }
 
+    /*
     if (real > 100000) {
-      real = limitByPrecision(real, 5);
+      real = limitByPrecision(real, basePrecision);
     }
+
+    if (real < 0.01) {
+      real = limitByPrecision(real, basePrecision);
+    }
+    */
+
+    real = limitByPrecision(real, basePrecision);
+
     let frac = new BigNumber(real.toString()).toFraction();
 
     return {

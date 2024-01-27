@@ -91,6 +91,14 @@ const repaymentPeriods = {
   "1825d": 1825 * 24 * 60 * 60,
 };
 
+function chunkArray(array, chunkSize) {
+  let chunks = [];
+  for (let i = 0; i < array.length; i += chunkSize) {
+    chunks.push(array.slice(i, i + chunkSize));
+  }
+  return chunks;
+}
+
 export default function CreditOfferEditor(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
   const form = useForm({
