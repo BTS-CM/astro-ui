@@ -804,14 +804,16 @@ export default function CreditOfferEditor(properties) {
                             ) : null}
                           </div>
                           <div className="col-span-2 mt-1 ml-3 text-center">
-                            <AssetDropDown
-                              assetSymbol={selectedAsset ?? ""}
-                              assetData={null}
-                              storeCallback={setSelectedAsset}
-                              otherAsset={null}
-                              marketSearch={marketSearch}
-                              type={null}
-                            />
+                            {!offerID ? (
+                              <AssetDropDown
+                                assetSymbol={selectedAsset ?? ""}
+                                assetData={null}
+                                storeCallback={setSelectedAsset}
+                                otherAsset={null}
+                                marketSearch={marketSearch}
+                                type={null}
+                              />
+                            ) : null}
                           </div>
                         </div>
                       </FormControl>
