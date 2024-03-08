@@ -205,7 +205,7 @@ export default function PageHeader(properties) {
             <h3 className="text-muted-foreground">
               {t(`PageHeader:descText.${page}`)}
               <br />
-              {t("PageHeader:usage")}{" "}
+              {t("PageHeader:usage")}
               <a
                 style={{
                   backgroundImage: "var(--accent-gradient)",
@@ -216,7 +216,18 @@ export default function PageHeader(properties) {
                 }}
                 href="https://github.com/bitshares/beet"
               >
-                Bitshares Beet {t("PageHeader:multiwallet")}
+                Beet
+              </a> & <a
+                style={{
+                  backgroundImage: "var(--accent-gradient)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundSize: "400%",
+                  backgroundPosition: "0%",
+                }}
+                href="https://github.com/beetapp/beeteos"
+              >
+                BeetEOS
               </a>
               .
             </h3>

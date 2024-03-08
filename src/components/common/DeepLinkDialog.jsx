@@ -92,13 +92,7 @@ export default function DeepLinkDialog(properties) {
                 <br />
                 {t("DeepLinkDialog:dialogContent.readyToBroadcast")}
                 <br />
-                {t("DeepLinkDialog:dialogContent.chooseMethod")}{" "}
-                <ExternalLink
-                  classnamecontents="text-blue-500"
-                  type="text"
-                  text={t("DeepLinkDialog:dialogContent.beetWallet")}
-                  hyperlink="https://github.com/bitshares/beet"
-                />
+                {t("DeepLinkDialog:dialogContent.chooseMethod")}
               </>
             ) : null}
           </DialogDescription>
@@ -173,15 +167,26 @@ export default function DeepLinkDialog(properties) {
                     <li type="1">{t("DeepLinkDialog:tabsContent.step5")}</li>
                   </ol>
                   {deeplink ? (
-                    <a
-                      href={`rawbeet://api?chain=${
-                        usrChain === "bitshares" ? "BTS" : "BTS_TEST"
-                      }&request=${deeplink}`}
-                    >
-                      <Button className="mt-4">
-                        {t("DeepLinkDialog:tabsContent.triggerRawBeet")}
-                      </Button>
-                    </a>
+                    <>
+                      <a
+                        href={`rawbeet://api?chain=${
+                          usrChain === "bitshares" ? "BTS" : "BTS_TEST"
+                        }&request=${deeplink}`}
+                      >
+                        <Button className="mt-4">
+                          BEET
+                        </Button>
+                      </a>
+                      <a
+                        href={`rawbeeteos://api?chain=${
+                          usrChain === "bitshares" ? "BTS" : "BTS_TEST"
+                        }&request=${deeplink}`}
+                      >
+                        <Button className="mt-4 ml-3">
+                          BeetEOS
+                        </Button>
+                      </a>
+                    </>
                   ) : null}
                 </TabsContent>
                 <TabsContent value="localJSON">
