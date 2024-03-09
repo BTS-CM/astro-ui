@@ -5,14 +5,6 @@ import { FixedSizeList as List } from "react-window";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
-import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Toggle } from "@/components/ui/toggle";
-
 import {
   Card,
   CardContent,
@@ -49,8 +41,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
+import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Toggle } from "@/components/ui/toggle";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
 import { Avatar as Av, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Avatar } from "@/components/Avatar.tsx";
 
@@ -66,15 +64,12 @@ import {
   $globalParamsCacheBTS,
   $globalParamsCacheTEST,
 } from "../stores/cache.ts";
+import { $currentUser } from "../stores/users.ts";
 
 import { createBitassetDataStore, createDynamicDataStore } from "../effects/Assets.ts";
-
 import { createPoolDetailsStore } from "../effects/Pools.ts";
-
 import { createUserBalancesStore } from "../effects/User.ts";
-
 import { useInitCache } from "../effects/Init.ts";
-import { $currentUser } from "../stores/users.ts";
 
 import PoolDialogs from "./Market/PoolDialogs.jsx";
 import MarketAssetCard from "./Market/MarketAssetCard.jsx";
@@ -430,6 +425,7 @@ export default function PoolForm() {
     };
   }, [usr, assetA, assetB]);
 
+  const [inverted, setInverted] = useState(false);
   const buyAmount = useMemo(() => {
     // Calculating the amount the user can buy
     if (assetA && assetB && foundPoolDetails) {
@@ -492,7 +488,7 @@ export default function PoolForm() {
       let taker_market_fee_percent_a = Number(taker_market_fee_percenta());
 
       let result;
-      if (assetA && foundPool && assetA.id === foundPool.asset_a_id) {
+      if (assetA && foundPool && !inverted) {
         let tmp_delta_b =
           Number(poolamountb) -
           Math.ceil(
@@ -529,10 +525,10 @@ export default function PoolForm() {
             )) /
           Number(poolamountap);
       }
-
+    
       return result;
     }
-  }, [sellAmount, assetA, assetB, foundPoolDetails]);
+  }, [sellAmount, assetA, assetB, inverted, foundPoolDetails]);
 
   const [buyAmountInput, setBuyAmountInput] = useState();
   useEffect(() => {
@@ -818,13 +814,19 @@ export default function PoolForm() {
                                     <ExternalLink
                                       classnamecontents="text-blue-500"
                                       type="text"
-                                      text={assetA.symbol}
-                                      hyperlink={`https://blocksights.info/#/assets/${assetA.id}`}
+                                      text={!inverted ? assetA.symbol : assetB.symbol}
+                                      hyperlink={`https://blocksights.info/#/assets/${!inverted ? assetA.id : assetB.id}`}
                                     />
                                   </CardTitle>
                                 </CardHeader>
                                 <CardContent className="text-lg mt-0 pt-0">
-                                  {foundPoolDetails.readable_balance_a.split(" ")[0]}
+                                  {
+                                    foundPoolDetails[
+                                      !inverted
+                                        ? 'readable_balance_a'
+                                        : 'readable_balance_b'
+                                    ].split(" ")[0]
+                                  }
                                 </CardContent>
                               </Card>
                             </div>
@@ -832,10 +834,13 @@ export default function PoolForm() {
                               <Toggle
                                 variant="outline"
                                 onClick={() => {
+                                  setInverted(!inverted);
+                                  /*
                                   const oldAssetA = assetA;
                                   const oldAssetB = assetB;
                                   setAssetA(oldAssetB);
                                   setAssetB(oldAssetA);
+                                  */
                                   setIsRotating(true);
                                   setTimeout(() => setIsRotating(false), 500);
                                 }}
@@ -865,13 +870,19 @@ export default function PoolForm() {
                                     <ExternalLink
                                       classnamecontents="text-blue-500"
                                       type="text"
-                                      text={assetB.symbol}
-                                      hyperlink={`https://blocksights.info/#/assets/${assetB.id}`}
+                                      text={!inverted ? assetB.symbol : assetA.symbol}
+                                      hyperlink={`https://blocksights.info/#/assets/${!inverted ? assetB.id : assetA.id}`}
                                     />
                                   </CardTitle>
                                 </CardHeader>
                                 <CardContent className="text-lg">
-                                  {foundPoolDetails.readable_balance_b.split(" ")[0]}
+                                  {
+                                    foundPoolDetails[
+                                      !inverted
+                                        ? 'readable_balance_b'
+                                        : 'readable_balance_a'
+                                    ].split(" ")[0]
+                                  }
                                 </CardContent>
                               </Card>
                             </div>
@@ -883,15 +894,24 @@ export default function PoolForm() {
                         <>
                           <FormItem>
                             <FormLabel>
-                              {t("PoolForm:amountToSwap", {
-                                symbol: assetA ? assetA.symbol : "???",
-                              })}
+                              {
+                                !inverted
+                                  ? t("PoolForm:amountToSwap", {symbol: assetA ? assetA.symbol : "???"})
+                                  : t("PoolForm:amountToSwap", {symbol: assetB ? assetB.symbol : "???"})
+                              }
                             </FormLabel>
                             <FormDescription style={{ marginTop: "0px" }}>
-                              {t("PoolForm:enterAmountToSwap", {
-                                symbolA: assetA ? assetA.symbol : "???",
-                                symbolB: assetB ? assetB.symbol : "???",
-                              })}
+                              {
+                                !inverted
+                                  ? t("PoolForm:enterAmountToSwap", {
+                                      symbolA: assetA ? assetA.symbol : "???",
+                                      symbolB: assetB ? assetB.symbol : "???",
+                                    })
+                                  : t("PoolForm:enterAmountToSwap", {
+                                    symbolA: assetB ? assetB.symbol : "???",
+                                    symbolB: assetA ? assetA.symbol : "???",
+                                  })
+                              }
                             </FormDescription>
                             <FormControl
                               onChange={(event) => {
@@ -905,9 +925,11 @@ export default function PoolForm() {
                               <div className="grid grid-cols-2">
                                 <div className="col-span-1">
                                   <Input
-                                    label={t("PoolForm:amountToSwap", {
-                                      symbol: assetA ? assetA.symbol : "???",
-                                    })}
+                                    label={
+                                      !inverted
+                                        ? t("PoolForm:amountToSwap", {symbol: assetA ? assetA.symbol : "???"})
+                                        : t("PoolForm:amountToSwap", {symbol: assetB ? assetB.symbol : "???"})
+                                    }
                                     value={sellAmount}
                                     placeholder={sellAmount}
                                     className="mb-3"
@@ -929,10 +951,17 @@ export default function PoolForm() {
                               <FormItem>
                                 <FormLabel>{t("PoolForm:totalAmount")}</FormLabel>
                                 <FormDescription style={{ marginTop: "0px" }}>
-                                  {t("PoolForm:totalAmountDescription", {
-                                    symbolA: assetA ? assetA.symbol : "???",
-                                    symbolB: assetB ? assetB.symbol : "???",
-                                  })}
+                                  {
+                                    !inverted
+                                      ? t("PoolForm:totalAmountDescription", {
+                                          symbolA: assetA ? assetA.symbol : "???",
+                                          symbolB: assetB ? assetB.symbol : "???",
+                                        })
+                                      : t("PoolForm:totalAmountDescription", {
+                                          symbolA: assetB ? assetB.symbol : "???",
+                                          symbolB: assetA ? assetA.symbol : "???",
+                                        })
+                                  }
                                 </FormDescription>
                                 <FormControl>
                                   <div className="grid grid-cols-2 mb-3 mt-3">
@@ -967,7 +996,7 @@ export default function PoolForm() {
                                         value={`${(
                                           (foundPoolDetails.taker_fee_percent / 10000) *
                                           sellAmount
-                                        ).toFixed(assetA.precision)} (${assetA.symbol}) (${
+                                        ).toFixed(!inverted ? assetA.precision : assetB.precision)} (${!inverted ? assetA.symbol : assetB.symbol}) (${
                                           foundPoolDetails.taker_fee_percent / 100
                                         }% ${t("PoolForm:fee")})`}
                                       />
@@ -1031,24 +1060,24 @@ export default function PoolForm() {
                       usrChain={usr.chain}
                       userID={usr.id}
                       dismissCallback={setShowDialog}
-                      key={`Exchanging${sellAmount}${assetA.symbol}for${buyAmount}${assetB.symbol}`}
+                      key={`Exchanging${sellAmount}${!inverted ? assetA.symbol : assetB.symbol}for${buyAmount}${!inverted ? assetB.symbol : assetA.symbol}`}
                       headerText={t("PoolForm:exchangeHeader", {
                         sellAmount: sellAmount,
-                        symbolA: assetA.symbol,
+                        symbolA: !inverted ? assetA.symbol : assetB.symbol,
                         buyAmount: buyAmount,
-                        symbolB: assetB.symbol,
+                        symbolB: !inverted ? assetB.symbol : assetA.symbol,
                       })}
                       trxJSON={[
                         {
                           account: usr.id,
                           pool: pool,
                           amount_to_sell: {
-                            amount: blockchainFloat(sellAmount, assetA.precision),
-                            asset_id: assetA.id,
+                            amount: blockchainFloat(sellAmount, !inverted ? assetA.precision : assetB.precision),
+                            asset_id: !inverted ? assetA.id : assetB.id,
                           },
                           min_to_receive: {
-                            amount: blockchainFloat(buyAmount, assetB.precision),
-                            asset_id: assetB.id,
+                            amount: blockchainFloat(buyAmount, !inverted ? assetB.precision : assetA.precision),
+                            asset_id: !inverted ? assetB.id : assetA.id,
                           },
                           extensions: [],
                         },
@@ -1060,10 +1089,13 @@ export default function PoolForm() {
                       variant="outline"
                       mt="xl"
                       onClick={() => {
+                        /*
                         const oldAssetA = assetA;
                         const oldAssetB = assetB;
                         setAssetA(oldAssetB);
                         setAssetB(oldAssetA);
+                        */
+                        setInverted(!inverted);
                         setIsRotating(true);
                         setTimeout(() => setIsRotating(false), 500);
                       }}
@@ -1129,19 +1161,27 @@ export default function PoolForm() {
                           <div className="col-span-1">
                             <ScrollArea className="h-72 rounded-md border">
                               <pre>
-                                {JSON.stringify(
+                                {
+                                assetA &&
+                                assetADetails &&
+                                assetB &&
+                                assetBDetails &&
+                                poolShareDetails ?
+                                JSON.stringify(
                                   {
-                                    assetA: assetA ?? "",
-                                    assetADetails: assetADetails ?? {},
-                                    aBitassetData: aBitassetData ?? {},
-                                    assetB: assetB ?? "",
-                                    assetBDetails: assetBDetails ?? {},
-                                    bBitassetData: bBitassetData ?? {},
-                                    poolShareDetails: poolShareDetails ?? {},
+                                    assetA: !inverted ? assetA : assetB,
+                                    assetADetails: !inverted ? assetADetails : assetBDetails,
+                                    aBitassetData: !inverted ? aBitassetData : bBitassetData,
+                                    assetB: !inverted ? assetB : assetA,
+                                    assetBDetails: !inverted ? assetBDetails : assetADetails,
+                                    bBitassetData: !inverted ? bBitassetData : aBitassetData,
+                                    poolShareDetails: poolShareDetails,
                                   },
                                   null,
                                   2
-                                )}
+                                )
+                                : "Loading..."
+                              }
                               </pre>
                             </ScrollArea>
                           </div>
@@ -1157,10 +1197,10 @@ export default function PoolForm() {
 
         {assetA && assetB ? (
           <PoolDialogs
-            assetA={assetA.symbol}
-            assetAData={assetA}
-            assetB={assetB.symbol}
-            assetBData={assetB}
+            assetA={!inverted ? assetA.symbol : assetB.symbol}
+            assetAData={!inverted ? assetA : assetB}
+            assetB={!inverted ? assetB.symbol : assetA.symbol}
+            assetBData={!inverted ? assetB : assetA}
             chain={usr.chain}
           />
         ) : null}
@@ -1171,20 +1211,20 @@ export default function PoolForm() {
               {usrBalances && foundPoolDetails ? (
                 <>
                   <MarketAssetCard
-                    asset={assetB.symbol}
-                    assetData={assetB}
-                    assetDetails={assetBDetails}
-                    bitassetData={bBitassetData}
+                    asset={!inverted ? assetB.symbol : assetA.symbol}
+                    assetData={!inverted ? assetB : assetA}
+                    assetDetails={!inverted ? assetBDetails : assetADetails}
+                    bitassetData={!inverted ? bBitassetData : aBitassetData}
                     marketSearch={marketSearch}
                     chain={usr.chain}
                     usrBalances={usrBalances}
                     type="buy"
                   />
                   <MarketAssetCard
-                    asset={assetA.symbol}
-                    assetData={assetA}
-                    assetDetails={assetADetails}
-                    bitassetData={aBitassetData}
+                    asset={!inverted ? assetA.symbol : assetB.symbol}
+                    assetData={!inverted ? assetA : assetB}
+                    assetDetails={!inverted ? assetADetails : assetBDetails}
+                    bitassetData={!inverted ? aBitassetData : bBitassetData}
                     marketSearch={marketSearch}
                     chain={usr.chain}
                     usrBalances={usrBalances}
@@ -1229,12 +1269,20 @@ export default function PoolForm() {
           <div className="grid grid-cols-1 gap-3">
             {pool && assetA && assetB ? (
               <>
-                <a href={`/dex/index.html?market=${assetA.symbol}_${assetB.symbol}`}>
+                <a href={
+                  !inverted
+                  ? `/dex/index.html?market=${assetA.symbol}_${assetB.symbol}`
+                  : `/dex/index.html?market=${assetB.symbol}_${assetA.symbol}`
+                }>
                   <Card>
                     <CardHeader className="pb-2 pt-4">
                       <CardTitle>{t("PoolForm:tradeOnDex")}</CardTitle>
                       <CardDescription className="text-sm">
-                        {t("PoolForm:market", { symbolA: assetA.symbol, symbolB: assetB.symbol })}
+                        {
+                          !inverted
+                            ? t("PoolForm:market", { symbolA: assetA.symbol, symbolB: assetB.symbol })
+                            : t("PoolForm:market", { symbolA: assetB.symbol, symbolB: assetA.symbol })
+                         }
                       </CardDescription>
                     </CardHeader>
                     <CardContent className="text-sm pb-2">
@@ -1243,9 +1291,11 @@ export default function PoolForm() {
                   </Card>
                 </a>
                 <a
-                  href={`/dex/index.html?market=${foundPool?.share_asset_symbol}_${
-                    assetA.symbol !== "BTS" ? "BTS" : assetA.symbol
-                  }`}
+                  href={
+                    !inverted
+                      ? `/dex/index.html?market=${foundPool?.share_asset_symbol}_${assetA.symbol !== "BTS" ? "BTS" : assetA.symbol}`
+                      : `/dex/index.html?market=${foundPool?.share_asset_symbol}_${assetB.symbol !== "BTS" ? "BTS" : assetB.symbol}`
+                    }
                 >
                   <Card>
                     <CardHeader className="pb-2 pt-4">
@@ -1284,14 +1334,14 @@ export default function PoolForm() {
                     <Label>{t("PoolForm:searchBorrowableAssets")}</Label>
                     <br />
                     <a
-                      href={`/borrow/index.html?tab=searchOffers&searchTab=borrow&searchText=${assetA.symbol}`}
+                      href={`/borrow/index.html?tab=searchOffers&searchTab=borrow&searchText=${!inverted ? assetA.symbol : assetB.symbol}`}
                     >
-                      <Badge>{assetA.symbol}</Badge>
+                      <Badge>{!inverted ? assetA.symbol : assetB.symbol}</Badge>
                     </a>
                     <a
                       href={`/borrow/index.html?tab=searchOffers&searchTab=borrow&searchText=${assetB.symbol}`}
                     >
-                      <Badge className="ml-2 mt-1 mb-1">{assetB.symbol}</Badge>
+                      <Badge className="ml-2 mt-1 mb-1">{!inverted ? assetB.symbol : assetA.symbol}</Badge>
                     </a>
                     <a
                       href={`/borrow/index.html?tab=searchOffers&searchTab=borrow&searchText=${foundPool?.share_asset_symbol}`}
@@ -1302,14 +1352,14 @@ export default function PoolForm() {
                     <Label>{t("PoolForm:searchAcceptedCollateral")}</Label>
                     <br />
                     <a
-                      href={`/borrow/index.html?tab=searchOffers&searchTab=collateral&searchText=${assetA.symbol}`}
+                      href={`/borrow/index.html?tab=searchOffers&searchTab=collateral&searchText=${!inverted ? assetA.symbol : assetB.symbol}`}
                     >
-                      <Badge>{assetA.symbol}</Badge>
+                      <Badge>{!inverted ? assetA.symbol : assetB.symbol}</Badge>
                     </a>
                     <a
-                      href={`/borrow/index.html?tab=searchOffers&searchTab=collateral&searchText=${assetB.symbol}`}
+                      href={`/borrow/index.html?tab=searchOffers&searchTab=collateral&searchText=${!inverted ? assetB.symbol : assetA.symbol}`}
                     >
-                      <Badge className="ml-2 mt-1">{assetB.symbol}</Badge>
+                      <Badge className="ml-2 mt-1">{!inverted ? assetB.symbol : assetA.symbol}</Badge>
                     </a>
                     <a
                       href={`/borrow/index.html?tab=searchOffers&searchTab=collateral&searchText=${foundPool?.share_asset_symbol}`}
@@ -1371,9 +1421,15 @@ export default function PoolForm() {
               <ul className="ml-2 list-disc [&>li]:mt-1 pl-2">
                 <li>{t("PoolForm:swappableAssetRisk1")}</li>
                 <li>
-                  {t("PoolForm:swappableAssetRisk2", {
-                    symbol: assetA.symbol !== "BTS" ? "BTS" : assetA.symbol,
-                  })}
+                  {
+                    !inverted
+                    ? t("PoolForm:swappableAssetRisk2", {
+                        symbol: assetA.symbol !== "BTS" ? "BTS" : assetA.symbol,
+                      })
+                    : t("PoolForm:swappableAssetRisk2", {
+                        symbol: assetB.symbol !== "BTS" ? "BTS" : assetB.symbol,
+                      })
+                  }
                 </li>
                 <li>{t("PoolForm:swappableAssetRisk3")}</li>
               </ul>
