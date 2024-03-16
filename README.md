@@ -2,7 +2,7 @@
 
 Created using [Astro](https://docs.astro.build) & React.
 
-Integrates with the Bitshares Beet multiwallet, specifically the [develop](https://github.com/bitshares/beet/tree/develop) branch.
+Integrates with both [Beet](https://github.com/bitshares/beet) and [BeetEOS](https://github.com/beetapp/beeteos) multiwallets.
 
 Requirements: [Run a local Beet API](https://github.com/BTS-CM/beet_api)
 
