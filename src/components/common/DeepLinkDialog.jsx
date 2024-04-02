@@ -187,7 +187,12 @@ export default function DeepLinkDialog(properties) {
                         </Button>
                       </a>
                     </>
-                  ) : null}
+                  ) : <Button>
+                      
+                    </Button>}
+                </TabsContent>
+                <TabsContent value="totp">
+
                 </TabsContent>
                 <TabsContent value="localJSON">
                   <Label className="text-left">
