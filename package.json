@@ -10,6 +10,18 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@exodus/bytebuffer": "git@github.com:BTS-CM/bytebuffer.js.git#393541bd29f988a2af6a7785b1ee4978881ed6bb",
+    "assert": "^2.1.0",
+    "bigi": "^1.4.2",
+    "bs58": "^5.0.0",
+    "create-hash": "^1.2.0",
+    "create-hmac": "^1.1.7",
+    "deep-equal": "^2.2.3",
+    "ecurve": "^1.0.6",
+    "isomorphic-ws": "^5.0.0",
+    "long": "^5.2.3",
+    "safe-buffer": "^5.2.1",
+    "uuid": "^9.0.1",
     "@astrojs/react": "^3.0.10",
     "@astrojs/tailwind": "^5.1.0",
     "@hookform/resolvers": "^3.3.4",
