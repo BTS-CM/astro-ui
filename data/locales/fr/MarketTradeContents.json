@@ -1,0 +1,7 @@
+{
+  "recentlyCompletedBuyOrdersTitle": "Ordres d'achat sur le marché récemment exécutés",
+  "recentlyCompletedSellOrdersTitle": "Ordres de vente sur le marché récemment exécutés",
+  "recentlyCompletedBuyOrdersDescription": "Le tableau ci-dessous répertorie les ordres d'achat récemment exécutés sur le Bitshares DEX.",
+  "recentlyCompletedSellOrdersDescription": "Le tableau ci-dessous répertorie les ordres de vente récemment exécutés sur le Bitshares DEX.",
+  "noMarketHistoryFound": "Aucun historique de marché trouvé"
+}

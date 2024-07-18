@@ -1,0 +1,95 @@
+{
+  "buyingWith": "At købe {{assetA}} med {{assetB}}",
+  "sellingFor": "Sælger {{assetA}} til {{assetB}}",
+  "createLimitOrder": "Brug denne formular til at oprette en grænseordreoperation.",
+  "editLabel": "Redigere",
+  "submit": "Indsend",
+  "useBalance": "Brug balance",
+  "priceAmount": {
+    "label": "Pris Beløb",
+    "description": "Prisbeløbet på {{assetA}} i {{assetB}}",
+    "provideNewLabel": "Angiv en ny pris",
+    "useLowestAsk": "Brug laveste spørge",
+    "useHighestBid": "Brug højeste bud"
+  },
+  "sellAmount": {
+    "label": "Salgsbeløb",
+    "buyDescription": "Mængden af {{asset}} du planlægger at købe",
+    "sellDescription": "Mængden af {{asset}} du planlægger at sælge",
+    "provideNewLabel": "Angiv et nyt beløb"
+  },
+  "sellTotal": {
+    "label": "Total",
+    "buyDescription": "Det samlede beløb {{asset}} du planlægger at sælge",
+    "sellDescription": "Det samlede beløb {{asset}} du vil modtage",
+    "provideNewLabel": "Angiv en ny total",
+    "requireMore": "Du har brug for {{requiredAmount}} mere {{asset}}"
+  },
+  "expiry": {
+    "label": "Begræns ordreudløb",
+    "1hr": "1 time",
+    "12hr": "12 timer",
+    "24hr": "24 timer",
+    "7d": "7 dage",
+    "30d": "30 dage",
+    "specific": "Specifik dato",
+    "fkill": "Fyld eller dræb",
+    "pickDate": "Vælg en dato",
+    "fkillDescription": "Denne ordre udløber øjeblikkeligt, hvis den ikke kan udfyldes",
+    "generalDescription": "Denne grænserækkefølge vil udløbe {{expiryType}} efter udsendelse"
+  },
+  "osoValue": {
+    "enabled": "Ordre sender Ordre aktiveret",
+    "enable": "Aktiver ordre sender ordre",
+    "description": "Den automatiske OSO-funktion vil være aktiv"
+  },
+  "osoEnabled": {
+    "spreadPercentLabel": "Spredningsprocent",
+    "spreadPercentDescription": "Hvor langt prisen på take profit-ordren afviger fra den oprindelige ordre",
+    "provideNewSpreadPercent": "Angiv en ny spredningsprocent"
+  },
+  "osoSize": {
+    "sizePercentLabel": "Størrelse procent",
+    "sizePercentDescription": "Procentdel, der skal sælges i overskudsordren",
+    "provideNewSizePercent": "Angiv en ny størrelsesprocent"
+  },
+  "repeatValue": {
+    "label": "Indstille OSO til automatisk at gentage?",
+    "description": "Automatiserer gentagne OSO-baserede grænseordrer",
+    "enabled": "OSO konfigureret til at gentage",
+    "disabled": "OSO konfigureret til ikke at gentage"
+  },
+  "fee": {
+    "label": "Betaling",
+    "description": "Netværksgebyret for at udsende denne operation",
+    "unfilledRebate": "Uudfyldt rabat: {{fee}} BTS (øjeblikkelig)",
+    "ltmRebate": "LTM rabat: {{rebate}} BTS (vesting)"
+  },
+  "marketFees": {
+    "label": "Markedsgebyr",
+    "description": "Markedsgebyr pålagt af aktivudsteder"
+  },
+  "sellPrice": {
+    "label": "Pris",
+    "useLowestAsk": "Brug Laveste Spørg",
+    "description": "Din pris pr. "
+  },
+  "sellAmount2": {
+    "label": "Beløb",
+    "buyDescription": "Mængden af ​​? ",
+    "sellDescription": "Mængden af ​​? "
+  },
+  "sellTotal2": {
+    "label": "Total",
+    "buyDescription": "det samlede? ",
+    "sellDescription": "det samlede? "
+  },
+  "expiry2": {
+    "label": "Begræns ordreudløb",
+    "description": "Tid til udløb..."
+  },
+  "headerText": {
+    "buying": "At købe {{amount}} {{thisAssetA}} til {{total}} {{thisAssetB}}",
+    "selling": "Sælger {{amount}} {{thisAssetA}} til {{total}} {{thisAssetB}}"
+  }
+}

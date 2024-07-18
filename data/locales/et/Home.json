@@ -1,0 +1,79 @@
+{
+  "lend": {
+    "title": "🪙 Laena raha",
+    "subtitle": "Laena teistele kasutajatele",
+    "hover1": "Looge oma detsentraliseeritud krediidipakkumised.",
+    "hover2": "Laenake varasid teie määratud intressimääradega.",
+    "hover3": "Täpsustage aktsepteeritav laenutagatis ja hinnad."
+  },
+  "pool": {
+    "title": "💱 Basseini vahetus",
+    "subtitle": "Vahetage varasid basseini kaudu",
+    "hover1": "Vahetage varad kasutaja loodud likviidsuskogumite kaudu.",
+    "hover2": "Pooltel on erinevad kauplemispaarid ja tasud.",
+    "hover3": "Lihtsam, kuid kulukam kui piirtellimus."
+  },
+  "stake": {
+    "title": "🔒 Panuse vara",
+    "subtitle": "Osalusvara likviidsuskogumites",
+    "hover1": "Tasude teenimiseks panustage varasid likviidsusfondidesse.",
+    "hover2": "Panustatud varad on basseinis lukus.",
+    "hover3": "Panustatud varad saab igal ajal välja võtta."
+  },
+  "dex": {
+    "title": "📈 DEX-i limiittellimused",
+    "subtitle": "Kaubelge Bitshares DEX-il",
+    "hover1": "Limiittellimuste käsitsi koostamine.",
+    "hover2": "Kasutage mis tahes varakauplemispaari.",
+    "hover3": "Määrake tellimuse aegumiskuupäevad.",
+    "hover4": "Keerulisem, kuid odavam kui basseinivahetus."
+  },
+  "transfer": {
+    "title": "💸 Kandke vara üle",
+    "subtitle": "Saatke vara teistele kasutajatele",
+    "hover1": "Kandke varad mõne sekundi jooksul üle kellelegi Bitsharesi plokiahelas."
+  },
+  "borrow": {
+    "title": "🏦 Laena raha",
+    "subtitle": "Laena teistelt kasutajatelt",
+    "hover1": "Sirvi aktiivse kasutaja loodud krediidipakkumisi.",
+    "hover2": "Laenake neilt varasid soovitud intressimääraga.",
+    "hover3": "Kasutage oma laenu tagamiseks nõutud tagatist."
+  },
+  "smartcoins": {
+    "title": "💵 Loo võlg",
+    "subtitle": "Väljastada tagatisega võlg",
+    "hover1": "Bitassetid, nagu USD, CNY ja EUR, on komitee loodud stabiilsed mündid (nutimündid), mida toetab BTS.",
+    "hover2": "Kasutaja loodud smartcoine saab toetada mis tahes varaga ja viidata mis tahes välisele kanalile.",
+    "hover3": "Välised arveldushinnad tuletatakse konfigureeritud söödatootjatelt.",
+    "hover4": "Kokkupuude välishindadega võib ohustada tagatisega võlapositsioone."
+  },
+  "ltm": {
+    "title": "🏅 Ostke LTM",
+    "subtitle": "Ostke eluaegne liikmesus",
+    "hover1": "Eluaegseks liikmeks saamisel on mitmeid eeliseid.",
+    "hover2": "Eluaegsed liikmed saavad tasudelt 80% tagasimakse.",
+    "hover3": "Eluaegsed liikmed saavad luua esmaklassilisi Bitsharesi kontonimesid.",
+    "hover4": "Eluaegsed liikmed saavad teenida suunamissüsteemi kaudu."
+  },
+  "portfolio": {
+    "title": "💰 Portfell",
+    "subtitle": "Vaadake oma portfelli",
+    "hover1": "Kontrollige oma saldosid.",
+    "hover2": "Jälgige oma avatud tellimusi.",
+    "hover3": "Analüüsige oma hiljutist kontotegevust."
+  },
+  "featured": {
+    "title": "🏆 Tippturud",
+    "subtitle": "Vaadake kõige aktiivsemaid turge",
+    "hover1": "Liikuge kõige aktiivsemate kauplemispaaride juurde.",
+    "hover2": "Võrrelge turu kauplemismahtu ja väärtust.",
+    "hover3": "Võrrelge turutehingute kogust."
+  },
+  "deals": {
+    "title": "ℹ️ Krediidipakkumised",
+    "subtitle": "Kontrollige oma krediidipakkumisi",
+    "hover1": "Jälgige oma aktiivseid krediiditehinguid.",
+    "hover2": "Hallake oma krediiditehingute seisu."
+  }
+}

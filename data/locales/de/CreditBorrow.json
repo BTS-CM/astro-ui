@@ -1,0 +1,36 @@
+{
+  "common": {
+    "title": " Angebot{{orderID}} von {{owner_name}} ({{owner_account}})",
+    "offering": "Angebot",
+    "accepting": "Akzeptieren",
+    "loading": "Wird geladen...",
+    "fee": "Gebühr: {{fee}}%",
+    "repayPeriod": "Rückzahlungszeitraum: {{repayPeriod}} Std.",
+    "validity": "Angebot gültig für {{validity}} Std.",
+    "min": "Mindestbetrag: {{amount}} {{asset}}",
+    "proceed": "Fahren Sie mit dem Kreditangebot fort{{offerID}}",
+    "edit": "Angebot bearbeiten",
+    "view": "Einstellungen anzeigen"
+  },
+  "card": {
+    "title": "🏦 Anzeigen verfügbarer Kreditangebote",
+    "description": "Kreditangebote werden vom Benutzer erstellt und bieten unterschiedliche Zinssätze, Vermögenswerte und Laufzeiten. ",
+    "viewingAll": "Alle Angebote ansehen",
+    "viewAll": "Alle Angebote ansehen",
+    "viewingAvailable": "Kompatible Bestellungen anzeigen",
+    "viewAvailable": "Kompatible Bestellungen anzeigen",
+    "viewingSearch": "Suchen",
+    "viewSearch": "Suchen",
+    "allOffers": "Diese Kreditangebote bieten eine Vielzahl von leihbaren Vermögenswerten zu konkurrierenden Konditionen.",
+    "availableOffers": "Diese Kreditangebote akzeptieren Vermögenswerte, die Sie besitzen, als Kreditsicherheit.",
+    "searchPrompt": "Wie möchten Sie suchen?",
+    "borrowSearching": "Suche nach leihbarem Vermögenswert",
+    "borrowSearch": "Suche nach leihbarem Vermögenswert",
+    "collateralSearching": "Suche nach Sicherheiten",
+    "collateralSearch": "Suche nach Sicherheiten",
+    "ownerSearching": "Suche nach Besitzername",
+    "ownerSearch": "Suche nach Eigentümername",
+    "noResults": "keine Ergebnisse gefunden",
+    "loading": "Angebote werden geladen..."
+  }
+}

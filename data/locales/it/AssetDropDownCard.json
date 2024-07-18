@@ -1,0 +1,11 @@
+{
+  "select": "Seleziona una risorsa",
+  "change": "Cambia risorsa",
+  "replacing": "Sostituzione {{assetSymbol}}",
+  "selecting": "Selezione di una nuova risorsa",
+  "noType": "Cerca una risorsa di seguito",
+  "baseType": "Seleziona una nuova risorsa di base",
+  "quoteType": "Seleziona una nuova risorsa preventivo",
+  "search": "Cerca una risorsa",
+  "issued": "Rilasciato da {{user}}"
+}

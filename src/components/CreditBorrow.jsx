@@ -33,18 +33,10 @@ import {
 import { humanReadableFloat } from "@/lib/common.js";
 
 function hoursTillExpiration(expirationTime) {
-  // Parse the expiration time
   var expirationDate = new Date(expirationTime);
-
-  // Get the current date and time
   var currentDate = new Date();
-
-  // Calculate the difference in milliseconds
   var difference = expirationDate - currentDate;
-
-  // Convert the difference to hours and round it to the nearest integer
   var hours = Math.round(difference / 1000 / 60 / 60);
-
   return hours;
 }
 

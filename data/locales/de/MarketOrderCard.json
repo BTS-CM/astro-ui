@@ -1,0 +1,15 @@
+{
+  "proceedLimitOrderDataTitle": "Möchten Sie mit den folgenden Limit-Order-Daten fortfahren?",
+  "proceedLimitOrderDataDescription": "Der {{cardType}} Das obige Limit-Order-Formular wird mit den folgenden Market-Order-Daten ausgefüllt.",
+  "sellingQuoteForBase": "Verkauf {{totalQuote}} {{assetA}} im Austausch für mindestens {{totalBase}} {{assetB}}",
+  "sellingBaseForQuote": "Verkauf {{totalBase}} {{assetB}} im Austausch für mindestens {{totalQuote}} {{assetA}}",
+  "pricePerAsset": "Preis: {{price}} {{assetB}} pro 1 {{assetA}}",
+  "proceedButton": "Fortfahren",
+  "marketDataRefreshing": "Die Marktdaten sind erfrischend, bitte warten...",
+  "loadingMarketOrdersTitle": "Laden von Marktaufträgen",
+  "loadingMarketOrdersDescription": "Die angeforderten Marktdaten werden abgerufen, bitte warten...",
+  "openBuyLimitOrdersTitle": "Offene Kauflimitaufträge",
+  "openSellLimitOrdersTitle": "Offene Verkaufslimitaufträge",
+  "buyLimitOrdersDescription": "Die folgende Tabelle zeigt die Kaufangebote des Netzwerks {{assetA}} mit {{assetB}}",
+  "sellLimitOrdersDescription": "Die folgende Tabelle zeigt die Verkaufsangebote des Netzwerks {{assetA}} für {{assetB}}"
+}

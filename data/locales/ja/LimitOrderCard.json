@@ -1,0 +1,95 @@
+{
+  "buyingWith": "購入する {{assetA}} と {{assetB}}",
+  "sellingFor": "販売 {{assetA}} のために {{assetB}}",
+  "createLimitOrder": "このフォームを使用して指値注文オペレーションを作成します。",
+  "editLabel": "編集",
+  "submit": "提出する",
+  "useBalance": "残高を使用する",
+  "priceAmount": {
+    "label": "価格金額",
+    "description": "価格の金額は、 {{assetA}} で {{assetB}}",
+    "provideNewLabel": "新しい価格を提供する",
+    "useLowestAsk": "最低のアスクを使用する",
+    "useHighestBid": "最高入札額を使用する"
+  },
+  "sellAmount": {
+    "label": "販売額",
+    "buyDescription": "の量 {{asset}} 購入するつもりですか",
+    "sellDescription": "の量 {{asset}} 販売するつもりですか",
+    "provideNewLabel": "新しい金額を入力してください"
+  },
+  "sellTotal": {
+    "label": "合計",
+    "buyDescription": "合計 {{asset}} 販売するつもりですか",
+    "sellDescription": "合計 {{asset}} あなたは受け取ります",
+    "provideNewLabel": "新しい合計を入力してください",
+    "requireMore": "あなたが必要とする {{requiredAmount}} もっと {{asset}}"
+  },
+  "expiry": {
+    "label": "指値注文の有効期限",
+    "1hr": "1時間",
+    "12hr": "12時間",
+    "24hr": "24時間",
+    "7d": "7日",
+    "30d": "30日",
+    "specific": "特定の日付",
+    "fkill": "埋めるか殺すか",
+    "pickDate": "日付を選択します",
+    "fkillDescription": "この注文は、約定できない場合はすぐに期限切れになります",
+    "generalDescription": "この指値注文は期限切れになります {{expiryType}} 放送後"
+  },
+  "osoValue": {
+    "enabled": "注文送信注文が有効になりました",
+    "enable": "注文を有効にする 注文を送信する",
+    "description": "自動OSO機能が有効になります"
+  },
+  "osoEnabled": {
+    "spreadPercentLabel": "スプレッドパーセント",
+    "spreadPercentDescription": "テイクプロフィット注文の価格が元の注文とどの程度異なっているか",
+    "provideNewSpreadPercent": "新しいスプレッドパーセントを提供します"
+  },
+  "osoSize": {
+    "sizePercentLabel": "サイズパーセント",
+    "sizePercentDescription": "利益確定注文で売るパーセンテージ",
+    "provideNewSizePercent": "新しいサイズパーセントを指定してください"
+  },
+  "repeatValue": {
+    "label": "OSO を自動的に繰り返すように設定しますか?",
+    "description": "繰り返されるOSOベースの指値注文を自動化します",
+    "enabled": "OSO は繰り返すように構成されています",
+    "disabled": "OSO は繰り返さないように構成されています"
+  },
+  "fee": {
+    "label": "手数料",
+    "description": "この操作をブロードキャストするためのネットワーク料金",
+    "unfilledRebate": "未充足のリベート: {{fee}} BTS (インスタント)",
+    "ltmRebate": "LTM リベート: {{rebate}} BTS (権利確定)"
+  },
+  "marketFees": {
+    "label": "市場手数料",
+    "description": "資産発行者によって適用される市場手数料"
+  },
+  "sellPrice": {
+    "label": "価格",
+    "useLowestAsk": "最低売価を使用する",
+    "description": "あたりの価格は？"
+  },
+  "sellAmount2": {
+    "label": "額",
+    "buyDescription": "の量は？",
+    "sellDescription": "の量は？"
+  },
+  "sellTotal2": {
+    "label": "合計",
+    "buyDescription": "合計 ？",
+    "sellDescription": "合計 ？"
+  },
+  "expiry2": {
+    "label": "指値注文の有効期限",
+    "description": "賞味期限まであと少し…"
+  },
+  "headerText": {
+    "buying": "購入する {{amount}} {{thisAssetA}} のために {{total}} {{thisAssetB}}",
+    "selling": "販売 {{amount}} {{thisAssetA}} のために {{total}} {{thisAssetB}}"
+  }
+}

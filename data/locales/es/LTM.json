@@ -1,0 +1,12 @@
+{
+  "cardTitle": "💱 Membresía LTM",
+  "cardDescription": "Compra una membresía vitalicia",
+  "alreadyMember": "¡Esta cuenta ya ha adquirido una membresía vitalicia!",
+  "benefitsTitle": "Beneficios de su membresía activa vitalicia:",
+  "benefit1": "Reciba un reembolso del 80 % en todas las tarifas en su saldo de adquisición de derechos.",
+  "benefit2": "Gane pasivamente una parte de las tarifas gastadas por sus usuarios recomendados.",
+  "benefit3": "Ahora puedo generar nombres de cuentas premium.",
+  "wantToPurchase": "¿Quiere comprar una membresía de por vida para su cuenta?",
+  "purchaseButton": "Comprar LTM",
+  "headerText": "Comprar una membresía vitalicia para {{username}}"
+}

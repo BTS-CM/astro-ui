@@ -1,0 +1,36 @@
+{
+  "common": {
+    "title": " Tilbud{{orderID}} ved {{owner_name}} ({{owner_account}})",
+    "offering": "Tilbud",
+    "accepting": "Accepterer",
+    "loading": "Indlæser...",
+    "fee": "Betaling: {{fee}}%",
+    "repayPeriod": "Tilbagebetalingsperiode: {{repayPeriod}} timer",
+    "validity": "Tilbuddet gælder pr {{validity}} timer",
+    "min": "Minimum beløb: {{amount}} {{asset}}",
+    "proceed": "Fortsæt med kredittilbud{{offerID}}",
+    "edit": "Rediger tilbud",
+    "view": "Se indstillinger"
+  },
+  "card": {
+    "title": "🏦 Se tilgængelige kredittilbud",
+    "description": "Kredittilbud er brugergenererede, de tilbyder forskellige satser, aktiver og varigheder; ",
+    "viewingAll": "Se alle tilbud",
+    "viewAll": "Se alle tilbud",
+    "viewingAvailable": "Visning af kompatible ordrer",
+    "viewAvailable": "Se kompatible ordrer",
+    "viewingSearch": "Søger",
+    "viewSearch": "Søg",
+    "allOffers": "Disse kredittilbud tilbyder en række lånbare aktiver til konkurrerende priser.",
+    "availableOffers": "Disse kredittilbud accepterer aktiver, du ejer, som sikkerhedsstillelse for lån.",
+    "searchPrompt": "Hvordan vil du søge?",
+    "borrowSearching": "Søgning efter lånbart aktiv",
+    "borrowSearch": "Søg efter lånbart aktiv",
+    "collateralSearching": "Søgning efter sikkerhedsstillelse aktiver",
+    "collateralSearch": "Søg efter sikkerhedsstillelse aktiver",
+    "ownerSearching": "Søger efter ejernavn",
+    "ownerSearch": "Søg efter ejernavn",
+    "noResults": "Ingen resultater fundet",
+    "loading": "Indlæser tilbud..."
+  }
+}

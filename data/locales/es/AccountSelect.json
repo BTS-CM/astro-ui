@@ -1,0 +1,29 @@
+{
+  "noAccount": "No se pudo encontrar la cuenta.",
+  "forgetPrompt": "Cuenta: {{user}}",
+  "forgetButton": "Olvida esta cuenta",
+  "noChain": {
+    "title": "⚙️ Seleccione una cadena de bloques para continuar",
+    "description": "¿Qué cadena de bloques quieres usar?",
+    "testnet": "red de prueba"
+  },
+  "noMode": {
+    "titleBTS": "¿Utiliza una cuenta Bitshares nueva o existente?",
+    "titleTEST": "¿Utiliza una cuenta de prueba de Bitshares nueva o existente?",
+    "description": "¿Como quieres proceder?",
+    "new": "Nueva cuenta",
+    "existing": "Cuenta existente",
+    "back": "Atrás"
+  },
+  "new": {
+    "title": "selección de cuenta",
+    "initDesc": "Ingrese el nombre de su cuenta Bitshares",
+    "description": "¿Continuar con la siguiente cuenta?",
+    "back": "Regresa",
+    "continue": "Continuar"
+  },
+  "existing": {
+    "description": "Seleccione una de sus cuentas utilizadas anteriormente",
+    "none": "No se encontraron cuentas."
+  }
+}

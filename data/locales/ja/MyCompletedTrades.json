@@ -1,0 +1,8 @@
+{
+  "recentlyCompletedBuyOrdersTitle": "最近完了した買い注文",
+  "recentlyCompletedSellOrdersTitle": "最近完了した売り注文",
+  "recentlyCompletedBuyOrdersDescription": "以下の表は、最近完了した買い注文を示しています。",
+  "recentlyCompletedSellOrdersDescription": "以下の表は、最近完了した売り注文を示しています。",
+  "noRecentlyCompletedPurchases": "最近完了した購入は見つかりませんでした",
+  "noRecentlyCompletedSales": "最近完了した販売は見つかりませんでした"
+}

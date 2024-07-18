@@ -1,0 +1,15 @@
+{
+  "proceedLimitOrderDataTitle": "次の指値注文データを続行しますか?",
+  "proceedLimitOrderDataDescription": "の {{cardType}} 上記の指値注文フォームには、次の成行注文データが入力されます。",
+  "sellingQuoteForBase": "販売 {{totalQuote}} {{assetA}} 少なくともそれと引き換えに {{totalBase}} {{assetB}}",
+  "sellingBaseForQuote": "販売 {{totalBase}} {{assetB}} 少なくともそれと引き換えに {{totalQuote}} {{assetA}}",
+  "pricePerAsset": "価格： {{price}} {{assetB}} 1あたり {{assetA}}",
+  "proceedButton": "進む",
+  "marketDataRefreshing": "市場データが更新されています。お待ちください...",
+  "loadingMarketOrdersTitle": "成行注文のロード",
+  "loadingMarketOrdersDescription": "要求された市場データを取得しています。お待ちください...",
+  "openBuyLimitOrdersTitle": "買い指値注文をオープンする",
+  "openSellLimitOrdersTitle": "オープン売り指値注文",
+  "buyLimitOrdersDescription": "次の表に、購入できるネットワーク オファーを示します。 {{assetA}} と {{assetB}}",
+  "sellLimitOrdersDescription": "次の表に、販売するネットワーク オファーを示します。 {{assetA}} のために {{assetB}}"
+}

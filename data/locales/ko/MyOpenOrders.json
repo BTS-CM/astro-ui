@@ -1,0 +1,6 @@
+{
+  "openBuyOrdersTitle": "내 공개 매수 주문",
+  "openSellOrdersTitle": "내 공개 판매 주문",
+  "openBuyOrdersDescription": "시장에 대한 공개 매수 지정가 주문 {{assetA}}/{{assetB}}",
+  "openSellOrdersDescription": "시장에 대한 귀하의 공개 판매 지정가 주문 {{assetA}}/{{assetB}}"
+}

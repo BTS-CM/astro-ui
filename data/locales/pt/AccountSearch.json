@@ -1,0 +1,15 @@
+{
+  "noSearch": {
+    "prompt": "Por favor insira um nome de conta blockchain",
+    "placeholder": "Nome ou ID da conta",
+    "continue": "Continuar",
+    "error": "Não foi possível encontrar a conta.",
+    "selfError": "Não é possível transferir ativos para esta conta."
+  },
+  "searchResponse": {
+    "promptBTS": "Continuar com a seguinte conta Bitshares?",
+    "promptTEST": "Prosseguir com a seguinte conta Bitshares testnet (TEST)?",
+    "back": "Volte",
+    "proceed": "Continuar"
+  }
+}

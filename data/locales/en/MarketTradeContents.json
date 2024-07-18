@@ -1,0 +1,7 @@
+{
+  "recentlyCompletedBuyOrdersTitle": "Recently completed market buy orders",
+  "recentlyCompletedSellOrdersTitle": "Recently completed market sell orders",
+  "recentlyCompletedBuyOrdersDescription": "The table below lists recently completed buy orders on the Bitshares DEX",
+  "recentlyCompletedSellOrdersDescription": "The table below lists recently completed sell orders on the Bitshares DEX",
+  "noMarketHistoryFound": "No market history found"
+}

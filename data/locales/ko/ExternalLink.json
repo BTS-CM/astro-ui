@@ -1,0 +1,9 @@
+{
+  "dialogContent": {
+    "leaveApp": "⚠️ 이 앱을 종료하려고 합니다!",
+    "navigateToExternal": "외부 웹사이트로 이동하려고 합니다.",
+    "proceedToURL": "다음 URL로 이동하시겠습니까?",
+    "checkingLeave": "확인 중입니다. 정말 떠나시겠어요?",
+    "openLink": "링크 열기"
+  }
+}

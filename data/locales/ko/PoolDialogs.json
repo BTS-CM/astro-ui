@@ -1,0 +1,21 @@
+{
+  "loadingMessage": "로드 중...",
+  "noPoolsFoundMessage": "0개의 풀을 찾았습니다",
+  "poolsFound": "{{count}} 풀을 찾았습니다",
+  "idColumnTitle": "ID",
+  "shareAssetColumnTitle": "자산 공유",
+  "assetAColumnTitle": "자산 A",
+  "assetBColumnTitle": "자산 B",
+  "assetAPoolsTitle": "{{assetA}} 풀",
+  "assetAPoolsDialogTitle": "{{assetA}} 풀",
+  "assetAPoolsDialogDescription": "이러한 Bitshares 풀은 다음을 사용합니다. {{assetA}} ({{assetAId}})를 자산 중 하나로 사용합니다.",
+  "assetAHoverCardContent": "교환 {{assetA}} 다음 유동성 풀 중 하나를 사용하여",
+  "marketPoolsTitle": "시장 풀",
+  "marketPoolsDialogTitle": "{{assetA}}/{{assetB}} 풀",
+  "marketPoolsDialogDescription": "이 풀은 다음 사이에서 거래됩니다. {{assetA}} 그리고 {{assetB}}.",
+  "marketHoverCardContent": "사이의 교환 {{assetA}} 그리고 {{assetB}} 다음 유동성 풀 중 하나를 사용하여",
+  "assetBPoolsTitle": "{{assetB}} 풀",
+  "assetBPoolsDialogTitle": "{{assetB}} 풀",
+  "assetBPoolsDialogDescription": "이러한 Bitshares 풀은 다음을 사용합니다. {{assetB}} ({{assetBId}})를 자산 중 하나로 사용합니다.",
+  "assetBHoverCardContent": "교환 {{assetB}} 다음 유동성 풀 중 하나를 사용하여"
+}

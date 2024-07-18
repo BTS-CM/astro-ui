@@ -1,0 +1,12 @@
+{
+  "cardTitle": "💱 Associação LTM",
+  "cardDescription": "Adquira uma assinatura vitalícia",
+  "alreadyMember": "Esta conta já adquiriu uma assinatura vitalícia!",
+  "benefitsTitle": "Seus benefícios de associação vitalícia ativa:",
+  "benefit1": "Receba um desconto de 80% em todas as taxas em seu saldo de aquisição.",
+  "benefit2": "Ganhe passivamente uma parte das taxas gastas pelos usuários indicados.",
+  "benefit3": "Agora capaz de gerar nomes de contas premium.",
+  "wantToPurchase": "Quer adquirir uma assinatura vitalícia para sua conta?",
+  "purchaseButton": "Comprar LTM",
+  "headerText": "Adquirir uma assinatura vitalícia para {{username}}"
+}

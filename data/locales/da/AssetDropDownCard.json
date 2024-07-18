@@ -1,0 +1,11 @@
+{
+  "select": "Vælg et aktiv",
+  "change": "Skift aktiv",
+  "replacing": "Udskiftning {{assetSymbol}}",
+  "selecting": "Valg af et nyt aktiv",
+  "noType": "Søg venligst efter et aktiv nedenfor",
+  "baseType": "Vælg venligst et nyt basisaktiv",
+  "quoteType": "Vælg venligst et nyt tilbudsaktiv",
+  "search": "Søg efter et aktiv",
+  "issued": "Udstedt af {{user}}"
+}

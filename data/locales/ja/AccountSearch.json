@@ -1,0 +1,15 @@
+{
+  "noSearch": {
+    "prompt": "ブロックチェーンアカウント名を入力してください",
+    "placeholder": "アカウント名またはID",
+    "continue": "続く",
+    "error": "アカウントが見つかりませんでした。",
+    "selfError": "このアカウントに資産を移すことはできません。"
+  },
+  "searchResponse": {
+    "promptBTS": "次の Bitshares アカウントを続行しますか?",
+    "promptTEST": "次の Bitshares テストネット (TEST) アカウントを続行しますか?",
+    "back": "戻る",
+    "proceed": "進む"
+  }
+}

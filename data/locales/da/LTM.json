@@ -1,0 +1,12 @@
+{
+  "cardTitle": "💱 LTM-medlemskab",
+  "cardDescription": "Køb et livstidsmedlemskab",
+  "alreadyMember": "Denne konto har allerede købt et livstidsmedlemskab!",
+  "benefitsTitle": "Dine aktive livstidsmedlemskabsfordele:",
+  "benefit1": "Modtag en rabat på 80 % på alle gebyrer til din optjeningssaldo.",
+  "benefit2": "Tjen passivt en andel af gebyrer brugt af dine henviste brugere.",
+  "benefit3": "Nu i stand til at generere premium kontonavne.",
+  "wantToPurchase": "Vil du købe et livstidsmedlemskab til din konto?",
+  "purchaseButton": "Køb LTM",
+  "headerText": "Køb et livstidsmedlemskab for {{username}}"
+}

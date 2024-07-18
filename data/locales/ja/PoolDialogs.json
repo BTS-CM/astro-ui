@@ -1,0 +1,21 @@
+{
+  "loadingMessage": "読み込み中...",
+  "noPoolsFoundMessage": "0 個のプールが見つかりました",
+  "poolsFound": "{{count}} プールが見つかりました",
+  "idColumnTitle": "ID",
+  "shareAssetColumnTitle": "資産を共有する",
+  "assetAColumnTitle": "資産A",
+  "assetBColumnTitle": "資産B",
+  "assetAPoolsTitle": "{{assetA}} プール",
+  "assetAPoolsDialogTitle": "{{assetA}} プール",
+  "assetAPoolsDialogDescription": "これらのビットシェア プールが使用するのは、 {{assetA}} ({{assetAId}}) 資産の 1 つとして。",
+  "assetAHoverCardContent": "スワップ {{assetA}} これらの流動性プールのいずれかを使用する",
+  "marketPoolsTitle": "マーケットプール",
+  "marketPoolsDialogTitle": "{{assetA}}/{{assetB}} プール",
+  "marketPoolsDialogDescription": "これらのプールは以下の間で取引されます。 {{assetA}} そして {{assetB}}。",
+  "marketHoverCardContent": "間を交換します {{assetA}} そして {{assetB}} これらの流動性プールのいずれかを使用する",
+  "assetBPoolsTitle": "{{assetB}} プール",
+  "assetBPoolsDialogTitle": "{{assetB}} プール",
+  "assetBPoolsDialogDescription": "これらのビットシェア プールが使用するのは、 {{assetB}} ({{assetBId}}) 資産の 1 つとして。",
+  "assetBHoverCardContent": "スワップ {{assetB}} これらの流動性プールのいずれかを使用する"
+}

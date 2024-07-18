@@ -1,0 +1,7 @@
+{
+  "recentlyCompletedBuyOrdersTitle": "Hiljuti täidetud turu ostutellimused",
+  "recentlyCompletedSellOrdersTitle": "Hiljuti täidetud turumüügi orderid",
+  "recentlyCompletedBuyOrdersDescription": "Allolevas tabelis on loetletud hiljuti täidetud ostutellimused Bitshares DEXis",
+  "recentlyCompletedSellOrdersDescription": "Allolevas tabelis on loetletud Bitshares DEXi hiljuti täidetud müügitellimused",
+  "noMarketHistoryFound": "Turu ajalugu ei leitud"
+}

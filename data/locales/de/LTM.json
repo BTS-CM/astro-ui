@@ -1,0 +1,12 @@
+{
+  "cardTitle": "💱 LTM-Mitgliedschaft",
+  "cardDescription": "Erwerben Sie eine lebenslange Mitgliedschaft",
+  "alreadyMember": "Für dieses Konto wurde bereits eine lebenslange Mitgliedschaft erworben!",
+  "benefitsTitle": "Die Vorteile Ihrer aktiven lebenslangen Mitgliedschaft:",
+  "benefit1": "Erhalten Sie eine Rückerstattung von 80 % auf alle Gebühren, die Ihrem Sperrguthaben gutgeschrieben werden.",
+  "benefit2": "Verdienen Sie passiv einen Anteil an den Gebühren, die Ihre geworbenen Benutzer ausgeben.",
+  "benefit3": "Jetzt können Premium-Kontonamen generiert werden.",
+  "wantToPurchase": "Möchten Sie eine lebenslange Mitgliedschaft für Ihr Konto erwerben?",
+  "purchaseButton": "Kaufen Sie LTM",
+  "headerText": "Kauf einer lebenslangen Mitgliedschaft für {{username}}"
+}

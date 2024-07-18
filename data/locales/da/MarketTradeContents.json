@@ -1,0 +1,7 @@
+{
+  "recentlyCompletedBuyOrdersTitle": "For nylig gennemførte markedskøbsordrer",
+  "recentlyCompletedSellOrdersTitle": "For nylig afsluttede markedssalgsordrer",
+  "recentlyCompletedBuyOrdersDescription": "Tabellen nedenfor viser nyligt afsluttede købsordrer på Bitshares DEX",
+  "recentlyCompletedSellOrdersDescription": "Tabellen nedenfor viser nyligt afsluttede salgsordrer på Bitshares DEX",
+  "noMarketHistoryFound": "Ingen markedshistorik fundet"
+}

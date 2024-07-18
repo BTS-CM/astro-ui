@@ -1,0 +1,8 @@
+{
+  "recentlyCompletedBuyOrdersTitle": "Teie hiljuti täidetud ostutellimused",
+  "recentlyCompletedSellOrdersTitle": "Teie hiljuti täidetud müügitellimused",
+  "recentlyCompletedBuyOrdersDescription": "Allolevas tabelis on loetletud teie hiljuti täidetud ostutellimused",
+  "recentlyCompletedSellOrdersDescription": "Allolevas tabelis on loetletud teie hiljuti täidetud müügitellimused",
+  "noRecentlyCompletedPurchases": "Hiljuti sooritatud oste ei leitud",
+  "noRecentlyCompletedSales": "Hiljuti lõpetatud müüke ei leitud"
+}

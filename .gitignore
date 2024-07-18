@@ -148,3 +148,13 @@ pnpm-debug.log*
 .DS_Store
 
 .vercel
+data/bitshares_testnet/pools.json
+data/bitshares_testnet/dynamicData.json
+data/bitshares_testnet/assetIssuers.json
+data/bitshares_testnet/allPools.json
+data/bitshares_testnet/allAssets.json
+data/bitshares/pools.json
+data/bitshares/dynamicData.json
+data/bitshares/assetIssuers.json
+data/bitshares/allPools.json
+data/bitshares/allAssets.json

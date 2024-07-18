@@ -1,0 +1,36 @@
+{
+  "dialogContent": {
+    "generatingDeeplink": "Generando enlace profundo...",
+    "withAccount": "Con la cuenta: {{username}} ({{userID}})",
+    "readyToBroadcast": "¡Tu operación Bitshares Beet está lista para transmitirse!",
+    "chooseMethod": "Elija entre los métodos a continuación para transmitir a su billetera de elección.",
+    "bitsharesBEETMultiwallet": "Bitshares BEET multibilletera",
+    "errorOccurred": "Se produjo un error, lo siento. ",
+    "beetWallet": "Bitshares BEET multibilletera"
+  },
+  "tabs": {
+    "viewTRXObject": "Ver objeto TRX",
+    "rawDeeplink": "Enlace profundo sin procesar",
+    "localJSONFile": "Archivo JSON local"
+  },
+  "tabsContent": {
+    "transactionObjectJSON": "Objeto de transacción JSON",
+    "operationType": "Tipo de operación: {{operationName}}",
+    "copyOperationJSON": "Operación de copia JSON",
+    "usingDeeplink": "Usar un enlace profundo para transmitir a través del multiwallet Beet",
+    "step1": "Inicie la billetera BEET y navegue hasta 'Enlace sin formato' en el menú; la billetera debe permanecer desbloqueada durante la transmisión.",
+    "step2": "Desde esta página puede permitir todas las operaciones o permitir únicamente la operación '{{operationName}}' (luego haga clic en guardar).",
+    "step3": "Una vez que aparezca 'Listo para enlaces sin formato' en Beet, puede hacer clic en el botón a continuación para continuar.",
+    "step4": "Se mostrará un mensaje de BEET, verificará el contenido, opcionalmente solicitará un recibo de Beet y luego transmitirá la transacción a la cadena de bloques.",
+    "step5": "No recibirá una confirmación en esta ventana, pero su operación se procesará en segundos en la cadena de bloques.",
+    "triggerRawBeet": "Activar enlace profundo de remolacha cruda",
+    "viaLocalFile": "Mediante carga de archivos local: listo para continuar",
+    "step1Local": "Inicie la billetera BEET y navegue hasta 'Local' en el menú.",
+    "step2Local": "En esta página permitir todo o permitir solo la operación '{{operationName}}'.",
+    "step3Local": "Una vez en la página de carga local, haga clic en el botón a continuación para descargar el archivo JSON a su computadora.",
+    "step4Local": "Desde la página BEET Local, cargue el archivo JSON; luego debería aparecer un mensaje.",
+    "step5Local": "Verifique minuciosamente el contenido del mensaje antes de aprobar cualquier operación; también considere alternar el recibo opcional para fines de verificación y análisis posterior a la transmisión.",
+    "downloading": "Descargando...",
+    "downloadBeetOperationJSON": "Descargar operación remolacha JSON"
+  }
+}

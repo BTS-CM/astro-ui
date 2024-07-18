@@ -1,0 +1,15 @@
+{
+  "noSearch": {
+    "prompt": "Sisestage plokiahela konto nimi",
+    "placeholder": "Konto nimi või ID",
+    "continue": "Jätka",
+    "error": "Kontot ei leitud.",
+    "selfError": "Sellele kontole ei saa varasid üle kanda."
+  },
+  "searchResponse": {
+    "promptBTS": "Kas jätkata järgmise Bitsharesi kontoga?",
+    "promptTEST": "Kas jätkata järgmise Bitsharesi testneti (TEST) kontoga?",
+    "back": "Mine tagasi",
+    "proceed": "Jätkake"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "proceedLimitOrderDataTitle": "คุณต้องการดำเนินการกับข้อมูลคำสั่งจำกัดต่อไปนี้หรือไม่",
+  "proceedLimitOrderDataDescription": "ที่ {{cardType}} แบบฟอร์มคำสั่งจำกัดด้านบนจะถูกกรอกด้วยข้อมูลคำสั่งตลาดต่อไปนี้",
+  "sellingQuoteForBase": "ขาย {{totalQuote}} {{assetA}} เพื่อแลกเป็นอย่างน้อย {{totalBase}} {{assetB}}",
+  "sellingBaseForQuote": "ขาย {{totalBase}} {{assetB}} เพื่อแลกเป็นอย่างน้อย {{totalQuote}} {{assetA}}",
+  "pricePerAsset": "ราคา: {{price}} {{assetB}} ต่อ 1 {{assetA}}",
+  "proceedButton": "ดำเนินการ",
+  "marketDataRefreshing": "ข้อมูลตลาดกำลังรีเฟรช โปรดรอสักครู่...",
+  "loadingMarketOrdersTitle": "กำลังโหลดคำสั่งซื้อในตลาด",
+  "loadingMarketOrdersDescription": "กำลังเรียกข้อมูลตลาดที่ร้องขอ โปรดรอสักครู่...",
+  "openBuyLimitOrdersTitle": "เปิดคำสั่งจำกัดการซื้อ",
+  "openSellLimitOrdersTitle": "เปิดคำสั่งจำกัดการขาย",
+  "buyLimitOrdersDescription": "ตารางต่อไปนี้แสดงข้อเสนอของเครือข่ายที่จะซื้อ {{assetA}} กับ {{assetB}}",
+  "sellLimitOrdersDescription": "ตารางต่อไปนี้แสดงข้อเสนอของเครือข่ายที่จะขาย {{assetA}} สำหรับ {{assetB}}"
+}

@@ -1,0 +1,21 @@
+{
+  "loadingMessage": "laadimine...",
+  "noPoolsFoundMessage": "Leiti 0 basseini",
+  "poolsFound": "{{count}} leitud basseinid",
+  "idColumnTitle": "id",
+  "shareAssetColumnTitle": "Jaga vara",
+  "assetAColumnTitle": "Vara A",
+  "assetBColumnTitle": "Vara B",
+  "assetAPoolsTitle": "{{assetA}} Basseinid",
+  "assetAPoolsDialogTitle": "{{assetA}} Basseinid",
+  "assetAPoolsDialogDescription": "Need Bitsharesi basseinid kasutavad {{assetA}} ({{assetAId}}) ühe varana.",
+  "assetAHoverCardContent": "Vahetada {{assetA}} kasutades ühte neist likviidsuskogumitest",
+  "marketPoolsTitle": "Turubasseinid",
+  "marketPoolsDialogTitle": "{{assetA}}/{{assetB}} Basseinid",
+  "marketPoolsDialogDescription": "Need basseinid kauplevad {{assetA}} ja {{assetB}}.",
+  "marketHoverCardContent": "Vaheta vahel {{assetA}} ja {{assetB}} kasutades ühte neist likviidsuskogumitest",
+  "assetBPoolsTitle": "{{assetB}} Basseinid",
+  "assetBPoolsDialogTitle": "{{assetB}} Basseinid",
+  "assetBPoolsDialogDescription": "Need Bitsharesi basseinid kasutavad {{assetB}} ({{assetBId}}) ühe varana.",
+  "assetBHoverCardContent": "Vahetada {{assetB}} kasutades ühte neist likviidsuskogumitest"
+}

@@ -1,0 +1,59 @@
+{
+  "dealNo": "取引",
+  "with": " と ",
+  "borrowed": "あなたは借りました",
+  "lent": "彼らは借りた",
+  "loanCollateral": "融資担保:",
+  "borrower": "借入手数料",
+  "lender": "収益",
+  "remainingTime": "残り時間：",
+  "repayLoan": "ローンを返済する",
+  "trade": "貿易 {{symbol}} DEXで",
+  "dialogTitle": "ローンの返済中",
+  "description": "このフォームを使用して、クレジット取引の返済を管理します。",
+  "account": "アカウント",
+  "balance": "あなたの現在 {{symbol}} バランス",
+  "repayAmount": "数の {{symbol}} 返済する",
+  "remainingDebt": "残債: {{amount}} {{symbol}}",
+  "repayDesc": "担保をすべて取り戻すには、借金を全額返済してください。",
+  "redeemCollateral": "担保の償還",
+  "remainingCollateral": "残りの担保: {金額} {{symbol}}",
+  "collateralRedemption": "数の {{symbol}} 償還する裏付け担保",
+  "loanLabel": "ローン手数料の目安",
+  "loanDesc": "これは貸し手に支払う手数料です。",
+  "finalPaymentLabel": "最終的な支払い",
+  "finalPaymentDesc": "全額返済すると、 {{symbol}} 担保は返却されます。",
+  "finalPaymentWarning": "不十分 {{symbol}} バランス",
+  "networkFee": "ネットワーク料金",
+  "networkFeeDesc": "これは、クレジット取引の返済操作をブロックチェーン上にブロードキャストするための料金です。",
+  "rebate": "リベート {{fee}} {{chain}} (権利確定)",
+  "submit": "提出する",
+  "deepLink": "返済中 {{finalRepayAmount}} {{debtAsset}}、取り戻すために {{collateralAsset}}",
+  "card": {
+    "title": "💱 アクティブなクレジット取引を確認してください",
+    "description": "ここから、アクティブなクレジット取引を監視したり、返済を管理したりできます。",
+    "viewingBorrowings": "借入の表示",
+    "viewBorrowings": "借入状況を確認する",
+    "viewingLendings": "貸し出しを表示する",
+    "viewLendings": "融資内容を確認する",
+    "noBorrowers": "有効な借入が見つかりません",
+    "noLendings": "有効な融資は見つかりませんでした",
+    "loading": "読み込み中..."
+  },
+  "risks": {
+    "borrowerTitle": "借り手のリスクに関する警告",
+    "lenderTitle": "貸し手のリスクに関する警告",
+    "description": "信用取引に関連するお客様の責任とリスクに関する重要な情報。",
+    "borrower": {
+      "risk1": "あなた （ {{username}} ）あなたの信用取引を管理し、適時に返済する責任は他の誰にもありません。",
+      "risk2": "クレジット取引の返済期間中は、外部ボラティリティにさらされることに注意してください。",
+      "risk3": "信用取引を返済できない場合、残りの裏付け担保資産が失われます。"
+    },
+    "lender": {
+      "risk1": "あなた （ {{username}} ) は、他の誰でもない、あなたのクレジットオファー、そのパラメーター、およびそのリスクエクスポージャを管理する責任を負います。",
+      "risk2": "クレジット取引の返済期間中は、外部ボラティリティにさらされることに注意してください。",
+      "risk3": "貸し手として、信用取引が成立すると、( {{username}} ) をキャンセルすることはできません。借り手は返済期間内に契約を継続する責任があります。",
+      "risk4": "借り手が信用取引を返済できなかった場合、裏付けとなる担保資産はあなたに没収されます。"
+    }
+  }
+}

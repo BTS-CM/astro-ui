@@ -1,0 +1,21 @@
+{
+  "loadingMessage": "chargement...",
+  "noPoolsFoundMessage": "0 piscine trouvée",
+  "poolsFound": "{{count}} piscines trouvées",
+  "idColumnTitle": "identifiant",
+  "shareAssetColumnTitle": "Partager l'actif",
+  "assetAColumnTitle": "Actif A",
+  "assetBColumnTitle": "Actif B",
+  "assetAPoolsTitle": "{{assetA}} Piscines",
+  "assetAPoolsDialogTitle": "{{assetA}} Piscines",
+  "assetAPoolsDialogDescription": "Ces pools Bitshares utilisent {{assetA}} ({{assetAId}}) comme l'un des actifs.",
+  "assetAHoverCardContent": "Échanger {{assetA}} en utilisant l'un de ces pools de liquidité",
+  "marketPoolsTitle": "Pools de marché",
+  "marketPoolsDialogTitle": "{{assetA}}/{{assetB}} Piscines",
+  "marketPoolsDialogDescription": "Ces pools négocient entre {{assetA}} et {{assetB}}.",
+  "marketHoverCardContent": "Échanger entre {{assetA}} et {{assetB}} en utilisant l'un de ces pools de liquidité",
+  "assetBPoolsTitle": "{{assetB}} Piscines",
+  "assetBPoolsDialogTitle": "{{assetB}} Piscines",
+  "assetBPoolsDialogDescription": "Ces pools Bitshares utilisent {{assetB}} ({{assetBId}}) comme l'un des actifs.",
+  "assetBHoverCardContent": "Échanger {{assetB}} en utilisant l'un de ces pools de liquidité"
+}

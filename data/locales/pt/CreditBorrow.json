@@ -1,0 +1,36 @@
+{
+  "common": {
+    "title": " Oferecer{{orderID}} por {{owner_name}} ({{owner_account}})",
+    "offering": "Oferta",
+    "accepting": "Aceitando",
+    "loading": "Carregando...",
+    "fee": "Taxa: {{fee}}%",
+    "repayPeriod": "Período de reembolso: {{repayPeriod}} horas",
+    "validity": "Oferta válida para {{validity}} horas",
+    "min": "Quantidade mínima: {{amount}} {{asset}}",
+    "proceed": "Prossiga com a oferta de crédito{{offerID}}",
+    "edit": "Editar oferta",
+    "view": "Configurações de exibição"
+  },
+  "card": {
+    "title": "🏦 Visualizando ofertas de crédito disponíveis",
+    "description": "As ofertas de crédito são geradas pelo usuário, oferecem diferentes taxas, ativos e durações; ",
+    "viewingAll": "Visualizando todas as ofertas",
+    "viewAll": "Ver todas as ofertas",
+    "viewingAvailable": "Visualizando pedidos compatíveis",
+    "viewAvailable": "Ver pedidos compatíveis",
+    "viewingSearch": "Procurando",
+    "viewSearch": "Procurar",
+    "allOffers": "Essas ofertas de crédito oferecem uma variedade de ativos para empréstimos a taxas concorrentes.",
+    "availableOffers": "Essas ofertas de crédito aceitam ativos que você possui como garantia de empréstimo.",
+    "searchPrompt": "Como você deseja pesquisar?",
+    "borrowSearching": "Pesquisando por ativo que pode ser emprestado",
+    "borrowSearch": "Pesquise por ativo que pode ser emprestado",
+    "collateralSearching": "Pesquisando por ativos colaterais",
+    "collateralSearch": "Pesquise por ativos colaterais",
+    "ownerSearching": "Pesquisando pelo nome do proprietário",
+    "ownerSearch": "Pesquise pelo nome do proprietário",
+    "noResults": "Nenhum resultado encontrado",
+    "loading": "Carregando ofertas..."
+  }
+}

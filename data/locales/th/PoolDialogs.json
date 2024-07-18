@@ -1,0 +1,21 @@
+{
+  "loadingMessage": "กำลังโหลด...",
+  "noPoolsFoundMessage": "พบ 0 พูล",
+  "poolsFound": "{{count}} พบสระน้ำ",
+  "idColumnTitle": "รหัส",
+  "shareAssetColumnTitle": "แบ่งปันเนื้อหา",
+  "assetAColumnTitle": "สินทรัพย์ ก",
+  "assetBColumnTitle": "สินทรัพย์ B",
+  "assetAPoolsTitle": "{{assetA}} สระน้ำ",
+  "assetAPoolsDialogTitle": "{{assetA}} สระน้ำ",
+  "assetAPoolsDialogDescription": "พูล Bitshares เหล่านี้ใช้ {{assetA}} ({{assetAId}}) เป็นหนึ่งในทรัพย์สิน",
+  "assetAHoverCardContent": "แลกเปลี่ยน {{assetA}} โดยใช้หนึ่งในแหล่งรวมสภาพคล่องเหล่านี้",
+  "marketPoolsTitle": "ตลาดพูล",
+  "marketPoolsDialogTitle": "{{assetA}}/{{assetB}} สระน้ำ",
+  "marketPoolsDialogDescription": "สระน้ำเหล่านี้ซื้อขายกันระหว่าง {{assetA}} และ {{assetB}}.",
+  "marketHoverCardContent": "สลับระหว่าง {{assetA}} และ {{assetB}} โดยใช้หนึ่งในแหล่งรวมสภาพคล่องเหล่านี้",
+  "assetBPoolsTitle": "{{assetB}} สระน้ำ",
+  "assetBPoolsDialogTitle": "{{assetB}} สระน้ำ",
+  "assetBPoolsDialogDescription": "พูล Bitshares เหล่านี้ใช้ {{assetB}} ({{assetBId}}) เป็นหนึ่งในทรัพย์สิน",
+  "assetBHoverCardContent": "แลกเปลี่ยน {{assetB}} โดยใช้หนึ่งในแหล่งรวมสภาพคล่องเหล่านี้"
+}

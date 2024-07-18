@@ -1,0 +1,7 @@
+{
+  "dialogContent": {
+    "switchAccountChain": "Switch account/chain",
+    "replacingUser": "Replacing current user",
+    "selectChainAccount": "Select a chain and account to proceed"
+  }
+}

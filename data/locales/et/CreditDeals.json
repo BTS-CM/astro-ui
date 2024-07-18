@@ -1,0 +1,59 @@
+{
+  "dealNo": "Tehing",
+  "with": " koos ",
+  "borrowed": "Sa laenasid",
+  "lent": "Nad laenasid",
+  "loanCollateral": "Laenu tagatis:",
+  "borrower": "Laenutasu",
+  "lender": "Tulud",
+  "remainingTime": "Järelejäänud aeg:",
+  "repayLoan": "Laen tagasi maksta",
+  "trade": "Kaubandus {{symbol}} DEXis",
+  "dialogTitle": "Laenu tagasimaksmine",
+  "description": "Kasutage seda vormi oma krediiditehingu tagasimaksete kontrollimiseks.",
+  "account": "Konto",
+  "balance": "Sinu praegune {{symbol}} tasakaalu",
+  "repayAmount": "Kogus {{symbol}} tagasi maksma",
+  "remainingDebt": "Järelejäänud võlg: {{amount}} {{symbol}}",
+  "repayDesc": "Kogu tagatise tagasi saamiseks tasuge võlg täielikult tagasi.",
+  "redeemCollateral": "Lunasta tagatis",
+  "remainingCollateral": "Järelejäänud tagatis: {amount} {{symbol}}",
+  "collateralRedemption": "Kogus {{symbol}} tagatistagatis, mille lunastate",
+  "loanLabel": "Eeldatav laenutasu",
+  "loanDesc": "See on tasu, mille maksate laenuandjale.",
+  "finalPaymentLabel": "Lõplik makse",
+  "finalPaymentDesc": "Kui olete täielikult tagasi maksnud, on teie {{symbol}} tagatis tagastatakse teile.",
+  "finalPaymentWarning": "Ebapiisav {{symbol}} tasakaalu",
+  "networkFee": "Võrgutasu",
+  "networkFeeDesc": "See on tasu teie krediiditehingu tagasimaksetoimingu edastamise eest plokiahelasse.",
+  "rebate": "Allahindlus {{fee}} {{chain}} (üleandmine)",
+  "submit": "Esita",
+  "deepLink": "Tagasimaksmine {{finalRepayAmount}} {{debtAsset}}, et nõuda tagasi {{collateralAsset}}",
+  "card": {
+    "title": "💱 Kontrollige oma aktiivseid krediidipakkumisi",
+    "description": "Siit saad nii aktiivseid krediiditehinguid jälgida kui ka tagasimakseid hallata.",
+    "viewingBorrowings": "Teie laenude vaatamine",
+    "viewBorrowings": "Vaadake oma laene",
+    "viewingLendings": "Laenude vaatamine",
+    "viewLendings": "Vaadake oma laene",
+    "noBorrowers": "Aktiivseid laene ei leitud",
+    "noLendings": "Aktiivseid laene ei leitud",
+    "loading": "Laadimine..."
+  },
+  "risks": {
+    "borrowerTitle": "Laenaja riskihoiatus",
+    "lenderTitle": "Laenuandja riskihoiatus",
+    "description": "Oluline teave teie krediiditehingutega seotud kohustuste ja riskide kohta.",
+    "borrower": {
+      "risk1": "Sina ( {{username}} ) vastutavad teie krediiditehingute haldamise ja nende õigeaegse tagasimaksmise eest, mitte keegi teine. ",
+      "risk2": "Olge teadlik oma kokkupuutest väliste volatiilsustega krediiditehingu tagasimakseperioodil; ",
+      "risk3": "Krediiditehingu tagasimaksmata jätmine toob kaasa ülejäänud tagatistagatisvarade kaotuse. "
+    },
+    "lender": {
+      "risk1": "Sina ( {{username}} ) vastutavad teie krediidipakkumiste, nende parameetrite ja riskipositsiooni haldamise eest, mitte keegi teine. ",
+      "risk2": "Olge teadlik oma kokkupuutest väliste volatiilsustega krediiditehingu tagasimakseperioodil; ",
+      "risk3": "Laenuandjana, kui krediiditehing on sõlmitud, {{username}} ) ei saa seda tühistada, vastutab laenusaaja tehingu kestuse eest tagasimaksetähtaja piires. ",
+      "risk4": "Kui laenuvõtjad ei suuda oma krediiditehinguid tagasi maksta, jääb nende tagatisvara teile ilma. "
+    }
+  }
+}

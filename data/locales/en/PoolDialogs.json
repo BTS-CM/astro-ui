@@ -1,0 +1,21 @@
+{
+  "loadingMessage": "loading...",
+  "noPoolsFoundMessage": "0 pools found",
+  "poolsFound": "{{count}} pools found",
+  "idColumnTitle": "id",
+  "shareAssetColumnTitle": "Share asset",
+  "assetAColumnTitle": "Asset A",
+  "assetBColumnTitle": "Asset B",
+  "assetAPoolsTitle": "{{assetA}} Pools",
+  "assetAPoolsDialogTitle": "{{assetA}} Pools",
+  "assetAPoolsDialogDescription": "These Bitshares pools use {{assetA}} ({{assetAId}}) as one of the assets.",
+  "assetAHoverCardContent": "Swap {{assetA}} using one of these liquidity pools",
+  "marketPoolsTitle": "Market Pools",
+  "marketPoolsDialogTitle": "{{assetA}}/{{assetB}} Pools",
+  "marketPoolsDialogDescription": "These pools trade between {{assetA}} and {{assetB}}.",
+  "marketHoverCardContent": "Swap between {{assetA}} and {{assetB}} using one of these liquidity pools",
+  "assetBPoolsTitle": "{{assetB}} Pools",
+  "assetBPoolsDialogTitle": "{{assetB}} Pools",
+  "assetBPoolsDialogDescription": "These Bitshares pools use {{assetB}} ({{assetBId}}) as one of the assets.",
+  "assetBHoverCardContent": "Swap {{assetB}} using one of these liquidity pools"
+}

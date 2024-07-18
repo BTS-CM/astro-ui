@@ -1,0 +1,15 @@
+{
+  "noSearch": {
+    "prompt": "Bitte geben Sie einen Blockchain-Kontonamen ein",
+    "placeholder": "Kontoname oder ID",
+    "continue": "Weitermachen",
+    "error": "Konto konnte nicht gefunden werden.",
+    "selfError": "Es können keine Vermögenswerte auf dieses Konto übertragen werden."
+  },
+  "searchResponse": {
+    "promptBTS": "Mit dem folgenden Bitshares-Konto fortfahren?",
+    "promptTEST": "Mit dem folgenden Bitshares-Testnet-Konto (TEST) fortfahren?",
+    "back": "Geh zurück",
+    "proceed": "Fortfahren"
+  }
+}

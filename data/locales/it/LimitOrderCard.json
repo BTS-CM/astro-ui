@@ -1,0 +1,95 @@
+{
+  "buyingWith": "Acquisto {{assetA}} con {{assetB}}",
+  "sellingFor": "Vendita {{assetA}} per {{assetB}}",
+  "createLimitOrder": "Utilizzare questo modulo per creare un'operazione di ordine limite.",
+  "editLabel": "Modificare",
+  "submit": "Invia",
+  "useBalance": "Usa l'equilibrio",
+  "priceAmount": {
+    "label": "Importo del prezzo",
+    "description": "L'importo del prezzo di {{assetA}} In {{assetB}}",
+    "provideNewLabel": "Fornire un nuovo prezzo",
+    "useLowestAsk": "Usa la richiesta più bassa",
+    "useHighestBid": "Utilizza l'offerta più alta"
+  },
+  "sellAmount": {
+    "label": "Importo di vendita",
+    "buyDescription": "La quantità di {{asset}} prevedi di acquistare",
+    "sellDescription": "La quantità di {{asset}} hai intenzione di vendere",
+    "provideNewLabel": "Fornire un nuovo importo"
+  },
+  "sellTotal": {
+    "label": "Totale",
+    "buyDescription": "Il totale {{asset}} hai intenzione di vendere",
+    "sellDescription": "Il totale {{asset}} Riceverai",
+    "provideNewLabel": "Fornire un nuovo totale",
+    "requireMore": "Hai bisogno {{requiredAmount}} Di più {{asset}}"
+  },
+  "expiry": {
+    "label": "Scadenza dell'ordine limite",
+    "1hr": "1 ora",
+    "12hr": "12 ore",
+    "24hr": "24 ore",
+    "7d": "7 giorni",
+    "30d": "30 giorni",
+    "specific": "Data specifica",
+    "fkill": "Riempi o uccidi",
+    "pickDate": "Scegli una data",
+    "fkillDescription": "Questo ordine scade immediatamente se non compilabile",
+    "generalDescription": "Questo ordine limite scadrà {{expiryType}} dopo la trasmissione"
+  },
+  "osoValue": {
+    "enabled": "L'ordine invia l'ordine abilitato",
+    "enable": "Abilita ordine Invia ordine",
+    "description": "La funzione OSO automatica sarà attiva"
+  },
+  "osoEnabled": {
+    "spreadPercentLabel": "Percentuale di diffusione",
+    "spreadPercentDescription": "Quanto il prezzo dell'ordine take profit differisce dall'ordine originale",
+    "provideNewSpreadPercent": "Fornire una nuova percentuale di spread"
+  },
+  "osoSize": {
+    "sizePercentLabel": "Percentuale di dimensioni",
+    "sizePercentDescription": "Percentuale da vendere nell'ordine take profit",
+    "provideNewSizePercent": "Fornire una nuova percentuale di dimensione"
+  },
+  "repeatValue": {
+    "label": "Impostare OSO per la ripetizione automatica?",
+    "description": "Automatizza gli ordini limite ripetuti basati su OSO",
+    "enabled": "OSO configurato per ripetere",
+    "disabled": "OSO configurato per non ripetersi"
+  },
+  "fee": {
+    "label": "Tassa",
+    "description": "Il canone di rete per trasmettere questa operazione",
+    "unfilledRebate": "Sconto non eseguito: {{fee}} BTS (istantaneo)",
+    "ltmRebate": "Sconto LTM: {{rebate}} BTS (acquisizione)"
+  },
+  "marketFees": {
+    "label": "Tassa di mercato",
+    "description": "La commissione di mercato applicata dall'emittente dell'asset"
+  },
+  "sellPrice": {
+    "label": "Prezzo",
+    "useLowestAsk": "Usa la richiesta più bassa",
+    "description": "Il tuo prezzo per ? "
+  },
+  "sellAmount2": {
+    "label": "Quantità",
+    "buyDescription": "La quantità di ? ",
+    "sellDescription": "La quantità di ? "
+  },
+  "sellTotal2": {
+    "label": "Totale",
+    "buyDescription": "Il totale ? ",
+    "sellDescription": "Il totale ? "
+  },
+  "expiry2": {
+    "label": "Limite di scadenza dell'ordine",
+    "description": "Tempo fino alla scadenza..."
+  },
+  "headerText": {
+    "buying": "Acquisto {{amount}} {{thisAssetA}} per {{total}} {{thisAssetB}}",
+    "selling": "Vendita {{amount}} {{thisAssetA}} per {{total}} {{thisAssetB}}"
+  }
+}

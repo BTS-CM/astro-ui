@@ -1,0 +1,9 @@
+{
+  "editLimitOrderTitle": "Quer editar este pedido com limite?",
+  "editLimitOrderDescription": "Os pedidos com limite agora podem ser atualizados, economize em taxas atualizando os pedidos com limite.",
+  "selectedOpenOrderData": "Dados do pedido em aberto selecionado:",
+  "proceedToUpdateButton": "Prossiga para atualizar este pedido com limite aberto",
+  "viewObjectOnBlocksights": "Veja o objeto em Blocksights.info",
+  "priceColumnTitle": "Preço",
+  "expirationDateColumnTitle": "Data de validade"
+}

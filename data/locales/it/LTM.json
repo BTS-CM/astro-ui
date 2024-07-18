@@ -1,0 +1,12 @@
+{
+  "cardTitle": "💱 Iscrizione LTM",
+  "cardDescription": "Acquista un abbonamento a vita",
+  "alreadyMember": "Questo account ha già acquistato un abbonamento a vita!",
+  "benefitsTitle": "I vantaggi dell'abbonamento a vita attiva:",
+  "benefit1": "Ricevi uno sconto dell'80% su tutte le commissioni nel tuo saldo di maturazione.",
+  "benefit2": "Guadagna passivamente una quota delle commissioni spese dai tuoi utenti indirizzati.",
+  "benefit3": "Ora in grado di generare nomi di account premium.",
+  "wantToPurchase": "Vuoi acquistare un abbonamento a vita per il tuo account?",
+  "purchaseButton": "Acquista LTM",
+  "headerText": "Acquistare un abbonamento a vita per {{username}}"
+}

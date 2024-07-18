@@ -1,0 +1,9 @@
+{
+  "dialogContent": {
+    "leaveApp": "⚠️ このアプリを終了しようとしています!",
+    "navigateToExternal": "外部 Web サイトに移動しようとしています。",
+    "proceedToURL": "次の URL に進みますか?",
+    "checkingLeave": "確認中です - 本当に退会してもよろしいですか?",
+    "openLink": "リンクを開く"
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "lend": {
+    "title": "🪙 Lend funds",
+    "subtitle": "Lend to other users",
+    "hover1": "Create your own decentralized credit offers.",
+    "hover2": "Lend assets at your defined rates.",
+    "hover3": "Specify acceptable loan collateral and prices."
+  },
+  "pool": {
+    "title": "💱 Pool exchange",
+    "subtitle": "Swap assets via a pool",
+    "hover1": "Swap assets via user created liquidity pools.",
+    "hover2": "Pools have different trading pairs and fees.",
+    "hover3": "Simpler but more costly than a limit order."
+  },
+  "stake": {
+    "title": "🔒 Stake assets",
+    "subtitle": "Stake assets in liquidity pools",
+    "hover1": "Stake assets in liquidity pools to earn fees.",
+    "hover2": "Staked assets are locked in the pool.",
+    "hover3": "Staked assets can be withdrawn at any time."
+  },
+  "dex": {
+    "title": "📈 DEX limit orders",
+    "subtitle": "Trade on the Bitshares DEX",
+    "hover1": "Manually craft limit orders.",
+    "hover2": "Use any asset trading pair.",
+    "hover3": "Specify order expiration dates.",
+    "hover4": "More complex but cheaper than pool swaps."
+  },
+  "transfer": {
+    "title": "💸 Transfer assets",
+    "subtitle": "Send assets to other users",
+    "hover1": "Transfer assets to anyone on the Bitshares blockchain in seconds."
+  },
+  "borrow": {
+    "title": "🏦 Borrow funds",
+    "subtitle": "Borrow from other users",
+    "hover1": "Browse the active user created credit offers.",
+    "hover2": "Borrow assets from them at their desired rate.",
+    "hover3": "Use requested collateral to secure your loan."
+  },
+  "smartcoins": {
+    "title": "💵 Create debt",
+    "subtitle": "Issue collateralized debt",
+    "hover1": "Bitassets like USD, CNY and EUR are committee created stablecoins (smartcoins) backed with BTS.",
+    "hover2": "User created smartcoins can be backed with any asset and reference any external feed.",
+    "hover3": "External settlement prices are derived from configured feed producers.",
+    "hover4": "Exposure to external price feeds can pose a risk to collateralized debt positions."
+  },
+  "ltm": {
+    "title": "🏅 Buy LTM",
+    "subtitle": "Buy a lifetime membership",
+    "hover1": "There are multiple benefits to becoming a lifetime member.",
+    "hover2": "Lifetime members receive a 80% vesting balance rebate on fees.",
+    "hover3": "Lifetime members can create premium Bitshares account names.",
+    "hover4": "Lifetime members can earn through the referral system."
+  },
+  "portfolio": {
+    "title": "💰 Portfolio",
+    "subtitle": "View your portfolio",
+    "hover1": "Check your balances.",
+    "hover2": "Monitor your open orders.",
+    "hover3": "Analyze your recent account activity."
+  },
+  "featured": {
+    "title": "🏆 Top markets",
+    "subtitle": "View most active markets",
+    "hover1": "Navigate to the most active trading pairs.",
+    "hover2": "Compare market trading volume and value.",
+    "hover3": "Compare quantity of market trades."
+  },
+  "deals": {
+    "title": "ℹ️ Credit deals",
+    "subtitle": "Check your credit deals",
+    "hover1": "Monitor your active credit deals.",
+    "hover2": "Manage the state of your credit deals."
+  }
+}

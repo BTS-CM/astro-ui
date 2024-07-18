@@ -1,0 +1,11 @@
+{
+  "select": "アセットを選択してください",
+  "change": "アセットの変更",
+  "replacing": "交換中 {{assetSymbol}}",
+  "selecting": "新しいアセットの選択",
+  "noType": "以下でアセットを検索してください",
+  "baseType": "新しいベースアセットを選択してください",
+  "quoteType": "新しい見積資産を選択してください",
+  "search": "アセットを検索する",
+  "issued": "発行者 {{user}}"
+}

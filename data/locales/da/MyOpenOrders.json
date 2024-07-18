@@ -1,0 +1,6 @@
+{
+  "openBuyOrdersTitle": "Mine åbne købsordrer",
+  "openSellOrdersTitle": "Mine åbne salgsordrer",
+  "openBuyOrdersDescription": "Dine åbne købsgrænseordrer til markedet {{assetA}}/{{assetB}}",
+  "openSellOrdersDescription": "Dine åbne salgsgrænseordrer til markedet {{assetA}}/{{assetB}}"
+}

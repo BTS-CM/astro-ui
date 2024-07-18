@@ -1,0 +1,9 @@
+{
+  "dialogContent": {
+    "leaveApp": "⚠️ Du er ved at forlade denne app!",
+    "navigateToExternal": "Du er ved at navigere til en ekstern hjemmeside.",
+    "proceedToURL": "Vil du fortsætte til følgende URL?",
+    "checkingLeave": "Tjekker lige - er du sikker på, at du vil af sted?",
+    "openLink": "Åben link"
+  }
+}

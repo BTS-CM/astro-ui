@@ -1,0 +1,36 @@
+{
+  "common": {
+    "title": " オファー{{orderID}} による {{owner_name}} ({{owner_account}})",
+    "offering": "募集",
+    "accepting": "受け入れる",
+    "loading": "読み込み中...",
+    "fee": "手数料： {{fee}}%",
+    "repayPeriod": "返済期間： {{repayPeriod}} 時間",
+    "validity": "オファーの有効期限 {{validity}} 時間",
+    "min": "最小金額: {{amount}} {{asset}}",
+    "proceed": "クレジットオファーを続行する{{offerID}}",
+    "edit": "オファーを編集する",
+    "view": "設定を表示する"
+  },
+  "card": {
+    "title": "🏦 利用可能なクレジット特典の表示",
+    "description": "クレジットオファーはユーザーが生成し、さまざまなレート、資産、期間を提供します。",
+    "viewingAll": "すべてのオファーを表示する",
+    "viewAll": "すべてのオファーを表示",
+    "viewingAvailable": "互換性のある注文の表示",
+    "viewAvailable": "互換性のある注文を表示する",
+    "viewingSearch": "検索中",
+    "viewSearch": "検索",
+    "allOffers": "これらのクレジット オファーでは、さまざまな借入可能な資産が競合する金利で提供されます。",
+    "availableOffers": "これらの信用オファーは、あなたが所有する資産をローンの裏付け担保として受け入れます。",
+    "searchPrompt": "どのように検索しますか?",
+    "borrowSearching": "借入可能資産から探す",
+    "borrowSearch": "借用可能資産から探す",
+    "collateralSearching": "担保資産から探す",
+    "collateralSearch": "担保資産から探す",
+    "ownerSearching": "所有者名で検索する",
+    "ownerSearch": "所有者名で検索",
+    "noResults": "結果が見つかりません",
+    "loading": "オファーを読み込んでいます..."
+  }
+}

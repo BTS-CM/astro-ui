@@ -1,0 +1,29 @@
+{
+  "noAccount": "Konto konnte nicht gefunden werden.",
+  "forgetPrompt": "Konto: {{user}}",
+  "forgetButton": "Vergessen Sie dieses Konto",
+  "noChain": {
+    "title": "⚙️ Wählen Sie eine Blockchain aus, um fortzufahren",
+    "description": "Welche Blockchain möchten Sie nutzen?",
+    "testnet": "Testnetz"
+  },
+  "noMode": {
+    "titleBTS": "Ein neues oder bestehendes Bitshares-Konto verwenden?",
+    "titleTEST": "Ein neues oder bestehendes Bitshares-Testnet-Konto verwenden?",
+    "description": "Wie wollen Sie fortfahren?",
+    "new": "Neues Konto",
+    "existing": "Bestehendes Konto",
+    "back": "Zurück"
+  },
+  "new": {
+    "title": "Kontoauswahl",
+    "initDesc": "Geben Sie Ihren Bitshares-Kontonamen ein",
+    "description": "Mit dem folgenden Konto fortfahren?",
+    "back": "Geh zurück",
+    "continue": "Weitermachen"
+  },
+  "existing": {
+    "description": "Wählen Sie eines Ihrer zuvor verwendeten Konten aus",
+    "none": "Keine Konten gefunden."
+  }
+}

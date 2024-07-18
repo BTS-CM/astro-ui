@@ -1,0 +1,29 @@
+{
+  "noAccount": "Kontot ei leitud.",
+  "forgetPrompt": "Konto: {{user}}",
+  "forgetButton": "Unustage see konto",
+  "noChain": {
+    "title": "⚙️ Jätkamiseks valige plokiahel",
+    "description": "Millist plokiahelat soovite kasutada?",
+    "testnet": "testnet"
+  },
+  "noMode": {
+    "titleBTS": "Kas kasutada uut või olemasolevat Bitsharesi kontot?",
+    "titleTEST": "Kas kasutada uut või olemasolevat Bitsharesi testneti kontot?",
+    "description": "Kuidas soovite edasi minna?",
+    "new": "Uus konto",
+    "existing": "Olemasolev konto",
+    "back": "tagasi"
+  },
+  "new": {
+    "title": "konto valik",
+    "initDesc": "Sisestage oma Bitsharesi konto nimi",
+    "description": "Kas jätkata järgmise kontoga?",
+    "back": "Mine tagasi",
+    "continue": "Jätka"
+  },
+  "existing": {
+    "description": "Valige üks oma varem kasutatud kontodest",
+    "none": "Ühtegi kontot ei leitud."
+  }
+}

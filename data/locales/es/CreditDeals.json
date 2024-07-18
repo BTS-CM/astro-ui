@@ -1,0 +1,59 @@
+{
+  "dealNo": "Trato",
+  "with": " con ",
+  "borrowed": "tomaste prestado",
+  "lent": "ellos tomaron prestado",
+  "loanCollateral": "Garantía de préstamo:",
+  "borrower": "Tarifa de préstamo",
+  "lender": "Ganancias",
+  "remainingTime": "Tiempo restante:",
+  "repayLoan": "Pagar el préstamo",
+  "trade": "Comercio {{symbol}} en DEX",
+  "dialogTitle": "Pagar el préstamo",
+  "description": "Utilice este formulario para controlar los pagos de su contrato de crédito.",
+  "account": "Cuenta",
+  "balance": "Su actual {{symbol}} balance",
+  "repayAmount": "Cantidad de {{symbol}} volver a pagar",
+  "remainingDebt": "Deuda restante: {{amount}} {{symbol}}",
+  "repayDesc": "Para recuperar toda su garantía, pague la deuda en su totalidad.",
+  "redeemCollateral": "Canjear garantía",
+  "remainingCollateral": "Garantía restante: {cantidad} {{symbol}}",
+  "collateralRedemption": "Cantidad de {{symbol}} garantía de respaldo que canjearás",
+  "loanLabel": "Tarifa de préstamo estimada",
+  "loanDesc": "Esta es la tarifa que pagará al prestamista.",
+  "finalPaymentLabel": "Pago final",
+  "finalPaymentDesc": "Una vez pagado en su totalidad, su {{symbol}} la garantía le será devuelta.",
+  "finalPaymentWarning": "Insuficiente {{symbol}} balance",
+  "networkFee": "Tarifa de red",
+  "networkFeeDesc": "Esta es la tarifa para transmitir la operación de pago de su contrato de crédito a la cadena de bloques.",
+  "rebate": "Reembolso {{fee}} {{chain}} (adquisición)",
+  "submit": "Entregar",
+  "deepLink": "pagar {{finalRepayAmount}} {{debtAsset}}, para reclamar {{collateralAsset}}",
+  "card": {
+    "title": "💱 Consulta tus ofertas de crédito activas",
+    "description": "Desde aquí puede controlar las ofertas de crédito activas y gestionar los reembolsos.",
+    "viewingBorrowings": "Ver sus préstamos",
+    "viewBorrowings": "Ver sus préstamos",
+    "viewingLendings": "Ver sus préstamos",
+    "viewLendings": "Ver tus préstamos",
+    "noBorrowers": "No se encontraron préstamos activos",
+    "noLendings": "No se encontraron préstamos activos",
+    "loading": "Cargando..."
+  },
+  "risks": {
+    "borrowerTitle": "Advertencia de riesgo del prestatario",
+    "lenderTitle": "Advertencia de riesgo del prestamista",
+    "description": "Información importante sobre sus responsabilidades y riesgos asociados con las operaciones de crédito.",
+    "borrower": {
+      "risk1": "Tú ( {{username}} ) son responsables de administrar sus acuerdos de crédito y pagarlos de manera oportuna, nadie más. ",
+      "risk2": "Sea consciente de su exposición a las volatilidades externas durante el período de amortización del contrato de crédito; ",
+      "risk3": "La falta de reembolso de un acuerdo de crédito resultará en la pérdida de los activos de garantía restantes. "
+    },
+    "lender": {
+      "risk1": "Tú ( {{username}} ) son responsables de gestionar sus ofertas de crédito, sus parámetros y su exposición al riesgo, nadie más. ",
+      "risk2": "Sea consciente de su exposición a las volatilidades externas durante el período de amortización del contrato de crédito; ",
+      "risk3": "Como prestamista, una vez que existe un acuerdo de crédito, usted ( {{username}} ) no puede cancelarlo, el prestatario es responsable de la duración del acuerdo dentro del período de amortización. ",
+      "risk4": "Si los prestatarios no pagan sus acuerdos de crédito, usted perderá sus activos de garantía de respaldo. "
+    }
+  }
+}

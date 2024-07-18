@@ -1,0 +1,6 @@
+{
+  "openBuyOrdersTitle": "私のオープンな買い注文",
+  "openSellOrdersTitle": "私のオープン売り注文",
+  "openBuyOrdersDescription": "市場のオープンな買い指値注文 {{assetA}}/{{assetB}}",
+  "openSellOrdersDescription": "市場向けのオープン売り指値注文 {{assetA}}/{{assetB}}"
+}

@@ -1,0 +1,11 @@
+{
+  "select": "Select an asset",
+  "change": "Change asset",
+  "replacing": "Replacing {{assetSymbol}}",
+  "selecting": "Selecting a new asset",
+  "noType": "Please search for an asset below",
+  "baseType": "Please select a new base asset",
+  "quoteType": "Please select a new quote asset",
+  "search": "Search for an asset",
+  "issued": "Issued by {{user}}"
+}
