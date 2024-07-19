@@ -1,6 +1,6 @@
 import { nanoquery } from "@nanostores/query";
-import Apis from "../../bts/ws/ApiInstances";
-import { chains } from "../../config/chains";
+import Apis from "../bts/ws/ApiInstances";
+import { chains } from "../config/chains";
 
 // Get the latest ID for an object in the blockchain
 async function getMaxObjectIDs(

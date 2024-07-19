@@ -1,6 +1,6 @@
 import { nanoquery } from "@nanostores/query";
-import Apis from "../../bts/ws/ApiInstances";
-import { chains } from "../../config/chains";
+import Apis from "../bts/ws/ApiInstances";
+import { chains } from "../config/chains";
 
 function getVestingBalances (chain: string, accountID: string, specificNode?: string | null) {
     return new Promise(async (resolve, reject) => {

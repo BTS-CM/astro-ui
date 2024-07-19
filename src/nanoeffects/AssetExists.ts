@@ -1,6 +1,6 @@
 import { nanoquery } from "@nanostores/query";
-import Apis from "../../bts/ws/ApiInstances";
-import { chains } from "../../config/chains";
+import Apis from "../bts/ws/ApiInstances";
+import { chains } from "../config/chains";
 
 // Returns an id if the asset exists
 async function checkAssetExists(chain: string, symbol_or_id: string, specificNode?: string | null) {
