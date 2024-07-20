@@ -10,7 +10,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 import {
@@ -67,11 +66,10 @@ import {
   $globalParamsCacheTEST,
 } from "../stores/cache.ts";
 
-import { createBitassetDataStore, createDynamicDataStore } from "../effects/Assets.ts";
+import { createDynamicDataStore } from "../effects/Assets.ts";
 
-import { createPoolDetailsStore, createPoolShareAssetDataStore } from "../effects/Pools.ts";
-
-import { createUserBalancesStore } from "../effects/User.ts";
+import { createObjectStore } from "@/nanoeffects/Objects.ts";
+import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 
 import { useInitCache } from "../effects/Init.ts";
 import { $currentUser } from "../stores/users.ts";
@@ -305,11 +303,11 @@ export default function PoolForm() {
     let unsubscribePoolDetails;
 
     if (usr && usr.chain && foundPool && assetA && assetB && assets) {
-      const poolDetailsStore = createPoolDetailsStore([usr.chain, foundPool.id]);
+      const poolDetailsStore = createObjectStore([usr.chain, [foundPool.id]]);
 
       unsubscribePoolDetails = poolDetailsStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
-          let finalResult = data;
+          let finalResult = data[0];
           finalResult["asset_a_symbol"] = assetA.symbol;
           finalResult["asset_a_precision"] = assetA.precision;
 
@@ -343,14 +341,14 @@ export default function PoolForm() {
     let unsubscribePoolDetails;
 
     if (foundPoolDetails) {
-      const poolDetailsStore = createPoolShareAssetDataStore([
+      const poolDetailsStore = createObjectStore([
         usr.chain,
-        foundPoolDetails.share_asset.replace("1.", "2."),
+        [foundPoolDetails.share_asset.replace("1.", "2.")],
       ]);
 
       unsubscribePoolDetails = poolDetailsStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
-          setFoundPoolShareAssetDetails(data);
+          setFoundPoolShareAssetDetails(data[0]);
         }
       });
     }
@@ -407,19 +405,19 @@ export default function PoolForm() {
       });
 
       if (assetA.bitasset_data_id) {
-        const bitassetDataStoreA = createBitassetDataStore([usr.chain, assetA.bitasset_data_id]);
+        const bitassetDataStoreA = createObjectStore([usr.chain, [assetA.bitasset_data_id]]);
         unsubscribeABitassetData = bitassetDataStoreA.subscribe(({ data, error, loading }) => {
           if (data && !error && !loading) {
-            setABitassetData(data);
+            setABitassetData(data[0]);
           }
         });
       }
 
       if (assetB.bitasset_data_id) {
-        const bitassetDataStoreB = createBitassetDataStore([usr.chain, assetB.bitasset_data_id]);
+        const bitassetDataStoreB = createObjectStore([usr.chain, [assetB.bitasset_data_id]]);
         unsubscribeBBitassetData = bitassetDataStoreB.subscribe(({ data, error, loading }) => {
           if (data && !error && !loading) {
-            setBBitassetData(data);
+            setBBitassetData(data[0]);
           }
         });
       }

@@ -32,11 +32,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 import { useInitCache } from "../effects/Init.ts";
-import { createUserBalancesStore } from "../effects/User.ts";
-import {
-  createLiteSmartcoinDataStore,
-  createSmartcoinCollateralBidsStore,
-} from "../effects/Assets.ts";
+import { createSmartcoinCollateralBidsStore } from "../effects/Assets.ts";
+
+import { createObjectStore } from "@/nanoeffects/Objects.ts";
 
 import { $currentUser } from "../stores/users.ts";
 import {
@@ -276,11 +274,13 @@ export default function Settlement(properties) {
     let unsub;
 
     if (parsedBitasset && parsedBitasset && usr && usr.chain) {
-      const smartcoinDataStore = createLiteSmartcoinDataStore([
+      const smartcoinDataStore = createObjectStore([
         usr.chain,
-        parsedAsset.id,
-        parsedBitasset.collateral,
-        parsedBitasset.id,
+        [
+          parsedAsset.id,
+          parsedBitasset.collateral,
+          parsedBitasset.id
+        ],
       ]);
       unsub = smartcoinDataStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {

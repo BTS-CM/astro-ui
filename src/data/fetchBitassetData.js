@@ -1,8 +1,8 @@
 import fs from "fs";
-import { getObjects } from "../src/nanoeffects/src/common.ts";
+import { getObjects } from "@/nanoeffects/src/common.ts";
 
 function writeToFile(data, chain, fileName, prettyPrint = true) {
-  console.log(`Writing to ./src/data/${chain}/${fileName}.json`);
+  console.log(`Writing to ./${chain}/${fileName}.json`);
   fs.writeFileSync(
     `./src/data/${chain}/${fileName}.json`,
     prettyPrint ? JSON.stringify(data, undefined, 4) : JSON.stringify(data)

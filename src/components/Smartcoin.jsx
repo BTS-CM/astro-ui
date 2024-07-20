@@ -53,7 +53,7 @@ import { Toggle } from "@/components/ui/toggle";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 import { useInitCache } from "../effects/Init.ts";
-import { createUserBalancesStore } from "../effects/User.ts";
+import { createUserBalancesStore } from "../nanoeffects/UserBalances.ts";
 import { createSmartcoinDataStore } from "../effects/Assets.ts";
 
 import { $currentUser } from "../stores/users.ts";
@@ -292,13 +292,15 @@ export default function Smartcoin(properties) {
     }
   }, [parsedCollateralAsset, bitAssetData]);
 
+  /*
   const parsedCollateralBitassetCollateralAsset = useMemo(() => {
     if (parsedCollateralBitasset && marketSearch) {
       const foundAsset = marketSearch.find((x) => x.id === parsedCollateralBitasset.collateral);
       return foundAsset;
     }
   }, [parsedCollateralBitasset, marketSearch]);
-
+  */
+ 
   const debtAssetHoldings = useMemo(() => {
     if (parsedAsset && usrBalances && usrBalances.length) {
       const foundAsset = usrBalances.find((x) => x.asset_id === parsedAsset.id);

@@ -1,6 +1,6 @@
 import fs from "fs";
-import { getObjects } from "../src/nanoeffects/src/common.ts";
-import { getMaxObjectIDs } from "../src/nanoeffects/MaxObjectID.ts";
+import { getObjects } from "@/nanoeffects/src/common.ts";
+import { getMaxObjectIDs } from "@/nanoeffects/MaxObjectID.ts";
 
 const chains = ["bitshares", "bitshares_testnet"];
 

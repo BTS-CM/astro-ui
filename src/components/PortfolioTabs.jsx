@@ -27,7 +27,10 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 import { useInitCache } from "../effects/Init.ts";
-import { createUserPortfolioStore, createUserHistoryStore } from "../effects/User.ts";
+import { createUserHistoryStore } from "../effects/User.ts";
+
+import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
+import { createLimitOrdersStore } from "@/nanoeffects/MarketLimitOrders.ts";
 
 import { $currentUser } from "../stores/users.ts";
 
@@ -69,39 +72,8 @@ export default function PortfolioTabs(properties) {
     return [];
   }, [_assetsBTS, _assetsTEST, _chain]);
 
-  /*
-  const _globalParamsBTS = useSyncExternalStore(
-    $globalParamsCacheBTS.subscribe,
-    $globalParamsCacheBTS.get,
-    () => true
-  );
-
-  const _globalParamsTEST = useSyncExternalStore(
-    $globalParamsCacheTEST.subscribe,
-    $globalParamsCacheTEST.get,
-    () => true
-  );
-
-  const globalParams = useMemo(() => {
-    if (_chain && (_globalParamsBTS || _globalParamsTEST)) {
-      return _chain === "bitshares" ? _globalParamsBTS : _globalParamsTEST;
-    }
-    return [];
-  }, [_globalParamsBTS, _globalParamsTEST, _chain]);
-
-  const [fee, setFee] = useState(0);
-  useEffect(() => {
-    if (globalParams && globalParams.length) {
-      const foundFee = globalParams.find((x) => x[0] === 2);
-      const finalFee = humanReadableFloat(foundFee[1].fee, 5);
-      setFee(finalFee);
-    }
-  }, [globalParams]);
-  */
-
   useInitCache(_chain ?? "bitshares", [
     "assets",
-    //"globalParams",
   ]);
 
   const activeTabStyle = {
@@ -111,28 +83,46 @@ export default function PortfolioTabs(properties) {
 
   const [activePortfolioTab, setActivePortfolioTab] = useState("balances");
 
-  const [balanceCounter, setBalanceCoutner] = useState(0);
+  const [balanceCounter, setBalanceCounter] = useState(0);
   const [balances, setBalances] = useState();
-  const [openOrders, setOpenOrders] = useState();
   useEffect(() => {
-    let unsubscribeUserPortfolioStore;
-
+    let unsubscribeUserBalancesStore;
     if (usr && usr.id) {
-      const userPortfolioStore = createUserPortfolioStore([usr.chain, usr.id]);
+      const userBalancesStore = createUserBalancesStore([usr.chain, usr.id]);
 
-      unsubscribeUserPortfolioStore = userPortfolioStore.subscribe(({ data, error, loading }) => {
+      unsubscribeUserBalancesStore = userBalancesStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
-          console.log("Successfully fetched user portfolio");
-          setBalances(data.balances);
-          setOpenOrders(data.limitOrders);
+          console.log("Successfully fetched balances");
+          setBalances(data);
         }
       });
     }
 
     return () => {
-      if (unsubscribeUserPortfolioStore) unsubscribeUserPortfolioStore();
-    };
+      if (unsubscribeUserBalancesStore) unsubscribeUserBalancesStore();
+    }
   }, [usr, balanceCounter]);
+    
+  const [openOrderCounter, setOpenOrderCounter] = useState(0);
+  const [openOrders, setOpenOrders] = useState();
+  useEffect(() => {
+    let unsubscribeLimitOrdersStore;
+
+    if (usr && usr.id) {
+      const limitOrdersStore = createLimitOrdersStore([usr.chain, usr.id]);
+      
+      unsubscribeLimitOrdersStore = limitOrdersStore.subscribe(({ data, error, loading }) => {
+        if (data && !error && !loading) {
+          console.log("Successfully fetched open orders");
+          setOpenOrders(data);
+        }
+      });
+    }
+
+    return () => {
+      if (unsubscribeLimitOrdersStore) unsubscribeLimitOrdersStore();
+    };
+  }, [usr, openOrderCounter]);
 
   const [activityCounter, setActivityCounter] = useState(0);
   const [activity, setActivity] = useState();
@@ -516,7 +506,7 @@ export default function PortfolioTabs(properties) {
                   <Button
                     onClick={() => {
                       setBalances();
-                      setBalanceCoutner(balanceCounter + 1);
+                      setBalanceCounter(balanceCounter + 1);
                     }}
                   >
                     {t("PortfolioTabs:refreshBalancesButton")}
@@ -546,7 +536,7 @@ export default function PortfolioTabs(properties) {
                   <Button
                     onClick={() => {
                       setOpenOrders();
-                      setBalanceCoutner(balanceCounter + 1);
+                      setOpenOrderCounter(openOrderCounter + 1);
                     }}
                   >
                     {t("PortfolioTabs:refreshOpenOrdersButton")}

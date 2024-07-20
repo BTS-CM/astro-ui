@@ -19,7 +19,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import { createUserBalancesStore } from "../effects/User.ts";
+import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 import { useInitCache } from "../effects/Init.ts";
 
 import { $currentUser } from "../stores/users.ts";

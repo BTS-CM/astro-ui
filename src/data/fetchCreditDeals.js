@@ -1,27 +1,33 @@
 import fs from "fs";
-import { getObjects } from "../src/nanoeffects/src/common.ts";
-import { getMaxObjectIDs } from "../src/nanoeffects/MaxObjectID.ts";
+import { getObjects } from "@/nanoeffects/src/common.ts";
+import { getMaxObjectIDs } from "@/nanoeffects/MaxObjectID.ts";
 
 const chains = ["bitshares", "bitshares_testnet"];
 
-const getLatestSettlementOrder = async (chain) => {
+const getAllCreditDealData = async (chain) => {
   let maxObjectID;
   try {
-    maxObjectID = await getMaxObjectIDs(chain, 1, 4);
+    maxObjectID = await getMaxObjectIDs(chain, 1, 22);
   } catch (error) {
     console.log({ error });
     return;
   }
 
-  let settlementOrder;
+  let objectIds = Array.from({ length: maxObjectID }, (_, i) => `1.22.${i}`);
+
+  console.log(
+    `Fetching ${chain} credit deal data for ${objectIds.length} deals!`
+  );
+
+  let data;
   try {
-    settlementOrder = await getObjects(chain, [`1.4.${maxObjectID}`]);
+    data = await getObjects(chain, objectIds);
   } catch (error) {
     console.log(error);
     return;
   }
 
-  return settlementOrder;
+  return data;
 };
 
 function writeToFile(data, chain, fileName) {
@@ -35,9 +41,9 @@ function writeToFile(data, chain, fileName) {
 const main = async () => {
   let allData = [];
   for (const chain of chains) {
-    allData = await getLatestSettlementOrder(chain);
+    allData = await getAllCreditDealData(chain);
     if (allData) {
-      writeToFile(allData, chain, "latestSettlementOrder");
+      writeToFile(allData, chain, "allCreditDeals");
     }
   }
   process.exit(0);

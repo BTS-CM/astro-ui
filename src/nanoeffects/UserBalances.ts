@@ -66,6 +66,7 @@ const [createUserBalancesStore] = nanoquery({
 
     return response;
   },
+  refetchInterval: 60000,
 });
 
 export { createUserBalancesStore, getAccountBalances };

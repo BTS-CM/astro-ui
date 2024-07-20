@@ -77,8 +77,8 @@ import {
   isInvertedMarket,
 } from "../lib/common";
 
-import { createUserBalancesStore } from "../effects/User.ts";
-import { createLimitOrderStore } from "../effects/Market.ts";
+import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
+import { createObjectStore } from "@/nanoeffects/Objects.ts";
 
 import { Avatar } from "./Avatar.tsx";
 
@@ -218,22 +218,23 @@ export default function MarketOrder(properties) {
     let unsubscribeLimitOrder;
 
     if (limitOrderID && usr && usr.chain) {
-      const limitOrderStore = createLimitOrderStore([usr.chain, limitOrderID]);
+      const limitOrderStore = createObjectStore([usr.chain, [limitOrderID]]);
       unsubscribeLimitOrder = limitOrderStore.subscribe(({ data }) => {
         if (data && !data.error && !data.loading) {
-          setCurrentLimitOrder(data);
+          const _data = data[0];
+          setCurrentLimitOrder(_data);
 
-          const foundQuoteAsset = assets.find((x) => x.id === data.sell_price.quote.asset_id);
-          const foundBaseAsset = assets.find((x) => x.id === data.sell_price.base.asset_id);
+          const foundQuoteAsset = assets.find((x) => x.id === _data.sell_price.quote.asset_id);
+          const foundBaseAsset = assets.find((x) => x.id === _data.sell_price.base.asset_id);
           setQuoteAsset(foundQuoteAsset);
           setBaseAsset(foundBaseAsset);
 
           const _quoteAmount = humanReadableFloat(
-            data.sell_price.quote.amount,
+            _data.sell_price.quote.amount,
             foundQuoteAsset.precision
           );
           const _baseAmount = humanReadableFloat(
-            data.sell_price.base.amount,
+            _data.sell_price.base.amount,
             foundBaseAsset.precision
           );
           const isInverted = isInvertedMarket(foundBaseAsset.id, foundQuoteAsset.id);
@@ -242,15 +243,14 @@ export default function MarketOrder(properties) {
           setExistingQuoteAmount(_quoteAmount);
           setExistingBaseAmount(_baseAmount);
           setExistingPrice(!isInverted ? _baseAmount * _quoteAmount : _baseAmount / _quoteAmount);
-          setExistingExpiry(data.expiration);
+          setExistingExpiry(_data.expiration);
 
-          //////
           setAmount(_baseAmount);
           setTotal(_quoteAmount);
 
           setPrice(!isInverted ? _baseAmount * _quoteAmount : _baseAmount / _quoteAmount);
 
-          const onFillContents = data.on_fill.length ? data.on_fill[0][1] : null;
+          const onFillContents = _data.on_fill.length ? _data.on_fill[0][1] : null;
           if (onFillContents) {
             setOSOEnabled(true);
             setSpreadPercent(onFillContents.spread_percent / 100);

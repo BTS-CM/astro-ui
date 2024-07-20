@@ -21,10 +21,11 @@ import {
 } from "../stores/cache.ts";
 
 import {
-  createBitassetDataStore,
   createCachedAssetStore,
   createDynamicDataStore,
 } from "../effects/Assets.ts";
+
+import { createObjectStore } from "@/nanoeffects/Objects.ts";
 
 export default function MarketOverlay(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
@@ -288,13 +289,13 @@ export default function MarketOverlay(properties) {
       });
 
       if (assetAData.bitasset_data_id) {
-        const bitassetDataStoreA = createBitassetDataStore([
+        const bitassetDataStoreA = createObjectStore([
           usr.chain,
-          assetAData.bitasset_data_id,
+          [assetAData.bitasset_data_id],
         ]);
         unsubscribeBitassetA = bitassetDataStoreA.subscribe(({ data }) => {
           if (data && !data.error && !data.loading) {
-            setABitassetData(data);
+            setABitassetData(data[0]);
           }
         });
       }
@@ -319,13 +320,13 @@ export default function MarketOverlay(properties) {
       });
 
       if (assetBData.bitasset_data_id) {
-        const bitassetDataStoreB = createBitassetDataStore([
+        const bitassetDataStoreB = createObjectStore([
           usr.chain,
-          assetBData.bitasset_data_id,
+          [assetBData.bitasset_data_id],
         ]);
         unsubscribeBitassetB = bitassetDataStoreB.subscribe(({ data }) => {
           if (data && !data.error && !data.loading) {
-            setBBitassetData(data);
+            setBBitassetData(data[0]);
           }
         });
       }

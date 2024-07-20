@@ -22,7 +22,7 @@ import { Input } from "@/components/ui/input";
 import { debounce } from "../lib/common.js";
 
 import { useInitCache } from "../effects/Init.ts";
-import { createUserBalancesStore } from "../effects/User.ts";
+import { createUserBalancesStore } from "../nanoeffects/UserBalances.ts";
 
 import { $currentUser } from "../stores/users.ts";
 import {

@@ -3,6 +3,40 @@ import Apis from "../bts/ws/ApiInstances";
 import { chains } from "../config/chains";
 import { getObjects } from "./src/common";
 
+const [createUsernameStore] = nanoquery({
+  fetcher: async (...args: unknown[]) => {
+    const chain = args[0] as string;
+    const object_ids = args[1] as string[];
+
+    const specificNode = args[2] ? (args[2] as string) : null;
+
+    let response;
+    try {
+      response = await getObjects(chain, object_ids, specificNode);
+    } catch (error) {
+      console.log({ error });
+      return;
+    }
+
+    if (!response) {
+      console.log(`Failed to fetch username`);
+      return;
+    }
+
+    const _finalResults = response.map((x) => {
+      if (x) {
+        return {
+          name: x.name,
+          id: x.id,
+        };
+      }
+    });
+
+    return _finalResults;
+  }
+});
+    
+
 const [createObjectStore] = nanoquery({
   fetcher: async (...args: unknown[]) => {
     const chain = args[0] as string;
@@ -80,4 +114,4 @@ const [createEveryObjectStore] = nanoquery({
   },
 });
 
-export { createObjectStore, createEveryObjectStore };
+export { createObjectStore, createEveryObjectStore, createUsernameStore };

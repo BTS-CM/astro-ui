@@ -11,8 +11,10 @@ import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 import { humanReadableFloat, blockchainFloat, debounce, copyToClipboard } from "@/lib/common.js";
 import { evaluateTradingPair } from "@/lib/market.js";
 
-import { createUserBalancesStore, createUsernameStore } from "../effects/User.ts";
-import { createOfferStore } from "../effects/Offers.ts";
+import { createUsernameStore } from "@/nanoeffects/Objects.ts";
+import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
+
+import { createObjectStore } from "@/nanoeffects/Objects.ts";
 
 import {
   Card,
@@ -273,29 +275,30 @@ export default function CreditOfferEditor(properties) {
     let unsub;
 
     if (offerID && usr && usr.chain) {
-      const offerDataStore = createOfferStore([usr.chain, offerID]);
+      const offerDataStore = createObjectStore([usr.chain, [offerID]]);
       unsub = offerDataStore.subscribe(({ data }) => {
         if (data && !data.error && !data.loading) {
-          const _lendingAsset = assets.find((x) => x.id === data.asset_type);
+          const _data = data[0];
+          const _lendingAsset = assets.find((x) => x.id === _data.asset_type);
 
-          setOfferJSON(data);
-          setOfferOwner(data.owner_account);
+          setOfferJSON(_data);
+          setOfferOwner(_data.owner_account);
           setSelectedAsset(_lendingAsset.symbol);
-          setLendingAmount(humanReadableFloat(data.total_balance, _lendingAsset.precision));
-          setRate(data.fee_rate ? data.fee_rate / 10000 : 0);
+          setLendingAmount(humanReadableFloat(_data.total_balance, _lendingAsset.precision));
+          setRate(_data.fee_rate ? _data.fee_rate / 10000 : 0);
           setRepayPeriod(
             Object.keys(repaymentPeriods).reduce((a, b) =>
-              Math.abs(repaymentPeriods[a] - data.max_duration_seconds) <
-              Math.abs(repaymentPeriods[b] - data.max_duration_seconds)
+              Math.abs(repaymentPeriods[a] - _data.max_duration_seconds) <
+              Math.abs(repaymentPeriods[b] - _data.max_duration_seconds)
                 ? a
                 : b
             )
           );
-          setMinimumBorowAmount(humanReadableFloat(data.min_deal_amount, _lendingAsset.precision));
-          setExpiration(data.auto_disable_time);
+          setMinimumBorowAmount(humanReadableFloat(_data.min_deal_amount, _lendingAsset.precision));
+          setExpiration(_data.auto_disable_time);
 
           setAcceptableCollateral(
-            data.acceptable_collateral.map((x) => {
+            _data.acceptable_collateral.map((x) => {
               const _collateralAsset = assets.find((y) => y.id === x[1].quote.asset_id);
               const _price =
                 1 /
@@ -320,8 +323,8 @@ export default function CreditOfferEditor(properties) {
             })
           );
 
-          if (data.acceptable_borrowers) {
-            setIdentityChunks(chunkArray(data.acceptable_borrowers, 100));
+          if (_data.acceptable_borrowers) {
+            setIdentityChunks(chunkArray(_data.acceptable_borrowers, 100));
           }
         }
       });
@@ -353,7 +356,6 @@ export default function CreditOfferEditor(properties) {
               "amount": 1
             }
           */
-          console.log({ usernames: data, index: chunkIndex });
           setAllowedAccounts(
             allowedAccounts.concat(
               data.map((x, i) => {

@@ -1,7 +1,6 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import { persistentAtom } from "@nanostores/persistent";
-import * as fflate from "fflate";
 
 const languages = ["en", "da", "de", "es", "fr", "it", "ja", "ko", "pt", "th"];
 const pages = [
@@ -47,26 +46,26 @@ const storedLocale = persistentAtom("storedLocale", "");
 async function fetchTranslations() {
   const _stored = storedLocale.get();
   const _parsed = _stored ? JSON.parse(_stored) : null;
-  if (_parsed && _parsed.locale && _parsed.locale === locale.get()) {
+  const _locale = locale.get();
+
+  if (_parsed && _parsed.locale && _parsed.locale === _locale) {
     console.log(`Using cached ${locale.get()} translations`);
     return _parsed.translations;
   }
-  const response = await fetch(`http://localhost:8080/cache/translations/${locale.get()}`);
-  if (response.ok) {
-    const pageContents = await response.json();
 
-    if (pageContents && pageContents.result) {
-      const decompressed = fflate.decompressSync(fflate.strToU8(pageContents.result, true));
-      const history = JSON.parse(fflate.strFromU8(decompressed));
-      const translations = {};
-      translations[locale.get()] = history;
-      storedLocale.set(JSON.stringify({ translations, locale: locale.get() }));
-      return translations;
-    }
-  } else {
-    console.error(`Failed to fetch translation cache`);
+  const translations = {};
+  const localPages = {};
+  for (const page of pages) {
+    const filePath = `../data/locales/${_locale}/${page}.json`;
+    const response = await fetch(filePath);
+    const jsonContents = await response.json();
+    localPages[page] = jsonContents;
   }
-  return;
+
+  translations[_locale] = localPages;
+
+  storedLocale.set(JSON.stringify({ translations, locale: _locale }));
+  return translations;
 }
 
 async function initialize() {

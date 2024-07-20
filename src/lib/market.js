@@ -1,5 +1,5 @@
 import { BigNumber } from "bignumber.js";
-import { humanReadableFloat, trimPrice, blockchainFloat, debounce } from "@/lib/common.js";
+import { blockchainFloat } from "@/lib/common.js";
 
 function limitByPrecision(value, p = 8) {
   let valueString = value.toString();

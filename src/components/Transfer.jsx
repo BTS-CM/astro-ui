@@ -52,7 +52,7 @@ import {
 
 import { humanReadableFloat, trimPrice, blockchainFloat } from "../lib/common";
 
-import { createUserBalancesStore } from "../effects/User.ts";
+import { createUserBalancesStore } from "../nanoeffects/UserBalances.ts";
 
 import { Avatar } from "./Avatar.tsx";
 import AccountSearch from "./AccountSearch.jsx";

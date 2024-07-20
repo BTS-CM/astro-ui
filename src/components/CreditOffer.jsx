@@ -49,7 +49,7 @@ import {
   $globalParamsCacheTEST,
 } from "../stores/cache.ts";
 
-import { createUserBalancesStore } from "../effects/User.ts";
+import { createUserBalancesStore } from "../nanoeffects/UserBalances.ts";
 import { useInitCache } from "../effects/Init.ts";
 
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
