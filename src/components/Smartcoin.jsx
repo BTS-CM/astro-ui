@@ -13,7 +13,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-
 import {
   Dialog,
   DialogContent,
@@ -23,9 +22,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-
 import {
   Form,
   FormControl,
@@ -35,12 +32,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-
 import { Avatar as Av, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Avatar } from "@/components/Avatar.tsx";
-
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
-
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -52,11 +46,13 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Toggle } from "@/components/ui/toggle";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-import { useInitCache } from "../effects/Init.ts";
-import { createUserBalancesStore } from "../nanoeffects/UserBalances.ts";
-import { createSmartcoinDataStore } from "../effects/Assets.ts";
+import { humanReadableFloat, getFlagBooleans, debounce, blockchainFloat } from "@/lib/common.js";
 
-import { $currentUser } from "../stores/users.ts";
+import { useInitCache } from "@/effects/Init.ts";
+import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
+import { createFullSmartcoinStore } from "@/nanoeffects/FullSmartcoin.ts";
+
+import { $currentUser } from "@/stores/users.ts";
 import {
   $marketSearchCacheBTS,
   $marketSearchCacheTEST,
@@ -64,14 +60,12 @@ import {
   $globalParamsCacheTEST,
   $bitAssetDataCacheBTS,
   $bitAssetDataCacheTEST,
-} from "../stores/cache.ts";
+} from "@/stores/cache.ts";
 
 import DeepLinkDialog from "./common/DeepLinkDialog";
 import ExternalLink from "./common/ExternalLink.jsx";
 import CardRow from "./common/CardRow.jsx";
 import EmptyRow from "./common/EmptyRow.jsx";
-
-import { humanReadableFloat, getFlagBooleans, debounce, blockchainFloat } from "../lib/common.js";
 
 const activeTabStyle = {
   backgroundColor: "#252526",
@@ -337,7 +331,7 @@ export default function Smartcoin(properties) {
     let unsub;
 
     if (parsedBitasset && parsedBitasset && usr && usr.chain) {
-      const smartcoinDataStore = createSmartcoinDataStore([
+      const smartcoinDataStore = createFullSmartcoinStore([
         usr.chain,
         parsedAsset.id,
         parsedBitasset.collateral,

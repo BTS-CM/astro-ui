@@ -13,7 +13,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-
 import {
   Form,
   FormControl,
@@ -25,18 +24,18 @@ import {
 } from "@/components/ui/form";
 import { Avatar as Av, AvatarFallback } from "@/components/ui/avatar";
 import { Avatar } from "@/components/Avatar.tsx";
-
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-import { useInitCache } from "../effects/Init.ts";
-import { createSmartcoinCollateralBidsStore } from "../effects/Assets.ts";
+import { humanReadableFloat, getFlagBooleans, blockchainFloat } from "@/lib/common.js";
 
+import { useInitCache } from "@/effects/Init.ts";
+import { createCollateralBidStore } from "@/nanoeffects/CollateralBids.ts";
 import { createObjectStore } from "@/nanoeffects/Objects.ts";
 
-import { $currentUser } from "../stores/users.ts";
+import { $currentUser } from "@/stores/users.ts";
 import {
   $marketSearchCacheBTS,
   $marketSearchCacheTEST,
@@ -44,11 +43,9 @@ import {
   $globalParamsCacheTEST,
   $bitAssetDataCacheBTS,
   $bitAssetDataCacheTEST,
-} from "../stores/cache.ts";
+} from "@/stores/cache.ts";
 
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
-
-import { humanReadableFloat, getFlagBooleans, blockchainFloat } from "../lib/common.js";
 
 export default function Settlement(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
@@ -301,7 +298,7 @@ export default function Settlement(properties) {
     let unsub;
 
     if (parsedAsset && usr && usr.chain) {
-      const collateralBidsStore = createSmartcoinCollateralBidsStore([usr.chain, parsedAsset.id]);
+      const collateralBidsStore = createCollateralBidStore([usr.chain, parsedAsset.id]);
 
       unsub = collateralBidsStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {

@@ -26,26 +26,26 @@ import {
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-import { useInitCache } from "../effects/Init.ts";
-import { createUserHistoryStore } from "../effects/User.ts";
+import { useInitCache } from "@/effects/Init.ts";
+import { createAccountHistoryStore } from "@/nanoeffects/AccountHistory.ts";
 
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 import { createLimitOrdersStore } from "@/nanoeffects/MarketLimitOrders.ts";
 
-import { $currentUser } from "../stores/users.ts";
+import { $currentUser } from "@/stores/users.ts";
 
 import {
   $assetCacheBTS,
   $assetCacheTEST,
   $globalParamsCacheBTS,
   $globalParamsCacheTEST,
-} from "../stores/cache.ts";
+} from "@/stores/cache.ts";
 
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
 import ExternalLink from "./common/ExternalLink.jsx";
 
-import { humanReadableFloat } from "../lib/common";
-import { opTypes } from "../lib/opTypes";
+import { humanReadableFloat } from "@/lib/common";
+import { opTypes } from "@/lib/opTypes";
 
 export default function PortfolioTabs(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
@@ -130,7 +130,7 @@ export default function PortfolioTabs(properties) {
     let unsubscribeUserHistoryStore;
 
     if (usr && usr.id) {
-      const userHistoryStore = createUserHistoryStore([usr.chain, usr.id]);
+      const userHistoryStore = createAccountHistoryStore([usr.chain, usr.id]);
 
       unsubscribeUserHistoryStore = userHistoryStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {

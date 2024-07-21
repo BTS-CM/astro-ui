@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useSyncExternalStore, useMemo } from "react";
 import { useStore } from "@nanostores/react";
+import { ReloadIcon } from "@radix-ui/react-icons";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
@@ -11,16 +12,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-
-import { ReloadIcon } from "@radix-ui/react-icons";
-
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+
+import { trimPrice, isInvertedMarket } from "@/lib/common";
+import { $marketSearchCacheBTS, $marketSearchCacheTEST } from "@/stores/cache.ts";
+import { createMarketTradeHistoryStore } from "@/nanoeffects/MarketTradeHistory.ts";
+import { createMarketOrderStore } from "@/nanoeffects/MarketOrderBook.ts";
 
 import LimitOrderCard from "./Market/LimitOrderCard.jsx";
 import MarketOrderCard from "./Market/MarketOrderCard.jsx";
@@ -28,14 +29,7 @@ import AssetDropDown from "./Market/AssetDropDownCard.jsx";
 import MarketAssetCard from "./Market/MarketAssetCard.jsx";
 import MarketSummaryTabs from "./Market/MarketSummaryTabs.jsx";
 import PoolDialogs from "./Market/PoolDialogs.jsx";
-
 import ExternalLink from "./common/ExternalLink.jsx";
-
-import { trimPrice, isInvertedMarket } from "../lib/common";
-
-import { $marketSearchCacheBTS, $marketSearchCacheTEST } from "../stores/cache.ts";
-
-import { createMarketHistoryStore, createMarketOrdersStore } from "../effects/Market.ts";
 
 export default function Market(properties) {
   const {
@@ -135,9 +129,8 @@ export default function Market(properties) {
     setTickerData(null);
   }
 
-  // Use the store
   const marketOrdersStore = useMemo(() => {
-    return createMarketOrdersStore([usr.chain, assetA, assetB, usr.id]);
+    return createMarketOrderStore([usr.chain, assetA, assetB, 100]);
   }, [usr, assetA, assetB, orderBookItr]);
 
   const {
@@ -160,7 +153,7 @@ export default function Market(properties) {
 
   // Use the store
   const marketHistoryStore = useMemo(() => {
-    return createMarketHistoryStore([usr.chain, assetAData.id, assetBData.id, usr.id]);
+    return createMarketTradeHistoryStore([usr.chain, assetAData.id, assetBData.id, usr.id]);
   }, [usr, assetAData, assetBData, marketItr]);
 
   const {

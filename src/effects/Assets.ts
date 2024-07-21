@@ -25,72 +25,6 @@ const [createDynamicDataStore] = nanoquery({
   },
 });
 
-// Create fetcher store for live full smartcoin data (asset + bitasset data)
-const [createSmartcoinDataStore] = nanoquery({
-  fetcher: async (
-    chain: string,
-    assetID: string,
-    collateralAssetID: string,
-    bitassetID: string,
-    collateralBitassetID: string,
-    userID: string
-  ) => {
-    let response;
-    try {
-      response = await fetch(`http://localhost:8080/api/fullSmartcoin/${chain}`, {
-        method: "POST",
-        body: JSON.stringify([
-          assetID,
-          collateralAssetID,
-          bitassetID,
-          collateralBitassetID,
-          userID,
-        ]),
-      });
-    } catch (error) {
-      console.log("Failed to fetch smartcoin data");
-      return;
-    }
-
-    if (!response.ok) {
-      console.log("Failed to fetch bitasset data");
-      return;
-    }
-
-    const responseContents = await response.json();
-    if (responseContents && responseContents.result) {
-      //console.log("Fetched bitasset data");
-      const decompressed = fflate.decompressSync(fflate.strToU8(responseContents.result, true));
-      const finalResult = fflate.strFromU8(decompressed);
-      return JSON.parse(finalResult);
-    }
-  },
-});
-
-// Create fetcher store for smartcoin collateral bids
-const [createSmartcoinCollateralBidsStore] = nanoquery({
-  fetcher: async (chain: string, assetID: string) => {
-    const response = await fetch(`http://localhost:8080/api/collateralBids/${chain}`, {
-      method: "POST",
-      body: JSON.stringify([assetID]),
-    });
-
-    if (!response.ok) {
-      console.log("Failed to fetch collateral bids");
-      return;
-    }
-
-    const responseContents = await response.json();
-
-    if (responseContents && responseContents.result) {
-      //console.log("Fetched collateral bids");
-      const decompressed = fflate.decompressSync(fflate.strToU8(responseContents.result, true));
-      const finalResult = fflate.strFromU8(decompressed);
-      return JSON.parse(finalResult);
-    }
-  },
-});
-
 /**
  * Retrieving a single cached asset
  */
@@ -116,9 +50,4 @@ const [createCachedAssetStore] = nanoquery({
   },
 });
 
-export {
-  createSmartcoinDataStore,
-  createCachedAssetStore,
-  createDynamicDataStore,
-  createSmartcoinCollateralBidsStore,
-};
+export { createCachedAssetStore, createDynamicDataStore };
