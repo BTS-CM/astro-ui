@@ -57,8 +57,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Toggle } from "@/components/ui/toggle";
 import { Badge } from "@/components/ui/badge";
 
-import { useInitCache } from "../effects/Init.ts";
-import { $currentUser } from "../stores/users.ts";
+import { useInitCache } from "@/nanoeffects/Init.ts";
+import { $currentUser } from "@/stores/users.ts";
 
 import {
   $assetCacheBTS,
@@ -67,7 +67,7 @@ import {
   $globalParamsCacheTEST,
   $poolCacheBTS,
   $poolCacheTEST,
-} from "../stores/cache.ts";
+} from "@/stores/cache.ts";
 
 import {
   humanReadableFloat,
@@ -75,7 +75,7 @@ import {
   blockchainFloat,
   debounce,
   isInvertedMarket,
-} from "../lib/common";
+} from "@/lib/common";
 
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 import { createObjectStore } from "@/nanoeffects/Objects.ts";

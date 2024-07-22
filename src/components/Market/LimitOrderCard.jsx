@@ -45,7 +45,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
 
 import { trimPrice, humanReadableFloat, blockchainFloat, debounce } from "@/lib/common.js";
-import DeepLinkDialog from "../common/DeepLinkDialog";
+import DeepLinkDialog from "@/common/DeepLinkDialog";
 
 /**
  * Creating a market card component for buy and sell limit orders

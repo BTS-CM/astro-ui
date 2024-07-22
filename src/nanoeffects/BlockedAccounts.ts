@@ -1,10 +1,10 @@
 import { nanoquery } from "@nanostores/query";
-import Apis from "../bts/ws/ApiInstances";
-import { chains } from "../config/chains";
+import Apis from "@/bts/ws/ApiInstances";
+import { chains } from "@/config/chains";
 
-import * as hash from "../bts/ecc/hash.js";
+import * as hash from "@/bts/ecc/hash.js";
 
-import { $blockList } from "../stores/blocklist";
+import { $blockList } from "@/stores/blocklist";
 
 async function getBlockedaccounts (chain: string) {
     return new Promise(async (resolve, reject) => {

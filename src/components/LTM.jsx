@@ -11,8 +11,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import { useInitCache } from "../effects/Init.ts";
-import { $currentUser } from "../stores/users.ts";
+import { useInitCache } from "@/nanoeffects/Init.ts";
+import { $currentUser } from "@/stores/users.ts";
 
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
 

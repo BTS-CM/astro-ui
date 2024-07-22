@@ -15,8 +15,8 @@ import {
 
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 
-import { useInitCache } from "../effects/Init.ts";
-import { $currentUser } from "../stores/users.ts";
+import { useInitCache } from "@/nanoeffects/Init.ts";
+import { $currentUser } from "@/stores/users.ts";
 
 export default function Home(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });

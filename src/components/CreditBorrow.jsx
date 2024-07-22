@@ -20,15 +20,15 @@ import {
 } from "@/components/ui/card";
 
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
-import { useInitCache } from "../effects/Init.ts";
+import { useInitCache } from "@/nanoeffects/Init.ts";
 
-import { $currentUser } from "../stores/users.ts";
+import { $currentUser } from "@/stores/users.ts";
 import {
   $assetCacheBTS,
   $assetCacheTEST,
   $offersCacheBTS,
   $offersCacheTEST,
-} from "../stores/cache.ts";
+} from "@/stores/cache.ts";
 
 import { humanReadableFloat } from "@/lib/common.js";
 

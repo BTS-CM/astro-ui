@@ -100,9 +100,6 @@ function getFeeSchedule() {
 
 /**
  * Retrieves the requested asset from cached assets
- * @param chain
- * @param id
- * @returns Response
  */
 function getAsset(chain: string, id: string) {
   let foundAsset;
@@ -119,9 +116,6 @@ function getAsset(chain: string, id: string) {
 
 /**
  * Get the dynamic data of an asset
- * @param chain
- * @param id 2.3.x
- * @returns Response
  */
 function getDynamicData(chain: string, id: string) {
   let foundDynamicData;
@@ -140,9 +134,6 @@ function getDynamicData(chain: string, id: string) {
 
 /**
  * Retrieves the requested pool from cached assets
- * @param chain
- * @param id
- * @returns Response
  */
 function getPool(chain: string, id: string) {
   let foundPool;

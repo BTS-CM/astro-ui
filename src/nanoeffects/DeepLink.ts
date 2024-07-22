@@ -1,10 +1,10 @@
 import { nanoquery } from "@nanostores/query";
 import { v4 as uuidv4 } from "uuid";
 
-import Apis from "../bts/ws/ApiInstances.js";
-import TransactionBuilder from "../bts/chain/TransactionBuilder.js";
+import Apis from "@/bts/ws/ApiInstances.js";
+import TransactionBuilder from "@/bts/chain/TransactionBuilder.js";
 
-import { chains } from "../config/chains";
+import { chains } from "@/config/chains";
 
 async function generateDeepLink(
   chain: string,

@@ -23,7 +23,7 @@ import {
 
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 
-import { $poolCacheBTS, $poolCacheTEST } from "../../stores/cache.ts";
+import { $poolCacheBTS, $poolCacheTEST } from "@/stores/cache.ts";
 
 export default function PoolDialogs(properties) {
   const { assetA, assetB, assetAData, assetBData, chain } = properties;

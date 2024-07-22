@@ -52,8 +52,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { useInitCache } from "../effects/Init.ts";
-import { $currentUser } from "../stores/users.ts";
+import { useInitCache } from "@/nanoeffects/Init.ts";
+import { $currentUser } from "@/stores/users.ts";
 
 import { Avatar } from "./Avatar.tsx";
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
@@ -69,7 +69,7 @@ import {
   $marketSearchCacheTEST,
   $globalParamsCacheBTS,
   $globalParamsCacheTEST,
-} from "../stores/cache.ts";
+} from "@/stores/cache.ts";
 
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Avatar as Av, AvatarFallback, AvatarImage } from "@/components/ui/avatar";

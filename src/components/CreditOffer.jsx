@@ -39,7 +39,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 import { blockchainFloat, humanReadableFloat } from "@/lib/common.js";
 
-import { $currentUser } from "../stores/users.ts";
+import { $currentUser } from "@/stores/users.ts";
 import {
   $assetCacheBTS,
   $assetCacheTEST,
@@ -47,10 +47,10 @@ import {
   $offersCacheTEST,
   $globalParamsCacheBTS,
   $globalParamsCacheTEST,
-} from "../stores/cache.ts";
+} from "@/stores/cache.ts";
 
-import { createUserBalancesStore } from "../nanoeffects/UserBalances.ts";
-import { useInitCache } from "../effects/Init.ts";
+import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
+import { useInitCache } from "@/nanoeffects/Init.ts";
 
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
 import ExternalLink from "./common/ExternalLink.jsx";

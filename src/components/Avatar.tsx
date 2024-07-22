@@ -1,7 +1,7 @@
 import React, { type HTMLProps, memo, useMemo, useState, useEffect, useId } from "react";
 import { useThrottle } from "@react-hook/throttle";
 
-import { getContrast, hashCode, RNG } from "../lib/utilities";
+import { getContrast, hashCode, RNG } from "@/lib/utilities";
 
 const SIZE = 36;
 

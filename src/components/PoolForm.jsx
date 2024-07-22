@@ -52,7 +52,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar as Av, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Avatar } from "@/components/Avatar.tsx";
 
-import { blockchainFloat, copyToClipboard, humanReadableFloat } from "../lib/common";
+import { blockchainFloat, copyToClipboard, humanReadableFloat } from "@/lib/common";
 
 import {
   $assetCacheBTS,
@@ -63,13 +63,13 @@ import {
   $marketSearchCacheTEST,
   $globalParamsCacheBTS,
   $globalParamsCacheTEST,
-} from "../stores/cache.ts";
-import { $currentUser } from "../stores/users.ts";
+} from "@/stores/cache.ts";
+import { $currentUser } from "@/stores/users.ts";
 
-import { createDynamicDataStore } from "../effects/Assets.ts";
+import { createDynamicDataStore } from "@/nanoeffects/Assets.ts";
 import { createObjectStore } from "@/nanoeffects/Objects.ts";
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
-import { useInitCache } from "../effects/Init.ts";
+import { useInitCache } from "@/effects/Init.ts";
 
 import { createObjectStore } from "@/nanoeffects/Objects.ts";
 

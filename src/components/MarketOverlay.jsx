@@ -5,10 +5,10 @@ import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 import Market from "./Market";
 import MarketPlaceholder from "./MarketPlaceholder";
 
-import { humanReadableFloat, trimPrice } from "../lib/common";
-import { useInitCache } from "../effects/Init.ts";
+import { humanReadableFloat, trimPrice } from "@/lib/common";
+import { useInitCache } from "@/effects/Init.ts";
 
-import { $currentUser } from "../stores/users.ts";
+import { $currentUser } from "@/stores/users.ts";
 import {
   $assetCacheBTS,
   $assetCacheTEST,
@@ -18,12 +18,12 @@ import {
   $marketSearchCacheTEST,
   $globalParamsCacheBTS,
   $globalParamsCacheTEST,
-} from "../stores/cache.ts";
+} from "@/stores/cache.ts";
 
 import {
   createCachedAssetStore,
   createDynamicDataStore,
-} from "../effects/Assets.ts";
+} from "@/nanoeffects/Assets.ts";
 
 import { createObjectStore } from "@/nanoeffects/Objects.ts";
 

@@ -1,5 +1,5 @@
 import { map } from "nanostores";
-import { chains } from "../config/chains";
+import { chains } from "@/config/chains";
 
 type Node = {
   url: string;

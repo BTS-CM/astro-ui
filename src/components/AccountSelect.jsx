@@ -18,7 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/Avatar.tsx";
 
-import { $currentUser, setCurrentUser, $userStorage, removeUser } from "../stores/users.ts";
+import { $currentUser, setCurrentUser, $userStorage, removeUser } from "@/stores/users.ts";
 
 export default function AccountSelect(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });

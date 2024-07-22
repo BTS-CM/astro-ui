@@ -13,7 +13,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 
-import CardRowPlaceholder from "../common/CardRowPlaceholder.jsx";
+import CardRowPlaceholder from "@/common/CardRowPlaceholder.jsx";
 
 export default function MarketAssetCard(properties) {
   const { type } = properties;

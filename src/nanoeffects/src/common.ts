@@ -1,5 +1,5 @@
-import Apis from "../../bts/ws/ApiInstances";
-import { chains } from "../../config/chains";
+import Apis from "@/bts/ws/ApiInstances";
+import { chains } from "@/config/chains";
 
 // Split the input object ids into acceptably sized chunks
 function _sliceIntoChunks(arr: any[], size: number) {

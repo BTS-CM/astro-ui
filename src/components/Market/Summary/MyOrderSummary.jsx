@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { humanReadableFloat, isInvertedMarket } from "../../../lib/common";
+import { humanReadableFloat, isInvertedMarket } from "@/lib/common";
 
 import {
   Dialog,

@@ -37,21 +37,21 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-import { $currentUser } from "../stores/users.ts";
+import { $currentUser } from "@/stores/users.ts";
 import {
   $assetCacheBTS,
   $assetCacheTEST,
   $globalParamsCacheBTS,
   $globalParamsCacheTEST,
-} from "../stores/cache.ts";
+} from "@/stores/cache.ts";
 
-import { useInitCache } from "../effects/Init.ts";
+import { useInitCache } from "@/nanoeffects/Init.ts";
 
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 import { createBorrowerDealStore } from "@/nanoeffects/BorrowerDeals.ts";
 import { createLenderDealsStore } from "@/nanoeffects/LenderDeals.ts";
 
-import { blockchainFloat, humanReadableFloat } from "../lib/common.js";
+import { blockchainFloat, humanReadableFloat } from "@/lib/common.js";
 
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
 import ExternalLink from "./common/ExternalLink.jsx";

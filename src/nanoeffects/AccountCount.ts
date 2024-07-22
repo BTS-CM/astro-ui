@@ -1,6 +1,6 @@
 import { nanoquery } from "@nanostores/query";
-import Apis from "../bts/ws/ApiInstances";
-import { chains } from "../config/chains";
+import Apis from "@/bts/ws/ApiInstances";
+import { chains } from "@/config/chains";
 
 // Retrieve the quantity of registered blockchain accounts
 async function getAccountCount(chain: string, specificNode?: string | null) {
