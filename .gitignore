@@ -180,3 +180,6 @@ src/data/bitshares_testnet/fees.json
 src/data/bitshares_testnet/minAssets.json
 src/data/bitshares_testnet/minBitassetData.json
 src/data/bitshares_testnet/minPools.json
+
+astroDist
+dist

@@ -40,7 +40,7 @@ export default function LTM(properties) {
                 <>
                   <h3>{t("LTM:alreadyMember")}</h3>
                   <h4>{t("LTM:benefitsTitle")}</h4>
-                  <ul className="ml-2 list-disc [&>li]:mt-2">
+                  <ul className="ml-2 list-disc [&>li]:mt-2 pl-3 text-sm">
                     <li>{t("LTM:benefit1")}</li>
                     <li>{t("LTM:benefit2")}</li>
                     <li>{t("LTM:benefit3")}</li>
@@ -50,7 +50,6 @@ export default function LTM(properties) {
               {usr && usr.id != usr.referrer ? (
                 <>
                   <h3>{t("LTM:wantToPurchase")}</h3>
-                  <h4 className="text-lg">{t("LTM:benefitsTitle")}</h4>
                   <ul className="ml-2 list-disc [&>li]:mt-2 pl-3 text-sm">
                     <li>{t("LTM:benefit1")}</li>
                     <li>{t("LTM:benefit2")}</li>

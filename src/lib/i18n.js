@@ -7,7 +7,7 @@ const pages = [
   "AccountSearch",
   "AccountSelect",
   "AssetDropDownCard",
-  "CreateCreditOffer",
+  "CreditOfferEditor",
   "CreditBorrow",
   "CreditDeals",
   "CreditOffer",
@@ -30,6 +30,7 @@ const pages = [
   "MyOrderSummary",
   "MyTradeSummary",
   "PageHeader",
+  "PageFooter",
   "PoolDialogs",
   "PoolForm",
   "PoolStake",
@@ -56,10 +57,16 @@ async function fetchTranslations() {
   const translations = {};
   const localPages = {};
   for (const page of pages) {
-    const filePath = `../data/locales/${_locale}/${page}.json`;
-    const response = await fetch(filePath);
-    const jsonContents = await response.json();
-    localPages[page] = jsonContents;
+    let response;
+    if (window && window.electron) {
+      response = await fetch(`/locales/${_locale}/${page}.json`);
+    } else {
+      response = await fetch(`../src/data/locales/${_locale}/${page}.json`);
+    }
+    if (response) {
+      const jsonContents = await response.json();
+      localPages[page] = jsonContents;
+    }
   }
 
   translations[_locale] = localPages;

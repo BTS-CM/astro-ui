@@ -26,7 +26,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-import { useInitCache } from "@/effects/Init.ts";
+import { useInitCache } from "@/nanoeffects/Init.ts";
 import { createAccountHistoryStore } from "@/nanoeffects/AccountHistory.ts";
 
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";

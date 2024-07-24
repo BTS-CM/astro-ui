@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
-import MyTradeSummary from "@/Summary/MyTradeSummary";
+import MyTradeSummary from "../Summary/MyTradeSummary";
 
 import {
   Card,

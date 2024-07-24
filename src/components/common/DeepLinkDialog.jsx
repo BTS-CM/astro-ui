@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import * as fflate from "fflate";
 import { useTranslation } from "react-i18next";
+
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -19,11 +19,9 @@ import {
 
 import { copyToClipboard } from "@/lib/common.js";
 
-import ExternalLink from "./ExternalLink";
-
 /**
  * Launches a dialog prompt, generating a deep link for the given operation.
- * Buttons link to the Beet multiwallet
+ * Buttons link to the Beet/BeetEOS multiwallets
  */
 export default function DeepLinkDialog(properties) {
   const { trxJSON, operationName, username, usrChain, userID, dismissCallback, headerText } =
@@ -33,7 +31,12 @@ export default function DeepLinkDialog(properties) {
   const [activeTab, setActiveTab] = useState("object");
   const [deeplink, setDeeplink] = useState();
   useEffect(() => {
-    async function createDeepLink() {
+    async function fetchDeeplink() {
+      if (!window || !window.electron) {
+        console.log("No electron window found, cannot fetch deeplink");
+        return;
+      }
+
       const response = await fetch(
         `http://localhost:8080/api/deeplink/${usrChain}/${operationName}`,
         {
@@ -41,25 +44,19 @@ export default function DeepLinkDialog(properties) {
           body: JSON.stringify(trxJSON),
         }
       );
-
+  
       if (!response.ok) {
         console.log("Failed to fetch deeplink");
         return;
       }
-
+  
       const responseContents = await response.json();
-
-      if (responseContents && responseContents.result) {
-        const decompressed = fflate.decompressSync(fflate.strToU8(responseContents.result, true));
-        const _parsed = JSON.parse(fflate.strFromU8(decompressed));
-        if (_parsed.generatedDeepLink) {
-          setDeeplink(_parsed.generatedDeepLink);
-        }
-      }
+      
+      setDeeplink(responseContents);
     }
 
     if (usrChain && operationName && trxJSON) {
-      createDeepLink();
+      fetchDeeplink();
     }
   }, [usrChain, operationName, trxJSON]);
 

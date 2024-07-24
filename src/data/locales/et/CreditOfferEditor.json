@@ -21,6 +21,7 @@
   "amountToLend": "Laenatav summa",
   "lendingAmountDescription": "Vara summa, mida soovite plokiahela kasutajatele kokku laenata",
   "lendingRate": "Laenumäär",
+  "lendingRateDescription": "vara laenamise kulu, väljendatuna protsendina laenatud summast.",
   "editLendingRate": "Muuda laenuintressi",
   "newLendingRate": "Esitage uus laenuintressiprotsent",
   "repaymentPeriod": "Tagasimakse periood",

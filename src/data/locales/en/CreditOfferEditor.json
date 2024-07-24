@@ -21,6 +21,7 @@
   "amountToLend": "Amount to lend",
   "lendingAmountDescription": "The amount of the asset you wish to lend in total to blockchain users",
   "lendingRate": "Lending rate",
+  "lendingRateDescription": "The cost of borrowing the asset, expressed as a percentage of the borrowed amount.",
   "editLendingRate": "Edit lending rate",
   "newLendingRate": "Provide a new lending rate percent",
   "repaymentPeriod": "Repayment period",

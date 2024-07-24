@@ -7,9 +7,9 @@ import PageFooter from '../components/PageFooter';
 
 <Layout title="Bitshares asset transfer form">
 	<main>
-		<PageHeader client:only page="transfer" backURL="../index.html" />
-		<Transfer  client:only />
-		<PageFooter client:only sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/transfer.astro" />
+		<PageHeader client:only="react" page="transfer" backURL="../index.html" />
+		<Transfer  client:only="react" />
+		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/transfer.astro" />
 	</main>
 </Layout>
 

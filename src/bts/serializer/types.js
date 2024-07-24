@@ -16,7 +16,7 @@ import { Buffer } from "safe-buffer";
 
 var Types = {};
 
-const HEX_DUMP = process.env.npm_config__graphene_serializer_hex_dump;
+// const HEX_DUMP = process ? process.env.npm_config__graphene_serializer_hex_dump : null;
 
 Types.uint8 = {
   fromByteBuffer(b) {
@@ -278,9 +278,11 @@ Types.array = function (st_operation) {
   return {
     fromByteBuffer(b) {
       var size = b.readVarint32();
+      /*
       if (HEX_DUMP) {
         console.log("varint32 size = " + size.toString(16));
       }
+      */
       var result = [];
       for (var i = 0; 0 < size ? i < size : i > size; 0 < size ? i++ : i++) {
         result.push(st_operation.fromByteBuffer(b));
@@ -379,9 +381,11 @@ Types.set = function (st_operation) {
     },
     fromByteBuffer(b) {
       var size = b.readVarint32();
+      /*
       if (HEX_DUMP) {
         console.log("varint32 size = " + size.toString(16));
       }
+      */
       return this.validate(
         (() => {
           var result = [];
@@ -775,9 +779,11 @@ Types.static_variant = function (_st_operations) {
     fromByteBuffer(b) {
       var type_id = b.readVarint32();
       var st_operation = this.st_operations[type_id];
+      /*
       if (HEX_DUMP) {
         console.error(`static_variant id 0x${type_id.toString(16)} (${type_id})`);
       }
+      */
       v.required(st_operation, `operation ${type_id}`);
       return [type_id, st_operation.fromByteBuffer(b)];
     },

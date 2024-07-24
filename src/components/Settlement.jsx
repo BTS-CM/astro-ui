@@ -31,7 +31,7 @@ import { Label } from "@/components/ui/label";
 
 import { humanReadableFloat, getFlagBooleans, blockchainFloat } from "@/lib/common.js";
 
-import { useInitCache } from "@/effects/Init.ts";
+import { useInitCache } from "@/nanoeffects/Init.ts";
 import { createCollateralBidStore } from "@/nanoeffects/CollateralBids.ts";
 import { createObjectStore } from "@/nanoeffects/Objects.ts";
 

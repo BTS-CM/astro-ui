@@ -21,6 +21,7 @@
   "amountToLend": "融資金額",
   "lendingAmountDescription": "ブロックチェーンユーザーに貸し出したい資産の総額",
   "lendingRate": "貸出金利",
+  "lendingRateDescription": "借入額のパーセンテージとして表される、資産の借入コスト。",
   "editLendingRate": "貸出金利を編集する",
   "newLendingRate": "新しい貸出金利パーセントを提供します",
   "repaymentPeriod": "返済期間",

@@ -11,7 +11,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import { useInitCache } from "@/effects/Init.ts";
+import { useInitCache } from "@/nanoeffects/Init.ts";
 import { createTopMarketsStore } from "@/nanoeffects/TopMarkets.ts";
 import { $currentUser } from "@/stores/users.ts";
 

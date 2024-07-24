@@ -20,6 +20,7 @@
   "lendingAssetDescription": "Sua oferta de crédito se concentrará no empréstimo deste ativo",
   "amountToLend": "Valor a emprestar",
   "lendingAmountDescription": "O valor total do ativo que você deseja emprestar aos usuários do blockchain",
+  "lendingRateDescription": "O custo do empréstimo do ativo, expresso como uma porcentagem do valor emprestado.",
   "lendingRate": "Taxa de empréstimo",
   "editLendingRate": "Editar taxa de empréstimo",
   "newLendingRate": "Fornecer uma nova porcentagem da taxa de empréstimo",

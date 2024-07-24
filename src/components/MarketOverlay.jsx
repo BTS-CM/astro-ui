@@ -6,7 +6,7 @@ import Market from "./Market";
 import MarketPlaceholder from "./MarketPlaceholder";
 
 import { humanReadableFloat, trimPrice } from "@/lib/common";
-import { useInitCache } from "@/effects/Init.ts";
+import { useInitCache } from "@/nanoeffects/Init.ts";
 
 import { $currentUser } from "@/stores/users.ts";
 import {

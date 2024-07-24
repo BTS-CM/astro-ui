@@ -48,7 +48,7 @@ import {
 import { useInitCache } from "@/nanoeffects/Init.ts";
 
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
-import { createBorrowerDealStore } from "@/nanoeffects/BorrowerDeals.ts";
+import { createBorrowerDealsStore } from "@/nanoeffects/BorrowerDeals.ts";
 import { createLenderDealsStore } from "@/nanoeffects/LenderDeals.ts";
 
 import { blockchainFloat, humanReadableFloat } from "@/lib/common.js";
@@ -121,7 +121,7 @@ export default function CreditDeals(properties) {
     let unsubscribeBorrowerDeals;
 
     if (usr && usr.id) {
-      const borrowerDealsStore = createBorrowerDealStore([usr.chain, usr.id]);
+      const borrowerDealsStore = createBorrowerDealsStore([usr.chain, usr.id]);
 
       unsubscribeBorrowerDeals = borrowerDealsStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {

@@ -49,10 +49,10 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Toggle } from "@/components/ui/toggle";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Avatar as Av, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar as Av, AvatarFallback } from "@/components/ui/avatar";
 import { Avatar } from "@/components/Avatar.tsx";
 
-import { blockchainFloat, copyToClipboard, humanReadableFloat } from "@/lib/common";
+import { blockchainFloat, humanReadableFloat } from "@/lib/common";
 
 import {
   $assetCacheBTS,
@@ -69,9 +69,7 @@ import { $currentUser } from "@/stores/users.ts";
 import { createDynamicDataStore } from "@/nanoeffects/Assets.ts";
 import { createObjectStore } from "@/nanoeffects/Objects.ts";
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
-import { useInitCache } from "@/effects/Init.ts";
-
-import { createObjectStore } from "@/nanoeffects/Objects.ts";
+import { useInitCache } from "@/nanoeffects/Init.ts";
 
 import PoolDialogs from "./Market/PoolDialogs.jsx";
 import MarketAssetCard from "./Market/MarketAssetCard.jsx";

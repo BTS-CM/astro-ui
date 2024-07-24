@@ -21,6 +21,7 @@
   "amountToLend": "대출할 금액",
   "lendingAmountDescription": "블록체인 사용자에게 빌려주고 싶은 총 자산 금액",
   "lendingRate": "대출 금리",
+  "lendingRateDescription": "자산을 빌리는 데 드는 비용은 빌린 금액의 백분율로 표현됩니다.",
   "editLendingRate": "대출 금리 수정",
   "newLendingRate": "새로운 대출 금리 퍼센트 제공",
   "repaymentPeriod": "상환기간",

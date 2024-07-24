@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
-import MyOrderSummary from "@/Summary/MyOrderSummary";
+import MyOrderSummary from "../Summary/MyOrderSummary";
 
 import {
   Card,

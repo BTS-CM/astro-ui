@@ -7,9 +7,9 @@ import PageFooter from '../components/PageFooter';
 
 <Layout title="Bitshares credit offer listings">
 	<main>
-		<PageHeader client:only page="borrow" backURL="../index.html" />
-		<CreditBorrow client:only />
-		<PageFooter client:only sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/borrow.astro" />
+		<PageHeader client:only="react" page="borrow" backURL="../index.html" />
+		<CreditBorrow client:only="react" />
+		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/borrow.astro" />
 	</main>
 </Layout>
 

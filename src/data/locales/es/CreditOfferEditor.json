@@ -21,6 +21,7 @@
   "amountToLend": "cantidad a prestar",
   "lendingAmountDescription": "El monto total del activo que desea prestar a los usuarios de blockchain",
   "lendingRate": "Tasa de préstamo",
+  "lendingRateDescription": "El costo de tomar prestado el activo, expresado como porcentaje del monto prestado",
   "editLendingRate": "Editar tasa de préstamo",
   "newLendingRate": "Proporcionar un nuevo porcentaje de tasa de préstamo",
   "repaymentPeriod": "Período de reembolso",

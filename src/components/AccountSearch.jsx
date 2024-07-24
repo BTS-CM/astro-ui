@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import * as fflate from "fflate";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
@@ -16,6 +15,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/Avatar.tsx";
 
+import { accountSearch } from "@/nanoeffects/UserSearch.ts";
+
 export default function AccountSearch(properties) {
   const { chain, excludedUsers, setChosenAccount } = properties;
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
@@ -25,6 +26,7 @@ export default function AccountSearch(properties) {
 
   const [inProgress, setInProgress] = useState(false);
   const [searchResponse, setSearchResponse] = useState();
+
   async function lookupAccount() {
     const excludedUsernames = excludedUsers.map((user) => user.username);
     const excludedIds = excludedUsers.map((user) => user.id);
@@ -35,32 +37,18 @@ export default function AccountSearch(properties) {
       return;
     }
 
-    const response = await fetch(
-      `http://localhost:8080/api/accountLookup/${chain}/${accountInput}`,
-      { method: "GET" }
-    );
-
-    if (!response.ok) {
-      console.log({
-        error: new Error(`${response.status} ${response.statusText}`),
-        msg: t("AccountSearch:noSearch.error"),
-      });
+    let response;
+    try {
+      response = await accountSearch(chain, accountInput);
+    } catch (error) {
+      console.log({ error, msg: t("AccountSearch:noSearch.error") });
+      setErrorMessage(t("AccountSearch:noSearch.error"));
       setInProgress(false);
-      return;
-    }
-
-    const responseContents = await response.json();
-
-    if (responseContents && responseContents.result) {
-      const decompressed = fflate.decompressSync(fflate.strToU8(responseContents.result, true));
-      const finalResult = JSON.parse(fflate.strFromU8(decompressed));
-      setInProgress(false);
-      setSearchResponse(finalResult);
       return;
     }
 
     setInProgress(false);
-    setErrorMessage(t("AccountSearch:noSearch.error"));
+    setSearchResponse(response);
   }
 
   return (

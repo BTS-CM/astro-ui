@@ -7,9 +7,9 @@ import PageFooter from '../components/PageFooter';
 
 <Layout title="Bitshares lifetime membership status">
 	<main>
-		<PageHeader client:only page="ltm" backURL="../index.html" />
-		<LTM client:only />
-		<PageFooter client:only sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/ltm.astro" />
+		<PageHeader client:only="react" page="ltm" backURL="../index.html" />
+		<LTM client:only="react" />
+		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/ltm.astro" />
 	</main>
 </Layout>
 

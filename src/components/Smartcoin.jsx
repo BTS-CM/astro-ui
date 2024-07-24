@@ -48,7 +48,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 
 import { humanReadableFloat, getFlagBooleans, debounce, blockchainFloat } from "@/lib/common.js";
 
-import { useInitCache } from "@/effects/Init.ts";
+import { useInitCache } from "@/nanoeffects/Init.ts";
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 import { createFullSmartcoinStore } from "@/nanoeffects/FullSmartcoin.ts";
 

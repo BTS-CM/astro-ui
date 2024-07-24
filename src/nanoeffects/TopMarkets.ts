@@ -2,6 +2,11 @@ import { nanoquery } from "@nanostores/query";
 
 const [createTopMarketsStore] = nanoquery({
   fetcher: async (chain) => {
+    if (!(window as any).electron) {
+      console.log("No electron window found");
+      return;
+    }
+    
     const retrievedData = await fetch(
       chain === "bitshares"
         ? `https://api.bitshares.ws/openexplorer/top_markets?top_n=100`
@@ -21,8 +26,7 @@ const [createTopMarketsStore] = nanoquery({
     }
 
     return topMarkets;
-  },
-  refetchInterval: 60000,
+  }
 });
 
 export { createTopMarketsStore };

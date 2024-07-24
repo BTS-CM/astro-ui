@@ -21,6 +21,7 @@
   "amountToLend": "Zu verleihender Betrag",
   "lendingAmountDescription": "Der Betrag des Vermögenswerts, den Sie insgesamt an Blockchain-Benutzer verleihen möchten",
   "lendingRate": "Kreditzins",
+  "lendingRateDescription": "Die Kosten für die Ausleihe des Vermögenswerts, ausgedrückt als Prozentsatz des geliehenen Betrags.",
   "editLendingRate": "Kreditzins bearbeiten",
   "newLendingRate": "Geben Sie einen neuen Kreditzinsprozentsatz an",
   "repaymentPeriod": "Rückzahlungszeitraum",

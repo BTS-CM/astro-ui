@@ -21,6 +21,7 @@
   "amountToLend": "Lånebeløb",
   "lendingAmountDescription": "Mængden af ​​det aktiv, du ønsker at låne i alt til blockchain-brugere",
   "lendingRate": "Udlånsrente",
+  "lendingRateDescription": "Omkostningerne ved at låne aktivet, udtrykt som en procentdel af det lånte beløb.",
   "editLendingRate": "Rediger udlånsrente",
   "newLendingRate": "Angiv en ny udlånsrenteprocent",
   "repaymentPeriod": "Tilbagebetalingsperiode",

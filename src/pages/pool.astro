@@ -7,9 +7,9 @@ import PageFooter from '../components/PageFooter';
 
 <Layout title="Bitshares pool exchange form">
 	<main>
-		<PageHeader client:only page="pool" backURL="../index.html" />
-		<PoolForm client:only />
-		<PageFooter client:only sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/pool.astro" />
+		<PageHeader client:only="react" page="pool" backURL="../index.html" />
+		<PoolForm client:only="react" />
+		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/pool.astro" />
 	</main>
 </Layout>
 

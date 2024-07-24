@@ -7,9 +7,9 @@ import PageFooter from '../components/PageFooter';
 
 <Layout title="Bitshares pool staking form">
 	<main>
-		<PageHeader client:only page="stake" backURL="../index.html" />
-		<PoolStake client:only />
-		<PageFooter client:only sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/stake.astro" />
+		<PageHeader client:only="react" page="stake" backURL="../index.html" />
+		<PoolStake client:only="react" />
+		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/stake.astro" />
 	</main>
 </Layout>
 

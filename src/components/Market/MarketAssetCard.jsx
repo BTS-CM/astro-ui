@@ -24,8 +24,8 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 
-import ExternalLink from "@/common/ExternalLink.jsx";
-import CardRow from "@/common/CardRow.jsx";
+import ExternalLink from "../common/ExternalLink.jsx";
+import CardRow from "../common/CardRow.jsx";
 
 import { humanReadableFloat } from "@/lib/common";
 
