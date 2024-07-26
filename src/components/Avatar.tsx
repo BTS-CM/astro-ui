@@ -113,7 +113,7 @@ function generateData(
   colors = DEFAULT_COLORS,
   expression: ExpressionProps = {}
 ): AvatarData {
-  let numFromName = hashCode(name);
+  let numFromName = name ? hashCode(name) : 0;
   const rng = new RNG(numFromName);
   const wrapperColor = rng ? randomHexColor(rng) : colors[0];
 
@@ -161,7 +161,12 @@ export const Avatar = ({
   const data = useMemo(() => generateData(name, colors, expression), [name, colors, expression]);
   const maskID = useId();
 
-  const [mousePosition, setMousePosition] = useThrottle(
+  type MousePosition = {
+    mouseX: number | null;
+    mouseY: number | null;
+  };
+
+  const [mousePosition, setMousePosition] = useThrottle<MousePosition>(
     {
       mouseX: null,
       mouseY: null,
@@ -181,22 +186,25 @@ export const Avatar = ({
     };
   }, []);
 
-  const [direction, setDirection] = useState();
+  const [direction, setDirection] = useState<"left" | "right" | undefined>(undefined);
   const [angle, setAngle] = useState(0);
   const [distance, setDistance] = useState(0);
 
   useEffect(() => {
     function calculate() {
       const avatar = document.querySelector(
-        `#avatar${extra}_${name.replace(".", "")}`
+        `#avatar${extra}_${name ? name.replace(".", "") : ""}`
       ) as HTMLElement;
 
       const { left, top, width, height } = avatar.getBoundingClientRect();
       const centerX = left + width / 2;
       const centerY = top + height / 2;
 
+      const mouseY = mousePosition.mouseY ?? 0;
+      const mouseX = mousePosition.mouseX ?? 0;
+
       let _angle =
-        (Math.atan2(mousePosition.mouseY - centerY, mousePosition.mouseX - centerX) * 180) /
+        (Math.atan2(mouseY - centerY, mouseX - centerX) * 180) /
           Math.PI +
         90;
 
@@ -215,10 +223,10 @@ export const Avatar = ({
       _angle = parseInt(_angle.toFixed(0));
 
       const _distance = Math.sqrt(
-        Math.pow(mousePosition.mouseX - centerX, 2) + Math.pow(mousePosition.mouseY - centerY, 2)
+        Math.pow(mouseX - centerX, 2) + Math.pow((mouseY ?? 0) - centerY, 2)
       );
 
-      setDirection(mousePosition.mouseX <= left ? "left" : "right");
+      setDirection(mouseX <= left ? "left" : "right");
       setDistance(_distance);
       setAngle(_angle);
     }
@@ -265,7 +273,7 @@ export const Avatar = ({
     return () => clearInterval(interval);
   }, [isIdle]);
 
-  const [timeoutTimer, setTimeoutTimer] = useState();
+  const [timeoutTimer, setTimeoutTimer] = useState<NodeJS.Timeout | null>(null);
   useEffect(() => {
     function handleIdle() {
       //console.log("User has gone idle");
@@ -324,7 +332,7 @@ export const Avatar = ({
           rx={SIZE}
         />
         <g
-          id={`avatar${extra}_${name.replace(".", "")}`}
+          id={`avatar${extra}_${name ? name.replace(".", "") : ""}`}
           transform={`rotate(${
             direction === "left" ? adjustedDegrees + 65 : adjustedDegrees - 65
           }, ${SIZE / 2} ${SIZE / 2})`}

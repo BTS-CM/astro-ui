@@ -17,7 +17,7 @@ function get_htlc(
   existingAPI?: any
 ) {
     return new Promise(async (resolve, reject) => {
-        let node = specificNode ? specificNode : chains[chain].nodeList[0].url;
+        let node = specificNode ? specificNode : (chains as any)[chain].nodeList[0].url;
 
         let currentAPI;
         try {
@@ -159,7 +159,7 @@ const [createHTLCStore] = nanoquery({
     const account_id = args[1] as string;
     let specificNode = args[2] ? args[2] as string : null;
 
-    let node = specificNode ? specificNode : chains[chain].nodeList[0].url;
+    let node = specificNode ? specificNode : (chains as any)[chain].nodeList[0].url;
 
     let currentAPI;
     try {

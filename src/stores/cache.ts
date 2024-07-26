@@ -106,7 +106,7 @@ const $assetCacheBTS = map<Asset[]>([]);
 const $assetCacheTEST = map<Asset[]>([]);
 
 function mappedAssets(data: any) {
-  return data.map((_asset) => {
+  return data.map((_asset: any) => {
     return {
       id: `1.3.${_asset.id}`,
       symbol: _asset.s,
@@ -140,7 +140,7 @@ const $poolCacheBTS = map<Pool[]>([]);
 const $poolCacheTEST = map<Pool[]>([]);
 
 function mappedPool(data: any) {
-  return data.map((_pool) => {
+  return data.map((_pool: any) => {
     return {
       id: `1.19.${_pool.id}`,
       asset_a_id: `1.3.${_pool.a}`,
@@ -207,8 +207,8 @@ function addMarketSearchesToCache(marketSearches: any) {
 }
 
 // Global Parameters Cache
-const $globalParamsCacheBTS = map<GlobalParameters>(null);
-const $globalParamsCacheTEST = map<GlobalParameters>(null);
+const $globalParamsCacheBTS = map<GlobalParameters>(undefined);
+const $globalParamsCacheTEST = map<GlobalParameters>(undefined);
 
 function setGlobalParams(params: any) {
   $globalParamsCacheBTS.set(params.bitshares);

@@ -91,16 +91,20 @@ __webpack_require__.r(__webpack_exports__);
 
 electron__WEBPACK_IMPORTED_MODULE_0__.contextBridge.exposeInMainWorld('electron', {
     // MISC
-    openURL: async (target) => electron__WEBPACK_IMPORTED_MODULE_0__.ipcRenderer.send('openURL', target), // Links to explorers
-    notify: async (msg) => electron__WEBPACK_IMPORTED_MODULE_0__.ipcRenderer.send('notify', msg), // Triggering an electron notification prompt
+    //openURL: async (target) => ipcRenderer.send('openURL', target), // Links to explorers
+    //notify: async (msg) => ipcRenderer.send('notify', msg), // Triggering an electron notification prompt
+    /*
     setNode: (func) => { // For storing the current connected blockchain node
-        electron__WEBPACK_IMPORTED_MODULE_0__.ipcRenderer.on('setNode', (event, args) => {
+        ipcRenderer.on('setNode', (event, args) => {
             func(args);
         });
     },
+    */
     // REST queries
-    fetchTopMarkets: async () => electron__WEBPACK_IMPORTED_MODULE_0__.ipcRenderer.invoke('fetchTopMarkets'),
-    fetchPortfolio: async () => electron__WEBPACK_IMPORTED_MODULE_0__.ipcRenderer.invoke('fetchPortfolio'),
+    fetchTopMarkets: async (args) => electron__WEBPACK_IMPORTED_MODULE_0__.ipcRenderer.invoke('fetchTopMarkets', args),
+    fetchAccountHistory: async (args) => electron__WEBPACK_IMPORTED_MODULE_0__.ipcRenderer.invoke('fetchAccountHistory', args),
+    // API queries
+    generateDeepLink: async (args) => electron__WEBPACK_IMPORTED_MODULE_0__.ipcRenderer.invoke('generateDeepLink', args),
     /*
     // For logging background issues to renderer dev console
     onMainLog: async (func) => {

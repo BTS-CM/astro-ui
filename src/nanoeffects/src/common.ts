@@ -19,7 +19,7 @@ async function getObjects(
     existingAPI?: any
 ) {
     return new Promise(async (resolve, reject) => {
-        let node = specificNode ? specificNode : chains[chain].nodeList[0].url;
+        let node = specificNode ? specificNode : (chains as any)[chain].nodeList[0].url;
 
         let currentAPI;
         try {
@@ -47,7 +47,7 @@ async function getObjects(
             }
 
             if (got_objects && got_objects.length) {
-                retrievedObjects = retrievedObjects.concat(got_objects.filter((x) => x !== null));
+                retrievedObjects = retrievedObjects.concat(got_objects.filter((x: any) => x !== null));
             }
         }
 

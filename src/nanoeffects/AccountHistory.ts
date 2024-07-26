@@ -4,7 +4,6 @@ import { nanoquery } from "@nanostores/query";
  * Fetch account history from external elasticsearch server
  * @param chain
  * @param accountID
- * @param app
  * @param from (optional) from which index to fetch
  * @param size (optional) how many items to fetch
  * @param from_date (optional) from which date to fetch
@@ -27,38 +26,29 @@ async function getAccountHistory(
   agg_field?: String
 ) {
   return new Promise(async (resolve, reject) => {
-    const url =
-      `https://${
-        chain === "bitshares" ? "api" : "api.testnet"
-      }.bitshares.ws/openexplorer/es/account_history` +
-      `?account_id=${accountID}` +
-      `&from_=${from ?? 0}` +
-      `&size=${size ?? 100}` +
-      `&from_date=${from_date ?? "2015-10-10"}` +
-      `&to_date=${to_date ?? "now"}` +
-      `&sort_by=${sort_by ?? "-operation_id_num"}` +
-      `&type=${type ?? "data"}` +
-      `&agg_field=${agg_field ?? "operation_type"}`;
 
-    let history;
-    try {
-      history = await fetch(url, { method: "GET" });
-    } catch (error) {
-      console.log({ error });
-      reject(error);
-    }
-
-    if (!history || !history.ok) {
-      console.log({
-        error: new Error(
-          history ? `${history.status} ${history.statusText}` : "Couldn't fetch account history"
-        ),
-        msg: "Couldn't fetch account history.",
-      });
+    if (!(window as any).electron) {
+      console.log("No electron window found");
+      reject(new Error("No electron window found"));
       return;
     }
 
-    const historyJSON = await history.json();
+    let historyJSON;
+    try {
+      historyJSON = await (window as any).electron.fetchAccountHistory({
+        chain,
+        accountID,
+        from,
+        size,
+        from_date,
+        to_date,
+        sort_by,
+        type,
+        agg_field
+      })
+    } catch (error) {
+      console.log({ error });
+    }
 
     if (!historyJSON) {
       reject(new Error("Account history not found"));
@@ -70,19 +60,19 @@ async function getAccountHistory(
 }
 
 const [createAccountHistoryStore] = nanoquery({
-  fetcher: async (chain: string, accountID: string) => {
-    const response: any = await getAccountHistory(chain, accountID);
+  fetcher: async (...args: unknown[]) => {
+    const chain = args[0] as string;
+    const accountID = args[1] as string;
 
-    if (!response || !response.ok) {
-      console.log(`Failed to fetch user history`);
-      return;
+    let response: any;
+    try {
+      response = await getAccountHistory(chain, accountID);
+    } catch (error) {
+      console.log({ error });
     }
 
-    const userHistoryJSON = await response.json();
-
-    return userHistoryJSON;
-  },
-  refetchInterval: 60000,
+    return response ?? null;
+  }
 });
 
-export { createAccountHistoryStore };
+export { createAccountHistoryStore, getAccountHistory };

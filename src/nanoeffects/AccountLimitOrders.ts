@@ -15,7 +15,7 @@ function getAccountLimitOrders (
   specificNode?: string | null
 ) {
     return new Promise(async (resolve, reject) => {
-        let node = specificNode ? specificNode : chains[chain].nodeList[0].url;
+        let node = specificNode ? specificNode : (chains as any)[chain].nodeList[0].url;
 
         let currentAPI;
         try {
@@ -31,7 +31,7 @@ function getAccountLimitOrders (
         const API_LIMIT = chain === "bitshares" ? BTS_LIMIT : TEST_LIMIT;
         const API_ITERATIONS = chain === "bitshares" ? MAX_BTS_ITERATIONS : MAX_TEST_ITERATIONS;
    
-        let limitOrders: any[] = [];
+        let limitOrders: any;
         try {
           limitOrders = await currentAPI
             .db_api()

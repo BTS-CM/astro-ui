@@ -7,25 +7,14 @@ const [createTopMarketsStore] = nanoquery({
       return;
     }
     
-    const retrievedData = await fetch(
-      chain === "bitshares"
-        ? `https://api.bitshares.ws/openexplorer/top_markets?top_n=100`
-        : `https://api.testnet.bitshares.ws/openexplorer/top_markets?top_n=50`
-    );
-
-    if (!retrievedData || !retrievedData.ok) {
-      console.log("Failed to fetch top markets");
-      return;
+    let topMarkets;
+    try {
+      topMarkets = await (window as any).electron.fetchTopMarkets({chain});
+    } catch (error) {
+      console.log({ error });
     }
 
-    const topMarkets = await retrievedData.json();
-
-    if (!topMarkets) {
-      console.log("No top markets found");
-      return;
-    }
-
-    return topMarkets;
+    return topMarkets ?? null;
   }
 });
 

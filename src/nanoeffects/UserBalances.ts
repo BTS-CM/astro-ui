@@ -5,7 +5,7 @@ import { chains } from "@/config/chains";
 //Fetch account balances
 async function getAccountBalances(chain: string, accountID: string, specificNode?: string | null) {
   return new Promise(async (resolve, reject) => {
-    let node = specificNode ? specificNode : chains[chain].nodeList[0].url;
+    let node = specificNode ? specificNode : (chains as any)[chain].nodeList[0].url;
 
     let currentAPI;
     try {
@@ -65,8 +65,7 @@ const [createUserBalancesStore] = nanoquery({
     }
 
     return response;
-  },
-  refetchInterval: 60000,
+  }
 });
 
 export { createUserBalancesStore, getAccountBalances };

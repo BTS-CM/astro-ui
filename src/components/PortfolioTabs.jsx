@@ -30,7 +30,7 @@ import { useInitCache } from "@/nanoeffects/Init.ts";
 import { createAccountHistoryStore } from "@/nanoeffects/AccountHistory.ts";
 
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
-import { createLimitOrdersStore } from "@/nanoeffects/MarketLimitOrders.ts";
+import { createAccountLimitOrderStore } from "@/nanoeffects/AccountLimitOrders.ts";
 
 import { $currentUser } from "@/stores/users.ts";
 
@@ -109,7 +109,7 @@ export default function PortfolioTabs(properties) {
     let unsubscribeLimitOrdersStore;
 
     if (usr && usr.id) {
-      const limitOrdersStore = createLimitOrdersStore([usr.chain, usr.id]);
+      const limitOrdersStore = createAccountLimitOrderStore([usr.chain, usr.id]);
       
       unsubscribeLimitOrdersStore = limitOrdersStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {

@@ -12,7 +12,7 @@ const MAX_TEST_ITERATIONS = MAXIMUM_CREDIT_OFFERS / TEST_LIMIT;
 // Retrieve all credit deals associated with the one credit offer
 function getCreditDealsByOfferId (chain: string, offerId: string, specificNode?: string | null) {
   return new Promise(async (resolve, reject) => {
-    let node = specificNode ? specificNode : chains[chain].nodeList[0].url;
+    let node = specificNode ? specificNode : (chains as any)[chain].nodeList[0].url;
 
     let currentAPI;
     try {

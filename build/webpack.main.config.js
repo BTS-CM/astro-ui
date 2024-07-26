@@ -25,11 +25,12 @@ module.exports = function(env) {
         })],
 
         resolve: {
-            extensions: ['.js', '.ts', '.json'],
+            extensions: ['.js', '.json'],
             mainFields: ["main"],
             alias: {
                 env: path.resolve(__dirname, `../config/env_${env}.json`),
-                '~': path.resolve(__dirname, '../src/')
+                '~': path.resolve(__dirname, '../src/'),
+                'bitsharesjs-ws': path.resolve(__dirname, 'node_modules/bitsharesjs-ws')
             }
         },
 

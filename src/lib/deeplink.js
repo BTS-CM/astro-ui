@@ -1,0 +1,126 @@
+import { Apis } from "bitsharesjs-ws";
+import { TransactionBuilder } from "bitsharesjs";
+import { v4 as uuidv4 } from "uuid";
+
+const chains = {
+    bitshares: {
+        nodeList: [
+            {
+            url: "wss://node.xbts.io/ws",
+            },
+            {
+            url: "wss://api.bts.mobi/ws",
+            },
+            {
+            url: "wss://api.bitshares.bhuz.info/ws",
+            },
+            {
+            url: "wss://btsws.roelandp.nl/ws",
+            },
+        ],
+    },
+    bitshares_testnet: {
+        nodeList: [
+            {
+            url: "wss://testnet.dex.trading/",
+            },
+            {
+            url: "wss://testnet.xbts.io/ws",
+            },
+            {
+            url: "wss://api-testnet.61bts.com/ws",
+            },
+        ],
+    },
+};
+
+async function generateDeepLink(chain, opType, operations) {
+    return new Promise(async (resolve, reject) => {
+        const _node = chains[chain].nodeList[0].url
+
+        try {
+            await Apis.instance(
+                _node,
+                true,
+                4000,
+                { enableCrypto: false, enableOrders: true },
+                (error) => console.log({ error })
+            ).init_promise;
+        } catch (error) {
+            console.log({ error, location: "api instance failed" });
+            return reject(error);
+        }
+
+        const tr = new TransactionBuilder();
+        for (let i = 0; i < operations.length; i++) {
+            tr.add_type_operation(opType, operations[i]);
+        }
+
+        try {
+            await tr.update_head_block();
+        } catch (error) {
+            console.log({ error, location: "update head block failed" });
+            reject(error);
+            return;
+        }
+
+        try {
+            await tr.set_required_fees();
+        } catch (error) {
+            console.log({ error, location: "set required fees failed" });
+            reject(error);
+            return;
+        }
+
+        try {
+            tr.set_expire_seconds(7200);
+        } catch (error) {
+            console.log({ error, location: "set expire seconds failed" });
+            reject(error);
+            return;
+        }
+
+        try {
+            tr.finalize();
+        } catch (error) {
+            console.log({ error, location: "finalize failed" });
+            reject(error);
+            return;
+        }
+
+        let id;
+        try {
+            id = await uuidv4();
+        } catch (error) {
+            console.log({ error, location: "uuid generation failed" });
+            reject(error);
+            return;
+        }
+
+        const request = {
+            type: "api",
+            id: id,
+            payload: {
+                method: "injectedCall",
+                params: ["signAndBroadcast", JSON.stringify(tr.toObject()), []],
+                appName: "Bitshares Astro UI",
+                chain: chain === "bitshares" ? "BTS" : "BTS_TEST",
+                browser: "web browser",
+                origin: "localhost",
+            },
+        };
+
+        let encodedPayload;
+        try {
+            encodedPayload = encodeURIComponent(JSON.stringify(request));
+        } catch (error) {
+            console.log({ error, location: "encode payload failed" });
+            reject(error);
+            return;
+        }
+
+        resolve(encodedPayload);
+    });
+}
+
+export { generateDeepLink };

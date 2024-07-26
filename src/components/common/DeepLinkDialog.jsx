@@ -37,22 +37,16 @@ export default function DeepLinkDialog(properties) {
         return;
       }
 
-      const response = await fetch(
-        `http://localhost:8080/api/deeplink/${usrChain}/${operationName}`,
-        {
-          method: "POST",
-          body: JSON.stringify(trxJSON),
-        }
-      );
-  
-      if (!response.ok) {
+      console.log({usrChain, operationName, trxJSON});
+
+      let response = await window.electron.generateDeepLink({usrChain, operationName, trxJSON});
+        
+      if (!response) {
         console.log("Failed to fetch deeplink");
         return;
       }
-  
-      const responseContents = await response.json();
       
-      setDeeplink(responseContents);
+      setDeeplink(response);
     }
 
     if (usrChain && operationName && trxJSON) {

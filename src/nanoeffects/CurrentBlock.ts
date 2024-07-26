@@ -5,7 +5,7 @@ import { chains } from "@/config/chains";
 // Get the latest ID for an object in the blockchain
 async function getCurrentBlock(chain: string, specificNode?: string | null) {
   return new Promise(async (resolve, reject) => {
-    let node = specificNode ? specificNode : chains[chain].nodeList[0].url;
+    let node = specificNode ? specificNode : (chains as any)[chain].nodeList[0].url;
 
     let currentAPI;
     try {
@@ -18,7 +18,7 @@ async function getCurrentBlock(chain: string, specificNode?: string | null) {
       return resolve(
         getCurrentBlock(
           chain,
-          chains[chain].nodeList.map((x: any) => x.url).filter((x: string) => x !== node)[0]
+          (chains as any)[chain].nodeList.map((x: any) => x.url).filter((x: string) => x !== node)[0]
         )
       );
     }

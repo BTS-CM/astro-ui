@@ -23,7 +23,7 @@ const [createUsernameStore] = nanoquery({
       return;
     }
 
-    const _finalResults = response.map((x) => {
+    const _finalResults = (response as any[]).map((x) => {
       if (x) {
         return {
           name: x.name,
@@ -71,7 +71,7 @@ const [createEveryObjectStore] = nanoquery({
     const type_id = args[2] as number;
     let specificNode = args[3] ? (args[3] as string) : null;
 
-    let node = specificNode ? specificNode : chains[chain].nodeList[0].url;
+    let node = specificNode ? specificNode : (chains as any)[chain].nodeList[0].url;
 
     let currentAPI;
     try {

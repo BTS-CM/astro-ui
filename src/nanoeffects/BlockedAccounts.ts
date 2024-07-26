@@ -19,7 +19,7 @@ async function getBlockedaccounts (chain: string) {
             return;
         }
 
-        let node = chains[chain].nodeList[0].url;
+        let node = (chains as any)[chain].nodeList[0].url;
 
         let currentAPI;
         try {
@@ -48,10 +48,8 @@ async function getBlockedaccounts (chain: string) {
 
         const blockedList = committeeAccount[0].blacklisted_accounts;
 
-        let hashedBlockList = blockedList.map(account => hash.sha256(account).toString("hex"));
+        let hashedBlockList = blockedList.map((account: string) => hash.sha256(account, "hex"));
     
-
-
         resolve(hashedBlockList);
     });
 }

@@ -25,22 +25,14 @@ export default function Featured(properties) {
   useEffect(() => {
     let unsubscribeMarkets;
 
-    if (usr && usr.chain && usr.chain.length) {
-      let marketsStore;
-      try {
-        marketsStore = createTopMarketsStore(usr.chain);
-      } catch (e) {
-        console.log(e);
-        return;
-      }
+    if (usr && usr.chain) {
+      let marketsStore = createTopMarketsStore(usr.chain);
 
-      unsubscribeMarkets = marketsStore
-        ? marketsStore.subscribe(({ data, loading, error }) => {
-            if (data && !error && !loading) {
-              setRetrievedMarkets(data);
-            }
-          })
-        : null;
+      unsubscribeMarkets = marketsStore.subscribe(({ data, loading, error }) => {
+        if (data && !error && !loading) {
+          setRetrievedMarkets(data);
+        }
+      });
     }
 
     return () => {

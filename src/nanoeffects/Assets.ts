@@ -4,8 +4,11 @@ import { getDynamicData, getAsset } from "@/lib/cache";
 
 // Create fetcher store for dynamic data
 const [createDynamicDataStore] = nanoquery({
-  fetcher: async (chain: string, id: string) => {
-    const replacedID = id.replace("1.3.", "2.3.");
+  fetcher: async (...args: unknown[]) => {
+    const chain = args[0] as string;
+    const assetID = args[1] as string;
+    
+    const replacedID = assetID.replace("1.3.", "2.3.");
 
     let response;
     try {
@@ -23,7 +26,10 @@ const [createDynamicDataStore] = nanoquery({
  * Retrieving a single cached asset
  */
 const [createCachedAssetStore] = nanoquery({
-  fetcher: async (chain: string, assetID: string) => {
+  fetcher: async (...args: unknown[]) => {
+    const chain = args[0] as string;
+    const assetID = args[1] as string;
+    
     let response;
     try {
       response = await getAsset(chain, assetID);

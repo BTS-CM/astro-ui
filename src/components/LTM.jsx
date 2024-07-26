@@ -26,6 +26,10 @@ export default function LTM(properties) {
 
   const [showDialog, setShowDialog] = useState(false);
 
+  useEffect(() => {
+    console.log({usr})
+  }, [usr]);
+
   return (
     <>
       <div className="container mx-auto mt-5 mb-5">

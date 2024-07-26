@@ -5,7 +5,7 @@ import { chains } from "@/config/chains";
 // Retrieve the quantity of registered blockchain accounts
 async function getAccountCount(chain: string, specificNode?: string | null) {
   return new Promise(async (resolve, reject) => {
-    let node = specificNode ? specificNode : chains[chain].nodeList[0].url;
+    let node = specificNode ? specificNode : (chains as any)[chain].nodeList[0].url;
 
     let currentAPI;
     try {
