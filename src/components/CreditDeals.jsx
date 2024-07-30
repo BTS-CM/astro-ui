@@ -691,8 +691,7 @@ export default function CreditDeals(properties) {
                   )}
                 </TabsList>
                 <TabsContent value="borrowings">
-                  {usrCreditDeals &&
-                  borrowerDeals &&
+                  {borrowerDeals &&
                   borrowerDeals.length ? (
                     <List
                       height={500}
@@ -703,18 +702,16 @@ export default function CreditDeals(properties) {
                       {BorrowerRow}
                     </List>
                   ) : null}
-                  {usrCreditDeals &&
-                  borrowerDeals &&
+                  {borrowerDeals &&
                   !borrowerDeals.length
                     ? t("CreditDeals:card.noBorrowers")
                     : null}
-                  {!usrCreditDeals || !borrowerDeals
+                  {!borrowerDeals
                     ? t("CreditDeals:card.loading")
                     : null}
                 </TabsContent>
                 <TabsContent value="lendings">
-                  {usrCreditDeals &&
-                  lenderDeals &&
+                  {lenderDeals &&
                   lenderDeals.length ? (
                     <List
                       height={500}
@@ -725,10 +722,10 @@ export default function CreditDeals(properties) {
                       {OwnerRow}
                     </List>
                   ) : null}
-                  {usrCreditDeals && lenderDeals && !lenderDeals.length
+                  {lenderDeals && !lenderDeals.length
                     ? t("CreditDeals:card.noLendings")
                     : null}
-                  {!usrCreditDeals || !lenderDeals
+                  {!lenderDeals
                     ? t("CreditDeals:card.loading")
                     : null}
                 </TabsContent>

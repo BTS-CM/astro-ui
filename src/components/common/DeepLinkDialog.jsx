@@ -37,8 +37,6 @@ export default function DeepLinkDialog(properties) {
         return;
       }
 
-      console.log({usrChain, operationName, trxJSON});
-
       let response = await window.electron.generateDeepLink({usrChain, operationName, trxJSON});
         
       if (!response) {

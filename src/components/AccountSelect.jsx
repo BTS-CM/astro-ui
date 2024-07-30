@@ -153,55 +153,42 @@ export default function AccountSelect(properties) {
   return (
     <div className="grid grid-cols-1">
       {!chain ? (
-        <Card>
-          <CardHeader>
-            <CardTitle>{t("AccountSelect:noChain.title")}</CardTitle>
-            <CardDescription>{t("AccountSelect:noChain.description")}</CardDescription>
-          </CardHeader>
-          <CardContent>
+        <>
+          {t("AccountSelect:noChain.description")}
+          <div className="grid grid-cols-2 gap-2 mt-5">
             <Button className="mr-2" onClick={() => setChain("bitshares")}>
               Bitshares (BTS)
             </Button>
             <Button onClick={() => setChain("bitshares_testnet")}>
               Bitshares {t("AccountSelect:noChain.testnet")} (TEST)
             </Button>
-          </CardContent>
-        </Card>
+          </div>
+        </>
       ) : null}
       {chain && !mode ? (
-        <Card>
-          <CardHeader>
-            <CardTitle>
-              {chain === "bitshares"
-                ? t("AccountSelect:noMode.titleBTS")
-                : t("AccountSelect:noMode.titleTEST")}
-            </CardTitle>
-            <CardDescription>{t("AccountSelect:noMode.description")}</CardDescription>
-          </CardHeader>
-          <CardContent>
+        <>
+          {
+            chain === "bitshares"
+                    ? t("AccountSelect:noMode.titleBTS")
+                    : t("AccountSelect:noMode.titleTEST")
+          }
+          <div className="grid grid-cols-2 gap-2 mt-5">
             <Button className="mr-2" onClick={() => setMode("new")}>
               {t("AccountSelect:noMode.new")}
             </Button>
             <Button onClick={() => setMode("existing")}>
               {t("AccountSelect:noMode.existing")}
             </Button>
-            <br />
-            <Button className="mt-2" onClick={() => setChain(null)}>
+            <Button variant="outline" className="mt-2 mr-2" onClick={() => setChain(null)}>
               {t("AccountSelect:noMode.back")}
             </Button>
-          </CardContent>
-        </Card>
+          </div>
+        </>
       ) : null}
       {chain && mode && mode === "new" && !searchResponse ? (
-        <Card>
-          <CardHeader>
-            <CardTitle>
-              {chain === "bitshares" ? "🔐 Bitshares (BTS)" : "🔐 Bitshares testnet (TEST)"}
-            </CardTitle>
-            <CardDescription>{t("AccountSelect:new.initDesc")}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Input
+        <>
+          {chain === "bitshares" ? "🔐 Bitshares (BTS)" : "🔐 Bitshares testnet (TEST)"}<br/>
+          <Input
               value={accountInput || ""}
               placeholder="Account name or ID"
               onKeyDown={(event) => {
@@ -218,43 +205,38 @@ export default function AccountSelect(properties) {
                   setSearchResponse();
                 }
               }}
+              className="mt-4"
             />
             {errorMessage ? (
               <p className="text-red-500 text-xs italic">{errorMessage || "ERROR"}</p>
             ) : null}
-          </CardContent>
-          <CardFooter>
-            <Button className="mr-2" onClick={() => setMode(null)}>
-              {t("AccountSelect:new.back")}
-            </Button>
-            {accountInput && !inProgress ? (
-              <Button onClick={() => lookupAccount()}>{t("AccountSelect:new.continue")}</Button>
-            ) : (
-              <Button disabled>{t("AccountSelect:new.continue")}</Button>
-            )}
-          </CardFooter>
-        </Card>
+            <div className="grid grid-cols-2 gap-2 mt-5">
+              <Button className="mr-2" variant="outline" onClick={() => setMode(null)}>
+                {t("AccountSelect:new.back")}
+              </Button>
+              {accountInput && !inProgress ? (
+                <Button onClick={() => lookupAccount()}>{t("AccountSelect:new.continue")}</Button>
+              ) : (
+                <Button disabled>{t("AccountSelect:new.continue")}</Button>
+              )}
+            </div>
+        </>
       ) : null}
       {searchResponse ? (
-        <Card>
-          <CardHeader>
-            <CardTitle>
-              {chain === "bitshares" ? "🔐 Bitshares (BTS) " : "🔐 Bitshares testnet (TEST) "}
-              {t("AccountSelect:new.title")}
-            </CardTitle>
-            <CardDescription>{t("AccountSelect:new.description")}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            {usr && chain !== usr.chain ? (
-              <a href={window.location.pathname}>{firstResponse}</a>
-            ) : (
-              firstResponse
-            )}
-          </CardContent>
-          <CardFooter>
+        <>
+          {t("AccountSelect:new.description")}
+          <div className="grid grid-cols-1 mt-3">
+            {
+              usr && chain !== usr.chain ? (
+                <a href={window.location.pathname}>{firstResponse}</a>
+              ) : (
+                firstResponse
+              )
+            }
+          </div>
+          <div className="grid grid-cols-2 gap-2 mt-5">
             <Button
               variant="outline"
-              className="mr-2"
               onClick={() => {
                 setErrorMessage();
                 setSearchResponse();
@@ -262,42 +244,34 @@ export default function AccountSelect(properties) {
             >
               {t("AccountSelect:new.back")}
             </Button>
-          </CardFooter>
-        </Card>
+          </div>
+        </>
       ) : null}
       {mode && mode === "existing" ? (
-        <Card>
-          <CardHeader>
-            <CardTitle>
-              {chain === "bitshares" ? "Bitshares (BTS)" : "Bitshares testnet (TEST)"}
-            </CardTitle>
-            <CardDescription>{t("AccountSelect:existing.description")}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-3 gap-3">
-              {users.filter((user) => user.chain === chain).length ? (
-                users
-                  .filter((user) => user.chain === chain)
-                  .map((user) => {
-                    return usr && chain !== usr.chain ? (
-                      <a href={window.location.pathname}>
-                        <SecondResponse user={user} />
-                      </a>
-                    ) : (
+        <>
+          {chain === "bitshares" ? "Bitshares (BTS)" : "Bitshares testnet (TEST)"}<br/>
+          {t("AccountSelect:existing.description")}
+          <div className="grid grid-cols-2 gap-3 mb-5 mt-5">
+            {users.filter((user) => user.chain === chain).length ? (
+              users
+                .filter((user) => user.chain === chain)
+                .map((user) => {
+                  return usr && chain !== usr.chain ? (
+                    <a href={window.location.pathname}>
                       <SecondResponse user={user} />
-                    );
-                  })
-              ) : (
-                <p className="text-red-500 text-xs italic">{t("AccountSelect:existing.none")}</p>
-              )}
-            </div>
-          </CardContent>
-          <CardFooter>
-            <Button className="mr-2" onClick={() => setMode(null)}>
-              {t("AccountSelect:noMode.back")}
-            </Button>
-          </CardFooter>
-        </Card>
+                    </a>
+                  ) : (
+                    <SecondResponse user={user} />
+                  );
+                })
+            ) : (
+              <p className="text-red-500 text-xs italic">{t("AccountSelect:existing.none")}</p>
+            )}
+          </div>
+          <Button className="mr-2" variant="outline" onClick={() => setMode(null)}>
+            {t("AccountSelect:noMode.back")}
+          </Button>
+        </>
       ) : null}
     </div>
   );

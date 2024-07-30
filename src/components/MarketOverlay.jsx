@@ -1,52 +1,39 @@
 import React, { useState, useEffect, useSyncExternalStore, useMemo } from "react";
-import { useTranslation } from "react-i18next";
-import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
 import Market from "./Market";
 import MarketPlaceholder from "./MarketPlaceholder";
 
-import { humanReadableFloat, trimPrice } from "@/lib/common";
+import { humanReadableFloat } from "@/lib/common";
 import { useInitCache } from "@/nanoeffects/Init.ts";
 
 import { $currentUser } from "@/stores/users.ts";
 import {
   $assetCacheBTS,
   $assetCacheTEST,
-  $poolCacheBTS,
-  $poolCacheTEST,
   $marketSearchCacheBTS,
   $marketSearchCacheTEST,
   $globalParamsCacheBTS,
   $globalParamsCacheTEST,
 } from "@/stores/cache.ts";
 
-import {
-  createCachedAssetStore,
-  createDynamicDataStore,
-} from "@/nanoeffects/Assets.ts";
-
-import { createObjectStore } from "@/nanoeffects/Objects.ts";
+import { createAssetFromSymbolStore } from "@/nanoeffects/Assets.ts";
 
 export default function MarketOverlay(properties) {
-  const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
+  
+  const _chain = useMemo(() => {
+    if (usr && usr.chain) {
+      return usr.chain;
+    }
+    return "bitshares";
+  }, [usr]);
+
+  useInitCache(_chain ?? "bitshares", ["assets", "globalParams", "marketSearch", "pools"]);
 
   const _assetsBTS = useSyncExternalStore($assetCacheBTS.subscribe, $assetCacheBTS.get, () => true);
   const _assetsTEST = useSyncExternalStore(
     $assetCacheTEST.subscribe,
     $assetCacheTEST.get,
-    () => true
-  );
-
-  const _globalParamsBTS = useSyncExternalStore(
-    $globalParamsCacheBTS.subscribe,
-    $globalParamsCacheBTS.get,
-    () => true
-  );
-
-  const _globalParamsTEST = useSyncExternalStore(
-    $globalParamsCacheTEST.subscribe,
-    $globalParamsCacheTEST.get,
     () => true
   );
 
@@ -62,15 +49,6 @@ export default function MarketOverlay(properties) {
     () => true
   );
 
-  const _chain = useMemo(() => {
-    if (usr && usr.chain) {
-      return usr.chain;
-    }
-    return "bitshares";
-  }, [usr]);
-
-  useInitCache(_chain ?? "bitshares", ["assets", "globalParams", "marketSearch", "pools"]);
-
   const assets = useMemo(() => {
     if (_chain && (_assetsBTS || _assetsTEST)) {
       return _chain === "bitshares" ? _assetsBTS : _assetsTEST;
@@ -78,19 +56,31 @@ export default function MarketOverlay(properties) {
     return [];
   }, [_assetsBTS, _assetsTEST, _chain]);
 
-  const globalParams = useMemo(() => {
-    if (_chain && (_globalParamsBTS || _globalParamsTEST)) {
-      return _chain === "bitshares" ? _globalParamsBTS : _globalParamsTEST;
-    }
-    return [];
-  }, [_globalParamsBTS, _globalParamsTEST, _chain]);
-
   const marketSearch = useMemo(() => {
     if (_chain && (_marketSearchBTS || _marketSearchTEST)) {
       return _chain === "bitshares" ? _marketSearchBTS : _marketSearchTEST;
     }
     return [];
   }, [_marketSearchBTS, _marketSearchTEST, _chain]);
+
+  const _globalParamsBTS = useSyncExternalStore(
+    $globalParamsCacheBTS.subscribe,
+    $globalParamsCacheBTS.get,
+    () => true
+  );
+
+  const _globalParamsTEST = useSyncExternalStore(
+    $globalParamsCacheTEST.subscribe,
+    $globalParamsCacheTEST.get,
+    () => true
+  );
+
+  const globalParams = useMemo(() => {
+    if (_chain && (_globalParamsBTS || _globalParamsTEST)) {
+      return _chain === "bitshares" ? _globalParamsBTS : _globalParamsTEST;
+    }
+    return [];
+  }, [_globalParamsBTS, _globalParamsTEST, _chain]);
 
   const [limitOrderFee, setLimitOrderFee] = useState(0);
   useEffect(() => {
@@ -100,19 +90,14 @@ export default function MarketOverlay(properties) {
       setLimitOrderFee(finalFee);
     }
   }, [globalParams]);
-
+ 
   // End of init
 
   const searchSymbols = useMemo(() => marketSearch.map((asset) => asset.s), [marketSearch]);
   const searchIds = useMemo(() => marketSearch.map((asset) => asset.id), [marketSearch]);
 
-  const handleAssetAChange = (newAssetA) => {
-    setAssetA(newAssetA);
-  };
-
-  const handleAssetBChange = (newAssetA) => {
-    setAssetB(newAssetA);
-  };
+  const handleAssetAChange = (newAssetA) => { setAssetA(newAssetA); };
+  const handleAssetBChange = (newAssetA) => { setAssetB(newAssetA); };
 
   const [assetA, setAssetA] = useState(!window.location.search ? "BTS" : null);
   const [assetB, setAssetB] = useState(!window.location.search ? "USD" : null);
@@ -176,7 +161,6 @@ export default function MarketOverlay(properties) {
             (asset) => asset.id === asset_b || asset.s === asset_b
           );
           if (foundAssetB) {
-            //console.log("Setting asset B.");
             finalAssetB = foundAssetB.s;
           } else {
             console.log("Setting default asset B");
@@ -185,7 +169,6 @@ export default function MarketOverlay(properties) {
         }
       }
 
-      // Return the final assets
       return { finalAssetA, finalAssetB };
     }
 
@@ -202,7 +185,6 @@ export default function MarketOverlay(properties) {
 
   const [assetADetails, setAssetADetails] = useState(null);
   const [assetBDetails, setAssetBDetails] = useState(null);
-
   const [aBitassetData, setABitassetData] = useState(null);
   const [bBitassetData, setBBitassetData] = useState(null);
 
@@ -217,127 +199,69 @@ export default function MarketOverlay(properties) {
     setAssetBDetails(null);
     setBBitassetData(null);
   }
-
+ 
   useEffect(() => {
-    let unsubscribeA;
-
-    if (assetA && usr && usr.chain) {
+    if (usr && usr.chain && assets && assets.length && assetA) {
       _resetA();
 
-      if (assets && assets.length) {
-        const foundAsset = assets.find((asset) => asset.s === assetA);
-        if (foundAsset) {
-          //console.log("Retrieved asset A from local cache");
-          setAssetAData(foundAsset);
-          return;
-        }
+      /*
+      // TODO: re factor 
+      const foundAsset = assets.find((asset) => asset.symbol === assetA);
+      if (foundAsset) {
+        console.log("Retrieved asset A from local cache");
+        setAssetAData(foundAsset);
+        return;
       }
+      */
 
-      const cachedAssetStoreA = createCachedAssetStore([usr.chain, assetA]);
-      unsubscribeA = cachedAssetStoreA.subscribe(({ data }) => {
-        if (data && !data.error && !data.loading) {
-          //console.log("Retrieved asset A from API");
-          setAssetAData(data);
+      const assetSymbolStore = createAssetFromSymbolStore([usr.chain, assetA]);
+      assetSymbolStore.subscribe(({ data, error, loading }) => {
+        if (data && !error && !loading) {
+          console.log("Retrieved asset A from API");
+          const extra = data.extra;
+          if (extra && extra.length) {
+            setAssetADetails(extra[0]);
+            if (extra.length > 1) {
+              setABitassetData(extra[1]);
+            }
+          }
+          setAssetAData(data.assetData);
         }
       });
     }
-
-    return () => {
-      if (unsubscribeA) unsubscribeA();
-    };
-  }, [assetA, usr]);
+  }, [assets, assetA, usr]);
 
   useEffect(() => {
-    let unsubscribeB;
-
-    if (assetB && usr && usr.chain) {
+    if (usr && usr.chain && assets && assets.length && assetB) {
       _resetB();
 
-      if (assets && assets.length) {
-        const foundAsset = assets.find((asset) => asset.s === assetB);
-        if (foundAsset) {
-          //console.log("Retrieved asset A from local cache");
-          setAssetBData(foundAsset);
-          return;
-        }
+      /*
+      // TODO: refactor
+      const foundAsset = assets.find((asset) => asset.symbol === assetB);
+      if (foundAsset) {
+        console.log("Retrieved asset B from local cache");
+        setAssetBData(foundAsset);
+        return;
       }
+      */
 
-      const cachedAssetStoreB = createCachedAssetStore([usr.chain, assetB]);
-      unsubscribeB = cachedAssetStoreB.subscribe(({ data }) => {
-        if (data && !data.error && !data.loading) {
-          //console.log("Retrieved asset B from API");
-          setAssetBData(data);
-        }
-      });
-    }
-
-    return () => {
-      if (unsubscribeB) unsubscribeB();
-    };
-  }, [assetB, usr]);
-
-  useEffect(() => {
-    let unsubscribeA;
-    let unsubscribeBitassetA;
-
-    if (assetAData && usr && usr.chain) {
-      const dynamicDataStoreA = createDynamicDataStore([usr.chain, assetAData.id]);
-      unsubscribeA = dynamicDataStoreA.subscribe(({ data }) => {
-        if (data && !data.error && !data.loading) {
-          setAssetADetails(data);
-        }
-      });
-
-      if (assetAData.bitasset_data_id) {
-        const bitassetDataStoreA = createObjectStore([
-          usr.chain,
-          [assetAData.bitasset_data_id],
-        ]);
-        unsubscribeBitassetA = bitassetDataStoreA.subscribe(({ data }) => {
-          if (data && !data.error && !data.loading) {
-            setABitassetData(data[0]);
+      const assetSymbolStore = createAssetFromSymbolStore([usr.chain, assetB]);
+      assetSymbolStore.subscribe(({ data, error, loading }) => {
+        if (data && !error && !loading) {
+          console.log("Retrieved asset B from API");
+          const extra = data.extra;
+          if (extra && extra.length) {
+            setAssetBDetails(extra[0]);
+            if (extra.length > 1) {
+              setBBitassetData(extra[1]);
+            }
           }
-        });
-      }
-    }
-
-    return () => {
-      if (unsubscribeA) unsubscribeA();
-      if (unsubscribeBitassetA) unsubscribeBitassetA();
-    };
-  }, [assetAData, usr]);
-
-  useEffect(() => {
-    let unsubscribeB;
-    let unsubscribeBitassetB;
-
-    if (assetBData && usr && usr.chain) {
-      const dynamicDataStoreB = createDynamicDataStore([usr.chain, assetBData.id]);
-      unsubscribeB = dynamicDataStoreB.subscribe(({ data }) => {
-        if (data && !data.error && !data.loading) {
-          setAssetBDetails(data);
+          setAssetBData(data.assetData);
         }
       });
-
-      if (assetBData.bitasset_data_id) {
-        const bitassetDataStoreB = createObjectStore([
-          usr.chain,
-          [assetBData.bitasset_data_id],
-        ]);
-        unsubscribeBitassetB = bitassetDataStoreB.subscribe(({ data }) => {
-          if (data && !data.error && !data.loading) {
-            setBBitassetData(data[0]);
-          }
-        });
-      }
     }
-
-    return () => {
-      if (unsubscribeB) unsubscribeB();
-      if (unsubscribeBitassetB) unsubscribeBitassetB();
-    };
-  }, [assetBData, usr]);
-
+  }, [assets, assetB, usr]);
+  
   return (
     <>
       <div className="container mx-auto mt-5 mb-5">

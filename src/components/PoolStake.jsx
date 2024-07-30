@@ -80,7 +80,7 @@ import MarketAssetCardPlaceholder from "./Market/MarketAssetCardPlaceholder.jsx"
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
 import ExternalLink from "./common/ExternalLink.jsx";
 
-export default function PoolForm() {
+export default function PoolStake() {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
   const form = useForm({
     defaultValues: {

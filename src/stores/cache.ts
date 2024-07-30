@@ -32,6 +32,7 @@ type Pool = {
   asset_b_id: string;
   asset_b_symbol: string;
   share_asset_symbol: string;
+  share_asset_id: string;
   balance_a: string;
   balance_b: number;
   taker_fee_percent: number;
@@ -41,62 +42,6 @@ type MarketSearch = {
   id: string; // asset id
   s: string; // symbol
   u: string; // identifier
-};
-
-type GlobalParameters = {
-  id: string;
-  parameters: {
-    current_fees: {
-      parameters: [
-        number,
-        {
-          fee: number;
-          price_per_kbyte?: number;
-          price_per_output?: number;
-          fee_per_day?: number;
-          fee_per_kb?: number;
-        }
-      ][];
-      scale: number;
-    };
-    block_interval: number;
-    maintenance_interval: number;
-    maintenance_skip_slots: number;
-    committee_proposal_review_period: number;
-    maximum_transaction_size: number;
-    maximum_block_size: number;
-    maximum_time_until_expiration: number;
-    maximum_proposal_lifetime: number;
-    maximum_asset_whitelist_authorities: number;
-    maximum_asset_feed_publishers: number;
-    maximum_witness_count: number;
-    maximum_committee_count: number;
-    maximum_authority_membership: number;
-    reserve_percent_of_fee: number;
-    network_percent_of_fee: number;
-    lifetime_referrer_percent_of_fee: number;
-    cashback_vesting_period_seconds: number;
-    cashback_vesting_threshold: number;
-    count_non_member_votes: boolean;
-    allow_non_member_whitelists: boolean;
-    witness_pay_per_block: number;
-    worker_budget_per_day: number;
-    max_predicate_opcode: number;
-    fee_liquidation_threshold: number;
-    accounts_per_fee_scale: number;
-    account_fee_scale_bitshifts: number;
-    max_authority_depth: number;
-    extensions: {
-      updatable_htlc_options?: {
-        max_timeout_secs: number;
-        max_preimage_size: number;
-      };
-      maker_fee_discount_percent?: number;
-    };
-  };
-  next_available_vote_id: number;
-  active_committee_members: string[];
-  active_witnesses: string[];
 };
 
 /**
@@ -148,6 +93,7 @@ function mappedPool(data: any) {
       asset_b_id: `1.3.${_pool.b}`,
       asset_b_symbol: _pool.bs,
       share_asset_symbol: _pool.sa,
+      share_asset_id: _pool.said,
       balance_a: _pool.ba,
       balance_b: _pool.bb,
       taker_fee_percent: _pool.tfp,
@@ -206,9 +152,15 @@ function addMarketSearchesToCache(marketSearches: any) {
   }
 }
 
+interface FeeData {
+  fee: number;
+}
+
+type Fees = [number, FeeData][];
+
 // Global Parameters Cache
-const $globalParamsCacheBTS = map<GlobalParameters>(undefined);
-const $globalParamsCacheTEST = map<GlobalParameters>(undefined);
+const $globalParamsCacheBTS = map<Fees>(undefined);
+const $globalParamsCacheTEST = map<Fees>(undefined);
 
 function setGlobalParams(params: any) {
   $globalParamsCacheBTS.set(params.bitshares);

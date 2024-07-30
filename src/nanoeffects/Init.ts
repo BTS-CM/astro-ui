@@ -71,13 +71,18 @@ async function useInitCache(chain: string, endpoints: any[]) {
   
       if (
         endpoints.includes("globalParams") &&
-        (
-          chain === "bitshares" && !$globalParamsCacheBTS.get() ||
-          chain === "bitshares_testnet" && !$globalParamsCacheTEST.get()
-        )
+        (chain === "bitshares" || chain === "bitshares_testnet")
       ) {
-        const globalParams = await getFeeSchedule();
-        setGlobalParams(globalParams);
+        let globalParams;
+        try {
+          globalParams = await getFeeSchedule();
+        } catch (error) {
+          console.log({ error });
+        }
+
+        if (globalParams) {
+          setGlobalParams(globalParams);
+        }
       }
   
       if (

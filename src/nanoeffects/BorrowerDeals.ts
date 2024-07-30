@@ -3,7 +3,7 @@ import Apis from "@/bts/ws/ApiInstances";
 import { chains } from "@/config/chains";
 
 const MAXIMUM_DEALS = 1000;
-const BTS_LIMIT = 100;
+const BTS_LIMIT = 50;
 const TEST_LIMIT = 10;
 
 const MAX_BTS_ITERATIONS = MAXIMUM_DEALS / BTS_LIMIT;
@@ -101,12 +101,12 @@ const [createBorrowerDealsStore] = nanoquery({
         response =  await fetchBorrowerDeals(chain, account_id, specificNode);
       } catch (error) {
         console.log({ error });
-        return;
+        return [];
       }
   
       if (!response) {
         console.log(`Failed to fetch borrower account's credit deals`);
-        return;
+        return [];
       }
   
       return response;

@@ -53,7 +53,7 @@ const [createObjectStore] = nanoquery({
     }
 
     if (!response) {
-      console.log(`Failed to fetch max object id`);
+      console.log(`Failed to fetch objects`);
       return;
     }
 

@@ -130,7 +130,7 @@ export default function Market(properties) {
   }
 
   const marketOrdersStore = useMemo(() => {
-    return createMarketOrderStore([usr.chain, assetA, assetB, 100]);
+    return createMarketOrderStore([usr.chain, assetA, assetB, 50]);
   }, [usr, assetA, assetB, orderBookItr]);
 
   const {

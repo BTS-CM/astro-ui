@@ -14,7 +14,7 @@ function getMarketTradeHistory (
 
     let currentAPI;
     try {
-      currentAPI = await Apis.instance(node, true, 4000, { enableDatabase: true }, (error: Error) =>
+      currentAPI = await Apis.instance(node, true, 4000, { enableDatabase: true, enableHistory: true }, (error: Error) =>
         console.log({ error })
       );
     } catch (error) {
@@ -29,11 +29,11 @@ function getMarketTradeHistory (
     try {
       const [balances, marketHistory, fullAccount, usrTrades, ticker] = await Promise.all([
         currentAPI.db_api().exec("get_account_balances", [accountID, [base, quote]]),
-        currentAPI.db_api().exec("get_trade_history", [base, quote, now, oneMonthAgo, 100]),
+        currentAPI.db_api().exec("get_trade_history", [base, quote, now, oneMonthAgo, 50]),
         currentAPI.db_api().exec("get_full_accounts", [[accountID], false]),
         currentAPI
           .history_api()
-          .exec("get_account_history_operations", [accountID, 4, "1.11.0", "1.11.0", 100]),
+          .exec("get_account_history_operations", [accountID, 4, "1.11.0", "1.11.0", 50]),
         currentAPI.db_api().exec("get_ticker", [base, quote]),
       ]);
 

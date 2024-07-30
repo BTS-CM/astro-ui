@@ -3,7 +3,7 @@ import Apis from "@/bts/ws/ApiInstances";
 import { chains } from "@/config/chains";
 
 const MAX_LIMIT_ORDERS = 1000;
-const BTS_LIMIT = 100;
+const BTS_LIMIT = 50;
 const TEST_LIMIT = 10;
 
 const MAX_BTS_ITERATIONS = MAX_LIMIT_ORDERS / BTS_LIMIT;
