@@ -184,16 +184,16 @@ export default function PoolForm() {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const [thisInput, setThisInput] = useState();
-  const [thisResult, setThisResult] = useState();
+  const [poolSearchResult, setPoolSearchResult] = useState();
   useEffect(() => {
     if (poolSearch && thisInput) {
       const searchResult = poolSearch.search(thisInput);
-      setThisResult(searchResult);
+      setPoolSearchResult(searchResult);
     }
   }, [poolSearch, thisInput]);
 
   const PoolRow = ({ index, style }) => {
-    const res = thisResult[index].item;
+    const res = poolSearchResult[index].item;
     return (
       <div
         style={{ ...style }}
@@ -202,7 +202,7 @@ export default function PoolForm() {
         onClick={() => {
           setPool(res.id);
           setDialogOpen(false);
-          setThisResult();
+          setPoolSearchResult();
         }}
       >
         <div className="col-span-2">{res.id}</div>
@@ -291,7 +291,6 @@ export default function PoolForm() {
             console.log({error, location: "poolStore.subscribe"});
           }
           if (data && !error && !loading) {
-            console.log({data})
             setFoundPool(data.foundPool);
             setPoolShareDetails(data.poolAsset);
   
@@ -340,20 +339,30 @@ export default function PoolForm() {
   const [inverted, setInverted] = useState(false);
   const buyAmount = useMemo(() => {
     // Calculating the amount the user can buy
-    if (assetA && assetB && foundPoolDetails) {
-      let poolamounta = Number(foundPoolDetails.balance_a);
+    if (assetA && assetB && foundPool) {
+      let poolamounta = Number(foundPool.balance_a);
       let poolamountap = Number(10 ** assetA.precision);
 
-      let poolamountb = Number(foundPoolDetails.balance_b);
+      let poolamountb = Number(foundPool.balance_b);
       let poolamountbp = Number(10 ** assetB.precision);
 
-      const maker_market_fee_percenta = assetA.market_fee_percent;
-      const maker_market_fee_percentb = assetB.market_fee_percent;
+      const maker_market_fee_percenta = assetA && assetA.options && assetA.options.market_fee_percent
+        ? assetA.options.market_fee_percent
+        : 0;
 
-      const max_market_feea = assetA.max_market_fee;
-      const max_market_feeb = assetB.max_market_fee;
+      const maker_market_fee_percentb = assetB && assetB.options && assetB.options.market_fee_percent
+        ? assetB.options.market_fee_percent
+        : 0;
 
-      const taker_fee_percenta = foundPoolDetails.taker_fee_percent;
+      const max_market_feea = assetA && assetA.options && assetA.options.max_market_fee
+        ? assetA.options.max_market_fee
+        : 0;
+
+      const max_market_feeb = assetB && assetB.options && assetB.options.max_market_fee
+        ? assetB.options.max_market_fee
+        : 0;
+
+      const taker_fee_percenta = foundPool.taker_fee_percent;
 
       function flagsa() {
         if (maker_market_fee_percenta === 0) {
@@ -437,10 +446,33 @@ export default function PoolForm() {
             )) /
           Number(poolamountap);
       }
-    
+      
+      /*
+      console.log({
+        calculated: {
+          poolamounta,
+          poolamountap,
+          poolamountb,
+          poolamountbp,
+          maker_market_fee_percenta,
+          maker_market_fee_percentb,
+          max_market_feea,
+          max_market_feeb,
+          taker_fee_percenta,
+          taker_market_fee_percent_a
+        },
+        inputs: {
+          foundPool,
+          assetA,
+          assetB,
+        },
+        result
+      })
+      */
+
       return result;
     }
-  }, [sellAmount, assetA, assetB, inverted, foundPoolDetails]);
+  }, [sellAmount, assetA, assetB, inverted, foundPool]);
 
   const [buyAmountInput, setBuyAmountInput] = useState();
   useEffect(() => {
@@ -591,7 +623,7 @@ export default function PoolForm() {
                                     open={dialogOpen}
                                     onOpenChange={(open) => {
                                       if (!open) {
-                                        setThisResult();
+                                        setPoolSearchResult();
                                       }
                                       setDialogOpen(open);
                                     }}
@@ -650,7 +682,7 @@ export default function PoolForm() {
                                             />
 
                                             <TabsContent value="share">
-                                              {thisResult && thisResult.length ? (
+                                              {poolSearchResult && poolSearchResult.length ? (
                                                 <>
                                                   <div className="grid grid-cols-12">
                                                     <div className="col-span-2">
@@ -671,7 +703,7 @@ export default function PoolForm() {
                                                   </div>
                                                   <List
                                                     height={400}
-                                                    itemCount={thisResult.length}
+                                                    itemCount={poolSearchResult.length}
                                                     itemSize={45}
                                                     className="w-full"
                                                   >
@@ -682,7 +714,7 @@ export default function PoolForm() {
                                             </TabsContent>
 
                                             <TabsContent value="asset">
-                                              {thisResult && thisResult.length ? (
+                                              {poolSearchResult && poolSearchResult.length ? (
                                                 <>
                                                   <div className="grid grid-cols-12">
                                                     <div className="col-span-2">
@@ -703,7 +735,7 @@ export default function PoolForm() {
                                                   </div>
                                                   <List
                                                     height={400}
-                                                    itemCount={thisResult.length}
+                                                    itemCount={poolSearchResult.length}
                                                     itemSize={45}
                                                     className="w-full"
                                                   >
@@ -725,7 +757,7 @@ export default function PoolForm() {
                       />
 
                       <div className="grid grid-cols-11 gap-5 mt-1 mb-1">
-                        {pool && foundPoolDetails && assetA && assetB ? (
+                        {pool && foundPool && assetA && assetB ? (
                           <>
                             <div className="col-span-5">
                               <Card>
@@ -742,8 +774,8 @@ export default function PoolForm() {
                                 </CardHeader>
                                 <CardContent className="text-lg mt-0 pt-0">
                                   {
-                                    foundPoolDetails
-                                      ? foundPoolDetails[
+                                    foundPool
+                                      ? foundPool[
                                         !inverted
                                           ? 'readable_balance_a'
                                           : 'readable_balance_b'
@@ -794,7 +826,7 @@ export default function PoolForm() {
                                 </CardHeader>
                                 <CardContent className="text-lg">
                                   {
-                                    foundPoolDetails[
+                                    foundPool[
                                       !inverted
                                         ? 'readable_balance_b'
                                         : 'readable_balance_a'
@@ -892,7 +924,7 @@ export default function PoolForm() {
                         </>
                       ) : null}
 
-                      {sellAmount && foundPoolDetails && foundPoolDetails.taker_fee_percent ? (
+                      {sellAmount && foundPool && foundPool.taker_fee_percent ? (
                         <>
                           <FormField
                             control={form.control}
@@ -911,10 +943,10 @@ export default function PoolForm() {
                                         readOnly
                                         placeholder="0"
                                         value={`${(
-                                          (foundPoolDetails.taker_fee_percent / 10000) *
+                                          (foundPool.taker_fee_percent / 10000) *
                                           sellAmount
                                         ).toFixed(!inverted ? assetA.precision : assetB.precision)} (${!inverted ? assetA.symbol : assetB.symbol}) (${
-                                          foundPoolDetails.taker_fee_percent / 100
+                                          foundPool.taker_fee_percent / 100
                                         }% ${t("PoolForm:fee")})`}
                                       />
                                     </div>
@@ -1030,7 +1062,7 @@ export default function PoolForm() {
                       }`}
                     />
                   ) : null}
-                  {foundPoolDetails ? (
+                  {foundPool ? (
                     <Dialog>
                       <DialogTrigger asChild>
                         <Button className="ml-2" variant="outline">
@@ -1047,7 +1079,7 @@ export default function PoolForm() {
                         <div className="grid grid-cols-1">
                           <div className="col-span-1">
                             <ScrollArea className="h-72 rounded-md border">
-                              <pre>{JSON.stringify(foundPoolDetails, null, 2)}</pre>
+                              <pre>{JSON.stringify(foundPool, null, 2)}</pre>
                             </ScrollArea>
                           </div>
                         </div>
@@ -1280,10 +1312,10 @@ export default function PoolForm() {
                   </CardContent>
                 </Card>
 
-                {foundPoolDetails && marketSearch && usrBalances ? (
+                {foundPool && marketSearch && usrBalances ? (
                   <MarketAssetCard
-                    asset={foundPoolDetails.share_asset_symbol}
-                    assetData={foundPoolDetails.share_asset_details}
+                    asset={foundPool.share_asset_symbol}
+                    assetData={foundPool.share_asset_details}
                     assetDetails={poolShareDetails}
                     bitassetData={null}
                     marketSearch={marketSearch}

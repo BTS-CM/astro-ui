@@ -164,7 +164,8 @@ const [createPoolAssetStore] = nanoquery({
     foundPool["readable_balance_b"] = `${humanReadableFloat(
       foundPool.balance_b, assetB.precision
     )} ${assetB.symbol}`;
-    foundPool["share_asset_details"] = assets.find((x) => x.id === foundPool.share_asset);
+
+    foundPool["share_asset_details"] = assets.find((x) => x.id === foundPool.share_asset_id);
 
     const poolResult = {
       foundPool,
