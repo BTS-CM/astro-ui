@@ -55,11 +55,11 @@ jobs:
     - uses: oven-sh/setup-bun@v2
       with:
         bun-version: 'latest'
-    
-    - run: bun run refreshData
-    
+
     - run: npm install
     
+    - run: bun run refreshData
+        
     - run: npm run-script build:astro
 
     - run: npm run-script dist:${{ matrix.os }}
