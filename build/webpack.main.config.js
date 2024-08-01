@@ -12,7 +12,7 @@ module.exports = function(env) {
             filename: "[name].js",
             path: path.resolve(__dirname, "../app"),
         },
-        mode: env === "production" ? "production" : "development",
+        mode: env && env.length ? env : "production",
         node: {
             __dirname: false,
             __filename: false

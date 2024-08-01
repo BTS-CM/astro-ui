@@ -42,7 +42,15 @@ const createWindow = async () => {
     });
     
     const expressApp = express();
-    expressApp.use(express.static('astroDist'));
+
+    let astroDistPath;
+    if (process.env.NODE_ENV === 'development') {
+        astroDistPath = 'astroDist';
+    } else {
+        astroDistPath = path.join(process.resourcesPath, 'astroDist');
+    }
+
+    expressApp.use(express.static(astroDistPath));
     expressApp.listen(8080, () => {
         console.log("Express server listening on port 8080");
     });

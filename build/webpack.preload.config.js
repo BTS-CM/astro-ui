@@ -11,7 +11,7 @@ module.exports = function(env) {
             path: path.resolve(__dirname, "../app"),
         },
         target: 'electron-preload',
-        mode: env === "production" ? "production" : "development",
+        mode: env && env.length ? env : "production",
         
         node: {
             __dirname: false,

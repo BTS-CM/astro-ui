@@ -17,8 +17,15 @@
       "node_modules/**/*",
       "package.json"
     ],
+    "extraResources": [
+      {
+        "from": "./astroDist",
+        "to": "astroDist"
+      }
+    ],
     "directories": {
-      "buildResources": "resources"
+      "buildResources": "resources",
+      "output": "dist"
     },
     "nsis": {
       "oneClick": false,
