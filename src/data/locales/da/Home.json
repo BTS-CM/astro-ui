@@ -1,0 +1,79 @@
+{
+  "lend": {
+    "title": "🪙 Lån penge",
+    "subtitle": "Lån til andre brugere",
+    "hover1": "Opret dine egne decentrale kredittilbud.",
+    "hover2": "Lån aktiver til dine definerede satser.",
+    "hover3": "Angiv acceptable lånesikkerheder og priser."
+  },
+  "pool": {
+    "title": "💱 Poolbytte",
+    "subtitle": "Byt aktiver via en pulje",
+    "hover1": "Byt aktiver via brugerskabte likviditetspuljer.",
+    "hover2": "Puljer har forskellige handelspar og gebyrer.",
+    "hover3": "Enklere men dyrere end en limiteret ordre."
+  },
+  "stake": {
+    "title": "🔒 Indsats aktiver",
+    "subtitle": "Sats aktiver i likviditetspuljer",
+    "hover1": "Sats aktiver i likviditetspuljer for at tjene gebyrer.",
+    "hover2": "Indsatte aktiver er låst i puljen.",
+    "hover3": "Indsatte aktiver kan til enhver tid trækkes tilbage."
+  },
+  "dex": {
+    "title": "📈 DEX begrænsede ordrer",
+    "subtitle": "Handl på Bitshares DEX",
+    "hover1": "Lav manuelt begrænsede ordrer.",
+    "hover2": "Brug ethvert aktivhandelspar.",
+    "hover3": "Angiv ordreudløbsdatoer.",
+    "hover4": "Mere kompleks, men billigere end poolbytte."
+  },
+  "transfer": {
+    "title": "💸 Overfør aktiver",
+    "subtitle": "Send aktiver til andre brugere",
+    "hover1": "Overfør aktiver til alle på Bitshares blockchain på få sekunder."
+  },
+  "borrow": {
+    "title": "🏦 Lån penge",
+    "subtitle": "Lån fra andre brugere",
+    "hover1": "Gennemse de aktive brugeroprettede kredittilbud.",
+    "hover2": "Lån aktiver fra dem til den ønskede kurs.",
+    "hover3": "Brug den ønskede sikkerhed for at sikre dit lån."
+  },
+  "smartcoins": {
+    "title": "💵 Opret gæld",
+    "subtitle": "Udstedelse af sikkerhedsstillet gæld",
+    "hover1": "Bitassets som USD, CNY og EUR er komitéskabte stablecoins (smartcoins) understøttet af BTS.",
+    "hover2": "Brugerskabte smartcoins kan bakkes op med ethvert aktiv og referere til ethvert eksternt feed.",
+    "hover3": "Eksterne afregningspriser er afledt fra konfigurerede foderproducenter.",
+    "hover4": "Eksponering for eksterne prisfeeds kan udgøre en risiko for sikkerhedsstillede gældspositioner."
+  },
+  "ltm": {
+    "title": "🏅 Køb LTM",
+    "subtitle": "Køb et livstidsmedlemskab",
+    "hover1": "Der er flere fordele ved at blive livstidsmedlem.",
+    "hover2": "Livsvarige medlemmer får en 80% rabat på saldo på kontingent.",
+    "hover3": "Livsvarige medlemmer kan oprette premium Bitshares-kontonavne.",
+    "hover4": "Livsvarige medlemmer kan tjene gennem henvisningssystemet."
+  },
+  "portfolio": {
+    "title": "💰 Portefølje",
+    "subtitle": "Se din portefølje",
+    "hover1": "Tjek dine saldi.",
+    "hover2": "Overvåg dine åbne ordrer.",
+    "hover3": "Analyser din seneste kontoaktivitet."
+  },
+  "featured": {
+    "title": "🏆 Topmarkeder",
+    "subtitle": "Se de fleste aktive markeder",
+    "hover1": "Naviger til de mest aktive handelspar.",
+    "hover2": "Sammenlign markedsomsætning og værdi.",
+    "hover3": "Sammenlign mængden af ​​markedshandler."
+  },
+  "deals": {
+    "title": "ℹ️ Kredittilbud",
+    "subtitle": "Tjek dine kreditaftaler",
+    "hover1": "Overvåg dine aktive kreditaftaler.",
+    "hover2": "Administrer status for dine kreditaftaler."
+  }
+}

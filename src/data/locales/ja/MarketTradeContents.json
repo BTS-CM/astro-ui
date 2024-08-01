@@ -1,0 +1,7 @@
+{
+  "recentlyCompletedBuyOrdersTitle": "最近完了した成行買い注文",
+  "recentlyCompletedSellOrdersTitle": "最近完了した成行売り注文",
+  "recentlyCompletedBuyOrdersDescription": "以下の表は、Bitshares DEX で最近完了した買い注文のリストです。",
+  "recentlyCompletedSellOrdersDescription": "以下の表は、Bitshares DEX で最近完了した売り注文のリストです。",
+  "noMarketHistoryFound": "市場履歴が見つかりません"
+}

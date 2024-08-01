@@ -1,0 +1,15 @@
+{
+  "proceedLimitOrderDataTitle": "Kas soovite jätkata järgmiste limiittellimuse andmetega?",
+  "proceedLimitOrderDataDescription": "The {{cardType}} Ülaltoodud limiittellimuse vorm täidetakse järgmiste turukorralduse andmetega.",
+  "sellingQuoteForBase": "Müüa {{totalQuote}} {{assetA}} vastutasuks vähemalt {{totalBase}} {{assetB}}",
+  "sellingBaseForQuote": "Müüa {{totalBase}} {{assetB}} vastutasuks vähemalt {{totalQuote}} {{assetA}}",
+  "pricePerAsset": "Hind: {{price}} {{assetB}} 1 kohta {{assetA}}",
+  "proceedButton": "Jätkake",
+  "marketDataRefreshing": "Turuandmeid värskendatakse, palun oodake...",
+  "loadingMarketOrdersTitle": "Turutellimuste laadimine",
+  "loadingMarketOrdersDescription": "Nõutud turuandmete toomine, palun oodake...",
+  "openBuyLimitOrdersTitle": "Avatud ostulimiidi orderid",
+  "openSellLimitOrdersTitle": "Avatud müügilimiit orderid",
+  "buyLimitOrdersDescription": "Järgmises tabelis kuvatakse võrgu ostupakkumised {{assetA}} koos {{assetB}}",
+  "sellLimitOrdersDescription": "Järgmises tabelis kuvatakse võrgu müügipakkumised {{assetA}} jaoks {{assetB}}"
+}

@@ -1,0 +1,36 @@
+{
+  "dialogContent": {
+    "generatingDeeplink": "딥링크 생성 중...",
+    "withAccount": "계정 사용: {{username}} ({{userID}})",
+    "readyToBroadcast": "귀하의 Bitshares Beet 작업이 방송될 준비가 되었습니다!",
+    "chooseMethod": "아래 방법 중 하나를 선택하여 원하는 지갑으로 방송하세요.",
+    "bitsharesBEETMultiwallet": "Bitshares BEET 멀티월렛",
+    "errorOccurred": "오류가 발생했습니다. 죄송합니다. ",
+    "beetWallet": "Bitshares BEET 멀티월렛"
+  },
+  "tabs": {
+    "viewTRXObject": "TRX 객체 보기",
+    "rawDeeplink": "원시 딥링크",
+    "localJSONFile": "로컬 JSON 파일"
+  },
+  "tabsContent": {
+    "transactionObjectJSON": "거래 객체 JSON",
+    "operationType": "작업 유형: {{operationName}}",
+    "copyOperationJSON": "복사 작업 JSON",
+    "usingDeeplink": "딥링크를 사용하여 Beet 다중 지갑을 통해 브로드캐스트",
+    "step1": "BEET 지갑을 실행하고 메뉴에서 'Raw Link'로 이동하세요. 방송이 진행되는 동안 지갑은 잠금 해제된 상태로 유지되어야 합니다.",
+    "step2": "이 페이지에서 모든 작업을 허용하거나 ' 작업만 허용할 수 있습니다.{{operationName}}' (그런 다음 저장을 클릭하세요).",
+    "step3": "Beet에 'Ready for raw link'가 표시되면 아래 버튼을 클릭하여 계속 진행할 수 있습니다.",
+    "step4": "BEET 프롬프트가 표시되고 내용을 확인하며 선택적으로 Beet 영수증을 요청한 다음 거래를 블록체인에 브로드캐스트합니다.",
+    "step5": "이 창에서는 확인을 받지 못하지만 작업은 블록체인에서 몇 초 내에 처리됩니다.",
+    "triggerRawBeet": "원시 비트 딥링크 트리거",
+    "viaLocalFile": "로컬 파일 업로드를 통해 - 진행 준비 완료",
+    "step1Local": "BEET 지갑을 실행하고 메뉴에서 '로컬'로 이동하세요.",
+    "step2Local": "이 페이지에서는 모두 허용하거나 '작업만 허용'합니다.{{operationName}}'.",
+    "step3Local": "로컬 업로드 페이지에서 아래 버튼을 클릭하여 JSON 파일을 컴퓨터에 다운로드하세요.",
+    "step4Local": "BEET 로컬 페이지에서 JSON 파일을 업로드하면 프롬프트가 나타납니다.",
+    "step5Local": "작업을 승인하기 전에 메시지 내용을 철저히 확인하고, 방송 후 분석 및 확인 목적으로 선택적 수신을 전환하는 것도 고려하세요.",
+    "downloading": "다운로드 중...",
+    "downloadBeetOperationJSON": "Beet 작업 JSON 다운로드"
+  }
+}

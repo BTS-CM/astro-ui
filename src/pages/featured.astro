@@ -7,9 +7,9 @@ import PageFooter from '../components/PageFooter';
 
 <Layout title="Featured Bitshares markets - listing the highest traded market pairs">
 	<main>
-		<PageHeader client:only page="featured" backURL="../index.html" />
-		<Featured client:only />
-		<PageFooter client:only sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/featured.astro" />
+		<PageHeader client:only="react" page="featured" backURL="../index.html" />
+		<Featured client:only="react" />
+		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/featured.astro" />
 	</main>
 </Layout>
 

@@ -1,0 +1,15 @@
+{
+  "proceedLimitOrderDataTitle": "Souhaitez-vous procéder avec les données d'ordre limité suivantes ?",
+  "proceedLimitOrderDataDescription": "Le {{cardType}} Le formulaire d’ordre limité ci-dessus sera rempli avec les données d’ordre au marché suivantes.",
+  "sellingQuoteForBase": "Vente {{totalQuote}} {{assetA}} en échange d'au moins {{totalBase}} {{assetB}}",
+  "sellingBaseForQuote": "Vente {{totalBase}} {{assetB}} en échange d'au moins {{totalQuote}} {{assetA}}",
+  "pricePerAsset": "Prix: {{price}} {{assetB}} par 1 {{assetA}}",
+  "proceedButton": "Procéder",
+  "marketDataRefreshing": "Les données du marché sont actualisées, veuillez patienter...",
+  "loadingMarketOrdersTitle": "Chargement des ordres de marché",
+  "loadingMarketOrdersDescription": "Récupération des données de marché demandées, veuillez patienter...",
+  "openBuyLimitOrdersTitle": "Ordres d'achat limités ouverts",
+  "openSellLimitOrdersTitle": "Ordres de vente limités ouverts",
+  "buyLimitOrdersDescription": "Le tableau suivant présente les offres d'achat du réseau {{assetA}} avec {{assetB}}",
+  "sellLimitOrdersDescription": "Le tableau suivant présente les offres du réseau à vendre {{assetA}} pour {{assetB}}"
+}

@@ -1,0 +1,15 @@
+{
+  "noSearch": {
+    "prompt": "Inserisci il nome di un account blockchain",
+    "placeholder": "Nome o ID dell'account",
+    "continue": "Continua",
+    "error": "Impossibile trovare l'account.",
+    "selfError": "Impossibile trasferire risorse a questo account."
+  },
+  "searchResponse": {
+    "promptBTS": "Procedere con il seguente account Bitshares?",
+    "promptTEST": "Procedere con il seguente account Bitshares testnet (TEST)?",
+    "back": "Torna indietro",
+    "proceed": "Procedere"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "recentlyCompletedBuyOrdersTitle": "I tuoi ordini di acquisto completati di recente",
+  "recentlyCompletedSellOrdersTitle": "I tuoi ordini di vendita completati di recente",
+  "recentlyCompletedBuyOrdersDescription": "La tabella seguente elenca gli ordini di acquisto completati di recente",
+  "recentlyCompletedSellOrdersDescription": "La tabella seguente elenca gli ordini di vendita completati di recente",
+  "noRecentlyCompletedPurchases": "Nessun acquisto completato di recente trovato",
+  "noRecentlyCompletedSales": "Nessuna vendita completata di recente trovata"
+}

@@ -7,9 +7,9 @@ import PageFooter from '../components/PageFooter';
 
 <Layout title="Bitshares smartcoin issuance form">
 	<main>
-		<PageHeader client:only page="settlement" backURL="../smartcoins/index.html" />
-		<Settlement client:only />
-		<PageFooter client:only sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/settlement.astro" />
+		<PageHeader client:only="react" page="settlement" backURL="../smartcoins/index.html" />
+		<Settlement client:only="react" />
+		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/settlement.astro" />
 	</main>
 </Layout>
 

@@ -49,10 +49,10 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Toggle } from "@/components/ui/toggle";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Avatar as Av, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar as Av, AvatarFallback } from "@/components/ui/avatar";
 import { Avatar } from "@/components/Avatar.tsx";
 
-import { blockchainFloat, copyToClipboard, humanReadableFloat } from "../lib/common";
+import { blockchainFloat, humanReadableFloat } from "@/lib/common";
 
 import {
   $assetCacheBTS,
@@ -63,13 +63,12 @@ import {
   $marketSearchCacheTEST,
   $globalParamsCacheBTS,
   $globalParamsCacheTEST,
-} from "../stores/cache.ts";
-import { $currentUser } from "../stores/users.ts";
+} from "@/stores/cache.ts";
+import { $currentUser } from "@/stores/users.ts";
 
-import { createBitassetDataStore, createDynamicDataStore } from "../effects/Assets.ts";
-import { createPoolDetailsStore } from "../effects/Pools.ts";
-import { createUserBalancesStore } from "../effects/User.ts";
-import { useInitCache } from "../effects/Init.ts";
+import { useInitCache } from "@/nanoeffects/Init.ts";
+import { createPoolAssetStore } from "@/nanoeffects/Assets.ts";
+import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 
 import PoolDialogs from "./Market/PoolDialogs.jsx";
 import MarketAssetCard from "./Market/MarketAssetCard.jsx";
@@ -85,7 +84,7 @@ export default function PoolForm() {
     },
   });
 
-  const [pool, setPool] = useState(""); // dropdown selected pool
+  const [pool, setPool] = useState("");
 
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
 
@@ -128,7 +127,7 @@ export default function PoolForm() {
       return usr.chain;
     }
     return "bitshares";
-  }, [usr]);
+  }, [usr]); 
 
   useInitCache(_chain ?? "bitshares", ["marketSearch", "assets", "pools", "globalParams"]);
 
@@ -185,16 +184,16 @@ export default function PoolForm() {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const [thisInput, setThisInput] = useState();
-  const [thisResult, setThisResult] = useState();
+  const [poolSearchResult, setPoolSearchResult] = useState();
   useEffect(() => {
     if (poolSearch && thisInput) {
       const searchResult = poolSearch.search(thisInput);
-      setThisResult(searchResult);
+      setPoolSearchResult(searchResult);
     }
   }, [poolSearch, thisInput]);
 
   const PoolRow = ({ index, style }) => {
-    const res = thisResult[index].item;
+    const res = poolSearchResult[index].item;
     return (
       <div
         style={{ ...style }}
@@ -203,7 +202,7 @@ export default function PoolForm() {
         onClick={() => {
           setPool(res.id);
           setDialogOpen(false);
-          setThisResult();
+          setPoolSearchResult();
         }}
       >
         <div className="col-span-2">{res.id}</div>
@@ -268,70 +267,8 @@ export default function PoolForm() {
   const [assetA, setAssetA] = useState("");
   const [assetB, setAssetB] = useState("");
 
-  const [isRotating, setIsRotating] = useState(false);
-
-  const rotateStyle = isRotating
-    ? {
-        transition: "transform 0.5s",
-        transform: "rotate(360deg)",
-      }
-    : {};
-
-  useEffect(() => {
-    // Setting various react states as the user interacts with the form
-    if (pools && pool && assets) {
-      const currentPool = pools.find((x) => x.id === pool);
-      if (!currentPool) {
-        console.log("Invalid pool");
-        return;
-      }
-      setFoundPool(currentPool);
-      const foundA = assets.find((x) => x.id === currentPool.asset_a_id);
-      const foundB = assets.find((x) => x.id === currentPool.asset_b_id);
-      setAssetA(foundA);
-      setAssetB(foundB);
-      setSellAmount(1);
-    }
-  }, [pool, pools, assets]);
-
   const [foundPoolDetails, setFoundPoolDetails] = useState();
-  useEffect(() => {
-    let unsubscribePoolDetails;
-
-    if (usr && usr.chain && foundPool && assetA && assetB && assets) {
-      const poolDetailsStore = createPoolDetailsStore([usr.chain, foundPool.id]);
-
-      unsubscribePoolDetails = poolDetailsStore.subscribe(({ data, error, loading }) => {
-        if (data && !error && !loading) {
-          let finalResult = data;
-          finalResult["asset_a_symbol"] = assetA.symbol;
-          finalResult["asset_a_precision"] = assetA.precision;
-
-          finalResult["asset_b_symbol"] = assetB.symbol;
-          finalResult["asset_b_precision"] = assetB.precision;
-
-          finalResult["share_asset_symbol"] = foundPool.share_asset_symbol;
-
-          finalResult["readable_balance_a"] = `${humanReadableFloat(
-            finalResult.balance_a,
-            assetA.precision
-          )} ${assetA.symbol}`;
-          finalResult["readable_balance_b"] = `${humanReadableFloat(
-            finalResult.balance_b,
-            assetB.precision
-          )} ${assetB.symbol}`;
-          finalResult["share_asset_details"] = assets.find((x) => x.id === finalResult.share_asset);
-
-          setFoundPoolDetails(finalResult);
-        }
-      });
-    }
-
-    return () => {
-      if (unsubscribePoolDetails) unsubscribePoolDetails();
-    };
-  }, [usr, foundPool, assetA, assetB, assets]);
-
+  
   const [assetADetails, setAssetADetails] = useState(null);
   const [assetBDetails, setAssetBDetails] = useState(null);
   const [poolShareDetails, setPoolShareDetails] = useState(null);
@@ -340,71 +277,46 @@ export default function PoolForm() {
   const [bBitassetData, setBBitassetData] = useState(null);
 
   useEffect(() => {
-    let unsubscribeADetails;
-    let unsubscribeBDetails;
-    let unsubscribePoolShareDetails;
-    let unsubscribeABitassetData;
-    let unsubscribeBBitassetData;
-
-    if (usr && usr.id && assets && assetA && assetB && foundPool) {
-      const dynamicDataStoreA = createDynamicDataStore([
+    // Setting various react states as the user interacts with the form
+    if (usr && usr.chain && pools && assets && pool) {
+      const poolStore = createPoolAssetStore([
         usr.chain,
-        assetA.id.replace("1.3.", "2.3."),
+        JSON.stringify(pools),
+        JSON.stringify(assets),
+        pool,
       ]);
-      unsubscribeADetails = dynamicDataStoreA.subscribe(({ data, error, loading }) => {
-        if (data && !error && !loading) {
-          setAssetADetails(data);
-        }
-      });
 
-      const dynamicDataStoreB = createDynamicDataStore([
-        usr.chain,
-        assetB.id.replace("1.3.", "2.3."),
-      ]);
-      unsubscribeBDetails = dynamicDataStoreB.subscribe(({ data, error, loading }) => {
-        if (data && !error && !loading) {
-          setAssetBDetails(data);
-        }
-      });
-
-      const poolAsset = assets.find((x) => x.symbol === foundPool.share_asset_symbol);
-      const dynamicDataStorePool = createDynamicDataStore([
-        usr.chain,
-        poolAsset.id.replace("1.3.", "2.3."),
-      ]);
-      unsubscribePoolShareDetails = dynamicDataStorePool.subscribe(({ data, error, loading }) => {
-        if (data && !error && !loading) {
-          setPoolShareDetails(data);
-        }
-      });
-
-      if (assetA.bitasset_data_id) {
-        const bitassetDataStoreA = createBitassetDataStore([usr.chain, assetA.bitasset_data_id]);
-        unsubscribeABitassetData = bitassetDataStoreA.subscribe(({ data, error, loading }) => {
+      try {
+        poolStore.subscribe(({ data, error, loading }) => {
+          if (error) {
+            console.log({error, location: "poolStore.subscribe"});
+          }
           if (data && !error && !loading) {
-            setABitassetData(data);
+            setFoundPool(data.foundPool);
+            setPoolShareDetails(data.poolAsset);
+  
+            setAssetA(data.assetA);
+            setAssetB(data.assetB);
+            setSellAmount(1);
+      
+            setFoundPoolDetails(data.foundPoolDetails);
+            setAssetADetails(data.assetADetails);
+            setAssetBDetails(data.assetBDetails);
+            if (data.bitassetA) {
+              setABitassetData(data.bitassetA);
+            }
+            if (data.bitassetB) {
+              setBBitassetData(data.bitassetB);
+            }
           }
         });
+      } catch (error) {
+        console.log({error});
       }
 
-      if (assetB.bitasset_data_id) {
-        const bitassetDataStoreB = createBitassetDataStore([usr.chain, assetB.bitasset_data_id]);
-        unsubscribeBBitassetData = bitassetDataStoreB.subscribe(({ data, error, loading }) => {
-          if (data && !error && !loading) {
-            setBBitassetData(data);
-          }
-        });
-      }
+
     }
-
-    return () => {
-      if (unsubscribeADetails) unsubscribeADetails();
-      if (unsubscribeBDetails) unsubscribeBDetails();
-      if (unsubscribePoolShareDetails) unsubscribePoolShareDetails();
-      if (unsubscribeABitassetData) unsubscribeABitassetData();
-      if (unsubscribeBBitassetData) unsubscribeBBitassetData();
-    };
-  }, [usr, assetA, assetB, foundPool, assets]);
+  }, [usr, pool, pools, assets]);
 
   const [usrBalances, setUsrBalances] = useState();
   useEffect(() => {
@@ -428,20 +340,30 @@ export default function PoolForm() {
   const [inverted, setInverted] = useState(false);
   const buyAmount = useMemo(() => {
     // Calculating the amount the user can buy
-    if (assetA && assetB && foundPoolDetails) {
-      let poolamounta = Number(foundPoolDetails.balance_a);
+    if (assetA && assetB && foundPool) {
+      let poolamounta = Number(foundPool.balance_a);
       let poolamountap = Number(10 ** assetA.precision);
 
-      let poolamountb = Number(foundPoolDetails.balance_b);
+      let poolamountb = Number(foundPool.balance_b);
       let poolamountbp = Number(10 ** assetB.precision);
 
-      const maker_market_fee_percenta = assetA.market_fee_percent;
-      const maker_market_fee_percentb = assetB.market_fee_percent;
+      const maker_market_fee_percenta = assetA && assetA.options && assetA.options.market_fee_percent
+        ? assetA.options.market_fee_percent
+        : 0;
 
-      const max_market_feea = assetA.max_market_fee;
-      const max_market_feeb = assetB.max_market_fee;
+      const maker_market_fee_percentb = assetB && assetB.options && assetB.options.market_fee_percent
+        ? assetB.options.market_fee_percent
+        : 0;
 
-      const taker_fee_percenta = foundPoolDetails.taker_fee_percent;
+      const max_market_feea = assetA && assetA.options && assetA.options.max_market_fee
+        ? assetA.options.max_market_fee
+        : 0;
+
+      const max_market_feeb = assetB && assetB.options && assetB.options.max_market_fee
+        ? assetB.options.max_market_fee
+        : 0;
+
+      const taker_fee_percenta = foundPool.taker_fee_percent;
 
       function flagsa() {
         if (maker_market_fee_percenta === 0) {
@@ -525,10 +447,33 @@ export default function PoolForm() {
             )) /
           Number(poolamountap);
       }
-    
+      
+      /*
+      console.log({
+        calculated: {
+          poolamounta,
+          poolamountap,
+          poolamountb,
+          poolamountbp,
+          maker_market_fee_percenta,
+          maker_market_fee_percentb,
+          max_market_feea,
+          max_market_feeb,
+          taker_fee_percenta,
+          taker_market_fee_percent_a
+        },
+        inputs: {
+          foundPool,
+          assetA,
+          assetB,
+        },
+        result
+      })
+      */
+
       return result;
     }
-  }, [sellAmount, assetA, assetB, inverted, foundPoolDetails]);
+  }, [sellAmount, assetA, assetB, inverted, foundPool]);
 
   const [buyAmountInput, setBuyAmountInput] = useState();
   useEffect(() => {
@@ -552,6 +497,15 @@ export default function PoolForm() {
       </SelectItem>
     );
   };
+
+  const [isRotating, setIsRotating] = useState(false);
+
+  const rotateStyle = isRotating
+    ? {
+        transition: "transform 0.5s",
+        transform: "rotate(360deg)",
+      }
+    : {};
 
   return (
     <>
@@ -670,7 +624,7 @@ export default function PoolForm() {
                                     open={dialogOpen}
                                     onOpenChange={(open) => {
                                       if (!open) {
-                                        setThisResult();
+                                        setPoolSearchResult();
                                       }
                                       setDialogOpen(open);
                                     }}
@@ -729,7 +683,7 @@ export default function PoolForm() {
                                             />
 
                                             <TabsContent value="share">
-                                              {thisResult && thisResult.length ? (
+                                              {poolSearchResult && poolSearchResult.length ? (
                                                 <>
                                                   <div className="grid grid-cols-12">
                                                     <div className="col-span-2">
@@ -750,7 +704,7 @@ export default function PoolForm() {
                                                   </div>
                                                   <List
                                                     height={400}
-                                                    itemCount={thisResult.length}
+                                                    itemCount={poolSearchResult.length}
                                                     itemSize={45}
                                                     className="w-full"
                                                   >
@@ -761,7 +715,7 @@ export default function PoolForm() {
                                             </TabsContent>
 
                                             <TabsContent value="asset">
-                                              {thisResult && thisResult.length ? (
+                                              {poolSearchResult && poolSearchResult.length ? (
                                                 <>
                                                   <div className="grid grid-cols-12">
                                                     <div className="col-span-2">
@@ -782,7 +736,7 @@ export default function PoolForm() {
                                                   </div>
                                                   <List
                                                     height={400}
-                                                    itemCount={thisResult.length}
+                                                    itemCount={poolSearchResult.length}
                                                     itemSize={45}
                                                     className="w-full"
                                                   >
@@ -804,7 +758,7 @@ export default function PoolForm() {
                       />
 
                       <div className="grid grid-cols-11 gap-5 mt-1 mb-1">
-                        {pool && foundPoolDetails && assetA && assetB ? (
+                        {pool && foundPool && assetA && assetB ? (
                           <>
                             <div className="col-span-5">
                               <Card>
@@ -821,11 +775,13 @@ export default function PoolForm() {
                                 </CardHeader>
                                 <CardContent className="text-lg mt-0 pt-0">
                                   {
-                                    foundPoolDetails[
-                                      !inverted
-                                        ? 'readable_balance_a'
-                                        : 'readable_balance_b'
-                                    ].split(" ")[0]
+                                    foundPool
+                                      ? foundPool[
+                                        !inverted
+                                          ? 'readable_balance_a'
+                                          : 'readable_balance_b'
+                                      ].split(" ")[0]
+                                      : null
                                   }
                                 </CardContent>
                               </Card>
@@ -835,12 +791,6 @@ export default function PoolForm() {
                                 variant="outline"
                                 onClick={() => {
                                   setInverted(!inverted);
-                                  /*
-                                  const oldAssetA = assetA;
-                                  const oldAssetB = assetB;
-                                  setAssetA(oldAssetB);
-                                  setAssetB(oldAssetA);
-                                  */
                                   setIsRotating(true);
                                   setTimeout(() => setIsRotating(false), 500);
                                 }}
@@ -877,7 +827,7 @@ export default function PoolForm() {
                                 </CardHeader>
                                 <CardContent className="text-lg">
                                   {
-                                    foundPoolDetails[
+                                    foundPool[
                                       !inverted
                                         ? 'readable_balance_b'
                                         : 'readable_balance_a'
@@ -975,7 +925,7 @@ export default function PoolForm() {
                         </>
                       ) : null}
 
-                      {sellAmount && foundPoolDetails && foundPoolDetails.taker_fee_percent ? (
+                      {sellAmount && foundPool && foundPool.taker_fee_percent ? (
                         <>
                           <FormField
                             control={form.control}
@@ -994,10 +944,10 @@ export default function PoolForm() {
                                         readOnly
                                         placeholder="0"
                                         value={`${(
-                                          (foundPoolDetails.taker_fee_percent / 10000) *
+                                          (foundPool.taker_fee_percent / 10000) *
                                           sellAmount
                                         ).toFixed(!inverted ? assetA.precision : assetB.precision)} (${!inverted ? assetA.symbol : assetB.symbol}) (${
-                                          foundPoolDetails.taker_fee_percent / 100
+                                          foundPool.taker_fee_percent / 100
                                         }% ${t("PoolForm:fee")})`}
                                       />
                                     </div>
@@ -1089,12 +1039,6 @@ export default function PoolForm() {
                       variant="outline"
                       mt="xl"
                       onClick={() => {
-                        /*
-                        const oldAssetA = assetA;
-                        const oldAssetB = assetB;
-                        setAssetA(oldAssetB);
-                        setAssetB(oldAssetA);
-                        */
                         setInverted(!inverted);
                         setIsRotating(true);
                         setTimeout(() => setIsRotating(false), 500);
@@ -1119,7 +1063,7 @@ export default function PoolForm() {
                       }`}
                     />
                   ) : null}
-                  {foundPoolDetails ? (
+                  {foundPool ? (
                     <Dialog>
                       <DialogTrigger asChild>
                         <Button className="ml-2" variant="outline">
@@ -1136,7 +1080,7 @@ export default function PoolForm() {
                         <div className="grid grid-cols-1">
                           <div className="col-span-1">
                             <ScrollArea className="h-72 rounded-md border">
-                              <pre>{JSON.stringify(foundPoolDetails, null, 2)}</pre>
+                              <pre>{JSON.stringify(foundPool, null, 2)}</pre>
                             </ScrollArea>
                           </div>
                         </div>
@@ -1369,10 +1313,10 @@ export default function PoolForm() {
                   </CardContent>
                 </Card>
 
-                {foundPoolDetails && marketSearch && usrBalances ? (
+                {foundPool && marketSearch && usrBalances ? (
                   <MarketAssetCard
-                    asset={foundPoolDetails.share_asset_symbol}
-                    assetData={foundPoolDetails.share_asset_details}
+                    asset={foundPool.share_asset_symbol}
+                    assetData={foundPool.share_asset_details}
                     assetDetails={poolShareDetails}
                     bitassetData={null}
                     marketSearch={marketSearch}

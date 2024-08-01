@@ -1,0 +1,15 @@
+{
+  "noSearch": {
+    "prompt": "블록체인 계정 이름을 입력하세요.",
+    "placeholder": "계정 이름 또는 ID",
+    "continue": "계속하다",
+    "error": "계정을 찾을 수 없습니다.",
+    "selfError": "이 계정으로 자산을 이전할 수 없습니다."
+  },
+  "searchResponse": {
+    "promptBTS": "다음 Bitshares 계정으로 진행하시겠습니까?",
+    "promptTEST": "다음 Bitshares 테스트넷(TEST) 계정으로 진행하시겠습니까?",
+    "back": "돌아가기",
+    "proceed": "진행하다"
+  }
+}

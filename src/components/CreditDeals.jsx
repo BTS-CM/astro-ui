@@ -37,18 +37,21 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-import { $currentUser } from "../stores/users.ts";
+import { $currentUser } from "@/stores/users.ts";
 import {
   $assetCacheBTS,
   $assetCacheTEST,
   $globalParamsCacheBTS,
   $globalParamsCacheTEST,
-} from "../stores/cache.ts";
+} from "@/stores/cache.ts";
 
-import { useInitCache } from "../effects/Init.ts";
-import { createUserCreditDealsStore, createUserBalancesStore } from "../effects/User.ts";
+import { useInitCache } from "@/nanoeffects/Init.ts";
 
-import { blockchainFloat, humanReadableFloat } from "../lib/common.js";
+import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
+import { createBorrowerDealsStore } from "@/nanoeffects/BorrowerDeals.ts";
+import { createLenderDealsStore } from "@/nanoeffects/LenderDeals.ts";
+
+import { blockchainFloat, humanReadableFloat } from "@/lib/common.js";
 
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
 import ExternalLink from "./common/ExternalLink.jsx";
@@ -113,6 +116,44 @@ export default function CreditDeals(properties) {
     }
   }, [globalParams]);
 
+  const [borrowerDeals, setBorrowerDeals] = useState();
+  useEffect(() => {
+    let unsubscribeBorrowerDeals;
+
+    if (usr && usr.id) {
+      const borrowerDealsStore = createBorrowerDealsStore([usr.chain, usr.id]);
+
+      unsubscribeBorrowerDeals = borrowerDealsStore.subscribe(({ data, error, loading }) => {
+        if (data && !error && !loading) {
+          setBorrowerDeals(data);
+        }
+      });
+    }
+    
+    return () => {
+      if (unsubscribeBorrowerDeals) unsubscribeBorrowerDeals();
+    }
+  }, [usr]);
+
+  const [lenderDeals, setLenderDeals] = useState();
+  useEffect(() => {
+    let unsubscribeLenderDeals;
+
+    if (usr && usr.id) {
+      const lenderDealsStore = createLenderDealsStore([usr.chain, usr.id]);
+      
+      unsubscribeLenderDeals = lenderDealsStore.subscribe(({ data, error, loading }) => {
+        if (data && !error && !loading) {
+          setLenderDeals(data);
+        }
+      });
+    }
+
+    return () => {
+      if (unsubscribeLenderDeals) unsubscribeLenderDeals();
+    }
+  }, [usr]);
+
   const [usrBalances, setUsrBalances] = useState();
   useEffect(() => {
     let unsubscribeUserBalances;
@@ -129,25 +170,6 @@ export default function CreditDeals(properties) {
 
     return () => {
       if (unsubscribeUserBalances) unsubscribeUserBalances();
-    };
-  }, [usr]);
-
-  const [usrCreditDeals, setUsrCreditDeals] = useState(); // { borrowerDeals, ownerDeals, }
-  useEffect(() => {
-    let unsubscribeUserCreditDeals;
-
-    if (usr && usr.id) {
-      const userCreditDealsStore = createUserCreditDealsStore([usr.chain, usr.id]);
-
-      unsubscribeUserCreditDeals = userCreditDealsStore.subscribe(({ data, error, loading }) => {
-        if (data && !error && !loading) {
-          setUsrCreditDeals(data);
-        }
-      });
-    }
-
-    return () => {
-      if (unsubscribeUserCreditDeals) unsubscribeUserCreditDeals();
     };
   }, [usr]);
 
@@ -611,7 +633,7 @@ export default function CreditDeals(properties) {
   }
 
   const BorrowerRow = ({ index, style }) => {
-    let res = usrCreditDeals.borrowerDeals[index];
+    let res = borrowerDeals[index];
 
     if (!res) {
       return null;
@@ -621,7 +643,7 @@ export default function CreditDeals(properties) {
   };
 
   const OwnerRow = ({ index, style }) => {
-    let res = usrCreditDeals.ownerDeals[index];
+    let res = lenderDeals[index];
 
     if (!res) {
       return null;
@@ -669,44 +691,41 @@ export default function CreditDeals(properties) {
                   )}
                 </TabsList>
                 <TabsContent value="borrowings">
-                  {usrCreditDeals &&
-                  usrCreditDeals.borrowerDeals &&
-                  usrCreditDeals.borrowerDeals.length ? (
+                  {borrowerDeals &&
+                  borrowerDeals.length ? (
                     <List
                       height={500}
-                      itemCount={usrCreditDeals.borrowerDeals.length}
+                      itemCount={borrowerDeals.length}
                       itemSize={225}
                       className="w-full"
                     >
                       {BorrowerRow}
                     </List>
                   ) : null}
-                  {usrCreditDeals &&
-                  usrCreditDeals.borrowerDeals &&
-                  !usrCreditDeals.borrowerDeals.length
+                  {borrowerDeals &&
+                  !borrowerDeals.length
                     ? t("CreditDeals:card.noBorrowers")
                     : null}
-                  {!usrCreditDeals || !usrCreditDeals.borrowerDeals
+                  {!borrowerDeals
                     ? t("CreditDeals:card.loading")
                     : null}
                 </TabsContent>
                 <TabsContent value="lendings">
-                  {usrCreditDeals &&
-                  usrCreditDeals.ownerDeals &&
-                  usrCreditDeals.ownerDeals.length ? (
+                  {lenderDeals &&
+                  lenderDeals.length ? (
                     <List
                       height={500}
-                      itemCount={usrCreditDeals.ownerDeals.length}
+                      itemCount={lenderDeals.length}
                       itemSize={165}
                       className="w-full"
                     >
                       {OwnerRow}
                     </List>
                   ) : null}
-                  {usrCreditDeals && usrCreditDeals.ownerDeals && !usrCreditDeals.ownerDeals.length
+                  {lenderDeals && !lenderDeals.length
                     ? t("CreditDeals:card.noLendings")
                     : null}
-                  {!usrCreditDeals || !usrCreditDeals.ownerDeals
+                  {!lenderDeals
                     ? t("CreditDeals:card.loading")
                     : null}
                 </TabsContent>

@@ -1,0 +1,21 @@
+{
+  "loadingMessage": "cargando...",
+  "noPoolsFoundMessage": "0 piscinas encontradas",
+  "poolsFound": "{{count}} piscinas encontradas",
+  "idColumnTitle": "identificación",
+  "shareAssetColumnTitle": "Compartir activo",
+  "assetAColumnTitle": "Activo A",
+  "assetBColumnTitle": "Activo B",
+  "assetAPoolsTitle": "{{assetA}} Quinielas",
+  "assetAPoolsDialogTitle": "{{assetA}} Quinielas",
+  "assetAPoolsDialogDescription": "Estos grupos de Bitshares utilizan {{assetA}} ({{assetAId}}) como uno de los activos.",
+  "assetAHoverCardContent": "Intercambio {{assetA}} utilizando uno de estos fondos de liquidez",
+  "marketPoolsTitle": "Grupos de mercado",
+  "marketPoolsDialogTitle": "{{assetA}}/{{assetB}} Quinielas",
+  "marketPoolsDialogDescription": "Estos pools se comercializan entre {{assetA}} y {{assetB}}.",
+  "marketHoverCardContent": "Intercambiar entre {{assetA}} y {{assetB}} utilizando uno de estos fondos de liquidez",
+  "assetBPoolsTitle": "{{assetB}} Quinielas",
+  "assetBPoolsDialogTitle": "{{assetB}} Quinielas",
+  "assetBPoolsDialogDescription": "Estos grupos de Bitshares utilizan {{assetB}} ({{assetBId}}) como uno de los activos.",
+  "assetBHoverCardContent": "Intercambio {{assetB}} utilizando uno de estos fondos de liquidez"
+}

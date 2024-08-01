@@ -1,0 +1,15 @@
+{
+  "proceedLimitOrderDataTitle": "Você gostaria de prosseguir com os seguintes dados de pedido com limite?",
+  "proceedLimitOrderDataDescription": "O {{cardType}} O formulário de pedido com limite acima será preenchido com os seguintes dados de pedido de mercado.",
+  "sellingQuoteForBase": "Vendendo {{totalQuote}} {{assetA}} em troca de pelo menos {{totalBase}} {{assetB}}",
+  "sellingBaseForQuote": "Vendendo {{totalBase}} {{assetB}} em troca de pelo menos {{totalQuote}} {{assetA}}",
+  "pricePerAsset": "Preço: {{price}} {{assetB}} por 1 {{assetA}}",
+  "proceedButton": "Continuar",
+  "marketDataRefreshing": "Os dados de mercado são atualizados, aguarde...",
+  "loadingMarketOrdersTitle": "Carregando ordens de mercado",
+  "loadingMarketOrdersDescription": "Buscando dados de mercado solicitados, aguarde...",
+  "openBuyLimitOrdersTitle": "Abrir pedidos com limite de compra",
+  "openSellLimitOrdersTitle": "Abrir ordens com limite de venda",
+  "buyLimitOrdersDescription": "A tabela a seguir exibe ofertas de rede para compra {{assetA}} com {{assetB}}",
+  "sellLimitOrdersDescription": "A tabela a seguir exibe ofertas de rede para vender {{assetA}} para {{assetB}}"
+}

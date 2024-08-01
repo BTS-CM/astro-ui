@@ -1,1 +1,0 @@
-function n(n,[t,a]){return Math.min(a,Math.max(t,n))}export{n as $};

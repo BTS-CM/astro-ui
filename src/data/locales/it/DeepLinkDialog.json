@@ -1,0 +1,36 @@
+{
+  "dialogContent": {
+    "generatingDeeplink": "Generazione del collegamento diretto in corso...",
+    "withAccount": "Con l'account: {{username}} ({{userID}})",
+    "readyToBroadcast": "La tua operazione Bitshares Beet è pronta per essere trasmessa!",
+    "chooseMethod": "Scegli tra i metodi seguenti per trasmettere al tuo portafoglio preferito.",
+    "bitsharesBEETMultiwallet": "Multiportafoglio Bitshares BEET",
+    "errorOccurred": "Si è verificato un errore, siamo spiacenti. ",
+    "beetWallet": "Multiportafoglio Bitshares BEET"
+  },
+  "tabs": {
+    "viewTRXObject": "Visualizza oggetto TRX",
+    "rawDeeplink": "Collegamento diretto grezzo",
+    "localJSONFile": "File JSON locale"
+  },
+  "tabsContent": {
+    "transactionObjectJSON": "Oggetto transazione JSON",
+    "operationType": "Tipo di operazione: {{operationName}}",
+    "copyOperationJSON": "Operazione di copia JSON",
+    "usingDeeplink": "Utilizzo di un deeplink per trasmettere tramite il multiwallet Beet",
+    "step1": "Avvia il portafoglio BEET e vai a \"Raw Link\" nel menu, il portafoglio deve rimanere sbloccato per tutta la durata della trasmissione.",
+    "step2": "Da questa pagina è possibile consentire tutte le operazioni oppure consentire solo l'operazione '{{operationName}}' (quindi fare clic su Salva).",
+    "step3": "Una volta visualizzato \"Pronto per i collegamenti grezzi\" in Beet, puoi fare clic sul pulsante in basso per procedere.",
+    "step4": "Verrà visualizzato un messaggio BEET, verificherà il contenuto, facoltativamente richiederà una ricevuta di BEET e quindi trasmetterà la transazione sulla blockchain.",
+    "step5": "Non riceverai una conferma in questa finestra, ma la tua operazione verrà elaborata in pochi secondi sulla blockchain.",
+    "triggerRawBeet": "Attiva il deeplink della barbabietola grezza",
+    "viaLocalFile": "Tramite caricamento file locale: pronto per procedere",
+    "step1Local": "Avvia il portafoglio BEET e vai su \"Locale\" nel menu.",
+    "step2Local": "In questa pagina consenti tutto o consenti solo l'operazione '{{operationName}}'.",
+    "step3Local": "Una volta nella pagina di caricamento locale, fai clic sul pulsante in basso per scaricare il file JSON sul tuo computer.",
+    "step4Local": "Dalla pagina BEET Local, carica il file JSON, dovrebbe quindi apparire un messaggio.",
+    "step5Local": "Verifica attentamente il contenuto della richiesta prima di approvare qualsiasi operazione, valuta anche la possibilità di attivare la ricevuta opzionale per scopi di analisi e verifica post trasmissione.",
+    "downloading": "Download in corso...",
+    "downloadBeetOperationJSON": "Scarica Operazione barbabietola JSON"
+  }
+}

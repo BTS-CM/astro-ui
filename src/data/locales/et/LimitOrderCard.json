@@ -1,0 +1,95 @@
+{
+  "buyingWith": "Ostmine {{assetA}} koos {{assetB}}",
+  "sellingFor": "Müüa {{assetA}} jaoks {{assetB}}",
+  "createLimitOrder": "Kasutage seda vormi limiittellimuse toimingu loomiseks.",
+  "editLabel": "Muuda",
+  "submit": "Esita",
+  "useBalance": "Kasutage tasakaalu",
+  "priceAmount": {
+    "label": "Hind Summa",
+    "description": "Hind summa {{assetA}} sisse {{assetB}}",
+    "provideNewLabel": "Pakkuge uus hind",
+    "useLowestAsk": "Kasutage madalaimat küsimust",
+    "useHighestBid": "Kasutage kõrgeimat pakkumist"
+  },
+  "sellAmount": {
+    "label": "Müügisumma",
+    "buyDescription": "Summa {{asset}} plaanite osta",
+    "sellDescription": "Summa {{asset}} plaanite müüa",
+    "provideNewLabel": "Esitage uus summa"
+  },
+  "sellTotal": {
+    "label": "Kokku",
+    "buyDescription": "Summa {{asset}} plaanite müüa",
+    "sellDescription": "Summa {{asset}} sa saad",
+    "provideNewLabel": "Esitage uus kogusumma",
+    "requireMore": "Sa nõuad {{requiredAmount}} rohkem {{asset}}"
+  },
+  "expiry": {
+    "label": "Limiittellimuse aegumine",
+    "1hr": "1 tund",
+    "12hr": "12 tundi",
+    "24hr": "24 tundi",
+    "7d": "7 päeva",
+    "30d": "30 päeva",
+    "specific": "Konkreetne kuupäev",
+    "fkill": "Täida või tapa",
+    "pickDate": "Valige kuupäev",
+    "fkillDescription": "See tellimus aegub kohe, kui seda ei saa täita",
+    "generalDescription": "See limiittellimus aegub {{expiryType}} peale saadet"
+  },
+  "osoValue": {
+    "enabled": "Tellimus saadab tellimuse lubatud",
+    "enable": "Luba Tellimus saadab tellimuse",
+    "description": "Automaatne OSO funktsioon on aktiivne"
+  },
+  "osoEnabled": {
+    "spreadPercentLabel": "Spread protsent",
+    "spreadPercentDescription": "Kui palju erineb take profit orderi hind algsest tellimusest",
+    "provideNewSpreadPercent": "Esitage uus leviprotsent"
+  },
+  "osoSize": {
+    "sizePercentLabel": "Suuruse protsent",
+    "sizePercentDescription": "Kasumi võtmise tellimuse müügiprotsent",
+    "provideNewSizePercent": "Esitage uus suuruse protsent"
+  },
+  "repeatValue": {
+    "label": "Kas määrata OSO automaatselt kordama?",
+    "description": "Automatiseerib korduvad OSO-põhised limiittellimused",
+    "enabled": "OSO on konfigureeritud kordama",
+    "disabled": "OSO on konfigureeritud mitte kordama"
+  },
+  "fee": {
+    "label": "Tasu",
+    "description": "Selle toimingu edastamise võrgutasu",
+    "unfilledRebate": "Täitmata allahindlus: {{fee}} BTS (kohene)",
+    "ltmRebate": "LTM-i allahindlus: {{rebate}} BTS (üleandmine)"
+  },
+  "marketFees": {
+    "label": "Turu tasu",
+    "description": "Varade emitendi kohaldatav turutasu"
+  },
+  "sellPrice": {
+    "label": "Hind",
+    "useLowestAsk": "Kasutage Lowest Ask",
+    "description": "Teie hind per? "
+  },
+  "sellAmount2": {
+    "label": "Summa",
+    "buyDescription": "Summa ? ",
+    "sellDescription": "Summa ? "
+  },
+  "sellTotal2": {
+    "label": "Kokku",
+    "buyDescription": "Summa ? ",
+    "sellDescription": "Summa ? "
+  },
+  "expiry2": {
+    "label": "Piira tellimuse aegumist",
+    "description": "Aeg aegumiseni..."
+  },
+  "headerText": {
+    "buying": "Ostmine {{amount}} {{thisAssetA}} jaoks {{total}} {{thisAssetB}}",
+    "selling": "Müüa {{amount}} {{thisAssetA}} jaoks {{total}} {{thisAssetB}}"
+  }
+}

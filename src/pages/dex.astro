@@ -7,9 +7,9 @@ import PageFooter from '../components/PageFooter';
 
 <Layout title="Bitshares decentralized cryptocurrency exchange - limit order page">
 	<main>
-		<PageHeader client:only page="dex" backURL="../index.html" />
-		<MarketOverlay  client:only />
-		<PageFooter client:only sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/dex.astro" />
+		<PageHeader client:only="react" page="dex" backURL="../index.html" />
+		<MarketOverlay client:only="react" />
+		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/dex.astro" />
 	</main>
 </Layout>
 

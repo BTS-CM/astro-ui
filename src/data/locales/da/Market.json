@@ -1,0 +1,19 @@
+{
+  "buyOrders": "Køb ordrer (bud)",
+  "sellOrders": "Sælg ordrer (spørger)",
+  "quoteAsset": "Citat aktiv",
+  "baseAsset": "Basisaktiv",
+  "loading": "Indlæser...",
+  "controls": "Markedskontrol",
+  "blocksightsMarketExplorer": "🔎 Blocksights markedsudforsker",
+  "marketSummary": "Markedsoversigt",
+  "latestPrice": "Seneste pris:",
+  "24HrChange": "24 timers ændring:",
+  "24HrBaseVolume": "24 timers basisvolumen:",
+  "24HrQuoteVolume": "24 timers tilbudsvolumen:",
+  "lowestAsk": "Laveste spørger:",
+  "highestBid": "Højeste bud:",
+  "externalMarketLinks": "Eksterne markedsforbindelser",
+  "buy": "Købe",
+  "sell": "Sælge"
+}

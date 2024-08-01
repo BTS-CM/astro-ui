@@ -1,0 +1,182 @@
+name: Build/release
+
+permissions:
+  contents: write
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  create_release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+    - name: Create Release
+      id: create_release
+      uses: BTS-CM/action-gh-release@cd28b0f5ee8571b76cfdaa62a30d51d752317477
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+      with:
+        name: ${{ github.ref_name }}
+        draft: true
+        prerelease: endsWith(github.ref_name, 'rc1') || endsWith(github.ref_name, 'rc2') || endsWith(github.ref_name, 'rc3')
+        generate_release_notes: false
+
+  build:
+    name: build_release
+    needs: create_release
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+        include:
+          - os: windows-latest
+            release_suffix: windows
+            release_format: exe
+          - os: ubuntu-latest
+            release_suffix: ubuntu
+            release_format: deb
+          - os: macos-latest
+            release_suffix: macos
+            release_format: dmg
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Use Node.js 21.6.2
+      uses: actions/setup-node@v3
+      with:
+        node-version: 'node'
+        cache: 'npm'
+
+    - uses: oven-sh/setup-bun@v2
+      with:
+        bun-version: 'latest'
+    
+    - run: bun run refreshData
+    
+    - run: npm install
+    
+    - run: npm run-script build:astro
+
+    - run: npm run-script dist:${{ matrix.os }}
+
+    - name: Upload .${{ matrix.release_format }} file
+      uses: actions/upload-artifact@v3
+      with:
+        name: BTSAstroUI.${{ matrix.release_format }}
+        path: dist/BTSAstroUI.${{ matrix.release_format }}
+
+    - name: Upload linux appimage
+      if: matrix.os == 'ubuntu-latest'
+      uses: actions/upload-artifact@v3
+      with:
+        name: BTSAstroUI.AppImage
+        path: dist/BTSAstroUI.AppImage
+
+    - name: Upload .exe.blockmap
+      if: matrix.release_format == 'exe'
+      uses: actions/upload-artifact@v3
+      with:
+        name: BTSAstroUI.exe.blockmap
+        path: dist/BTSAstroUI.exe.blockmap
+
+    - name: Upload latest.yml file
+      if: matrix.release_format == 'exe'
+      uses: actions/upload-artifact@v3
+      with:
+        name: latest.yml
+        path: dist/latest.yml
+
+    - run: ls dist
+
+  generate:
+    name: generate files
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: reqs
+      run: sudo apt-get install unzip
+    - name: Download VT
+      run: wget https://github.com/VirusTotal/vt-cli/releases/download/1.0.0/Linux64.zip
+    - name: Unzip VT
+      run: unzip Linux64.zip
+    - name: Prepare
+      run: chmod +x vt
+    - name: Download exe
+      uses: actions/download-artifact@v3
+      with:
+        name: BTSAstroUI.exe
+        path: ~/
+    - name: Download exe blockmap
+      uses: actions/download-artifact@v3
+      with:
+        name: BTSAstroUI.exe.blockmap
+        path: ~/
+    - name: Download latest yml
+      uses: actions/download-artifact@v3
+      with:
+        name: latest.yml
+        path: ~/
+    - name: Download dmg
+      uses: actions/download-artifact@v3
+      with:
+        name: BTSAstroUI.dmg
+        path: ~/
+    - name: Download deb
+      uses: actions/download-artifact@v3
+      with:
+        name: BTSAstroUI.deb
+        path: ~/
+    - name: Download AppImage
+      uses: actions/download-artifact@v3
+      with:
+        name: BTSAstroUI.AppImage
+        path: ~/
+    - name: scan
+      id: scan
+      run: |
+          echo "::set-output name=exeVT::$(./vt scan file /home/runner/BTSAstroUI.exe -k ${{ secrets.VT_API_KEY }}|cut -d' ' -f2)"
+          echo "::set-output name=exeMapVT::$(./vt scan file /home/runner/BTSAstroUI.exe.blockmap -k ${{ secrets.VT_API_KEY }}|cut -d' ' -f2)"
+          echo "::set-output name=ymlVT::$(./vt scan file /home/runner/latest.yml -k ${{ secrets.VT_API_KEY }}|cut -d' ' -f2)"
+          echo "::set-output name=dmgVT::$(./vt scan file /home/runner/BTSAstroUI.dmg -k ${{ secrets.VT_API_KEY }}|cut -d' ' -f2)"
+          echo "::set-output name=debVT::$(./vt scan file /home/runner/BTSAstroUI.deb -k ${{ secrets.VT_API_KEY }}|cut -d' ' -f2)"
+          echo "::set-output name=appVT::$(./vt scan file /home/runner/BTSAstroUI.AppImage -k ${{ secrets.VT_API_KEY }}|cut -d' ' -f2)"
+    - name: Calculate hashes
+      id: calc_hash
+      run: |
+          echo "::set-output name=blockmaphash::$(sha256sum /home/runner/BTSAstroUI.exe.blockmap|cut -c-64)"
+          echo "::set-output name=ymlhash::$(sha256sum /home/runner/latest.yml|cut -c-64)"
+          echo "::set-output name=exehash::$(sha256sum /home/runner/BTSAstroUI.exe|cut -c-64)"
+          echo "::set-output name=dmghash::$(sha256sum /home/runner/BTSAstroUI.dmg|cut -c-64)"
+          echo "::set-output name=debhash::$(sha256sum /home/runner/BTSAstroUI.deb|cut -c-64)"
+          echo "::set-output name=apphash::$(sha256sum /home/runner/BTSAstroUI.AppImage|cut -c-64)"
+    - name: Perform release
+      uses: BTS-CM/action-gh-release@cd28b0f5ee8571b76cfdaa62a30d51d752317477
+      with:
+        files: |
+            /home/runner/BTSAstroUI.exe
+            /home/runner/BTSAstroUI.dmg
+            /home/runner/BTSAstroUI.deb
+            /home/runner/BTSAstroUI.AppImage
+            /home/runner/BTSAstroUI.exe.blockmap
+            /home/runner/latest.yml
+        tag_name: ${{ needs.create_release.outputs.tag-name }}
+        body: |
+                Release Notes
+                _________________________________
+                Binaries for download
+                --------
+                | Platform | SHA256 Checksum | VirusTotal Analyses |
+                |---|---|---|
+                |[Microsoft Windows](https://github.com/BTS-CM/astro-ui/releases/download/${{ github.ref_name }}/BTSAstroUI.exe)|`${{steps.calc_hash.outputs.exehash}}`|[exe](https://www.virustotal.com/gui/file-analysis/${{steps.scan.outputs.exeVT}})|
+                |[MacOS](https://github.com/BTS-CM/astro-ui/releases/download/${{ github.ref_name }}/BTSAstroUI.dmg)|`${{steps.calc_hash.outputs.dmghash}}`|[dmg](https://www.virustotal.com/gui/file-analysis/${{steps.scan.outputs.dmgVT}})|
+                |[Linux Deb](https://github.com/BTS-CM/astro-ui/releases/download/${{ github.ref_name }}/BTSAstroUI.deb)|`${{steps.calc_hash.outputs.debhash}}`|[deb](https://www.virustotal.com/gui/file-analysis/${{steps.scan.outputs.debVT}})|
+                |[Linux AppImage](https://github.com/BTS-CM/astro-ui/releases/download/${{ github.ref_name }}/BTSAstroUI.AppImage)|`${{steps.calc_hash.outputs.apphash}}`|[AppImage](https://www.virustotal.com/gui/file-analysis/${{steps.scan.outputs.appVT}})|
+                |[EXE blockmap](https://github.com/BTS-CM/astro-ui/releases/download/${{ github.ref_name }}/BTSAstroUI.exe.blockmap)|`${{steps.calc_hash.outputs.blockmaphash}}`|[blockmap](https://www.virustotal.com/gui/file-analysis/${{steps.scan.outputs.exeMapVT}})|
+                |[Latest.yml](https://github.com/BTS-CM/astro-ui/releases/download/${{ github.ref_name }}/latest.yml)|`${{steps.calc_hash.outputs.ymlhash}}`|[yml](https://www.virustotal.com/gui/file-analysis/${{steps.scan.outputs.ymlVT}})|
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

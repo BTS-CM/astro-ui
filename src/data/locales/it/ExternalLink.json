@@ -1,0 +1,9 @@
+{
+  "dialogContent": {
+    "leaveApp": "⚠️ Stai per lasciare questa app!",
+    "navigateToExternal": "Stai per navigare verso un sito web esterno.",
+    "proceedToURL": "Vuoi procedere al seguente URL?",
+    "checkingLeave": "Stavo solo controllando: sei sicuro di voler uscire?",
+    "openLink": "Link aperto"
+  }
+}

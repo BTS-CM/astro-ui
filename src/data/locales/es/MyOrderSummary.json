@@ -1,0 +1,9 @@
+{
+  "editLimitOrderTitle": "¿Quieres editar esta orden límite?",
+  "editLimitOrderDescription": "Las órdenes limitadas ahora se pueden actualizar; ahorre en tarifas actualizando las órdenes limitadas.",
+  "selectedOpenOrderData": "Datos de la orden abierta seleccionada:",
+  "proceedToUpdateButton": "Proceda a actualizar esta orden de límite abierto",
+  "viewObjectOnBlocksights": "Ver objeto en blocksights.info",
+  "priceColumnTitle": "Precio",
+  "expirationDateColumnTitle": "Fecha de caducidad"
+}

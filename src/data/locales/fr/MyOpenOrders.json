@@ -1,0 +1,6 @@
+{
+  "openBuyOrdersTitle": "Mes ordres d'achat ouverts",
+  "openSellOrdersTitle": "Mes ordres de vente ouverts",
+  "openBuyOrdersDescription": "Vos ordres d'achat limités ouverts pour le marché {{assetA}}/{{assetB}}",
+  "openSellOrdersDescription": "Vos ordres de vente à cours limité ouverts pour le marché {{assetA}}/{{assetB}}"
+}

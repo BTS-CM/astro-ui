@@ -11,9 +11,9 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import { useInitCache } from "../effects/Init.ts";
-import { createMarketsStore } from "../effects/Market.ts";
-import { $currentUser } from "../stores/users.ts";
+import { useInitCache } from "@/nanoeffects/Init.ts";
+import { createTopMarketsStore } from "@/nanoeffects/TopMarkets.ts";
+import { $currentUser } from "@/stores/users.ts";
 
 export default function Featured(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
@@ -25,22 +25,14 @@ export default function Featured(properties) {
   useEffect(() => {
     let unsubscribeMarkets;
 
-    if (usr && usr.chain && usr.chain.length) {
-      let marketsStore;
-      try {
-        marketsStore = createMarketsStore(usr.chain);
-      } catch (e) {
-        console.log(e);
-        return;
-      }
+    if (usr && usr.chain) {
+      let marketsStore = createTopMarketsStore(usr.chain);
 
-      unsubscribeMarkets = marketsStore
-        ? marketsStore.subscribe(({ data, loading, error }) => {
-            if (data && !error && !loading) {
-              setRetrievedMarkets(data);
-            }
-          })
-        : null;
+      unsubscribeMarkets = marketsStore.subscribe(({ data, loading, error }) => {
+        if (data && !error && !loading) {
+          setRetrievedMarkets(data);
+        }
+      });
     }
 
     return () => {

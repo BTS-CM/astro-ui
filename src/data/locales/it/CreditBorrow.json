@@ -1,0 +1,36 @@
+{
+  "common": {
+    "title": " Offerta{{orderID}} di {{owner_name}} ({{owner_account}})",
+    "offering": "Offerta",
+    "accepting": "Accettare",
+    "loading": "Caricamento...",
+    "fee": "Tassa: {{fee}}%",
+    "repayPeriod": "Periodo di rimborso: {{repayPeriod}} ore",
+    "validity": "Offerta valida per {{validity}} ore",
+    "min": "Importo minimo: {{amount}} {{asset}}",
+    "proceed": "Procedere con l'offerta di credito{{offerID}}",
+    "edit": "Modifica offerta",
+    "view": "Visualizza le impostazioni"
+  },
+  "card": {
+    "title": "🏦 Visualizzazione delle offerte di credito disponibili",
+    "description": "Le offerte di credito sono generate dagli utenti, offrono tassi, asset e durate diverse; ",
+    "viewingAll": "Visualizzazione di tutte le offerte",
+    "viewAll": "Visualizza tutte le offerte",
+    "viewingAvailable": "Visualizzazione degli ordini compatibili",
+    "viewAvailable": "Visualizza gli ordini compatibili",
+    "viewingSearch": "Ricerca",
+    "viewSearch": "Ricerca",
+    "allOffers": "Queste offerte di credito offrono una varietà di beni mutuabili a tassi concorrenti.",
+    "availableOffers": "Queste offerte di credito accettano beni che possiedi come garanzia a sostegno del prestito.",
+    "searchPrompt": "Come vuoi cercare?",
+    "borrowSearching": "Ricerca per bene mutuabile",
+    "borrowSearch": "Ricerca per bene mutuabile",
+    "collateralSearching": "Ricerca per beni collaterali",
+    "collateralSearch": "Ricerca per beni collaterali",
+    "ownerSearching": "Ricerca per nome del proprietario",
+    "ownerSearch": "Cerca per nome del proprietario",
+    "noResults": "nessun risultato trovato",
+    "loading": "Caricamento offerte..."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "loadingMessage": "Wird geladen...",
+  "noPoolsFoundMessage": "0 Pools gefunden",
+  "poolsFound": "{{count}} Pools gefunden",
+  "idColumnTitle": "Ausweis",
+  "shareAssetColumnTitle": "Vermögenswert teilen",
+  "assetAColumnTitle": "Vermögenswert A",
+  "assetBColumnTitle": "Vermögenswert B",
+  "assetAPoolsTitle": "{{assetA}} Pools",
+  "assetAPoolsDialogTitle": "{{assetA}} Pools",
+  "assetAPoolsDialogDescription": "Diese Bitshares-Pools verwenden {{assetA}} ({{assetAId}}) als eines der Vermögenswerte.",
+  "assetAHoverCardContent": "Tauschen {{assetA}} Nutzung eines dieser Liquiditätspools",
+  "marketPoolsTitle": "Marktpools",
+  "marketPoolsDialogTitle": "{{assetA}}/{{assetB}} Pools",
+  "marketPoolsDialogDescription": "Diese Pools handeln zwischen {{assetA}} Und {{assetB}}.",
+  "marketHoverCardContent": "Wechseln Sie zwischen {{assetA}} Und {{assetB}} Nutzung eines dieser Liquiditätspools",
+  "assetBPoolsTitle": "{{assetB}} Pools",
+  "assetBPoolsDialogTitle": "{{assetB}} Pools",
+  "assetBPoolsDialogDescription": "Diese Bitshares-Pools verwenden {{assetB}} ({{assetBId}}) als eines der Vermögenswerte.",
+  "assetBHoverCardContent": "Tauschen {{assetB}} Nutzung eines dieser Liquiditätspools"
+}

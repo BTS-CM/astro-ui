@@ -27,7 +27,7 @@ import { Button } from "@/components/ui/button";
 import ExternalLink from "../common/ExternalLink.jsx";
 import CardRow from "../common/CardRow.jsx";
 
-import { humanReadableFloat } from "../../lib/common";
+import { humanReadableFloat } from "@/lib/common";
 
 export default function MarketAssetCard(properties) {
   const { asset, assetData, assetDetails, bitassetData, marketSearch, chain, usrBalances, type } =

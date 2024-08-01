@@ -2,7 +2,7 @@ import React, { useSyncExternalStore } from "react";
 import { useTranslation } from "react-i18next";
 
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
-import { $currentUser } from "../stores/users.ts";
+import { $currentUser } from "@/stores/users.ts";
 
 import CurrentUser from "./common/CurrentUser.jsx";
 
@@ -51,6 +51,34 @@ export default function PageFooter(properties) {
           </a>
           .
         </h4>
+        
+        <h3 className="text-muted-foreground text-center">
+          {t("PageHeader:usage")}
+          <a
+            style={{
+              backgroundImage: "var(--accent-gradient)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundSize: "400%",
+              backgroundPosition: "0%",
+            }}
+            href="https://github.com/bitshares/beet"
+          >
+            Beet
+          </a> & <a
+            style={{
+              backgroundImage: "var(--accent-gradient)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundSize: "400%",
+              backgroundPosition: "0%",
+            }}
+            href="https://github.com/beetapp/beeteos"
+          >
+            BeetEOS
+          </a>
+          .
+        </h3>
       </div>
     </div>
   );

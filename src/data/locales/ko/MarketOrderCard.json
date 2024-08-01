@@ -1,0 +1,15 @@
+{
+  "proceedLimitOrderDataTitle": "다음 지정가 주문 데이터를 진행하시겠습니까?",
+  "proceedLimitOrderDataDescription": "그만큼 {{cardType}} 위의 지정가 주문 양식은 다음 시장 주문 데이터로 작성됩니다.",
+  "sellingQuoteForBase": "판매 {{totalQuote}} {{assetA}} 그 대가로 적어도 {{totalBase}} {{assetB}}",
+  "sellingBaseForQuote": "판매 {{totalBase}} {{assetB}} 그 대가로 적어도 {{totalQuote}} {{assetA}}",
+  "pricePerAsset": "가격: {{price}} {{assetB}} 1개당 {{assetA}}",
+  "proceedButton": "진행하다",
+  "marketDataRefreshing": "시장 데이터를 새로 고치는 중입니다. 잠시 기다려 주세요...",
+  "loadingMarketOrdersTitle": "시장가 주문 로드 중",
+  "loadingMarketOrdersDescription": "요청한 시장 데이터를 가져오는 중입니다. 잠시 기다려 주세요...",
+  "openBuyLimitOrdersTitle": "매수 제한 주문 열기",
+  "openSellLimitOrdersTitle": "판매 제한 주문 열기",
+  "buyLimitOrdersDescription": "다음 표에는 구매할 수 있는 네트워크 제안이 표시되어 있습니다. {{assetA}} ~와 함께 {{assetB}}",
+  "sellLimitOrdersDescription": "다음 표에는 판매할 네트워크 제안이 나와 있습니다. {{assetA}} ~을 위한 {{assetB}}"
+}

@@ -1,0 +1,36 @@
+{
+  "common": {
+    "title": " Pakkumine{{orderID}} kõrval {{owner_name}} ({{owner_account}})",
+    "offering": "Pakkumine",
+    "accepting": "Aktsepteerimine",
+    "loading": "Laadimine...",
+    "fee": "Tasu: {{fee}}%",
+    "repayPeriod": "Tagasimakse periood: {{repayPeriod}} tundi",
+    "validity": "Pakkumine kehtib {{validity}} tundi",
+    "min": "Minimaalne summa: {{amount}} {{asset}}",
+    "proceed": "Jätkake krediidipakkumisega{{offerID}}",
+    "edit": "Muuda pakkumist",
+    "view": "Kuva seaded"
+  },
+  "card": {
+    "title": "🏦 Saadaolevate krediidipakkumiste vaatamine",
+    "description": "Krediidipakkumised on kasutaja loodud, need pakuvad erinevaid intressimäärasid, varasid ja kestusi; ",
+    "viewingAll": "Kõikide pakkumiste vaatamine",
+    "viewAll": "Vaata kõiki pakkumisi",
+    "viewingAvailable": "Ühilduvate tellimuste vaatamine",
+    "viewAvailable": "Vaadake ühilduvaid tellimusi",
+    "viewingSearch": "Otsimine",
+    "viewSearch": "Otsing",
+    "allOffers": "Need krediidipakkumised pakuvad erinevaid laenatavaid varasid konkureerivate intressimääradega.",
+    "availableOffers": "Need krediidipakkumised aktsepteerivad teile kuuluvaid varasid laenu tagatistagatisena.",
+    "searchPrompt": "Kuidas soovite otsida?",
+    "borrowSearching": "Otsimine laenatava vara järgi",
+    "borrowSearch": "Otsige laenatava vara järgi",
+    "collateralSearching": "Otsing tagatisvarade järgi",
+    "collateralSearch": "Otsige tagatisvarade järgi",
+    "ownerSearching": "Otsimine omaniku nime järgi",
+    "ownerSearch": "Otsige omaniku nime järgi",
+    "noResults": "Tulemusi ei leitud",
+    "loading": "Pakkumiste laadimine..."
+  }
+}

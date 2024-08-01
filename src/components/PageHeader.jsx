@@ -189,62 +189,24 @@ export default function PageHeader(properties) {
           </div>
           <div className="col-span-8 text-center">
             <h2>
-              {t("PageHeader:welcomeMessage")}
-              <span
-                style={{
-                  backgroundImage: "var(--accent-gradient)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundSize: "400%",
-                  backgroundPosition: "0%",
-                }}
-              >
-                {t("PageHeader:uiName")}
-              </span>
+              <a href="/index.html">
+                {t("PageHeader:welcomeMessage")}
+                <span
+                  style={{
+                    backgroundImage: "var(--accent-gradient)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundSize: "400%",
+                    backgroundPosition: "0%",
+                  }}
+                >
+                  {t("PageHeader:uiName")}
+                </span>
+              </a>
             </h2>
-            <h3 className="text-muted-foreground">
+            <h4 className="text-muted-foreground">
               {t(`PageHeader:descText.${page}`)}
-              <br />
-              {t("PageHeader:usage")}
-              <a
-                style={{
-                  backgroundImage: "var(--accent-gradient)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundSize: "400%",
-                  backgroundPosition: "0%",
-                }}
-                href="https://github.com/bitshares/beet"
-              >
-                Beet
-              </a> & <a
-                style={{
-                  backgroundImage: "var(--accent-gradient)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundSize: "400%",
-                  backgroundPosition: "0%",
-                }}
-                href="https://github.com/beetapp/beeteos"
-              >
-                BeetEOS
-              </a>
-              .
-            </h3>
-            {backURL ? (
-              <a
-                style={{
-                  backgroundImage: "var(--accent-gradient)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundSize: "400%",
-                  backgroundPosition: "0%",
-                }}
-                href={backURL}
-              >
-                {t("PageHeader:back")}
-              </a>
-            ) : null}
+            </h4>
           </div>
           <div className="col-span-2 text-right">
             <DropdownMenu>

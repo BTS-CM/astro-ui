@@ -1,0 +1,59 @@
+{
+  "dealNo": "거래",
+  "with": " ~와 함께 ",
+  "borrowed": "당신은 빌린",
+  "lent": "그들은 빌렸다",
+  "loanCollateral": "대출 담보:",
+  "borrower": "대출 수수료",
+  "lender": "수입",
+  "remainingTime": "남은 시간:",
+  "repayLoan": "대출금 상환",
+  "trade": "거래 {{symbol}} DEX에서",
+  "dialogTitle": "대출 상환",
+  "description": "이 양식을 사용하여 신용 거래 상환을 관리하세요.",
+  "account": "계정",
+  "balance": "현재 {{symbol}} 균형",
+  "repayAmount": "금액 {{symbol}} 상환하다",
+  "remainingDebt": "남은 부채: {{amount}} {{symbol}}",
+  "repayDesc": "모든 담보를 돌려받으려면 부채를 전액 상환하십시오.",
+  "redeemCollateral": "담보 상환",
+  "remainingCollateral": "남은 담보: {amount} {{symbol}}",
+  "collateralRedemption": "금액 {{symbol}} 귀하가 상환할 담보",
+  "loanLabel": "예상 대출 수수료",
+  "loanDesc": "이는 대출 기관에 지불할 수수료입니다.",
+  "finalPaymentLabel": "최종 결제",
+  "finalPaymentDesc": "전액 상환되면 귀하의 {{symbol}} 담보는 귀하에게 반환됩니다.",
+  "finalPaymentWarning": "불충분 {{symbol}} 균형",
+  "networkFee": "네트워크 수수료",
+  "networkFeeDesc": "이는 귀하의 신용 거래 상환 작업을 블록체인에 방송하는 데 드는 수수료입니다.",
+  "rebate": "할인 {{fee}} {{chain}} (베스팅)",
+  "submit": "제출하다",
+  "deepLink": "상환 중 {{finalRepayAmount}} {{debtAsset}}, 돌려받기 위해 {{collateralAsset}}",
+  "card": {
+    "title": "💱 활성 신용 거래를 확인하세요",
+    "description": "여기에서 활성 신용 거래를 모니터링하고 상환을 관리할 수 있습니다.",
+    "viewingBorrowings": "대출 보기",
+    "viewBorrowings": "대출 보기",
+    "viewingLendings": "대출 보기",
+    "viewLendings": "대출 보기",
+    "noBorrowers": "활성 차입금이 없습니다.",
+    "noLendings": "활성 대출이 없습니다.",
+    "loading": "로드 중..."
+  },
+  "risks": {
+    "borrowerTitle": "차용자 위험 경고",
+    "lenderTitle": "대출 기관 위험 경고",
+    "description": "신용 거래와 관련된 귀하의 책임과 위험에 대한 중요한 정보입니다.",
+    "borrower": {
+      "risk1": "너 ( {{username}} )은 귀하의 신용 거래를 관리하고 적시에 상환할 책임이 있으며 다른 사람은 없습니다. ",
+      "risk2": "신용 거래 상환 기간 동안 외부 변동성에 대한 노출에 유의하십시오. ",
+      "risk3": "신용 거래를 상환하지 못하면 남은 담보 자산이 손실됩니다. "
+    },
+    "lender": {
+      "risk1": "너 ( {{username}} )은 귀하의 신용 제안, 해당 매개변수 및 위험 노출을 관리할 책임이 있으며 다른 사람은 없습니다. ",
+      "risk2": "신용 거래 상환 기간 동안 외부 변동성에 대한 노출에 유의하십시오. ",
+      "risk3": "대출 기관으로서 일단 신용 거래가 존재하면 귀하( {{username}} ) 취소할 수 없는 경우, 상환 기간 내 거래 기간에 대한 책임은 차용인에게 있습니다. ",
+      "risk4": "차용인이 신용 거래를 상환하지 못하는 경우, 그들의 담보 자산은 귀하에게 상실됩니다. "
+    }
+  }
+}

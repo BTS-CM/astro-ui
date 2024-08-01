@@ -1,0 +1,59 @@
+{
+  "dealNo": "Del",
+  "with": " med ",
+  "borrowed": "Du lånte",
+  "lent": "De lånte",
+  "loanCollateral": "Sikkerhed for lån:",
+  "borrower": "Lånegebyr",
+  "lender": "Indtjening",
+  "remainingTime": "Resterende tid:",
+  "repayLoan": "tilbagebetale lån",
+  "trade": "Handle {{symbol}} på DEX",
+  "dialogTitle": "Tilbagebetaling af lån",
+  "description": "Brug denne formular til at kontrollere tilbagebetalinger af din kreditaftale.",
+  "account": "Konto",
+  "balance": "Din nuværende {{symbol}} balance",
+  "repayAmount": "Mængde af {{symbol}} at tilbagebetale",
+  "remainingDebt": "Resterende gæld: {{amount}} {{symbol}}",
+  "repayDesc": "For at få al din sikkerhed tilbage, skal du tilbagebetale gælden fuldt ud.",
+  "redeemCollateral": "Indløs sikkerhedsstillelse",
+  "remainingCollateral": "Resterende sikkerhed: {amount} {{symbol}}",
+  "collateralRedemption": "Mængde af {{symbol}} sikkerhedsstillelse, du vil indløse",
+  "loanLabel": "Anslået lånegebyr",
+  "loanDesc": "Dette er det gebyr, du betaler til långiveren.",
+  "finalPaymentLabel": "Endelig betaling",
+  "finalPaymentDesc": "Når det er fuldt tilbagebetalt, vil din {{symbol}} sikkerhed vil blive returneret til dig.",
+  "finalPaymentWarning": "Utilstrækkelig {{symbol}} balance",
+  "networkFee": "Netværksgebyr",
+  "networkFeeDesc": "Dette er gebyret for at udsende din tilbagebetaling af kreditaftale til blockchain.",
+  "rebate": "Rabat {{fee}} {{chain}} (optjening)",
+  "submit": "Indsend",
+  "deepLink": "Tilbagebetaling {{finalRepayAmount}} {{debtAsset}}, for at kræve tilbage {{collateralAsset}}",
+  "card": {
+    "title": "💱 Tjek dine aktive kreditaftaler",
+    "description": "Herfra kan du både overvåge aktive kreditaftaler og administrere tilbagebetalinger.",
+    "viewingBorrowings": "Se dine lån",
+    "viewBorrowings": "Se dine lån",
+    "viewingLendings": "Se dine udlån",
+    "viewLendings": "Se dine udlån",
+    "noBorrowers": "Ingen aktive lån fundet",
+    "noLendings": "Ingen aktive udlån fundet",
+    "loading": "Indlæser..."
+  },
+  "risks": {
+    "borrowerTitle": "Advarsel om låntagerrisiko",
+    "lenderTitle": "Advarsel om långiverrisiko",
+    "description": "Vigtig information om dit ansvar og risici forbundet med kreditaftaler.",
+    "borrower": {
+      "risk1": "dig ( {{username}} ) er ansvarlige for at administrere dine kreditaftaler og tilbagebetale dem rettidigt, ingen andre. ",
+      "risk2": "Vær opmærksom på din eksponering for eksterne volatiliteter i kreditaftalens tilbagebetalingsperiode; ",
+      "risk3": "Manglende tilbagebetaling af en kreditaftale vil resultere i tab af resterende sikkerhedsstillelse. "
+    },
+    "lender": {
+      "risk1": "dig ( {{username}} ) er ansvarlige for at administrere dine kredittilbud, deres parametre og deres risikoeksponering, ingen andre. ",
+      "risk2": "Vær opmærksom på din eksponering for eksterne volatiliteter i kreditaftalens tilbagebetalingsperiode; ",
+      "risk3": "Som långiver, når der først er en kreditaftale, kan du ( {{username}} ) ikke kan annullere den, er låntager ansvarlig for handlens varighed inden for tilbagebetalingsperioden. ",
+      "risk4": "Hvis låntagere undlader at tilbagebetale deres kreditaftaler, vil deres sikkerhedsstillelse mistes til dig. "
+    }
+  }
+}

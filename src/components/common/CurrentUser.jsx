@@ -90,9 +90,6 @@ export default function CurrentUser(properties) {
           <DialogContent className="sm:max-w-[600px] bg-white">
             <DialogHeader>
               <DialogTitle>{t("CurrentUser:dialogContent.replacingUser")}</DialogTitle>
-              <DialogDescription>
-                {t("CurrentUser:dialogContent.selectChainAccount")}
-              </DialogDescription>
             </DialogHeader>
             <AccountSelect />
           </DialogContent>

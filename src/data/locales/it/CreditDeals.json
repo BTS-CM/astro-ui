@@ -1,0 +1,59 @@
+{
+  "dealNo": "Affare",
+  "with": " con ",
+  "borrowed": "Hai preso in prestito",
+  "lent": "Hanno preso in prestito",
+  "loanCollateral": "Garanzia del prestito:",
+  "borrower": "Commissione di prestito",
+  "lender": "Guadagni",
+  "remainingTime": "Tempo rimanente:",
+  "repayLoan": "Rimborsare il prestito",
+  "trade": "Commercio {{symbol}} su DEX",
+  "dialogTitle": "Rimborso del prestito",
+  "description": "Utilizza questo modulo per controllare i rimborsi del tuo contratto di credito.",
+  "account": "Account",
+  "balance": "Il tuo attuale {{symbol}} bilancia",
+  "repayAmount": "Quantità di {{symbol}} ripagare",
+  "remainingDebt": "Debito residuo: {{amount}} {{symbol}}",
+  "repayDesc": "Per recuperare tutte le garanzie collaterali, ripagare integralmente il debito.",
+  "redeemCollateral": "Riscattare la garanzia",
+  "remainingCollateral": "Garanzia rimanente: {importo} {{symbol}}",
+  "collateralRedemption": "Quantità di {{symbol}} garanzia collaterale che riscatterai",
+  "loanLabel": "Commissione di prestito stimata",
+  "loanDesc": "Questa è la commissione che pagherai al creditore.",
+  "finalPaymentLabel": "Pagamento finale",
+  "finalPaymentDesc": "Una volta rimborsato per intero, il tuo {{symbol}} la garanzia ti verrà restituita.",
+  "finalPaymentWarning": "Insufficiente {{symbol}} bilancia",
+  "networkFee": "Tariffa di rete",
+  "networkFeeDesc": "Questa è la commissione per trasmettere l'operazione di rimborso del tuo contratto di credito sulla blockchain.",
+  "rebate": "Sconto {{fee}} {{chain}} (veste)",
+  "submit": "Invia",
+  "deepLink": "Rimborsare {{finalRepayAmount}} {{debtAsset}}, per reclamare la restituzione {{collateralAsset}}",
+  "card": {
+    "title": "💱 Controlla le tue offerte di credito attive",
+    "description": "Da qui puoi sia monitorare i contratti di credito attivi sia gestire i rimborsi.",
+    "viewingBorrowings": "Visualizzazione dei tuoi prestiti",
+    "viewBorrowings": "Visualizza i tuoi prestiti",
+    "viewingLendings": "Visualizzazione dei tuoi prestiti",
+    "viewLendings": "Visualizza i tuoi prestiti",
+    "noBorrowers": "Nessun prestito attivo trovato",
+    "noLendings": "Nessun prestito attivo trovato",
+    "loading": "Caricamento..."
+  },
+  "risks": {
+    "borrowerTitle": "Avvertenza sul rischio del mutuatario",
+    "lenderTitle": "Avvertimento sul rischio del prestatore",
+    "description": "Informazioni importanti sulle responsabilità e sui rischi associati alle operazioni di credito.",
+    "borrower": {
+      "risk1": "Voi ( {{username}} ) sono responsabili della gestione dei tuoi contratti di credito e del loro rimborso in modo tempestivo, nessun altro. ",
+      "risk2": "Sii consapevole della tua esposizione alle volatilità esterne durante il periodo di rimborso del contratto di credito; ",
+      "risk3": "Il mancato rimborso di un accordo di credito comporterà la perdita delle rimanenti attività collaterali di garanzia. "
+    },
+    "lender": {
+      "risk1": "Voi ( {{username}} ) sono responsabili della gestione delle vostre offerte di credito, dei loro parametri e della loro esposizione al rischio, e nessun altro. ",
+      "risk2": "Sii consapevole della tua esposizione alle volatilità esterne durante il periodo di rimborso del contratto di credito; ",
+      "risk3": "Come prestatore, una volta che esiste un contratto di credito, tu ( {{username}} ) non può annullarlo, il mutuatario è responsabile per la durata dell'accordo entro il periodo di rimborso. ",
+      "risk4": "Se i mutuatari non riescono a ripagare i loro accordi di credito, le loro attività collaterali di supporto verranno perse. "
+    }
+  }
+}

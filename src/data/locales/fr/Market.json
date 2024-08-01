@@ -1,0 +1,19 @@
+{
+  "buyOrders": "Ordres d'achat (offres)",
+  "sellOrders": "Ordres de vente (demande)",
+  "quoteAsset": "Actif de cotation",
+  "baseAsset": "Actif de base",
+  "loading": "Chargement...",
+  "controls": "Contrôles du marché",
+  "blocksightsMarketExplorer": "🔎 Explorateur de marché Blocksights",
+  "marketSummary": "Résumé du marché",
+  "latestPrice": "Dernier prix :",
+  "24HrChange": "Changement sur 24 heures :",
+  "24HrBaseVolume": "Volume de base sur 24 heures :",
+  "24HrQuoteVolume": "Volume de devis sur 24 heures :",
+  "lowestAsk": "Demande la plus basse :",
+  "highestBid": "Offre la plus élevée:",
+  "externalMarketLinks": "Liens avec le marché externe",
+  "buy": "Acheter",
+  "sell": "Vendre"
+}

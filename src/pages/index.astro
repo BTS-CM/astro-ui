@@ -7,9 +7,9 @@ import PageFooter from '../components/PageFooter';
 
 <Layout title="Bitshares Beet Astro UI - index">
 	<main>
-		<PageHeader client:only page="index" backURL="" />
-		<Home client:only />
-		<PageFooter client:only sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/index.astro" />
+		<PageHeader client:only="react" page="index" backURL="" />
+		<Home client:only="react" />
+		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/index.astro" />
 	</main>
 </Layout>
 

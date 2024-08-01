@@ -1,0 +1,8 @@
+{
+  "recentlyCompletedBuyOrdersTitle": "Dine nyligt gennemførte købsordrer",
+  "recentlyCompletedSellOrdersTitle": "Dine nyligt afsluttede salgsordrer",
+  "recentlyCompletedBuyOrdersDescription": "Tabellen nedenfor viser dine nyligt gennemførte købsordrer",
+  "recentlyCompletedSellOrdersDescription": "Tabellen nedenfor viser dine nyligt afsluttede salgsordrer",
+  "noRecentlyCompletedPurchases": "Der blev ikke fundet nogen nyligt gennemførte køb",
+  "noRecentlyCompletedSales": "Der blev ikke fundet noget nyligt gennemførte salg"
+}

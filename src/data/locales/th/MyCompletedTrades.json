@@ -1,0 +1,8 @@
+{
+  "recentlyCompletedBuyOrdersTitle": "คำสั่งซื้อที่เสร็จสมบูรณ์ล่าสุดของคุณ",
+  "recentlyCompletedSellOrdersTitle": "คำสั่งซื้อขายที่เพิ่งเสร็จสิ้นของคุณ",
+  "recentlyCompletedBuyOrdersDescription": "ตารางด้านล่างแสดงรายการคำสั่งซื้อที่เสร็จสมบูรณ์ล่าสุดของคุณ",
+  "recentlyCompletedSellOrdersDescription": "ตารางด้านล่างแสดงรายการคำสั่งขายที่เสร็จสมบูรณ์ล่าสุดของคุณ",
+  "noRecentlyCompletedPurchases": "ไม่พบการซื้อที่เสร็จสมบูรณ์เมื่อเร็วๆ นี้",
+  "noRecentlyCompletedSales": "ไม่พบยอดขายที่เสร็จสมบูรณ์เมื่อเร็วๆ นี้"
+}

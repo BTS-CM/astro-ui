@@ -1,0 +1,7 @@
+{
+  "dialogContent": {
+    "switchAccountChain": "アカウント/チェーンを切り替える",
+    "replacingUser": "現在のユーザーを置き換える",
+    "selectChainAccount": "チェーンとアカウントを選択して続行してください"
+  }
+}

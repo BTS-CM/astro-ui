@@ -13,7 +13,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-
 import {
   Form,
   FormControl,
@@ -25,20 +24,18 @@ import {
 } from "@/components/ui/form";
 import { Avatar as Av, AvatarFallback } from "@/components/ui/avatar";
 import { Avatar } from "@/components/Avatar.tsx";
-
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-import { useInitCache } from "../effects/Init.ts";
-import { createUserBalancesStore } from "../effects/User.ts";
-import {
-  createLiteSmartcoinDataStore,
-  createSmartcoinCollateralBidsStore,
-} from "../effects/Assets.ts";
+import { humanReadableFloat, getFlagBooleans, blockchainFloat } from "@/lib/common.js";
 
-import { $currentUser } from "../stores/users.ts";
+import { useInitCache } from "@/nanoeffects/Init.ts";
+import { createCollateralBidStore } from "@/nanoeffects/CollateralBids.ts";
+import { createObjectStore } from "@/nanoeffects/Objects.ts";
+
+import { $currentUser } from "@/stores/users.ts";
 import {
   $marketSearchCacheBTS,
   $marketSearchCacheTEST,
@@ -46,11 +43,9 @@ import {
   $globalParamsCacheTEST,
   $bitAssetDataCacheBTS,
   $bitAssetDataCacheTEST,
-} from "../stores/cache.ts";
+} from "@/stores/cache.ts";
 
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
-
-import { humanReadableFloat, getFlagBooleans, blockchainFloat } from "../lib/common.js";
 
 export default function Settlement(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
@@ -272,17 +267,20 @@ export default function Settlement(properties) {
     }
   }, [finalBitasset, parsedAsset, parsedCollateralAsset]);
 
-  useEffect(() => {
-    let unsub;
+  const [collateralBids, setCollateralBids] = useState();
 
+  
+  useEffect(() => {
     if (parsedBitasset && parsedBitasset && usr && usr.chain) {
-      const smartcoinDataStore = createLiteSmartcoinDataStore([
+      const smartcoinDataStore = createObjectStore([
         usr.chain,
-        parsedAsset.id,
-        parsedBitasset.collateral,
-        parsedBitasset.id,
+        JSON.stringify([
+          parsedAsset.id,
+          parsedBitasset.collateral,
+          parsedBitasset.id
+        ]),
       ]);
-      unsub = smartcoinDataStore.subscribe(({ data, error, loading }) => {
+      smartcoinDataStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
           setFinalAsset(data[0]);
           setFinalCollateralAsset(data[1]);
@@ -290,18 +288,13 @@ export default function Settlement(properties) {
         }
       });
     }
-
-    return () => {
-      if (unsub) unsub();
-    };
   }, [parsedAsset, parsedBitasset, usr]);
 
-  const [collateralBids, setCollateralBids] = useState();
   useEffect(() => {
     let unsub;
 
     if (parsedAsset && usr && usr.chain) {
-      const collateralBidsStore = createSmartcoinCollateralBidsStore([usr.chain, parsedAsset.id]);
+      const collateralBidsStore = createCollateralBidStore([usr.chain, parsedAsset.id]);
 
       unsub = collateralBidsStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {

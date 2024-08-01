@@ -1,0 +1,36 @@
+{
+  "dialogContent": {
+    "generatingDeeplink": "Gerando link direto...",
+    "withAccount": "Com a conta: {{username}} ({{userID}})",
+    "readyToBroadcast": "Sua operação Bitshares Beet está pronta para transmissão!",
+    "chooseMethod": "Escolha um dos métodos abaixo para transmitir para a carteira de sua preferência.",
+    "bitsharesBEETMultiwallet": "Carteira múltipla Bitshares BEET",
+    "errorOccurred": "Ocorreu um erro, desculpe. ",
+    "beetWallet": "Carteira múltipla Bitshares BEET"
+  },
+  "tabs": {
+    "viewTRXObject": "Ver objeto TRX",
+    "rawDeeplink": "Link direto bruto",
+    "localJSONFile": "Arquivo JSON local"
+  },
+  "tabsContent": {
+    "transactionObjectJSON": "Objeto de transação JSON",
+    "operationType": "Tipo de operação: {{operationName}}",
+    "copyOperationJSON": "Copiar operação JSON",
+    "usingDeeplink": "Usando um deeplink para transmitir através da multiwallet Beet",
+    "step1": "Inicie a carteira BEET e navegue até ‘Raw Link’ no menu, a carteira deve permanecer desbloqueada durante a transmissão.",
+    "step2": "Nesta página você pode permitir todas as operações ou permitir apenas a operação '{{operationName}}' (depois clique em salvar).",
+    "step3": "Assim que 'Pronto para links brutos' aparecer no Beet, você pode clicar no botão abaixo para continuar.",
+    "step4": "Um prompt BEET será exibido, verificará o conteúdo, opcionalmente solicitará um recibo do Beet e, em seguida, transmitirá a transação para o blockchain.",
+    "step5": "Você não receberá uma confirmação nesta janela, mas sua operação será processada em segundos no blockchain.",
+    "triggerRawBeet": "Acionar deeplink de beterraba crua",
+    "viaLocalFile": "Via upload de arquivo local - pronto para prosseguir",
+    "step1Local": "Inicie a carteira BEET e navegue até ‘Local’ no menu.",
+    "step2Local": "Nesta página, permita tudo ou permita apenas a operação '{{operationName}}'.",
+    "step3Local": "Uma vez na página de upload local, clique no botão abaixo para baixar o arquivo JSON para o seu computador.",
+    "step4Local": "Na página BEET Local, carregue o arquivo JSON e um prompt deverá aparecer.",
+    "step5Local": "Verifique minuciosamente o conteúdo do prompt antes de aprovar qualquer operação e considere também alternar o recibo opcional para fins de análise e verificação pós-transmissão.",
+    "downloading": "Baixando...",
+    "downloadBeetOperationJSON": "Baixe JSON da operação Beet"
+  }
+}

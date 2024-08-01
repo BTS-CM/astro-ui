@@ -1,0 +1,15 @@
+{
+  "noSearch": {
+    "prompt": "Indtast venligst et blockchain-kontonavn",
+    "placeholder": "Kontonavn eller ID",
+    "continue": "Blive ved",
+    "error": "Kontoen kunne ikke findes.",
+    "selfError": "Kan ikke overføre aktiver til denne konto."
+  },
+  "searchResponse": {
+    "promptBTS": "Fortsæt med følgende Bitshares-konto?",
+    "promptTEST": "Fortsæt med følgende Bitshares testnet (TEST) konto?",
+    "back": "Gå tilbage",
+    "proceed": "Fortsæt"
+  }
+}

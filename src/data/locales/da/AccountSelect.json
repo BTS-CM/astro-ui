@@ -1,0 +1,29 @@
+{
+  "noAccount": "Kontoen kunne ikke findes.",
+  "forgetPrompt": "Konto: {{user}}",
+  "forgetButton": "Glem denne konto",
+  "noChain": {
+    "title": "⚙️ Vælg en blockchain for at fortsætte",
+    "description": "Hvilken blockchain vil du bruge?",
+    "testnet": "testnet"
+  },
+  "noMode": {
+    "titleBTS": "Brug en ny eller eksisterende Bitshares-konto?",
+    "titleTEST": "Brug en ny eller eksisterende Bitshares testnet-konto?",
+    "description": "Hvordan vil du gå videre?",
+    "new": "Ny konto",
+    "existing": "Eksisterende konto",
+    "back": "Tilbage"
+  },
+  "new": {
+    "title": "kontovalg",
+    "initDesc": "Indtast dit Bitshares-kontonavn",
+    "description": "Vil du fortsætte med følgende konto?",
+    "back": "Gå tilbage",
+    "continue": "Blive ved"
+  },
+  "existing": {
+    "description": "Vælg en af ​​dine tidligere brugte konti",
+    "none": "Ingen konti fundet."
+  }
+}

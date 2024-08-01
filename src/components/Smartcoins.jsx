@@ -19,18 +19,18 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 
-import { debounce } from "../lib/common.js";
+import { debounce } from "@/lib/common.js";
 
-import { useInitCache } from "../effects/Init.ts";
-import { createUserBalancesStore } from "../effects/User.ts";
+import { useInitCache } from "@/nanoeffects/Init.ts";
+import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 
-import { $currentUser } from "../stores/users.ts";
+import { $currentUser } from "@/stores/users.ts";
 import {
   $marketSearchCacheBTS,
   $marketSearchCacheTEST,
   $bitAssetDataCacheBTS,
   $bitAssetDataCacheTEST,
-} from "../stores/cache.ts";
+} from "@/stores/cache.ts";
 
 import ExternalLink from "./common/ExternalLink.jsx";
 

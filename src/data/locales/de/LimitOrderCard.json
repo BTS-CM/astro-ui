@@ -1,0 +1,95 @@
+{
+  "buyingWith": "Kauf {{assetA}} mit {{assetB}}",
+  "sellingFor": "Verkauf {{assetA}} für {{assetB}}",
+  "createLimitOrder": "Verwenden Sie dieses Formular, um einen Limit-Order-Vorgang zu erstellen.",
+  "editLabel": "Bearbeiten",
+  "submit": "Einreichen",
+  "useBalance": "Nutzen Sie das Gleichgewicht",
+  "priceAmount": {
+    "label": "Preisbetrag",
+    "description": "Der Preisbetrag von {{assetA}} In {{assetB}}",
+    "provideNewLabel": "Geben Sie einen neuen Preis an",
+    "useLowestAsk": "Verwenden Sie die niedrigste Frage",
+    "useHighestBid": "Höchstgebot verwenden"
+  },
+  "sellAmount": {
+    "label": "Verkaufsbetrag",
+    "buyDescription": "Die Menge an {{asset}} Sie planen einen Kauf",
+    "sellDescription": "Die Menge an {{asset}} Sie planen zu verkaufen",
+    "provideNewLabel": "Geben Sie einen neuen Betrag an"
+  },
+  "sellTotal": {
+    "label": "Gesamt",
+    "buyDescription": "Die Summe {{asset}} Sie planen zu verkaufen",
+    "sellDescription": "Die Summe {{asset}} du wirst erhalten",
+    "provideNewLabel": "Geben Sie eine neue Summe an",
+    "requireMore": "Du benötigst {{requiredAmount}} mehr {{asset}}"
+  },
+  "expiry": {
+    "label": "Begrenzen Sie den Ablauf der Bestellung",
+    "1hr": "1 Stunde",
+    "12hr": "12 Stunden",
+    "24hr": "24 Stunden",
+    "7d": "7 Tage",
+    "30d": "30 Tage",
+    "specific": "Bestimmtes Datum",
+    "fkill": "Füllen oder töten",
+    "pickDate": "Suche dir einen Termin aus",
+    "fkillDescription": "Diese Bestellung erlischt sofort, wenn sie nicht ausführbar ist",
+    "generalDescription": "Diese Limit-Order läuft ab {{expiryType}} nach der Ausstrahlung"
+  },
+  "osoValue": {
+    "enabled": "Bestellung sendet Bestellung aktiviert",
+    "enable": "Bestellung aktivieren, Bestellung senden",
+    "description": "Die automatische OSO-Funktion ist aktiv"
+  },
+  "osoEnabled": {
+    "spreadPercentLabel": "Spread-Prozent",
+    "spreadPercentDescription": "Wie weit unterscheidet sich der Preis der Take-Profit-Order von der ursprünglichen Order?",
+    "provideNewSpreadPercent": "Geben Sie einen neuen Spread-Prozentsatz an"
+  },
+  "osoSize": {
+    "sizePercentLabel": "Größenprozent",
+    "sizePercentDescription": "Prozentsatz, der in der Take-Profit-Order verkauft werden soll",
+    "provideNewSizePercent": "Geben Sie einen neuen Größenprozentsatz an"
+  },
+  "repeatValue": {
+    "label": "OSO auf automatische Wiederholung einstellen?",
+    "description": "Automatisiert wiederholte OSO-basierte Limit-Orders",
+    "enabled": "OSO ist für die Wiederholung konfiguriert",
+    "disabled": "OSO ist so konfiguriert, dass es sich nicht wiederholt"
+  },
+  "fee": {
+    "label": "Gebühr",
+    "description": "Die Netzwerkgebühr für die Übertragung dieses Vorgangs",
+    "unfilledRebate": "Nicht erfüllter Rabatt: {{fee}} BTS (sofort)",
+    "ltmRebate": "LTM-Rabatt: {{rebate}} BTS (Vesting)"
+  },
+  "marketFees": {
+    "label": "Marktgebühr",
+    "description": "Die vom Vermögensemittenten erhobene Marktgebühr"
+  },
+  "sellPrice": {
+    "label": "Preis",
+    "useLowestAsk": "Verwenden Sie die niedrigste Frage",
+    "description": "Ihr Preis pro ? "
+  },
+  "sellAmount2": {
+    "label": "Menge",
+    "buyDescription": "Die Menge an ? ",
+    "sellDescription": "Die Menge an ? "
+  },
+  "sellTotal2": {
+    "label": "Gesamt",
+    "buyDescription": "Die Summe? ",
+    "sellDescription": "Die Summe? "
+  },
+  "expiry2": {
+    "label": "Begrenzen Sie den Ablauf der Bestellung",
+    "description": "Zeit bis zum Ablauf..."
+  },
+  "headerText": {
+    "buying": "Kauf {{amount}} {{thisAssetA}} für {{total}} {{thisAssetB}}",
+    "selling": "Verkauf {{amount}} {{thisAssetA}} für {{total}} {{thisAssetB}}"
+  }
+}

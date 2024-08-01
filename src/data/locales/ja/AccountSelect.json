@@ -1,0 +1,29 @@
+{
+  "noAccount": "アカウントが見つかりませんでした。",
+  "forgetPrompt": "アカウント： {{user}}",
+  "forgetButton": "このアカウントを忘れてください",
+  "noChain": {
+    "title": "⚙️ 続行するにはブロックチェーンを選択してください",
+    "description": "どのブロックチェーンを使用したいですか?",
+    "testnet": "テストネット"
+  },
+  "noMode": {
+    "titleBTS": "新規または既存の Bitshares アカウントを使用しますか?",
+    "titleTEST": "新規または既存の Bitshares テストネット アカウントを使用しますか?",
+    "description": "どのように進めたいですか?",
+    "new": "新しいアカウント",
+    "existing": "既存のアカウント",
+    "back": "戻る"
+  },
+  "new": {
+    "title": "アカウントの選択",
+    "initDesc": "Bitshares アカウント名を入力してください",
+    "description": "次のアカウントで続行しますか?",
+    "back": "戻る",
+    "continue": "続く"
+  },
+  "existing": {
+    "description": "以前に使用したアカウントのいずれかを選択します",
+    "none": "アカウントが見つかりませんでした。"
+  }
+}

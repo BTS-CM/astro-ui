@@ -1,0 +1,11 @@
+{
+  "select": "Valige vara",
+  "change": "Muuda vara",
+  "replacing": "Asendamine {{assetSymbol}}",
+  "selecting": "Uue vara valimine",
+  "noType": "Palun otsige allolevat vara",
+  "baseType": "Valige uus põhivara",
+  "quoteType": "Valige uus hinnapakkumise vara",
+  "search": "Otsige vara",
+  "issued": "Välja andnud {{user}}"
+}

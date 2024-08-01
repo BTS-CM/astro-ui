@@ -1,14 +1,13 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import { persistentAtom } from "@nanostores/persistent";
-import * as fflate from "fflate";
 
 const languages = ["en", "da", "de", "es", "fr", "it", "ja", "ko", "pt", "th"];
 const pages = [
   "AccountSearch",
   "AccountSelect",
   "AssetDropDownCard",
-  "CreateCreditOffer",
+  "CreditOfferEditor",
   "CreditBorrow",
   "CreditDeals",
   "CreditOffer",
@@ -31,6 +30,7 @@ const pages = [
   "MyOrderSummary",
   "MyTradeSummary",
   "PageHeader",
+  "PageFooter",
   "PoolDialogs",
   "PoolForm",
   "PoolStake",
@@ -47,26 +47,32 @@ const storedLocale = persistentAtom("storedLocale", "");
 async function fetchTranslations() {
   const _stored = storedLocale.get();
   const _parsed = _stored ? JSON.parse(_stored) : null;
-  if (_parsed && _parsed.locale && _parsed.locale === locale.get()) {
+  const _locale = locale.get();
+
+  if (_parsed && _parsed.locale && _parsed.locale === _locale) {
     console.log(`Using cached ${locale.get()} translations`);
     return _parsed.translations;
   }
-  const response = await fetch(`http://localhost:8080/cache/translations/${locale.get()}`);
-  if (response.ok) {
-    const pageContents = await response.json();
 
-    if (pageContents && pageContents.result) {
-      const decompressed = fflate.decompressSync(fflate.strToU8(pageContents.result, true));
-      const history = JSON.parse(fflate.strFromU8(decompressed));
-      const translations = {};
-      translations[locale.get()] = history;
-      storedLocale.set(JSON.stringify({ translations, locale: locale.get() }));
-      return translations;
+  const translations = {};
+  const localPages = {};
+  for (const page of pages) {
+    let response;
+    if (window && window.electron) {
+      response = await fetch(`/locales/${_locale}/${page}.json`);
+    } else {
+      response = await fetch(`../src/data/locales/${_locale}/${page}.json`);
     }
-  } else {
-    console.error(`Failed to fetch translation cache`);
+    if (response) {
+      const jsonContents = await response.json();
+      localPages[page] = jsonContents;
+    }
   }
-  return;
+
+  translations[_locale] = localPages;
+
+  storedLocale.set(JSON.stringify({ translations, locale: _locale }));
+  return translations;
 }
 
 async function initialize() {

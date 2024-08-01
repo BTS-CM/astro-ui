@@ -1,0 +1,12 @@
+{
+  "cardTitle": "💱 LTM-i liikmelisus",
+  "cardDescription": "Ostke eluaegne liikmesus",
+  "alreadyMember": "Sellel kontol on juba eluaegne liikmesus ostetud!",
+  "benefitsTitle": "Teie aktiivse eluaegse liikmelisuse eelised:",
+  "benefit1": "Saate 80% allahindlust kõikidelt tasudelt oma üleandmisjäägile.",
+  "benefit2": "Teenige passiivselt osa teie viidatud kasutajate kulutatud tasudest.",
+  "benefit3": "Nüüd saate luua lisatasu kontonimesid.",
+  "wantToPurchase": "Kas soovite osta oma kontole eluaegse liikmelisuse?",
+  "purchaseButton": "Ostke LTM",
+  "headerText": "Eluaegse liikmelisuse ostmine {{username}}"
+}

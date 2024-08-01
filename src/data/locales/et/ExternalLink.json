@@ -1,0 +1,9 @@
+{
+  "dialogContent": {
+    "leaveApp": "⚠️ Olete sellest rakendusest lahkumas!",
+    "navigateToExternal": "Olete navigeerimas välisele veebisaidile.",
+    "proceedToURL": "Kas soovite liikuda järgmisele URL-ile?",
+    "checkingLeave": "Lihtsalt kontrollin – kas soovite kindlasti lahkuda?",
+    "openLink": "Ava link"
+  }
+}

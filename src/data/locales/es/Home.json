@@ -1,0 +1,79 @@
+{
+  "lend": {
+    "title": "🪙 Prestar fondos",
+    "subtitle": "Prestar a otros usuarios",
+    "hover1": "Crea tus propias ofertas de crédito descentralizadas.",
+    "hover2": "Preste activos a sus tasas definidas.",
+    "hover3": "Especifique garantías y precios de préstamo aceptables."
+  },
+  "pool": {
+    "title": "💱 Intercambio de piscina",
+    "subtitle": "Intercambiar activos a través de un pool",
+    "hover1": "Intercambie activos a través de fondos de liquidez creados por el usuario.",
+    "hover2": "Los pools tienen diferentes pares comerciales y tarifas.",
+    "hover3": "Más simple pero más costoso que una orden limitada."
+  },
+  "stake": {
+    "title": "🔒 Participar activos",
+    "subtitle": "Participar activos en fondos de liquidez",
+    "hover1": "Invierta activos en fondos de liquidez para ganar comisiones.",
+    "hover2": "Los activos apostados están bloqueados en el grupo.",
+    "hover3": "Los activos apostados se pueden retirar en cualquier momento."
+  },
+  "dex": {
+    "title": "📈 Órdenes limitadas DEX",
+    "subtitle": "Opere en Bitshares DEX",
+    "hover1": "Elaborar manualmente órdenes límite.",
+    "hover2": "Utilice cualquier par de negociación de activos.",
+    "hover3": "Especifique las fechas de vencimiento del pedido.",
+    "hover4": "Más complejo pero más económico que los swaps de grupos."
+  },
+  "transfer": {
+    "title": "💸 Transferir activos",
+    "subtitle": "Enviar activos a otros usuarios",
+    "hover1": "Transfiera activos a cualquier persona en la cadena de bloques Bitshares en segundos."
+  },
+  "borrow": {
+    "title": "🏦 Pedir prestado fondos",
+    "subtitle": "Pedir prestado a otros usuarios",
+    "hover1": "Explore las ofertas de crédito creadas por usuarios activos.",
+    "hover2": "Pídales prestados activos al tipo de cambio deseado.",
+    "hover3": "Utilice la garantía solicitada para garantizar su préstamo."
+  },
+  "smartcoins": {
+    "title": "💵 Crear deuda",
+    "subtitle": "Emitir deuda garantizada",
+    "hover1": "Los Bitassets como USD, CNY y EUR son monedas estables (smartcoins) creadas por un comité respaldadas por BTS.",
+    "hover2": "Las smartcoins creadas por el usuario pueden respaldarse con cualquier activo y hacer referencia a cualquier fuente externa.",
+    "hover3": "Los precios de liquidación externos se derivan de los productores de piensos configurados.",
+    "hover4": "La exposición a los precios externos puede suponer un riesgo para las posiciones de deuda colateralizada."
+  },
+  "ltm": {
+    "title": "🏅 Comprar LTM",
+    "subtitle": "Compra una membresía de por vida",
+    "hover1": "Hay múltiples beneficios al convertirse en miembro vitalicio.",
+    "hover2": "Los miembros vitalicios reciben un reembolso del 80% del saldo adquirido sobre las tarifas.",
+    "hover3": "Los miembros vitalicios pueden crear nombres de cuentas premium de Bitshares.",
+    "hover4": "Los miembros vitalicios pueden ganar dinero a través del sistema de referencias."
+  },
+  "portfolio": {
+    "title": "💰 Portafolio",
+    "subtitle": "Ver tu portafolio",
+    "hover1": "Consulta tus saldos.",
+    "hover2": "Supervise sus órdenes abiertas.",
+    "hover3": "Analice la actividad reciente de su cuenta."
+  },
+  "featured": {
+    "title": "🏆 Principales mercados",
+    "subtitle": "Ver los mercados más activos",
+    "hover1": "Navegue hasta los pares comerciales más activos.",
+    "hover2": "Compare el volumen y el valor de las operaciones en el mercado.",
+    "hover3": "Compare la cantidad de operaciones en el mercado."
+  },
+  "deals": {
+    "title": "ℹ️ Ofertas de crédito",
+    "subtitle": "Consulta tus ofertas de crédito",
+    "hover1": "Supervise sus ofertas de crédito activas.",
+    "hover2": "Gestiona el estado de tus operaciones crediticias."
+  }
+}

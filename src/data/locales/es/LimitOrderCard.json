@@ -1,0 +1,95 @@
+{
+  "buyingWith": "Comprar {{assetA}} con {{assetB}}",
+  "sellingFor": "Venta {{assetA}} para {{assetB}}",
+  "createLimitOrder": "Utilice este formulario para crear una operación de orden limitada.",
+  "editLabel": "Editar",
+  "submit": "Entregar",
+  "useBalance": "Usar saldo",
+  "priceAmount": {
+    "label": "Precio Monto",
+    "description": "El importe del precio de {{assetA}} en {{assetB}}",
+    "provideNewLabel": "Proporcionar un nuevo precio",
+    "useLowestAsk": "Utilice la solicitud más baja",
+    "useHighestBid": "Usar la oferta más alta"
+  },
+  "sellAmount": {
+    "label": "Monto de venta",
+    "buyDescription": "La cantidad de {{asset}} planeas comprar",
+    "sellDescription": "La cantidad de {{asset}} planeas vender",
+    "provideNewLabel": "Proporcionar una nueva cantidad"
+  },
+  "sellTotal": {
+    "label": "Total",
+    "buyDescription": "El total {{asset}} planeas vender",
+    "sellDescription": "El total {{asset}} usted recibirá",
+    "provideNewLabel": "Proporcionar un nuevo total",
+    "requireMore": "Necesitas {{requiredAmount}} más {{asset}}"
+  },
+  "expiry": {
+    "label": "Límite de vencimiento de la orden",
+    "1hr": "1 hora",
+    "12hr": "12 horas",
+    "24hr": "24 horas",
+    "7d": "7 días",
+    "30d": "30 dias",
+    "specific": "Fecha específica",
+    "fkill": "Llenar o matar",
+    "pickDate": "Elija una fecha",
+    "fkillDescription": "Este pedido caduca inmediatamente si no se puede completar",
+    "generalDescription": "Esta orden límite caducará {{expiryType}} después de la transmisión"
+  },
+  "osoValue": {
+    "enabled": "Orden Envía Orden Habilitada",
+    "enable": "Habilitar pedido envía pedido",
+    "description": "La función OSO automática estará activa"
+  },
+  "osoEnabled": {
+    "spreadPercentLabel": "Porcentaje de propagación",
+    "spreadPercentDescription": "¿En qué se diferencia el precio de la orden de toma de ganancias del de la orden original?",
+    "provideNewSpreadPercent": "Proporcionar un nuevo porcentaje de diferencial"
+  },
+  "osoSize": {
+    "sizePercentLabel": "Porcentaje de tamaño",
+    "sizePercentDescription": "Porcentaje a vender en la orden de toma de ganancias",
+    "provideNewSizePercent": "Proporcionar un nuevo porcentaje de tamaño"
+  },
+  "repeatValue": {
+    "label": "¿Configurar OSO para que se repita automáticamente?",
+    "description": "Automatiza órdenes límite repetidas basadas en OSO",
+    "enabled": "OSO configurado para repetir",
+    "disabled": "OSO configurado para no repetir"
+  },
+  "fee": {
+    "label": "Tarifa",
+    "description": "La tarifa de la red para transmitir esta operación.",
+    "unfilledRebate": "Reembolso no completado: {{fee}} BTS (instantáneo)",
+    "ltmRebate": "Reembolso LTM: {{rebate}} BTS (adquisición)"
+  },
+  "marketFees": {
+    "label": "Tarifa de mercado",
+    "description": "La comisión de mercado aplicada por el emisor de activos"
+  },
+  "sellPrice": {
+    "label": "Precio",
+    "useLowestAsk": "Utilice la pregunta más baja",
+    "description": "¿Su precio por? "
+  },
+  "sellAmount2": {
+    "label": "Cantidad",
+    "buyDescription": "La cantidad de ? ",
+    "sellDescription": "La cantidad de ? "
+  },
+  "sellTotal2": {
+    "label": "Total",
+    "buyDescription": "El total ? ",
+    "sellDescription": "El total ? "
+  },
+  "expiry2": {
+    "label": "Limitar el vencimiento de la orden",
+    "description": "Tiempo hasta el vencimiento..."
+  },
+  "headerText": {
+    "buying": "Comprar {{amount}} {{thisAssetA}} para {{total}} {{thisAssetB}}",
+    "selling": "Venta {{amount}} {{thisAssetA}} para {{total}} {{thisAssetB}}"
+  }
+}

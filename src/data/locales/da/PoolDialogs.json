@@ -1,0 +1,21 @@
+{
+  "loadingMessage": "Indlæser...",
+  "noPoolsFoundMessage": "0 pools fundet",
+  "poolsFound": "{{count}} pools fundet",
+  "idColumnTitle": "id",
+  "shareAssetColumnTitle": "Del aktiv",
+  "assetAColumnTitle": "Aktiv A",
+  "assetBColumnTitle": "Aktiv B",
+  "assetAPoolsTitle": "{{assetA}} Pools",
+  "assetAPoolsDialogTitle": "{{assetA}} Pools",
+  "assetAPoolsDialogDescription": "Disse Bitshares-puljer bruger {{assetA}} ({{assetAId}}) som et af aktiverne.",
+  "assetAHoverCardContent": "Bytte rundt {{assetA}} ved at bruge en af ​​disse likviditetspuljer",
+  "marketPoolsTitle": "Markedspuljer",
+  "marketPoolsDialogTitle": "{{assetA}}/{{assetB}} Pools",
+  "marketPoolsDialogDescription": "Disse puljer handler mellem {{assetA}} og {{assetB}}.",
+  "marketHoverCardContent": "Skift mellem {{assetA}} og {{assetB}} ved at bruge en af ​​disse likviditetspuljer",
+  "assetBPoolsTitle": "{{assetB}} Pools",
+  "assetBPoolsDialogTitle": "{{assetB}} Pools",
+  "assetBPoolsDialogDescription": "Disse Bitshares-puljer bruger {{assetB}} ({{assetBId}}) som et af aktiverne.",
+  "assetBHoverCardContent": "Bytte rundt {{assetB}} ved at bruge en af ​​disse likviditetspuljer"
+}

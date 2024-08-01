@@ -36,8 +36,8 @@ import { Avatar as Av, AvatarFallback, AvatarImage } from "@/components/ui/avata
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-import { useInitCache } from "../effects/Init.ts";
-import { $currentUser } from "../stores/users.ts";
+import { useInitCache } from "@/nanoeffects/Init.ts";
+import { $currentUser } from "@/stores/users.ts";
 
 import {
   $assetCacheBTS,
@@ -48,11 +48,11 @@ import {
   $marketSearchCacheTEST,
   $globalParamsCacheBTS,
   $globalParamsCacheTEST,
-} from "../stores/cache.ts";
+} from "@/stores/cache.ts";
 
-import { humanReadableFloat, trimPrice, blockchainFloat } from "../lib/common";
+import { humanReadableFloat, trimPrice, blockchainFloat } from "@/lib/common";
 
-import { createUserBalancesStore } from "../effects/User.ts";
+import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 
 import { Avatar } from "./Avatar.tsx";
 import AccountSearch from "./AccountSearch.jsx";

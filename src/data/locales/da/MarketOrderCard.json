@@ -1,0 +1,15 @@
+{
+  "proceedLimitOrderDataTitle": "Vil du fortsætte med følgende grænseordredata?",
+  "proceedLimitOrderDataDescription": "Det {{cardType}} limitordreformularen ovenfor vil blive udfyldt med følgende markedsordredata.",
+  "sellingQuoteForBase": "Sælger {{totalQuote}} {{assetA}} i bytte for mindst {{totalBase}} {{assetB}}",
+  "sellingBaseForQuote": "Sælger {{totalBase}} {{assetB}} i bytte for mindst {{totalQuote}} {{assetA}}",
+  "pricePerAsset": "Pris: {{price}} {{assetB}} pr 1 {{assetA}}",
+  "proceedButton": "Fortsæt",
+  "marketDataRefreshing": "Markedsdata er forfriskende, vent venligst...",
+  "loadingMarketOrdersTitle": "Indlæsning af markedsordrer",
+  "loadingMarketOrdersDescription": "Henter anmodede markedsdata, vent venligst...",
+  "openBuyLimitOrdersTitle": "Åbne købsgrænseordrer",
+  "openSellLimitOrdersTitle": "Åbne salgsgrænseordrer",
+  "buyLimitOrdersDescription": "Følgende tabel viser netværkstilbud til køb {{assetA}} med {{assetB}}",
+  "sellLimitOrdersDescription": "Følgende tabel viser netværkstilbud til salg {{assetA}} til {{assetB}}"
+}

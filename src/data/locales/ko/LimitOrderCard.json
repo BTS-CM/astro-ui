@@ -1,0 +1,95 @@
+{
+  "buyingWith": "구매 {{assetA}} ~와 함께 {{assetB}}",
+  "sellingFor": "판매 {{assetA}} ~을 위한 {{assetB}}",
+  "createLimitOrder": "이 양식을 사용하여 지정가 주문 작업을 생성하세요.",
+  "editLabel": "편집하다",
+  "submit": "제출하다",
+  "useBalance": "잔액 사용",
+  "priceAmount": {
+    "label": "가격 금액",
+    "description": "가격 금액 {{assetA}} ~에 {{assetB}}",
+    "provideNewLabel": "새로운 가격 제공",
+    "useLowestAsk": "가장 낮은 요청을 사용하세요",
+    "useHighestBid": "최고 입찰가 사용"
+  },
+  "sellAmount": {
+    "label": "판매금액",
+    "buyDescription": "양 {{asset}} 당신은 구입할 계획입니다",
+    "sellDescription": "양 {{asset}} 당신은 판매할 계획이에요",
+    "provideNewLabel": "새로운 금액 제공"
+  },
+  "sellTotal": {
+    "label": "총",
+    "buyDescription": "전체 {{asset}} 당신은 판매할 계획이에요",
+    "sellDescription": "전체 {{asset}} 당신은 받게 될 것입니다",
+    "provideNewLabel": "새로운 합계 제공",
+    "requireMore": "당신은 필요합니다 {{requiredAmount}} 더 {{asset}}"
+  },
+  "expiry": {
+    "label": "제한 주문 만료",
+    "1hr": "1 시간",
+    "12hr": "12 시간",
+    "24hr": "24 시간",
+    "7d": "7 일",
+    "30d": "30 일",
+    "specific": "특정 날짜",
+    "fkill": "채우거나 죽이거나",
+    "pickDate": "날짜를 선택하세요",
+    "fkillDescription": "이 주문은 채울 수 없는 경우 즉시 만료됩니다.",
+    "generalDescription": "이 지정가 주문은 만료됩니다 {{expiryType}} 방송 후"
+  },
+  "osoValue": {
+    "enabled": "주문 전송 주문 활성화됨",
+    "enable": "주문 활성화 주문 전송",
+    "description": "자동 OSO 기능이 활성화됩니다."
+  },
+  "osoEnabled": {
+    "spreadPercentLabel": "스프레드 퍼센트",
+    "spreadPercentDescription": "이익 실현 주문의 가격이 원래 주문과 얼마나 다른지",
+    "provideNewSpreadPercent": "새로운 스프레드 비율 제공"
+  },
+  "osoSize": {
+    "sizePercentLabel": "크기 백분율",
+    "sizePercentDescription": "이익실현 주문에서 매도할 비율",
+    "provideNewSizePercent": "새로운 크기 비율 제공"
+  },
+  "repeatValue": {
+    "label": "OSO를 자동으로 반복하도록 설정하시겠습니까?",
+    "description": "반복되는 OSO 기반 지정가 주문을 자동화합니다.",
+    "enabled": "반복하도록 구성된 OSO",
+    "disabled": "반복하지 않도록 구성된 OSO"
+  },
+  "fee": {
+    "label": "요금",
+    "description": "이 작업을 브로드캐스트하는 데 필요한 네트워크 수수료",
+    "unfilledRebate": "채워지지 않은 리베이트: {{fee}} 방탄소년단(인스턴트)",
+    "ltmRebate": "LTM 리베이트: {{rebate}} 방탄소년단 (베스팅)"
+  },
+  "marketFees": {
+    "label": "시장 수수료",
+    "description": "자산 발행자가 적용하는 시장 수수료"
+  },
+  "sellPrice": {
+    "label": "가격",
+    "useLowestAsk": "최저 요청 사용",
+    "description": "귀하의 가격은? "
+  },
+  "sellAmount2": {
+    "label": "양",
+    "buyDescription": "양 ? ",
+    "sellDescription": "양 ? "
+  },
+  "sellTotal2": {
+    "label": "총",
+    "buyDescription": "전체 ? ",
+    "sellDescription": "전체 ? "
+  },
+  "expiry2": {
+    "label": "주문 만료 제한",
+    "description": "만료까지 남은 시간.."
+  },
+  "headerText": {
+    "buying": "구매 {{amount}} {{thisAssetA}} ~을 위한 {{total}} {{thisAssetB}}",
+    "selling": "판매 {{amount}} {{thisAssetA}} ~을 위한 {{total}} {{thisAssetB}}"
+  }
+}

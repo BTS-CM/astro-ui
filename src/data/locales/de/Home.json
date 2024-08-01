@@ -1,0 +1,79 @@
+{
+  "lend": {
+    "title": "🪙 Gelder verleihen",
+    "subtitle": "An andere Benutzer verleihen",
+    "hover1": "Erstellen Sie Ihre eigenen dezentralen Kreditangebote.",
+    "hover2": "Verleihen Sie Vermögenswerte zu Ihren festgelegten Zinssätzen.",
+    "hover3": "Geben Sie akzeptable Kreditsicherheiten und Preise an."
+  },
+  "pool": {
+    "title": "💱 Pooltausch",
+    "subtitle": "Tauschen Sie Vermögenswerte über einen Pool aus",
+    "hover1": "Tauschen Sie Vermögenswerte über vom Benutzer erstellte Liquiditätspools aus.",
+    "hover2": "Pools haben unterschiedliche Handelspaare und Gebühren.",
+    "hover3": "Einfacher, aber teurer als eine Limit-Order."
+  },
+  "stake": {
+    "title": "🔒 Vermögenswerte einsetzen",
+    "subtitle": "Setzen Sie Vermögenswerte in Liquiditätspools ein",
+    "hover1": "Setzen Sie Vermögenswerte in Liquiditätspools ein, um Gebühren zu verdienen.",
+    "hover2": "Abgesteckte Vermögenswerte sind im Pool gesperrt.",
+    "hover3": "Eingesetzte Vermögenswerte können jederzeit abgehoben werden."
+  },
+  "dex": {
+    "title": "📈 DEX-Limit-Orders",
+    "subtitle": "Handeln Sie am Bitshares DEX",
+    "hover1": "Erstellen Sie manuell Limit-Orders.",
+    "hover2": "Verwenden Sie ein beliebiges Asset-Trading-Paar.",
+    "hover3": "Geben Sie das Ablaufdatum der Bestellung an.",
+    "hover4": "Komplexer, aber günstiger als Pool-Swaps."
+  },
+  "transfer": {
+    "title": "💸 Vermögenswerte übertragen",
+    "subtitle": "Senden Sie Assets an andere Benutzer",
+    "hover1": "Übertragen Sie Vermögenswerte in Sekundenschnelle an jeden in der Bitshares-Blockchain."
+  },
+  "borrow": {
+    "title": "🏦 Geld leihen",
+    "subtitle": "Von anderen Benutzern ausleihen",
+    "hover1": "Durchsuchen Sie die vom aktiven Benutzer erstellten Kreditangebote.",
+    "hover2": "Leihen Sie sich von ihnen Vermögenswerte zum gewünschten Zinssatz.",
+    "hover3": "Nutzen Sie die geforderten Sicherheiten zur Absicherung Ihres Kredits."
+  },
+  "smartcoins": {
+    "title": "💵 Schulden machen",
+    "subtitle": "Besicherte Schulden ausgeben",
+    "hover1": "Bitassets wie USD, CNY und EUR sind vom Ausschuss erstellte Stablecoins (Smartcoins), die mit BTS gedeckt sind.",
+    "hover2": "Vom Benutzer erstellte Smartcoins können mit jedem beliebigen Vermögenswert unterlegt werden und auf jeden externen Feed verweisen.",
+    "hover3": "Externe Abrechnungspreise werden von konfigurierten Futtermittelherstellern abgeleitet.",
+    "hover4": "Das Risiko externer Preisströme kann ein Risiko für besicherte Schuldenpositionen darstellen."
+  },
+  "ltm": {
+    "title": "🏅 Kaufen Sie LTM",
+    "subtitle": "Kaufen Sie eine lebenslange Mitgliedschaft",
+    "hover1": "Eine lebenslange Mitgliedschaft bietet zahlreiche Vorteile.",
+    "hover2": "Mitglieder auf Lebenszeit erhalten eine 80-prozentige Ermäßigung des Unverfallbarkeitsguthabens auf ihre Gebühren.",
+    "hover3": "Lebenslange Mitglieder können Premium-Bitshares-Kontonamen erstellen.",
+    "hover4": "Lebenslange Mitglieder können über das Empfehlungssystem Geld verdienen."
+  },
+  "portfolio": {
+    "title": "💰 Portfolio",
+    "subtitle": "Sehen Sie sich Ihr Portfolio an",
+    "hover1": "Überprüfen Sie Ihre Guthaben.",
+    "hover2": "Überwachen Sie Ihre offenen Bestellungen.",
+    "hover3": "Analysieren Sie Ihre letzten Kontoaktivitäten."
+  },
+  "featured": {
+    "title": "🏆 Top-Märkte",
+    "subtitle": "Sehen Sie sich die aktivsten Märkte an",
+    "hover1": "Navigieren Sie zu den aktivsten Handelspaaren.",
+    "hover2": "Vergleichen Sie Markthandelsvolumen und -wert.",
+    "hover3": "Vergleichen Sie die Anzahl der Marktgeschäfte."
+  },
+  "deals": {
+    "title": "ℹ️ Kreditangebote",
+    "subtitle": "Überprüfen Sie Ihre Kreditverträge",
+    "hover1": "Überwachen Sie Ihre aktiven Kreditgeschäfte.",
+    "hover2": "Verwalten Sie den Status Ihrer Kreditverträge."
+  }
+}

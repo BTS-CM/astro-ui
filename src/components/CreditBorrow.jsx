@@ -19,32 +19,24 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import { createUserBalancesStore } from "../effects/User.ts";
-import { useInitCache } from "../effects/Init.ts";
+import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
+import { useInitCache } from "@/nanoeffects/Init.ts";
 
-import { $currentUser } from "../stores/users.ts";
+import { $currentUser } from "@/stores/users.ts";
 import {
   $assetCacheBTS,
   $assetCacheTEST,
   $offersCacheBTS,
   $offersCacheTEST,
-} from "../stores/cache.ts";
+} from "@/stores/cache.ts";
 
 import { humanReadableFloat } from "@/lib/common.js";
 
 function hoursTillExpiration(expirationTime) {
-  // Parse the expiration time
   var expirationDate = new Date(expirationTime);
-
-  // Get the current date and time
   var currentDate = new Date();
-
-  // Calculate the difference in milliseconds
   var difference = expirationDate - currentDate;
-
-  // Convert the difference to hours and round it to the nearest integer
   var hours = Math.round(difference / 1000 / 60 / 60);
-
   return hours;
 }
 

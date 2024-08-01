@@ -1,0 +1,95 @@
+{
+  "buyingWith": "กำลังซื้อ {{assetA}} กับ {{assetB}}",
+  "sellingFor": "ขาย {{assetA}} สำหรับ {{assetB}}",
+  "createLimitOrder": "ใช้แบบฟอร์มนี้เพื่อสร้างการดำเนินการใบสั่งจำกัด",
+  "editLabel": "แก้ไข",
+  "submit": "ส่ง",
+  "useBalance": "ใช้ความสมดุล",
+  "priceAmount": {
+    "label": "ราคา จำนวน",
+    "description": "ราคาจำนวน {{assetA}} ใน {{assetB}}",
+    "provideNewLabel": "ให้ราคาใหม่",
+    "useLowestAsk": "ใช้ราคาถามต่ำสุด",
+    "useHighestBid": "ใช้ราคาเสนอสูงสุด"
+  },
+  "sellAmount": {
+    "label": "ขายจำนวน",
+    "buyDescription": "จำนวน {{asset}} คุณวางแผนที่จะซื้อ",
+    "sellDescription": "จำนวน {{asset}} คุณวางแผนที่จะขาย",
+    "provideNewLabel": "ระบุจำนวนเงินใหม่"
+  },
+  "sellTotal": {
+    "label": "ทั้งหมด",
+    "buyDescription": "ยอดรวม {{asset}} คุณวางแผนที่จะขาย",
+    "sellDescription": "ยอดรวม {{asset}} คุณจะได้รับ",
+    "provideNewLabel": "ให้ผลรวมใหม่",
+    "requireMore": "คุณต้องการ {{requiredAmount}} มากกว่า {{asset}}"
+  },
+  "expiry": {
+    "label": "จำกัดการหมดอายุของคำสั่งซื้อ",
+    "1hr": "1 ชั่วโมง",
+    "12hr": "12 ชั่วโมง",
+    "24hr": "24 ชั่วโมง",
+    "7d": "7 วัน",
+    "30d": "30 วัน",
+    "specific": "วันที่เจาะจง",
+    "fkill": "เติมหรือฆ่า",
+    "pickDate": "เลือกวันที่",
+    "fkillDescription": "คำสั่งซื้อนี้จะหมดอายุทันทีหากไม่สามารถกรอกได้",
+    "generalDescription": "คำสั่งจำกัดนี้จะหมดอายุ {{expiryType}} หลังจากออกอากาศ"
+  },
+  "osoValue": {
+    "enabled": "คำสั่งซื้อส่งคำสั่งซื้อที่เปิดใช้งาน",
+    "enable": "เปิดใช้งานคำสั่งซื้อส่งคำสั่งซื้อ",
+    "description": "ฟังก์ชัน OSO อัตโนมัติจะเปิดใช้งาน"
+  },
+  "osoEnabled": {
+    "spreadPercentLabel": "เปอร์เซ็นต์การแพร่กระจาย",
+    "spreadPercentDescription": "ราคาของคำสั่ง Take Profit แตกต่างจากคำสั่งเดิมมากน้อยเพียงใด",
+    "provideNewSpreadPercent": "ระบุเปอร์เซ็นต์สเปรดใหม่"
+  },
+  "osoSize": {
+    "sizePercentLabel": "ขนาด เปอร์เซ็นต์",
+    "sizePercentDescription": "เปอร์เซ็นต์ที่จะขายในคำสั่ง Take Profit",
+    "provideNewSizePercent": "ระบุเปอร์เซ็นต์ขนาดใหม่"
+  },
+  "repeatValue": {
+    "label": "ตั้งค่า OSO ให้ทำซ้ำโดยอัตโนมัติหรือไม่",
+    "description": "ทำคำสั่งจำกัดตาม OSO ซ้ำโดยอัตโนมัติ",
+    "enabled": "OSO กำหนดค่าให้ทำซ้ำ",
+    "disabled": "OSO กำหนดค่าไม่ให้ทำซ้ำ"
+  },
+  "fee": {
+    "label": "ค่าธรรมเนียม",
+    "description": "ค่าธรรมเนียมเครือข่ายในการถ่ายทอดการดำเนินการนี้",
+    "unfilledRebate": "ส่วนลดที่ไม่ได้รับ: {{fee}} รถไฟฟ้า BTS (ทันที)",
+    "ltmRebate": "ส่วนลด LTM: {{rebate}} รถไฟฟ้า BTS (มอบสิทธิ)"
+  },
+  "marketFees": {
+    "label": "ค่าธรรมเนียมการตลาด",
+    "description": "ค่าธรรมเนียมการตลาดที่ผู้ออกสินทรัพย์เรียกเก็บ"
+  },
+  "sellPrice": {
+    "label": "ราคา",
+    "useLowestAsk": "ใช้ราคาถามต่ำสุด",
+    "description": "ราคาของคุณต่อ ? "
+  },
+  "sellAmount2": {
+    "label": "จำนวน",
+    "buyDescription": "จำนวน ? ",
+    "sellDescription": "จำนวน ? "
+  },
+  "sellTotal2": {
+    "label": "ทั้งหมด",
+    "buyDescription": "รวม ? ",
+    "sellDescription": "รวม ? "
+  },
+  "expiry2": {
+    "label": "จำกัดการหมดอายุของคำสั่งซื้อ",
+    "description": "ถึงเวลาหมดอายุ..."
+  },
+  "headerText": {
+    "buying": "กำลังซื้อ {{amount}} {{thisAssetA}} สำหรับ {{total}} {{thisAssetB}}",
+    "selling": "ขาย {{amount}} {{thisAssetA}} สำหรับ {{total}} {{thisAssetB}}"
+  }
+}

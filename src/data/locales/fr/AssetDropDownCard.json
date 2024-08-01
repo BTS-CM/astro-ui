@@ -1,0 +1,11 @@
+{
+  "select": "Sélectionnez un actif",
+  "change": "Changer l'actif",
+  "replacing": "Remplacement {{assetSymbol}}",
+  "selecting": "Sélection d'un nouvel actif",
+  "noType": "Veuillez rechercher un actif ci-dessous",
+  "baseType": "Veuillez sélectionner un nouvel actif de base",
+  "quoteType": "Veuillez sélectionner un nouvel actif de devis",
+  "search": "Rechercher un bien",
+  "issued": "Délivré par {{user}}"
+}

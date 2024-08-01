@@ -1,0 +1,9 @@
+{
+  "editLimitOrderTitle": "ต้องการแก้ไขคำสั่งจำกัดนี้หรือไม่",
+  "editLimitOrderDescription": "ขณะนี้สามารถอัปเดตคำสั่งซื้อที่จำกัดได้ ประหยัดค่าธรรมเนียมโดยการอัปเดตคำสั่งซื้อที่จำกัด",
+  "selectedOpenOrderData": "ข้อมูลคำสั่งที่เปิดที่เลือก:",
+  "proceedToUpdateButton": "ดำเนินการอัปเดตใบสั่งจำกัดแบบเปิดนี้",
+  "viewObjectOnBlocksights": "ดูวัตถุบน blockights.info",
+  "priceColumnTitle": "ราคา",
+  "expirationDateColumnTitle": "วันหมดอายุ"
+}

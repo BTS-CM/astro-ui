@@ -1,0 +1,7 @@
+{
+  "recentlyCompletedBuyOrdersTitle": "최근 완료된 시장 매수 주문",
+  "recentlyCompletedSellOrdersTitle": "최근 완료된 시장 매도 주문",
+  "recentlyCompletedBuyOrdersDescription": "아래 표에는 Bitshares DEX에서 최근 완료된 구매 주문이 나열되어 있습니다.",
+  "recentlyCompletedSellOrdersDescription": "아래 표에는 Bitshares DEX에서 최근 완료된 매도 주문이 나와 있습니다.",
+  "noMarketHistoryFound": "시장 내역을 찾을 수 없습니다."
+}

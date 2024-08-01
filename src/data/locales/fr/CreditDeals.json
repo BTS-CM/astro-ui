@@ -1,0 +1,59 @@
+{
+  "dealNo": "Accord",
+  "with": " avec ",
+  "borrowed": "tu as emprunté",
+  "lent": "Ils ont emprunté",
+  "loanCollateral": "Garantie de prêt :",
+  "borrower": "Frais d'emprunt",
+  "lender": "Gains",
+  "remainingTime": "Temps restant:",
+  "repayLoan": "Rembourser le prêt",
+  "trade": "Commerce {{symbol}} sur DEX",
+  "dialogTitle": "Remboursement du prêt",
+  "description": "Utilisez ce formulaire pour contrôler les remboursements de vos opérations de crédit.",
+  "account": "Compte",
+  "balance": "Votre actuel {{symbol}} équilibre",
+  "repayAmount": "Quantité de {{symbol}} rembourser",
+  "remainingDebt": "Dette restante : {{amount}} {{symbol}}",
+  "repayDesc": "Pour récupérer toutes vos garanties, remboursez intégralement la dette.",
+  "redeemCollateral": "Échanger des garanties",
+  "remainingCollateral": "Garantie restante : {montant} {{symbol}}",
+  "collateralRedemption": "Quantité de {{symbol}} garantie de garantie que vous rachèterez",
+  "loanLabel": "Frais de prêt estimés",
+  "loanDesc": "Il s'agit des frais que vous paierez au prêteur.",
+  "finalPaymentLabel": "Paiement final",
+  "finalPaymentDesc": "Une fois remboursé intégralement, votre {{symbol}} la garantie vous sera restituée.",
+  "finalPaymentWarning": "Insuffisant {{symbol}} équilibre",
+  "networkFee": "Frais de réseau",
+  "networkFeeDesc": "Il s’agit des frais nécessaires à la diffusion de votre opération de remboursement de crédit sur la blockchain.",
+  "rebate": "Rabais {{fee}} {{chain}} (acquisition)",
+  "submit": "Soumettre",
+  "deepLink": "Rembourser {{finalRepayAmount}} {{debtAsset}}, pour réclamer {{collateralAsset}}",
+  "card": {
+    "title": "💱 Vérifiez vos offres de crédit actives",
+    "description": "À partir de là, vous pouvez à la fois surveiller les opérations de crédit actives et gérer les remboursements.",
+    "viewingBorrowings": "Consulter vos emprunts",
+    "viewBorrowings": "Consultez vos emprunts",
+    "viewingLendings": "Consulter vos prêts",
+    "viewLendings": "Consultez vos prêts",
+    "noBorrowers": "Aucun emprunt actif trouvé",
+    "noLendings": "Aucun prêt actif trouvé",
+    "loading": "Chargement..."
+  },
+  "risks": {
+    "borrowerTitle": "Avertissement sur les risques de l'emprunteur",
+    "lenderTitle": "Avertissement de risque pour le prêteur",
+    "description": "Informations importantes sur vos responsabilités et les risques associés aux opérations de crédit.",
+    "borrower": {
+      "risk1": "Toi ( {{username}} ) sont responsables de la gestion de vos opérations de crédit et de leur remboursement en temps opportun, personne d'autre. ",
+      "risk2": "Soyez conscient de votre exposition aux volatilités externes pendant la période de remboursement de l’accord de crédit ; ",
+      "risk3": "Le non-remboursement d’une opération de crédit entraînera la perte des actifs de garantie restants. "
+    },
+    "lender": {
+      "risk1": "Toi ( {{username}} ) sont responsables de la gestion de vos offres de crédit, de leurs paramètres et de leur exposition aux risques, personne d'autre. ",
+      "risk2": "Soyez conscient de votre exposition aux volatilités externes pendant la période de remboursement de l’accord de crédit ; ",
+      "risk3": "En tant que prêteur, une fois qu'une opération de crédit existe, vous ( {{username}} ) ne peut pas l'annuler, l'emprunteur est responsable de la durée de la transaction pendant la période de remboursement. ",
+      "risk4": "Si les emprunteurs ne parviennent pas à rembourser leurs opérations de crédit, leurs actifs de garantie vous seront perdus. "
+    }
+  }
+}
