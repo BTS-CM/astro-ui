@@ -51,8 +51,17 @@ jobs:
       with:
         node-version: 'node'
         cache: 'npm'
+
+    - uses: oven-sh/setup-bun@v2
+      with:
+        bun-version: 'latest'
+    
+    - run: bun run refreshData
     
     - run: npm install
+    
+    - run: npm run-script build:astro
+
     - run: npm run-script dist:${{ matrix.os }}
 
     - name: Upload .${{ matrix.release_format }} file
@@ -89,6 +98,14 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+    - name: reqs
+      run: sudo apt-get install unzip
+    - name: Download VT
+      run: wget https://github.com/VirusTotal/vt-cli/releases/download/1.0.0/Linux64.zip
+    - name: Unzip VT
+      run: unzip Linux64.zip
+    - name: Prepare
+      run: chmod +x vt
     - name: Download exe
       uses: actions/download-artifact@v3
       with:
@@ -119,6 +136,15 @@ jobs:
       with:
         name: BTSAstroUI.AppImage
         path: ~/
+    - name: scan
+      id: scan
+      run: |
+          echo "::set-output name=exeVT::$(./vt scan file /home/runner/BTSAstroUI.exe -k ${{ secrets.VT_API_KEY }}|cut -d' ' -f2)"
+          echo "::set-output name=exeMapVT::$(./vt scan file /home/runner/BTSAstroUI.exe.blockmap -k ${{ secrets.VT_API_KEY }}|cut -d' ' -f2)"
+          echo "::set-output name=ymlVT::$(./vt scan file /home/runner/latest.yml -k ${{ secrets.VT_API_KEY }}|cut -d' ' -f2)"
+          echo "::set-output name=dmgVT::$(./vt scan file /home/runner/BTSAstroUI.dmg -k ${{ secrets.VT_API_KEY }}|cut -d' ' -f2)"
+          echo "::set-output name=debVT::$(./vt scan file /home/runner/BTSAstroUI.deb -k ${{ secrets.VT_API_KEY }}|cut -d' ' -f2)"
+          echo "::set-output name=appVT::$(./vt scan file /home/runner/BTSAstroUI.AppImage -k ${{ secrets.VT_API_KEY }}|cut -d' ' -f2)"
     - name: Calculate hashes
       id: calc_hash
       run: |
@@ -144,13 +170,13 @@ jobs:
                 _________________________________
                 Binaries for download
                 --------
-                | Platform | SHA256 Checksum |
-                |---|---|
-                |[Microsoft Windows](https://github.com/BTS-CM/astro-ui/releases/download/${{ github.ref_name }}/BTSAstroUI.exe)|`${{steps.calc_hash.outputs.exehash}}`|
-                |[MacOS](https://github.com/BTS-CM/astro-ui/releases/download/${{ github.ref_name }}/BTSAstroUI.dmg)|`${{steps.calc_hash.outputs.dmghash}}`|
-                |[Linux Deb](https://github.com/BTS-CM/astro-ui/releases/download/${{ github.ref_name }}/BTSAstroUI.deb)|`${{steps.calc_hash.outputs.debhash}}`|
-                |[Linux AppImage](https://github.com/BTS-CM/astro-ui/releases/download/${{ github.ref_name }}/BTSAstroUI.AppImage)|`${{steps.calc_hash.outputs.apphash}}`|
-                |[EXE blockmap](https://github.com/BTS-CM/astro-ui/releases/download/${{ github.ref_name }}/BTSAstroUI.exe.blockmap)|`${{steps.calc_hash.outputs.blockmaphash}}`|
-                |[Latest.yml](https://github.com/BTS-CM/astro-ui/releases/download/${{ github.ref_name }}/latest.yml)|`${{steps.calc_hash.outputs.ymlhash}}`|
+                | Platform | SHA256 Checksum | VirusTotal Analyses |
+                |---|---|---|
+                |[Microsoft Windows](https://github.com/BTS-CM/astro-ui/releases/download/${{ github.ref_name }}/BTSAstroUI.exe)|`${{steps.calc_hash.outputs.exehash}}`|[exe](https://www.virustotal.com/gui/file-analysis/${{steps.scan.outputs.exeVT}})|
+                |[MacOS](https://github.com/BTS-CM/astro-ui/releases/download/${{ github.ref_name }}/BTSAstroUI.dmg)|`${{steps.calc_hash.outputs.dmghash}}`|[dmg](https://www.virustotal.com/gui/file-analysis/${{steps.scan.outputs.dmgVT}})|
+                |[Linux Deb](https://github.com/BTS-CM/astro-ui/releases/download/${{ github.ref_name }}/BTSAstroUI.deb)|`${{steps.calc_hash.outputs.debhash}}`|[deb](https://www.virustotal.com/gui/file-analysis/${{steps.scan.outputs.debVT}})|
+                |[Linux AppImage](https://github.com/BTS-CM/astro-ui/releases/download/${{ github.ref_name }}/BTSAstroUI.AppImage)|`${{steps.calc_hash.outputs.apphash}}`|[AppImage](https://www.virustotal.com/gui/file-analysis/${{steps.scan.outputs.appVT}})|
+                |[EXE blockmap](https://github.com/BTS-CM/astro-ui/releases/download/${{ github.ref_name }}/BTSAstroUI.exe.blockmap)|`${{steps.calc_hash.outputs.blockmaphash}}`|[blockmap](https://www.virustotal.com/gui/file-analysis/${{steps.scan.outputs.exeMapVT}})|
+                |[Latest.yml](https://github.com/BTS-CM/astro-ui/releases/download/${{ github.ref_name }}/latest.yml)|`${{steps.calc_hash.outputs.ymlhash}}`|[yml](https://www.virustotal.com/gui/file-analysis/${{steps.scan.outputs.ymlVT}})|
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
