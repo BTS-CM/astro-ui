@@ -127,6 +127,7 @@
     "eraseFees": "rm -rf ./src/data/bitshares/fees.json && rm -rf ./src/data/bitshares_testnet/fees.json",
     "a": "",
     "refreshData": "rm -rf ./src/data/bitshares/* && rm -rf ./src/data/bitshares_testnet/* && bun run fetchPools && bun run fetchFees && bun run fetchAssets && bun run fetchDynamicData && bun run fetchIssuers && bun run fetchBitassetData && bun run fetchOffers",
+    "initData": "bun run fetchPools && bun run fetchFees && bun run fetchAssets && bun run fetchDynamicData && bun run fetchIssuers && bun run fetchBitassetData && bun run fetchOffers",
     "fetchPools": "bun run ./src/data/fetchPools.js",
     "fetchAssets": "bun run ./src/data/fetchAssets.js",
     "fetchDynamicData": "bun run ./src/data/fetchDynamicData.js",
