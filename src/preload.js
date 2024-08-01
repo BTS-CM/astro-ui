@@ -2,7 +2,7 @@ import { ipcRenderer, contextBridge } from 'electron';
 
 contextBridge.exposeInMainWorld('electron', {
     // MISC
-    //openURL: async (target) => ipcRenderer.send('openURL', target), // Links to explorers
+    openURL: async (target) => ipcRenderer.send('openURL', target), // Links to explorers
     //notify: async (msg) => ipcRenderer.send('notify', msg), // Triggering an electron notification prompt
     /*
     setNode: (func) => { // For storing the current connected blockchain node

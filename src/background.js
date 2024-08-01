@@ -1,5 +1,6 @@
 import path from "path";
 import os from "os";
+import url from "url";
 import express from "express";
 
 import {
@@ -9,6 +10,7 @@ import {
     Tray,
     ipcMain,
     screen,
+    shell,
 } from "electron";
 
 import { initApplicationMenu } from "./lib/applicationMenu.js";
@@ -147,6 +149,36 @@ const createWindow = async () => {
 
         return deeplink ?? null;
     });
+
+    const safeDomains = [
+        "https://blocksights.info/",
+        "https://bts.exchange/",
+        "https://ex.xbts.io/",
+        "https://kibana.bts.mobi/",
+        "https://www.bitsharescan.info/",
+        "https://github.com/bitshares/beet",
+      ];
+    ipcMain.on("openURL", (event, arg) => {
+        try {
+            const parsedUrl = new url.URL(arg);
+            const domain = parsedUrl.hostname;
+
+            const isSafeDomain = safeDomains.some(safeDomain => {
+                const safeDomainHostname = new url.URL(safeDomain).hostname;
+                return safeDomainHostname === domain;
+            });
+
+            if (isSafeDomain) {
+                shell.openExternal(arg);
+            } else {
+                console.error(
+                    `Rejected opening URL with unsafe domain: ${domain}`
+                );
+            }
+        } catch (err) {
+            console.error(`Failed to open URL: ${err.message}`);
+        }
+    });    
 
     tray.on("click", () => {
         mainWindow?.setAlwaysOnTop(true);

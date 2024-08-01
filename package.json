@@ -29,7 +29,10 @@
     },
     "linux": {
       "category": "Utility",
-      "target": ["deb", "AppImage"],
+      "target": [
+        "deb",
+        "AppImage"
+      ],
       "mimeTypes": [],
       "desktop": {
         "exec": "BTSAstroUI %U"
@@ -38,7 +41,7 @@
   },
   "dependencies": {
     "@astrojs/node": "^8.3.2",
-    "@astrojs/react": "^3.6.0",
+    "@astrojs/react": "^3.6.1",
     "@astrojs/tailwind": "^5.1.0",
     "@babel/runtime": "^7.25.0",
     "@exodus/bytebuffer": "git@github.com:BTS-CM/bytebuffer.js.git#393541bd29f988a2af6a7785b1ee4978881ed6bb",
@@ -66,7 +69,7 @@
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "assert": "^2.1.0",
-    "astro": "^4.12.2",
+    "astro": "^4.12.3",
     "bigi": "^1.4.2",
     "bignumber.js": "^9.1.2",
     "bitsharesjs": "https://github.com/bitshares/bitsharesjs#develop",
@@ -76,7 +79,7 @@
     "cmdk": "^0.2.0",
     "create-hash": "^1.2.0",
     "create-hmac": "^1.1.7",
-    "date-fns": "^3.3.1",
+    "date-fns": "^3.6.0",
     "deep-equal": "^2.2.3",
     "ecurve": "^1.0.6",
     "electron-devtools-installer": "^3.2.0",
@@ -86,7 +89,7 @@
     "long": "^5.2.3",
     "nanostores": "^0.10.3",
     "react": "^18.3.1",
-    "react-day-picker": "^9.0.4",
+    "react-day-picker": "^8.10.1",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.52.1",
     "react-i18next": "^15.0.0",
@@ -100,13 +103,13 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@babel/core": "^7.24.9",
+    "@babel/core": "^7.25.2",
     "@babel/plugin-proposal-object-rest-spread": "^7.20.7",
     "@babel/plugin-transform-runtime": "^7.24.7",
-    "@babel/preset-env": "^7.25.0",
+    "@babel/preset-env": "^7.25.3",
     "@soda/friendly-errors-webpack-plugin": "^1.8.1",
     "babel-loader": "^9.1.3",
-    "electron": "^31.3.0",
+    "electron": "^31.3.1",
     "electron-builder": "^24.13.3",
     "webpack": "^5.93.0",
     "webpack-cli": "^5.1.4",
@@ -115,14 +118,14 @@
   },
   "scripts": {
     "eraseChainData": "rm -rf ./src/data/bitshares/* && rm -rf ./src/data/bitshares_testnet/*",
-    "erasePools": "rm -rf ./src/data/bitshares/allPools.json && rm -rf ./src/data/bitshares/minPools.json && rm -rf ./src/data/bitshares_testnet/allPools.json && rm -rf ./src/data/bitshares_testnet/minPools.json",
-    "eraseAssets": "rm -rf ./src/data/bitshares/assets/* && rm -rf ./src/data/bitshares_testnet/assets/*",
-    "eraseDynamicData": "rm -rf ./src/data/bitshares/dynamic/* && rm -rf ./src/data/bitshares_testnet/dynamic/*",
-    "eraseIssuers": "rm -rf ./src/data/bitshares/issuers/* && rm -rf ./src/data/bitshares_testnet/issuers/*",
-    "eraseBitassetData": "rm -rf ./src/data/bitshares/bitassets/* && rm -rf ./src/data/bitshares_testnet/bitassets/*",
-    "eraseOffers": "rm -rf ./src/data/bitshares/offers/* && rm -rf ./src/data/bitshares_testnet/offers/*",
-    "eraseDeals": "rm -rf ./src/data/bitshares/deals/* && rm -rf ./src/data/bitshares_testnet/deals/*",
-    "eraseFees": "rm -rf ./src/data/bitshares/fees/* && rm -rf ./src/data/bitshares_testnet/fees/*",
+    "erasePools": "rm -rf ./src/data/bitshares/allPools.json && rm -rf ./src/data/bitshares/minPools.json && rm -rf ./src/data/bitshares/pools.json && rm -rf ./src/data/bitshares_testnet/allPools.json && rm -rf ./src/data/bitshares_testnet/minPools.json && rm -rf ./src/data/bitshares_testnet/pools.json",
+    "eraseAssets": "rm -rf ./src/data/bitshares/allAssets.json && rm -rf ./src/data/bitshares/minAssets.json && rm -rf ./src/data/bitshares_testnet/allAssets.json && rm -rf ./src/data/bitshares_testnet/minAssets.json",
+    "eraseDynamicData": "rm -rf ./src/data/bitshares/dynamicData.json && rm -rf ./src/data/bitshares_testnet/dynamicData.json",
+    "eraseIssuers": "rm -rf ./src/data/bitshares/assetIssuers.json && rm -rf ./src/data/bitshares_testnet/assetIssuers.json",
+    "eraseBitassetData": "rm -rf ./src/data/bitshares/bitassetData.json && rm -rf ./src/data/bitshares/minBitassetData.json && rm -rf ./src/data/bitshares_testnet/bitassetData.json && rm -rf ./src/data/bitshares_testnet/minBitassetData.json",
+    "eraseOffers": "rm -rf ./src/data/bitshares/allOffers.json && rm -rf ./src/data/bitshares_testnet/allOffers.json",
+    "eraseFees": "rm -rf ./src/data/bitshares/fees.json && rm -rf ./src/data/bitshares_testnet/fees.json",
+    "a": "",
     "refreshData": "rm -rf ./src/data/bitshares/* && rm -rf ./src/data/bitshares_testnet/* && bun run fetchPools && bun run fetchFees && bun run fetchAssets && bun run fetchDynamicData && bun run fetchIssuers && bun run fetchBitassetData && bun run fetchOffers",
     "fetchPools": "bun run ./src/data/fetchPools.js",
     "fetchAssets": "bun run ./src/data/fetchAssets.js",
@@ -132,13 +135,14 @@
     "fetchOffers": "bun run ./src/data/fetchCreditOffers.js",
     "fetchDeals": "bun run ./src/data/fetchCreditDeals.js",
     "fetchFees": "bun run ./src/data/fetchFees.js",
-    "emptySpace": "",
+    "b": "",
     "dev": "astro dev",
     "build:astro": "astro build",
     "start": "node build/start.js",
+    "restart": "npm run-script build:astro && npm run-script start",
     "compile": "webpack --config=build/webpack.main.config.js --config=build/webpack.preload.config.js --env=production",
-    "dist:macos-latest": "bun run compile && electron-builder -m --publish never",
-    "dist:windows-latest": "bun run compile && electron-builder -w --publish never",
-    "dist:ubuntu-latest": "bun run compile && electron-builder -l --publish never"
+    "dist:macos-latest": "npm run-script compile && electron-builder -m --publish never",
+    "dist:windows-latest": "npm run-script compile && electron-builder -w --publish never",
+    "dist:ubuntu-latest": "npm run-script compile && electron-builder -l --publish never"
   }
 }

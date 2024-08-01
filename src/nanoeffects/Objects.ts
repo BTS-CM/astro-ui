@@ -40,7 +40,7 @@ const [createUsernameStore] = nanoquery({
 const [createObjectStore] = nanoquery({
   fetcher: async (...args: unknown[]) => {
     const chain = args[0] as string;
-    const object_ids = args[1] as string[];
+    const object_ids = JSON.parse(args[1] as string);
 
     const specificNode = args[2] ? (args[2] as string) : null;
 

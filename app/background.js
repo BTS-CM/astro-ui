@@ -255,6 +255,16 @@ module.exports = require("os");
 
 module.exports = require("path");
 
+/***/ }),
+
+/***/ "url":
+/*!**********************!*\
+  !*** external "url" ***!
+  \**********************/
+/***/ ((module) => {
+
+module.exports = require("url");
+
 /***/ })
 
 /******/ 	});
@@ -334,12 +344,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var path__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(path__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var os__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! os */ "os");
 /* harmony import */ var os__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(os__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var express__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! express */ "express");
-/* harmony import */ var express__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(express__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var electron__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! electron */ "electron");
-/* harmony import */ var electron__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(electron__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _lib_applicationMenu_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./lib/applicationMenu.js */ "./src/lib/applicationMenu.js");
-/* harmony import */ var _lib_deeplink_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./lib/deeplink.js */ "./src/lib/deeplink.js");
+/* harmony import */ var url__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! url */ "url");
+/* harmony import */ var url__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(url__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var express__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! express */ "express");
+/* harmony import */ var express__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(express__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var electron__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! electron */ "electron");
+/* harmony import */ var electron__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(electron__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _lib_applicationMenu_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./lib/applicationMenu.js */ "./src/lib/applicationMenu.js");
+/* harmony import */ var _lib_deeplink_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./lib/deeplink.js */ "./src/lib/deeplink.js");
+
 
 
 
@@ -353,9 +366,9 @@ let mainWindow = null;
 let tray = null;
 
 const createWindow = async () => {
-    const { width, height } = electron__WEBPACK_IMPORTED_MODULE_3__.screen.getPrimaryDisplay().workAreaSize;
+    const { width, height } = electron__WEBPACK_IMPORTED_MODULE_4__.screen.getPrimaryDisplay().workAreaSize;
 
-    mainWindow = new electron__WEBPACK_IMPORTED_MODULE_3__.BrowserWindow({
+    mainWindow = new electron__WEBPACK_IMPORTED_MODULE_4__.BrowserWindow({
         width: width,
         height: height,
         minWidth: 480,
@@ -374,18 +387,18 @@ const createWindow = async () => {
         icon: __dirname + "/img/taskbar.png",
     });
     
-    const expressApp = express__WEBPACK_IMPORTED_MODULE_2___default()();
-    expressApp.use(express__WEBPACK_IMPORTED_MODULE_2___default()["static"]('astroDist'));
+    const expressApp = express__WEBPACK_IMPORTED_MODULE_3___default()();
+    expressApp.use(express__WEBPACK_IMPORTED_MODULE_3___default()["static"]('astroDist'));
     expressApp.listen(8080, () => {
         console.log("Express server listening on port 8080");
     });
 
-    (0,_lib_applicationMenu_js__WEBPACK_IMPORTED_MODULE_4__.initApplicationMenu)(mainWindow);
+    (0,_lib_applicationMenu_js__WEBPACK_IMPORTED_MODULE_5__.initApplicationMenu)(mainWindow);
 
     mainWindow.loadURL('http://localhost:8080/index.html');
 
-    tray = new electron__WEBPACK_IMPORTED_MODULE_3__.Tray(path__WEBPACK_IMPORTED_MODULE_0___default().join(__dirname, "img", "tray.png"));
-    const contextMenu = electron__WEBPACK_IMPORTED_MODULE_3__.Menu.buildFromTemplate([
+    tray = new electron__WEBPACK_IMPORTED_MODULE_4__.Tray(path__WEBPACK_IMPORTED_MODULE_0___default().join(__dirname, "img", "tray.png"));
+    const contextMenu = electron__WEBPACK_IMPORTED_MODULE_4__.Menu.buildFromTemplate([
         {
             label: "Show App",
             click: function () {
@@ -396,7 +409,7 @@ const createWindow = async () => {
             label: "Quit",
             click: function () {
                 tray = null;
-                electron__WEBPACK_IMPORTED_MODULE_3__.app.quit();
+                electron__WEBPACK_IMPORTED_MODULE_4__.app.quit();
             },
         },
     ]);
@@ -407,7 +420,7 @@ const createWindow = async () => {
         tray?.popUpContextMenu(contextMenu);
     });
 
-    electron__WEBPACK_IMPORTED_MODULE_3__.ipcMain.handle("fetchTopMarkets", async (event, arg) => {
+    electron__WEBPACK_IMPORTED_MODULE_4__.ipcMain.handle("fetchTopMarkets", async (event, arg) => {
         const { chain } = arg;
 
         let retrievedData;
@@ -430,7 +443,7 @@ const createWindow = async () => {
         return topMarkets ?? null;
     });
 
-    electron__WEBPACK_IMPORTED_MODULE_3__.ipcMain.handle("fetchAccountHistory", async (event, arg) => {
+    electron__WEBPACK_IMPORTED_MODULE_4__.ipcMain.handle("fetchAccountHistory", async (event, arg) => {
         const { chain, accountID } = arg;
 
         const from = arg.from ?? 0;
@@ -470,18 +483,49 @@ const createWindow = async () => {
         return accountHistory ?? null;
     });
 
-    electron__WEBPACK_IMPORTED_MODULE_3__.ipcMain.handle("generateDeepLink", async (event, arg) => {
+    electron__WEBPACK_IMPORTED_MODULE_4__.ipcMain.handle("generateDeepLink", async (event, arg) => {
         const { usrChain, operationName, trxJSON } = arg;
 
         let deeplink;
         try {
-            deeplink = await (0,_lib_deeplink_js__WEBPACK_IMPORTED_MODULE_5__.generateDeepLink)(usrChain, operationName, trxJSON);
+            deeplink = await (0,_lib_deeplink_js__WEBPACK_IMPORTED_MODULE_6__.generateDeepLink)(usrChain, operationName, trxJSON);
         } catch (error) {
             console.log({ error });
         }
 
         return deeplink ?? null;
     });
+
+    const safeDomains = [
+        "https://blocksights.info/",
+        "https://bts.exchange/",
+        "https://ex.xbts.io/",
+        "https://kibana.bts.mobi/",
+        "https://www.bitsharescan.info/",
+        "https://github.com/bitshares/beet",
+      ];
+    electron__WEBPACK_IMPORTED_MODULE_4__.ipcMain.on("openURL", (event, arg) => {
+        try {
+            const parsedUrl = new (url__WEBPACK_IMPORTED_MODULE_2___default().URL)(arg);
+            const domain = parsedUrl.hostname;
+            console.log({arg, domain})
+
+            const isSafeDomain = safeDomains.some(safeDomain => {
+                const safeDomainHostname = new (url__WEBPACK_IMPORTED_MODULE_2___default().URL)(safeDomain).hostname;
+                return safeDomainHostname === domain;
+            });
+
+            if (isSafeDomain) {
+                electron__WEBPACK_IMPORTED_MODULE_4__.shell.openExternal(arg);
+            } else {
+                console.error(
+                    `Rejected opening URL with unsafe domain: ${domain}`
+                );
+            }
+        } catch (err) {
+            console.error(`Failed to open URL: ${err.message}`);
+        }
+    });    
 
     tray.on("click", () => {
         mainWindow?.setAlwaysOnTop(true);
@@ -498,32 +542,32 @@ const createWindow = async () => {
     });
 };
 
-electron__WEBPACK_IMPORTED_MODULE_3__.app.disableHardwareAcceleration();
+electron__WEBPACK_IMPORTED_MODULE_4__.app.disableHardwareAcceleration();
 
 const currentOS = os__WEBPACK_IMPORTED_MODULE_1___default().platform();
 if (currentOS === "win32" || currentOS === "linux") {
     // windows + linux setup phase
-    const gotTheLock = electron__WEBPACK_IMPORTED_MODULE_3__.app.requestSingleInstanceLock();
+    const gotTheLock = electron__WEBPACK_IMPORTED_MODULE_4__.app.requestSingleInstanceLock();
 
     if (!gotTheLock) {
-        electron__WEBPACK_IMPORTED_MODULE_3__.app.quit();
+        electron__WEBPACK_IMPORTED_MODULE_4__.app.quit();
     }
 
-    electron__WEBPACK_IMPORTED_MODULE_3__.app.whenReady().then(() => {
+    electron__WEBPACK_IMPORTED_MODULE_4__.app.whenReady().then(() => {
         createWindow();
     });
 } else {
-    electron__WEBPACK_IMPORTED_MODULE_3__.app.whenReady().then(() => {
+    electron__WEBPACK_IMPORTED_MODULE_4__.app.whenReady().then(() => {
         createWindow();
     });
 
-    electron__WEBPACK_IMPORTED_MODULE_3__.app.on("window-all-closed", () => {
+    electron__WEBPACK_IMPORTED_MODULE_4__.app.on("window-all-closed", () => {
         if (process.platform !== "darwin") {
-            electron__WEBPACK_IMPORTED_MODULE_3__.app.quit();
+            electron__WEBPACK_IMPORTED_MODULE_4__.app.quit();
         }
     });
 
-    electron__WEBPACK_IMPORTED_MODULE_3__.app.on("activate", () => {
+    electron__WEBPACK_IMPORTED_MODULE_4__.app.on("activate", () => {
         if (mainWindow === null) {
             createWindow();
         }

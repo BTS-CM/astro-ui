@@ -91,7 +91,7 @@ __webpack_require__.r(__webpack_exports__);
 
 electron__WEBPACK_IMPORTED_MODULE_0__.contextBridge.exposeInMainWorld('electron', {
     // MISC
-    //openURL: async (target) => ipcRenderer.send('openURL', target), // Links to explorers
+    openURL: async (target) => electron__WEBPACK_IMPORTED_MODULE_0__.ipcRenderer.send('openURL', target), // Links to explorers
     //notify: async (msg) => ipcRenderer.send('notify', msg), // Triggering an electron notification prompt
     /*
     setNode: (func) => { // For storing the current connected blockchain node

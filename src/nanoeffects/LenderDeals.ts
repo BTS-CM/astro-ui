@@ -49,11 +49,8 @@ function fetchLenderDeals (
         }
 
         if (!lenderDeals || !lenderDeals.length) {
-          reject(new Error("No credit deals found"));
-          if (!existingAPI) {
-            currentAPI.close();
-          }
-          return;
+          currentAPI.close();
+          return resolve([]);
         }
 
         if (lenderDeals.length === limit) {

@@ -275,9 +275,9 @@ export default function CreditOfferEditor(properties) {
     let unsub;
 
     if (offerID && usr && usr.chain) {
-      const offerDataStore = createObjectStore([usr.chain, [offerID]]);
-      unsub = offerDataStore.subscribe(({ data }) => {
-        if (data && !data.error && !data.loading) {
+      const offerDataStore = createObjectStore([usr.chain, JSON.stringify([offerID])]);
+      unsub = offerDataStore.subscribe(({ data, error, loading }) => {
+        if (data && !error && !loading) {
           const _data = data[0];
           const _lendingAsset = assets.find((x) => x.id === _data.asset_type);
 

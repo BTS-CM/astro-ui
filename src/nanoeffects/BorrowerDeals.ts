@@ -50,8 +50,8 @@ function fetchBorrowerDeals (
         }
 
         if (!borrowerDeals || !borrowerDeals.length) {
-          reject(new Error("No credit deals found"));
-          return;
+          currentAPI.close();
+          return resolve([]);
         }
 
         if (borrowerDeals.length === limit) {

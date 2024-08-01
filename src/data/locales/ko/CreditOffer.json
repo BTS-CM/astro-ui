@@ -26,7 +26,7 @@
     "borrowDescription2": "대출 기관이 지정한 가격: {{price}} {{quote}}/{{base}}",
     "noCollateralMessage": "계정에 이 담보 자산이 보관되어 있지 않습니다.",
     "borrowAmount": "금액 {{symbol}} 너는 빌릴 계획이야",
-    "availableAmountRange": "사용 가능: {{minAmount}} 에게 {{availableAmount}} {{symbol}}",
+    "availableAmountRange": "사용 가능: {{availableAmount}} {{symbol}} (최소: {{minAmount}})",
     "inputBorrowAmount": "금액을 입력하세요. {{symbol}} 당신은 빌리고 싶어 {{owner_name}}.",
     "repayMethod": "신용 제안 상환 방법",
     "selectRepayMethod": "상환방법을 선택하세요..",

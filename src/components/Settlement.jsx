@@ -267,19 +267,20 @@ export default function Settlement(properties) {
     }
   }, [finalBitasset, parsedAsset, parsedCollateralAsset]);
 
-  useEffect(() => {
-    let unsub;
+  const [collateralBids, setCollateralBids] = useState();
 
+  
+  useEffect(() => {
     if (parsedBitasset && parsedBitasset && usr && usr.chain) {
       const smartcoinDataStore = createObjectStore([
         usr.chain,
-        [
+        JSON.stringify([
           parsedAsset.id,
           parsedBitasset.collateral,
           parsedBitasset.id
-        ],
+        ]),
       ]);
-      unsub = smartcoinDataStore.subscribe(({ data, error, loading }) => {
+      smartcoinDataStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
           setFinalAsset(data[0]);
           setFinalCollateralAsset(data[1]);
@@ -287,13 +288,8 @@ export default function Settlement(properties) {
         }
       });
     }
-
-    return () => {
-      if (unsub) unsub();
-    };
   }, [parsedAsset, parsedBitasset, usr]);
 
-  const [collateralBids, setCollateralBids] = useState();
   useEffect(() => {
     let unsub;
 

@@ -26,7 +26,7 @@
     "borrowDescription2": "Lender's designated price: {{price}} {{quote}}/{{base}}",
     "noCollateralMessage": "Account doesn't hold this backing collateral asset.",
     "borrowAmount": "Amount of {{symbol}} you plan on borrowing",
-    "availableAmountRange": "Available: {{minAmount}} to {{availableAmount}} {{symbol}}",
+    "availableAmountRange": "Available: {{availableAmount}} {{symbol}} (Minimum: {{minAmount}})",
     "inputBorrowAmount": "Input the amount of {{symbol}} you'd like to borrow from {{owner_name}}.",
     "repayMethod": "Credit offer repay method",
     "selectRepayMethod": "Select your repay method..",

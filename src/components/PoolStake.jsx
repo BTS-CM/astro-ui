@@ -53,7 +53,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar as Av, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Avatar } from "@/components/Avatar.tsx";
 
-import { blockchainFloat, copyToClipboard, humanReadableFloat } from "@/lib/common";
+import { blockchainFloat, humanReadableFloat } from "@/lib/common";
 
 import {
   $assetCacheBTS,
@@ -66,9 +66,7 @@ import {
   $globalParamsCacheTEST,
 } from "@/stores/cache.ts";
 
-import { createDynamicDataStore } from "@/nanoeffects/Assets.ts";
-
-import { createObjectStore } from "@/nanoeffects/Objects.ts";
+import { createPoolAssetStore } from "@/nanoeffects/Assets.ts";
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
@@ -275,162 +273,58 @@ export default function PoolStake() {
     }
   }, [pools]);
 
-  const [sellAmount, setSellAmount] = useState(0);
-
   const [foundPool, setFoundPool] = useState();
+  const [foundPoolDetails, setFoundPoolDetails] = useState();
+  const [poolShareDetails, setPoolShareDetails] = useState(null);
+
   const [assetA, setAssetA] = useState("");
   const [assetB, setAssetB] = useState("");
 
-  useEffect(() => {
-    // Setting various react states as the user interacts with the form
-    if (pools && pool && assets) {
-      const currentPool = pools.find((x) => x.id === pool);
-      if (!currentPool) {
-        console.log("Invalid pool");
-        return;
-      }
-      setFoundPool(currentPool);
-      const foundA = assets.find((x) => x.id === currentPool.asset_a_id);
-      const foundB = assets.find((x) => x.id === currentPool.asset_b_id);
-      setAssetA(foundA);
-      setAssetB(foundB);
-      setSellAmount(1);
-    }
-  }, [pool, pools, assets]);
-
-  const [foundPoolDetails, setFoundPoolDetails] = useState();
-  useEffect(() => {
-    let unsubscribePoolDetails;
-
-    if (usr && usr.chain && foundPool && assetA && assetB && assets) {
-      const poolDetailsStore = createObjectStore([usr.chain, [foundPool.id]]);
-
-      unsubscribePoolDetails = poolDetailsStore.subscribe(({ data, error, loading }) => {
-        if (data && !error && !loading) {
-          let finalResult = data[0];
-          finalResult["asset_a_symbol"] = assetA.symbol;
-          finalResult["asset_a_precision"] = assetA.precision;
-
-          finalResult["asset_b_symbol"] = assetB.symbol;
-          finalResult["asset_b_precision"] = assetB.precision;
-
-          finalResult["share_asset_symbol"] = foundPool.share_asset_symbol;
-
-          finalResult["readable_balance_a"] = `${humanReadableFloat(
-            finalResult.balance_a,
-            assetA.precision
-          )} ${assetA.symbol}`;
-          finalResult["readable_balance_b"] = `${humanReadableFloat(
-            finalResult.balance_b,
-            assetB.precision
-          )} ${assetB.symbol}`;
-          finalResult["share_asset_details"] = assets.find((x) => x.id === finalResult.share_asset);
-
-          setFoundPoolDetails(finalResult);
-        }
-      });
-    }
-
-    return () => {
-      if (unsubscribePoolDetails) unsubscribePoolDetails();
-    };
-  }, [usr, foundPool, assetA, assetB, assets]);
-
-  const [foundPoolShareAssetDetails, setFoundPoolShareAssetDetails] = useState();
-  useEffect(() => {
-    let unsubscribePoolDetails;
-
-    if (foundPoolDetails) {
-      const poolDetailsStore = createObjectStore([
-        usr.chain,
-        [foundPoolDetails.share_asset.replace("1.", "2.")],
-      ]);
-
-      unsubscribePoolDetails = poolDetailsStore.subscribe(({ data, error, loading }) => {
-        if (data && !error && !loading) {
-          setFoundPoolShareAssetDetails(data[0]);
-        }
-      });
-    }
-
-    return () => {
-      if (unsubscribePoolDetails) unsubscribePoolDetails();
-    };
-  }, [foundPoolDetails]);
-
   const [assetADetails, setAssetADetails] = useState(null);
   const [assetBDetails, setAssetBDetails] = useState(null);
-  const [poolShareDetails, setPoolShareDetails] = useState(null);
 
   const [aBitassetData, setABitassetData] = useState(null);
   const [bBitassetData, setBBitassetData] = useState(null);
 
   useEffect(() => {
-    let unsubscribeADetails;
-    let unsubscribeBDetails;
-    let unsubscribePoolShareDetails;
-    let unsubscribeABitassetData;
-    let unsubscribeBBitassetData;
-
-    if (usr && usr.id && assets && assetA && assetB && foundPool) {
-      const dynamicDataStoreA = createDynamicDataStore([
+    // Setting various react states as the user interacts with the form
+    if (usr && usr.chain && pools && assets && pool) {
+      const poolStore = createPoolAssetStore([
         usr.chain,
-        assetA.id.replace("1.3.", "2.3."),
+        JSON.stringify(pools),
+        JSON.stringify(assets),
+        pool,
       ]);
-      unsubscribeADetails = dynamicDataStoreA.subscribe(({ data, error, loading }) => {
-        if (data && !error && !loading) {
-          setAssetADetails(data);
-        }
-      });
 
-      const dynamicDataStoreB = createDynamicDataStore([
-        usr.chain,
-        assetB.id.replace("1.3.", "2.3."),
-      ]);
-      unsubscribeBDetails = dynamicDataStoreB.subscribe(({ data, error, loading }) => {
-        if (data && !error && !loading) {
-          setAssetBDetails(data);
-        }
-      });
-
-      const poolAsset = assets.find((x) => x.symbol === foundPool.share_asset_symbol);
-      const dynamicDataStorePool = createDynamicDataStore([
-        usr.chain,
-        poolAsset.id.replace("1.3.", "2.3."),
-      ]);
-      unsubscribePoolShareDetails = dynamicDataStorePool.subscribe(({ data, error, loading }) => {
-        if (data && !error && !loading) {
-          setPoolShareDetails(data);
-        }
-      });
-
-      if (assetA.bitasset_data_id) {
-        const bitassetDataStoreA = createObjectStore([usr.chain, [assetA.bitasset_data_id]]);
-        unsubscribeABitassetData = bitassetDataStoreA.subscribe(({ data, error, loading }) => {
+      try {
+        poolStore.subscribe(({ data, error, loading }) => {
+          if (error) {
+            console.log({error, location: "poolStore.subscribe"});
+          }
           if (data && !error && !loading) {
-            setABitassetData(data[0]);
+            setFoundPool(data.foundPool);
+            setPoolShareDetails(data.poolAsset);
+  
+            setAssetA(data.assetA);
+            setAssetB(data.assetB);
+      
+            setFoundPoolDetails(data.foundPoolDetails);
+            setAssetADetails(data.assetADetails);
+            setAssetBDetails(data.assetBDetails);
+            if (data.bitassetA) {
+              setABitassetData(data.bitassetA);
+            }
+            if (data.bitassetB) {
+              setBBitassetData(data.bitassetB);
+            }
           }
         });
+      } catch (error) {
+        console.log({error});
       }
 
-      if (assetB.bitasset_data_id) {
-        const bitassetDataStoreB = createObjectStore([usr.chain, [assetB.bitasset_data_id]]);
-        unsubscribeBBitassetData = bitassetDataStoreB.subscribe(({ data, error, loading }) => {
-          if (data && !error && !loading) {
-            setBBitassetData(data[0]);
-          }
-        });
-      }
     }
-
-    return () => {
-      if (unsubscribeADetails) unsubscribeADetails();
-      if (unsubscribeBDetails) unsubscribeBDetails();
-      if (unsubscribePoolShareDetails) unsubscribePoolShareDetails();
-      if (unsubscribeABitassetData) unsubscribeABitassetData();
-      if (unsubscribeBBitassetData) unsubscribeBBitassetData();
-    };
-  }, [usr, assetA, assetB, foundPool, assets]);
+  }, [usr, pool, pools, assets]);
 
   const [usrBalances, setUsrBalances] = useState();
   useEffect(() => {
@@ -750,7 +644,7 @@ export default function PoolStake() {
                                 </CardHeader>
                                 <CardContent className="text-lg mt-0 pt-0">
                                   {foundPoolDetails
-                                    ? foundPoolDetails.readable_balance_a.split(" ")[0]
+                                    ? foundPool.readable_balance_a.split(" ")[0]
                                     : "0"}
                                 </CardContent>
                               </Card>
@@ -773,7 +667,7 @@ export default function PoolStake() {
                                 </CardHeader>
                                 <CardContent className="text-lg">
                                   {foundPoolDetails
-                                    ? foundPoolDetails.readable_balance_b.split(" ")[0]
+                                    ? foundPool.readable_balance_b.split(" ")[0]
                                     : "0"}
                                 </CardContent>
                               </Card>
@@ -794,7 +688,7 @@ export default function PoolStake() {
                                 usr.chain !== "bitshares" ? "?network=testnet" : ""
                               }`}
                             />
-                            {foundPoolDetails && foundPoolShareAssetDetails ? (
+                            {foundPool && foundPoolDetails ? (
                               <Dialog>
                                 <DialogTrigger asChild>
                                   <Button className="ml-2" variant="outline">
@@ -813,7 +707,7 @@ export default function PoolStake() {
                                       <ScrollArea className="h-72 rounded-md border">
                                         <pre>
                                           {JSON.stringify(
-                                            [foundPoolDetails, foundPoolShareAssetDetails],
+                                            [foundPool, foundPoolDetails],
                                             null,
                                             2
                                           )}
@@ -967,42 +861,42 @@ export default function PoolStake() {
                                                     setAStake(input);
 
                                                     if (
-                                                      foundPoolDetails.balance_a &&
-                                                      foundPoolDetails.balance_b
+                                                      foundPool.balance_a &&
+                                                      foundPool.balance_b
                                                     ) {
                                                       const _aAmount = parseFloat(input);
                                                       const _bAmount = parseFloat(
                                                         (
                                                           _aAmount *
                                                           (humanReadableFloat(
-                                                            Number(foundPoolDetails.balance_b),
-                                                            foundPoolDetails.asset_b_precision
+                                                            Number(foundPool.balance_b),
+                                                            foundPool.asset_b_precision
                                                           ) /
                                                             humanReadableFloat(
-                                                              Number(foundPoolDetails.balance_a),
-                                                              foundPoolDetails.asset_a_precision
+                                                              Number(foundPool.balance_a),
+                                                              foundPool.asset_a_precision
                                                             ))
                                                         ).toFixed(
-                                                          foundPoolDetails.asset_a_precision
+                                                          foundPool.asset_a_precision
                                                         )
                                                       );
 
                                                       setBStake(_bAmount);
 
                                                       const _supply = humanReadableFloat(
-                                                        foundPoolShareAssetDetails.current_supply,
-                                                        foundPoolDetails.share_asset_details
+                                                        foundPoolDetails.current_supply,
+                                                        foundPool.share_asset_details
                                                           .precision
                                                       );
 
                                                       const balanceA = humanReadableFloat(
-                                                        Number(foundPoolDetails.balance_a),
-                                                        foundPoolDetails.asset_a_precision
+                                                        Number(foundPool.balance_a),
+                                                        foundPool.asset_a_precision
                                                       );
 
                                                       const balanceB = humanReadableFloat(
-                                                        Number(foundPoolDetails.balance_b),
-                                                        foundPoolDetails.asset_b_precision
+                                                        Number(foundPool.balance_b),
+                                                        foundPool.asset_b_precision
                                                       );
 
                                                       const shareAssetAmountA =
@@ -1018,7 +912,7 @@ export default function PoolStake() {
                                                       setTotalReceiving(
                                                         parseFloat(
                                                           shareAssetAmount.toFixed(
-                                                            foundPoolDetails.share_asset_details
+                                                            foundPool.share_asset_details
                                                               .precision
                                                           )
                                                         )
@@ -1082,42 +976,42 @@ export default function PoolStake() {
                                                     setBStake(input);
 
                                                     if (
-                                                      foundPoolDetails.balance_a &&
-                                                      foundPoolDetails.balance_b
+                                                      foundPool.balance_a &&
+                                                      foundPool.balance_b
                                                     ) {
                                                       const _bAmount = parseFloat(input);
                                                       const _aAmount = parseFloat(
                                                         (
                                                           _bAmount *
                                                           (humanReadableFloat(
-                                                            Number(foundPoolDetails.balance_a),
-                                                            foundPoolDetails.asset_a_precision
+                                                            Number(foundPool.balance_a),
+                                                            foundPool.asset_a_precision
                                                           ) /
                                                             humanReadableFloat(
-                                                              Number(foundPoolDetails.balance_b),
-                                                              foundPoolDetails.asset_b_precision
+                                                              Number(foundPool.balance_b),
+                                                              foundPool.asset_b_precision
                                                             ))
                                                         ).toFixed(
-                                                          foundPoolDetails.asset_a_precision
+                                                          foundPool.asset_a_precision
                                                         )
                                                       );
 
                                                       setAStake(_aAmount);
 
                                                       const _supply = humanReadableFloat(
-                                                        foundPoolShareAssetDetails.current_supply,
-                                                        foundPoolDetails.share_asset_details
+                                                        foundPoolDetails.current_supply,
+                                                        foundPool.share_asset_details
                                                           .precision
                                                       );
 
                                                       const balanceA = humanReadableFloat(
-                                                        Number(foundPoolDetails.balance_a),
-                                                        foundPoolDetails.asset_a_precision
+                                                        Number(foundPool.balance_a),
+                                                        foundPool.asset_a_precision
                                                       );
 
                                                       const balanceB = humanReadableFloat(
-                                                        Number(foundPoolDetails.balance_b),
-                                                        foundPoolDetails.asset_b_precision
+                                                        Number(foundPool.balance_b),
+                                                        foundPool.asset_b_precision
                                                       );
 
                                                       const shareAssetAmountA =
@@ -1133,7 +1027,7 @@ export default function PoolStake() {
                                                       setTotalReceiving(
                                                         parseFloat(
                                                           shareAssetAmount.toFixed(
-                                                            foundPoolDetails.share_asset_details
+                                                            foundPool.share_asset_details
                                                               .precision
                                                           )
                                                         )
@@ -1183,7 +1077,7 @@ export default function PoolStake() {
                                   <FormItem>
                                     <FormLabel>
                                       {t("PoolStake:withdrawLabel", {
-                                        symbol: foundPoolDetails.share_asset_symbol,
+                                        symbol: foundPool.share_asset_symbol,
                                       })}
                                     </FormLabel>
                                     <FormDescription>{t("PoolStake:withdrawDesc")}</FormDescription>
@@ -1195,8 +1089,8 @@ export default function PoolStake() {
                                             readOnly
                                             value={
                                               withdrawAmount
-                                                ? `${withdrawAmount} ${foundPoolDetails.share_asset_symbol}`
-                                                : `0 ${foundPoolDetails.share_asset_symbol}`
+                                                ? `${withdrawAmount} ${foundPool.share_asset_symbol}`
+                                                : `0 ${foundPool.share_asset_symbol}`
                                             }
                                           />
                                         </div>
@@ -1223,7 +1117,7 @@ export default function PoolStake() {
                                                   if (input && input.length && regex.test(input)) {
                                                     const _input = parseFloat(
                                                       Number(input).toFixed(
-                                                        foundPoolDetails.share_asset_details
+                                                        foundPool.share_asset_details
                                                           .precision
                                                       )
                                                     );
@@ -1231,29 +1125,29 @@ export default function PoolStake() {
                                                     setWithdrawAmount(_input);
 
                                                     const _supply = humanReadableFloat(
-                                                      foundPoolShareAssetDetails.current_supply,
-                                                      foundPoolDetails.share_asset_details.precision
+                                                      foundPoolDetails.current_supply,
+                                                      foundPool.share_asset_details.precision
                                                     );
 
                                                     const _balanceA = humanReadableFloat(
-                                                      Number(foundPoolDetails.balance_a),
-                                                      foundPoolDetails.asset_a_precision
+                                                      Number(foundPool.balance_a),
+                                                      foundPool.asset_a_precision
                                                     );
 
                                                     const _balanceB = humanReadableFloat(
-                                                      Number(foundPoolDetails.balance_b),
-                                                      foundPoolDetails.asset_b_precision
+                                                      Number(foundPool.balance_b),
+                                                      foundPool.asset_b_precision
                                                     );
 
                                                     const _withdrawRatio = _input / _supply;
                                                     const _allocatedA = parseFloat(
                                                       (_balanceA * _withdrawRatio).toFixed(
-                                                        foundPoolDetails.asset_a_precision
+                                                        foundPool.asset_a_precision
                                                       )
                                                     );
                                                     const _allocatedB = parseFloat(
                                                       (_balanceB * _withdrawRatio).toFixed(
-                                                        foundPoolDetails.asset_b_precision
+                                                        foundPool.asset_b_precision
                                                       )
                                                     );
 
@@ -1406,7 +1300,7 @@ export default function PoolStake() {
                       key={`Withdrawing`}
                       headerText={t("PoolStake:unstakingDesc", {
                         amount: withdrawAmount,
-                        symbol: foundPoolDetails.share_asset_symbol,
+                        symbol: foundPool.share_asset_symbol,
                         poolId: pool,
                       })}
                       trxJSON={[
@@ -1416,9 +1310,9 @@ export default function PoolStake() {
                           share_amount: {
                             amount: blockchainFloat(
                               withdrawAmount,
-                              foundPoolDetails.share_asset_details.precision
+                              foundPool.share_asset_details.precision
                             ),
-                            asset_id: foundPoolDetails.share_asset,
+                            asset_id: foundPool.share_asset,
                           },
                           extensions: [],
                         },
@@ -1517,8 +1411,8 @@ export default function PoolStake() {
 
                 {foundPoolDetails && marketSearch && usrBalances ? (
                   <MarketAssetCard
-                    asset={foundPoolDetails.share_asset_symbol}
-                    assetData={foundPoolDetails.share_asset_details}
+                    asset={foundPool.share_asset_symbol}
+                    assetData={foundPool.share_asset_details}
                     assetDetails={poolShareDetails}
                     bitassetData={null}
                     marketSearch={marketSearch}

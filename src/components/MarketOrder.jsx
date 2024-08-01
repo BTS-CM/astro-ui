@@ -218,9 +218,9 @@ export default function MarketOrder(properties) {
     let unsubscribeLimitOrder;
 
     if (limitOrderID && usr && usr.chain) {
-      const limitOrderStore = createObjectStore([usr.chain, [limitOrderID]]);
-      unsubscribeLimitOrder = limitOrderStore.subscribe(({ data }) => {
-        if (data && !data.error && !data.loading) {
+      const limitOrderStore = createObjectStore([usr.chain, JSON.stringify([limitOrderID])]);
+      unsubscribeLimitOrder = limitOrderStore.subscribe(({ data, error, loading }) => {
+        if (data && !error && !loading) {
           const _data = data[0];
           setCurrentLimitOrder(_data);
 

@@ -268,6 +268,7 @@ export default function PoolForm() {
   const [assetB, setAssetB] = useState("");
 
   const [foundPoolDetails, setFoundPoolDetails] = useState();
+  
   const [assetADetails, setAssetADetails] = useState(null);
   const [assetBDetails, setAssetBDetails] = useState(null);
   const [poolShareDetails, setPoolShareDetails] = useState(null);

@@ -28,7 +28,7 @@ export default function ExternalLink(properties) {
     "https://kibana.bts.mobi/",
     "https://www.bitsharescan.info/",
     "https://github.com/bitshares/beet",
-  ]; // Crude counter-xss measure
+  ];
 
   if (!allowedDomains.some((domain) => hyperlink.startsWith(domain))) {
     console.log("Invalid external link");
@@ -83,11 +83,18 @@ export default function ExternalLink(properties) {
           </h3>
 
           <div className="grid grid-cols-1 gap-3">
-            <a href={hyperlink} target="_blank">
-              <Button color="gray" variant="outline">
-                {t("ExternalLink:dialogContent.openLink")}
-              </Button>
-            </a>
+            {
+              window.electron
+              ? <Button color="gray" variant="outline" onClick={() => window.electron.openURL(hyperlink)}>
+                  {t("ExternalLink:dialogContent.openLink")}
+                </Button>
+              : <a href={hyperlink} target="_blank">
+                  <Button color="gray" variant="outline">
+                    {t("ExternalLink:dialogContent.openLink")}
+                  </Button>
+                </a>
+            }
+            
           </div>
         </DialogContent>
       </Dialog>

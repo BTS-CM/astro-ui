@@ -47,9 +47,12 @@ import {
   $offersCacheTEST,
   $globalParamsCacheBTS,
   $globalParamsCacheTEST,
+  $marketSearchCacheBTS,
+  $marketSearchCacheTEST,
 } from "@/stores/cache.ts";
 
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
+import { createObjectStore } from "@/nanoeffects/Objects.ts";
 import { useInitCache } from "@/nanoeffects/Init.ts";
 
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
@@ -114,6 +117,18 @@ export default function CreditBorrow(properties) {
     () => true
   );
 
+  const _marketSearchBTS = useSyncExternalStore(
+    $marketSearchCacheBTS.subscribe,
+    $marketSearchCacheBTS.get,
+    () => true
+  );
+
+  const _marketSearchTEST = useSyncExternalStore(
+    $marketSearchCacheTEST.subscribe,
+    $marketSearchCacheTEST.get,
+    () => true
+  );
+
   const _chain = useMemo(() => {
     if (usr && usr.chain) {
       return usr.chain;
@@ -121,7 +136,33 @@ export default function CreditBorrow(properties) {
     return "bitshares";
   }, [usr]);
 
-  useInitCache(_chain ?? "bitshares", ["assets", "globalParams", "offers"]);
+  useInitCache(_chain ?? "bitshares", ["assets", "globalParams", "offers", "marketSearch"]);
+
+  const assetIssuers = useMemo(() => {
+    if (_chain && (_marketSearchBTS || _marketSearchTEST)) {
+      const targetCache = _chain === "bitshares" ? _marketSearchBTS : _marketSearchTEST;
+      let mappedCache = targetCache.map((x) => {
+        const split = x.u.split("(");
+        const name = split[0].replace(" ", "");
+        const id = split[1].replace(")", "").replace(" ", "");
+        return { name, id };
+      });
+
+      let uniqueEntries = new Set();
+      let filteredCache = mappedCache.filter((entry) => {
+        const key = `${entry.name}-${entry.id}`;
+        if (!uniqueEntries.has(key)) {
+          uniqueEntries.add(key);
+          return true;
+        }
+        return false;
+      });
+
+      return filteredCache;
+    }
+  }, [_marketSearchBTS, _marketSearchTEST, _chain]);
+
+
 
   const assets = useMemo(() => {
     if (_chain && (_assetsBTS || _assetsTEST)) {
@@ -166,31 +207,34 @@ export default function CreditBorrow(properties) {
       if (!id) {
         console.log("Credit offer parameter not found");
         return null;
-      } else {
-        const foundOffer = offers.find((offer) => offer.id === id);
-
-        if (!foundOffer) {
-          return null;
-        }
-
-        //console.log("Found offer");
-        return foundOffer;
       }
+      
+      return id;
     }
 
     if (offers && offers.length) {
-      parseUrlAssets().then((foundOffer) => {
-        if (!foundOffer) {
+      parseUrlAssets().then((id) => {
+        if (!id) {
           setError(true);
           return;
         }
-        const foundAsset = assets.find((asset) => asset.id === foundOffer.asset_type);
-        setError(false);
-        setFoundAsset(foundAsset);
-        setRelevantOffer(foundOffer);
+
+        const offerStore = createObjectStore([_chain, JSON.stringify([id])]);
+        offerStore.subscribe(({ data, error, loading }) => {
+          if (data && !error && !loading) {
+            const foundOffer = data[0];
+            setRelevantOffer(foundOffer);
+            const foundAsset = assets.find((asset) => asset.id === foundOffer.asset_type);
+            setError(false);
+            setFoundAsset(foundAsset);
+          }
+          if (error) {
+            setError(true);
+          }
+        });
       });
     }
-  }, [offers]);
+  }, [_chain, offers]);
 
   const [usrBalances, setUsrBalances] = useState();
   const [balanceAssetIDs, setBalanceAssetIDs] = useState([]);
@@ -252,43 +296,7 @@ export default function CreditBorrow(properties) {
   }, [relevantOffer, foundAsset]);
 
   const [inputValue, setInputValue] = useState(minAmount ?? 1);
-  const [debouncedInputValue, setDebouncedInputValue] = useState(0);
   const [finalBorrowAmount, setFinalBorrowAmount] = useState();
-
-  // Update debouncedInputValue after user stops typing for 1 second
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedInputValue(inputValue);
-    }, 1000);
-    return () => clearTimeout(timer);
-  }, [inputValue]);
-
-  // Calculate finalBorrowAmount when debouncedInputValue or availableAmount changes
-  useEffect(() => {
-    if (!availableAmount) {
-      setFinalBorrowAmount(0);
-      return;
-    }
-    if (!debouncedInputValue) {
-      return;
-    }
-    if (debouncedInputValue > availableAmount) {
-      setFinalBorrowAmount(availableAmount);
-      setInputValue(availableAmount); // Set value to maximum available amount
-    } else if (debouncedInputValue < minAmount) {
-      setFinalBorrowAmount(minAmount);
-      setInputValue(minAmount); // Set value to minimum accepted amount
-    } else if (
-      debouncedInputValue.toString().split(".").length > 1 &&
-      debouncedInputValue.toString().split(".")[1].length > foundAsset.precision
-    ) {
-      const fixedValue = parseFloat(debouncedInputValue).toFixed(foundAsset.precision);
-      setFinalBorrowAmount(fixedValue);
-      setInputValue(fixedValue); // Set value to minimum accepted amount
-    } else {
-      setFinalBorrowAmount(debouncedInputValue);
-    }
-  }, [debouncedInputValue, availableAmount]);
 
   const collateralInfo = useMemo(() => {
     if (chosenCollateral && balanceAssetIDs && assets && usrBalances) {
@@ -394,6 +402,45 @@ export default function CreditBorrow(properties) {
     }
   }, [repayPeriod]);
 
+  const handleInputChange = (event) => {
+    const input = event.target.value;
+    const regex = /^[0-9]*\.?[0-9]*$/;
+    if (regex.test(input)) {
+      let adjustedValue = input;
+
+      if (availableAmount && input > availableAmount) {
+        adjustedValue = availableAmount;
+      } else if (input < minAmount) {
+        adjustedValue = minAmount;
+      } else if (
+        input.toString().split(".").length > 1 &&
+        input.toString().split(".")[1].length > foundAsset.precision
+      ) {
+        adjustedValue = parseFloat(input).toFixed(foundAsset.precision);
+      }
+
+      setInputValue(adjustedValue);
+      setFinalBorrowAmount(adjustedValue);
+    }
+  };
+
+  const creditOfferOwner = useMemo(() => {
+    if (assetIssuers && assetIssuers.length && relevantOffer) {
+      let owner = assetIssuers.find((x) => x.id === relevantOffer.owner_account);
+      if (!owner) {
+        const userStore = createObjectStore([_chain, JSON.stringify([relevantOffer.owner_account])]);
+        userStore.subscribe(({ data, error, loading }) => {
+          if (data && !error && !loading) {
+            const foundUser = data[0];
+            owner = { id: foundUser.id, name: foundUser.name };
+            return owner;
+          }
+        });
+      }
+      return owner;
+    }
+  }, [assetIssuers, relevantOffer]);
+
   return (
     <>
       <div className="container mx-auto mt-5 mb-5">
@@ -421,11 +468,11 @@ export default function CreditBorrow(properties) {
             <Card>
               <CardHeader className="pb-1">
                 <CardTitle>
-                  {relevantOffer
+                  {creditOfferOwner
                     ? t("CreditOffer:offerCardHeader.viewingOffer", {
                         id: relevantOffer.id,
-                        owner_name: relevantOffer.owner_name ?? "?",
-                        owner_account: relevantOffer.owner_account,
+                        owner_name: creditOfferOwner.name,
+                        owner_account: creditOfferOwner.id,
                       })
                     : t("CreditOffer:offerCardHeader.loadingOfferTerms")}
                 </CardTitle>
@@ -507,14 +554,14 @@ export default function CreditBorrow(properties) {
                                     {t("CreditOffer:cardContent.lendingAccount")}
                                   </div>
                                   <div className="col-span-1 text-right">
-                                    {relevantOffer ? (
+                                    {creditOfferOwner ? (
                                       <ExternalLink
                                         classnamecontents="text-blue-500"
                                         type="text"
                                         text={t("CreditOffer:cardContent.viewAccount", {
-                                          owner_name: relevantOffer.owner_name,
+                                          owner_name: creditOfferOwner.name,
                                         })}
-                                        hyperlink={`https://blocksights.info/#/accounts/${relevantOffer.owner_name}`}
+                                        hyperlink={`https://blocksights.info/#/accounts/${creditOfferOwner.name}`}
                                       />
                                     ) : null}
                                   </div>
@@ -523,10 +570,10 @@ export default function CreditBorrow(properties) {
                               <FormControl>
                                 <div className="grid grid-cols-8 mt-4">
                                   <div className="col-span-1 ml-5">
-                                    {relevantOffer && relevantOffer.owner_name ? (
+                                    {creditOfferOwner && creditOfferOwner.name ? (
                                       <Avatar
                                         size={40}
-                                        name={relevantOffer.owner_name}
+                                        name={creditOfferOwner.name}
                                         extra="Target"
                                         expression={{
                                           eye: "normal",
@@ -552,8 +599,8 @@ export default function CreditBorrow(properties) {
                                       placeholder="Bitshares account (1.2.x)"
                                       className="mb-1 mt-1"
                                       value={
-                                        relevantOffer
-                                          ? `${relevantOffer.owner_name} (${relevantOffer.owner_account})`
+                                        creditOfferOwner && creditOfferOwner.name
+                                          ? `${creditOfferOwner.name} (${creditOfferOwner.id})`
                                           : ""
                                       }
                                       readOnly
@@ -751,15 +798,7 @@ export default function CreditBorrow(properties) {
                                   <Input disabled value={0} className="mb-3" readOnly />
                                 </FormControl>
                               ) : (
-                                <FormControl
-                                  onChange={(event) => {
-                                    const input = event.target.value;
-                                    const regex = /^[0-9]*\.?[0-9]*$/;
-                                    if (regex.test(input)) {
-                                      setInputValue(input);
-                                    }
-                                  }}
-                                >
+                                <FormControl onChange={handleInputChange}>
                                   <Input value={inputValue} className="mb-3" />
                                 </FormControl>
                               )}
@@ -988,7 +1027,7 @@ export default function CreditBorrow(properties) {
                               <FormDescription>
                                 {t("CreditOffer:cardContent.feeDescription", {
                                   symbol: foundAsset ? foundAsset.symbol : "?",
-                                  owner_name: relevantOffer ? relevantOffer.owner_name : "?",
+                                  owner_name: creditOfferOwner ? creditOfferOwner.name : "?",
                                 })}
                               </FormDescription>
                               <FormMessage />
@@ -1042,12 +1081,12 @@ export default function CreditBorrow(properties) {
             usrChain={usr.chain}
             userID={usr.id}
             dismissCallback={setShowDialog}
-            key={`Borrowing${finalBorrowAmount}${foundAsset.symbol}from${relevantOffer.owner_name}(${relevantOffer.owner_account})`}
+            key={`Borrowing${finalBorrowAmount}${foundAsset.symbol}from${creditOfferOwner.name}(${creditOfferOwner.id})`}
             headerText={t("CreditOffer:dialogContent.borrowing", {
               finalBorrowAmount: finalBorrowAmount,
               symbol: foundAsset.symbol,
-              owner_name: relevantOffer.owner_name,
-              owner_account: relevantOffer.owner_account,
+              owner_name: creditOfferOwner.name,
+              owner_account: creditOfferOwner.id,
             })}
             trxJSON={[
               {
