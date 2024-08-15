@@ -12,23 +12,34 @@ import {
 
 import { Button } from "@/components/ui/button";
 
+const _gradient = {
+  backgroundImage: "var(--accent-gradient)",
+  WebkitBackgroundClip: "text",
+  WebkitTextFillColor: "transparent",
+  backgroundSize: "400%",
+  backgroundPosition: "0%",
+};
+
+const allowedDomains = [
+  "https://blocksights.info/",
+  "https://bts.exchange/",
+  "https://ex.xbts.io/",
+  "https://kibana.bts.mobi/",
+  "https://www.bitsharescan.info/",
+  "https://github.com/bitshares/beet",
+  "https://react.dev/",
+  "https://github.com/",
+  "https://astro.build/"
+];
+
 /**
  * Launches a dialog prompt, prompting the user to verify their intent to launch a new tab to an external web resource
  */
 export default function ExternalLink(properties) {
-  const { hyperlink, type, text, variant, classnamecontents } = properties;
+  const { hyperlink, type, text, variant, classnamecontents, gradient } = properties;
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
 
   const [open, setOpen] = useState(false);
-
-  const allowedDomains = [
-    "https://blocksights.info/",
-    "https://bts.exchange/",
-    "https://ex.xbts.io/",
-    "https://kibana.bts.mobi/",
-    "https://www.bitsharescan.info/",
-    "https://github.com/bitshares/beet",
-  ];
 
   if (!allowedDomains.some((domain) => hyperlink.startsWith(domain))) {
     console.log("Invalid external link");
@@ -44,6 +55,7 @@ export default function ExternalLink(properties) {
             event.preventDefault();
           }}
           className={classnamecontents}
+          style={gradient ? _gradient : null}
         >
           {text}
         </span>

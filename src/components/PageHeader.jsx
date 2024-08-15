@@ -190,7 +190,7 @@ export default function PageHeader(properties) {
           <div className="col-span-8 text-center">
             <h2>
               <a href="/index.html">
-                {t("PageHeader:welcomeMessage")}
+                {page && page === "index" ? t("PageHeader:welcomeMessage") : ""}
                 <span
                   style={{
                     backgroundImage: "var(--accent-gradient)",

@@ -1149,9 +1149,9 @@ export default function PoolForm() {
           />
         ) : null}
 
-        <div className="grid grid-cols-2 gap-5 mt-5">
-          {pool ? (
-            <div className="grid grid-cols-1 gap-3">
+        {
+          pool
+          ? <div className="grid grid-cols-2 gap-3 mt-5">
               {usrBalances && foundPoolDetails ? (
                 <>
                   <MarketAssetCard
@@ -1207,65 +1207,33 @@ export default function PoolForm() {
                   </Card>
                 </>
               )}
-            </div>
-          ) : null}
-
-          <div className="grid grid-cols-1 gap-3">
-            {pool && assetA && assetB ? (
-              <>
-                <a href={
-                  !inverted
-                  ? `/dex/index.html?market=${assetA.symbol}_${assetB.symbol}`
-                  : `/dex/index.html?market=${assetB.symbol}_${assetA.symbol}`
-                }>
+              {foundPool && marketSearch && usrBalances ? (
+                  <MarketAssetCard
+                    asset={foundPool.share_asset_symbol}
+                    assetData={foundPool.share_asset_details}
+                    assetDetails={poolShareDetails}
+                    bitassetData={null}
+                    marketSearch={marketSearch}
+                    chain={usr.chain}
+                    usrBalances={usrBalances}
+                    type="pool"
+                  />
+                ) : (
                   <Card>
                     <CardHeader className="pb-2 pt-4">
-                      <CardTitle>{t("PoolForm:tradeOnDex")}</CardTitle>
-                      <CardDescription className="text-sm">
-                        {
-                          !inverted
-                            ? t("PoolForm:market", { symbolA: assetA.symbol, symbolB: assetB.symbol })
-                            : t("PoolForm:market", { symbolA: assetB.symbol, symbolB: assetA.symbol })
-                         }
-                      </CardDescription>
+                      <CardTitle>{t("PoolForm:poolShareAsset")}</CardTitle>
+                      <CardDescription className="text-lg">{t("PoolForm:loading")}</CardDescription>
                     </CardHeader>
-                    <CardContent className="text-sm pb-2">
-                      {t("PoolForm:tradeOnDexDescription")}
+                    <CardContent>
+                      <div className="space-y-2">
+                        <Skeleton className="h-4 w-[250px]" />
+                        <Skeleton className="h-4 w-[200px]" />
+                        <Skeleton className="h-4 w-[250px]" />
+                        <Skeleton className="h-4 w-[200px]" />
+                      </div>
                     </CardContent>
                   </Card>
-                </a>
-                <a
-                  href={
-                    !inverted
-                      ? `/dex/index.html?market=${foundPool?.share_asset_symbol}_${assetA.symbol !== "BTS" ? "BTS" : assetA.symbol}`
-                      : `/dex/index.html?market=${foundPool?.share_asset_symbol}_${assetB.symbol !== "BTS" ? "BTS" : assetB.symbol}`
-                    }
-                >
-                  <Card>
-                    <CardHeader className="pb-2 pt-4">
-                      <CardTitle>{t("PoolForm:purchaseStake")}</CardTitle>
-                      <CardDescription className="text-sm">
-                        {t("PoolForm:shareAsset", { shareAsset: foundPool?.share_asset_symbol })}
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="text-sm pb-2">
-                      {t("PoolForm:purchaseStakeDescription")}
-                    </CardContent>
-                  </Card>
-                </a>
-                <a href={`/stake/index.html?pool=${pool}`}>
-                  <Card>
-                    <CardHeader className="pb-2 pt-4">
-                      <CardTitle>{t("PoolForm:stakeAssets")}</CardTitle>
-                      <CardDescription className="text-sm">
-                        {t("PoolForm:shareAsset", { shareAsset: foundPool?.share_asset_symbol })}
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="text-sm pb-2">
-                      {t("PoolForm:stakeAssetsDescription")}
-                    </CardContent>
-                  </Card>
-                </a>
+                )}
 
                 <Card>
                   <CardHeader className="pb-2 pt-4">
@@ -1312,37 +1280,68 @@ export default function PoolForm() {
                     </a>
                   </CardContent>
                 </Card>
-
-                {foundPool && marketSearch && usrBalances ? (
-                  <MarketAssetCard
-                    asset={foundPool.share_asset_symbol}
-                    assetData={foundPool.share_asset_details}
-                    assetDetails={poolShareDetails}
-                    bitassetData={null}
-                    marketSearch={marketSearch}
-                    chain={usr.chain}
-                    usrBalances={usrBalances}
-                    type="pool"
-                  />
-                ) : (
+            </div>
+          : null
+        }
+        
+        <div className="grid grid-cols-2 gap-3 mt-5">
+            {pool && assetA && assetB ? (
+              <>
+                <a
+                  href={
+                    !inverted
+                      ? `/dex/index.html?market=${foundPool?.share_asset_symbol}_${assetA.symbol !== "BTS" ? "BTS" : assetA.symbol}`
+                      : `/dex/index.html?market=${foundPool?.share_asset_symbol}_${assetB.symbol !== "BTS" ? "BTS" : assetB.symbol}`
+                    }
+                >
                   <Card>
                     <CardHeader className="pb-2 pt-4">
-                      <CardTitle>{t("PoolForm:poolShareAsset")}</CardTitle>
-                      <CardDescription className="text-lg">{t("PoolForm:loading")}</CardDescription>
+                      <CardTitle>{t("PoolForm:purchaseStake")}</CardTitle>
+                      <CardDescription className="text-sm">
+                        {t("PoolForm:shareAsset", { shareAsset: foundPool?.share_asset_symbol })}
+                      </CardDescription>
                     </CardHeader>
-                    <CardContent>
-                      <div className="space-y-2">
-                        <Skeleton className="h-4 w-[250px]" />
-                        <Skeleton className="h-4 w-[200px]" />
-                        <Skeleton className="h-4 w-[250px]" />
-                        <Skeleton className="h-4 w-[200px]" />
-                      </div>
+                    <CardContent className="text-sm pb-2">
+                      {t("PoolForm:purchaseStakeDescription")}
                     </CardContent>
                   </Card>
-                )}
+                </a>
+                <a href={`/stake/index.html?pool=${pool}`}>
+                  <Card>
+                    <CardHeader className="pb-2 pt-4">
+                      <CardTitle>{t("PoolForm:stakeAssets")}</CardTitle>
+                      <CardDescription className="text-sm">
+                        {t("PoolForm:shareAsset", { shareAsset: foundPool?.share_asset_symbol })}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="text-sm pb-2">
+                      {t("PoolForm:stakeAssetsDescription")}
+                    </CardContent>
+                  </Card>
+                </a>
+                <a href={
+                  !inverted
+                  ? `/dex/index.html?market=${assetA.symbol}_${assetB.symbol}`
+                  : `/dex/index.html?market=${assetB.symbol}_${assetA.symbol}`
+                }>
+                  <Card>
+                    <CardHeader className="pb-2 pt-4">
+                      <CardTitle>{t("PoolForm:tradeOnDex")}</CardTitle>
+                      <CardDescription className="text-sm">
+                        {
+                          !inverted
+                            ? t("PoolForm:market", { symbolA: assetA.symbol, symbolB: assetB.symbol })
+                            : t("PoolForm:market", { symbolA: assetB.symbol, symbolB: assetA.symbol })
+                         }
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="text-sm pb-2">
+                      {t("PoolForm:tradeOnDexDescription")}
+                    </CardContent>
+                  </Card>
+                </a>
               </>
             ) : null}
-          </div>
         </div>
       </div>
 

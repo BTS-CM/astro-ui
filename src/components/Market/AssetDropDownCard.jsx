@@ -33,8 +33,16 @@ import { Button } from "@/components/ui/button";
  * @returns {JSX.Element}
  */
 export default function AssetDropDown(properties) {
-  const { assetSymbol, assetData, storeCallback, otherAsset, marketSearch, type, size, chain } =
-    properties;
+  const { 
+    assetSymbol,
+    assetData,
+    storeCallback,
+    otherAsset,
+    marketSearch,
+    type,
+    size,
+    chain,
+  } = properties;
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
 
   let marketSearchContents;
@@ -103,8 +111,8 @@ export default function AssetDropDown(properties) {
     >
       <DialogTrigger asChild>
         <Button
-          variant="outline"
-          className={`${size && size === "small" ? "h-5 " : ""}p-3`}
+          variant={type === "base" ? "outline" : "primary"}
+          className={`${size && size === "small" ? "h-7 " : ""}p-3 ${type === "quote" ? "bg-black hover:bg-gray-700 text-white" : ""} hover:shadow-xl`}
           onClick={() => setDialogOpen(true)}
         >
           {!assetSymbol ? t("AssetDropDownCard:select") : null}

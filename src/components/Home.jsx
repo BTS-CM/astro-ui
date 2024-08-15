@@ -25,12 +25,15 @@ export default function Home(properties) {
   useInitCache(usr && usr.chain ? usr.chain : "bitshares", []);
 
   return (
-    <div className="container mx-auto mt-5 mb-5">
+    <div className="container mx-auto mt-3 mb-5">
+      <h4 className="mb-2">
+        {t("PageHeader:exchangingFundsHeading")}
+      </h4>
       <div className="grid grid-cols-3 gap-3">
         <HoverCard key="dex">
           <HoverCardTrigger asChild>
             <a href="/dex/index.html" style={{ textDecoration: "none" }}>
-              <Card className="h-full">
+              <Card className="h-full hover:shadow-md hover:shadow-black">
                 <CardHeader>
                   <CardTitle>{t("Home:dex.title")}</CardTitle>
                   <CardDescription>{t("Home:dex.subtitle")}</CardDescription>
@@ -51,7 +54,7 @@ export default function Home(properties) {
         <HoverCard key="poolExchange">
           <HoverCardTrigger asChild>
             <a href="/pool/index.html" style={{ textDecoration: "none" }}>
-              <Card className="h-full">
+              <Card className="h-full hover:shadow-md hover:shadow-black">
                 <CardHeader>
                   <CardTitle>{t("Home:pool.title")}</CardTitle>
                   <CardDescription>{t("Home:pool.subtitle")}</CardDescription>
@@ -71,7 +74,7 @@ export default function Home(properties) {
         <HoverCard key="poolStake">
           <HoverCardTrigger asChild>
             <a href="/stake/index.html" style={{ textDecoration: "none" }}>
-              <Card className="h-full">
+              <Card className="h-full hover:shadow-md hover:shadow-black">
                 <CardHeader>
                   <CardTitle>{t("Home:stake.title")}</CardTitle>
                   <CardDescription>{t("Home:stake.subtitle")}</CardDescription>
@@ -88,31 +91,33 @@ export default function Home(properties) {
           </HoverCardContent>
         </HoverCard>
 
-        <HoverCard key="smartcoins">
+        <HoverCard key="transfer">
           <HoverCardTrigger asChild>
-            <a href="/smartcoins/index.html" style={{ textDecoration: "none" }}>
-              <Card className="h-full">
+            <a href="/transfer/index.html" style={{ textDecoration: "none" }}>
+              <Card className="h-full hover:shadow-md hover:shadow-black">
                 <CardHeader>
-                  <CardTitle>{t("Home:smartcoins.title")}</CardTitle>
-                  <CardDescription>{t("Home:smartcoins.subtitle")}</CardDescription>
+                  <CardTitle>{t("Home:transfer.title")}</CardTitle>
+                  <CardDescription>{t("Home:transfer.subtitle")}</CardDescription>
                 </CardHeader>
               </Card>
             </a>
           </HoverCardTrigger>
           <HoverCardContent className="w-80 text-sm pt-1">
             <ul className="ml-2 list-disc [&>li]:mt-2">
-              <li>{t("Home:smartcoins.hover1")}</li>
-              <li>{t("Home:smartcoins.hover2")}</li>
-              <li>{t("Home:smartcoins.hover3")}</li>
-              <li>{t("Home:smartcoins.hover4")}</li>
+              <li>{t("Home:transfer.hover1")}</li>
             </ul>
           </HoverCardContent>
         </HoverCard>
+      </div>
 
+      <h4 className="mt-3 mb-2">
+        {t("PageHeader:formsOfDebtHeading")}
+      </h4>
+      <div className="grid grid-cols-3 gap-3">
         <HoverCard key="borrow">
           <HoverCardTrigger asChild>
             <a href="/borrow/index.html" style={{ textDecoration: "none" }}>
-              <Card className="h-full">
+              <Card className="h-full hover:shadow-md hover:shadow-black">
                 <CardHeader>
                   <CardTitle>{t("Home:borrow.title")}</CardTitle>
                   <CardDescription>{t("Home:borrow.subtitle")}</CardDescription>
@@ -132,7 +137,7 @@ export default function Home(properties) {
         <HoverCard key="lend">
           <HoverCardTrigger asChild>
             <a href="/lend/index.html" style={{ textDecoration: "none" }}>
-              <Card className="h-full">
+              <Card className="h-full hover:shadow-md hover:shadow-black">
                 <CardHeader>
                   <CardTitle>{t("Home:lend.title")}</CardTitle>
                   <CardDescription>{t("Home:lend.subtitle")}</CardDescription>
@@ -149,68 +154,36 @@ export default function Home(properties) {
           </HoverCardContent>
         </HoverCard>
 
-        <HoverCard key="deals">
+        <HoverCard key="smartcoins">
           <HoverCardTrigger asChild>
-            <a href="/deals/index.html" style={{ textDecoration: "none" }}>
-              <Card className="h-full">
+            <a href="/smartcoins/index.html" style={{ textDecoration: "none" }}>
+              <Card className="h-full hover:shadow-md hover:shadow-black">
                 <CardHeader>
-                  <CardTitle>{t("Home:deals.title")}</CardTitle>
-                  <CardDescription>{t("Home:deals.subtitle")}</CardDescription>
+                  <CardTitle>{t("Home:smartcoins.title")}</CardTitle>
+                  <CardDescription>{t("Home:smartcoins.subtitle")}</CardDescription>
                 </CardHeader>
               </Card>
             </a>
           </HoverCardTrigger>
           <HoverCardContent className="w-80 text-sm pt-1">
             <ul className="ml-2 list-disc [&>li]:mt-2">
-              <li>{t("Home:deals.hover1")}</li>
-              <li>{t("Home:deals.hover2")}</li>
+              <li>{t("Home:smartcoins.hover1")}</li>
+              <li>{t("Home:smartcoins.hover2")}</li>
+              <li>{t("Home:smartcoins.hover3")}</li>
+              <li>{t("Home:smartcoins.hover4")}</li>
             </ul>
           </HoverCardContent>
         </HoverCard>
+      </div>
 
-        <HoverCard key="transfer">
-          <HoverCardTrigger asChild>
-            <a href="/transfer/index.html" style={{ textDecoration: "none" }}>
-              <Card className="h-full">
-                <CardHeader>
-                  <CardTitle>{t("Home:transfer.title")}</CardTitle>
-                  <CardDescription>{t("Home:transfer.subtitle")}</CardDescription>
-                </CardHeader>
-              </Card>
-            </a>
-          </HoverCardTrigger>
-          <HoverCardContent className="w-80 text-sm pt-1">
-            <ul className="ml-2 list-disc [&>li]:mt-2">
-              <li>{t("Home:transfer.hover1")}</li>
-            </ul>
-          </HoverCardContent>
-        </HoverCard>
-
-        <HoverCard key="ltm">
-          <HoverCardTrigger asChild>
-            <a href="/ltm/index.html" style={{ textDecoration: "none" }}>
-              <Card className="h-full">
-                <CardHeader>
-                  <CardTitle>{t("Home:ltm.title")}</CardTitle>
-                  <CardDescription>{t("Home:ltm.subtitle")}</CardDescription>
-                </CardHeader>
-              </Card>
-            </a>
-          </HoverCardTrigger>
-          <HoverCardContent className="w-80 text-sm pt-1">
-            <ul className="ml-2 list-disc [&>li]:mt-2">
-              <li>{t("Home:ltm.hover1")}</li>
-              <li>{t("Home:ltm.hover2")}</li>
-              <li>{t("Home:ltm.hover3")}</li>
-              <li>{t("Home:ltm.hover4")}</li>
-            </ul>
-          </HoverCardContent>
-        </HoverCard>
-
+      <h4 className="mt-3 mb-2">
+        {t("PageHeader:overviewsHeading")}
+      </h4>
+      <div className="grid grid-cols-3 gap-3">
         <HoverCard key="portfolio">
           <HoverCardTrigger asChild>
             <a href="/portfolio/index.html" style={{ textDecoration: "none" }}>
-              <Card className="h-full">
+              <Card className="h-full hover:shadow-md hover:shadow-black">
                 <CardHeader>
                   <CardTitle>{t("Home:portfolio.title")}</CardTitle>
                   <CardDescription>{t("Home:portfolio.subtitle")}</CardDescription>
@@ -230,7 +203,7 @@ export default function Home(properties) {
         <HoverCard key="featured">
           <HoverCardTrigger asChild>
             <a href="/featured/index.html" style={{ textDecoration: "none" }}>
-              <Card className="h-full">
+              <Card className="h-full hover:shadow-md hover:shadow-black">
                 <CardHeader>
                   <CardTitle>{t("Home:featured.title")}</CardTitle>
                   <CardDescription>{t("Home:featured.subtitle")}</CardDescription>
@@ -246,7 +219,53 @@ export default function Home(properties) {
             </ul>
           </HoverCardContent>
         </HoverCard>
+
+        <HoverCard key="deals">
+          <HoverCardTrigger asChild>
+            <a href="/deals/index.html" style={{ textDecoration: "none" }}>
+              <Card className="h-full hover:shadow-md hover:shadow-black">
+                <CardHeader>
+                  <CardTitle>{t("Home:deals.title")}</CardTitle>
+                  <CardDescription>{t("Home:deals.subtitle")}</CardDescription>
+                </CardHeader>
+              </Card>
+            </a>
+          </HoverCardTrigger>
+          <HoverCardContent className="w-80 text-sm pt-1">
+            <ul className="ml-2 list-disc [&>li]:mt-2">
+              <li>{t("Home:deals.hover1")}</li>
+              <li>{t("Home:deals.hover2")}</li>
+            </ul>
+          </HoverCardContent>
+        </HoverCard>
       </div>
+
+      <h4 className="mt-3 mb-2">
+        {t("PageHeader:settingsHeading")}
+      </h4>
+      <div className="grid grid-cols-3 gap-3">
+        <HoverCard key="ltm">
+          <HoverCardTrigger asChild>
+            <a href="/ltm/index.html" style={{ textDecoration: "none" }}>
+              <Card className="h-full hover:shadow-md hover:shadow-black">
+                <CardHeader>
+                  <CardTitle>{t("Home:ltm.title")}</CardTitle>
+                  <CardDescription>{t("Home:ltm.subtitle")}</CardDescription>
+                </CardHeader>
+              </Card>
+            </a>
+          </HoverCardTrigger>
+          <HoverCardContent className="w-80 text-sm pt-1">
+            <ul className="ml-2 list-disc [&>li]:mt-2">
+              <li>{t("Home:ltm.hover1")}</li>
+              <li>{t("Home:ltm.hover2")}</li>
+              <li>{t("Home:ltm.hover3")}</li>
+              <li>{t("Home:ltm.hover4")}</li>
+            </ul>
+          </HoverCardContent>
+        </HoverCard>
+      </div>
+
     </div>
   );
 }

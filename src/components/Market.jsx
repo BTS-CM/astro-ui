@@ -475,7 +475,7 @@ export default function Market(properties) {
               <div className="flex-grow">
                 <Card>
                   <CardHeader className="pt-2 pb-2">
-                    <CardTitle className="text-center text-lg">
+                    <CardTitle className="text-lg">
                       {usr.chain === "bitshares" ? "Bitshares " : "Bitshares (Testnet) "}
                       {t("Market:controls")}
                     </CardTitle>
