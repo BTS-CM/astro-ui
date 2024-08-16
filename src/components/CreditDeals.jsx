@@ -276,14 +276,14 @@ export default function CreditDeals(properties) {
         <Card className="ml-2 mr-2 pb-3" onClick={() => {}}>
           <CardHeader className="pb-1">
             <CardTitle>
-              {t("CreditDeals.dealNo")}
+              {t("CreditDeals:dealNo")}
               <ExternalLink
                 classnamecontents="text-blue-500"
                 type="text"
                 text={res.id.replace("1.22.", "")}
                 hyperlink={`https://blocksights.info/#/objects/${res.id}`}
               />
-              {t("CreditDeals.with")}
+              {t("CreditDeals:with")}
               <ExternalLink
                 classnamecontents="text-blue-500"
                 type="text"
@@ -294,7 +294,7 @@ export default function CreditDeals(properties) {
               />
             </CardTitle>
             <CardDescription>
-              {type === "borrower" ? t("CreditDeals.borrowed") : t("CreditDeals.lent")}:
+              {type === "borrower" ? t("CreditDeals:borrowed") : t("CreditDeals:lent")}:
               <b>
                 {` ${borrowedAmount} ${debtAsset.symbol}`} (
                 <ExternalLink
@@ -306,7 +306,7 @@ export default function CreditDeals(properties) {
                 )
               </b>
               <br />
-              {t("CreditDeals.loanCollateral")}
+              {t("CreditDeals:loanCollateral")}
               <b>
                 {` ${collateralAmount} ${collateralAsset.symbol}`} (
                 <ExternalLink
@@ -318,14 +318,14 @@ export default function CreditDeals(properties) {
                 )
               </b>
               <br />
-              {type === "borrower" ? t("CreditDeals.borrower") : t("CreditDeals.lender")}:
+              {type === "borrower" ? t("CreditDeals:borrower") : t("CreditDeals:lender")}:
               <b>
                 {` ${borrowedAmount * (res.fee_rate / 10000)} ${debtAsset.symbol} (${
                   res.fee_rate / 10000
                 }%)`}
               </b>
               <br />
-              {t("CreditDeals.remainingTime")}
+              {t("CreditDeals:remainingTime")}
               <b>
                 {remainingTime} ({res.latest_repay_time})
               </b>
@@ -333,10 +333,10 @@ export default function CreditDeals(properties) {
           </CardHeader>
           {type === "borrower" ? (
             <CardFooter className="pb-0 mt-2">
-              <Button onClick={() => setOpenRepay(true)}>{t("CreditDeals.repayLoan")}</Button>
+              <Button onClick={() => setOpenRepay(true)}>{t("CreditDeals:repayLoan")}</Button>
               <a href={`/dex/index.html?market=${debtAsset.symbol}_${collateralAsset.symbol}`}>
                 <Button className="ml-2">
-                  {t("CreditDeals.trade", { symbol: debtAsset.symbol })}
+                  {t("CreditDeals:trade", { symbol: debtAsset.symbol })}
                 </Button>
               </a>
               {openRepay ? (
@@ -348,8 +348,8 @@ export default function CreditDeals(properties) {
                 >
                   <DialogContent className="sm:max-w-[900px] bg-white">
                     <DialogHeader>
-                      <DialogTitle>{t("CreditDeals.dialogTitle", { id: res.id })}</DialogTitle>
-                      <DialogDescription>{t("CreditDeals.description")}</DialogDescription>
+                      <DialogTitle>{t("CreditDeals:dialogTitle", { id: res.id })}</DialogTitle>
+                      <DialogDescription>{t("CreditDeals:description")}</DialogDescription>
                       <Form {...form}>
                         <form
                           onSubmit={() => {
@@ -363,7 +363,7 @@ export default function CreditDeals(properties) {
                             name="account"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>{t("CreditDeals.account")}</FormLabel>
+                                <FormLabel>{t("CreditDeals:account")}</FormLabel>
                                 <FormControl>
                                   <Input
                                     disabled
@@ -384,7 +384,7 @@ export default function CreditDeals(properties) {
                             render={({ field }) => (
                               <FormItem>
                                 <FormLabel>
-                                  {t("CreditDeals.balance", { symbol: debtAsset.symbol })}
+                                  {t("CreditDeals:balance", { symbol: debtAsset.symbol })}
                                 </FormLabel>
                                 <FormControl>
                                   <Input
@@ -407,17 +407,17 @@ export default function CreditDeals(properties) {
                                 <FormLabel>
                                   <div className="grid grid-cols-2 gap-2 mt-2">
                                     <div className="col-span-1">
-                                      {t("CreditDeals.repayAmount", { symbol: debtAsset.symbol })}
+                                      {t("CreditDeals:repayAmount", { symbol: debtAsset.symbol })}
                                     </div>
                                     <div className="col-span-1 text-right">
-                                      {t("CreditDeals.remainingDebt", {
+                                      {t("CreditDeals:remainingDebt", {
                                         amount: borrowedAmount,
                                         symbol: debtAsset.symbol,
                                       })}
                                     </div>
                                   </div>
                                 </FormLabel>
-                                <FormDescription>{t("CreditDeals.repayDesc")}</FormDescription>
+                                <FormDescription>{t("CreditDeals:repayDesc")}</FormDescription>
                                 <FormControl
                                   onChange={(event) => {
                                     const input = event.target.value;
@@ -428,7 +428,7 @@ export default function CreditDeals(properties) {
                                   }}
                                 >
                                   <Input
-                                    label={t("CreditDeals.repayAmount", {
+                                    label={t("CreditDeals:repayAmount", {
                                       symbol: debtAsset.symbol,
                                     })}
                                     className="mb-3"
@@ -449,10 +449,10 @@ export default function CreditDeals(properties) {
                                 <FormLabel>
                                   <div className="grid grid-cols-2 gap-2 mt-2">
                                     <div className="col-span-1">
-                                      {t("CreditDeals.redeemCollateral")}
+                                      {t("CreditDeals:redeemCollateral")}
                                     </div>
                                     <div className="col-span-1 text-right">
-                                      {t("CreditDeals.remainingCollateral", {
+                                      {t("CreditDeals:remainingCollateral", {
                                         amount: collateralAmount,
                                         symbol: collateralAsset.symbol,
                                       })}
@@ -460,13 +460,13 @@ export default function CreditDeals(properties) {
                                   </div>
                                 </FormLabel>
                                 <FormDescription>
-                                  {t("CreditDeals.collateralRedemption", {
+                                  {t("CreditDeals:collateralRedemption", {
                                     symbol: collateralAsset.symbol,
                                   })}
                                 </FormDescription>
                                 <FormControl>
                                   <Input
-                                    label={t("CreditDeals.repayAmount", {
+                                    label={t("CreditDeals:repayAmount", {
                                       symbol: debtAsset.symbol,
                                     })}
                                     value={
@@ -494,9 +494,9 @@ export default function CreditDeals(properties) {
                               render={({ field }) => (
                                 <FormItem>
                                   <FormLabel>
-                                    <div className="mt-2">{t("CreditDeals.loanLabel")}</div>
+                                    <div className="mt-2">{t("CreditDeals:loanLabel")}</div>
                                   </FormLabel>
-                                  <FormDescription>{t("CreditDeals.loanDesc")}</FormDescription>
+                                  <FormDescription>{t("CreditDeals:loanDesc")}</FormDescription>
                                   <FormControl>
                                     <Input
                                       disabled
@@ -520,10 +520,10 @@ export default function CreditDeals(properties) {
                               render={({ field }) => (
                                 <FormItem>
                                   <FormLabel>
-                                    <div className="mt-2">{t("CreditDeals.finalPaymentLabel")}</div>
+                                    <div className="mt-2">{t("CreditDeals:finalPaymentLabel")}</div>
                                   </FormLabel>
                                   <FormDescription>
-                                    {t("CreditDeals.finalPaymentDesc", {
+                                    {t("CreditDeals:finalPaymentDesc", {
                                       symbol: collateralAsset.symbol,
                                     })}
                                   </FormDescription>
@@ -539,7 +539,7 @@ export default function CreditDeals(properties) {
                                   </FormControl>
                                   {debtAssetBalance < finalRepayment ? (
                                     <FormMessage>
-                                      {t("CreditDeals.finalPaymentWarning", {
+                                      {t("CreditDeals:finalPaymentWarning", {
                                         symbol: debtAsset.symbol,
                                       })}
                                     </FormMessage>
