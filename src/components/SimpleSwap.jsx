@@ -641,6 +641,7 @@ export default function SimpleSwap() {
                                                     <span className="grid grid-cols-8 w-full" onClick={() => {
                                                       setSelectedAssetA(asset)
                                                       setSelectedAssetB();
+                                                      setInverted(false);
                                                     }}>
                                                       {asset}
                                                     </span>
