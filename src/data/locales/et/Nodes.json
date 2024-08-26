@@ -1,0 +1,8 @@
+{
+    "cardTitle": "Seadistage oma plokiahela ühendus",
+    "cardDescription": "Ühendage oma valitud Bitsharesi sõlmega.",
+    "add": "Lisa URL",
+    "reset": "Lähtestage sõlme konfiguratsioon",
+    "none": "Ühtegi sõlme pole konfigureeritud, jätkamiseks sisestage sõlme URL.",
+    "addDescription": "Kas lisada selle plokiahela sõlmede loendisse uus sõlme URL?"
+  }

@@ -1,0 +1,27 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Nodes from '../components/Nodes.jsx';
+import PageHeader from '../components/PageHeader';
+import PageFooter from '../components/PageFooter';
+---
+
+<Layout title="Bitshares node configuration page">
+	<main>
+		<PageHeader client:only="react" page="nodes" backURL="../index.html" />
+		<Nodes client:only="react" />
+		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/nodes.astro" />
+	</main>
+</Layout>
+
+<style>
+	main {
+		margin: auto;
+		padding: 1rem;
+		width: 800px;
+		max-width: calc(100% - 2rem);
+		color: white;
+		font-size: 20px;
+		line-height: 1.6;
+		min-height: 100vh;
+	}
+</style>

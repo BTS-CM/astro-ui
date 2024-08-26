@@ -6,6 +6,19 @@
     "hover2": "Laenake varasid teie määratud intressimääradega.",
     "hover3": "Täpsustage aktsepteeritav laenutagatis ja hinnad."
   },
+  "nodes": {
+    "title": "🌐 Sõlmed",
+    "subtitle": "Konfigureerige plokiahela ühendus",
+    "hover1": "Ühendage oma valitud Bitsharesi sõlmega.",
+    "hover2": "Lisage/eemaldage sõlmed oma ühenduste loendisse."
+  },
+  "swap": {
+    "title": "🔄 Lihtne vahetus",
+    "subtitle": "Vahetage varasid basseini kaudu",
+    "hover1": "Vahetage varad kasutaja loodud likviidsuskogumite kaudu.",
+    "hover2": "Pooltel on erinevad kauplemispaarid ja tasud.",
+    "hover3": "Lihtsam, kuid kulukam kui piirtellimus."
+  },
   "pool": {
     "title": "💱 Basseini vahetus",
     "subtitle": "Vahetage varasid basseini kaudu",

@@ -38,12 +38,11 @@ import { Input } from "@/components/ui/input";
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
 import { $currentUser } from "@/stores/users.ts";
+import { $currentNode } from "@/stores/node.ts";
 
 import {
   $assetCacheBTS,
   $assetCacheTEST,
-  $poolCacheBTS,
-  $poolCacheTEST,
   $marketSearchCacheBTS,
   $marketSearchCacheTEST,
   $globalParamsCacheBTS,
@@ -69,6 +68,7 @@ export default function Transfer(properties) {
       account: "",
     },
   });
+  const currentNode = useStore($currentNode);
 
   const [showDialog, setShowDialog] = useState(false);
 
@@ -156,7 +156,7 @@ export default function Transfer(properties) {
     let unsubscribeUserBalances;
 
     if (usr && usr.id) {
-      const userBalancesStore = createUserBalancesStore([usr.chain, usr.id]);
+      const userBalancesStore = createUserBalancesStore([usr.chain, usr.id, currentNode ? currentNode.url : null]);
 
       unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
@@ -243,7 +243,6 @@ export default function Transfer(properties) {
               <CardTitle>{t("Transfer:transferAssets")}</CardTitle>
               <CardDescription>
                 <p>{t("Transfer:sendFundsDescription")}</p>
-                <p className="mt-1">{t("Transfer:transferLimitations")}</p>
               </CardDescription>
             </CardHeader>
             <CardContent>

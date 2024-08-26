@@ -6,6 +6,19 @@
     "hover2": "Presta beni ai tassi da te definiti.",
     "hover3": "Specificare le garanzie e i prezzi del prestito accettabili."
   },
+  "nodes": {
+    "title": "🌐 Nodi",
+    "subtitle": "Configura la connessione blockchain",
+    "hover1": "Connettiti a un nodo Bitshares di tua scelta.",
+    "hover2": "Aggiungi/rimuovi nodi all'elenco delle connessioni."
+  },
+  "swap": {
+    "title": "🔄Scambio semplice",
+    "subtitle": "Scambia asset tramite un pool",
+    "hover1": "Scambia asset tramite pool di liquidità creati dall'utente.",
+    "hover2": "I pool hanno coppie di trading e commissioni di trading diverse.",
+    "hover3": "Più semplice ma più costoso di un ordine limite."
+  },
   "pool": {
     "title": "💱 Scambio piscina",
     "subtitle": "Scambia asset tramite un pool",

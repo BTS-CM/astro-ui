@@ -6,6 +6,19 @@
     "hover2": "Verleihen Sie Vermögenswerte zu Ihren festgelegten Zinssätzen.",
     "hover3": "Geben Sie akzeptable Kreditsicherheiten und Preise an."
   },
+  "nodes": {
+    "title": "🌐 Knoten",
+    "subtitle": "Konfigurieren Sie die Blockchain-Verbindung",
+    "hover1": "Stellen Sie eine Verbindung zu einem Bitshares-Knoten Ihrer Wahl her.",
+    "hover2": "Fügen Sie Ihrer Verbindungsliste Knoten hinzu bzw. entfernen Sie sie."
+  },
+  "swap": {
+    "title": "🔄 Einfacher Tausch",
+    "subtitle": "Tauschen Sie Vermögenswerte über einen Pool aus",
+    "hover1": "Tauschen Sie Vermögenswerte über vom Benutzer erstellte Liquiditätspools aus.",
+    "hover2": "Pools haben unterschiedliche Handelspaare und Gebühren.",
+    "hover3": "Einfacher, aber teurer als eine Limit-Order."
+  },
   "pool": {
     "title": "💱 Pooltausch",
     "subtitle": "Tauschen Sie Vermögenswerte über einen Pool aus",

@@ -1,0 +1,8 @@
+{
+    "cardTitle": "Konfigurieren Sie Ihre Blockchain-Verbindung",
+    "cardDescription": "Stellen Sie eine Verbindung zu einem Bitshares-Knoten Ihrer Wahl her.",
+    "add": "URL hinzufügen",
+    "reset": "Knotenkonfiguration zurücksetzen",
+    "none": "Keine Knoten konfiguriert. Bitte geben Sie eine Knoten-URL an, um fortzufahren.",
+    "addDescription": "Eine neue Knoten-URL zur Knotenliste dieser Blockchain hinzufügen?"
+  }

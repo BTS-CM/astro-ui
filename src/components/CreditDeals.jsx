@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useSyncExternalStore, useMemo } from "react";
 import { FixedSizeList as List } from "react-window";
 import { useForm } from "react-hook-form";
+import { useStore } from '@nanostores/react';
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
@@ -38,6 +39,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 import { $currentUser } from "@/stores/users.ts";
+import { $currentNode } from "@/stores/node.ts";
 import {
   $assetCacheBTS,
   $assetCacheTEST,
@@ -46,7 +48,6 @@ import {
 } from "@/stores/cache.ts";
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
-
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 import { createBorrowerDealsStore } from "@/nanoeffects/BorrowerDeals.ts";
 import { createLenderDealsStore } from "@/nanoeffects/LenderDeals.ts";
@@ -63,6 +64,7 @@ export default function CreditDeals(properties) {
       account: "",
     },
   });
+  const currentNode = useStore($currentNode);
 
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
 
@@ -159,7 +161,7 @@ export default function CreditDeals(properties) {
     let unsubscribeUserBalances;
 
     if (usr && usr.id) {
-      const userBalancesStore = createUserBalancesStore([usr.chain, usr.id]);
+      const userBalancesStore = createUserBalancesStore([usr.chain, usr.id, currentNode ? currentNode.url : null]);
 
       unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {

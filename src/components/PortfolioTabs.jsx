@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useSyncExternalStore, useMemo } from "react";
 import { FixedSizeList as List } from "react-window";
+import { useStore } from '@nanostores/react';
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
@@ -33,6 +34,7 @@ import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 import { createAccountLimitOrderStore } from "@/nanoeffects/AccountLimitOrders.ts";
 
 import { $currentUser } from "@/stores/users.ts";
+import { $currentNode } from "@/stores/node.ts";
 
 import {
   $assetCacheBTS,
@@ -50,6 +52,7 @@ import { opTypes } from "@/lib/opTypes";
 export default function PortfolioTabs(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
+  const currentNode = useStore($currentNode);
 
   const _assetsBTS = useSyncExternalStore($assetCacheBTS.subscribe, $assetCacheBTS.get, () => true);
   const _assetsTEST = useSyncExternalStore(
@@ -88,7 +91,7 @@ export default function PortfolioTabs(properties) {
   useEffect(() => {
     let unsubscribeUserBalancesStore;
     if (usr && usr.id) {
-      const userBalancesStore = createUserBalancesStore([usr.chain, usr.id]);
+      const userBalancesStore = createUserBalancesStore([usr.chain, usr.id, currentNode ? currentNode.url : null]);
 
       unsubscribeUserBalancesStore = userBalancesStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {

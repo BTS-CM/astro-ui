@@ -33,7 +33,7 @@
     "deals": "¡Consulta tus ofertas actuales a continuación!",
     "dex": "Utilice el siguiente formulario para crear una orden limitada en Bitshares DEX.",
     "featured": "Echa un vistazo a algunos de estos mercados destacados",
-    "index": "Esta herramienta de código abierto puede crear múltiples operaciones de Bitshares.",
+    "index": "¡Una herramienta para elaborar operaciones Bitshares!",
     "ltm": "Utilice el siguiente formulario para actualizar su cuenta a una membresía de por vida.",
     "offer": "El siguiente formulario es para aceptar una oferta de crédito en Bitshares DEX.",
     "offereditor": "Utilice el siguiente formulario para crear/editar ofertas de crédito en Bitshares DEX.",
@@ -44,7 +44,8 @@
     "smartcoin": "Utilice el siguiente formulario para emitir deuda garantizada y crearla.",
     "smartcoins": "Utilice la siguiente interfaz para localizar un activo para pedir prestado y crearlo.",
     "stake": "Utilice este formulario para apostar sus activos en fondos de liquidez",
-    "transfer": "Utilice el siguiente formulario para transferir activos a otros usuarios de blockchain"
+    "transfer": "Utilice el siguiente formulario para transferir activos a otros usuarios de blockchain",
+    "nodes": "Conéctese a la cadena de bloques a través de un nodo de su elección"
   },
   "back": "Regresa",
   "usage": "Diseñado para usar con ",

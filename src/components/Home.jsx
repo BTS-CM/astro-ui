@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
+import { useStore } from '@nanostores/react';
 import { useSyncExternalStore } from "react";
 
 import { useTranslation } from "react-i18next";
@@ -67,6 +68,26 @@ export default function Home(properties) {
               <li>{t("Home:pool.hover1")}</li>
               <li>{t("Home:pool.hover2")}</li>
               <li>{t("Home:pool.hover3")}</li>
+            </ul>
+          </HoverCardContent>
+        </HoverCard>
+
+        <HoverCard key="swap">
+          <HoverCardTrigger asChild>
+            <a href="/swap/index.html" style={{ textDecoration: "none" }}>
+              <Card className="h-full hover:shadow-md hover:shadow-black">
+                <CardHeader>
+                  <CardTitle>{t("Home:swap.title")}</CardTitle>
+                  <CardDescription>{t("Home:swap.subtitle")}</CardDescription>
+                </CardHeader>
+              </Card>
+            </a>
+          </HoverCardTrigger>
+          <HoverCardContent className="w-80 text-sm pt-1">
+            <ul className="ml-2 list-disc [&>li]:mt-2">
+              <li>{t("Home:swap.hover1")}</li>
+              <li>{t("Home:swap.hover2")}</li>
+              <li>{t("Home:swap.hover3")}</li>
             </ul>
           </HoverCardContent>
         </HoverCard>
@@ -261,6 +282,25 @@ export default function Home(properties) {
               <li>{t("Home:ltm.hover2")}</li>
               <li>{t("Home:ltm.hover3")}</li>
               <li>{t("Home:ltm.hover4")}</li>
+            </ul>
+          </HoverCardContent>
+        </HoverCard>
+        
+        <HoverCard key="nodes">
+          <HoverCardTrigger asChild>
+            <a href="/nodes/index.html" style={{ textDecoration: "none" }}>
+              <Card className="h-full hover:shadow-md hover:shadow-black">
+                <CardHeader>
+                  <CardTitle>{t("Home:nodes.title")}</CardTitle>
+                  <CardDescription>{t("Home:nodes.subtitle")}</CardDescription>
+                </CardHeader>
+              </Card>
+            </a>
+          </HoverCardTrigger>
+          <HoverCardContent className="w-80 text-sm pt-1">
+            <ul className="ml-2 list-disc [&>li]:mt-2">
+              <li>{t("Home:nodes.hover1")}</li>
+              <li>{t("Home:nodes.hover2")}</li>
             </ul>
           </HoverCardContent>
         </HoverCard>

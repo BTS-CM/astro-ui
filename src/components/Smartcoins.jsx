@@ -25,6 +25,7 @@ import { useInitCache } from "@/nanoeffects/Init.ts";
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 
 import { $currentUser } from "@/stores/users.ts";
+import { $currentNode } from "@/stores/node.ts";
 import {
   $marketSearchCacheBTS,
   $marketSearchCacheTEST,
@@ -42,6 +43,7 @@ const activeTabStyle = {
 export default function Smartcoins(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
+  const currentNode = useStore($currentNode);
 
   const bitAssetDataBTS = useSyncExternalStore(
     $bitAssetDataCacheBTS.subscribe,
@@ -95,7 +97,7 @@ export default function Smartcoins(properties) {
     let unsubscribeUserBalances;
 
     if (usr && usr.id) {
-      const userBalancesStore = createUserBalancesStore([usr.chain, usr.id]);
+      const userBalancesStore = createUserBalancesStore([usr.chain, usr.id, currentNode ? currentNode.url : null]);
 
       unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
@@ -173,6 +175,7 @@ export default function Smartcoins(properties) {
   }, [bitAssetData, marketSearch, activeSearch]);
 
   const [thisInput, setThisInput] = useState();
+  const [thisSearchInput, setThisSearchInput] = useState();
   const [thisResult, setThisResult] = useState();
 
   useEffect(() => {
@@ -535,9 +538,13 @@ export default function Smartcoins(properties) {
 
                       <Input
                         name="searchInput"
-                        placeholder={thisInput ?? t("Smartcoins:enterSearchText")}
+                        placeholder={thisSearchInput ?? t("Smartcoins:enterSearchText")}
                         className="mb-3 mt-3 w-full"
-                        onChange={(event) => debouncedSetSearchInput(event)}
+                        value={thisSearchInput || ""}
+                        onChange={(event) => {
+                          setThisSearchInput(event.target.value);
+                          debouncedSetSearchInput(event)
+                        }}
                       />
 
                       <TabsContent value="borrow">

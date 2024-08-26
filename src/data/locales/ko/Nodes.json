@@ -1,0 +1,8 @@
+{
+    "cardTitle": "블록체인 연결 구성",
+    "cardDescription": "원하는 Bitshares 노드에 연결하세요.",
+    "add": "URL 추가",
+    "reset": "노드 구성 재설정",
+    "none": "구성된 노드가 없습니다. 계속하려면 노드 URL을 입력하세요.",
+    "addDescription": "이 블록체인의 노드 목록에 새 노드 URL을 추가하시겠습니까?"
+  }

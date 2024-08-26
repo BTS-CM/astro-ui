@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useSyncExternalStore, useMemo } from "react";
-import { useStore } from "@nanostores/react";
 import { ReloadIcon } from "@radix-ui/react-icons";
+import { useStore } from '@nanostores/react';
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 

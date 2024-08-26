@@ -6,6 +6,19 @@
     "hover2": "Lend assets at your defined rates.",
     "hover3": "Specify acceptable loan collateral and prices."
   },
+  "nodes": {
+    "title": "🌐 Nodes",
+    "subtitle": "Blockchain node configuration",
+    "hover1": "Connect to a Bitshares node of your choice.",
+    "hover2": "Add/remove nodes to your connection list."
+  },
+  "swap": {
+    "title": "🔄 Simple swap",
+    "subtitle": "Swap assets via a pool",
+    "hover1": "Swap assets via user created liquidity pools.",
+    "hover2": "Pools have different trading pairs and fees.",
+    "hover3": "Simpler but more costly than a limit order."
+  },
   "pool": {
     "title": "💱 Pool exchange",
     "subtitle": "Swap assets via a pool",

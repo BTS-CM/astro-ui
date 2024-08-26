@@ -1,0 +1,8 @@
+{
+    "cardTitle": "Konfigurer din blockchain-forbindelse",
+    "cardDescription": "Opret forbindelse til en Bitshares-node efter eget valg.",
+    "add": "Tilføj URL",
+    "reset": "Nulstil nodekonfiguration",
+    "none": "Ingen noder konfigureret. Angiv venligst en node-URL for at fortsætte.",
+    "addDescription": "Tilføj en ny node-URL til denne blockchains nodeliste?"
+  }

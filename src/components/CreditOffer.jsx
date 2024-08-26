@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo, useSyncExternalStore } from "react";
 import { useForm } from "react-hook-form";
 import { FixedSizeList as List } from "react-window";
+import { useStore } from '@nanostores/react';
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
@@ -35,7 +36,6 @@ import { Avatar as Av, AvatarFallback, AvatarImage } from "@/components/ui/avata
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Skeleton } from "@/components/ui/skeleton";
 
 import { blockchainFloat, humanReadableFloat } from "@/lib/common.js";
 
@@ -54,6 +54,7 @@ import {
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 import { createObjectStore } from "@/nanoeffects/Objects.ts";
 import { useInitCache } from "@/nanoeffects/Init.ts";
+import { $currentNode } from "@/stores/node.ts";
 
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
 import ExternalLink from "./common/ExternalLink.jsx";
@@ -83,6 +84,7 @@ export default function CreditBorrow(properties) {
       account: "",
     },
   });
+  const currentNode = useStore($currentNode);
 
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
 
@@ -242,7 +244,7 @@ export default function CreditBorrow(properties) {
     let unsubscribeUserBalances;
 
     if (usr && usr.id) {
-      const userBalancesStore = createUserBalancesStore([usr.chain, usr.id]);
+      const userBalancesStore = createUserBalancesStore([usr.chain, usr.id, currentNode ? currentNode.url : null]);
 
       unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {

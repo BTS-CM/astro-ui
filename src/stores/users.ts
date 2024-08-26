@@ -1,6 +1,8 @@
 import { map } from "nanostores";
 import { persistentMap } from "@nanostores/persistent";
 
+import { setCurrentNode } from "@/stores/node";
+
 type User = {
   username: string;
   id: string;
@@ -38,6 +40,8 @@ function setCurrentUser(username: string, id: string, referrer: string, chain: s
   } catch (e) {
     console.log(e);
   }
+
+  setCurrentNode(chain);
 }
 
 function eraseCurrentUser() {

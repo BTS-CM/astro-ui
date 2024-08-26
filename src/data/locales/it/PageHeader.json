@@ -33,7 +33,7 @@
     "deals": "Controlla le tue offerte attuali qui sotto!",
     "dex": "Utilizza il modulo sottostante per creare un ordine limite su Bitshares DEX.",
     "featured": "Dai un'occhiata ad alcuni di questi mercati in primo piano",
-    "index": "Questo strumento open source può creare più operazioni Bitshares.",
+    "index": "Uno strumento per creare operazioni Bitshares!",
     "ltm": "Utilizza il modulo sottostante per aggiornare il tuo account ad un abbonamento a vita!",
     "offer": "Il modulo sottostante serve per accettare un'offerta di credito su Bitshares DEX.",
     "offereditor": "Utilizza il modulo sottostante per creare/modificare offerte di credito su Bitshares DEX.",
@@ -44,7 +44,8 @@
     "smartcoin": "Utilizza il modulo sottostante per emettere debito garantito",
     "smartcoins": "Utilizza l'interfaccia sottostante per individuare un bene da prendere in prestito",
     "stake": "Utilizza questo modulo per puntare i tuoi asset in pool di liquidità",
-    "transfer": "Utilizza il modulo sottostante per trasferire risorse ad altri utenti blockchain"
+    "transfer": "Utilizza il modulo sottostante per trasferire risorse ad altri utenti blockchain",
+    "nodes": "Connettiti alla blockchain tramite un nodo a tua scelta"
   },
   "back": "Torna indietro",
   "usage": "Progettato per l'uso con ",

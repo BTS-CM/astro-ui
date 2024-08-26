@@ -2,9 +2,10 @@ import React, { useState, useEffect, useSyncExternalStore, useMemo, useCallback 
 import { useForm } from "react-hook-form";
 import { CalendarIcon, LockOpen2Icon, LockClosedIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
+import { useStore } from '@nanostores/react';
 import { useTranslation } from "react-i18next";
-import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
+import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 import { cn } from "@/lib/utils";
 
 import {
@@ -59,6 +60,7 @@ import { Badge } from "@/components/ui/badge";
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
 import { $currentUser } from "@/stores/users.ts";
+import { $currentNode } from "@/stores/node.ts";
 
 import {
   $assetCacheBTS,
@@ -93,6 +95,7 @@ export default function MarketOrder(properties) {
       account: "",
     },
   });
+  const currentNode = useStore($currentNode);
 
   const [quoteAsset, setQuoteAsset] = useState();
   const [baseAsset, setBaseAsset] = useState();
@@ -274,7 +277,7 @@ export default function MarketOrder(properties) {
     let unsubscribeUserBalances;
 
     if (usr && usr.id && currentLimitOrder && baseAsset && quoteAsset) {
-      const userBalancesStore = createUserBalancesStore([usr.chain, usr.id]);
+      const userBalancesStore = createUserBalancesStore([usr.chain, usr.id, currentNode ? currentNode.url : null]);
 
       unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {

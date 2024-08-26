@@ -6,6 +6,19 @@
     "hover2": "Empreste ativos às taxas definidas.",
     "hover3": "Especifique garantias e preços de empréstimo aceitáveis."
   },
+  "nodes": {
+    "title": "🌐 Nós",
+    "subtitle": "Configurar conexão blockchain",
+    "hover1": "Conecte-se a um nó Bitshares de sua escolha.",
+    "hover2": "Adicione/remova nós à sua lista de conexões."
+  },
+  "swap": {
+    "title": "🔄 Troca simples",
+    "subtitle": "Trocar ativos por meio de um pool",
+    "hover1": "Troque ativos por meio de pools de liquidez criados pelo usuário.",
+    "hover2": "Os pools têm diferentes pares de negociação e taxas.",
+    "hover3": "Mais simples, mas mais caro do que um pedido com limite."
+  },
   "pool": {
     "title": "💱 Troca de piscina",
     "subtitle": "Trocar ativos por meio de um pool",

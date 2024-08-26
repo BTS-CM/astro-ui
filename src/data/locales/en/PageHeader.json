@@ -33,7 +33,7 @@
     "deals": "Check out your current deals below!",
     "dex": "Use the form below to create a limit order on the Bitshares DEX.",
     "featured": "Check out some of these featured markets",
-    "index": "This open-source tool can craft multiple Bitshares operations.",
+    "index": "A tool for crafting Bitshares operations!",
     "ltm": "Use the form below to upgrade your account to a lifetime membership!",
     "offer": "The form below is for accepting a credit offer on the Bitshares DEX.",
     "offereditor": "Use the form below to create/edit credit offers on the Bitshares DEX.",
@@ -44,7 +44,8 @@
     "smartcoin": "Use the form below to issue collateralized debt into existence",
     "smartcoins": "Use the interface below to locate an asset to borrow into existence",
     "stake": "Use this form to stake your assets in liquidity pools",
-    "transfer": "Use the form below to transfer assets to other blockchain users"
+    "transfer": "Use the form below to transfer assets to other blockchain users",
+    "nodes": "Connect to the blockchain via a node of your choice"
   },
   "back": "Go back",
   "usage": "Designed for use with ",

@@ -1,0 +1,8 @@
+{
+    "cardTitle": "Configura tu conexión blockchain",
+    "cardDescription": "Conéctese a un nodo Bitshares de su elección.",
+    "add": "Agregar URL",
+    "reset": "Restablecer la configuración del nodo",
+    "none": "No hay nodos configurados. Proporcione una URL de nodo para continuar.",
+    "addDescription": "¿Agregar una nueva URL de nodo a la lista de nodos de esta cadena de bloques?"
+  }

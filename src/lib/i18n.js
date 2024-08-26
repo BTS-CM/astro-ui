@@ -39,20 +39,14 @@ const pages = [
   "Smartcoin",
   "Smartcoins",
   "Transfer",
+  "Nodes",
+  "SimpleSwap"
 ];
 
 const locale = persistentAtom("locale", "en");
-const storedLocale = persistentAtom("storedLocale", "");
 
 async function fetchTranslations() {
-  const _stored = storedLocale.get();
-  const _parsed = _stored ? JSON.parse(_stored) : null;
   const _locale = locale.get();
-
-  if (_parsed && _parsed.locale && _parsed.locale === _locale) {
-    console.log(`Using cached ${locale.get()} translations`);
-    return _parsed.translations;
-  }
 
   const translations = {};
   const localPages = {};
@@ -71,7 +65,6 @@ async function fetchTranslations() {
 
   translations[_locale] = localPages;
 
-  storedLocale.set(JSON.stringify({ translations, locale: _locale }));
   return translations;
 }
 

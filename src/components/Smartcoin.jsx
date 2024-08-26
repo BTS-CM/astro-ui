@@ -53,6 +53,7 @@ import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 import { createFullSmartcoinStore } from "@/nanoeffects/FullSmartcoin.ts";
 
 import { $currentUser } from "@/stores/users.ts";
+import { $currentNode } from "@/stores/node.ts";
 import {
   $marketSearchCacheBTS,
   $marketSearchCacheTEST,
@@ -95,6 +96,7 @@ export default function Smartcoin(properties) {
       account: "",
     },
   });
+  const currentNode = useStore($currentNode);
 
   const tips = {
     charge_market_fee: t("Smartcoin:chargeMarketFee"),
@@ -182,7 +184,7 @@ export default function Smartcoin(properties) {
     let unsubscribeUserBalances;
 
     if (usr && usr.id) {
-      const userBalancesStore = createUserBalancesStore([usr.chain, usr.id]);
+      const userBalancesStore = createUserBalancesStore([usr.chain, usr.id, currentNode ? currentNode.url : null]);
 
       unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
@@ -896,13 +898,15 @@ export default function Smartcoin(properties) {
       <Card className="mt-2">
         <CardHeader className="pb-2">
           <CardTitle>
-            <Trans
-              i18nKey="Smartcoin:currentMarginPosition"
-              values={{ asset: parsedAsset.s, id: parsedAsset.id }}
-            />
+            {
+              t("Smartcoin:currentMarginPosition", {
+                asset: parsedAsset.s,
+                id: parsedAsset.id,
+              })
+            }
           </CardTitle>
           <CardDescription>
-            <Trans i18nKey="Smartcoin:ongoingMarginPosition" />
+            {t("Smartcoin:marginPositionDescription")}
           </CardDescription>
         </CardHeader>
         <CardContent className="text-sm">

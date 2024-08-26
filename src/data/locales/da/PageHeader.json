@@ -33,7 +33,7 @@
     "deals": "Se dine aktuelle tilbud nedenfor!",
     "dex": "Brug formularen nedenfor til at oprette en grænseordre på Bitshares DEX.",
     "featured": "Tjek nogle af disse fremhævede markeder",
-    "index": "Dette open source-værktøj kan lave flere Bitshares-operationer.",
+    "index": "Et værktøj til at lave Bitshares-operationer!",
     "ltm": "Brug formularen nedenfor til at opgradere din konto til et livstidsmedlemskab!",
     "offer": "Nedenstående formular er til at acceptere et kredittilbud på Bitshares DEX.",
     "offereditor": "Brug formularen nedenfor til at oprette/redigere kredittilbud på Bitshares DEX.",
@@ -44,7 +44,8 @@
     "smartcoin": "Brug formularen nedenfor til at udstede sikkerhedsstillet gæld",
     "smartcoins": "Brug grænsefladen nedenfor til at finde et aktiv, som du kan låne",
     "stake": "Brug denne formular til at satse dine aktiver i likviditetspuljer",
-    "transfer": "Brug formularen nedenfor til at overføre aktiver til andre blockchain-brugere"
+    "transfer": "Brug formularen nedenfor til at overføre aktiver til andre blockchain-brugere",
+    "nodes": "Opret forbindelse til blockchain via en node efter eget valg"
   },
   "back": "Gå tilbage",
   "usage": "Designet til brug med ",

@@ -33,7 +33,7 @@
     "deals": "Schauen Sie sich unten Ihre aktuellen Angebote an!",
     "dex": "Verwenden Sie das untenstehende Formular, um eine Limit-Order für den Bitshares DEX zu erstellen.",
     "featured": "Schauen Sie sich einige dieser vorgestellten Märkte an",
-    "index": "Dieses Open-Source-Tool kann mehrere Bitshares-Operationen erstellen.",
+    "index": "Ein Tool zum Erstellen von Bitshares-Operationen!",
     "ltm": "Verwenden Sie das untenstehende Formular, um Ihr Konto auf eine lebenslange Mitgliedschaft zu aktualisieren!",
     "offer": "Das folgende Formular dient der Annahme eines Kreditangebots für den Bitshares DEX.",
     "offereditor": "Verwenden Sie das untenstehende Formular, um Kreditangebote für den Bitshares DEX zu erstellen/bearbeiten.",
@@ -44,7 +44,8 @@
     "smartcoin": "Verwenden Sie das untenstehende Formular, um besicherte Schulden ins Leben zu rufen",
     "smartcoins": "Verwenden Sie die folgende Schnittstelle, um einen Vermögenswert zu finden, den Sie leihen können",
     "stake": "Verwenden Sie dieses Formular, um Ihr Vermögen in Liquiditätspools zu verpfänden",
-    "transfer": "Verwenden Sie das untenstehende Formular, um Vermögenswerte an andere Blockchain-Benutzer zu übertragen"
+    "transfer": "Verwenden Sie das untenstehende Formular, um Vermögenswerte an andere Blockchain-Benutzer zu übertragen",
+    "nodes": "Verbinden Sie sich über einen Knoten Ihrer Wahl mit der Blockchain"
   },
   "back": "Geh zurück",
   "usage": "Konzipiert für den Einsatz mit ",

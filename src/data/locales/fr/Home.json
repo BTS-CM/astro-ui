@@ -6,6 +6,19 @@
     "hover2": "Prêtez des actifs à vos taux définis.",
     "hover3": "Spécifiez les garanties de prêt et les prix acceptables."
   },
+  "nodes": {
+    "title": "🌐 Nœuds",
+    "subtitle": "Configurer la connexion blockchain",
+    "hover1": "Connectez-vous à un nœud Bitshares de votre choix.",
+    "hover2": "Ajoutez/supprimez des nœuds à votre liste de connexions."
+  },
+  "swap": {
+    "title": "🔄 Échange simple",
+    "subtitle": "Échanger des actifs via un pool",
+    "hover1": "Échangez des actifs via des pools de liquidités créés par l'utilisateur.",
+    "hover2": "Les pools ont des paires de trading et des frais différents.",
+    "hover3": "Plus simple mais plus coûteux qu’un ordre limité."
+  },
   "pool": {
     "title": "💱 Échange de piscine",
     "subtitle": "Échanger des actifs via un pool",

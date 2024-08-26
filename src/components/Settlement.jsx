@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { useSyncExternalStore } from "react";
 import { useForm } from "react-hook-form";
 import { FixedSizeList as List } from "react-window";
+import { useStore } from '@nanostores/react';
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
@@ -36,6 +37,7 @@ import { createCollateralBidStore } from "@/nanoeffects/CollateralBids.ts";
 import { createObjectStore } from "@/nanoeffects/Objects.ts";
 
 import { $currentUser } from "@/stores/users.ts";
+import { $currentNode } from "@/stores/node.ts";
 import {
   $marketSearchCacheBTS,
   $marketSearchCacheTEST,
@@ -54,6 +56,7 @@ export default function Settlement(properties) {
       account: "",
     },
   });
+  const currentNode = useStore($currentNode);
 
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
 
@@ -134,7 +137,7 @@ export default function Settlement(properties) {
     let unsubscribeUserBalances;
 
     if (usr && usr.id) {
-      const userBalancesStore = createUserBalancesStore([usr.chain, usr.id]);
+      const userBalancesStore = createUserBalancesStore([usr.chain, usr.id, currentNode ? currentNode.url : null]);
 
       unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {

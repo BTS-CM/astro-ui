@@ -2,6 +2,7 @@ import React, { useState, useEffect, useSyncExternalStore, useMemo } from "react
 import Fuse from "fuse.js";
 import { useForm } from "react-hook-form";
 import { FixedSizeList as List } from "react-window";
+import { useStore } from '@nanostores/react';
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
@@ -65,6 +66,7 @@ import {
   $globalParamsCacheTEST,
 } from "@/stores/cache.ts";
 import { $currentUser } from "@/stores/users.ts";
+import { $currentNode } from "@/stores/node.ts";
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
 import { createPoolAssetStore } from "@/nanoeffects/Assets.ts";
@@ -83,6 +85,7 @@ export default function PoolForm() {
       account: "",
     },
   });
+  const currentNode = useStore($currentNode);
 
   const [pool, setPool] = useState("");
 
@@ -323,7 +326,7 @@ export default function PoolForm() {
     let unsubscribeUserBalances;
 
     if (usr && usr.id && assetA && assetB) {
-      const userBalancesStore = createUserBalancesStore([usr.chain, usr.id]);
+      const userBalancesStore = createUserBalancesStore([usr.chain, usr.id, currentNode ? currentNode.url : null]);
 
       unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {

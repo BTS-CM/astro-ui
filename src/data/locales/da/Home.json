@@ -6,6 +6,19 @@
     "hover2": "Lån aktiver til dine definerede satser.",
     "hover3": "Angiv acceptable lånesikkerheder og priser."
   },
+  "nodes": {
+    "title": "🌐 Noder",
+    "subtitle": "Konfigurer blockchain-forbindelse",
+    "hover1": "Opret forbindelse til en Bitshares-node efter eget valg.",
+    "hover2": "Tilføj/fjern noder til din forbindelsesliste."
+  },
+  "swap": {
+    "title": "🔄 Enkelt bytte",
+    "subtitle": "Byt aktiver via en pulje",
+    "hover1": "Byt aktiver via brugerskabte likviditetspuljer.",
+    "hover2": "Puljer har forskellige handelspar og gebyrer.",
+    "hover3": "Enklere men dyrere end en limiteret ordre."
+  },
   "pool": {
     "title": "💱 Poolbytte",
     "subtitle": "Byt aktiver via en pulje",

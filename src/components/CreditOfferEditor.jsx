@@ -5,6 +5,7 @@ import { format } from "date-fns";
 import { useSyncExternalStore } from "react";
 import { useTranslation } from "react-i18next";
 import { FixedSizeList as List } from "react-window";
+import { useStore } from '@nanostores/react';
 
 import { cn } from "@/lib/utils";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
@@ -13,8 +14,11 @@ import { evaluateTradingPair } from "@/lib/market.js";
 
 import { createUsernameStore } from "@/nanoeffects/Objects.ts";
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
-
 import { createObjectStore } from "@/nanoeffects/Objects.ts";
+import { useInitCache } from "@/nanoeffects/Init.ts";
+
+import { $currentUser } from "@/stores/users.ts";
+import { $currentNode } from "@/stores/node.ts";
 
 import {
   Card,
@@ -51,9 +55,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
-import { useInitCache } from "@/nanoeffects/Init.ts";
-import { $currentUser } from "@/stores/users.ts";
 
 import { Avatar } from "./Avatar.tsx";
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
@@ -108,6 +109,7 @@ export default function CreditOfferEditor(properties) {
       account: "",
     },
   });
+  const currentNode = useStore($currentNode);
 
   const [showDialog, setShowDialog] = useState(false);
   const [selectedAsset, setSelectedAsset] = useState();
@@ -214,7 +216,7 @@ export default function CreditOfferEditor(properties) {
     let unsubscribeUserBalances;
 
     if (usr && usr.id) {
-      const userBalancesStore = createUserBalancesStore([usr.chain, usr.id]);
+      const userBalancesStore = createUserBalancesStore([usr.chain, usr.id, currentNode ? currentNode.url : null]);
 
       unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {

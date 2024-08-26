@@ -1,0 +1,8 @@
+{
+    "cardTitle": "Configurez votre connexion blockchain",
+    "cardDescription": "Connectez-vous à un nœud Bitshares de votre choix.",
+    "add": "Ajouter une URL",
+    "reset": "Réinitialiser la configuration du nœud",
+    "none": "Aucun nœud configuré, veuillez fournir une URL de nœud pour continuer.",
+    "addDescription": "Ajouter une nouvelle URL de nœud à la liste de nœuds de cette blockchain ?"
+  }

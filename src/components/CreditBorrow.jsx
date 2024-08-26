@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useSyncExternalStore, useMemo } from "react";
+import React, { useState, useEffect, useSyncExternalStore, useMemo, useCallback } from "react";
 import { FixedSizeList as List } from "react-window";
 import Fuse from "fuse.js";
+import { useStore } from '@nanostores/react';
 import { useTranslation } from "react-i18next";
-import { GearIcon } from "@radix-ui/react-icons";
 
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
@@ -23,6 +23,7 @@ import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 import { useInitCache } from "@/nanoeffects/Init.ts";
 
 import { $currentUser } from "@/stores/users.ts";
+import { $currentNode } from "@/stores/node.ts";
 import {
   $assetCacheBTS,
   $assetCacheTEST,
@@ -30,7 +31,7 @@ import {
   $offersCacheTEST,
 } from "@/stores/cache.ts";
 
-import { humanReadableFloat } from "@/lib/common.js";
+import { humanReadableFloat, debounce } from "@/lib/common.js";
 
 function hoursTillExpiration(expirationTime) {
   var expirationDate = new Date(expirationTime);
@@ -50,6 +51,7 @@ const isValid = (str) => /^[a-zA-Z0-9.-]+$/.test(str);
 export default function CreditBorrow(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
+  const currentNode = useStore($currentNode);
 
   const _assetsBTS = useSyncExternalStore($assetCacheBTS.subscribe, $assetCacheBTS.get, () => true);
   const _assetsTEST = useSyncExternalStore(
@@ -105,7 +107,7 @@ export default function CreditBorrow(properties) {
     let unsubscribeUserBalances;
 
     if (usr && usr.id) {
-      const userBalancesStore = createUserBalancesStore([usr.chain, usr.id]);
+      const userBalancesStore = createUserBalancesStore([usr.chain, usr.id, currentNode ? currentNode.url : null]);
 
       unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
@@ -350,6 +352,21 @@ export default function CreditBorrow(properties) {
     return <CommonRow index={index} style={style} res={res} foundAsset={foundAsset} />;
   };
 
+  const [thisSearchInput, setThisSearchInput] = useState();
+
+  const debouncedSetSearchInput = useCallback(
+    // Throttle slider
+    debounce((event) => {
+      setThisInput(event.target.value);
+      window.history.replaceState(
+        {},
+        "",
+        `?tab=search&searchTab=${activeSearch}&searchText=${event.target.value}`
+      );
+    }, 500),
+    []
+  );
+
   return (
     <>
       <div className="container mx-auto mt-5 mb-5">
@@ -512,10 +529,12 @@ export default function CreditBorrow(properties) {
                         </TabsList>
                         <Input
                           name="searchInput"
-                          placeholder={thisInput ?? "Enter search text"}
+                          placeholder={thisSearchInput ?? t("Smartcoins:enterSearchText")}
                           className="mb-3 mt-3 w-full"
+                          value={thisSearchInput || ""}
                           onChange={(event) => {
-                            setThisInput(event.target.value);
+                            setThisSearchInput(event.target.value);
+                            debouncedSetSearchInput(event)
                           }}
                         />
                         <TabsContent value="borrow">

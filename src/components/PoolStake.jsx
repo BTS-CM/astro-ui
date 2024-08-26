@@ -2,6 +2,7 @@ import React, { useState, useEffect, useSyncExternalStore, useMemo } from "react
 import Fuse from "fuse.js";
 import { useForm } from "react-hook-form";
 import { FixedSizeList as List } from "react-window";
+import { useStore } from '@nanostores/react';
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
@@ -65,6 +66,7 @@ import {
   $globalParamsCacheBTS,
   $globalParamsCacheTEST,
 } from "@/stores/cache.ts";
+import { $currentNode } from "@/stores/node.ts";
 
 import { createPoolAssetStore } from "@/nanoeffects/Assets.ts";
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
@@ -85,6 +87,7 @@ export default function PoolStake() {
       account: "",
     },
   });
+  const currentNode = useStore($currentNode);
 
   const [pool, setPool] = useState(""); // dropdown selected pool
 
@@ -331,7 +334,7 @@ export default function PoolStake() {
     let unsubscribeUserBalances;
 
     if (usr && usr.id && assetA && assetB) {
-      const userBalancesStore = createUserBalancesStore([usr.chain, usr.id]);
+      const userBalancesStore = createUserBalancesStore([usr.chain, usr.id, currentNode ? currentNode.url : null]);
 
       unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
