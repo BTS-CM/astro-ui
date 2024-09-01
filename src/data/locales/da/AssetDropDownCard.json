@@ -7,5 +7,7 @@
   "baseType": "Vælg venligst et nyt basisaktiv",
   "quoteType": "Vælg venligst et nyt tilbudsaktiv",
   "search": "Søg efter et aktiv",
-  "issued": "Udstedt af {{user}}"
+  "issued": "Udstedt af {{user}}",
+  "search2": "Søge",
+  "favourites": "Favoritter"
 }

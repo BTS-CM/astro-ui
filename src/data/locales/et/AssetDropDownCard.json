@@ -7,5 +7,7 @@
   "baseType": "Valige uus põhivara",
   "quoteType": "Valige uus hinnapakkumise vara",
   "search": "Otsige vara",
-  "issued": "Välja andnud {{user}}"
+  "issued": "Välja andnud {{user}}",
+  "search2": "Otsi",
+  "favourites": "Lemmikud"
 }

@@ -490,6 +490,7 @@ export default function Market(properties) {
                         marketSearch={marketSearch}
                         type={activeLimitCard === "buy" ? "quote" : "base"}
                         size="small"
+                        chain={usr.chain}
                       />
 
                       <a
@@ -510,6 +511,7 @@ export default function Market(properties) {
                         marketSearch={marketSearch}
                         type={activeLimitCard === "sell" ? "quote" : "base"}
                         size="small"
+                        chain={usr.chain}
                       />
                     </div>
                   </CardContent>
@@ -564,9 +566,11 @@ export default function Market(properties) {
                   <Card>
                     <CardHeader className="pb-2 pt-4">
                       <CardTitle>
-                        {activeLimitCard === "sell"
-                          ? t("Market:baseAsset")
-                          : t("Market:quoteAsset")}
+                        {
+                          activeLimitCard === "sell"
+                            ? t("Market:baseAsset")
+                            : t("Market:quoteAsset")
+                        }
                       </CardTitle>
                       <CardDescription className="text-lg">{t("Market:loading")}</CardDescription>
                     </CardHeader>

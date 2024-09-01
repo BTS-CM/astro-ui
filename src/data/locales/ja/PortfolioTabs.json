@@ -43,5 +43,9 @@
   "recentBlockchainActivityTitle": "最近のブロックチェーン活動",
   "recentBlockchainActivityDescription": "最近のブロックチェーン アクティビティ",
   "noRecentActivityFound": "最近のアクティビティは見つかりませんでした",
-  "refreshRecentActivityButton": "最近のアクティビティを更新する"
+  "refreshRecentActivityButton": "最近のアクティビティを更新する",
+  "pools": "プール",
+  "default": "デフォルト",
+  "alphabetical": "アルファベット順",
+  "amount": "額"
 }

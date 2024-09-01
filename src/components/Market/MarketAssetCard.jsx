@@ -1,6 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
+import {
+  HeartFilledIcon,
+  HeartIcon
+} from "@radix-ui/react-icons"
+import { useStore } from '@nanostores/react';
 
 import {
   Card,
@@ -10,6 +15,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 import {
   Dialog,
@@ -28,11 +40,22 @@ import ExternalLink from "../common/ExternalLink.jsx";
 import CardRow from "../common/CardRow.jsx";
 
 import { humanReadableFloat } from "@/lib/common";
+import {
+  $favouriteAssets,
+  addFavouriteAsset,
+  removeFavouriteAsset,
+} from "@/stores/favourites.ts"
 
 export default function MarketAssetCard(properties) {
   const { asset, assetData, assetDetails, bitassetData, marketSearch, chain, usrBalances, type } =
     properties;
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
+
+  const favouriteAssets = useStore($favouriteAssets);
+
+  const isFavourite = useMemo(() => {
+    return favouriteAssets[chain].map(x => x.id).includes(assetData.id);
+  }, [favouriteAssets, chain, asset]);
 
   const [assetBalance, setAssetBalance] = useState(0);
   useEffect(() => {
@@ -71,7 +94,43 @@ export default function MarketAssetCard(properties) {
     <Card>
       <CardHeader className="pb-2 pt-4">
         <CardTitle>
-          {asset} {assetData ? `(${assetData.id})` : ""}
+          <div className="grid grid-cols-2">
+            <div>
+              {asset} {assetData ? `(${assetData.id})` : ""}
+            </div>
+            <div className="flex justify-end mt-1">
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    {
+                      isFavourite
+                      ? <HeartFilledIcon
+                          onClick={() => {
+                            removeFavouriteAsset(chain, {
+                              id: assetData.id,
+                              symbol: assetData.symbol,
+                              issuer: assetData.issuer
+                            })
+                          }}
+                        />
+                      : <HeartIcon
+                          onClick={() => {
+                            addFavouriteAsset(chain, {
+                              id: assetData.id,
+                              symbol: assetData.symbol,
+                              issuer: assetData.issuer
+                            })
+                          }}
+                        />
+                    }
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    Favourite
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+          </div>
         </CardTitle>
         <CardDescription className="text-lg">
           {type === "buy" ? (

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useSyncExternalStore, useMemo } from "react";
 import { useForm } from "react-hook-form";
+import { useStore } from "@nanostores/react";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
@@ -428,7 +429,7 @@ export default function Transfer(properties) {
                                 otherAsset={null}
                                 marketSearch={marketSearch}
                                 type={null}
-                              />
+                                chain={usr && usr.chain ? usr.chain : "bitshares"}                              />
                             </div>
                           </div>
                         </FormControl>

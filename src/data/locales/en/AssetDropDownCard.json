@@ -7,5 +7,7 @@
   "baseType": "Please select a new base asset",
   "quoteType": "Please select a new quote asset",
   "search": "Search for an asset",
-  "issued": "Issued by {{user}}"
+  "issued": "Issued by {{user}}",
+  "search2": "Search",
+  "favourites": "Favourites"
 }

@@ -7,5 +7,7 @@
   "baseType": "Selecione um novo recurso base",
   "quoteType": "Selecione um novo ativo de cotação",
   "search": "Procure um ativo",
-  "issued": "Emitida pela {{user}}"
+  "issued": "Emitida pela {{user}}",
+  "search2": "찾다",
+  "favourites": "즐겨찾기"
 }

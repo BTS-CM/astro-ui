@@ -7,5 +7,7 @@
   "baseType": "新しいベースアセットを選択してください",
   "quoteType": "新しい見積資産を選択してください",
   "search": "アセットを検索する",
-  "issued": "発行者 {{user}}"
+  "issued": "発行者 {{user}}",
+  "search2": "検索",
+  "favourites": "お気に入り"
 }

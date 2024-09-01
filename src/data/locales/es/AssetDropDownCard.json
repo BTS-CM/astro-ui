@@ -7,5 +7,7 @@
   "baseType": "Seleccione un nuevo recurso base",
   "quoteType": "Seleccione un nuevo activo de cotización",
   "search": "Buscar un activo",
-  "issued": "Expedido por {{user}}"
+  "issued": "Expedido por {{user}}",
+  "search2": "Buscar",
+  "favourites": "Favoritos"
 }

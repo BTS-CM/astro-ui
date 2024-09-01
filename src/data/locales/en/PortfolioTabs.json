@@ -43,5 +43,9 @@
   "recentBlockchainActivityTitle": "Recent blockchain activity",
   "recentBlockchainActivityDescription": "Your recent blockchain activity",
   "noRecentActivityFound": "No recent activity found",
-  "refreshRecentActivityButton": "Refresh recent activity"
+  "refreshRecentActivityButton": "Refresh recent activity",
+  "pools": "Pools",
+  "default": "Default",
+  "alphabetical": "Alphabetical",
+  "amount": "Amount"
 }

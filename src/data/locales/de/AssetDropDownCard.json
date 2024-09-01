@@ -7,5 +7,7 @@
   "baseType": "Bitte wählen Sie ein neues Basis-Asset aus",
   "quoteType": "Bitte wählen Sie ein neues Angebots-Asset aus",
   "search": "Suchen Sie nach einem Vermögenswert",
-  "issued": "Ausgestellt von {{user}}"
+  "issued": "Ausgestellt von {{user}}",
+  "search2": "Suchen",
+  "favourites": "Favoriten"
 }

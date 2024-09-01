@@ -816,6 +816,7 @@ export default function CreditOfferEditor(properties) {
                                 otherAsset={null}
                                 marketSearch={marketSearch}
                                 type={null}
+                                chain={usr.chain}
                               />
                             ) : null}
                           </div>

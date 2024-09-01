@@ -43,5 +43,9 @@
   "recentBlockchainActivityTitle": "Seneste blockchain-aktivitet",
   "recentBlockchainActivityDescription": "Din seneste blockchain-aktivitet",
   "noRecentActivityFound": "Der blev ikke fundet nogen nylig aktivitet",
-  "refreshRecentActivityButton": "Opdater seneste aktivitet"
+  "refreshRecentActivityButton": "Opdater seneste aktivitet",
+  "pools": "Pools",
+  "default": "Misligholdelse",
+  "alphabetical": "Alfabetisk",
+  "amount": "Beløb"
 }

@@ -43,5 +43,9 @@
   "recentBlockchainActivityTitle": "최근 블록체인 활동",
   "recentBlockchainActivityDescription": "최근 블록체인 활동",
   "noRecentActivityFound": "최근 활동이 없습니다.",
-  "refreshRecentActivityButton": "최근 활동 새로 고침"
+  "refreshRecentActivityButton": "최근 활동 새로 고침",
+  "pools": "풀",
+  "default": "기본",
+  "alphabetical": "알파벳순",
+  "amount": "양"
 }

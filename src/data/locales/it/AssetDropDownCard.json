@@ -7,5 +7,7 @@
   "baseType": "Seleziona una nuova risorsa di base",
   "quoteType": "Seleziona una nuova risorsa preventivo",
   "search": "Cerca una risorsa",
-  "issued": "Rilasciato da {{user}}"
+  "issued": "Rilasciato da {{user}}",
+  "search2": "Ricerca",
+  "favourites": "Preferiti"
 }

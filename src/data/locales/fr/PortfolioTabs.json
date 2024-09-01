@@ -43,5 +43,9 @@
   "recentBlockchainActivityTitle": "Activité récente de la blockchain",
   "recentBlockchainActivityDescription": "Votre activité blockchain récente",
   "noRecentActivityFound": "Aucune activité récente trouvée",
-  "refreshRecentActivityButton": "Actualiser l'activité récente"
+  "refreshRecentActivityButton": "Actualiser l'activité récente",
+  "pools": "Piscines",
+  "default": "Défaut",
+  "alphabetical": "Alphabétique",
+  "amount": "Montant"
 }

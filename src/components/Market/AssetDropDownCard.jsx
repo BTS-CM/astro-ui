@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Fuse from "fuse.js";
 import { FixedSizeList as List } from "react-window";
+import { useStore } from '@nanostores/react';
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
@@ -24,6 +25,12 @@ import {
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+
+import {
+  $favouriteAssets,
+  addFavouriteAsset,
+  removeFavouriteAsset,
+} from "@/stores/favourites.ts"
 
 /**
  * Creating an asset dropdown component
@@ -74,29 +81,70 @@ export default function AssetDropDown(properties) {
   }, [thisInput]);
 
   const Row = ({ index, style }) => {
-    const res = thisResult[index];
+    const res = mode === "search"
+      ? thisResult[index]
+      : relevantAssets[index];
     return (
       <div style={{ ...style, marginBottom: "10px", paddingRight: "10px" }}>
         <Card
-          key={`acard-${res.item.id}`}
+          key={
+            mode === "search"
+            ? `acard-${res.item.id}`
+            : `acard-${res.id}`
+          }
           style={{ marginBottom: "2px" }}
           onClick={() => {
             setTimeout(() => {
-              storeCallback(res.item.s);
+              storeCallback(
+                mode === "search"
+                  ? res.item.s
+                  : res.symbol,
+              );
             }, 0);
             setDialogOpen(false);
           }}
         >
           <CardHeader className="p-3">
             <CardTitle className="h-3">
-              {res.item.s} ({res.item.id})
+              {
+                mode === "search"
+                ? `${res.item.s} (${res.item.id})`
+                : `${res.symbol} (${res.id})`
+              }
             </CardTitle>
-            <CardDescription>{t("AssetDropDownCard:issued", { user: res.item.u })}</CardDescription>
+            <CardDescription>
+              {t(
+                "AssetDropDownCard:issued",
+                { user: mode === "search" ? res.item.u : res.issuer }
+              )}
+            </CardDescription>
           </CardHeader>
         </Card>
       </div>
     );
   };
+
+  const [mode, setMode] = useState("search");
+
+  const favouriteAssets = useStore($favouriteAssets);
+
+  const relevantAssets = useMemo(() => {
+    if (!chain || !favouriteAssets) {
+      return [];
+    }
+    
+    const _chainAssets = favouriteAssets[chain];
+
+    if (!assetSymbol && !otherAsset) {
+      return _chainAssets;
+    }
+
+    return _chainAssets.filter(
+      (asset) => assetSymbol && otherAsset
+        ? asset.symbol !== assetSymbol && asset.symbol !== otherAsset
+        : asset.symbol !== assetSymbol
+    );
+  }, [favouriteAssets, assetSymbol, otherAsset, chain]);
 
   return (
     <Dialog
@@ -105,7 +153,6 @@ export default function AssetDropDown(properties) {
         if (!open) {
           setThisResult();
         }
-
         setDialogOpen(open);
       }}
     >
@@ -128,25 +175,69 @@ export default function AssetDropDown(properties) {
               ? t("AssetDropDownCard:replacing", { assetSymbol: assetSymbol })
               : t("AssetDropDownCard:selecting")}
           </h3>
-          <h4 className="text-md font-bold tracking-tight">
-            {!type ? t("AssetDropDownCard:noType") : null}
-            {type && type === "base" ? t("AssetDropDownCard:baseType") : null}
-            {type && type === "quote" ? t("AssetDropDownCard:quoteType") : null}
-          </h4>
-          <Input
-            name="assetSearch"
-            placeholder={t("AssetDropDownCard:search")}
-            onChange={(event) => {
-              setThisInput(event.target.value);
-            }}
-          />
-          {thisResult && thisResult.length ? (
-            <>
-              <List height={200} itemCount={thisResult.length} itemSize={70} className="w-full">
-                {Row}
-              </List>
-            </>
-          ) : null}
+
+          <div className="grid grid-cols-2 gap-2">
+            <Button
+              variant={mode === "search" ? "" : "outline"}
+              size="sm"
+              onClick={() => setMode("search")}
+            >
+              {t("AssetDropDownCard:search")}
+            </Button>
+            <Button
+              variant={mode === "favourites" ? "" : "outline"}
+              size="sm"
+              onClick={() => setMode("favourites")}
+            >
+              {t("AssetDropDownCard:favourites")}
+            </Button>
+          </div>
+
+          {
+            mode === "search"
+            ? <>
+                <h4 className="text-md font-bold tracking-tight">
+                  {!type ? t("AssetDropDownCard:noType") : null}
+                  {type && type === "base" ? t("AssetDropDownCard:baseType") : null}
+                  {type && type === "quote" ? t("AssetDropDownCard:quoteType") : null}
+                </h4>
+                <Input
+                  name="assetSearch"
+                  placeholder={t("AssetDropDownCard:search")}
+                  onChange={(event) => {
+                    setThisInput(event.target.value);
+                  }}
+                />
+                {thisResult && thisResult.length ? (
+                  <>
+                    <List height={200} itemCount={thisResult.length} itemSize={70} className="w-full">
+                      {Row}
+                    </List>
+                  </>
+                ) : null}
+              </>
+            : null
+          }
+
+          {
+            mode === "favourites"
+            ? <>
+                <h4 className="text-md font-bold tracking-tight">
+                  {!type ? t("AssetDropDownCard:noType") : null}
+                  {type && type === "base" ? t("AssetDropDownCard:baseType") : null}
+                  {type && type === "quote" ? t("AssetDropDownCard:quoteType") : null}
+                </h4>
+                {relevantAssets && relevantAssets.length ? (
+                  <>
+                    <List height={200} itemCount={relevantAssets.length} itemSize={70} className="w-full">
+                      {Row}
+                    </List>
+                  </>
+                ) : "No favourite assets..."}
+                
+              </>
+            : null
+          }
         </>
       </DialogContent>
     </Dialog>

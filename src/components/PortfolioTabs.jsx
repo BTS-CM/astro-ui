@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/card";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 
 import {
   Dialog,
@@ -35,13 +36,9 @@ import { createAccountLimitOrderStore } from "@/nanoeffects/AccountLimitOrders.t
 
 import { $currentUser } from "@/stores/users.ts";
 import { $currentNode } from "@/stores/node.ts";
+import { $poolCacheBTS, $poolCacheTEST } from "@/stores/cache.ts";
 
-import {
-  $assetCacheBTS,
-  $assetCacheTEST,
-  $globalParamsCacheBTS,
-  $globalParamsCacheTEST,
-} from "@/stores/cache.ts";
+import { $assetCacheBTS, $assetCacheTEST } from "@/stores/cache.ts";
 
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
 import ExternalLink from "./common/ExternalLink.jsx";
@@ -49,10 +46,31 @@ import ExternalLink from "./common/ExternalLink.jsx";
 import { humanReadableFloat } from "@/lib/common";
 import { opTypes } from "@/lib/opTypes";
 
+function RowHyperlink({ id, share_asset_symbol, asset_a_symbol, asset_b_symbol }) {
+  return (
+    <div className="grid grid-cols-10">
+      <div className="col-span-1">
+        <p>{id}</p>
+      </div>
+      <div className="col-span-3">
+        <p>{share_asset_symbol}</p>
+      </div>
+      <div className="col-span-3">
+        <p>{asset_a_symbol}</p>
+      </div>
+      <div className="col-span-3">
+        <p>{asset_b_symbol}</p>
+      </div>
+    </div>
+  );
+}
+
 export default function PortfolioTabs(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
   const currentNode = useStore($currentNode);
+
+  const [sortType, setSortType] = useState("default");
 
   const _assetsBTS = useSyncExternalStore($assetCacheBTS.subscribe, $assetCacheBTS.get, () => true);
   const _assetsTEST = useSyncExternalStore(
@@ -61,12 +79,22 @@ export default function PortfolioTabs(properties) {
     () => true
   );
 
+  const _poolsBTS = useSyncExternalStore($poolCacheBTS.subscribe, $poolCacheBTS.get, () => true);
+  const _poolsTEST = useSyncExternalStore($poolCacheTEST.subscribe, $poolCacheTEST.get, () => true);
+
   const _chain = useMemo(() => {
     if (usr && usr.chain) {
       return usr.chain;
     }
     return "bitshares";
   }, [usr]);
+
+  const pools = useMemo(() => {
+    if (usr && usr.chain && (_poolsBTS || _poolsTEST)) {
+      return usr.chain === "bitshares" ? _poolsBTS : _poolsTEST;
+    }
+    return [];
+  }, [_poolsBTS, _poolsTEST, _chain]);
 
   const assets = useMemo(() => {
     if (_chain && (_assetsBTS || _assetsTEST)) {
@@ -75,9 +103,7 @@ export default function PortfolioTabs(properties) {
     return [];
   }, [_assetsBTS, _assetsTEST, _chain]);
 
-  useInitCache(_chain ?? "bitshares", [
-    "assets",
-  ]);
+  useInitCache(_chain ?? "bitshares", ["assets", "pools"]);
 
   const activeTabStyle = {
     backgroundColor: "#252526",
@@ -95,8 +121,39 @@ export default function PortfolioTabs(properties) {
 
       unsubscribeUserBalancesStore = userBalancesStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
+          console.log({data})
+          const updatedData = data.map((balance) => {
+            return {
+              ...balance,
+              symbol: assets.find((asset) => asset.id === balance.asset_id).symbol,
+            }
+          });
           console.log("Successfully fetched balances");
-          setBalances(data);
+          if (sortType === "default") {
+            setBalances(data);
+          } else if (sortType === "alphabetical") {
+            const alphabetical = updatedData.sort((a, b) => {
+              if (a.symbol < b.symbol) {
+                return -1;
+              }
+              if (a.symbol > b.symbol) {
+                return 1;
+              }
+              return 0;
+            });
+            setBalances(alphabetical);
+          } else if (sortType === "amount") {
+            const amount = updatedData.sort((a, b) => {
+              if (parseInt(a.amount) < parseInt(b.amount)) {
+                return 1;
+              }
+              if (parseInt(a.amount) > parseInt(b.amount)) {
+                return -1;
+              }
+              return 0;
+            });
+            setBalances(amount);
+          }
         }
       });
     }
@@ -104,7 +161,7 @@ export default function PortfolioTabs(properties) {
     return () => {
       if (unsubscribeUserBalancesStore) unsubscribeUserBalancesStore();
     }
-  }, [usr, balanceCounter]);
+  }, [usr, balanceCounter, sortType, assets]);
     
   const [openOrderCounter, setOpenOrderCounter] = useState(0);
   const [openOrders, setOpenOrders] = useState();
@@ -180,6 +237,9 @@ export default function PortfolioTabs(properties) {
   const BalanceRow = ({ index, style }) => {
     const rowBalance = balances[index];
 
+    const _balanceAsset = retrievedBalanceAssets.find((asset) => asset.id === rowBalance.asset_id);
+    const _balanceAssetSymbol = _balanceAsset.symbol;
+
     const currentBalance =
       retrievedBalanceAssets && Array.isArray(retrievedBalanceAssets)
         ? retrievedBalanceAssets.find((asset) => asset.id === rowBalance.asset_id)
@@ -195,12 +255,16 @@ export default function PortfolioTabs(properties) {
       minimumFractionDigits: currentBalance.precision,
     });
 
+    const relevantPools = pools.filter(
+      (pool) => pool.asset_a_symbol === currentBalance.symbol || pool.asset_b_symbol === currentBalance.symbol
+    );
+
     return (
       <div style={{ ...style, marginBottom: "8px" }}>
         <Card>
           <div className="grid grid-cols-6">
-            <div className="col-span-4">
-              <CardHeader>
+            <div className="col-span-3 text-left">
+              <CardHeader className="pt-3 pb-3">
                 <CardTitle>
                   {t("PortfolioTabs:assetTitle", {
                     symbol: currentBalance.symbol,
@@ -212,7 +276,7 @@ export default function PortfolioTabs(properties) {
                 </CardDescription>
               </CardHeader>
             </div>
-            <div className="col-span-2 pt-5">
+            <div className="col-span-3 pt-2 text-right mr-3">
               <a
                 href={`/dex/index.html?market=${currentBalance.symbol}_${
                   currentBalance.symbol === "BTS" ? "USD" : "BTS"
@@ -223,9 +287,25 @@ export default function PortfolioTabs(properties) {
                 </Button>
               </a>
 
+              <HoverCard key="hover_a">
+                <HoverCardTrigger asChild>
+                  <PoolDialog
+                    poolArray={relevantPools}
+                    dialogTitle={t("PoolDialogs:assetAPoolsDialogTitle", { assetA: currentBalance.symbol })}
+                    dialogDescription={t("PoolDialogs:assetAPoolsDialogDescription", {
+                      assetA: currentBalance.symbol,
+                      assetAId: currentBalance.id,
+                    })}
+                  />
+                </HoverCardTrigger>
+                <HoverCardContent className="w-60">
+                  {t("PoolDialogs:assetAHoverCardContent", { assetA: currentBalance.symbol })}
+                </HoverCardContent>
+              </HoverCard>
+
               <ExternalLink
                 variant="outline"
-                classnamecontents="mt-2"
+                classnamecontents="mt-2 ml-2"
                 type="button"
                 text={t("PortfolioTabs:assetInfoButton")}
                 hyperlink={`https://blocksights.info/#/assets/${currentBalance.symbol}`}
@@ -446,6 +526,53 @@ export default function PortfolioTabs(properties) {
     );
   };
 
+  function PoolDialog({ poolArray, dialogTitle, dialogDescription }) {
+    if (!poolArray || !poolArray.length) {
+      return null;
+    }
+  
+    const PoolRow = ({ index, style }) => {
+      const pool = poolArray[index];
+      return (
+        <a style={style} href={`/pool/index.html?pool=${pool.id}`} key={`a_${pool.id}`}>
+          <RowHyperlink
+            id={pool.id}
+            share_asset_symbol={pool.share_asset_symbol}
+            asset_a_symbol={pool.asset_a_symbol}
+            asset_b_symbol={pool.asset_b_symbol}
+          />
+        </a>
+      );
+    };
+  
+    return (
+      <Dialog>
+        <DialogTrigger asChild>
+          <Button variant="outline">
+            {t("PortfolioTabs:pools")}
+          </Button>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-[800px] bg-white">
+          <DialogHeader>
+            <DialogTitle>{dialogTitle}</DialogTitle>
+            <DialogDescription>{dialogDescription}</DialogDescription>
+          </DialogHeader>
+          <div className="grid grid-cols-1">
+            <div className="grid grid-cols-10">
+              <div className="col-span-1">{t("PoolDialogs:idColumnTitle")}</div>
+              <div className="col-span-3">{t("PoolDialogs:shareAssetColumnTitle")}</div>
+              <div className="col-span-3">{t("PoolDialogs:assetAColumnTitle")}</div>
+              <div className="col-span-3">{t("PoolDialogs:assetBColumnTitle")}</div>
+            </div>
+            <List height={300} itemCount={poolArray.length} itemSize={35} className="w-full">
+              {PoolRow}
+            </List>
+          </div>
+        </DialogContent>
+      </Dialog>
+    );
+  };
+
   return (
     <>
       <div className="container mx-auto mt-5 mb-5">
@@ -482,11 +609,25 @@ export default function PortfolioTabs(properties) {
             </TabsList>
             <TabsContent value="balances">
               <Card>
-                <CardHeader>
+                <CardHeader className="pb-3">
                   <CardTitle>
                     {t("PortfolioTabs:accountBalances", { username: usr.username })}
                   </CardTitle>
-                  <CardDescription>{t("PortfolioTabs:accountBalancesDescription")}</CardDescription>
+                  <CardDescription>
+                    {t("PortfolioTabs:accountBalancesDescription")}
+                    <br/>
+                    <div className="grid grid-cols-3 gap-3 mt-2">
+                      <Button onClick={() => setSortType("default")} variant={sortType === "default" ? "" : "outline"}>
+                        {t("PortfolioTabs:default")}
+                      </Button>
+                      <Button onClick={() => setSortType("alphabetical")} variant={sortType === "alphabetical" ? "" : "outline"}>
+                        {t("PortfolioTabs:alphabetical")}
+                      </Button>
+                      <Button onClick={() => setSortType("amount")} variant={sortType === "amount" ? "" : "outline"}>
+                        {t("PortfolioTabs:amount")}
+                      </Button>
+                    </div>
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-2">
                   {balances &&
@@ -496,7 +637,7 @@ export default function PortfolioTabs(properties) {
                     <List
                       height={500}
                       itemCount={balances.length}
-                      itemSize={100}
+                      itemSize={80}
                       className="gaps-2"
                     >
                       {BalanceRow}

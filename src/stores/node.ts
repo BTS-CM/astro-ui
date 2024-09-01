@@ -10,8 +10,8 @@ type Node = {
 const $currentNode = map<Node>({ url: "", chain: "" });
 
 function setCurrentNode(chain: string, url?: string) {
-  if (!(chains as any)[chain] || url && !(chains as any)[chain].nodeList.find((node: any) => node.url === url)) {
-    return; // block invalid nodes
+  if (!(chains as any)[chain]) {
+    return;
   }
 
   $currentNode.set({ chain, url: url ?? (chains as any)[chain].nodeList[0].url });

@@ -43,5 +43,9 @@
   "recentBlockchainActivityTitle": "กิจกรรมบล็อกเชนล่าสุด",
   "recentBlockchainActivityDescription": "กิจกรรมบล็อกเชนล่าสุดของคุณ",
   "noRecentActivityFound": "ไม่พบกิจกรรมล่าสุด",
-  "refreshRecentActivityButton": "รีเฟรชกิจกรรมล่าสุด"
+  "refreshRecentActivityButton": "รีเฟรชกิจกรรมล่าสุด",
+  "pools": "สระน้ำ",
+  "default": "ค่าเริ่มต้น",
+  "alphabetical": "ตามตัวอักษร",
+  "amount": "จำนวน"
 }

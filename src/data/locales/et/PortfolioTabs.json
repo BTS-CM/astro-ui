@@ -43,5 +43,9 @@
   "recentBlockchainActivityTitle": "Hiljutine plokiahela tegevus",
   "recentBlockchainActivityDescription": "Teie hiljutine tegevus plokiahelas",
   "noRecentActivityFound": "Hiljutist tegevust ei leitud",
-  "refreshRecentActivityButton": "Värskendage hiljutisi tegevusi"
+  "refreshRecentActivityButton": "Värskendage hiljutisi tegevusi",
+  "pools": "Basseinid",
+  "default": "Vaikimisi",
+  "alphabetical": "Tähestikuline",
+  "amount": "Summa"
 }
