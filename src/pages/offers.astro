@@ -1,0 +1,27 @@
+---
+import Layout from '../layouts/Layout.astro';
+import CreditOffers from '../components/CreditOffers.jsx';
+import PageHeader from '../components/PageHeader';
+import PageFooter from '../components/PageFooter';
+---
+
+<Layout title="Bitshares credit offer listings">
+	<main>
+		<PageHeader client:only="react" page="offers" backURL="../index.html" />
+		<CreditOffers client:only="react" />
+		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/offers.astro" />
+	</main>
+</Layout>
+
+<style>
+	main {
+		margin: auto;
+		padding: 1rem;
+		width: 900px;
+		max-width: calc(100% - 2rem);
+		color: white;
+		font-size: 20px;
+		line-height: 1.6;
+		min-height: 100vh;
+	}
+</style>

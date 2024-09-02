@@ -121,7 +121,6 @@ export default function PortfolioTabs(properties) {
 
       unsubscribeUserBalancesStore = userBalancesStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
-          console.log({data})
           const updatedData = data.map((balance) => {
             return {
               ...balance,

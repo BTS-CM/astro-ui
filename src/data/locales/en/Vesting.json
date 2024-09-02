@@ -1,0 +1,18 @@
+{
+    "dialogContent": {
+        "header": "Withdrawing {{readable}}"
+    },
+    "vesting_seconds": "Vesting seconds",
+    "start_claim": "Start claim",
+    "coin_seconds_earned": "Coin seconds earned",
+    "coin_seconds_earned_last_update": "Coin seconds earned last update",
+    "claim_a": "Withdraw cashback",
+    "claim_b": "Withdraw share of market fees",
+    "card": {
+        "title": "Vesting balances",
+        "description": "Monitor and withdraw your vesting balances.",
+        "empty": "No vesting balances found."
+    },
+    "cashback": "Cashback",
+    "market_fees": "Market fees"
+}

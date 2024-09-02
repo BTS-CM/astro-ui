@@ -1,0 +1,18 @@
+{
+  "dialogContent": {
+    "header": "撤退する {{readable}}"
+  },
+  "vesting_seconds": "権利確定秒数",
+  "start_claim": "請求を開始する",
+  "coin_seconds_earned": "獲得コイン秒数",
+  "coin_seconds_earned_last_update": "前回の更新で獲得したコイン秒数",
+  "claim_a": "キャッシュバックの出金",
+  "claim_b": "市場手数料の取り消し",
+  "card": {
+    "title": "権利確定残高",
+    "description": "権利確定残高を監視して引き出します。",
+    "empty": "権利確定残高が見つかりません。"
+  },
+  "cashback": "キャッシュバック",
+  "market_fees": "市場手数料"
+}

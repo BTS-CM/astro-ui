@@ -1,0 +1,18 @@
+{
+  "dialogContent": {
+    "header": "Retrait {{readable}}"
+  },
+  "vesting_seconds": "Secondes d’acquisition",
+  "start_claim": "Commencer la réclamation",
+  "coin_seconds_earned": "Secondes de pièces gagnées",
+  "coin_seconds_earned_last_update": "Secondes de pièces gagnées lors de la dernière mise à jour",
+  "claim_a": "Retirer du cashback",
+  "claim_b": "Retirer une part des frais de marché",
+  "card": {
+    "title": "Soldes d’acquisition",
+    "description": "Surveillez et retirez vos soldes d’acquisition.",
+    "empty": "Aucun solde d'acquisition trouvé."
+  },
+  "cashback": "Remise en argent",
+  "market_fees": "Frais de marché"
+}

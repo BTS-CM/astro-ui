@@ -88,5 +88,17 @@
     "subtitle": "Kontrollige oma krediidipakkumisi",
     "hover1": "Jälgige oma aktiivseid krediiditehinguid.",
     "hover2": "Hallake oma krediiditehingute seisu."
+  },
+  "offers": {
+    "title": "📜 Krediidipakkumised",
+    "subtitle": "Kontrollige oma krediidipakkumisi",
+    "hover1": "Jälgige oma aktiivseid krediidipakkumisi.",
+    "hover2": "Hallake oma krediidipakkumiste olekut."
+  },
+  "vesting": {
+    "title": "⌚ Üleandmise saldod",
+    "subtitle": "Vaadake üleandmise saldosid",
+    "hover1": "Kontrollige oma üleandmisjääke.",
+    "hover2": "Nõudke oma kontojääke."
   }
 }

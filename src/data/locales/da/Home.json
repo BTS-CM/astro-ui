@@ -88,5 +88,17 @@
     "subtitle": "Tjek dine kreditaftaler",
     "hover1": "Overvåg dine aktive kreditaftaler.",
     "hover2": "Administrer status for dine kreditaftaler."
+  },
+  "offers": {
+    "title": "📜 Kredittilbud",
+    "subtitle": "Tjek dine kredittilbud",
+    "hover1": "Overvåg dine aktive kredittilbud.",
+    "hover2": "Administrer status for dine kredittilbud."
+  },
+  "vesting": {
+    "title": "⌚ Optjening af saldi",
+    "subtitle": "Se optjeningssaldi",
+    "hover1": "Tjek dine optjente saldi.",
+    "hover2": "Gør krav på dine optjente saldi."
   }
 }

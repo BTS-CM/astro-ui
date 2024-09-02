@@ -45,7 +45,9 @@
     "smartcoins": "Use the interface below to locate an asset to borrow into existence",
     "stake": "Use this form to stake your assets in liquidity pools",
     "transfer": "Use the form below to transfer assets to other blockchain users",
-    "nodes": "Connect to the blockchain via a node of your choice"
+    "nodes": "Connect to the blockchain via a node of your choice",
+    "offers": "Monitor and manage your credit offers with the below form.",
+    "vesting": "Monitor and withdraw your vesting balances with the below form."
   },
   "back": "Go back",
   "usage": "Designed for use with ",

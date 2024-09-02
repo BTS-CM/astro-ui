@@ -45,7 +45,9 @@
     "smartcoins": "Utilisez l'interface ci-dessous pour localiser un actif à emprunter pour exister",
     "stake": "Utilisez ce formulaire pour miser vos actifs dans des pools de liquidité",
     "transfer": "Utilisez le formulaire ci-dessous pour transférer des actifs à d'autres utilisateurs de la blockchain",
-    "nodes": "Connectez-vous à la blockchain via un nœud de votre choix"
+    "nodes": "Connectez-vous à la blockchain via un nœud de votre choix",
+    "offers": "Suivez et gérez vos offres de crédit avec le formulaire ci-dessous.",
+    "vesting": "Surveillez et retirez vos soldes d’acquisition avec le formulaire ci-dessous."
   },
   "back": "Retourner",
   "usage": "Conçu pour être utilisé avec ",

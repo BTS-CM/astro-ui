@@ -88,5 +88,17 @@
     "subtitle": "Check your credit deals",
     "hover1": "Monitor your active credit deals.",
     "hover2": "Manage the state of your credit deals."
+  },
+  "offers": {
+    "title": "📜 Credit offers",
+    "subtitle": "Check your credit offers",
+    "hover1": "Monitor your active credit offers.",
+    "hover2": "Manage the state of your credit offers."
+  },
+  "vesting": {
+    "title": "⌚ Vesting balances",
+    "subtitle": "View vesting balances",
+    "hover1": "Check your vesting balances.",
+    "hover2": "Claim your vested balances."
   }
 }

@@ -88,5 +88,17 @@
     "subtitle": "Vérifiez vos offres de crédit",
     "hover1": "Surveillez vos transactions de crédit actives.",
     "hover2": "Gérez l’état de vos transactions de crédit."
+  },
+  "offers": {
+    "title": "📜 Offres de crédit",
+    "subtitle": "Vérifiez vos offres de crédit",
+    "hover1": "Surveillez vos offres de crédit actives.",
+    "hover2": "Gérez l’état de vos offres de crédit."
+  },
+  "vesting": {
+    "title": "⌚ Soldes d’acquisition",
+    "subtitle": "Afficher les soldes d'acquisition",
+    "hover1": "Vérifiez vos soldes d’acquisition.",
+    "hover2": "Réclamez vos soldes acquis."
   }
 }

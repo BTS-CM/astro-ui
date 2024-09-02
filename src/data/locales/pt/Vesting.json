@@ -1,0 +1,18 @@
+{
+  "dialogContent": {
+    "header": "Retirada {{readable}}"
+  },
+  "vesting_seconds": "Segundos adquiridos",
+  "start_claim": "Iniciar reivindicação",
+  "coin_seconds_earned": "Segundos de moeda ganhos",
+  "coin_seconds_earned_last_update": "Segundos de moeda ganhos na última atualização",
+  "claim_a": "Retirar reembolso",
+  "claim_b": "Retirar parte das taxas de mercado",
+  "card": {
+    "title": "Saldos adquiridos",
+    "description": "Monitore e retire seus saldos de aquisição.",
+    "empty": "Nenhum saldo de aquisição encontrado."
+  },
+  "cashback": "Reembolso",
+  "market_fees": "Taxas de mercado"
+}

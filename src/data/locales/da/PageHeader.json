@@ -45,7 +45,9 @@
     "smartcoins": "Brug grænsefladen nedenfor til at finde et aktiv, som du kan låne",
     "stake": "Brug denne formular til at satse dine aktiver i likviditetspuljer",
     "transfer": "Brug formularen nedenfor til at overføre aktiver til andre blockchain-brugere",
-    "nodes": "Opret forbindelse til blockchain via en node efter eget valg"
+    "nodes": "Opret forbindelse til blockchain via en node efter eget valg",
+    "offers": "Overvåg og administrer dine kredittilbud med nedenstående formular.",
+    "vesting": "Overvåg og træk dine optjente saldi med nedenstående formular."
   },
   "back": "Gå tilbage",
   "usage": "Designet til brug med ",

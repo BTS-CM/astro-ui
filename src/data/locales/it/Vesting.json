@@ -1,0 +1,18 @@
+{
+  "dialogContent": {
+    "header": "Ritiro {{readable}}"
+  },
+  "vesting_seconds": "Secondi di maturazione",
+  "start_claim": "Avvia reclamo",
+  "coin_seconds_earned": "Secondi di monete guadagnati",
+  "coin_seconds_earned_last_update": "Secondi di monete guadagnati nell'ultimo aggiornamento",
+  "claim_a": "Prelevare il rimborso",
+  "claim_b": "Ritirare la quota delle commissioni di mercato",
+  "card": {
+    "title": "Saldi di maturazione",
+    "description": "Monitora e ritira i tuoi saldi di maturazione.",
+    "empty": "Nessun saldo di maturazione trovato."
+  },
+  "cashback": "Rimborso",
+  "market_fees": "Commissioni di mercato"
+}

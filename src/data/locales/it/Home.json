@@ -88,5 +88,17 @@
     "subtitle": "Controlla le tue offerte di credito",
     "hover1": "Monitora le tue operazioni di credito attive.",
     "hover2": "Gestisci lo stato dei tuoi contratti di credito."
+  },
+  "offers": {
+    "title": "📜Offerte di credito",
+    "subtitle": "Controlla le tue offerte di credito",
+    "hover1": "Monitora le tue offerte di credito attive.",
+    "hover2": "Gestisci lo stato delle tue offerte di credito."
+  },
+  "vesting": {
+    "title": "⌚ Saldi di maturazione",
+    "subtitle": "Visualizza i saldi di maturazione",
+    "hover1": "Controlla i tuoi saldi di maturazione.",
+    "hover2": "Richiedi i tuoi saldi acquisiti."
   }
 }

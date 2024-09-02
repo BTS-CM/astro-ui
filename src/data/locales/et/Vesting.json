@@ -1,0 +1,18 @@
+{
+  "dialogContent": {
+    "header": "Väljatõmbumine {{readable}}"
+  },
+  "vesting_seconds": "Sekundite omandamine",
+  "start_claim": "Alustage nõuet",
+  "coin_seconds_earned": "Teenitud mündisekundid",
+  "coin_seconds_earned_last_update": "Viimase värskenduse teenitud mündisekundid",
+  "claim_a": "Võtke raha tagasi",
+  "claim_b": "Võtta osa turutasudest välja",
+  "card": {
+    "title": "Üleandmise saldod",
+    "description": "Jälgige ja eemaldage oma üleandmise saldosid.",
+    "empty": "Üleandmisjääke ei leitud."
+  },
+  "cashback": "Raha tagasi",
+  "market_fees": "Turu tasud"
+}

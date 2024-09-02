@@ -45,7 +45,9 @@
     "smartcoins": "Utilice la siguiente interfaz para localizar un activo para pedir prestado y crearlo.",
     "stake": "Utilice este formulario para apostar sus activos en fondos de liquidez",
     "transfer": "Utilice el siguiente formulario para transferir activos a otros usuarios de blockchain",
-    "nodes": "Conéctese a la cadena de bloques a través de un nodo de su elección"
+    "nodes": "Conéctese a la cadena de bloques a través de un nodo de su elección",
+    "offers": "Monitoree y administre sus ofertas de crédito con el siguiente formulario.",
+    "vesting": "Supervise y retire sus saldos adquiridos con el siguiente formulario."
   },
   "back": "Regresa",
   "usage": "Diseñado para usar con ",

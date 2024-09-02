@@ -45,7 +45,9 @@
     "smartcoins": "Utilizza l'interfaccia sottostante per individuare un bene da prendere in prestito",
     "stake": "Utilizza questo modulo per puntare i tuoi asset in pool di liquidità",
     "transfer": "Utilizza il modulo sottostante per trasferire risorse ad altri utenti blockchain",
-    "nodes": "Connettiti alla blockchain tramite un nodo a tua scelta"
+    "nodes": "Connettiti alla blockchain tramite un nodo a tua scelta",
+    "offers": "Monitora e gestisci le tue offerte di credito con il modulo sottostante.",
+    "vesting": "Monitora e ritira i tuoi saldi di maturazione con il modulo sottostante."
   },
   "back": "Torna indietro",
   "usage": "Progettato per l'uso con ",

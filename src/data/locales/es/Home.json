@@ -88,5 +88,17 @@
     "subtitle": "Consulta tus ofertas de crédito",
     "hover1": "Supervise sus ofertas de crédito activas.",
     "hover2": "Gestiona el estado de tus operaciones crediticias."
+  },
+  "offers": {
+    "title": "📜 Ofertas de crédito",
+    "subtitle": "Consulta tus ofertas de crédito",
+    "hover1": "Monitoree sus ofertas de crédito activas.",
+    "hover2": "Gestiona el estado de tus ofertas de crédito."
+  },
+  "vesting": {
+    "title": "⌚ Saldos adquiridos",
+    "subtitle": "Ver saldos de adquisición de derechos",
+    "hover1": "Verifique sus saldos de derechos adquiridos.",
+    "hover2": "Reclame sus saldos adquiridos."
   }
 }

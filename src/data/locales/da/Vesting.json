@@ -1,0 +1,18 @@
+{
+  "dialogContent": {
+    "header": "Tilbagetrækning {{readable}}"
+  },
+  "vesting_seconds": "Optjening sekunder",
+  "start_claim": "Start krav",
+  "coin_seconds_earned": "Møntsekunder optjent",
+  "coin_seconds_earned_last_update": "Mønt sekunder optjent sidste opdatering",
+  "claim_a": "Hæv cashback",
+  "claim_b": "Træk andel af markedsgebyrer tilbage",
+  "card": {
+    "title": "Optjening af saldi",
+    "description": "Overvåg og træk dine optjente saldi.",
+    "empty": "Ingen optjeningssaldi fundet."
+  },
+  "cashback": "Cashback",
+  "market_fees": "Markedsgebyrer"
+}

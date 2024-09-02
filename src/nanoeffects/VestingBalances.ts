@@ -26,34 +26,15 @@ function getVestingBalances (chain: string, accountID: string, specificNode?: st
           console.log({ error });
         }
 
+        currentAPI.close();
+
         if (!vestingBalanceObjects) {
             console.log(`Failed to fetch vesting balances`);
-            currentAPI.close();
             reject();
             return;
         }
-
-        console.log({vestingBalanceObjects});
-
-        let vestingBalances;
-        try {
-          vestingBalances = await currentAPI.db_api().exec(
-            "get_vested_balances", [vestingBalanceObjects.map((x: any) => x.id)]
-          );
-        } catch (error) {
-          console.log({ error });
-        }
-
-        console.log({vestingBalances});
-    
-        currentAPI.close();
-    
-        if (!vestingBalances) {
-          reject(new Error("No vesting balances found"));
-          return;
-        }
-    
-        resolve({vestingBalances, vestingBalanceObjects});
+        
+        resolve(vestingBalanceObjects);
       });
 }
 
@@ -61,7 +42,7 @@ const [createVestingBalanceStore] = nanoquery({
     fetcher: async (...args: unknown[]) => {
       const chain = args[0] as string;
       const account_id = args[1] as string;
-      let specificNode = args[2] ? args[2] as string : null;
+      const specificNode = args[2] ? args[2] as string : null;
   
       let response;
       try {

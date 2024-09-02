@@ -45,7 +45,9 @@
     "smartcoins": "Kasutage laenatava vara leidmiseks allolevat liidest",
     "stake": "Kasutage seda vormi oma varade paigutamiseks likviidsusfondidesse",
     "transfer": "Kasutage allolevat vormi varade ülekandmiseks teistele plokiahela kasutajatele",
-    "nodes": "Ühendage plokiahelaga teie valitud sõlme kaudu"
+    "nodes": "Ühendage plokiahelaga teie valitud sõlme kaudu",
+    "offers": "Jälgige ja hallake oma krediidipakkumisi alloleva vormi abil.",
+    "vesting": "Jälgige ja eemaldage oma üleandmise saldosid alloleva vormi abil."
   },
   "back": "Mine tagasi",
   "usage": "Mõeldud kasutamiseks koos ",

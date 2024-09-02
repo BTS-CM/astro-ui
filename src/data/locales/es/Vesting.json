@@ -1,0 +1,18 @@
+{
+  "dialogContent": {
+    "header": "Retirándose {{readable}}"
+  },
+  "vesting_seconds": "Segundos de adquisición de derechos",
+  "start_claim": "Iniciar reclamo",
+  "coin_seconds_earned": "Segundos de monedas ganados",
+  "coin_seconds_earned_last_update": "Segundos de monedas obtenidos en la última actualización",
+  "claim_a": "Retirar reembolso",
+  "claim_b": "Retirar parte de las tarifas del mercado",
+  "card": {
+    "title": "Saldos adquiridos",
+    "description": "Supervise y retire sus saldos de derechos adquiridos.",
+    "empty": "No se encontraron saldos de adquisición de derechos."
+  },
+  "cashback": "Reembolso",
+  "market_fees": "Tarifas de mercado"
+}

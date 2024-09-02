@@ -45,7 +45,9 @@
     "smartcoins": "Use a interface abaixo para localizar um ativo para empréstimo",
     "stake": "Use este formulário para apostar seus ativos em pools de liquidez",
     "transfer": "Use o formulário abaixo para transferir ativos para outros usuários do blockchain",
-    "nodes": "Conecte-se ao blockchain através de um nó de sua escolha" 
+    "nodes": "Conecte-se ao blockchain através de um nó de sua escolha",
+    "offers": "Monitore e gerencie suas ofertas de crédito com o formulário abaixo.",
+    "vesting": "Monitore e retire seus saldos de aquisição com o formulário abaixo."
   },
   "back": "Volte",
   "usage": "Projetado para uso com ",

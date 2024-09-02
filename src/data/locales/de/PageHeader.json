@@ -45,7 +45,9 @@
     "smartcoins": "Verwenden Sie die folgende Schnittstelle, um einen Vermögenswert zu finden, den Sie leihen können",
     "stake": "Verwenden Sie dieses Formular, um Ihr Vermögen in Liquiditätspools zu verpfänden",
     "transfer": "Verwenden Sie das untenstehende Formular, um Vermögenswerte an andere Blockchain-Benutzer zu übertragen",
-    "nodes": "Verbinden Sie sich über einen Knoten Ihrer Wahl mit der Blockchain"
+    "nodes": "Verbinden Sie sich über einen Knoten Ihrer Wahl mit der Blockchain",
+    "offers": "Überwachen und verwalten Sie Ihre Kreditangebote mit dem untenstehenden Formular.",
+    "vesting": "Überwachen und heben Sie Ihr Sperrguthaben mit dem untenstehenden Formular ab."
   },
   "back": "Geh zurück",
   "usage": "Konzipiert für den Einsatz mit ",

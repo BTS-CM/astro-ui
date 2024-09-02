@@ -467,29 +467,6 @@ export default function SimpleSwap() {
             )) /
           Number(poolamountap);
       }
-      
-      /*
-      console.log({
-        calculated: {
-          poolamounta,
-          poolamountap,
-          poolamountb,
-          poolamountbp,
-          maker_market_fee_percenta,
-          maker_market_fee_percentb,
-          max_market_feea,
-          max_market_feeb,
-          taker_fee_percenta,
-          taker_market_fee_percent_a
-        },
-        inputs: {
-          foundPool,
-          assetA,
-          assetB,
-        },
-        result
-      })
-      */
 
       return result;
     }

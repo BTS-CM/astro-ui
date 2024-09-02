@@ -123,7 +123,7 @@ export default function CreditDeals(properties) {
     let unsubscribeBorrowerDeals;
 
     if (usr && usr.id) {
-      const borrowerDealsStore = createBorrowerDealsStore([usr.chain, usr.id]);
+      const borrowerDealsStore = createBorrowerDealsStore([usr.chain, usr.id, currentNode ? currentNode.url : null]);
 
       unsubscribeBorrowerDeals = borrowerDealsStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {

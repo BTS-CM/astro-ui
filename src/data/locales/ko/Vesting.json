@@ -1,0 +1,18 @@
+{
+  "dialogContent": {
+    "header": "철수 {{readable}}"
+  },
+  "vesting_seconds": "베스팅 초",
+  "start_claim": "청구 시작",
+  "coin_seconds_earned": "코인 초 획득",
+  "coin_seconds_earned_last_update": "코인 초 획득 마지막 업데이트",
+  "claim_a": "캐시백 인출",
+  "claim_b": "시장 수수료 지분 인출",
+  "card": {
+    "title": "베스팅 잔액",
+    "description": "베스팅 잔액을 모니터링하고 인출하세요.",
+    "empty": "베스팅 잔액이 없습니다."
+  },
+  "cashback": "캐시백",
+  "market_fees": "시장 수수료"
+}

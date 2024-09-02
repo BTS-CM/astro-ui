@@ -403,6 +403,10 @@ const createWindow = async () => {
 
     mainWindow.loadURL('http://localhost:8080/index.html');
 
+    mainWindow.webContents.setWindowOpenHandler(() => {
+        return { action: "deny" };
+    });
+
     tray = new electron__WEBPACK_IMPORTED_MODULE_4__.Tray(path__WEBPACK_IMPORTED_MODULE_0___default().join(__dirname, "img", "tray.png"));
     const contextMenu = electron__WEBPACK_IMPORTED_MODULE_4__.Menu.buildFromTemplate([
         {

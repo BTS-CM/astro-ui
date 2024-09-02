@@ -59,6 +59,10 @@ const createWindow = async () => {
 
     mainWindow.loadURL('http://localhost:8080/index.html');
 
+    mainWindow.webContents.setWindowOpenHandler(() => {
+        return { action: "deny" };
+    });
+
     tray = new Tray(path.join(__dirname, "img", "tray.png"));
     const contextMenu = Menu.buildFromTemplate([
         {

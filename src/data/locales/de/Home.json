@@ -88,5 +88,17 @@
     "subtitle": "Überprüfen Sie Ihre Kreditverträge",
     "hover1": "Überwachen Sie Ihre aktiven Kreditgeschäfte.",
     "hover2": "Verwalten Sie den Status Ihrer Kreditverträge."
+  },
+  "offers": {
+    "title": "📜 Kreditangebote",
+    "subtitle": "Prüfen Sie Ihre Kreditangebote",
+    "hover1": "Überwachen Sie Ihre aktiven Kreditangebote.",
+    "hover2": "Verwalten Sie den Status Ihrer Kreditangebote."
+  },
+  "vesting": {
+    "title": "⌚ Freizügigkeitsguthaben",
+    "subtitle": "Freizügigkeitsguthaben anzeigen",
+    "hover1": "Überprüfen Sie Ihre Sperrguthaben.",
+    "hover2": "Fordern Sie Ihr Freizügigkeitsguthaben an."
   }
 }

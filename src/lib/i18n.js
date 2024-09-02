@@ -9,6 +9,7 @@ const pages = [
   "AssetDropDownCard",
   "CreditOfferEditor",
   "CreditBorrow",
+  "CreditOffers",
   "CreditDeals",
   "CreditOffer",
   "CurrentUser",
@@ -40,7 +41,8 @@ const pages = [
   "Smartcoins",
   "Transfer",
   "Nodes",
-  "SimpleSwap"
+  "SimpleSwap",
+  "Vesting"
 ];
 
 const locale = persistentAtom("locale", "en");

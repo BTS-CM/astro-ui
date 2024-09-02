@@ -1,0 +1,18 @@
+{
+  "dialogContent": {
+    "header": "Rückzug {{readable}}"
+  },
+  "vesting_seconds": "Vesting-Sekunden",
+  "start_claim": "Anspruch starten",
+  "coin_seconds_earned": "Münzsekunden verdient",
+  "coin_seconds_earned_last_update": "Letztes Update verdiente Münzsekunden",
+  "claim_a": "Cashback abheben",
+  "claim_b": "Anteil der Marktgebühren abheben",
+  "card": {
+    "title": "Freizügigkeitsguthaben",
+    "description": "Überwachen Sie Ihr Sperrguthaben und ziehen Sie es ab.",
+    "empty": "Es wurden keine Restguthaben gefunden."
+  },
+  "cashback": "Cashback",
+  "market_fees": "Marktgebühren"
+}
