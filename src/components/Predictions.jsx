@@ -813,17 +813,15 @@ export default function Predictions(properties) {
                                         headerText={t(`Predictions:dialogContent.header_issue`)}
                                         trxJSON={[{
                                           funding_account: usr.id,
-                                          /*
                                           delta_collateral: {
                                             amount: blockchainFloat(existingCollateral + issueAmount, res.precision),
                                             asset_id: res.id
                                           },
                                           delta_debt: {
-                                            amount: blockchainFloat(existingCollateral + issueAmount, res.backingAsset.precision),
-                                            asset_id: res.backingAsset.id
+                                            amount: blockchainFloat(existingCollateral + issueAmount, _backingPrecision),
+                                            asset_id: _backingAssetID
                                           },
-                                          extensions: []
-                                          */
+                                          extensions: {}
                                         }]}
                                       />
                                     : null
@@ -1048,7 +1046,7 @@ export default function Predictions(properties) {
                                         },
                                         expiration: expiry,
                                         fill_or_kill: expiryType === "fkill" ? true : false,
-                                        extensions: []
+                                        extensions: {}
                                       }]}
                                     />
                                   : null
@@ -1288,7 +1286,7 @@ export default function Predictions(properties) {
                                           },
                                           expiration: expiry,
                                           fill_or_kill: expiryType === "fkill" ? true : false,
-                                          extensions: []
+                                          extensions: {}
                                         }]}
                                       />
                                     : null
@@ -1407,7 +1405,7 @@ export default function Predictions(properties) {
                                             amount: blockchainFloat(claimAmount, res.precision).toFixed(0),
                                             asset_id: res.id
                                           },
-                                          extensions: []
+                                          extensions: {}
                                         }]}
                                       />
                                     : null
@@ -1543,7 +1541,7 @@ export default function Predictions(properties) {
                                                   asset_id: _backingAssetID
                                                 }
                                               },
-                                              extensions: []
+                                              extensions: {}
                                             }]}
                                           />
                                         : null
@@ -1670,7 +1668,7 @@ export default function Predictions(properties) {
                                               asset_to_update: res.id,
                                               new_feed_producers: priceFeeders.map((_usr) => _usr.id),
                                             },
-                                            extensions: []
+                                            extensions: {}
                                           }]}
                                         />
                                       : null
@@ -1911,7 +1909,7 @@ export default function Predictions(properties) {
                   },
                   expiration: expiry,
                   fill_or_kill: false,
-                  extensions: []
+                  extensions: {}
                 }]}
               />
             : null
