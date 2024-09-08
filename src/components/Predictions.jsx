@@ -456,18 +456,18 @@ export default function Predictions(properties) {
         <div style={{ ...style }} key={`acard-${res.id}`}>
           <Card className="ml-2 mr-2 mt-1">
             <CardHeader className="pb-3 pt-3">
-              <span className="grid grid-cols-12">
-                <span className="col-span-1">
+              <span className="flex items-center w-full">
+                <span className="flex-shrink-0">
                   <Avatar
                     size={40} name={res.name} extra="Borrower"
                     expression={{ eye: "normal", mouth: "open" }}
                     colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]}
                   />
                 </span>
-                <span className="col-span-10 ml-3">
+                <span className="flex-grow ml-3">
                     #{index + 1}: {res.name} ({res.id})
                 </span>
-                <span className="col-span-1">
+                <span className="flex-shrink-0">
                   <Button
                       variant="outline"
                       className="mr-2"
@@ -1618,9 +1618,7 @@ export default function Predictions(properties) {
                                                 </DialogHeader>
                                                 <AccountSearch
                                                     chain={usr && usr.chain ? usr.chain : "bitshares"}
-                                                    excludedUsers={
-                                                        usr && usr.username && usr.username.length ? [usr] : []
-                                                    }
+                                                    excludedUsers={[]}
                                                     setChosenAccount={(_account) => {
                                                         if (
                                                             _account &&
@@ -1662,13 +1660,8 @@ export default function Predictions(properties) {
                                           headerText={t(`Predictions:dialogContent.header_pricefeeder`)}
                                           trxJSON={[{
                                             issuer: usr.id,
-                                            asset_to_settle: res.id,
-                                            settle_price: {
-                                              issuer: usr.id,
-                                              asset_to_update: res.id,
-                                              new_feed_producers: priceFeeders.map((_usr) => _usr.id),
-                                            },
-                                            extensions: {}
+                                            asset_to_update: res.id,
+                                            new_feed_producers: priceFeeders.map((_usr) => _usr.id),
                                           }]}
                                         />
                                       : null
