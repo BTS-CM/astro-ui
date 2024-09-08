@@ -1,0 +1,156 @@
+{
+  "dialogContent": {
+    "headerText": "Erstellen des folgenden Prognosemarkt-Assets: {{symbol}}"
+  },
+  "card": {
+    "title": "Formular zur Erstellung von Prognosemarkt-Assets",
+    "description": "Erstellen Sie ein neues Prognosemarkt-Asset, indem Sie das folgende Formular ausfüllen."
+  },
+  "asset_details": {
+    "title": "Asset-Details",
+    "title_content": "Dies sind die Asset-Einstellungen, die für die DEX-Kernfunktionalität verwendet werden.",
+    "symbol": {
+      "header": "Vermögenssymbol",
+      "header_content": "Das Asset-Symbol ist eine eindeutige Kennung auf der Blockchain, die den Asset im gesamten DEX identifiziert. ",
+      "placeholder": "Symbol"
+    },
+    "shortName": {
+      "header": "Kurzname des Assets",
+      "header_content": "Dies ist der Kurzname des Assets, der weniger wichtig ist als das Symbol, aber dennoch eine optionale verkürzte eindeutige Kennung ist. ",
+      "placeholder": "Kurzname"
+    },
+    "description": {
+      "header": "Beschreibung des Vermögenswerts",
+      "header_content": "Dies ist die Beschreibung des Vermögenswerts. Sie wird im DEX angezeigt und kann verwendet werden, um weitere Informationen über den Vermögenswert bereitzustellen.",
+      "placeholder": "Beschreibung"
+    },
+    "max_supply": {
+      "header": "Maximale Versorgung",
+      "header_content": "Das maximale Angebot des Vermögenswerts ist der Gesamtbetrag des Vermögenswerts, der jemals von Kreditnehmern geschaffen werden kann, während der prognostizierte Marktwert aktiv ist.",
+      "placeholder": "Maximaler Vorrat"
+    },
+    "precision": {
+      "header": "Asset-Präzision",
+      "header_content": "Die Genauigkeit des Assets gibt die Anzahl der unterstützten Dezimalstellen an.",
+      "placeholder": "Präzision"
+    }
+  },
+  "pma": {
+    "title": "Details zum prognostizierten Marktvermögen",
+    "title_content": "Dies sind die Asset-Einstellungen, die für das prognostizierte Markt-Asset verwendet werden.",
+    "condition": {
+      "header": "Zustand",
+      "header_content": "Geben Sie hier die prognostizierten Details zum Marktvermögen an",
+      "placeholder": "Vorhersagebedingungen"
+    },
+    "commission": {
+      "header": "Provision (%)",
+      "header_content": "Die Provision ist die Gebühr, die das Haus für die Erstellung und Bewertung des prognostizierten Marktwerts erhebt.",
+      "placeholder": "Kommission"
+    },
+    "backing_asset": {
+      "header": "Sicherungsvermögenswert",
+      "header_content": "Der Sicherungswert ist der Vermögenswert, der zur Sicherung des prognostizierten Marktwerts verwendet wird. "
+    },
+    "resolution": {
+      "header": "Datum und Uhrzeit der Vorhersageauflösung",
+      "header_content": "Das Auflösungsdatum und die Auflösungszeit sind das Datum und die Uhrzeit, zu denen das prognostizierte Marktvermögenswert aufgelöst wird. "
+    }
+  },
+  "permissions": {
+    "header": "Berechtigungen des Assets",
+    "header_content": "Hinweis: Das Deaktivieren von Berechtigungen ist eine dauerhafte Entscheidung",
+    "charge_market_fee": {
+      "allowedText": "Erlaubte Marktgebühren (charge_market_fee)",
+      "disabledText": "Marktgebühren deaktiviert"
+    },
+    "white_list": {
+      "allowedText": "Weiße Liste erlaubt (white_list)",
+      "disabledText": "Weiße Liste deaktiviert"
+    },
+    "override_authority": {
+      "allowedText": "Überschreibungsberechtigung zulässig (override_authority)",
+      "disabledText": "Außerkraftsetzungsberechtigung deaktiviert"
+    },
+    "transfer_restricted": {
+      "allowedText": "Übertragung eingeschränkt erlaubt (transfer_restricted)",
+      "disabledText": "Übertragung eingeschränkt deaktiviert"
+    },
+    "disable_confidential": {
+      "allowedText": "Vertraulich deaktivieren erlaubt (disable_confidential)",
+      "disabledText": "Vertraulich deaktivieren deaktiviert"
+    },
+    "witness_fed_asset": {
+      "allowedText": "Zeugenbefragung erlaubt",
+      "disabledText": "Zeugen-Feed-Aktivierung deaktiviert"
+    },
+    "committee_fed_asset": {
+      "allowedText": "Vom Ausschuss gespeistes Vermögen erlaubt",
+      "disabledText": "Ausschuss fütterte Vermögenswert deaktiviert"
+    }
+  },
+  "flags": {
+    "header": "Flaggen des Assets",
+    "header_content": "Jede zulässige Asset-Berechtigung kann ein-/ausgeschaltet werden.",
+    "charge_market_fee": {
+      "allowedText": "Marktgebühren aktiviert",
+      "disabledText": "Marktgebühren deaktiviert"
+    },
+    "white_list": {
+      "allowedText": "Weiße Liste aktiviert",
+      "disabledText": "Weiße Liste deaktiviert"
+    },
+    "override_authority": {
+      "allowedText": "Außerkraftsetzungsberechtigung aktiviert",
+      "disabledText": "Außerkraftsetzungsberechtigung deaktiviert"
+    },
+    "transfer_restricted": {
+      "allowedText": "Übertragungsbeschränkung aktiviert",
+      "disabledText": "Übertragung eingeschränkt deaktiviert"
+    },
+    "disable_confidential": {
+      "allowedText": "Vertraulich deaktivieren aktiviert",
+      "disabledText": "Vertraulich deaktivieren deaktiviert"
+    },
+    "witness_fed_asset": {
+      "allowedText": "Zeugen-Feed-Asset aktiviert",
+      "disabledText": "Zeugen-Feed-Aktivierung deaktiviert"
+    },
+    "committee_fed_asset": {
+      "allowedText": "Vom Ausschuss gespeistes Vermögen aktiviert",
+      "disabledText": "Ausschuss fütterte Vermögenswert deaktiviert"
+    }
+  },
+  "buttons": {
+    "submit": "Einreichen"
+  },
+  "risks": {
+    "1": "Eine Fehlkonfiguration der Prognosemarkt-Assets kann zu einer schlechten Blockchain-Teilnahme führen. Einige Benutzeroberflächen filtern Ihren PMA möglicherweise vollständig aus der Ansicht. ",
+    "2": "Wenn Sie einen prognostizierten Marktwert erstellen, sind Sie als Haus dafür verantwortlich, das Ergebnis richtig zu bewerten. Wenn Sie dies nicht ordnungsgemäß oder nicht rechtzeitig tun, kann dies zu rechtlichen oder steuerlichen Problemen für Sie führen, zusätzlich zum Verlust der Glaubwürdigkeit als Haus.",
+    "3": "Diese Benutzeroberfläche und die Beet/BEETEOS-Wallets unterstützen keine Multi-Signatur-Konten, daher ist Ihr Hauskonto langfristig ein Single Point of Failure – schützen Sie es gut.",
+    "title": "Einige der Risiken, die mit der Erstellung von Prognosemarkt-Assets verbunden sind",
+    "description": "Machen Sie Ihre eigenen Recherchen, bevor Sie eine PMA erstellen. Lesen Sie zuerst die Dokumente. "
+  },
+  "extensions": {
+    "header_content": "Bei den Erweiterungen handelt es sich um zusätzliche erweiterte Einstellungen, mit denen das Asset weiter angepasst werden kann.",
+    "header": "Prognosemarkt-Asset-Erweiterungen",
+    "reward_percent": {
+      "enabled": "Erweiterung des Referrer-Belohnungsprozentsatzes aktiviert",
+      "disabled": "Erweiterung des Empfehlungsprämienprozentsatzes aktivieren?",
+      "header": "Prozentsatz der Referrer-Belohnung",
+      "header_content": "Der Empfehlungsprämienprozentsatz ist der Prozentsatz der Provision, der dem Empfehlungsgeber aktiver Marktteilnehmer zugewiesen wird."
+    },
+    "whitelist_market_fee_sharing": {
+      "enabled": "Erweiterung zur Aufteilung der Marktgebühren auf die Whitelist aktiviert",
+      "disabled": "Aktivieren Sie die Whitelist-Marktgebührenteilungserweiterung?",
+      "header": "Aufteilung der Marktgebühren auf die Whitelist",
+      "header_content": "Die Gebührenteilungserweiterung für den Whitelist-Markt ermöglicht es dem Haus, Referrer auf diese Konten auf der Whitelist zu beschränken."
+    },
+    "taker_fee_percent": {
+      "enabled": "Erweiterung des Taker-Gebühr-Prozentsatzes aktiviert",
+      "disabled": "Erweiterung des Prozentsatzes der Abnehmergebühr aktivieren?",
+      "header": "Prozentsatz der Abnehmergebühr",
+      "header_content": "Der Prozentsatz der Abnehmergebühr ist der Prozentsatz der Provision, der dem „Abnehmer“ des prognostizierten Marktwerts zugewiesen wird."
+    }
+  }
+}

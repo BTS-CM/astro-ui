@@ -9,5 +9,6 @@
   "search": "Otsige vara",
   "issued": "Välja andnud {{user}}",
   "search2": "Otsi",
-  "favourites": "Lemmikud"
+  "favourites": "Lemmikud",
+  "backingType": "Valige uus tugivara"
 }

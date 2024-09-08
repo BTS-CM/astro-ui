@@ -15,7 +15,7 @@ const getAllAssetData = async (chain) => {
     return;
   }
 
-  let objectIds = Array.from({ length: maxObjectID }, (_, i) => `1.3.${i}`);
+  let objectIds = Array.from({ length: maxObjectID + 1 }, (_, i) => `1.3.${i}`);
 
   let existingAssetFile;
   try {
@@ -66,6 +66,13 @@ const getAllAssetData = async (chain) => {
         max_supply: asset.options.max_supply,
       };
 
+      /*
+        prediction_market: asset.options.description.includes("expiry")
+                        && asset.options.description.includes("condition")
+                        && asset.options.description.includes("market")
+                        && asset.bitasset_data_id
+      */
+
       if (asset.bitasset_data_id) {
         mappedResponse.bitasset_data_id = asset.bitasset_data_id;
       }
@@ -91,15 +98,19 @@ const main = async () => {
     if (allData) {
       writeToFile(allData, chain, "allAssets");
       const minimumAssetInfo = allData.map((asset) => {
-        return {
+        const _data = {
           id: asset.id.replace("1.3.", ""),
           s: asset.symbol,
           p: asset.precision,
           i: asset.issuer.replace("1.2.", ""),
           mfp: asset.market_fee_percent,
           mmf: asset.max_market_fee,
-          ms: asset.max_supply,
+          ms: asset.max_supply
         };
+        if (asset.bitasset_data_id) {
+          _data.bdi = asset.bitasset_data_id.replace("2.4.", "");
+        }
+        return _data;
       });
       writeToFile(minimumAssetInfo, chain, "minAssets", false);
     }

@@ -1,4 +1,5 @@
 {
+  "assetCreation": "Oprettelse af aktiver",
   "welcomeMessage": "Velkommen til ",
   "uiName": "Bitshares Beet Astro UI",
   "commandSearchPlaceholder": "Skriv en kommando eller søg...",
@@ -47,7 +48,8 @@
     "transfer": "Brug formularen nedenfor til at overføre aktiver til andre blockchain-brugere",
     "nodes": "Opret forbindelse til blockchain via en node efter eget valg",
     "offers": "Overvåg og administrer dine kredittilbud med nedenstående formular.",
-    "vesting": "Overvåg og træk dine optjente saldi med nedenstående formular."
+    "vesting": "Overvåg og træk dine optjente saldi med nedenstående formular.",
+    "predictions": "Find et forudsigelsesmarkedsaktiv nedenfor for at spille på."
   },
   "back": "Gå tilbage",
   "usage": "Designet til brug med ",

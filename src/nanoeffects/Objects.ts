@@ -69,7 +69,9 @@ const [createEveryObjectStore] = nanoquery({
     const chain = args[0] as string;
     const space_id = args[1] as number;
     const type_id = args[2] as number;
-    let specificNode = args[3] ? (args[3] as string) : null;
+    const last_known_id = args[3] ? (args[3] as number) : 0; // for fetching non-cached latest objects
+
+    let specificNode = args[4] ? (args[4] as string) : null;
 
     let node = specificNode ? specificNode : (chains as any)[chain].nodeList[0].url;
 
@@ -95,7 +97,14 @@ const [createEveryObjectStore] = nanoquery({
 
     const maxObjectID = parseInt(nextObjectId.split(".")[2]) - 1;
 
-    let objectIds = Array.from({ length: maxObjectID }, (_, i) => `${space_id}.${type_id}.${i}`);
+    if (last_known_id === maxObjectID) {
+      return []; // nothing to fetch...
+    }
+
+    // if last_known_id < maxObjectID, fetch the latest objects
+    let objectIds = last_known_id > 0 && last_known_id < maxObjectID 
+                      ? Array.from({ length: maxObjectID - last_known_id }, (_, i) => `${space_id}.${type_id}.${last_known_id + i + 1}`) 
+                      : Array.from({ length: maxObjectID }, (_, i) => `${space_id}.${type_id}.${i}`);
 
     let response;
     try {

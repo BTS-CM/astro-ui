@@ -8,6 +8,7 @@ type Asset = {
   market_fee_percent: number;
   max_market_fee: string;
   max_supply: string;
+  prediction_market: boolean;
 };
 
 type BitassetData = {
@@ -60,6 +61,7 @@ function mappedAssets(data: any) {
       market_fee_percent: _asset.mfp,
       max_market_fee: _asset.mmf,
       max_supply: _asset.ms,
+      prediction_market: _asset.pm || false,
     };
   });
 }

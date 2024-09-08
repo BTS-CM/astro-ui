@@ -9,5 +9,6 @@
   "search": "Suchen Sie nach einem Vermögenswert",
   "issued": "Ausgestellt von {{user}}",
   "search2": "Suchen",
-  "favourites": "Favoriten"
+  "favourites": "Favoriten",
+  "backingType": "Bitte wählen Sie ein neues Backing-Asset aus"
 }

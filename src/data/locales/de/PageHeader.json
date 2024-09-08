@@ -1,4 +1,5 @@
 {
+  "assetCreation": "Vermögenserstellung",
   "welcomeMessage": "Willkommen zu ",
   "uiName": "Bitshares Beet Astro-Benutzeroberfläche",
   "commandSearchPlaceholder": "Geben Sie einen Befehl ein oder suchen Sie...",
@@ -47,7 +48,9 @@
     "transfer": "Verwenden Sie das untenstehende Formular, um Vermögenswerte an andere Blockchain-Benutzer zu übertragen",
     "nodes": "Verbinden Sie sich über einen Knoten Ihrer Wahl mit der Blockchain",
     "offers": "Überwachen und verwalten Sie Ihre Kreditangebote mit dem untenstehenden Formular.",
-    "vesting": "Überwachen und heben Sie Ihr Sperrguthaben mit dem untenstehenden Formular ab."
+    "vesting": "Überwachen und heben Sie Ihr Sperrguthaben mit dem untenstehenden Formular ab.",
+    "create_prediction": "Verwenden Sie das folgende Formular, um ein Prognosemarkt-Asset zu erstellen.",
+    "predictions": "Suchen Sie unten nach einem Prognosemarkt-Asset, auf das Sie wetten können."
   },
   "back": "Geh zurück",
   "usage": "Konzipiert für den Einsatz mit ",

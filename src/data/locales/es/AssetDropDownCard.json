@@ -9,5 +9,6 @@
   "search": "Buscar un activo",
   "issued": "Expedido por {{user}}",
   "search2": "Buscar",
-  "favourites": "Favoritos"
+  "favourites": "Favoritos",
+  "backingType": "Seleccione un nuevo recurso de respaldo"
 }

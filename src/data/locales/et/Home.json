@@ -100,5 +100,19 @@
     "subtitle": "Vaadake üleandmise saldosid",
     "hover1": "Kontrollige oma üleandmisjääke.",
     "hover2": "Nõudke oma kontojääke."
+  },
+  "create_prediction": {
+    "title": "🔮 Loo ennustus",
+    "subtitle": "Tehke panus ükskõik mille kohta",
+    "hover1": "Tehke panuseid sõna otseses mõttes kõige kohta.",
+    "hover2": "Olge kihlveovahendaja ja määrake oma vahendustasu.",
+    "hover3": "Võimalikud on nii lühi- kui ka pikaajalised panused."
+  },
+  "prediction_markets": {
+    "title": "🎲 Ennustused",
+    "subtitle": "Mängige peaaegu kõigega",
+    "hover1": "Sirvige saadaolevaid ennustusturu varasid.",
+    "hover2": "Ennustusturgudel võib olla ükskõik mida.",
+    "hover3": "Igal ennustusturu varal on ainulaadne tasu."
   }
 }

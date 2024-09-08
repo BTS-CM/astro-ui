@@ -158,8 +158,8 @@ export default function AssetDropDown(properties) {
     >
       <DialogTrigger asChild>
         <Button
-          variant={type === "base" ? "outline" : "primary"}
-          className={`${size && size === "small" ? "h-7 " : ""}p-3 ${type === "quote" ? "bg-black hover:bg-gray-700 text-white" : ""} hover:shadow-xl`}
+          variant={type === "base" || type === "backing" ? "outline" : "primary"}
+          className={`${size && size === "small" ? "h-7 " : ""}p-3 ${type === "quote" ? "bg-black hover:bg-gray-700 text-white" : ""} hover:shadow-lg`}
           onClick={() => setDialogOpen(true)}
         >
           {!assetSymbol ? t("AssetDropDownCard:select") : null}
@@ -200,6 +200,7 @@ export default function AssetDropDown(properties) {
                   {!type ? t("AssetDropDownCard:noType") : null}
                   {type && type === "base" ? t("AssetDropDownCard:baseType") : null}
                   {type && type === "quote" ? t("AssetDropDownCard:quoteType") : null}
+                  {type && type === "backing" ? t("AssetDropDownCard:backingType") : null}
                 </h4>
                 <Input
                   name="assetSearch"
@@ -226,6 +227,7 @@ export default function AssetDropDown(properties) {
                   {!type ? t("AssetDropDownCard:noType") : null}
                   {type && type === "base" ? t("AssetDropDownCard:baseType") : null}
                   {type && type === "quote" ? t("AssetDropDownCard:quoteType") : null}
+                  {type && type === "backing" ? t("AssetDropDownCard:backingType") : null}
                 </h4>
                 {relevantAssets && relevantAssets.length ? (
                   <>

@@ -2,6 +2,6 @@
     "card": {
         "title": "📜 Check your credit offers",
         "description": "From here you can monitor your active credit offers and manage their settings.",
-        "noResults": "No active credit deals found."
+        "noResults": "No active credit offers found."
     }
 }

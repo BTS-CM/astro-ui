@@ -9,5 +9,6 @@
   "search": "자산 검색",
   "issued": "발행자 {{user}}",
   "search2": "찾다",
-  "favourites": "즐겨찾기"
+  "favourites": "즐겨찾기",
+  "backingType": "새 지원 자산을 선택하세요."
 }

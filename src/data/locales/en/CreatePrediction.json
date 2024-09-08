@@ -1,0 +1,164 @@
+{
+    "dialogContent": {
+        "headerText": "Creating the following prediction market asset: {{symbol}}"
+    },
+    "card": {
+        "title": "Prediction Market Asset creation form",
+        "description": "Create a new Prediction Market Asset by filling out the form below."
+    },
+    "asset_details": {
+        "title": "Asset Details",
+        "title_content": "These are the asset settings used for core DEX functionality.",
+        "symbol": {
+            "header": "Asset symbol",
+            "header_content": "The asset symbol is an unique identifier on the blockchain identifiying the asset throughout the DEX. Cheaper assets can be created by using a subasset name like NFT.TITLE",
+            "placeholder": "Symbol"
+        },
+        "shortName": {
+            "header": "Asset short name",
+            "header_content": "This is the short name of the asset, less important than the symbol but still am optionally shortened unique identifier. You can just re-use the symbol for this field.",
+            "placeholder": "Short Name"
+        },
+        "description": {
+            "header": "Asset description",
+            "header_content": "This is the description of the asset, it will be displayed in the DEX and can be used to provide more information about the asset.",
+            "placeholder": "Description"
+        },
+        "max_supply": {
+            "header": "Maximum supply",
+            "header_content": "The maximum supply of the asset, this is the total amount of the asset that can ever be created by borrowers whilst the prediction market asset is active.",
+            "placeholder": "Max supply"
+        },
+        "precision": {
+            "header": "Asset precision",
+            "header_content": "The precision of the asset specifies the quantity of supported decimal places.",
+            "placeholder": "Precision"
+        }
+    },
+    "pma": {
+        "title": "Prediction Market Asset Details",
+        "title_content": "These are the asset settings used for the prediction market asset.",
+        "condition": {
+            "header": "Condition",
+            "header_content": "Provide the prediction market asset details here",
+            "placeholder": "Prediction conditions"
+        },
+        "commission": {
+            "header": "Commission (%)",
+            "header_content": "The commission is the fee which the house takes for creating and evaluating the prediction market asset.",
+            "placeholder": "Commission"
+        },
+        "backing_asset": {
+            "header": "Backing asset",
+            "header_content": "The backing asset is the asset that is used to back the prediction market asset. This asset will be used to pay out the winners of the prediction market asset."
+        },
+        "resolution": {
+            "header": "Prediction resolution date & time",
+            "header_content": "The resolution date and time is the date and time at which the prediction market asset will be resolved. This is the date and time at which the prediction market asset will be evaluated and the winners will be paid out."
+        }
+    },
+    "permissions": {
+        "header": "Asset's permissions",
+        "header_content": "Note: Disabling permissions is a permanent decision",
+        "charge_market_fee": {
+            "allowedText": "Market fees allowed (charge_market_fee)",
+            "disabledText": "Market fees disabled"
+        },
+        "white_list": {
+            "allowedText": "White list allowed (white_list)",
+            "disabledText": "White list disabled"
+        },
+        "override_authority": {
+            "allowedText": "Override authority allowed (override_authority)",
+            "disabledText": "Override authority disabled"
+        },
+        "transfer_restricted": {
+            "allowedText": "Transfer restricted allowed (transfer_restricted)",
+            "disabledText": "Transfer restricted disabled"
+        },
+        "disable_confidential": {
+            "allowedText": "Disable confidential allowed (disable_confidential)",
+            "disabledText": "Disable confidential disabled"
+        },
+        "witness_fed_asset": {
+            "allowedText": "Witness fed asset allowed",
+            "disabledText": "Witness fed asset disabled"
+        },
+        "committee_fed_asset": {
+            "allowedText": "Committee fed asset allowed",
+            "disabledText": "Committee fed asset disabled"
+        }
+    },
+    "flags": {
+        "header": "Asset's flags",
+        "header_content": "Each allowed asset permission can be toggled on/off.",
+        "charge_market_fee": {
+            "allowedText": "Market fees enabled",
+            "disabledText": "Market fees disabled"
+        },
+        "white_list": {
+            "allowedText": "White list enabled",
+            "disabledText": "White list disabled"
+        },
+        "override_authority": {
+            "allowedText": "Override authority enabled",
+            "disabledText": "Override authority disabled"
+        },
+        "transfer_restricted": {
+            "allowedText": "Transfer restricted enabled",
+            "disabledText": "Transfer restricted disabled"
+        },
+        "disable_confidential": {
+            "allowedText": "Disable confidential enabled",
+            "disabledText": "Disable confidential disabled"
+        },
+        "witness_fed_asset": {
+            "allowedText": "Witness fed asset enabled",
+            "disabledText": "Witness fed asset disabled"
+        },
+        "committee_fed_asset": {
+            "allowedText": "Committee fed asset enabled",
+            "disabledText": "Committee fed asset disabled"
+        }
+    },
+    "buttons": {
+        "submit": "Submit"
+    },
+    "risks": {
+      "title": "Some of the risks associated with creating prediction market assets",
+      "description": "Do your own research prior to creating a PMA, read the docs first; not legal advice.",
+      "1": "Misconfiguration of prediction market assets can lead to poor blockchain participation, some user interfaces may filter your PMA entirely from view; make sure to correctly configure your PMA, set a reasonable commission fee and try the functionality out on testnet first.",
+      "2": "When you create a prediction market asset you are responsible as the house to properly evaluate the outcome, failure to do so properly or within a timely manner could lead to legal or fiscal issues for you ontop of loss of credibility as a house.",
+      "3": "This user interface and the Beet/BEETEOS wallets do not support multi-signature accounts, so your house account is a long term single point of failure - protect it well."
+    },
+    "extensions": {
+        "header_content": "The extensions are additional advanced settings that can be used to further customize the asset.",
+        "header": "Prediction Market Asset Extensions",
+        "reward_percent": {
+            "enabled": "Referrer reward percentage extension enabled",
+            "disabled": "Enable the referrer reward percentage extension?",
+            "header": "Referrer reward percentage",
+            "header_content": "The referrer reward percentage is the percentage of the commission which is allocated to the referrer of active market participants."
+        },
+        "whitelist_market_fee_sharing": {
+            "enabled": "Whitelist market fee sharing extension enabled",
+            "disabled": "Enable the whitelist market fee sharing extension?",
+            "header": "Whitelist market fee sharing",
+            "header_content": "The whitelist market fee sharing extension allows the house to limit referrers to these whitelisted accounts."
+        },
+        "taker_fee_percent": {
+            "enabled": "Taker fee percentage extension enabled",
+            "disabled": "Enable the taker fee percentage extension?",
+            "header": "Taker fee percentage",
+            "header_content": "The taker fee percentage is the percentage of the commission which is allocated to the 'taker' of the prediction market asset."
+        }
+    },
+    "whitelist": {
+        "header_content": "The asset whitelist authorities are accounts who can contribute their account's whistelisted accounts list to authorize interaction with this access.", 
+        "header": "Asset Whitelist authorities"
+    },
+    "blacklist": {
+        "header_content": "The asset blacklist authorities are accounts who can contribute their account's blacklisted accounts list to enforce a banned account list preventing interaction with this access.",
+        "header": "Asset blacklist authorities"
+    }
+}

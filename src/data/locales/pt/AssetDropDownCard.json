@@ -9,5 +9,6 @@
   "search": "Procure um ativo",
   "issued": "Emitida pela {{user}}",
   "search2": "찾다",
-  "favourites": "즐겨찾기"
+  "favourites": "즐겨찾기",
+  "backingType": "Selecione um novo ativo de garantia"
 }

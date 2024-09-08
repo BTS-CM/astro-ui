@@ -100,5 +100,19 @@
     "subtitle": "Ver saldos de adquisición de derechos",
     "hover1": "Verifique sus saldos de derechos adquiridos.",
     "hover2": "Reclame sus saldos adquiridos."
+  },
+  "create_prediction": {
+    "title": "🔮 Crear predicción",
+    "subtitle": "Crea una apuesta sobre cualquier cosa.",
+    "hover1": "Crea apuestas sobre literalmente cualquier cosa.",
+    "hover2": "Sea el corredor de apuestas y establezca su propia comisión.",
+    "hover3": "Son posibles apuestas tanto a corto como a largo plazo."
+  },
+  "prediction_markets": {
+    "title": "🎲 Predicciones",
+    "subtitle": "Apuesta por casi cualquier cosa",
+    "hover1": "Explore los activos del mercado de predicción disponibles.",
+    "hover2": "Los mercados de predicción pueden tratar sobre cualquier cosa.",
+    "hover3": "Cada activo del mercado de predicción tiene una tarifa única."
   }
 }

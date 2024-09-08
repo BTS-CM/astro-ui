@@ -9,5 +9,6 @@
   "search": "Søg efter et aktiv",
   "issued": "Udstedt af {{user}}",
   "search2": "Søge",
-  "favourites": "Favoritter"
+  "favourites": "Favoritter",
+  "backingType": "Vælg venligst et nyt støtteaktiv"
 }

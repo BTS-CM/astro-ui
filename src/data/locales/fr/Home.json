@@ -100,5 +100,19 @@
     "subtitle": "Afficher les soldes d'acquisition",
     "hover1": "Vérifiez vos soldes d’acquisition.",
     "hover2": "Réclamez vos soldes acquis."
+  },
+  "create_prediction": {
+    "title": "🔮 Créer une prédiction",
+    "subtitle": "Créer un pari sur n'importe quoi",
+    "hover1": "Créez des paris sur littéralement n'importe quoi.",
+    "hover2": "Soyez le bookmaker et fixez votre propre commission.",
+    "hover3": "Les paris à court et à long terme sont possibles."
+  },
+  "prediction_markets": {
+    "title": "🎲 Prédictions",
+    "subtitle": "Pariez sur presque tout",
+    "hover1": "Parcourez les actifs du marché de prédiction disponibles.",
+    "hover2": "Les marchés de prédiction peuvent concerner n’importe quoi.",
+    "hover3": "Chaque actif du marché de prédiction a des frais uniques."
   }
 }

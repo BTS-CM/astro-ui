@@ -12,26 +12,36 @@ function writeToFile(data, chain, fileName, prettyPrint = true) {
 const main = async () => {
   for (const chain of ["bitshares", "bitshares_testnet"]) {
     const allData = JSON.parse(fs.readFileSync(`./src/data/${chain}/allAssets.json`));
+    const minAssets = JSON.parse(fs.readFileSync(`./src/data/${chain}/minAssets.json`));
 
-    // Filter the assets
-    const filteredAssets = allData.filter(
-      (asset) => asset.bitasset_data_id && !asset.is_prediction_market // &&
-      //asset.market_fee_percent < 20
-    );
-
-    // Get the objectIds from the filtered assets
+    const filteredAssets = allData.filter((asset) => asset.bitasset_data_id);
     const objectIds = filteredAssets.map((asset) => asset.bitasset_data_id);
 
-    let assetData;
+    let finalBitassetData;
     try {
-      assetData = await getObjects(chain, objectIds);
+      finalBitassetData = await getObjects(chain, objectIds);
     } catch (error) {
       console.log(error);
       return;
     }
 
-    let finalBitassetData = assetData.filter((asset) => asset.feeds.length > 0);
     writeToFile(finalBitassetData, chain, "bitassetData");
+
+    finalBitassetData.forEach((bitasset) => {
+      if (bitasset.is_prediction_market && bitasset.is_prediction_market === true) {
+        const matchingAsset = allData.find((asset) => asset.bitasset_data_id === bitasset.id);
+        if (matchingAsset) {
+          matchingAsset.prediction_market = true;
+        }
+        const matchingMinAsset = minAssets.find((asset) => `2.4.${asset.bdi}` === bitasset.id);
+        if (matchingMinAsset) {
+          matchingMinAsset.pm = true;
+        }
+      }
+    });
+
+    writeToFile(allData, chain, "allAssets");
+    writeToFile(minAssets, chain, "minAssets");
 
     const assetIssuers = JSON.parse(fs.readFileSync(`./src/data/${chain}/assetIssuers.json`));
 

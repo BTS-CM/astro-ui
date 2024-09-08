@@ -100,5 +100,19 @@
     "subtitle": "Ver saldos de aquisição",
     "hover1": "Verifique seus saldos de aquisição.",
     "hover2": "Reivindique seus saldos adquiridos."
+  },
+  "create_prediction": {
+    "title": "🔮 Criar previsão",
+    "subtitle": "Crie uma aposta sobre qualquer coisa",
+    "hover1": "Crie apostas sobre literalmente qualquer coisa.",
+    "hover2": "Seja o agenciador de apostas e defina sua própria comissão.",
+    "hover3": "São possíveis apostas de curto e longo prazo."
+  },
+  "prediction_markets": {
+    "title": "🎲 Previsões",
+    "subtitle": "Aposte em quase tudo",
+    "hover1": "Navegue pelos ativos de mercado de previsão disponíveis.",
+    "hover2": "Os mercados de previsão podem ser sobre qualquer coisa.",
+    "hover3": "Cada ativo de mercado de previsão possui uma taxa exclusiva."
   }
 }

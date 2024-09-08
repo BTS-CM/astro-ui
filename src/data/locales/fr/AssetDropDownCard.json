@@ -9,5 +9,6 @@
   "search": "Rechercher un bien",
   "issued": "Délivré par {{user}}",
   "search2": "Recherche",
-  "favourites": "Favoris"
+  "favourites": "Favoris",
+  "backingType": "Veuillez sélectionner un nouvel actif de support"
 }

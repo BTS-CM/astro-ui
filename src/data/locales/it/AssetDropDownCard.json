@@ -9,5 +9,6 @@
   "search": "Cerca una risorsa",
   "issued": "Rilasciato da {{user}}",
   "search2": "Ricerca",
-  "favourites": "Preferiti"
+  "favourites": "Preferiti",
+  "backingType": "Seleziona una nuova risorsa di supporto"
 }

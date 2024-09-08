@@ -1,4 +1,5 @@
 {
+  "assetCreation": "Creazione di risorse",
   "welcomeMessage": "Benvenuto a ",
   "uiName": "Interfaccia utente di Bitshares Beet Astro",
   "commandSearchPlaceholder": "Digita un comando o cerca...",
@@ -47,7 +48,9 @@
     "transfer": "Utilizza il modulo sottostante per trasferire risorse ad altri utenti blockchain",
     "nodes": "Connettiti alla blockchain tramite un nodo a tua scelta",
     "offers": "Monitora e gestisci le tue offerte di credito con il modulo sottostante.",
-    "vesting": "Monitora e ritira i tuoi saldi di maturazione con il modulo sottostante."
+    "vesting": "Monitora e ritira i tuoi saldi di maturazione con il modulo sottostante.",
+    "create_prediction": "Utilizza il modulo sottostante per creare un asset di mercato di previsione.",
+    "predictions": "Individua di seguito un asset del mercato di previsione su cui scommettere."
   },
   "back": "Torna indietro",
   "usage": "Progettato per l'uso con ",

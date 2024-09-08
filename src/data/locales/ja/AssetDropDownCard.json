@@ -9,5 +9,6 @@
   "search": "アセットを検索する",
   "issued": "発行者 {{user}}",
   "search2": "検索",
-  "favourites": "お気に入り"
+  "favourites": "お気に入り",
+  "backingType": "新しいバッキング アセットを選択してください"
 }

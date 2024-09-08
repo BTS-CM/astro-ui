@@ -1,4 +1,5 @@
 {
+  "assetCreation": "Criação de ativos",
   "welcomeMessage": "Bem vindo à ",
   "uiName": "Interface do usuário Bitshares Beet Astro",
   "commandSearchPlaceholder": "Digite um comando ou pesquise...",
@@ -47,7 +48,9 @@
     "transfer": "Use o formulário abaixo para transferir ativos para outros usuários do blockchain",
     "nodes": "Conecte-se ao blockchain através de um nó de sua escolha",
     "offers": "Monitore e gerencie suas ofertas de crédito com o formulário abaixo.",
-    "vesting": "Monitore e retire seus saldos de aquisição com o formulário abaixo."
+    "vesting": "Monitore e retire seus saldos de aquisição com o formulário abaixo.",
+    "create_prediction": "Use o formulário abaixo para criar um ativo de mercado de previsão.",
+    "predictions": "Localize abaixo um ativo de mercado de previsão para apostar."
   },
   "back": "Volte",
   "usage": "Projetado para uso com ",

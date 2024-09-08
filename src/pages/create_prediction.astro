@@ -1,0 +1,27 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHeader from '../components/PageHeader';
+import PageFooter from '../components/PageFooter';
+import Prediction from '../components/CreatePrediction';
+---
+
+<Layout title="Bitshares Beet Astro UI - Creating a Prediction Market Asset">
+	<main>
+		<PageHeader client:only="react" page="create_prediction" backURL="" />
+		<Prediction client:only="react" />
+		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/create_prediction/index.astro" />
+	</main>
+</Layout>
+
+<style>
+	main {
+		margin: auto;
+		padding: 1rem;
+		width: 850px;
+		max-width: calc(100% - 2rem);
+		color: white;
+		font-size: 20px;
+		line-height: 1.6;
+		min-height: 100vh;
+	}
+</style>

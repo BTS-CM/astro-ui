@@ -1,0 +1,156 @@
+{
+  "dialogContent": {
+    "headerText": "Järgmise prognoositava turuvara loomine: {{symbol}}"
+  },
+  "card": {
+    "title": "Turu prognoosimise vara loomise vorm",
+    "description": "Looge uus ennustusturu vara, täites alloleva vormi."
+  },
+  "asset_details": {
+    "title": "Vara üksikasjad",
+    "title_content": "Need on DEX-i põhifunktsioonide jaoks kasutatavad varaseaded.",
+    "symbol": {
+      "header": "Vara sümbol",
+      "header_content": "Vara sümbol on plokiahela kordumatu identifikaator, mis identifitseerib vara kogu DEX-is. ",
+      "placeholder": "Sümbol"
+    },
+    "shortName": {
+      "header": "Vara lühinimi",
+      "header_content": "See on vara lühinimi, mis on sümbolist vähem oluline, kuid olen siiski valikuliselt lühendatud kordumatu identifikaator. ",
+      "placeholder": "Lühike nimi"
+    },
+    "description": {
+      "header": "Vara kirjeldus",
+      "header_content": "See on vara kirjeldus, see kuvatakse DEX-is ja seda saab kasutada vara kohta lisateabe pakkumiseks.",
+      "placeholder": "Kirjeldus"
+    },
+    "max_supply": {
+      "header": "Maksimaalne pakkumine",
+      "header_content": "Vara maksimaalne pakkumine, see on vara kogusumma, mida laenuvõtjad saavad luua, kui prognoositava turu vara on aktiivne.",
+      "placeholder": "Maksimaalne pakkumine"
+    },
+    "precision": {
+      "header": "Varade täpsus",
+      "header_content": "Vara täpsus määrab toetatud kümnendkohtade arvu.",
+      "placeholder": "Täpsus"
+    }
+  },
+  "pma": {
+    "title": "Prognoositud turuvarade üksikasjad",
+    "title_content": "Neid varaseadeid kasutatakse prognoositava turuvara jaoks.",
+    "condition": {
+      "header": "Seisund",
+      "header_content": "Esitage siin prognoositud turuvara üksikasjad",
+      "placeholder": "Ennustustingimused"
+    },
+    "commission": {
+      "header": "vahendustasu (%)",
+      "header_content": "Komisjonitasu on tasu, mida maja võtab prognoositava turuvara loomise ja hindamise eest.",
+      "placeholder": "komisjon"
+    },
+    "backing_asset": {
+      "header": "Tagavara",
+      "header_content": "Tagavara on vara, mida kasutatakse prognoositava turu vara tagamiseks. "
+    },
+    "resolution": {
+      "header": "Prognoosilahutuse kuupäev ja kellaaeg",
+      "header_content": "Lahendamise kuupäev ja kellaaeg on kuupäev ja kellaaeg, millal prognoositav turuvara lahendatakse. "
+    }
+  },
+  "permissions": {
+    "header": "Vara load",
+    "header_content": "Märkus. Lubade keelamine on püsiv otsus",
+    "charge_market_fee": {
+      "allowedText": "Lubatud turutasud (charge_market_fee)",
+      "disabledText": "Turu tasud keelatud"
+    },
+    "white_list": {
+      "allowedText": "Valge nimekiri lubatud (valge_loend)",
+      "disabledText": "Valge nimekiri on keelatud"
+    },
+    "override_authority": {
+      "allowedText": "Autoriteedi alistamine lubatud (alista_volitus)",
+      "disabledText": "Autoriteedi alistamine on keelatud"
+    },
+    "transfer_restricted": {
+      "allowedText": "Ülekandmine piiratud lubatud (transfer_restricted)",
+      "disabledText": "Edastamine on keelatud"
+    },
+    "disable_confidential": {
+      "allowedText": "Konfidentsiaalsuse keelamine lubatud (disable_confidential)",
+      "disabledText": "Keela konfidentsiaalne keel"
+    },
+    "witness_fed_asset": {
+      "allowedText": "Lubatud on tunnistaja toidetud vara",
+      "disabledText": "Tunnistaja toidetud vara on keelatud"
+    },
+    "committee_fed_asset": {
+      "allowedText": "Komitee toidetud vara lubatud",
+      "disabledText": "Komitee toidetud vara on keelatud"
+    }
+  },
+  "flags": {
+    "header": "Vara lipud",
+    "header_content": "Iga lubatud varade luba saab sisse/välja lülitada.",
+    "charge_market_fee": {
+      "allowedText": "Turu tasud lubatud",
+      "disabledText": "Turu tasud keelatud"
+    },
+    "white_list": {
+      "allowedText": "Valge nimekiri on lubatud",
+      "disabledText": "Valge nimekiri on keelatud"
+    },
+    "override_authority": {
+      "allowedText": "Autoriteedi alistamine on lubatud",
+      "disabledText": "Autoriteedi alistamine on keelatud"
+    },
+    "transfer_restricted": {
+      "allowedText": "Edastamine on piiratud",
+      "disabledText": "Edastamine on keelatud"
+    },
+    "disable_confidential": {
+      "allowedText": "Konfidentsiaalsuse keelamine on lubatud",
+      "disabledText": "Keela konfidentsiaalne keel"
+    },
+    "witness_fed_asset": {
+      "allowedText": "Tunnistaja toidetud vara on lubatud",
+      "disabledText": "Tunnistaja toidetud vara on keelatud"
+    },
+    "committee_fed_asset": {
+      "allowedText": "Komitee toidetud vara on lubatud",
+      "disabledText": "Komitee toidetud vara on keelatud"
+    }
+  },
+  "buttons": {
+    "submit": "Esita"
+  },
+  "risks": {
+    "1": "Prognoositud turuvarade vale konfigureerimine võib põhjustada kehva osaluse plokiahelas, mõned kasutajaliidesed võivad teie PMA-d täielikult välja filtreerida; ",
+    "2": "Kui loote prognoositava turuvara, vastutate majana tulemuste nõuetekohase hindamise eest, kui seda õigesti või õigeaegselt ei tee, võib teie jaoks lisaks maja usaldusväärsuse kaotamisele kaasa tuua juriidilisi või fiskaalprobleeme.",
+    "3": "See kasutajaliides ja Beet/BEETEOS rahakotid ei toeta mitme allkirjaga kontosid, seega on teie majakonto pikaajaline ainuke tõrkepunkt – kaitske seda hästi.",
+    "title": "Mõned riskid, mis on seotud prognoositava turu varade loomisega",
+    "description": "Tehke enne PMA loomist ise uurimistööd, lugege esmalt dokumente; "
+  },
+  "extensions": {
+    "header_content": "Laiendused on täiendavad täpsemad seaded, mida saab kasutada vara täiendavaks kohandamiseks.",
+    "header": "Prognoositavad turuvarade laiendused",
+    "reward_percent": {
+      "enabled": "Soovitaja preemia protsendilaiend on lubatud",
+      "disabled": "Kas lubada suunaja preemia protsendilaiend?",
+      "header": "Soovitaja preemia protsent",
+      "header_content": "Soovitaja preemia protsent on protsent komisjonitasust, mis eraldatakse aktiivsete turuosaliste suunajale."
+    },
+    "whitelist_market_fee_sharing": {
+      "enabled": "Valge nimekirja turutasude jagamise laiendus on lubatud",
+      "disabled": "Kas lubada valge nimekirja turutasude jagamise laiendus?",
+      "header": "Turutasude jagamine valgesse nimekirja",
+      "header_content": "Valge nimekirja turu tasude jagamise laiendus võimaldab majal piirata nendele lubatud kontodele viitajaid."
+    },
+    "taker_fee_percent": {
+      "enabled": "Tasu protsendi laiendus on lubatud",
+      "disabled": "Kas lubada vastuvõtjatasu protsendilaiend?",
+      "header": "Võtja tasu protsent",
+      "header_content": "Võtmistasu protsent on protsent komisjonitasust, mis eraldatakse prognoositava turu vara „võtjale”."
+    }
+  }
+}

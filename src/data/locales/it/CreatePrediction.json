@@ -1,0 +1,156 @@
+{
+  "dialogContent": {
+    "headerText": "Creazione del seguente asset di mercato di previsione: {{symbol}}"
+  },
+  "card": {
+    "title": "Modulo per la creazione di asset di mercato di previsione",
+    "description": "Crea un nuovo asset di mercato di previsione compilando il modulo sottostante."
+  },
+  "asset_details": {
+    "title": "Dettagli risorsa",
+    "title_content": "Queste sono le impostazioni delle risorse utilizzate per la funzionalità DEX principale.",
+    "symbol": {
+      "header": "Simbolo della risorsa",
+      "header_content": "Il simbolo dell'asset è un identificatore univoco sulla blockchain che identifica l'asset in tutto il DEX. ",
+      "placeholder": "Simbolo"
+    },
+    "shortName": {
+      "header": "Nome breve della risorsa",
+      "header_content": "Questo è il nome breve della risorsa, meno importante del simbolo ma è comunque un identificatore univoco abbreviato facoltativamente. ",
+      "placeholder": "Nome breve"
+    },
+    "description": {
+      "header": "Descrizione dell'asset",
+      "header_content": "Questa è la descrizione della risorsa, verrà visualizzata nel DEX e potrà essere utilizzata per fornire ulteriori informazioni sulla risorsa.",
+      "placeholder": "Descrizione"
+    },
+    "max_supply": {
+      "header": "Massima fornitura",
+      "header_content": "L'offerta massima dell'asset, ovvero l'importo totale dell'asset che può mai essere creato dai mutuatari mentre l'asset del mercato di previsione è attivo.",
+      "placeholder": "Fornitura massima"
+    },
+    "precision": {
+      "header": "Precisione delle risorse",
+      "header_content": "La precisione dell'asset specifica la quantità di cifre decimali supportate.",
+      "placeholder": "Precisione"
+    }
+  },
+  "pma": {
+    "title": "Dettagli sugli asset del mercato di previsione",
+    "title_content": "Queste sono le impostazioni degli asset utilizzate per l'asset di mercato di previsione.",
+    "condition": {
+      "header": "Condizione",
+      "header_content": "Fornisci qui i dettagli sugli asset di mercato previsti",
+      "placeholder": "Condizioni di previsione"
+    },
+    "commission": {
+      "header": "Commissione (%)",
+      "header_content": "La commissione è la commissione che la casa prende per creare e valutare l'asset di mercato di previsione.",
+      "placeholder": "Commissione"
+    },
+    "backing_asset": {
+      "header": "Risorsa di supporto",
+      "header_content": "L'asset di supporto è l'asset utilizzato per sostenere l'asset del mercato di previsione. "
+    },
+    "resolution": {
+      "header": "Data e ora di risoluzione della previsione",
+      "header_content": "La data e l'ora di risoluzione rappresentano la data e l'ora in cui l'attività del mercato di previsione verrà risolta. "
+    }
+  },
+  "permissions": {
+    "header": "Permessi dell'asset",
+    "header_content": "Nota: la disabilitazione delle autorizzazioni è una decisione permanente",
+    "charge_market_fee": {
+      "allowedText": "Commissioni di mercato consentite (charge_market_fee)",
+      "disabledText": "Commissioni di mercato disattivate"
+    },
+    "white_list": {
+      "allowedText": "Lista bianca consentita (white_list)",
+      "disabledText": "Lista bianca disabilitata"
+    },
+    "override_authority": {
+      "allowedText": "Autorizzazione di sostituzione consentita (override_authority)",
+      "disabledText": "Ignora autorizzazione disabilitata"
+    },
+    "transfer_restricted": {
+      "allowedText": "Trasferimento limitato consentito (transfer_restricted)",
+      "disabledText": "Trasferimento limitato disabilitato"
+    },
+    "disable_confidential": {
+      "allowedText": "Disabilita confidenziale consentito (disable_confidential)",
+      "disabledText": "Disabilita riservata disabilitata"
+    },
+    "witness_fed_asset": {
+      "allowedText": "Risorsa alimentata da testimoni consentita",
+      "disabledText": "Risorsa alimentata dal testimone disabilitata"
+    },
+    "committee_fed_asset": {
+      "allowedText": "Risorsa alimentata dal comitato consentita",
+      "disabledText": "Asset alimentato dal comitato disabilitato"
+    }
+  },
+  "flags": {
+    "header": "Flag dell'asset",
+    "header_content": "Ogni autorizzazione per risorsa consentita può essere attivata/disattivata.",
+    "charge_market_fee": {
+      "allowedText": "Commissioni di mercato abilitate",
+      "disabledText": "Commissioni di mercato disattivate"
+    },
+    "white_list": {
+      "allowedText": "Lista bianca abilitata",
+      "disabledText": "Lista bianca disabilitata"
+    },
+    "override_authority": {
+      "allowedText": "Ignora autorizzazione abilitata",
+      "disabledText": "Ignora autorizzazione disabilitata"
+    },
+    "transfer_restricted": {
+      "allowedText": "Trasferimento limitato abilitato",
+      "disabledText": "Trasferimento limitato disabilitato"
+    },
+    "disable_confidential": {
+      "allowedText": "Disabilita riservata abilitata",
+      "disabledText": "Disabilita riservata disabilitata"
+    },
+    "witness_fed_asset": {
+      "allowedText": "Risorsa alimentata con testimone abilitata",
+      "disabledText": "Risorsa alimentata dal testimone disabilitata"
+    },
+    "committee_fed_asset": {
+      "allowedText": "Asset alimentato dal comitato abilitato",
+      "disabledText": "Asset alimentato dal comitato disabilitato"
+    }
+  },
+  "buttons": {
+    "submit": "Invia"
+  },
+  "risks": {
+    "1": "Una configurazione errata delle risorse del mercato di previsione può portare a una scarsa partecipazione alla blockchain, alcune interfacce utente potrebbero filtrare completamente il tuo PMA; ",
+    "2": "Quando crei un asset di mercato di previsione, sei responsabile come casa di valutare adeguatamente il risultato, l'incapacità di farlo correttamente o in modo tempestivo potrebbe portare a problemi legali o fiscali oltre alla perdita di credibilità come casa.",
+    "3": "Questa interfaccia utente e i portafogli Beet/BEETEOS non supportano account multi-firma, quindi il tuo account interno è un singolo punto di fallimento a lungo termine: proteggilo bene.",
+    "title": "Alcuni dei rischi associati alla creazione di attività di mercato di previsione",
+    "description": "Fai le tue ricerche prima di creare un PMA, leggi prima i documenti; "
+  },
+  "extensions": {
+    "header_content": "Le estensioni sono impostazioni avanzate aggiuntive che possono essere utilizzate per personalizzare ulteriormente la risorsa.",
+    "header": "Estensioni delle risorse del mercato di previsione",
+    "reward_percent": {
+      "enabled": "Estensione percentuale ricompensa referrer abilitata",
+      "disabled": "Abilitare l'estensione della percentuale di ricompensa del referrer?",
+      "header": "Percentuale di ricompensa del referrer",
+      "header_content": "La percentuale di ricompensa del referrer è la percentuale della commissione assegnata al referrer dei partecipanti attivi al mercato."
+    },
+    "whitelist_market_fee_sharing": {
+      "enabled": "Estensione di condivisione delle commissioni di mercato nella whitelist abilitata",
+      "disabled": "Abilitare l'estensione per la condivisione delle commissioni del mercato whitelist?",
+      "header": "Condivisione delle commissioni di mercato nella whitelist",
+      "header_content": "L'estensione di condivisione delle commissioni del mercato whitelist consente alla casa di limitare i referrer a questi account autorizzati."
+    },
+    "taker_fee_percent": {
+      "enabled": "Estensione percentuale commissione acquirente abilitata",
+      "disabled": "Abilitare l'estensione percentuale della commissione dell'acquirente?",
+      "header": "Percentuale della commissione dell'acquirente",
+      "header_content": "La percentuale della commissione dell'acquirente è la percentuale della commissione assegnata all'acquirente dell'asset del mercato di previsione."
+    }
+  }
+}

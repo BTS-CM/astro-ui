@@ -118,6 +118,42 @@ function getFlagBooleans(mask) {
 }
 
 /**
+ * Given form values return the asset flag value
+ */
+function getFlags(flagBooleans) {
+  const keys = Object.keys(permission_flags);
+
+  let flags = 0;
+
+  keys.forEach((key) => {
+    if (flagBooleans[key] && key !== "global_settle") {
+      flags += permission_flags[key];
+    }
+  });
+
+  return flags;
+}
+
+/**
+ * Given form values return the asset permissions value
+ */
+function getPermissions(flagBooleans, isBitAsset = false) {
+  const permissions = isBitAsset ? Object.keys(permission_flags) : uia_permission_mask;
+  let flags = 0;
+  permissions.forEach((permission) => {
+    if (flagBooleans[permission] && permission !== "global_settle") {
+      flags += permission_flags[permission];
+    }
+  });
+
+  if (isBitAsset && flagBooleans.global_settle) {
+    flags += permission_flags.global_settle;
+  }
+
+  return flags;
+}
+
+/**
  * Delaying the execution of the function until the user stops typing
  * @param {function} func
  * @param {number} delay
@@ -153,5 +189,7 @@ export {
   trimPrice,
   getTimeSince,
   getFlagBooleans,
+  getFlags,
+  getPermissions,
   isInvertedMarket,
 };

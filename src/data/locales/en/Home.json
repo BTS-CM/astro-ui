@@ -100,5 +100,19 @@
     "subtitle": "View vesting balances",
     "hover1": "Check your vesting balances.",
     "hover2": "Claim your vested balances."
+  },
+  "create_prediction": {
+    "title": "🔮 Create prediction",
+    "subtitle": "Create a bet about anything",
+    "hover1": "Create bets about literally anything.",
+    "hover2": "Be the bookie and set your own commission.",
+    "hover3": "Both short and long term bets are possible."
+  },
+  "prediction_markets": {
+    "title": "🎲 Predictions",
+    "subtitle": "Gamble on almost anything",
+    "hover1": "Browse the available prediction market assets.",
+    "hover2": "Prediction markets can be about anything.",
+    "hover3": "Each prediction market asset has an unique fee."
   }
 }

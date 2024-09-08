@@ -141,7 +141,13 @@ export default function CreditBorrow(properties) {
   useInitCache(_chain ?? "bitshares", ["assets", "globalParams", "offers", "marketSearch"]);
 
   const assetIssuers = useMemo(() => {
-    if (_chain && (_marketSearchBTS || _marketSearchTEST)) {
+    if (
+      _chain &&
+      (
+        _marketSearchBTS && _marketSearchBTS.length || 
+        _marketSearchTEST && _marketSearchTEST.length
+      )
+    ) {
       const targetCache = _chain === "bitshares" ? _marketSearchBTS : _marketSearchTEST;
       let mappedCache = targetCache.map((x) => {
         const split = x.u.split("(");
@@ -163,8 +169,6 @@ export default function CreditBorrow(properties) {
       return filteredCache;
     }
   }, [_marketSearchBTS, _marketSearchTEST, _chain]);
-
-
 
   const assets = useMemo(() => {
     if (_chain && (_assetsBTS || _assetsTEST)) {
@@ -426,20 +430,22 @@ export default function CreditBorrow(properties) {
     }
   };
 
-  const creditOfferOwner = useMemo(() => {
+  const [creditOfferOwner, setCreditOfferOwner] = useState();
+  useEffect(() => {
     if (assetIssuers && assetIssuers.length && relevantOffer) {
-      let owner = assetIssuers.find((x) => x.id === relevantOffer.owner_account);
-      if (!owner) {
+      let foundOwner = assetIssuers.find((x) => x.id === relevantOffer.owner_account);
+      if (foundOwner) {
+        setOwner(foundOwner);
+      } else {
         const userStore = createObjectStore([_chain, JSON.stringify([relevantOffer.owner_account])]);
         userStore.subscribe(({ data, error, loading }) => {
           if (data && !error && !loading) {
             const foundUser = data[0];
-            owner = { id: foundUser.id, name: foundUser.name };
-            return owner;
+            const newOwner = { id: foundUser.id, name: foundUser.name };
+            setCreditOfferOwner(newOwner);
           }
         });
       }
-      return owner;
     }
   }, [assetIssuers, relevantOffer]);
 

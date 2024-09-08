@@ -429,7 +429,8 @@ export default function Transfer(properties) {
                                 otherAsset={null}
                                 marketSearch={marketSearch}
                                 type={null}
-                                chain={usr && usr.chain ? usr.chain : "bitshares"}                              />
+                                chain={usr && usr.chain ? usr.chain : "bitshares"}
+                              />
                             </div>
                           </div>
                         </FormControl>

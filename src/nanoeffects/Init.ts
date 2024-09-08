@@ -108,7 +108,7 @@ async function useInitCache(chain: string, endpoints: any[]) {
       }
     }
 
-    if (endpoints && endpoints.length) {
+    if (chain && endpoints && endpoints.length) {
       init();
     }
   }, [chain, endpoints]);

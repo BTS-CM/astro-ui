@@ -1,4 +1,5 @@
 {
+  "assetCreation": "Asset creation",
   "welcomeMessage": "Welcome to the ",
   "uiName": "Bitshares Beet Astro UI",
   "commandSearchPlaceholder": "Type a command or search...",
@@ -47,7 +48,9 @@
     "transfer": "Use the form below to transfer assets to other blockchain users",
     "nodes": "Connect to the blockchain via a node of your choice",
     "offers": "Monitor and manage your credit offers with the below form.",
-    "vesting": "Monitor and withdraw your vesting balances with the below form."
+    "vesting": "Monitor and withdraw your vesting balances with the below form.",
+    "create_prediction": "Use the form below to create a prediction market asset.",
+    "predictions": "Locate a prediction market asset below to bet on."
   },
   "back": "Go back",
   "usage": "Designed for use with ",

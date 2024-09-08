@@ -100,5 +100,19 @@
     "subtitle": "Freizügigkeitsguthaben anzeigen",
     "hover1": "Überprüfen Sie Ihre Sperrguthaben.",
     "hover2": "Fordern Sie Ihr Freizügigkeitsguthaben an."
+  },
+  "create_prediction": {
+    "title": "🔮 Vorhersage erstellen",
+    "subtitle": "Erstellen Sie eine Wette über alles",
+    "hover1": "Erstellen Sie Wetten über buchstäblich alles.",
+    "hover2": "Seien Sie der Buchmacher und legen Sie Ihre eigene Provision fest.",
+    "hover3": "Es sind sowohl kurzfristige als auch langfristige Wetten möglich."
+  },
+  "prediction_markets": {
+    "title": "🎲 Vorhersagen",
+    "subtitle": "Spielen Sie auf fast alles",
+    "hover1": "Durchsuchen Sie die verfügbaren Prognosemarkt-Assets.",
+    "hover2": "Auf Prognosemärkten kann es um alles Mögliche gehen.",
+    "hover3": "Für jedes Prognosemarkt-Asset gibt es eine eigene Gebühr."
   }
 }

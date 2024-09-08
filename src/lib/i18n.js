@@ -17,6 +17,7 @@ const pages = [
   "ExternalLink",
   "Featured",
   "Home",
+  "CreatePrediction",
   "LimitOrderCard",
   "LTM",
   "Market",
@@ -42,7 +43,8 @@ const pages = [
   "Transfer",
   "Nodes",
   "SimpleSwap",
-  "Vesting"
+  "Vesting",
+  "Predictions"
 ];
 
 const locale = persistentAtom("locale", "en");

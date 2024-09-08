@@ -1,0 +1,156 @@
+{
+  "dialogContent": {
+    "headerText": "Creando el siguiente activo de mercado de predicción: {{symbol}}"
+  },
+  "card": {
+    "title": "Formulario de creación de activos del mercado de predicción",
+    "description": "Cree un nuevo activo de mercado de predicción completando el siguiente formulario."
+  },
+  "asset_details": {
+    "title": "Detalles del activo",
+    "title_content": "Estas son las configuraciones de activos utilizadas para la funcionalidad principal de DEX.",
+    "symbol": {
+      "header": "Símbolo de activo",
+      "header_content": "El símbolo del activo es un identificador único en la cadena de bloques que identifica el activo en todo el DEX. ",
+      "placeholder": "Símbolo"
+    },
+    "shortName": {
+      "header": "Nombre corto del activo",
+      "header_content": "Este es el nombre corto del activo, menos importante que el símbolo, pero aún así es un identificador único abreviado opcionalmente. ",
+      "placeholder": "Nombre corto"
+    },
+    "description": {
+      "header": "Descripción del activo",
+      "header_content": "Esta es la descripción del activo, se mostrará en el DEX y se puede utilizar para proporcionar más información sobre el activo.",
+      "placeholder": "Descripción"
+    },
+    "max_supply": {
+      "header": "Oferta máxima",
+      "header_content": "La oferta máxima del activo, es la cantidad total del activo que los prestatarios pueden crear mientras el activo del mercado de predicción está activo.",
+      "placeholder": "Suministro máximo"
+    },
+    "precision": {
+      "header": "Precisión de activos",
+      "header_content": "La precisión del activo especifica la cantidad de decimales admitidos.",
+      "placeholder": "Precisión"
+    }
+  },
+  "pma": {
+    "title": "Detalles de los activos del mercado de predicción",
+    "title_content": "Estas son las configuraciones de activos utilizadas para el activo del mercado de predicción.",
+    "condition": {
+      "header": "Condición",
+      "header_content": "Proporcione los detalles de los activos del mercado de predicción aquí",
+      "placeholder": "Condiciones de predicción"
+    },
+    "commission": {
+      "header": "Comisión (%)",
+      "header_content": "La comisión es la tarifa que cobra la casa por crear y evaluar el activo del mercado de predicción.",
+      "placeholder": "Comisión"
+    },
+    "backing_asset": {
+      "header": "Activo de respaldo",
+      "header_content": "El activo de respaldo es el activo que se utiliza para respaldar el activo del mercado de predicción. "
+    },
+    "resolution": {
+      "header": "Fecha y hora de resolución de predicción",
+      "header_content": "La fecha y hora de resolución es la fecha y hora en la que se resolverá el activo del mercado de predicción. "
+    }
+  },
+  "permissions": {
+    "header": "Permisos de activos",
+    "header_content": "Nota: Deshabilitar permisos es una decisión permanente",
+    "charge_market_fee": {
+      "allowedText": "Tarifas de mercado permitidas (charge_market_fee)",
+      "disabledText": "Tarifas de mercado deshabilitadas"
+    },
+    "white_list": {
+      "allowedText": "Lista blanca permitida (white_list)",
+      "disabledText": "Lista blanca deshabilitada"
+    },
+    "override_authority": {
+      "allowedText": "Anulación de autoridad permitida (override_authority)",
+      "disabledText": "Anular autoridad deshabilitada"
+    },
+    "transfer_restricted": {
+      "allowedText": "Transferencia restringida permitida (transfer_restricted)",
+      "disabledText": "Transferencia restringida deshabilitada"
+    },
+    "disable_confidential": {
+      "allowedText": "Deshabilitar confidencial permitido (disable_confidential)",
+      "disabledText": "Deshabilitar confidencial deshabilitado"
+    },
+    "witness_fed_asset": {
+      "allowedText": "Se permite el activo alimentado por testigos",
+      "disabledText": "Activo alimentado por testigo inhabilitado"
+    },
+    "committee_fed_asset": {
+      "allowedText": "Activo alimentado por el comité permitido",
+      "disabledText": "Activo alimentado por el comité inhabilitado"
+    }
+  },
+  "flags": {
+    "header": "Banderas de activos",
+    "header_content": "Cada permiso de activo permitido se puede activar o desactivar.",
+    "charge_market_fee": {
+      "allowedText": "Tarifas de mercado habilitadas",
+      "disabledText": "Tarifas de mercado deshabilitadas"
+    },
+    "white_list": {
+      "allowedText": "Lista blanca habilitada",
+      "disabledText": "Lista blanca deshabilitada"
+    },
+    "override_authority": {
+      "allowedText": "Anular autoridad habilitada",
+      "disabledText": "Anular autoridad deshabilitada"
+    },
+    "transfer_restricted": {
+      "allowedText": "Transferencia restringida habilitada",
+      "disabledText": "Transferencia restringida deshabilitada"
+    },
+    "disable_confidential": {
+      "allowedText": "Desactivar confidencial habilitado",
+      "disabledText": "Deshabilitar confidencial deshabilitado"
+    },
+    "witness_fed_asset": {
+      "allowedText": "Activo alimentado por testigo habilitado",
+      "disabledText": "Activo alimentado por testigo inhabilitado"
+    },
+    "committee_fed_asset": {
+      "allowedText": "Activo alimentado por comité habilitado",
+      "disabledText": "Activo alimentado por el comité inhabilitado"
+    }
+  },
+  "buttons": {
+    "submit": "Entregar"
+  },
+  "risks": {
+    "1": "La mala configuración de los activos del mercado de predicción puede llevar a una pobre participación de blockchain, algunas interfaces de usuario pueden filtrar su PMA por completo de la vista; ",
+    "2": "Cuando crea un activo de mercado de predicción, usted es responsable, como casa, de evaluar adecuadamente el resultado; no hacerlo de manera adecuada o oportuna podría generarle problemas legales o fiscales, además de la pérdida de credibilidad como casa.",
+    "3": "Esta interfaz de usuario y las billeteras Beet/BEETEOS no admiten cuentas de firmas múltiples, por lo que su cuenta doméstica es un punto único de falla a largo plazo: protéjala bien.",
+    "title": "Algunos de los riesgos asociados con la creación de activos de mercado de predicción",
+    "description": "Haga su propia investigación antes de crear una PMA, lea primero los documentos; "
+  },
+  "extensions": {
+    "header_content": "Las extensiones son configuraciones avanzadas adicionales que se pueden usar para personalizar aún más el activo.",
+    "header": "Extensiones de activos del mercado de predicción",
+    "reward_percent": {
+      "enabled": "Extensión de porcentaje de recompensa de referencia habilitada",
+      "disabled": "¿Habilitar la extensión del porcentaje de recompensa del referente?",
+      "header": "Porcentaje de recompensa del referente",
+      "header_content": "El porcentaje de recompensa del referente es el porcentaje de la comisión que se asigna al referente de los participantes activos del mercado."
+    },
+    "whitelist_market_fee_sharing": {
+      "enabled": "Extensión de cuota compartida del mercado de lista blanca habilitada",
+      "disabled": "¿Habilitar la extensión de tarifa compartida del mercado de la lista blanca?",
+      "header": "Lista blanca de cuotas compartidas en el mercado",
+      "header_content": "La extensión de tarifa compartida del mercado de la lista blanca permite a la casa limitar las referencias a estas cuentas incluidas en la lista blanca."
+    },
+    "taker_fee_percent": {
+      "enabled": "Extensión del porcentaje de la tarifa del tomador habilitada",
+      "disabled": "¿Habilitar la extensión del porcentaje de la tarifa del tomador?",
+      "header": "Porcentaje de tarifa del tomador",
+      "header_content": "El porcentaje de la tarifa del tomador es el porcentaje de la comisión que se asigna al 'tomador' del activo del mercado de predicción."
+    }
+  }
+}

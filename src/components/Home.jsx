@@ -297,6 +297,51 @@ export default function Home(properties) {
             </ul>
           </HoverCardContent>
         </HoverCard>
+
+        <HoverCard key="predictions">
+          <HoverCardTrigger asChild>
+            <a href="/predictions/index.html" style={{ textDecoration: "none" }}>
+              <Card className="h-full hover:shadow-md hover:shadow-black">
+                <CardHeader>
+                  <CardTitle>{t("Home:prediction_markets.title")}</CardTitle>
+                  <CardDescription>{t("Home:prediction_markets.subtitle")}</CardDescription>
+                </CardHeader>
+              </Card>
+            </a>
+          </HoverCardTrigger>
+          <HoverCardContent className="w-80 text-sm pt-1">
+            <ul className="ml-2 list-disc [&>li]:mt-2">
+              <li>{t("Home:prediction_markets.hover1")}</li>
+              <li>{t("Home:prediction_markets.hover2")}</li>
+              <li>{t("Home:prediction_markets.hover3")}</li>
+            </ul>
+          </HoverCardContent>
+        </HoverCard>
+      </div>
+
+      <h4 className="mt-3 mb-2">
+        {t("PageHeader:assetCreation")}
+      </h4>
+      <div className="grid grid-cols-3 gap-3">
+        <HoverCard key="create_prediction">
+          <HoverCardTrigger asChild>
+            <a href="/create_prediction/index.html" style={{ textDecoration: "none" }}>
+              <Card className="h-full hover:shadow-md hover:shadow-black">
+                <CardHeader>
+                  <CardTitle>{t("Home:create_prediction.title")}</CardTitle>
+                  <CardDescription>{t("Home:create_prediction.subtitle")}</CardDescription>
+                </CardHeader>
+              </Card>
+            </a>
+          </HoverCardTrigger>
+          <HoverCardContent className="w-80 text-sm pt-1">
+            <ul className="ml-2 list-disc [&>li]:mt-2">
+              <li>{t("Home:create_prediction.hover1")}</li>
+              <li>{t("Home:create_prediction.hover2")}</li>
+              <li>{t("Home:create_prediction.hover3")}</li>
+            </ul>
+          </HoverCardContent>
+        </HoverCard>
       </div>
 
       <h4 className="mt-3 mb-2">

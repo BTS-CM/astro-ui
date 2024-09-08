@@ -19,14 +19,12 @@ import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/Avatar.tsx";
 
 import { $currentUser, setCurrentUser, $userStorage, removeUser } from "@/stores/users.ts";
-import { $currentNode } from "@/stores/node.ts";
 
 import { accountSearch } from "@/nanoeffects/UserSearch.ts";
 
 export default function AccountSelect(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
-  const currentNode = useStore($currentNode);
 
   const [chain, setChain] = useState();
   const [mode, setMode] = useState();
@@ -46,7 +44,7 @@ export default function AccountSelect(properties) {
   async function lookupAccount() {
     let response;
     try {
-      response = await accountSearch(chain, accountInput, currentNode ? currentNode.url : null);
+      response = await accountSearch(chain, accountInput);
     } catch (error) {
       console.log({ error, msg: t("AccountSelect:noAccount") });
       setErrorMessage(t("AccountSelect:noAccount"));

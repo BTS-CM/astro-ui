@@ -100,5 +100,19 @@
     "subtitle": "Se optjeningssaldi",
     "hover1": "Tjek dine optjente saldi.",
     "hover2": "Gør krav på dine optjente saldi."
+  },
+  "create_prediction": {
+    "title": "🔮 Opret forudsigelse",
+    "subtitle": "Lav et væddemål om hvad som helst",
+    "hover1": "Lav væddemål om bogstaveligt talt alt.",
+    "hover2": "Vær bookmaker og sæt din egen kommission.",
+    "hover3": "Både kort- og langsigtede væddemål er mulige."
+  },
+  "prediction_markets": {
+    "title": "🎲 Forudsigelser",
+    "subtitle": "Spil på næsten alt",
+    "hover1": "Gennemse de tilgængelige forudsigelige markedsaktiver.",
+    "hover2": "Forudsigelsesmarkeder kan handle om alt.",
+    "hover3": "Hvert forudsigelsesmarkedsaktiv har et unikt gebyr."
   }
 }

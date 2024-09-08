@@ -100,5 +100,19 @@
     "subtitle": "Visualizza i saldi di maturazione",
     "hover1": "Controlla i tuoi saldi di maturazione.",
     "hover2": "Richiedi i tuoi saldi acquisiti."
+  },
+  "create_prediction": {
+    "title": "🔮 Crea previsione",
+    "subtitle": "Crea una scommessa su qualsiasi cosa",
+    "hover1": "Crea scommesse letteralmente su qualsiasi cosa.",
+    "hover2": "Diventa il bookmaker e stabilisci la tua commissione.",
+    "hover3": "Sono possibili sia scommesse a breve che a lungo termine."
+  },
+  "prediction_markets": {
+    "title": "🎲 Pronostici",
+    "subtitle": "Scommetti su quasi tutto",
+    "hover1": "Sfoglia le risorse di mercato di previsione disponibili.",
+    "hover2": "I mercati di previsione possono riguardare qualsiasi cosa.",
+    "hover3": "Ogni asset del mercato di previsione ha una tariffa unica."
   }
 }

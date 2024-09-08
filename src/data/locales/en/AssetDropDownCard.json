@@ -9,5 +9,6 @@
   "search": "Search for an asset",
   "issued": "Issued by {{user}}",
   "search2": "Search",
-  "favourites": "Favourites"
+  "favourites": "Favourites",
+  "backingType": "Please select a new backing asset"
 }
