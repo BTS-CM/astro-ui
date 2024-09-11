@@ -224,10 +224,7 @@ export default function SameTFunds(properties) {
             setCommissionFunction(0.01);
         } else {
             setCommissionFunction(parsedInput);
-        }
-  
-        e.currentTarget.value = input;
-  
+        }  
     }, 500),
     []
   );
