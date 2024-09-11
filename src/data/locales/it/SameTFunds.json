@@ -1,0 +1,38 @@
+{
+    "title": "Fondi Same-T",
+    "description": "I fondi Same-T offrono prestiti senza richiedere garanzie reali, sono validi per un'unica transazione simile ai prestiti flash.",
+    "noFunds": "Impossibile trovare fondi Same-T.",
+    "offering": "Offerta",
+    "fee": "Tassa",
+    "rowTitle": "Finanziare #{{id}} di {{user}}",
+    "unpaidAmount": "Importo non pagato",
+    "id": "Id",
+    "deleteHeader": "Eliminazione {{owner_account}}il fondo {{fund_id}}",
+    "update": "Aggiornamento",
+    "updateDialog": {
+      "title": "Aggiornamento del tuo Fondo Same-T",
+      "description": "Puoi aggiornare l'importo che offri e la commissione che addebiti.",
+      "newAmountContent": "La nuova quantità di asset da offrire nel tuo Fondo Same-T.",
+      "newAmountHeader": "Nuovo importo",
+      "balance": "Usa l'equilibrio",
+      "newFeeContent": "La commissione percentuale addebitata per la stessa operazione di prestito/rimborso del fondo.",
+      "newFeeHeader": "Nuova tariffa",
+      "updateHeader": "Aggiornamento del Fondo Same-T {{owner_account}} di {{fund_id}}"
+    },
+    "createDialog": {
+      "title": "Creazione di un nuovo Fondo Same-T",
+      "description": "Specifica di seguito l'asset, l'importo e la commissione per il tuo nuovo fondo Same-T.",
+      "amount": "Quantità",
+      "fee": "Tasso di commissione",
+      "asset": "Bene prestativo",
+      "asset_description": "L'asset che offri in prestito nel tuo Fondo Same-T."
+    },
+    "create": "Creare",
+    "all": "Tutto",
+    "mine": "I miei fondi",
+    "search": "Ricerca",
+    "noOwnedFunds": "Non possiedi alcun fondo Same-T.",
+    "noSearchResults": "Nessun fondo Same-T trovato.",
+    "searchHeader": "Cerca fondi Same-T",
+    "searchDescription": "Puoi cercare i fondi Same-T in base al nome del conto del proprietario o all'asset in offerta"
+  }

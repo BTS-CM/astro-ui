@@ -35,7 +35,7 @@ function hoursTillExpiration(expirationTime) {
   return hours;
 }
 
-export default function CreditBorrow(properties) {
+export default function CreditOffers(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
 

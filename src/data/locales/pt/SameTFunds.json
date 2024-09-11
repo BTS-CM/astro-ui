@@ -1,0 +1,38 @@
+{
+    "title": "Fundos Same-T",
+    "description": "Os fundos Same-T oferecem empréstimos sem exigir garantias; são válidos para uma única transação, semelhante aos empréstimos instantâneos.",
+    "noFunds": "Não foi possível encontrar nenhum fundo Same-T.",
+    "offering": "Oferta",
+    "fee": "Taxa",
+    "rowTitle": "Fundo #{{id}} por {{user}}",
+    "unpaidAmount": "Valor não pago",
+    "id": "Eu ia",
+    "deleteHeader": "Excluindo {{owner_account}}fundo {{fund_id}}",
+    "update": "Atualizar",
+    "updateDialog": {
+      "title": "Atualizando seu Fundo Same-T",
+      "description": "Você pode atualizar o valor que está oferecendo e a taxa que está cobrando.",
+      "newAmountContent": "A nova quantidade de ativos a serem oferecidos em seu Fundo Same-T.",
+      "newAmountHeader": "Novo valor",
+      "balance": "Usar saldo",
+      "newFeeContent": "A taxa percentual que você cobra pela mesma operação de empréstimo/reembolso do fundo de transação.",
+      "newFeeHeader": "Nova taxa de taxa",
+      "updateHeader": "Atualizando o Fundo Same-T {{owner_account}} por {{fund_id}}"
+    },
+    "createDialog": {
+      "title": "Criando um novo fundo Same-T",
+      "description": "Especifique abaixo o ativo, o valor e a taxa do seu novo Fundo Same-T.",
+      "amount": "Quantia",
+      "fee": "Taxa de taxa",
+      "asset": "Ativo de empréstimo",
+      "asset_description": "O ativo que você está oferecendo para emprestar em seu Fundo Same-T."
+    },
+    "create": "Criar",
+    "all": "Todos",
+    "mine": "Meus fundos",
+    "search": "Procurar",
+    "noOwnedFunds": "Você não possui nenhum fundo Same-T.",
+    "noSearchResults": "Nenhum fundo Same-T encontrado.",
+    "searchHeader": "Pesquisar fundos Same-T",
+    "searchDescription": "Você pode pesquisar fundos Same-T pelo nome da conta do proprietário ou pelo ativo em oferta"
+  }

@@ -1,0 +1,38 @@
+{
+    "title": "Same-T-Fonds",
+    "description": "Same-T-Fonds bieten Kredite an, ohne dass Sicherheiten erforderlich sind. Sie gelten für eine einzelne Transaktion, ähnlich wie Schnellkredite.",
+    "noFunds": "Es konnten keine Same-T-Fonds gefunden werden.",
+    "offering": "Angebot",
+    "fee": "Gebühr",
+    "rowTitle": "Fondsnr.{{id}} von {{user}}",
+    "unpaidAmount": "Unbezahlter Betrag",
+    "id": "Ausweis",
+    "deleteHeader": "Löschen {{owner_account}}'s Fonds {{fund_id}}",
+    "update": "Aktualisieren",
+    "updateDialog": {
+      "title": "Aktualisieren Ihres Same-T-Fonds",
+      "description": "Sie können den von Ihnen angebotenen Betrag und die von Ihnen berechnete Gebühr aktualisieren.",
+      "newAmountContent": "Die neue Menge an Vermögenswerten, die Sie in Ihrem Same-T-Fonds anbieten können.",
+      "newAmountHeader": "Neuer Betrag",
+      "balance": "Nutzen Sie das Gleichgewicht",
+      "newFeeContent": "Die prozentuale Gebühr, die Sie für den Kredit-/Rückzahlungsvorgang des gleichen Transaktionsfonds berechnen.",
+      "newFeeHeader": "Neuer Gebührensatz",
+      "updateHeader": "Aktualisierung des Same-T-Fonds {{owner_account}} von {{fund_id}}"
+    },
+    "createDialog": {
+      "title": "Erstellen eines neuen Same-T-Fonds",
+      "description": "Geben Sie unten den Vermögenswert, den Betrag und die Gebühr für Ihren neuen Same-T-Fonds an.",
+      "amount": "Menge",
+      "fee": "Gebührensatz",
+      "asset": "Kreditvermögenswert",
+      "asset_description": "Der Vermögenswert, den Sie in Ihrem Same-T-Fonds zur Ausleihe anbieten."
+    },
+    "create": "Erstellen",
+    "all": "Alle",
+    "mine": "Meine Mittel",
+    "search": "Suchen",
+    "noOwnedFunds": "Sie besitzen keine Same-T-Fonds.",
+    "noSearchResults": "Keine Same-T-Fonds gefunden.",
+    "searchHeader": "Suchen Sie nach Same-T-Fonds",
+    "searchDescription": "Sie können nach Same-T-Fonds anhand des Kontonamens ihres Eigentümers oder des angebotenen Vermögenswerts suchen"
+  }

@@ -50,7 +50,8 @@
     "offers": "Überwachen und verwalten Sie Ihre Kreditangebote mit dem untenstehenden Formular.",
     "vesting": "Überwachen und heben Sie Ihr Sperrguthaben mit dem untenstehenden Formular ab.",
     "create_prediction": "Verwenden Sie das folgende Formular, um ein Prognosemarkt-Asset zu erstellen.",
-    "predictions": "Suchen Sie unten nach einem Prognosemarkt-Asset, auf das Sie wetten können."
+    "predictions": "Suchen Sie unten nach einem Prognosemarkt-Asset, auf das Sie wetten können.",
+    "tfunds": "Suchen, erstellen, aktualisieren oder löschen Sie unten Same-T-Fonds!"
   },
   "back": "Geh zurück",
   "usage": "Konzipiert für den Einsatz mit ",

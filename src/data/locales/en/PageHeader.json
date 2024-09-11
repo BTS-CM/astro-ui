@@ -50,7 +50,8 @@
     "offers": "Monitor and manage your credit offers with the below form.",
     "vesting": "Monitor and withdraw your vesting balances with the below form.",
     "create_prediction": "Use the form below to create a prediction market asset.",
-    "predictions": "Locate a prediction market asset below to bet on."
+    "predictions": "Locate a prediction market asset below to bet on.",
+    "tfunds": "Find, create, update or delete Same-T funds below!"
   },
   "back": "Go back",
   "usage": "Designed for use with ",

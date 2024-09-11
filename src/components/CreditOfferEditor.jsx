@@ -277,7 +277,7 @@ export default function CreditOfferEditor(properties) {
     let unsub;
 
     if (offerID && usr && usr.chain) {
-      const offerDataStore = createObjectStore([usr.chain, JSON.stringify([offerID])]);
+      const offerDataStore = createObjectStore([usr.chain, JSON.stringify([offerID]), currentNode ? currentNode.url : null]);
       unsub = offerDataStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
           const _data = data[0];
@@ -348,7 +348,7 @@ export default function CreditOfferEditor(properties) {
       const _batchIDs = _identityBatch.flatMap(Object.keys);
       console.log({ _batchIDs });
 
-      const usernameDataStore = createUsernameStore([usr.chain, _batchIDs]);
+      const usernameDataStore = createUsernameStore([usr.chain, _batchIDs, currentNode ? currentNode.url : null]);
       unsub = usernameDataStore.subscribe(({ data }) => {
         if (data && !data.error && !data.loading) {
           /*

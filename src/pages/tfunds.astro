@@ -1,0 +1,27 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SameTFunds from '../components/SameTFunds.jsx';
+import PageHeader from '../components/PageHeader.jsx';
+import PageFooter from '../components/PageFooter.jsx';
+---
+
+<Layout title="Bitshares credit offer editor">
+	<main>
+		<PageHeader client:only="react" page="tfunds" backURL="../index.html" />
+		<SameTFunds client:only="react" />
+		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/tfunds.astro" />
+	</main>
+</Layout>
+
+<style>
+	main {
+		margin: auto;
+		padding: 1rem;
+		width: 900px;
+		max-width: calc(100% - 2rem);
+		color: white;
+		font-size: 20px;
+		line-height: 1.6;
+		min-height: 100vh;
+	}
+</style>

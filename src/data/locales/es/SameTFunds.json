@@ -1,0 +1,38 @@
+{
+    "title": "Fondos Mismo T",
+    "description": "Los Fondos Same-T ofrecen préstamos sin requerir garantía, son válidos para una sola transacción similar a los préstamos flash.",
+    "noFunds": "No se pudo encontrar ningún fondo Same-T.",
+    "offering": "Ofrenda",
+    "fee": "Tarifa",
+    "rowTitle": "Fondo #{{id}} por {{user}}",
+    "unpaidAmount": "Monto impago",
+    "id": "Identificación",
+    "deleteHeader": "Eliminando {{owner_account}}el fondo {{fund_id}}",
+    "update": "Actualizar",
+    "updateDialog": {
+      "title": "Actualización de su fondo Same-T",
+      "description": "Puedes actualizar el monto que ofreces y la tarifa que cobras.",
+      "newAmountContent": "La nueva cantidad de activos a ofrecer en su Fondo Same-T.",
+      "newAmountHeader": "Nueva cantidad",
+      "balance": "Usar saldo",
+      "newFeeContent": "La tarifa porcentual que usted cobra por la misma operación de préstamo/pago del fondo de transacción.",
+      "newFeeHeader": "Nueva tarifa",
+      "updateHeader": "Actualización del Fondo Same-T {{owner_account}} por {{fund_id}}"
+    },
+    "createDialog": {
+      "title": "Creando un nuevo Fondo Same-T",
+      "description": "Especifique el activo, el monto y la tarifa de su nuevo Fondo Same-T a continuación.",
+      "amount": "Cantidad",
+      "fee": "Tasa de tarifa",
+      "asset": "Activo crediticio",
+      "asset_description": "El activo que ofrece prestar en su Fondo Same-T."
+    },
+    "create": "Crear",
+    "all": "Todo",
+    "mine": "Mis fondos",
+    "search": "Buscar",
+    "noOwnedFunds": "No posee ningún fondo Same-T.",
+    "noSearchResults": "No se encontraron fondos Same-T.",
+    "searchHeader": "Búsqueda de fondos Same-T",
+    "searchDescription": "Puede buscar fondos Same-T por el nombre de la cuenta del propietario o el activo en oferta"
+  }

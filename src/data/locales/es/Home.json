@@ -114,5 +114,13 @@
     "hover1": "Explore los activos del mercado de predicción disponibles.",
     "hover2": "Los mercados de predicción pueden tratar sobre cualquier cosa.",
     "hover3": "Cada activo del mercado de predicción tiene una tarifa única."
+  },
+  "tfunds": {
+    "title": "🤖 Fondos Same-T",
+    "subtitle": "¡Vea, cree, actualice y elimine fondos Same-T!",
+    "hover1": "Vea todos los fondos Same-T que otros usuarios ofrecen actualmente.",
+    "hover2": "Cree fácilmente un nuevo fondo Same-T.",
+    "hover3": "Actualice o elimine sus fondos Same-T existentes.",
+    "hover4": "Los fondos Same-T son una forma de ganar pasivamente con sus tenencias."
   }
 }

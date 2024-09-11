@@ -282,6 +282,7 @@ export default function Settlement(properties) {
           parsedBitasset.collateral,
           parsedBitasset.id
         ]),
+        currentNode ? currentNode.url : null
       ]);
       smartcoinDataStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
@@ -297,7 +298,11 @@ export default function Settlement(properties) {
     let unsub;
 
     if (parsedAsset && usr && usr.chain) {
-      const collateralBidsStore = createCollateralBidStore([usr.chain, parsedAsset.id]);
+      const collateralBidsStore = createCollateralBidStore([
+        usr.chain,
+        parsedAsset.id,
+        currentNode ? currentNode.url : null
+      ]);
 
       unsub = collateralBidsStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {

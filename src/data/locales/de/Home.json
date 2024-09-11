@@ -114,5 +114,13 @@
     "hover1": "Durchsuchen Sie die verfügbaren Prognosemarkt-Assets.",
     "hover2": "Auf Prognosemärkten kann es um alles Mögliche gehen.",
     "hover3": "Für jedes Prognosemarkt-Asset gibt es eine eigene Gebühr."
+  },
+  "tfunds": {
+    "title": "🤖 Same-T-Fonds",
+    "subtitle": "Same-T Funds ansehen, erstellen, aktualisieren, löschen!",
+    "hover1": "Sehen Sie sich alle derzeit von anderen Benutzern angebotenen Same-T-Fonds an.",
+    "hover2": "Erstellen Sie ganz einfach einen neuen Same-T-Fonds.",
+    "hover3": "Aktualisieren oder löschen Sie Ihre vorhandenen Same-T-Gelder.",
+    "hover4": "Same-T-Fonds sind eine Möglichkeit, passiv an Ihren Beständen zu verdienen."
   }
 }

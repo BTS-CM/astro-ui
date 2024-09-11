@@ -114,5 +114,13 @@
     "hover1": "Navegue pelos ativos de mercado de previsão disponíveis.",
     "hover2": "Os mercados de previsão podem ser sobre qualquer coisa.",
     "hover3": "Cada ativo de mercado de previsão possui uma taxa exclusiva."
+  },
+  "tfunds": {
+    "title": "🤖 Fundos Same-T",
+    "subtitle": "Visualize, crie, atualize e exclua fundos Same-T!",
+    "hover1": "Veja todos os fundos Same-T atualmente oferecidos por outros usuários.",
+    "hover2": "Crie facilmente um novo fundo Same-T.",
+    "hover3": "Atualize ou exclua seus fundos Same-T existentes.",
+    "hover4": "Os fundos Same-T são uma forma de ganhar passivamente com suas participações."
   }
 }

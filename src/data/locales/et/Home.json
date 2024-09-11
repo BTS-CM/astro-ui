@@ -114,5 +114,13 @@
     "hover1": "Sirvige saadaolevaid ennustusturu varasid.",
     "hover2": "Ennustusturgudel võib olla ükskõik mida.",
     "hover3": "Igal ennustusturu varal on ainulaadne tasu."
+  },
+  "tfunds": {
+    "title": "🤖 Sama-T fondid",
+    "subtitle": "Vaadake, looge, värskendage ja kustutage Same-T fonde!",
+    "hover1": "Vaadake kõiki teiste kasutajate praegu pakutavaid Same-T fonde.",
+    "hover2": "Looge lihtsalt uus Same-T fond.",
+    "hover3": "Värskendage või kustutage olemasolevaid Same-T fonde.",
+    "hover4": "Same-T fondid on viis oma osalustelt passiivselt teenida."
   }
 }

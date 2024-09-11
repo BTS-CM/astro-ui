@@ -114,5 +114,13 @@
     "hover1": "Sfoglia le risorse di mercato di previsione disponibili.",
     "hover2": "I mercati di previsione possono riguardare qualsiasi cosa.",
     "hover3": "Ogni asset del mercato di previsione ha una tariffa unica."
+  },
+  "tfunds": {
+    "title": "🤖 Fondi Same-T",
+    "subtitle": "Visualizza, crea, aggiorna, elimina i fondi Same-T!",
+    "hover1": "Visualizza tutti i Fondi Same-T attualmente offerti da altri utenti.",
+    "hover2": "Crea facilmente un nuovo fondo Same-T.",
+    "hover3": "Aggiorna o elimina i tuoi fondi Same-T esistenti.",
+    "hover4": "I fondi Same-T sono un modo per guadagnare passivamente dalle tue partecipazioni."
   }
 }

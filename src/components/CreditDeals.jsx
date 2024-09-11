@@ -142,7 +142,7 @@ export default function CreditDeals(properties) {
     let unsubscribeLenderDeals;
 
     if (usr && usr.id) {
-      const lenderDealsStore = createLenderDealsStore([usr.chain, usr.id]);
+      const lenderDealsStore = createLenderDealsStore([usr.chain, usr.id, currentNode ? currentNode.url : null]);
       
       unsubscribeLenderDeals = lenderDealsStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {

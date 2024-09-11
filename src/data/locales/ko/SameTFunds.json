@@ -1,0 +1,38 @@
+{
+    "title": "Same-T 펀드",
+    "description": "Same-T Fund는 담보 없이 대출을 제공하며 플래시 대출과 유사한 단일 거래에 유효합니다.",
+    "noFunds": "Same-T 자금을 찾을 수 없습니다.",
+    "offering": "헌금",
+    "fee": "요금",
+    "rowTitle": "기금 #{{id}} ~에 의해 {{user}}",
+    "unpaidAmount": "미지급금액",
+    "id": "ID",
+    "deleteHeader": "삭제 중 {{owner_account}}님의 기금 {{fund_id}}",
+    "update": "업데이트",
+    "updateDialog": {
+      "title": "Same-T 펀드 업데이트",
+      "description": "제공하는 금액과 청구하는 수수료를 업데이트할 수 있습니다.",
+      "newAmountContent": "Same-T 펀드에 제공할 새로운 자산 수량입니다.",
+      "newAmountHeader": "새로운 금액",
+      "balance": "잔액 사용",
+      "newFeeContent": "동일한 거래 자금 차입/상환 작업에 대해 부과하는 수수료 비율입니다.",
+      "newFeeHeader": "새로운 수수료율",
+      "updateHeader": "Same-T 펀드 업데이트 {{owner_account}} ~에 의해 {{fund_id}}"
+    },
+    "createDialog": {
+      "title": "새로운 Same-T 펀드 만들기",
+      "description": "아래에서 새로운 Same-T 펀드의 자산, 금액, 수수료를 지정하세요.",
+      "amount": "양",
+      "fee": "수수료율",
+      "asset": "대출 자산",
+      "asset_description": "Same-T 펀드에서 대출하기 위해 제공하는 자산입니다."
+    },
+    "create": "만들다",
+    "all": "모두",
+    "mine": "내 자금",
+    "search": "찾다",
+    "noOwnedFunds": "귀하는 Same-T 펀드를 소유하고 있지 않습니다.",
+    "noSearchResults": "Same-T 자금을 찾을 수 없습니다.",
+    "searchHeader": "Same-T 펀드 검색",
+    "searchDescription": "소유자의 계좌 이름이나 제공되는 자산으로 Same-T Funds를 검색할 수 있습니다."
+  }

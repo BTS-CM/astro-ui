@@ -114,5 +114,13 @@
     "hover1": "Gennemse de tilgængelige forudsigelige markedsaktiver.",
     "hover2": "Forudsigelsesmarkeder kan handle om alt.",
     "hover3": "Hvert forudsigelsesmarkedsaktiv har et unikt gebyr."
+  },
+  "tfunds": {
+    "title": "🤖 Same-T Funds",
+    "subtitle": "Se, opret, opdater, slet Same-T Funds!",
+    "hover1": "Se alle de Same-T-fonde, der i øjeblikket tilbydes af andre brugere.",
+    "hover2": "Opret nemt en ny Same-T-fond.",
+    "hover3": "Opdater eller slet dine eksisterende Same-T-midler.",
+    "hover4": "Same-T-midler er en måde at tjene passivt på dine besiddelser."
   }
 }

@@ -50,7 +50,8 @@
     "offers": "Monitore e gerencie suas ofertas de crédito com o formulário abaixo.",
     "vesting": "Monitore e retire seus saldos de aquisição com o formulário abaixo.",
     "create_prediction": "Use o formulário abaixo para criar um ativo de mercado de previsão.",
-    "predictions": "Localize abaixo um ativo de mercado de previsão para apostar."
+    "predictions": "Localize abaixo um ativo de mercado de previsão para apostar.",
+    "tfunds": "Encontre, crie, atualize ou exclua fundos Same-T abaixo!"
   },
   "back": "Volte",
   "usage": "Projetado para uso com ",

@@ -1,0 +1,38 @@
+{
+    "title": "Sama-T fondid",
+    "description": "Same-T fondid pakuvad laenu ilma tagatist nõudmata, need kehtivad ühe tehingu jaoks, mis on sarnased kiirlaenudega.",
+    "noFunds": "Ühtegi Same-T fondi ei leitud.",
+    "offering": "Pakkumine",
+    "fee": "Tasu",
+    "rowTitle": "Fond nr{{id}} poolt {{user}}",
+    "unpaidAmount": "Tasumata summa",
+    "id": "Id",
+    "deleteHeader": "Kustutamine {{owner_account}}fondi {{fund_id}}",
+    "update": "Värskenda",
+    "updateDialog": {
+      "title": "Same-T fondi värskendamine",
+      "description": "Saate värskendada pakutavat summat ja võetavat tasu.",
+      "newAmountContent": "Teie Same-T fondis pakutavate varade uus kogus.",
+      "newAmountHeader": "Uus summa",
+      "balance": "Kasutage tasakaalu",
+      "newFeeContent": "Protsentuaalne tasu, mida küsite sama tehingu fondi laenu-/tagasimaksetoimingu eest.",
+      "newFeeHeader": "Uus tasu määr",
+      "updateHeader": "Same-T fondi uuendamine {{owner_account}} poolt {{fund_id}}"
+    },
+    "createDialog": {
+      "title": "Uue Same-T fondi loomine",
+      "description": "Täpsustage allpool oma uue Same-T fondi vara, summa ja tasu.",
+      "amount": "Summa",
+      "fee": "Tasu määr",
+      "asset": "Laenu vara",
+      "asset_description": "Vara, mida pakute laenuks oma Same-T fondis."
+    },
+    "create": "Loo",
+    "all": "Kõik",
+    "mine": "Minu fondid",
+    "search": "Otsi",
+    "noOwnedFunds": "Teil ei ole Same-T fonde.",
+    "noSearchResults": "Same-T fonde ei leitud.",
+    "searchHeader": "Otsi Same-T Funds",
+    "searchDescription": "Saate otsida Same-T fonde nende omaniku kontonime või pakutava vara järgi"
+  }

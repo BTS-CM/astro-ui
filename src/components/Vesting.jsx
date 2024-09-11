@@ -77,7 +77,7 @@ export default function Vesting(properties) {
     if (!usr || !usr.chain || !usr.id || !currentNode) {
       return;
     }
-    return createVestingBalanceStore([usr.chain, usr.id, currentNode.url]);
+    return createVestingBalanceStore([usr.chain, usr.id, currentNode ? currentNode.url : null]);
   }, [usr, currentNode]);
 
   const {

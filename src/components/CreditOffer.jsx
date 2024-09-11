@@ -77,7 +77,7 @@ function hoursTillExpiration(expirationTime) {
   return hours;
 }
 
-export default function CreditBorrow(properties) {
+export default function CreditOffer(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
   const form = useForm({
     defaultValues: {
@@ -225,7 +225,7 @@ export default function CreditBorrow(properties) {
           return;
         }
 
-        const offerStore = createObjectStore([_chain, JSON.stringify([id])]);
+        const offerStore = createObjectStore([_chain, JSON.stringify([id]), currentNode ? currentNode.url : null]);
         offerStore.subscribe(({ data, error, loading }) => {
           if (data && !error && !loading) {
             const foundOffer = data[0];
@@ -437,7 +437,7 @@ export default function CreditBorrow(properties) {
       if (foundOwner) {
         setOwner(foundOwner);
       } else {
-        const userStore = createObjectStore([_chain, JSON.stringify([relevantOffer.owner_account])]);
+        const userStore = createObjectStore([_chain, JSON.stringify([relevantOffer.owner_account]), currentNode ? currentNode.url : null]);
         userStore.subscribe(({ data, error, loading }) => {
           if (data && !error && !loading) {
             const foundUser = data[0];

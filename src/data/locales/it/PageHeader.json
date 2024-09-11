@@ -50,7 +50,8 @@
     "offers": "Monitora e gestisci le tue offerte di credito con il modulo sottostante.",
     "vesting": "Monitora e ritira i tuoi saldi di maturazione con il modulo sottostante.",
     "create_prediction": "Utilizza il modulo sottostante per creare un asset di mercato di previsione.",
-    "predictions": "Individua di seguito un asset del mercato di previsione su cui scommettere."
+    "predictions": "Individua di seguito un asset del mercato di previsione su cui scommettere.",
+    "tfunds": "Trova, crea, aggiorna o elimina i fondi Same-T qui sotto!"
   },
   "back": "Torna indietro",
   "usage": "Progettato per l'uso con ",

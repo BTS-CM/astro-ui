@@ -172,7 +172,7 @@ export default function Predictions(properties) {
   const [pmaProcessedData, setPmaProcessedData] = useState([]);
   useEffect(() => {
     async function fetching() {
-      const _store = createObjectStore([_chain, JSON.stringify(predictionMarketAssets.map(x => x.id)), currentNode.url]);
+      const _store = createObjectStore([_chain, JSON.stringify(predictionMarketAssets.map(x => x.id)), currentNode ? currentNode.url : null]);
     
       _store.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
@@ -250,7 +250,7 @@ export default function Predictions(properties) {
   const [completedPMAs, setCompletedPMAs] = useState([]);
   useEffect(() => {
     async function fetching() {
-      const _store = createObjectStore([_chain, JSON.stringify(pmaProcessedData.map(x => x.bitasset_data_id)), currentNode.url]);
+      const _store = createObjectStore([_chain, JSON.stringify(pmaProcessedData.map(x => x.bitasset_data_id)), currentNode ? currentNode.url : null]);
     
       _store.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {

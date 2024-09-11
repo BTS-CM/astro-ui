@@ -114,5 +114,13 @@
     "hover1": "Parcourez les actifs du marché de prédiction disponibles.",
     "hover2": "Les marchés de prédiction peuvent concerner n’importe quoi.",
     "hover3": "Chaque actif du marché de prédiction a des frais uniques."
+  },
+  "tfunds": {
+    "title": "🤖 Fonds identiques",
+    "subtitle": "Consultez, créez, mettez à jour, supprimez les fonds Same-T !",
+    "hover1": "Consultez tous les fonds Same-T actuellement proposés par d’autres utilisateurs.",
+    "hover2": "Créez facilement un nouveau fonds Same-T.",
+    "hover3": "Mettez à jour ou supprimez vos fonds Same-T existants.",
+    "hover4": "Les fonds Same-T sont un moyen de gagner passivement de l’argent grâce à vos avoirs."
   }
 }

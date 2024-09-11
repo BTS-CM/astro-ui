@@ -341,6 +341,7 @@ export default function Smartcoin(properties) {
         parsedBitasset.id,
         parsedCollateralBitasset && parsedCollateralBitasset.id ? parsedCollateralBitasset.id : "",
         usr.id,
+        currentNode ? currentNode.url : null
       ]);
       unsub = smartcoinDataStore.subscribe(({ data }) => {
         if (data && !data.error && !data.loading) {

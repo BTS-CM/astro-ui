@@ -50,7 +50,8 @@
     "offers": "Suivez et gérez vos offres de crédit avec le formulaire ci-dessous.",
     "vesting": "Surveillez et retirez vos soldes d’acquisition avec le formulaire ci-dessous.",
     "create_prediction": "Utilisez le formulaire ci-dessous pour créer un actif de marché de prédiction.",
-    "predictions": "Localisez ci-dessous un actif du marché de prédiction sur lequel parier."
+    "predictions": "Localisez ci-dessous un actif du marché de prédiction sur lequel parier.",
+    "tfunds": "Recherchez, créez, mettez à jour ou supprimez des fonds Same-T ci-dessous !"
   },
   "back": "Retourner",
   "usage": "Conçu pour être utilisé avec ",

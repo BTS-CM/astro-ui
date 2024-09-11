@@ -33,7 +33,7 @@ Integrates with both the [Beet](https://github.com/bitshares/beet) and [BeetEOS]
 * Create prediction market assets
 * Buy Life Time Membership for your account
 * User configurable blockchain node connections
-
+* Create/update/delete Same-T Funds
 
 ## Dev Commands
 

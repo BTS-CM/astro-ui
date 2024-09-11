@@ -1,0 +1,38 @@
+{
+    "title": "Same-T Funds",
+    "description": "Same-T Funds offer loans without requiring collateral, they're valid for a single transaction similar to flash loans.",
+    "noFunds": "Couldn't find any Same-T Funds.",
+    "offering": "Offering",
+    "fee": "Fee",
+    "rowTitle": "Fund #{{id}} by {{user}}",
+    "unpaidAmount": "Unpaid Amount",
+    "id": "Id",
+    "deleteHeader": "Deleting {{owner_account}}'s fund {{fund_id}}",
+    "update": "Update",
+    "updateDialog": {
+        "title": "Updating your Same-T Fund",
+        "description": "You can update the amount you're offering and the fee you're charging.",    
+        "newAmountContent": "The new quantity of assets to offer in your Same-T Fund.",
+        "newAmountHeader": "New amount",
+        "balance": "Use balance",
+        "newFeeContent": "The percentage fee you charge for the same transaction fund borrow/repay operation.",
+        "newFeeHeader": "New fee rate",
+        "updateHeader": "Updating the Same-T Fund {{owner_account}} by {{fund_id}}"
+    },
+    "createDialog": {
+        "title": "Creating a new Same-T Fund",
+        "description": "Specify the asset, amount, and fee for your new Same-T Fund below.",
+        "amount": "Amount",
+        "fee": "Fee rate",
+        "asset": "Lending asset",
+        "asset_description": "The asset you're offering to lend in your Same-T Fund."
+    },
+    "create": "Create",
+    "all": "All",
+    "mine": "My Funds",
+    "search": "Search",
+    "noOwnedFunds": "You don't own any Same-T Funds.",
+    "noSearchResults": "No Same-T Funds found.",
+    "searchHeader": "Search for Same-T Funds",
+    "searchDescription": "You can search for Same-T Funds by their owner's account name or the asset on offer"
+}

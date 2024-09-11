@@ -1,0 +1,38 @@
+{
+    "title": "Same-T Funds",
+    "description": "Same-T Funds tilbyder lån uden at kræve sikkerhed, de er gyldige for en enkelt transaktion, der ligner flashlån.",
+    "noFunds": "Kunne ikke finde nogen Same-T-midler.",
+    "offering": "Tilbud",
+    "fee": "Betaling",
+    "rowTitle": "Fondsnr.{{id}} ved {{user}}",
+    "unpaidAmount": "Ubetalt beløb",
+    "id": "Id",
+    "deleteHeader": "Sletter {{owner_account}}'s fond {{fund_id}}",
+    "update": "Opdatering",
+    "updateDialog": {
+      "title": "Opdatering af din Same-T-fond",
+      "description": "Du kan opdatere det beløb, du tilbyder, og det gebyr, du opkræver.",
+      "newAmountContent": "Den nye mængde aktiver, du kan tilbyde i din Same-T-fond.",
+      "newAmountHeader": "Nyt beløb",
+      "balance": "Brug balance",
+      "newFeeContent": "Det procentvise gebyr, du opkræver for den samme transaktionsfondslån/tilbagebetalingsoperation.",
+      "newFeeHeader": "Ny gebyrsats",
+      "updateHeader": "Opdatering af Same-T Fund {{owner_account}} ved {{fund_id}}"
+    },
+    "createDialog": {
+      "title": "Oprettelse af en ny Same-T-fond",
+      "description": "Angiv aktiv, beløb og gebyr for din nye Same-T-fond nedenfor.",
+      "amount": "Beløb",
+      "fee": "Gebyrsats",
+      "asset": "Udlånsaktiv",
+      "asset_description": "Det aktiv, du tilbyder at låne i din Same-T-fond."
+    },
+    "create": "Skabe",
+    "all": "Alle",
+    "mine": "Mine midler",
+    "search": "Søge",
+    "noOwnedFunds": "Du ejer ikke nogen Same-T-midler.",
+    "noSearchResults": "Ingen Same-T Funds fundet.",
+    "searchHeader": "Søg efter Same-T Funds",
+    "searchDescription": "Du kan søge efter Same-T Funds ved deres ejers kontonavn eller det tilbudte aktiv"
+  }

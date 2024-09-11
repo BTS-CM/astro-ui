@@ -317,7 +317,7 @@ export default function Prediction(properties) {
                 setCommissionFunction(0);
                 return;
             }
-
+    
             const split = parsedInput.toString().split(".");
             if (split.length > 1) {
                 const decimals = split[1].length;
@@ -325,7 +325,7 @@ export default function Prediction(properties) {
                     parsedInput = parseFloat(parsedInput.toFixed(2));
                 }
             }
-
+    
             if (parsedInput > 100) {
                 setCommissionFunction(100);
             } else if (parsedInput < 0.01) {
@@ -333,18 +333,18 @@ export default function Prediction(properties) {
             } else {
                 setCommissionFunction(parsedInput);
             }
-
+    
             e.currentTarget.value = input;
-
+    
         }, 500),
         []
-      );
+    );
 
-      const [whitelistMarketFeeSharingDialogOpen, setWhitelistMarketFeeSharingDialogOpen] = useState(false);
-      const [whitelistAuthorityDialogOpen, setWhitelistAuthorityDialogOpen] = useState(false);
-      const [blacklistAuthorityDialogOpen, setBlacklistAuthorityDialogOpen] = useState(false);
+    const [whitelistMarketFeeSharingDialogOpen, setWhitelistMarketFeeSharingDialogOpen] = useState(false);
+    const [whitelistAuthorityDialogOpen, setWhitelistAuthorityDialogOpen] = useState(false);
+    const [blacklistAuthorityDialogOpen, setBlacklistAuthorityDialogOpen] = useState(false);
 
-      const feeSharingWhitelistRow = ({ index, style }) => {
+    const feeSharingWhitelistRow = ({ index, style }) => {
         let res = feeSharingWhitelist[index];
         if (!res) {
             return null;
@@ -352,61 +352,61 @@ export default function Prediction(properties) {
 
         return (
             <div style={{ ...style }} key={`acard-${res.id}`}>
-              <Card className="ml-2 mr-2 mt-1">
+                <Card className="ml-2 mr-2 mt-1">
                 <CardHeader className="pb-3 pt-3">
-                  <span className="grid grid-cols-12">
+                    <span className="grid grid-cols-12">
                     <span className="col-span-1">
-                      <Avatar
+                        <Avatar
                         size={40} name={res.name} extra="Borrower"
                         expression={{ eye: "normal", mouth: "open" }}
                         colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]}
-                      />
+                        />
                     </span>
                     <span className="col-span-10 ml-3">
                         #{index + 1}: {res.name} ({res.id})
                     </span>
                     <span className="col-span-1">
-                      <Button
-                          variant="outline"
-                          className="mr-2"
-                          onClick={(e) => {
-                              e.preventDefault();
-                              const _update = feeSharingWhitelist.filter((x) => x.id !== res.id);
-                              setFeeSharingWhitelist(_update);
-                          }}
-                      >
-                          ❌
-                      </Button>
+                        <Button
+                            variant="outline"
+                            className="mr-2"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                const _update = feeSharingWhitelist.filter((x) => x.id !== res.id);
+                                setFeeSharingWhitelist(_update);
+                            }}
+                        >
+                            ❌
+                        </Button>
                     </span>
-                  </span>
+                    </span>
                 </CardHeader>
-              </Card>
+                </Card>
             </div>
         );
-      };
+    };
 
-      const whitelistAuthorityRow = ({ index, style }) => {
+    const whitelistAuthorityRow = ({ index, style }) => {
         let res = whitelistAuthorities[index];
         if (!res) {
-          return null;
+            return null;
         }
         
         return (
-          <div style={{ ...style }} key={`acard-${res.id}`}>
+            <div style={{ ...style }} key={`acard-${res.id}`}>
             <Card className="ml-2 mr-2 mt-1">
-              <CardHeader className="pb-3 pt-3">
+                <CardHeader className="pb-3 pt-3">
                 <span className="grid grid-cols-12">
-                  <span className="col-span-1">
+                    <span className="col-span-1">
                     <Avatar
-                      size={40} name={res.name} extra="Borrower"
-                      expression={{ eye: "normal", mouth: "open" }}
-                      colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]}
+                        size={40} name={res.name} extra="Borrower"
+                        expression={{ eye: "normal", mouth: "open" }}
+                        colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]}
                     />
-                  </span>
-                  <span className="col-span-10 ml-3">
-                      #{index + 1}: {res.name} ({res.id})
-                  </span>
-                  <span className="col-span-1">
+                    </span>
+                    <span className="col-span-10 ml-3">
+                        #{index + 1}: {res.name} ({res.id})
+                    </span>
+                    <span className="col-span-1">
                     <Button
                         variant="outline"
                         className="mr-2"
@@ -418,36 +418,36 @@ export default function Prediction(properties) {
                     >
                         ❌
                     </Button>
-                  </span>
+                    </span>
                 </span>
-              </CardHeader>
+                </CardHeader>
             </Card>
-          </div>
+            </div>
         );
-      };
+    };
 
-      const blacklistAuthorityRow = ({ index, style }) => {
+    const blacklistAuthorityRow = ({ index, style }) => {
         let res = blacklistAuthorities[index];
         if (!res) {
-          return null;
+            return null;
         }
         
         return (
-          <div style={{ ...style }} key={`acard-${res.id}`}>
+            <div style={{ ...style }} key={`acard-${res.id}`}>
             <Card className="ml-2 mr-2 mt-1">
-              <CardHeader className="pb-3 pt-3">
+                <CardHeader className="pb-3 pt-3">
                 <span className="grid grid-cols-12">
-                  <span className="col-span-1">
+                    <span className="col-span-1">
                     <Avatar
-                      size={40} name={res.name} extra="Borrower"
-                      expression={{ eye: "normal", mouth: "open" }}
-                      colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]}
+                        size={40} name={res.name} extra="Borrower"
+                        expression={{ eye: "normal", mouth: "open" }}
+                        colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]}
                     />
-                  </span>
-                  <span className="col-span-9 ml-3">
-                      #{index + 1}: {res.name} ({res.id})
-                  </span>
-                  <span className="col-span-1">
+                    </span>
+                    <span className="col-span-9 ml-3">
+                        #{index + 1}: {res.name} ({res.id})
+                    </span>
+                    <span className="col-span-1">
                     <Button
                         variant="outline"
                         className="mr-2"
@@ -459,13 +459,13 @@ export default function Prediction(properties) {
                     >
                         ❌
                     </Button>
-                  </span>
+                    </span>
                 </span>
-              </CardHeader>
+                </CardHeader>
             </Card>
-          </div>
+            </div>
         );
-      }
+    }
 
     return (
         <>

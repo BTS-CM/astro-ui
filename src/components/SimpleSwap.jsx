@@ -305,6 +305,7 @@ export default function SimpleSwap() {
         JSON.stringify(pools),
         JSON.stringify(assets),
         pool,
+        currentNode ? currentNode.url : null
       ]);
 
       try {

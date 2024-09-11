@@ -1,0 +1,38 @@
+{
+    "title": "Same-T ファンド",
+    "description": "Same-T Funds は担保を必要とせずにローンを提供しており、フラッシュ ローンと同様に 1 回の取引で有効です。",
+    "noFunds": "Same-T ファンドが見つかりませんでした。",
+    "offering": "オファリング",
+    "fee": "手数料",
+    "rowTitle": "基金番号{{id}} による {{user}}",
+    "unpaidAmount": "未払い額",
+    "id": "ID",
+    "deleteHeader": "削除中 {{owner_account}}さんの基金 {{fund_id}}",
+    "update": "アップデート",
+    "updateDialog": {
+      "title": "Same-T ファンドの更新",
+      "description": "提示する金額と請求する料金は更新できます。",
+      "newAmountContent": "Same-T ファンドで提供する新しい資産の量。",
+      "newAmountHeader": "新しい金額",
+      "balance": "残高を使用する",
+      "newFeeContent": "同じ取引資金の借入/返済操作に対して請求する手数料の割合。",
+      "newFeeHeader": "新しい手数料率",
+      "updateHeader": "Same-T ファンドの更新 {{owner_account}} による {{fund_id}}"
+    },
+    "createDialog": {
+      "title": "新しい Same-T ファンドの創設",
+      "description": "新しい Same-T ファンドの資産、金額、手数料を以下に指定します。",
+      "amount": "額",
+      "fee": "手数料率",
+      "asset": "貸付資産",
+      "asset_description": "Same-T Fund での貸し出しを提案している資産。"
+    },
+    "create": "作成する",
+    "all": "全て",
+    "mine": "私の資金",
+    "search": "検索",
+    "noOwnedFunds": "Same-T ファンドを所有していません。",
+    "noSearchResults": "Same-T ファンドが見つかりません。",
+    "searchHeader": "Same-T ファンドを検索する",
+    "searchDescription": "Same-T ファンドは、所有者の口座名またはオファーされている資産で検索できます。"
+  }

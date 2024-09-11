@@ -114,5 +114,13 @@
     "hover1": "Browse the available prediction market assets.",
     "hover2": "Prediction markets can be about anything.",
     "hover3": "Each prediction market asset has an unique fee."
+  },
+  "tfunds": {
+    "title": "🤖 Same-T Funds",
+    "subtitle": "View, create, update, delete Same-T Funds!",
+    "hover1": "View all the Same-T Funds currently on offer by other users.",
+    "hover2": "Easily create a new Same-T fund.",
+    "hover3": "Update or delete your existing Same-T funds.",
+    "hover4": "Same-T funds are a way to earn passively from your holdings."
   }
 }
