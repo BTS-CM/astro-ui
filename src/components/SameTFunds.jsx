@@ -473,7 +473,7 @@ export default function SameTFunds(properties) {
                         amount: blockchainFloat(deltaAmount, asset.precision).toFixed(0),
                         asset_id: asset.id
                       },
-                      new_fee_rate: newFeeRate,
+                      new_fee_rate: newFeeRate * 100,
                       extensions: {}
                     },
                   ]}
