@@ -122,5 +122,13 @@
     "hover2": "Créez facilement un nouveau fonds Same-T.",
     "hover3": "Mettez à jour ou supprimez vos fonds Same-T existants.",
     "hover4": "Les fonds Same-T sont un moyen de gagner passivement de l’argent grâce à vos avoirs."
+  },
+  "create_vesting": {
+    "title": "🫰 Gilet d'actifs",
+    "subtitle": "Créez des soldes d'acquisition pour vous-même ou pour d'autres",
+    "hover1": "La création d'un solde d'acquisition vous permet de bloquer une quantité d'actifs pour une période de temps définie.",
+    "hover2": "Vous pouvez utiliser l’un des deux types d’acquisition : Coin Days Destroyed et Linear Vesting with Cliff.",
+    "hover3": "L'effet de la politique de Coin Days Destroyed est d'exiger qu'un certain montant « d'intérêts » s'accumule avant que le solde total puisse être retiré. ",
+    "hover4": "La politique d'acquisition linéaire avec Cliff est utilisée pour imiter les contrats d'acquisition d'actions traditionnels dans lesquels chaque jour un certain montant est acquis jusqu'à son échéance complète."
   }
 }

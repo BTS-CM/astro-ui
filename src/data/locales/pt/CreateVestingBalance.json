@@ -1,0 +1,29 @@
+{
+    "selectAccount": "Selecione a conta",
+    "card": {
+      "title": "Criador do saldo de aquisição de ativos",
+      "description": "Crie um saldo de aquisição para uma conta. "
+    },
+    "amount": "Valor a ser adquirido",
+    "amountDescription": "Esta é a quantidade de ativos que você planeja colocar em um saldo de aquisição da conta de destino.",
+    "target": "Conta alvo",
+    "targetDescription": "Esta é a conta que receberá o saldo de aquisição.",
+    "policy": "Política de saldo de aquisição",
+    "policyDescription": "Você pode usar uma das duas políticas: Coin Days Destroyed ou Linear Vesting with Cliff. ",
+    "asset": "Ativo",
+    "assetDescription": "Este é o ativo que será colocado no saldo de aquisição.",
+    "ccd": "Dias de moedas destruídos",
+    "lvc": "Vesting Linear com Cliff",
+    "startClaim": "Data de início da reivindicação",
+    "startClaimDescription": "Esta é a data em que a conta pode começar a reivindicar o saldo adquirido.",
+    "vestingSeconds": "Segundos adquiridos",
+    "vestingSecondsDescription": "Este é o número de segundos durante os quais o saldo será adquirido.",
+    "beginTime": "Hora de início",
+    "beginTimeDescription": "Este é o momento em que o saldo de aquisição começará a ser adquirido.",
+    "vestingCliffSeconds": "Vestindo segundos de penhasco",
+    "vestingCliffSecondsDescription": "Este é o número de segundos após o horário de início antes que o saldo comece a ser adquirido.",
+    "vestingDurationSeconds": "Duração da aquisição em segundos",
+    "vestingDurationSecondsDescription": "Este é o número de segundos durante os quais o saldo será adquirido.",
+    "dialogHeader": "Criando um novo saldo de aquisição",
+    "myAccount": "Sua conta"
+  }

@@ -1,0 +1,29 @@
+{
+    "selectAccount": "Seleziona Conto",
+    "card": {
+      "title": "Creatore del saldo di maturazione delle risorse",
+      "description": "Creare un saldo di maturazione per un conto. "
+    },
+    "amount": "Importo da spettare",
+    "amountDescription": "Si tratta dell'importo delle risorse che prevedi di inserire in un saldo di maturazione per il conto di destinazione.",
+    "target": "Conto di destinazione",
+    "targetDescription": "Questo è il conto che riceverà il saldo di maturazione.",
+    "policy": "Politica del saldo di maturazione",
+    "policyDescription": "Puoi utilizzare una delle due politiche: Coin Days Destroyed o Linear Vesting with Cliff. ",
+    "asset": "Risorsa",
+    "assetDescription": "Questa è l'attività che verrà inserita nel saldo di maturazione.",
+    "ccd": "Giorni di monete distrutti",
+    "lvc": "Vesting lineare con Cliff",
+    "startClaim": "Data di inizio del reclamo",
+    "startClaimDescription": "Questa è la data in cui il conto può iniziare a richiedere il saldo maturato.",
+    "vestingSeconds": "Secondi di maturazione",
+    "vestingSecondsDescription": "Questo è il numero di secondi in cui matura il saldo.",
+    "beginTime": "Ora di inizio",
+    "beginTimeDescription": "Questo è il momento in cui il saldo di maturazione inizierà a maturare.",
+    "vestingCliffSeconds": "Vestire i secondi della scogliera",
+    "vestingCliffSecondsDescription": "Questo è il numero di secondi dopo l'ora di inizio prima che il saldo inizi a maturare.",
+    "vestingDurationSeconds": "Durata della maturazione secondi",
+    "vestingDurationSecondsDescription": "Questo è il numero di secondi in cui matura il saldo.",
+    "dialogHeader": "Creazione di un nuovo saldo di maturazione",
+    "myAccount": "Il tuo conto"
+  }

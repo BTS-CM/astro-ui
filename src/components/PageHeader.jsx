@@ -135,11 +135,25 @@ export default function PageHeader(properties) {
                         text={t("PageHeader:poolExchange")}
                         icon="💱"
                       />
-                      <MenuRow url="/stake/index.html" text={t("PageHeader:poolStake")} icon="🔒" />
+                      <MenuRow
+                        url="/swap/index.html"
+                        text={t("PageHeader:simpleSwap")}
+                        icon="🔄"
+                      />
+                      <MenuRow
+                        url="/stake/index.html"
+                        text={t("PageHeader:poolStake")}
+                        icon="🔒"
+                      />
                       <MenuRow
                         url="/transfer/index.html"
                         text={t("PageHeader:transferAssets")}
                         icon="💸"
+                      />
+                      <MenuRow
+                        url="/create_vesting/index.html"
+                        text={t("PageHeader:vestAssets")}
+                        icon="🫰"
                       />
                     </CommandGroup>
                     <CommandSeparator />
@@ -159,6 +173,11 @@ export default function PageHeader(properties) {
                         text={t("PageHeader:createDebt")}
                         icon="💵"
                       />
+                      <MenuRow
+                        url="/tfunds/index.html"
+                        text={t("PageHeader:sameTFunds")}
+                        icon="🤖"
+                      />
                     </CommandGroup>
                     <CommandSeparator />
                     <CommandGroup heading={t("PageHeader:overviewsHeading")}>
@@ -177,10 +196,42 @@ export default function PageHeader(properties) {
                         text={t("PageHeader:creditDeals")}
                         icon="🤝"
                       />
+                      <MenuRow
+                        url="/offers/index.html"
+                        text={t("PageHeader:creditOffers")}
+                        icon="📜"
+                      />
+                      <MenuRow
+                        url="/vesting/index.html"
+                        text={t("PageHeader:vestingBalances")}
+                        icon="⌚"
+                      />
+                      <MenuRow
+                        url="/predictions/index.html"
+                        text={t("PageHeader:predictions")}
+                        icon="🎲"
+                      />
+                    </CommandGroup>
+                    <CommandSeparator />
+                    <CommandGroup heading={t("PageHeader:assetsHeading")}>
+                      <MenuRow
+                        url="/create_prediction/index.html"
+                        text={t("PageHeader:createPrediction")}
+                        icon="🔮"
+                      />
                     </CommandGroup>
                     <CommandSeparator />
                     <CommandGroup heading={t("PageHeader:settingsHeading")}>
-                      <MenuRow url="/ltm/index.html" text={t("PageHeader:buyLTM")} icon="🏅" />
+                      <MenuRow
+                        url="/ltm/index.html"
+                        text={t("PageHeader:buyLTM")}
+                        icon="🏅"
+                      />
+                      <MenuRow
+                        url="/nodes/index.html"
+                        text={t("PageHeader:nodes")}
+                        icon="🌐"
+                      />
                     </CommandGroup>
                   </CommandList>
                 </Command>

@@ -1,0 +1,29 @@
+{
+    "selectAccount": "Select Account",
+    "card": {
+        "title": "Asset Vesting Balance creator",
+        "description": "Create a vesting balance for an account. The balance will vest over the period of time you specify."
+    },
+    "amount": "Amount to vest",
+    "amountDescription": "This is the amount of assets you plan on placing into a vesting balance for the target account.",
+    "target": "Target account",
+    "targetDescription": "This is the account that will receive the vesting balance.",
+    "policy": "Vesting balance policy",
+    "policyDescription": "You can use one of two policies: Coin Days Destroyed or Linear Vesting with Cliff. Coin Days Destroyed policy's effect is to require a certain amount of “interest” to accrue before the full balance may be withdrawn. Interest accrues as coindays (balance * length held). If some of the balance is withdrawn, the remaining balance must be held longer. Linear Vesting with Cliff policy is used to mimic traditional stock vesting contracts where each day a certain amount vests until it is fully matured.",
+    "asset": "Asset",
+    "assetDescription": "This is the asset that will be placed into the vesting balance.",
+    "ccd": "Coin Days Destroyed",
+    "lvc": "Linear Vesting with Cliff",
+    "startClaim": "Claim start date",
+    "startClaimDescription": "This is the date when the account can start claiming the vested balance.",
+    "vestingSeconds": "Vesting seconds",
+    "vestingSecondsDescription": "This is the number of seconds over which the balance will vest.",
+    "beginTime": "Begin time",
+    "beginTimeDescription": "This is the time at which the vesting balance will begin vesting.",
+    "vestingCliffSeconds": "Vesting cliff seconds",
+    "vestingCliffSecondsDescription": "This is the number of seconds after the begin time before the balance will begin vesting.",
+    "vestingDurationSeconds": "Vesting duration seconds",
+    "vestingDurationSecondsDescription": "This is the number of seconds over which the balance will vest.",
+    "dialogHeader": "Creating a new Vesting Balance",
+    "myAccount": "Your account"
+}

@@ -206,7 +206,6 @@ export default function Vesting(properties) {
                   : null
               }
             </>
-
           </CardContent>
         </Card>
         {

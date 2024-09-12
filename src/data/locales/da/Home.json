@@ -122,5 +122,13 @@
     "hover2": "Opret nemt en ny Same-T-fond.",
     "hover3": "Opdater eller slet dine eksisterende Same-T-midler.",
     "hover4": "Same-T-midler er en måde at tjene passivt på dine besiddelser."
+  },
+  "create_vesting": {
+    "title": "🫰 Vestaktiver",
+    "subtitle": "Skab optjening til dig selv eller andre",
+    "hover1": "Oprettelse af en optjeningsbalance giver dig mulighed for at låse en mængde aktiver op i en bestemt periode.",
+    "hover2": "Du kan bruge en af ​​to typer optjening: Coin Days Destroyed og Linear Vesting with Cliff.",
+    "hover3": "Coin Days Destroyed-politikkens effekt er at kræve en vis mængde \"rente\", før den fulde saldo kan trækkes tilbage. ",
+    "hover4": "Lineær Vesting med Cliff-politik bruges til at efterligne traditionelle aktieoptjeningkontrakter, hvor et vist beløb hver dag optjenes, indtil det er fuldt modnet."
   }
 }

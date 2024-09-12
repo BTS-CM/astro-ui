@@ -45,7 +45,8 @@ const pages = [
   "SimpleSwap",
   "Vesting",
   "Predictions",
-  "SameTFunds"
+  "SameTFunds",
+  "CreateVestingBalance"
 ];
 
 const locale = persistentAtom("locale", "en");

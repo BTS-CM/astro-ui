@@ -122,5 +122,13 @@
     "hover2": "Looge lihtsalt uus Same-T fond.",
     "hover3": "Värskendage või kustutage olemasolevaid Same-T fonde.",
     "hover4": "Same-T fondid on viis oma osalustelt passiivselt teenida."
+  },
+  "create_vesting": {
+    "title": "🫰 Vestivarad",
+    "subtitle": "Looge endale või teistele omandisaldod",
+    "hover1": "Üleandmisbilansi loomine võimaldab lukustada teatud koguse varasid kindlaksmääratud perioodiks.",
+    "hover2": "Võite kasutada ühte kahest omandamise tüübist: Coin Days Destroyed ja Linear Vesting with Cliff.",
+    "hover3": "Coin Days Destroyed poliitika mõju seisneb selles, et enne kogu saldo väljavõtmist nõutakse teatud intresside kogunemist. ",
+    "hover4": "Lineaarse üleandmise koos Cliffiga poliitikat kasutatakse traditsiooniliste aktsiate üleandmise lepingute jäljendamiseks, kus iga päev antakse teatud summa kuni selle täieliku küpsemiseni."
   }
 }

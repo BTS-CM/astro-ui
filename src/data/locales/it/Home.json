@@ -122,5 +122,13 @@
     "hover2": "Crea facilmente un nuovo fondo Same-T.",
     "hover3": "Aggiorna o elimina i tuoi fondi Same-T esistenti.",
     "hover4": "I fondi Same-T sono un modo per guadagnare passivamente dalle tue partecipazioni."
+  },
+  "create_vesting": {
+    "title": "🫰 Vesti i beni",
+    "subtitle": "Crea saldi di maturazione per te o per altri",
+    "hover1": "La creazione di un saldo di maturazione consente di bloccare una quantità di beni per un determinato periodo di tempo.",
+    "hover2": "È possibile utilizzare uno dei due tipi di vesting: Coin Days Destroyed e Linear Vesting with Cliff.",
+    "hover3": "L'effetto della politica Coin Days Destroyed è di richiedere che una certa quantità di “interessi” maturi prima che l'intero saldo possa essere ritirato. ",
+    "hover4": "La politica di maturazione lineare con Cliff viene utilizzata per imitare i tradizionali contratti di maturazione azionaria in cui ogni giorno un certo importo matura fino alla completa maturazione."
   }
 }

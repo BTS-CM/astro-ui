@@ -1,0 +1,29 @@
+{
+    "selectAccount": "계정 선택",
+    "card": {
+      "title": "자산 베스팅 잔액 생성자",
+      "description": "계정에 대한 베스팅 잔액을 만듭니다. "
+    },
+    "amount": "조끼 금액",
+    "amountDescription": "이는 대상 계정의 베스팅 잔액에 배치하려는 자산 금액입니다.",
+    "target": "대상 계정",
+    "targetDescription": "베스팅 잔액을 받을 계좌입니다.",
+    "policy": "베스팅 잔액 정책",
+    "policyDescription": "두 가지 정책 중 하나를 사용할 수 있습니다: Coin Days Destroyed 또는 Cliff를 사용한 선형 베스팅. ",
+    "asset": "유산",
+    "assetDescription": "이는 베스팅 잔고에 포함될 자산입니다.",
+    "ccd": "코인이 파괴된 날",
+    "lvc": "Cliff를 사용한 선형 베스팅",
+    "startClaim": "청구 시작일",
+    "startClaimDescription": "이는 계정이 베스팅된 잔액을 청구하기 시작할 수 있는 날짜입니다.",
+    "vestingSeconds": "베스팅 초",
+    "vestingSecondsDescription": "이는 잔액이 부여되는 시간(초)입니다.",
+    "beginTime": "시작 시간",
+    "beginTimeDescription": "베스팅 잔액이 베스팅되기 시작하는 시점입니다.",
+    "vestingCliffSeconds": "베스팅 절벽 초",
+    "vestingCliffSecondsDescription": "이는 시작 시간 이후 잔액이 베스팅을 시작하기 전까지의 시간(초)입니다.",
+    "vestingDurationSeconds": "베스팅 기간(초)",
+    "vestingDurationSecondsDescription": "이는 잔액이 부여되는 시간(초)입니다.",
+    "dialogHeader": "새로운 베스팅 잔액 생성",
+    "myAccount": "귀하의 계정"
+  }

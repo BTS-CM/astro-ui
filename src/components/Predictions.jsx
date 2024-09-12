@@ -795,8 +795,8 @@ export default function Predictions(properties) {
                                       {
                                         issueAmount > humanReadableBackingAssetBalance
                                         ? <Badge variant="destructive">
-                                            <ExclamationTriangleIcon className="mr-2"/> {t("Predictions:insufficient_funds")}
-                                        </Badge>
+                                              <ExclamationTriangleIcon className="mr-2"/> {t("Predictions:insufficient_funds")}
+                                          </Badge>
                                         : null
                                       }
                                     </div>

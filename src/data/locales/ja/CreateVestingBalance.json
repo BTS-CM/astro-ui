@@ -1,0 +1,29 @@
+{
+    "selectAccount": "アカウントの選択",
+    "card": {
+      "title": "資産権利確定残高作成者",
+      "description": "アカウントの権利確定残高を作成します。"
+    },
+    "amount": "権利確定額",
+    "amountDescription": "これは、ターゲット口座の権利確定残高に入れる予定の資産の額です。",
+    "target": "対象アカウント",
+    "targetDescription": "これは権利確定残高を受け取る口座です。",
+    "policy": "権利確定バランスポリシー",
+    "policyDescription": "Coin Days Destroyed または Linear Vesting with Cliff の 2 つのポリシーのいずれかを使用できます。 ",
+    "asset": "資産",
+    "assetDescription": "これは権利確定残高に組み込まれる資産です。",
+    "ccd": "コインの日数が破壊されました",
+    "lvc": "クリフによるリニアベスティング",
+    "startClaim": "請求開始日",
+    "startClaimDescription": "これは、アカウントが確定残高の請求を開始できる日です。",
+    "vestingSeconds": "権利確定秒数",
+    "vestingSecondsDescription": "これは、残高が確定するまでの秒数です。",
+    "beginTime": "開始時間",
+    "beginTimeDescription": "これは、権利確定残高の権利確定が開始される時点です。",
+    "vestingCliffSeconds": "権利確定クリフ秒数",
+    "vestingCliffSecondsDescription": "これは、開始時刻から残高の確定が開始されるまでの秒数です。",
+    "vestingDurationSeconds": "権利確定期間の秒数",
+    "vestingDurationSecondsDescription": "これは、残高が確定するまでの秒数です。",
+    "dialogHeader": "新しい権利確定残高の作成",
+    "myAccount": "あなたのアカウント"
+  }

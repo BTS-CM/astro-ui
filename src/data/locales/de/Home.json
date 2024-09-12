@@ -122,5 +122,13 @@
     "hover2": "Erstellen Sie ganz einfach einen neuen Same-T-Fonds.",
     "hover3": "Aktualisieren oder löschen Sie Ihre vorhandenen Same-T-Gelder.",
     "hover4": "Same-T-Fonds sind eine Möglichkeit, passiv an Ihren Beständen zu verdienen."
+  },
+  "create_vesting": {
+    "title": "🫰 Vermögenswerte übertragen",
+    "subtitle": "Erstellen Sie Freizügigkeitsguthaben für sich selbst oder andere",
+    "hover1": "Durch die Erstellung eines Sperrguthabens können Sie eine bestimmte Menge an Vermögenswerten für einen bestimmten Zeitraum sperren.",
+    "hover2": "Sie können einen von zwei Vesting-Typen verwenden: Coin Days Destroyed und Linear Vesting with Cliff.",
+    "hover3": "Die Wirkung der Coin Days Destroyed-Richtlinie besteht darin, dass ein bestimmter Betrag an „Zinsen“ anfallen muss, bevor der gesamte Restbetrag abgehoben werden kann. ",
+    "hover4": "Die Richtlinie „Linear Vesting with Cliff“ wird verwendet, um traditionelle Aktien-Vesting-Verträge nachzuahmen, bei denen jeden Tag ein bestimmter Betrag bis zur vollständigen Fälligkeit unverfallbar wird."
   }
 }

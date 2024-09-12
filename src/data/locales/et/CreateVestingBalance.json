@@ -1,0 +1,29 @@
+{
+    "selectAccount": "Valige Konto",
+    "card": {
+      "title": "Varade üleandmise saldo looja",
+      "description": "Looge kontole üleandmise saldo. "
+    },
+    "amount": "Vestile kuuluv summa",
+    "amountDescription": "See on varade summa, mille kavatsete sihtkonto üleandmise saldole paigutada.",
+    "target": "Sihtkonto",
+    "targetDescription": "See on konto, millele laekub üleandmise saldo.",
+    "policy": "Üleandmise bilansi poliitika",
+    "policyDescription": "Võite kasutada ühte kahest poliitikast: Coin Days Destroyed või Lineaarne üleandmine koos Cliffiga. ",
+    "asset": "Vara",
+    "assetDescription": "See on vara, mis paigutatakse üleandmisbilanssi.",
+    "ccd": "Müntide päevad hävitatud",
+    "lvc": "Lineaarne üleandmine kaljuga",
+    "startClaim": "Nõude alguskuupäev",
+    "startClaimDescription": "See on kuupäev, mil kontol saab hakata taotlema omandatud saldot.",
+    "vestingSeconds": "Sekundite omandamine",
+    "vestingSecondsDescription": "See on sekundite arv, mille jooksul saldo säilib.",
+    "beginTime": "Alusta aega",
+    "beginTimeDescription": "See on aeg, mil üleandmisjäägi üleandmine algab.",
+    "vestingCliffSeconds": "Kalju sekundite omandamine",
+    "vestingCliffSecondsDescription": "See on sekundite arv pärast algusaega, enne kui saldo omandamist alustatakse.",
+    "vestingDurationSeconds": "Omandamise kestus sekundis",
+    "vestingDurationSecondsDescription": "See on sekundite arv, mille jooksul saldo säilib.",
+    "dialogHeader": "Uue üleandmise saldo loomine",
+    "myAccount": "Teie konto"
+  }

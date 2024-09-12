@@ -1,0 +1,29 @@
+{
+    "selectAccount": "Seleccionar cuenta",
+    "card": {
+      "title": "Creador del saldo de adquisición de activos",
+      "description": "Cree un saldo de adquisición de derechos para una cuenta. "
+    },
+    "amount": "Cantidad a otorgar",
+    "amountDescription": "Esta es la cantidad de activos que planea colocar en un saldo de adquisición de derechos para la cuenta objetivo.",
+    "target": "Cuenta objetivo",
+    "targetDescription": "Esta es la cuenta que recibirá el saldo de adquisición de derechos.",
+    "policy": "Política de saldo adquirido",
+    "policyDescription": "Puede utilizar una de dos políticas: Coin Days Destroyed o Linear Vesting with Cliff. ",
+    "asset": "Activo",
+    "assetDescription": "Este es el activo que se colocará en el saldo de adquisición de derechos.",
+    "ccd": "Días de monedas destruidos",
+    "lvc": "Adquisición lineal con acantilado",
+    "startClaim": "Fecha de inicio del reclamo",
+    "startClaimDescription": "Esta es la fecha en la que la cuenta puede comenzar a reclamar el saldo adquirido.",
+    "vestingSeconds": "Segundos de adquisición de derechos",
+    "vestingSecondsDescription": "Esta es la cantidad de segundos durante los cuales se otorgará el saldo.",
+    "beginTime": "hora de inicio",
+    "beginTimeDescription": "Este es el momento en el que el saldo adquirido comenzará a adquirir derechos.",
+    "vestingCliffSeconds": "Segundos del acantilado adquirido",
+    "vestingCliffSecondsDescription": "Esta es la cantidad de segundos después de la hora de inicio antes de que el saldo comience a adquirir derechos.",
+    "vestingDurationSeconds": "Duración de la concesión segundos",
+    "vestingDurationSecondsDescription": "Esta es la cantidad de segundos durante los cuales se otorgará el saldo.",
+    "dialogHeader": "Crear un nuevo saldo de adquisición de derechos",
+    "myAccount": "tu cuenta"
+  }

@@ -122,5 +122,13 @@
     "hover2": "Crie facilmente um novo fundo Same-T.",
     "hover3": "Atualize ou exclua seus fundos Same-T existentes.",
     "hover4": "Os fundos Same-T são uma forma de ganhar passivamente com suas participações."
+  },
+  "create_vesting": {
+    "title": "🫰 Colete ativos",
+    "subtitle": "Crie saldos de aquisição para você ou outros",
+    "hover1": "A criação de um saldo de aquisição permite bloquear uma quantidade de ativos por um determinado período de tempo.",
+    "hover2": "Você pode usar um dos dois tipos de aquisição: Coin Days Destroyed e Linear Vesting with Cliff.",
+    "hover3": "O efeito da política Coin Days Destroyed é exigir que uma certa quantia de “juros” seja acumulada antes que o saldo total possa ser sacado. ",
+    "hover4": "A política de aquisição linear com Cliff é usada para imitar os contratos tradicionais de aquisição de ações, onde a cada dia uma determinada quantia é adquirida até que esteja totalmente vencida."
   }
 }
