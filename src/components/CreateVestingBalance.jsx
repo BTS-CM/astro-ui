@@ -126,13 +126,16 @@ export default function CreateVestingBalance(properties) {
   const chosenAssetBalance = useMemo(() => {
     if (usrBalances && assetData) {
       const found = usrBalances.find((_balance) => _balance.asset_id === assetData.id);
+      if (!found) {
+        return 0;
+      }
       const assetBalance = humanReadableFloat(found.amount, assetData.precision);
       return assetBalance;
     }
   }, [usrBalances, assetData]);
 
   // ccd & lvc
-  const [beginDateTime, setBeginDateTime] = useState(0); // date time picked date
+  const [beginDateTime, setBeginDateTime] = useState();
 
   // ccd policy
   const [vestingSeconds, setVestingSeconds] = useState(0);
@@ -408,11 +411,11 @@ export default function CreateVestingBalance(properties) {
                     },
                     policy: policy === "ccd"
                       ? [1, {
-                        start_claim: Math.floor(beginDateTime.getTime()),
+                        start_claim: Math.floor(beginDateTime.getTime()) / 1000,
                         vesting_seconds: parseInt(vestingSeconds)
                       }]
                       : [0, {
-                        begin_timestamp: Math.floor(beginDateTime.getTime()),
+                        begin_timestamp: Math.floor(beginDateTime.getTime()) / 1000,
                         vesting_cliff_seconds: parseInt(vestingCliffSeconds),
                         vesting_duration_seconds: parseInt(vestingDurationSeconds)
                       }]
