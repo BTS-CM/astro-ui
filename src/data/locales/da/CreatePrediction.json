@@ -31,7 +31,7 @@
     },
     "precision": {
       "header": "Aktiv præcision",
-      "header_content": "Præcisionen af ​​aktivet angiver antallet af understøttede decimaler.",
+      "header_content": "Præcisionen af ​​aktivet angiver antallet af understøttede decimaler. Denne værdi kan ikke ændres efter aktivets oprettelse.",
       "placeholder": "Præcision"
     }
   },

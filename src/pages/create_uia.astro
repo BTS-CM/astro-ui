@@ -1,15 +1,15 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Home from '../components/Home.jsx';
 import PageHeader from '../components/PageHeader';
 import PageFooter from '../components/PageFooter';
+import UIA from '../components/UIA';
 ---
 
-<Layout title="Bitshares Beet Astro UI - index">
+<Layout title="Bitshares Beet Astro UI - Creating an User Issued Asset">
 	<main>
-		<PageHeader client:only="react" page="index" backURL="" />
-		<Home client:only="react" />
-		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/index.astro" />
+		<PageHeader client:only="react" page="uia" backURL="" />
+		<UIA client:only="react" />
+		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/create_prediction/index.astro" />
 	</main>
 </Layout>
 
@@ -17,7 +17,7 @@ import PageFooter from '../components/PageFooter';
 	main {
 		margin: auto;
 		padding: 1rem;
-		width: 1000px;
+		width: 850px;
 		max-width: calc(100% - 2rem);
 		color: white;
 		font-size: 20px;

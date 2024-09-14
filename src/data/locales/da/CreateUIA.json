@@ -1,0 +1,154 @@
+{
+    "dialogContent": {
+      "headerText": "Oprettelse af følgende brugerudstedte aktiv: {{symbol}}"
+    },
+    "card": {
+      "title_create": "Oprettelse af et brugerudstedt aktiv",
+      "title_edit": "Redigering af et brugerudstedt aktiv",
+      "description": "Brugerudstedte aktiver kan repræsentere alt, hvad du ønsker, de kan bruges til en række forskellige formål. "
+    },
+    "asset_details": {
+      "title": "Aktivdetaljer",
+      "title_content": "Disse er aktivindstillingerne, der bruges til kerne DEX-funktionalitet.",
+      "symbol": {
+        "header": "Aktiv symbol",
+        "header_content": "Aktivsymbolet er en unik identifikator på blockchain, der identificerer aktivet i hele DEX. ",
+        "placeholder": "Symbol"
+      },
+      "shortName": {
+        "header": "Kort navn på aktiv",
+        "header_content": "Dette er det korte navn på aktivet, mindre vigtigt end symbolet, men er stadig en forkortet unik identifikator. ",
+        "placeholder": "Kort Navn"
+      },
+      "preferredMarket": {
+        "header": "Foretrukken markedshandelspar",
+        "header_content": "Det foretrukne markedshandelspar er standardaktivet, der bruges til at handle mod dit aktiv, dette er et uformelt forslag."
+      },
+      "description": {
+        "header": "Aktivbeskrivelse",
+        "header_content": "Dette er beskrivelsen af ​​aktivet, det vil blive vist i DEX og kan bruges til at give flere oplysninger om aktivet.",
+        "placeholder": "Beskrivelse"
+      },
+      "max_supply": {
+        "header": "Maksimal forsyning",
+        "header_content": "Den maksimale levering af aktivet, dette er den samlede mængde af aktivet, der nogensinde kan udstedes af aktivejeren (dig).",
+        "placeholder": "Max forsyning"
+      },
+      "precision": {
+        "header": "Aktiv præcision",
+        "header_content": "Præcisionen af ​​aktivet angiver antallet af understøttede decimaler. ",
+        "placeholder": "Præcision"
+      }
+    },
+    "permissions": {
+      "header": "Aktivets tilladelser",
+      "header_content": "Bemærk: Deaktivering af tilladelser er en permanent beslutning",
+      "charge_market_fee": {
+        "allowedText": "Markedsgebyrer tilladt (charge_market_fee)",
+        "disabledText": "Markedsgebyrer deaktiveret"
+      },
+      "white_list": {
+        "allowedText": "Hvid liste tilladt (white_list)",
+        "disabledText": "Hvidliste deaktiveret"
+      },
+      "override_authority": {
+        "allowedText": "Tilsidesættelse af autoritet tilladt (override_authority)",
+        "disabledText": "Tilsidesættelse af autoritet deaktiveret"
+      },
+      "transfer_restricted": {
+        "allowedText": "Overførsel begrænset tilladt (transfer_restricted)",
+        "disabledText": "Overførsel begrænset deaktiveret"
+      },
+      "disable_confidential": {
+        "allowedText": "Deaktiver fortroligt tilladt (disable_confidential)",
+        "disabledText": "Deaktiver fortroligt deaktiveret"
+      }
+    },
+    "flags": {
+      "header": "Aktivets flag",
+      "header_content": "Hver tilladt aktivtilladelse kan slås til/fra.",
+      "charge_market_fee": {
+        "allowedText": "Markedsgebyrer aktiveret",
+        "disabledText": "Markedsgebyrer deaktiveret"
+      },
+      "white_list": {
+        "allowedText": "Hvidliste aktiveret",
+        "disabledText": "Hvidliste deaktiveret"
+      },
+      "override_authority": {
+        "allowedText": "Tilsidesættelse af autoritet aktiveret",
+        "disabledText": "Tilsidesættelse af autoritet deaktiveret"
+      },
+      "transfer_restricted": {
+        "allowedText": "Overførsel begrænset aktiveret",
+        "disabledText": "Overførsel begrænset deaktiveret"
+      },
+      "disable_confidential": {
+        "allowedText": "Deaktiver fortroligt aktiveret",
+        "disabledText": "Deaktiver fortroligt deaktiveret"
+      }
+    },
+    "buttons": {
+      "submit": "Indsend"
+    },
+    "extensions": {
+      "header_content": "Udvidelserne er yderligere avancerede indstillinger, der kan bruges til yderligere at tilpasse aktivet.",
+      "header": "Markedsgebyrudvidelser",
+      "reward_percent": {
+        "enabled": "Forlængelse af referencebelønning i procent er aktiveret",
+        "disabled": "Vil du aktivere udvidelsen af ​​henvisningsbelønningsprocenten?",
+        "header": "Henviserbelønningsprocent",
+        "header_content": "Henviserbelønningsprocenten er den procentdel af markedsgebyret, som tildeles henviseren af ​​aktive markedsdeltagere."
+      },
+      "whitelist_market_fee_sharing": {
+        "enabled": "Hvidliste udvidelse af markedsgebyrdeling aktiveret",
+        "disabled": "Vil du aktivere udvidelsen til hvidlistemarkedsgebyrdeling?",
+        "header": "Hvidliste markedsgebyrdeling",
+        "header_content": "Hvidliste-markedsgebyrdelingsudvidelsen giver huset mulighed for at begrænse henvisninger til disse hvidlistede konti."
+      },
+      "taker_fee_percent": {
+        "enabled": "Forlængelse af takergebyrprocent er aktiveret",
+        "disabled": "Vil du aktivere udvidelsen af ​​takergebyrsprocenten?",
+        "header": "Aftagerhonorarprocent",
+        "header_content": "Taker-fee-procenten er den procentdel af markedsgebyret, som tildeles \"tageren\" af limitordrerne på den decentrale børs."
+      },
+      "allowed_markets": {
+        "enabled": "Tilladt markedsudvidelse aktiveret",
+        "disabled": "Vil du aktivere den tilladte markedsudvidelse?"
+      },
+      "banned_markets": {
+        "enabled": "Udvidelse af forbudte markeder aktiveret",
+        "disabled": "Vil du aktivere udvidelsen af ​​forbudte markeder?"
+      }
+    },
+    "whitelist": {
+      "header_content": "Hvidlistemyndighederne for aktiver er konti, der kan bidrage med deres kontos liste over hemmelige konti for at godkende interaktion med denne adgang.",
+      "header": "Asset Whitelist myndigheder"
+    },
+    "blacklist": {
+      "header_content": "Aktivernes sortlistemyndigheder er konti, der kan bidrage med deres kontos sortlistede kontiliste for at håndhæve en forbudt kontoliste, der forhindrer interaktion med denne adgang.",
+      "header": "Asset blacklist myndigheder"
+    },
+    "market_fee": {
+      "header_content": "Markedsgebyret er gebyrprocenten, der opkræves for hver handel, der udføres på Bitshares DEX. ",
+      "header": "Markedsgebyr procent"
+    },
+    "max_market_fee": {
+      "header": "Maksimal markedsafgift",
+      "header_content": "Det maksimale markedsgebyr er det maksimale beløb af aktivet, der kan opkræves som et gebyr for hver handel, der udføres på Bitshares DEX."
+    },
+    "cer": {
+      "quote_asset_amount": {
+        "header": "Angiv aktivbeløb",
+        "header_content": "Beløbet for det aktiv, der er udstedt af dit bruger, der kræves for at købe basisaktivbeløbet."
+      },
+      "base_asset_amount": {
+        "header": "Basisaktivbeløb",
+        "header_content": "Mængden af ​​basisaktivet ({{symbol}}), der er påkrævet for at købe tilbudsaktivbeløbet."
+      },
+      "calculated_cer_price": {
+        "header": "Kernekurs",
+        "header_content": "Sørg for, at din kernekurs er højere end markedsprisen, ellers vil folk købe dit token fra markedet og dræne din gebyrpulje via implicit arbitrage. "
+      }
+    }
+  }

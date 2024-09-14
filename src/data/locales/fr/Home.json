@@ -1,84 +1,86 @@
 {
-  "lend": {
-    "title": "🪙 Prêter des fonds",
-    "subtitle": "Prêter à d'autres utilisateurs",
-    "hover1": "Créez vos propres offres de crédit décentralisées.",
-    "hover2": "Prêtez des actifs à vos taux définis.",
-    "hover3": "Spécifiez les garanties de prêt et les prix acceptables."
+  "dex": {
+    "title": "📈 Ordres limités DEX",
+    "subtitle": "Négociez des actifs sur le Bitshares DEX",
+    "hover1": "Créez manuellement des ordres limités.",
+    "hover2": "Utilisez n’importe quelle paire de trading d’actifs.",
+    "hover3": "Précisez les dates d’expiration des commandes.",
+    "hover4": "Plus complexe mais moins cher que les échanges de pool."
   },
-  "nodes": {
-    "title": "🌐 Nœuds",
-    "subtitle": "Configurer la connexion blockchain",
-    "hover1": "Connectez-vous à un nœud Bitshares de votre choix.",
-    "hover2": "Ajoutez/supprimez des nœuds à votre liste de connexions."
-  },
-  "swap": {
-    "title": "🔄 Échange simple",
-    "subtitle": "Échanger des actifs via un pool",
+  "pool": {
+    "title": "💱 Échange de pool de liquidités",
+    "subtitle": "Échanger des actifs via un pool de liquidité",
     "hover1": "Échangez des actifs via des pools de liquidités créés par l'utilisateur.",
     "hover2": "Les pools ont des paires de trading et des frais différents.",
     "hover3": "Plus simple mais plus coûteux qu’un ordre limité."
   },
-  "pool": {
-    "title": "💱 Échange de piscine",
-    "subtitle": "Échanger des actifs via un pool",
+  "swap": {
+    "title": "🔄 Échange d'actifs simple",
+    "subtitle": "Échangez plus facilement des actifs via des pools",
     "hover1": "Échangez des actifs via des pools de liquidités créés par l'utilisateur.",
     "hover2": "Les pools ont des paires de trading et des frais différents.",
     "hover3": "Plus simple mais plus coûteux qu’un ordre limité."
   },
   "stake": {
-    "title": "🔒 Miser des actifs",
+    "title": "🔒 Actifs de mise en jeu",
     "subtitle": "Miser des actifs dans des pools de liquidité",
     "hover1": "Misez des actifs dans des pools de liquidités pour gagner des frais.",
     "hover2": "Les actifs jalonnés sont verrouillés dans le pool.",
     "hover3": "Les actifs mis en jeu peuvent être retirés à tout moment."
-  },
-  "dex": {
-    "title": "📈 Ordres limités DEX",
-    "subtitle": "Négociez sur les Bitshares DEX",
-    "hover1": "Créez manuellement des ordres limités.",
-    "hover2": "Utilisez n’importe quelle paire de trading d’actifs.",
-    "hover3": "Précisez les dates d’expiration des commandes.",
-    "hover4": "Plus complexe mais moins cher que les échanges de pool."
   },
   "transfer": {
     "title": "💸 Transférer des actifs",
     "subtitle": "Envoyer des actifs à d'autres utilisateurs",
     "hover1": "Transférez des actifs à n'importe qui sur la blockchain Bitshares en quelques secondes."
   },
+  "create_vesting": {
+    "title": "🫰 Gilet d'actifs",
+    "subtitle": "Créer des soldes d'acquisition",
+    "hover1": "La création d'un solde d'acquisition vous permet de bloquer une quantité d'actifs pour une période de temps définie.",
+    "hover2": "Vous pouvez utiliser l’un des deux types d’acquisition : Coin Days Destroyed et Linear Vesting with Cliff.",
+    "hover3": "L'effet de la politique de Coin Days Destroyed est d'exiger qu'un certain montant « d'intérêts » s'accumule avant que le solde total puisse être retiré. ",
+    "hover4": "La politique d'acquisition linéaire avec Cliff est utilisée pour imiter les contrats d'acquisition d'actions traditionnels dans lesquels chaque jour un certain montant est acquis jusqu'à son échéance complète."
+  },
   "borrow": {
     "title": "🏦 Emprunter des fonds",
-    "subtitle": "Emprunter auprès d'autres utilisateurs",
+    "subtitle": "Emprunter des offres de crédit auprès d'autres utilisateurs",
     "hover1": "Parcourez les offres de crédit créées par les utilisateurs actifs.",
     "hover2": "Empruntez-leur des actifs au taux souhaité.",
     "hover3": "Utilisez les garanties demandées pour garantir votre prêt."
   },
+  "lend": {
+    "title": "🪙 Prêter des fonds",
+    "subtitle": "Créer une offre de crédit pour prêter à autrui",
+    "hover1": "Créez vos propres offres de crédit décentralisées.",
+    "hover2": "Prêtez des actifs à vos taux définis.",
+    "hover3": "Spécifiez les garanties de prêt et les prix acceptables."
+  },
   "smartcoins": {
-    "title": "💵 Créer de la dette",
-    "subtitle": "Émettre une dette garantie",
+    "title": "💵 Émettre de la dette garantie",
+    "subtitle": "Empruntez des bitassets Fiat, des smartcoins privés et bien plus encore.",
     "hover1": "Les Bitassets comme l'USD, le CNY et l'EUR sont des pièces stables (smartcoins) créées par un comité et soutenues par des BTS.",
     "hover2": "Les smartcoins créés par l'utilisateur peuvent être sauvegardés avec n'importe quel actif et référencer n'importe quel flux externe.",
     "hover3": "Les prix de règlement externe sont dérivés des producteurs d'aliments configurés.",
     "hover4": "L’exposition aux flux de prix externes peut présenter un risque pour les positions de dette garantie."
   },
-  "ltm": {
-    "title": "🏅 Acheter du LTM",
-    "subtitle": "Achetez un abonnement à vie",
-    "hover1": "Il y a de nombreux avantages à devenir membre à vie.",
-    "hover2": "Les membres à vie bénéficient d’une remise de 80 % sur le solde d’acquisition des frais.",
-    "hover3": "Les membres à vie peuvent créer des noms de compte Bitshares premium.",
-    "hover4": "Les membres à vie peuvent gagner grâce au système de parrainage."
+  "tfunds": {
+    "title": "🤖 Fonds identiques",
+    "subtitle": "Consultez, créez, mettez à jour, supprimez les fonds Same-T !",
+    "hover1": "Consultez tous les fonds Same-T actuellement proposés par d’autres utilisateurs.",
+    "hover2": "Créez facilement un nouveau fonds Same-T.",
+    "hover3": "Mettez à jour ou supprimez vos fonds Same-T existants.",
+    "hover4": "Les fonds Same-T sont un moyen de gagner passivement de l’argent grâce à vos avoirs."
   },
   "portfolio": {
-    "title": "💰 Portefeuille",
-    "subtitle": "Consultez votre portefeuille",
+    "title": "💰 Votre portefeuille",
+    "subtitle": "Vérifiez vos soldes, vos commandes ouvertes et votre activité récente de la blockchain",
     "hover1": "Vérifiez vos soldes.",
     "hover2": "Surveillez vos commandes ouvertes.",
     "hover3": "Analysez l’activité récente de votre compte."
   },
   "featured": {
     "title": "🏆 Principaux marchés",
-    "subtitle": "Afficher les marchés les plus actifs",
+    "subtitle": "Découvrez les actifs les plus activement négociés aujourd'hui",
     "hover1": "Accédez aux paires de trading les plus actives.",
     "hover2": "Comparez le volume et la valeur des transactions sur le marché.",
     "hover3": "Comparez la quantité de transactions sur le marché."
@@ -96,39 +98,53 @@
     "hover2": "Gérez l’état de vos offres de crédit."
   },
   "vesting": {
-    "title": "⌚ Soldes d’acquisition",
-    "subtitle": "Afficher les soldes d'acquisition",
+    "title": "⌚ Soldes d'acquisition",
+    "subtitle": "Consultez et réclamez des récompenses, des commissions de référence et d’autres soldes d’acquisition",
     "hover1": "Vérifiez vos soldes d’acquisition.",
     "hover2": "Réclamez vos soldes acquis."
   },
+  "prediction_markets": {
+    "title": "🎲 Prédictions",
+    "subtitle": "Parcourez les pronostics, gérez les paris, effectuez l'administration des pronostics.",
+    "hover1": "Parcourez les actifs du marché de prédiction disponibles.",
+    "hover2": "Les marchés de prédiction peuvent concerner n’importe quoi.",
+    "hover3": "Chaque actif du marché de prédiction a des frais uniques."
+  },
   "create_prediction": {
-    "title": "🔮 Créer une prédiction",
+    "title": "🔮 Actif du marché de prédiction",
     "subtitle": "Créer un pari sur n'importe quoi",
     "hover1": "Créez des paris sur littéralement n'importe quoi.",
     "hover2": "Soyez le bookmaker et fixez votre propre commission.",
     "hover3": "Les paris à court et à long terme sont possibles."
   },
-  "prediction_markets": {
-    "title": "🎲 Prédictions",
-    "subtitle": "Pariez sur presque tout",
-    "hover1": "Parcourez les actifs du marché de prédiction disponibles.",
-    "hover2": "Les marchés de prédiction peuvent concerner n’importe quoi.",
-    "hover3": "Chaque actif du marché de prédiction a des frais uniques."
+  "create_uia": {
+    "title": "🍬 Actif émis par l'utilisateur",
+    "subtitle": "Créez votre propre jeton pour n'importe quoi",
+    "hover1": "Créez votre propre actif émis par l'utilisateur.",
+    "hover2": "Ils peuvent être utilisés à diverses fins.",
+    "hover3": "Ils peuvent être utilisés comme jeton pour votre entreprise, comme jeton de récompense, comme jeton pour un jeu, et bien plus encore.",
+    "hover4": "Les passerelles peuvent créer des actifs adossés à des échanges pour le trading sur Bitshares DEX."
   },
-  "tfunds": {
-    "title": "🤖 Fonds identiques",
-    "subtitle": "Consultez, créez, mettez à jour, supprimez les fonds Same-T !",
-    "hover1": "Consultez tous les fonds Same-T actuellement proposés par d’autres utilisateurs.",
-    "hover2": "Créez facilement un nouveau fonds Same-T.",
-    "hover3": "Mettez à jour ou supprimez vos fonds Same-T existants.",
-    "hover4": "Les fonds Same-T sont un moyen de gagner passivement de l’argent grâce à vos avoirs."
+  "create_smartcoin": {
+    "title": "💷 Actif Smartcoin",
+    "subtitle": "Créer un actif Fiat stablecoin",
+    "hover1": "Créez votre propre Smartcoin.",
+    "hover2": "Ils peuvent être utilisés à diverses fins.",
+    "hover3": "Ils peuvent être utilisés comme stablecoin, jeton pour votre entreprise, jeton de récompense, jeton pour un jeu, et plus encore.",
+    "hover4": "Les Smartcoins peuvent être soutenus par n’importe quel actif et référencer n’importe quel flux externe."
   },
-  "create_vesting": {
-    "title": "🫰 Gilet d'actifs",
-    "subtitle": "Créez des soldes d'acquisition pour vous-même ou pour d'autres",
-    "hover1": "La création d'un solde d'acquisition vous permet de bloquer une quantité d'actifs pour une période de temps définie.",
-    "hover2": "Vous pouvez utiliser l’un des deux types d’acquisition : Coin Days Destroyed et Linear Vesting with Cliff.",
-    "hover3": "L'effet de la politique de Coin Days Destroyed est d'exiger qu'un certain montant « d'intérêts » s'accumule avant que le solde total puisse être retiré. ",
-    "hover4": "La politique d'acquisition linéaire avec Cliff est utilisée pour imiter les contrats d'acquisition d'actions traditionnels dans lesquels chaque jour un certain montant est acquis jusqu'à son échéance complète."
+  "ltm": {
+    "title": "🏅 Mettre à niveau le compte",
+    "subtitle": "Achetez un abonnement à vie",
+    "hover1": "Il y a de nombreux avantages à devenir membre à vie.",
+    "hover2": "Les membres à vie bénéficient d’une réduction de 80 % sur le solde d’acquisition des frais.",
+    "hover3": "Les membres à vie peuvent créer des noms de compte Bitshares premium.",
+    "hover4": "Les membres à vie peuvent gagner grâce au système de parrainage."
+  },
+  "nodes": {
+    "title": "🌐 Nœuds",
+    "subtitle": "Configuration du nœud blockchain",
+    "hover1": "Connectez-vous à un nœud Bitshares de votre choix.",
+    "hover2": "Ajoutez/supprimez des nœuds à votre liste de connexions."
   }
 }

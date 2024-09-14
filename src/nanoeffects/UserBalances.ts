@@ -3,15 +3,22 @@ import Apis from "@/bts/ws/ApiInstances";
 import { chains } from "@/config/chains";
 
 //Fetch account balances
-async function getAccountBalances(chain: string, accountID: string, specificNode?: string | null) {
+async function getAccountBalances(
+  chain: string,
+  accountID: string,
+  specificNode?: string | null,
+  existingAPI?: any
+) {
   return new Promise(async (resolve, reject) => {
     let node = specificNode ? specificNode : (chains as any)[chain].nodeList[0].url;
 
     let currentAPI;
     try {
-      currentAPI = await Apis.instance(node, true, 4000, { enableDatabase: true }, (error: Error) =>
-        console.log({ error })
-      );
+      currentAPI = existingAPI
+        ? existingAPI
+        : await Apis.instance(node, true, 4000, { enableDatabase: true }, (error: Error) =>
+            console.log({ error })
+          );
     } catch (error) {
       console.log({ error });
       reject(error);
@@ -30,11 +37,15 @@ async function getAccountBalances(chain: string, accountID: string, specificNode
         });
     } catch (error) {
       console.log({ error });
-      currentAPI.close();
+      if (!existingAPI) {
+        currentAPI.close();
+      }
       reject(error);
     }
 
-    currentAPI.close();
+    if (!existingAPI) {
+      currentAPI.close();
+    }
 
     if (!balances) {
       return resolve([]);

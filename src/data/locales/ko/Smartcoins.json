@@ -34,5 +34,7 @@
   "searchingByIssuer": "발급자별 검색",
   "searchByIssuer": "발행자로 검색",
   "enterSearchText": "검색어를 입력하세요",
-  "noResultsFound": "검색 결과가 없습니다"
+  "noResultsFound": "검색 결과가 없습니다",
+  "bitassets": "비트자산",
+  "privateSmartcoins": "프라이빗 스마트코인"
 }

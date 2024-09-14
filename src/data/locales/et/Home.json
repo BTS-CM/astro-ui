@@ -1,27 +1,22 @@
 {
-  "lend": {
-    "title": "🪙 Laena raha",
-    "subtitle": "Laena teistele kasutajatele",
-    "hover1": "Looge oma detsentraliseeritud krediidipakkumised.",
-    "hover2": "Laenake varasid teie määratud intressimääradega.",
-    "hover3": "Täpsustage aktsepteeritav laenutagatis ja hinnad."
+  "dex": {
+    "title": "📈 DEX-i limiittellimused",
+    "subtitle": "Kauple varadega Bitshares DEXis",
+    "hover1": "Limiittellimuste käsitsi koostamine.",
+    "hover2": "Kasutage mis tahes varakauplemispaari.",
+    "hover3": "Määrake tellimuse aegumiskuupäevad.",
+    "hover4": "Keerulisem, kuid odavam kui basseinivahetus."
   },
-  "nodes": {
-    "title": "🌐 Sõlmed",
-    "subtitle": "Konfigureerige plokiahela ühendus",
-    "hover1": "Ühendage oma valitud Bitsharesi sõlmega.",
-    "hover2": "Lisage/eemaldage sõlmed oma ühenduste loendisse."
-  },
-  "swap": {
-    "title": "🔄 Lihtne vahetus",
-    "subtitle": "Vahetage varasid basseini kaudu",
+  "pool": {
+    "title": "💱 Likviidsusbasseini börs",
+    "subtitle": "Vahetage varad likviidsuskogumi kaudu",
     "hover1": "Vahetage varad kasutaja loodud likviidsuskogumite kaudu.",
     "hover2": "Pooltel on erinevad kauplemispaarid ja tasud.",
     "hover3": "Lihtsam, kuid kulukam kui piirtellimus."
   },
-  "pool": {
-    "title": "💱 Basseini vahetus",
-    "subtitle": "Vahetage varasid basseini kaudu",
+  "swap": {
+    "title": "🔄 Lihtne varade vahetus",
+    "subtitle": "Vahetage varasid hõlpsamini basseinide kaudu",
     "hover1": "Vahetage varad kasutaja loodud likviidsuskogumite kaudu.",
     "hover2": "Pooltel on erinevad kauplemispaarid ja tasud.",
     "hover3": "Lihtsam, kuid kulukam kui piirtellimus."
@@ -31,89 +26,42 @@
     "subtitle": "Osalusvara likviidsuskogumites",
     "hover1": "Tasude teenimiseks panustage varasid likviidsusfondidesse.",
     "hover2": "Panustatud varad on basseinis lukus.",
-    "hover3": "Panustatud varad saab igal ajal välja võtta."
-  },
-  "dex": {
-    "title": "📈 DEX-i limiittellimused",
-    "subtitle": "Kaubelge Bitshares DEX-il",
-    "hover1": "Limiittellimuste käsitsi koostamine.",
-    "hover2": "Kasutage mis tahes varakauplemispaari.",
-    "hover3": "Määrake tellimuse aegumiskuupäevad.",
-    "hover4": "Keerulisem, kuid odavam kui basseinivahetus."
+    "hover3": "Panustatud varasid saab igal ajal välja võtta."
   },
   "transfer": {
-    "title": "💸 Kandke vara üle",
+    "title": "💸 Varade ülekandmine",
     "subtitle": "Saatke vara teistele kasutajatele",
     "hover1": "Kandke varad mõne sekundi jooksul üle kellelegi Bitsharesi plokiahelas."
   },
+  "create_vesting": {
+    "title": "🫰 Vestivarad",
+    "subtitle": "Looge omandamise saldod",
+    "hover1": "Üleandmisbilansi loomine võimaldab lukustada teatud koguse varasid kindlaksmääratud perioodiks.",
+    "hover2": "Võite kasutada ühte kahest omandamise tüübist: Coin Days Destroyed ja Linear Vesting with Cliff.",
+    "hover3": "Coin Days Destroyed poliitika mõju seisneb selles, et enne kogu saldo väljavõtmist nõutakse teatud intresside kogunemist. ",
+    "hover4": "Lineaarse üleandmise koos Cliffiga poliitikat kasutatakse traditsiooniliste aktsiate üleandmise lepingute jäljendamiseks, kus iga päev antakse teatud summa kuni selle täieliku küpsemiseni."
+  },
   "borrow": {
-    "title": "🏦 Laena raha",
-    "subtitle": "Laena teistelt kasutajatelt",
+    "title": "🏦 Laenake raha",
+    "subtitle": "Laena teistelt kasutajatelt krediidipakkumisi",
     "hover1": "Sirvi aktiivse kasutaja loodud krediidipakkumisi.",
     "hover2": "Laenake neilt varasid soovitud intressimääraga.",
     "hover3": "Kasutage oma laenu tagamiseks nõutud tagatist."
   },
+  "lend": {
+    "title": "🪙 Laena vahendeid",
+    "subtitle": "Looge teistele laenu pakkumine",
+    "hover1": "Looge oma detsentraliseeritud krediidipakkumised.",
+    "hover2": "Laenake varasid teie määratud intressimääradega.",
+    "hover3": "Täpsustage aktsepteeritav laenutagatis ja hinnad."
+  },
   "smartcoins": {
-    "title": "💵 Loo võlg",
-    "subtitle": "Väljastada tagatisega võlg",
-    "hover1": "Bitassetid, nagu USD, CNY ja EUR, on komitee loodud stabiilsed mündid (nutimündid), mida toetab BTS.",
+    "title": "💵 Väljasta tagatisega võlg",
+    "subtitle": "Laenake Fiati bitasette, privaatseid nutimünte ja palju muud.",
+    "hover1": "Bitassetid, nagu USD, CNY ja EUR, on komiteede loodud stabiilsed mündid (nutimündid), mida toetab BTS.",
     "hover2": "Kasutaja loodud smartcoine saab toetada mis tahes varaga ja viidata mis tahes välisele kanalile.",
     "hover3": "Välised arveldushinnad tuletatakse konfigureeritud söödatootjatelt.",
     "hover4": "Kokkupuude välishindadega võib ohustada tagatisega võlapositsioone."
-  },
-  "ltm": {
-    "title": "🏅 Ostke LTM",
-    "subtitle": "Ostke eluaegne liikmesus",
-    "hover1": "Eluaegseks liikmeks saamisel on mitmeid eeliseid.",
-    "hover2": "Eluaegsed liikmed saavad tasudelt 80% tagasimakse.",
-    "hover3": "Eluaegsed liikmed saavad luua esmaklassilisi Bitsharesi kontonimesid.",
-    "hover4": "Eluaegsed liikmed saavad teenida suunamissüsteemi kaudu."
-  },
-  "portfolio": {
-    "title": "💰 Portfell",
-    "subtitle": "Vaadake oma portfelli",
-    "hover1": "Kontrollige oma saldosid.",
-    "hover2": "Jälgige oma avatud tellimusi.",
-    "hover3": "Analüüsige oma hiljutist kontotegevust."
-  },
-  "featured": {
-    "title": "🏆 Tippturud",
-    "subtitle": "Vaadake kõige aktiivsemaid turge",
-    "hover1": "Liikuge kõige aktiivsemate kauplemispaaride juurde.",
-    "hover2": "Võrrelge turu kauplemismahtu ja väärtust.",
-    "hover3": "Võrrelge turutehingute kogust."
-  },
-  "deals": {
-    "title": "ℹ️ Krediidipakkumised",
-    "subtitle": "Kontrollige oma krediidipakkumisi",
-    "hover1": "Jälgige oma aktiivseid krediiditehinguid.",
-    "hover2": "Hallake oma krediiditehingute seisu."
-  },
-  "offers": {
-    "title": "📜 Krediidipakkumised",
-    "subtitle": "Kontrollige oma krediidipakkumisi",
-    "hover1": "Jälgige oma aktiivseid krediidipakkumisi.",
-    "hover2": "Hallake oma krediidipakkumiste olekut."
-  },
-  "vesting": {
-    "title": "⌚ Üleandmise saldod",
-    "subtitle": "Vaadake üleandmise saldosid",
-    "hover1": "Kontrollige oma üleandmisjääke.",
-    "hover2": "Nõudke oma kontojääke."
-  },
-  "create_prediction": {
-    "title": "🔮 Loo ennustus",
-    "subtitle": "Tehke panus ükskõik mille kohta",
-    "hover1": "Tehke panuseid sõna otseses mõttes kõige kohta.",
-    "hover2": "Olge kihlveovahendaja ja määrake oma vahendustasu.",
-    "hover3": "Võimalikud on nii lühi- kui ka pikaajalised panused."
-  },
-  "prediction_markets": {
-    "title": "🎲 Ennustused",
-    "subtitle": "Mängige peaaegu kõigega",
-    "hover1": "Sirvige saadaolevaid ennustusturu varasid.",
-    "hover2": "Ennustusturgudel võib olla ükskõik mida.",
-    "hover3": "Igal ennustusturu varal on ainulaadne tasu."
   },
   "tfunds": {
     "title": "🤖 Sama-T fondid",
@@ -123,12 +71,80 @@
     "hover3": "Värskendage või kustutage olemasolevaid Same-T fonde.",
     "hover4": "Same-T fondid on viis oma osalustelt passiivselt teenida."
   },
-  "create_vesting": {
-    "title": "🫰 Vestivarad",
-    "subtitle": "Looge endale või teistele omandisaldod",
-    "hover1": "Üleandmisbilansi loomine võimaldab lukustada teatud koguse varasid kindlaksmääratud perioodiks.",
-    "hover2": "Võite kasutada ühte kahest omandamise tüübist: Coin Days Destroyed ja Linear Vesting with Cliff.",
-    "hover3": "Coin Days Destroyed poliitika mõju seisneb selles, et enne kogu saldo väljavõtmist nõutakse teatud intresside kogunemist. ",
-    "hover4": "Lineaarse üleandmise koos Cliffiga poliitikat kasutatakse traditsiooniliste aktsiate üleandmise lepingute jäljendamiseks, kus iga päev antakse teatud summa kuni selle täieliku küpsemiseni."
+  "portfolio": {
+    "title": "💰 Teie portfell",
+    "subtitle": "Kontrollige oma saldosid, avatud tellimusi ja hiljutist plokiahela tegevust",
+    "hover1": "Kontrollige oma saldosid.",
+    "hover2": "Jälgige oma avatud tellimusi.",
+    "hover3": "Analüüsige oma hiljutist kontotegevust."
+  },
+  "featured": {
+    "title": "🏆 Parimad turud",
+    "subtitle": "Avastage täna kõige aktiivsemalt kaubeldavad varad",
+    "hover1": "Liikuge kõige aktiivsemate kauplemispaaride juurde.",
+    "hover2": "Võrrelge turu kauplemismahtu ja väärtust.",
+    "hover3": "Võrrelge turutehingute kogust."
+  },
+  "deals": {
+    "title": "ℹ️ Krediidipakkumised",
+    "subtitle": "Kontrollige oma krediidipakkumisi",
+    "hover1": "Jälgige oma aktiivseid krediiditehinguid.",
+    "hover2": "Hallake oma krediiditehingute olekut."
+  },
+  "offers": {
+    "title": "📜 Krediidipakkumised",
+    "subtitle": "Kontrollige oma krediidipakkumisi",
+    "hover1": "Jälgige oma aktiivseid krediidipakkumisi.",
+    "hover2": "Hallake oma krediidipakkumiste olekut."
+  },
+  "vesting": {
+    "title": "⌚ Üleandmise saldod",
+    "subtitle": "Vaadake ja taotlege preemiaid, suunamistasusid ja muid üleandmise saldosid",
+    "hover1": "Kontrollige oma üleandmisjääke.",
+    "hover2": "Nõudke oma kontojääke."
+  },
+  "prediction_markets": {
+    "title": "🎲 Ennustused",
+    "subtitle": "Sirvige ennustusi, hallake panuseid, tehke ennustusteadministraator.",
+    "hover1": "Sirvige saadaolevaid ennustusturu varasid.",
+    "hover2": "Ennustusturgudel võib olla ükskõik mida.",
+    "hover3": "Igal ennustusturu varal on ainulaadne tasu."
+  },
+  "create_prediction": {
+    "title": "🔮 Ennustusturu vara",
+    "subtitle": "Tehke panus ükskõik mille kohta",
+    "hover1": "Tehke panuseid sõna otseses mõttes kõige kohta.",
+    "hover2": "Olge kihlveovahendaja ja määrake oma vahendustasu.",
+    "hover3": "Võimalikud on nii lühi- kui ka pikaajalised panused."
+  },
+  "create_uia": {
+    "title": "🍬 Kasutaja väljastatud vara",
+    "subtitle": "Looge kõige jaoks oma märk",
+    "hover1": "Looge oma kasutaja väljastatud vara.",
+    "hover2": "Neid saab kasutada erinevatel eesmärkidel.",
+    "hover3": "Neid saab kasutada teie ettevõtte märgina, preemia märgina, mängu märgina ja palju muud.",
+    "hover4": "Lüüsid saavad Bitshares DEX-is kauplemiseks luua börsil tagatud varasid."
+  },
+  "create_smartcoin": {
+    "title": "💷 Smartcoini vara",
+    "subtitle": "Looge Fiati stabiilse mündi vara",
+    "hover1": "Looge oma Smartcoin.",
+    "hover2": "Neid saab kasutada erinevatel eesmärkidel.",
+    "hover3": "Neid saab kasutada stabiilse mündina, teie ettevõtte märgina, preemia märgina, mängu märgina ja palju muud.",
+    "hover4": "Nutikamünte saab toetada mis tahes varaga ja viidata mis tahes välisele kanalile."
+  },
+  "ltm": {
+    "title": "🏅 Täiendage kontot",
+    "subtitle": "Ostke eluaegne liikmesus",
+    "hover1": "Eluaegseks liikmeks saamisel on mitmeid eeliseid.",
+    "hover2": "Eluaegsed liikmed saavad tasudelt 80% tagasimakse.",
+    "hover3": "Eluaegsed liikmed saavad luua esmaklassilisi Bitsharesi kontonimesid.",
+    "hover4": "Eluaegsed liikmed saavad teenida suunamissüsteemi kaudu."
+  },
+  "nodes": {
+    "title": "🌐 Sõlmed",
+    "subtitle": "Plokiahela sõlme konfiguratsioon",
+    "hover1": "Ühendage oma valitud Bitsharesi sõlmega.",
+    "hover2": "Lisage/eemaldage sõlmed oma ühenduste loendisse."
   }
 }

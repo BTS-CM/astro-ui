@@ -34,5 +34,7 @@
   "searchingByIssuer": "Searching by issuer",
   "searchByIssuer": "Search by issuer",
   "enterSearchText": "Enter search text",
-  "noResultsFound": "No results found"
+  "noResultsFound": "No results found",
+  "bitassets": "Bitassets",
+  "privateSmartcoins": "Private smartcoins"
 }

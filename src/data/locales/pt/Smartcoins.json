@@ -34,5 +34,7 @@
   "searchingByIssuer": "Pesquisando por emissor",
   "searchByIssuer": "Pesquisar por emissor",
   "enterSearchText": "Insira o texto de pesquisa",
-  "noResultsFound": "Nenhum resultado encontrado"
+  "noResultsFound": "Nenhum resultado encontrado",
+  "bitassets": "Bitassets",
+  "privateSmartcoins": "Smartcoins privadas"
 }

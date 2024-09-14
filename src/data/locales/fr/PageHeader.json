@@ -61,7 +61,8 @@
     "create_prediction": "Utilisez le formulaire ci-dessous pour créer un actif de marché de prédiction.",
     "predictions": "Localisez ci-dessous un actif du marché de prédiction sur lequel parier.",
     "tfunds": "Recherchez, créez, mettez à jour ou supprimez des fonds Same-T ci-dessous !",
-    "create_vesting": "Utilisez ce formulaire pour créer un solde d'acquisition pour n'importe quel compte !"
+    "create_vesting": "Utilisez ce formulaire pour créer un solde d'acquisition pour n'importe quel compte !",
+    "uia": "Créez votre propre actif émis par l'utilisateur avec le formulaire ci-dessous !"
   },
   "back": "Retourner",
   "usage": "Conçu pour être utilisé avec ",

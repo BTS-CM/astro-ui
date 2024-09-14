@@ -1,84 +1,86 @@
 {
-  "lend": {
-    "title": "🪙 Presta fondi",
-    "subtitle": "Prestare ad altri utenti",
-    "hover1": "Crea le tue offerte di credito decentralizzato.",
-    "hover2": "Presta beni ai tassi da te definiti.",
-    "hover3": "Specificare le garanzie e i prezzi del prestito accettabili."
+  "dex": {
+    "title": "📈 Ordini con limite DEX",
+    "subtitle": "Scambia asset su Bitshares DEX",
+    "hover1": "Crea manualmente ordini limite.",
+    "hover2": "Utilizza qualsiasi coppia di asset trading.",
+    "hover3": "Specificare le date di scadenza dell'ordine.",
+    "hover4": "Più complesso ma più economico dello scambio di pool."
   },
-  "nodes": {
-    "title": "🌐 Nodi",
-    "subtitle": "Configura la connessione blockchain",
-    "hover1": "Connettiti a un nodo Bitshares di tua scelta.",
-    "hover2": "Aggiungi/rimuovi nodi all'elenco delle connessioni."
-  },
-  "swap": {
-    "title": "🔄Scambio semplice",
-    "subtitle": "Scambia asset tramite un pool",
+  "pool": {
+    "title": "💱 Scambio di pool di liquidità",
+    "subtitle": "Scambiare asset tramite un pool di liquidità",
     "hover1": "Scambia asset tramite pool di liquidità creati dall'utente.",
     "hover2": "I pool hanno coppie di trading e commissioni di trading diverse.",
     "hover3": "Più semplice ma più costoso di un ordine limite."
   },
-  "pool": {
-    "title": "💱 Scambio piscina",
-    "subtitle": "Scambia asset tramite un pool",
+  "swap": {
+    "title": "🔄 Scambio di risorse semplice",
+    "subtitle": "Scambiare più facilmente le risorse tramite pool",
     "hover1": "Scambia asset tramite pool di liquidità creati dall'utente.",
     "hover2": "I pool hanno coppie di trading e commissioni di trading diverse.",
     "hover3": "Più semplice ma più costoso di un ordine limite."
   },
   "stake": {
-    "title": "🔒 Partecipare al patrimonio",
+    "title": "🔒 Partecipazione del patrimonio",
     "subtitle": "Partecipazione di asset in pool di liquidità",
     "hover1": "Partecipare a asset in pool di liquidità per guadagnare commissioni.",
     "hover2": "Le risorse picchettate sono bloccate nel pool.",
     "hover3": "Il patrimonio investito può essere ritirato in qualsiasi momento."
-  },
-  "dex": {
-    "title": "📈 Ordini limite DEX",
-    "subtitle": "Fai trading su Bitshares DEX",
-    "hover1": "Crea manualmente ordini limite.",
-    "hover2": "Utilizza qualsiasi coppia di asset trading.",
-    "hover3": "Specificare le date di scadenza dell'ordine.",
-    "hover4": "Più complesso ma più economico dello scambio di pool."
   },
   "transfer": {
     "title": "💸 Trasferisci beni",
     "subtitle": "Invia risorse ad altri utenti",
     "hover1": "Trasferisci risorse a chiunque sulla blockchain di Bitshares in pochi secondi."
   },
+  "create_vesting": {
+    "title": "🫰 Vesti i beni",
+    "subtitle": "Creare saldi di maturazione",
+    "hover1": "La creazione di un saldo di maturazione consente di bloccare una quantità di beni per un determinato periodo di tempo.",
+    "hover2": "È possibile utilizzare uno dei due tipi di vesting: Coin Days Destroyed e Linear Vesting with Cliff.",
+    "hover3": "L'effetto della politica Coin Days Destroyed è di richiedere che una certa quantità di “interessi” maturi prima che l'intero saldo possa essere ritirato. ",
+    "hover4": "La politica di maturazione lineare con Cliff viene utilizzata per imitare i tradizionali contratti di maturazione azionaria in cui ogni giorno un certo importo matura fino alla completa maturazione."
+  },
   "borrow": {
     "title": "🏦 Prendi in prestito fondi",
-    "subtitle": "Prendi in prestito da altri utenti",
+    "subtitle": "Prendi in prestito offerte di credito da altri utenti",
     "hover1": "Sfoglia le offerte di credito attive create dagli utenti.",
     "hover2": "Prendi in prestito beni da loro al tasso desiderato.",
     "hover3": "Utilizza la garanzia richiesta per garantire il tuo prestito."
   },
+  "lend": {
+    "title": "🪙 Presta fondi",
+    "subtitle": "Crea un'offerta di credito per prestare ad altri",
+    "hover1": "Crea le tue offerte di credito decentralizzato.",
+    "hover2": "Presta beni ai tassi da te definiti.",
+    "hover3": "Specificare le garanzie e i prezzi del prestito accettabili."
+  },
   "smartcoins": {
-    "title": "💵Crea debito",
-    "subtitle": "Emettere debito garantito",
+    "title": "💵 Emetti debito collateralizzato",
+    "subtitle": "Prendi in prestito bitasset Fiat, smartcoin privati ​​e altro ancora.",
     "hover1": "Bitasset come USD, CNY ed EUR sono stablecoin (smartcoin) create da un comitato e supportate da BTS.",
     "hover2": "Gli smartcoin creati dagli utenti possono essere supportati da qualsiasi risorsa e fare riferimento a qualsiasi feed esterno.",
     "hover3": "I prezzi di liquidazione esterni derivano dai produttori di mangimi configurati.",
     "hover4": "L’esposizione ai feed di prezzo esterni può rappresentare un rischio per le posizioni debitorie collateralizzate."
   },
-  "ltm": {
-    "title": "🏅 Acquista LTM",
-    "subtitle": "Acquista un abbonamento a vita",
-    "hover1": "Ci sono molteplici vantaggi nel diventare un membro a vita.",
-    "hover2": "I membri a vita ricevono uno sconto dell'80% sul saldo di maturazione sulle commissioni.",
-    "hover3": "I membri a vita possono creare nomi di account Bitshares premium.",
-    "hover4": "I membri a vita possono guadagnare attraverso il sistema di riferimento."
+  "tfunds": {
+    "title": "🤖 Fondi Same-T",
+    "subtitle": "Visualizza, crea, aggiorna, elimina i fondi Same-T!",
+    "hover1": "Visualizza tutti i Fondi Same-T attualmente offerti da altri utenti.",
+    "hover2": "Crea facilmente un nuovo fondo Same-T.",
+    "hover3": "Aggiorna o elimina i tuoi fondi Same-T esistenti.",
+    "hover4": "I fondi Same-T sono un modo per guadagnare passivamente dalle tue partecipazioni."
   },
   "portfolio": {
-    "title": "💰 Portafoglio",
-    "subtitle": "Visualizza il tuo portafoglio",
+    "title": "💰 Il tuo portafoglio",
+    "subtitle": "Controlla i tuoi saldi, gli ordini aperti e la recente attività blockchain",
     "hover1": "Controlla i tuoi saldi.",
     "hover2": "Monitora i tuoi ordini aperti.",
     "hover3": "Analizza l'attività recente del tuo account."
   },
   "featured": {
     "title": "🏆 Mercati principali",
-    "subtitle": "Visualizza i mercati più attivi",
+    "subtitle": "Scopri gli asset scambiati più attivamente oggi",
     "hover1": "Naviga verso le coppie di trading più attive.",
     "hover2": "Confronta il volume e il valore degli scambi di mercato.",
     "hover3": "Confronta la quantità di scambi di mercato."
@@ -97,38 +99,52 @@
   },
   "vesting": {
     "title": "⌚ Saldi di maturazione",
-    "subtitle": "Visualizza i saldi di maturazione",
+    "subtitle": "Visualizza e richiedi premi, commissioni per segnalazione e altri saldi di maturazione",
     "hover1": "Controlla i tuoi saldi di maturazione.",
     "hover2": "Richiedi i tuoi saldi acquisiti."
   },
+  "prediction_markets": {
+    "title": "🎲 Pronostici",
+    "subtitle": "Sfoglia i pronostici, gestisci le scommesse, esegui l'amministrazione dei pronostici.",
+    "hover1": "Sfoglia le risorse del mercato di previsione disponibili.",
+    "hover2": "I mercati di previsione possono riguardare qualsiasi cosa.",
+    "hover3": "Ogni asset del mercato di previsione ha una tariffa unica."
+  },
   "create_prediction": {
-    "title": "🔮 Crea previsione",
+    "title": "🔮 Asset di mercato di previsione",
     "subtitle": "Crea una scommessa su qualsiasi cosa",
     "hover1": "Crea scommesse letteralmente su qualsiasi cosa.",
     "hover2": "Diventa il bookmaker e stabilisci la tua commissione.",
     "hover3": "Sono possibili sia scommesse a breve che a lungo termine."
   },
-  "prediction_markets": {
-    "title": "🎲 Pronostici",
-    "subtitle": "Scommetti su quasi tutto",
-    "hover1": "Sfoglia le risorse di mercato di previsione disponibili.",
-    "hover2": "I mercati di previsione possono riguardare qualsiasi cosa.",
-    "hover3": "Ogni asset del mercato di previsione ha una tariffa unica."
+  "create_uia": {
+    "title": "🍬 Asset emesso dall'utente",
+    "subtitle": "Crea il tuo token per qualsiasi cosa",
+    "hover1": "Crea la tua risorsa emessa dall'utente.",
+    "hover2": "Possono essere utilizzati per vari scopi.",
+    "hover3": "Possono essere utilizzati come gettone per la tua attività, gettone ricompensa, gettone per un gioco e altro ancora.",
+    "hover4": "I gateway possono creare asset garantiti da scambi per il trading su Bitshares DEX."
   },
-  "tfunds": {
-    "title": "🤖 Fondi Same-T",
-    "subtitle": "Visualizza, crea, aggiorna, elimina i fondi Same-T!",
-    "hover1": "Visualizza tutti i Fondi Same-T attualmente offerti da altri utenti.",
-    "hover2": "Crea facilmente un nuovo fondo Same-T.",
-    "hover3": "Aggiorna o elimina i tuoi fondi Same-T esistenti.",
-    "hover4": "I fondi Same-T sono un modo per guadagnare passivamente dalle tue partecipazioni."
+  "create_smartcoin": {
+    "title": "💷 Asset Smartcoin",
+    "subtitle": "Crea un asset stablecoin Fiat",
+    "hover1": "Crea il tuo Smartcoin.",
+    "hover2": "Possono essere utilizzati per vari scopi.",
+    "hover3": "Possono essere utilizzati come stablecoin, token per la tua attività, token di ricompensa, token per un gioco e altro ancora.",
+    "hover4": "Gli smartcoin possono essere supportati da qualsiasi asset e fare riferimento a qualsiasi feed esterno."
   },
-  "create_vesting": {
-    "title": "🫰 Vesti i beni",
-    "subtitle": "Crea saldi di maturazione per te o per altri",
-    "hover1": "La creazione di un saldo di maturazione consente di bloccare una quantità di beni per un determinato periodo di tempo.",
-    "hover2": "È possibile utilizzare uno dei due tipi di vesting: Coin Days Destroyed e Linear Vesting with Cliff.",
-    "hover3": "L'effetto della politica Coin Days Destroyed è di richiedere che una certa quantità di “interessi” maturi prima che l'intero saldo possa essere ritirato. ",
-    "hover4": "La politica di maturazione lineare con Cliff viene utilizzata per imitare i tradizionali contratti di maturazione azionaria in cui ogni giorno un certo importo matura fino alla completa maturazione."
+  "ltm": {
+    "title": "🏅 Aggiorna account",
+    "subtitle": "Acquista un abbonamento a vita",
+    "hover1": "Ci sono molteplici vantaggi nel diventare un membro a vita.",
+    "hover2": "I membri a vita ricevono uno sconto dell'80% sul saldo di maturazione sulle commissioni.",
+    "hover3": "I membri a vita possono creare nomi di account Bitshares premium.",
+    "hover4": "I membri a vita possono guadagnare attraverso il sistema di riferimento."
+  },
+  "nodes": {
+    "title": "🌐 Nodi",
+    "subtitle": "Configurazione del nodo blockchain",
+    "hover1": "Connettiti a un nodo Bitshares di tua scelta.",
+    "hover2": "Aggiungi/rimuovi nodi all'elenco delle connessioni."
   }
 }

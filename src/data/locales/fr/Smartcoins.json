@@ -34,5 +34,7 @@
   "searchingByIssuer": "Recherche par émetteur",
   "searchByIssuer": "Recherche par émetteur",
   "enterSearchText": "Saisissez le texte de recherche",
-  "noResultsFound": "Aucun résultat trouvé"
+  "noResultsFound": "Aucun résultat trouvé",
+  "bitassets": "Bitactifs",
+  "privateSmartcoins": "Pièces intelligentes privées"
 }

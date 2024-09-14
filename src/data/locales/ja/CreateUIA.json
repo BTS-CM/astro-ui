@@ -1,0 +1,154 @@
+{
+    "dialogContent": {
+      "headerText": "次のユーザー発行アセットを作成します。 {{symbol}}"
+    },
+    "card": {
+      "title_create": "ユーザー発行アセットの作成",
+      "title_edit": "ユーザー発行アセットの編集",
+      "description": "ユーザー発行アセットは、必要なものを何でも表すことができ、さまざまな目的に使用できます。"
+    },
+    "asset_details": {
+      "title": "資産の詳細",
+      "title_content": "これらは、コア DEX 機能に使用されるアセット設定です。",
+      "symbol": {
+        "header": "資産記号",
+        "header_content": "資産シンボルは、DEX 全体で資産を識別するブロックチェーン上の一意の識別子です。 ",
+        "placeholder": "シンボル"
+      },
+      "shortName": {
+        "header": "アセットの短縮名",
+        "header_content": "これはアセットの短縮名であり、シンボルほど重要ではありませんが、それでもオプションで短縮された一意の識別子です。",
+        "placeholder": "ショートネーム"
+      },
+      "preferredMarket": {
+        "header": "優先市場取引ペア",
+        "header_content": "優先市場取引ペアは、資産に対して取引するために使用されるデフォルトの資産です。これは非公式の提案です。"
+      },
+      "description": {
+        "header": "資産の説明",
+        "header_content": "これはアセットの説明であり、DEX に表示され、アセットに関する詳細情報を提供するために使用できます。",
+        "placeholder": "説明"
+      },
+      "max_supply": {
+        "header": "最大供給量",
+        "header_content": "資産の最大供給量。これは、資産所有者 (あなた) が発行できる資産の合計額です。",
+        "placeholder": "最大供給量"
+      },
+      "precision": {
+        "header": "アセットの精度",
+        "header_content": "アセットの精度は、サポートされる小数点以下の桁数を指定します。",
+        "placeholder": "精度"
+      }
+    },
+    "permissions": {
+      "header": "アセットの権限",
+      "header_content": "注: アクセス許可の無効化は永続的な決定です。",
+      "charge_market_fee": {
+        "allowedText": "許可される市場手数料 (charge_market_fee)",
+        "disabledText": "市場手数料が無効になっています"
+      },
+      "white_list": {
+        "allowedText": "許可されるホワイトリスト (white_list)",
+        "disabledText": "ホワイトリストが無効になっています"
+      },
+      "override_authority": {
+        "allowedText": "許可された権限の上書き (override_authority)",
+        "disabledText": "オーバーライド権限が無効になっています"
+      },
+      "transfer_restricted": {
+        "allowedText": "転送制限許可 (transfer_restricted)",
+        "disabledText": "転送制限が無効になっています"
+      },
+      "disable_confidential": {
+        "allowedText": "許可された機密情報を無効にする (disable_confidential)",
+        "disabledText": "機密を無効にする 無効にする"
+      }
+    },
+    "flags": {
+      "header": "アセットのフラグ",
+      "header_content": "許可された各アセットの権限は、オン/オフを切り替えることができます。",
+      "charge_market_fee": {
+        "allowedText": "市場手数料の有効化",
+        "disabledText": "市場手数料が無効になっています"
+      },
+      "white_list": {
+        "allowedText": "ホワイトリストが有効になっている",
+        "disabledText": "ホワイトリストが無効になっています"
+      },
+      "override_authority": {
+        "allowedText": "オーバーライド権限が有効になっています",
+        "disabledText": "オーバーライド権限が無効になっています"
+      },
+      "transfer_restricted": {
+        "allowedText": "転送制限が有効になっている",
+        "disabledText": "転送制限が無効になっています"
+      },
+      "disable_confidential": {
+        "allowedText": "機密情報を無効にする 有効にする",
+        "disabledText": "機密を無効にする 無効にする"
+      }
+    },
+    "buttons": {
+      "submit": "提出する"
+    },
+    "extensions": {
+      "header_content": "拡張機能は、アセットをさらにカスタマイズするために使用できる追加の詳細設定です。",
+      "header": "市場手数料の延長",
+      "reward_percent": {
+        "enabled": "紹介者報酬パーセンテージ拡張が有効になっています",
+        "disabled": "紹介者報酬パーセンテージ拡張を有効にしますか?",
+        "header": "紹介者の報酬割合",
+        "header_content": "紹介者報酬の割合は、アクティブな市場参加者の紹介者に割り当てられる市場手数料の割合です。"
+      },
+      "whitelist_market_fee_sharing": {
+        "enabled": "ホワイトリスト市場手数料共有拡張機能が有効になっています",
+        "disabled": "ホワイトリスト市場手数料共有拡張機能を有効にしますか?",
+        "header": "ホワイトリスト市場手数料の共有",
+        "header_content": "ホワイトリスト市場手数料共有拡張機能により、ハウスはこれらのホワイトリストに登録されたアカウントへの紹介者を制限することができます。"
+      },
+      "taker_fee_percent": {
+        "enabled": "テイカー手数料パーセンテージ拡張が有効になりました",
+        "disabled": "受取手数料パーセンテージの延長を有効にしますか?",
+        "header": "テイカー手数料の割合",
+        "header_content": "テイカー手数料の割合は、分散型取引所で指値注文の「テイカー」に割り当てられる市場手数料の割合です。"
+      },
+      "allowed_markets": {
+        "enabled": "許可されたマーケット拡張機能が有効になっています",
+        "disabled": "許可されているマーケット拡張機能を有効にしますか?"
+      },
+      "banned_markets": {
+        "enabled": "禁止されたマーケットの拡張機能が有効になりました",
+        "disabled": "禁止されたマーケットの拡張機能を有効にしますか?"
+      }
+    },
+    "whitelist": {
+      "header_content": "資産ホワイトリスト権限者は、自分のアカウントの許可リストに登録されたアカウント リストを提供して、このアクセスとの対話を許可できるアカウントです。",
+      "header": "資産ホワイトリストの当局"
+    },
+    "blacklist": {
+      "header_content": "資産ブラックリスト当局は、自分のアカウントのブラックリストに登録されたアカウント リストを提供して、このアクセスとのやり取りを防止する禁止アカウント リストを強制できるアカウントです。",
+      "header": "資産ブラックリスト当局"
+    },
+    "market_fee": {
+      "header_content": "市場手数料は、Bitshares DEX で実行されるすべての取引に請求される手数料の割合です。",
+      "header": "市場手数料の割合"
+    },
+    "max_market_fee": {
+      "header": "市場手数料の上限",
+      "header_content": "最大市場手数料は、Bitshares DEX で実行されるすべての取引で手数料として請求できる資産の最大額です。"
+    },
+    "cer": {
+      "quote_asset_amount": {
+        "header": "見積資産額",
+        "header_content": "基本資産金額を購入するために必要な、ユーザーが発行した資産の金額。"
+      },
+      "base_asset_amount": {
+        "header": "基準資産額",
+        "header_content": "基本資産の額（{{symbol}}) 見積資産金額を購入するために必要です。"
+      },
+      "calculated_cer_price": {
+        "header": "コア為替レート",
+        "header_content": "コア為替レートが市場価格よりも高いことを確認してください。そうしないと、人々が市場からトークンを購入し、暗黙の裁定取引によって手数料プールを使い果たしてしまいます。"
+      }
+    }
+  }

@@ -31,7 +31,7 @@
     },
     "precision": {
       "header": "Précision des actifs",
-      "header_content": "La précision de l'actif spécifie la quantité de décimales prises en charge.",
+      "header_content": "La précision de l'actif spécifie la quantité de décimales prises en charge. Cette valeur ne peut pas être modifiée après la création de l'actif.",
       "placeholder": "Précision"
     }
   },

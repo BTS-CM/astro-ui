@@ -34,5 +34,7 @@
   "searchingByIssuer": "Søgning efter udsteder",
   "searchByIssuer": "Søg efter udsteder",
   "enterSearchText": "Indtast søgetekst",
-  "noResultsFound": "Ingen resultater fundet"
+  "noResultsFound": "Ingen resultater fundet",
+  "bitassets": "Bitassets",
+  "privateSmartcoins": "Private smartcoins"
 }

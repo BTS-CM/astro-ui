@@ -1164,7 +1164,7 @@ export default function CreditOfferEditor(properties) {
                                       _account.amount = minimumBorowAmount ?? 1;
                                       setAllowedAccounts(
                                         allowedAccounts && allowedAccounts.length
-                                          ? [allowedAccounts].concat([_account])
+                                          ? [...allowedAccounts, _account]
                                           : [_account]
                                       );
                                     }

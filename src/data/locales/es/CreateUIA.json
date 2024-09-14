@@ -1,0 +1,154 @@
+{
+    "dialogContent": {
+      "headerText": "Creando el siguiente activo emitido por el usuario: {{symbol}}"
+    },
+    "card": {
+      "title_create": "Crear un activo emitido por el usuario",
+      "title_edit": "Edición de un activo emitido por el usuario",
+      "description": "Los activos emitidos por el usuario pueden representar cualquier cosa que desee y se pueden utilizar para una variedad de propósitos. "
+    },
+    "asset_details": {
+      "title": "Detalles del activo",
+      "title_content": "Estas son las configuraciones de activos utilizadas para la funcionalidad principal de DEX.",
+      "symbol": {
+        "header": "Símbolo de activo",
+        "header_content": "El símbolo del activo es un identificador único en la cadena de bloques que identifica el activo en todo el DEX. ",
+        "placeholder": "Símbolo"
+      },
+      "shortName": {
+        "header": "Nombre corto del activo",
+        "header_content": "Este es el nombre corto del activo, menos importante que el símbolo, pero sigue siendo un identificador único opcionalmente abreviado. ",
+        "placeholder": "Nombre corto"
+      },
+      "preferredMarket": {
+        "header": "Par comercial de mercado preferido",
+        "header_content": "El par de negociación de mercado preferido es el activo predeterminado que se utiliza para negociar con su activo; esta es una sugerencia informal."
+      },
+      "description": {
+        "header": "Descripción del activo",
+        "header_content": "Esta es la descripción del activo, se mostrará en el DEX y se puede utilizar para proporcionar más información sobre el activo.",
+        "placeholder": "Descripción"
+      },
+      "max_supply": {
+        "header": "Oferta máxima",
+        "header_content": "La oferta máxima del activo, es la cantidad total del activo que el propietario del activo (usted) puede emitir alguna vez.",
+        "placeholder": "Suministro máximo"
+      },
+      "precision": {
+        "header": "Precisión de activos",
+        "header_content": "La precisión del activo especifica la cantidad de decimales admitidos. ",
+        "placeholder": "Precisión"
+      }
+    },
+    "permissions": {
+      "header": "Permisos de activos",
+      "header_content": "Nota: Deshabilitar permisos es una decisión permanente",
+      "charge_market_fee": {
+        "allowedText": "Tarifas de mercado permitidas (charge_market_fee)",
+        "disabledText": "Tarifas de mercado deshabilitadas"
+      },
+      "white_list": {
+        "allowedText": "Lista blanca permitida (white_list)",
+        "disabledText": "Lista blanca deshabilitada"
+      },
+      "override_authority": {
+        "allowedText": "Anulación de autoridad permitida (override_authority)",
+        "disabledText": "Anular autoridad deshabilitada"
+      },
+      "transfer_restricted": {
+        "allowedText": "Transferencia restringida permitida (transfer_restricted)",
+        "disabledText": "Transferencia restringida deshabilitada"
+      },
+      "disable_confidential": {
+        "allowedText": "Deshabilitar confidencial permitido (disable_confidential)",
+        "disabledText": "Deshabilitar confidencial deshabilitado"
+      }
+    },
+    "flags": {
+      "header": "Banderas de activos",
+      "header_content": "Cada permiso de activo permitido se puede activar o desactivar.",
+      "charge_market_fee": {
+        "allowedText": "Tarifas de mercado habilitadas",
+        "disabledText": "Tarifas de mercado deshabilitadas"
+      },
+      "white_list": {
+        "allowedText": "Lista blanca habilitada",
+        "disabledText": "Lista blanca deshabilitada"
+      },
+      "override_authority": {
+        "allowedText": "Anular autoridad habilitada",
+        "disabledText": "Anular autoridad deshabilitada"
+      },
+      "transfer_restricted": {
+        "allowedText": "Transferencia restringida habilitada",
+        "disabledText": "Transferencia restringida deshabilitada"
+      },
+      "disable_confidential": {
+        "allowedText": "Desactivar confidencial habilitado",
+        "disabledText": "Deshabilitar confidencial deshabilitado"
+      }
+    },
+    "buttons": {
+      "submit": "Entregar"
+    },
+    "extensions": {
+      "header_content": "Las extensiones son configuraciones avanzadas adicionales que se pueden usar para personalizar aún más el activo.",
+      "header": "Extensiones de tarifas de mercado",
+      "reward_percent": {
+        "enabled": "Extensión de porcentaje de recompensa de referencia habilitada",
+        "disabled": "¿Habilitar la extensión del porcentaje de recompensa del referente?",
+        "header": "Porcentaje de recompensa del referente",
+        "header_content": "El porcentaje de recompensa del referente es el porcentaje de la tarifa de mercado que se asigna al referente de los participantes activos del mercado."
+      },
+      "whitelist_market_fee_sharing": {
+        "enabled": "Extensión de cuota compartida del mercado de lista blanca habilitada",
+        "disabled": "¿Habilitar la extensión de tarifa compartida del mercado de la lista blanca?",
+        "header": "Lista blanca de cuotas compartidas en el mercado",
+        "header_content": "La extensión de tarifa compartida del mercado de la lista blanca permite a la casa limitar las referencias a estas cuentas incluidas en la lista blanca."
+      },
+      "taker_fee_percent": {
+        "enabled": "Extensión del porcentaje de la tarifa del tomador habilitada",
+        "disabled": "¿Habilitar la extensión del porcentaje de la tarifa del tomador?",
+        "header": "Porcentaje de tarifa del tomador",
+        "header_content": "El porcentaje de la tarifa del receptor es el porcentaje de la tarifa de mercado que se asigna al \"receptor\" de las órdenes limitadas en el intercambio descentralizado."
+      },
+      "allowed_markets": {
+        "enabled": "Extensión de mercados permitidos habilitada",
+        "disabled": "¿Habilitar la extensión de mercados permitidos?"
+      },
+      "banned_markets": {
+        "enabled": "Habilitada la extensión de mercados prohibidos",
+        "disabled": "¿Habilitar la extensión de mercados prohibidos?"
+      }
+    },
+    "whitelist": {
+      "header_content": "Las autoridades de la lista blanca de activos son cuentas que pueden contribuir con la lista de cuentas permitidas de su cuenta para autorizar la interacción con este acceso.",
+      "header": "Autoridades de la lista blanca de activos"
+    },
+    "blacklist": {
+      "header_content": "Las autoridades de la lista negra de activos son cuentas que pueden contribuir con la lista de cuentas negras de su cuenta para hacer cumplir una lista de cuentas prohibidas que impida la interacción con este acceso.",
+      "header": "Autoridades de la lista negra de activos"
+    },
+    "market_fee": {
+      "header_content": "La tarifa de mercado es el porcentaje de tarifa que se cobra en cada operación que se ejecuta en Bitshares DEX. ",
+      "header": "Porcentaje de tarifa de mercado"
+    },
+    "max_market_fee": {
+      "header": "Tarifa máxima de mercado",
+      "header_content": "La tarifa máxima de mercado es la cantidad máxima del activo que se puede cobrar como tarifa en cada operación que se ejecuta en Bitshares DEX."
+    },
+    "cer": {
+      "quote_asset_amount": {
+        "header": "Monto del activo cotizado",
+        "header_content": "El monto del activo emitido por su usuario que se requiere para comprar el monto del activo base."
+      },
+      "base_asset_amount": {
+        "header": "Monto base del activo",
+        "header_content": "El importe del activo base ({{symbol}}) que se requiere para comprar el monto del activo cotizado."
+      },
+      "calculated_cer_price": {
+        "header": "Tipo de cambio subyacente",
+        "header_content": "Asegúrese de que su tipo de cambio principal sea más alto que el precio de mercado; de lo contrario, la gente comprará su token en el mercado y agotará su fondo de tarifas mediante arbitraje implícito. "
+      }
+    }
+  }

@@ -31,7 +31,7 @@
     },
     "precision": {
       "header": "Asset-Präzision",
-      "header_content": "Die Genauigkeit des Assets gibt die Anzahl der unterstützten Dezimalstellen an.",
+      "header_content": "Die Genauigkeit des Assets gibt die Anzahl der unterstützten Dezimalstellen an. Dieser Wert kann nach der Asset-Erstellung nicht mehr geändert werden.",
       "placeholder": "Präzision"
     }
   },

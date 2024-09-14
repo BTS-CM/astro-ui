@@ -31,7 +31,7 @@
     },
     "precision": {
       "header": "Precisione delle risorse",
-      "header_content": "La precisione dell'asset specifica la quantità di cifre decimali supportate.",
+      "header_content": "La precisione dell'asset specifica la quantità di cifre decimali supportate. Questo valore non può essere modificato dopo la creazione dell'asset.",
       "placeholder": "Precisione"
     }
   },

@@ -34,5 +34,7 @@
   "searchingByIssuer": "発行者ごとに検索する",
   "searchByIssuer": "発行者から探す",
   "enterSearchText": "検索テキストを入力してください",
-  "noResultsFound": "結果が見つかりません"
+  "noResultsFound": "結果が見つかりません",
+  "bitassets": "ビットアセット",
+  "privateSmartcoins": "プライベートスマートコイン"
 }

@@ -31,7 +31,7 @@
     },
     "precision": {
       "header": "Precisão de ativos",
-      "header_content": "A precisão do ativo especifica a quantidade de casas decimais suportadas.",
+      "header_content": "A precisão do ativo especifica a quantidade de casas decimais suportadas. Este valor não pode ser alterado após a criação do ativo.",
       "placeholder": "Precisão"
     }
   },

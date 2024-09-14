@@ -60,7 +60,8 @@
     "vesting": "Overvåg og træk dine optjente saldi med nedenstående formular.",
     "predictions": "Find et forudsigelsesmarkedsaktiv nedenfor for at spille på.",
     "tfunds": "Find, opret, opdater eller slet Same-T-midler nedenfor!",
-    "create_vesting": "Brug denne formular til at oprette en optjeningssaldo for enhver konto!"
+    "create_vesting": "Brug denne formular til at oprette en optjeningssaldo for enhver konto!",
+    "uia": "Opret dit eget brugerudstedte aktiv med formularen nedenfor!"
   },
   "back": "Gå tilbage",
   "usage": "Designet til brug med ",

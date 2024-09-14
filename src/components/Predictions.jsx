@@ -655,7 +655,7 @@ export default function Predictions(properties) {
                                       {Object.keys(_issuer_permissions).join(", ")}
                                     </HoverCardContent>
                                   </HoverCard>
-                                : null
+                                : <><b>{t("Predictions:permissions")}</b>: 0</>
                               }
                             </div>
                             <div>
@@ -1626,7 +1626,7 @@ export default function Predictions(properties) {
                                                         ) {
                                                             setPriceFeeders(
                                                               priceFeeders && priceFeeders.length
-                                                                ? [priceFeeders].concat([_account])
+                                                                ? [...priceFeeders, _account]
                                                                 : [_account]
                                                             );
                                                         }

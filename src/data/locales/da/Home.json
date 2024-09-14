@@ -1,84 +1,86 @@
 {
-  "lend": {
-    "title": "🪙 Lån penge",
-    "subtitle": "Lån til andre brugere",
-    "hover1": "Opret dine egne decentrale kredittilbud.",
-    "hover2": "Lån aktiver til dine definerede satser.",
-    "hover3": "Angiv acceptable lånesikkerheder og priser."
+  "dex": {
+    "title": "📈 DEX-begrænsningsordrer",
+    "subtitle": "Handl aktiver på Bitshares DEX",
+    "hover1": "Lav manuelt begrænsede ordrer.",
+    "hover2": "Brug ethvert aktivhandelspar.",
+    "hover3": "Angiv ordrens udløbsdatoer.",
+    "hover4": "Mere kompleks, men billigere end poolbytte."
   },
-  "nodes": {
-    "title": "🌐 Noder",
-    "subtitle": "Konfigurer blockchain-forbindelse",
-    "hover1": "Opret forbindelse til en Bitshares-node efter eget valg.",
-    "hover2": "Tilføj/fjern noder til din forbindelsesliste."
-  },
-  "swap": {
-    "title": "🔄 Enkelt bytte",
-    "subtitle": "Byt aktiver via en pulje",
+  "pool": {
+    "title": "💱 Liquidity Pool Exchange",
+    "subtitle": "Swap aktiver via en likviditetspulje",
     "hover1": "Byt aktiver via brugerskabte likviditetspuljer.",
     "hover2": "Puljer har forskellige handelspar og gebyrer.",
     "hover3": "Enklere men dyrere end en limiteret ordre."
   },
-  "pool": {
-    "title": "💱 Poolbytte",
-    "subtitle": "Byt aktiver via en pulje",
+  "swap": {
+    "title": "🔄 Simpel aktivbytte",
+    "subtitle": "Det er nemmere at bytte aktiver via puljer",
     "hover1": "Byt aktiver via brugerskabte likviditetspuljer.",
     "hover2": "Puljer har forskellige handelspar og gebyrer.",
     "hover3": "Enklere men dyrere end en limiteret ordre."
   },
   "stake": {
-    "title": "🔒 Indsats aktiver",
+    "title": "🔒 Indsatsaktiver",
     "subtitle": "Sats aktiver i likviditetspuljer",
     "hover1": "Sats aktiver i likviditetspuljer for at tjene gebyrer.",
     "hover2": "Indsatte aktiver er låst i puljen.",
     "hover3": "Indsatte aktiver kan til enhver tid trækkes tilbage."
   },
-  "dex": {
-    "title": "📈 DEX begrænsede ordrer",
-    "subtitle": "Handl på Bitshares DEX",
-    "hover1": "Lav manuelt begrænsede ordrer.",
-    "hover2": "Brug ethvert aktivhandelspar.",
-    "hover3": "Angiv ordreudløbsdatoer.",
-    "hover4": "Mere kompleks, men billigere end poolbytte."
-  },
   "transfer": {
     "title": "💸 Overfør aktiver",
     "subtitle": "Send aktiver til andre brugere",
-    "hover1": "Overfør aktiver til alle på Bitshares blockchain på få sekunder."
+    "hover1": "Overfør aktiver til enhver på Bitshares blockchain på få sekunder."
+  },
+  "create_vesting": {
+    "title": "🫰 Vestaktiver",
+    "subtitle": "Opret optjeningssaldi",
+    "hover1": "Oprettelse af en optjeningsbalance giver dig mulighed for at låse en mængde aktiver op i en bestemt periode.",
+    "hover2": "Du kan bruge en af ​​to typer optjening: Coin Days Destroyed og Linear Vesting with Cliff.",
+    "hover3": "Coin Days Destroyed-politikkens effekt er at kræve en vis mængde \"rente\", før den fulde saldo kan trækkes tilbage. ",
+    "hover4": "Lineær Vesting med Cliff-politik bruges til at efterligne traditionelle aktieoptjeningkontrakter, hvor et vist beløb hver dag optjenes, indtil det er fuldt modnet."
   },
   "borrow": {
-    "title": "🏦 Lån penge",
-    "subtitle": "Lån fra andre brugere",
+    "title": "🏦 Lån midler",
+    "subtitle": "Lån fra andre brugere kredittilbud",
     "hover1": "Gennemse de aktive brugeroprettede kredittilbud.",
     "hover2": "Lån aktiver fra dem til den ønskede kurs.",
     "hover3": "Brug den ønskede sikkerhed for at sikre dit lån."
   },
+  "lend": {
+    "title": "🪙 Lån midler",
+    "subtitle": "Opret et kredittilbud for at låne ud til andre",
+    "hover1": "Opret dine egne decentrale kredittilbud.",
+    "hover2": "Lån aktiver til dine definerede satser.",
+    "hover3": "Angiv acceptable lånesikkerheder og priser."
+  },
   "smartcoins": {
-    "title": "💵 Opret gæld",
-    "subtitle": "Udstedelse af sikkerhedsstillet gæld",
+    "title": "💵 Udstedelse af sikkerhedsstillet gæld",
+    "subtitle": "Lån Fiat bitassets, private smartcoins og mere.",
     "hover1": "Bitassets som USD, CNY og EUR er komitéskabte stablecoins (smartcoins) understøttet af BTS.",
     "hover2": "Brugerskabte smartcoins kan bakkes op med ethvert aktiv og referere til ethvert eksternt feed.",
     "hover3": "Eksterne afregningspriser er afledt fra konfigurerede foderproducenter.",
     "hover4": "Eksponering for eksterne prisfeeds kan udgøre en risiko for sikkerhedsstillede gældspositioner."
   },
-  "ltm": {
-    "title": "🏅 Køb LTM",
-    "subtitle": "Køb et livstidsmedlemskab",
-    "hover1": "Der er flere fordele ved at blive livstidsmedlem.",
-    "hover2": "Livsvarige medlemmer får en 80% rabat på saldo på kontingent.",
-    "hover3": "Livsvarige medlemmer kan oprette premium Bitshares-kontonavne.",
-    "hover4": "Livsvarige medlemmer kan tjene gennem henvisningssystemet."
+  "tfunds": {
+    "title": "🤖 Same-T Funds",
+    "subtitle": "Se, opret, opdater, slet Same-T Funds!",
+    "hover1": "Se alle de Same-T-fonde, der i øjeblikket tilbydes af andre brugere.",
+    "hover2": "Opret nemt en ny Same-T-fond.",
+    "hover3": "Opdater eller slet dine eksisterende Same-T-midler.",
+    "hover4": "Same-T-midler er en måde at tjene passivt på dine besiddelser."
   },
   "portfolio": {
-    "title": "💰 Portefølje",
-    "subtitle": "Se din portefølje",
+    "title": "💰 Din portefølje",
+    "subtitle": "Tjek dine saldi, åbne ordrer og seneste blockchain-aktivitet",
     "hover1": "Tjek dine saldi.",
     "hover2": "Overvåg dine åbne ordrer.",
     "hover3": "Analyser din seneste kontoaktivitet."
   },
   "featured": {
     "title": "🏆 Topmarkeder",
-    "subtitle": "Se de fleste aktive markeder",
+    "subtitle": "Oplev de mest aktivt handlede aktiver i dag",
     "hover1": "Naviger til de mest aktive handelspar.",
     "hover2": "Sammenlign markedsomsætning og værdi.",
     "hover3": "Sammenlign mængden af ​​markedshandler."
@@ -97,38 +99,52 @@
   },
   "vesting": {
     "title": "⌚ Optjening af saldi",
-    "subtitle": "Se optjeningssaldi",
-    "hover1": "Tjek dine optjente saldi.",
+    "subtitle": "Se og kræve belønninger, henvisningsgebyrer og andre optjeningssaldi",
+    "hover1": "Tjek dine optjeningssaldi.",
     "hover2": "Gør krav på dine optjente saldi."
   },
+  "prediction_markets": {
+    "title": "🎲 Forudsigelser",
+    "subtitle": "Gennemse forudsigelser, administrer væddemål, udfør forudsigelsesadministrator.",
+    "hover1": "Gennemse de tilgængelige forudsigelige markedsaktiver.",
+    "hover2": "Forudsigelsesmarkeder kan handle om alt.",
+    "hover3": "Hvert forudsigelsesmarkedsaktiv har et unikt gebyr."
+  },
   "create_prediction": {
-    "title": "🔮 Opret forudsigelse",
+    "title": "🔮 Forudsigelsesmarkedsaktiv",
     "subtitle": "Lav et væddemål om hvad som helst",
     "hover1": "Lav væddemål om bogstaveligt talt alt.",
     "hover2": "Vær bookmaker og sæt din egen kommission.",
     "hover3": "Både kort- og langsigtede væddemål er mulige."
   },
-  "prediction_markets": {
-    "title": "🎲 Forudsigelser",
-    "subtitle": "Spil på næsten alt",
-    "hover1": "Gennemse de tilgængelige forudsigelige markedsaktiver.",
-    "hover2": "Forudsigelsesmarkeder kan handle om alt.",
-    "hover3": "Hvert forudsigelsesmarkedsaktiv har et unikt gebyr."
+  "create_uia": {
+    "title": "🍬 Brugerudstedt aktiv",
+    "subtitle": "Opret dit eget token til hvad som helst",
+    "hover1": "Opret dit eget brugerudstedte aktiv.",
+    "hover2": "De kan bruges til en række forskellige formål.",
+    "hover3": "De kan bruges som et token til din virksomhed, et belønningstoken, et token til et spil og mere.",
+    "hover4": "Gateways kan oprette børsstøttede aktiver til handel på Bitshares DEX."
   },
-  "tfunds": {
-    "title": "🤖 Same-T Funds",
-    "subtitle": "Se, opret, opdater, slet Same-T Funds!",
-    "hover1": "Se alle de Same-T-fonde, der i øjeblikket tilbydes af andre brugere.",
-    "hover2": "Opret nemt en ny Same-T-fond.",
-    "hover3": "Opdater eller slet dine eksisterende Same-T-midler.",
-    "hover4": "Same-T-midler er en måde at tjene passivt på dine besiddelser."
+  "create_smartcoin": {
+    "title": "💷 Smartcoin-aktiv",
+    "subtitle": "Opret et Fiat stablecoin-aktiv",
+    "hover1": "Skab din egen Smartcoin.",
+    "hover2": "De kan bruges til en række forskellige formål.",
+    "hover3": "De kan bruges som en stablecoin, et token til din virksomhed, et belønningstoken, et token til et spil og mere.",
+    "hover4": "Smartcoins kan bakkes op af ethvert aktiv og referere til ethvert eksternt feed."
   },
-  "create_vesting": {
-    "title": "🫰 Vestaktiver",
-    "subtitle": "Skab optjening til dig selv eller andre",
-    "hover1": "Oprettelse af en optjeningsbalance giver dig mulighed for at låse en mængde aktiver op i en bestemt periode.",
-    "hover2": "Du kan bruge en af ​​to typer optjening: Coin Days Destroyed og Linear Vesting with Cliff.",
-    "hover3": "Coin Days Destroyed-politikkens effekt er at kræve en vis mængde \"rente\", før den fulde saldo kan trækkes tilbage. ",
-    "hover4": "Lineær Vesting med Cliff-politik bruges til at efterligne traditionelle aktieoptjeningkontrakter, hvor et vist beløb hver dag optjenes, indtil det er fuldt modnet."
+  "ltm": {
+    "title": "🏅 Opgrader konto",
+    "subtitle": "Køb et livstidsmedlemskab",
+    "hover1": "Der er flere fordele ved at blive livstidsmedlem.",
+    "hover2": "Livsvarige medlemmer får en 80% rabat på saldo på kontingent.",
+    "hover3": "Livsvarige medlemmer kan oprette premium Bitshares-kontonavne.",
+    "hover4": "Livsvarige medlemmer kan tjene gennem henvisningssystemet."
+  },
+  "nodes": {
+    "title": "🌐 Noder",
+    "subtitle": "Blockchain node konfiguration",
+    "hover1": "Opret forbindelse til en Bitshares-node efter eget valg.",
+    "hover2": "Tilføj/fjern noder til din forbindelsesliste."
   }
 }

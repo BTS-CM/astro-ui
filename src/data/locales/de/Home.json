@@ -1,27 +1,22 @@
 {
-  "lend": {
-    "title": "🪙 Gelder verleihen",
-    "subtitle": "An andere Benutzer verleihen",
-    "hover1": "Erstellen Sie Ihre eigenen dezentralen Kreditangebote.",
-    "hover2": "Verleihen Sie Vermögenswerte zu Ihren festgelegten Zinssätzen.",
-    "hover3": "Geben Sie akzeptable Kreditsicherheiten und Preise an."
+  "dex": {
+    "title": "📈 DEX-Limit-Orders",
+    "subtitle": "Handeln Sie Vermögenswerte auf dem Bitshares DEX",
+    "hover1": "Erstellen Sie manuell Limit-Orders.",
+    "hover2": "Verwenden Sie ein beliebiges Asset-Trading-Paar.",
+    "hover3": "Geben Sie das Ablaufdatum der Bestellung an.",
+    "hover4": "Komplexer, aber günstiger als Pool-Swaps."
   },
-  "nodes": {
-    "title": "🌐 Knoten",
-    "subtitle": "Konfigurieren Sie die Blockchain-Verbindung",
-    "hover1": "Stellen Sie eine Verbindung zu einem Bitshares-Knoten Ihrer Wahl her.",
-    "hover2": "Fügen Sie Ihrer Verbindungsliste Knoten hinzu bzw. entfernen Sie sie."
-  },
-  "swap": {
-    "title": "🔄 Einfacher Tausch",
-    "subtitle": "Tauschen Sie Vermögenswerte über einen Pool aus",
+  "pool": {
+    "title": "💱 Liquiditätspool-Austausch",
+    "subtitle": "Tauschen Sie Vermögenswerte über einen Liquiditätspool",
     "hover1": "Tauschen Sie Vermögenswerte über vom Benutzer erstellte Liquiditätspools aus.",
     "hover2": "Pools haben unterschiedliche Handelspaare und Gebühren.",
     "hover3": "Einfacher, aber teurer als eine Limit-Order."
   },
-  "pool": {
-    "title": "💱 Pooltausch",
-    "subtitle": "Tauschen Sie Vermögenswerte über einen Pool aus",
+  "swap": {
+    "title": "🔄 Einfacher Asset-Swap",
+    "subtitle": "Einfacherer Austausch von Vermögenswerten über Pools",
     "hover1": "Tauschen Sie Vermögenswerte über vom Benutzer erstellte Liquiditätspools aus.",
     "hover2": "Pools haben unterschiedliche Handelspaare und Gebühren.",
     "hover3": "Einfacher, aber teurer als eine Limit-Order."
@@ -33,52 +28,59 @@
     "hover2": "Abgesteckte Vermögenswerte sind im Pool gesperrt.",
     "hover3": "Eingesetzte Vermögenswerte können jederzeit abgehoben werden."
   },
-  "dex": {
-    "title": "📈 DEX-Limit-Orders",
-    "subtitle": "Handeln Sie am Bitshares DEX",
-    "hover1": "Erstellen Sie manuell Limit-Orders.",
-    "hover2": "Verwenden Sie ein beliebiges Asset-Trading-Paar.",
-    "hover3": "Geben Sie das Ablaufdatum der Bestellung an.",
-    "hover4": "Komplexer, aber günstiger als Pool-Swaps."
-  },
   "transfer": {
     "title": "💸 Vermögenswerte übertragen",
     "subtitle": "Senden Sie Assets an andere Benutzer",
     "hover1": "Übertragen Sie Vermögenswerte in Sekundenschnelle an jeden in der Bitshares-Blockchain."
   },
+  "create_vesting": {
+    "title": "🫰 Vermögenswerte übertragen",
+    "subtitle": "Erstellen Sie Restguthaben",
+    "hover1": "Durch die Erstellung eines Sperrguthabens können Sie eine bestimmte Menge an Vermögenswerten für einen bestimmten Zeitraum sperren.",
+    "hover2": "Sie können einen von zwei Vesting-Typen verwenden: Coin Days Destroyed und Linear Vesting with Cliff.",
+    "hover3": "Die Wirkung der Coin Days Destroyed-Richtlinie besteht darin, dass ein bestimmter Betrag an „Zinsen“ anfallen muss, bevor der gesamte Restbetrag abgehoben werden kann. ",
+    "hover4": "Die Richtlinie „Linear Vesting with Cliff“ wird verwendet, um traditionelle Aktien-Vesting-Verträge nachzuahmen, bei denen jeden Tag ein bestimmter Betrag bis zur vollständigen Fälligkeit unverfallbar wird."
+  },
   "borrow": {
     "title": "🏦 Geld leihen",
-    "subtitle": "Von anderen Benutzern ausleihen",
+    "subtitle": "Leihen Sie sich Kreditangebote von anderen Nutzern aus",
     "hover1": "Durchsuchen Sie die vom aktiven Benutzer erstellten Kreditangebote.",
     "hover2": "Leihen Sie sich von ihnen Vermögenswerte zum gewünschten Zinssatz.",
     "hover3": "Nutzen Sie die geforderten Sicherheiten zur Absicherung Ihres Kredits."
   },
+  "lend": {
+    "title": "🪙 Geld verleihen",
+    "subtitle": "Erstellen Sie ein Kreditangebot, um es anderen zu leihen",
+    "hover1": "Erstellen Sie Ihre eigenen dezentralen Kreditangebote.",
+    "hover2": "Verleihen Sie Vermögenswerte zu Ihren festgelegten Zinssätzen.",
+    "hover3": "Geben Sie akzeptable Kreditsicherheiten und Preise an."
+  },
   "smartcoins": {
-    "title": "💵 Schulden machen",
-    "subtitle": "Besicherte Schulden ausgeben",
+    "title": "💵 Besicherte Schulden ausgeben",
+    "subtitle": "Leihen Sie sich Fiat-Bitassets, private Smartcoins und mehr.",
     "hover1": "Bitassets wie USD, CNY und EUR sind vom Ausschuss erstellte Stablecoins (Smartcoins), die mit BTS gedeckt sind.",
     "hover2": "Vom Benutzer erstellte Smartcoins können mit jedem beliebigen Vermögenswert unterlegt werden und auf jeden externen Feed verweisen.",
     "hover3": "Externe Abrechnungspreise werden von konfigurierten Futtermittelherstellern abgeleitet.",
     "hover4": "Das Risiko externer Preisströme kann ein Risiko für besicherte Schuldenpositionen darstellen."
   },
-  "ltm": {
-    "title": "🏅 Kaufen Sie LTM",
-    "subtitle": "Kaufen Sie eine lebenslange Mitgliedschaft",
-    "hover1": "Eine lebenslange Mitgliedschaft bietet zahlreiche Vorteile.",
-    "hover2": "Mitglieder auf Lebenszeit erhalten eine 80-prozentige Ermäßigung des Unverfallbarkeitsguthabens auf ihre Gebühren.",
-    "hover3": "Lebenslange Mitglieder können Premium-Bitshares-Kontonamen erstellen.",
-    "hover4": "Lebenslange Mitglieder können über das Empfehlungssystem Geld verdienen."
+  "tfunds": {
+    "title": "🤖 Same-T-Fonds",
+    "subtitle": "Same-T Funds ansehen, erstellen, aktualisieren, löschen!",
+    "hover1": "Sehen Sie sich alle derzeit von anderen Benutzern angebotenen Same-T-Fonds an.",
+    "hover2": "Erstellen Sie ganz einfach einen neuen Same-T-Fonds.",
+    "hover3": "Aktualisieren oder löschen Sie Ihre vorhandenen Same-T-Gelder.",
+    "hover4": "Same-T-Fonds sind eine Möglichkeit, passiv an Ihren Beständen zu verdienen."
   },
   "portfolio": {
-    "title": "💰 Portfolio",
-    "subtitle": "Sehen Sie sich Ihr Portfolio an",
+    "title": "💰 Dein Portfolio",
+    "subtitle": "Überprüfen Sie Ihre Guthaben, offenen Bestellungen und aktuelle Blockchain-Aktivitäten",
     "hover1": "Überprüfen Sie Ihre Guthaben.",
     "hover2": "Überwachen Sie Ihre offenen Bestellungen.",
     "hover3": "Analysieren Sie Ihre letzten Kontoaktivitäten."
   },
   "featured": {
     "title": "🏆 Top-Märkte",
-    "subtitle": "Sehen Sie sich die aktivsten Märkte an",
+    "subtitle": "Entdecken Sie heute die am aktivsten gehandelten Vermögenswerte",
     "hover1": "Navigieren Sie zu den aktivsten Handelspaaren.",
     "hover2": "Vergleichen Sie Markthandelsvolumen und -wert.",
     "hover3": "Vergleichen Sie die Anzahl der Marktgeschäfte."
@@ -97,38 +99,52 @@
   },
   "vesting": {
     "title": "⌚ Freizügigkeitsguthaben",
-    "subtitle": "Freizügigkeitsguthaben anzeigen",
+    "subtitle": "Sehen Sie sich Prämien, Empfehlungsgebühren und andere Sperrguthaben an und fordern Sie diese an",
     "hover1": "Überprüfen Sie Ihre Sperrguthaben.",
     "hover2": "Fordern Sie Ihr Freizügigkeitsguthaben an."
   },
-  "create_prediction": {
-    "title": "🔮 Vorhersage erstellen",
-    "subtitle": "Erstellen Sie eine Wette über alles",
-    "hover1": "Erstellen Sie Wetten über buchstäblich alles.",
-    "hover2": "Seien Sie der Buchmacher und legen Sie Ihre eigene Provision fest.",
-    "hover3": "Es sind sowohl kurzfristige als auch langfristige Wetten möglich."
-  },
   "prediction_markets": {
     "title": "🎲 Vorhersagen",
-    "subtitle": "Spielen Sie auf fast alles",
+    "subtitle": "Vorhersagen durchsuchen, Wetten verwalten, Vorhersageverwaltung durchführen.",
     "hover1": "Durchsuchen Sie die verfügbaren Prognosemarkt-Assets.",
     "hover2": "Auf Prognosemärkten kann es um alles Mögliche gehen.",
     "hover3": "Für jedes Prognosemarkt-Asset gibt es eine eigene Gebühr."
   },
-  "tfunds": {
-    "title": "🤖 Same-T-Fonds",
-    "subtitle": "Same-T Funds ansehen, erstellen, aktualisieren, löschen!",
-    "hover1": "Sehen Sie sich alle derzeit von anderen Benutzern angebotenen Same-T-Fonds an.",
-    "hover2": "Erstellen Sie ganz einfach einen neuen Same-T-Fonds.",
-    "hover3": "Aktualisieren oder löschen Sie Ihre vorhandenen Same-T-Gelder.",
-    "hover4": "Same-T-Fonds sind eine Möglichkeit, passiv an Ihren Beständen zu verdienen."
+  "create_prediction": {
+    "title": "🔮 Vorhersage des Marktwerts",
+    "subtitle": "Erstellen Sie eine Wette über alles",
+    "hover1": "Erstellen Sie Wetten über buchstäblich alles.",
+    "hover2": "Seien Sie der Buchmacher und legen Sie Ihre eigene Provision fest.",
+    "hover3": "Es sind sowohl Kurz- als auch Langzeitwetten möglich."
   },
-  "create_vesting": {
-    "title": "🫰 Vermögenswerte übertragen",
-    "subtitle": "Erstellen Sie Freizügigkeitsguthaben für sich selbst oder andere",
-    "hover1": "Durch die Erstellung eines Sperrguthabens können Sie eine bestimmte Menge an Vermögenswerten für einen bestimmten Zeitraum sperren.",
-    "hover2": "Sie können einen von zwei Vesting-Typen verwenden: Coin Days Destroyed und Linear Vesting with Cliff.",
-    "hover3": "Die Wirkung der Coin Days Destroyed-Richtlinie besteht darin, dass ein bestimmter Betrag an „Zinsen“ anfallen muss, bevor der gesamte Restbetrag abgehoben werden kann. ",
-    "hover4": "Die Richtlinie „Linear Vesting with Cliff“ wird verwendet, um traditionelle Aktien-Vesting-Verträge nachzuahmen, bei denen jeden Tag ein bestimmter Betrag bis zur vollständigen Fälligkeit unverfallbar wird."
+  "create_uia": {
+    "title": "🍬 Vom Benutzer ausgegebenes Asset",
+    "subtitle": "Erstellen Sie Ihren eigenen Token für alles",
+    "hover1": "Erstellen Sie Ihr eigenes vom Benutzer ausgegebenes Asset.",
+    "hover2": "Sie können für verschiedene Zwecke verwendet werden.",
+    "hover3": "Sie können als Wertmarke für Ihr Unternehmen, als Belohnungsmarke, als Spielmarke und mehr verwendet werden.",
+    "hover4": "Gateways können börsengesicherte Vermögenswerte für den Handel am Bitshares DEX erstellen."
+  },
+  "create_smartcoin": {
+    "title": "💷 Smartcoin-Asset",
+    "subtitle": "Erstellen Sie ein Fiat-Stablecoin-Asset",
+    "hover1": "Erstellen Sie Ihren eigenen Smartcoin.",
+    "hover2": "Sie können für verschiedene Zwecke verwendet werden.",
+    "hover3": "Sie können als Stablecoin, als Token für Ihr Unternehmen, als Belohnungstoken, als Token für ein Spiel und mehr verwendet werden.",
+    "hover4": "Smartcoins können durch jeden Vermögenswert gedeckt sein und auf jeden externen Feed verweisen."
+  },
+  "ltm": {
+    "title": "🏅 Konto aktualisieren",
+    "subtitle": "Kaufen Sie eine lebenslange Mitgliedschaft",
+    "hover1": "Eine lebenslange Mitgliedschaft bietet zahlreiche Vorteile.",
+    "hover2": "Mitglieder auf Lebenszeit erhalten eine 80-prozentige Ermäßigung des Unverfallbarkeitsguthabens auf ihre Gebühren.",
+    "hover3": "Lebenslange Mitglieder können Premium-Bitshares-Kontonamen erstellen.",
+    "hover4": "Lebenslange Mitglieder können über das Empfehlungssystem Geld verdienen."
+  },
+  "nodes": {
+    "title": "🌐 Knoten",
+    "subtitle": "Konfiguration des Blockchain-Knotens",
+    "hover1": "Stellen Sie eine Verbindung zu einem Bitshares-Knoten Ihrer Wahl her.",
+    "hover2": "Fügen Sie Ihrer Verbindungsliste Knoten hinzu bzw. entfernen Sie sie."
   }
 }

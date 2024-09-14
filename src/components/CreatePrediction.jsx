@@ -747,8 +747,8 @@ export default function Prediction(properties) {
                                                                     ) {
                                                                         setFeeSharingWhitelist(
                                                                             feeSharingWhitelist && feeSharingWhitelist.length
-                                                                            ? [feeSharingWhitelist].concat([_account])
-                                                                            : [_account]
+                                                                                ? [...feeSharingWhitelist, _account]
+                                                                                : [_account]
                                                                         );
                                                                     }
                                                                     setWhitelistMarketFeeSharingDialogOpen(false);
@@ -974,8 +974,8 @@ export default function Prediction(properties) {
                                                                     ) {
                                                                         setWhitelistAuthorities(
                                                                             whitelistAuthorities && whitelistAuthorities.length
-                                                                            ? [whitelistAuthorities].concat([_account])
-                                                                            : [_account]
+                                                                                ? [...whitelistAuthorities, _account]
+                                                                                : [_account]
                                                                         );
                                                                     }
                                                                     setWhitelistAuthorityDialogOpen(false);
@@ -1045,8 +1045,8 @@ export default function Prediction(properties) {
                                                                     ) {
                                                                         setBlacklistAuthorities(
                                                                             blacklistAuthorities && blacklistAuthorities.length
-                                                                            ? [blacklistAuthorities].concat([_account])
-                                                                            : [_account]
+                                                                                ? [...blacklistAuthorities, _account]
+                                                                                : [_account]
                                                                         );
                                                                     }
                                                                     setBlacklistAuthorityDialogOpen(false);

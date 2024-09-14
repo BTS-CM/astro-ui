@@ -34,5 +34,7 @@
   "searchingByIssuer": "ค้นหาตามผู้ออก",
   "searchByIssuer": "ค้นหาตามผู้ออก",
   "enterSearchText": "ป้อนข้อความค้นหา",
-  "noResultsFound": "ไม่พบผลลัพธ์"
+  "noResultsFound": "ไม่พบผลลัพธ์",
+  "bitassets": "บิตแอสเซท",
+  "privateSmartcoins": "สมาร์ทคอยน์ส่วนตัว"
 }

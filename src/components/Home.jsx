@@ -385,6 +385,26 @@ export default function Home(properties) {
             </ul>
           </HoverCardContent>
         </HoverCard>
+        
+        <HoverCard key="create_uia">
+          <HoverCardTrigger asChild>
+            <a href="/create_uia/index.html" style={{ textDecoration: "none" }}>
+              <Card className="h-full hover:shadow-md hover:shadow-black">
+                <CardHeader>
+                  <CardTitle>{t("Home:create_uia.title")}</CardTitle>
+                  <CardDescription>{t("Home:create_uia.subtitle")}</CardDescription>
+                </CardHeader>
+              </Card>
+            </a>
+          </HoverCardTrigger>
+          <HoverCardContent className="w-80 text-sm pt-1">
+            <ul className="ml-2 list-disc [&>li]:mt-2">
+              <li>{t("Home:create_uia.hover1")}</li>
+              <li>{t("Home:create_uia.hover2")}</li>
+              <li>{t("Home:create_uia.hover3")}</li>
+            </ul>
+          </HoverCardContent>
+        </HoverCard>
       </div>
 
       <h4 className="mt-3 mb-2">

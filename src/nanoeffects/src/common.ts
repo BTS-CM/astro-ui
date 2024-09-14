@@ -24,10 +24,10 @@ async function getObjects(
         let currentAPI;
         try {
             currentAPI = existingAPI
-            ? existingAPI
-            : await Apis.instance(node, true, 4000, { enableDatabase: true }, (error: Error) =>
-                console.log({ error })
-              );
+                ? existingAPI
+                : await Apis.instance(node, true, 4000, { enableDatabase: true }, (error: Error) =>
+                    console.log({ error })
+                );
         } catch (error) {
             console.log({ error, node });
             return reject(error);
@@ -54,6 +54,7 @@ async function getObjects(
         if (!existingAPI) {
             currentAPI.close();
         }
+        
         resolve(retrievedObjects);
     });
 }

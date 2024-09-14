@@ -31,7 +31,7 @@
     },
     "precision": {
       "header": "Precisión de activos",
-      "header_content": "La precisión del activo especifica la cantidad de decimales admitidos.",
+      "header_content": "La precisión del activo especifica la cantidad de decimales admitidas. Este valor no se puede modificar después de la creación del activo.",
       "placeholder": "Precisión"
     }
   },

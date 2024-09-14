@@ -31,7 +31,7 @@
     },
     "precision": {
       "header": "Varade täpsus",
-      "header_content": "Vara täpsus määrab toetatud kümnendkohtade arvu.",
+      "header_content": "Vara täpsus määrab toetatud kümnendkohtade arvu. Seda väärtust ei saa pärast vara loomist muuta.",
       "placeholder": "Täpsus"
     }
   },

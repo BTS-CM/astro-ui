@@ -34,5 +34,7 @@
   "searchingByIssuer": "Otsimine väljaandja järgi",
   "searchByIssuer": "Otsi väljaandja järgi",
   "enterSearchText": "Sisesta otsingutekst",
-  "noResultsFound": "Tulemusi ei leitud"
+  "noResultsFound": "Tulemusi ei leitud",
+  "bitassets": "Bitassetid",
+  "privateSmartcoins": "Privaatsed smartcoinid"
 }

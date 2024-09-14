@@ -61,7 +61,8 @@
     "create_prediction": "Utilice el siguiente formulario para crear un activo de mercado de predicción.",
     "predictions": "Localice un activo del mercado de predicción a continuación para apostar.",
     "tfunds": "¡Encuentre, cree, actualice o elimine fondos de Same-T a continuación!",
-    "create_vesting": "¡Utilice este formulario para crear un saldo de adquisición de derechos para cualquier cuenta!"
+    "create_vesting": "¡Utilice este formulario para crear un saldo de adquisición de derechos para cualquier cuenta!",
+    "uia": "¡Cree su propio activo emitido por el usuario con el siguiente formulario!"
   },
   "back": "Regresa",
   "usage": "Diseñado para usar con ",

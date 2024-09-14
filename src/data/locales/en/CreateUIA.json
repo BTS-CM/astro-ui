@@ -1,10 +1,11 @@
 {
     "dialogContent": {
-        "headerText": "Creating the following prediction market asset: {{symbol}}"
+        "headerText": "Creating the following User Issued Asset: {{symbol}}"
     },
     "card": {
-        "title": "Prediction Market Asset creation form",
-        "description": "Create a new Prediction Market Asset by filling out the form below."
+        "title_create": "Creating an User Issued Asset",
+        "title_edit": "Editing an User Issued Asset",
+        "description": "User Issued Assets can represent anything you want, they can be used for a variety of purposes. They can be used as a token for your business, a reward token, a token for a game, and more."
     },
     "asset_details": {
         "title": "Asset Details",
@@ -19,6 +20,10 @@
             "header_content": "This is the short name of the asset, less important than the symbol but still am optionally shortened unique identifier. You can just re-use the symbol for this field.",
             "placeholder": "Short Name"
         },
+        "preferredMarket": {
+            "header": "Preferred market trading pair",
+            "header_content": "The preferred market trading pair is the default asset used to trade against your asset, this is an informal suggestion."
+        },
         "description": {
             "header": "Asset description",
             "header_content": "This is the description of the asset, it will be displayed in the DEX and can be used to provide more information about the asset.",
@@ -26,35 +31,13 @@
         },
         "max_supply": {
             "header": "Maximum supply",
-            "header_content": "The maximum supply of the asset, this is the total amount of the asset that can ever be created by borrowers whilst the prediction market asset is active.",
+            "header_content": "The maximum supply of the asset, this is the total amount of the asset that can ever be issued by the asset owner (you).",
             "placeholder": "Max supply"
         },
         "precision": {
             "header": "Asset precision",
             "header_content": "The precision of the asset specifies the quantity of supported decimal places. This value cannot be changed after asset creation.",
             "placeholder": "Precision"
-        }
-    },
-    "pma": {
-        "title": "Prediction Market Asset Details",
-        "title_content": "These are the asset settings used for the prediction market asset.",
-        "condition": {
-            "header": "Condition",
-            "header_content": "Provide the prediction market asset details here",
-            "placeholder": "Prediction conditions"
-        },
-        "commission": {
-            "header": "Commission (%)",
-            "header_content": "The commission is the fee which the house takes for creating and evaluating the prediction market asset.",
-            "placeholder": "Commission"
-        },
-        "backing_asset": {
-            "header": "Backing asset",
-            "header_content": "The backing asset is the asset that is used to back the prediction market asset. This asset will be used to pay out the winners of the prediction market asset."
-        },
-        "resolution": {
-            "header": "Prediction resolution date & time",
-            "header_content": "The resolution date and time is the date and time at which the prediction market asset will be resolved. This is the date and time at which the prediction market asset will be evaluated and the winners will be paid out."
         }
     },
     "permissions": {
@@ -79,14 +62,6 @@
         "disable_confidential": {
             "allowedText": "Disable confidential allowed (disable_confidential)",
             "disabledText": "Disable confidential disabled"
-        },
-        "witness_fed_asset": {
-            "allowedText": "Witness fed asset allowed",
-            "disabledText": "Witness fed asset disabled"
-        },
-        "committee_fed_asset": {
-            "allowedText": "Committee fed asset allowed",
-            "disabledText": "Committee fed asset disabled"
         }
     },
     "flags": {
@@ -111,34 +86,19 @@
         "disable_confidential": {
             "allowedText": "Disable confidential enabled",
             "disabledText": "Disable confidential disabled"
-        },
-        "witness_fed_asset": {
-            "allowedText": "Witness fed asset enabled",
-            "disabledText": "Witness fed asset disabled"
-        },
-        "committee_fed_asset": {
-            "allowedText": "Committee fed asset enabled",
-            "disabledText": "Committee fed asset disabled"
         }
     },
     "buttons": {
         "submit": "Submit"
     },
-    "risks": {
-      "title": "Some of the risks associated with creating prediction market assets",
-      "description": "Do your own research prior to creating a PMA, read the docs first; not legal advice.",
-      "1": "Misconfiguration of prediction market assets can lead to poor blockchain participation, some user interfaces may filter your PMA entirely from view; make sure to correctly configure your PMA, set a reasonable commission fee and try the functionality out on testnet first.",
-      "2": "When you create a prediction market asset you are responsible as the house to properly evaluate the outcome, failure to do so properly or within a timely manner could lead to legal or fiscal issues for you ontop of loss of credibility as a house.",
-      "3": "This user interface and the Beet/BEETEOS wallets do not support multi-signature accounts, so your house account is a long term single point of failure - protect it well."
-    },
     "extensions": {
         "header_content": "The extensions are additional advanced settings that can be used to further customize the asset.",
-        "header": "Prediction Market Asset Extensions",
+        "header": "Market Fee Extensions",
         "reward_percent": {
             "enabled": "Referrer reward percentage extension enabled",
             "disabled": "Enable the referrer reward percentage extension?",
             "header": "Referrer reward percentage",
-            "header_content": "The referrer reward percentage is the percentage of the commission which is allocated to the referrer of active market participants."
+            "header_content": "The referrer reward percentage is the percentage of the market fee which is allocated to the referrer of active market participants."
         },
         "whitelist_market_fee_sharing": {
             "enabled": "Whitelist market fee sharing extension enabled",
@@ -150,7 +110,15 @@
             "enabled": "Taker fee percentage extension enabled",
             "disabled": "Enable the taker fee percentage extension?",
             "header": "Taker fee percentage",
-            "header_content": "The taker fee percentage is the percentage of the commission which is allocated to the 'taker' of the prediction market asset."
+            "header_content": "The taker fee percentage is the percentage of the market fee which is allocated to the 'taker' of the limit orders on the decentralized exchange."
+        },
+        "allowed_markets": {
+            "enabled": "Allowed markets extension enabled",
+            "disabled": "Enable the allowed markets extension?"
+        },
+        "banned_markets": {
+            "enabled": "Banned markets extension enabled",
+            "disabled": "Enable the banned markets extension?"
         }
     },
     "whitelist": {
@@ -160,5 +128,27 @@
     "blacklist": {
         "header_content": "The asset blacklist authorities are accounts who can contribute their account's blacklisted accounts list to enforce a banned account list preventing interaction with this access.",
         "header": "Asset blacklist authorities"
+    },
+    "market_fee": {
+        "header_content": "The market fee is the fee percentage that is charged on every trade that is executed on the Bitshares DEX. The fee is charged in the asset that is being traded.",
+        "header": "Market fee percent"
+    },
+    "max_market_fee": {
+        "header": "Maximum market fee",
+        "header_content": "The maximum market fee is the maximum amount of the asset that can be charged as a fee on every trade that is executed on the Bitshares DEX."
+    },
+    "cer": {
+        "quote_asset_amount": {
+            "header": "Quote asset amount",
+            "header_content": "The amount of the your user issued asset that is required to purchase the base asset amount."
+        },
+        "base_asset_amount": {
+            "header": "Base asset amount",
+            "header_content": "The amount of the base asset ({{symbol}}) that is required to purchase the quote asset amount."
+        },
+        "calculated_cer_price": {
+            "header": "Core exchange rate",
+            "header_content": "Make sure your core exchange rate is higher than the market price, otherwise people will buy your token from the market and drain your fee pool via implicit arbitrage. The core exchange rate should be updated regularly to reflect market pricing of your asset."
+        }
     }
 }
