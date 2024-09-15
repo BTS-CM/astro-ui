@@ -269,9 +269,8 @@ export default function UIA(properties) {
                 }).filter((x) => x),
                 extensions: _extensions
             },
-            bitasset_opts: null,
             is_prediction_market: false,
-            extensions: null
+            extensions: {}
         };
     }, [
         usr,
