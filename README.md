@@ -6,12 +6,15 @@ Integrates with both the [Beet](https://github.com/bitshares/beet) and [BeetEOS]
 
 ## Dev blogs
 
-* [Announcement thread](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-development-worker-proposal)
-* [Electron packaging announcement thread](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-worker-proposal-electron-release)
-* [Simple swaps & node configuration dev blog](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-dev-update-swaps-and-nodes)
-* [Favourite assets & Portfolio tweaks dev blog](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-dev-update-favourite-assets-and-portfolio-tweaks)
+* [Creating & Browsing User Issued Assets](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-dev-update-creating-user-issued-assets-and-browsing-issued-assets-overview)
+* [Creating Vesting Balances](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-dev-update-creating-vesting-balances)
+* [Same-T Funds](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-dev-update-same-t-fund-support-has-been-added)
+* [Prediction Market Assets](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-dev-update-prediction-market-assets)
 * [Credit offer overviews & Vesting balance claims](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-dev-update-credit-offer-owner-overview-page-and-vesting-balance-claim-page)
-* [Prediction market asset update](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-dev-update-prediction-market-assets)
+* [Favourite assets & Portfolio tweaks](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-dev-update-favourite-assets-and-portfolio-tweaks)
+* [Simple swaps & node configuration](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-dev-update-swaps-and-nodes)
+* [Electron packaging](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-worker-proposal-electron-release)
+* [Announcement thread](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-development-worker-proposal)
 
 ## Functionality
 
@@ -29,11 +32,13 @@ Integrates with both the [Beet](https://github.com/bitshares/beet) and [BeetEOS]
 * Credit deal overview
 * Credit offer overview
 * Claim vesting balances
-* Prediction market asset overview
+* Prediction Market Asset overview
 * Create prediction market assets
 * Buy Life Time Membership for your account
 * User configurable blockchain node connections
 * Create/update/delete Same-T Funds
+* Create/update User Issued Assets
+* View your issued assets (UIAs, NFTs, Smartcoins & PMAs)
 
 ## Dev Commands
 
