@@ -4,12 +4,10 @@ import { FixedSizeList as List } from "react-window";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
-import { DateTimePicker, TimePicker } from '@/components/ui/datetime-picker';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea"
 import { Separator } from "@/components/ui/separator"
-import { Label } from "@/components/ui/label";
 import {
     Dialog,
     DialogContent,
@@ -39,15 +37,24 @@ import { Avatar } from "./Avatar.tsx";
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
 import { $currentUser } from "@/stores/users.ts";
+import { $currentNode } from "@/stores/node.ts";
 import { $assetCacheBTS, $assetCacheTEST } from "@/stores/cache.ts";
-import { getPermissions, getFlags, debounce, humanReadableFloat } from "@/lib/common.js";
 import { $marketSearchCacheBTS, $marketSearchCacheTEST } from "@/stores/cache.ts";
+import { createObjectStore } from "@/nanoeffects/Objects.ts";
 
-import { blockchainFloat } from "@/bts/common";
+import {
+    getPermissions,
+    getFlags,
+    debounce,
+    humanReadableFloat,
+    blockchainFloat,
+    getFlagBooleans
+} from "@/lib/common.js";
 
 export default function UIA(properties) {
     const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
     const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
+    const currentNode = useStore($currentNode);
 
     const _assetsBTS = useSyncExternalStore($assetCacheBTS.subscribe, $assetCacheBTS.get, () => true);
     const _assetsTEST = useSyncExternalStore(
@@ -208,6 +215,9 @@ export default function UIA(properties) {
         return JSON.stringify({ main: desc, short_name: shortName, market });
     }, [desc, market, shortName]);
 
+    const [editing, setEditing] = useState(false); // editing mode
+    const [existingAssetID, setExistingAssetID] = useState(); // existing asset ID
+
     const trx = useMemo(() => {
         let _extensions = {};
         if (enabledReferrerReward) {
@@ -240,7 +250,7 @@ export default function UIA(properties) {
                     },
                     quote: {
                         amount: blockchainFloat(cerQuoteAmount, precision),
-                        asset_id: "1.3.1"
+                        asset_id: existingAssetID ?? "1.3.1"
                     }
                 },
                 whitelist_authorities: flagWhiteList && whitelistAuthorities && whitelistAuthorities.length
@@ -250,11 +260,11 @@ export default function UIA(properties) {
                                         ? blacklistAuthorities.map((x) => x.id)
                                         : [],
                 whitelist_markets: allowedMarkets.map((x) => {
-                    const asset = assets.find((y) => y.symbol === x);
+                    const asset = assets.find((y) => y.id === x);
                     return asset ? asset.id : null;
                 }).filter((x) => x),
                 blacklist_markets: bannedMarkets.map((x) => {
-                    const asset = assets.find((y) => y.symbol === x);
+                    const asset = assets.find((y) => y.id === x);
                     return asset ? asset.id : null;
                 }).filter((x) => x),
                 extensions: _extensions
@@ -265,17 +275,29 @@ export default function UIA(properties) {
         };
     }, [
         usr,
+        assets,
         symbol,
         precision,
         description,
         maxSupply,
         commission,
+        maxCommission,
         issuer_permissions,
         flags,
+        flagWhiteList,
+        whitelistAuthorities,
+        blacklistAuthorities,
+        allowedMarkets,
+        bannedMarkets,
         cerBaseAmount,
+        cerQuoteAmount,
         enabledReferrerReward,
         enabledFeeSharingWhitelist,
-        enabledTakerFee
+        enabledTakerFee,
+        referrerReward,
+        feeSharingWhitelist,
+        takerFee,
+        existingAssetID
     ]);
 
     const debouncedMax = useCallback(
@@ -325,14 +347,61 @@ export default function UIA(properties) {
     const [whitelistAuthorityDialogOpen, setWhitelistAuthorityDialogOpen] = useState(false);
     const [blacklistAuthorityDialogOpen, setBlacklistAuthorityDialogOpen] = useState(false);
 
+
+    const allowedMarketsRow = ({ index, style }) => {
+        let res = allowedMarkets[index];
+        if (!res) {
+            return null;
+        }
+
+        const currentAsset = assets.find((x) => x.id === res);
+        const issuer = marketSearch.find((x) => x.id === res);
+
+        return (
+            <div style={{ ...style }} key={`acard-${res}`}>
+                <Card className="ml-2 mr-2 mt-1">
+                    <CardHeader className="pb-3 pt-3">
+                        <span className="grid grid-cols-12">
+                            <span className="col-span-11">
+                                <div className="">
+                                    {
+                                        currentAsset
+                                            ? `${currentAsset.symbol} (${currentAsset.id})`
+                                            : res
+                                    }
+                                </div>
+                                <div className="text-sm">
+                                    {t("Smartcoins:createdBy")} {issuer && issuer.u ? issuer.u : currentAsset.issuer}
+                                </div>
+                            </span>
+                            <span className="col-span-1">
+                                <Button
+                                    variant="outline"
+                                    className="mr-2 mt-2"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        const _update = allowedMarkets.filter((x) => x !== res);
+                                        setAllowedMarkets(_update);
+                                    }}
+                                >
+                                    ❌
+                                </Button>
+                            </span>
+                        </span>
+                    </CardHeader>
+                </Card>
+            </div>
+        );
+    };
+
     const bannedMarketsRow = ({ index, style }) => {
         let res = bannedMarkets[index];
         if (!res) {
             return null;
         }
 
-        const currentAsset = assets.find((x) => x.symbol === res);
-        const issuer = marketSearch.find((x) => x.s === res);
+        const currentAsset = assets.find((x) => x.id === res);
+        const issuer = marketSearch.find((x) => x.id === res);
 
         return (
             <div style={{ ...style }} key={`acard-${res}`}>
@@ -370,52 +439,6 @@ export default function UIA(properties) {
             </div>
         );
     
-    };
-
-    const allowedMarketsRow = ({ index, style }) => {
-        let res = allowedMarkets[index];
-        if (!res) {
-            return null;
-        }
-
-        const currentAsset = assets.find((x) => x.symbol === res);
-        const issuer = marketSearch.find((x) => x.s === res);
-
-        return (
-            <div style={{ ...style }} key={`acard-${res}`}>
-                <Card className="ml-2 mr-2 mt-1">
-                    <CardHeader className="pb-3 pt-3">
-                        <span className="grid grid-cols-12">
-                            <span className="col-span-11">
-                                <div className="">
-                                    {
-                                        currentAsset
-                                            ? `${currentAsset.symbol} (${currentAsset.id})`
-                                            : res
-                                    }
-                                </div>
-                                <div className="text-sm">
-                                    {t("Smartcoins:createdBy")} {issuer && issuer.u ? issuer.u : currentAsset.issuer}
-                                </div>
-                            </span>
-                            <span className="col-span-1">
-                                <Button
-                                    variant="outline"
-                                    className="mr-2 mt-2"
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        const _update = allowedMarkets.filter((x) => x !== res);
-                                        setAllowedMarkets(_update);
-                                    }}
-                                >
-                                    ❌
-                                </Button>
-                            </span>
-                        </span>
-                    </CardHeader>
-                </Card>
-            </div>
-        );
     };
 
     const feeSharingWhitelistRow = ({ index, style }) => {
@@ -513,13 +536,17 @@ export default function UIA(properties) {
                 <span className="grid grid-cols-12">
                     <span className="col-span-1">
                     <Avatar
-                        size={40} name={res.name} extra="Borrower"
+                        size={40} name={res.name ? res.name : ""} extra="Borrower"
                         expression={{ eye: "normal", mouth: "open" }}
                         colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]}
                     />
                     </span>
                     <span className="col-span-9 ml-3">
-                        #{index + 1}: {res.name} ({res.id})
+                        {
+                            res.name
+                                ? `#${index + 1}: ${res.name} (${res.id})`
+                                : `#${index + 1}: ${res.id}`
+                        }
                     </span>
                     <span className="col-span-1">
                     <Button
@@ -540,6 +567,141 @@ export default function UIA(properties) {
             </div>
         );
     }
+
+    useEffect(() => {
+        const urlSearchParams = new URLSearchParams(window.location.search);
+        const params = Object.fromEntries(urlSearchParams.entries());
+    
+        async function fetching() {
+            const _store = createObjectStore([_chain, JSON.stringify([params.id]), currentNode ? currentNode.url : null]);
+    
+            _store.subscribe(({ data, error, loading }) => {
+                if (data && !error && !loading) {
+                    const propsAsset = data && data.length ? data[0] : null;
+                    if (!propsAsset || propsAsset && propsAsset.bitasset_data_id) {
+                        return;
+                    }
+                    setEditing(true);
+                    setExistingAssetID(propsAsset.id);
+
+                    setSymbol(propsAsset.symbol);
+                    setPrecision(propsAsset.precision);
+                    setMaxSupply(humanReadableFloat(propsAsset.options.max_supply, propsAsset.precision));
+
+                    const desc = propsAsset.options.description;
+                    const parsedJSON = desc && desc.length && desc.includes("main")
+                        ? JSON.parse(desc)
+                        : null;
+                    setShortName(parsedJSON && parsedJSON.short_name ? parsedJSON.short_name : "");
+                    setDesc(parsedJSON && parsedJSON.main ? parsedJSON.main : "");
+                    setMarket(parsedJSON && parsedJSON.market ? parsedJSON.market : "");
+                    setCommission(propsAsset.options.market_fee_percent / 100);
+                    setMaxCommission(humanReadableFloat(propsAsset.options.max_market_fee, propsAsset.precision));
+
+                    setAllowedMarketsEnabled(propsAsset.options.whitelist_markets.length > 0);
+                    setBannedMarketsEnabled(propsAsset.options.blacklist_markets.length > 0);
+                    setAllowedMarkets(propsAsset.options.whitelist_markets);
+                    setBannedMarkets(propsAsset.options.blacklist_markets);
+                    setWhitelistAuthorities(propsAsset.options.whitelist_authorities.map((x) => {
+                        return {
+                            id: x,
+                            name: ""
+                        }
+                    }));
+                    setBlacklistAuthorities(propsAsset.options.blacklist_authorities.map((x) => {
+                        return {
+                            id: x,
+                            name: ""
+                        }
+                    }));
+
+                    const _flags = getFlagBooleans(propsAsset.options.flags);
+                    const _issuer_permissions = getFlagBooleans(propsAsset.options.issuer_permissions);
+
+                    if (_issuer_permissions.charge_market_fee) {
+                        setPermChargeMarketFee(true);
+                    } else {
+                        setPermChargeMarketFee(false);
+                    }
+                    if (_issuer_permissions.disable_confidential) {
+                        setPermDisableConfidential(true);
+                    } else {
+                        setPermDisableConfidential(false);
+                    }
+                    if (_issuer_permissions.override_authority) {
+                        setPermOverrideAuthority(true);
+                    } else {
+                        setPermOverrideAuthority(false);
+                    }
+                    if (_issuer_permissions.transfer_restricted) {
+                        setPermTransferRestricted(true);
+                    } else {
+                        setPermTransferRestricted(false);
+                    }
+                    if (_issuer_permissions.white_list) {
+                        setPermWhiteList(true);
+                    } else {
+                        setPermWhiteList(false);
+                    }
+
+                    if (_flags.charge_market_fee) {
+                        setFlagChargeMarketFee(true);
+                    } else {
+                        setFlagChargeMarketFee(false);
+                    }
+                    if (_flags.disable_confidential) {
+                        setFlagDisableConfidential(true);
+                    } else {
+                        setFlagDisableConfidential(false);
+                    }
+                    if (_flags.override_authority) {
+                        setFlagOverrideAuthority(true);
+                    } else {
+                        setFlagOverrideAuthority(false);
+                    }
+                    if (_flags.transfer_restricted) {
+                        setFlagTransferRestricted(true);
+                    } else {
+                        setFlagTransferRestricted(false);
+                    }
+                    if (_flags.white_list) {
+                        setFlagWhiteList(true);
+                    } else {
+                        setFlagWhiteList(false);
+                    }
+                    
+                    if (propsAsset.options.extensions.reward_percent) {
+                        setEnabledReferrerReward(true);
+                        setReferrerReward(propsAsset.options.extensions.reward_percent / 100);
+                    }
+
+                    if (propsAsset.options.extensions.whitelist_market_fee_sharing) {
+                        setEnabledFeeSharingWhitelist(true);
+                        setFeeSharingWhitelist(propsAsset.options.extensions.whitelist_market_fee_sharing);
+                    }
+
+                    if (propsAsset.options.extensions.taker_fee_percent) {
+                        setEnabledTakerFee(true);
+                        setTakerFee(propsAsset.options.extensions.taker_fee_percent / 100);
+                    }
+
+                    setCerBaseAmount(
+                        humanReadableFloat(propsAsset.options.core_exchange_rate.base.amount, 5)
+                    );
+                    setCerQuoteAmount(
+                        humanReadableFloat(
+                            propsAsset.options.core_exchange_rate.quote.amount,
+                            propsAsset.precision
+                        )
+                    );
+                }
+            });
+        }
+
+        if (params.id && params.id.startsWith("1.3.")) {
+            fetching(params.id);
+        }
+    }, []);
 
     return (
         <>
@@ -565,20 +727,30 @@ export default function UIA(properties) {
                                                 content={t("CreateUIA:asset_details.symbol.header_content")}
                                                 header={t("CreateUIA:asset_details.symbol.header")}
                                             />
-                                            <Input
-                                                placeholder={t("CreateUIA:asset_details.symbol.placeholder")}
-                                                value={symbol}
-                                                type="text"
-                                                onInput={(e) => {
-                                                    const value = e.currentTarget.value;
-                                                    const regex = /^[a-zA-Z0-9]*\.?[a-zA-Z0-9]*$/;
-                                                    if (regex.test(value)) {
-                                                        setSymbol(value);
-                                                    }
-                                                }}
-                                                maxLength={16}
-                                                className="mt-1"
-                                            />
+                                            {
+                                                !editing
+                                                    ? <Input
+                                                        placeholder={t("CreateUIA:asset_details.symbol.placeholder")}
+                                                        value={symbol}
+                                                        type="text"
+                                                        onInput={(e) => {
+                                                            const value = e.currentTarget.value;
+                                                            const regex = /^[a-zA-Z0-9]*\.?[a-zA-Z0-9]*$/;
+                                                            if (regex.test(value)) {
+                                                                setSymbol(value);
+                                                            }
+                                                        }}
+                                                        maxLength={16}
+                                                        className="mt-1"
+                                                    />
+                                                    : <Input
+                                                        placeholder={symbol}
+                                                        type="text"
+                                                        disabled
+                                                        className="mt-1"
+                                                    />
+                                            }
+                                            
                                         </div>
                                         
                                         <div>
@@ -606,22 +778,31 @@ export default function UIA(properties) {
                                                 content={t("CreateUIA:asset_details.precision.header_content")}
                                                 header={t("CreateUIA:asset_details.precision.header")}
                                             />
-                                            <Input
-                                                placeholder={t("CreateUIA:asset_details.precision.placeholder")}
-                                                value={precision}
-                                                type="number"
-                                                onInput={(e) => {
-                                                    const input = parseInt(e.currentTarget.value);
-                                                    if (input >= 0 && input <= 8) {
-                                                        setPrecision(parseInt(e.currentTarget.value))
-                                                    } else if (input < 0) {
-                                                        setPrecision(0);
-                                                    } else {
-                                                        setPrecision(8);
-                                                    }
-                                                }}
-                                                className="mt-1"
-                                            />
+                                            {
+                                                !editing
+                                                ? <Input
+                                                    placeholder={t("CreateUIA:asset_details.precision.placeholder")}
+                                                    value={precision}
+                                                    type="number"
+                                                    onInput={(e) => {
+                                                        const input = parseInt(e.currentTarget.value);
+                                                        if (input >= 0 && input <= 8) {
+                                                            setPrecision(parseInt(e.currentTarget.value))
+                                                        } else if (input < 0) {
+                                                            setPrecision(0);
+                                                        } else {
+                                                            setPrecision(8);
+                                                        }
+                                                    }}
+                                                    className="mt-1"
+                                                />
+                                                : <Input
+                                                    placeholder={precision}
+                                                    type="number"
+                                                    disabled
+                                                    className="mt-1"
+                                                />
+                                            }
                                         </div>
                                     </div>
 
@@ -725,84 +906,90 @@ export default function UIA(properties) {
                                         </div>
                                     </div>
                                     
-                                    <AssetFlag
-                                        alreadyDisabled={false}
-                                        id={"allowed_markets_flag"}
-                                        allowedText={t("CreateUIA:extensions.allowed_markets.enabled")}
-                                        disabledText={t("CreateUIA:extensions.allowed_markets.disabled")}
-                                        permission={true}
-                                        flag={allowedMarketsEnabled}
-                                        setFlag={setAllowedMarketsEnabled}
-                                    />
+                                    <div className="grid grid-cols-2 gap-5 mt-4">
+                                        <AssetFlag
+                                            alreadyDisabled={false}
+                                            id={"allowed_markets_flag"}
+                                            allowedText={t("CreateUIA:extensions.allowed_markets.enabled")}
+                                            disabledText={t("CreateUIA:extensions.allowed_markets.disabled")}
+                                            permission={true}
+                                            flag={allowedMarketsEnabled}
+                                            setFlag={setAllowedMarketsEnabled}
+                                        />
+                                        {
+                                            allowedMarketsEnabled
+                                                ? <AssetDropDown
+                                                    assetSymbol={""}
+                                                    assetData={null}
+                                                    storeCallback={(input) => {
+                                                        if (!allowedMarkets.includes(input) && !bannedMarkets.includes(input)) {
+                                                            const _foundAsset = assets.find((x) => x.symbol === input);
+                                                            setAllowedMarkets([...allowedMarkets, _foundAsset.id]);
+                                                        }
+                                                    }}
+                                                    otherAsset={null}
+                                                    marketSearch={marketSearch}
+                                                    type={"backing"}
+                                                    chain={usr && usr.chain ? usr.chain : "bitshares"}
+                                                />
+                                                : null
+                                        }
+                                    </div>
                                     {
                                         allowedMarketsEnabled
-                                            ?   <div className="grid grid-cols-12 mt-1">
-                                                    <div className="col-span-9 border border-grey rounded">
-                                                        <List
-                                                            height={210}
-                                                            itemCount={allowedMarkets.length}
-                                                            itemSize={90}
-                                                            className="w-full"
-                                                        >
-                                                            {allowedMarketsRow}
-                                                        </List>
-                                                    </div>
-                                                    <div className="col-span-3 ml-3 text-center">
-                                                        <AssetDropDown
-                                                            assetSymbol={""}
-                                                            assetData={null}
-                                                            storeCallback={(input) => {
-                                                                if (!allowedMarkets.includes(input) && !bannedMarkets.includes(input)) {
-                                                                    setAllowedMarkets([...allowedMarkets, input]);
-                                                                }
-                                                            }}
-                                                            otherAsset={null}
-                                                            marketSearch={marketSearch}
-                                                            type={"backing"}
-                                                            chain={usr && usr.chain ? usr.chain : "bitshares"}
-                                                        />
-                                                    </div>
+                                            ?   <div className="mt-3 border border-grey rounded">
+                                                    <List
+                                                        height={210}
+                                                        itemCount={allowedMarkets.length}
+                                                        itemSize={90}
+                                                        className="w-full"
+                                                    >
+                                                        {allowedMarketsRow}
+                                                    </List>
                                                 </div>
                                             : null
                                     }
-                                    <AssetFlag
-                                        alreadyDisabled={false}
-                                        id={"banned_markets_flag"}
-                                        allowedText={t("CreateUIA:extensions.banned_markets.enabled")}
-                                        disabledText={t("CreateUIA:extensions.banned_markets.disabled")}
-                                        permission={true}
-                                        flag={bannedMarketsEnabled}
-                                        setFlag={setBannedMarketsEnabled}
-                                    />
+                                    <div className="grid grid-cols-2 gap-5 mt-4">
+                                        <AssetFlag
+                                            alreadyDisabled={false}
+                                            id={"banned_markets_flag"}
+                                            allowedText={t("CreateUIA:extensions.banned_markets.enabled")}
+                                            disabledText={t("CreateUIA:extensions.banned_markets.disabled")}
+                                            permission={true}
+                                            flag={bannedMarketsEnabled}
+                                            setFlag={setBannedMarketsEnabled}
+                                        />
+                                        {
+                                            bannedMarketsEnabled
+                                            ?   <AssetDropDown
+                                                    assetSymbol={""}
+                                                    assetData={null}
+                                                    storeCallback={(input) => {
+                                                        if (!bannedMarkets.includes(input) && !allowedMarkets.includes(input)) {
+                                                            const _foundAsset = assets.find((x) => x.symbol === input);
+                                                            setBannedMarkets([...bannedMarkets, _foundAsset.id]);
+                                                        }
+                                                    }}
+                                                    otherAsset={null}
+                                                    marketSearch={marketSearch}
+                                                    type={"backing"}
+                                                    chain={usr && usr.chain ? usr.chain : "bitshares"}
+                                                />
+                                                : null
+                                        }
+                                    </div>
                                     {
                                         bannedMarketsEnabled
-                                            ? <div className="grid grid-cols-12 mt-1">
-                                                    <div className="col-span-9 border border-grey rounded">
-                                                        <List
-                                                            height={210}
-                                                            itemCount={bannedMarkets.length}
-                                                            itemSize={90}
-                                                            className="w-full"
-                                                        >
-                                                            {bannedMarketsRow}
-                                                        </List>
-                                                    </div>
-                                                    <div className="col-span-3 ml-3 text-center">
-                                                        <AssetDropDown
-                                                            assetSymbol={""}
-                                                            assetData={null}
-                                                            storeCallback={(input) => {
-                                                                if (!bannedMarkets.includes(input) && !allowedMarkets.includes(input)) {
-                                                                    setBannedMarkets([...bannedMarkets, input]);
-                                                                }
-                                                            }}
-                                                            otherAsset={null}
-                                                            marketSearch={marketSearch}
-                                                            type={"backing"}
-                                                            chain={usr && usr.chain ? usr.chain : "bitshares"}
-                                                        />
-                                                    </div>
-                                                </div>
+                                            ? <div className="mt-2 border border-grey rounded">
+                                                <List
+                                                    height={210}
+                                                    itemCount={bannedMarkets.length}
+                                                    itemSize={90}
+                                                    className="w-full"
+                                                >
+                                                    {bannedMarketsRow}
+                                                </List>
+                                              </div>
                                             : null
                                     }
                                     <Separator className="my-4 mt-5" />
@@ -1272,12 +1459,12 @@ export default function UIA(properties) {
             {
                 showDialog
                     ? <DeepLinkDialog
-                        operationName="asset_create"
+                        operationName={editing ? "asset_update" : "asset_create"}
                         username={usr.username}
                         usrChain={usr.chain}
                         userID={usr.id}
                         dismissCallback={setShowDialog}
-                        key={`CreatingPMA-${usr.id}-${symbol}`}
+                        key={`${editing ? "Editing" : "Creating"}UIA-${usr.id}-${symbol}`}
                         headerText={t("CreateUIA:dialogContent.headerText", { symbol })}
                         trxJSON={[trx]}
                     />
