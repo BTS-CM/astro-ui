@@ -1792,6 +1792,16 @@ export default function Predictions(properties) {
           </div>;
   };
 
+
+  useEffect(() => {
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const params = Object.fromEntries(urlSearchParams.entries());
+
+    if (params.hasOwnProperty("id")) {
+      setView("mine");
+    }
+  }, []);
+
   return (
     <div className="container mx-auto mt-5 mb-5">
       <div className="grid grid-cols-1 gap-3">

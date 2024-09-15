@@ -110,6 +110,13 @@
     "hover2": "Auf Prognosemärkten kann es um alles Mögliche gehen.",
     "hover3": "Für jedes Prognosemarkt-Asset gibt es eine eigene Gebühr."
   },
+  "issued_assets": {
+    "title": "📃 Ihre ausgegebenen Vermögenswerte",
+    "subtitle": "Sehen Sie sich alle von Ihnen erstellten Assets an",
+    "hover1": "Sehen Sie sich von Benutzern bereitgestellte Vermögenswerte, prognostizierte Marktwerte, Smartcoins und nicht fungible Token an!",
+    "hover2": "Bearbeiten Sie die Assets, die Sie in der Blockchain erstellt haben.",
+    "hover3": "Geben Sie optional eine Menge Ihrer erstellten Vermögenswerte aus."
+  },
   "create_prediction": {
     "title": "🔮 Vorhersage des Marktwerts",
     "subtitle": "Erstellen Sie eine Wette über alles",

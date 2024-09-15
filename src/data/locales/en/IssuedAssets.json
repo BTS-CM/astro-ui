@@ -1,0 +1,22 @@
+{
+    "proceedToTrade": "Trade",
+    "creditBorrow": "Borrow",
+    "creditLend": "Lend",
+    "proceedToBorrow": "Issue",
+    "manageUIA": "Edit",
+    "pmaBet": "Bet",
+    "uiaButton": "User Issued Assets",
+    "smartcoinsButton": "Smartcoin Assets",
+    "predictionButton": "Prediction Market Assets",
+    "nftButton": "Non-Fungible Token Assets",
+    "listingUIA": "Listing {{count}} User Issued Assets",
+    "noUIA": "No User Issued Assets found",
+    "listingSmartcoins": "Listing {{count}} Smartcoin Assets",
+    "noSmartcoins": "No Smartcoin Assets found",
+    "listingPredictionMarkets": "Listing {{count}} Prediction Market Assets",
+    "noPredictionMarkets": "No Prediction Market Assets found",
+    "listingNFTs": "Listing {{count}} Non-Fungible Token Assets",
+    "noNFTs": "No Non-Fungible Token Assets found",
+    "title": "Viewing the blockchain assets you've created",
+    "description": "From here you can manage the assets you've created, including updating their details, issuing more of them, and more."
+}

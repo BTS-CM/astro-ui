@@ -110,6 +110,13 @@
     "hover2": "Os mercados de previsão podem ser sobre qualquer coisa.",
     "hover3": "Cada ativo de mercado de previsão possui uma taxa exclusiva."
   },
+  "issued_assets": {
+    "title": "📃 Seus ativos emitidos",
+    "subtitle": "Veja todos os ativos que você criou",
+    "hover1": "Veja ativos emitidos pelo usuário, ativos de mercado de previsão, smartcoins e tokens não fungíveis!",
+    "hover2": "Edite os ativos que você criou no blockchain.",
+    "hover3": "Opcionalmente, emita uma quantidade de seus ativos criados."
+  },
   "create_prediction": {
     "title": "🔮 Previsão de ativos de mercado",
     "subtitle": "Crie uma aposta sobre qualquer coisa",

@@ -62,7 +62,8 @@
     "predictions": "Individua di seguito un asset del mercato di previsione su cui scommettere.",
     "tfunds": "Trova, crea, aggiorna o elimina i fondi Same-T qui sotto!",
     "create_vesting": "Utilizza questo modulo per creare un saldo di maturazione per qualsiasi account!",
-    "uia": "Crea la tua risorsa emessa dall'utente con il modulo sottostante!"
+    "uia": "Crea la tua risorsa emessa dall'utente con il modulo sottostante!",
+    "issuedAssets": "Gestisci le risorse blockchain che hai creato nelle schede seguenti!"
   },
   "back": "Torna indietro",
   "usage": "Progettato per l'uso con ",

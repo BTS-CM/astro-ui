@@ -110,6 +110,13 @@
     "hover2": "Prediction markets can be about anything.",
     "hover3": "Each prediction market asset has an unique fee."
   },
+  "issued_assets": {
+    "title": "📃 Your Issued Assets",
+    "subtitle": "View all the assets you've created",
+    "hover1": "View user issed assets, prediction market assets, smartcoins and non-fungible tokens!",
+    "hover2": "Edit the assets you've created on the blockchain.",
+    "hover3": "Optionally issue a quantity of your created assets."
+  },
   "create_prediction": {
     "title": "🔮 Prediction Market Asset",
     "subtitle": "Create a bet about anything",

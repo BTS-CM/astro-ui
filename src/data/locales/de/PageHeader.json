@@ -62,7 +62,8 @@
     "predictions": "Suchen Sie unten nach einem Prognosemarkt-Asset, auf das Sie wetten können.",
     "tfunds": "Suchen, erstellen, aktualisieren oder löschen Sie unten Same-T-Fonds!",
     "create_vesting": "Verwenden Sie dieses Formular, um ein Sperrguthaben für jedes Konto zu erstellen!",
-    "uia": "Erstellen Sie mit dem untenstehenden Formular Ihr eigenes, vom Benutzer ausgegebenes Asset!"
+    "uia": "Erstellen Sie mit dem untenstehenden Formular Ihr eigenes, vom Benutzer ausgegebenes Asset!",
+    "issuedAssets": "Verwalten Sie die von Ihnen erstellten Blockchain-Assets in den folgenden Registerkarten!"
   },
   "back": "Geh zurück",
   "usage": "Konzipiert für den Einsatz mit ",

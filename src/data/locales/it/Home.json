@@ -110,6 +110,13 @@
     "hover2": "I mercati di previsione possono riguardare qualsiasi cosa.",
     "hover3": "Ogni asset del mercato di previsione ha una tariffa unica."
   },
+  "issued_assets": {
+    "title": "📃 I tuoi beni emessi",
+    "subtitle": "Visualizza tutte le risorse che hai creato",
+    "hover1": "Visualizza le risorse emesse dagli utenti, le risorse del mercato di previsione, gli smartcoin e i token non fungibili!",
+    "hover2": "Modifica le risorse che hai creato sulla blockchain.",
+    "hover3": "Facoltativamente, emetti una quantità delle risorse create."
+  },
   "create_prediction": {
     "title": "🔮 Asset di mercato di previsione",
     "subtitle": "Crea una scommessa su qualsiasi cosa",

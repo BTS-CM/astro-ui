@@ -110,6 +110,13 @@
     "hover2": "Forudsigelsesmarkeder kan handle om alt.",
     "hover3": "Hvert forudsigelsesmarkedsaktiv har et unikt gebyr."
   },
+  "issued_assets": {
+    "title": "📃 Dine udstedte aktiver",
+    "subtitle": "Se alle de aktiver, du har oprettet",
+    "hover1": "Se brugerudstedte aktiver, forudsigelige markedsaktiver, smartcoins og ikke-fungible tokens!",
+    "hover2": "Rediger de aktiver, du har oprettet på blockchain.",
+    "hover3": "Udsted eventuelt en mængde af dine oprettede aktiver."
+  },
   "create_prediction": {
     "title": "🔮 Forudsigelsesmarkedsaktiv",
     "subtitle": "Lav et væddemål om hvad som helst",

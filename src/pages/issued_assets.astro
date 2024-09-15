@@ -1,0 +1,27 @@
+---
+import Layout from '../layouts/Layout.astro';
+import IssuedAssets from '../components/IssuedAssets.jsx';
+import PageHeader from '../components/PageHeader';
+import PageFooter from '../components/PageFooter';
+---
+
+<Layout title="Bitshares - Issued Asset Overview">
+	<main>
+		<PageHeader client:only="react" page="issuedAssets" backURL="../index.html" />
+		<IssuedAssets client:only="react" />
+		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/issued_assets.astro" />
+	</main>
+</Layout>
+
+<style>
+	main {
+		margin: auto;
+		padding: 1rem;
+		width: 1024px;
+		max-width: calc(100% - 2rem);
+		color: white;
+		font-size: 20px;
+		line-height: 1.6;
+		min-height: 100vh;
+	}
+</style>

@@ -62,7 +62,8 @@
     "predictions": "Leidke altpoolt ennustatav turuvara, millele panustada.",
     "tfunds": "Otsige, looge, värskendage või kustutage Same-T fonde allpool!",
     "create_vesting": "Kasutage seda vormi mis tahes konto omandisaldo loomiseks!",
-    "uia": "Looge alloleva vormi abil oma kasutaja väljastatud vara!"
+    "uia": "Looge alloleva vormi abil oma kasutaja väljastatud vara!",
+    "issuedAssets": "Hallake oma loodud plokiahela varasid allolevatel vahekaartidel!"
   },
   "back": "Mine tagasi",
   "usage": "Mõeldud kasutamiseks koos ",

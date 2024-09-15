@@ -244,7 +244,7 @@ export default function CreditBorrow(properties) {
   function CommonRow({ index, style, res, foundAsset }) {
     return (
       <div style={{ ...style }} key={`acard-${res.id}`}>
-        <Card className="ml-2 mr-2" onClick={() => {}}>
+        <Card className="ml-2 mr-2">
           <CardHeader className="pb-1">
             <CardTitle>
               {t("CreditBorrow:common.title", {

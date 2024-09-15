@@ -110,6 +110,13 @@
     "hover2": "Ennustusturgudel võib olla ükskõik mida.",
     "hover3": "Igal ennustusturu varal on ainulaadne tasu."
   },
+  "issued_assets": {
+    "title": "📃 Teie väljastatud varad",
+    "subtitle": "Vaadake kõiki loodud varasid",
+    "hover1": "Vaadake kasutaja väljastatud varasid, ennustusturu varasid, nutikoine ja mittevahetatavaid žetoone!",
+    "hover2": "Muutke plokiahelas loodud varasid.",
+    "hover3": "Soovi korral väljastage loodud varade kogus."
+  },
   "create_prediction": {
     "title": "🔮 Ennustusturu vara",
     "subtitle": "Tehke panus ükskõik mille kohta",

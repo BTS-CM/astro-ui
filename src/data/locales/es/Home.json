@@ -110,6 +110,13 @@
     "hover2": "Los mercados de predicción pueden tratar sobre cualquier cosa.",
     "hover3": "Cada activo del mercado de predicción tiene una tarifa única."
   },
+  "issued_assets": {
+    "title": "📃 Sus activos emitidos",
+    "subtitle": "Ver todos los activos que has creado",
+    "hover1": "¡Vea los activos emitidos por los usuarios, los activos del mercado de predicción, las monedas inteligentes y los tokens no fungibles!",
+    "hover2": "Edite los activos que ha creado en blockchain.",
+    "hover3": "Opcionalmente, emita una cantidad de sus activos creados."
+  },
   "create_prediction": {
     "title": "🔮 Activo del mercado de predicción",
     "subtitle": "Crea una apuesta sobre cualquier cosa.",

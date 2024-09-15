@@ -275,7 +275,7 @@ export default function CreditDeals(properties) {
 
     return (
       <div style={{ ...style }} key={`acard-${res.id}`}>
-        <Card className="ml-2 mr-2 pb-3" onClick={() => {}}>
+        <Card className="ml-2 mr-2 pb-3">
           <CardHeader className="pb-1">
             <CardTitle>
               {t("CreditDeals:dealNo")}

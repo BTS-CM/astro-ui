@@ -244,7 +244,7 @@ export default function Smartcoins(properties) {
 
     return (
       <div style={{ ...style }} key={`acard-${bitasset.asset_id}`}>
-        <Card className="ml-2 mr-2" onClick={() => {}}>
+        <Card className="ml-2 mr-2">
           <CardHeader className="pb-1">
             <CardTitle>
               {mode === "bitasset" ? "Bitasset" : "Smartcoin"} "

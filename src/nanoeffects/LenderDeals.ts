@@ -81,6 +81,7 @@ function fetchLenderDeals (
         if (!existingAPI) {
           currentAPI.close();
         }
+        
         return resolve(lenderDeals);
       });
 }

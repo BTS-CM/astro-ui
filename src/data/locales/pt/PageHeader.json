@@ -62,7 +62,8 @@
     "predictions": "Localize abaixo um ativo de mercado de previsão para apostar.",
     "tfunds": "Encontre, crie, atualize ou exclua fundos Same-T abaixo!",
     "create_vesting": "Use este formulário para criar um saldo de aquisição para qualquer conta!",
-    "uia": "Crie seu próprio ativo emitido pelo usuário com o formulário abaixo!"
+    "uia": "Crie seu próprio ativo emitido pelo usuário com o formulário abaixo!",
+    "issuedAssets": "Gerencie os ativos blockchain que você criou nas guias abaixo!"
   },
   "back": "Volte",
   "usage": "Projetado para uso com ",

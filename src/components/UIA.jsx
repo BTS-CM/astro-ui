@@ -347,7 +347,6 @@ export default function UIA(properties) {
     const [whitelistAuthorityDialogOpen, setWhitelistAuthorityDialogOpen] = useState(false);
     const [blacklistAuthorityDialogOpen, setBlacklistAuthorityDialogOpen] = useState(false);
 
-
     const allowedMarketsRow = ({ index, style }) => {
         let res = allowedMarkets[index];
         if (!res) {
