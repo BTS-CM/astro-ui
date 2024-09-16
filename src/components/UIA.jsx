@@ -230,13 +230,7 @@ export default function UIA(properties) {
             _extensions.taker_fee_percent = takerFee ? takerFee * 100 : 0;
         }
 
-        let _trxContents = {
-            issuer: usr.id,
-            symbol: symbol,
-            precision: precision,
-            is_prediction_market: false,
-            extensions: {}
-        };
+        let _trxContents = { issuer: usr.id, extensions: {}};
 
         _trxContents[editing ? "new_options" : "common_options"] = {
             // user configured
@@ -276,6 +270,10 @@ export default function UIA(properties) {
 
         if (editing) {
             _trxContents["asset_to_update"] = existingAssetID;
+        } else {
+            _trxContents["symbol"] = symbol;
+            _trxContents["precision"] = precision;
+            _trxContents["is_prediction_market"] = false;
         }
 
         return _trxContents;
