@@ -230,48 +230,55 @@ export default function UIA(properties) {
             _extensions.taker_fee_percent = takerFee ? takerFee * 100 : 0;
         }
 
-        return {
+        let _trxContents = {
             issuer: usr.id,
             symbol: symbol,
             precision: precision,
-            common_options: {
-                // user configured
-                description,
-                max_supply: blockchainFloat(maxSupply, precision), 
-                market_fee_percent: commission ? commission * 100 : 0,
-                max_market_fee: blockchainFloat(maxCommission, precision),
-                issuer_permissions,
-                flags,
-                // static
-                core_exchange_rate: {
-                    base: {
-                        amount: blockchainFloat(cerBaseAmount, 5),
-                        asset_id: "1.3.0"
-                    },
-                    quote: {
-                        amount: blockchainFloat(cerQuoteAmount, precision),
-                        asset_id: existingAssetID ?? "1.3.1"
-                    }
-                },
-                whitelist_authorities: flagWhiteList && whitelistAuthorities && whitelistAuthorities.length
-                                        ? whitelistAuthorities.map((x) => x.id)
-                                        : [],
-                blacklist_authorities: flagWhiteList && blacklistAuthorities && blacklistAuthorities.length
-                                        ? blacklistAuthorities.map((x) => x.id)
-                                        : [],
-                whitelist_markets: allowedMarkets.map((x) => {
-                    const asset = assets.find((y) => y.id === x);
-                    return asset ? asset.id : null;
-                }).filter((x) => x),
-                blacklist_markets: bannedMarkets.map((x) => {
-                    const asset = assets.find((y) => y.id === x);
-                    return asset ? asset.id : null;
-                }).filter((x) => x),
-                extensions: _extensions
-            },
             is_prediction_market: false,
             extensions: {}
         };
+
+        _trxContents[editing ? "new_options" : "common_options"] = {
+            // user configured
+            description,
+            max_supply: blockchainFloat(maxSupply, precision), 
+            market_fee_percent: commission ? commission * 100 : 0,
+            max_market_fee: blockchainFloat(maxCommission, precision),
+            issuer_permissions,
+            flags,
+            // static
+            core_exchange_rate: {
+                base: {
+                    amount: blockchainFloat(cerBaseAmount, 5),
+                    asset_id: "1.3.0"
+                },
+                quote: {
+                    amount: blockchainFloat(cerQuoteAmount, precision),
+                    asset_id: existingAssetID ?? "1.3.1"
+                }
+            },
+            whitelist_authorities: flagWhiteList && whitelistAuthorities && whitelistAuthorities.length
+                                    ? whitelistAuthorities.map((x) => x.id)
+                                    : [],
+            blacklist_authorities: flagWhiteList && blacklistAuthorities && blacklistAuthorities.length
+                                    ? blacklistAuthorities.map((x) => x.id)
+                                    : [],
+            whitelist_markets: allowedMarkets.map((x) => {
+                const asset = assets.find((y) => y.id === x);
+                return asset ? asset.id : null;
+            }).filter((x) => x),
+            blacklist_markets: bannedMarkets.map((x) => {
+                const asset = assets.find((y) => y.id === x);
+                return asset ? asset.id : null;
+            }).filter((x) => x),
+            extensions: _extensions
+        };
+
+        if (editing) {
+            _trxContents["asset_to_update"] = existingAssetID;
+        }
+
+        return _trxContents;
     }, [
         usr,
         assets,
@@ -296,7 +303,8 @@ export default function UIA(properties) {
         referrerReward,
         feeSharingWhitelist,
         takerFee,
-        existingAssetID
+        existingAssetID,
+        editing
     ]);
 
     const debouncedMax = useCallback(
@@ -707,7 +715,7 @@ export default function UIA(properties) {
                 <div className="grid grid-cols-1 gap-3">
                     <Card>
                         <CardHeader className="pb-1">
-                            <CardTitle>🍬 {t("CreateUIA:card.title_create")}</CardTitle>
+                            <CardTitle>🍬 {t(!editing ? "CreateUIA:card.title_create" : "CreateUIA:card.title_edit")}</CardTitle>
                             <CardDescription>{t("CreateUIA:card.description")}</CardDescription>
                         </CardHeader>
                         <CardContent>
