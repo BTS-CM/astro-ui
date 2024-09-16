@@ -1,0 +1,94 @@
+{
+    "permissions": {
+      "header": "Permissões do ativo",
+      "header_content": "Nota: Desativar permissões é uma decisão permanente",
+      "charge_market_fee": {
+        "allowedText": "Taxas de mercado permitidas",
+        "disabledText": "Taxas de mercado desativadas",
+        "enabledInfo": "É possível que o criador do ativo permita a cobrança de taxas de negociação no mercado para esse ativo.",
+        "disabledInfo": "Agora é impossível para o criador do ativo cobrar taxas de negociação no mercado por esse ativo."
+      },
+      "white_list": {
+        "allowedText": "Lista branca permitida",
+        "disabledText": "Lista branca desativada",
+        "enabledInfo": "É possível que o criador do ativo permita a configuração de autoridades de lista branca para este ativo.",
+        "disabledInfo": "Agora é impossível para o criador do ativo configurar autoridades de lista branca para este ativo."
+      },
+      "override_authority": {
+        "allowedText": "Substituir autoridade permitida",
+        "disabledText": "Substituir autoridade desativada",
+        "enabledInfo": "É possível que o criador do ativo habilite a capacidade de realizar uma operação de transferência de substituição neste ativo, devolvendo-o ao seu saldo.",
+        "disabledInfo": "Agora é impossível para o criador do ativo realizar operações de transferência de substituição neste ativo."
+      },
+      "transfer_restricted": {
+        "allowedText": "Transferência restrita permitida",
+        "enabledInfo": "É possível que o criador do ativo habilite a capacidade de restringir as transferências deste ativo.",
+        "disabledText": "Transferência restrita desativada",
+        "disabledInfo": "Agora é impossível para o criador do ativo restringir as transferências deste ativo."
+      },
+      "disable_confidential": {
+        "allowedText": "Desativar confidencial permitido",
+        "enabledInfo": "É possível que o criador do ativo habilite a capacidade de desabilitar operações confidenciais para esse ativo.",
+        "disabledText": "Desativar confidencial desativado",
+        "disabledInfo": "Agora é impossível para o criador do ativo desabilitar operações confidenciais para este ativo."
+      },
+      "witness_fed_asset": {
+        "allowedText": "Recurso alimentado por testemunha permitido",
+        "enabledInfo": "É possível que o criador do ativo permita que testemunhas publiquem feeds de preços para esse ativo.",
+        "disabledText": "Recurso alimentado por testemunha desativado",
+        "disabledInfo": "Agora é impossível para o criador do ativo permitir que testemunhas publiquem feeds de preços para este ativo."
+      },
+      "committee_fed_asset": {
+        "allowedText": "Ativo alimentado pelo comitê permitido",
+        "enabledInfo": "É possível que o criador do ativo permita que os membros do comitê publiquem feeds de preços para esse ativo.",
+        "disabledText": "Ativo alimentado pelo comitê desativado",
+        "disabledInfo": "Agora é impossível para o criador do ativo permitir que os membros do comitê publiquem feeds de preços para esse ativo."
+      }
+    },
+    "flags": {
+      "header": "Sinalizadores de ativos",
+      "header_content": "Cada permissão de ativo permitida pode ser ativada/desativada.",
+      "charge_market_fee": {
+        "allowedText": "Taxas de mercado habilitadas",
+        "enabledInfo": "O criador do ativo pode configurar taxas de negociação de mercado para esse ativo, incluindo a funcionalidade de compartilhamento de recompensas de taxas de mercado.",
+        "disabledText": "Taxas de mercado desativadas",
+        "disabledInfo": "O criador do ativo desativou a cobrança de taxas de negociação de mercado para este ativo."
+      },
+      "white_list": {
+        "allowedText": "Lista branca ativada",
+        "enabledInfo": "O criador do ativo pode configurar autoridades de lista branca para este ativo.",
+        "disabledText": "Lista branca desativada",
+        "disabledInfo": "O criador do ativo desativou a configuração de autoridades da lista branca para este ativo."
+      },
+      "override_authority": {
+        "allowedText": "Substituir autoridade ativada",
+        "enabledInfo": "O criador do ativo pode realizar uma operação de transferência de substituição neste ativo, devolvendo-o ao seu saldo.",
+        "disabledText": "Substituir autoridade desativada",
+        "disabledInfo": "O criador do ativo desativou a execução de operações de transferência de substituição neste ativo."
+      },
+      "transfer_restricted": {
+        "allowedText": "Transferência restrita ativada",
+        "enabledInfo": "O criador do ativo pode restringir as transferências deste ativo.",
+        "disabledText": "Transferência restrita desativada",
+        "disabledInfo": "O criador do ativo desativou a restrição de transferências deste ativo."
+      },
+      "disable_confidential": {
+        "allowedText": "Desativar confidencial ativado",
+        "enabledInfo": "O criador do ativo desativou as operações confidenciais para este ativo.",
+        "disabledText": "Desativar confidencial desativado",
+        "disabledInfo": "O criador do ativo não desativou as operações confidenciais deste ativo."
+      },
+      "witness_fed_asset": {
+        "allowedText": "Recurso alimentado por testemunha ativado",
+        "enabledInfo": "As testemunhas podem publicar feeds de preços para este ativo.",
+        "disabledText": "Recurso alimentado por testemunha desativado",
+        "disabledInfo": "As testemunhas não conseguem publicar feeds de preços para este ativo."
+      },
+      "committee_fed_asset": {
+        "allowedText": "Ativo alimentado pelo comitê ativado",
+        "enabledInfo": "Os membros do comitê podem publicar feeds de preços para este ativo.",
+        "disabledText": "Ativo alimentado pelo comitê desativado",
+        "disabledInfo": "Os membros do comitê não podem publicar feeds de preços para este ativo."
+      }
+    }
+  }

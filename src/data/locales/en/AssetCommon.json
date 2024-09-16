@@ -1,0 +1,96 @@
+{
+    
+    "permissions": {
+        "header": "Asset's permissions",
+        "header_content": "Note: Disabling permissions is a permanent decision",
+        "charge_market_fee": {
+            "allowedText": "Market fees allowed",
+            "disabledText": "Market fees disabled",
+            "enabledInfo": "It's possible for the asset creator to enable charging market trading fees for this asset.",
+            "disabledInfo": "It's now impossible for the asset creator to charge market trading fees for this asset."
+        },
+        "white_list": {
+            "allowedText": "White list allowed",
+            "disabledText": "White list disabled",
+            "enabledInfo": "It's possible for the asset creator to enable configuring white list authorities for this asset.",
+            "disabledInfo": "It's now impossible for the asset creator to configure white list authorities for this asset."
+        },
+        "override_authority": {
+            "allowedText": "Override authority allowed",
+            "disabledText": "Override authority disabled",
+            "enabledInfo": "It's possible for the asset creator to enable the ability to perform an override transfer operation on this asset, returning it to their balance from yours.",
+            "disabledInfo": "It's now impossible for the asset creator to perform override transfer operations on this asset."
+        },
+        "transfer_restricted": {
+            "allowedText": "Transfer restricted allowed",
+            "enabledInfo": "It's possible for the asset creator to enable the ability to restrict transfers of this asset.",
+            "disabledText": "Transfer restricted disabled",
+            "disabledInfo": "It's now impossible for the asset creator to restrict transfers of this asset."
+        },
+        "disable_confidential": {
+            "allowedText": "Disable confidential allowed",
+            "enabledInfo": "It's possible for the asset creator to enable the ability to disable confidential operations for this asset.",
+            "disabledText": "Disable confidential disabled",
+            "disabledInfo": "It's now impossible for the asset creator to disable confidential operations for this asset."
+        },
+        "witness_fed_asset": {
+            "allowedText": "Witness fed asset allowed",
+            "enabledInfo": "It's possible for the asset creator to enable witnesses to publish price feeds for this asset.",
+            "disabledText": "Witness fed asset disabled",
+            "disabledInfo": "It's now impossible for the asset creator to enable witnesses to publish price feed for this asset."
+        },
+        "committee_fed_asset": {
+            "allowedText": "Committee fed asset allowed",
+            "enabledInfo": "It's possible for the asset creator to enable committee members to publish price feeds for this asset.",
+            "disabledText": "Committee fed asset disabled",
+            "disabledInfo": "It's now impossible for the asset creator to enable committee members to publish price feeds for this asset."
+        }
+    },
+    "flags": {
+        "header": "Asset's flags",
+        "header_content": "Each allowed asset permission can be toggled on/off.",
+        "charge_market_fee": {
+            "allowedText": "Market fees enabled",
+            "enabledInfo": "The asset creator can configure market trading fees for this asset, including market fee reward sharing functionality.",
+            "disabledText": "Market fees disabled",
+            "disabledInfo": "The asset creator has disabled charging market trading fees for this asset."
+        },
+        "white_list": {
+            "allowedText": "White list enabled",
+            "enabledInfo": "The asset creator can configure white list authorities for this asset.",
+            "disabledText": "White list disabled",
+            "disabledInfo": "The asset creator has disabled configuring white list authorities for this asset."
+        },
+        "override_authority": {
+            "allowedText": "Override authority enabled",
+            "enabledInfo": "The asset creator can perform an override transfer operation on this asset, returning it to their balance from yours.",
+            "disabledText": "Override authority disabled",
+            "disabledInfo": "The asset creator has disabled performing override transfer operations on this asset."
+        },
+        "transfer_restricted": {
+            "allowedText": "Transfer restricted enabled",
+            "enabledInfo": "The asset creator can restrict transfers of this asset.",
+            "disabledText": "Transfer restricted disabled",
+            "disabledInfo": "The asset creator has disabled restricting transfers of this asset."
+        },
+        "disable_confidential": {
+            "allowedText": "Disable confidential enabled",
+            "enabledInfo": "The asset creator has disabled confidential operations for this asset.",
+            "disabledText": "Disable confidential disabled",
+            "disabledInfo": "The asset creator hasn't disabled confidential operations for this asset."
+        },
+        "witness_fed_asset": {
+            "allowedText": "Witness fed asset enabled",
+            "enabledInfo": "Witnesses are able to publish price feeds for this asset.",
+            "disabledText": "Witness fed asset disabled",
+            "disabledInfo": "Witnesses are unable to publish price feed for this asset."
+
+        },
+        "committee_fed_asset": {
+            "allowedText": "Committee fed asset enabled",
+            "enabledInfo": "Committee members are able to publish price feeds for this asset.",
+            "disabledText": "Committee fed asset disabled",
+            "disabledInfo": "Committee members are unable to publish price feeds for this asset."
+        }
+    }
+}

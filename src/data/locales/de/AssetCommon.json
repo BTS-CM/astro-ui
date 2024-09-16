@@ -1,0 +1,94 @@
+{
+    "permissions": {
+      "header": "Berechtigungen des Assets",
+      "header_content": "Hinweis: Das Deaktivieren von Berechtigungen ist eine dauerhafte Entscheidung",
+      "charge_market_fee": {
+        "allowedText": "Marktgebühren erlaubt",
+        "disabledText": "Marktgebühren deaktiviert",
+        "enabledInfo": "Der Ersteller des Vermögenswerts kann die Erhebung von Markthandelsgebühren für diesen Vermögenswert aktivieren.",
+        "disabledInfo": "Für den Vermögensersteller ist es jetzt nicht mehr möglich, Markthandelsgebühren für diesen Vermögenswert zu erheben."
+      },
+      "white_list": {
+        "allowedText": "Weiße Liste erlaubt",
+        "disabledText": "Weiße Liste deaktiviert",
+        "enabledInfo": "Der Asset-Ersteller kann die Konfiguration von Whitelist-Berechtigungen für dieses Asset aktivieren.",
+        "disabledInfo": "Für den Asset-Ersteller ist es jetzt nicht mehr möglich, Whitelist-Berechtigungen für dieses Asset zu konfigurieren."
+      },
+      "override_authority": {
+        "allowedText": "Außerkraftsetzungsberechtigung zulässig",
+        "disabledText": "Außerkraftsetzungsberechtigung deaktiviert",
+        "enabledInfo": "Es ist möglich, dass der Ersteller des Vermögenswerts die Möglichkeit einräumt, einen Überschreibungsübertragungsvorgang für diesen Vermögenswert durchzuführen und ihn von Ihrem Guthaben auf sein Guthaben zurückzuführen.",
+        "disabledInfo": "Für den Asset-Ersteller ist es jetzt nicht mehr möglich, Überschreibungsübertragungsvorgänge für dieses Asset durchzuführen."
+      },
+      "transfer_restricted": {
+        "allowedText": "Übertragung eingeschränkt erlaubt",
+        "enabledInfo": "Der Ersteller des Assets kann die Möglichkeit aktivieren, die Übertragung dieses Assets einzuschränken.",
+        "disabledText": "Übertragung eingeschränkt deaktiviert",
+        "disabledInfo": "Für den Ersteller des Vermögenswerts ist es nun nicht mehr möglich, die Übertragung dieses Vermögenswerts einzuschränken."
+      },
+      "disable_confidential": {
+        "allowedText": "Vertraulich deaktivieren erlaubt",
+        "enabledInfo": "Der Asset-Ersteller kann die Möglichkeit aktivieren, vertrauliche Vorgänge für dieses Asset zu deaktivieren.",
+        "disabledText": "Vertraulich deaktivieren deaktiviert",
+        "disabledInfo": "Für den Asset-Ersteller ist es jetzt nicht mehr möglich, vertrauliche Vorgänge für dieses Asset zu deaktivieren."
+      },
+      "witness_fed_asset": {
+        "allowedText": "Zeugenbefragung erlaubt",
+        "enabledInfo": "Der Asset-Ersteller kann Zeugen die Veröffentlichung von Preis-Feeds für dieses Asset ermöglichen.",
+        "disabledText": "Zeugen-Feed-Aktivierung deaktiviert",
+        "disabledInfo": "Es ist für den Asset-Ersteller jetzt nicht mehr möglich, Zeugen die Veröffentlichung von Preis-Feeds für dieses Asset zu ermöglichen."
+      },
+      "committee_fed_asset": {
+        "allowedText": "Vom Ausschuss gespeistes Vermögen erlaubt",
+        "enabledInfo": "Es ist möglich, dass der Asset-Ersteller den Ausschussmitgliedern die Veröffentlichung von Preis-Feeds für dieses Asset ermöglicht.",
+        "disabledText": "Ausschuss fütterte Vermögenswert deaktiviert",
+        "disabledInfo": "Es ist für den Asset-Ersteller jetzt nicht mehr möglich, Ausschussmitgliedern die Veröffentlichung von Preis-Feeds für dieses Asset zu ermöglichen."
+      }
+    },
+    "flags": {
+      "header": "Flaggen des Assets",
+      "header_content": "Jede zulässige Asset-Berechtigung kann ein-/ausgeschaltet werden.",
+      "charge_market_fee": {
+        "allowedText": "Marktgebühren aktiviert",
+        "enabledInfo": "Der Asset-Ersteller kann Markthandelsgebühren für dieses Asset konfigurieren, einschließlich der Funktion zum Teilen von Marktgebührenprämien.",
+        "disabledText": "Marktgebühren deaktiviert",
+        "disabledInfo": "Der Ersteller des Vermögenswerts hat die Erhebung von Markthandelsgebühren für diesen Vermögenswert deaktiviert."
+      },
+      "white_list": {
+        "allowedText": "Weiße Liste aktiviert",
+        "enabledInfo": "Der Asset-Ersteller kann Whitelist-Berechtigungen für dieses Asset konfigurieren.",
+        "disabledText": "Weiße Liste deaktiviert",
+        "disabledInfo": "Der Asset-Ersteller hat die Konfiguration von Whitelist-Berechtigungen für dieses Asset deaktiviert."
+      },
+      "override_authority": {
+        "allowedText": "Außerkraftsetzungsberechtigung aktiviert",
+        "enabledInfo": "Der Ersteller des Vermögenswerts kann einen Überschreibungsübertragungsvorgang für diesen Vermögenswert durchführen und ihn von Ihrem auf sein Guthaben zurückführen.",
+        "disabledText": "Außerkraftsetzungsberechtigung deaktiviert",
+        "disabledInfo": "Der Asset-Ersteller hat die Durchführung von Überschreibungsübertragungsvorgängen für dieses Asset deaktiviert."
+      },
+      "transfer_restricted": {
+        "allowedText": "Übertragungsbeschränkung aktiviert",
+        "enabledInfo": "Der Asset-Ersteller kann die Übertragung dieses Assets einschränken.",
+        "disabledText": "Übertragung eingeschränkt deaktiviert",
+        "disabledInfo": "Der Asset-Ersteller hat die Einschränkung von Übertragungen dieses Assets deaktiviert."
+      },
+      "disable_confidential": {
+        "allowedText": "Vertraulich deaktivieren aktiviert",
+        "enabledInfo": "Der Asset-Ersteller hat vertrauliche Vorgänge für dieses Asset deaktiviert.",
+        "disabledText": "Vertraulich deaktivieren deaktiviert",
+        "disabledInfo": "Der Asset-Ersteller hat vertrauliche Vorgänge für dieses Asset nicht deaktiviert."
+      },
+      "witness_fed_asset": {
+        "allowedText": "Zeugen-Feed-Asset aktiviert",
+        "enabledInfo": "Zeugen können Preis-Feeds für diesen Vermögenswert veröffentlichen.",
+        "disabledText": "Zeugen-Feed-Aktivierung deaktiviert",
+        "disabledInfo": "Zeugen können keinen Preis-Feed für diesen Vermögenswert veröffentlichen."
+      },
+      "committee_fed_asset": {
+        "allowedText": "Vom Ausschuss gespeistes Vermögen aktiviert",
+        "enabledInfo": "Ausschussmitglieder können Preis-Feeds für diesen Vermögenswert veröffentlichen.",
+        "disabledText": "Ausschuss fütterte Vermögenswert deaktiviert",
+        "disabledInfo": "Ausschussmitglieder können keine Preis-Feeds für diesen Vermögenswert veröffentlichen."
+      }
+    }
+  }

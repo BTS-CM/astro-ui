@@ -1,0 +1,94 @@
+{
+    "permissions": {
+      "header": "Vara load",
+      "header_content": "Märkus. Lubade keelamine on püsiv otsus",
+      "charge_market_fee": {
+        "allowedText": "Lubatud turutasud",
+        "disabledText": "Turu tasud keelatud",
+        "enabledInfo": "Vara loojal on võimalik selle vara eest turul kauplemistasu nõuda.",
+        "disabledInfo": "Nüüd on vara loojal võimatu selle vara eest turul kauplemistasu nõuda."
+      },
+      "white_list": {
+        "allowedText": "Valge nimekiri lubatud",
+        "disabledText": "Valge nimekiri keelatud",
+        "enabledInfo": "Vara loojal on võimalik lubada selle vara jaoks valge nimekirja volituste konfigureerimine.",
+        "disabledInfo": "Nüüd on vara loojal võimatu selle vara jaoks valge nimekirja volitusi konfigureerida."
+      },
+      "override_authority": {
+        "allowedText": "Autoriteedi alistamine lubatud",
+        "disabledText": "Autoriteedi alistamine on keelatud",
+        "enabledInfo": "Vara loojal on võimalik lubada sellele varale alistamise ülekandeoperatsioon, tagastades selle teie saldole.",
+        "disabledInfo": "Nüüd on vara loojal võimatu selle varaga alistada ülekandetoiminguid."
+      },
+      "transfer_restricted": {
+        "allowedText": "Ülekandmine on piiratud",
+        "enabledInfo": "Vara loojal on võimalik lubada selle vara ülekandmist piirata.",
+        "disabledText": "Ülekandmine on keelatud",
+        "disabledInfo": "Nüüd on vara loojal võimatu selle vara ülekandmist piirata."
+      },
+      "disable_confidential": {
+        "allowedText": "Lubatud keelata konfidentsiaalne",
+        "enabledInfo": "Vara loojal on võimalik lubada selle vara konfidentsiaalsed toimingud keelata.",
+        "disabledText": "Keela konfidentsiaalne keelamine",
+        "disabledInfo": "Nüüd on vara loojal võimatu selle varaga seotud konfidentsiaalseid toiminguid keelata."
+      },
+      "witness_fed_asset": {
+        "allowedText": "Lubatud on tunnistaja toidetud vara",
+        "enabledInfo": "Vara loojal on võimalik lubada tunnistajatel avaldada selle vara hinnavooge.",
+        "disabledText": "Tunnistaja toidetud vara on keelatud",
+        "disabledInfo": "Nüüd on vara loojal võimatu lubada tunnistajatel selle vara hinnavoogu avaldada."
+      },
+      "committee_fed_asset": {
+        "allowedText": "Komitee toidetud vara lubatud",
+        "enabledInfo": "Vara loojal on võimalik lubada komisjoni liikmetel avaldada selle vara hinnavooge.",
+        "disabledText": "Komitee toidetud vara on keelatud",
+        "disabledInfo": "Nüüd on vara loojal võimatu lubada komisjoni liikmetel avaldada selle vara hinnavooge."
+      }
+    },
+    "flags": {
+      "header": "Vara lipud",
+      "header_content": "Iga lubatud varade luba saab sisse/välja lülitada.",
+      "charge_market_fee": {
+        "allowedText": "Turu tasud lubatud",
+        "enabledInfo": "Vara looja saab selle vara jaoks konfigureerida turul kauplemistasud, sealhulgas turutasude jagamise funktsiooni.",
+        "disabledText": "Turu tasud keelatud",
+        "disabledInfo": "Vara looja on keelanud selle vara eest turul kauplemistasude võtmise."
+      },
+      "white_list": {
+        "allowedText": "Valge nimekiri on lubatud",
+        "enabledInfo": "Vara looja saab selle vara jaoks konfigureerida valge nimekirja volitused.",
+        "disabledText": "Valge nimekiri keelatud",
+        "disabledInfo": "Vara looja on keelanud selle vara jaoks lubatud nimekirja volituste konfigureerimise."
+      },
+      "override_authority": {
+        "allowedText": "Autoriteedi alistamine on lubatud",
+        "enabledInfo": "Vara looja saab selle vara puhul teha alistamise ülekandetoimingu, tagastades selle teie saldole.",
+        "disabledText": "Autoriteedi alistamine on keelatud",
+        "disabledInfo": "Vara looja on keelanud selle vara alistamise ülekandetoimingute tegemise."
+      },
+      "transfer_restricted": {
+        "allowedText": "Edastamine on piiratud",
+        "enabledInfo": "Vara looja saab selle vara ülekandmist piirata.",
+        "disabledText": "Ülekandmine on keelatud",
+        "disabledInfo": "Vara looja on keelanud selle vara üleandmise piiramise."
+      },
+      "disable_confidential": {
+        "allowedText": "Konfidentsiaalsuse keelamine on lubatud",
+        "enabledInfo": "Vara looja on selle vara konfidentsiaalsed toimingud keelanud.",
+        "disabledText": "Keela konfidentsiaalne keelamine",
+        "disabledInfo": "Vara looja ei ole selle vara konfidentsiaalseid toiminguid keelanud."
+      },
+      "witness_fed_asset": {
+        "allowedText": "Tunnistaja toidetud vara on lubatud",
+        "enabledInfo": "Tunnistajad saavad avaldada selle vara hinnavooge.",
+        "disabledText": "Tunnistaja toidetud vara on keelatud",
+        "disabledInfo": "Tunnistajad ei saa selle vara hinnavoogu avaldada."
+      },
+      "committee_fed_asset": {
+        "allowedText": "Komitee toidetud vara on lubatud",
+        "enabledInfo": "Komitee liikmed saavad avaldada selle vara hinnavooge.",
+        "disabledText": "Komitee toidetud vara on keelatud",
+        "disabledInfo": "Komitee liikmed ei saa avaldada selle vara hinnavooge."
+      }
+    }
+  }

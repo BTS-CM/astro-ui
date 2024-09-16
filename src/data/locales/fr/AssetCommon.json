@@ -1,0 +1,94 @@
+{
+    "permissions": {
+      "header": "Autorisations de l'actif",
+      "header_content": "Remarque : la désactivation des autorisations est une décision permanente",
+      "charge_market_fee": {
+        "allowedText": "Frais de marché autorisés",
+        "disabledText": "Frais de marché désactivés",
+        "enabledInfo": "Il est possible pour le créateur de l'actif d'autoriser la facturation de frais de négociation sur le marché pour cet actif.",
+        "disabledInfo": "Il est désormais impossible pour le créateur d'actifs de facturer des frais de négociation sur le marché pour cet actif."
+      },
+      "white_list": {
+        "allowedText": "Liste blanche autorisée",
+        "disabledText": "Liste blanche désactivée",
+        "enabledInfo": "Il est possible pour le créateur de l'actif d'activer la configuration des autorités de liste blanche pour cet actif.",
+        "disabledInfo": "Il est désormais impossible pour le créateur de l'actif de configurer les autorités de liste blanche pour cet actif."
+      },
+      "override_authority": {
+        "allowedText": "Autorité de remplacement autorisée",
+        "disabledText": "Autorité de remplacement désactivée",
+        "enabledInfo": "Il est possible pour le créateur de l'actif d'activer la possibilité d'effectuer une opération de transfert de remplacement sur cet actif, en le restituant à son solde depuis le vôtre.",
+        "disabledInfo": "Il est désormais impossible pour le créateur de l'actif d'effectuer des opérations de transfert de remplacement sur cet actif."
+      },
+      "transfer_restricted": {
+        "allowedText": "Transfert restreint autorisé",
+        "enabledInfo": "Il est possible pour le créateur de l'actif d'activer la possibilité de restreindre les transferts de cet actif.",
+        "disabledText": "Transfert restreint désactivé",
+        "disabledInfo": "Il est désormais impossible pour le créateur de l'actif de restreindre les transferts de cet actif."
+      },
+      "disable_confidential": {
+        "allowedText": "Désactiver la confidentialité autorisée",
+        "enabledInfo": "Il est possible pour le créateur de l'actif d'activer la possibilité de désactiver les opérations confidentielles pour cet actif.",
+        "disabledText": "Désactiver la confidentialité désactivée",
+        "disabledInfo": "Il est désormais impossible pour le créateur de l'actif de désactiver les opérations confidentielles sur cet actif."
+      },
+      "witness_fed_asset": {
+        "allowedText": "Actif alimenté par un témoin autorisé",
+        "enabledInfo": "Il est possible pour le créateur de l'actif de permettre aux témoins de publier des flux de prix pour cet actif.",
+        "disabledText": "Actif alimenté par un témoin désactivé",
+        "disabledInfo": "Il est désormais impossible pour le créateur de l'actif de permettre aux témoins de publier le prix de cet actif."
+      },
+      "committee_fed_asset": {
+        "allowedText": "Actif alimenté par le comité autorisé",
+        "enabledInfo": "Il est possible pour le créateur de l'actif de permettre aux membres du comité de publier des flux de prix pour cet actif.",
+        "disabledText": "Comité alimenté actif désactivé",
+        "disabledInfo": "Il est désormais impossible pour le créateur de l'actif de permettre aux membres du comité de publier des flux de prix pour cet actif."
+      }
+    },
+    "flags": {
+      "header": "Drapeaux de l'actif",
+      "header_content": "Chaque autorisation d'actif autorisée peut être activée/désactivée.",
+      "charge_market_fee": {
+        "allowedText": "Frais de marché activés",
+        "enabledInfo": "Le créateur de l'actif peut configurer les frais de négociation sur le marché pour cet actif, y compris la fonctionnalité de partage des récompenses des frais de marché.",
+        "disabledText": "Frais de marché désactivés",
+        "disabledInfo": "Le créateur de l'actif a désactivé la facturation des frais de négociation sur le marché pour cet actif."
+      },
+      "white_list": {
+        "allowedText": "Liste blanche activée",
+        "enabledInfo": "Le créateur de l'actif peut configurer les autorités de liste blanche pour cet actif.",
+        "disabledText": "Liste blanche désactivée",
+        "disabledInfo": "Le créateur de l'actif a désactivé la configuration des autorités de liste blanche pour cet actif."
+      },
+      "override_authority": {
+        "allowedText": "Autorité de remplacement activée",
+        "enabledInfo": "Le créateur de l'actif peut effectuer une opération de transfert de remplacement sur cet actif, le ramenant sur son solde depuis le vôtre.",
+        "disabledText": "Autorité de remplacement désactivée",
+        "disabledInfo": "Le créateur de l'actif a désactivé les opérations de transfert de remplacement sur cet actif."
+      },
+      "transfer_restricted": {
+        "allowedText": "Transfert restreint activé",
+        "enabledInfo": "Le créateur de l'actif peut restreindre les transferts de cet actif.",
+        "disabledText": "Transfert restreint désactivé",
+        "disabledInfo": "Le créateur de l'élément a désactivé la restriction des transferts de cet élément."
+      },
+      "disable_confidential": {
+        "allowedText": "Désactiver la confidentialité activée",
+        "enabledInfo": "Le créateur de l'élément a désactivé les opérations confidentielles pour cet élément.",
+        "disabledText": "Désactiver la confidentialité désactivée",
+        "disabledInfo": "Le créateur de l'élément n'a pas désactivé les opérations confidentielles pour cet élément."
+      },
+      "witness_fed_asset": {
+        "allowedText": "Actif alimenté par un témoin activé",
+        "enabledInfo": "Les témoins sont en mesure de publier des flux de prix pour cet actif.",
+        "disabledText": "Actif alimenté par un témoin désactivé",
+        "disabledInfo": "Les témoins ne sont pas en mesure de publier le prix de cet actif."
+      },
+      "committee_fed_asset": {
+        "allowedText": "Actif alimenté par le comité activé",
+        "enabledInfo": "Les membres du comité sont en mesure de publier des flux de prix pour cet actif.",
+        "disabledText": "Comité alimenté actif désactivé",
+        "disabledInfo": "Les membres du comité ne sont pas en mesure de publier des flux de prix pour cet actif."
+      }
+    }
+  }

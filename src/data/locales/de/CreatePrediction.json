@@ -11,7 +11,7 @@
     "title_content": "Dies sind die Asset-Einstellungen, die für die DEX-Kernfunktionalität verwendet werden.",
     "symbol": {
       "header": "Vermögenssymbol",
-      "header_content": "Das Asset-Symbol ist eine eindeutige Kennung auf der Blockchain, die den Asset im gesamten DEX identifiziert. ",
+      "header_content": "Das Vermögenswertsymbol ist eine eindeutige Kennung auf der Blockchain, die den Vermögenswert im gesamten DEX identifiziert. ",
       "placeholder": "Symbol"
     },
     "shortName": {
@@ -30,8 +30,8 @@
       "placeholder": "Maximaler Vorrat"
     },
     "precision": {
-      "header": "Asset-Präzision",
-      "header_content": "Die Genauigkeit des Assets gibt die Anzahl der unterstützten Dezimalstellen an. Dieser Wert kann nach der Asset-Erstellung nicht mehr geändert werden.",
+      "header": "Präzision der Vermögenswerte",
+      "header_content": "Die Genauigkeit des Assets gibt die Anzahl der unterstützten Dezimalstellen an. ",
       "placeholder": "Präzision"
     }
   },
@@ -133,24 +133,50 @@
   },
   "extensions": {
     "header_content": "Bei den Erweiterungen handelt es sich um zusätzliche erweiterte Einstellungen, mit denen das Asset weiter angepasst werden kann.",
-    "header": "Prognosemarkt-Asset-Erweiterungen",
+    "header": "Marktgebührenverlängerungen",
     "reward_percent": {
       "enabled": "Erweiterung des Referrer-Belohnungsprozentsatzes aktiviert",
+      "enabledInfo": "Den Empfehlungsgebern aktiver Marktteilnehmer wird ein prozentualer Anteil der Marktgebühr zugerechnet.",
       "disabled": "Erweiterung des Empfehlungsprämienprozentsatzes aktivieren?",
+      "disabledInfo": "Die Erweiterung des Referrer-Belohnungsprozentsatzes ermöglicht es dem Asset-Ersteller, dem Referrer aktiver Marktteilnehmer einen Prozentsatz der Marktgebühr zuzuweisen.",
       "header": "Prozentsatz der Referrer-Belohnung",
-      "header_content": "Der Empfehlungsprämienprozentsatz ist der Prozentsatz der Provision, der dem Empfehlungsgeber aktiver Marktteilnehmer zugewiesen wird."
+      "header_content": "Der Empfehlungsprämienprozentsatz ist der Prozentsatz der Marktgebühr, der dem Empfehlungsgeber aktiver Marktteilnehmer zugewiesen wird."
     },
     "whitelist_market_fee_sharing": {
       "enabled": "Erweiterung zur Aufteilung der Marktgebühren auf die Whitelist aktiviert",
+      "enabledInfo": "Den folgenden Empfehlungskonten wird gestattet, einen Teil der eingezogenen Marktgebühren von ihren Empfehlungskonten zu erhalten.",
       "disabled": "Aktivieren Sie die Whitelist-Marktgebührenteilungserweiterung?",
+      "disabledInfo": "Sie können festlegen, wer einen Anteil der erhobenen Marktgebühren erhalten darf, und zwar auf eine Reihe vorab genehmigter Empfehlungskonten.",
       "header": "Aufteilung der Marktgebühren auf die Whitelist",
       "header_content": "Die Gebührenteilungserweiterung für den Whitelist-Markt ermöglicht es dem Haus, Referrer auf diese Konten auf der Whitelist zu beschränken."
     },
     "taker_fee_percent": {
       "enabled": "Erweiterung des Taker-Gebühr-Prozentsatzes aktiviert",
+      "enabledInfo": "Der „Nehmer“-Teilnehmer der Limit-Order erhält einen Prozentsatz der Marktgebühr.",
       "disabled": "Erweiterung des Prozentsatzes der Abnehmergebühr aktivieren?",
+      "disabledInfo": "Die Erweiterung des Prozentsatzes der Abnehmergebühr ermöglicht es dem Vermögensersteller, dem „Abnehmer“ von Limit-Order-Operationen einen Prozentsatz der Marktgebühr zuzuweisen.",
       "header": "Prozentsatz der Abnehmergebühr",
-      "header_content": "Der Prozentsatz der Abnehmergebühr ist der Prozentsatz der Provision, der dem „Abnehmer“ des prognostizierten Marktwerts zugewiesen wird."
+      "header_content": "Der Prozentsatz der Taker-Gebühr ist der Prozentsatz der Marktgebühr, der dem „Nehmer“ der Limit-Orders an der dezentralen Börse zugewiesen wird."
+    },
+    "allowed_markets": {
+      "enabled": "Erweiterung „Zulässige Märkte“ aktiviert",
+      "enabledInfo": "Die folgenden Märkte sind für den Handel mit diesem Vermögenswert zugelassen.",
+      "disabled": "Die Erweiterung „Zulässige Märkte“ aktivieren?",
+      "disabledInfo": "Sie können die Märkte, auf denen dieser Vermögenswert gehandelt werden darf, auf eine Reihe vorab genehmigter Märkte beschränken."
+    },
+    "banned_markets": {
+      "enabled": "Erweiterung für verbotene Märkte aktiviert",
+      "enabledInfo": "Auf den folgenden Märkten ist der Handel mit diesem Vermögenswert verboten.",
+      "disabled": "Die Erweiterung für verbotene Märkte aktivieren?",
+      "disabledInfo": "Mit dieser Funktion können Sie bestimmte Markthandelspaare sperren und so verhindern, dass Ihre Vermögenswerte auf unerwünschten Märkten gehandelt werden."
     }
+  },
+  "whitelist": {
+    "header_content": "Die Asset-Whitelist-Berechtigungen sind Konten, die die Liste der gelisteten Konten ihres Kontos beisteuern können, um die Interaktion mit diesem Zugriff zu autorisieren.",
+    "header": "Asset-Whitelist-Behörden"
+  },
+  "blacklist": {
+    "header_content": "Bei den Asset Blacklist-Behörden handelt es sich um Konten, die zur Liste der auf der schwarzen Liste ihres Kontos stehenden Konten beitragen können, um eine Liste gesperrter Konten durchzusetzen, die die Interaktion mit diesem Zugriff verhindert.",
+    "header": "Behörden führen eine schwarze Liste für Vermögenswerte auf"
   }
 }

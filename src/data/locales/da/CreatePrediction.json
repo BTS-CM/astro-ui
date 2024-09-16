@@ -15,7 +15,7 @@
       "placeholder": "Symbol"
     },
     "shortName": {
-      "header": "Kort navn på aktiv",
+      "header": "Aktivt kort navn",
       "header_content": "Dette er det korte navn på aktivet, mindre vigtigt end symbolet, men er stadig en forkortet unik identifikator. ",
       "placeholder": "Kort Navn"
     },
@@ -27,11 +27,11 @@
     "max_supply": {
       "header": "Maksimal forsyning",
       "header_content": "Det maksimale udbud af aktivet, dette er den samlede mængde af aktivet, der nogensinde kan skabes af låntagere, mens forudsigelsesmarkedsaktivet er aktivt.",
-      "placeholder": "Max forsyning"
+      "placeholder": "Max udbud"
     },
     "precision": {
       "header": "Aktiv præcision",
-      "header_content": "Præcisionen af ​​aktivet angiver antallet af understøttede decimaler. Denne værdi kan ikke ændres efter aktivets oprettelse.",
+      "header_content": "Præcisionen af ​​aktivet angiver antallet af understøttede decimaler. ",
       "placeholder": "Præcision"
     }
   },
@@ -133,24 +133,50 @@
   },
   "extensions": {
     "header_content": "Udvidelserne er yderligere avancerede indstillinger, der kan bruges til yderligere at tilpasse aktivet.",
-    "header": "Prediction Market Asset Extensions",
+    "header": "Markedsgebyrudvidelser",
     "reward_percent": {
       "enabled": "Forlængelse af referencebelønning i procent er aktiveret",
-      "disabled": "Vil du aktivere udvidelsen med henvisningsbelønning i procent?",
+      "enabledInfo": "En procentnedsættelse af markedsgebyret vil blive tildelt henviseren af ​​aktive markedsdeltagere.",
+      "disabled": "Vil du aktivere udvidelsen af ​​henvisningsbelønningsprocenten?",
+      "disabledInfo": "Forlængelsen af ​​referencebelønningsprocenten gør det muligt for aktivopretteren at tildele en procentdel af markedsgebyret til henvisningen af ​​aktive markedsdeltagere.",
       "header": "Henviserbelønningsprocent",
-      "header_content": "Henviserbelønningsprocenten er den procentdel af provisionen, der tildeles henviseren af ​​aktive markedsdeltagere."
+      "header_content": "Henviserbelønningsprocenten er den procentdel af markedsgebyret, som tildeles henviseren af ​​aktive markedsdeltagere."
     },
     "whitelist_market_fee_sharing": {
       "enabled": "Hvidliste udvidelse af markedsgebyrdeling aktiveret",
+      "enabledInfo": "Følgende henvisningskonti vil blive godkendt til at modtage en reduktion af de opkrævede markedsgebyrer fra deres henvisningskonti.",
       "disabled": "Vil du aktivere udvidelsen til hvidlistemarkedsgebyrdeling?",
+      "disabledInfo": "Du kan begrænse, hvem der har tilladelse til at modtage en nedskæring af de opkrævede markedsgebyrer til et sæt forhåndsgodkendte henvisningskonti.",
       "header": "Hvidliste markedsgebyrdeling",
       "header_content": "Hvidliste-markedsgebyrdelingsudvidelsen giver huset mulighed for at begrænse henvisninger til disse hvidlistede konti."
     },
     "taker_fee_percent": {
       "enabled": "Forlængelse af takergebyrprocent aktiveret",
+      "enabledInfo": "Den \"tager\"-deltager af limitordren vil modtage en procentdel af markedsgebyret.",
       "disabled": "Vil du aktivere udvidelsen af ​​takergebyrsprocenten?",
+      "disabledInfo": "Forlængelsen af ​​taker-gebyrets procentdel giver aktivophavsmanden mulighed for at allokere en procentdel af markedsgebyret til \"tageren\" af limitordre-operationer.",
       "header": "Aftagerhonorarprocent",
-      "header_content": "Taker-fee-procenten er den procentdel af provisionen, som tildeles \"tageren\" af forudsigelsesmarkedsaktivet."
+      "header_content": "Taker-fee-procenten er den procentdel af markedsgebyret, som tildeles 'tageren' af limitordrerne på den decentrale børs."
+    },
+    "allowed_markets": {
+      "enabled": "Tilladt markedsudvidelse aktiveret",
+      "enabledInfo": "Følgende markeder er godkendt til at handle med dette aktiv.",
+      "disabled": "Vil du aktivere den tilladte markedsudvidelse?",
+      "disabledInfo": "Du kan begrænse de markeder, der har tilladelse til at handle med dette aktiv, til et sæt forhåndsgodkendte markeder."
+    },
+    "banned_markets": {
+      "enabled": "Udvidelse af forbudte markeder aktiveret",
+      "enabledInfo": "Følgende markeder er forbudt at handle med dette aktiv.",
+      "disabled": "Vil du aktivere udvidelsen af ​​forbudte markeder?",
+      "disabledInfo": "Denne funktion giver dig mulighed for at forbyde specifikke markedshandelspar, så du kan hjælpe med at undgå, at dine aktiver handles på uønskede markeder."
     }
+  },
+  "whitelist": {
+    "header_content": "Hvidlistemyndighederne for aktiver er konti, der kan bidrage med deres kontos liste over hhv. kontoer for at godkende interaktion med denne adgang.",
+    "header": "Asset Whitelist myndigheder"
+  },
+  "blacklist": {
+    "header_content": "Aktivernes sortlistemyndigheder er konti, der kan bidrage med deres kontos sortlistede kontiliste for at håndhæve en forbudt kontoliste, der forhindrer interaktion med denne adgang.",
+    "header": "Asset blacklist myndigheder"
   }
 }

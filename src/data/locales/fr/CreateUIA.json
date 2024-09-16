@@ -1,154 +1,116 @@
 {
-    "dialogContent": {
-      "headerText": "Création de l'actif émis par l'utilisateur suivant : {{symbol}}"
+  "dialogContent": {
+    "headerText": "Création de l'actif émis par l'utilisateur suivant : {{symbol}}"
+  },
+  "card": {
+    "title_create": "Création d'un actif émis par l'utilisateur",
+    "title_edit": "Modification d'un actif émis par l'utilisateur",
+    "description": "Les actifs émis par l'utilisateur peuvent représenter tout ce que vous voulez, ils peuvent être utilisés à diverses fins. "
+  },
+  "asset_details": {
+    "title": "Détails de l'actif",
+    "title_content": "Il s’agit des paramètres d’actifs utilisés pour les fonctionnalités DEX de base.",
+    "symbol": {
+      "header": "Symbole d'actif",
+      "header_content": "Le symbole de l'actif est un identifiant unique sur la blockchain identifiant l'actif dans tout le DEX. ",
+      "placeholder": "Symbole"
     },
-    "card": {
-      "title_create": "Création d'un actif émis par l'utilisateur",
-      "title_edit": "Modification d'un actif émis par l'utilisateur",
-      "description": "Les actifs émis par l'utilisateur peuvent représenter tout ce que vous voulez, ils peuvent être utilisés à diverses fins. "
+    "shortName": {
+      "header": "Nom abrégé de l'actif",
+      "header_content": "Il s'agit du nom court de l'actif, moins important que le symbole mais qui reste un identifiant unique éventuellement abrégé. ",
+      "placeholder": "Nom court"
     },
-    "asset_details": {
-      "title": "Détails de l'actif",
-      "title_content": "Il s’agit des paramètres d’actifs utilisés pour les fonctionnalités DEX de base.",
-      "symbol": {
-        "header": "Symbole d'actif",
-        "header_content": "Le symbole de l'actif est un identifiant unique sur la blockchain identifiant l'actif dans tout le DEX. ",
-        "placeholder": "Symbole"
-      },
-      "shortName": {
-        "header": "Nom abrégé de l'actif",
-        "header_content": "Il s'agit du nom court de l'actif, moins important que le symbole mais qui reste un identifiant unique éventuellement abrégé. ",
-        "placeholder": "Nom court"
-      },
-      "preferredMarket": {
-        "header": "Paire de trading sur le marché préféré",
-        "header_content": "La paire de trading préférée sur le marché est l'actif par défaut utilisé pour négocier contre votre actif, il s'agit d'une suggestion informelle."
-      },
-      "description": {
-        "header": "Description de l'actif",
-        "header_content": "Il s'agit de la description de l'actif, elle sera affichée dans le DEX et pourra être utilisée pour fournir plus d'informations sur l'actif.",
-        "placeholder": "Description"
-      },
-      "max_supply": {
-        "header": "Approvisionnement maximal",
-        "header_content": "L'offre maximale de l'actif, c'est le montant total de l'actif qui peut jamais être émis par le propriétaire de l'actif (vous).",
-        "placeholder": "Approvisionnement maximum"
-      },
-      "precision": {
-        "header": "Précision des actifs",
-        "header_content": "La précision de l'actif spécifie la quantité de décimales prises en charge. ",
-        "placeholder": "Précision"
-      }
+    "preferredMarket": {
+      "header": "Paire de trading sur le marché préféré",
+      "header_content": "La paire de trading préférée sur le marché est l'actif par défaut utilisé pour négocier contre votre actif, il s'agit d'une suggestion informelle."
     },
-    "permissions": {
-      "header": "Autorisations de l'actif",
-      "header_content": "Remarque : la désactivation des autorisations est une décision permanente",
-      "charge_market_fee": {
-        "allowedText": "Frais de marché autorisés (charge_market_fee)",
-        "disabledText": "Frais de marché désactivés"
-      },
-      "white_list": {
-        "allowedText": "Liste blanche autorisée (white_list)",
-        "disabledText": "Liste blanche désactivée"
-      },
-      "override_authority": {
-        "allowedText": "Autorité de remplacement autorisée (override_authority)",
-        "disabledText": "Autorité de remplacement désactivée"
-      },
-      "transfer_restricted": {
-        "allowedText": "Transfert restreint autorisé (transfer_restricted)",
-        "disabledText": "Transfert restreint désactivé"
-      },
-      "disable_confidential": {
-        "allowedText": "Désactiver la confidentialité autorisée (disable_confidential)",
-        "disabledText": "Désactiver la confidentialité désactivée"
-      }
+    "description": {
+      "header": "Description de l'actif",
+      "header_content": "Il s'agit de la description de l'actif, elle sera affichée dans le DEX et pourra être utilisée pour fournir plus d'informations sur l'actif.",
+      "placeholder": "Description"
     },
-    "flags": {
-      "header": "Drapeaux de l'actif",
-      "header_content": "Chaque autorisation d'actif autorisée peut être activée/désactivée.",
-      "charge_market_fee": {
-        "allowedText": "Frais de marché activés",
-        "disabledText": "Frais de marché désactivés"
-      },
-      "white_list": {
-        "allowedText": "Liste blanche activée",
-        "disabledText": "Liste blanche désactivée"
-      },
-      "override_authority": {
-        "allowedText": "Autorité de remplacement activée",
-        "disabledText": "Autorité de remplacement désactivée"
-      },
-      "transfer_restricted": {
-        "allowedText": "Transfert restreint activé",
-        "disabledText": "Transfert restreint désactivé"
-      },
-      "disable_confidential": {
-        "allowedText": "Désactiver la confidentialité activée",
-        "disabledText": "Désactiver la confidentialité désactivée"
-      }
+    "max_supply": {
+      "header": "Approvisionnement maximal",
+      "header_content": "L'offre maximale de l'actif, c'est le montant total de l'actif qui peut jamais être émis par le propriétaire de l'actif (vous).",
+      "placeholder": "Approvisionnement maximum"
     },
-    "buttons": {
-      "submit": "Soumettre"
+    "precision": {
+      "header": "Précision des actifs",
+      "header_content": "La précision de l'actif spécifie la quantité de décimales prises en charge. ",
+      "placeholder": "Précision"
+    }
+  },
+  "buttons": {
+    "submit": "Soumettre"
+  },
+  "extensions": {
+    "header_content": "Les extensions sont des paramètres avancés supplémentaires qui peuvent être utilisés pour personnaliser davantage l'actif.",
+    "header": "Extensions des frais de marché",
+    "reward_percent": {
+      "enabled": "Extension du pourcentage de récompense du parrain activée",
+      "enabledInfo": "Une réduction en pourcentage des frais de marché sera allouée au référent des participants actifs au marché.",
+      "disabled": "Activer l'extension du pourcentage de récompense du parrain ?",
+      "disabledInfo": "L'extension du pourcentage de récompense du référent permet au créateur d'actifs d'attribuer un pourcentage des frais de marché au référent des participants actifs du marché.",
+      "header": "Pourcentage de récompense du parrain",
+      "header_content": "Le pourcentage de récompense du parrain est le pourcentage des frais de marché qui est alloué au parrain des participants actifs au marché."
     },
-    "extensions": {
-      "header_content": "Les extensions sont des paramètres avancés supplémentaires qui peuvent être utilisés pour personnaliser davantage l'actif.",
-      "header": "Extensions des frais de marché",
-      "reward_percent": {
-        "enabled": "Extension du pourcentage de récompense du parrain activée",
-        "disabled": "Activer l'extension du pourcentage de récompense du parrain ?",
-        "header": "Pourcentage de récompense du parrain",
-        "header_content": "Le pourcentage de récompense du parrain est le pourcentage des frais de marché qui est alloué au parrain des participants actifs au marché."
-      },
-      "whitelist_market_fee_sharing": {
-        "enabled": "Extension de partage des frais de marché sur liste blanche activée",
-        "disabled": "Activer l'extension de partage des frais de marché sur liste blanche ?",
-        "header": "Partage des frais de marché sur liste blanche",
-        "header_content": "L'extension de partage des frais de marché sur liste blanche permet à la maison de limiter les référents vers ces comptes sur liste blanche."
-      },
-      "taker_fee_percent": {
-        "enabled": "Extension du pourcentage des frais du preneur activée",
-        "disabled": "Activer l'extension du pourcentage des frais du preneur ?",
-        "header": "Pourcentage des frais du preneur",
-        "header_content": "Le pourcentage des frais du preneur est le pourcentage des frais de marché qui est alloué au « preneur » des ordres limités sur la bourse décentralisée."
-      },
-      "allowed_markets": {
-        "enabled": "Extension des marchés autorisés activée",
-        "disabled": "Activer l'extension des marchés autorisés ?"
-      },
-      "banned_markets": {
-        "enabled": "Extension des marchés interdits activée",
-        "disabled": "Activer l'extension des marchés interdits ?"
-      }
+    "whitelist_market_fee_sharing": {
+      "enabled": "Extension de partage des frais de marché sur liste blanche activée",
+      "enabledInfo": "Les comptes référents suivants seront approuvés pour recevoir une réduction des frais de marché collectés sur leurs comptes référents.",
+      "disabled": "Activer l'extension de partage des frais de marché sur liste blanche ?",
+      "disabledInfo": "Vous pouvez limiter les personnes autorisées à recevoir une réduction des frais de marché collectés à un ensemble de comptes référents pré-approuvés.",
+      "header": "Partage des frais de marché sur liste blanche",
+      "header_content": "L'extension de partage des frais de marché sur liste blanche permet à la maison de limiter les référents vers ces comptes sur liste blanche."
     },
-    "whitelist": {
-      "header_content": "Les autorités de liste blanche d'actifs sont des comptes qui peuvent contribuer à la liste des comptes autorisés de leur compte pour autoriser l'interaction avec cet accès.",
-      "header": "Autorités de la liste blanche des actifs"
+    "taker_fee_percent": {
+      "enabled": "Extension du pourcentage des frais du preneur activée",
+      "enabledInfo": "Le participant « preneur » de l'ordre limité recevra un pourcentage des frais de marché.",
+      "disabled": "Activer l'extension du pourcentage des frais du preneur ?",
+      "disabledInfo": "L'extension du pourcentage des frais du preneur permet au créateur d'actifs d'attribuer un pourcentage des frais de marché au « preneur » des opérations d'ordre limité.",
+      "header": "Pourcentage des frais du preneur",
+      "header_content": "Le pourcentage des frais du preneur est le pourcentage des frais de marché qui est alloué au « preneur » des ordres limités sur la bourse décentralisée."
     },
-    "blacklist": {
-      "header_content": "Les autorités de liste noire d'actifs sont des comptes qui peuvent contribuer à la liste des comptes sur liste noire de leur compte pour appliquer une liste de comptes interdits empêchant toute interaction avec cet accès.",
-      "header": "Autorités de liste noire des actifs"
+    "allowed_markets": {
+      "enabled": "Extension des marchés autorisés activée",
+      "enabledInfo": "Les marchés suivants sont autorisés à négocier cet actif.",
+      "disabled": "Activer l'extension des marchés autorisés ?",
+      "disabledInfo": "Vous pouvez limiter les marchés autorisés à négocier cet actif à un ensemble de marchés pré-approuvés."
     },
-    "market_fee": {
-      "header_content": "Les frais de marché sont le pourcentage de frais facturé sur chaque transaction exécutée sur le Bitshares DEX. ",
-      "header": "Pourcentage des frais de marché"
+    "banned_markets": {
+      "enabled": "Extension des marchés interdits activée",
+      "enabledInfo": "Les marchés suivants sont interdits de négocier cet actif.",
+      "disabled": "Activer l'extension des marchés interdits ?",
+      "disabledInfo": "Cette fonctionnalité vous permet d'interdire des paires de négociation de marché spécifiques, vous permettant ainsi d'éviter que vos actifs ne soient négociés sur des marchés indésirables."
+    }
+  },
+  "whitelist": {
+    "header_content": "Les autorités de liste blanche d'actifs sont des comptes qui peuvent contribuer à la liste des comptes autorisés de leur compte pour autoriser l'interaction avec cet accès.",
+    "header": "Autorités de la liste blanche des actifs"
+  },
+  "blacklist": {
+    "header_content": "Les autorités de liste noire d'actifs sont des comptes qui peuvent contribuer à la liste des comptes sur liste noire de leur compte pour appliquer une liste de comptes interdits empêchant toute interaction avec cet accès.",
+    "header": "Autorités de liste noire des actifs"
+  },
+  "market_fee": {
+    "header_content": "Les frais de marché sont le pourcentage de frais facturé sur chaque transaction exécutée sur le Bitshares DEX. ",
+    "header": "Pourcentage des frais de marché"
+  },
+  "max_market_fee": {
+    "header": "Frais de marché maximum",
+    "header_content": "Les frais de marché maximum sont le montant maximum de l'actif qui peut être facturé comme frais sur chaque transaction exécutée sur le Bitshares DEX."
+  },
+  "cer": {
+    "quote_asset_amount": {
+      "header": "Montant de l'actif de cotation",
+      "header_content": "Le montant de l'actif émis par votre utilisateur qui est nécessaire pour acheter le montant de l'actif de base."
     },
-    "max_market_fee": {
-      "header": "Frais de marché maximum",
-      "header_content": "Les frais de marché maximum sont le montant maximum de l'actif qui peut être facturé comme frais sur chaque transaction exécutée sur le Bitshares DEX."
+    "base_asset_amount": {
+      "header": "Montant de l'actif de base",
+      "header_content": "Le montant de l'actif de base ({{symbol}}) qui est nécessaire pour acheter le montant de l'actif de cotation."
     },
-    "cer": {
-      "quote_asset_amount": {
-        "header": "Montant de l'actif de cotation",
-        "header_content": "Le montant de l'actif émis par votre utilisateur qui est nécessaire pour acheter le montant de l'actif de base."
-      },
-      "base_asset_amount": {
-        "header": "Montant de l'actif de base",
-        "header_content": "Le montant de l'actif de base ({{symbol}}) qui est nécessaire pour acheter le montant de l'actif de cotation."
-      },
-      "calculated_cer_price": {
-        "header": "Taux de change de base",
-        "header_content": "Assurez-vous que votre taux de change de base est supérieur au prix du marché, sinon les gens achèteront votre jeton sur le marché et draineront votre pool de frais via un arbitrage implicite. "
-      }
+    "calculated_cer_price": {
+      "header": "Taux de change de base",
+      "header_content": "Assurez-vous que votre taux de change de base est supérieur au prix du marché, sinon les gens achèteront votre jeton sur le marché et draineront votre pool de frais via un arbitrage implicite. "
     }
   }
+}

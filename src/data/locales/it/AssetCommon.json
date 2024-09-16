@@ -1,0 +1,94 @@
+{
+    "permissions": {
+      "header": "Permessi dell'asset",
+      "header_content": "Nota: la disabilitazione delle autorizzazioni è una decisione permanente",
+      "charge_market_fee": {
+        "allowedText": "Sono ammesse commissioni di mercato",
+        "disabledText": "Commissioni di mercato disattivate",
+        "enabledInfo": "È possibile per il creatore dell'asset consentire l'addebito di commissioni di negoziazione sul mercato per questo asset.",
+        "disabledInfo": "Ora è impossibile per il creatore dell'asset addebitare commissioni di negoziazione sul mercato per questo asset."
+      },
+      "white_list": {
+        "allowedText": "Lista bianca consentita",
+        "disabledText": "Lista bianca disabilitata",
+        "enabledInfo": "È possibile che il creatore della risorsa abiliti la configurazione delle autorità della lista bianca per questa risorsa.",
+        "disabledInfo": "Ora è impossibile per il creatore della risorsa configurare le autorità della lista bianca per questa risorsa."
+      },
+      "override_authority": {
+        "allowedText": "Autorizzazione di override consentita",
+        "disabledText": "Ignora autorizzazione disabilitata",
+        "enabledInfo": "È possibile per il creatore della risorsa abilitare la possibilità di eseguire un'operazione di trasferimento sostitutiva su questa risorsa, restituendola al suo saldo dal tuo.",
+        "disabledInfo": "Ora è impossibile per il creatore della risorsa eseguire operazioni di trasferimento sostitutive su questa risorsa."
+      },
+      "transfer_restricted": {
+        "allowedText": "Trasferimento limitato consentito",
+        "enabledInfo": "È possibile per il creatore della risorsa abilitare la possibilità di limitare i trasferimenti di questa risorsa.",
+        "disabledText": "Trasferimento limitato disabilitato",
+        "disabledInfo": "Ora è impossibile per il creatore della risorsa limitare i trasferimenti di questa risorsa."
+      },
+      "disable_confidential": {
+        "allowedText": "Disabilita riservata consentita",
+        "enabledInfo": "È possibile per il creatore della risorsa abilitare la possibilità di disabilitare le operazioni riservate per questa risorsa.",
+        "disabledText": "Disabilita riservata disabilitata",
+        "disabledInfo": "Ora è impossibile per il creatore della risorsa disabilitare le operazioni riservate per questa risorsa."
+      },
+      "witness_fed_asset": {
+        "allowedText": "Risorsa alimentata da testimoni consentita",
+        "enabledInfo": "È possibile per il creatore della risorsa consentire ai testimoni di pubblicare feed di prezzo per questa risorsa.",
+        "disabledText": "Risorsa alimentata dal testimone disabilitata",
+        "disabledInfo": "Ora è impossibile per il creatore della risorsa consentire ai testimoni di pubblicare il feed del prezzo per questa risorsa."
+      },
+      "committee_fed_asset": {
+        "allowedText": "Risorsa alimentata dal comitato consentita",
+        "enabledInfo": "È possibile per il creatore della risorsa consentire ai membri del comitato di pubblicare feed di prezzo per questa risorsa.",
+        "disabledText": "Asset alimentato dal comitato disabilitato",
+        "disabledInfo": "Ora è impossibile per il creatore della risorsa consentire ai membri del comitato di pubblicare feed di prezzo per questa risorsa."
+      }
+    },
+    "flags": {
+      "header": "Flag dell'asset",
+      "header_content": "Ogni autorizzazione per risorsa consentita può essere attivata/disattivata.",
+      "charge_market_fee": {
+        "allowedText": "Commissioni di mercato abilitate",
+        "enabledInfo": "Il creatore dell'asset può configurare le commissioni di negoziazione di mercato per questo asset, inclusa la funzionalità di condivisione dei premi delle commissioni di mercato.",
+        "disabledText": "Commissioni di mercato disattivate",
+        "disabledInfo": "Il creatore dell'asset ha disattivato l'addebito delle commissioni di negoziazione del mercato per questo asset."
+      },
+      "white_list": {
+        "allowedText": "Lista bianca abilitata",
+        "enabledInfo": "Il creatore della risorsa può configurare le autorità della lista bianca per questa risorsa.",
+        "disabledText": "Lista bianca disabilitata",
+        "disabledInfo": "Il creatore della risorsa ha disabilitato la configurazione delle autorità della lista bianca per questa risorsa."
+      },
+      "override_authority": {
+        "allowedText": "Ignora autorizzazione abilitata",
+        "enabledInfo": "Il creatore della risorsa può eseguire un'operazione di trasferimento sostitutiva su questa risorsa, restituendola al suo saldo dal tuo.",
+        "disabledText": "Ignora autorizzazione disabilitata",
+        "disabledInfo": "Il creatore della risorsa ha disabilitato l'esecuzione di operazioni di trasferimento di sostituzione su questa risorsa."
+      },
+      "transfer_restricted": {
+        "allowedText": "Trasferimento limitato abilitato",
+        "enabledInfo": "Il creatore della risorsa può limitare i trasferimenti di questa risorsa.",
+        "disabledText": "Trasferimento limitato disabilitato",
+        "disabledInfo": "Il creatore della risorsa ha disattivato la limitazione dei trasferimenti di questa risorsa."
+      },
+      "disable_confidential": {
+        "allowedText": "Disabilita riservata abilitata",
+        "enabledInfo": "Il creatore della risorsa ha disattivato le operazioni riservate per questa risorsa.",
+        "disabledText": "Disabilita riservata disabilitata",
+        "disabledInfo": "L'autore della risorsa non ha disattivato le operazioni riservate per questa risorsa."
+      },
+      "witness_fed_asset": {
+        "allowedText": "Risorsa alimentata con testimone abilitata",
+        "enabledInfo": "I testimoni possono pubblicare feed di prezzo per questa risorsa.",
+        "disabledText": "Risorsa alimentata dal testimone disabilitata",
+        "disabledInfo": "I testimoni non sono in grado di pubblicare il feed dei prezzi per questa risorsa."
+      },
+      "committee_fed_asset": {
+        "allowedText": "Asset alimentato dal comitato abilitato",
+        "enabledInfo": "I membri del comitato possono pubblicare feed di prezzo per questo asset.",
+        "disabledText": "Asset alimentato dal comitato disabilitato",
+        "disabledInfo": "I membri del comitato non sono in grado di pubblicare feed di prezzo per questo asset."
+      }
+    }
+  }

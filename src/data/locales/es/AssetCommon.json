@@ -1,0 +1,94 @@
+{
+    "permissions": {
+      "header": "Permisos de activos",
+      "header_content": "Nota: Deshabilitar permisos es una decisión permanente",
+      "charge_market_fee": {
+        "allowedText": "Tarifas de mercado permitidas",
+        "disabledText": "Tarifas de mercado deshabilitadas",
+        "enabledInfo": "Es posible que el creador del activo habilite el cobro de tarifas de negociación en el mercado para este activo.",
+        "disabledInfo": "Ahora es imposible para el creador del activo cobrar tarifas de negociación en el mercado por este activo."
+      },
+      "white_list": {
+        "allowedText": "Lista blanca permitida",
+        "disabledText": "Lista blanca deshabilitada",
+        "enabledInfo": "Es posible que el creador del activo habilite la configuración de autoridades de lista blanca para este activo.",
+        "disabledInfo": "Ahora es imposible para el creador del recurso configurar autoridades de lista blanca para este recurso."
+      },
+      "override_authority": {
+        "allowedText": "Anulación de autoridad permitida",
+        "disabledText": "Anular autoridad deshabilitada",
+        "enabledInfo": "Es posible que el creador del activo habilite la capacidad de realizar una operación de transferencia de anulación en este activo, devolviéndolo a su saldo desde el suyo.",
+        "disabledInfo": "Ahora es imposible para el creador del activo realizar operaciones de transferencia de anulación en este activo."
+      },
+      "transfer_restricted": {
+        "allowedText": "Transferencia restringida permitida",
+        "enabledInfo": "Es posible que el creador del activo habilite la capacidad de restringir las transferencias de este activo.",
+        "disabledText": "Transferencia restringida deshabilitada",
+        "disabledInfo": "Ahora es imposible para el creador del activo restringir las transferencias de este activo."
+      },
+      "disable_confidential": {
+        "allowedText": "Deshabilitar confidencial permitido",
+        "enabledInfo": "Es posible que el creador del activo habilite la capacidad de deshabilitar operaciones confidenciales para este activo.",
+        "disabledText": "Deshabilitar confidencial deshabilitado",
+        "disabledInfo": "Ahora es imposible para el creador del activo desactivar las operaciones confidenciales para este activo."
+      },
+      "witness_fed_asset": {
+        "allowedText": "Se permite el activo alimentado por testigos",
+        "enabledInfo": "Es posible que el creador del activo permita a los testigos publicar feeds de precios para este activo.",
+        "disabledText": "Activo alimentado por testigo inhabilitado",
+        "disabledInfo": "Ahora es imposible para el creador del activo permitir que los testigos publiquen precios de este activo."
+      },
+      "committee_fed_asset": {
+        "allowedText": "Activo alimentado por el comité permitido",
+        "enabledInfo": "Es posible que el creador del activo permita a los miembros del comité publicar feeds de precios para este activo.",
+        "disabledText": "Activo alimentado por el comité inhabilitado",
+        "disabledInfo": "Ahora es imposible para el creador del activo permitir que los miembros del comité publiquen precios para este activo."
+      }
+    },
+    "flags": {
+      "header": "Banderas de activos",
+      "header_content": "Cada permiso de activo permitido se puede activar o desactivar.",
+      "charge_market_fee": {
+        "allowedText": "Tarifas de mercado habilitadas",
+        "enabledInfo": "El creador del activo puede configurar las tarifas de negociación del mercado para este activo, incluida la funcionalidad de reparto de recompensas de las tarifas del mercado.",
+        "disabledText": "Tarifas de mercado deshabilitadas",
+        "disabledInfo": "El creador del activo ha inhabilitado el cobro de tarifas comerciales en el mercado para este activo."
+      },
+      "white_list": {
+        "allowedText": "Lista blanca habilitada",
+        "enabledInfo": "El creador del activo puede configurar autoridades de lista blanca para este activo.",
+        "disabledText": "Lista blanca deshabilitada",
+        "disabledInfo": "El creador del recurso ha inhabilitado la configuración de autoridades de la lista blanca para este recurso."
+      },
+      "override_authority": {
+        "allowedText": "Anular autoridad habilitada",
+        "enabledInfo": "El creador del activo puede realizar una operación de transferencia de anulación de este activo y devolverlo a su saldo desde el suyo.",
+        "disabledText": "Anular autoridad deshabilitada",
+        "disabledInfo": "El creador del recurso ha inhabilitado la realización de operaciones de transferencia de anulación en este recurso."
+      },
+      "transfer_restricted": {
+        "allowedText": "Transferencia restringida habilitada",
+        "enabledInfo": "El creador del activo puede restringir las transferencias de este activo.",
+        "disabledText": "Transferencia restringida deshabilitada",
+        "disabledInfo": "El creador del activo ha desactivado la restricción de transferencias de este activo."
+      },
+      "disable_confidential": {
+        "allowedText": "Desactivar confidencial habilitado",
+        "enabledInfo": "El creador del activo ha desactivado las operaciones confidenciales para este activo.",
+        "disabledText": "Deshabilitar confidencial deshabilitado",
+        "disabledInfo": "El creador del recurso no ha inhabilitado las operaciones confidenciales para este recurso."
+      },
+      "witness_fed_asset": {
+        "allowedText": "Activo alimentado por testigo habilitado",
+        "enabledInfo": "Los testigos pueden publicar precios de este activo.",
+        "disabledText": "Activo alimentado por testigo inhabilitado",
+        "disabledInfo": "Los testigos no pueden publicar el precio de este activo."
+      },
+      "committee_fed_asset": {
+        "allowedText": "Activo alimentado por comité habilitado",
+        "enabledInfo": "Los miembros del comité pueden publicar precios de este activo.",
+        "disabledText": "Activo alimentado por el comité inhabilitado",
+        "disabledInfo": "Los miembros del comité no pueden publicar precios de este activo."
+      }
+    }
+  }

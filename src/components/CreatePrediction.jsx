@@ -651,7 +651,9 @@ export default function Prediction(properties) {
                                         alreadyDisabled={false}
                                         id={"reward_percent_flag"}
                                         allowedText={t("CreatePrediction:extensions.reward_percent.enabled")}
+                                        enabledInfo={t("CreatePrediction:extensions.reward_percent.enabledInfo")}
                                         disabledText={t("CreatePrediction:extensions.reward_percent.disabled")}
+                                        disabledInfo={t("CreatePrediction:extensions.reward_percent.disabledInfo")}
                                         permission={true}
                                         flag={enabledReferrerReward}
                                         setFlag={setEnabledReferrerReward}
@@ -685,7 +687,9 @@ export default function Prediction(properties) {
                                         alreadyDisabled={false}
                                         id={"whitelist_market_fee_sharing_flag"}
                                         allowedText={t("CreatePrediction:extensions.whitelist_market_fee_sharing.enabled")}
+                                        enabledInfo={t("CreatePrediction:extensions.whitelist_market_fee_sharing.enabledInfo")}
                                         disabledText={t("CreatePrediction:extensions.whitelist_market_fee_sharing.disabled")}
+                                        disabledInfo={t("CreatePrediction:extensions.whitelist_market_fee_sharing.disabledInfo")}
                                         permission={true}
                                         flag={enabledFeeSharingWhitelist}
                                         setFlag={setEnabledFeeSharingWhitelist}
@@ -766,7 +770,9 @@ export default function Prediction(properties) {
                                         alreadyDisabled={false}
                                         id={"taker_fee_percent_flag"}
                                         allowedText={t("CreatePrediction:extensions.taker_fee_percent.enabled")}
+                                        enabledInfo={t("CreatePrediction:extensions.taker_fee_percent.enabledInfo")}
                                         disabledText={t("CreatePrediction:extensions.taker_fee_percent.disabled")}
+                                        disabledInfo={t("CreatePrediction:extensions.taker_fee_percent.disabledInfo")}
                                         permission={true}
                                         flag={enabledTakerFee}
                                         setFlag={setEnabledTakerFee}
@@ -802,15 +808,17 @@ export default function Prediction(properties) {
                                     <div className="grid grid-cols-2 gap-5">
                                         <div>
                                             <HoverInfo
-                                                content={t("CreatePrediction:permissions.header_content")}
-                                                header={t("CreatePrediction:permissions.header")}
+                                                content={t("AssetCommon:permissions.header_content")}
+                                                header={t("AssetCommon:permissions.header")}
                                                 type="header"
                                             />
                                             <AssetPermission
                                                 alreadyDisabled={false}
                                                 id={"white_list"}
-                                                allowedText={t("CreatePrediction:permissions.white_list.allowedText")}
-                                                disabledText={t("CreatePrediction:permissions.white_list.disabledText")}
+                                                allowedText={t("AssetCommon:permissions.white_list.allowedText")}
+                                                enabledInfo={t("AssetCommon:permissions.white_list.enabledInfo")}
+                                                disabledText={t("AssetCommon:permissions.white_list.disabledText")}
+                                                disabledInfo={t("AssetCommon:permissions.white_list.disabledInfo")}
                                                 permission={permWhiteList}
                                                 setPermission={setPermWhiteList}
                                                 flag={flagWhiteList}
@@ -819,8 +827,10 @@ export default function Prediction(properties) {
                                             <AssetPermission
                                                 alreadyDisabled={false}
                                                 id={"transfer_restricted"}
-                                                allowedText={t("CreatePrediction:permissions.transfer_restricted.allowedText")}
-                                                disabledText={t("CreatePrediction:permissions.transfer_restricted.disabledText")}
+                                                allowedText={t("AssetCommon:permissions.transfer_restricted.allowedText")}
+                                                enabledInfo={t("AssetCommon:permissions.transfer_restricted.enabledInfo")}
+                                                disabledText={t("AssetCommon:permissions.transfer_restricted.disabledText")}
+                                                disabledInfo={t("AssetCommon:permissions.transfer_restricted.disabledInfo")}
                                                 permission={permTransferRestricted}
                                                 setPermission={setPermTransferRestricted}
                                                 flag={flagTransferRestricted}
@@ -829,8 +839,10 @@ export default function Prediction(properties) {
                                             <AssetPermission
                                                 alreadyDisabled={false}
                                                 id={"disable_confidential"}
-                                                allowedText={t("CreatePrediction:permissions.disable_confidential.allowedText")}
-                                                disabledText={t("CreatePrediction:permissions.disable_confidential.disabledText")}
+                                                allowedText={t("AssetCommon:permissions.disable_confidential.allowedText")}
+                                                enabledInfo={t("AssetCommon:permissions.disable_confidential.enabledInfo")}
+                                                disabledText={t("AssetCommon:permissions.disable_confidential.disabledText")}
+                                                disabledInfo={t("AssetCommon:permissions.disable_confidential.disabledInfo")}
                                                 permission={permDisableConfidential}
                                                 setPermission={setPermDisableConfidential}
                                                 flag={flagDisableConfidential}
@@ -840,8 +852,10 @@ export default function Prediction(properties) {
                                             <AssetPermission
                                                 alreadyDisabled={false}
                                                 id={"witness_fed_asset"}
-                                                allowedText={t("CreatePrediction:permissions.witness_fed_asset.allowedText")}
-                                                disabledText={t("CreatePrediction:permissions.witness_fed_asset.disabledText")}
+                                                allowedText={t("AssetCommon:permissions.witness_fed_asset.allowedText")}
+                                                enabledInfo={t("AssetCommon:permissions.witness_fed_asset.enabledInfo")}
+                                                disabledText={t("AssetCommon:permissions.witness_fed_asset.disabledText")}
+                                                disabledInfo={t("AssetCommon:permissions.witness_fed_asset.disabledInfo")}
                                                 permission={permWitnessFedAsset}
                                                 setPermission={setPermWitnessFedAsset}
                                                 flag={flagWitnessFedAsset}
@@ -851,8 +865,10 @@ export default function Prediction(properties) {
                                             <AssetPermission
                                                 alreadyDisabled={false}
                                                 id={"committee_fed_asset"}
-                                                allowedText={t("CreatePrediction:permissions.committee_fed_asset.allowedText")}
-                                                disabledText={t("CreatePrediction:permissions.committee_fed_asset.disabledText")}
+                                                allowedText={t("AssetCommon:permissions.committee_fed_asset.allowedText")}
+                                                enabledInfo={t("AssetCommon:permissions.committee_fed_asset.enabledInfo")}
+                                                disabledText={t("AssetCommon:permissions.committee_fed_asset.disabledText")}
+                                                disabledInfo={t("AssetCommon:permissions.committee_fed_asset.disabledInfo")}
                                                 permission={permCommitteeFedAsset}
                                                 setPermission={setPermCommitteeFedAsset}
                                                 flag={flagCommitteeFedAsset}
@@ -862,15 +878,17 @@ export default function Prediction(properties) {
 
                                         <div>
                                             <HoverInfo
-                                                content={t("CreatePrediction:flags.header_content")}
-                                                header={t("CreatePrediction:flags.header")}
+                                                content={t("AssetCommon:flags.header_content")}
+                                                header={t("AssetCommon:flags.header")}
                                                 type="header"
                                             />
                                             <AssetFlag
                                                 alreadyDisabled={false}
                                                 id={"white_list_flag"}
-                                                allowedText={t("CreatePrediction:flags.white_list.allowedText")}
-                                                disabledText={t("CreatePrediction:flags.white_list.disabledText")}
+                                                allowedText={t("AssetCommon:flags.white_list.allowedText")}
+                                                enabledInfo={t("AssetCommon:flags.white_list.enabledInfo")}
+                                                disabledText={t("AssetCommon:flags.white_list.disabledText")}
+                                                disabledInfo={t("AssetCommon:flags.white_list.disabledInfo")}
                                                 permission={permWhiteList}
                                                 flag={flagWhiteList}
                                                 setFlag={setFlagWhiteList}
@@ -878,8 +896,10 @@ export default function Prediction(properties) {
                                             <AssetFlag
                                                 alreadyDisabled={false}
                                                 id={"transfer_restricted_flag"}
-                                                allowedText={t("CreatePrediction:flags.transfer_restricted.allowedText")}
-                                                disabledText={t("CreatePrediction:flags.transfer_restricted.disabledText")}
+                                                allowedText={t("AssetCommon:flags.transfer_restricted.allowedText")}
+                                                enabledInfo={t("AssetCommon:flags.transfer_restricted.enabledInfo")}
+                                                disabledText={t("AssetCommon:flags.transfer_restricted.disabledText")}
+                                                disabledInfo={t("AssetCommon:flags.transfer_restricted.disabledInfo")}
                                                 permission={permTransferRestricted}
                                                 flag={flagTransferRestricted}
                                                 setFlag={setFlagTransferRestricted}
@@ -887,8 +907,10 @@ export default function Prediction(properties) {
                                             <AssetFlag
                                                 alreadyDisabled={false}
                                                 id={"disable_confidential_flag"}
-                                                allowedText={t("CreatePrediction:flags.disable_confidential.allowedText")}
-                                                disabledText={t("CreatePrediction:flags.disable_confidential.disabledText")}
+                                                allowedText={t("AssetCommon:flags.disable_confidential.allowedText")}
+                                                enabledInfo={t("AssetCommon:flags.disable_confidential.enabledInfo")}
+                                                disabledText={t("AssetCommon:flags.disable_confidential.disabledText")}
+                                                disabledInfo={t("AssetCommon:flags.disable_confidential.disabledInfo")}
                                                 permission={permDisableConfidential}
                                                 flag={flagDisableConfidential}
                                                 setFlag={setFlagDisableConfidential}
@@ -897,8 +919,10 @@ export default function Prediction(properties) {
                                             <AssetFlag
                                                 alreadyDisabled={false}
                                                 id={"witness_fed_asset_flag"}
-                                                allowedText={t("CreatePrediction:flags.witness_fed_asset.allowedText")}
-                                                disabledText={t("CreatePrediction:flags.witness_fed_asset.disabledText")}
+                                                allowedText={t("AssetCommon:flags.witness_fed_asset.allowedText")}
+                                                enabledInfo={t("AssetCommon:flags.witness_fed_asset.enabledInfo")}
+                                                disabledText={t("AssetCommon:flags.witness_fed_asset.disabledText")}
+                                                disabledInfo={t("AssetCommon:flags.witness_fed_asset.disabledInfo")}
                                                 permission={permWitnessFedAsset}
                                                 flag={flagWitnessFedAsset}
                                                 setFlag={setFlagWitnessFedAsset}
@@ -907,8 +931,10 @@ export default function Prediction(properties) {
                                             <AssetFlag
                                                 alreadyDisabled={false}
                                                 id={"committee_fed_asset_flag"}
-                                                allowedText={t("CreatePrediction:flags.committee_fed_asset.allowedText")}
-                                                disabledText={t("CreatePrediction:flags.committee_fed_asset.disabledText")}
+                                                allowedText={t("AssetCommon:flags.committee_fed_asset.allowedText")}
+                                                enabledInfo={t("AssetCommon:flags.committee_fed_asset.enabledInfo")}
+                                                disabledText={t("AssetCommon:flags.committee_fed_asset.disabledText")}
+                                                disabledInfo={t("AssetCommon:flags.committee_fed_asset.disabledInfo")}
                                                 permission={permCommitteeFedAsset}
                                                 flag={flagCommitteeFedAsset}
                                                 setFlag={setFlagCommitteeFedAsset}

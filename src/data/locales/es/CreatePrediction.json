@@ -16,7 +16,7 @@
     },
     "shortName": {
       "header": "Nombre corto del activo",
-      "header_content": "Este es el nombre corto del activo, menos importante que el símbolo, pero aún así es un identificador único abreviado opcionalmente. ",
+      "header_content": "Este es el nombre corto del activo, menos importante que el símbolo, pero sigue siendo un identificador único opcionalmente abreviado. ",
       "placeholder": "Nombre corto"
     },
     "description": {
@@ -31,7 +31,7 @@
     },
     "precision": {
       "header": "Precisión de activos",
-      "header_content": "La precisión del activo especifica la cantidad de decimales admitidas. Este valor no se puede modificar después de la creación del activo.",
+      "header_content": "La precisión del activo especifica la cantidad de decimales admitidos. ",
       "placeholder": "Precisión"
     }
   },
@@ -127,30 +127,56 @@
   "risks": {
     "1": "La mala configuración de los activos del mercado de predicción puede llevar a una pobre participación de blockchain, algunas interfaces de usuario pueden filtrar su PMA por completo de la vista; ",
     "2": "Cuando crea un activo de mercado de predicción, usted es responsable, como casa, de evaluar adecuadamente el resultado; no hacerlo de manera adecuada o oportuna podría generarle problemas legales o fiscales, además de la pérdida de credibilidad como casa.",
-    "3": "Esta interfaz de usuario y las billeteras Beet/BEETEOS no admiten cuentas de firmas múltiples, por lo que su cuenta doméstica es un punto único de falla a largo plazo: protéjala bien.",
+    "3": "Esta interfaz de usuario y las billeteras Beet/BEETEOS no admiten cuentas con múltiples firmas, por lo que su cuenta doméstica es un punto único de falla a largo plazo: protéjala bien.",
     "title": "Algunos de los riesgos asociados con la creación de activos de mercado de predicción",
     "description": "Haga su propia investigación antes de crear una PMA, lea primero los documentos; "
   },
   "extensions": {
     "header_content": "Las extensiones son configuraciones avanzadas adicionales que se pueden usar para personalizar aún más el activo.",
-    "header": "Extensiones de activos del mercado de predicción",
+    "header": "Extensiones de tarifas de mercado",
     "reward_percent": {
       "enabled": "Extensión de porcentaje de recompensa de referencia habilitada",
+      "enabledInfo": "Se asignará un porcentaje de la comisión del mercado al referente de los participantes activos del mercado.",
       "disabled": "¿Habilitar la extensión del porcentaje de recompensa del referente?",
+      "disabledInfo": "La extensión del porcentaje de recompensa del referente permite al creador de activos asignar un porcentaje de la tarifa del mercado al referente de los participantes activos del mercado.",
       "header": "Porcentaje de recompensa del referente",
-      "header_content": "El porcentaje de recompensa del referente es el porcentaje de la comisión que se asigna al referente de los participantes activos del mercado."
+      "header_content": "El porcentaje de recompensa del referente es el porcentaje de la tarifa de mercado que se asigna al referente de los participantes activos del mercado."
     },
     "whitelist_market_fee_sharing": {
       "enabled": "Extensión de cuota compartida del mercado de lista blanca habilitada",
+      "enabledInfo": "Se aprobará que las siguientes cuentas de referencia reciban una parte de las tarifas de mercado cobradas de sus cuentas de referencia.",
       "disabled": "¿Habilitar la extensión de tarifa compartida del mercado de la lista blanca?",
+      "disabledInfo": "Puede limitar quién puede recibir una parte de las tarifas de mercado cobradas a un conjunto de cuentas de referencia previamente aprobadas.",
       "header": "Lista blanca de cuotas compartidas en el mercado",
       "header_content": "La extensión de tarifa compartida del mercado de la lista blanca permite a la casa limitar las referencias a estas cuentas incluidas en la lista blanca."
     },
     "taker_fee_percent": {
       "enabled": "Extensión del porcentaje de la tarifa del tomador habilitada",
+      "enabledInfo": "El participante 'taker' de la orden limitada recibirá un porcentaje de la comisión del mercado.",
       "disabled": "¿Habilitar la extensión del porcentaje de la tarifa del tomador?",
+      "disabledInfo": "La extensión del porcentaje de la tarifa del tomador permite al creador de activos asignar un porcentaje de la tarifa de mercado al 'tomador' de las operaciones de órdenes limitadas.",
       "header": "Porcentaje de tarifa del tomador",
-      "header_content": "El porcentaje de la tarifa del tomador es el porcentaje de la comisión que se asigna al 'tomador' del activo del mercado de predicción."
+      "header_content": "El porcentaje de la tarifa del receptor es el porcentaje de la tarifa de mercado que se asigna al \"receptor\" de las órdenes limitadas en el intercambio descentralizado."
+    },
+    "allowed_markets": {
+      "enabled": "Extensión de mercados permitidos habilitada",
+      "enabledInfo": "Los siguientes mercados están aprobados para negociar este activo.",
+      "disabled": "¿Habilitar la extensión de mercados permitidos?",
+      "disabledInfo": "Puede limitar los mercados en los que se permite negociar este activo a un conjunto de mercados preaprobados."
+    },
+    "banned_markets": {
+      "enabled": "Habilitada la extensión de mercados prohibidos",
+      "enabledInfo": "Los siguientes mercados tienen prohibido negociar este activo.",
+      "disabled": "¿Habilitar la extensión de mercados prohibidos?",
+      "disabledInfo": "Esta función le permite prohibir pares comerciales de mercado específicos, lo que le permite ayudar a evitar la negociación de activos en mercados no deseados."
     }
+  },
+  "whitelist": {
+    "header_content": "Las autoridades de la lista blanca de activos son cuentas que pueden contribuir con la lista de cuentas permitidas de su cuenta para autorizar la interacción con este acceso.",
+    "header": "Autoridades de la lista blanca de activos"
+  },
+  "blacklist": {
+    "header_content": "Las autoridades de la lista negra de activos son cuentas que pueden contribuir con la lista de cuentas negras de su cuenta para hacer cumplir una lista de cuentas prohibidas que impida la interacción con este acceso.",
+    "header": "Autoridades de la lista negra de activos"
   }
 }

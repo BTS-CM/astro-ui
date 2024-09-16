@@ -31,7 +31,7 @@
     },
     "precision": {
       "header": "Precisione delle risorse",
-      "header_content": "La precisione dell'asset specifica la quantità di cifre decimali supportate. Questo valore non può essere modificato dopo la creazione dell'asset.",
+      "header_content": "La precisione dell'asset specifica la quantità di cifre decimali supportate. ",
       "placeholder": "Precisione"
     }
   },
@@ -125,7 +125,7 @@
     "submit": "Invia"
   },
   "risks": {
-    "1": "Una configurazione errata delle risorse del mercato di previsione può portare a una scarsa partecipazione alla blockchain, alcune interfacce utente potrebbero filtrare completamente il tuo PMA; ",
+    "1": "Una configurazione errata delle risorse del mercato di previsione può portare a una scarsa partecipazione alla blockchain, alcune interfacce utente potrebbero filtrare completamente il tuo PMA dalla vista; ",
     "2": "Quando crei un asset di mercato di previsione, sei responsabile come casa di valutare adeguatamente il risultato, l'incapacità di farlo correttamente o in modo tempestivo potrebbe portare a problemi legali o fiscali oltre alla perdita di credibilità come casa.",
     "3": "Questa interfaccia utente e i portafogli Beet/BEETEOS non supportano account multi-firma, quindi il tuo account interno è un singolo punto di fallimento a lungo termine: proteggilo bene.",
     "title": "Alcuni dei rischi associati alla creazione di attività di mercato di previsione",
@@ -133,24 +133,50 @@
   },
   "extensions": {
     "header_content": "Le estensioni sono impostazioni avanzate aggiuntive che possono essere utilizzate per personalizzare ulteriormente la risorsa.",
-    "header": "Estensioni delle risorse del mercato di previsione",
+    "header": "Estensioni delle commissioni di mercato",
     "reward_percent": {
       "enabled": "Estensione percentuale ricompensa referrer abilitata",
+      "enabledInfo": "Al referrer dei partecipanti attivi al mercato verrà assegnata una riduzione percentuale della commissione di mercato.",
       "disabled": "Abilitare l'estensione della percentuale di ricompensa del referrer?",
+      "disabledInfo": "L'estensione della percentuale di ricompensa del referrer consente al creatore dell'asset di assegnare una percentuale della commissione di mercato al referrer dei partecipanti attivi al mercato.",
       "header": "Percentuale di ricompensa del referrer",
-      "header_content": "La percentuale di ricompensa del referrer è la percentuale della commissione assegnata al referrer dei partecipanti attivi al mercato."
+      "header_content": "La percentuale di ricompensa del referrer è la percentuale della commissione di mercato assegnata al referrer dei partecipanti attivi al mercato."
     },
     "whitelist_market_fee_sharing": {
       "enabled": "Estensione di condivisione delle commissioni di mercato nella whitelist abilitata",
+      "enabledInfo": "I seguenti conti referrer saranno approvati per ricevere una riduzione delle commissioni di mercato raccolte dai loro conti referrer.",
       "disabled": "Abilitare l'estensione per la condivisione delle commissioni del mercato whitelist?",
+      "disabledInfo": "Puoi limitare chi è autorizzato a ricevere una riduzione delle commissioni di mercato raccolte a una serie di conti referrer pre-approvati.",
       "header": "Condivisione delle commissioni di mercato nella whitelist",
       "header_content": "L'estensione di condivisione delle commissioni del mercato whitelist consente alla casa di limitare i referrer a questi account autorizzati."
     },
     "taker_fee_percent": {
       "enabled": "Estensione percentuale commissione acquirente abilitata",
+      "enabledInfo": "Il partecipante \"acquirente\" dell'ordine limite riceverà una percentuale della commissione di mercato.",
       "disabled": "Abilitare l'estensione percentuale della commissione dell'acquirente?",
+      "disabledInfo": "L'estensione percentuale della commissione dell'acquirente consente al creatore dell'asset di assegnare una percentuale della commissione di mercato all'acquirente delle operazioni di ordine limite.",
       "header": "Percentuale della commissione dell'acquirente",
-      "header_content": "La percentuale della commissione dell'acquirente è la percentuale della commissione assegnata all'acquirente dell'asset del mercato di previsione."
+      "header_content": "La percentuale della commissione taker è la percentuale della commissione di mercato assegnata al \"taker\" degli ordini limite sulla borsa decentralizzata."
+    },
+    "allowed_markets": {
+      "enabled": "Estensione dei mercati consentiti abilitata",
+      "enabledInfo": "I seguenti mercati sono autorizzati a negoziare questo asset.",
+      "disabled": "Abilitare l'estensione dei mercati consentiti?",
+      "disabledInfo": "Puoi limitare i mercati a cui è consentito scambiare questo asset a una serie di mercati pre-approvati."
+    },
+    "banned_markets": {
+      "enabled": "Estensione dei mercati vietati abilitata",
+      "enabledInfo": "Ai seguenti mercati è vietato negoziare questo asset.",
+      "disabled": "Abilitare l'estensione dei mercati vietati?",
+      "disabledInfo": "Questa funzione ti consente di vietare specifiche coppie di trading di mercato, consentendoti di evitare il trading di asset su mercati indesiderati."
     }
+  },
+  "whitelist": {
+    "header_content": "Le autorità della lista bianca delle risorse sono account che possono contribuire all'elenco degli account autorizzati del proprio account per autorizzare l'interazione con questo accesso.",
+    "header": "Autorità della lista bianca delle risorse"
+  },
+  "blacklist": {
+    "header_content": "Le autorità della lista nera delle risorse sono account che possono contribuire all'elenco degli account nella lista nera del proprio account per imporre un elenco di account vietati che impediscono l'interazione con questo accesso.",
+    "header": "Autorità della lista nera delle risorse"
   }
 }
