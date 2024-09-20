@@ -211,6 +211,18 @@ export default function UIA(properties) {
     const [cerBaseAmount, setCerBaseAmount] = useState(1);
     const [cerQuoteAmount, setCerQuoteAmount] = useState(1);
 
+    // Asset Update extensions
+    /*
+      {
+         /// After BSIP48, the precision of an asset can be updated if no supply is available
+         /// @note The parties involved still need to be careful
+         fc::optional<uint8_t> new_precision;
+         /// After BSIP48, if this option is set to true, the asset's core_exchange_rate won't be updated.
+         /// This is especially useful for committee-owned bitassets which can not be updated quickly.
+         fc::optional<bool> skip_core_exchange_rate;
+      };
+    */
+
     const description = useMemo(() => {
         return JSON.stringify({ main: desc, short_name: shortName, market });
     }, [desc, market, shortName]);
@@ -730,21 +742,21 @@ export default function UIA(properties) {
                             <div className="grid grid-cols-2">
                                 <div className="col-span-2">
                                     <HoverInfo
-                                        content={t("CreateUIA:asset_details.title_content")}
-                                        header={t("CreateUIA:asset_details.title")}
+                                        content={t("AssetCommon:asset_details.title_content")}
+                                        header={t("AssetCommon:asset_details.title")}
                                         type="header"
                                     />
                                     
                                     <div className="grid grid-cols-3 gap-5">
                                         <div>
                                             <HoverInfo
-                                                content={t("CreateUIA:asset_details.symbol.header_content")}
-                                                header={t("CreateUIA:asset_details.symbol.header")}
+                                                content={t("AssetCommon:asset_details.symbol.header_content")}
+                                                header={t("AssetCommon:asset_details.symbol.header")}
                                             />
                                             {
                                                 !editing
                                                     ? <Input
-                                                        placeholder={t("CreateUIA:asset_details.symbol.placeholder")}
+                                                        placeholder={t("AssetCommon:asset_details.symbol.placeholder")}
                                                         value={symbol}
                                                         type="text"
                                                         onInput={(e) => {
@@ -769,11 +781,11 @@ export default function UIA(properties) {
                                         
                                         <div>
                                             <HoverInfo
-                                                content={t("CreateUIA:asset_details.max_supply.header_content")}
-                                                header={t("CreateUIA:asset_details.max_supply.header")}
+                                                content={t("AssetCommon:asset_details.max_supply.header_content")}
+                                                header={t("AssetCommon:asset_details.max_supply.header")}
                                             />
                                             <Input
-                                                placeholder={t("CreateUIA:asset_details.max_supply.placeholder")}
+                                                placeholder={t("AssetCommon:asset_details.max_supply.placeholder")}
                                                 value={maxSupply}
                                                 type="number"
                                                 onInput={(e) => {
@@ -789,13 +801,13 @@ export default function UIA(properties) {
                                         </div>
                                         <div>
                                             <HoverInfo
-                                                content={t("CreateUIA:asset_details.precision.header_content")}
-                                                header={t("CreateUIA:asset_details.precision.header")}
+                                                content={t("AssetCommon:asset_details.precision.header_content")}
+                                                header={t("AssetCommon:asset_details.precision.header")}
                                             />
                                             {
                                                 !editing
                                                 ? <Input
-                                                    placeholder={t("CreateUIA:asset_details.precision.placeholder")}
+                                                    placeholder={t("AssetCommon:asset_details.precision.placeholder")}
                                                     value={precision}
                                                     type="number"
                                                     onInput={(e) => {
@@ -821,11 +833,11 @@ export default function UIA(properties) {
                                     </div>
 
                                     <HoverInfo
-                                        content={t("CreateUIA:asset_details.description.header_content")}
-                                        header={t("CreateUIA:asset_details.description.header")}
+                                        content={t("AssetCommon:asset_details.description.header_content")}
+                                        header={t("AssetCommon:asset_details.description.header")}
                                     />
                                     <Textarea
-                                        placeholder={t("CreateUIA:asset_details.description.placeholder")}
+                                        placeholder={t("AssetCommon:asset_details.description.placeholder")}
                                         value={desc}
                                         onInput={(e) => setDesc(e.currentTarget.value)}
                                         className="mt-1"
@@ -834,11 +846,11 @@ export default function UIA(properties) {
                                     <div className="grid grid-cols-2 gap-5 mb-3">
                                         <div>
                                             <HoverInfo
-                                                content={t("CreateUIA:asset_details.shortName.header_content")}
-                                                header={t("CreateUIA:asset_details.shortName.header")}
+                                                content={t("AssetCommon:asset_details.shortName.header_content")}
+                                                header={t("AssetCommon:asset_details.shortName.header")}
                                             />
                                             <Input
-                                                placeholder={t("CreateUIA:asset_details.shortName.placeholder")}
+                                                placeholder={t("AssetCommon:asset_details.shortName.placeholder")}
                                                 value={shortName}
                                                 type="text"
                                                 onInput={(e) => setShortName(e.currentTarget.value)}
@@ -847,8 +859,8 @@ export default function UIA(properties) {
                                         </div>
                                         <div>
                                             <HoverInfo
-                                                content={t("CreateUIA:asset_details.preferredMarket.header_content")}
-                                                header={t("CreateUIA:asset_details.preferredMarket.header")}
+                                                content={t("AssetCommon:asset_details.preferredMarket.header_content")}
+                                                header={t("AssetCommon:asset_details.preferredMarket.header")}
                                             />
                                             <div className="grid grid-cols-2 gap-3 mt-1">
                                                 <Input
@@ -872,8 +884,8 @@ export default function UIA(properties) {
                                     <div className="grid grid-cols-3 gap-5 mb-3">
                                         <div>
                                             <HoverInfo
-                                                content={t("CreateUIA:cer.quote_asset_amount.header_content")}
-                                                header={t("CreateUIA:cer.quote_asset_amount.header")}
+                                                content={t("AssetCommon:cer.quote_asset_amount.header_content")}
+                                                header={t("AssetCommon:cer.quote_asset_amount.header")}
                                             />
                                             <Input
                                                 placeholder={0}
@@ -888,8 +900,8 @@ export default function UIA(properties) {
                                         </div>
                                         <div>
                                             <HoverInfo
-                                                content={t("CreateUIA:cer.base_asset_amount.header_content", {symbol: "BTS"})}
-                                                header={t("CreateUIA:cer.base_asset_amount.header")}
+                                                content={t("AssetCommon:cer.base_asset_amount.header_content", {symbol: "BTS"})}
+                                                header={t("AssetCommon:cer.base_asset_amount.header")}
                                             />
                                             <Input
                                                 placeholder={0}
@@ -904,8 +916,8 @@ export default function UIA(properties) {
                                         </div>
                                         <div>
                                             <HoverInfo
-                                                content={t("CreateUIA:cer.calculated_cer_price.header_content")}
-                                                header={t("CreateUIA:cer.calculated_cer_price.header")}
+                                                content={t("AssetCommon:cer.calculated_cer_price.header_content")}
+                                                header={t("AssetCommon:cer.calculated_cer_price.header")}
                                             />
                                             <Input
                                                 placeholder={
@@ -924,10 +936,10 @@ export default function UIA(properties) {
                                         <AssetFlag
                                             alreadyDisabled={false}
                                             id={"allowed_markets"}
-                                            allowedText={t("CreateUIA:extensions.allowed_markets.enabled")}
-                                            enabledInfo={t("CreateUIA:extensions.allowed_markets.enabledInfo")}
-                                            disabledText={t("CreateUIA:extensions.allowed_markets.disabled")}
-                                            disabledInfo={t("CreateUIA:extensions.allowed_markets.disabledInfo")}
+                                            allowedText={t("AssetCommon:extensions.allowed_markets.enabled")}
+                                            enabledInfo={t("AssetCommon:extensions.allowed_markets.enabledInfo")}
+                                            disabledText={t("AssetCommon:extensions.allowed_markets.disabled")}
+                                            disabledInfo={t("AssetCommon:extensions.allowed_markets.disabledInfo")}
                                             permission={true}
                                             flag={allowedMarketsEnabled}
                                             setFlag={setAllowedMarketsEnabled}
@@ -969,10 +981,10 @@ export default function UIA(properties) {
                                         <AssetFlag
                                             alreadyDisabled={false}
                                             id={"banned_markets"}
-                                            allowedText={t("CreateUIA:extensions.banned_markets.enabled")}
-                                            enabledInfo={t("CreateUIA:extensions.banned_markets.enabledInfo")}
-                                            disabledText={t("CreateUIA:extensions.banned_markets.disabled")}
-                                            disabledInfo={t("CreateUIA:extensions.banned_markets.disabledInfo")}
+                                            allowedText={t("AssetCommon:extensions.banned_markets.enabled")}
+                                            enabledInfo={t("AssetCommon:extensions.banned_markets.enabledInfo")}
+                                            disabledText={t("AssetCommon:extensions.banned_markets.disabled")}
+                                            disabledInfo={t("AssetCommon:extensions.banned_markets.disabledInfo")}
                                             permission={true}
                                             flag={bannedMarketsEnabled}
                                             setFlag={setBannedMarketsEnabled}
@@ -1023,9 +1035,9 @@ export default function UIA(properties) {
                                             <AssetPermission
                                                 alreadyDisabled={permanentlyDisabledCMF}
                                                 id={"charge_market_fee"}
-                                                allowedText={t("AssetCommon:permissions.charge_market_fee.allowedText")}
+                                                allowedText={t("AssetCommon:permissions.charge_market_fee.true")}
                                                 enabledInfo={t("AssetCommon:permissions.charge_market_fee.enabledInfo")}
-                                                disabledText={t("AssetCommon:permissions.charge_market_fee.disabledText")}
+                                                disabledText={t("AssetCommon:permissions.charge_market_fee.false")}
                                                 disabledInfo={t("AssetCommon:permissions.charge_market_fee.disabledInfo")}
                                                 permission={permChargeMarketFee}
                                                 setPermission={setPermChargeMarketFee}
@@ -1035,9 +1047,9 @@ export default function UIA(properties) {
                                             <AssetPermission
                                                 alreadyDisabled={permanentlyDisabledWL}
                                                 id={"white_list"}
-                                                allowedText={t("AssetCommon:permissions.white_list.allowedText")}
+                                                allowedText={t("AssetCommon:permissions.white_list.true")}
                                                 enabledInfo={t("AssetCommon:permissions.white_list.enabledInfo")}
-                                                disabledText={t("AssetCommon:permissions.white_list.disabledText")}
+                                                disabledText={t("AssetCommon:permissions.white_list.false")}
                                                 disabledInfo={t("AssetCommon:permissions.white_list.disabledInfo")}
                                                 permission={permWhiteList}
                                                 setPermission={setPermWhiteList}
@@ -1047,9 +1059,9 @@ export default function UIA(properties) {
                                             <AssetPermission
                                                 alreadyDisabled={permanentlyDisabledTR}
                                                 id={"transfer_restricted"}
-                                                allowedText={t("AssetCommon:permissions.transfer_restricted.allowedText")}
+                                                allowedText={t("AssetCommon:permissions.transfer_restricted.true")}
                                                 enabledInfo={t("AssetCommon:permissions.transfer_restricted.enabledInfo")}
-                                                disabledText={t("AssetCommon:permissions.transfer_restricted.disabledText")}
+                                                disabledText={t("AssetCommon:permissions.transfer_restricted.false")}
                                                 disabledInfo={t("AssetCommon:permissions.transfer_restricted.disabledInfo")}
                                                 permission={permTransferRestricted}
                                                 setPermission={setPermTransferRestricted}
@@ -1059,9 +1071,9 @@ export default function UIA(properties) {
                                             <AssetPermission
                                                 alreadyDisabled={permanentlyDisabledDC}
                                                 id={"disable_confidential"}
-                                                allowedText={t("AssetCommon:permissions.disable_confidential.allowedText")}
+                                                allowedText={t("AssetCommon:permissions.disable_confidential.true")}
                                                 enabledInfo={t("AssetCommon:permissions.disable_confidential.enabledInfo")}
-                                                disabledText={t("AssetCommon:permissions.disable_confidential.disabledText")}
+                                                disabledText={t("AssetCommon:permissions.disable_confidential.false")}
                                                 disabledInfo={t("AssetCommon:permissions.disable_confidential.disabledInfo")}
                                                 permission={permDisableConfidential}
                                                 setPermission={setPermDisableConfidential}
@@ -1071,9 +1083,9 @@ export default function UIA(properties) {
                                             <AssetPermission
                                                 alreadyDisabled={permanentlyDisabledOA}
                                                 id={"override_authority"}
-                                                allowedText={t("AssetCommon:permissions.override_authority.allowedText")}
+                                                allowedText={t("AssetCommon:permissions.override_authority.true")}
                                                 enabledInfo={t("AssetCommon:permissions.override_authority.enabledInfo")}
-                                                disabledText={t("AssetCommon:permissions.override_authority.disabledText")}
+                                                disabledText={t("AssetCommon:permissions.override_authority.false")}
                                                 disabledInfo={t("AssetCommon:permissions.override_authority.disabledInfo")}
                                                 permission={permOverrideAuthority}
                                                 setPermission={setPermOverrideAuthority}
@@ -1090,10 +1102,10 @@ export default function UIA(properties) {
                                             />
                                             <AssetFlag
                                                 alreadyDisabled={permanentlyDisabledCMF}
-                                                id={"charge_market_fee"}
-                                                allowedText={t("AssetCommon:flags.charge_market_fee.allowedText")}
+                                                id={"charge_market_fee_flag"}
+                                                allowedText={t("AssetCommon:flags.charge_market_fee.true")}
                                                 enabledInfo={t("AssetCommon:flags.charge_market_fee.enabledInfo")}
-                                                disabledText={t("AssetCommon:flags.charge_market_fee.disabledText")}
+                                                disabledText={t("AssetCommon:flags.charge_market_fee.false")}
                                                 disabledInfo={t("AssetCommon:flags.charge_market_fee.disabledInfo")}
                                                 permission={permChargeMarketFee}
                                                 flag={flagChargeMarketFee}
@@ -1101,10 +1113,10 @@ export default function UIA(properties) {
                                             />
                                             <AssetFlag
                                                 alreadyDisabled={permanentlyDisabledWL}
-                                                id={"white_list"}
-                                                allowedText={t("AssetCommon:flags.white_list.allowedText")}
+                                                id={"white_list_flag"}
+                                                allowedText={t("AssetCommon:flags.white_list.true")}
                                                 enabledInfo={t("AssetCommon:flags.white_list.enabledInfo")}
-                                                disabledText={t("AssetCommon:flags.white_list.disabledText")}
+                                                disabledText={t("AssetCommon:flags.white_list.false")}
                                                 disabledInfo={t("AssetCommon:flags.white_list.disabledInfo")}
                                                 permission={permWhiteList}
                                                 flag={flagWhiteList}
@@ -1112,10 +1124,10 @@ export default function UIA(properties) {
                                             />
                                             <AssetFlag
                                                 alreadyDisabled={permanentlyDisabledTR}
-                                                id={"transfer_restricted"}
-                                                allowedText={t("AssetCommon:flags.transfer_restricted.allowedText")}
+                                                id={"transfer_restricted_flag"}
+                                                allowedText={t("AssetCommon:flags.transfer_restricted.true")}
                                                 enabledInfo={t("AssetCommon:flags.transfer_restricted.enabledInfo")}
-                                                disabledText={t("AssetCommon:flags.transfer_restricted.disabledText")}
+                                                disabledText={t("AssetCommon:flags.transfer_restricted.false")}
                                                 disabledInfo={t("AssetCommon:flags.transfer_restricted.disabledInfo")}
                                                 permission={permTransferRestricted}
                                                 flag={flagTransferRestricted}
@@ -1123,10 +1135,10 @@ export default function UIA(properties) {
                                             />
                                             <AssetFlag
                                                 alreadyDisabled={permanentlyDisabledDC}
-                                                id={"disable_confidential"}
-                                                allowedText={t("AssetCommon:flags.disable_confidential.allowedText")}
+                                                id={"disable_confidential_flag"}
+                                                allowedText={t("AssetCommon:flags.disable_confidential.true")}
                                                 enabledInfo={t("AssetCommon:flags.disable_confidential.enabledInfo")}
-                                                disabledText={t("AssetCommon:flags.disable_confidential.disabledText")}
+                                                disabledText={t("AssetCommon:flags.disable_confidential.false")}
                                                 disabledInfo={t("AssetCommon:flags.disable_confidential.disabledInfo")}
                                                 permission={permDisableConfidential}
                                                 flag={flagDisableConfidential}
@@ -1134,10 +1146,10 @@ export default function UIA(properties) {
                                             />
                                             <AssetFlag
                                                 alreadyDisabled={permanentlyDisabledOA}
-                                                id={"override_authority"}
-                                                allowedText={t("AssetCommon:flags.override_authority.allowedText")}
+                                                id={"override_authority_flag"}
+                                                allowedText={t("AssetCommon:flags.override_authority.true")}
                                                 enabledInfo={t("AssetCommon:flags.override_authority.enabledInfo")}
-                                                disabledText={t("AssetCommon:flags.override_authority.disabledText")}
+                                                disabledText={t("AssetCommon:flags.override_authority.false")}
                                                 disabledInfo={t("AssetCommon:flags.override_authority.disabledInfo")}
                                                 permission={permOverrideAuthority}
                                                 flag={flagOverrideAuthority}
@@ -1151,47 +1163,53 @@ export default function UIA(properties) {
                                     flagChargeMarketFee
                                         ? <div className="col-span-2 mb-4">
                                             <HoverInfo
-                                                content={t("CreateUIA:extensions.header_content")}
-                                                header={t("CreateUIA:extensions.header")}
+                                                content={t("AssetCommon:extensions.header_content")}
+                                                header={t("AssetCommon:extensions.header")}
                                                 type="header"
                                             />
-                                            <HoverInfo
-                                                content={t("CreateUIA:market_fee.header_content")}
-                                                header={t("CreateUIA:market_fee.header")}
-                                            />
-                                            <Input
-                                                value={commission}
-                                                type="number"
-                                                min="0"
-                                                max="100"
-                                                step="0.01"
-                                                onInput={(e) => {
-                                                    setCommission(e.currentTarget.value);
-                                                    debouncedPercent(e.currentTarget.value, setCommission);
-                                                }}
-                                            />
-                                            <HoverInfo
-                                                content={t("CreateUIA:max_market_fee.header_content")}
-                                                header={t("CreateUIA:max_market_fee.header")}
-                                            />
-                                            <Input
-                                                placeholder={0}
-                                                value={maxCommission}
-                                                type="number"
-                                                min="0"
-                                                pattern="^\d*(\.\d{0,2})?$"
-                                                onInput={(e) => {
-                                                    setMaxCommission(e.currentTarget.value);
-                                                    debouncedMax(e.currentTarget.value, setMaxCommission);
-                                                }}
-                                            />
+                                            <div className="grid grid-cols-2 gap-5 mb-2">
+                                                <div>
+                                                    <HoverInfo
+                                                        content={t("AssetCommon:market_fee.header_content")}
+                                                        header={t("AssetCommon:market_fee.header")}
+                                                    />
+                                                    <Input
+                                                        value={commission}
+                                                        type="number"
+                                                        min="0"
+                                                        max="100"
+                                                        step="0.01"
+                                                        onInput={(e) => {
+                                                            setCommission(e.currentTarget.value);
+                                                            debouncedPercent(e.currentTarget.value, setCommission);
+                                                        }}
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <HoverInfo
+                                                        content={t("AssetCommon:max_market_fee.header_content")}
+                                                        header={t("AssetCommon:max_market_fee.header")}
+                                                    />
+                                                    <Input
+                                                        placeholder={0}
+                                                        value={maxCommission}
+                                                        type="number"
+                                                        min="0"
+                                                        pattern="^\d*(\.\d{0,2})?$"
+                                                        onInput={(e) => {
+                                                            setMaxCommission(e.currentTarget.value);
+                                                            debouncedMax(e.currentTarget.value, setMaxCommission);
+                                                        }}
+                                                    />
+                                                </div>
+                                            </div>
                                             <AssetFlag
                                                 alreadyDisabled={false}
                                                 id={"reward_percent"}
-                                                allowedText={t("CreateUIA:extensions.reward_percent.enabled")}
-                                                enabledInfo={t("CreateUIA:extensions.reward_percent.enabledInfo")}
-                                                disabledText={t("CreateUIA:extensions.reward_percent.disabled")}
-                                                disabledInfo={t("CreateUIA:extensions.reward_percent.disabledInfo")}
+                                                allowedText={t("AssetCommon:extensions.reward_percent.enabled")}
+                                                enabledInfo={t("AssetCommon:extensions.reward_percent.enabledInfo")}
+                                                disabledText={t("AssetCommon:extensions.reward_percent.disabled")}
+                                                disabledInfo={t("AssetCommon:extensions.reward_percent.disabledInfo")}
                                                 permission={true}
                                                 flag={enabledReferrerReward}
                                                 setFlag={setEnabledReferrerReward}
@@ -1201,8 +1219,8 @@ export default function UIA(properties) {
                                                 enabledReferrerReward
                                                 ? <>
                                                     <HoverInfo
-                                                        content={t("CreateUIA:extensions.reward_percent.header_content")}
-                                                        header={t("CreateUIA:extensions.reward_percent.header")}
+                                                        content={t("AssetCommon:extensions.reward_percent.header_content")}
+                                                        header={t("AssetCommon:extensions.reward_percent.header")}
                                                     />
                                                     <Input
                                                         placeholder={0}
@@ -1224,10 +1242,10 @@ export default function UIA(properties) {
                                             <AssetFlag
                                                 alreadyDisabled={false}
                                                 id={"whitelist_market_fee_sharing"}
-                                                allowedText={t("CreateUIA:extensions.whitelist_market_fee_sharing.enabled")}
-                                                enabledInfo={t("CreateUIA:extensions.whitelist_market_fee_sharing.enabledInfo")}
-                                                disabledText={t("CreateUIA:extensions.whitelist_market_fee_sharing.disabled")}
-                                                disabledInfo={t("CreateUIA:extensions.whitelist_market_fee_sharing.disabledInfo")}
+                                                allowedText={t("AssetCommon:extensions.whitelist_market_fee_sharing.enabled")}
+                                                enabledInfo={t("AssetCommon:extensions.whitelist_market_fee_sharing.enabledInfo")}
+                                                disabledText={t("AssetCommon:extensions.whitelist_market_fee_sharing.disabled")}
+                                                disabledInfo={t("AssetCommon:extensions.whitelist_market_fee_sharing.disabledInfo")}
                                                 permission={true}
                                                 flag={enabledFeeSharingWhitelist}
                                                 setFlag={setEnabledFeeSharingWhitelist}
@@ -1237,8 +1255,8 @@ export default function UIA(properties) {
                                                 enabledFeeSharingWhitelist
                                                 ? <>
                                                     <HoverInfo
-                                                        content={t("CreateUIA:extensions.whitelist_market_fee_sharing.header_content")}
-                                                        header={t("CreateUIA:extensions.whitelist_market_fee_sharing.header")}
+                                                        content={t("AssetCommon:extensions.whitelist_market_fee_sharing.header_content")}
+                                                        header={t("AssetCommon:extensions.whitelist_market_fee_sharing.header")}
                                                     />
                                                     <div className="grid grid-cols-12 mt-1">
                                                         <span className="col-span-9 border border-grey rounded">
@@ -1307,10 +1325,10 @@ export default function UIA(properties) {
                                             <AssetFlag
                                                 alreadyDisabled={false}
                                                 id={"taker_fee_percent"}
-                                                allowedText={t("CreateUIA:extensions.taker_fee_percent.enabled")}
-                                                enabledInfo={t("CreateUIA:extensions.taker_fee_percent.enabledInfo")}
-                                                disabledText={t("CreateUIA:extensions.taker_fee_percent.disabled")}
-                                                disabledInfo={t("CreateUIA:extensions.taker_fee_percent.disabledInfo")}
+                                                allowedText={t("AssetCommon:extensions.taker_fee_percent.enabled")}
+                                                enabledInfo={t("AssetCommon:extensions.taker_fee_percent.enabledInfo")}
+                                                disabledText={t("AssetCommon:extensions.taker_fee_percent.disabled")}
+                                                disabledInfo={t("AssetCommon:extensions.taker_fee_percent.disabledInfo")}
                                                 permission={true}
                                                 flag={enabledTakerFee}
                                                 setFlag={setEnabledTakerFee}
@@ -1320,11 +1338,11 @@ export default function UIA(properties) {
                                                 enabledTakerFee
                                                 ? <>
                                                     <HoverInfo
-                                                        content={t("CreateUIA:extensions.taker_fee_percent.header_content")}
-                                                        header={t("CreateUIA:extensions.taker_fee_percent.header")}
+                                                        content={t("AssetCommon:extensions.taker_fee_percent.header_content")}
+                                                        header={t("AssetCommon:extensions.taker_fee_percent.header")}
                                                     />
                                                     <Input
-                                                        placeholder={t("CreateUIA:extensions.taker_fee_percent.placeholder")}
+                                                        placeholder={t("AssetCommon:extensions.taker_fee_percent.placeholder")}
                                                         value={takerFee}
                                                         type="number"
                                                         min="0"
@@ -1347,8 +1365,8 @@ export default function UIA(properties) {
                                     flagWhiteList
                                         ? <div className="col-span-2 mb-3">
                                             <HoverInfo
-                                                content={t("CreateUIA:whitelist.header_content")}
-                                                header={t("CreateUIA:whitelist.header")}
+                                                content={t("AssetCommon:whitelist.header_content")}
+                                                header={t("AssetCommon:whitelist.header")}
                                                 type="header"
                                             />
                                             <div className="grid grid-cols-12 mt-1">
@@ -1418,8 +1436,8 @@ export default function UIA(properties) {
                                     flagWhiteList
                                         ? <div className="col-span-2 mb-3">
                                             <HoverInfo
-                                                content={t("CreateUIA:blacklist.header_content")}
-                                                header={t("CreateUIA:blacklist.header")}
+                                                content={t("AssetCommon:blacklist.header_content")}
+                                                header={t("AssetCommon:blacklist.header")}
                                                 type="header"
                                             />
                                             <div className="grid grid-cols-12 mt-1">
@@ -1503,7 +1521,7 @@ export default function UIA(properties) {
             {
                 showDialog
                     ? <DeepLinkDialog
-                        operationName={editing ? "asset_update" : "asset_create"}
+                        operationNames={editing ? ["asset_update"] : ["asset_create"]}
                         username={usr.username}
                         usrChain={usr.chain}
                         userID={usr.id}

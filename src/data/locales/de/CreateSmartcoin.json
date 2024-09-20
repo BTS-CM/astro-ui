@@ -1,0 +1,67 @@
+{
+    "card": {
+      "title_create": "Erstellen eines neuen Smartcoin-Assets",
+      "title_edit": "Bearbeiten eines vorhandenen Smartcoin-Assets",
+      "description": "Smartcoins sind besicherte Vermögenswerte, die sich auf externe Marktpreisdaten beziehen können. "
+    },
+    "title": {
+      "header": "Smartcoin-Einstellungen",
+      "header_content": "Die folgenden Einstellungen definieren, wie sich Ihr Smartcoin auf der Bitshares-Blockchain verhält. "
+    },
+    "bsrm": {
+      "header": "Black Swan-Risikomanagementstrategie",
+      "header_content": "Diese Strategien bieten unterschiedliche Ergebnisse für unterbesicherte Schuldenpositionen und ermöglichen es Ihnen, das Risiko der Liquidierung von Schuldenpositionen zu verhindern, zu minimieren oder zu globalisieren. ",
+      "select_0": "Globale Abwicklung: Alle Schuldenpositionen geschlossen; ",
+      "select_1": "Keine Abwicklung: Es werden keine Schuldenpositionen geschlossen; ",
+      "select_2": "Individuelle Ausgleichsfonds: Unterbesicherte Schuldenpositionen werden geschlossen; ",
+      "select_3": "Individuelle Abwicklungsaufträge: Unterbesicherte Schuldenpositionen werden geschlossen; "
+    },
+    "mcr": {
+      "header": "Statisches Mindestsicherheitsverhältnis",
+      "header_content": "Dies ist die Mindestsicherheitsquote, die erforderlich ist, damit eine Schuldenposition als vollständig besichert gilt. "
+    },
+    "icr": {
+      "header": "Statische anfängliche Sicherheitenquote",
+      "header_content": "Dabei handelt es sich um die Besicherungsquote, die erforderlich ist, damit eine Schuldenposition zum Zeitpunkt ihrer Entstehung als vollständig besichert gilt. "
+    },
+    "mssr": {
+      "header": "Statisches maximales Short-Squeeze-Verhältnis",
+      "header_content": "Dies ist die maximale Sicherheitenquote, zu der eine Schuldenposition liquidiert werden kann. "
+    },
+    "feed_lifetime": {
+      "header": "Lebenslang füttern",
+      "header_content": "Die Zeit in Sekunden, die ein Preis-Feed als gültig gilt. "
+    },
+    "minimum_feeds": {
+      "header": "Mindest-Feeds",
+      "header_content": "Die Mindestanzahl an Preis-Feeds, die zur Berechnung des aktuellen Feed-Preises erforderlich sind."
+    },
+    "force_settlement_delay": {
+      "header": "Abwicklungsverzögerung erzwingen",
+      "header_content": "Die Zeit in Sekunden, die ein Benutzer nach der erzwungenen Abwicklung warten muss, bevor der Abwicklungsvorgang auf der Blockchain ausgeführt wird."
+    },
+    "force_settlement_offset": {
+      "header": "Setzungsversatz erzwingen",
+      "header_content": "Der Prozentsatz des Futterpreises, um den der erzwungene Abrechnungspreis für den Abrechnungsvorgang ausgeglichen wird."
+    },
+    "maximum_force_settlement_volume": {
+      "header": "Maximales Kraftausgleichsvolumen",
+      "header_content": "Der maximale Betrag des Vermögensvorrats, der innerhalb eines Zeitraums von 24 Stunden zwangsweise abgewickelt werden kann."
+    },
+    "extensions": {
+      "margin_call_fee_ratio": {
+        "enabled": "Erweiterung „Margin Call Fee Ratio“ aktiviert",
+        "disabled": "Aktivieren Sie die Smartcoin-Erweiterung „Margin Call Fee Ratio“?",
+        "extensionInfo": "Die Erweiterung „Margin Call Fee Ratio“ ermöglicht es dem Smartcoin-Besitzer, einem Benutzer eine Gebühr zu berechnen, wenn seine Schuldenposition einem Margin Call unterliegt. ",
+        "header": "Margin-Call-Gebührenverhältnis",
+        "header_content": "Das Gebührenverhältnis, das einem Benutzer berechnet wird, wenn seine Schuldenposition als Margin Call bezeichnet wird. "
+      },
+      "force_settle_fee": {
+        "enabled": "Erweiterung „Erzwinge Abrechnungsgebühr“ aktiviert",
+        "disabled": "Aktivieren Sie die Smartcoin-Erweiterung „Force Settle Fee“?",
+        "extensionInfo": "Die Erweiterung „Force Settle Fee“ ermöglicht es dem Smartcoin-Besitzer, einem Benutzer eine Gebühr zu berechnen, wenn er die Begleichung seiner Schuldenposition erzwingt. ",
+        "header": "Gebühr für Zwangsabwicklung",
+        "header_content": "Die Gebühr, die einem Benutzer berechnet wird, wenn er die Begleichung seiner Schuldenposition erzwingt. "
+      }
+    }
+  }

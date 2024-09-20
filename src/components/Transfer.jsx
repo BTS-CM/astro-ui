@@ -554,7 +554,7 @@ export default function Transfer(properties) {
               </Form>
               {showDialog ? (
                 <DeepLinkDialog
-                  operationName="transfer"
+                  operationNames={["transfer"]}
                   username={usr.username}
                   usrChain={usr.chain}
                   userID={usr.id}

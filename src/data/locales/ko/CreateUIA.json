@@ -3,114 +3,11 @@
     "headerText": "다음 사용자 발행 자산 생성: {{symbol}}"
   },
   "card": {
-    "title_create": "사용자 발행 자산 생성",
+    "title_create": "새로운 사용자 발행 자산 생성",
     "title_edit": "사용자 발행 자산 편집",
     "description": "사용자 발행 자산은 원하는 모든 것을 나타낼 수 있으며 다양한 목적으로 사용될 수 있습니다. "
   },
-  "asset_details": {
-    "title": "자산 세부정보",
-    "title_content": "이는 핵심 DEX 기능에 사용되는 자산 설정입니다.",
-    "symbol": {
-      "header": "자산 기호",
-      "header_content": "자산 기호는 DEX 전체에서 자산을 식별하는 블록체인의 고유 식별자입니다. ",
-      "placeholder": "상징"
-    },
-    "shortName": {
-      "header": "자산 별칭",
-      "header_content": "이는 자산의 짧은 이름으로 기호보다 덜 중요하지만 선택적으로 단축된 고유 식별자입니다. ",
-      "placeholder": "짧은 이름"
-    },
-    "preferredMarket": {
-      "header": "선호하는 시장 거래 쌍",
-      "header_content": "선호하는 시장 거래 쌍은 귀하의 자산과 거래하는 데 사용되는 기본 자산이며 이는 비공식적인 제안입니다."
-    },
-    "description": {
-      "header": "자산 설명",
-      "header_content": "이는 자산에 대한 설명으로 DEX에 표시되며 자산에 대한 추가 정보를 제공하는 데 사용될 수 있습니다.",
-      "placeholder": "설명"
-    },
-    "max_supply": {
-      "header": "최대 공급량",
-      "header_content": "자산의 최대 공급량, 이는 자산 소유자(귀하)가 발행할 수 있는 자산의 총액입니다.",
-      "placeholder": "최대 공급량"
-    },
-    "precision": {
-      "header": "자산 정밀도",
-      "header_content": "자산의 정밀도는 지원되는 소수 자릿수를 지정합니다. ",
-      "placeholder": "정도"
-    }
-  },
   "buttons": {
     "submit": "제출하다"
-  },
-  "extensions": {
-    "header_content": "확장은 자산을 추가로 사용자 정의하는 데 사용할 수 있는 추가 고급 설정입니다.",
-    "header": "시장 수수료 확장",
-    "reward_percent": {
-      "enabled": "추천인 보상 비율 확장이 활성화되었습니다.",
-      "enabledInfo": "시장 수수료의 일부 삭감은 활성 시장 참여자의 추천인에게 할당됩니다.",
-      "disabled": "추천인 보상 비율 확장을 활성화하시겠습니까?",
-      "disabledInfo": "추천인 보상 비율 확장을 통해 자산 생성자는 활성 시장 참여자의 추천인에게 시장 수수료의 일정 비율을 할당할 수 있습니다.",
-      "header": "추천인 보상 비율",
-      "header_content": "추천인 보상 비율은 활성 시장 참여자의 추천인에게 할당되는 시장 수수료의 비율입니다."
-    },
-    "whitelist_market_fee_sharing": {
-      "enabled": "화이트리스트 시장 수수료 공유 확장 활성화됨",
-      "enabledInfo": "다음 추천인 계정은 추천인 계정에서 징수된 시장 수수료를 삭감하도록 승인됩니다.",
-      "disabled": "화이트리스트 시장 수수료 공유 확장 프로그램을 활성화하시겠습니까?",
-      "disabledInfo": "수집된 시장 수수료의 일부를 받을 수 있는 사람을 사전 승인된 추천 계정 세트로 제한할 수 있습니다.",
-      "header": "화이트리스트 시장 수수료 공유",
-      "header_content": "화이트리스트 시장 수수료 공유 확장을 통해 하우스는 이러한 화이트리스트 계정에 대한 추천인을 제한할 수 있습니다."
-    },
-    "taker_fee_percent": {
-      "enabled": "테이커 수수료 비율 확장 활성화됨",
-      "enabledInfo": "지정가 주문의 '테이커' 참가자는 시장 수수료의 일정 비율을 받게 됩니다.",
-      "disabled": "테이커 수수료 비율 확장을 활성화하시겠습니까?",
-      "disabledInfo": "테이커 수수료 비율 확장을 통해 자산 생성자는 지정가 주문 작업의 '테이커'에게 시장 수수료의 일정 비율을 할당할 수 있습니다.",
-      "header": "테이커 수수료 비율",
-      "header_content": "테이커 수수료 백분율은 분산형 거래소에서 지정가 주문의 '테이커'에게 할당되는 시장 수수료의 백분율입니다."
-    },
-    "allowed_markets": {
-      "enabled": "허용된 시장 확장 활성화됨",
-      "enabledInfo": "다음 시장은 이 자산을 거래하도록 승인되었습니다.",
-      "disabled": "허용된 시장 확장을 활성화하시겠습니까?",
-      "disabledInfo": "이 자산을 거래할 수 있는 시장을 사전 승인된 시장 집합으로 제한할 수 있습니다."
-    },
-    "banned_markets": {
-      "enabled": "금지된 시장 확장 활성화됨",
-      "enabledInfo": "다음 시장에서는 이 자산 거래가 금지됩니다.",
-      "disabled": "금지된 시장 확장을 활성화하시겠습니까?",
-      "disabledInfo": "이 기능을 사용하면 특정 시장 거래 쌍을 금지하여 원하지 않는 시장에서 자산 거래를 피할 수 있습니다."
-    }
-  },
-  "whitelist": {
-    "header_content": "자산 화이트리스트 권한은 이 액세스와의 상호 작용을 승인하기 위해 자신의 계정의 휘스팅된 계정 목록을 제공할 수 있는 계정입니다.",
-    "header": "자산 화이트리스트 권한"
-  },
-  "blacklist": {
-    "header_content": "자산 블랙리스트 권한은 이 액세스와의 상호 작용을 방지하는 금지된 계정 목록을 시행하기 위해 자신의 계정의 블랙리스트에 등록된 계정 목록을 제공할 수 있는 계정입니다.",
-    "header": "자산 블랙리스트 당국"
-  },
-  "market_fee": {
-    "header_content": "시장 수수료는 Bitshares DEX에서 실행되는 모든 거래에 부과되는 수수료 비율입니다. ",
-    "header": "시장 수수료 비율"
-  },
-  "max_market_fee": {
-    "header": "최대 시장 수수료",
-    "header_content": "최대 시장 수수료는 Bitshares DEX에서 실행되는 모든 거래에 대해 수수료로 청구할 수 있는 자산의 최대 금액입니다."
-  },
-  "cer": {
-    "quote_asset_amount": {
-      "header": "견적 자산 금액",
-      "header_content": "기본 자산 금액을 구매하는 데 필요한 사용자 발행 자산 금액입니다."
-    },
-    "base_asset_amount": {
-      "header": "기준자산금액",
-      "header_content": "기본자산 금액({{symbol}}) 견적 자산 금액을 구매하는 데 필요합니다."
-    },
-    "calculated_cer_price": {
-      "header": "핵심 환율",
-      "header_content": "핵심 환율이 시장 가격보다 높은지 확인하십시오. 그렇지 않으면 사람들이 시장에서 토큰을 구매하고 암시적 차익거래를 통해 수수료 풀을 소모하게 됩니다. "
-    }
   }
 }

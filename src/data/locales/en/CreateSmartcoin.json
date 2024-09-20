@@ -1,0 +1,67 @@
+{
+    "card": {
+        "title_create": "Creating a new Smartcoin asset",
+        "title_edit": "Editing an existing Smartcoin asset",
+        "description": "Smartcoins are collateralized assets which can reference external market price feeds. You can easily create your own collateralized stablecoin referencing any asset you want, like USD/CNY/JPY, etc."
+    },
+    "title": {
+        "header": "Smartcoin Settings",
+        "header_content": "The settings below define how your smartcoin will behave on the Bitshares blockchain. The asset creator is responsible for properly configuring their smartcoin."
+    },
+    "bsrm": {
+        "header": "Black Swan Risk Management strategy",
+        "header_content": "These strategies offer different outcomes for undercollateralized debt positions, enabling you to disable, minimize or globalize the risk of debt position liquidization. Different strategy selection can benefit unique smartcoins and increase tolerance of volatile markets.",
+        "select_0": "Global Settlement: All debt positions closed; collateral moved to settlement fund. New debt positions are not allowed till resolved.",
+        "select_1": "No Settlement: No debt positions are closed; settlement price capped by lowest collateral ratio. New positions allowed.",
+        "select_2": "Individual Settlement Funds: Undercollateralized debt positions are closed; collateral moved to a claimable fund. New positions allowed.",
+        "select_3": "Individual Settlement Orders: Undercollateralized debt positions are closed; collateral moved to a limit order. No price cap. New positions allowed."
+    },
+    "mcr": {
+        "header": "Static Minimum Collateral Ratio",
+        "header_content": "This is the minimum collateral ratio required for a debt position to be considered fully collateralized. Usually calculated from price feeds, is now being statically set by the asset owner."
+    },
+    "icr": {
+        "header": "Static Initial Collateral Ratio",
+        "header_content": "This is the collateral ratio required for a debt position to be considered fully collateralized at the time of creation. Usually calculated from price feeds, is now being statically set by the asset owner."
+    },
+    "mssr": {
+        "header": "Static Maximum Short Squeeze Ratio",
+        "header_content": "This is the maximum collateral ratio that a debt position can be liquidated at. Usually calculated from price feeds, is now being statically set by the asset owner."
+    },
+    "feed_lifetime": {
+        "header": "Feed Lifetime",
+        "header_content": "The time in seconds that a price feed is considered valid. After this time, the feed is considered invalid and the price is no longer used for collateral ratio calculations."
+    },
+    "minimum_feeds": {
+        "header": "Minimum Feeds",
+        "header_content": "The minimum number of price feeds required for calculating the current feed price."
+    },
+    "force_settlement_delay": {
+        "header": "Force Settlement Delay",
+        "header_content": "The time in seconds that a user must wait after force settling before the settlement operation is executed on the blockchain."
+    },
+    "force_settlement_offset": {
+        "header": "Force Settlement Offset",
+        "header_content": "The percentage of the feed price that the force settlement price is offset by for the settlement operation."
+    },
+    "maximum_force_settlement_volume": {
+        "header": "Maximum Force Settlement Volume",
+        "header_content": "The maximum amount of the asset supply that can be force settled within a 24 hour period."
+    },
+    "extensions": {
+        "margin_call_fee_ratio": {
+            "enabled": "Margin Call Fee Ratio extension enabled",
+            "disabled": "Enable the Margin Call Fee Ratio smartcoin extension?",
+            "extensionInfo": "The Margin Call Fee Ratio extension allows the smartcoin owner to charge a fee to a user when their debt position is margin called. The fee is calculated as a percentage of the traded collateral, paid to the smartcoin owner.",
+            "header": "Margin Call Fee Ratio",
+            "header_content": "The fee ratio charged to a user when their debt position is margin called. The fee is calculated as a percentage of the traded collateral, paid to the smartcoin owner."
+        },
+        "force_settle_fee": {
+            "enabled": "Force Settle Fee extension enabled",
+            "disabled": "Enable the Force Settle Fee smartcoin extension?",
+            "extensionInfo": "The Force Settle Fee extension allows the smartcoin owner to charge a fee to a user when they force settle their debt position. The fee is calculated as a percentage of the traded collateral, paid to the smartcoin owner.",
+            "header": "Force Settle Fee",
+            "header_content": "The fee charged to a user when they force settle their debt position. The fee is calculated as a percentage of the traded collateral, paid to the smartcoin owner."
+        }
+    }
+}

@@ -1211,7 +1211,7 @@ export default function CreditOfferEditor(properties) {
         {transactionJSON && showDialog ? (
           <DeepLinkDialog
             trxJSON={transactionJSON ?? []}
-            operationName={!offerID ? "credit_offer_create" : "credit_offer_update"}
+            operationNames={[!offerID ? "credit_offer_create" : "credit_offer_update"]}
             username={usr.username}
             usrChain={usr.chain}
             userID={usr.id}

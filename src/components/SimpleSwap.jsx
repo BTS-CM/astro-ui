@@ -839,7 +839,7 @@ export default function SimpleSwap() {
                   </Form>
                   {showDialog ? (
                     <DeepLinkDialog
-                      operationName="liquidity_pool_exchange"
+                      operationNames={["liquidity_pool_exchange"]}
                       username={usr.username}
                       usrChain={usr.chain}
                       userID={usr.id}

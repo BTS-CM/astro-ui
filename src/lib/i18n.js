@@ -49,7 +49,8 @@ const pages = [
   "CreateVestingBalance",
   "CreateUIA",
   "IssuedAssets",
-  "AssetCommon"
+  "AssetCommon",
+  "CreateSmartcoin"
 ];
 
 const locale = persistentAtom("locale", "en");

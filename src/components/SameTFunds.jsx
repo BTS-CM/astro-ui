@@ -452,7 +452,7 @@ export default function SameTFunds(properties) {
           {
             updateDialog
               ? <DeepLinkDialog
-                  operationName="samet_fund_update"
+                  operationNames={["samet_fund_update"]}
                   username={usr.username}
                   usrChain={usr.chain}
                   userID={usr.id}
@@ -480,7 +480,7 @@ export default function SameTFunds(properties) {
           {
             deleteDialog
               ? <DeepLinkDialog
-                  operationName="samet_fund_delete"
+                  operationNames={["samet_fund_delete"]}
                   username={usr.username}
                   usrChain={usr.chain}
                   userID={usr.id}
@@ -692,7 +692,7 @@ export default function SameTFunds(properties) {
                     {
                       createDialog
                         ? <DeepLinkDialog
-                            operationName="samet_fund_create"
+                            operationNames={["samet_fund_create"]}
                             username={usr.username}
                             usrChain={usr.chain}
                             userID={usr.id}

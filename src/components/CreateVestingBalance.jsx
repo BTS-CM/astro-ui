@@ -394,7 +394,7 @@ export default function CreateVestingBalance(properties) {
         {
           showDialog
             ? <DeepLinkDialog
-                operationName="vesting_balance_create"
+                operationNames={["vesting_balance_create"]}
                 username={usr.username}
                 usrChain={usr.chain}
                 userID={usr.id}

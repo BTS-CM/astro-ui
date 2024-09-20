@@ -1269,7 +1269,7 @@ export default function MarketOrder(properties) {
               </Form>
               {showDialog ? (
                 <DeepLinkDialog
-                  operationName="limit_order_update"
+                  operationNames={["limit_order_update"]}
                   username={usr.username}
                   usrChain={usr.chain}
                   userID={usr.id}
@@ -1329,7 +1329,7 @@ export default function MarketOrder(properties) {
 
               {cancelDialog ? (
                 <DeepLinkDialog
-                  operationName="limit_order_cancel"
+                  operationNames={["limit_order_cancel"]}
                   username={usr.username}
                   usrChain={usr.chain}
                   userID={usr.id}

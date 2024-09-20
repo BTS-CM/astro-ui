@@ -956,7 +956,7 @@ export default function Smartcoin(properties) {
           </a>
           {showClosePositionDialog ? (
             <DeepLinkDialog
-              operationName="call_order_update"
+              operationNames={["call_order_update"]}
               username={usr.username}
               usrChain={usr.chain}
               userID={usr.id}
@@ -2793,7 +2793,7 @@ export default function Smartcoin(properties) {
 
         {showDialog && trxJSON ? (
           <DeepLinkDialog
-            operationName="call_order_update"
+            operationNames={["call_order_update"]}
             username={usr.username}
             usrChain={usr.chain}
             userID={usr.id}

@@ -595,7 +595,7 @@ export default function CreditDeals(properties) {
                       </Form>
                       {showDialog ? (
                         <DeepLinkDialog
-                          operationName="credit_deal_repay"
+                          operationNames={["credit_deal_repay"]}
                           username={usr.username}
                           usrChain={usr.chain}
                           userID={usr.id}

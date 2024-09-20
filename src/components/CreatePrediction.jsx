@@ -470,26 +470,26 @@ export default function Prediction(properties) {
                 <div className="grid grid-cols-1 gap-3">
                     <Card>
                         <CardHeader className="pb-1">
-                            <CardTitle>{t("CreatePrediction:card.title")}</CardTitle>
+                            <CardTitle>🔮 {t("CreatePrediction:card.title")}</CardTitle>
                             <CardDescription>{t("CreatePrediction:card.description")}</CardDescription>
                         </CardHeader>
                         <CardContent>
                             <div className="grid grid-cols-2">
                                 <div className="col-span-2">
                                     <HoverInfo
-                                        content={t("CreatePrediction:asset_details.title_content")}
-                                        header={t("CreatePrediction:asset_details.title")}
+                                        content={t("AssetCommon:asset_details.title_content")}
+                                        header={t("AssetCommon:asset_details.title")}
                                         type="header"
                                     />
                                     
                                     <div className="grid grid-cols-2 gap-5">
                                         <div>
                                             <HoverInfo
-                                                content={t("CreatePrediction:asset_details.symbol.header_content")}
-                                                header={t("CreatePrediction:asset_details.symbol.header")}
+                                                content={t("AssetCommon:asset_details.symbol.header_content")}
+                                                header={t("AssetCommon:asset_details.symbol.header")}
                                             />
                                             <Input
-                                                placeholder={t("CreatePrediction:asset_details.symbol.placeholder")}
+                                                placeholder={t("AssetCommon:asset_details.symbol.placeholder")}
                                                 value={symbol}
                                                 type="text"
                                                 onInput={(e) => {
@@ -504,11 +504,11 @@ export default function Prediction(properties) {
                                         </div>
                                         <div>
                                             <HoverInfo
-                                                content={t("CreatePrediction:asset_details.shortName.header_content")}
-                                                header={t("CreatePrediction:asset_details.shortName.header")}
+                                                content={t("AssetCommon:asset_details.shortName.header_content")}
+                                                header={t("AssetCommon:asset_details.shortName.header")}
                                             />
                                             <Input
-                                                placeholder={t("CreatePrediction:asset_details.shortName.placeholder")}
+                                                placeholder={t("AssetCommon:asset_details.shortName.placeholder")}
                                                 value={shortName}
                                                 type="text"
                                                 onInput={(e) => setShortName(e.currentTarget.value)}
@@ -517,11 +517,11 @@ export default function Prediction(properties) {
                                     </div>
 
                                     <HoverInfo
-                                        content={t("CreatePrediction:asset_details.description.header_content")}
-                                        header={t("CreatePrediction:asset_details.description.header")}
+                                        content={t("AssetCommon:asset_details.description.header_content")}
+                                        header={t("AssetCommon:asset_details.description.header")}
                                     />
                                     <Textarea
-                                        placeholder={t("CreatePrediction:asset_details.description.placeholder")}
+                                        placeholder={t("AssetCommon:asset_details.description.placeholder")}
                                         value={desc}
                                         onInput={(e) => setDesc(e.currentTarget.value)}
                                     />
@@ -529,11 +529,11 @@ export default function Prediction(properties) {
                                     <div className="grid grid-cols-2 gap-5">
                                         <div>
                                             <HoverInfo
-                                                content={t("CreatePrediction:asset_details.max_supply.header_content")}
-                                                header={t("CreatePrediction:asset_details.max_supply.header")}
+                                                content={t("AssetCommon:asset_details.max_supply.header_content")}
+                                                header={t("AssetCommon:asset_details.max_supply.header")}
                                             />
                                             <Input
-                                                placeholder={t("CreatePrediction:asset_details.max_supply.placeholder")}
+                                                placeholder={t("AssetCommon:asset_details.max_supply.placeholder")}
                                                 value={maxSupply}
                                                 type="number"
                                                 onInput={(e) => {
@@ -548,11 +548,11 @@ export default function Prediction(properties) {
                                         </div>
                                         <div>
                                             <HoverInfo
-                                                content={t("CreatePrediction:asset_details.precision.header_content")}
-                                                header={t("CreatePrediction:asset_details.precision.header")}
+                                                content={t("AssetCommon:asset_details.precision.header_content")}
+                                                header={t("AssetCommon:asset_details.precision.header")}
                                             />
                                             <Input
-                                                placeholder={t("CreatePrediction:asset_details.precision.placeholder")}
+                                                placeholder={t("AssetCommon:asset_details.precision.placeholder")}
                                                 value={precision}
                                                 type="number"
                                                 onInput={(e) => {
@@ -642,18 +642,18 @@ export default function Prediction(properties) {
                                 </div>
                                 <div className="col-span-2">
                                     <HoverInfo
-                                        content={t("CreatePrediction:extensions.header_content")}
-                                        header={t("CreatePrediction:extensions.header")}
+                                        content={t("AssetCommon:extensions.header_content")}
+                                        header={t("AssetCommon:extensions.header")}
                                         type="header"
                                     />
 
                                     <AssetFlag
                                         alreadyDisabled={false}
                                         id={"reward_percent_flag"}
-                                        allowedText={t("CreatePrediction:extensions.reward_percent.enabled")}
-                                        enabledInfo={t("CreatePrediction:extensions.reward_percent.enabledInfo")}
-                                        disabledText={t("CreatePrediction:extensions.reward_percent.disabled")}
-                                        disabledInfo={t("CreatePrediction:extensions.reward_percent.disabledInfo")}
+                                        allowedText={t("AssetCommon:extensions.reward_percent.enabled")}
+                                        enabledInfo={t("AssetCommon:extensions.reward_percent.enabledInfo")}
+                                        disabledText={t("AssetCommon:extensions.reward_percent.disabled")}
+                                        disabledInfo={t("AssetCommon:extensions.reward_percent.disabledInfo")}
                                         permission={true}
                                         flag={enabledReferrerReward}
                                         setFlag={setEnabledReferrerReward}
@@ -663,8 +663,8 @@ export default function Prediction(properties) {
                                         enabledReferrerReward
                                         ? <>
                                             <HoverInfo
-                                                content={t("CreatePrediction:extensions.reward_percent.header_content")}
-                                                header={t("CreatePrediction:extensions.reward_percent.header")}
+                                                content={t("AssetCommon:extensions.reward_percent.header_content")}
+                                                header={t("AssetCommon:extensions.reward_percent.header")}
                                             />
                                             <Input
                                                 placeholder={0}
@@ -686,10 +686,10 @@ export default function Prediction(properties) {
                                     <AssetFlag
                                         alreadyDisabled={false}
                                         id={"whitelist_market_fee_sharing_flag"}
-                                        allowedText={t("CreatePrediction:extensions.whitelist_market_fee_sharing.enabled")}
-                                        enabledInfo={t("CreatePrediction:extensions.whitelist_market_fee_sharing.enabledInfo")}
-                                        disabledText={t("CreatePrediction:extensions.whitelist_market_fee_sharing.disabled")}
-                                        disabledInfo={t("CreatePrediction:extensions.whitelist_market_fee_sharing.disabledInfo")}
+                                        allowedText={t("AssetCommon:extensions.whitelist_market_fee_sharing.enabled")}
+                                        enabledInfo={t("AssetCommon:extensions.whitelist_market_fee_sharing.enabledInfo")}
+                                        disabledText={t("AssetCommon:extensions.whitelist_market_fee_sharing.disabled")}
+                                        disabledInfo={t("AssetCommon:extensions.whitelist_market_fee_sharing.disabledInfo")}
                                         permission={true}
                                         flag={enabledFeeSharingWhitelist}
                                         setFlag={setEnabledFeeSharingWhitelist}
@@ -699,8 +699,8 @@ export default function Prediction(properties) {
                                         enabledFeeSharingWhitelist
                                         ? <>
                                             <HoverInfo
-                                                content={t("CreatePrediction:extensions.whitelist_market_fee_sharing.header_content")}
-                                                header={t("CreatePrediction:extensions.whitelist_market_fee_sharing.header")}
+                                                content={t("AssetCommon:extensions.whitelist_market_fee_sharing.header_content")}
+                                                header={t("AssetCommon:extensions.whitelist_market_fee_sharing.header")}
                                             />
                                             <div className="grid grid-cols-12 mt-1">
                                                 <span className="col-span-9 border border-grey rounded">
@@ -769,10 +769,10 @@ export default function Prediction(properties) {
                                     <AssetFlag
                                         alreadyDisabled={false}
                                         id={"taker_fee_percent_flag"}
-                                        allowedText={t("CreatePrediction:extensions.taker_fee_percent.enabled")}
-                                        enabledInfo={t("CreatePrediction:extensions.taker_fee_percent.enabledInfo")}
-                                        disabledText={t("CreatePrediction:extensions.taker_fee_percent.disabled")}
-                                        disabledInfo={t("CreatePrediction:extensions.taker_fee_percent.disabledInfo")}
+                                        allowedText={t("AssetCommon:extensions.taker_fee_percent.enabled")}
+                                        enabledInfo={t("AssetCommon:extensions.taker_fee_percent.enabledInfo")}
+                                        disabledText={t("AssetCommon:extensions.taker_fee_percent.disabled")}
+                                        disabledInfo={t("AssetCommon:extensions.taker_fee_percent.disabledInfo")}
                                         permission={true}
                                         flag={enabledTakerFee}
                                         setFlag={setEnabledTakerFee}
@@ -782,11 +782,11 @@ export default function Prediction(properties) {
                                         enabledTakerFee
                                         ? <>
                                             <HoverInfo
-                                                content={t("CreatePrediction:extensions.taker_fee_percent.header_content")}
-                                                header={t("CreatePrediction:extensions.taker_fee_percent.header")}
+                                                content={t("AssetCommon:extensions.taker_fee_percent.header_content")}
+                                                header={t("AssetCommon:extensions.taker_fee_percent.header")}
                                             />
                                             <Input
-                                                placeholder={t("CreatePrediction:extensions.taker_fee_percent.placeholder")}
+                                                placeholder={t("AssetCommon:extensions.taker_fee_percent.placeholder")}
                                                 value={takerFee}
                                                 type="number"
                                                 min="0"
@@ -815,9 +815,9 @@ export default function Prediction(properties) {
                                             <AssetPermission
                                                 alreadyDisabled={false}
                                                 id={"white_list"}
-                                                allowedText={t("AssetCommon:permissions.white_list.allowedText")}
+                                                allowedText={t("AssetCommon:permissions.white_list.true")}
                                                 enabledInfo={t("AssetCommon:permissions.white_list.enabledInfo")}
-                                                disabledText={t("AssetCommon:permissions.white_list.disabledText")}
+                                                disabledText={t("AssetCommon:permissions.white_list.false")}
                                                 disabledInfo={t("AssetCommon:permissions.white_list.disabledInfo")}
                                                 permission={permWhiteList}
                                                 setPermission={setPermWhiteList}
@@ -827,9 +827,9 @@ export default function Prediction(properties) {
                                             <AssetPermission
                                                 alreadyDisabled={false}
                                                 id={"transfer_restricted"}
-                                                allowedText={t("AssetCommon:permissions.transfer_restricted.allowedText")}
+                                                allowedText={t("AssetCommon:permissions.transfer_restricted.true")}
                                                 enabledInfo={t("AssetCommon:permissions.transfer_restricted.enabledInfo")}
-                                                disabledText={t("AssetCommon:permissions.transfer_restricted.disabledText")}
+                                                disabledText={t("AssetCommon:permissions.transfer_restricted.false")}
                                                 disabledInfo={t("AssetCommon:permissions.transfer_restricted.disabledInfo")}
                                                 permission={permTransferRestricted}
                                                 setPermission={setPermTransferRestricted}
@@ -839,9 +839,9 @@ export default function Prediction(properties) {
                                             <AssetPermission
                                                 alreadyDisabled={false}
                                                 id={"disable_confidential"}
-                                                allowedText={t("AssetCommon:permissions.disable_confidential.allowedText")}
+                                                allowedText={t("AssetCommon:permissions.disable_confidential.true")}
                                                 enabledInfo={t("AssetCommon:permissions.disable_confidential.enabledInfo")}
-                                                disabledText={t("AssetCommon:permissions.disable_confidential.disabledText")}
+                                                disabledText={t("AssetCommon:permissions.disable_confidential.false")}
                                                 disabledInfo={t("AssetCommon:permissions.disable_confidential.disabledInfo")}
                                                 permission={permDisableConfidential}
                                                 setPermission={setPermDisableConfidential}
@@ -852,9 +852,9 @@ export default function Prediction(properties) {
                                             <AssetPermission
                                                 alreadyDisabled={false}
                                                 id={"witness_fed_asset"}
-                                                allowedText={t("AssetCommon:permissions.witness_fed_asset.allowedText")}
+                                                allowedText={t("AssetCommon:permissions.witness_fed_asset.true")}
                                                 enabledInfo={t("AssetCommon:permissions.witness_fed_asset.enabledInfo")}
-                                                disabledText={t("AssetCommon:permissions.witness_fed_asset.disabledText")}
+                                                disabledText={t("AssetCommon:permissions.witness_fed_asset.false")}
                                                 disabledInfo={t("AssetCommon:permissions.witness_fed_asset.disabledInfo")}
                                                 permission={permWitnessFedAsset}
                                                 setPermission={setPermWitnessFedAsset}
@@ -865,9 +865,9 @@ export default function Prediction(properties) {
                                             <AssetPermission
                                                 alreadyDisabled={false}
                                                 id={"committee_fed_asset"}
-                                                allowedText={t("AssetCommon:permissions.committee_fed_asset.allowedText")}
+                                                allowedText={t("AssetCommon:permissions.committee_fed_asset.true")}
                                                 enabledInfo={t("AssetCommon:permissions.committee_fed_asset.enabledInfo")}
-                                                disabledText={t("AssetCommon:permissions.committee_fed_asset.disabledText")}
+                                                disabledText={t("AssetCommon:permissions.committee_fed_asset.false")}
                                                 disabledInfo={t("AssetCommon:permissions.committee_fed_asset.disabledInfo")}
                                                 permission={permCommitteeFedAsset}
                                                 setPermission={setPermCommitteeFedAsset}
@@ -885,9 +885,9 @@ export default function Prediction(properties) {
                                             <AssetFlag
                                                 alreadyDisabled={false}
                                                 id={"white_list_flag"}
-                                                allowedText={t("AssetCommon:flags.white_list.allowedText")}
+                                                allowedText={t("AssetCommon:flags.white_list.true")}
                                                 enabledInfo={t("AssetCommon:flags.white_list.enabledInfo")}
-                                                disabledText={t("AssetCommon:flags.white_list.disabledText")}
+                                                disabledText={t("AssetCommon:flags.white_list.false")}
                                                 disabledInfo={t("AssetCommon:flags.white_list.disabledInfo")}
                                                 permission={permWhiteList}
                                                 flag={flagWhiteList}
@@ -896,9 +896,9 @@ export default function Prediction(properties) {
                                             <AssetFlag
                                                 alreadyDisabled={false}
                                                 id={"transfer_restricted_flag"}
-                                                allowedText={t("AssetCommon:flags.transfer_restricted.allowedText")}
+                                                allowedText={t("AssetCommon:flags.transfer_restricted.true")}
                                                 enabledInfo={t("AssetCommon:flags.transfer_restricted.enabledInfo")}
-                                                disabledText={t("AssetCommon:flags.transfer_restricted.disabledText")}
+                                                disabledText={t("AssetCommon:flags.transfer_restricted.false")}
                                                 disabledInfo={t("AssetCommon:flags.transfer_restricted.disabledInfo")}
                                                 permission={permTransferRestricted}
                                                 flag={flagTransferRestricted}
@@ -907,9 +907,9 @@ export default function Prediction(properties) {
                                             <AssetFlag
                                                 alreadyDisabled={false}
                                                 id={"disable_confidential_flag"}
-                                                allowedText={t("AssetCommon:flags.disable_confidential.allowedText")}
+                                                allowedText={t("AssetCommon:flags.disable_confidential.true")}
                                                 enabledInfo={t("AssetCommon:flags.disable_confidential.enabledInfo")}
-                                                disabledText={t("AssetCommon:flags.disable_confidential.disabledText")}
+                                                disabledText={t("AssetCommon:flags.disable_confidential.false")}
                                                 disabledInfo={t("AssetCommon:flags.disable_confidential.disabledInfo")}
                                                 permission={permDisableConfidential}
                                                 flag={flagDisableConfidential}
@@ -919,9 +919,9 @@ export default function Prediction(properties) {
                                             <AssetFlag
                                                 alreadyDisabled={false}
                                                 id={"witness_fed_asset_flag"}
-                                                allowedText={t("AssetCommon:flags.witness_fed_asset.allowedText")}
+                                                allowedText={t("AssetCommon:flags.witness_fed_asset.true")}
                                                 enabledInfo={t("AssetCommon:flags.witness_fed_asset.enabledInfo")}
-                                                disabledText={t("AssetCommon:flags.witness_fed_asset.disabledText")}
+                                                disabledText={t("AssetCommon:flags.witness_fed_asset.false")}
                                                 disabledInfo={t("AssetCommon:flags.witness_fed_asset.disabledInfo")}
                                                 permission={permWitnessFedAsset}
                                                 flag={flagWitnessFedAsset}
@@ -931,9 +931,9 @@ export default function Prediction(properties) {
                                             <AssetFlag
                                                 alreadyDisabled={false}
                                                 id={"committee_fed_asset_flag"}
-                                                allowedText={t("AssetCommon:flags.committee_fed_asset.allowedText")}
+                                                allowedText={t("AssetCommon:flags.committee_fed_asset.true")}
                                                 enabledInfo={t("AssetCommon:flags.committee_fed_asset.enabledInfo")}
-                                                disabledText={t("AssetCommon:flags.committee_fed_asset.disabledText")}
+                                                disabledText={t("AssetCommon:flags.committee_fed_asset.false")}
                                                 disabledInfo={t("AssetCommon:flags.committee_fed_asset.disabledInfo")}
                                                 permission={permCommitteeFedAsset}
                                                 flag={flagCommitteeFedAsset}
@@ -1121,7 +1121,7 @@ export default function Prediction(properties) {
             {
                 showDialog
                     ? <DeepLinkDialog
-                        operationName="asset_create"
+                        operationNames={["asset_create"]}
                         username={usr.username}
                         usrChain={usr.chain}
                         userID={usr.id}

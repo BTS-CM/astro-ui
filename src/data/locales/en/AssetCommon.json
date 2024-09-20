@@ -1,96 +1,281 @@
 {
-    
     "permissions": {
         "header": "Asset's permissions",
         "header_content": "Note: Disabling permissions is a permanent decision",
         "charge_market_fee": {
-            "allowedText": "Market fees allowed",
-            "disabledText": "Market fees disabled",
-            "enabledInfo": "It's possible for the asset creator to enable charging market trading fees for this asset.",
-            "disabledInfo": "It's now impossible for the asset creator to charge market trading fees for this asset."
+            "true": "Market fees allowed",
+            "false": "Market fees disabled",
+            "enabledInfo": "The asset creator can enable charging market trading fees for this asset.",
+            "disabledInfo": "The asset creator cannot charge market trading fees for this asset."
         },
         "white_list": {
-            "allowedText": "White list allowed",
-            "disabledText": "White list disabled",
-            "enabledInfo": "It's possible for the asset creator to enable configuring white list authorities for this asset.",
-            "disabledInfo": "It's now impossible for the asset creator to configure white list authorities for this asset."
+            "true": "White list allowed",
+            "false": "White list disabled",
+            "enabledInfo": "The asset creator can enable configuring white list authorities for this asset.",
+            "disabledInfo": "The asset creator cannot configure white list authorities for this asset."
         },
         "override_authority": {
-            "allowedText": "Override authority allowed",
-            "disabledText": "Override authority disabled",
-            "enabledInfo": "It's possible for the asset creator to enable the ability to perform an override transfer operation on this asset, returning it to their balance from yours.",
-            "disabledInfo": "It's now impossible for the asset creator to perform override transfer operations on this asset."
+            "true": "Override authority allowed",
+            "false": "Override authority disabled",
+            "enabledInfo": "The asset creator can enable the ability to perform an override transfer operation on this asset.",
+            "disabledInfo": "The asset creator cannot perform override transfer operations on this asset."
         },
         "transfer_restricted": {
-            "allowedText": "Transfer restricted allowed",
-            "enabledInfo": "It's possible for the asset creator to enable the ability to restrict transfers of this asset.",
-            "disabledText": "Transfer restricted disabled",
-            "disabledInfo": "It's now impossible for the asset creator to restrict transfers of this asset."
+            "true": "Transfer restriction allowed",
+            "false": "Transfer restriction disabled",
+            "enabledInfo": "The asset creator can enable the ability to restrict transfers of this asset.",
+            "disabledInfo": "The asset creator cannot restrict transfers of this asset."
         },
         "disable_confidential": {
-            "allowedText": "Disable confidential allowed",
-            "enabledInfo": "It's possible for the asset creator to enable the ability to disable confidential operations for this asset.",
-            "disabledText": "Disable confidential disabled",
-            "disabledInfo": "It's now impossible for the asset creator to disable confidential operations for this asset."
+            "true": "Disable confidential allowed",
+            "false": "Disable confidential disabled",
+            "enabledInfo": "The asset creator can enable the ability to disable confidential operations for this asset.",
+            "disabledInfo": "The asset creator cannot disable confidential operations for this asset."
         },
         "witness_fed_asset": {
-            "allowedText": "Witness fed asset allowed",
-            "enabledInfo": "It's possible for the asset creator to enable witnesses to publish price feeds for this asset.",
-            "disabledText": "Witness fed asset disabled",
-            "disabledInfo": "It's now impossible for the asset creator to enable witnesses to publish price feed for this asset."
+            "true": "Witness fed asset allowed",
+            "false": "Witness fed asset disabled",
+            "enabledInfo": "The asset creator can enable witnesses to publish price feeds for this asset.",
+            "disabledInfo": "The asset creator cannot enable witnesses to publish price feeds for this asset."
         },
         "committee_fed_asset": {
-            "allowedText": "Committee fed asset allowed",
-            "enabledInfo": "It's possible for the asset creator to enable committee members to publish price feeds for this asset.",
-            "disabledText": "Committee fed asset disabled",
-            "disabledInfo": "It's now impossible for the asset creator to enable committee members to publish price feeds for this asset."
+            "true": "Committee fed asset allowed",
+            "false": "Committee fed asset disabled",
+            "enabledInfo": "The asset creator can enable committee members to publish price feeds for this asset.",
+            "disabledInfo": "The asset creator cannot enable committee members to publish price feeds for this asset."
+        },
+        "disable_force_settle": {
+            "true": "Disable force settle allowed",
+            "false": "Disable force settle disabled",
+            "enabledInfo": "The asset creator can enable the ability to disable force settling for this asset.",
+            "disabledInfo": "The asset creator cannot disable force settling for this asset."
+        },
+        "global_settle": {
+            "true": "Global settlement allowed",
+            "false": "Global settlement disabled",
+            "enabledInfo": "The asset creator can enable the ability to globally settle this asset.",
+            "disabledInfo": "The asset creator cannot globally settle this asset."
+        },
+        "lock_max_supply": {
+            "true": "Unable to lock max supply",
+            "false": "Able to lock max supply",
+            "enabledInfo": "The asset creator cannot lock the max supply of this asset.",
+            "disabledInfo": "The asset creator can lock the max supply of this asset."
+        },
+        "disable_new_supply": {
+            "true": "Unable to disable new supply",
+            "false": "Able to disable new supply",
+            "enabledInfo": "The asset creator cannot disable the ability to create new supply for this asset.",
+            "disabledInfo": "The asset creator can disable the ability to create new supply for this asset."
+        },
+        "disable_collateral_bidding": {
+            "true": "Unable to disable collateral bidding",
+            "false": "Able to disable collateral bidding",
+            "enabledInfo": "The asset creator cannot disable collateral bidding for this asset.",
+            "disabledInfo": "The asset creator can disable collateral bidding for this asset."
+        },
+        "disable_mcr_update": {
+            "true": "Cannot update static MCR",
+            "false": "Can update MCR",
+            "enabledInfo": "The asset owner uses a price fed Minimum Collateral Ratio requirement for this asset.",
+            "disabledInfo": "The asset owner statically sets the Minimum Collateral Ratio requirement for this asset."
+        },
+        "disable_icr_update": {
+            "true": "Cannot update static ICR",
+            "false": "Can update ICR",
+            "enabledInfo": "The asset owner uses a price fed Initial Collateral Ratio requirement for this asset.",
+            "disabledInfo": "The asset owner statically sets the Initial Collateral Ratio requirement for this asset."
+        },
+        "disable_mssr_update": {
+            "true": "Cannot update static MSSR",
+            "false": "Can update MSSR",
+            "enabledInfo": "The asset owner uses a price fed Maximum Short Squeeze Ratio for this asset.",
+            "disabledInfo": "The asset owner statically sets the Maximum Short Squeeze Ratio for this asset."
+        },
+        "disable_bsrm_update": {
+            "true": "Cannot update custom BSRM",
+            "false": "Can update BSRM",
+            "enabledInfo": "The asset owner uses the default Global Settlement strategy for this asset.",
+            "disabledInfo": "The asset owner uses a custom Black Swan Risk Management strategy for this asset."
         }
     },
     "flags": {
         "header": "Asset's flags",
         "header_content": "Each allowed asset permission can be toggled on/off.",
         "charge_market_fee": {
-            "allowedText": "Market fees enabled",
+            "true": "Market fees enabled",
+            "false": "Market fees disabled",
             "enabledInfo": "The asset creator can configure market trading fees for this asset, including market fee reward sharing functionality.",
-            "disabledText": "Market fees disabled",
             "disabledInfo": "The asset creator has disabled charging market trading fees for this asset."
         },
         "white_list": {
-            "allowedText": "White list enabled",
+            "true": "White list enabled",
+            "false": "White list disabled",
             "enabledInfo": "The asset creator can configure white list authorities for this asset.",
-            "disabledText": "White list disabled",
             "disabledInfo": "The asset creator has disabled configuring white list authorities for this asset."
         },
         "override_authority": {
-            "allowedText": "Override authority enabled",
+            "true": "Override authority enabled",
+            "false": "Override authority disabled",
             "enabledInfo": "The asset creator can perform an override transfer operation on this asset, returning it to their balance from yours.",
-            "disabledText": "Override authority disabled",
             "disabledInfo": "The asset creator has disabled performing override transfer operations on this asset."
         },
+        "disable_force_settle": {
+            "true": "Force settle disabled",
+            "false": "Force settle enabled",
+            "enabledInfo": "The asset creator has disabled force settling for this asset.",
+            "disabledInfo": "The asset creator has enabled force settling for this asset."
+        },
         "transfer_restricted": {
-            "allowedText": "Transfer restricted enabled",
+            "true": "Transfer restricted enabled",
+            "false": "Transfer restricted disabled",
             "enabledInfo": "The asset creator can restrict transfers of this asset.",
-            "disabledText": "Transfer restricted disabled",
             "disabledInfo": "The asset creator has disabled restricting transfers of this asset."
         },
         "disable_confidential": {
-            "allowedText": "Disable confidential enabled",
+            "true": "Disable confidential enabled",
+            "false": "Disable confidential disabled",
             "enabledInfo": "The asset creator has disabled confidential operations for this asset.",
-            "disabledText": "Disable confidential disabled",
             "disabledInfo": "The asset creator hasn't disabled confidential operations for this asset."
         },
         "witness_fed_asset": {
-            "allowedText": "Witness fed asset enabled",
-            "enabledInfo": "Witnesses are able to publish price feeds for this asset.",
-            "disabledText": "Witness fed asset disabled",
-            "disabledInfo": "Witnesses are unable to publish price feed for this asset."
-
+            "true": "Witness fed asset enabled",
+            "false": "Witness fed asset disabled",
+            "enabledInfo": "Witnesses can publish price feeds for this asset.",
+            "disabledInfo": "Witnesses cannot publish price feeds for this asset."
         },
         "committee_fed_asset": {
-            "allowedText": "Committee fed asset enabled",
-            "enabledInfo": "Committee members are able to publish price feeds for this asset.",
-            "disabledText": "Committee fed asset disabled",
-            "disabledInfo": "Committee members are unable to publish price feeds for this asset."
+            "true": "Committee fed asset enabled",
+            "false": "Committee fed asset disabled",
+            "enabledInfo": "Committee members can publish price feeds for this asset.",
+            "disabledInfo": "Committee members cannot publish price feeds for this asset."
+        },
+        "lock_max_supply": {
+            "true": "Maximum supply is locked",
+            "false": "Maximum supply is unlocked",
+            "enabledInfo": "The asset owner has locked the maximum supply of this asset.",
+            "disabledInfo": "The asset owner hasn't locked the maximum supply of this asset."
+        },
+        "disable_new_supply": {
+            "true": "Unable to issue new supply",
+            "false": "Able to issue new supply",
+            "enabledInfo": "The asset owner has disabled the ability to issue new supply for this asset.",
+            "disabledInfo": "The asset owner allows the issuance of additional supply for this asset."
+        },
+        "disable_collateral_bidding": {
+            "true": "Collateral bidding disabled",
+            "false": "Collateral bidding permitted",
+            "enabledInfo": "The asset owner has disabled collateral bidding for this asset.",
+            "disabledInfo": "The asset owner has enabled collateral bidding for this asset."
+        }
+    },
+    "asset_details": {
+        "title": "Asset Details",
+        "title_content": "These are the asset settings used for core DEX functionality.",
+        "symbol": {
+            "header": "Asset symbol",
+            "header_content": "The asset symbol is an unique identifier on the blockchain identifiying the asset throughout the DEX. Cheaper assets can be created by using a subasset name like NFT.TITLE",
+            "placeholder": "Symbol"
+        },
+        "shortName": {
+            "header": "Asset short name",
+            "header_content": "This is the short name of the asset, less important than the symbol but still am optionally shortened unique identifier. You can just re-use the symbol for this field.",
+            "placeholder": "Short Name"
+        },
+        "preferredMarket": {
+            "header": "Preferred market trading pair",
+            "header_content": "The preferred market trading pair is the default asset used to trade against your asset, this is an informal suggestion."
+        },
+        "description": {
+            "header": "Asset description",
+            "header_content": "This is the description of the asset, it will be displayed in the DEX and can be used to provide more information about the asset.",
+            "placeholder": "Description"
+        },
+        "max_supply": {
+            "header": "Maximum supply",
+            "header_content": "The maximum supply of the asset, this is the total amount of the asset that can ever be issued by the asset owner (you).",
+            "placeholder": "Max supply"
+        },
+        "precision": {
+            "header": "Asset precision",
+            "header_content": "The precision of the asset specifies the quantity of supported decimal places. This value cannot be changed after asset creation.",
+            "placeholder": "Precision"
+        }
+    },
+    "extensions": {
+        "header_content": "The extensions are additional advanced settings that can be used to further customize the asset.",
+        "header": "Market Fee Extensions",
+        "reward_percent": {
+            "enabled": "Referrer reward percentage extension enabled",
+            "enabledInfo": "A percentage cut of the market fee will be allocated to the referrer of active market participants.",
+            "disabled": "Enable the referrer reward percentage extension?",
+            "disabledInfo": "The referrer reward percentage extension allows the asset creator to allocate a percentage of the market fee to the referrer of active market participants.",
+            "header": "Referrer reward percentage",
+            "header_content": "The referrer reward percentage is the percentage of the market fee which is allocated to the referrer of active market participants."
+        },
+        "whitelist_market_fee_sharing": {
+            "enabled": "Whitelist market fee sharing extension enabled",
+            "enabledInfo": "The following referrer accounts will be approved to receive a cut of the collected market fees from their referrer accounts.",
+            "disabled": "Enable the whitelist market fee sharing extension?",
+            "disabledInfo": "You can limit who is allowed to receive a cut of the collected market fees to a set of pre-approved referrer accounts.",
+            "header": "Whitelist market fee sharing",
+            "header_content": "The whitelist market fee sharing extension allows the house to limit referrers to these whitelisted accounts."
+        },
+        "taker_fee_percent": {
+            "enabled": "Taker fee percentage extension enabled",
+            "enabledInfo": "The 'taker' participant of the limit order will receive a percentage of the market fee.",
+            "disabled": "Enable the taker fee percentage extension?",
+            "disabledInfo": "The taker fee percentage extension allows the asset creator to allocate a percentage of the market fee to the 'taker' of limit order operations.",
+            "header": "Taker fee percentage",
+            "header_content": "The taker fee percentage is the percentage of the market fee which is allocated to the 'taker' of the limit orders on the decentralized exchange."
+        },
+        "allowed_markets": {
+            "enabled": "Allowed markets extension enabled",
+            "enabledInfo": "The following markets are approved to trade this asset.",
+            "disabled": "Enable the allowed markets extension?",
+            "disabledInfo": "You can limit the markets that are allowed to trade this asset to a set of pre-approved markets."
+        },
+        "banned_markets": {
+            "enabled": "Banned markets extension enabled",
+            "enabledInfo": "The following markets are banned from trading this asset.",
+            "disabled": "Enable the banned markets extension?",
+            "disabledInfo": "This feature enables you to ban specific market trading pairs, enabling you to help avoid your asset trading on undesired markets."
+        },
+        "skipCER": {
+            "enabled": "Skipping Core Exchange Rate calculation",
+            "enabledInfo": "The asset creator has enabled the ability to skip the core exchange rate check for this asset.",
+            "disabled": "Skip the Core Exchange Rate calculation?",
+            "disabledInfo": "The Skip Core Exchange Rate extension allows the asset creator to skip the core exchange rate check for this asset."
+        }
+    },
+    "whitelist": {
+        "header_content": "The asset whitelist authorities are accounts who can contribute their account's whistelisted accounts list to authorize interaction with this access.", 
+        "header": "Asset Whitelist authorities"
+    },
+    "blacklist": {
+        "header_content": "The asset blacklist authorities are accounts who can contribute their account's blacklisted accounts list to enforce a banned account list preventing interaction with this access.",
+        "header": "Asset blacklist authorities"
+    },
+    "market_fee": {
+        "header_content": "The market fee is the fee percentage that is charged on every trade that is executed on the Bitshares DEX. The fee is charged in the asset that is being traded.",
+        "header": "Market fee percent"
+    },
+    "max_market_fee": {
+        "header": "Maximum market fee",
+        "header_content": "The maximum market fee is the maximum amount of the asset that can be charged as a fee on every trade that is executed on the Bitshares DEX."
+    },
+    "cer": {
+        "quote_asset_amount": {
+            "header": "Quote asset amount",
+            "header_content": "The amount of the your user issued asset that is required to purchase the base asset amount."
+        },
+        "base_asset_amount": {
+            "header": "Base asset amount",
+            "header_content": "The amount of the base asset ({{symbol}}) that is required to purchase the quote asset amount."
+        },
+        "calculated_cer_price": {
+            "header": "Core exchange rate",
+            "header_content": "Make sure your core exchange rate is higher than the market price, otherwise people will buy your token from the market and drain your fee pool via implicit arbitrage. The core exchange rate should be updated regularly to reflect market pricing of your asset."
         }
     }
 }

@@ -1,94 +1,281 @@
 {
-    "permissions": {
-      "header": "자산의 권한",
-      "header_content": "참고: 권한 비활성화는 영구적인 결정입니다.",
-      "charge_market_fee": {
-        "allowedText": "시장 수수료 허용",
-        "disabledText": "시장 수수료 비활성화",
-        "enabledInfo": "자산 생성자는 이 자산에 대해 시장 거래 수수료를 청구할 수 있습니다.",
-        "disabledInfo": "이제 자산 생성자가 이 자산에 대해 시장 거래 수수료를 청구하는 것은 불가능합니다."
-      },
-      "white_list": {
-        "allowedText": "허용되는 화이트리스트",
-        "disabledText": "화이트리스트 비활성화됨",
-        "enabledInfo": "자산 생성자가 이 자산에 대한 화이트리스트 권한 구성을 활성화할 수 있습니다.",
-        "disabledInfo": "이제 자산 생성자가 이 자산에 대한 화이트리스트 권한을 구성하는 것은 불가능합니다."
-      },
-      "override_authority": {
-        "allowedText": "재정의 권한이 허용됨",
-        "disabledText": "재정의 권한이 비활성화되었습니다.",
-        "enabledInfo": "자산 생성자는 이 자산에 대한 대체 전송 작업을 수행하여 귀하의 잔액으로 자산을 반환하는 기능을 활성화할 수 있습니다.",
-        "disabledInfo": "이제 자산 생성자가 이 자산에 대해 대체 전송 작업을 수행하는 것이 불가능합니다."
-      },
-      "transfer_restricted": {
-        "allowedText": "이체 제한 허용",
-        "enabledInfo": "자산 생성자가 이 자산의 전송을 제한하는 기능을 활성화할 수 있습니다.",
-        "disabledText": "전송 제한 비활성화됨",
-        "disabledInfo": "이제 자산 생성자가 이 자산의 전송을 제한하는 것은 불가능합니다."
-      },
-      "disable_confidential": {
-        "allowedText": "기밀 비활성화 허용",
-        "enabledInfo": "자산 작성자는 이 자산에 대한 기밀 작업을 비활성화하는 기능을 활성화할 수 있습니다.",
-        "disabledText": "기밀 비활성화 비활성화",
-        "disabledInfo": "이제 자산 생성자가 이 자산에 대한 기밀 작업을 비활성화하는 것은 불가능합니다."
-      },
-      "witness_fed_asset": {
-        "allowedText": "증인 제공 자산이 허용됨",
-        "enabledInfo": "자산 생성자는 증인이 이 자산에 대한 가격 피드를 게시할 수 있도록 할 수 있습니다.",
-        "disabledText": "증인 제공 자산이 비활성화되었습니다.",
-        "disabledInfo": "이제 자산 생성자가 증인이 이 자산에 대한 가격 피드를 게시할 수 있도록 하는 것은 불가능합니다."
-      },
-      "committee_fed_asset": {
-        "allowedText": "위원회 공급 자산 허용",
-        "enabledInfo": "자산 생성자는 위원회 구성원이 이 자산에 대한 가격 피드를 게시할 수 있도록 할 수 있습니다.",
-        "disabledText": "위원회 공급 자산 비활성화",
-        "disabledInfo": "이제 자산 생성자가 위원회 구성원이 이 자산에 대한 가격 피드를 게시하도록 허용하는 것은 불가능합니다."
-      }
+  "permissions": {
+    "header": "자산의 권한",
+    "header_content": "참고: 권한 비활성화는 영구적인 결정입니다.",
+    "charge_market_fee": {
+      "true": "시장 수수료 허용",
+      "false": "시장 수수료 비활성화",
+      "enabledInfo": "자산 생성자는 이 자산에 대해 시장 거래 수수료를 청구할 수 있습니다.",
+      "disabledInfo": "자산 생성자는 이 자산에 대해 시장 거래 수수료를 청구할 수 없습니다."
     },
-    "flags": {
-      "header": "자산의 플래그",
-      "header_content": "허용된 각 자산 권한은 켜거나 끌 수 있습니다.",
-      "charge_market_fee": {
-        "allowedText": "시장 수수료 활성화됨",
-        "enabledInfo": "자산 생성자는 시장 수수료 보상 공유 기능을 포함하여 이 자산에 대한 시장 거래 수수료를 구성할 수 있습니다.",
-        "disabledText": "시장 수수료 비활성화",
-        "disabledInfo": "자산 생성자가 이 자산에 대한 시장 거래 수수료 청구를 비활성화했습니다."
-      },
-      "white_list": {
-        "allowedText": "화이트리스트 활성화됨",
-        "enabledInfo": "자산 생성자는 이 자산에 대한 화이트리스트 권한을 구성할 수 있습니다.",
-        "disabledText": "화이트리스트 비활성화됨",
-        "disabledInfo": "자산 생성자가 이 자산에 대한 화이트리스트 권한 구성을 비활성화했습니다."
-      },
-      "override_authority": {
-        "allowedText": "재정의 권한이 활성화되었습니다.",
-        "enabledInfo": "자산 생성자는 이 자산에 대해 대체 전송 작업을 수행하여 귀하의 잔액으로 자산을 반환할 수 있습니다.",
-        "disabledText": "재정의 권한이 비활성화되었습니다.",
-        "disabledInfo": "자산 생성자가 이 자산에 대한 재정의 전송 작업 수행을 비활성화했습니다."
-      },
-      "transfer_restricted": {
-        "allowedText": "전송 제한 활성화됨",
-        "enabledInfo": "자산 생성자는 이 자산의 양도를 제한할 수 있습니다.",
-        "disabledText": "전송 제한 비활성화됨",
-        "disabledInfo": "자산 생성자가 이 자산의 전송 제한을 비활성화했습니다."
-      },
-      "disable_confidential": {
-        "allowedText": "기밀 비활성화 활성화",
-        "enabledInfo": "자산 생성자가 이 자산에 대한 기밀 작업을 비활성화했습니다.",
-        "disabledText": "기밀 비활성화 비활성화",
-        "disabledInfo": "자산 생성자가 이 자산에 대한 기밀 작업을 비활성화하지 않았습니다."
-      },
-      "witness_fed_asset": {
-        "allowedText": "증인 제공 자산이 활성화되었습니다.",
-        "enabledInfo": "증인은 이 자산에 대한 가격 피드를 게시할 수 있습니다.",
-        "disabledText": "증인 제공 자산이 비활성화되었습니다.",
-        "disabledInfo": "증인은 이 자산에 대한 가격 피드를 게시할 수 없습니다."
-      },
-      "committee_fed_asset": {
-        "allowedText": "위원회 공급 자산 활성화됨",
-        "enabledInfo": "위원회 구성원은 이 자산에 대한 가격 피드를 게시할 수 있습니다.",
-        "disabledText": "위원회 공급 자산 비활성화",
-        "disabledInfo": "위원회 구성원은 이 자산에 대한 가격 피드를 게시할 수 없습니다."
-      }
+    "white_list": {
+      "true": "허용되는 화이트리스트",
+      "false": "화이트리스트 비활성화됨",
+      "enabledInfo": "자산 생성자는 이 자산에 대한 화이트리스트 권한 구성을 활성화할 수 있습니다.",
+      "disabledInfo": "자산 생성자는 이 자산에 대한 화이트리스트 권한을 구성할 수 없습니다."
+    },
+    "override_authority": {
+      "true": "재정의 권한이 허용됨",
+      "false": "재정의 권한이 비활성화되었습니다.",
+      "enabledInfo": "자산 생성자는 이 자산에 대해 대체 전송 작업을 수행하는 기능을 활성화할 수 있습니다.",
+      "disabledInfo": "자산 생성자는 이 자산에 대해 대체 전송 작업을 수행할 수 없습니다."
+    },
+    "transfer_restricted": {
+      "true": "이체 제한 허용됨",
+      "false": "전송 제한이 비활성화되었습니다.",
+      "enabledInfo": "자산 생성자는 이 자산의 전송을 제한하는 기능을 활성화할 수 있습니다.",
+      "disabledInfo": "자산 생성자는 이 자산의 양도를 제한할 수 없습니다."
+    },
+    "disable_confidential": {
+      "true": "기밀 비활성화 허용",
+      "false": "기밀 비활성화 비활성화",
+      "enabledInfo": "자산 생성자는 이 자산에 대한 기밀 작업을 비활성화하는 기능을 활성화할 수 있습니다.",
+      "disabledInfo": "자산 생성자는 이 자산에 대한 기밀 작업을 비활성화할 수 없습니다."
+    },
+    "witness_fed_asset": {
+      "true": "증인 제공 자산이 허용됨",
+      "false": "증인 제공 자산이 비활성화되었습니다.",
+      "enabledInfo": "자산 생성자는 증인이 이 자산에 대한 가격 피드를 게시하도록 할 수 있습니다.",
+      "disabledInfo": "자산 생성자는 증인이 이 자산에 대한 가격 피드를 게시하도록 할 수 없습니다."
+    },
+    "committee_fed_asset": {
+      "true": "위원회 공급 자산 허용",
+      "false": "위원회 공급 자산 비활성화",
+      "enabledInfo": "자산 생성자는 위원회 구성원이 이 자산에 대한 가격 피드를 게시하도록 할 수 있습니다.",
+      "disabledInfo": "자산 생성자는 위원회 구성원이 이 자산에 대한 가격 피드를 게시하도록 설정할 수 없습니다."
+    },
+    "disable_force_settle": {
+      "true": "강제 정착 비활성화 허용",
+      "false": "강제 정착 비활성화 비활성화",
+      "enabledInfo": "자산 생성자는 이 자산에 대한 강제 정착을 비활성화하는 기능을 활성화할 수 있습니다.",
+      "disabledInfo": "자산 생성자는 이 자산에 대한 강제 정착을 비활성화할 수 없습니다."
+    },
+    "global_settle": {
+      "true": "글로벌 결제 허용",
+      "false": "글로벌 결제 비활성화",
+      "enabledInfo": "자산 생성자는 이 자산을 전 세계적으로 정산하는 기능을 활성화할 수 있습니다.",
+      "disabledInfo": "자산 생성자는 이 자산을 전역적으로 정산할 수 없습니다."
+    },
+    "lock_max_supply": {
+      "true": "최대 공급량을 잠글 수 없습니다",
+      "false": "최대 공급량을 잠글 수 있음",
+      "enabledInfo": "자산 생성자는 이 자산의 최대 공급량을 잠글 수 없습니다.",
+      "disabledInfo": "자산 생성자는 이 자산의 최대 공급량을 잠글 수 있습니다."
+    },
+    "disable_new_supply": {
+      "true": "새 공급을 비활성화할 수 없습니다.",
+      "false": "새로운 공급을 비활성화할 수 있음",
+      "enabledInfo": "자산 생성자는 이 자산에 대한 새 공급을 생성하는 기능을 비활성화할 수 없습니다.",
+      "disabledInfo": "자산 생성자는 이 자산에 대한 새로운 공급을 생성하는 기능을 비활성화할 수 있습니다."
+    },
+    "disable_collateral_bidding": {
+      "true": "담보 입찰을 비활성화할 수 없습니다.",
+      "false": "담보 입찰을 비활성화할 수 있음",
+      "enabledInfo": "자산 생성자는 이 자산에 대한 담보 입찰을 비활성화할 수 없습니다.",
+      "disabledInfo": "자산 생성자는 이 자산에 대한 담보 입찰을 비활성화할 수 있습니다."
+    },
+    "disable_mcr_update": {
+      "true": "정적 MCR을 업데이트할 수 없습니다.",
+      "false": "MCR 업데이트 가능",
+      "enabledInfo": "자산 소유자는 이 자산에 대한 최소 담보 비율 요구 사항이 적용된 가격을 사용합니다.",
+      "disabledInfo": "자산 소유자는 이 자산에 대한 최소 담보 비율 요구 사항을 정적으로 설정합니다."
+    },
+    "disable_icr_update": {
+      "true": "정적 ICR을 업데이트할 수 없습니다.",
+      "false": "ICR 업데이트 가능",
+      "enabledInfo": "자산 소유자는 이 자산에 대한 초기 담보 비율 요구 사항에 따른 가격을 사용합니다.",
+      "disabledInfo": "자산 소유자는 이 자산에 대한 초기 담보 비율 요구 사항을 정적으로 설정합니다."
+    },
+    "disable_mssr_update": {
+      "true": "정적 MSSR을 업데이트할 수 없습니다.",
+      "false": "MSSR 업데이트 가능",
+      "enabledInfo": "자산 소유자는 이 자산에 대해 최대 숏 스퀴즈 비율(Maximum Short Squeeze Ratio)을 적용한 가격을 사용합니다.",
+      "disabledInfo": "자산 소유자는 이 자산에 대한 최대 숏 스퀴즈 비율을 정적으로 설정합니다."
+    },
+    "disable_bsrm_update": {
+      "true": "사용자 정의 BSRM을 업데이트할 수 없습니다.",
+      "false": "BSRM 업데이트 가능",
+      "enabledInfo": "자산 소유자는 이 자산에 대해 기본 글로벌 정산 전략을 사용합니다.",
+      "disabledInfo": "자산 소유자는 이 자산에 대해 맞춤형 Black Swan 위험 관리 전략을 사용합니다."
+    }
+  },
+  "flags": {
+    "header": "자산의 플래그",
+    "header_content": "허용된 각 자산 권한은 켜거나 끌 수 있습니다.",
+    "charge_market_fee": {
+      "true": "시장 수수료 활성화됨",
+      "false": "시장 수수료 비활성화",
+      "enabledInfo": "자산 생성자는 시장 수수료 보상 공유 기능을 포함하여 이 자산에 대한 시장 거래 수수료를 구성할 수 있습니다.",
+      "disabledInfo": "자산 생성자가 이 자산에 대한 시장 거래 수수료 청구를 비활성화했습니다."
+    },
+    "white_list": {
+      "true": "화이트리스트 활성화됨",
+      "false": "화이트리스트 비활성화됨",
+      "enabledInfo": "자산 생성자는 이 자산에 대한 화이트리스트 권한을 구성할 수 있습니다.",
+      "disabledInfo": "자산 생성자가 이 자산에 대한 화이트리스트 권한 구성을 비활성화했습니다."
+    },
+    "override_authority": {
+      "true": "재정의 권한이 활성화되었습니다.",
+      "false": "재정의 권한이 비활성화되었습니다.",
+      "enabledInfo": "자산 생성자는 이 자산에 대해 대체 전송 작업을 수행하여 귀하의 잔액으로 자산을 반환할 수 있습니다.",
+      "disabledInfo": "자산 생성자가 이 자산에 대한 대체 전송 작업 수행을 비활성화했습니다."
+    },
+    "disable_force_settle": {
+      "true": "강제 정산 비활성화됨",
+      "false": "강제 정산 활성화됨",
+      "enabledInfo": "자산 생성자가 이 자산에 대한 강제 정산을 비활성화했습니다.",
+      "disabledInfo": "자산 생성자가 이 자산에 대해 강제 정산을 활성화했습니다."
+    },
+    "transfer_restricted": {
+      "true": "전송 제한 활성화됨",
+      "false": "전송 제한 비활성화됨",
+      "enabledInfo": "자산 생성자는 이 자산의 양도를 제한할 수 있습니다.",
+      "disabledInfo": "자산 생성자가 이 자산의 전송 제한을 비활성화했습니다."
+    },
+    "disable_confidential": {
+      "true": "기밀 비활성화 활성화",
+      "false": "기밀 비활성화 비활성화",
+      "enabledInfo": "자산 생성자가 이 자산에 대한 기밀 작업을 비활성화했습니다.",
+      "disabledInfo": "자산 생성자가 이 자산에 대한 기밀 작업을 비활성화하지 않았습니다."
+    },
+    "witness_fed_asset": {
+      "true": "증인 제공 자산이 활성화되었습니다.",
+      "false": "증인 제공 자산이 비활성화되었습니다.",
+      "enabledInfo": "증인은 이 자산에 대한 가격 피드를 게시할 수 있습니다.",
+      "disabledInfo": "증인은 이 자산에 대한 가격 피드를 게시할 수 없습니다."
+    },
+    "committee_fed_asset": {
+      "true": "위원회 공급 자산 활성화됨",
+      "false": "위원회 공급 자산 비활성화",
+      "enabledInfo": "위원회 구성원은 이 자산에 대한 가격 피드를 게시할 수 있습니다.",
+      "disabledInfo": "위원회 구성원은 이 자산에 대한 가격 피드를 게시할 수 없습니다."
+    },
+    "lock_max_supply": {
+      "true": "최대 공급량이 잠겨 있습니다.",
+      "false": "최대 공급량이 잠금 해제되었습니다.",
+      "enabledInfo": "자산 소유자가 이 자산의 최대 공급량을 잠갔습니다.",
+      "disabledInfo": "자산 소유자가 이 자산의 최대 공급량을 잠그지 않았습니다."
+    },
+    "disable_new_supply": {
+      "true": "새로운 물량을 발행할 수 없습니다",
+      "false": "신규 공급 가능",
+      "enabledInfo": "자산 소유자가 이 자산에 대한 신규 공급을 발행하는 기능을 비활성화했습니다.",
+      "disabledInfo": "자산 소유자는 이 자산에 대한 추가 공급 발행을 허용합니다."
+    },
+    "disable_collateral_bidding": {
+      "true": "담보 입찰이 비활성화되었습니다.",
+      "false": "담보 입찰 허용",
+      "enabledInfo": "자산 소유자가 이 자산에 대한 담보 입찰을 비활성화했습니다.",
+      "disabledInfo": "자산 소유자가 이 자산에 대한 담보 입찰을 활성화했습니다."
+    }
+  },
+  "asset_details": {
+    "title": "자산 세부정보",
+    "title_content": "이는 핵심 DEX 기능에 사용되는 자산 설정입니다.",
+    "symbol": {
+      "header": "자산 기호",
+      "header_content": "자산 기호는 DEX 전체에서 자산을 식별하는 블록체인의 고유 식별자입니다. ",
+      "placeholder": "상징"
+    },
+    "shortName": {
+      "header": "자산 별칭",
+      "header_content": "이는 자산의 짧은 이름으로 기호보다 덜 중요하지만 선택적으로 단축된 고유 식별자입니다. ",
+      "placeholder": "짧은 이름"
+    },
+    "preferredMarket": {
+      "header": "선호하는 시장 거래 쌍",
+      "header_content": "선호하는 시장 거래 쌍은 귀하의 자산과 거래하는 데 사용되는 기본 자산이며 이는 비공식적인 제안입니다."
+    },
+    "description": {
+      "header": "자산 설명",
+      "header_content": "이는 자산에 대한 설명으로, DEX에 표시되며 자산에 대한 추가 정보를 제공하는 데 사용될 수 있습니다.",
+      "placeholder": "설명"
+    },
+    "max_supply": {
+      "header": "최대 공급량",
+      "header_content": "자산의 최대 공급량, 이는 자산 소유자(귀하)가 발행할 수 있는 자산의 총액입니다.",
+      "placeholder": "최대 공급량"
+    },
+    "precision": {
+      "header": "자산 정밀도",
+      "header_content": "자산의 정밀도는 지원되는 소수 자릿수를 지정합니다. ",
+      "placeholder": "정도"
+    }
+  },
+  "extensions": {
+    "header_content": "확장은 자산을 추가로 사용자 정의하는 데 사용할 수 있는 추가 고급 설정입니다.",
+    "header": "시장 수수료 확장",
+    "reward_percent": {
+      "enabled": "추천인 보상 비율 확장이 활성화되었습니다.",
+      "enabledInfo": "시장 수수료의 일부 삭감은 활성 시장 참여자의 추천인에게 할당됩니다.",
+      "disabled": "추천인 보상 비율 확장을 활성화하시겠습니까?",
+      "disabledInfo": "추천인 보상 비율 확장을 통해 자산 생성자는 활성 시장 참여자의 추천인에게 시장 수수료의 일정 비율을 할당할 수 있습니다.",
+      "header": "추천인 보상 비율",
+      "header_content": "추천인 보상 비율은 활성 시장 참여자의 추천인에게 할당되는 시장 수수료의 비율입니다."
+    },
+    "whitelist_market_fee_sharing": {
+      "enabled": "화이트리스트 시장 수수료 공유 확장 활성화됨",
+      "enabledInfo": "다음 추천인 계정은 추천인 계정에서 징수된 시장 수수료를 삭감하도록 승인됩니다.",
+      "disabled": "화이트리스트 시장 수수료 공유 확장 프로그램을 활성화하시겠습니까?",
+      "disabledInfo": "수집된 시장 수수료의 일부를 받을 수 있는 사람을 사전 승인된 추천 계정 집합으로 제한할 수 있습니다.",
+      "header": "화이트리스트 시장 수수료 공유",
+      "header_content": "화이트리스트 시장 수수료 공유 확장을 통해 하우스는 이러한 화이트리스트 계정에 대한 추천인을 제한할 수 있습니다."
+    },
+    "taker_fee_percent": {
+      "enabled": "테이커 수수료 비율 확장 활성화됨",
+      "enabledInfo": "지정가 주문의 '테이커' 참가자는 시장 수수료의 일정 비율을 받게 됩니다.",
+      "disabled": "테이커 수수료 비율 확장을 활성화하시겠습니까?",
+      "disabledInfo": "테이커 수수료 비율 확장을 통해 자산 생성자는 지정가 주문 작업의 '테이커'에게 시장 수수료의 일정 비율을 할당할 수 있습니다.",
+      "header": "테이커 수수료 비율",
+      "header_content": "테이커 수수료 백분율은 분산형 거래소에서 지정가 주문의 '테이커'에게 할당되는 시장 수수료의 백분율입니다."
+    },
+    "allowed_markets": {
+      "enabled": "허용된 시장 확장 활성화됨",
+      "enabledInfo": "다음 시장은 이 자산을 거래하도록 승인되었습니다.",
+      "disabled": "허용된 시장 확장을 활성화하시겠습니까?",
+      "disabledInfo": "이 자산을 거래할 수 있는 시장을 사전 승인된 시장 집합으로 제한할 수 있습니다."
+    },
+    "banned_markets": {
+      "enabled": "금지된 시장 확장 활성화됨",
+      "enabledInfo": "다음 시장에서는 이 자산 거래가 금지됩니다.",
+      "disabled": "금지된 시장 확장을 활성화하시겠습니까?",
+      "disabledInfo": "이 기능을 사용하면 특정 시장 거래 쌍을 금지하여 원하지 않는 시장에서 자산 거래를 방지할 수 있습니다."
+    },
+    "skipCER": {
+      "enabled": "핵심 환율 계산 건너뛰기",
+      "enabledInfo": "자산 생성자가 이 자산에 대한 핵심 환율 확인을 건너뛸 수 있는 기능을 활성화했습니다.",
+      "disabled": "핵심 환율 계산을 건너뛰시겠습니까?",
+      "disabledInfo": "핵심 환율 건너뛰기 확장을 사용하면 자산 생성자가 이 자산에 대한 핵심 환율 확인을 건너뛸 수 있습니다."
+    }
+  },
+  "whitelist": {
+    "header_content": "자산 화이트리스트 권한은 이 액세스와의 상호 작용을 승인하기 위해 자신의 계정의 휘스팅된 계정 목록을 제공할 수 있는 계정입니다.",
+    "header": "자산 화이트리스트 권한"
+  },
+  "blacklist": {
+    "header_content": "자산 블랙리스트 권한은 이 액세스와의 상호 작용을 방지하는 금지된 계정 목록을 시행하기 위해 자신의 계정의 블랙리스트에 등록된 계정 목록을 제공할 수 있는 계정입니다.",
+    "header": "자산 블랙리스트 당국"
+  },
+  "market_fee": {
+    "header_content": "시장 수수료는 Bitshares DEX에서 실행되는 모든 거래에 부과되는 수수료 비율입니다. ",
+    "header": "시장 수수료 비율"
+  },
+  "max_market_fee": {
+    "header": "최대 시장 수수료",
+    "header_content": "최대 시장 수수료는 Bitshares DEX에서 실행되는 모든 거래에 대해 수수료로 청구할 수 있는 자산의 최대 금액입니다."
+  },
+  "cer": {
+    "quote_asset_amount": {
+      "header": "견적 자산 금액",
+      "header_content": "기본 자산 금액을 구매하는 데 필요한 사용자 발행 자산 금액입니다."
+    },
+    "base_asset_amount": {
+      "header": "기준자산금액",
+      "header_content": "기본자산 금액({{symbol}}) 견적 자산 금액을 구매하는 데 필요합니다."
+    },
+    "calculated_cer_price": {
+      "header": "핵심 환율",
+      "header_content": "핵심 환율이 시장 가격보다 높은지 확인하십시오. 그렇지 않으면 사람들이 시장에서 토큰을 구매하고 암시적 차익거래를 통해 수수료 풀을 소모하게 됩니다. "
     }
   }
+}

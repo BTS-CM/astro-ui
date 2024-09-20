@@ -1084,7 +1084,7 @@ export default function CreditOffer(properties) {
         </div>
         {showDialog ? (
           <DeepLinkDialog
-            operationName="credit_offer_accept"
+            operationNames={["credit_offer_accept"]}
             username={usr.username}
             usrChain={usr.chain}
             userID={usr.id}

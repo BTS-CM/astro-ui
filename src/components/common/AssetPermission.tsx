@@ -19,6 +19,10 @@ interface Props {
   setFlag: (flag: boolean) => void;
 }
 
+interface MakeHoverProps {
+  children: React.ReactNode;
+}
+
 export default function AssetPermission({
   alreadyDisabled,
   id,
@@ -33,62 +37,71 @@ export default function AssetPermission({
 }: Props) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
 
-  if (alreadyDisabled) {
+  const MakeHover: React.FC<MakeHoverProps> = ({ children }) => {
     return (
       <HoverCard>
         <HoverCardTrigger>
-          <span className="grid grid-cols-12">
-            <span>
-              <Checkbox checked={false} id={id} className="align-middle mr-2" disabled />
-            </span>
-            <span className="col-span-10">
-              <Label htmlFor={id}>
-                {permission || disabledText}
-              </Label>
-            </span>        
-            <InfoCircledIcon className="text-gray-400 mt-3"/>
-          </span>
+          {children}
         </HoverCardTrigger>
         <HoverCardContent className={"w-80 mt-1"} align="start">
-          <h4 className="scroll-m-20 text-md font-semibold tracking-tight">{t("Predictions:about")}: {id}</h4>
-          <p className="leading-6 text-sm [&:not(:first-child)]:mt-1">{disabledInfo}</p>
+          <h4 className="scroll-m-20 text-md font-semibold tracking-tight">
+            {t("Predictions:about")}: {id}
+          </h4>
+          <p className="leading-6 text-sm [&:not(:first-child)]:mt-1">
+            {alreadyDisabled || !permission ? disabledInfo : enabledInfo}
+          </p>
         </HoverCardContent>
       </HoverCard>
+    );
+  };
+
+  if (alreadyDisabled) {
+    return (
+      <span className="grid grid-cols-12">
+        <span>
+          <Checkbox checked={false} id={id} className="align-middle mr-2" disabled />
+        </span>
+        <span className="col-span-10">
+          <MakeHover>
+            <Label htmlFor={id}>
+              {permission || disabledText}
+            </Label>
+          </MakeHover>
+        </span>
+        <MakeHover>
+          <InfoCircledIcon className="text-gray-400 mt-3"/>
+        </MakeHover>
+      </span>
     );
   }
 
   return (
-    <HoverCard>
-      <HoverCardTrigger>
-        <span className="grid grid-cols-12">
-            <span>
-              <Checkbox
-                onClick={(e) => {
-                  const target = e.target as Element;
-                  const isChecked = target.getAttribute("aria-checked") === "true";
-                  setPermission(!isChecked);
-                  if (!isChecked && flag) {
-                    setFlag(false);
-                  }
-                }}
-                id={id}
-                className="align-middle mr-2"
-                checked={permission}
-              />
-          </span>
-          <span className="col-span-10">
-            <Label htmlFor={id}>
-              {permission ? allowedText : disabledText}
-            </Label>
-          </span>
-          <InfoCircledIcon className="text-gray-400 mt-3"/>
-        </span>
-
-      </HoverCardTrigger>
-      <HoverCardContent className={"w-80 mt-1"} align="start">
-        <h4 className="scroll-m-20 text-md font-semibold tracking-tight">{t("Predictions:about")}: {id}</h4>
-        <p className="leading-6 text-sm [&:not(:first-child)]:mt-1">{permission ? enabledInfo : disabledInfo}</p>
-      </HoverCardContent>
-    </HoverCard>
+    <span className="grid grid-cols-12">
+        <span>
+          <Checkbox
+            onClick={(e) => {
+              const target = e.target as Element;
+              const isChecked = target.getAttribute("aria-checked") === "true";
+              setPermission(!isChecked);
+              if (!isChecked && flag) {
+                setFlag(false);
+              }
+            }}
+            id={id}
+            className="align-middle mr-2"
+            checked={permission}
+          />
+      </span>
+      <span className="col-span-10">
+        <MakeHover>
+          <Label htmlFor={id}>
+            {permission ? allowedText : disabledText}
+          </Label>
+        </MakeHover>
+      </span>
+      <MakeHover>
+        <InfoCircledIcon className="text-gray-400 mt-3"/>
+      </MakeHover>
+    </span>
   );
 }

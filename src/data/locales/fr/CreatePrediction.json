@@ -3,37 +3,8 @@
     "headerText": "Création de l'actif de marché de prédiction suivant : {{symbol}}"
   },
   "card": {
-    "title": "Formulaire de création d’actifs du marché de prédiction",
-    "description": "Créez un nouvel actif de marché de prédiction en remplissant le formulaire ci-dessous."
-  },
-  "asset_details": {
-    "title": "Détails de l'actif",
-    "title_content": "Il s’agit des paramètres d’actifs utilisés pour les fonctionnalités DEX de base.",
-    "symbol": {
-      "header": "Symbole d'actif",
-      "header_content": "Le symbole de l'actif est un identifiant unique sur la blockchain identifiant l'actif dans tout le DEX. ",
-      "placeholder": "Symbole"
-    },
-    "shortName": {
-      "header": "Nom abrégé de l'actif",
-      "header_content": "Il s'agit du nom court de l'actif, moins important que le symbole mais qui reste un identifiant unique éventuellement abrégé. ",
-      "placeholder": "Nom court"
-    },
-    "description": {
-      "header": "Description de l'actif",
-      "header_content": "Il s'agit de la description de l'actif, elle sera affichée dans le DEX et pourra être utilisée pour fournir plus d'informations sur l'actif.",
-      "placeholder": "Description"
-    },
-    "max_supply": {
-      "header": "Approvisionnement maximal",
-      "header_content": "L'offre maximale de l'actif, c'est le montant total de l'actif qui peut être créé par les emprunteurs pendant que l'actif du marché de prédiction est actif.",
-      "placeholder": "Approvisionnement maximum"
-    },
-    "precision": {
-      "header": "Précision des actifs",
-      "header_content": "La précision de l'actif spécifie la quantité de décimales prises en charge. ",
-      "placeholder": "Précision"
-    }
+    "title": "Création d'un nouvel actif de marché de prédiction",
+    "description": "En créant un marché de prédiction d'actifs, vous pouvez agir en tant que centre de paris décentralisés sur des événements futurs en échange de frais de commission sans exposition au risque de contrepartie du pool de gains."
   },
   "pma": {
     "title": "Détails des actifs du marché de prédiction",
@@ -41,7 +12,7 @@
     "condition": {
       "header": "Condition",
       "header_content": "Fournissez ici les détails des actifs du marché de prédiction",
-      "placeholder": "Conditions de prédiction"
+      "placeholder": "Conditions de prévision"
     },
     "commission": {
       "header": "Commission (%)",
@@ -57,70 +28,6 @@
       "header_content": "La date et l'heure de résolution sont la date et l'heure auxquelles l'actif du marché de prédiction sera résolu. "
     }
   },
-  "permissions": {
-    "header": "Autorisations de l'actif",
-    "header_content": "Remarque : la désactivation des autorisations est une décision permanente",
-    "charge_market_fee": {
-      "allowedText": "Frais de marché autorisés (charge_market_fee)",
-      "disabledText": "Frais de marché désactivés"
-    },
-    "white_list": {
-      "allowedText": "Liste blanche autorisée (white_list)",
-      "disabledText": "Liste blanche désactivée"
-    },
-    "override_authority": {
-      "allowedText": "Autorité de remplacement autorisée (override_authority)",
-      "disabledText": "Autorité de remplacement désactivée"
-    },
-    "transfer_restricted": {
-      "allowedText": "Transfert restreint autorisé (transfer_restricted)",
-      "disabledText": "Transfert restreint désactivé"
-    },
-    "disable_confidential": {
-      "allowedText": "Désactiver la confidentialité autorisée (disable_confidential)",
-      "disabledText": "Désactiver la confidentialité désactivée"
-    },
-    "witness_fed_asset": {
-      "allowedText": "Actif alimenté par un témoin autorisé",
-      "disabledText": "Actif alimenté par un témoin désactivé"
-    },
-    "committee_fed_asset": {
-      "allowedText": "Actif alimenté par le comité autorisé",
-      "disabledText": "Comité alimenté actif désactivé"
-    }
-  },
-  "flags": {
-    "header": "Drapeaux de l'actif",
-    "header_content": "Chaque autorisation d'actif autorisée peut être activée/désactivée.",
-    "charge_market_fee": {
-      "allowedText": "Frais de marché activés",
-      "disabledText": "Frais de marché désactivés"
-    },
-    "white_list": {
-      "allowedText": "Liste blanche activée",
-      "disabledText": "Liste blanche désactivée"
-    },
-    "override_authority": {
-      "allowedText": "Autorité de remplacement activée",
-      "disabledText": "Autorité de remplacement désactivée"
-    },
-    "transfer_restricted": {
-      "allowedText": "Transfert restreint activé",
-      "disabledText": "Transfert restreint désactivé"
-    },
-    "disable_confidential": {
-      "allowedText": "Désactiver la confidentialité activée",
-      "disabledText": "Désactiver la confidentialité désactivée"
-    },
-    "witness_fed_asset": {
-      "allowedText": "Actif alimenté par un témoin activé",
-      "disabledText": "Actif alimenté par un témoin désactivé"
-    },
-    "committee_fed_asset": {
-      "allowedText": "Actif alimenté par le comité activé",
-      "disabledText": "Comité alimenté actif désactivé"
-    }
-  },
   "buttons": {
     "submit": "Soumettre"
   },
@@ -130,53 +37,5 @@
     "3": "Cette interface utilisateur et les portefeuilles Beet/BEETEOS ne prennent pas en charge les comptes multi-signatures, votre compte maison est donc un point de défaillance unique à long terme – protégez-le bien.",
     "title": "Certains des risques associés à la création d'actifs de marché de prédiction",
     "description": "Faites vos propres recherches avant de créer une PMA, lisez d'abord la documentation ; "
-  },
-  "extensions": {
-    "header_content": "Les extensions sont des paramètres avancés supplémentaires qui peuvent être utilisés pour personnaliser davantage l'actif.",
-    "header": "Extensions des frais de marché",
-    "reward_percent": {
-      "enabled": "Extension du pourcentage de récompense du parrain activée",
-      "enabledInfo": "Une réduction en pourcentage des frais de marché sera allouée au référent des participants actifs au marché.",
-      "disabled": "Activer l'extension du pourcentage de récompense du parrain ?",
-      "disabledInfo": "L'extension du pourcentage de récompense du référent permet au créateur d'actifs d'attribuer un pourcentage des frais de marché au référent des participants actifs du marché.",
-      "header": "Pourcentage de récompense du parrain",
-      "header_content": "Le pourcentage de récompense du parrain est le pourcentage des frais de marché qui est alloué au parrain des participants actifs au marché."
-    },
-    "whitelist_market_fee_sharing": {
-      "enabled": "Extension de partage des frais de marché sur liste blanche activée",
-      "enabledInfo": "Les comptes référents suivants seront approuvés pour recevoir une réduction des frais de marché collectés sur leurs comptes référents.",
-      "disabled": "Activer l'extension de partage des frais de marché sur liste blanche ?",
-      "disabledInfo": "Vous pouvez limiter les personnes autorisées à recevoir une réduction des frais de marché collectés à un ensemble de comptes référents pré-approuvés.",
-      "header": "Partage des frais de marché sur liste blanche",
-      "header_content": "L'extension de partage des frais de marché sur liste blanche permet à la maison de limiter les référents vers ces comptes sur liste blanche."
-    },
-    "taker_fee_percent": {
-      "enabled": "Extension du pourcentage des frais du preneur activée",
-      "enabledInfo": "Le participant « preneur » de l'ordre limité recevra un pourcentage des frais de marché.",
-      "disabled": "Activer l'extension du pourcentage des frais du preneur ?",
-      "disabledInfo": "L'extension du pourcentage des frais du preneur permet au créateur d'actifs d'attribuer un pourcentage des frais de marché au « preneur » des opérations d'ordre limité.",
-      "header": "Pourcentage des frais du preneur",
-      "header_content": "Le pourcentage des frais du preneur est le pourcentage des frais de marché qui est alloué au « preneur » des ordres limités sur la bourse décentralisée."
-    },
-    "allowed_markets": {
-      "enabled": "Extension des marchés autorisés activée",
-      "enabledInfo": "Les marchés suivants sont autorisés à négocier cet actif.",
-      "disabled": "Activer l'extension des marchés autorisés ?",
-      "disabledInfo": "Vous pouvez limiter les marchés autorisés à négocier cet actif à un ensemble de marchés pré-approuvés."
-    },
-    "banned_markets": {
-      "enabled": "Extension des marchés interdits activée",
-      "enabledInfo": "Les marchés suivants sont interdits de négocier cet actif.",
-      "disabled": "Activer l'extension des marchés interdits ?",
-      "disabledInfo": "Cette fonctionnalité vous permet d'interdire des paires de négociation de marché spécifiques, vous permettant ainsi d'éviter que vos actifs ne soient négociés sur des marchés indésirables."
-    }
-  },
-  "whitelist": {
-    "header_content": "Les autorités de liste blanche d'actifs sont des comptes qui peuvent contribuer à la liste des comptes autorisés de leur compte pour autoriser l'interaction avec cet accès.",
-    "header": "Autorités de la liste blanche des actifs"
-  },
-  "blacklist": {
-    "header_content": "Les autorités de liste noire d'actifs sont des comptes qui peuvent contribuer à la liste des comptes sur liste noire de leur compte pour appliquer une liste de comptes interdits empêchant toute interaction avec cet accès.",
-    "header": "Autorités de liste noire des actifs"
   }
 }

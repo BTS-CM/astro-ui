@@ -1263,7 +1263,7 @@ export default function PoolStake() {
                   </Form>
                   {showDialog && stakeTab === "stake" ? (
                     <DeepLinkDialog
-                      operationName="liquidity_pool_deposit"
+                      operationNames={["liquidity_pool_deposit"]}
                       username={usr.username}
                       usrChain={usr.chain}
                       userID={usr.id}
@@ -1295,7 +1295,7 @@ export default function PoolStake() {
                   ) : null}
                   {showDialog && stakeTab === "unstake" ? (
                     <DeepLinkDialog
-                      operationName="liquidity_pool_withdraw"
+                      operationNames={["liquidity_pool_withdraw"]}
                       username={usr.username}
                       usrChain={usr.chain}
                       userID={usr.id}

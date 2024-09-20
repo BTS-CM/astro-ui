@@ -24,7 +24,7 @@ import { copyToClipboard } from "@/lib/common.js";
  * Buttons link to the Beet/BeetEOS multiwallets
  */
 export default function DeepLinkDialog(properties) {
-  const { trxJSON, operationName, username, usrChain, userID, dismissCallback, headerText } =
+  const { trxJSON, operationNames, username, usrChain, userID, dismissCallback, headerText } =
     properties;
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
 
@@ -37,7 +37,11 @@ export default function DeepLinkDialog(properties) {
         return;
       }
 
-      let response = await window.electron.generateDeepLink({usrChain, operationName, trxJSON});
+      let response = await window.electron.generateDeepLink({
+        usrChain,
+        operationNames,
+        trxJSON
+      });
         
       if (!response) {
         console.log("Failed to fetch deeplink");
@@ -47,10 +51,10 @@ export default function DeepLinkDialog(properties) {
       setDeeplink(response);
     }
 
-    if (usrChain && operationName && trxJSON) {
+    if (usrChain && operationNames && trxJSON) {
       fetchDeeplink();
     }
-  }, [usrChain, operationName, trxJSON]);
+  }, [usrChain, operationNames, trxJSON]);
 
   const [downloadClicked, setDownloadClicked] = useState(false);
   const handleDownloadClick = () => {
@@ -124,7 +128,7 @@ export default function DeepLinkDialog(properties) {
                     </Label>
                     <span className="text-left text-sm">
                       {t("DeepLinkDialog:tabsContent.operationType", {
-                        operationName: operationName,
+                        operationName: operationNames.join(", "),
                       })}
                     </span>
                     <Textarea
@@ -149,7 +153,7 @@ export default function DeepLinkDialog(properties) {
                   <ol className="ml-4">
                     <li type="1">{t("DeepLinkDialog:tabsContent.step1")}</li>
                     <li type="1">
-                      {t("DeepLinkDialog:tabsContent.step2", { operationName: operationName })}
+                      {t("DeepLinkDialog:tabsContent.step2", { operationName: operationNames.join(", ") })}
                     </li>
                     <li type="1">{t("DeepLinkDialog:tabsContent.step3")}</li>
                     <li type="1">{t("DeepLinkDialog:tabsContent.step4")}</li>
@@ -185,7 +189,7 @@ export default function DeepLinkDialog(properties) {
                   <ol className="ml-4">
                     <li type="1">{t("DeepLinkDialog:tabsContent.step1Local")}</li>
                     <li type="1">
-                      {t("DeepLinkDialog:tabsContent.step2Local", { operationName: operationName })}
+                      {t("DeepLinkDialog:tabsContent.step2Local", { operationName: operationNames.join(", ") })}
                     </li>
                     <li type="1">{t("DeepLinkDialog:tabsContent.step3Local")}</li>
                     <li type="1">{t("DeepLinkDialog:tabsContent.step4Local")}</li>
@@ -199,7 +203,7 @@ export default function DeepLinkDialog(properties) {
                   {deeplink && !downloadClicked ? (
                     <a
                       href={`data:text/json;charset=utf-8,${deeplink}`}
-                      download={`${operationName}.json`}
+                      download={`${operationNames.join("_and_")}.json`}
                       target="_blank"
                       rel="noreferrer"
                       onClick={handleDownloadClick}

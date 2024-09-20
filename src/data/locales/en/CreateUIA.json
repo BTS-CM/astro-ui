@@ -3,114 +3,11 @@
         "headerText": "Creating the following User Issued Asset: {{symbol}}"
     },
     "card": {
-        "title_create": "Creating an User Issued Asset",
+        "title_create": "Creating a new User Issued Asset",
         "title_edit": "Editing an User Issued Asset",
         "description": "User Issued Assets can represent anything you want, they can be used for a variety of purposes. They can be used as a token for your business, a reward token, a token for a game, and more."
     },
-    "asset_details": {
-        "title": "Asset Details",
-        "title_content": "These are the asset settings used for core DEX functionality.",
-        "symbol": {
-            "header": "Asset symbol",
-            "header_content": "The asset symbol is an unique identifier on the blockchain identifiying the asset throughout the DEX. Cheaper assets can be created by using a subasset name like NFT.TITLE",
-            "placeholder": "Symbol"
-        },
-        "shortName": {
-            "header": "Asset short name",
-            "header_content": "This is the short name of the asset, less important than the symbol but still am optionally shortened unique identifier. You can just re-use the symbol for this field.",
-            "placeholder": "Short Name"
-        },
-        "preferredMarket": {
-            "header": "Preferred market trading pair",
-            "header_content": "The preferred market trading pair is the default asset used to trade against your asset, this is an informal suggestion."
-        },
-        "description": {
-            "header": "Asset description",
-            "header_content": "This is the description of the asset, it will be displayed in the DEX and can be used to provide more information about the asset.",
-            "placeholder": "Description"
-        },
-        "max_supply": {
-            "header": "Maximum supply",
-            "header_content": "The maximum supply of the asset, this is the total amount of the asset that can ever be issued by the asset owner (you).",
-            "placeholder": "Max supply"
-        },
-        "precision": {
-            "header": "Asset precision",
-            "header_content": "The precision of the asset specifies the quantity of supported decimal places. This value cannot be changed after asset creation.",
-            "placeholder": "Precision"
-        }
-    },
     "buttons": {
         "submit": "Submit"
-    },
-    "extensions": {
-        "header_content": "The extensions are additional advanced settings that can be used to further customize the asset.",
-        "header": "Market Fee Extensions",
-        "reward_percent": {
-            "enabled": "Referrer reward percentage extension enabled",
-            "enabledInfo": "A percentage cut of the market fee will be allocated to the referrer of active market participants.",
-            "disabled": "Enable the referrer reward percentage extension?",
-            "disabledInfo": "The referrer reward percentage extension allows the asset creator to allocate a percentage of the market fee to the referrer of active market participants.",
-            "header": "Referrer reward percentage",
-            "header_content": "The referrer reward percentage is the percentage of the market fee which is allocated to the referrer of active market participants."
-        },
-        "whitelist_market_fee_sharing": {
-            "enabled": "Whitelist market fee sharing extension enabled",
-            "enabledInfo": "The following referrer accounts will be approved to receive a cut of the collected market fees from their referrer accounts.",
-            "disabled": "Enable the whitelist market fee sharing extension?",
-            "disabledInfo": "You can limit who is allowed to receive a cut of the collected market fees to a set of pre-approved referrer accounts.",
-            "header": "Whitelist market fee sharing",
-            "header_content": "The whitelist market fee sharing extension allows the house to limit referrers to these whitelisted accounts."
-        },
-        "taker_fee_percent": {
-            "enabled": "Taker fee percentage extension enabled",
-            "enabledInfo": "The 'taker' participant of the limit order will receive a percentage of the market fee.",
-            "disabled": "Enable the taker fee percentage extension?",
-            "disabledInfo": "The taker fee percentage extension allows the asset creator to allocate a percentage of the market fee to the 'taker' of limit order operations.",
-            "header": "Taker fee percentage",
-            "header_content": "The taker fee percentage is the percentage of the market fee which is allocated to the 'taker' of the limit orders on the decentralized exchange."
-        },
-        "allowed_markets": {
-            "enabled": "Allowed markets extension enabled",
-            "enabledInfo": "The following markets are approved to trade this asset.",
-            "disabled": "Enable the allowed markets extension?",
-            "disabledInfo": "You can limit the markets that are allowed to trade this asset to a set of pre-approved markets."
-        },
-        "banned_markets": {
-            "enabled": "Banned markets extension enabled",
-            "enabledInfo": "The following markets are banned from trading this asset.",
-            "disabled": "Enable the banned markets extension?",
-            "disabledInfo": "This feature enables you to ban specific market trading pairs, enabling you to help avoid your asset trading on undesired markets."
-        }
-    },
-    "whitelist": {
-        "header_content": "The asset whitelist authorities are accounts who can contribute their account's whistelisted accounts list to authorize interaction with this access.", 
-        "header": "Asset Whitelist authorities"
-    },
-    "blacklist": {
-        "header_content": "The asset blacklist authorities are accounts who can contribute their account's blacklisted accounts list to enforce a banned account list preventing interaction with this access.",
-        "header": "Asset blacklist authorities"
-    },
-    "market_fee": {
-        "header_content": "The market fee is the fee percentage that is charged on every trade that is executed on the Bitshares DEX. The fee is charged in the asset that is being traded.",
-        "header": "Market fee percent"
-    },
-    "max_market_fee": {
-        "header": "Maximum market fee",
-        "header_content": "The maximum market fee is the maximum amount of the asset that can be charged as a fee on every trade that is executed on the Bitshares DEX."
-    },
-    "cer": {
-        "quote_asset_amount": {
-            "header": "Quote asset amount",
-            "header_content": "The amount of the your user issued asset that is required to purchase the base asset amount."
-        },
-        "base_asset_amount": {
-            "header": "Base asset amount",
-            "header_content": "The amount of the base asset ({{symbol}}) that is required to purchase the quote asset amount."
-        },
-        "calculated_cer_price": {
-            "header": "Core exchange rate",
-            "header_content": "Make sure your core exchange rate is higher than the market price, otherwise people will buy your token from the market and drain your fee pool via implicit arbitrage. The core exchange rate should be updated regularly to reflect market pricing of your asset."
-        }
     }
 }

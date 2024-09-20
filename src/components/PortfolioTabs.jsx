@@ -404,7 +404,7 @@ export default function PortfolioTabs(properties) {
                 </Button>
                 {showDialog && orderId === orderID ? (
                   <DeepLinkDialog
-                    operationName="limit_order_cancel"
+                    operationNames={["limit_order_cancel"]}
                     username={usr.username}
                     usrChain={usr.chain}
                     userID={usr.id}

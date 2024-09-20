@@ -3,114 +3,11 @@
     "headerText": "Järgmise kasutaja väljastatud vara loomine: {{symbol}}"
   },
   "card": {
-    "title_create": "Kasutaja väljastatud vara loomine",
+    "title_create": "Uue kasutaja väljastatud vara loomine",
     "title_edit": "Kasutaja väljastatud vara redigeerimine",
     "description": "Kasutaja väljastatud varad võivad esindada kõike, mida soovite, neid saab kasutada erinevatel eesmärkidel. "
   },
-  "asset_details": {
-    "title": "Vara üksikasjad",
-    "title_content": "Need on DEX-i põhifunktsioonide jaoks kasutatavad varaseaded.",
-    "symbol": {
-      "header": "Vara sümbol",
-      "header_content": "Vara sümbol on plokiahela kordumatu identifikaator, mis identifitseerib vara kogu DEX-is. ",
-      "placeholder": "Sümbol"
-    },
-    "shortName": {
-      "header": "Vara lühinimi",
-      "header_content": "See on vara lühinimi, mis on sümbolist vähem oluline, kuid olen siiski valikuliselt lühendatud kordumatu identifikaator. ",
-      "placeholder": "Lühike nimi"
-    },
-    "preferredMarket": {
-      "header": "Eelistatud turu kauplemispaar",
-      "header_content": "Eelistatud turu kauplemispaar on vaikevara, mida kasutatakse teie vara vastu kauplemiseks, see on mitteametlik soovitus."
-    },
-    "description": {
-      "header": "Vara kirjeldus",
-      "header_content": "See on vara kirjeldus, see kuvatakse DEX-is ja seda saab kasutada vara kohta lisateabe pakkumiseks.",
-      "placeholder": "Kirjeldus"
-    },
-    "max_supply": {
-      "header": "Maksimaalne pakkumine",
-      "header_content": "Vara maksimaalne pakkumine, see on vara kogusumma, mille vara omanik (teie) võib kunagi välja anda.",
-      "placeholder": "Maksimaalne pakkumine"
-    },
-    "precision": {
-      "header": "Varade täpsus",
-      "header_content": "Vara täpsus määrab toetatud kümnendkohtade arvu. ",
-      "placeholder": "Täpsus"
-    }
-  },
   "buttons": {
     "submit": "Esita"
-  },
-  "extensions": {
-    "header_content": "Laiendused on täiendavad täpsemad seaded, mida saab kasutada vara täiendavaks kohandamiseks.",
-    "header": "Turutasude laiendused",
-    "reward_percent": {
-      "enabled": "Soovitaja preemia protsendilaiend on lubatud",
-      "enabledInfo": "Aktiivsete turuosaliste suunajale määratakse turutasu protsentuaalne kärpe.",
-      "disabled": "Kas lubada suunaja preemia protsendilaiend?",
-      "disabledInfo": "Soovitaja tasu protsendi laiendus võimaldab vara loojal eraldada aktiivsete turuosaliste suunajale teatud protsendi turutasust.",
-      "header": "Soovitaja preemia protsent",
-      "header_content": "Soovitaja preemia protsent on protsent turutasust, mis eraldatakse aktiivsete turuosaliste suunajale."
-    },
-    "whitelist_market_fee_sharing": {
-      "enabled": "Valge nimekirja turutasude jagamise laiendus on lubatud",
-      "enabledInfo": "Järgmised suunajakontod kiidetakse heaks, et saada nende suunajakontodelt kogutud turutasusid.",
-      "disabled": "Kas lubada valge nimekirja turutasude jagamise laiendus?",
-      "disabledInfo": "Saate piirata seda, kellel on lubatud kogutud turutasudest kärpeid saada, eelnevalt kinnitatud suunajakontode komplektiga.",
-      "header": "Turutasude jagamine valgesse nimekirja",
-      "header_content": "Valge nimekirja turu tasude jagamise laiendus võimaldab majal piirata nendele lubatud kontodele viitajaid."
-    },
-    "taker_fee_percent": {
-      "enabled": "Tasu protsendi laiendus on lubatud",
-      "enabledInfo": "Limiittellimuse 'võtja' osaleja saab protsendi turutasust.",
-      "disabled": "Kas lubada vastuvõtjatasu protsendilaiend?",
-      "disabledInfo": "Vastuvõtjatasu protsendi laiendus võimaldab vara loojal eraldada teatud protsendi turutasust limiitkorraldusoperatsioonide „võtjale”.",
-      "header": "Võtja tasu protsent",
-      "header_content": "Võtmistasu protsent on protsent turutasust, mis jaotatakse detsentraliseeritud börsil limiitkorralduste \"võtjale\"."
-    },
-    "allowed_markets": {
-      "enabled": "Lubatud turgude laiendus on lubatud",
-      "enabledInfo": "Selle varaga kauplemiseks on lubatud järgmised turud.",
-      "disabled": "Kas lubada lubatud turgude laiendus?",
-      "disabledInfo": "Saate piirata turge, millel on lubatud selle varaga kaubelda, eelnevalt kinnitatud turgudega."
-    },
-    "banned_markets": {
-      "enabled": "Keelatud turgude laiendus on lubatud",
-      "enabledInfo": "Järgmistel turgudel on selle varaga kauplemine keelatud.",
-      "disabled": "Kas lubada keelatud turgude laiendus?",
-      "disabledInfo": "See funktsioon võimaldab teil keelata teatud turukauplemispaarid, mis võimaldab teil vältida oma varadega kauplemist soovimatutel turgudel."
-    }
-  },
-  "whitelist": {
-    "header_content": "Lubatud varade loendi asutused on kontod, kes saavad oma konto volitatud loendisse kantud kontode loendisse lisada, et lubada selle juurdepääsuga suhtlemist.",
-    "header": "Varade valgesse nimekirja kantud ametiasutused"
-  },
-  "blacklist": {
-    "header_content": "Varade musta nimekirja asutused on kontod, kes saavad lisada oma konto musta nimekirja kantud kontode loendisse, et jõustada keelatud kontode loend, mis takistab selle juurdepääsuga suhtlemist.",
-    "header": "Varade musta nimekirja asutused"
-  },
-  "market_fee": {
-    "header_content": "Turutasu on tasu protsent, mida võetakse iga tehingu eest, mis tehakse Bitshares DEXis. ",
-    "header": "Turutasu protsent"
-  },
-  "max_market_fee": {
-    "header": "Maksimaalne turutasu",
-    "header_content": "Maksimaalne turutasu on vara maksimaalne summa, mida saab tasuda iga tehingu eest, mis tehakse Bitshares DEXis."
-  },
-  "cer": {
-    "quote_asset_amount": {
-      "header": "Pakkuge vara summat",
-      "header_content": "Teie kasutaja väljastatud vara summa, mis on vajalik põhivarasumma ostmiseks."
-    },
-    "base_asset_amount": {
-      "header": "Põhivara summa",
-      "header_content": "Põhivara summa ({{symbol}}), mida on vaja noteeritava vara summa ostmiseks."
-    },
-    "calculated_cer_price": {
-      "header": "Põhivahetuskurss",
-      "header_content": "Veenduge, et teie põhivahetuskurss oleks turuhinnast kõrgem, vastasel juhul ostavad inimesed teie märgi turult ja tühjendavad teie tasufondi kaudse arbitraaži kaudu. "
-    }
   }
 }

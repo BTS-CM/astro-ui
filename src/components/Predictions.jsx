@@ -804,7 +804,7 @@ export default function Predictions(properties) {
                                   {
                                     issueDialog
                                     ? <DeepLinkDialog
-                                        operationName="call_order_update"
+                                        operationNames={["call_order_update"]}
                                         username={usr.username}
                                         usrChain={usr.chain}
                                         userID={usr.id}
@@ -1027,7 +1027,7 @@ export default function Predictions(properties) {
                               {
                                 sellDialog // selling the PMA token in return for backing asset tokens
                                   ? <DeepLinkDialog
-                                      operationName="limit_order_create"
+                                      operationNames={["limit_order_create"]}
                                       username={usr.username}
                                       usrChain={usr.chain}
                                       userID={usr.id}
@@ -1267,7 +1267,7 @@ export default function Predictions(properties) {
                                 {
                                   buyDialog // buying the PMA token in return for backing asset tokens
                                     ? <DeepLinkDialog
-                                        operationName="limit_order_create"
+                                        operationNames={["limit_order_create"]}
                                         username={usr.username}
                                         usrChain={usr.chain}
                                         userID={usr.id}
@@ -1392,7 +1392,7 @@ export default function Predictions(properties) {
                                 {
                                   claimDialog
                                     ? <DeepLinkDialog
-                                        operationName="asset_settle"
+                                        operationNames={["asset_settle"]}
                                         username={usr.username}
                                         usrChain={usr.chain}
                                         userID={usr.id}
@@ -1519,7 +1519,7 @@ export default function Predictions(properties) {
                                     {
                                       resolveDialog && chosenOutcome
                                         ? <DeepLinkDialog
-                                            operationName="asset_global_settle"
+                                            operationNames={["asset_global_settle"]}
                                             username={usr.username}
                                             usrChain={usr.chain}
                                             userID={usr.id}
@@ -1651,7 +1651,7 @@ export default function Predictions(properties) {
                                   {
                                     pricefeederDialog
                                       ? <DeepLinkDialog
-                                          operationName="asset_update_feed_producers"
+                                          operationNames={["asset_update_feed_producers"]}
                                           username={usr.username}
                                           usrChain={usr.chain}
                                           userID={usr.id}
@@ -1736,7 +1736,7 @@ export default function Predictions(properties) {
                                   {
                                     priceFeedDialog && priceFeedOutcome
                                       ? <DeepLinkDialog // feeding the price of the prediction market asset (witness || committee || private price feeder)
-                                          operationName="asset_publish_feed"
+                                          operationNames={["asset_publish_feed"]}
                                           username={usr.username}
                                           usrChain={usr.chain}
                                           userID={usr.id}
@@ -1893,7 +1893,7 @@ export default function Predictions(properties) {
           /*
           buyDialog || sellDialog
             ? <DeepLinkDialog
-                operationName="limit_order_create"
+                operationNames={["limit_order_create"]}
                 username={usr.username}
                 usrChain={usr.chain}
                 userID={usr.id}

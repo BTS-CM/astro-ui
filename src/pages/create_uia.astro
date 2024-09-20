@@ -2,14 +2,14 @@
 import Layout from '../layouts/Layout.astro';
 import PageHeader from '../components/PageHeader';
 import PageFooter from '../components/PageFooter';
-import UIA from '../components/UIA';
+import CreateUIA from '../components/CreateUIA';
 ---
 
 <Layout title="Bitshares Beet Astro UI - Creating an User Issued Asset">
 	<main>
 		<PageHeader client:only="react" page="uia" backURL="" />
-		<UIA client:only="react" />
-		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/create_prediction/index.astro" />
+		<CreateUIA client:only="react" />
+		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/create_uia/index.astro" />
 	</main>
 </Layout>
 

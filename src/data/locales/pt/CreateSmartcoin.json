@@ -1,0 +1,67 @@
+{
+    "card": {
+      "title_create": "Criando um novo ativo Smartcoin",
+      "title_edit": "Editando um ativo Smartcoin existente",
+      "description": "Smartcoins são ativos garantidos que podem fazer referência a feeds de preços de mercado externo. "
+    },
+    "title": {
+      "header": "Configurações de Smartcoin",
+      "header_content": "As configurações abaixo definem como sua smartcoin se comportará na blockchain Bitshares. "
+    },
+    "bsrm": {
+      "header": "Estratégia de gerenciamento de riscos do Cisne Negro",
+      "header_content": "Estas estratégias oferecem resultados diferentes para posições de dívida subcolateralizadas, permitindo-lhe desativar, minimizar ou globalizar o risco de liquidação da posição de dívida. ",
+      "select_0": "Liquidação Global: Todas as posições de dívida encerradas; ",
+      "select_1": "Sem Liquidação: Nenhuma posição de dívida é encerrada; ",
+      "select_2": "Fundos de Liquidação Individuais: As posições de dívida subcolateralizadas são encerradas; ",
+      "select_3": "Ordens de Liquidação Individuais: As posições de dívida subcolateralizadas são encerradas; "
+    },
+    "mcr": {
+      "header": "Proporção de garantia mínima estática",
+      "header_content": "Este é o índice de garantia mínimo exigido para que uma posição de dívida seja considerada totalmente garantida. "
+    },
+    "icr": {
+      "header": "Proporção de garantia inicial estática",
+      "header_content": "Este é o rácio de garantia necessário para que uma posição de dívida seja considerada totalmente garantida no momento da criação. "
+    },
+    "mssr": {
+      "header": "Taxa de compressão curta máxima estática",
+      "header_content": "Este é o rácio de garantia máximo pelo qual uma posição de dívida pode ser liquidada. "
+    },
+    "feed_lifetime": {
+      "header": "Vida útil do feed",
+      "header_content": "O tempo em segundos que um feed de preço é considerado válido. "
+    },
+    "minimum_feeds": {
+      "header": "Feeds mínimos",
+      "header_content": "O número mínimo de feeds de preços necessários para calcular o preço atual do feed."
+    },
+    "force_settlement_delay": {
+      "header": "Forçar Atraso na Liquidação",
+      "header_content": "O tempo em segundos que um usuário deve esperar após a liquidação forçada antes que a operação de liquidação seja executada no blockchain."
+    },
+    "force_settlement_offset": {
+      "header": "Forçar compensação de liquidação",
+      "header_content": "A porcentagem do preço feed pela qual o preço de liquidação forçada é compensado para a operação de liquidação."
+    },
+    "maximum_force_settlement_volume": {
+      "header": "Volume Máximo de Liquidação de Força",
+      "header_content": "O valor máximo do fornecimento de ativos que pode ser liquidado à força dentro de um período de 24 horas."
+    },
+    "extensions": {
+      "margin_call_fee_ratio": {
+        "enabled": "Extensão Margin Call Fee Ratio ativada",
+        "disabled": "Habilitar a extensão smartcoin Margin Call Fee Ratio?",
+        "extensionInfo": "A extensão Margin Call Fee Ratio permite que o proprietário do smartcoin cobre uma taxa de um usuário quando sua posição de dívida é chamada de margem. ",
+        "header": "Taxa de taxa de chamada de margem",
+        "header_content": "A taxa cobrada de um usuário quando sua posição de dívida é chamada de margem. "
+      },
+      "force_settle_fee": {
+        "enabled": "Extensão de taxa de liquidação forçada ativada",
+        "disabled": "Habilitar a extensão smartcoin Force Settle Fee?",
+        "extensionInfo": "A extensão Force Settle Fee permite que o proprietário do smartcoin cobre uma taxa de um usuário quando ele força a liquidação de sua posição de dívida. ",
+        "header": "Taxa de liquidação forçada",
+        "header_content": "A taxa cobrada de um usuário quando ele força a liquidação de sua dívida. "
+      }
+    }
+  }

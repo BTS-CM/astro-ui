@@ -993,11 +993,11 @@ export default function Settlement(properties) {
 
           {showDialog ? (
             <DeepLinkDialog
-              operationName={
+              operationNames={[
                 settlementFund && settlementFund.finalSettlementFund
                   ? "bid_collateral" // op: 45
                   : "asset_settle" // op: 17
-              }
+              ]}
               username={usr.username}
               usrChain={usr.chain}
               userID={usr.id}

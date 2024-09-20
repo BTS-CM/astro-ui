@@ -34,9 +34,9 @@ const chains = {
     },
 };
 
-async function generateDeepLink(chain, opType, operations) {
+async function generateDeepLink(chain, nodeURL, opTypes, operations) {
     return new Promise(async (resolve, reject) => {
-        const _node = chains[chain].nodeList[0].url
+        const _node = nodeURL ? nodeURL : chains[chain].nodeList[0].url;
 
         try {
             await Apis.instance(
@@ -53,7 +53,7 @@ async function generateDeepLink(chain, opType, operations) {
 
         const tr = new TransactionBuilder();
         for (let i = 0; i < operations.length; i++) {
-            tr.add_type_operation(opType, operations[i]);
+            tr.add_type_operation(opTypes[i], operations[i]);
         }
 
         try {
