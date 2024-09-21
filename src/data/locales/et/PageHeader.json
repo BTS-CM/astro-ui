@@ -63,7 +63,8 @@
     "tfunds": "Otsige, looge, värskendage või kustutage Same-T fonde allpool!",
     "create_vesting": "Kasutage seda vormi mis tahes konto omandisaldo loomiseks!",
     "uia": "Looge alloleva vormi abil oma kasutaja väljastatud vara!",
-    "issuedAssets": "Hallake oma loodud plokiahela varasid allolevatel vahekaartidel!"
+    "issuedAssets": "Hallake oma loodud plokiahela varasid allolevatel vahekaartidel!",
+    "create_smartcoin": "Uue smartcoini vara loomiseks kasutage allolevat vormi."
   },
   "back": "Mine tagasi",
   "usage": "Mõeldud kasutamiseks koos ",

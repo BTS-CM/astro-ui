@@ -150,11 +150,21 @@ const createWindow = async () => {
     });
 
     ipcMain.handle("generateDeepLink", async (event, arg) => {
-        const { usrChain, operationName, trxJSON } = arg;
+        const {
+            usrChain,
+            nodeURL,
+            operationNames,
+            trxJSON
+        } = arg;
 
         let deeplink;
         try {
-            deeplink = await generateDeepLink(usrChain, operationName, trxJSON);
+            deeplink = await generateDeepLink(
+                usrChain,
+                nodeURL,
+                operationNames,
+                trxJSON
+            );
         } catch (error) {
             console.log({ error });
         }

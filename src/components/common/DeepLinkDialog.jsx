@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { useStore } from '@nanostores/react';
 import { useTranslation } from "react-i18next";
-
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/dialog";
 
 import { copyToClipboard } from "@/lib/common.js";
+import { $currentNode } from "@/stores/node.ts";
 
 /**
  * Launches a dialog prompt, generating a deep link for the given operation.
@@ -27,6 +28,9 @@ export default function DeepLinkDialog(properties) {
   const { trxJSON, operationNames, username, usrChain, userID, dismissCallback, headerText } =
     properties;
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
+  const currentNode = useStore($currentNode);
+
+
 
   const [activeTab, setActiveTab] = useState("object");
   const [deeplink, setDeeplink] = useState();
@@ -39,6 +43,7 @@ export default function DeepLinkDialog(properties) {
 
       let response = await window.electron.generateDeepLink({
         usrChain,
+        currentNode: currentNode ? currentNode.url : "",
         operationNames,
         trxJSON
       });

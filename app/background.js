@@ -94,9 +94,11 @@ const chains = {
     },
 };
 
-async function generateDeepLink(chain, opType, operations) {
+async function generateDeepLink(chain, nodeURL, opTypes, operations) {
     return new Promise(async (resolve, reject) => {
-        const _node = chains[chain].nodeList[0].url
+        const _node = nodeURL && nodeURL.length
+            ? nodeURL
+            : chains[chain].nodeList[0].url;
 
         try {
             await bitsharesjs_ws__WEBPACK_IMPORTED_MODULE_0__.Apis.instance(
@@ -113,7 +115,7 @@ async function generateDeepLink(chain, opType, operations) {
 
         const tr = new bitsharesjs__WEBPACK_IMPORTED_MODULE_1__.TransactionBuilder();
         for (let i = 0; i < operations.length; i++) {
-            tr.add_type_operation(opType, operations[i]);
+            tr.add_type_operation(opTypes[i], operations[i]);
         }
 
         try {
@@ -494,11 +496,21 @@ const createWindow = async () => {
     });
 
     electron__WEBPACK_IMPORTED_MODULE_4__.ipcMain.handle("generateDeepLink", async (event, arg) => {
-        const { usrChain, operationName, trxJSON } = arg;
+        const {
+            usrChain,
+            nodeURL,
+            operationNames,
+            trxJSON
+        } = arg;
 
         let deeplink;
         try {
-            deeplink = await (0,_lib_deeplink_js__WEBPACK_IMPORTED_MODULE_6__.generateDeepLink)(usrChain, operationName, trxJSON);
+            deeplink = await (0,_lib_deeplink_js__WEBPACK_IMPORTED_MODULE_6__.generateDeepLink)(
+                usrChain,
+                nodeURL,
+                operationNames,
+                trxJSON
+            );
         } catch (error) {
             console.log({ error });
         }

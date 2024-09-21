@@ -36,7 +36,9 @@ const chains = {
 
 async function generateDeepLink(chain, nodeURL, opTypes, operations) {
     return new Promise(async (resolve, reject) => {
-        const _node = nodeURL ? nodeURL : chains[chain].nodeList[0].url;
+        const _node = nodeURL && nodeURL.length
+            ? nodeURL
+            : chains[chain].nodeList[0].url;
 
         try {
             await Apis.instance(

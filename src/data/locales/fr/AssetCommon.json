@@ -3,98 +3,82 @@
     "header": "Autorisations de l'actif",
     "header_content": "Remarque : la désactivation des autorisations est une décision permanente",
     "charge_market_fee": {
-      "true": "Frais de marché autorisés",
-      "false": "Frais de marché désactivés",
+      "about": "Activer les frais de marché",
       "enabledInfo": "Le créateur de l'actif peut permettre de facturer des frais de négociation sur le marché pour cet actif.",
       "disabledInfo": "Le créateur de l'actif ne peut pas facturer de frais de négociation sur le marché pour cet actif."
     },
     "white_list": {
-      "true": "Liste blanche autorisée",
-      "false": "Liste blanche désactivée",
+      "about": "Exiger que les titulaires soient sur la liste blanche",
       "enabledInfo": "Le créateur de l'actif peut activer la configuration des autorités de liste blanche pour cet actif.",
       "disabledInfo": "Le créateur de l'actif ne peut pas configurer les autorités de liste blanche pour cet actif."
     },
     "override_authority": {
-      "true": "Autorité de remplacement autorisée",
-      "false": "Autorité de remplacement désactivée",
+      "about": "Le propriétaire de l'actif peut se retransférer l'actif",
       "enabledInfo": "Le créateur de l'actif peut permettre d'effectuer une opération de transfert de remplacement sur cet actif.",
       "disabledInfo": "Le créateur de l'actif ne peut pas effectuer d'opérations de transfert de remplacement sur cet actif."
     },
     "transfer_restricted": {
-      "true": "Restriction de transfert autorisée",
-      "false": "Restriction de transfert désactivée",
+      "about": "Le propriétaire de l'actif doit approuver tous les transferts",
       "enabledInfo": "Le créateur de l'actif peut permettre de restreindre les transferts de cet actif.",
       "disabledInfo": "Le créateur de l'actif ne peut pas restreindre les transferts de cet actif."
     },
     "disable_confidential": {
-      "true": "Désactiver la confidentialité autorisée",
-      "false": "Désactiver la confidentialité désactivée",
+      "about": "Désactiver les transactions confidentielles",
       "enabledInfo": "Le créateur de l'actif peut activer la possibilité de désactiver les opérations confidentielles pour cet actif.",
       "disabledInfo": "Le créateur de l'actif ne peut pas désactiver les opérations confidentielles pour cet actif."
     },
     "witness_fed_asset": {
-      "true": "Actif alimenté par un témoin autorisé",
-      "false": "Actif alimenté par un témoin désactivé",
+      "about": "Autoriser les témoins à fournir des flux",
       "enabledInfo": "Le créateur de l'actif peut permettre aux témoins de publier des flux de prix pour cet actif.",
       "disabledInfo": "Le créateur de l'actif ne peut pas permettre aux témoins de publier des flux de prix pour cet actif."
     },
     "committee_fed_asset": {
-      "true": "Actif alimenté par le comité autorisé",
-      "false": "Comité alimenté actif désactivé",
+      "about": "Autoriser les membres du comité à fournir des flux",
       "enabledInfo": "Le créateur de l'actif peut permettre aux membres du comité de publier des flux de prix pour cet actif.",
       "disabledInfo": "Le créateur de l'actif ne peut pas permettre aux membres du comité de publier des flux de prix pour cet actif."
     },
     "disable_force_settle": {
-      "true": "Désactiver le règlement forcé autorisé",
-      "false": "Désactiver le règlement forcé désactivé",
+      "about": "Désactiver la stabilisation des forces",
       "enabledInfo": "Le créateur de l'actif peut activer la possibilité de désactiver le règlement forcé pour cet actif.",
       "disabledInfo": "Le créateur de l'actif ne peut pas désactiver le règlement forcé pour cet actif."
     },
     "global_settle": {
-      "true": "Règlement global autorisé",
-      "false": "Règlement global désactivé",
+      "about": "Autoriser le propriétaire de l'actif à forcer un règlement global",
       "enabledInfo": "Le créateur de l'actif peut permettre le règlement global de cet actif.",
       "disabledInfo": "Le créateur du bien ne peut pas régler globalement ce bien."
     },
     "lock_max_supply": {
-      "true": "Impossible de verrouiller l'approvisionnement maximum",
-      "false": "Capable de verrouiller l'approvisionnement maximum",
+      "about": "Verrouiller l'alimentation maximale",
       "enabledInfo": "Le créateur de l'actif ne peut pas verrouiller l'offre maximale de cet actif.",
       "disabledInfo": "Le créateur de l'actif peut verrouiller l'offre maximale de cet actif."
     },
     "disable_new_supply": {
-      "true": "Impossible de désactiver la nouvelle fourniture",
-      "false": "Capable de désactiver une nouvelle alimentation",
+      "about": "Désactiver la nouvelle fourniture",
       "enabledInfo": "Le créateur de l'actif ne peut pas désactiver la possibilité de créer un nouvel approvisionnement pour cet actif.",
       "disabledInfo": "Le créateur de l'actif peut désactiver la possibilité de créer une nouvelle offre pour cet actif."
     },
     "disable_collateral_bidding": {
-      "true": "Impossible de désactiver les enchères de garantie",
-      "false": "Capable de désactiver les enchères de garantie",
+      "about": "Désactiver les enchères de garantie",
       "enabledInfo": "Le créateur de l'actif ne peut pas désactiver les enchères de garanties pour cet actif.",
       "disabledInfo": "Le créateur de l'actif peut désactiver les enchères de garanties pour cet actif."
     },
     "disable_mcr_update": {
-      "true": "Impossible de mettre à jour le MCR statique",
-      "false": "Peut mettre à jour MCR",
+      "about": "Désactiver la mise à jour du propriétaire Ratio de garantie minimum",
       "enabledInfo": "Le propriétaire de l'actif utilise une exigence de ratio de garantie minimum alimentée par le prix pour cet actif.",
       "disabledInfo": "Le propriétaire de l'actif définit de manière statique l'exigence de ratio de garantie minimum pour cet actif."
     },
     "disable_icr_update": {
-      "true": "Impossible de mettre à jour l'ICR statique",
-      "false": "Peut mettre à jour l'ICR",
+      "about": "Désactiver la mise à jour du propriétaire Ratio de garantie initial",
       "enabledInfo": "Le propriétaire de l'actif utilise une exigence de ratio de garantie initiale alimentée par le prix pour cet actif.",
       "disabledInfo": "Le propriétaire de l'actif définit de manière statique l'exigence du ratio de garantie initial pour cet actif."
     },
     "disable_mssr_update": {
-      "true": "Impossible de mettre à jour le MSSR statique",
-      "false": "Peut mettre à jour le MSSR",
+      "about": "Désactiver la mise à jour du propriétaire Maximum Short Squeeze Ratio",
       "enabledInfo": "Le propriétaire de l'actif utilise un ratio de compression à court terme maximum alimenté par le prix pour cet actif.",
       "disabledInfo": "Le propriétaire de l'actif définit de manière statique le ratio de compression à court terme maximum pour cet actif."
     },
     "disable_bsrm_update": {
-      "true": "Impossible de mettre à jour le BSRM personnalisé",
-      "false": "Peut mettre à jour BSRM",
+      "about": "Désactiver la mise à jour du propriétaire de la stratégie de gestion des risques Black Swan",
       "enabledInfo": "Le propriétaire de l'actif utilise la stratégie de règlement global par défaut pour cet actif.",
       "disabledInfo": "Le propriétaire de l'actif utilise une stratégie personnalisée de gestion des risques Black Swan pour cet actif."
     }
@@ -103,68 +87,57 @@
     "header": "Drapeaux de l'actif",
     "header_content": "Chaque autorisation d'actif autorisée peut être activée/désactivée.",
     "charge_market_fee": {
-      "true": "Frais de marché activés",
-      "false": "Frais de marché désactivés",
+      "about": "Activer les frais de marché",
       "enabledInfo": "Le créateur de l'actif peut configurer les frais de négociation sur le marché pour cet actif, y compris la fonctionnalité de partage des récompenses des frais de marché.",
       "disabledInfo": "Le créateur de l'actif a désactivé la facturation des frais de négociation sur le marché pour cet actif."
     },
     "white_list": {
-      "true": "Liste blanche activée",
-      "false": "Liste blanche désactivée",
+      "about": "Exiger que les titulaires soient sur la liste blanche",
       "enabledInfo": "Le créateur de l'actif peut configurer les autorités de liste blanche pour cet actif.",
       "disabledInfo": "Le créateur de l'actif a désactivé la configuration des autorités de liste blanche pour cet actif."
     },
     "override_authority": {
-      "true": "Autorité de remplacement activée",
-      "false": "Autorité de remplacement désactivée",
+      "about": "Le propriétaire de l'actif peut se retransférer l'actif",
       "enabledInfo": "Le créateur de l'actif peut effectuer une opération de transfert de remplacement sur cet actif, le ramenant sur son solde depuis le vôtre.",
       "disabledInfo": "Le créateur de l'élément a désactivé les opérations de transfert de remplacement sur cet élément."
     },
     "disable_force_settle": {
-      "true": "Forcer le réglage désactivé",
-      "false": "Forcer le réglage activé",
+      "about": "Désactiver la stabilisation des forces",
       "enabledInfo": "Le créateur de l'élément a désactivé le règlement forcé pour cet élément.",
       "disabledInfo": "Le créateur de l'actif a activé le règlement forcé pour cet actif."
     },
     "transfer_restricted": {
-      "true": "Transfert restreint activé",
-      "false": "Transfert restreint désactivé",
+      "about": "Le propriétaire de l'actif doit approuver tous les transferts",
       "enabledInfo": "Le créateur de l'actif peut restreindre les transferts de cet actif.",
       "disabledInfo": "Le créateur de l'élément a désactivé la restriction des transferts de cet élément."
     },
     "disable_confidential": {
-      "true": "Désactiver la confidentialité activée",
-      "false": "Désactiver la confidentialité désactivée",
+      "about": "Désactiver les transactions confidentielles",
       "enabledInfo": "Le créateur de l'élément a désactivé les opérations confidentielles pour cet élément.",
       "disabledInfo": "Le créateur de l'élément n'a pas désactivé les opérations confidentielles pour cet élément."
     },
     "witness_fed_asset": {
-      "true": "Actif alimenté par un témoin activé",
-      "false": "Actif alimenté par un témoin désactivé",
+      "about": "Autoriser les témoins à fournir des flux",
       "enabledInfo": "Les témoins peuvent publier des flux de prix pour cet actif.",
       "disabledInfo": "Les témoins ne peuvent pas publier de flux de prix pour cet actif."
     },
     "committee_fed_asset": {
-      "true": "Actif alimenté par le comité activé",
-      "false": "Comité alimenté actif désactivé",
+      "about": "Autoriser les membres du comité à fournir des flux",
       "enabledInfo": "Les membres du comité peuvent publier des flux de prix pour cet actif.",
       "disabledInfo": "Les membres du comité ne peuvent pas publier de flux de prix pour cet actif."
     },
     "lock_max_supply": {
-      "true": "L’approvisionnement maximum est verrouillé",
-      "false": "L’approvisionnement maximum est débloqué",
+      "about": "Verrouiller l'alimentation maximale",
       "enabledInfo": "Le propriétaire de l'actif a verrouillé l'offre maximale de cet actif.",
       "disabledInfo": "Le propriétaire de l'actif n'a pas verrouillé l'offre maximale de cet actif."
     },
     "disable_new_supply": {
-      "true": "Impossible d'émettre un nouvel approvisionnement",
-      "false": "Capable d'émettre de nouveaux approvisionnements",
+      "about": "Désactiver la nouvelle fourniture",
       "enabledInfo": "Le propriétaire de l'actif a désactivé la possibilité d'émettre un nouvel approvisionnement pour cet actif.",
       "disabledInfo": "Le propriétaire de l'actif autorise l'émission d'une fourniture supplémentaire pour cet actif."
     },
     "disable_collateral_bidding": {
-      "true": "Enchères de garantie désactivées",
-      "false": "Offres de garantie autorisées",
+      "about": "Désactiver les enchères de garantie",
       "enabledInfo": "Le propriétaire de l'actif a désactivé les enchères de garanties pour cet actif.",
       "disabledInfo": "Le propriétaire de l'actif a activé les offres de garantie pour cet actif."
     }

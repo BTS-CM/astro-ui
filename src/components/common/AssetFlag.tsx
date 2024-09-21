@@ -58,7 +58,7 @@ export default function AssetFlag({
     <span className="grid grid-cols-12">
         <span>
           {
-            alreadyDisabled ? (
+            alreadyDisabled || !permission ? (
               <Checkbox checked={false} id={id} className="align-middle mr-2" disabled />
             ) : (
               <Checkbox

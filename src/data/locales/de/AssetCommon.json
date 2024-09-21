@@ -3,98 +3,82 @@
     "header": "Berechtigungen des Assets",
     "header_content": "Hinweis: Das Deaktivieren von Berechtigungen ist eine dauerhafte Entscheidung",
     "charge_market_fee": {
-      "true": "Marktgebühren erlaubt",
-      "false": "Marktgebühren deaktiviert",
+      "about": "Marktgebühr aktivieren",
       "enabledInfo": "Der Ersteller des Vermögenswerts kann die Erhebung von Markthandelsgebühren für diesen Vermögenswert aktivieren.",
       "disabledInfo": "Der Ersteller des Vermögenswerts kann für diesen Vermögenswert keine Markthandelsgebühren erheben."
     },
     "white_list": {
-      "true": "Weiße Liste erlaubt",
-      "false": "Weiße Liste deaktiviert",
+      "about": "Erfordern, dass Inhaber auf die weiße Liste gesetzt werden",
       "enabledInfo": "Der Asset-Ersteller kann die Konfiguration von Whitelist-Berechtigungen für dieses Asset aktivieren.",
       "disabledInfo": "Der Asset-Ersteller kann für dieses Asset keine Whitelist-Berechtigungen konfigurieren."
     },
     "override_authority": {
-      "true": "Außerkraftsetzungsberechtigung zulässig",
-      "false": "Außerkraftsetzungsberechtigung deaktiviert",
+      "about": "Der Vermögenseigentümer kann das Vermögen auf sich selbst zurück übertragen",
       "enabledInfo": "Der Asset-Ersteller kann die Möglichkeit aktivieren, einen Override-Übertragungsvorgang für dieses Asset durchzuführen.",
       "disabledInfo": "Der Asset-Ersteller kann für dieses Asset keine außer Kraft gesetzten Übertragungsvorgänge durchführen."
     },
     "transfer_restricted": {
-      "true": "Übertragungsbeschränkung zulässig",
-      "false": "Übertragungsbeschränkung deaktiviert",
+      "about": "Der Vermögenseigentümer muss allen Übertragungen zustimmen",
       "enabledInfo": "Der Asset-Ersteller kann die Möglichkeit aktivieren, Übertragungen dieses Assets einzuschränken.",
       "disabledInfo": "Der Asset-Ersteller kann die Übertragung dieses Assets nicht einschränken."
     },
     "disable_confidential": {
-      "true": "Vertraulich deaktivieren erlaubt",
-      "false": "Vertraulich deaktivieren deaktiviert",
+      "about": "Vertrauliche Transaktionen deaktivieren",
       "enabledInfo": "Der Asset-Ersteller kann die Möglichkeit aktivieren, vertrauliche Vorgänge für dieses Asset zu deaktivieren.",
       "disabledInfo": "Der Asset-Ersteller kann vertrauliche Vorgänge für dieses Asset nicht deaktivieren."
     },
     "witness_fed_asset": {
-      "true": "Zeugenbefragung erlaubt",
-      "false": "Zeugen-Feed-Aktivierung deaktiviert",
+      "about": "Erlauben Sie Zeugen, Feeds bereitzustellen",
       "enabledInfo": "Der Asset-Ersteller kann Zeugen die Veröffentlichung von Preis-Feeds für dieses Asset ermöglichen.",
       "disabledInfo": "Der Asset-Ersteller kann es Zeugen nicht ermöglichen, Preis-Feeds für dieses Asset zu veröffentlichen."
     },
     "committee_fed_asset": {
-      "true": "Vom Ausschuss gespeistes Vermögen erlaubt",
-      "false": "Ausschuss fütterte Vermögenswert deaktiviert",
+      "about": "Erlauben Sie Ausschussmitgliedern, Feeds bereitzustellen",
       "enabledInfo": "Der Asset-Ersteller kann Ausschussmitgliedern ermöglichen, Preis-Feeds für dieses Asset zu veröffentlichen.",
       "disabledInfo": "Der Asset-Ersteller kann Ausschussmitgliedern nicht ermöglichen, Preis-Feeds für dieses Asset zu veröffentlichen."
     },
     "disable_force_settle": {
-      "true": "Deaktivieren der erzwungenen Beruhigung ist zulässig",
-      "false": "Deaktivieren Sie die erzwungene Beruhigung",
+      "about": "Deaktivieren Sie die erzwungene Setzung",
       "enabledInfo": "Der Asset-Ersteller kann die Möglichkeit aktivieren, die erzwungene Abrechnung für dieses Asset zu deaktivieren.",
       "disabledInfo": "Der Asset-Ersteller kann die erzwungene Abrechnung für dieses Asset nicht deaktivieren."
     },
     "global_settle": {
-      "true": "Globale Abwicklung erlaubt",
-      "false": "Globale Abrechnung deaktiviert",
+      "about": "Ermöglichen Sie dem Vermögenseigentümer, eine globale Abrechnung zu erzwingen",
       "enabledInfo": "Der Vermögensersteller kann die Möglichkeit zur globalen Abrechnung dieses Vermögenswerts aktivieren.",
       "disabledInfo": "Der Anlagenersteller kann diese Anlage nicht pauschal abrechnen."
     },
     "lock_max_supply": {
-      "true": "Maximaler Vorrat kann nicht gesperrt werden",
-      "false": "Kann die maximale Versorgung sperren",
+      "about": "Maximale Versorgung sperren",
       "enabledInfo": "Der Asset-Ersteller kann den maximalen Vorrat dieses Assets nicht sperren.",
       "disabledInfo": "Der Asset-Ersteller kann den maximalen Vorrat dieses Assets sperren."
     },
     "disable_new_supply": {
-      "true": "Neues Angebot kann nicht deaktiviert werden",
-      "false": "Neue Versorgung kann deaktiviert werden",
+      "about": "Neue Versorgung deaktivieren",
       "enabledInfo": "Der Asset-Ersteller kann die Möglichkeit, ein neues Angebot für dieses Asset zu erstellen, nicht deaktivieren.",
       "disabledInfo": "Der Asset-Ersteller kann die Möglichkeit deaktivieren, ein neues Angebot für dieses Asset zu erstellen."
     },
     "disable_collateral_bidding": {
-      "true": "Collateral Bidding kann nicht deaktiviert werden",
-      "false": "Möglichkeit, Sicherheitengebote zu deaktivieren",
+      "about": "Deaktivieren Sie Nebengebote",
       "enabledInfo": "Der Ersteller des Assets kann das Bieten von Sicherheiten für dieses Asset nicht deaktivieren.",
       "disabledInfo": "Der Ersteller des Assets kann das Bieten von Sicherheiten für dieses Asset deaktivieren."
     },
     "disable_mcr_update": {
-      "true": "Der statische MCR kann nicht aktualisiert werden",
-      "false": "Kann MCR aktualisieren",
+      "about": "Deaktivieren Sie die Aktualisierung des Mindestsicherheitsverhältnisses durch den Eigentümer",
       "enabledInfo": "Der Eigentümer des Vermögenswerts verwendet für diesen Vermögenswert eine preisabhängige Mindestsicherheitsquoteanforderung.",
       "disabledInfo": "Der Eigentümer des Vermögenswerts legt die Mindestanforderung an die Sicherheitenquote für diesen Vermögenswert statisch fest."
     },
     "disable_icr_update": {
-      "true": "Der statische ICR kann nicht aktualisiert werden",
-      "false": "Kann ICR aktualisieren",
+      "about": "Deaktivieren Sie die Aktualisierung des Anfangssicherheitsverhältnisses durch den Eigentümer",
       "enabledInfo": "Der Eigentümer des Vermögenswerts verwendet für diesen Vermögenswert eine preisabhängige Anforderung an die Anfangssicherheitsquote.",
       "disabledInfo": "Der Eigentümer des Vermögenswerts legt die Anforderungen an die anfängliche Sicherheitenquote für diesen Vermögenswert statisch fest."
     },
     "disable_mssr_update": {
-      "true": "Das statische MSSR kann nicht aktualisiert werden",
-      "false": "Kann MSSR aktualisieren",
+      "about": "Deaktivieren Sie die Eigentümeraktualisierung „Maximum Short Squeeze Ratio“.",
       "enabledInfo": "Der Eigentümer des Vermögenswerts verwendet für diesen Vermögenswert eine preisabhängige maximale Short-Squeeze-Ratio.",
       "disabledInfo": "Der Asset-Eigentümer legt die maximale Short-Squeeze-Ratio für dieses Asset statisch fest."
     },
     "disable_bsrm_update": {
-      "true": "Benutzerdefiniertes BSRM kann nicht aktualisiert werden",
-      "false": "Kann BSRM aktualisieren",
+      "about": "Deaktivieren Sie die Eigentümeraktualisierung der Black Swan Risk Management-Strategie",
       "enabledInfo": "Der Asset-Eigentümer verwendet die standardmäßige Global Settlement-Strategie für dieses Asset.",
       "disabledInfo": "Der Asset-Eigentümer verwendet eine benutzerdefinierte Black Swan-Risikomanagementstrategie für dieses Asset."
     }
@@ -103,70 +87,59 @@
     "header": "Flaggen des Assets",
     "header_content": "Jede zulässige Asset-Berechtigung kann ein-/ausgeschaltet werden.",
     "charge_market_fee": {
-      "true": "Marktgebühren aktiviert",
-      "false": "Marktgebühren deaktiviert",
-      "enabledInfo": "Der Asset-Ersteller kann Markthandelsgebühren für dieses Asset konfigurieren, einschließlich der Funktion zum Teilen von Marktgebührenprämien.",
+      "about": "Marktgebühr aktivieren",
+      "enabledInfo": "Der Ersteller des Vermögenswerts kann Markthandelsgebühren für diesen Vermögenswert konfigurieren, einschließlich der Funktion zum Teilen von Marktgebührenprämien.",
       "disabledInfo": "Der Ersteller des Vermögenswerts hat die Erhebung von Markthandelsgebühren für diesen Vermögenswert deaktiviert."
     },
     "white_list": {
-      "true": "Weiße Liste aktiviert",
-      "false": "Weiße Liste deaktiviert",
+      "about": "Erfordern, dass Inhaber auf die weiße Liste gesetzt werden",
       "enabledInfo": "Der Asset-Ersteller kann Whitelist-Berechtigungen für dieses Asset konfigurieren.",
       "disabledInfo": "Der Asset-Ersteller hat die Konfiguration von Whitelist-Berechtigungen für dieses Asset deaktiviert."
     },
     "override_authority": {
-      "true": "Außerkraftsetzungsberechtigung aktiviert",
-      "false": "Außerkraftsetzungsberechtigung deaktiviert",
+      "about": "Der Vermögenseigentümer kann das Vermögen auf sich selbst zurück übertragen",
       "enabledInfo": "Der Ersteller des Vermögenswerts kann einen Überschreibungsübertragungsvorgang für diesen Vermögenswert durchführen und ihn von Ihrem auf sein Guthaben zurückführen.",
       "disabledInfo": "Der Asset-Ersteller hat die Durchführung von Überschreibungsübertragungsvorgängen für dieses Asset deaktiviert."
     },
     "disable_force_settle": {
-      "true": "Force Settlement deaktiviert",
-      "false": "Force Settlement aktiviert",
+      "about": "Deaktivieren Sie die erzwungene Setzung",
       "enabledInfo": "Der Asset-Ersteller hat die erzwungene Abrechnung für dieses Asset deaktiviert.",
       "disabledInfo": "Der Asset-Ersteller hat die erzwungene Abrechnung für dieses Asset aktiviert."
     },
     "transfer_restricted": {
-      "true": "Übertragungsbeschränkung aktiviert",
-      "false": "Übertragung eingeschränkt deaktiviert",
+      "about": "Der Vermögenseigentümer muss allen Übertragungen zustimmen",
       "enabledInfo": "Der Asset-Ersteller kann die Übertragung dieses Assets einschränken.",
       "disabledInfo": "Der Asset-Ersteller hat die Einschränkung von Übertragungen dieses Assets deaktiviert."
     },
     "disable_confidential": {
-      "true": "Vertraulich deaktivieren aktiviert",
-      "false": "Vertraulich deaktivieren deaktiviert",
+      "about": "Vertrauliche Transaktionen deaktivieren",
       "enabledInfo": "Der Asset-Ersteller hat vertrauliche Vorgänge für dieses Asset deaktiviert.",
       "disabledInfo": "Der Asset-Ersteller hat vertrauliche Vorgänge für dieses Asset nicht deaktiviert."
     },
     "witness_fed_asset": {
-      "true": "Zeugen-Feed-Asset aktiviert",
-      "false": "Zeugen-Feed-Aktivierung deaktiviert",
+      "about": "Erlauben Sie Zeugen, Feeds bereitzustellen",
       "enabledInfo": "Zeugen können Preis-Feeds für diesen Vermögenswert veröffentlichen.",
       "disabledInfo": "Zeugen können keine Preis-Feeds für diesen Vermögenswert veröffentlichen."
     },
     "committee_fed_asset": {
-      "true": "Vom Ausschuss gespeistes Vermögen aktiviert",
-      "false": "Ausschuss fütterte Vermögenswert deaktiviert",
+      "about": "Erlauben Sie Ausschussmitgliedern, Feeds bereitzustellen",
       "enabledInfo": "Ausschussmitglieder können Preis-Feeds für diesen Vermögenswert veröffentlichen.",
       "disabledInfo": "Ausschussmitglieder können keine Preis-Feeds für diesen Vermögenswert veröffentlichen."
     },
     "lock_max_supply": {
-      "true": "Maximaler Vorrat ist gesperrt",
-      "false": "Der maximale Vorrat ist freigeschaltet",
+      "about": "Maximale Versorgung sperren",
       "enabledInfo": "Der Asset-Eigentümer hat das maximale Angebot dieses Assets gesperrt.",
       "disabledInfo": "Der Asset-Eigentümer hat das maximale Angebot dieses Assets nicht gesperrt."
     },
     "disable_new_supply": {
-      "true": "Neues Angebot kann nicht ausgegeben werden",
-      "false": "Kann neue Lieferungen ausstellen",
+      "about": "Neue Versorgung deaktivieren",
       "enabledInfo": "Der Asset-Eigentümer hat die Möglichkeit zur Ausgabe eines neuen Angebots für dieses Asset deaktiviert.",
       "disabledInfo": "Der Eigentümer des Vermögenswerts gestattet die Ausgabe zusätzlicher Lieferungen für diesen Vermögenswert."
     },
     "disable_collateral_bidding": {
-      "true": "Nebengebote deaktiviert",
-      "false": "Nebengebote sind zulässig",
+      "about": "Deaktivieren Sie Nebengebote",
       "enabledInfo": "Der Eigentümer des Vermögenswerts hat das Bieten von Sicherheiten für diesen Vermögenswert deaktiviert.",
-      "disabledInfo": "Der Eigentümer des Vermögenswerts hat das Bieten von Sicherheiten für diesen Vermögenswert aktiviert."
+      "disabledInfo": "Der Asset-Eigentümer hat das Bieten von Sicherheiten für dieses Asset aktiviert."
     }
   },
   "asset_details": {

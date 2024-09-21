@@ -63,7 +63,8 @@
     "tfunds": "Recherchez, créez, mettez à jour ou supprimez des fonds Same-T ci-dessous !",
     "create_vesting": "Utilisez ce formulaire pour créer un solde d'acquisition pour n'importe quel compte !",
     "uia": "Créez votre propre actif émis par l'utilisateur avec le formulaire ci-dessous !",
-    "issuedAssets": "Gérez les actifs blockchain que vous avez créés dans les onglets ci-dessous !"
+    "issuedAssets": "Gérez les actifs blockchain que vous avez créés dans les onglets ci-dessous !",
+    "create_smartcoin": "Utilisez le formulaire ci-dessous pour créer un nouvel actif smartcoin."
   },
   "back": "Retourner",
   "usage": "Conçu pour être utilisé avec ",

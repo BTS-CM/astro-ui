@@ -3,98 +3,82 @@
     "header": "Aktivets tilladelser",
     "header_content": "Bemærk: Deaktivering af tilladelser er en permanent beslutning",
     "charge_market_fee": {
-      "true": "Markedsgebyrer tilladt",
-      "false": "Markedsgebyrer deaktiveret",
+      "about": "Aktiver markedsgebyr",
       "enabledInfo": "Aktivets skaber kan gøre det muligt at opkræve markedshandelsgebyrer for dette aktiv.",
       "disabledInfo": "Aktivets skaber kan ikke opkræve markedshandelsgebyrer for dette aktiv."
     },
     "white_list": {
-      "true": "Hvid liste tilladt",
-      "false": "Hvidliste deaktiveret",
+      "about": "Kræv indehavere at være hvidlistet",
       "enabledInfo": "Aktivopretteren kan aktivere konfiguration af hvidlisteautoriteter for dette aktiv.",
       "disabledInfo": "Aktivopretteren kan ikke konfigurere hvidlisteautoriteter for dette aktiv."
     },
     "override_authority": {
-      "true": "Tilsidesættelse af autoritet tilladt",
-      "false": "Tilsidesættelse af autoritet deaktiveret",
+      "about": "Aktivejer kan overføre aktiv tilbage til sig selv",
       "enabledInfo": "Aktivopretteren kan aktivere muligheden for at udføre en tilsidesættelsesoverførselshandling på dette aktiv.",
       "disabledInfo": "Aktivets skaber kan ikke udføre tilsidesættelsesoverførselshandlinger på dette aktiv."
     },
     "transfer_restricted": {
-      "true": "Overførselsbegrænsning tilladt",
-      "false": "Overførselsbegrænsning deaktiveret",
+      "about": "Aktivejer skal godkende alle overførsler",
       "enabledInfo": "Aktivopretteren kan aktivere muligheden for at begrænse overførsler af dette aktiv.",
       "disabledInfo": "Aktivets skaber kan ikke begrænse overførsler af dette aktiv."
     },
     "disable_confidential": {
-      "true": "Deaktiver fortroligt tilladt",
-      "false": "Deaktiver fortroligt deaktiveret",
+      "about": "Deaktiver fortrolige transaktioner",
       "enabledInfo": "Aktivopretteren kan aktivere muligheden for at deaktivere fortrolige handlinger for dette aktiv.",
       "disabledInfo": "Aktivets skaber kan ikke deaktivere fortrolige handlinger for dette aktiv."
     },
     "witness_fed_asset": {
-      "true": "Vidnefodret aktiv tilladt",
-      "false": "Vidnefodret aktiv deaktiveret",
+      "about": "Tillad vidner at give feeds",
       "enabledInfo": "Aktivets skaber kan gøre det muligt for vidner at offentliggøre prisfeeds for dette aktiv.",
       "disabledInfo": "Aktivets skaber kan ikke give vidner mulighed for at offentliggøre prisfeeds for dette aktiv."
     },
     "committee_fed_asset": {
-      "true": "Komité fodret aktiv tilladt",
-      "false": "Udvalgsfodret aktiv deaktiveret",
+      "about": "Tillad udvalgsmedlemmer at levere feeds",
       "enabledInfo": "Aktivopretteren kan give udvalgsmedlemmer mulighed for at udgive prisfeeds for dette aktiv.",
       "disabledInfo": "Aktivopretteren kan ikke give udvalgsmedlemmer mulighed for at udgive prisfeeds for dette aktiv."
     },
     "disable_force_settle": {
-      "true": "Deaktiver kraftafregning tilladt",
-      "false": "Deaktiver kraftafvikling deaktiveret",
+      "about": "Deaktiver kraftudligning",
       "enabledInfo": "Aktivopretteren kan aktivere muligheden for at deaktivere tvungen afregning for dette aktiv.",
       "disabledInfo": "Aktivets skaber kan ikke deaktivere tvungen afregning for dette aktiv."
     },
     "global_settle": {
-      "true": "Global afregning tilladt",
-      "false": "Global afvikling deaktiveret",
+      "about": "Tillad aktivejer at fremtvinge en global afregning",
       "enabledInfo": "Aktivopretteren kan aktivere muligheden for at afvikle dette aktiv globalt.",
       "disabledInfo": "Aktivets skaber kan ikke afregne dette aktiv globalt."
     },
     "lock_max_supply": {
-      "true": "Kan ikke låse maks. forsyning",
-      "false": "Kan låse max forsyning",
+      "about": "Lås max forsyning",
       "enabledInfo": "Aktivets skaber kan ikke låse det maksimale antal af dette aktiv.",
       "disabledInfo": "Aktivopretteren kan låse det maksimale antal af dette aktiv."
     },
     "disable_new_supply": {
-      "true": "Kan ikke deaktivere ny forsyning",
-      "false": "Kan deaktivere ny forsyning",
+      "about": "Deaktiver ny forsyning",
       "enabledInfo": "Aktivopretteren kan ikke deaktivere muligheden for at oprette ny forsyning for dette aktiv.",
       "disabledInfo": "Aktivopretteren kan deaktivere muligheden for at oprette ny forsyning for dette aktiv."
     },
     "disable_collateral_bidding": {
-      "true": "Kan ikke deaktivere sikkerhedsstillelse",
-      "false": "Kan deaktivere sikkerhedsstillelse",
+      "about": "Deaktiver sikkerhedsstillelse",
       "enabledInfo": "Aktivets skaber kan ikke deaktivere sikkerhedsstillelse for dette aktiv.",
       "disabledInfo": "Aktivets skaber kan deaktivere sikkerhedsstillelse for dette aktiv."
     },
     "disable_mcr_update": {
-      "true": "Kan ikke opdatere statisk MCR",
-      "false": "Kan opdatere MCR",
+      "about": "Deaktiver ejeropdatering Minimum Collateral Ratio",
       "enabledInfo": "Aktivejeren bruger et pristilført minimumskrav til sikkerhedsforhold for dette aktiv.",
       "disabledInfo": "Aktivejeren sætter statisk kravet om minimumssikkerhedsforhold for dette aktiv."
     },
     "disable_icr_update": {
-      "true": "Kan ikke opdatere statisk ICR",
-      "false": "Kan opdatere ICR",
+      "about": "Deaktiver ejeropdatering Initial Collateral Ratio",
       "enabledInfo": "Aktivejeren bruger et pristilført krav til initial sikkerhedsforhold for dette aktiv.",
       "disabledInfo": "Aktivejeren sætter statisk kravet om initial sikkerhedsforhold for dette aktiv."
     },
     "disable_mssr_update": {
-      "true": "Kan ikke opdatere statisk MSSR",
-      "false": "Kan opdatere MSSR",
+      "about": "Deaktiver ejeropdatering Maksimalt kort klemforhold",
       "enabledInfo": "Aktivejeren bruger en pristilført Maksimal Short Squeeze Ratio for dette aktiv.",
       "disabledInfo": "Aktivejeren indstiller statisk det maksimale korte klemforhold for dette aktiv."
     },
     "disable_bsrm_update": {
-      "true": "Kan ikke opdatere tilpasset BSRM",
-      "false": "Kan opdatere BSRM",
+      "about": "Deaktiver ejeropdatering Black Swan Risk Management-strategi",
       "enabledInfo": "Aktivejeren bruger standardstrategien for global afvikling for dette aktiv.",
       "disabledInfo": "Aktivejeren bruger en tilpasset Black Swan Risk Management-strategi for dette aktiv."
     }
@@ -103,68 +87,57 @@
     "header": "Aktivets flag",
     "header_content": "Hver tilladt aktivtilladelse kan slås til/fra.",
     "charge_market_fee": {
-      "true": "Markedsgebyrer aktiveret",
-      "false": "Markedsgebyrer deaktiveret",
+      "about": "Aktiver markedsgebyr",
       "enabledInfo": "Aktivopretteren kan konfigurere markedshandelsgebyrer for dette aktiv, herunder funktionalitet til deling af markedsgebyrer.",
       "disabledInfo": "Aktivets skaber har deaktiveret opkrævning af markedshandelsgebyrer for dette aktiv."
     },
     "white_list": {
-      "true": "Hvidliste aktiveret",
-      "false": "Hvidliste deaktiveret",
+      "about": "Kræv indehavere at være hvidlistet",
       "enabledInfo": "Aktivopretteren kan konfigurere hvidlisteautoriteter for dette aktiv.",
       "disabledInfo": "Aktivopretteren har deaktiveret konfiguration af hvidlisteautoriteter for dette aktiv."
     },
     "override_authority": {
-      "true": "Tilsidesættelse af autoritet aktiveret",
-      "false": "Tilsidesættelse af autoritet deaktiveret",
+      "about": "Aktivejer kan overføre aktiv tilbage til sig selv",
       "enabledInfo": "Aktivopretteren kan udføre en tilsidesættelse af overførsel af dette aktiv og returnere det til deres saldo fra din.",
       "disabledInfo": "Aktivets skaber har deaktiveret udførelsen af ​​tilsidesættelsesoverførselshandlinger på dette aktiv."
     },
     "disable_force_settle": {
-      "true": "Tving udligning deaktiveret",
-      "false": "Tvungen afregning aktiveret",
+      "about": "Deaktiver kraftudligning",
       "enabledInfo": "Aktivets skaber har deaktiveret tvungen afregning for dette aktiv.",
       "disabledInfo": "Aktivets skaber har aktiveret tvungen afregning for dette aktiv."
     },
     "transfer_restricted": {
-      "true": "Overførsel begrænset aktiveret",
-      "false": "Overførsel begrænset deaktiveret",
+      "about": "Aktivejer skal godkende alle overførsler",
       "enabledInfo": "Aktivets skaber kan begrænse overførsler af dette aktiv.",
       "disabledInfo": "Aktivets skaber har deaktiveret begrænsning af overførsler af dette aktiv."
     },
     "disable_confidential": {
-      "true": "Deaktiver fortroligt aktiveret",
-      "false": "Deaktiver fortroligt deaktiveret",
+      "about": "Deaktiver fortrolige transaktioner",
       "enabledInfo": "Aktivets skaber har deaktiveret fortrolige handlinger for dette aktiv.",
       "disabledInfo": "Aktivets skaber har ikke deaktiveret fortrolige handlinger for dette aktiv."
     },
     "witness_fed_asset": {
-      "true": "Vidnefodret aktiv aktiveret",
-      "false": "Vidnefodret aktiv deaktiveret",
+      "about": "Tillad vidner at give feeds",
       "enabledInfo": "Vidner kan udgive prisfeeds for dette aktiv.",
       "disabledInfo": "Vidner kan ikke offentliggøre prisfeeds for dette aktiv."
     },
     "committee_fed_asset": {
-      "true": "Komitéfed aktiv aktiveret",
-      "false": "Udvalgsfodret aktiv deaktiveret",
+      "about": "Tillad udvalgsmedlemmer at levere feeds",
       "enabledInfo": "Udvalgsmedlemmer kan offentliggøre prisfeeds for dette aktiv.",
       "disabledInfo": "Udvalgsmedlemmer kan ikke offentliggøre prisfeeds for dette aktiv."
     },
     "lock_max_supply": {
-      "true": "Maksimal forsyning er låst",
-      "false": "Maksimal forsyning er låst op",
-      "enabledInfo": "Aktivejeren har låst den maksimale levering af dette aktiv.",
+      "about": "Lås max forsyning",
+      "enabledInfo": "Aktivejeren har låst den maksimale forsyning af dette aktiv.",
       "disabledInfo": "Aktivejeren har ikke låst den maksimale forsyning af dette aktiv."
     },
     "disable_new_supply": {
-      "true": "Kan ikke udstede ny forsyning",
-      "false": "Kan udstede nye forsyninger",
+      "about": "Deaktiver ny forsyning",
       "enabledInfo": "Aktivejeren har deaktiveret muligheden for at udstede nye forsyninger til dette aktiv.",
       "disabledInfo": "Aktivejeren tillader udstedelse af yderligere forsyninger til dette aktiv."
     },
     "disable_collateral_bidding": {
-      "true": "Sikkerhedsbudgivning deaktiveret",
-      "false": "Sikkerhedsbud tilladt",
+      "about": "Deaktiver sikkerhedsstillelse",
       "enabledInfo": "Aktivejeren har deaktiveret sikkerhedsstillelse for dette aktiv.",
       "disabledInfo": "Aktivejeren har aktiveret sikkerhedsstillelse for dette aktiv."
     }
