@@ -63,5 +63,13 @@
         "header": "Gebühr für Zwangsabwicklung",
         "header_content": "Die Gebühr, die einem Benutzer berechnet wird, wenn er die Begleichung seiner Schuldenposition erzwingt. "
       }
+    },
+    "editAsset": {
+      "disabled": "Bearbeiten Sie die Asset-Einstellungen",
+      "enabled": "Brechen Sie die Bearbeitung der Asset-Einstellungen ab"
+    },
+    "editSmartcoin": {
+      "disabled": "Bearbeiten Sie die Smartcoin-Einstellungen",
+      "enabled": "Brechen Sie die Bearbeitung der Smartcoin-Einstellungen ab"
     }
   }

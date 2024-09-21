@@ -63,5 +63,13 @@
         "header": "강제정산 수수료",
         "header_content": "사용자가 채무 상황을 강제로 청산할 때 사용자에게 부과되는 수수료입니다. "
       }
+    },
+    "editAsset": {
+      "disabled": "자산 설정 편집",
+      "enabled": "자산 설정 편집 취소"
+    },
+    "editSmartcoin": {
+      "disabled": "스마트코인 설정 편집",
+      "enabled": "Smartcoin 설정 편집 취소"
     }
   }

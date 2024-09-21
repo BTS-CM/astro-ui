@@ -63,5 +63,13 @@
         "header": "Tarifa de liquidación forzada",
         "header_content": "La tarifa que se cobra a un usuario cuando obliga a liquidar su posición de deuda. "
       }
+    },
+    "editAsset": {
+      "disabled": "Editar configuración de activos",
+      "enabled": "Cancelar la edición de la configuración de recursos"
+    },
+    "editSmartcoin": {
+      "disabled": "Editar la configuración de Smartcoin",
+      "enabled": "Cancelar la edición de la configuración de Smartcoin"
     }
   }

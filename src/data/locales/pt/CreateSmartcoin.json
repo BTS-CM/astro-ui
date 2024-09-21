@@ -63,5 +63,13 @@
         "header": "Taxa de liquidação forçada",
         "header_content": "A taxa cobrada de um usuário quando ele força a liquidação de sua dívida. "
       }
+    },
+    "editAsset": {
+      "disabled": "Editar configurações de ativos",
+      "enabled": "Cancelar a edição das configurações de ativos"
+    },
+    "editSmartcoin": {
+      "disabled": "Editar configurações de Smartcoin",
+      "enabled": "Cancelar edição das configurações do Smartcoin"
     }
   }

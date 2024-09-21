@@ -63,5 +63,13 @@
             "header": "Force Settle Fee",
             "header_content": "The fee charged to a user when they force settle their debt position. The fee is calculated as a percentage of the traded collateral, paid to the smartcoin owner."
         }
+    },
+    "editAsset": {
+        "disabled": "Edit Asset Settings",
+        "enabled": "Cancel editing Asset Settings"
+    },
+    "editSmartcoin": {
+        "disabled": "Edit Smartcoin Settings",
+        "enabled": "Cancel editing Smartcoin Settings"
     }
 }

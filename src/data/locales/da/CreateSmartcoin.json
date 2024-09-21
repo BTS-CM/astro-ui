@@ -63,5 +63,13 @@
         "header": "Tvangsafregningsgebyr",
         "header_content": "Gebyret, der opkræves af en bruger, når de tvinger afvikling af deres gældsposition. "
       }
+    },
+    "editAsset": {
+      "disabled": "Rediger aktivindstillinger",
+      "enabled": "Annuller redigering af aktivindstillinger"
+    },
+    "editSmartcoin": {
+      "disabled": "Rediger Smartcoin-indstillinger",
+      "enabled": "Annuller redigering af Smartcoin-indstillinger"
     }
   }

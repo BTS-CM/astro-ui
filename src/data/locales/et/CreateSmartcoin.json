@@ -63,5 +63,13 @@
         "header": "Sundarvestustasu",
         "header_content": "Tasu, mida võetakse kasutajalt, kui ta sunnib oma võlapositsiooni tasuma. "
       }
+    },
+    "editAsset": {
+      "disabled": "Muuda vara seadeid",
+      "enabled": "Tühista Varaseadete muutmine"
+    },
+    "editSmartcoin": {
+      "disabled": "Redigeeri Smartcoini sätteid",
+      "enabled": "Tühistage Smartcoini seadete muutmine"
     }
   }

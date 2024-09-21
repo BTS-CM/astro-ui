@@ -63,5 +63,13 @@
         "header": "Commissione per la risoluzione forzata",
         "header_content": "La commissione addebitata a un utente quando forza il saldo della propria posizione debitoria. "
       }
+    },
+    "editAsset": {
+      "disabled": "Modifica le impostazioni delle risorse",
+      "enabled": "Annulla la modifica delle impostazioni delle risorse"
+    },
+    "editSmartcoin": {
+      "disabled": "Modifica le impostazioni dello Smartcoin",
+      "enabled": "Annulla la modifica delle impostazioni Smartcoin"
     }
   }

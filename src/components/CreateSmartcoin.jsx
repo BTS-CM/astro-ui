@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea"
 import { Separator } from "@/components/ui/separator"
+
 import {
     Dialog,
     DialogContent,
@@ -319,7 +320,7 @@ export default function CreateSmartcoin(properties) {
     const [forceSettlementOffsetPercent, setForceSettlementOffsetPercent] = useState(0);
     const [maximumForceSettlementVolume, setMaximumForceSettlementVolume] = useState(5);
 
-    const [backingAsset, setBackingAsset] = useState(usr.chain === "bitshares" ? "BTS" : "TEST");
+    const [backingAsset, setBackingAsset] = useState("1.3.0");
     const backingAssetData = useMemo(() => {
         if (assets && backingAsset) {
             return assets.find((asset) => asset.symbol === backingAsset);
@@ -349,7 +350,6 @@ export default function CreateSmartcoin(properties) {
     const [hasEditedBitassetOptions, setHasEditedBitassetOptions] = useState(false); // bitasset options edited
 
     const [existingAssetData, setExistingAssetData] = useState(); // existing asset data
-    const [bitassetData, setBitassetData] = useState(); // existing bitasset data
     const [dynamicData, setDynamicData] = useState(); // existing dynamic data
 
     const existingSupply = useMemo(() => {
@@ -387,9 +387,44 @@ export default function CreateSmartcoin(properties) {
                     }
                     let _bitassetData = data[0];
                     let _dynamicData = data[1];
+                    if (!_bitassetData || !_dynamicData) {
+                        return;
+                    }
                     console.log({ _bitassetData, _dynamicData });
-                    setBitassetData(_bitassetData);
                     setDynamicData(_dynamicData);
+                    
+                    if (_bitassetData.options.extensions.hasOwnProperty("force_settle_fee_percent")) {
+                        setFsfExtensionEnabled(true);
+                        setForceSettleFeePercent(_bitassetData.options.extensions.force_settle_fee_percent / 100);
+                    }
+
+                    if (_bitassetData.options.extensions.hasOwnProperty("margin_call_fee_ratio")) {
+                        setMcfrExtensionEnabled(true);
+                        setMarginCallFeeRatio(_bitassetData.options.extensions.margin_call_fee_ratio / 100);
+                    }
+
+                    if (_bitassetData.options.extensions.hasOwnProperty("initial_collateral_ratio")) {
+                        setIcr(_bitassetData.options.extensions.initial_collateral_ratio / 100);
+                    }
+
+                    if (_bitassetData.options.extensions.hasOwnProperty("maintenance_collateral_ratio")) {
+                        setMcr(_bitassetData.options.extensions.maintenance_collateral_ratio / 100);
+                    }
+
+                    if (_bitassetData.options.extensions.hasOwnProperty("maximum_short_squeeze_ratio")) {
+                        setMssr(_bitassetData.options.extensions.maximum_short_squeeze_ratio / 100);
+                    }
+
+                    if (_bitassetData.options.extensions.hasOwnProperty("black_swan_response_method")) {
+                        setBsrmStrategy(_bitassetData.options.extensions.black_swan_response_method);
+                    }
+
+                    setFeedLifetimeSeconds(_bitassetData.options.feed_lifetime_sec);
+                    setMinimumFeeds(_bitassetData.options.minimum_feeds);
+                    setForceSettlementDelaySeconds(_bitassetData.options.force_settlement_delay_sec);
+                    setForceSettlementOffsetPercent(_bitassetData.options.force_settlement_offset_percent / 100);
+                    setMaximumForceSettlementVolume(_bitassetData.options.maximum_force_settlement_volume);
+                    setBackingAsset(_bitassetData.options.short_backing_asset);
                 }
             });
         }
@@ -552,7 +587,6 @@ export default function CreateSmartcoin(properties) {
         maxSupply,
         issuer_permissions,
         flags,
-        bitassetData,
         // Market Settings
         commission,
         maxCommission,
@@ -890,6 +924,7 @@ export default function CreateSmartcoin(properties) {
     const [permanentlyDisabledDBSRM, setPermanentlyDisabledDBSRM] = useState(false); // disable_bsrm_update
     const [permanentlyDisabledDCB, setPermanentlyDisabledDCB] = useState(false); // disable_collateral_bidding
 
+    // Fetching asset data
     useEffect(() => {
         const urlSearchParams = new URLSearchParams(window.location.search);
         const params = Object.fromEntries(urlSearchParams.entries());
@@ -1076,6 +1111,10 @@ export default function CreateSmartcoin(properties) {
                         setTakerFee(propsAsset.options.extensions.taker_fee_percent / 100);
                     }
 
+                    if (propsAsset.options.extensions.skip_core_exchange_rate) {
+                        setOptedSkipCER(true);
+                    }
+
                     setCerBaseAmount(
                         humanReadableFloat(propsAsset.options.core_exchange_rate.base.amount, 5)
                     );
@@ -1099,1396 +1138,1464 @@ export default function CreateSmartcoin(properties) {
             <div className="container mx-auto mt-5 mb-5">
                 <div className="grid grid-cols-1 gap-3">
                     <Card>
-                        <CardHeader className="pb-1">
+                        <CardHeader className="pb-5">
                             <CardTitle>💷 {t(!editing ? "CreateSmartcoin:card.title_create" : "CreateSmartcoin:card.title_edit")}</CardTitle>
                             <CardDescription>{t("CreateSmartcoin:card.description")}</CardDescription>
                         </CardHeader>
                         <CardContent>
                             <div className="grid grid-cols-2">
+
                                 <div className="col-span-2">
-                                    <HoverInfo
-                                        content={t("AssetCommon:asset_details.title_content")}
-                                        header={t("AssetCommon:asset_details.title")}
-                                        type="header"
-                                    />
-                                    
-                                    <div className="grid grid-cols-3 gap-5">
-                                        <div>
-                                            <HoverInfo
-                                                content={t("AssetCommon:asset_details.symbol.header_content")}
-                                                header={t("AssetCommon:asset_details.symbol.header")}
+                                    {
+                                        !editing
+                                            ? <HoverInfo
+                                                content={t("AssetCommon:asset_details.title_content")}
+                                                header={t("AssetCommon:asset_details.title")}
+                                                type="header"
                                             />
-                                            {
-                                                !editing
-                                                    ? <Input
-                                                        placeholder={t("AssetCommon:asset_details.symbol.placeholder")}
-                                                        value={symbol}
-                                                        type="text"
+                                            : <div className="grid grid-cols-2 gap-3">
+                                                <HoverInfo
+                                                    content={t("AssetCommon:asset_details.title_content")}
+                                                    header={t("AssetCommon:asset_details.title")}
+                                                    type="header"
+                                                />
+                                                <div className="text-right mb-1">
+                                                    {
+                                                        !hasEditedAssetOptions
+                                                            ? <Button
+                                                                variant="outline"
+                                                                onClick={() => setHasEditedAssetOptions(true)}
+                                                                className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0"
+                                                            >
+                                                                {t("CreateSmartcoin:editAsset.disabled")}
+                                                            </Button>
+                                                            : <Button
+                                                                variant="outline"
+                                                                onClick={() => setHasEditedAssetOptions(false)}
+                                                            >
+                                                                {t("CreateSmartcoin:editAsset.enabled")}
+                                                            </Button>
+                                                    }
+                                                </div>
+                                            </div>
+                                    }
+
+                                    {
+                                        !editing || editing && hasEditedAssetOptions
+                                        ? <span>
+                                            <div className={`grid grid-cols-3 gap-5`}>
+                                                <div>
+                                                    <HoverInfo
+                                                        content={t("AssetCommon:asset_details.symbol.header_content")}
+                                                        header={t("AssetCommon:asset_details.symbol.header")}
+                                                    />
+                                                    {
+                                                        !editing
+                                                            ? <Input
+                                                                placeholder={t("AssetCommon:asset_details.symbol.placeholder")}
+                                                                value={symbol}
+                                                                type="text"
+                                                                onInput={(e) => {
+                                                                    const value = e.currentTarget.value;
+                                                                    const regex = /^[a-zA-Z0-9]*\.?[a-zA-Z0-9]*$/;
+                                                                    if (regex.test(value)) {
+                                                                        setSymbol(value);
+                                                                    }
+                                                                }}
+                                                                maxLength={16}
+                                                                className="mt-1"
+                                                            />
+                                                            : <Input
+                                                                placeholder={symbol}
+                                                                type="text"
+                                                                disabled
+                                                                className="mt-1"
+                                                            />
+                                                    }
+                                                    
+                                                </div>
+                                                
+                                                <div>
+                                                    <HoverInfo
+                                                        content={t("AssetCommon:asset_details.max_supply.header_content")}
+                                                        header={t("AssetCommon:asset_details.max_supply.header")}
+                                                    />
+                                                    <Input
+                                                        placeholder={t("AssetCommon:asset_details.max_supply.placeholder")}
+                                                        value={maxSupply}
+                                                        type="number"
                                                         onInput={(e) => {
-                                                            const value = e.currentTarget.value;
-                                                            const regex = /^[a-zA-Z0-9]*\.?[a-zA-Z0-9]*$/;
-                                                            if (regex.test(value)) {
-                                                                setSymbol(value);
+                                                            const input = parseInt(e.currentTarget.value);
+                                                            if (input >= 0) {
+                                                                setMaxSupply(parseInt(e.currentTarget.value))
+                                                            } else {
+                                                                setMaxSupply(0);
                                                             }
                                                         }}
-                                                        maxLength={16}
                                                         className="mt-1"
                                                     />
-                                                    : <Input
-                                                        placeholder={symbol}
-                                                        type="text"
-                                                        disabled
-                                                        className="mt-1"
+                                                </div>
+                                                <div>
+                                                    <HoverInfo
+                                                        content={t("AssetCommon:asset_details.precision.header_content")}
+                                                        header={t("AssetCommon:asset_details.precision.header")}
                                                     />
-                                            }
-                                            
-                                        </div>
-                                        
-                                        <div>
-                                            <HoverInfo
-                                                content={t("AssetCommon:asset_details.max_supply.header_content")}
-                                                header={t("AssetCommon:asset_details.max_supply.header")}
-                                            />
-                                            <Input
-                                                placeholder={t("AssetCommon:asset_details.max_supply.placeholder")}
-                                                value={maxSupply}
-                                                type="number"
-                                                onInput={(e) => {
-                                                    const input = parseInt(e.currentTarget.value);
-                                                    if (input >= 0) {
-                                                        setMaxSupply(parseInt(e.currentTarget.value))
-                                                    } else {
-                                                        setMaxSupply(0);
+                                                    {
+                                                        !editing
+                                                            ? <Input
+                                                                placeholder={t("AssetCommon:asset_details.precision.placeholder")}
+                                                                value={precision}
+                                                                type="number"
+                                                                onInput={(e) => {
+                                                                    const input = parseInt(e.currentTarget.value);
+                                                                    if (input >= 0 && input <= 8) {
+                                                                        setPrecision(parseInt(e.currentTarget.value))
+                                                                    } else if (input < 0) {
+                                                                        setPrecision(0);
+                                                                    } else {
+                                                                        setPrecision(8);
+                                                                    }
+                                                                }}
+                                                                className="mt-1"
+                                                            />
+                                                            : null
                                                     }
-                                                    if (editing) setHasEditedAssetOptions(true);
+                                                    {
+                                                        editing && existingSupply > 0
+                                                            ? <Input
+                                                                placeholder={precision}
+                                                                type="number"
+                                                                disabled
+                                                                className="mt-1"
+                                                            />
+                                                            : null
+                                                    }
+                                                    {
+                                                        editing && existingSupply === 0
+                                                            ? <Input
+                                                                placeholder={t("AssetCommon:asset_details.precision.placeholder")}
+                                                                value={precision}
+                                                                type="number"
+                                                                onInput={(e) => {
+                                                                    const input = parseInt(e.currentTarget.value);
+                                                                    if (input >= 0 && input <= 8) {
+                                                                        setUpdatedPrecision(parseInt(e.currentTarget.value))
+                                                                    } else if (input < 0) {
+                                                                        setUpdatedPrecision(0);
+                                                                    } else {
+                                                                        setUpdatedPrecision(8);
+                                                                    }
+                                                                    setHasUpdatedPrecision(true);
+                                                                }}
+                                                                className="mt-1"
+                                                            />
+                                                            : null
+                                                    }
+                                                </div>
+                                            </div>
+
+                                            <HoverInfo
+                                                content={t("AssetCommon:asset_details.description.header_content")}
+                                                header={t("AssetCommon:asset_details.description.header")}
+                                            />
+                                            <Textarea
+                                                placeholder={t("AssetCommon:asset_details.description.placeholder")}
+                                                value={desc}
+                                                onInput={(e) => {
+                                                    setDesc(e.currentTarget.value)
                                                 }}
                                                 className="mt-1"
                                             />
-                                        </div>
-                                        <div>
-                                            <HoverInfo
-                                                content={t("AssetCommon:asset_details.precision.header_content")}
-                                                header={t("AssetCommon:asset_details.precision.header")}
-                                            />
-                                            {
-                                                !editing
-                                                    ? <Input
-                                                        placeholder={t("AssetCommon:asset_details.precision.placeholder")}
-                                                        value={precision}
-                                                        type="number"
-                                                        onInput={(e) => {
-                                                            const input = parseInt(e.currentTarget.value);
-                                                            if (input >= 0 && input <= 8) {
-                                                                setPrecision(parseInt(e.currentTarget.value))
-                                                            } else if (input < 0) {
-                                                                setPrecision(0);
-                                                            } else {
-                                                                setPrecision(8);
-                                                            }
-                                                        }}
-                                                        className="mt-1"
-                                                    />
-                                                    : null
-                                            }
-                                            {
-                                                editing && existingSupply > 0
-                                                    ? <Input
-                                                        placeholder={precision}
-                                                        type="number"
-                                                        disabled
-                                                        className="mt-1"
-                                                    />
-                                                    : null
-                                            }
-                                            {
-                                                editing && existingSupply === 0
-                                                    ? <Input
-                                                        placeholder={t("AssetCommon:asset_details.precision.placeholder")}
-                                                        value={precision}
-                                                        type="number"
-                                                        onInput={(e) => {
-                                                            const input = parseInt(e.currentTarget.value);
-                                                            if (input >= 0 && input <= 8) {
-                                                                setUpdatedPrecision(parseInt(e.currentTarget.value))
-                                                            } else if (input < 0) {
-                                                                setUpdatedPrecision(0);
-                                                            } else {
-                                                                setUpdatedPrecision(8);
-                                                            }
-                                                            setHasUpdatedPrecision(true);
-                                                        }}
-                                                        className="mt-1"
-                                                    />
-                                                    : null
-                                            }
-                                        </div>
-                                    </div>
 
-                                    <HoverInfo
-                                        content={t("AssetCommon:asset_details.description.header_content")}
-                                        header={t("AssetCommon:asset_details.description.header")}
-                                    />
-                                    <Textarea
-                                        placeholder={t("AssetCommon:asset_details.description.placeholder")}
-                                        value={desc}
-                                        onInput={(e) => {
-                                            setDesc(e.currentTarget.value)
-                                            if (editing) setHasEditedAssetOptions(true);
-                                        }}
-                                        className="mt-1"
-                                    />
-
-                                    <div className="grid grid-cols-2 gap-5 mb-3">
-                                        <div>
-                                            <HoverInfo
-                                                content={t("AssetCommon:asset_details.shortName.header_content")}
-                                                header={t("AssetCommon:asset_details.shortName.header")}
-                                            />
-                                            {
-                                                !editing
-                                                ? <Input
-                                                    placeholder={t("AssetCommon:asset_details.shortName.placeholder")}
-                                                    value={shortName}
-                                                    type="text"
-                                                    onInput={(e) => setShortName(e.currentTarget.value)}
-                                                    className="mt-1"
-                                                />
-                                                : <Input
-                                                    placeholder={shortName}
-                                                    type="text"
-                                                    disabled
-                                                    className="mt-1"
-                                                />
-                                            }
-                                        </div>
-                                        <div>
-                                            <HoverInfo
-                                                content={t("AssetCommon:asset_details.preferredMarket.header_content")}
-                                                header={t("AssetCommon:asset_details.preferredMarket.header")}
-                                            />
-                                            <div className="grid grid-cols-2 gap-3 mt-1">
-                                                <Input
-                                                    placeholder={market}
-                                                    disabled
-                                                    type="text"
-                                                />
-                                                <AssetDropDown
-                                                    assetSymbol={""}
-                                                    assetData={null}
-                                                    storeCallback={setMarket}
-                                                    otherAsset={null}
-                                                    marketSearch={marketSearch}
-                                                    type={"backing"}
-                                                    chain={usr && usr.chain ? usr.chain : "bitshares"}
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className="grid grid-cols-3 gap-5 mb-3">
-                                        <div>
-                                            <HoverInfo
-                                                content={t("AssetCommon:cer.quote_asset_amount.header_content")}
-                                                header={t("AssetCommon:cer.quote_asset_amount.header")}
-                                            />
-                                            {
-                                                !optedSkipCER
-                                                    ?   <Input
-                                                            placeholder={0}
-                                                            value={cerQuoteAmount}
-                                                            type="number"
-                                                            min="0"
-                                                            onInput={(e) => {
-                                                                setCerQuoteAmount(e.currentTarget.value);
-                                                                if (editing) setHasEditedAssetOptions(true);
-                                                            }}
+                                            <div className="grid grid-cols-2 gap-5 mb-3">
+                                                <div>
+                                                    <HoverInfo
+                                                        content={t("AssetCommon:asset_details.shortName.header_content")}
+                                                        header={t("AssetCommon:asset_details.shortName.header")}
+                                                    />
+                                                    {
+                                                        !editing
+                                                        ? <Input
+                                                            placeholder={t("AssetCommon:asset_details.shortName.placeholder")}
+                                                            value={shortName}
+                                                            type="text"
+                                                            onInput={(e) => setShortName(e.currentTarget.value)}
                                                             className="mt-1"
                                                         />
-                                                    :   <Input
-                                                            placeholder={cerQuoteAmount}
-                                                            type="number"
+                                                        : <Input
+                                                            placeholder={shortName}
+                                                            type="text"
                                                             disabled
                                                             className="mt-1"
                                                         />
-                                            }
-                                        </div>
-                                        <div>
-                                            <HoverInfo
-                                                content={t("AssetCommon:cer.base_asset_amount.header_content", {symbol: "BTS"})}
-                                                header={t("AssetCommon:cer.base_asset_amount.header")}
-                                            />
-                                            {
-                                                !optedSkipCER
-                                                    ? <Input
-                                                        placeholder={0}
-                                                        value={cerBaseAmount}
-                                                        type="number"
-                                                        min="0"
-                                                        onInput={(e) => {
-                                                            setCerBaseAmount(e.currentTarget.value);
-                                                            if (editing) setHasEditedAssetOptions(true);
-                                                        }}
-                                                        className="mt-1"
+                                                    }
+                                                </div>
+                                                <div>
+                                                    <HoverInfo
+                                                        content={t("AssetCommon:asset_details.preferredMarket.header_content")}
+                                                        header={t("AssetCommon:asset_details.preferredMarket.header")}
                                                     />
-                                                    : <Input
-                                                        placeholder={cerBaseAmount}
-                                                        type="number"
+                                                    <div className="grid grid-cols-2 gap-3 mt-1">
+                                                        <Input
+                                                            placeholder={market}
+                                                            disabled
+                                                            type="text"
+                                                        />
+                                                        <AssetDropDown
+                                                            assetSymbol={""}
+                                                            assetData={null}
+                                                            storeCallback={setMarket}
+                                                            otherAsset={null}
+                                                            marketSearch={marketSearch}
+                                                            type={"backing"}
+                                                            chain={usr && usr.chain ? usr.chain : "bitshares"}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div className="grid grid-cols-3 gap-5 mb-3">
+                                                <div>
+                                                    <HoverInfo
+                                                        content={t("AssetCommon:cer.quote_asset_amount.header_content")}
+                                                        header={t("AssetCommon:cer.quote_asset_amount.header")}
+                                                    />
+                                                    {
+                                                        !optedSkipCER
+                                                            ?   <Input
+                                                                    placeholder={0}
+                                                                    value={cerQuoteAmount}
+                                                                    type="number"
+                                                                    min="0"
+                                                                    onInput={(e) => {
+                                                                        setCerQuoteAmount(e.currentTarget.value);
+                                                                    }}
+                                                                    className="mt-1"
+                                                                />
+                                                            :   <Input
+                                                                    placeholder={cerQuoteAmount}
+                                                                    type="number"
+                                                                    disabled
+                                                                    className="mt-1"
+                                                                />
+                                                    }
+                                                </div>
+                                                <div>
+                                                    <HoverInfo
+                                                        content={t("AssetCommon:cer.base_asset_amount.header_content", {symbol: "BTS"})}
+                                                        header={t("AssetCommon:cer.base_asset_amount.header")}
+                                                    />
+                                                    {
+                                                        !optedSkipCER
+                                                            ? <Input
+                                                                placeholder={0}
+                                                                value={cerBaseAmount}
+                                                                type="number"
+                                                                min="0"
+                                                                onInput={(e) => {
+                                                                    setCerBaseAmount(e.currentTarget.value);
+                                                                }}
+                                                                className="mt-1"
+                                                            />
+                                                            : <Input
+                                                                placeholder={cerBaseAmount}
+                                                                type="number"
+                                                                disabled
+                                                                className="mt-1"
+                                                            />
+                                                    }
+                                                </div>
+                                                <div>
+                                                    <HoverInfo
+                                                        content={t("AssetCommon:cer.calculated_cer_price.header_content")}
+                                                        header={t("AssetCommon:cer.calculated_cer_price.header")}
+                                                    />
+                                                    <Input
+                                                        placeholder={
+                                                            `${
+                                                                (cerQuoteAmount / cerBaseAmount).toFixed(precision)
+                                                            } ${usr.chain === "bitshares" ? "BTS" : "TEST"}`
+                                                        }
+                                                        type="text"
+                                                        className="mt-1"
                                                         disabled
-                                                        className="mt-1"
                                                     />
+                                                </div>
+                                            </div>
+                                            
+                                            {
+                                                editing
+                                                    ? <div className="col-span-2 w-1/2">
+                                                        <AssetFlag
+                                                            alreadyDisabled={false}
+                                                            id={"skipCER"}
+                                                            allowedText={t("AssetCommon:extensions.skipCER.enabled")}
+                                                            enabledInfo={t("AssetCommon:extensions.skipCER.enabledInfo")}
+                                                            disabledText={t("AssetCommon:extensions.skipCER.disabled")}
+                                                            disabledInfo={t("AssetCommon:extensions.skipCER.disabledInfo")}
+                                                            permission={true}
+                                                            flag={optedSkipCER}
+                                                            setFlag={setOptedSkipCER}
+                                                        />
+                                                    </div>
+                                                    : null
                                             }
-                                        </div>
-                                        <div>
-                                            <HoverInfo
-                                                content={t("AssetCommon:cer.calculated_cer_price.header_content")}
-                                                header={t("AssetCommon:cer.calculated_cer_price.header")}
-                                            />
-                                            <Input
-                                                placeholder={
-                                                    `${
-                                                        (cerQuoteAmount / cerBaseAmount).toFixed(precision)
-                                                    } ${usr.chain === "bitshares" ? "BTS" : "TEST"}`
-                                                }
-                                                type="text"
-                                                className="mt-1"
-                                                disabled
-                                            />
-                                        </div>
-                                    </div>
-                                    
-                                    {
-                                        editing
-                                            ? <div className="col-span-2 w-1/2">
+
+                                            <div className="grid grid-cols-2 gap-5 mt-2">
                                                 <AssetFlag
                                                     alreadyDisabled={false}
-                                                    id={"skipCER"}
-                                                    allowedText={t("AssetCommon:extensions.skipCER.enabled")}
-                                                    enabledInfo={t("AssetCommon:extensions.skipCER.enabledInfo")}
-                                                    disabledText={t("AssetCommon:extensions.skipCER.disabled")}
-                                                    disabledInfo={t("AssetCommon:extensions.skipCER.disabledInfo")}
+                                                    id={"allowed_markets"}
+                                                    allowedText={t("AssetCommon:extensions.allowed_markets.enabled")}
+                                                    enabledInfo={t("AssetCommon:extensions.allowed_markets.enabledInfo")}
+                                                    disabledText={t("AssetCommon:extensions.allowed_markets.disabled")}
+                                                    disabledInfo={t("AssetCommon:extensions.allowed_markets.disabledInfo")}
                                                     permission={true}
-                                                    flag={optedSkipCER}
-                                                    setFlag={setOptedSkipCER}
+                                                    flag={allowedMarketsEnabled}
+                                                    setFlag={setAllowedMarketsEnabled}
                                                 />
-                                            </div>
-                                            : null
-                                    }
-
-                                    <div className="grid grid-cols-2 gap-5 mt-2">
-                                        <AssetFlag
-                                            alreadyDisabled={false}
-                                            id={"allowed_markets"}
-                                            allowedText={t("AssetCommon:extensions.allowed_markets.enabled")}
-                                            enabledInfo={t("AssetCommon:extensions.allowed_markets.enabledInfo")}
-                                            disabledText={t("AssetCommon:extensions.allowed_markets.disabled")}
-                                            disabledInfo={t("AssetCommon:extensions.allowed_markets.disabledInfo")}
-                                            permission={true}
-                                            flag={allowedMarketsEnabled}
-                                            setFlag={setAllowedMarketsEnabled}
-                                        />
-                                        {
-                                            allowedMarketsEnabled
-                                                ? <AssetDropDown
-                                                    assetSymbol={""}
-                                                    assetData={null}
-                                                    storeCallback={(input) => {
-                                                        if (!allowedMarkets.includes(input) && !bannedMarkets.includes(input)) {
-                                                            const _foundAsset = assets.find((x) => x.symbol === input);
-                                                            setAllowedMarkets([...allowedMarkets, _foundAsset.id]);
-                                                            if (editing) setHasEditedAssetOptions(true);
-                                                        }
-                                                    }}
-                                                    otherAsset={null}
-                                                    marketSearch={marketSearch}
-                                                    type={"backing"}
-                                                    chain={usr && usr.chain ? usr.chain : "bitshares"}
-                                                />
-                                                : null
-                                        }
-                                    </div>
-                                    {
-                                        allowedMarketsEnabled
-                                            ?   <div className="mt-3 border border-grey rounded">
-                                                    <List
-                                                        height={210}
-                                                        itemCount={allowedMarkets.length}
-                                                        itemSize={90}
-                                                        className="w-full"
-                                                    >
-                                                        {allowedMarketsRow}
-                                                    </List>
-                                                </div>
-                                            : null
-                                    }
-                                    <div className="grid grid-cols-2 gap-5 mt-2">
-                                        <AssetFlag
-                                            alreadyDisabled={false}
-                                            id={"banned_markets"}
-                                            allowedText={t("AssetCommon:extensions.banned_markets.enabled")}
-                                            enabledInfo={t("AssetCommon:extensions.banned_markets.enabledInfo")}
-                                            disabledText={t("AssetCommon:extensions.banned_markets.disabled")}
-                                            disabledInfo={t("AssetCommon:extensions.banned_markets.disabledInfo")}
-                                            permission={true}
-                                            flag={bannedMarketsEnabled}
-                                            setFlag={setBannedMarketsEnabled}
-                                        />
-                                        {
-                                            bannedMarketsEnabled
-                                            ?   <AssetDropDown
-                                                    assetSymbol={""}
-                                                    assetData={null}
-                                                    storeCallback={(input) => {
-                                                        if (!bannedMarkets.includes(input) && !allowedMarkets.includes(input)) {
-                                                            const _foundAsset = assets.find((x) => x.symbol === input);
-                                                            setBannedMarkets([...bannedMarkets, _foundAsset.id]);
-                                                            if (editing) setHasEditedAssetOptions(true);
-                                                        }
-                                                    }}
-                                                    otherAsset={null}
-                                                    marketSearch={marketSearch}
-                                                    type={"backing"}
-                                                    chain={usr && usr.chain ? usr.chain : "bitshares"}
-                                                />
-                                                : null
-                                        }
-                                    </div>
-                                    {
-                                        bannedMarketsEnabled
-                                            ? <div className="mt-2 border border-grey rounded">
-                                                <List
-                                                    height={210}
-                                                    itemCount={bannedMarkets.length}
-                                                    itemSize={90}
-                                                    className="w-full"
-                                                >
-                                                    {bannedMarketsRow}
-                                                </List>
-                                              </div>
-                                            : null
-                                    }
-                                    <Separator className="my-4 mt-5" />
-                                </div>
-                                <div className="col-span-2">
-                                    <div className="grid grid-cols-2 gap-5">
-                                        <div>
-                                            <HoverInfo
-                                                content={t("AssetCommon:permissions.header_content")}
-                                                header={t("AssetCommon:permissions.header")}
-                                                type="header"
-                                            />
-                                            <AssetPermission
-                                                alreadyDisabled={existingSupply > 0 && permanentlyDisabledCMF}
-                                                id={"charge_market_fee"}
-                                                allowedText={t("AssetCommon:permissions.charge_market_fee.about")}
-                                                enabledInfo={t("AssetCommon:permissions.charge_market_fee.enabledInfo")}
-                                                disabledText={t("AssetCommon:permissions.charge_market_fee.about")}
-                                                disabledInfo={t("AssetCommon:permissions.charge_market_fee.disabledInfo")}
-                                                permission={permChargeMarketFee}
-                                                setPermission={setPermChargeMarketFee}
-                                                flag={flagChargeMarketFee}
-                                                setFlag={setFlagChargeMarketFee}
-                                            />
-                                            <AssetPermission
-                                                alreadyDisabled={existingSupply > 0 && permanentlyDisabledWL}
-                                                id={"white_list"}
-                                                allowedText={t("AssetCommon:permissions.white_list.about")}
-                                                enabledInfo={t("AssetCommon:permissions.white_list.enabledInfo")}
-                                                disabledText={t("AssetCommon:permissions.white_list.about")}
-                                                disabledInfo={t("AssetCommon:permissions.white_list.disabledInfo")}
-                                                permission={permWhiteList}
-                                                setPermission={setPermWhiteList}
-                                                flag={flagWhiteList}
-                                                setFlag={setFlagWhiteList}
-                                            />
-                                            <AssetPermission
-                                                alreadyDisabled={existingSupply > 0 && permanentlyDisabledTR}
-                                                id={"transfer_restricted"}
-                                                allowedText={t("AssetCommon:permissions.transfer_restricted.about")}
-                                                enabledInfo={t("AssetCommon:permissions.transfer_restricted.enabledInfo")}
-                                                disabledText={t("AssetCommon:permissions.transfer_restricted.about")}
-                                                disabledInfo={t("AssetCommon:permissions.transfer_restricted.disabledInfo")}
-                                                permission={permTransferRestricted}
-                                                setPermission={setPermTransferRestricted}
-                                                flag={flagTransferRestricted}
-                                                setFlag={setFlagTransferRestricted}
-                                            />
-                                            <AssetPermission
-                                                alreadyDisabled={existingSupply > 0 && permanentlyDisabledDC}
-                                                id={"disable_confidential"}
-                                                allowedText={t("AssetCommon:permissions.disable_confidential.about")}
-                                                enabledInfo={t("AssetCommon:permissions.disable_confidential.enabledInfo")}
-                                                disabledText={t("AssetCommon:permissions.disable_confidential.about")}
-                                                disabledInfo={t("AssetCommon:permissions.disable_confidential.disabledInfo")}
-                                                permission={permDisableConfidential}
-                                                setPermission={setPermDisableConfidential}
-                                                flag={flagDisableConfidential}
-                                                setFlag={setFlagDisableConfidential}
-                                            />
-                                            <AssetPermission
-                                                alreadyDisabled={existingSupply > 0 && permanentlyDisabledOA}
-                                                id={"override_authority"}
-                                                allowedText={t("AssetCommon:permissions.override_authority.about")}
-                                                enabledInfo={t("AssetCommon:permissions.override_authority.enabledInfo")}
-                                                disabledText={t("AssetCommon:permissions.override_authority.about")}
-                                                disabledInfo={t("AssetCommon:permissions.override_authority.disabledInfo")}
-                                                permission={permOverrideAuthority}
-                                                setPermission={setPermOverrideAuthority}
-                                                flag={flagOverrideAuthority}
-                                                setFlag={setFlagOverrideAuthority}
-                                            />
-                                            <AssetPermission
-                                                alreadyDisabled={existingSupply > 0 && permanentlyDisabledDFS}
-                                                id={"disable_force_settle"}
-                                                allowedText={t("AssetCommon:permissions.disable_force_settle.about")}
-                                                enabledInfo={t("AssetCommon:permissions.disable_force_settle.enabledInfo")}
-                                                disabledText={t("AssetCommon:permissions.disable_force_settle.about")}
-                                                disabledInfo={t("AssetCommon:permissions.disable_force_settle.disabledInfo")}
-                                                permission={permDisableForceSettle}
-                                                setPermission={setPermDisableForceSettle}
-                                                flag={flagDisableForceSettle}
-                                                setFlag={setFlagDisableForceSettle}
-                                            />
-                                            <AssetPermission
-                                                alreadyDisabled={existingSupply > 0 && permanentlyDisabledGS}
-                                                id={"global_settle"}
-                                                allowedText={t("AssetCommon:permissions.global_settle.about")}
-                                                enabledInfo={t("AssetCommon:permissions.global_settle.enabledInfo")}
-                                                disabledText={t("AssetCommon:permissions.global_settle.about")}
-                                                disabledInfo={t("AssetCommon:permissions.global_settle.disabledInfo")}
-                                                permission={permGlobalSettle}
-                                                setPermission={setPermGlobalSettle}
-                                                flag={null}
-                                                setFlag={null}
-                                            />
-                                            <AssetPermission
-                                                alreadyDisabled={existingSupply > 0 && permanentlyDisabledWFA}
-                                                id={"witness_fed_asset"}
-                                                allowedText={t("AssetCommon:permissions.witness_fed_asset.about")}
-                                                enabledInfo={t("AssetCommon:permissions.witness_fed_asset.enabledInfo")}
-                                                disabledText={t("AssetCommon:permissions.witness_fed_asset.about")}
-                                                disabledInfo={t("AssetCommon:permissions.witness_fed_asset.disabledInfo")}
-                                                permission={permWitnessFedAsset}
-                                                setPermission={setPermWitnessFedAsset}
-                                                flag={flagWitnessFedAsset}
-                                                setFlag={setFlagWitnessFedAsset}
-                                            />
-                                            <AssetPermission
-                                                alreadyDisabled={existingSupply > 0 && permanentlyDisabledCFA}
-                                                id={"committee_fed_asset"}
-                                                allowedText={t("AssetCommon:permissions.committee_fed_asset.about")}
-                                                enabledInfo={t("AssetCommon:permissions.committee_fed_asset.enabledInfo")}
-                                                disabledText={t("AssetCommon:permissions.committee_fed_asset.about")}
-                                                disabledInfo={t("AssetCommon:permissions.committee_fed_asset.disabledInfo")}
-                                                permission={permCommitteeFedAsset}
-                                                setPermission={setPermCommitteeFedAsset}
-                                                flag={flagCommitteeFedAsset}
-                                                setFlag={setFlagCommitteeFedAsset}
-                                            />
-                                            <div className="grid grid-cols-3 gap-5 mt-1 mb-1">
-                                                <Separator className="mt-3 w-1/2 mx-auto text-center" />
-                                                <Separator className="mt-3 w-1/2 mx-auto text-center" />
-                                                <Separator className="mt-3 w-1/2 mx-auto text-center" />
-                                            </div>
-                                            <AssetPermission
-                                                alreadyDisabled={existingSupply > 0 && permanentlyDisabledLMS}
-                                                id={"lock_max_supply"}
-                                                allowedText={t("AssetCommon:permissions.lock_max_supply.about")}
-                                                enabledInfo={t("AssetCommon:permissions.lock_max_supply.enabledInfo")}
-                                                disabledText={t("AssetCommon:permissions.lock_max_supply.about")}
-                                                disabledInfo={t("AssetCommon:permissions.lock_max_supply.disabledInfo")}
-                                                permission={permLockMaxSupply}
-                                                setPermission={setPermLockMaxSupply}
-                                                flag={flagLockMaxSupply}
-                                                setFlag={setFlagLockMaxSupply}
-                                            />
-                                            <AssetPermission
-                                                alreadyDisabled={existingSupply > 0 && permanentlyDisabledDNS}
-                                                id={"disable_new_supply"}
-                                                allowedText={t("AssetCommon:permissions.disable_new_supply.about")}
-                                                enabledInfo={t("AssetCommon:permissions.disable_new_supply.enabledInfo")}
-                                                disabledText={t("AssetCommon:permissions.disable_new_supply.about")}
-                                                disabledInfo={t("AssetCommon:permissions.disable_new_supply.disabledInfo")}
-                                                permission={permDisableNewSupply}
-                                                setPermission={setPermDisableNewSupply}
-                                                flag={flagDisableNewSupply}
-                                                setFlag={setFlagDisableNewSupply}
-                                            />
-                                            <AssetPermission
-                                                alreadyDisabled={existingSupply > 0 && permanentlyDisabledDCB}
-                                                id={"disable_collateral_bidding"}
-                                                allowedText={t("AssetCommon:permissions.disable_collateral_bidding.about")}
-                                                enabledInfo={t("AssetCommon:permissions.disable_collateral_bidding.enabledInfo")}
-                                                disabledText={t("AssetCommon:permissions.disable_collateral_bidding.about")}
-                                                disabledInfo={t("AssetCommon:permissions.disable_collateral_bidding.disabledInfo")}
-                                                permission={permDisableCollateralBidding}
-                                                setPermission={setPermDisableCollateralBidding}
-                                                flag={flagDisableCollateralBidding}
-                                                setFlag={setFlagDisableCollateralBidding}
-                                            />
-                                            <AssetPermission
-                                                alreadyDisabled={existingSupply > 0 && permanentlyDisabledDMCR}
-                                                id={"disable_mcr_update"}
-                                                allowedText={t("AssetCommon:permissions.disable_mcr_update.about")}
-                                                enabledInfo={t("AssetCommon:permissions.disable_mcr_update.enabledInfo")}
-                                                disabledText={t("AssetCommon:permissions.disable_mcr_update.about")}
-                                                disabledInfo={t("AssetCommon:permissions.disable_mcr_update.disabledInfo")}
-                                                permission={permDisableMCRUpdate}
-                                                setPermission={setPermDisableMCRUpdate}
-                                                flag={null}
-                                                setFlag={null}
-                                            />
-                                            <AssetPermission
-                                                alreadyDisabled={existingSupply > 0 && permanentlyDisabledDICR}
-                                                id={"disable_icr_update"}
-                                                allowedText={t("AssetCommon:permissions.disable_icr_update.about")}
-                                                enabledInfo={t("AssetCommon:permissions.disable_icr_update.enabledInfo")}
-                                                disabledText={t("AssetCommon:permissions.disable_icr_update.about")}
-                                                disabledInfo={t("AssetCommon:permissions.disable_icr_update.disabledInfo")}
-                                                permission={permDisableICRUpdate}
-                                                setPermission={setPermDisableICRUpdate}
-                                                flag={null}
-                                                setFlag={null}
-                                            />
-                                            <AssetPermission
-                                                alreadyDisabled={existingSupply > 0 && permanentlyDisabledDMSSR}
-                                                id={"disable_mssr_update"}
-                                                allowedText={t("AssetCommon:permissions.disable_mssr_update.about")}
-                                                enabledInfo={t("AssetCommon:permissions.disable_mssr_update.enabledInfo")}
-                                                disabledText={t("AssetCommon:permissions.disable_mssr_update.about")}
-                                                disabledInfo={t("AssetCommon:permissions.disable_mssr_update.disabledInfo")}
-                                                permission={permDisableMSSRUpdate}
-                                                setPermission={setPermDisableMSSRUpdate}
-                                                flag={null}
-                                                setFlag={null}
-                                            />
-                                            <AssetPermission
-                                                alreadyDisabled={existingSupply > 0 && permanentlyDisabledDBSRM}
-                                                id={"disable_bsrm_update"}
-                                                allowedText={t("AssetCommon:permissions.disable_bsrm_update.about")}
-                                                enabledInfo={t("AssetCommon:permissions.disable_bsrm_update.enabledInfo")}
-                                                disabledText={t("AssetCommon:permissions.disable_bsrm_update.about")}
-                                                disabledInfo={t("AssetCommon:permissions.disable_bsrm_update.disabledInfo")}
-                                                permission={permDisableBSRMUpdate}
-                                                setPermission={setPermDisableBSRMUpdate}
-                                                flag={null}
-                                                setFlag={null}
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <HoverInfo
-                                                content={t("AssetCommon:flags.header_content")}
-                                                header={t("AssetCommon:flags.header")}
-                                                type="header"
-                                            />
-                                            <AssetFlag
-                                                alreadyDisabled={existingSupply > 0 && permanentlyDisabledCMF}
-                                                id={"charge_market_fee_flag"}
-                                                allowedText={t("AssetCommon:flags.charge_market_fee.about")}
-                                                enabledInfo={t("AssetCommon:flags.charge_market_fee.enabledInfo")}
-                                                disabledText={t("AssetCommon:flags.charge_market_fee.about")}
-                                                disabledInfo={t("AssetCommon:flags.charge_market_fee.disabledInfo")}
-                                                permission={permChargeMarketFee}
-                                                flag={flagChargeMarketFee}
-                                                setFlag={setFlagChargeMarketFee}
-                                            />
-                                            <AssetFlag
-                                                alreadyDisabled={existingSupply > 0 && permanentlyDisabledWL}
-                                                id={"white_list_flag"}
-                                                allowedText={t("AssetCommon:flags.white_list.about")}
-                                                enabledInfo={t("AssetCommon:flags.white_list.enabledInfo")}
-                                                disabledText={t("AssetCommon:flags.white_list.about")}
-                                                disabledInfo={t("AssetCommon:flags.white_list.disabledInfo")}
-                                                permission={permWhiteList}
-                                                flag={flagWhiteList}
-                                                setFlag={setFlagWhiteList}
-                                            />
-                                            <AssetFlag
-                                                alreadyDisabled={existingSupply > 0 && permanentlyDisabledTR}
-                                                id={"transfer_restricted_flag"}
-                                                allowedText={t("AssetCommon:flags.transfer_restricted.about")}
-                                                enabledInfo={t("AssetCommon:flags.transfer_restricted.enabledInfo")}
-                                                disabledText={t("AssetCommon:flags.transfer_restricted.about")}
-                                                disabledInfo={t("AssetCommon:flags.transfer_restricted.disabledInfo")}
-                                                permission={permTransferRestricted}
-                                                flag={flagTransferRestricted}
-                                                setFlag={setFlagTransferRestricted}
-                                            />
-                                            <AssetFlag
-                                                alreadyDisabled={existingSupply > 0 && permanentlyDisabledDC}
-                                                id={"disable_confidential_flag"}
-                                                allowedText={t("AssetCommon:flags.disable_confidential.about")}
-                                                enabledInfo={t("AssetCommon:flags.disable_confidential.enabledInfo")}
-                                                disabledText={t("AssetCommon:flags.disable_confidential.about")}
-                                                disabledInfo={t("AssetCommon:flags.disable_confidential.disabledInfo")}
-                                                permission={permDisableConfidential}
-                                                flag={flagDisableConfidential}
-                                                setFlag={setFlagDisableConfidential}
-                                            />
-                                            <AssetFlag
-                                                alreadyDisabled={existingSupply > 0 && permanentlyDisabledOA}
-                                                id={"override_authority_flag"}
-                                                allowedText={t("AssetCommon:flags.override_authority.about")}
-                                                enabledInfo={t("AssetCommon:flags.override_authority.enabledInfo")}
-                                                disabledText={t("AssetCommon:flags.override_authority.about")}
-                                                disabledInfo={t("AssetCommon:flags.override_authority.disabledInfo")}
-                                                permission={permOverrideAuthority}
-                                                flag={flagOverrideAuthority}
-                                                setFlag={setFlagOverrideAuthority}
-                                            />
-                                            <AssetFlag
-                                                alreadyDisabled={existingSupply > 0 && permanentlyDisabledDFS}
-                                                id={"disable_force_settle_flag"}
-                                                allowedText={t("AssetCommon:flags.disable_force_settle.about")}
-                                                enabledInfo={t("AssetCommon:flags.disable_force_settle.enabledInfo")}
-                                                disabledText={t("AssetCommon:flags.disable_force_settle.about")}
-                                                disabledInfo={t("AssetCommon:flags.disable_force_settle.disabledInfo")}
-                                                permission={permDisableForceSettle}
-                                                flag={flagDisableForceSettle}
-                                                setFlag={setFlagDisableForceSettle}
-                                            />
-                                            <br/>
-                                            <AssetFlag
-                                                alreadyDisabled={existingSupply > 0 && permanentlyDisabledWFA}
-                                                id={"witness_fed_asset_flag"}
-                                                allowedText={t("AssetCommon:flags.witness_fed_asset.about")}
-                                                enabledInfo={t("AssetCommon:flags.witness_fed_asset.enabledInfo")}
-                                                disabledText={t("AssetCommon:flags.witness_fed_asset.about")}
-                                                disabledInfo={t("AssetCommon:flags.witness_fed_asset.disabledInfo")}
-                                                permission={permWitnessFedAsset}
-                                                flag={flagWitnessFedAsset}
-                                                setFlag={setFlagWitnessFedAsset}
-                                            />
-                                            <AssetFlag
-                                                alreadyDisabled={existingSupply > 0 && permanentlyDisabledCFA}
-                                                id={"committee_fed_asset_flag"}
-                                                allowedText={t("AssetCommon:flags.committee_fed_asset.about")}
-                                                enabledInfo={t("AssetCommon:flags.committee_fed_asset.enabledInfo")}
-                                                disabledText={t("AssetCommon:flags.committee_fed_asset.about")}
-                                                disabledInfo={t("AssetCommon:flags.committee_fed_asset.disabledInfo")}
-                                                permission={permCommitteeFedAsset}
-                                                flag={flagCommitteeFedAsset}
-                                                setFlag={setFlagCommitteeFedAsset}
-                                            />
-                                            <div className="grid grid-cols-3 gap-5 mt-1 mb-1">
-                                                <Separator className="mt-3 w-1/2 mx-auto text-center" />
-                                                <Separator className="mt-3 w-1/2 mx-auto text-center" />
-                                                <Separator className="mt-3 w-1/2 mx-auto text-center" />
-                                            </div>
-                                            <AssetFlag
-                                                alreadyDisabled={existingSupply > 0 && !permanentlyDisabledLMS}
-                                                id={"lock_max_supply_flag"}
-                                                allowedText={t("AssetCommon:flags.lock_max_supply.about")}
-                                                enabledInfo={t("AssetCommon:flags.lock_max_supply.enabledInfo")}
-                                                disabledText={t("AssetCommon:flags.lock_max_supply.about")}
-                                                disabledInfo={t("AssetCommon:flags.lock_max_supply.disabledInfo")}
-                                                permission={!permLockMaxSupply}
-                                                flag={flagLockMaxSupply}
-                                                setFlag={setFlagLockMaxSupply}
-                                            />
-                                            <AssetFlag
-                                                alreadyDisabled={existingSupply > 0 && !permanentlyDisabledDNS}
-                                                id={"disable_new_supply_flag"}
-                                                allowedText={t("AssetCommon:flags.disable_new_supply.about")}
-                                                enabledInfo={t("AssetCommon:flags.disable_new_supply.enabledInfo")}
-                                                disabledText={t("AssetCommon:flags.disable_new_supply.about")}
-                                                disabledInfo={t("AssetCommon:flags.disable_new_supply.disabledInfo")}
-                                                permission={!permDisableNewSupply}
-                                                flag={flagDisableNewSupply}
-                                                setFlag={setFlagDisableNewSupply}
-                                            />
-                                            <AssetFlag
-                                                alreadyDisabled={existingSupply > 0 && !permanentlyDisabledDCB}
-                                                id={"disable_collateral_bidding_flag"}
-                                                allowedText={t("AssetCommon:flags.disable_collateral_bidding.about")}
-                                                enabledInfo={t("AssetCommon:flags.disable_collateral_bidding.enabledInfo")}
-                                                disabledText={t("AssetCommon:flags.disable_collateral_bidding.about")}
-                                                disabledInfo={t("AssetCommon:flags.disable_collateral_bidding.disabledInfo")}
-                                                permission={!permDisableCollateralBidding}
-                                                flag={flagDisableCollateralBidding}
-                                                setFlag={setFlagDisableCollateralBidding}
-                                            />
-                                        </div>
-                                    </div>
-                                    <Separator className="my-4 mt-5" />
-                                </div>
-                                <div className="col-span-2">
-                                    <HoverInfo
-                                        content={t("CreateSmartcoin:title.header_content")}
-                                        header={t("CreateSmartcoin:title.header")}
-                                        type="header"
-                                    />
-                                    <HoverInfo
-                                        content={t("CreatePrediction:pma.backing_asset.header_content")}
-                                        header={t("CreatePrediction:pma.backing_asset.header")}
-                                    />
-                                    <div className="grid grid-cols-2 gap-2">
-                                        <Input disabled value={backingAssetData ? `${backingAssetData.symbol} (${backingAssetData.id})` : backingAsset} type="text" />
-                                        {
-                                            !editing
-                                            ? <AssetDropDown
-                                                assetSymbol={backingAsset ?? ""}
-                                                assetData={null}
-                                                storeCallback={setBackingAsset}
-                                                otherAsset={null}
-                                                marketSearch={marketSearch}
-                                                type={"backing"}
-                                                chain={usr && usr.chain ? usr.chain : "bitshares"}
-                                            />
-                                            : null
-                                        }
-                                    </div>
-                                    <div className="grid grid-cols-2 gap-2">
-                                        <div>
-                                            <HoverInfo
-                                                content={t("CreateSmartcoin:feed_lifetime.header_content")}
-                                                header={t("CreateSmartcoin:feed_lifetime.header")}
-                                            />
-                                            <Input
-                                                value={feedLifetimeSeconds}
-                                                type="number"
-                                                min="0"
-                                                className="mt-1"
-                                                onInput={(e) => {
-                                                    setFeedLifetimeSeconds(e.currentTarget.value);
-                                                    if (editing) setHasEditedBitassetOptions(true);
-                                                }}
-                                            />
-                                        </div>
-                                        <div>
-                                            <HoverInfo
-                                                content={t("CreateSmartcoin:minimum_feeds.header_content")}
-                                                header={t("CreateSmartcoin:minimum_feeds.header")}
-                                            />
-                                            <Input
-                                                value={minimumFeeds}
-                                                type="number"
-                                                min="1"
-                                                max="20"
-                                                className="mt-1"
-                                                onInput={(e) => {
-                                                    setMinimumFeeds(parseInt(e.currentTarget.value));
-                                                    if (editing) setHasEditedBitassetOptions(true);
-                                                }}
-                                            />
-                                        </div>
-                                        <div>
-                                            <HoverInfo
-                                                content={t("CreateSmartcoin:force_settlement_delay.header_content")}
-                                                header={t("CreateSmartcoin:force_settlement_delay.header")}
-                                            />
-                                            <Input
-                                                value={forceSettlementDelaySeconds}
-                                                type="number"
-                                                min="0"
-                                                className="mt-1"
-                                                onInput={(e) => {
-                                                    setForceSettlementDelaySeconds(e.currentTarget.value);
-                                                    if (editing) setHasEditedBitassetOptions(true);
-                                                }}
-                                            />
-                                        </div>
-                                        <div>
-                                            <HoverInfo
-                                                content={t("CreateSmartcoin:force_settlement_offset.header_content")}
-                                                header={t("CreateSmartcoin:force_settlement_offset.header")}
-                                            />
-                                            <Input
-                                                value={forceSettlementOffsetPercent}
-                                                type="number"
-                                                min="0"
-                                                max="100"
-                                                className="mt-1"
-                                                onInput={(e) => {
-                                                    setForceSettlementOffsetPercent(e.currentTarget.value);
-                                                    debouncedPercent(
-                                                        e.currentTarget.value,
-                                                        setForceSettlementOffsetPercent,
-                                                        100
-                                                    );
-                                                    if (editing) setHasEditedBitassetOptions(true);
-                                                }}
-                                            />
-                                        </div>
-                                        <div>
-                                            <HoverInfo
-                                                content={t("CreateSmartcoin:maximum_force_settlement_volume.header_content")}
-                                                header={t("CreateSmartcoin:maximum_force_settlement_volume.header")}
-                                            />
-                                            <Input
-                                                value={maximumForceSettlementVolume}
-                                                type="number"
-                                                min="0"
-                                                className="mt-1"
-                                                onInput={(e) => {
-                                                    setMaximumForceSettlementVolume(e.currentTarget.value);
-                                                    if (editing) setHasEditedBitassetOptions(true);
-                                                }}
-                                            />
-                                        </div>
-                                        {
-                                            !permDisableMCRUpdate
-                                                ? <div className="col-span-2 w-1/2">
-                                                    <HoverInfo
-                                                        content={t("CreateSmartcoin:mcr.header_content")}
-                                                        header={t("CreateSmartcoin:mcr.header")}
-                                                    />
-                                                    <Input
-                                                        value={mcr}
-                                                        type="number"
-                                                        min="0"
-                                                        max="4200"
-                                                        className="mt-1"
-                                                        onInput={(e) => {
-                                                            setMcr(e.currentTarget.value);
-                                                            debouncedPercent(
-                                                                e.currentTarget.value,
-                                                                setMcr,
-                                                                4200
-                                                            );
-                                                            if (editing) setHasEditedBitassetOptions(true);
-                                                        }}
-                                                    />
-                                                </div>
-                                                : null
-                                        }
-                                        {
-                                            !permDisableICRUpdate
-                                                ? <div className="col-span-2 w-1/2">
-                                                    <HoverInfo
-                                                        content={t("CreateSmartcoin:icr.header_content")}
-                                                        header={t("CreateSmartcoin:icr.header")}
-                                                    />
-                                                    <Input
-                                                        value={icr}
-                                                        type="number"
-                                                        min="0"
-                                                        max="4200"
-                                                        className="mt-1"
-                                                        onInput={(e) => {
-                                                            setIcr(e.currentTarget.value);
-                                                            debouncedPercent(
-                                                                e.currentTarget.value,
-                                                                setIcr,
-                                                                4200
-                                                            );
-                                                            if (editing) setHasEditedBitassetOptions(true);
-                                                        }}
-                                                    />
-                                                </div>
-                                                : null
-                                        }
-                                        {
-                                            !permDisableMSSRUpdate
-                                                ? <div className="col-span-2 w-1/2">
-                                                    <HoverInfo
-                                                        content={t("CreateSmartcoin:mssr.header_content")}
-                                                        header={t("CreateSmartcoin:mssr.header")}
-                                                    />
-                                                    <Input
-                                                        value={mssr}
-                                                        type="number"
-                                                        min="0"
-                                                        max="4200"
-                                                        className="mt-1"
-                                                        onInput={(e) => {
-                                                            setMssr(e.currentTarget.value);
-                                                            debouncedPercent(
-                                                                e.currentTarget.value,
-                                                                setMssr,
-                                                                4200
-                                                            );
-                                                            if (editing) setHasEditedBitassetOptions(true);
-                                                        }}
-                                                    />
-                                                </div>
-                                                : null
-                                        }
-                                        {
-                                            !permDisableBSRMUpdate
-                                                ? <div className="col-span-2">
-                                                    <HoverInfo
-                                                        content={t("CreateSmartcoin:bsrm.header_content")}
-                                                        header={t("CreateSmartcoin:bsrm.header")}
-                                                    />
-                                                    <Select
-                                                        onValueChange={(bsrmStrategy) => {
-                                                            setBsrmStrategy(bsrmStrategy);
-                                                            if (editing) setHasEditedBitassetOptions(true);
-                                                        }}
-                                                        value={bsrmStrategy}
-                                                    >
-                                                        <SelectTrigger className="mb-1">
-                                                            <SelectValue />
-                                                        </SelectTrigger>
-                                                        <SelectContent className="bg-white">
-                                                            <SelectGroup>
-                                                                <SelectItem value="0">{t("CreateSmartcoin:bsrm.select_0")}</SelectItem>
-                                                                <SelectItem value="1">{t("CreateSmartcoin:bsrm.select_1")}</SelectItem>
-                                                                <SelectItem value="2">{t("CreateSmartcoin:bsrm.select_2")}</SelectItem>
-                                                                <SelectItem value="3">{t("CreateSmartcoin:bsrm.select_3")}</SelectItem>
-                                                            </SelectGroup>
-                                                        </SelectContent>
-                                                    </Select>
-                                                </div>
-                                                : null
-                                        }
-
-                                        <span className="col-span-2 w-3/4">
-                                            <AssetFlag
-                                                alreadyDisabled={false}
-                                                id={"margin_call_fee_ratio"}
-                                                allowedText={t("CreateSmartcoin:extensions.margin_call_fee_ratio.enabled")}
-                                                enabledInfo={t("CreateSmartcoin:extensions.margin_call_fee_ratio.extensionInfo")}
-                                                disabledText={t("CreateSmartcoin:extensions.margin_call_fee_ratio.disabled")}
-                                                disabledInfo={t("CreateSmartcoin:extensions.margin_call_fee_ratio.extensionInfo")}
-                                                permission={true}
-                                                flag={mcfrExtensionEnabled}
-                                                setFlag={setMcfrExtensionEnabled}
-                                            />
-                                            {
-                                                mcfrExtensionEnabled
-                                                    ? <div className="col-span-2">
-                                                        <HoverInfo
-                                                            content={t("CreateSmartcoin:extensions.margin_call_fee_ratio.header_content")}
-                                                            header={t("CreateSmartcoin:extensions.margin_call_fee_ratio.header")}
-                                                        />
-                                                        <Input
-                                                            value={marginCallFeeRatio}
-                                                            type="number"
-                                                            min="0"
-                                                            max="100"
-                                                            className="mt-1"
-                                                            onInput={(e) => {
-                                                                setMarginCallFeeRatio(e.currentTarget.value);
-                                                                debouncedPercent(
-                                                                    e.currentTarget.value,
-                                                                    setMarginCallFeeRatio,
-                                                                    100
-                                                                );
-                                                                if (editing) setHasEditedBitassetOptions(true);
+                                                {
+                                                    allowedMarketsEnabled
+                                                        ? <AssetDropDown
+                                                            assetSymbol={""}
+                                                            assetData={null}
+                                                            storeCallback={(input) => {
+                                                                if (!allowedMarkets.includes(input) && !bannedMarkets.includes(input)) {
+                                                                    const _foundAsset = assets.find((x) => x.symbol === input);
+                                                                    setAllowedMarkets([...allowedMarkets, _foundAsset.id]);
+                                                                }
                                                             }}
+                                                            otherAsset={null}
+                                                            marketSearch={marketSearch}
+                                                            type={"backing"}
+                                                            chain={usr && usr.chain ? usr.chain : "bitshares"}
                                                         />
-                                                    </div>
-                                                    : null
-                                            }
-                                        </span>
-
-                                        <span className="col-span-2 w-3/4">
-                                            <AssetFlag
-                                                alreadyDisabled={false}
-                                                id={"force_settle_fee"}
-                                                allowedText={t("CreateSmartcoin:extensions.force_settle_fee.enabled")}
-                                                enabledInfo={t("CreateSmartcoin:extensions.force_settle_fee.extensionInfo")}
-                                                disabledText={t("CreateSmartcoin:extensions.force_settle_fee.disabled")}
-                                                disabledInfo={t("CreateSmartcoin:extensions.force_settle_fee.extensionInfo")}
-                                                permission={true}
-                                                flag={fsfExtensionEnabled}
-                                                setFlag={setFsfExtensionEnabled}
-                                            />
-                                            {
-                                                fsfExtensionEnabled
-                                                    ? <div className="col-span-2">
-                                                        <HoverInfo
-                                                            content={t("CreateSmartcoin:extensions.force_settle_fee.header_content")}
-                                                            header={t("CreateSmartcoin:extensions.force_settle_fee.header")}
-                                                        />
-                                                        <Input
-                                                            value={forceSettleFeePercent}
-                                                            type="number"
-                                                            min="0"
-                                                            max="100"
-                                                            className="mt-1"
-                                                            onInput={(e) => {
-                                                                setForceSettleFeePercent(e.currentTarget.value);
-                                                                debouncedPercent(
-                                                                    e.currentTarget.value,
-                                                                    setForceSettleFeePercent,
-                                                                    100
-                                                                );
-                                                                if (editing) setHasEditedBitassetOptions(true);
-                                                            }}
-                                                        />
-                                                    </div>
-                                                    : null
-                                            }
-                                        </span>
-                                    </div>
-
-                                    <Separator className="my-4 mt-5" />
-                                </div>
-                                {
-                                    flagChargeMarketFee
-                                        ? <div className="col-span-2 mb-4">
-                                            <HoverInfo
-                                                content={t("AssetCommon:extensions.header_content")}
-                                                header={t("AssetCommon:extensions.header")}
-                                                type="header"
-                                            />
-                                            <div className="grid grid-cols-2 gap-5 mb-2">
-                                                <div>
-                                                    <HoverInfo
-                                                        content={t("AssetCommon:market_fee.header_content")}
-                                                        header={t("AssetCommon:market_fee.header")}
-                                                    />
-                                                    <Input
-                                                        value={commission}
-                                                        type="number"
-                                                        min="0"
-                                                        max="100"
-                                                        step="0.01"
-                                                        onInput={(e) => {
-                                                            setCommission(e.currentTarget.value);
-                                                            debouncedPercent(
-                                                                e.currentTarget.value,
-                                                                setCommission,
-                                                                100
-                                                            );
-                                                            if (editing) hasEditedAssetOptions(true);
-                                                        }}
-                                                    />
-                                                </div>
-                                                <div>
-                                                    <HoverInfo
-                                                        content={t("AssetCommon:max_market_fee.header_content")}
-                                                        header={t("AssetCommon:max_market_fee.header")}
-                                                    />
-                                                    <Input
-                                                        placeholder={0}
-                                                        value={maxCommission}
-                                                        type="number"
-                                                        min="0"
-                                                        pattern="^\d*(\.\d{0,2})?$"
-                                                        onInput={(e) => {
-                                                            setMaxCommission(e.currentTarget.value);
-                                                            debouncedMax(e.currentTarget.value, setMaxCommission);
-                                                            if (editing) hasEditedAssetOptions(true);
-                                                        }}
-                                                    />
-                                                </div>
+                                                        : null
+                                                }
                                             </div>
-                                            <AssetFlag
-                                                alreadyDisabled={false}
-                                                id={"reward_percent"}
-                                                allowedText={t("AssetCommon:extensions.reward_percent.enabled")}
-                                                enabledInfo={t("AssetCommon:extensions.reward_percent.enabledInfo")}
-                                                disabledText={t("AssetCommon:extensions.reward_percent.disabled")}
-                                                disabledInfo={t("AssetCommon:extensions.reward_percent.disabledInfo")}
-                                                permission={true}
-                                                flag={enabledReferrerReward}
-                                                setFlag={setEnabledReferrerReward}
-                                            />
-
                                             {
-                                                enabledReferrerReward
-                                                ? <>
-                                                    <HoverInfo
-                                                        content={t("AssetCommon:extensions.reward_percent.header_content")}
-                                                        header={t("AssetCommon:extensions.reward_percent.header")}
-                                                    />
-                                                    <Input
-                                                        placeholder={0}
-                                                        value={referrerReward}
-                                                        type="number"
-                                                        min="0"
-                                                        max="100"
-                                                        step="0.01"
-                                                        pattern="^\d*(\.\d{0,2})?$"
-                                                        onInput={(e) => {
-                                                            setReferrerReward(e.currentTarget.value);
-                                                            debouncedPercent(
-                                                                e.currentTarget.value,
-                                                                setReferrerReward,
-                                                                100
-                                                            );
-                                                            if (editing) hasEditedAssetOptions(true);
-                                                        }}
-                                                    />
-                                                </>
-                                                : null
-                                            }
-
-                                            <AssetFlag
-                                                alreadyDisabled={false}
-                                                id={"whitelist_market_fee_sharing"}
-                                                allowedText={t("AssetCommon:extensions.whitelist_market_fee_sharing.enabled")}
-                                                enabledInfo={t("AssetCommon:extensions.whitelist_market_fee_sharing.enabledInfo")}
-                                                disabledText={t("AssetCommon:extensions.whitelist_market_fee_sharing.disabled")}
-                                                disabledInfo={t("AssetCommon:extensions.whitelist_market_fee_sharing.disabledInfo")}
-                                                permission={true}
-                                                flag={enabledFeeSharingWhitelist}
-                                                setFlag={setEnabledFeeSharingWhitelist}
-                                            />
-
-                                            {
-                                                enabledFeeSharingWhitelist
-                                                ? <>
-                                                    <HoverInfo
-                                                        content={t("AssetCommon:extensions.whitelist_market_fee_sharing.header_content")}
-                                                        header={t("AssetCommon:extensions.whitelist_market_fee_sharing.header")}
-                                                    />
-                                                    <div className="grid grid-cols-12 mt-1">
-                                                        <span className="col-span-9 border border-grey rounded">
+                                                allowedMarketsEnabled
+                                                    ?   <div className="mt-3 border border-grey rounded">
                                                             <List
                                                                 height={210}
-                                                                itemCount={feeSharingWhitelist.length}
-                                                                itemSize={100}
+                                                                itemCount={allowedMarkets.length}
+                                                                itemSize={90}
                                                                 className="w-full"
                                                             >
-                                                                {feeSharingWhitelistRow}
+                                                                {allowedMarketsRow}
                                                             </List>
-                                                        </span>
-                                                        <span className="col-span-3 ml-3 text-center">
-                                                            <Dialog
-                                                                open={whitelistMarketFeeSharingDialogOpen}
-                                                                onOpenChange={(open) => {
-                                                                    setWhitelistMarketFeeSharingDialogOpen(open);
-                                                                }}
-                                                            >
-                                                                <DialogTrigger asChild>
-                                                                    <Button variant="outline" className="ml-3 mt-1">
-                                                                    ➕ {t("CreditOfferEditor:addUser")}
-                                                                    </Button>
-                                                                </DialogTrigger>
-                                                                <DialogContent className="sm:max-w-[375px] bg-white">
-                                                                    <DialogHeader>
-                                                                    <DialogTitle>
-                                                                        {!usr || !usr.chain
-                                                                        ? t("Transfer:bitsharesAccountSearch")
-                                                                        : null}
-                                                                        {usr && usr.chain === "bitshares"
-                                                                        ? t("Transfer:bitsharesAccountSearchBTS")
-                                                                        : null}
-                                                                        {usr && usr.chain !== "bitshares"
-                                                                        ? t("Transfer:bitsharesAccountSearchTEST")
-                                                                        : null}
-                                                                    </DialogTitle>
-                                                                    </DialogHeader>
-                                                                    <AccountSearch
-                                                                        chain={usr && usr.chain ? usr.chain : "bitshares"}
-                                                                        excludedUsers={
-                                                                            usr && usr.username && usr.username.length ? [usr] : []
-                                                                        }
-                                                                        setChosenAccount={(_account) => {
-                                                                            if (
-                                                                                _account &&
-                                                                                !feeSharingWhitelist.find((_usr) => _usr.id === _account.id)
-                                                                            ) {
-                                                                                setFeeSharingWhitelist(
-                                                                                    feeSharingWhitelist && feeSharingWhitelist.length
-                                                                                        ? [...feeSharingWhitelist, _account]
-                                                                                        : [_account]
-                                                                                );
-                                                                                if (editing) hasEditedAssetOptions(true);
-                                                                            }
-                                                                            setWhitelistMarketFeeSharingDialogOpen(false);
-                                                                        }}
-                                                                    />
-                                                                </DialogContent>
-                                                            </Dialog>
-                                                        </span>
-                                                    </div>
-                                                </>
-                                                : null
+                                                        </div>
+                                                    : null
                                             }
-
-                                            <AssetFlag
-                                                alreadyDisabled={false}
-                                                id={"taker_fee_percent"}
-                                                allowedText={t("AssetCommon:extensions.taker_fee_percent.enabled")}
-                                                enabledInfo={t("AssetCommon:extensions.taker_fee_percent.enabledInfo")}
-                                                disabledText={t("AssetCommon:extensions.taker_fee_percent.disabled")}
-                                                disabledInfo={t("AssetCommon:extensions.taker_fee_percent.disabledInfo")}
-                                                permission={true}
-                                                flag={enabledTakerFee}
-                                                setFlag={setEnabledTakerFee}
-                                            />
-
+                                            <div className="grid grid-cols-2 gap-5 mt-2">
+                                                <AssetFlag
+                                                    alreadyDisabled={false}
+                                                    id={"banned_markets"}
+                                                    allowedText={t("AssetCommon:extensions.banned_markets.enabled")}
+                                                    enabledInfo={t("AssetCommon:extensions.banned_markets.enabledInfo")}
+                                                    disabledText={t("AssetCommon:extensions.banned_markets.disabled")}
+                                                    disabledInfo={t("AssetCommon:extensions.banned_markets.disabledInfo")}
+                                                    permission={true}
+                                                    flag={bannedMarketsEnabled}
+                                                    setFlag={setBannedMarketsEnabled}
+                                                />
+                                                {
+                                                    bannedMarketsEnabled
+                                                    ?   <AssetDropDown
+                                                            assetSymbol={""}
+                                                            assetData={null}
+                                                            storeCallback={(input) => {
+                                                                if (!bannedMarkets.includes(input) && !allowedMarkets.includes(input)) {
+                                                                    const _foundAsset = assets.find((x) => x.symbol === input);
+                                                                    setBannedMarkets([...bannedMarkets, _foundAsset.id]);
+                                                                }
+                                                            }}
+                                                            otherAsset={null}
+                                                            marketSearch={marketSearch}
+                                                            type={"backing"}
+                                                            chain={usr && usr.chain ? usr.chain : "bitshares"}
+                                                        />
+                                                        : null
+                                                }
+                                            </div>
                                             {
-                                                enabledTakerFee
-                                                ? <>
+                                                bannedMarketsEnabled
+                                                    ? <div className="mt-2 border border-grey rounded">
+                                                        <List
+                                                            height={210}
+                                                            itemCount={bannedMarkets.length}
+                                                            itemSize={90}
+                                                            className="w-full"
+                                                        >
+                                                            {bannedMarketsRow}
+                                                        </List>
+                                                    </div>
+                                                    : null
+                                            }
+                                            <Separator className="my-4 mt-5" />
+
+                                            <div className="grid grid-cols-2 gap-5">
+                                                <div>
                                                     <HoverInfo
-                                                        content={t("AssetCommon:extensions.taker_fee_percent.header_content")}
-                                                        header={t("AssetCommon:extensions.taker_fee_percent.header")}
+                                                        content={t("AssetCommon:permissions.header_content")}
+                                                        header={t("AssetCommon:permissions.header")}
+                                                        type="header"
+                                                    />
+                                                    <AssetPermission
+                                                        alreadyDisabled={existingSupply > 0 && permanentlyDisabledCMF}
+                                                        id={"charge_market_fee"}
+                                                        allowedText={t("AssetCommon:permissions.charge_market_fee.about")}
+                                                        enabledInfo={t("AssetCommon:permissions.charge_market_fee.enabledInfo")}
+                                                        disabledText={t("AssetCommon:permissions.charge_market_fee.about")}
+                                                        disabledInfo={t("AssetCommon:permissions.charge_market_fee.disabledInfo")}
+                                                        permission={permChargeMarketFee}
+                                                        setPermission={setPermChargeMarketFee}
+                                                        flag={flagChargeMarketFee}
+                                                        setFlag={setFlagChargeMarketFee}
+                                                    />
+                                                    <AssetPermission
+                                                        alreadyDisabled={existingSupply > 0 && permanentlyDisabledWL}
+                                                        id={"white_list"}
+                                                        allowedText={t("AssetCommon:permissions.white_list.about")}
+                                                        enabledInfo={t("AssetCommon:permissions.white_list.enabledInfo")}
+                                                        disabledText={t("AssetCommon:permissions.white_list.about")}
+                                                        disabledInfo={t("AssetCommon:permissions.white_list.disabledInfo")}
+                                                        permission={permWhiteList}
+                                                        setPermission={setPermWhiteList}
+                                                        flag={flagWhiteList}
+                                                        setFlag={setFlagWhiteList}
+                                                    />
+                                                    <AssetPermission
+                                                        alreadyDisabled={existingSupply > 0 && permanentlyDisabledTR}
+                                                        id={"transfer_restricted"}
+                                                        allowedText={t("AssetCommon:permissions.transfer_restricted.about")}
+                                                        enabledInfo={t("AssetCommon:permissions.transfer_restricted.enabledInfo")}
+                                                        disabledText={t("AssetCommon:permissions.transfer_restricted.about")}
+                                                        disabledInfo={t("AssetCommon:permissions.transfer_restricted.disabledInfo")}
+                                                        permission={permTransferRestricted}
+                                                        setPermission={setPermTransferRestricted}
+                                                        flag={flagTransferRestricted}
+                                                        setFlag={setFlagTransferRestricted}
+                                                    />
+                                                    <AssetPermission
+                                                        alreadyDisabled={existingSupply > 0 && permanentlyDisabledDC}
+                                                        id={"disable_confidential"}
+                                                        allowedText={t("AssetCommon:permissions.disable_confidential.about")}
+                                                        enabledInfo={t("AssetCommon:permissions.disable_confidential.enabledInfo")}
+                                                        disabledText={t("AssetCommon:permissions.disable_confidential.about")}
+                                                        disabledInfo={t("AssetCommon:permissions.disable_confidential.disabledInfo")}
+                                                        permission={permDisableConfidential}
+                                                        setPermission={setPermDisableConfidential}
+                                                        flag={flagDisableConfidential}
+                                                        setFlag={setFlagDisableConfidential}
+                                                    />
+                                                    <AssetPermission
+                                                        alreadyDisabled={existingSupply > 0 && permanentlyDisabledOA}
+                                                        id={"override_authority"}
+                                                        allowedText={t("AssetCommon:permissions.override_authority.about")}
+                                                        enabledInfo={t("AssetCommon:permissions.override_authority.enabledInfo")}
+                                                        disabledText={t("AssetCommon:permissions.override_authority.about")}
+                                                        disabledInfo={t("AssetCommon:permissions.override_authority.disabledInfo")}
+                                                        permission={permOverrideAuthority}
+                                                        setPermission={setPermOverrideAuthority}
+                                                        flag={flagOverrideAuthority}
+                                                        setFlag={setFlagOverrideAuthority}
+                                                    />
+                                                    <AssetPermission
+                                                        alreadyDisabled={existingSupply > 0 && permanentlyDisabledDFS}
+                                                        id={"disable_force_settle"}
+                                                        allowedText={t("AssetCommon:permissions.disable_force_settle.about")}
+                                                        enabledInfo={t("AssetCommon:permissions.disable_force_settle.enabledInfo")}
+                                                        disabledText={t("AssetCommon:permissions.disable_force_settle.about")}
+                                                        disabledInfo={t("AssetCommon:permissions.disable_force_settle.disabledInfo")}
+                                                        permission={permDisableForceSettle}
+                                                        setPermission={setPermDisableForceSettle}
+                                                        flag={flagDisableForceSettle}
+                                                        setFlag={setFlagDisableForceSettle}
+                                                    />
+                                                    <AssetPermission
+                                                        alreadyDisabled={existingSupply > 0 && permanentlyDisabledGS}
+                                                        id={"global_settle"}
+                                                        allowedText={t("AssetCommon:permissions.global_settle.about")}
+                                                        enabledInfo={t("AssetCommon:permissions.global_settle.enabledInfo")}
+                                                        disabledText={t("AssetCommon:permissions.global_settle.about")}
+                                                        disabledInfo={t("AssetCommon:permissions.global_settle.disabledInfo")}
+                                                        permission={permGlobalSettle}
+                                                        setPermission={setPermGlobalSettle}
+                                                        flag={null}
+                                                        setFlag={null}
+                                                    />
+                                                    <AssetPermission
+                                                        alreadyDisabled={existingSupply > 0 && permanentlyDisabledWFA}
+                                                        id={"witness_fed_asset"}
+                                                        allowedText={t("AssetCommon:permissions.witness_fed_asset.about")}
+                                                        enabledInfo={t("AssetCommon:permissions.witness_fed_asset.enabledInfo")}
+                                                        disabledText={t("AssetCommon:permissions.witness_fed_asset.about")}
+                                                        disabledInfo={t("AssetCommon:permissions.witness_fed_asset.disabledInfo")}
+                                                        permission={permWitnessFedAsset}
+                                                        setPermission={setPermWitnessFedAsset}
+                                                        flag={flagWitnessFedAsset}
+                                                        setFlag={setFlagWitnessFedAsset}
+                                                    />
+                                                    <AssetPermission
+                                                        alreadyDisabled={existingSupply > 0 && permanentlyDisabledCFA}
+                                                        id={"committee_fed_asset"}
+                                                        allowedText={t("AssetCommon:permissions.committee_fed_asset.about")}
+                                                        enabledInfo={t("AssetCommon:permissions.committee_fed_asset.enabledInfo")}
+                                                        disabledText={t("AssetCommon:permissions.committee_fed_asset.about")}
+                                                        disabledInfo={t("AssetCommon:permissions.committee_fed_asset.disabledInfo")}
+                                                        permission={permCommitteeFedAsset}
+                                                        setPermission={setPermCommitteeFedAsset}
+                                                        flag={flagCommitteeFedAsset}
+                                                        setFlag={setFlagCommitteeFedAsset}
+                                                    />
+                                                    <div className="grid grid-cols-3 gap-5 mt-1 mb-1">
+                                                        <Separator className="mt-3 w-1/2 mx-auto text-center" />
+                                                        <Separator className="mt-3 w-1/2 mx-auto text-center" />
+                                                        <Separator className="mt-3 w-1/2 mx-auto text-center" />
+                                                    </div>
+                                                    <AssetPermission
+                                                        alreadyDisabled={existingSupply > 0 && permanentlyDisabledLMS}
+                                                        id={"lock_max_supply"}
+                                                        allowedText={t("AssetCommon:permissions.lock_max_supply.about")}
+                                                        enabledInfo={t("AssetCommon:permissions.lock_max_supply.enabledInfo")}
+                                                        disabledText={t("AssetCommon:permissions.lock_max_supply.about")}
+                                                        disabledInfo={t("AssetCommon:permissions.lock_max_supply.disabledInfo")}
+                                                        permission={permLockMaxSupply}
+                                                        setPermission={setPermLockMaxSupply}
+                                                        flag={flagLockMaxSupply}
+                                                        setFlag={setFlagLockMaxSupply}
+                                                    />
+                                                    <AssetPermission
+                                                        alreadyDisabled={existingSupply > 0 && permanentlyDisabledDNS}
+                                                        id={"disable_new_supply"}
+                                                        allowedText={t("AssetCommon:permissions.disable_new_supply.about")}
+                                                        enabledInfo={t("AssetCommon:permissions.disable_new_supply.enabledInfo")}
+                                                        disabledText={t("AssetCommon:permissions.disable_new_supply.about")}
+                                                        disabledInfo={t("AssetCommon:permissions.disable_new_supply.disabledInfo")}
+                                                        permission={permDisableNewSupply}
+                                                        setPermission={setPermDisableNewSupply}
+                                                        flag={flagDisableNewSupply}
+                                                        setFlag={setFlagDisableNewSupply}
+                                                    />
+                                                    <AssetPermission
+                                                        alreadyDisabled={existingSupply > 0 && permanentlyDisabledDCB}
+                                                        id={"disable_collateral_bidding"}
+                                                        allowedText={t("AssetCommon:permissions.disable_collateral_bidding.about")}
+                                                        enabledInfo={t("AssetCommon:permissions.disable_collateral_bidding.enabledInfo")}
+                                                        disabledText={t("AssetCommon:permissions.disable_collateral_bidding.about")}
+                                                        disabledInfo={t("AssetCommon:permissions.disable_collateral_bidding.disabledInfo")}
+                                                        permission={permDisableCollateralBidding}
+                                                        setPermission={setPermDisableCollateralBidding}
+                                                        flag={flagDisableCollateralBidding}
+                                                        setFlag={setFlagDisableCollateralBidding}
+                                                    />
+                                                    <AssetPermission
+                                                        alreadyDisabled={existingSupply > 0 && permanentlyDisabledDMCR}
+                                                        id={"disable_mcr_update"}
+                                                        allowedText={t("AssetCommon:permissions.disable_mcr_update.about")}
+                                                        enabledInfo={t("AssetCommon:permissions.disable_mcr_update.enabledInfo")}
+                                                        disabledText={t("AssetCommon:permissions.disable_mcr_update.about")}
+                                                        disabledInfo={t("AssetCommon:permissions.disable_mcr_update.disabledInfo")}
+                                                        permission={permDisableMCRUpdate}
+                                                        setPermission={setPermDisableMCRUpdate}
+                                                        flag={null}
+                                                        setFlag={null}
+                                                    />
+                                                    <AssetPermission
+                                                        alreadyDisabled={existingSupply > 0 && permanentlyDisabledDICR}
+                                                        id={"disable_icr_update"}
+                                                        allowedText={t("AssetCommon:permissions.disable_icr_update.about")}
+                                                        enabledInfo={t("AssetCommon:permissions.disable_icr_update.enabledInfo")}
+                                                        disabledText={t("AssetCommon:permissions.disable_icr_update.about")}
+                                                        disabledInfo={t("AssetCommon:permissions.disable_icr_update.disabledInfo")}
+                                                        permission={permDisableICRUpdate}
+                                                        setPermission={setPermDisableICRUpdate}
+                                                        flag={null}
+                                                        setFlag={null}
+                                                    />
+                                                    <AssetPermission
+                                                        alreadyDisabled={existingSupply > 0 && permanentlyDisabledDMSSR}
+                                                        id={"disable_mssr_update"}
+                                                        allowedText={t("AssetCommon:permissions.disable_mssr_update.about")}
+                                                        enabledInfo={t("AssetCommon:permissions.disable_mssr_update.enabledInfo")}
+                                                        disabledText={t("AssetCommon:permissions.disable_mssr_update.about")}
+                                                        disabledInfo={t("AssetCommon:permissions.disable_mssr_update.disabledInfo")}
+                                                        permission={permDisableMSSRUpdate}
+                                                        setPermission={setPermDisableMSSRUpdate}
+                                                        flag={null}
+                                                        setFlag={null}
+                                                    />
+                                                    <AssetPermission
+                                                        alreadyDisabled={existingSupply > 0 && permanentlyDisabledDBSRM}
+                                                        id={"disable_bsrm_update"}
+                                                        allowedText={t("AssetCommon:permissions.disable_bsrm_update.about")}
+                                                        enabledInfo={t("AssetCommon:permissions.disable_bsrm_update.enabledInfo")}
+                                                        disabledText={t("AssetCommon:permissions.disable_bsrm_update.about")}
+                                                        disabledInfo={t("AssetCommon:permissions.disable_bsrm_update.disabledInfo")}
+                                                        permission={permDisableBSRMUpdate}
+                                                        setPermission={setPermDisableBSRMUpdate}
+                                                        flag={null}
+                                                        setFlag={null}
+                                                    />
+                                                </div>
+
+                                                <div>
+                                                    <HoverInfo
+                                                        content={t("AssetCommon:flags.header_content")}
+                                                        header={t("AssetCommon:flags.header")}
+                                                        type="header"
+                                                    />
+                                                    <AssetFlag
+                                                        alreadyDisabled={existingSupply > 0 && permanentlyDisabledCMF}
+                                                        id={"charge_market_fee_flag"}
+                                                        allowedText={t("AssetCommon:flags.charge_market_fee.about")}
+                                                        enabledInfo={t("AssetCommon:flags.charge_market_fee.enabledInfo")}
+                                                        disabledText={t("AssetCommon:flags.charge_market_fee.about")}
+                                                        disabledInfo={t("AssetCommon:flags.charge_market_fee.disabledInfo")}
+                                                        permission={permChargeMarketFee}
+                                                        flag={flagChargeMarketFee}
+                                                        setFlag={setFlagChargeMarketFee}
+                                                    />
+                                                    <AssetFlag
+                                                        alreadyDisabled={existingSupply > 0 && permanentlyDisabledWL}
+                                                        id={"white_list_flag"}
+                                                        allowedText={t("AssetCommon:flags.white_list.about")}
+                                                        enabledInfo={t("AssetCommon:flags.white_list.enabledInfo")}
+                                                        disabledText={t("AssetCommon:flags.white_list.about")}
+                                                        disabledInfo={t("AssetCommon:flags.white_list.disabledInfo")}
+                                                        permission={permWhiteList}
+                                                        flag={flagWhiteList}
+                                                        setFlag={setFlagWhiteList}
+                                                    />
+                                                    <AssetFlag
+                                                        alreadyDisabled={existingSupply > 0 && permanentlyDisabledTR}
+                                                        id={"transfer_restricted_flag"}
+                                                        allowedText={t("AssetCommon:flags.transfer_restricted.about")}
+                                                        enabledInfo={t("AssetCommon:flags.transfer_restricted.enabledInfo")}
+                                                        disabledText={t("AssetCommon:flags.transfer_restricted.about")}
+                                                        disabledInfo={t("AssetCommon:flags.transfer_restricted.disabledInfo")}
+                                                        permission={permTransferRestricted}
+                                                        flag={flagTransferRestricted}
+                                                        setFlag={setFlagTransferRestricted}
+                                                    />
+                                                    <AssetFlag
+                                                        alreadyDisabled={existingSupply > 0 && permanentlyDisabledDC}
+                                                        id={"disable_confidential_flag"}
+                                                        allowedText={t("AssetCommon:flags.disable_confidential.about")}
+                                                        enabledInfo={t("AssetCommon:flags.disable_confidential.enabledInfo")}
+                                                        disabledText={t("AssetCommon:flags.disable_confidential.about")}
+                                                        disabledInfo={t("AssetCommon:flags.disable_confidential.disabledInfo")}
+                                                        permission={permDisableConfidential}
+                                                        flag={flagDisableConfidential}
+                                                        setFlag={setFlagDisableConfidential}
+                                                    />
+                                                    <AssetFlag
+                                                        alreadyDisabled={existingSupply > 0 && permanentlyDisabledOA}
+                                                        id={"override_authority_flag"}
+                                                        allowedText={t("AssetCommon:flags.override_authority.about")}
+                                                        enabledInfo={t("AssetCommon:flags.override_authority.enabledInfo")}
+                                                        disabledText={t("AssetCommon:flags.override_authority.about")}
+                                                        disabledInfo={t("AssetCommon:flags.override_authority.disabledInfo")}
+                                                        permission={permOverrideAuthority}
+                                                        flag={flagOverrideAuthority}
+                                                        setFlag={setFlagOverrideAuthority}
+                                                    />
+                                                    <AssetFlag
+                                                        alreadyDisabled={existingSupply > 0 && permanentlyDisabledDFS}
+                                                        id={"disable_force_settle_flag"}
+                                                        allowedText={t("AssetCommon:flags.disable_force_settle.about")}
+                                                        enabledInfo={t("AssetCommon:flags.disable_force_settle.enabledInfo")}
+                                                        disabledText={t("AssetCommon:flags.disable_force_settle.about")}
+                                                        disabledInfo={t("AssetCommon:flags.disable_force_settle.disabledInfo")}
+                                                        permission={permDisableForceSettle}
+                                                        flag={flagDisableForceSettle}
+                                                        setFlag={setFlagDisableForceSettle}
+                                                    />
+                                                    <br/>
+                                                    <AssetFlag
+                                                        alreadyDisabled={existingSupply > 0 && permanentlyDisabledWFA}
+                                                        id={"witness_fed_asset_flag"}
+                                                        allowedText={t("AssetCommon:flags.witness_fed_asset.about")}
+                                                        enabledInfo={t("AssetCommon:flags.witness_fed_asset.enabledInfo")}
+                                                        disabledText={t("AssetCommon:flags.witness_fed_asset.about")}
+                                                        disabledInfo={t("AssetCommon:flags.witness_fed_asset.disabledInfo")}
+                                                        permission={permWitnessFedAsset}
+                                                        flag={flagWitnessFedAsset}
+                                                        setFlag={setFlagWitnessFedAsset}
+                                                    />
+                                                    <AssetFlag
+                                                        alreadyDisabled={existingSupply > 0 && permanentlyDisabledCFA}
+                                                        id={"committee_fed_asset_flag"}
+                                                        allowedText={t("AssetCommon:flags.committee_fed_asset.about")}
+                                                        enabledInfo={t("AssetCommon:flags.committee_fed_asset.enabledInfo")}
+                                                        disabledText={t("AssetCommon:flags.committee_fed_asset.about")}
+                                                        disabledInfo={t("AssetCommon:flags.committee_fed_asset.disabledInfo")}
+                                                        permission={permCommitteeFedAsset}
+                                                        flag={flagCommitteeFedAsset}
+                                                        setFlag={setFlagCommitteeFedAsset}
+                                                    />
+                                                    <div className="grid grid-cols-3 gap-5 mt-1 mb-1">
+                                                        <Separator className="mt-3 w-1/2 mx-auto text-center" />
+                                                        <Separator className="mt-3 w-1/2 mx-auto text-center" />
+                                                        <Separator className="mt-3 w-1/2 mx-auto text-center" />
+                                                    </div>
+                                                    <AssetFlag
+                                                        alreadyDisabled={existingSupply > 0 && !permanentlyDisabledLMS}
+                                                        id={"lock_max_supply_flag"}
+                                                        allowedText={t("AssetCommon:flags.lock_max_supply.about")}
+                                                        enabledInfo={t("AssetCommon:flags.lock_max_supply.enabledInfo")}
+                                                        disabledText={t("AssetCommon:flags.lock_max_supply.about")}
+                                                        disabledInfo={t("AssetCommon:flags.lock_max_supply.disabledInfo")}
+                                                        permission={!permLockMaxSupply}
+                                                        flag={flagLockMaxSupply}
+                                                        setFlag={setFlagLockMaxSupply}
+                                                    />
+                                                    <AssetFlag
+                                                        alreadyDisabled={existingSupply > 0 && !permanentlyDisabledDNS}
+                                                        id={"disable_new_supply_flag"}
+                                                        allowedText={t("AssetCommon:flags.disable_new_supply.about")}
+                                                        enabledInfo={t("AssetCommon:flags.disable_new_supply.enabledInfo")}
+                                                        disabledText={t("AssetCommon:flags.disable_new_supply.about")}
+                                                        disabledInfo={t("AssetCommon:flags.disable_new_supply.disabledInfo")}
+                                                        permission={!permDisableNewSupply}
+                                                        flag={flagDisableNewSupply}
+                                                        setFlag={setFlagDisableNewSupply}
+                                                    />
+                                                    <AssetFlag
+                                                        alreadyDisabled={existingSupply > 0 && !permanentlyDisabledDCB}
+                                                        id={"disable_collateral_bidding_flag"}
+                                                        allowedText={t("AssetCommon:flags.disable_collateral_bidding.about")}
+                                                        enabledInfo={t("AssetCommon:flags.disable_collateral_bidding.enabledInfo")}
+                                                        disabledText={t("AssetCommon:flags.disable_collateral_bidding.about")}
+                                                        disabledInfo={t("AssetCommon:flags.disable_collateral_bidding.disabledInfo")}
+                                                        permission={!permDisableCollateralBidding}
+                                                        flag={flagDisableCollateralBidding}
+                                                        setFlag={setFlagDisableCollateralBidding}
+                                                    />
+                                                </div>
+                                            </div>
+                                            <Separator className="my-4 mt-5" />
+                                        </span>
+                                        : null
+                                    }
+
+                                    {
+                                        flagChargeMarketFee && (!editing || editing && hasEditedAssetOptions)
+                                            ? <div className="col-span-2 mb-4">
+                                                <HoverInfo
+                                                    content={t("AssetCommon:extensions.header_content")}
+                                                    header={t("AssetCommon:extensions.header")}
+                                                    type="header"
+                                                />
+                                                <div className="grid grid-cols-2 gap-5 mb-2">
+                                                    <div>
+                                                        <HoverInfo
+                                                            content={t("AssetCommon:market_fee.header_content")}
+                                                            header={t("AssetCommon:market_fee.header")}
+                                                        />
+                                                        <Input
+                                                            value={commission}
+                                                            type="number"
+                                                            min="0"
+                                                            max="100"
+                                                            step="0.01"
+                                                            onInput={(e) => {
+                                                                setCommission(e.currentTarget.value);
+                                                                debouncedPercent(
+                                                                    e.currentTarget.value,
+                                                                    setCommission,
+                                                                    100
+                                                                );
+                                                            }}
+                                                        />
+                                                    </div>
+                                                    <div>
+                                                        <HoverInfo
+                                                            content={t("AssetCommon:max_market_fee.header_content")}
+                                                            header={t("AssetCommon:max_market_fee.header")}
+                                                        />
+                                                        <Input
+                                                            placeholder={0}
+                                                            value={maxCommission}
+                                                            type="number"
+                                                            min="0"
+                                                            pattern="^\d*(\.\d{0,2})?$"
+                                                            onInput={(e) => {
+                                                                setMaxCommission(e.currentTarget.value);
+                                                                debouncedMax(e.currentTarget.value, setMaxCommission);
+                                                            }}
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <AssetFlag
+                                                    alreadyDisabled={false}
+                                                    id={"reward_percent"}
+                                                    allowedText={t("AssetCommon:extensions.reward_percent.enabled")}
+                                                    enabledInfo={t("AssetCommon:extensions.reward_percent.enabledInfo")}
+                                                    disabledText={t("AssetCommon:extensions.reward_percent.disabled")}
+                                                    disabledInfo={t("AssetCommon:extensions.reward_percent.disabledInfo")}
+                                                    permission={true}
+                                                    flag={enabledReferrerReward}
+                                                    setFlag={setEnabledReferrerReward}
+                                                />
+
+                                                {
+                                                    enabledReferrerReward
+                                                    ? <>
+                                                        <HoverInfo
+                                                            content={t("AssetCommon:extensions.reward_percent.header_content")}
+                                                            header={t("AssetCommon:extensions.reward_percent.header")}
+                                                        />
+                                                        <Input
+                                                            placeholder={0}
+                                                            value={referrerReward}
+                                                            type="number"
+                                                            min="0"
+                                                            max="100"
+                                                            step="0.01"
+                                                            pattern="^\d*(\.\d{0,2})?$"
+                                                            onInput={(e) => {
+                                                                setReferrerReward(e.currentTarget.value);
+                                                                debouncedPercent(
+                                                                    e.currentTarget.value,
+                                                                    setReferrerReward,
+                                                                    100
+                                                                );
+                                                            }}
+                                                        />
+                                                    </>
+                                                    : null
+                                                }
+
+                                                <AssetFlag
+                                                    alreadyDisabled={false}
+                                                    id={"whitelist_market_fee_sharing"}
+                                                    allowedText={t("AssetCommon:extensions.whitelist_market_fee_sharing.enabled")}
+                                                    enabledInfo={t("AssetCommon:extensions.whitelist_market_fee_sharing.enabledInfo")}
+                                                    disabledText={t("AssetCommon:extensions.whitelist_market_fee_sharing.disabled")}
+                                                    disabledInfo={t("AssetCommon:extensions.whitelist_market_fee_sharing.disabledInfo")}
+                                                    permission={true}
+                                                    flag={enabledFeeSharingWhitelist}
+                                                    setFlag={setEnabledFeeSharingWhitelist}
+                                                />
+
+                                                {
+                                                    enabledFeeSharingWhitelist
+                                                    ? <>
+                                                        <HoverInfo
+                                                            content={t("AssetCommon:extensions.whitelist_market_fee_sharing.header_content")}
+                                                            header={t("AssetCommon:extensions.whitelist_market_fee_sharing.header")}
+                                                        />
+                                                        <div className="grid grid-cols-12 mt-1">
+                                                            <span className="col-span-9 border border-grey rounded">
+                                                                <List
+                                                                    height={210}
+                                                                    itemCount={feeSharingWhitelist.length}
+                                                                    itemSize={100}
+                                                                    className="w-full"
+                                                                >
+                                                                    {feeSharingWhitelistRow}
+                                                                </List>
+                                                            </span>
+                                                            <span className="col-span-3 ml-3 text-center">
+                                                                <Dialog
+                                                                    open={whitelistMarketFeeSharingDialogOpen}
+                                                                    onOpenChange={(open) => {
+                                                                        setWhitelistMarketFeeSharingDialogOpen(open);
+                                                                    }}
+                                                                >
+                                                                    <DialogTrigger asChild>
+                                                                        <Button variant="outline" className="ml-3 mt-1">
+                                                                        ➕ {t("CreditOfferEditor:addUser")}
+                                                                        </Button>
+                                                                    </DialogTrigger>
+                                                                    <DialogContent className="sm:max-w-[375px] bg-white">
+                                                                        <DialogHeader>
+                                                                        <DialogTitle>
+                                                                            {!usr || !usr.chain
+                                                                            ? t("Transfer:bitsharesAccountSearch")
+                                                                            : null}
+                                                                            {usr && usr.chain === "bitshares"
+                                                                            ? t("Transfer:bitsharesAccountSearchBTS")
+                                                                            : null}
+                                                                            {usr && usr.chain !== "bitshares"
+                                                                            ? t("Transfer:bitsharesAccountSearchTEST")
+                                                                            : null}
+                                                                        </DialogTitle>
+                                                                        </DialogHeader>
+                                                                        <AccountSearch
+                                                                            chain={usr && usr.chain ? usr.chain : "bitshares"}
+                                                                            excludedUsers={
+                                                                                usr && usr.username && usr.username.length ? [usr] : []
+                                                                            }
+                                                                            setChosenAccount={(_account) => {
+                                                                                if (
+                                                                                    _account &&
+                                                                                    !feeSharingWhitelist.find((_usr) => _usr.id === _account.id)
+                                                                                ) {
+                                                                                    setFeeSharingWhitelist(
+                                                                                        feeSharingWhitelist && feeSharingWhitelist.length
+                                                                                            ? [...feeSharingWhitelist, _account]
+                                                                                            : [_account]
+                                                                                    );
+                                                                                }
+                                                                                setWhitelistMarketFeeSharingDialogOpen(false);
+                                                                            }}
+                                                                        />
+                                                                    </DialogContent>
+                                                                </Dialog>
+                                                            </span>
+                                                        </div>
+                                                    </>
+                                                    : null
+                                                }
+
+                                                <AssetFlag
+                                                    alreadyDisabled={false}
+                                                    id={"taker_fee_percent"}
+                                                    allowedText={t("AssetCommon:extensions.taker_fee_percent.enabled")}
+                                                    enabledInfo={t("AssetCommon:extensions.taker_fee_percent.enabledInfo")}
+                                                    disabledText={t("AssetCommon:extensions.taker_fee_percent.disabled")}
+                                                    disabledInfo={t("AssetCommon:extensions.taker_fee_percent.disabledInfo")}
+                                                    permission={true}
+                                                    flag={enabledTakerFee}
+                                                    setFlag={setEnabledTakerFee}
+                                                />
+
+                                                {
+                                                    enabledTakerFee
+                                                    ? <>
+                                                        <HoverInfo
+                                                            content={t("AssetCommon:extensions.taker_fee_percent.header_content")}
+                                                            header={t("AssetCommon:extensions.taker_fee_percent.header")}
+                                                        />
+                                                        <Input
+                                                            placeholder={t("AssetCommon:extensions.taker_fee_percent.placeholder")}
+                                                            value={takerFee}
+                                                            type="number"
+                                                            min="0"
+                                                            max="100"
+                                                            step="0.01"
+                                                            pattern="^\d*(\.\d{0,2})?$"
+                                                            onInput={(e) => {
+                                                                setTakerFee(e.currentTarget.value);
+                                                                debouncedPercent(
+                                                                    e.currentTarget.value,
+                                                                    setTakerFee,
+                                                                    100
+                                                                );
+                                                            }}
+                                                        />
+                                                    </>
+                                                    : null
+                                                }
+                                            </div>
+                                            : null
+                                    }
+                                    
+                                    {
+                                        flagWhiteList && (!editing || editing && hasEditedAssetOptions)
+                                            ? <div className="col-span-2 mb-3">
+                                                <HoverInfo
+                                                    content={t("AssetCommon:whitelist.header_content")}
+                                                    header={t("AssetCommon:whitelist.header")}
+                                                    type="header"
+                                                />
+                                                <div className="grid grid-cols-12 mt-1">
+                                                    <span className="col-span-9 border border-grey rounded">
+                                                        <List
+                                                            height={210}
+                                                            itemCount={whitelistAuthorities.length}
+                                                            itemSize={100}
+                                                            className="w-full"
+                                                        >
+                                                            {whitelistAuthorityRow}
+                                                        </List>
+                                                    </span>
+                                                    <span className="col-span-3 ml-3 text-center">
+                                                        <Dialog
+                                                            open={whitelistAuthorityDialogOpen}
+                                                            onOpenChange={(open) => {
+                                                                setWhitelistAuthorityDialogOpen(open);
+                                                            }}
+                                                        >
+                                                            <DialogTrigger asChild>
+                                                                <Button variant="outline" className="ml-3 mt-1">
+                                                                ➕ {t("CreditOfferEditor:addUser")}
+                                                                </Button>
+                                                            </DialogTrigger>
+                                                            <DialogContent className="sm:max-w-[375px] bg-white">
+                                                                <DialogHeader>
+                                                                <DialogTitle>
+                                                                    {!usr || !usr.chain
+                                                                    ? t("Transfer:bitsharesAccountSearch")
+                                                                    : null}
+                                                                    {usr && usr.chain === "bitshares"
+                                                                    ? t("Transfer:bitsharesAccountSearchBTS")
+                                                                    : null}
+                                                                    {usr && usr.chain !== "bitshares"
+                                                                    ? t("Transfer:bitsharesAccountSearchTEST")
+                                                                    : null}
+                                                                </DialogTitle>
+                                                                </DialogHeader>
+                                                                <AccountSearch
+                                                                    chain={usr && usr.chain ? usr.chain : "bitshares"}
+                                                                    excludedUsers={
+                                                                        usr && usr.username && usr.username.length ? [usr] : []
+                                                                    }
+                                                                    setChosenAccount={(_account) => {
+                                                                        if (
+                                                                            _account &&
+                                                                            !whitelistAuthorities.find((_usr) => _usr.id === _account.id)
+                                                                        ) {
+                                                                            setWhitelistAuthorities(
+                                                                                whitelistAuthorities && whitelistAuthorities.length
+                                                                                    ? [...whitelistAuthorities, _account]
+                                                                                    : [_account]
+                                                                            );
+                                                                        }
+                                                                        setWhitelistAuthorityDialogOpen(false);
+                                                                    }}
+                                                                />
+                                                            </DialogContent>
+                                                        </Dialog>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            : null
+                                    }
+                                    {
+                                        flagWhiteList && (!editing || editing && hasEditedAssetOptions)
+                                            ? <div className="col-span-2 mb-3">
+                                                <HoverInfo
+                                                    content={t("AssetCommon:blacklist.header_content")}
+                                                    header={t("AssetCommon:blacklist.header")}
+                                                    type="header"
+                                                />
+                                                <div className="grid grid-cols-12 mt-1">
+                                                    <span className="col-span-9 border border-grey rounded">
+                                                        <List
+                                                            height={210}
+                                                            itemCount={blacklistAuthorities.length}
+                                                            itemSize={75}
+                                                            className="w-full"
+                                                        >
+                                                            {blacklistAuthorityRow}
+                                                        </List>
+                                                    </span>
+                                                    <span className="col-span-3 ml-3 text-center">
+                                                        <Dialog
+                                                            open={blacklistAuthorityDialogOpen}
+                                                            onOpenChange={(open) => {
+                                                                setBlacklistAuthorityDialogOpen(open);
+                                                            }}
+                                                        >
+                                                            <DialogTrigger asChild>
+                                                                <Button variant="outline" className="ml-3 mt-1">
+                                                                ➕ {t("CreditOfferEditor:addUser")}
+                                                                </Button>
+                                                            </DialogTrigger>
+                                                            <DialogContent className="sm:max-w-[375px] bg-white">
+                                                                <DialogHeader>
+                                                                <DialogTitle>
+                                                                    {!usr || !usr.chain
+                                                                    ? t("Transfer:bitsharesAccountSearch")
+                                                                    : null}
+                                                                    {usr && usr.chain === "bitshares"
+                                                                    ? t("Transfer:bitsharesAccountSearchBTS")
+                                                                    : null}
+                                                                    {usr && usr.chain !== "bitshares"
+                                                                    ? t("Transfer:bitsharesAccountSearchTEST")
+                                                                    : null}
+                                                                </DialogTitle>
+                                                                </DialogHeader>
+                                                                <AccountSearch
+                                                                    chain={usr && usr.chain ? usr.chain : "bitshares"}
+                                                                    excludedUsers={
+                                                                        usr && usr.username && usr.username.length ? [usr] : []
+                                                                    }
+                                                                    setChosenAccount={(_account) => {
+                                                                        if (
+                                                                            _account &&
+                                                                            !blacklistAuthorities.find((_usr) => _usr.id === _account.id)
+                                                                        ) {
+                                                                            setBlacklistAuthorities(
+                                                                                blacklistAuthorities && blacklistAuthorities.length
+                                                                                    ? [...blacklistAuthorities, _account]
+                                                                                    : [_account]
+                                                                            );
+                                                                        }
+                                                                        setBlacklistAuthorityDialogOpen(false);
+                                                                    }}
+                                                                />
+                                                            </DialogContent>
+                                                        </Dialog>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            : null
+                                    }
+
+                                    <Separator className="my-4 mt-5 mb-2" />
+                                        
+                                </div>
+
+                                <div className="col-span-2">
+                                {
+                                    !editing
+                                        ? <HoverInfo
+                                            content={t("CreateSmartcoin:title.header_content")}
+                                            header={t("CreateSmartcoin:title.header")}
+                                            type="header"
+                                        />
+                                        : <div className="grid grid-cols-2 gap-3 mt-3">
+                                            <HoverInfo
+                                                content={t("CreateSmartcoin:title.header_content")}
+                                                header={t("CreateSmartcoin:title.header")}
+                                                type="header"
+                                            />
+                                            <div className={`text-right mb-${!hasEditedBitassetOptions ? 5 : 1}`}>
+                                                {
+                                                    !hasEditedBitassetOptions
+                                                        ? <Button
+                                                            variant="outline"
+                                                            onClick={() => setHasEditedBitassetOptions(true)}
+                                                            className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0"
+                                                        >
+                                                            {t("CreateSmartcoin:editSmartcoin.disabled")}
+                                                        </Button>
+                                                        : <Button
+                                                            variant="outline"
+                                                            onClick={() => setHasEditedBitassetOptions(false)}
+                                                        >
+                                                            {t("CreateSmartcoin:editSmartcoin.enabled")}
+                                                        </Button>
+                                                }
+                                            </div>
+                                        </div>
+                                }
+                                </div>
+
+                                {
+                                    !editing || editing && hasEditedBitassetOptions
+                                        ? <div className="col-span-2">
+                                            <HoverInfo
+                                                content={t("CreatePrediction:pma.backing_asset.header_content")}
+                                                header={t("CreatePrediction:pma.backing_asset.header")}
+                                            />
+                                            <div className="grid grid-cols-2 gap-2">
+                                                <Input disabled value={backingAssetData ? `${backingAssetData.symbol} (${backingAssetData.id})` : backingAsset} type="text" />
+                                                {
+                                                    !editing
+                                                    ? <AssetDropDown
+                                                        assetSymbol={backingAsset ?? ""}
+                                                        assetData={null}
+                                                        storeCallback={setBackingAsset}
+                                                        otherAsset={null}
+                                                        marketSearch={marketSearch}
+                                                        type={"backing"}
+                                                        chain={usr && usr.chain ? usr.chain : "bitshares"}
+                                                    />
+                                                    : null
+                                                }
+                                            </div>
+                                            <div className="grid grid-cols-2 gap-2">
+                                                <div>
+                                                    <HoverInfo
+                                                        content={t("CreateSmartcoin:feed_lifetime.header_content")}
+                                                        header={t("CreateSmartcoin:feed_lifetime.header")}
                                                     />
                                                     <Input
-                                                        placeholder={t("AssetCommon:extensions.taker_fee_percent.placeholder")}
-                                                        value={takerFee}
+                                                        value={feedLifetimeSeconds}
+                                                        type="number"
+                                                        min="0"
+                                                        className="mt-1"
+                                                        onInput={(e) => {
+                                                            setFeedLifetimeSeconds(e.currentTarget.value);
+                                                            if (editing) setHasEditedBitassetOptions(true);
+                                                        }}
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <HoverInfo
+                                                        content={t("CreateSmartcoin:minimum_feeds.header_content")}
+                                                        header={t("CreateSmartcoin:minimum_feeds.header")}
+                                                    />
+                                                    <Input
+                                                        value={minimumFeeds}
+                                                        type="number"
+                                                        min="1"
+                                                        max="20"
+                                                        className="mt-1"
+                                                        onInput={(e) => {
+                                                            setMinimumFeeds(parseInt(e.currentTarget.value));
+                                                            if (editing) setHasEditedBitassetOptions(true);
+                                                        }}
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <HoverInfo
+                                                        content={t("CreateSmartcoin:force_settlement_delay.header_content")}
+                                                        header={t("CreateSmartcoin:force_settlement_delay.header")}
+                                                    />
+                                                    <Input
+                                                        value={forceSettlementDelaySeconds}
+                                                        type="number"
+                                                        min="0"
+                                                        className="mt-1"
+                                                        onInput={(e) => {
+                                                            setForceSettlementDelaySeconds(e.currentTarget.value);
+                                                            if (editing) setHasEditedBitassetOptions(true);
+                                                        }}
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <HoverInfo
+                                                        content={t("CreateSmartcoin:force_settlement_offset.header_content")}
+                                                        header={t("CreateSmartcoin:force_settlement_offset.header")}
+                                                    />
+                                                    <Input
+                                                        value={forceSettlementOffsetPercent}
                                                         type="number"
                                                         min="0"
                                                         max="100"
-                                                        step="0.01"
-                                                        pattern="^\d*(\.\d{0,2})?$"
+                                                        className="mt-1"
                                                         onInput={(e) => {
-                                                            setTakerFee(e.currentTarget.value);
+                                                            setForceSettlementOffsetPercent(e.currentTarget.value);
                                                             debouncedPercent(
                                                                 e.currentTarget.value,
-                                                                setTakerFee,
+                                                                setForceSettlementOffsetPercent,
                                                                 100
                                                             );
-                                                            if (editing) hasEditedAssetOptions(true);
+                                                            if (editing) setHasEditedBitassetOptions(true);
                                                         }}
                                                     />
-                                                </>
-                                                : null
-                                            }
-                                        </div>
-                                        : null
-                                }
-                                
-                                {
-                                    flagWhiteList
-                                        ? <div className="col-span-2 mb-3">
-                                            <HoverInfo
-                                                content={t("AssetCommon:whitelist.header_content")}
-                                                header={t("AssetCommon:whitelist.header")}
-                                                type="header"
-                                            />
-                                            <div className="grid grid-cols-12 mt-1">
-                                                <span className="col-span-9 border border-grey rounded">
-                                                    <List
-                                                        height={210}
-                                                        itemCount={whitelistAuthorities.length}
-                                                        itemSize={100}
-                                                        className="w-full"
-                                                    >
-                                                        {whitelistAuthorityRow}
-                                                    </List>
-                                                </span>
-                                                <span className="col-span-3 ml-3 text-center">
-                                                    <Dialog
-                                                        open={whitelistAuthorityDialogOpen}
-                                                        onOpenChange={(open) => {
-                                                            setWhitelistAuthorityDialogOpen(open);
+                                                </div>
+                                                <div>
+                                                    <HoverInfo
+                                                        content={t("CreateSmartcoin:maximum_force_settlement_volume.header_content")}
+                                                        header={t("CreateSmartcoin:maximum_force_settlement_volume.header")}
+                                                    />
+                                                    <Input
+                                                        value={maximumForceSettlementVolume}
+                                                        type="number"
+                                                        min="0"
+                                                        className="mt-1"
+                                                        onInput={(e) => {
+                                                            setMaximumForceSettlementVolume(e.currentTarget.value);
+                                                            if (editing) setHasEditedBitassetOptions(true);
                                                         }}
-                                                    >
-                                                        <DialogTrigger asChild>
-                                                            <Button variant="outline" className="ml-3 mt-1">
-                                                            ➕ {t("CreditOfferEditor:addUser")}
-                                                            </Button>
-                                                        </DialogTrigger>
-                                                        <DialogContent className="sm:max-w-[375px] bg-white">
-                                                            <DialogHeader>
-                                                            <DialogTitle>
-                                                                {!usr || !usr.chain
-                                                                ? t("Transfer:bitsharesAccountSearch")
-                                                                : null}
-                                                                {usr && usr.chain === "bitshares"
-                                                                ? t("Transfer:bitsharesAccountSearchBTS")
-                                                                : null}
-                                                                {usr && usr.chain !== "bitshares"
-                                                                ? t("Transfer:bitsharesAccountSearchTEST")
-                                                                : null}
-                                                            </DialogTitle>
-                                                            </DialogHeader>
-                                                            <AccountSearch
-                                                                chain={usr && usr.chain ? usr.chain : "bitshares"}
-                                                                excludedUsers={
-                                                                    usr && usr.username && usr.username.length ? [usr] : []
-                                                                }
-                                                                setChosenAccount={(_account) => {
-                                                                    if (
-                                                                        _account &&
-                                                                        !whitelistAuthorities.find((_usr) => _usr.id === _account.id)
-                                                                    ) {
-                                                                        setWhitelistAuthorities(
-                                                                            whitelistAuthorities && whitelistAuthorities.length
-                                                                                ? [...whitelistAuthorities, _account]
-                                                                                : [_account]
-                                                                        );
-                                                                        if (editing) hasEditedAssetOptions(true);
-                                                                    }
-                                                                    setWhitelistAuthorityDialogOpen(false);
+                                                    />
+                                                </div>
+                                                {
+                                                    !permDisableMCRUpdate
+                                                        ? <div className="col-span-2 w-1/2">
+                                                            <HoverInfo
+                                                                content={t("CreateSmartcoin:mcr.header_content")}
+                                                                header={t("CreateSmartcoin:mcr.header")}
+                                                            />
+                                                            <Input
+                                                                value={mcr}
+                                                                type="number"
+                                                                min="0"
+                                                                max="4200"
+                                                                className="mt-1"
+                                                                onInput={(e) => {
+                                                                    setMcr(e.currentTarget.value);
+                                                                    debouncedPercent(
+                                                                        e.currentTarget.value,
+                                                                        setMcr,
+                                                                        4200
+                                                                    );
+                                                                    if (editing) setHasEditedBitassetOptions(true);
                                                                 }}
                                                             />
-                                                        </DialogContent>
-                                                    </Dialog>
-                                                </span>
-                                            </div>
-                                        </div>
-                                        : null
-                                }
-                                {
-                                    flagWhiteList
-                                        ? <div className="col-span-2 mb-3">
-                                            <HoverInfo
-                                                content={t("AssetCommon:blacklist.header_content")}
-                                                header={t("AssetCommon:blacklist.header")}
-                                                type="header"
-                                            />
-                                            <div className="grid grid-cols-12 mt-1">
-                                                <span className="col-span-9 border border-grey rounded">
-                                                    <List
-                                                        height={210}
-                                                        itemCount={blacklistAuthorities.length}
-                                                        itemSize={75}
-                                                        className="w-full"
-                                                    >
-                                                        {blacklistAuthorityRow}
-                                                    </List>
-                                                </span>
-                                                <span className="col-span-3 ml-3 text-center">
-                                                    <Dialog
-                                                        open={blacklistAuthorityDialogOpen}
-                                                        onOpenChange={(open) => {
-                                                            setBlacklistAuthorityDialogOpen(open);
-                                                        }}
-                                                    >
-                                                        <DialogTrigger asChild>
-                                                            <Button variant="outline" className="ml-3 mt-1">
-                                                            ➕ {t("CreditOfferEditor:addUser")}
-                                                            </Button>
-                                                        </DialogTrigger>
-                                                        <DialogContent className="sm:max-w-[375px] bg-white">
-                                                            <DialogHeader>
-                                                            <DialogTitle>
-                                                                {!usr || !usr.chain
-                                                                ? t("Transfer:bitsharesAccountSearch")
-                                                                : null}
-                                                                {usr && usr.chain === "bitshares"
-                                                                ? t("Transfer:bitsharesAccountSearchBTS")
-                                                                : null}
-                                                                {usr && usr.chain !== "bitshares"
-                                                                ? t("Transfer:bitsharesAccountSearchTEST")
-                                                                : null}
-                                                            </DialogTitle>
-                                                            </DialogHeader>
-                                                            <AccountSearch
-                                                                chain={usr && usr.chain ? usr.chain : "bitshares"}
-                                                                excludedUsers={
-                                                                    usr && usr.username && usr.username.length ? [usr] : []
-                                                                }
-                                                                setChosenAccount={(_account) => {
-                                                                    if (
-                                                                        _account &&
-                                                                        !blacklistAuthorities.find((_usr) => _usr.id === _account.id)
-                                                                    ) {
-                                                                        setBlacklistAuthorities(
-                                                                            blacklistAuthorities && blacklistAuthorities.length
-                                                                                ? [...blacklistAuthorities, _account]
-                                                                                : [_account]
-                                                                        );
-                                                                        if (editing) hasEditedAssetOptions(true);
-                                                                    }
-                                                                    setBlacklistAuthorityDialogOpen(false);
+                                                        </div>
+                                                        : null
+                                                }
+                                                {
+                                                    !permDisableICRUpdate
+                                                        ? <div className="col-span-2 w-1/2">
+                                                            <HoverInfo
+                                                                content={t("CreateSmartcoin:icr.header_content")}
+                                                                header={t("CreateSmartcoin:icr.header")}
+                                                            />
+                                                            <Input
+                                                                value={icr}
+                                                                type="number"
+                                                                min="0"
+                                                                max="4200"
+                                                                className="mt-1"
+                                                                onInput={(e) => {
+                                                                    setIcr(e.currentTarget.value);
+                                                                    debouncedPercent(
+                                                                        e.currentTarget.value,
+                                                                        setIcr,
+                                                                        4200
+                                                                    );
+                                                                    if (editing) setHasEditedBitassetOptions(true);
                                                                 }}
                                                             />
-                                                        </DialogContent>
-                                                    </Dialog>
+                                                        </div>
+                                                        : null
+                                                }
+                                                {
+                                                    !permDisableMSSRUpdate
+                                                        ? <div className="col-span-2 w-1/2">
+                                                            <HoverInfo
+                                                                content={t("CreateSmartcoin:mssr.header_content")}
+                                                                header={t("CreateSmartcoin:mssr.header")}
+                                                            />
+                                                            <Input
+                                                                value={mssr}
+                                                                type="number"
+                                                                min="0"
+                                                                max="4200"
+                                                                className="mt-1"
+                                                                onInput={(e) => {
+                                                                    setMssr(e.currentTarget.value);
+                                                                    debouncedPercent(
+                                                                        e.currentTarget.value,
+                                                                        setMssr,
+                                                                        4200
+                                                                    );
+                                                                    if (editing) setHasEditedBitassetOptions(true);
+                                                                }}
+                                                            />
+                                                        </div>
+                                                        : null
+                                                }
+                                                {
+                                                    !permDisableBSRMUpdate
+                                                        ? <div className="col-span-2">
+                                                            <HoverInfo
+                                                                content={t("CreateSmartcoin:bsrm.header_content")}
+                                                                header={t("CreateSmartcoin:bsrm.header")}
+                                                            />
+                                                            <Select
+                                                                onValueChange={(bsrmStrategy) => {
+                                                                    setBsrmStrategy(bsrmStrategy);
+                                                                    if (editing) setHasEditedBitassetOptions(true);
+                                                                }}
+                                                                value={bsrmStrategy}
+                                                            >
+                                                                <SelectTrigger className="mb-1">
+                                                                    <SelectValue />
+                                                                </SelectTrigger>
+                                                                <SelectContent className="bg-white">
+                                                                    <SelectGroup>
+                                                                        <SelectItem value="0">{t("CreateSmartcoin:bsrm.select_0")}</SelectItem>
+                                                                        <SelectItem value="1">{t("CreateSmartcoin:bsrm.select_1")}</SelectItem>
+                                                                        <SelectItem value="2">{t("CreateSmartcoin:bsrm.select_2")}</SelectItem>
+                                                                        <SelectItem value="3">{t("CreateSmartcoin:bsrm.select_3")}</SelectItem>
+                                                                    </SelectGroup>
+                                                                </SelectContent>
+                                                            </Select>
+                                                        </div>
+                                                        : null
+                                                }
+        
+                                                <span className="col-span-2 w-3/4">
+                                                    <AssetFlag
+                                                        alreadyDisabled={false}
+                                                        id={"margin_call_fee_ratio"}
+                                                        allowedText={t("CreateSmartcoin:extensions.margin_call_fee_ratio.enabled")}
+                                                        enabledInfo={t("CreateSmartcoin:extensions.margin_call_fee_ratio.extensionInfo")}
+                                                        disabledText={t("CreateSmartcoin:extensions.margin_call_fee_ratio.disabled")}
+                                                        disabledInfo={t("CreateSmartcoin:extensions.margin_call_fee_ratio.extensionInfo")}
+                                                        permission={true}
+                                                        flag={mcfrExtensionEnabled}
+                                                        setFlag={setMcfrExtensionEnabled}
+                                                    />
+                                                    {
+                                                        mcfrExtensionEnabled
+                                                            ? <div className="col-span-2">
+                                                                <HoverInfo
+                                                                    content={t("CreateSmartcoin:extensions.margin_call_fee_ratio.header_content")}
+                                                                    header={t("CreateSmartcoin:extensions.margin_call_fee_ratio.header")}
+                                                                />
+                                                                <Input
+                                                                    value={marginCallFeeRatio}
+                                                                    type="number"
+                                                                    min="0"
+                                                                    max="100"
+                                                                    className="mt-1"
+                                                                    onInput={(e) => {
+                                                                        setMarginCallFeeRatio(e.currentTarget.value);
+                                                                        debouncedPercent(
+                                                                            e.currentTarget.value,
+                                                                            setMarginCallFeeRatio,
+                                                                            100
+                                                                        );
+                                                                        if (editing) setHasEditedBitassetOptions(true);
+                                                                    }}
+                                                                />
+                                                            </div>
+                                                            : null
+                                                    }
+                                                </span>
+        
+                                                <span className="col-span-2 w-3/4">
+                                                    <AssetFlag
+                                                        alreadyDisabled={false}
+                                                        id={"force_settle_fee"}
+                                                        allowedText={t("CreateSmartcoin:extensions.force_settle_fee.enabled")}
+                                                        enabledInfo={t("CreateSmartcoin:extensions.force_settle_fee.extensionInfo")}
+                                                        disabledText={t("CreateSmartcoin:extensions.force_settle_fee.disabled")}
+                                                        disabledInfo={t("CreateSmartcoin:extensions.force_settle_fee.extensionInfo")}
+                                                        permission={true}
+                                                        flag={fsfExtensionEnabled}
+                                                        setFlag={setFsfExtensionEnabled}
+                                                    />
+                                                    {
+                                                        fsfExtensionEnabled
+                                                            ? <div className="col-span-2">
+                                                                <HoverInfo
+                                                                    content={t("CreateSmartcoin:extensions.force_settle_fee.header_content")}
+                                                                    header={t("CreateSmartcoin:extensions.force_settle_fee.header")}
+                                                                />
+                                                                <Input
+                                                                    value={forceSettleFeePercent}
+                                                                    type="number"
+                                                                    min="0"
+                                                                    max="100"
+                                                                    className="mt-1"
+                                                                    onInput={(e) => {
+                                                                        setForceSettleFeePercent(e.currentTarget.value);
+                                                                        debouncedPercent(
+                                                                            e.currentTarget.value,
+                                                                            setForceSettleFeePercent,
+                                                                            100
+                                                                        );
+                                                                        if (editing) setHasEditedBitassetOptions(true);
+                                                                    }}
+                                                                />
+                                                            </div>
+                                                            : null
+                                                    }
                                                 </span>
                                             </div>
+        
+                                            <Separator className="my-4 mt-5" />
                                         </div>
                                         : null
                                 }
+
                                 <div className="col-span-2">
-                                    <Button
-                                        className="h-8"
-                                        onClick={() => {
-                                            setShowDialog(true)
-                                        }}
-                                    >
-                                        {t("CreateUIA:buttons.submit")}
-                                    </Button>
+                                    {
+                                        editing && !hasEditedAssetOptions && !hasEditedBitassetOptions
+                                        ? <Button className="h-8" disabled>
+                                            {t("CreateUIA:buttons.submit")}
+                                        </Button>
+                                        : <Button
+                                            className="h-8"
+                                            onClick={() => {
+                                                setShowDialog(true)
+                                            }}
+                                        >
+                                            {t("CreateUIA:buttons.submit")}
+                                        </Button>
+                                    }
                                 </div>
                             </div>
                         </CardContent>

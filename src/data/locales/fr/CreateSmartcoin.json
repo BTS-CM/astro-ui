@@ -63,5 +63,13 @@
         "header": "Frais de règlement forcé",
         "header_content": "Les frais facturés à un utilisateur lorsqu'il force le règlement de sa dette. "
       }
+    },
+    "editAsset": {
+      "disabled": "Modifier les paramètres de l'actif",
+      "enabled": "Annuler la modification des paramètres de l'actif"
+    },
+    "editSmartcoin": {
+      "disabled": "Modifier les paramètres du Smartcoin",
+      "enabled": "Annuler la modification des paramètres Smartcoin"
     }
   }
