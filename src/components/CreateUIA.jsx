@@ -1035,9 +1035,9 @@ export default function UIA(properties) {
                                             <AssetPermission
                                                 alreadyDisabled={permanentlyDisabledCMF}
                                                 id={"charge_market_fee"}
-                                                allowedText={t("AssetCommon:permissions.charge_market_fee.true")}
+                                                allowedText={t("AssetCommon:permissions.charge_market_fee.about")}
                                                 enabledInfo={t("AssetCommon:permissions.charge_market_fee.enabledInfo")}
-                                                disabledText={t("AssetCommon:permissions.charge_market_fee.false")}
+                                                disabledText={t("AssetCommon:permissions.charge_market_fee.about")}
                                                 disabledInfo={t("AssetCommon:permissions.charge_market_fee.disabledInfo")}
                                                 permission={permChargeMarketFee}
                                                 setPermission={setPermChargeMarketFee}
@@ -1047,9 +1047,9 @@ export default function UIA(properties) {
                                             <AssetPermission
                                                 alreadyDisabled={permanentlyDisabledWL}
                                                 id={"white_list"}
-                                                allowedText={t("AssetCommon:permissions.white_list.true")}
+                                                allowedText={t("AssetCommon:permissions.white_list.about")}
                                                 enabledInfo={t("AssetCommon:permissions.white_list.enabledInfo")}
-                                                disabledText={t("AssetCommon:permissions.white_list.false")}
+                                                disabledText={t("AssetCommon:permissions.white_list.about")}
                                                 disabledInfo={t("AssetCommon:permissions.white_list.disabledInfo")}
                                                 permission={permWhiteList}
                                                 setPermission={setPermWhiteList}
@@ -1059,9 +1059,9 @@ export default function UIA(properties) {
                                             <AssetPermission
                                                 alreadyDisabled={permanentlyDisabledTR}
                                                 id={"transfer_restricted"}
-                                                allowedText={t("AssetCommon:permissions.transfer_restricted.true")}
+                                                allowedText={t("AssetCommon:permissions.transfer_restricted.about")}
                                                 enabledInfo={t("AssetCommon:permissions.transfer_restricted.enabledInfo")}
-                                                disabledText={t("AssetCommon:permissions.transfer_restricted.false")}
+                                                disabledText={t("AssetCommon:permissions.transfer_restricted.about")}
                                                 disabledInfo={t("AssetCommon:permissions.transfer_restricted.disabledInfo")}
                                                 permission={permTransferRestricted}
                                                 setPermission={setPermTransferRestricted}
@@ -1071,9 +1071,9 @@ export default function UIA(properties) {
                                             <AssetPermission
                                                 alreadyDisabled={permanentlyDisabledDC}
                                                 id={"disable_confidential"}
-                                                allowedText={t("AssetCommon:permissions.disable_confidential.true")}
+                                                allowedText={t("AssetCommon:permissions.disable_confidential.about")}
                                                 enabledInfo={t("AssetCommon:permissions.disable_confidential.enabledInfo")}
-                                                disabledText={t("AssetCommon:permissions.disable_confidential.false")}
+                                                disabledText={t("AssetCommon:permissions.disable_confidential.about")}
                                                 disabledInfo={t("AssetCommon:permissions.disable_confidential.disabledInfo")}
                                                 permission={permDisableConfidential}
                                                 setPermission={setPermDisableConfidential}
@@ -1083,9 +1083,9 @@ export default function UIA(properties) {
                                             <AssetPermission
                                                 alreadyDisabled={permanentlyDisabledOA}
                                                 id={"override_authority"}
-                                                allowedText={t("AssetCommon:permissions.override_authority.true")}
+                                                allowedText={t("AssetCommon:permissions.override_authority.about")}
                                                 enabledInfo={t("AssetCommon:permissions.override_authority.enabledInfo")}
-                                                disabledText={t("AssetCommon:permissions.override_authority.false")}
+                                                disabledText={t("AssetCommon:permissions.override_authority.about")}
                                                 disabledInfo={t("AssetCommon:permissions.override_authority.disabledInfo")}
                                                 permission={permOverrideAuthority}
                                                 setPermission={setPermOverrideAuthority}
@@ -1103,9 +1103,9 @@ export default function UIA(properties) {
                                             <AssetFlag
                                                 alreadyDisabled={permanentlyDisabledCMF}
                                                 id={"charge_market_fee_flag"}
-                                                allowedText={t("AssetCommon:flags.charge_market_fee.true")}
+                                                allowedText={t("AssetCommon:flags.charge_market_fee.about")}
                                                 enabledInfo={t("AssetCommon:flags.charge_market_fee.enabledInfo")}
-                                                disabledText={t("AssetCommon:flags.charge_market_fee.false")}
+                                                disabledText={t("AssetCommon:flags.charge_market_fee.about")}
                                                 disabledInfo={t("AssetCommon:flags.charge_market_fee.disabledInfo")}
                                                 permission={permChargeMarketFee}
                                                 flag={flagChargeMarketFee}
@@ -1114,9 +1114,9 @@ export default function UIA(properties) {
                                             <AssetFlag
                                                 alreadyDisabled={permanentlyDisabledWL}
                                                 id={"white_list_flag"}
-                                                allowedText={t("AssetCommon:flags.white_list.true")}
+                                                allowedText={t("AssetCommon:flags.white_list.about")}
                                                 enabledInfo={t("AssetCommon:flags.white_list.enabledInfo")}
-                                                disabledText={t("AssetCommon:flags.white_list.false")}
+                                                disabledText={t("AssetCommon:flags.white_list.about")}
                                                 disabledInfo={t("AssetCommon:flags.white_list.disabledInfo")}
                                                 permission={permWhiteList}
                                                 flag={flagWhiteList}
@@ -1125,9 +1125,9 @@ export default function UIA(properties) {
                                             <AssetFlag
                                                 alreadyDisabled={permanentlyDisabledTR}
                                                 id={"transfer_restricted_flag"}
-                                                allowedText={t("AssetCommon:flags.transfer_restricted.true")}
+                                                allowedText={t("AssetCommon:flags.transfer_restricted.about")}
                                                 enabledInfo={t("AssetCommon:flags.transfer_restricted.enabledInfo")}
-                                                disabledText={t("AssetCommon:flags.transfer_restricted.false")}
+                                                disabledText={t("AssetCommon:flags.transfer_restricted.about")}
                                                 disabledInfo={t("AssetCommon:flags.transfer_restricted.disabledInfo")}
                                                 permission={permTransferRestricted}
                                                 flag={flagTransferRestricted}
@@ -1136,9 +1136,9 @@ export default function UIA(properties) {
                                             <AssetFlag
                                                 alreadyDisabled={permanentlyDisabledDC}
                                                 id={"disable_confidential_flag"}
-                                                allowedText={t("AssetCommon:flags.disable_confidential.true")}
+                                                allowedText={t("AssetCommon:flags.disable_confidential.about")}
                                                 enabledInfo={t("AssetCommon:flags.disable_confidential.enabledInfo")}
-                                                disabledText={t("AssetCommon:flags.disable_confidential.false")}
+                                                disabledText={t("AssetCommon:flags.disable_confidential.about")}
                                                 disabledInfo={t("AssetCommon:flags.disable_confidential.disabledInfo")}
                                                 permission={permDisableConfidential}
                                                 flag={flagDisableConfidential}
@@ -1147,9 +1147,9 @@ export default function UIA(properties) {
                                             <AssetFlag
                                                 alreadyDisabled={permanentlyDisabledOA}
                                                 id={"override_authority_flag"}
-                                                allowedText={t("AssetCommon:flags.override_authority.true")}
+                                                allowedText={t("AssetCommon:flags.override_authority.about")}
                                                 enabledInfo={t("AssetCommon:flags.override_authority.enabledInfo")}
-                                                disabledText={t("AssetCommon:flags.override_authority.false")}
+                                                disabledText={t("AssetCommon:flags.override_authority.about")}
                                                 disabledInfo={t("AssetCommon:flags.override_authority.disabledInfo")}
                                                 permission={permOverrideAuthority}
                                                 flag={flagOverrideAuthority}

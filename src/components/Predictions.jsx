@@ -1497,11 +1497,11 @@ export default function Predictions(properties) {
                                         }}>
                                           <div className="flex items-center space-x-2">
                                             <RadioGroupItem value="1" id="1" />
-                                            <Label htmlFor="1">{t("Predictions:resolveDialog.true")}</Label>
+                                            <Label htmlFor="1">{t("Predictions:resolveDialog.about")}</Label>
                                           </div>
                                           <div className="flex items-center space-x-2">
                                             <RadioGroupItem value="2" id="2" />
-                                            <Label htmlFor="2">{t("Predictions:resolveDialog.false")}</Label>
+                                            <Label htmlFor="2">{t("Predictions:resolveDialog.about")}</Label>
                                           </div>
                                         </RadioGroup>
                                       </div>
@@ -1715,11 +1715,11 @@ export default function Predictions(properties) {
                                     }}>
                                       <div className="flex items-center space-x-2">
                                         <RadioGroupItem value="1" id="1" />
-                                        <Label htmlFor="1">{t("Predictions:resolveDialog.true")}</Label>
+                                        <Label htmlFor="1">{t("Predictions:resolveDialog.about")}</Label>
                                       </div>
                                       <div className="flex items-center space-x-2">
                                         <RadioGroupItem value="2" id="2" />
-                                        <Label htmlFor="2">{t("Predictions:resolveDialog.false")}</Label>
+                                        <Label htmlFor="2">{t("Predictions:resolveDialog.about")}</Label>
                                       </div>
                                     </RadioGroup>
                                   </div>

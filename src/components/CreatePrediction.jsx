@@ -815,9 +815,9 @@ export default function Prediction(properties) {
                                             <AssetPermission
                                                 alreadyDisabled={false}
                                                 id={"white_list"}
-                                                allowedText={t("AssetCommon:permissions.white_list.true")}
+                                                allowedText={t("AssetCommon:permissions.white_list.about")}
                                                 enabledInfo={t("AssetCommon:permissions.white_list.enabledInfo")}
-                                                disabledText={t("AssetCommon:permissions.white_list.false")}
+                                                disabledText={t("AssetCommon:permissions.white_list.about")}
                                                 disabledInfo={t("AssetCommon:permissions.white_list.disabledInfo")}
                                                 permission={permWhiteList}
                                                 setPermission={setPermWhiteList}
@@ -827,9 +827,9 @@ export default function Prediction(properties) {
                                             <AssetPermission
                                                 alreadyDisabled={false}
                                                 id={"transfer_restricted"}
-                                                allowedText={t("AssetCommon:permissions.transfer_restricted.true")}
+                                                allowedText={t("AssetCommon:permissions.transfer_restricted.about")}
                                                 enabledInfo={t("AssetCommon:permissions.transfer_restricted.enabledInfo")}
-                                                disabledText={t("AssetCommon:permissions.transfer_restricted.false")}
+                                                disabledText={t("AssetCommon:permissions.transfer_restricted.about")}
                                                 disabledInfo={t("AssetCommon:permissions.transfer_restricted.disabledInfo")}
                                                 permission={permTransferRestricted}
                                                 setPermission={setPermTransferRestricted}
@@ -839,9 +839,9 @@ export default function Prediction(properties) {
                                             <AssetPermission
                                                 alreadyDisabled={false}
                                                 id={"disable_confidential"}
-                                                allowedText={t("AssetCommon:permissions.disable_confidential.true")}
+                                                allowedText={t("AssetCommon:permissions.disable_confidential.about")}
                                                 enabledInfo={t("AssetCommon:permissions.disable_confidential.enabledInfo")}
-                                                disabledText={t("AssetCommon:permissions.disable_confidential.false")}
+                                                disabledText={t("AssetCommon:permissions.disable_confidential.about")}
                                                 disabledInfo={t("AssetCommon:permissions.disable_confidential.disabledInfo")}
                                                 permission={permDisableConfidential}
                                                 setPermission={setPermDisableConfidential}
@@ -852,9 +852,9 @@ export default function Prediction(properties) {
                                             <AssetPermission
                                                 alreadyDisabled={false}
                                                 id={"witness_fed_asset"}
-                                                allowedText={t("AssetCommon:permissions.witness_fed_asset.true")}
+                                                allowedText={t("AssetCommon:permissions.witness_fed_asset.about")}
                                                 enabledInfo={t("AssetCommon:permissions.witness_fed_asset.enabledInfo")}
-                                                disabledText={t("AssetCommon:permissions.witness_fed_asset.false")}
+                                                disabledText={t("AssetCommon:permissions.witness_fed_asset.about")}
                                                 disabledInfo={t("AssetCommon:permissions.witness_fed_asset.disabledInfo")}
                                                 permission={permWitnessFedAsset}
                                                 setPermission={setPermWitnessFedAsset}
@@ -865,9 +865,9 @@ export default function Prediction(properties) {
                                             <AssetPermission
                                                 alreadyDisabled={false}
                                                 id={"committee_fed_asset"}
-                                                allowedText={t("AssetCommon:permissions.committee_fed_asset.true")}
+                                                allowedText={t("AssetCommon:permissions.committee_fed_asset.about")}
                                                 enabledInfo={t("AssetCommon:permissions.committee_fed_asset.enabledInfo")}
-                                                disabledText={t("AssetCommon:permissions.committee_fed_asset.false")}
+                                                disabledText={t("AssetCommon:permissions.committee_fed_asset.about")}
                                                 disabledInfo={t("AssetCommon:permissions.committee_fed_asset.disabledInfo")}
                                                 permission={permCommitteeFedAsset}
                                                 setPermission={setPermCommitteeFedAsset}
@@ -885,9 +885,9 @@ export default function Prediction(properties) {
                                             <AssetFlag
                                                 alreadyDisabled={false}
                                                 id={"white_list_flag"}
-                                                allowedText={t("AssetCommon:flags.white_list.true")}
+                                                allowedText={t("AssetCommon:flags.white_list.about")}
                                                 enabledInfo={t("AssetCommon:flags.white_list.enabledInfo")}
-                                                disabledText={t("AssetCommon:flags.white_list.false")}
+                                                disabledText={t("AssetCommon:flags.white_list.about")}
                                                 disabledInfo={t("AssetCommon:flags.white_list.disabledInfo")}
                                                 permission={permWhiteList}
                                                 flag={flagWhiteList}
@@ -896,9 +896,9 @@ export default function Prediction(properties) {
                                             <AssetFlag
                                                 alreadyDisabled={false}
                                                 id={"transfer_restricted_flag"}
-                                                allowedText={t("AssetCommon:flags.transfer_restricted.true")}
+                                                allowedText={t("AssetCommon:flags.transfer_restricted.about")}
                                                 enabledInfo={t("AssetCommon:flags.transfer_restricted.enabledInfo")}
-                                                disabledText={t("AssetCommon:flags.transfer_restricted.false")}
+                                                disabledText={t("AssetCommon:flags.transfer_restricted.about")}
                                                 disabledInfo={t("AssetCommon:flags.transfer_restricted.disabledInfo")}
                                                 permission={permTransferRestricted}
                                                 flag={flagTransferRestricted}
@@ -907,9 +907,9 @@ export default function Prediction(properties) {
                                             <AssetFlag
                                                 alreadyDisabled={false}
                                                 id={"disable_confidential_flag"}
-                                                allowedText={t("AssetCommon:flags.disable_confidential.true")}
+                                                allowedText={t("AssetCommon:flags.disable_confidential.about")}
                                                 enabledInfo={t("AssetCommon:flags.disable_confidential.enabledInfo")}
-                                                disabledText={t("AssetCommon:flags.disable_confidential.false")}
+                                                disabledText={t("AssetCommon:flags.disable_confidential.about")}
                                                 disabledInfo={t("AssetCommon:flags.disable_confidential.disabledInfo")}
                                                 permission={permDisableConfidential}
                                                 flag={flagDisableConfidential}
@@ -919,9 +919,9 @@ export default function Prediction(properties) {
                                             <AssetFlag
                                                 alreadyDisabled={false}
                                                 id={"witness_fed_asset_flag"}
-                                                allowedText={t("AssetCommon:flags.witness_fed_asset.true")}
+                                                allowedText={t("AssetCommon:flags.witness_fed_asset.about")}
                                                 enabledInfo={t("AssetCommon:flags.witness_fed_asset.enabledInfo")}
-                                                disabledText={t("AssetCommon:flags.witness_fed_asset.false")}
+                                                disabledText={t("AssetCommon:flags.witness_fed_asset.about")}
                                                 disabledInfo={t("AssetCommon:flags.witness_fed_asset.disabledInfo")}
                                                 permission={permWitnessFedAsset}
                                                 flag={flagWitnessFedAsset}
@@ -931,9 +931,9 @@ export default function Prediction(properties) {
                                             <AssetFlag
                                                 alreadyDisabled={false}
                                                 id={"committee_fed_asset_flag"}
-                                                allowedText={t("AssetCommon:flags.committee_fed_asset.true")}
+                                                allowedText={t("AssetCommon:flags.committee_fed_asset.about")}
                                                 enabledInfo={t("AssetCommon:flags.committee_fed_asset.enabledInfo")}
-                                                disabledText={t("AssetCommon:flags.committee_fed_asset.false")}
+                                                disabledText={t("AssetCommon:flags.committee_fed_asset.about")}
                                                 disabledInfo={t("AssetCommon:flags.committee_fed_asset.disabledInfo")}
                                                 permission={permCommitteeFedAsset}
                                                 flag={flagCommitteeFedAsset}
