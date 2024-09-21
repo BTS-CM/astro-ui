@@ -1004,46 +1004,46 @@ export default function CreateSmartcoin(properties) {
                     }
                     // Disable-bit permissions
                     if (_issuer_permissions.lock_max_supply) {
-                        setPermLockMaxSupply(true);
-                    } else {
                         setPermLockMaxSupply(false);
                         setPermanentlyDisabledLMS(true);
+                    } else {
+                        setPermLockMaxSupply(true);
                     }
                     if (_issuer_permissions.disable_new_supply) {
-                        setPermDisableNewSupply(true);
-                    } else {
                         setPermDisableNewSupply(false);
                         setPermanentlyDisabledDNS(true);
+                    } else {
+                        setPermDisableNewSupply(true);
                     }
                     if (_issuer_permissions.disable_mcr_update) {
-                        setPermDisableMCRUpdate(true);
-                    } else {
                         setPermDisableMCRUpdate(false);
                         setPermanentlyDisabledDMCR(true);
+                    } else {
+                        setPermDisableMCRUpdate(true);
                     }
                     if (_issuer_permissions.disable_icr_update) {
-                        setPermDisableICRUpdate(true);
-                    } else {
                         setPermDisableICRUpdate(false);
                         setPermanentlyDisabledDICR(true);
+                    } else {
+                        setPermDisableICRUpdate(true);
                     }
                     if (_issuer_permissions.disable_mssr_update) {
-                        setPermDisableMSSRUpdate(true);
-                    } else {
                         setPermDisableMSSRUpdate(false);
                         setPermanentlyDisabledDMSSR(true);
+                    } else {
+                        setPermDisableMSSRUpdate(true);
                     }
                     if (_issuer_permissions.disable_bsrm_update) {
-                        setPermDisableBSRMUpdate(true);
-                    } else {
                         setPermDisableBSRMUpdate(false);
                         setPermanentlyDisabledDBSRM(true);
+                    } else {
+                        setPermDisableBSRMUpdate(true);
                     }
                     if (_issuer_permissions.disable_collateral_bidding) {
-                        setPermDisableCollateralBidding(true);
-                    } else {
                         setPermDisableCollateralBidding(false);
                         setPermanentlyDisabledDCB(true);
+                    } else {
+                        setPermDisableCollateralBidding(true);
                     }
 
                     // Enable-bit feature flags
