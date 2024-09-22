@@ -253,6 +253,7 @@ export default function CreateSmartcoin(properties) {
             true
         );
     }, [
+        // enable-bits
         permWhiteList,
         permTransferRestricted,
         permDisableConfidential,
@@ -262,7 +263,7 @@ export default function CreateSmartcoin(properties) {
         permCommitteeFedAsset,
         permDisableForceSettle,
         permGlobalSettle,
-        //
+        // disable-bits
         permLockMaxSupply,
         permDisableNewSupply,
         permDisableMCRUpdate,
@@ -285,7 +286,8 @@ export default function CreateSmartcoin(properties) {
             disable_force_settle: flagDisableForceSettle,
             // disable-bit feature flags
             lock_max_supply: flagLockMaxSupply,
-            disable_new_supply: flagDisableNewSupply
+            disable_new_supply: flagDisableNewSupply,
+            disable_collateral_bidding: flagDisableCollateralBidding
         });
     }, [
         // Enable-bit flags
@@ -300,6 +302,7 @@ export default function CreateSmartcoin(properties) {
         // Disable-bit flags
         flagLockMaxSupply,
         flagDisableNewSupply,
+        flagDisableCollateralBidding
     ]);
 
     const [market, setMarket] = useState("BTS"); // preferred market
@@ -390,7 +393,7 @@ export default function CreateSmartcoin(properties) {
                     if (!_bitassetData || !_dynamicData) {
                         return;
                     }
-                    console.log({ _bitassetData, _dynamicData });
+                    console.log({ _bitassetData, _dynamicData, existingAssetData });
                     setDynamicData(_dynamicData);
                     
                     if (_bitassetData.options.extensions.hasOwnProperty("force_settle_fee_percent")) {
@@ -981,137 +984,166 @@ export default function CreateSmartcoin(properties) {
 
                     const _flags = getFlagBooleans(propsAsset.options.flags);
                     const _issuer_permissions = getFlagBooleans(propsAsset.options.issuer_permissions);
+                    console.log({ _flags, _issuer_permissions });
 
                     // Enable-bit permissions
-                    if (_issuer_permissions.charge_market_fee) {
+                    if (_issuer_permissions.hasOwnProperty("charge_market_fee")) {
                         setPermChargeMarketFee(true);
                     } else {
                         setPermChargeMarketFee(false);
                         setPermanentlyDisabledCMF(true);
                     }
-                    if (_issuer_permissions.disable_confidential) {
+                    if (_issuer_permissions.hasOwnProperty("disable_confidential")) {
                         setPermDisableConfidential(true);
                     } else {
                         setPermDisableConfidential(false);
                         setPermanentlyDisabledDC(true);
                     }
-                    if (_issuer_permissions.override_authority) {
+                    if (_issuer_permissions.hasOwnProperty("override_authority")) {
                         setPermOverrideAuthority(true);
                     } else {
                         setPermOverrideAuthority(false);
                         setPermanentlyDisabledOA(true);
                     }
-                    if (_issuer_permissions.transfer_restricted) {
+                    if (_issuer_permissions.hasOwnProperty("transfer_restricted")) {
                         setPermTransferRestricted(true);
                     } else {
                         setPermTransferRestricted(false);
                         setPermanentlyDisabledTR(true);
                     }
-                    if (_issuer_permissions.white_list) {
+                    if (_issuer_permissions.hasOwnProperty("white_list")) {
                         setPermWhiteList(true);
                     } else {
                         setPermWhiteList(false);
                         setPermanentlyDisabledWL(true);
                     }
-                    if (_issuer_permissions.witness_fed_asset) {
+                    if (_issuer_permissions.hasOwnProperty("witness_fed_asset")) {
                         setPermWitnessFedAsset(true);
                     } else {
                         setPermWitnessFedAsset(false);
                         setPermanentlyDisabledWFA(true);
                     }
-                    if (_issuer_permissions.committee_fed_asset) {
+                    if (_issuer_permissions.hasOwnProperty("committee_fed_asset")) {
                         setPermCommitteeFedAsset(true);
                     } else {
                         setPermCommitteeFedAsset(false);
                         setPermanentlyDisabledCFA(true);
                     }
-                    if (_issuer_permissions.disable_force_settle) {
+                    if (_issuer_permissions.hasOwnProperty("disable_force_settle")) {
                         setPermDisableForceSettle(true);
                     } else {
                         setPermDisableForceSettle(false);
                         setPermanentlyDisabledDFS(true);
                     }
-                    if (_issuer_permissions.global_settle) {
+                    if (_issuer_permissions.hasOwnProperty("global_settle")) {
                         setPermGlobalSettle(true);
                     } else {
                         setPermGlobalSettle(false);
                         setPermanentlyDisabledGS(true);
                     }
+                    // End of enable-bit permissions
+
                     // Disable-bit permissions
-                    if (_issuer_permissions.lock_max_supply) {
+                    if (_issuer_permissions.hasOwnProperty("lock_max_supply")) {
+                        setPermLockMaxSupply(true);
+                    } else {
                         setPermLockMaxSupply(false);
                         setPermanentlyDisabledLMS(true);
-                    } else {
-                        setPermLockMaxSupply(true);
                     }
-                    if (_issuer_permissions.disable_new_supply) {
+                    if (_issuer_permissions.hasOwnProperty("disable_new_supply")) {
+                        setPermDisableNewSupply(true);
+                    } else {
                         setPermDisableNewSupply(false);
                         setPermanentlyDisabledDNS(true);
-                    } else {
-                        setPermDisableNewSupply(true);
                     }
-                    if (_issuer_permissions.disable_mcr_update) {
+                    if (_issuer_permissions.hasOwnProperty("disable_mcr_update")) {
+                        setPermDisableMCRUpdate(true);
+                    } else {
                         setPermDisableMCRUpdate(false);
                         setPermanentlyDisabledDMCR(true);
-                    } else {
-                        setPermDisableMCRUpdate(true);
                     }
-                    if (_issuer_permissions.disable_icr_update) {
+                    if (_issuer_permissions.hasOwnProperty("disable_icr_update")) {
+                        setPermDisableICRUpdate(true);
+                    } else {
                         setPermDisableICRUpdate(false);
                         setPermanentlyDisabledDICR(true);
-                    } else {
-                        setPermDisableICRUpdate(true);
                     }
-                    if (_issuer_permissions.disable_mssr_update) {
+                    if (_issuer_permissions.hasOwnProperty("disable_mssr_update")) {
+                        setPermDisableMSSRUpdate(true);
+                    } else {
                         setPermDisableMSSRUpdate(false);
                         setPermanentlyDisabledDMSSR(true);
-                    } else {
-                        setPermDisableMSSRUpdate(true);
                     }
-                    if (_issuer_permissions.disable_bsrm_update) {
+                    if (_issuer_permissions.hasOwnProperty("disable_bsrm_update")) {
+                        setPermDisableBSRMUpdate(true);
+                    } else {
                         setPermDisableBSRMUpdate(false);
                         setPermanentlyDisabledDBSRM(true);
-                    } else {
-                        setPermDisableBSRMUpdate(true);
                     }
-                    if (_issuer_permissions.disable_collateral_bidding) {
+                    if (_issuer_permissions.hasOwnProperty("disable_collateral_bidding")) {
+                        setPermDisableCollateralBidding(true);
+                    } else {
                         setPermDisableCollateralBidding(false);
                         setPermanentlyDisabledDCB(true);
-                    } else {
-                        setPermDisableCollateralBidding(true);
                     }
+                    // End of disable-bit permissions
 
                     // Enable-bit feature flags
-                    setFlagChargeMarketFee(_flags.charge_market_fee ? true : false);
-                    setFlagDisableConfidential(_flags.disable_confidential ? true : false);
-                    setFlagOverrideAuthority(_flags.override_authority ? true : false);
-                    setFlagTransferRestricted(_flags.transfer_restricted ? true : false);
-                    setFlagWhiteList(_flags.white_list ? true : false);
-                    setFlagWitnessFedAsset(_flags.witness_fed_asset ? true : false);
-                    setFlagCommitteeFedAsset(_flags.committee_fed_asset ? true : false);
-                    setFlagDisableForceSettle(_flags.disable_force_settle ? true : false);
+                    if (_flags.hasOwnProperty("charge_market_fee")) {
+                        setFlagChargeMarketFee(true);
+                    }
+                    if (_flags.hasOwnProperty("disable_confidential")) {
+                        setFlagDisableConfidential(true);
+                    }
+                    if (_flags.hasOwnProperty("override_authority")) {
+                        setFlagOverrideAuthority(true);
+                    }
+                    if (_flags.hasOwnProperty("transfer_restricted")) {
+                        setFlagTransferRestricted(true);
+                    }
+                    if (_flags.hasOwnProperty("white_list")) {
+                        setFlagWhiteList(true);
+                    }
+                    if (_flags.hasOwnProperty("witness_fed_asset")) {
+                        setFlagWitnessFedAsset(true);
+                    }
+                    if (_flags.hasOwnProperty("committee_fed_asset")) {
+                        setFlagCommitteeFedAsset(true);
+                    }
+                    if (_flags.hasOwnProperty("disable_force_settle")) {
+                        setFlagDisableForceSettle(true);
+                    }
+                    // End of Enable-bit flags
                     
                     // Disable-bit feature flags
-                    setFlagLockMaxSupply(_flags.lock_max_supply ? true : false);
-                    setFlagDisableNewSupply(_flags.disable_new_supply ? true : false);
-                    setFlagDisableCollateralBidding(_flags.disable_collateral_bidding ? true : false);
+                    if (_flags.hasOwnProperty("lock_max_supply")) {
+                        setFlagLockMaxSupply(true);
+                    }
+                    if (_flags.hasOwnProperty("disable_new_supply")) {
+                        setFlagDisableNewSupply(true);
+                    }
+                    if (_flags.hasOwnProperty("disable_collateral_bidding")) {
+                        setFlagDisableCollateralBidding(true);
+                    }
+                    // End of Disable-bit flags
                     
-                    if (propsAsset.options.extensions.reward_percent) {
+                    const _existingAssetExtensions = propsAsset.options.extensions;
+                    if (_existingAssetExtensions.hasOwnProperty("reward_percent")) {
                         setEnabledReferrerReward(true);
-                        setReferrerReward(propsAsset.options.extensions.reward_percent / 100);
+                        setReferrerReward(_existingAssetExtensions.reward_percent / 100);
                     }
 
-                    if (propsAsset.options.extensions.whitelist_market_fee_sharing) {
+                    if (_existingAssetExtensions.hasOwnProperty("whitelist_market_fee_sharing")) {
                         setEnabledFeeSharingWhitelist(true);
-                        setFeeSharingWhitelist(propsAsset.options.extensions.whitelist_market_fee_sharing);
+                        setFeeSharingWhitelist(_existingAssetExtensions.whitelist_market_fee_sharing);
                     }
 
-                    if (propsAsset.options.extensions.taker_fee_percent) {
+                    if (_existingAssetExtensions.hasOwnProperty("taker_fee_percent")) {
                         setEnabledTakerFee(true);
-                        setTakerFee(propsAsset.options.extensions.taker_fee_percent / 100);
+                        setTakerFee(_existingAssetExtensions.taker_fee_percent / 100);
                     }
 
-                    if (propsAsset.options.extensions.skip_core_exchange_rate) {
+                    if (_existingAssetExtensions.hasOwnProperty("skip_core_exchange_rate")) {
                         setOptedSkipCER(true);
                     }
 
@@ -1872,6 +1904,14 @@ export default function CreateSmartcoin(properties) {
                                                         flag={flagDisableCollateralBidding}
                                                         setFlag={setFlagDisableCollateralBidding}
                                                     />
+                                                </div>
+                                            </div>
+                                            <div className="grid grid-cols-2 gap-5 mt-2">
+                                                <div className="text-md text-gray-300">
+                                                    Issuer Permissions: {issuer_permissions} {existingAssetData ? `(${existingAssetData.options.issuer_permissions})` : null}
+                                                </div>
+                                                <div className="text-md text-gray-300">
+                                                    Asset Flags: {flags} {existingAssetData ? `(${existingAssetData.options.flags})` : null}
                                                 </div>
                                             </div>
                                             <Separator className="my-4 mt-5" />
