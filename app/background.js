@@ -350,10 +350,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var url__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(url__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var express__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! express */ "express");
 /* harmony import */ var express__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(express__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var electron__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! electron */ "electron");
-/* harmony import */ var electron__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(electron__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _lib_applicationMenu_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./lib/applicationMenu.js */ "./src/lib/applicationMenu.js");
-/* harmony import */ var _lib_deeplink_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./lib/deeplink.js */ "./src/lib/deeplink.js");
+/* harmony import */ var bitsharesjs_ws__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! bitsharesjs-ws */ "bitsharesjs-ws");
+/* harmony import */ var bitsharesjs_ws__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(bitsharesjs_ws__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var electron__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! electron */ "electron");
+/* harmony import */ var electron__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(electron__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _lib_applicationMenu_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./lib/applicationMenu.js */ "./src/lib/applicationMenu.js");
+/* harmony import */ var _lib_deeplink_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./lib/deeplink.js */ "./src/lib/deeplink.js");
+
+
 
 
 
@@ -368,9 +372,9 @@ let mainWindow = null;
 let tray = null;
 
 const createWindow = async () => {
-    const { width, height } = electron__WEBPACK_IMPORTED_MODULE_4__.screen.getPrimaryDisplay().workAreaSize;
+    const { width, height } = electron__WEBPACK_IMPORTED_MODULE_5__.screen.getPrimaryDisplay().workAreaSize;
 
-    mainWindow = new electron__WEBPACK_IMPORTED_MODULE_4__.BrowserWindow({
+    mainWindow = new electron__WEBPACK_IMPORTED_MODULE_5__.BrowserWindow({
         width: width,
         height: height,
         minWidth: 480,
@@ -401,7 +405,7 @@ const createWindow = async () => {
         console.log("Express server listening on port 8080");
     });
 
-    (0,_lib_applicationMenu_js__WEBPACK_IMPORTED_MODULE_5__.initApplicationMenu)(mainWindow);
+    (0,_lib_applicationMenu_js__WEBPACK_IMPORTED_MODULE_6__.initApplicationMenu)(mainWindow);
 
     mainWindow.loadURL('http://localhost:8080/index.html');
 
@@ -409,8 +413,8 @@ const createWindow = async () => {
         return { action: "deny" };
     });
 
-    tray = new electron__WEBPACK_IMPORTED_MODULE_4__.Tray(path__WEBPACK_IMPORTED_MODULE_0___default().join(__dirname, "img", "tray.png"));
-    const contextMenu = electron__WEBPACK_IMPORTED_MODULE_4__.Menu.buildFromTemplate([
+    tray = new electron__WEBPACK_IMPORTED_MODULE_5__.Tray(path__WEBPACK_IMPORTED_MODULE_0___default().join(__dirname, "img", "tray.png"));
+    const contextMenu = electron__WEBPACK_IMPORTED_MODULE_5__.Menu.buildFromTemplate([
         {
             label: "Show App",
             click: function () {
@@ -421,7 +425,7 @@ const createWindow = async () => {
             label: "Quit",
             click: function () {
                 tray = null;
-                electron__WEBPACK_IMPORTED_MODULE_4__.app.quit();
+                electron__WEBPACK_IMPORTED_MODULE_5__.app.quit();
             },
         },
     ]);
@@ -432,7 +436,85 @@ const createWindow = async () => {
         tray?.popUpContextMenu(contextMenu);
     });
 
-    electron__WEBPACK_IMPORTED_MODULE_4__.ipcMain.handle("fetchTopMarkets", async (event, arg) => {
+    let stillAlive = true;
+    let continueFetching = true;
+    let latestBlockNumber = 0;
+    electron__WEBPACK_IMPORTED_MODULE_5__.ipcMain.on("requestBlocks", async (event, arg) => {
+        const { url } = arg;
+        if (!stillAlive) {
+            return;
+        }
+
+        bitsharesjs_ws__WEBPACK_IMPORTED_MODULE_4__.Apis.instance(url, true).init_promise.then(async (res) => {
+            console.log("connected to:", res[0].network);
+
+            let globalProperties;
+            try {
+                globalProperties = await bitsharesjs_ws__WEBPACK_IMPORTED_MODULE_4__.Apis.instance().db_api().exec("get_dynamic_global_properties", []);
+            } catch (error) {
+                console.log({ error, location: "globalProperties", url });
+                return;
+            }
+    
+            latestBlockNumber = globalProperties.head_block_number;
+
+            const blockPromises = [];
+            for (let i = latestBlockNumber - 1; i > latestBlockNumber - 31; i--) {
+                blockPromises.push(bitsharesjs_ws__WEBPACK_IMPORTED_MODULE_4__.Apis.instance().db_api().exec("get_block", [i]));
+            }
+
+            let lastFewBlocks = [];
+            try {
+                lastFewBlocks = await Promise.all(blockPromises);
+            } catch (error) {
+                console.log({ error });
+            }
+
+            for (let i = lastFewBlocks.length - 1; i >= 0; i--) {
+                mainWindow.webContents.send(
+                    "blockResponse",
+                    { ...lastFewBlocks[i], block: latestBlockNumber - 1 - i }
+                );
+            }
+    
+            const fetchBlocks = async () => {
+                while (continueFetching) {
+                    if (!stillAlive) {
+                        continueFetching = false;
+                        break;
+                    }
+                    let currentBlock;
+                    try {
+                        currentBlock = await bitsharesjs_ws__WEBPACK_IMPORTED_MODULE_4__.Apis.instance().db_api().exec("get_block", [latestBlockNumber]);
+                    } catch (error) {
+                        console.log({ error });
+                        continueFetching = false;
+                        break;
+                    }
+                    mainWindow.webContents.send("blockResponse", {...currentBlock, block: latestBlockNumber});
+                    latestBlockNumber += 1;
+                    stillAlive = false;
+        
+                    await new Promise(resolve => setTimeout(resolve, 3000));
+                }
+        
+                if (!continueFetching) {
+                    bitsharesjs_ws__WEBPACK_IMPORTED_MODULE_4__.Apis.instance().close();
+                }
+            };
+    
+            fetchBlocks();
+    
+            electron__WEBPACK_IMPORTED_MODULE_5__.ipcMain.on("stillAlive", (event, arg) => {
+                stillAlive = true;
+            });
+
+        }).catch((err) => {
+            console.log({ err });
+        });
+    });
+
+    electron__WEBPACK_IMPORTED_MODULE_5__.ipcMain.handle("fetchTopMarkets", async (event, arg) => {
         const { chain } = arg;
 
         let retrievedData;
@@ -455,7 +537,7 @@ const createWindow = async () => {
         return topMarkets ?? null;
     });
 
-    electron__WEBPACK_IMPORTED_MODULE_4__.ipcMain.handle("fetchAccountHistory", async (event, arg) => {
+    electron__WEBPACK_IMPORTED_MODULE_5__.ipcMain.handle("fetchAccountHistory", async (event, arg) => {
         const { chain, accountID } = arg;
 
         const from = arg.from ?? 0;
@@ -495,7 +577,7 @@ const createWindow = async () => {
         return accountHistory ?? null;
     });
 
-    electron__WEBPACK_IMPORTED_MODULE_4__.ipcMain.handle("generateDeepLink", async (event, arg) => {
+    electron__WEBPACK_IMPORTED_MODULE_5__.ipcMain.handle("generateDeepLink", async (event, arg) => {
         const {
             usrChain,
             nodeURL,
@@ -505,7 +587,7 @@ const createWindow = async () => {
 
         let deeplink;
         try {
-            deeplink = await (0,_lib_deeplink_js__WEBPACK_IMPORTED_MODULE_6__.generateDeepLink)(
+            deeplink = await (0,_lib_deeplink_js__WEBPACK_IMPORTED_MODULE_7__.generateDeepLink)(
                 usrChain,
                 nodeURL,
                 operationNames,
@@ -526,7 +608,7 @@ const createWindow = async () => {
         "https://www.bitsharescan.info/",
         "https://github.com/bitshares/beet",
       ];
-    electron__WEBPACK_IMPORTED_MODULE_4__.ipcMain.on("openURL", (event, arg) => {
+    electron__WEBPACK_IMPORTED_MODULE_5__.ipcMain.on("openURL", (event, arg) => {
         try {
             const parsedUrl = new (url__WEBPACK_IMPORTED_MODULE_2___default().URL)(arg);
             const domain = parsedUrl.hostname;
@@ -537,7 +619,7 @@ const createWindow = async () => {
             });
 
             if (isSafeDomain) {
-                electron__WEBPACK_IMPORTED_MODULE_4__.shell.openExternal(arg);
+                electron__WEBPACK_IMPORTED_MODULE_5__.shell.openExternal(arg);
             } else {
                 console.error(
                     `Rejected opening URL with unsafe domain: ${domain}`
@@ -563,32 +645,32 @@ const createWindow = async () => {
     });
 };
 
-electron__WEBPACK_IMPORTED_MODULE_4__.app.disableHardwareAcceleration();
+electron__WEBPACK_IMPORTED_MODULE_5__.app.disableHardwareAcceleration();
 
 const currentOS = os__WEBPACK_IMPORTED_MODULE_1___default().platform();
 if (currentOS === "win32" || currentOS === "linux") {
     // windows + linux setup phase
-    const gotTheLock = electron__WEBPACK_IMPORTED_MODULE_4__.app.requestSingleInstanceLock();
+    const gotTheLock = electron__WEBPACK_IMPORTED_MODULE_5__.app.requestSingleInstanceLock();
 
     if (!gotTheLock) {
-        electron__WEBPACK_IMPORTED_MODULE_4__.app.quit();
+        electron__WEBPACK_IMPORTED_MODULE_5__.app.quit();
     }
 
-    electron__WEBPACK_IMPORTED_MODULE_4__.app.whenReady().then(() => {
+    electron__WEBPACK_IMPORTED_MODULE_5__.app.whenReady().then(() => {
         createWindow();
     });
 } else {
-    electron__WEBPACK_IMPORTED_MODULE_4__.app.whenReady().then(() => {
+    electron__WEBPACK_IMPORTED_MODULE_5__.app.whenReady().then(() => {
         createWindow();
     });
 
-    electron__WEBPACK_IMPORTED_MODULE_4__.app.on("window-all-closed", () => {
+    electron__WEBPACK_IMPORTED_MODULE_5__.app.on("window-all-closed", () => {
         if (process.platform !== "darwin") {
-            electron__WEBPACK_IMPORTED_MODULE_4__.app.quit();
+            electron__WEBPACK_IMPORTED_MODULE_5__.app.quit();
         }
     });
 
-    electron__WEBPACK_IMPORTED_MODULE_4__.app.on("activate", () => {
+    electron__WEBPACK_IMPORTED_MODULE_5__.app.on("activate", () => {
         if (mainWindow === null) {
             createWindow();
         }

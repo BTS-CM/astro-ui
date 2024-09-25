@@ -3,6 +3,8 @@ import os from "os";
 import url from "url";
 import express from "express";
 
+import {Apis} from "bitsharesjs-ws";
+
 import {
     app,
     BrowserWindow,
@@ -84,6 +86,84 @@ const createWindow = async () => {
 
     tray.on("right-click", (event, bounds) => {
         tray?.popUpContextMenu(contextMenu);
+    });
+
+    let stillAlive = true;
+    let continueFetching = true;
+    let latestBlockNumber = 0;
+    ipcMain.on("requestBlocks", async (event, arg) => {
+        const { url } = arg;
+        if (!stillAlive) {
+            return;
+        }
+
+        Apis.instance(url, true).init_promise.then(async (res) => {
+            console.log("connected to:", res[0].network);
+
+            let globalProperties;
+            try {
+                globalProperties = await Apis.instance().db_api().exec("get_dynamic_global_properties", []);
+            } catch (error) {
+                console.log({ error, location: "globalProperties", url });
+                return;
+            }
+    
+            latestBlockNumber = globalProperties.head_block_number;
+
+            const blockPromises = [];
+            for (let i = latestBlockNumber - 1; i > latestBlockNumber - 31; i--) {
+                blockPromises.push(Apis.instance().db_api().exec("get_block", [i]));
+            }
+
+            let lastFewBlocks = [];
+            try {
+                lastFewBlocks = await Promise.all(blockPromises);
+            } catch (error) {
+                console.log({ error });
+            }
+
+            for (let i = lastFewBlocks.length - 1; i >= 0; i--) {
+                mainWindow.webContents.send(
+                    "blockResponse",
+                    { ...lastFewBlocks[i], block: latestBlockNumber - 1 - i }
+                );
+            }
+    
+            const fetchBlocks = async () => {
+                while (continueFetching) {
+                    if (!stillAlive) {
+                        continueFetching = false;
+                        break;
+                    }
+                    let currentBlock;
+                    try {
+                        currentBlock = await Apis.instance().db_api().exec("get_block", [latestBlockNumber]);
+                    } catch (error) {
+                        console.log({ error });
+                        continueFetching = false;
+                        break;
+                    }
+                    mainWindow.webContents.send("blockResponse", {...currentBlock, block: latestBlockNumber});
+                    latestBlockNumber += 1;
+                    stillAlive = false;
+        
+                    await new Promise(resolve => setTimeout(resolve, 3000));
+                }
+        
+                if (!continueFetching) {
+                    Apis.instance().close();
+                }
+            };
+    
+            fetchBlocks();
+    
+            ipcMain.on("stillAlive", (event, arg) => {
+                stillAlive = true;
+            });
+
+        }).catch((err) => {
+            console.log({ err });
+        });
     });
 
     ipcMain.handle("fetchTopMarkets", async (event, arg) => {

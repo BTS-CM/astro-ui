@@ -1,0 +1,45 @@
+{
+  "cardTitle": "Live blockchain oversigt",
+  "cardDescription": "Bitshares blockchain har 3 sekunders blokeringstider og er i stand til at håndtere tusindvis af transaktioner i sekundet. ",
+  "currentBlock": {
+    "content": "Det seneste bloknummer.",
+    "header": "Nuværende blok"
+  },
+  "currentWitness": {
+    "content": "Vidnet, der fremstillede den seneste blok.",
+    "header": "Nuværende vidne"
+  },
+  "tps": {
+    "content": "Transaktioner pr. sekund i løbet af de sidste {{blockQty}} blokke.",
+    "header": "Transaktioner pr. sekund"
+  },
+  "uniqueWitnesses": {
+    "content": "Antal unikke vidner i de seneste blokke.",
+    "header": "Unikke Vidner"
+  },
+  "txPerBlock": {
+    "content": "Gennemsnitligt antal transaktioner pr. blok over den sidste {{blockQty}} blokke.",
+    "header": "Transaktioner pr. blok"
+  },
+  "recentFees": {
+    "content": "Samlede gebyrer opkrævet i sidste {{blockQty}} blokke.",
+    "header": "Seneste gebyrer"
+  },
+  "chart": {
+    "content": "Viser antallet af transaktioner pr. blok over den sidste {{blockQty}} blokke.",
+    "header": "Transaktioner pr. blok"
+  },
+  "recentActivity": {
+    "content": "Seneste aktivitet i blockchain.",
+    "header": "Seneste aktivitet"
+  },
+  "recentBlocks": {
+    "content": "Liste over seneste blokke.",
+    "header": "Nylige blokke"
+  },
+  "dialogContent": {
+    "json": "JSON-data",
+    "jsonDescription": "Detaljerede JSON-data for det valgte element.",
+    "copy": "Kopi"
+  }
+}

@@ -106,7 +106,6 @@ export default function ExternalLink(properties) {
                   </Button>
                 </a>
             }
-            
           </div>
         </DialogContent>
       </Dialog>

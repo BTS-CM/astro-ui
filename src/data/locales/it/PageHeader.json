@@ -64,7 +64,8 @@
     "create_vesting": "Utilizza questo modulo per creare un saldo di maturazione per qualsiasi account!",
     "uia": "Crea la tua risorsa emessa dall'utente con il modulo sottostante!",
     "issuedAssets": "Gestisci le risorse blockchain che hai creato nelle schede seguenti!",
-    "create_smartcoin": "Utilizza il modulo sottostante per creare un nuovo asset smartcoin."
+    "create_smartcoin": "Utilizza il modulo sottostante per creare un nuovo asset smartcoin.",
+    "blocks": "Visualizza i dati blockchain più recenti comodamente riepilogati di seguito!"
   },
   "back": "Torna indietro",
   "usage": "Progettato per l'uso con ",

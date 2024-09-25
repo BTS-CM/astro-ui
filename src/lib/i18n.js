@@ -50,7 +50,8 @@ const pages = [
   "CreateUIA",
   "IssuedAssets",
   "AssetCommon",
-  "CreateSmartcoin"
+  "CreateSmartcoin",
+  "LiveBlocks"
 ];
 
 const locale = persistentAtom("locale", "en");

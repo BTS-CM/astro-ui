@@ -63,7 +63,8 @@
     "create_vesting": "Brug denne formular til at oprette en optjeningssaldo for enhver konto!",
     "uia": "Opret dit eget brugerudstedte aktiv med formularen nedenfor!",
     "issuedAssets": "Administrer de blockchain-aktiver, du har oprettet, på fanerne nedenfor!",
-    "create_smartcoin": "Brug formularen nedenfor til at oprette et nyt smartcoin-aktiv."
+    "create_smartcoin": "Brug formularen nedenfor til at oprette et nyt smartcoin-aktiv.",
+    "blocks": "Se de seneste blockchain-data bekvemt opsummeret nedenfor!"
   },
   "back": "Gå tilbage",
   "usage": "Designet til brug med ",

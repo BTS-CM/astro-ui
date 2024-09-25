@@ -1,0 +1,45 @@
+{
+  "cardTitle": "라이브 블록체인 개요",
+  "cardDescription": "Bitshares 블록체인은 블록 시간이 3초이며 초당 수천 건의 거래를 처리할 수 있습니다. ",
+  "currentBlock": {
+    "content": "가장 최근의 블록 번호입니다.",
+    "header": "현재 블록"
+  },
+  "currentWitness": {
+    "content": "가장 최근의 블록을 생성한 증인입니다.",
+    "header": "현재 증인"
+  },
+  "tps": {
+    "content": "지난번에 대한 초당 트랜잭션 {{blockQty}} 블록.",
+    "header": "초당 트랜잭션"
+  },
+  "uniqueWitnesses": {
+    "content": "최근 블록의 고유 증인 수입니다.",
+    "header": "독특한 증인"
+  },
+  "txPerBlock": {
+    "content": "지난 기간 동안 블록당 평균 거래 수 {{blockQty}} 블록.",
+    "header": "블록당 거래"
+  },
+  "recentFees": {
+    "content": "지난번에 징수된 총 수수료 {{blockQty}} 블록.",
+    "header": "최근 수수료"
+  },
+  "chart": {
+    "content": "지난 블록당 거래 수 표시 {{blockQty}} 블록.",
+    "header": "블록당 거래"
+  },
+  "recentActivity": {
+    "content": "블록체인의 최근 활동.",
+    "header": "최근 활동"
+  },
+  "recentBlocks": {
+    "content": "최근 블록 목록.",
+    "header": "최근 블록"
+  },
+  "dialogContent": {
+    "json": "JSON 데이터",
+    "jsonDescription": "선택한 항목의 자세한 JSON 데이터입니다.",
+    "copy": "복사"
+  }
+}

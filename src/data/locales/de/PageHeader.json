@@ -64,7 +64,8 @@
     "create_vesting": "Verwenden Sie dieses Formular, um ein Sperrguthaben für jedes Konto zu erstellen!",
     "uia": "Erstellen Sie mit dem untenstehenden Formular Ihr eigenes, vom Benutzer ausgegebenes Asset!",
     "issuedAssets": "Verwalten Sie die von Ihnen erstellten Blockchain-Assets in den folgenden Registerkarten!",
-    "create_smartcoin": "Verwenden Sie das untenstehende Formular, um ein neues Smartcoin-Asset zu erstellen."
+    "create_smartcoin": "Verwenden Sie das untenstehende Formular, um ein neues Smartcoin-Asset zu erstellen.",
+    "blocks": "Sehen Sie sich die aktuellsten Blockchain-Daten bequem zusammengefasst unten an!"
   },
   "back": "Geh zurück",
   "usage": "Konzipiert für den Einsatz mit ",

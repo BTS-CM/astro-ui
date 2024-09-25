@@ -1,0 +1,45 @@
+{
+    "cardTitle": "Live blockchain overview",
+    "cardDescription": "The Bitshares blockchain has 3 second block times and is capable of handling thousands of transactions per second. This page provides a live overview of the blockchain.",
+    "currentBlock": {
+      "content": "The most recent block number.",
+      "header": "Current Block"
+    },
+    "currentWitness": {
+      "content": "The witness who produced the most recent block.",
+      "header": "Current Witness"
+    },
+    "tps": {
+      "content": "Transactions per second over the last {{blockQty}} blocks.",
+      "header": "Transactions Per Second"
+    },
+    "uniqueWitnesses": {
+      "content": "Number of unique witnesses in the recent blocks.",
+      "header": "Unique Witnesses"
+    },
+    "txPerBlock": {
+      "content": "Average number of transactions per block over the last {{blockQty}} blocks.",
+      "header": "Transactions Per Block"
+    },
+    "recentFees": {
+      "content": "Total fees collected in the last {{blockQty}} blocks.",
+      "header": "Recent Fees"
+    },
+    "chart": {
+      "content": "Displaying the number of transactions per block over the last {{blockQty}} blocks.",
+      "header": "Transactions per block"
+    },
+    "recentActivity": {
+      "content": "Recent activity in the blockchain.",
+      "header": "Recent Activity"
+    },
+    "recentBlocks": {
+      "content": "List of recent blocks.",
+      "header": "Recent Blocks"
+    },
+    "dialogContent": {
+      "json": "JSON Data",
+      "jsonDescription": "Detailed JSON data of the selected item.",
+      "copy": "Copy"
+    }
+  }

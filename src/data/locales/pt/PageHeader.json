@@ -64,7 +64,8 @@
     "create_vesting": "Use este formulário para criar um saldo de aquisição para qualquer conta!",
     "uia": "Crie seu próprio ativo emitido pelo usuário com o formulário abaixo!",
     "issuedAssets": "Gerencie os ativos blockchain que você criou nas guias abaixo!",
-    "create_smartcoin": "Use o formulário abaixo para criar um novo ativo smartcoin."
+    "create_smartcoin": "Use o formulário abaixo para criar um novo ativo smartcoin.",
+    "blocks": "Veja os dados mais recentes do blockchain convenientemente resumidos abaixo!"
   },
   "back": "Volte",
   "usage": "Projetado para uso com ",
