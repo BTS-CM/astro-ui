@@ -117,6 +117,13 @@
     "hover2": "Edite los activos que ha creado en blockchain.",
     "hover3": "Opcionalmente, emita una cantidad de sus activos creados."
   },
+  "blocks": {
+    "title": "💾 Datos de cadena de bloques",
+    "subtitle": "Ver los datos resumidos de blockchain más recientes",
+    "hover1": "Tablas de datos en vivo de actividad reciente y bloques recientes.",
+    "hover2": "Gráfico en vivo del recuento de transacciones en bloque recientes.",
+    "hover3": "Promedios y totales de datos resumidos de blockchain."
+  },
   "create_prediction": {
     "title": "🔮 Activo del mercado de predicción",
     "subtitle": "Crea una apuesta sobre cualquier cosa.",

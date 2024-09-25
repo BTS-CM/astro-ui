@@ -117,6 +117,13 @@
     "hover2": "Bearbeiten Sie die Assets, die Sie in der Blockchain erstellt haben.",
     "hover3": "Geben Sie optional eine Menge Ihrer erstellten Vermögenswerte aus."
   },
+  "blocks": {
+    "title": "💾 Blockchain-Daten",
+    "subtitle": "Sehen Sie sich die neuesten zusammengefassten Blockchain-Daten an",
+    "hover1": "Aktuelle Aktivitäten und aktuelle Block-Live-Datentabellen.",
+    "hover2": "Aktuelles Live-Diagramm zur Anzahl der Blocktransaktionen.",
+    "hover3": "Zusammengefasste Durchschnitts- und Gesamtwerte der Blockchain-Daten."
+  },
   "create_prediction": {
     "title": "🔮 Vorhersage des Marktwerts",
     "subtitle": "Erstellen Sie eine Wette über alles",

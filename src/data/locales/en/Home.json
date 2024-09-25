@@ -117,6 +117,13 @@
     "hover2": "Edit the assets you've created on the blockchain.",
     "hover3": "Optionally issue a quantity of your created assets."
   },
+  "blocks": {
+    "title": "💾 Blockchain data",
+    "subtitle": "View the most recent summarized blockchain data",
+    "hover1": "Recent activity and recent block live data tables.",
+    "hover2": "Recent block transaction count live chart.",
+    "hover3": "Summarized blockchain data averages and totals."
+  },
   "create_prediction": {
     "title": "🔮 Prediction Market Asset",
     "subtitle": "Create a bet about anything",
