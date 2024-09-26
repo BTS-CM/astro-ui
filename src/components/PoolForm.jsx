@@ -3,6 +3,8 @@ import Fuse from "fuse.js";
 import { useForm } from "react-hook-form";
 import { FixedSizeList as List } from "react-window";
 import { useStore } from '@nanostores/react';
+import { sha256 } from '@noble/hashes/sha2';
+import { bytesToHex as toHex } from '@noble/hashes/utils';
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
@@ -67,6 +69,7 @@ import {
 } from "@/stores/cache.ts";
 import { $currentUser } from "@/stores/users.ts";
 import { $currentNode } from "@/stores/node.ts";
+import { $blockList } from "@/stores/blocklist.ts";
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
 import { createPoolAssetStore } from "@/nanoeffects/Assets.ts";
@@ -90,6 +93,7 @@ export default function PoolForm() {
   const [pool, setPool] = useState("");
 
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
+  const blocklist = useSyncExternalStore($blockList.subscribe, $blockList.get, () => true);
 
   const _assetsBTS = useSyncExternalStore($assetCacheBTS.subscribe, $assetCacheBTS.get, () => true);
   const _assetsTEST = useSyncExternalStore(
@@ -135,18 +139,38 @@ export default function PoolForm() {
   useInitCache(_chain ?? "bitshares", ["marketSearch", "assets", "pools", "globalParams"]);
 
   const assets = useMemo(() => {
-    if (_chain && (_assetsBTS || _assetsTEST)) {
-      return _chain === "bitshares" ? _assetsBTS : _assetsTEST;
+    if (!_chain || (!_assetsBTS && !_assetsTEST)) {
+      return [];
     }
-    return [];
-  }, [_assetsBTS, _assetsTEST, _chain]);
+  
+    if (_chain !== "bitshares") {
+      return _assetsTEST;
+    }
+  
+    const relevantAssets = _assetsBTS.filter((asset) => {
+      return !blocklist.users.includes(toHex(sha256(asset.issuer)));
+    });
+  
+    return relevantAssets;
+  }, [blocklist, _assetsBTS, _assetsTEST, _chain]);
 
   const pools = useMemo(() => {
-    if (_chain && (_poolsBTS || _poolsTEST)) {
-      return _chain === "bitshares" ? _poolsBTS : _poolsTEST;
+    if (!_chain || (!_poolsBTS && !_poolsTEST)) {
+      return [];
     }
-    return [];
-  }, [_poolsBTS, _poolsTEST, _chain]);
+  
+    if (_chain !== "bitshares") {
+      return _poolsTEST;
+    }
+  
+    const relevantPools = _poolsBTS.filter((pool) => {
+      const poolShareAsset = assets.find((asset) => asset.id === pool.share_asset_id);
+      if (!poolShareAsset) return false;
+      return !blocklist.users.includes(toHex(sha256(poolShareAsset.issuer)));
+    });
+  
+    return relevantPools;
+  }, [assets, blocklist, _poolsBTS, _poolsTEST, _chain]);
 
   const marketSearch = useMemo(() => {
     if (_chain && (_marketSearchBTS || _marketSearchTEST)) {

@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useSyncExternalStore, useMemo } from "react";
 import { FixedSizeList as List } from "react-window";
 import { useStore } from '@nanostores/react';
+import { sha256 } from '@noble/hashes/sha2';
+import { bytesToHex as toHex } from '@noble/hashes/utils';
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
@@ -35,6 +37,7 @@ import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 import { createAccountLimitOrderStore } from "@/nanoeffects/AccountLimitOrders.ts";
 
 import { $currentUser } from "@/stores/users.ts";
+import { $blockList } from "@/stores/blocklist.ts";
 import { $currentNode } from "@/stores/node.ts";
 import { $poolCacheBTS, $poolCacheTEST } from "@/stores/cache.ts";
 
@@ -68,6 +71,7 @@ function RowHyperlink({ id, share_asset_symbol, asset_a_symbol, asset_b_symbol }
 export default function PortfolioTabs(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
+  const blocklist = useSyncExternalStore($blockList.subscribe, $blockList.get, () => true);
   const currentNode = useStore($currentNode);
 
   const [sortType, setSortType] = useState("default");
@@ -90,18 +94,38 @@ export default function PortfolioTabs(properties) {
   }, [usr]);
 
   const pools = useMemo(() => {
-    if (usr && usr.chain && (_poolsBTS || _poolsTEST)) {
-      return usr.chain === "bitshares" ? _poolsBTS : _poolsTEST;
+    if (!_chain || (!_poolsBTS && !_poolsTEST)) {
+      return [];
     }
-    return [];
-  }, [_poolsBTS, _poolsTEST, _chain]);
+  
+    if (_chain !== "bitshares") {
+      return _poolsTEST;
+    }
+  
+    const relevantPools = _poolsBTS.filter((pool) => {
+      const poolShareAsset = assets.find((asset) => asset.id === pool.share_asset_id);
+      if (!poolShareAsset) return false;
+      return !blocklist.users.includes(toHex(sha256(poolShareAsset.issuer)));
+    });
+  
+    return relevantPools;
+  }, [assets, blocklist, _poolsBTS, _poolsTEST, _chain]);
 
   const assets = useMemo(() => {
-    if (_chain && (_assetsBTS || _assetsTEST)) {
-      return _chain === "bitshares" ? _assetsBTS : _assetsTEST;
+    if (!_chain || (!_assetsBTS && !_assetsTEST)) {
+      return [];
     }
-    return [];
-  }, [_assetsBTS, _assetsTEST, _chain]);
+  
+    if (_chain !== "bitshares") {
+      return _assetsTEST;
+    }
+  
+    const relevantAssets = _assetsBTS.filter((asset) => {
+      return !blocklist.users.includes(toHex(sha256(asset.issuer)));
+    });
+  
+    return relevantAssets;
+  }, [blocklist, _assetsBTS, _assetsTEST, _chain]);
 
   useInitCache(_chain ?? "bitshares", ["assets", "pools"]);
 

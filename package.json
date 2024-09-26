@@ -56,6 +56,7 @@
     "@nanostores/persistent": "^0.10.2",
     "@nanostores/query": "^0.3.4",
     "@nanostores/react": "^0.7.3",
+    "@noble/hashes": "^1.5.0",
     "@radix-ui/react-accordion": "^1.2.0",
     "@radix-ui/react-alert-dialog": "^1.1.1",
     "@radix-ui/react-aspect-ratio": "^1.1.0",

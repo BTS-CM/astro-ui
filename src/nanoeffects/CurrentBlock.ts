@@ -37,8 +37,6 @@ async function getCurrentBlock(chain: string, specificNode?: string | null) {
       reject();
       return;
     }
-
-    console.log({dynamicGlobalProperties});
     
     let currentBlock;
     try {
@@ -46,8 +44,6 @@ async function getCurrentBlock(chain: string, specificNode?: string | null) {
     } catch (error) {
       console.log({ error });
     }
-
-    console.log({currentBlock});
 
     currentAPI.close();
 

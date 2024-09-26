@@ -20,17 +20,16 @@ const $blockList = persistentMap<StoredBlocklist>(
           return JSON.parse(value);
         } catch (e) {
           console.log(e);
-          return value;
+          return { users: [], timestamp: 0 };
         }
       },
     }
 );
 
 function updateBlockList(users: string[]) {
-    $blockList.set({
-        users,
-        timestamp: Date.now(),
-    });
+  console.log("Updating blocklist");
+  $blockList.setKey("users", users);
+  $blockList.setKey("timestamp", Date.now());
 }
 
 export { $blockList, updateBlockList };

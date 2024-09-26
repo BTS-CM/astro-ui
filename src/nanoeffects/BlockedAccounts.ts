@@ -2,11 +2,12 @@ import { nanoquery } from "@nanostores/query";
 import Apis from "@/bts/ws/ApiInstances";
 import { chains } from "@/config/chains";
 
-import * as hash from "@/bts/ecc/hash.js";
+import { sha256 } from '@noble/hashes/sha2';
+import { bytesToHex as toHex } from '@noble/hashes/utils';
 
 import { $blockList } from "@/stores/blocklist";
 
-async function getBlockedaccounts (chain: string) {
+async function getBlockedaccounts (chain: string, node: string) {
     return new Promise(async (resolve, reject) => {
 
         let _existingBlockList = $blockList.get();
@@ -18,8 +19,6 @@ async function getBlockedaccounts (chain: string) {
             resolve(_existingBlockList.users);
             return;
         }
-
-        let node = (chains as any)[chain].nodeList[0].url;
 
         let currentAPI;
         try {
@@ -48,7 +47,8 @@ async function getBlockedaccounts (chain: string) {
 
         const blockedList = committeeAccount[0].blacklisted_accounts;
 
-        let hashedBlockList = blockedList.map((account: string) => hash.sha256(account, "hex"));
+        // [1.2.x, ...] -> hex string
+        let hashedBlockList = blockedList.map((account: string) => toHex(sha256(account)));
     
         resolve(hashedBlockList);
     });
@@ -57,10 +57,11 @@ async function getBlockedaccounts (chain: string) {
 const [createBlockedAccountStore] = nanoquery({
     fetcher: async (...args: unknown[]) => {
         const chain = args[0] as string;
+        const node = args[1] ? (args[1] as string) : (chains as any)[chain].nodeList[0].url;
 
         let response;
         try {
-            response = await getBlockedaccounts(chain);
+            response = await getBlockedaccounts(chain, node);
         } catch (error) {
             console.log({ error });
             return;

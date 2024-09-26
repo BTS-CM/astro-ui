@@ -18,12 +18,43 @@ import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/h
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
 import { $currentUser } from "@/stores/users.ts";
+import { $currentNode } from "@/stores/node.ts";
+import { $blockList, updateBlockList } from "@/stores/blocklist.ts";
+
+import { createBlockedAccountStore } from "@/nanoeffects/BlockedAccounts.ts";
 
 export default function Home(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
+  const blocklist = useSyncExternalStore($blockList.subscribe, $blockList.get, () => true);
+  const currentNode = useStore($currentNode);
 
   useInitCache(usr && usr.chain ? usr.chain : "bitshares", []);
+
+  useEffect(() => {
+    if (
+      blocklist && blocklist.timestamp &&
+      usr && usr.chain && usr.chain === "bitshares" && // production only block list
+      currentNode && currentNode.url
+    ) {
+      const currentTime = Date.now();
+      const isOlderThan24Hours = currentTime - blocklist.timestamp > 24 * 60 * 60 * 1000;
+      if (isOlderThan24Hours || !blocklist.users.length) {
+        const blockListStore = createBlockedAccountStore([usr.chain, currentNode.url]);
+        const unsub = blockListStore.subscribe((result) => {
+          if (result.error) {
+            console.error(result.error);
+          }
+          if (!result.loading && result.data) {
+            updateBlockList(result.data);
+          }
+        });
+        return () => {
+          unsub();
+        };
+      }
+    }
+  }, [usr, currentNode]);
 
   return (
     <div className="container mx-auto mt-3 mb-5">

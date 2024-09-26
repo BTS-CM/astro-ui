@@ -2,6 +2,8 @@ import React, { useSyncExternalStore, useMemo, useEffect, useState } from "react
 import { FixedSizeList as List } from "react-window";
 import { useStore } from '@nanostores/react';
 import { format } from "date-fns";
+import { sha256 } from '@noble/hashes/sha2';
+import { bytesToHex as toHex } from '@noble/hashes/utils';
 import DOMPurify from 'dompurify';
 import {
   QuestionMarkCircledIcon,
@@ -52,6 +54,7 @@ import {
 } from "@/components/ui/dialog";
 
 import { $currentUser } from "@/stores/users.ts";
+import { $blockList } from "@/stores/blocklist.ts";
 import { $currentNode } from "@/stores/node.ts";
 import { $assetCacheBTS, $assetCacheTEST } from "@/stores/cache.ts";
 import { $marketSearchCacheBTS, $marketSearchCacheTEST } from "@/stores/cache.ts";
@@ -88,6 +91,7 @@ function prettifyDate(date) {
 export default function Predictions(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
+  const blocklist = useSyncExternalStore($blockList.subscribe, $blockList.get, () => true);
   const currentNode = useStore($currentNode);
 
   const [view, setView] = useState("active"); // active, expired, mine
@@ -163,11 +167,24 @@ export default function Predictions(properties) {
   }, [_chain, assets, currentNode]);
 
   const predictionMarketAssets = useMemo(() => {
-    return combinedAssets.filter(
+    if (!_chain || !combinedAssets || !combinedAssets.length) {
+      return [];
+    }
+
+    let _predictionMarketAssets = combinedAssets.filter(
       (x) => (x.hasOwnProperty("prediction_market") && x.prediction_market === true) ||
       (!x.hasOwnProperty("prediction_market") && x.bitasset_data_id) // non cached assets minus non-pm smartcoins
     );
-  }, [combinedAssets]);
+
+    if (_chain === "bitshares" && _predictionMarketAssets.length) {
+      // filter out prediction market assets created by banned users
+      _predictionMarketAssets = _predictionMarketAssets.filter(
+        (x) => !blocklist.users.includes(toHex(sha256(x.issuer)))
+      );
+    }
+
+    return _predictionMarketAssets;
+  }, [_chain, combinedAssets]);
 
   const [pmaProcessedData, setPmaProcessedData] = useState([]);
   useEffect(() => {

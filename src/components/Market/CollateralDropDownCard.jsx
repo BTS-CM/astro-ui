@@ -1,14 +1,14 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useSyncExternalStore } from "react";
 import Fuse from "fuse.js";
 import { FixedSizeList as List } from "react-window";
+import { sha256 } from '@noble/hashes/sha2';
+import { bytesToHex as toHex } from '@noble/hashes/utils';
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
 import {
   Card,
-  CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -16,22 +16,15 @@ import {
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
-import { Avatar as Av, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Slider } from "@/components/ui/slider";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Separator } from "@/components/ui/separator";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+
+import { $blockList } from "@/stores/blocklist.ts";
 
 /**
  * Creating an asset dropdown component
@@ -41,15 +34,32 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
  * @returns {JSX.Element}
  */
 export default function CollateralDropDownCard(properties) {
-  const { chosenAssets, lendingAsset, marketSearch, storeCallback } = properties;
+  const { chosenAssets, lendingAsset, marketSearch, storeCallback, chain } = properties;
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
+  const blocklist = useSyncExternalStore($blockList.subscribe, $blockList.get, () => true);
 
   const fuse = useMemo(() => {
-    return new Fuse(
-      marketSearch.filter(
+    let marketSearchContents;
+
+    if (!marketSearch || !marketSearch.length) {
+      marketSearchContents = [];
+    } else {
+      marketSearchContents = marketSearch.filter(
         (asset) =>
           !chosenAssets.find((chosen) => chosen.symbol === asset.s) && asset.s !== lendingAsset
-      ),
+      );
+    }
+  
+    if (chain === "bitshares" && blocklist && blocklist.users) {
+      marketSearchContents = marketSearchContents.filter(
+        (asset) => !blocklist.users.includes(
+          toHex(sha256(asset.u.split(" ")[1].replace("(", "").replace(")", "")))
+        ),
+      );
+    }
+
+    return new Fuse(
+      marketSearchContents,
       {
         includeScore: true,
         keys: [

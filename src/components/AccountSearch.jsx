@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useSyncExternalStore } from "react";
 import { useStore } from '@nanostores/react';
+import { sha256 } from '@noble/hashes/sha2';
+import { bytesToHex as toHex } from '@noble/hashes/utils';
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
@@ -17,11 +19,15 @@ import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/Avatar.tsx";
 
 import { accountSearch } from "@/nanoeffects/UserSearch.ts";
+import { $currentUser } from "@/stores/users.ts";
+import { $blockList } from "@/stores/blocklist.ts";
 import { $currentNode } from "@/stores/node.ts";
 
 export default function AccountSearch(properties) {
   const { chain, excludedUsers, setChosenAccount } = properties;
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
+  const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
+  const blocklist = useSyncExternalStore($blockList.subscribe, $blockList.get, () => true);
   const currentNode = useStore($currentNode);
 
   const [accountInput, setAccountInput] = useState();
@@ -51,6 +57,24 @@ export default function AccountSearch(properties) {
     }
 
     setInProgress(false);
+
+    if (response && response.id) {
+      if (usr.chain === "bitshares") {
+        let hashedID;
+        try {
+          hashedID = toHex(sha256(response.id));
+        } catch (error) {
+          console.log({error})
+        }
+        if (hashedID && blocklist.users.includes(hashedID)) {
+          setErrorMessage(t("AccountSelect:noAccount"));
+          return;
+        }
+      }
+    } else {
+      setErrorMessage(t("AccountSelect:noAccount"));
+    }
+
     setSearchResponse(response);
   }
 
@@ -106,10 +130,7 @@ export default function AccountSearch(properties) {
                 key={searchResponse.id}
                 className="mb-2 mt-1 text-center"
                 onClick={() => {
-                  setChosenAccount({
-                    name: searchResponse.name,
-                    id: searchResponse.id,
-                  });
+                  setChosenAccount({ name: searchResponse.name, id: searchResponse.id });
                 }}
               >
                 <div className="grid grid-cols-4">
@@ -160,10 +181,7 @@ export default function AccountSearch(properties) {
                   <Button
                     variant="outline"
                     onClick={() => {
-                      setChosenAccount({
-                        name: searchResponse.name,
-                        id: searchResponse.id,
-                      });
+                      setChosenAccount({ name: searchResponse.name, id: searchResponse.id });
                     }}
                   >
                     {t("AccountSearch:searchResponse.proceed")}

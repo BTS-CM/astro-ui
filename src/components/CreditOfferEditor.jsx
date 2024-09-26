@@ -1093,6 +1093,7 @@ export default function CreditOfferEditor(properties) {
                               }
                               marketSearch={marketSearch}
                               storeCallback={setAcceptableCollateral}
+                              chain={usr && usr.chain ? usr.chain : "bitshares"}
                             />
                           </span>
                         </span>

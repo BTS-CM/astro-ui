@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useSyncExternalStore, useMemo, useCallback } from "react";
 import { FixedSizeList as List } from "react-window";
 import Fuse from "fuse.js";
+import { sha256 } from '@noble/hashes/sha2';
+import { bytesToHex as toHex } from '@noble/hashes/utils';
 import { useStore } from '@nanostores/react';
 import { useTranslation } from "react-i18next";
 
@@ -23,6 +25,7 @@ import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 import { useInitCache } from "@/nanoeffects/Init.ts";
 
 import { $currentUser } from "@/stores/users.ts";
+import { $blockList } from "@/stores/blocklist.ts";
 import { $currentNode } from "@/stores/node.ts";
 import {
   $assetCacheBTS,
@@ -51,6 +54,8 @@ const isValid = (str) => /^[a-zA-Z0-9.-]+$/.test(str);
 export default function CreditBorrow(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
+  const blocklist = useSyncExternalStore($blockList.subscribe, $blockList.get, () => true);
+
   const currentNode = useStore($currentNode);
 
   const _assetsBTS = useSyncExternalStore($assetCacheBTS.subscribe, $assetCacheBTS.get, () => true);
@@ -89,9 +94,19 @@ export default function CreditBorrow(properties) {
 
   const offers = useMemo(() => {
     if (_chain && (_offersBTS || _offersTEST)) {
-      return _chain === "bitshares"
+      let currentOffers = _chain === "bitshares"
         ? _offersBTS.filter((x) => hoursTillExpiration(x.auto_disable_time) >= 0)
         : _offersTEST.filter((x) => hoursTillExpiration(x.auto_disable_time) >= 0);
+      
+      if (_chain === "bitshares" && blocklist && blocklist.users) {
+        // Discard offers from banned users
+        currentOffers = currentOffers.filter(
+          (offer) => !blocklist.users.includes(toHex(sha256(offer.owner_account)))
+        );
+      }
+
+      return currentOffers;
+
     }
     return [];
   }, [_offersBTS, _offersTEST, _chain]);
