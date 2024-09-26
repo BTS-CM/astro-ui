@@ -90,16 +90,22 @@ const createWindow = async () => {
 
     let stillAlive = true;
     let continueFetching = true;
+    let activeBlockchainConnection = false;
+    let killBlockchainConnection = false;
     let latestBlockNumber = 0;
+    let isFetching = false;
+    
     ipcMain.on("requestBlocks", async (event, arg) => {
         const { url } = arg;
-        if (!stillAlive) {
-            return;
+    
+        if (isFetching) {
+            continueFetching = false;
+            await new Promise(resolve => setTimeout(resolve, 3100)); // Wait for the current fetching to stop
         }
-
+    
         Apis.instance(url, true).init_promise.then(async (res) => {
             console.log("connected to:", res[0].network);
-
+    
             let globalProperties;
             try {
                 globalProperties = await Apis.instance().db_api().exec("get_dynamic_global_properties", []);
@@ -109,19 +115,19 @@ const createWindow = async () => {
             }
     
             latestBlockNumber = globalProperties.head_block_number;
-
+    
             const blockPromises = [];
             for (let i = latestBlockNumber - 1; i > latestBlockNumber - 31; i--) {
                 blockPromises.push(Apis.instance().db_api().exec("get_block", [i]));
             }
-
+    
             let lastFewBlocks = [];
             try {
                 lastFewBlocks = await Promise.all(blockPromises);
             } catch (error) {
                 console.log({ error });
             }
-
+    
             for (let i = lastFewBlocks.length - 1; i >= 0; i--) {
                 mainWindow.webContents.send(
                     "blockResponse",
@@ -130,6 +136,7 @@ const createWindow = async () => {
             }
     
             const fetchBlocks = async () => {
+                isFetching = true;
                 while (continueFetching) {
                     if (!stillAlive) {
                         continueFetching = false;
@@ -143,16 +150,17 @@ const createWindow = async () => {
                         continueFetching = false;
                         break;
                     }
-                    mainWindow.webContents.send("blockResponse", {...currentBlock, block: latestBlockNumber});
+                    mainWindow.webContents.send("blockResponse", { ...currentBlock, block: latestBlockNumber });
                     latestBlockNumber += 1;
                     stillAlive = false;
-        
-                    await new Promise(resolve => setTimeout(resolve, 3000));
+    
+                    await new Promise(resolve => setTimeout(resolve, 4200));
                 }
-        
+    
                 if (!continueFetching) {
                     Apis.instance().close();
                 }
+                isFetching = false;
             };
     
             fetchBlocks();
@@ -160,7 +168,7 @@ const createWindow = async () => {
             ipcMain.on("stillAlive", (event, arg) => {
                 stillAlive = true;
             });
-
+    
         }).catch((err) => {
             console.log({ err });
         });

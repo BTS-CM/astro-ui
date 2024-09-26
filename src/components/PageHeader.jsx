@@ -231,12 +231,12 @@ export default function PageHeader(properties) {
                       />
                       <MenuRow
                         url="/create_uia/index.html"
-                        text={t("PageHeader:createUIA")}
+                        text={t("PageHeader:create_uia")}
                         icon="🍬"
                       />
                       <MenuRow
                         url="/create_smartcoin/index.html"
-                        text={t("PageHeader:createSmartCoin")}
+                        text={t("PageHeader:create_smartcoin")}
                         icon="💷"
                       />
                     </CommandGroup>

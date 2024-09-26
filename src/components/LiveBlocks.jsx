@@ -1,7 +1,12 @@
 import React, { useState, useEffect, useMemo, useSyncExternalStore, act } from "react";
 import { useStore } from '@nanostores/react';
 import { FixedSizeList as List } from "react-window";
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import {
+  Bar,
+  BarChart,
+  XAxis,
+  CartesianGrid
+} from "recharts";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
@@ -33,9 +38,7 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   ChartContainer,
   ChartTooltip,
-  ChartTooltipContent,
-  ChartLegend,
-  ChartLegendContent
+  ChartTooltipContent
 } from "@/components/ui/chart";
 
 import HoverInfo from "@/components/common/HoverInfo.tsx";
@@ -55,7 +58,13 @@ const RecentBlocksBarChart = ({ data }) => {
         <CartesianGrid vertical={false} />
         <XAxis dataKey="block" tickLine={false} tickMargin={5} axisLine={false} tick={false} />
         <ChartTooltip className="bg-white" content={<ChartTooltipContent />} />
-        <Bar dataKey="trxQuantity" fill="var(--chart-1)" radius={2} />
+        <Bar 
+          dataKey="trxQuantity" 
+          fill="var(--chart-1)" 
+          radius={2} 
+          animationDuration={500} 
+          animationEasing="ease-in-out" 
+        />
       </BarChart>
     </ChartContainer>
   );
@@ -83,13 +92,9 @@ export default function LiveBlocks(properties) {
     // on ipc render process
     window.electron.requestBlocks({url: currentNode.url});
     window.electron.onBlockResponse((data) => {
+      if (recentBlocks.find((x) => x.block === data.block)) return;
       setRecentBlocks((prevBlocks) => {
-        const newBlocks = [...prevBlocks];
-        if (newBlocks.length > 100) {
-          newBlocks.pop(); // Remove the oldest item
-        }
-        newBlocks.push(data);
-        return newBlocks;
+        return [...prevBlocks, data];
       });
       window.electron.stillAlive({});
     });
@@ -260,7 +265,7 @@ export default function LiveBlocks(properties) {
                         ? <span
                             className="hover:text-purple-500"
                             onClick={() => {
-                              setHyperlink(`https://blocksights.info/#/witness/${block.witness}`);
+                              setHyperlink(`https://blocksights.info/#/witness/${recentBlocks[0].witness}`);
                               setOpenHyperlink(true);
                             }}
                           >

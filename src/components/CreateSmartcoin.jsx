@@ -6,8 +6,9 @@ import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea"
-import { Separator } from "@/components/ui/separator"
+import { Textarea } from "@/components/ui/textarea";
+import { Separator } from "@/components/ui/separator";
+import { Label } from "@/components/ui/label";
 
 import {
     Dialog,
@@ -61,6 +62,35 @@ import {
     blockchainFloat,
     getFlagBooleans
 } from "@/lib/common.js";
+
+
+function getImages(nft_object) {
+    if (!nft_object) return [];
+    const object_keys = Object.keys(nft_object);
+    if (object_keys.find((x) => x.includes("media_") && x.includes("_multihashes"))) {
+      return (
+        object_keys
+          .filter((key) => key.includes("media_") && key.includes("_multihashes"))
+          .map((key) => {
+            const current = nft_object[key];
+            const type = key.split("_")[1].toUpperCase();
+            return current.map((image) => ({ url: image.url, type }));
+          })
+          .flat() || []
+      );
+    }
+  
+    return (
+      object_keys
+        .filter((key) => key.includes("media_") && !key.includes("_multihash"))
+        .map((key) => {
+          const current = nft_object[key];
+          const type = key.split("_")[1].toUpperCase();
+          return { url: current, type };
+        })
+        .flat() || []
+    );
+}
 
 export default function CreateSmartcoin(properties) {
     const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
@@ -311,6 +341,22 @@ export default function CreateSmartcoin(properties) {
     const [cerBaseAmount, setCerBaseAmount] = useState(1);
     const [cerQuoteAmount, setCerQuoteAmount] = useState(1);
 
+    // NFT info
+    const [enabledNFT, setEnabledNFT] = useState(false);
+    const [acknowledgements, setAcknowledgements] = useState("");
+    const [artist, setArtist] = useState("");
+    const [attestation, setAttestation] = useState("");
+    const [holderLicense, setHolderLicense] = useState("");
+    const [license, setLicense] = useState("");
+    const [narrative, setNarrative] = useState("");
+    const [title, setTitle] = useState("");
+    const [tags, setTags] = useState("");
+    const [type, setType] = useState("NFT/ART/VISUAL");
+
+    const [nftMedia, setNFTMedia] = useState([]);
+    const [newMediaType, setNewMediaType] = useState("");
+    const [newMediaUrl, setNewMediaUrl] = useState("");
+
     // BSIP48 extensions to asset_update
     const [optedSkipCER, setOptedSkipCER] = useState(false); // skip_core_exchange_rate
     const [hasUpdatedPrecision, setHasUpdatedPrecision] = useState(false); // asset_update extension if supply == 0
@@ -338,15 +384,68 @@ export default function CreateSmartcoin(properties) {
     const [forceSettleFeePercent, setForceSettleFeePercent] = useState(0);
 
     const description = useMemo(() => {
-        let _desc = {
-            main: desc,
-            short_name: shortName,
-            market
-        };
-        // TODO: Optional NFT data
-        // _desc["nft_object"] = ...
-        return JSON.stringify(_desc);
-    }, [desc, market, shortName]);
+        let _description = { main: desc, short_name: shortName, market };
+
+        if (enabledNFT) {
+            const nft_object = {
+                acknowledgements: acknowledgements,
+                artist: artist,
+                attestation: attestation,
+                encoding: "ipfs",
+                holder_license: holderLicense,
+                license: license,
+                narrative: narrative,
+                title: title,
+                tags: tags,
+                type: type,
+            };
+    
+            nftMedia.forEach((image) => {
+                // Supports png, jpeg & gif, following the NFT spec
+                const imageType = image.type;
+                if (!nft_object[`media_${imageType}_multihash`]) {
+                    // only the first image is used for the main image
+                    nft_object[`media_${imageType}_multihash`] = image.url;
+                }
+        
+                const sameTypeFiles = nftMedia.filter((img) => img.type === imageType);
+                if (sameTypeFiles && sameTypeFiles.length > 1) {
+                    if (!nft_object[`media_${imageType}_multihashes`]) {
+                    // initialise the ipfs multihashes array
+                    nft_object[`media_${imageType}_multihashes`] = [
+                        {
+                        url: image.url,
+                        },
+                    ];
+                    } else {
+                    // add the image to the ipfs multihashes array
+                    nft_object[`media_${imageType}_multihashes`].push({
+                        url: image.url,
+                    });
+                    }
+                }
+            });
+
+            _description["nft_object"] = nft_object;
+        }
+
+        return JSON.stringify(_description);
+    }, [
+        // NFT dependencies
+        enabledNFT,
+        acknowledgements,
+        artist,
+        attestation,
+        holderLicense,
+        license,
+        narrative,
+        title,
+        tags,
+        type,
+        nftMedia,
+        // Asset dependencies
+        desc, market, shortName
+    ]);
 
     const [editing, setEditing] = useState(false); // editing mode
     const [hasEditedAssetOptions, setHasEditedAssetOptions] = useState(false); // asset options edited
@@ -959,6 +1058,27 @@ export default function CreateSmartcoin(properties) {
                     const parsedJSON = desc && desc.length && desc.includes("main")
                         ? JSON.parse(desc)
                         : null;
+                    
+                    if (parsedJSON && parsedJSON.hasOwnProperty("nft_object")) {
+                        const nft_object = parsedJSON.nft_object;
+
+                        if (nft_object) {
+                            setAcknowledgements(nft_object.acknowledgements);
+                            setArtist(nft_object.artist);
+                            setAttestation(nft_object.attestation);
+                            setHolderLicense(nft_object.holder_license);
+                            setLicense(nft_object.license);
+                            setNarrative(nft_object.narrative);
+                            setTitle(nft_object.title);
+                            setTags(nft_object.tags);
+                            setType(nft_object.type);
+
+                            setEnabledNFT(true);
+
+                            setNFTMedia(getImages(nft_object));
+                        }
+                    }
+
                     setShortName(parsedJSON && parsedJSON.short_name ? parsedJSON.short_name : "");
                     setDesc(parsedJSON && parsedJSON.main ? parsedJSON.main : "");
                     setMarket(parsedJSON && parsedJSON.market ? parsedJSON.market : "");
@@ -1164,6 +1284,47 @@ export default function CreateSmartcoin(properties) {
             fetching(params.id);
         }
     }, []);
+
+    const MediaRow = ({ index, style }) => {
+        if (!nftMedia || !nftMedia.length || !nftMedia[index]) {
+            return;
+        }
+
+        let res = nftMedia[index];
+
+        return (
+            <div style={{ ...style }} key={`dialogrow-${index}`} className="grid grid-cols-4">
+                <div className="col-span-1">{res.type}</div>
+                <div className="col-span-1">
+                    <Dialog>
+                        <DialogTrigger>
+                        <Button className="h-5" variant="outline">
+                            Full URL
+                        </Button>
+                        </DialogTrigger>
+                        <DialogContent className="bg-white w-full max-w-4xl bg-gray-100">
+                        <DialogHeader>
+                            <DialogTitle>Full IPFS URL</DialogTitle>
+                        </DialogHeader>
+                        <p>{res.url}</p>
+                        </DialogContent>
+                    </Dialog>
+                </div>
+                <div className="col-span-1">{res.url.split("/").pop()}</div>
+                <div className="col-span-1">
+                    <Button
+                        variant="outline"
+                        className="w-5 h-5"
+                        onClick={() => {
+                        setNFTMedia(nftMedia.filter((x) => x.url !== res.url));
+                        }}
+                    >
+                        ❌
+                    </Button>
+                </div>
+            </div>
+        );
+    };
 
     return (
         <>
@@ -2618,6 +2779,357 @@ export default function CreateSmartcoin(properties) {
         
                                             <Separator className="my-4 mt-5" />
                                         </div>
+                                        : null
+                                }
+
+<div className="col-span-2 grid grid-cols-2">
+                                    <HoverInfo
+                                        content={t("AssetCommon:nft.main_header_content")}
+                                        header={t("AssetCommon:nft.main_header")}
+                                        type="header"
+                                    />
+                                    <div className={`text-right mb-${!enabledNFT ? 5 : 1}`}>
+                                        {
+                                            !enabledNFT
+                                                ? <Button
+                                                    variant="outline"
+                                                    onClick={() => {
+                                                        setEnabledNFT(true)
+                                                        setHasEditedAssetOptions(true)
+                                                    }}
+                                                    className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0"
+                                                >
+                                                    {t("AssetCommon:nft.disabled")}
+                                                </Button>
+                                                : <Button
+                                                    variant="outline"
+                                                    onClick={() => {
+                                                        setEnabledNFT(false)
+                                                        setHasEditedAssetOptions(true)
+                                                    }}
+                                                >
+                                                    {t("AssetCommon:nft.enabled")}
+                                                </Button>
+                                        }
+                                    </div>
+                                </div>
+                                {
+                                    enabledNFT
+                                        ? <>
+                                            <div className="col-span-2 mb-3">
+                                                <Label>{t("AssetCommon:nft.currentIPFSFiles", { count: nftMedia.length })}</Label>
+                                                <br />
+                                                <Label>{t("AssetCommon:nft.supportedFiletypes")}</Label>
+                                                <br />  
+                                                <Dialog
+                                                    onOpenChange={(open) => {
+                                                        if (!open) {
+                                                        setNewMediaUrl("");
+                                                        }
+                                                    }}
+                                                >
+                                                    <DialogTrigger>
+                                                        <Button className="h-8 mt-3" variant="outline">
+                                                            {t("AssetCommon:nft.modifyMultimediaContents")}
+                                                        </Button>
+                                                    </DialogTrigger>
+                                                    <DialogContent className="bg-white w-full max-w-4xl bg-gray-100">
+                                                        <DialogHeader>
+                                                            <DialogTitle>{t("AssetCommon:nft.modifyingMultimediaContents")}</DialogTitle>
+                                                        </DialogHeader>
+                                                        <Card>
+                                                        <CardHeader>
+                                                            <CardTitle>{t("AssetCommon:nft.currentIPFSMedia")}</CardTitle>
+                                                            <CardDescription>
+                                                                {t("AssetCommon:nft.referencesIPFSObjects", { count: nftMedia.length })}
+                                                            </CardDescription>
+                                                        </CardHeader>
+                                                        <CardContent>
+                                                            {!nftMedia || !nftMedia.length ? (
+                                                            <p>{t("AssetCommon:nft.noIPFSMediaFound")}</p>
+                                                            ) : (
+                                                            <>
+                                                                <div className="grid grid-cols-4">
+                                                                    <div className="col-span-1">{t("AssetCommon:nft.type")}</div>
+                                                                    <div className="col-span-1">{t("AssetCommon:nft.contentIdentifier")}</div>
+                                                                    <div className="col-span-1">{t("AssetCommon:nft.filename")}</div>
+                                                                    <div className="col-span-1">{t("AssetCommon:nft.delete")}</div>
+                                                                </div>
+                                                                <List
+                                                                    width={"100%"}
+                                                                    height={125}
+                                                                    itemCount={nftMedia.length}
+                                                                    itemSize={25}
+                                                                    className="w-full"
+                                                                >
+                                                                    {({ index, style }) => <MediaRow index={index} style={style} />}
+                                                                </List>
+                                                            </>
+                                                            )}
+                                                        </CardContent>
+                                                        </Card>
+
+                                                        <Card>
+                                                        <CardHeader>
+                                                            <CardTitle>{t("AssetCommon:nft.addNewIPFSMedia")}</CardTitle>
+                                                            <CardDescription>
+                                                            {t("AssetCommon:nft.noIPFSGateway")}
+                                                            </CardDescription>
+                                                        </CardHeader>
+                                                        <CardContent>
+                                                            <div className="grid grid-cols-4">
+                                                            <div className="col-span-3 mr-3">
+                                                                <Input
+                                                                placeholder={t("AssetCommon:nft.mediaURLPlaceholder")}
+                                                                type="text"
+                                                                onInput={(e) => setNewMediaUrl(e.currentTarget.value)}
+                                                                onKeyDown={(e) => {
+                                                                    if (e.key === "Enter" && newMediaUrl && newMediaType) {
+                                                                    const temp_urls = nftMedia.map((x) => x.url);
+                                                                    if (temp_urls.includes(newMediaUrl)) {
+                                                                        console.log("Already exists");
+                                                                        setNewMediaUrl("");
+                                                                        return;
+                                                                    }
+
+                                                                    setNFTMedia(
+                                                                        nftMedia && nftMedia.length
+                                                                        ? [...nftMedia, { url: newMediaUrl, type: newMediaType }]
+                                                                        : [{ url: newMediaUrl, type: newMediaType }]
+                                                                    );
+                                                                    setNewMediaUrl("");
+                                                                    }
+                                                                }}
+                                                                value={newMediaUrl}
+                                                                />
+                                                            </div>
+                                                            <div className="col-span-1">
+                                                                <Select onValueChange={setNewMediaType}>
+                                                                <SelectTrigger className="w-[105px]">
+                                                                    <SelectValue placeholder={t("AssetCommon:nft.fileTypePlaceholder")} />
+                                                                </SelectTrigger>
+                                                                <SelectContent>
+                                                                    <SelectGroup>
+                                                                    <SelectLabel>{t("AssetCommon:nft.imageFormats")}</SelectLabel>
+                                                                    <SelectItem value="PNG">PNG</SelectItem>
+                                                                    <SelectItem value="WEBP">WEBP</SelectItem>
+                                                                    <SelectItem value="JPEG">JPEG</SelectItem>
+                                                                    <SelectItem value="GIF">GIF</SelectItem>
+                                                                    <SelectItem value="TIFF">TIFF</SelectItem>
+                                                                    <SelectItem value="BMP">BMP</SelectItem>
+                                                                    <SelectLabel>{t("AssetCommon:nft.audioFormats")}</SelectLabel>
+                                                                    <SelectItem value="MP3">MP3</SelectItem>
+                                                                    <SelectItem value="MP4">MP4</SelectItem>
+                                                                    <SelectItem value="M4A">M4A</SelectItem>
+                                                                    <SelectItem value="OGG">OGG</SelectItem>
+                                                                    <SelectItem value="FLAC">FLAC</SelectItem>
+                                                                    <SelectItem value="WAV">WAV</SelectItem>
+                                                                    <SelectItem value="WMA">WMA</SelectItem>
+                                                                    <SelectItem value="AAC">AAC</SelectItem>
+                                                                    <SelectLabel>{t("AssetCommon:nft.videoFormats")}</SelectLabel>
+                                                                    <SelectItem value="WEBM">WEBM</SelectItem>
+                                                                    <SelectItem value="MOV">MOV</SelectItem>
+                                                                    <SelectItem value="QT">QT</SelectItem>
+                                                                    <SelectItem value="AVI">AVI</SelectItem>
+                                                                    <SelectItem value="WMV">WMV</SelectItem>
+                                                                    <SelectItem value="MPEG">MPEG</SelectItem>
+                                                                    <SelectLabel>{t("AssetCommon:nft.documentFormats")}</SelectLabel>
+                                                                    <SelectItem value="PDF">PDF</SelectItem>
+                                                                    <SelectItem value="DOCX">DOCX</SelectItem>
+                                                                    <SelectItem value="ODT">ODT</SelectItem>
+                                                                    <SelectItem value="XLSX">XLSX</SelectItem>
+                                                                    <SelectItem value="ODS">ODS</SelectItem>
+                                                                    <SelectItem value="PPTX">PPTX</SelectItem>
+                                                                    <SelectItem value="TXT">TXT</SelectItem>
+                                                                    <SelectLabel>{t("AssetCommon:nft.threeDFormats")}</SelectLabel>
+                                                                    <SelectItem value="OBJ">OBJ</SelectItem>
+                                                                    <SelectItem value="FBX">FBX</SelectItem>
+                                                                    <SelectItem value="GLTF">GLTF</SelectItem>
+                                                                    <SelectItem value="3DS">3DS</SelectItem>
+                                                                    <SelectItem value="STL">STL</SelectItem>
+                                                                    <SelectItem value="COLLADA">COLLADA</SelectItem>
+                                                                    <SelectItem value="3MF">3MF</SelectItem>
+                                                                    <SelectItem value="BLEND">BLEND</SelectItem>
+                                                                    <SelectItem value="SKP">SKP</SelectItem>
+                                                                    <SelectItem value="VOX">VOX</SelectItem>
+                                                                    </SelectGroup>
+                                                                </SelectContent>
+                                                                </Select>
+                                                            </div>
+                                                            <div className="col-span-4">
+                                                                {newMediaType && newMediaType.length && newMediaUrl && newMediaUrl.length ? (
+                                                                <Button
+                                                                    className="mt-3"
+                                                                    onClick={() => {
+                                                                    const temp_urls = nftMedia.map((x) => x.url);
+                                                                    if (temp_urls.includes(newMediaUrl)) {
+                                                                        console.log("Already exists");
+                                                                        setNewMediaUrl("");
+                                                                        return;
+                                                                    }
+
+                                                                    setNFTMedia([...nftMedia, { url: newMediaUrl, type: newMediaType }]);
+                                                                    setNewMediaUrl("");
+                                                                    }}
+                                                                >
+                                                                    {t("AssetCommon:nft.submit")}
+                                                                </Button>
+                                                                ) : (
+                                                                <Button className="mt-3" disabled>
+                                                                    {t("AssetCommon:nft.submit")}
+                                                                </Button>
+                                                                )}
+                                                                <Dialog>
+                                                                <DialogTrigger>
+                                                                    <Button className="mt-3 ml-3">{t("AssetCommon:nft.ipfsHostingSolutions")}</Button>
+                                                                </DialogTrigger>
+                                                                <DialogContent className="bg-white">
+                                                                    <DialogHeader>
+                                                                    <DialogTitle>{t("AssetCommon:nft.ipfsHostingSolutions")}</DialogTitle>
+                                                                    <DialogDescription>
+                                                                        {t("AssetCommon:nft.ipfsHostingDescription")}
+                                                                    </DialogDescription>
+                                                                    </DialogHeader>
+                                                                    <div className="grid grid-cols-3 gap-3">
+                                                                    <a href="https://www.pinata.cloud/">
+                                                                        <Button>Pinata.cloud</Button>
+                                                                    </a>
+                                                                    <a href="https://nft.storage/">
+                                                                        <Button>NFT.storage</Button>
+                                                                    </a>
+                                                                    <a href="https://web3.storage/">
+                                                                        <Button>Web3.storage</Button>
+                                                                    </a>
+                                                                    <a href="https://fleek.co/ipfs-gateway/">
+                                                                        <Button>Fleek.co</Button>
+                                                                    </a>
+                                                                    <a href="https://infura.io/product/ipfs">
+                                                                        <Button>Infura.io</Button>
+                                                                    </a>
+                                                                    <a href="https://landing.storj.io/permanently-pin-with-storj-dcs">
+                                                                        <Button>StorJ</Button>
+                                                                    </a>
+                                                                    <a href="https://www.eternum.io/">
+                                                                        <Button>Eternum.io</Button>
+                                                                    </a>
+                                                                    <a href="https://blog.ipfs.io/2021-04-05-storing-nfts-on-ipfs/">
+                                                                        <Button>IPFS Docs</Button>
+                                                                    </a>
+                                                                    </div>
+                                                                </DialogContent>
+                                                                </Dialog>
+                                                            </div>
+                                                            </div>
+                                                        </CardContent>
+                                                        </Card>
+                                                    </DialogContent>
+                                                </Dialog>
+                                            </div>
+                                            <div className="col-span-2 mb-2">
+                                                <HoverInfo
+                                                    content={t("AssetCommon:nft.header_content")}
+                                                    header={t("AssetCommon:nft.header")}
+                                                    type="header"
+                                                />
+                                                <div className="grid grid-cols-2 gap-5">
+                                                    <div className="col-span-1">
+                                                        <HoverInfo
+                                                            content={t("AssetCommon:nft.NFTTitleContent")}
+                                                            header={t("AssetCommon:nft.NFTTitleHeader")}
+                                                        />
+                                                        <Input
+                                                            placeholder={t("AssetCommon:nft.TitlePlaceholder")}
+                                                            value={title}
+                                                            type="text"
+                                                            onInput={(e) => setTitle(e.currentTarget.value)}
+                                                        />
+                                                        <HoverInfo
+                                                            content={t("AssetCommon:nft.NFTArtistContent")}
+                                                            header={t("AssetCommon:nft.NFTArtistHeader")}
+                                                        />
+                                                        <Input
+                                                            placeholder={t("AssetCommon:nft.ArtistPlaceholder")}
+                                                            value={artist}
+                                                            type="text"
+                                                            onInput={(e) => setArtist(e.currentTarget.value)}
+                                                        />
+                                                        <HoverInfo
+                                                            content={t("AssetCommon:nft.NFTNarrativeContent")}
+                                                            header={t("AssetCommon:nft.NFTNarrativeHeader")}
+                                                        />
+                                                        <Input
+                                                            placeholder={t("AssetCommon:nft.NarrativePlaceholder")}
+                                                            value={narrative}
+                                                            type="text"
+                                                            onInput={(e) => setNarrative(e.currentTarget.value)}
+                                                        />
+                                                        <HoverInfo
+                                                            content={t("AssetCommon:nft.NFTTagsContent")}
+                                                            header={t("AssetCommon:nft.NFTTagsHeader")}
+                                                        />
+                                                        <Input
+                                                            placeholder={t("AssetCommon:nft.TagsPlaceholder")}
+                                                            value={tags}
+                                                            type="text"
+                                                            onInput={(e) => setTags(e.currentTarget.value)}
+                                                        />
+                                                        <HoverInfo
+                                                            content={t("AssetCommon:nft.NFTTypeContent")}
+                                                            header={t("AssetCommon:nft.NFTTypeHeader")}
+                                                        />
+                                                        <Input
+                                                            placeholder={t("AssetCommon:nft.TypePlaceholder")}
+                                                            value={type}
+                                                            type="text"
+                                                            onInput={(e) => setType(e.currentTarget.value)}
+                                                        />
+                                                    </div>
+                                                    <div className="col-span-1">
+                                                        <HoverInfo
+                                                            content={t("AssetCommon:nft.NFTAttestationContent")}
+                                                            header={t("AssetCommon:nft.NFTAttestationHeader")}
+                                                        />
+                                                        <Input
+                                                            placeholder={t("AssetCommon:nft.AttestationPlaceholder")}
+                                                            value={attestation}
+                                                            type="text"
+                                                            onInput={(e) => setAttestation(e.currentTarget.value)}
+                                                        />
+                                                        <HoverInfo
+                                                            content={t("AssetCommon:nft.NFTAcknowledgementsContent")}
+                                                            header={t("AssetCommon:nft.NFTAcknowledgementsHeader")}
+                                                        />
+                                                        <Input
+                                                            placeholder={t("AssetCommon:nft.AcknowledgementsPlaceholder")}
+                                                            value={acknowledgements}
+                                                            type="text"
+                                                            onInput={(e) => setAcknowledgements(e.currentTarget.value)}
+                                                        />
+                                                        <HoverInfo
+                                                            content={t("AssetCommon:nft.NFTHolderLicenseContent")}
+                                                            header={t("AssetCommon:nft.NFTHolderLicenseHeader")}
+                                                        />
+                                                        <Input
+                                                            placeholder={t("AssetCommon:nft.HolderLicensePlaceholder")}
+                                                            value={holderLicense}
+                                                            type="text"
+                                                            onInput={(e) => setHolderLicense(e.currentTarget.value)}
+                                                        />
+                                                        <HoverInfo
+                                                            content={t("AssetCommon:nft.NFTLicenseContent")}
+                                                            header={t("AssetCommon:nft.NFTLicenseHeader")}
+                                                        />
+                                                        <Input
+                                                            placeholder={t("AssetCommon:nft.LicensePlaceholder")}
+                                                            value={license}
+                                                            type="text"
+                                                            onInput={(e) => setLicense(e.currentTarget.value)}
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <Separator className="my-4 mt-5" />
+                                            </div>
+                                        </>
                                         : null
                                 }
 
