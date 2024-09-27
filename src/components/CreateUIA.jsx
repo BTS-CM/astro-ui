@@ -42,6 +42,7 @@ import HoverInfo from "@/components/common/HoverInfo.tsx";
 import AssetPermission from "@/components/common/AssetPermission.tsx";
 import AssetFlag from "@/components/common/AssetFlag.tsx";
 import DeepLinkDialog from "@/components/common/DeepLinkDialog.jsx";
+import ExternalLink from "@/components/common/ExternalLink.jsx";
 import AssetDropDown from "@/components/Market/AssetDropDownCard.jsx"
 
 import AccountSearch from "@/components/AccountSearch.jsx";
@@ -1875,30 +1876,54 @@ export default function UIA(properties) {
                                                                     </DialogDescription>
                                                                     </DialogHeader>
                                                                     <div className="grid grid-cols-3 gap-3">
-                                                                    <a href="https://www.pinata.cloud/">
-                                                                        <Button>Pinata.cloud</Button>
-                                                                    </a>
-                                                                    <a href="https://nft.storage/">
-                                                                        <Button>NFT.storage</Button>
-                                                                    </a>
-                                                                    <a href="https://web3.storage/">
-                                                                        <Button>Web3.storage</Button>
-                                                                    </a>
-                                                                    <a href="https://fleek.co/ipfs-gateway/">
-                                                                        <Button>Fleek.co</Button>
-                                                                    </a>
-                                                                    <a href="https://infura.io/product/ipfs">
-                                                                        <Button>Infura.io</Button>
-                                                                    </a>
-                                                                    <a href="https://landing.storj.io/permanently-pin-with-storj-dcs">
-                                                                        <Button>StorJ</Button>
-                                                                    </a>
-                                                                    <a href="https://www.eternum.io/">
-                                                                        <Button>Eternum.io</Button>
-                                                                    </a>
-                                                                    <a href="https://blog.ipfs.io/2021-04-05-storing-nfts-on-ipfs/">
-                                                                        <Button>IPFS Docs</Button>
-                                                                    </a>
+                                                                        <ExternalLink
+                                                                            classnamecontents="hover:text-purple-500"
+                                                                            type="button"
+                                                                            text={"Pinata.cloud"}
+                                                                            hyperlink={"https://www.pinata.cloud/"}
+                                                                        />
+                                                                        <ExternalLink
+                                                                            classnamecontents="hover:text-purple-500"
+                                                                            type="button"
+                                                                            text={"NFT.storage"}
+                                                                            hyperlink={"https://nft.storage/"}
+                                                                        />
+                                                                        <ExternalLink
+                                                                            classnamecontents="hover:text-purple-500"
+                                                                            type="button"
+                                                                            text={"Web3.storage"}
+                                                                            hyperlink={"https://web3.storage/"}
+                                                                        />
+                                                                        <ExternalLink
+                                                                            classnamecontents="hover:text-purple-500"
+                                                                            type="button"
+                                                                            text={"Fleek.co"}
+                                                                            hyperlink={"https://fleek.co/ipfs-gateway/"}
+                                                                        />
+                                                                        <ExternalLink
+                                                                            classnamecontents="hover:text-purple-500"
+                                                                            type="button"
+                                                                            text={"Infura.io"}
+                                                                            hyperlink={"https://infura.io/product/ipfs"}
+                                                                        />
+                                                                        <ExternalLink
+                                                                            classnamecontents="hover:text-purple-500"
+                                                                            type="button"
+                                                                            text={"StorJ"}
+                                                                            hyperlink={"https://landing.storj.io/permanently-pin-with-storj-dcs"}
+                                                                        />
+                                                                        <ExternalLink
+                                                                            classnamecontents="hover:text-purple-500"
+                                                                            type="button"
+                                                                            text={"Eternum.io"}
+                                                                            hyperlink={"https://www.eternum.io/"}
+                                                                        />
+                                                                        <ExternalLink
+                                                                            classnamecontents="hover:text-purple-500"
+                                                                            type="button"
+                                                                            text={"IPFS Docs"}
+                                                                            hyperlink={"https://blog.ipfs.io/2021-04-05-storing-nfts-on-ipfs/"}
+                                                                        />
                                                                     </div>
                                                                 </DialogContent>
                                                                 </Dialog>

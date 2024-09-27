@@ -29,7 +29,15 @@ const allowedDomains = [
   "https://github.com/bitshares/beet",
   "https://react.dev/",
   "https://github.com/",
-  "https://astro.build/"
+  "https://astro.build/",
+  "https://www.pinata.cloud/",
+  "https://nft.storage/",
+  "https://web3.storage/",
+  "https://fleek.co/ipfs-gateway/",
+  "https://infura.io/product/ipfs",
+  "https://landing.storj.io/permanently-pin-with-storj-dcs",
+  "https://www.eternum.io/",
+  "https://blog.ipfs.io/2021-04-05-storing-nfts-on-ipfs/"
 ];
 
 /**
