@@ -35,6 +35,7 @@ import {
 } from "@/stores/cache.ts";
 
 import { humanReadableFloat, debounce } from "@/lib/common.js";
+import ExternalLink from "./common/ExternalLink.jsx";
 
 function hoursTillExpiration(expirationTime) {
   var expirationDate = new Date(expirationTime);
@@ -261,32 +262,76 @@ export default function CreditBorrow(properties) {
       <div style={{ ...style }} key={`acard-${res.id}`}>
         <Card className="ml-2 mr-2">
           <CardHeader className="pb-1">
-            <CardTitle>
-              {t("CreditBorrow:common.title", {
-                orderID: res.id.replace("1.21.", ""),
-                owner_name: res.owner_name,
-                owner_account: res.owner_account,
-              })}
+          <CardTitle>
+              {t("CreditBorrow:common.offer")}
+              {" #"}
+              <ExternalLink
+                classnamecontents="hover:text-purple-500"
+                type="text"
+                text={res.id.replace("1.21.", "")}
+                hyperlink={`https://blocksights.info/#/credit-offers/${res.id.replace("1.21.", "")}`}
+              />
+              {" "}
+              {t("CreditBorrow:common.by")}
+              {" "}
+              <ExternalLink
+                classnamecontents="hover:text-purple-500"
+                type="text"
+                text={res.owner_name}
+                hyperlink={`https://blocksights.info/#/accounts/${res.owner_name}`}
+              />
+              {" "}
+              (
+                <ExternalLink
+                  classnamecontents="hover:text-purple-500"
+                  type="text"
+                  text={res.owner_account}
+                  hyperlink={`https://blocksights.info/#/accounts/${res.owner_account}`}
+                />
+              )
             </CardTitle>
             <CardDescription>
               {t("CreditBorrow:common.offering")}
               <b>
-                {` ${humanReadableFloat(res.current_balance, foundAsset.precision)} ${
-                  foundAsset.symbol
-                } (${res.asset_type})`}
+                {` ${humanReadableFloat(res.current_balance, foundAsset.precision)} `}
+                <ExternalLink
+                  classnamecontents="hover:text-purple-500"
+                  type="text"
+                  text={foundAsset.symbol}
+                  hyperlink={`https://blocksights.info/#/asset/${foundAsset.symbol}`}
+                />
+                (
+                  <ExternalLink
+                    classnamecontents="hover:text-purple-500"
+                    type="text"
+                    text={res.asset_type}
+                    hyperlink={`https://blocksights.info/#/asset/${res.asset_type}`}
+                  />
+                )
               </b>
               <br />
               {t("CreditBorrow:common.accepting")}
-              <b>
-                {assets && assets.length
-                  ? ` ${res.acceptable_collateral
-                      .map((asset) => asset[0])
-                      .map((x) => {
-                        return assets.find((y) => y.id === x)?.symbol;
-                      })
-                      .map((x) => x)
-                      .join(", ")}`
-                  : t("CreditBorrow:common.loading")}
+              <b className="ml-1">
+                {
+                  assets && assets.length
+                    ? res.acceptable_collateral
+                        .map((asset) => asset[0])
+                        .map((x) => {
+                          return assets.find((y) => y.id === x)?.symbol;
+                        })
+                        .map((x, index, array) => (
+                          <>
+                            <ExternalLink
+                              classnamecontents="hover:text-purple-500"
+                              type="text"
+                              text={x}
+                              hyperlink={`https://blocksights.info/#/asset/${x}`}
+                            />
+                            {index < array.length - 1 && ", "}
+                          </>
+                        ))
+                    : t("CreditBorrow:common.loading")
+                }
               </b>
             </CardDescription>
           </CardHeader>

@@ -5,6 +5,7 @@
     "offering": "Oferta",
     "fee": "Taxa",
     "rowTitle": "Fundo #{{id}} por {{user}}",
+    "fund": "Fundo",
     "unpaidAmount": "Valor não pago",
     "id": "Eu ia",
     "deleteHeader": "Excluindo {{owner_account}}fundo {{fund_id}}",

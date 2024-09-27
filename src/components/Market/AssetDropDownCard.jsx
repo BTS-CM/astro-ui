@@ -52,31 +52,34 @@ export default function AssetDropDown(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
   const blocklist = useSyncExternalStore($blockList.subscribe, $blockList.get, () => true);
 
-  let marketSearchContents;
-  if (!marketSearch || !marketSearch.length) {
-    marketSearchContents = [];
-  } else {
-    marketSearchContents = otherAsset
-      ? marketSearch.filter((asset) => asset.s !== otherAsset && asset.s !== assetSymbol)
-      : marketSearch.filter((asset) => asset.s !== assetSymbol);
-  }
+  const marketSearchContents = useMemo(() => {
+    if (!marketSearch || !marketSearch.length) {
+      return [];
+    } else {
+      let currentContents = otherAsset
+        ? marketSearch.filter((asset) => asset.s !== otherAsset && asset.s !== assetSymbol)
+        : marketSearch.filter((asset) => asset.s !== assetSymbol);
 
-  if (chain === "bitshares" && blocklist && blocklist.users) {
-    marketSearchContents = marketSearchContents.filter(
-      (asset) => !blocklist.users.includes(
-        toHex(sha256(asset.u.split(" ")[1].replace("(", "").replace(")", "")))
-      ),
-    );
-  }
+      if (chain === "bitshares" && blocklist && blocklist.users) {
+        currentContents = currentContents.filter(
+          (asset) => !blocklist.users.includes(
+            toHex(sha256(asset.u.split(" ")[1].replace("(", "").replace(")", "")))
+          ),
+        );
+      }
 
-  const fuse = new Fuse(marketSearchContents, {
+      return currentContents;
+    }
+  }, [marketSearch, blocklist, chain]);
+
+  const fuse = useMemo(() => new Fuse(marketSearchContents, {
     includeScore: true,
     keys: [
       "id",
       "s", // symbol
       "u", // `name (id) (ltm?)`
     ],
-  });
+  }), [marketSearchContents]);
 
   const [thisInput, setThisInput] = useState();
   const [thisResult, setThisResult] = useState();
@@ -86,7 +89,7 @@ export default function AssetDropDown(properties) {
       const result = fuse.search(thisInput);
       setThisResult(result);
     }
-  }, [thisInput]);
+  }, [thisInput, fuse]);
 
   const Row = ({ index, style }) => {
     const res = mode === "search"

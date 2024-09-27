@@ -5,6 +5,7 @@
     "offering": "Tilbud",
     "fee": "Betaling",
     "rowTitle": "Fondsnr.{{id}} ved {{user}}",
+    "fund": "Fond",
     "unpaidAmount": "Ubetalt beløb",
     "id": "Id",
     "deleteHeader": "Sletter {{owner_account}}'s fond {{fund_id}}",

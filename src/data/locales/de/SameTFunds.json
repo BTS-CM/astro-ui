@@ -5,6 +5,7 @@
     "offering": "Angebot",
     "fee": "Gebühr",
     "rowTitle": "Fondsnr.{{id}} von {{user}}",
+    "fund": "Fonds",
     "unpaidAmount": "Unbezahlter Betrag",
     "id": "Ausweis",
     "deleteHeader": "Löschen {{owner_account}}'s Fonds {{fund_id}}",

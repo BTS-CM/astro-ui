@@ -25,7 +25,9 @@ import {
 
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 
+import { useInitCache } from "@/nanoeffects/Init.ts";
 import { $poolCacheBTS, $poolCacheTEST } from "@/stores/cache.ts";
+import { $assetCacheBTS, $assetCacheTEST } from "@/stores/cache.ts";
 import { $blockList } from "@/stores/blocklist.ts";
 
 export default function PoolDialogs(properties) {
@@ -33,15 +35,31 @@ export default function PoolDialogs(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
   const blocklist = useSyncExternalStore($blockList.subscribe, $blockList.get, () => true);
 
+  useInitCache(chain ?? "bitshares", ["assets", "pools"]);  
+
+  const _assetsBTS = useSyncExternalStore($assetCacheBTS.subscribe, $assetCacheBTS.get, () => true);
+  const _assetsTEST = useSyncExternalStore(
+    $assetCacheTEST.subscribe,
+    $assetCacheTEST.get,
+    () => true
+  );
+
+  const assets = useMemo(() => {
+    if (chain && (_assetsBTS || _assetsTEST)) {
+      return chain === "bitshares" ? _assetsBTS : _assetsTEST;
+    }
+    return [];
+  }, [_assetsBTS, _assetsTEST, chain]);
+
   const _poolsBTS = useSyncExternalStore($poolCacheBTS.subscribe, $poolCacheBTS.get, () => true);
   const _poolsTEST = useSyncExternalStore($poolCacheTEST.subscribe, $poolCacheTEST.get, () => true);
-
+  
   const pools = useMemo(() => {
-    if (!_chain || (!_poolsBTS && !_poolsTEST)) {
+    if (!chain || (!_poolsBTS && !_poolsTEST)) {
       return [];
     }
   
-    if (_chain !== "bitshares") {
+    if (chain !== "bitshares") {
       return _poolsTEST;
     }
   
@@ -52,7 +70,7 @@ export default function PoolDialogs(properties) {
     });
   
     return relevantPools;
-  }, [assets, _poolsBTS, _poolsTEST, _chain]);
+  }, [assets, _poolsBTS, _poolsTEST, chain]);
 
   const [assetAPools, setAssetAPools] = useState();
   const [assetBPools, setAssetBPools] = useState();

@@ -5,6 +5,7 @@
     "offering": "Offre",
     "fee": "Frais",
     "rowTitle": "N° de fonds{{id}} par {{user}}",
+    "fund": "Fonds",
     "unpaidAmount": "Montant impayé",
     "id": "Identifiant",
     "deleteHeader": "Suppression {{owner_account}}le fonds {{fund_id}}",

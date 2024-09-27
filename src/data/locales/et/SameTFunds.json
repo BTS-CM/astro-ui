@@ -5,6 +5,7 @@
     "offering": "Pakkumine",
     "fee": "Tasu",
     "rowTitle": "Fond nr{{id}} poolt {{user}}",
+    "fund": "fond",
     "unpaidAmount": "Tasumata summa",
     "id": "Id",
     "deleteHeader": "Kustutamine {{owner_account}}fondi {{fund_id}}",

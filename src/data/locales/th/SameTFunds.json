@@ -5,6 +5,7 @@
     "offering": "ถวาย",
     "fee": "ค่าธรรมเนียม",
     "rowTitle": "กองทุน #{{id}} โดย {{user}}",
+    "fund": "กองทุน",
     "unpaidAmount": "จำนวนเงินที่ยังไม่ได้ชำระ",
     "id": "รหัส",
     "deleteHeader": "กำลังลบ {{owner_account}}กองทุนของ {{fund_id}}",

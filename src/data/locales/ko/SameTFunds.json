@@ -5,6 +5,7 @@
     "offering": "헌금",
     "fee": "요금",
     "rowTitle": "기금 #{{id}} ~에 의해 {{user}}",
+    "fund": "축적",
     "unpaidAmount": "미지급금액",
     "id": "ID",
     "deleteHeader": "삭제 중 {{owner_account}}님의 기금 {{fund_id}}",

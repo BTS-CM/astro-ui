@@ -5,6 +5,7 @@
     "offering": "Offerta",
     "fee": "Tassa",
     "rowTitle": "Finanziare #{{id}} di {{user}}",
+    "fund": "Finanziare",
     "unpaidAmount": "Importo non pagato",
     "id": "Id",
     "deleteHeader": "Eliminazione {{owner_account}}il fondo {{fund_id}}",

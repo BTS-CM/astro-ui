@@ -292,12 +292,36 @@ export default function SameTFunds(properties) {
         <Card className="w-full">
           <CardHeader className="pt-4 pb-0">
             <CardTitle>
+              {t("SameTFunds:fund")}
+              {" #"}
+              <ExternalLink
+                classnamecontents="hover:text-purple-500"
+                type="text"
+                text={fund.id.replace("1.20.", "")}
+                hyperlink={`https://blocksights.info/#/objects/${fund.id}`}
+              />
+              {" "}
+              {t("CreditBorrow:common.by")}
+              {" "}
               {
-                t("SameTFunds:rowTitle", {
-                  id: fund.id.replace("1.20.", ""),
-                  user: `${lender ? lender.name : "???"} (${fund.owner_account})${lender && lender.id === lender.lifetime_referrer ? " - LTM" : ""}`,
-                })
+                lender
+                ? <ExternalLink
+                    classnamecontents="hover:text-purple-500"
+                    type="text"
+                    text={lender.name}
+                    hyperlink={`https://blocksights.info/#/account/${lender.name}`}
+                  />
+                : "???"
               }
+              {" ("}
+              <ExternalLink
+                classnamecontents="hover:text-purple-500"
+                type="text"
+                text={fund.owner_account}
+                hyperlink={`https://blocksights.info/#/account/${fund.owner_account}`}
+              />
+              {") "}
+              {lender && lender.id === lender.lifetime_referrer ? " - LTM" : ""}
             </CardTitle>
             <CardDescription>
             </CardDescription>

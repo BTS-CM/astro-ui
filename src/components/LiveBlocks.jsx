@@ -138,7 +138,7 @@ export default function LiveBlocks(properties) {
       <div style={style} className="border grid grid-cols-5 gap-2 mb-1 mt-1">
         <div className="col-span-1 ml-2">
           <span
-            className="hover:text-purple-500"
+            classnamecontents="hover:text-purple-500"
             onClick={() => {
               setHyperlink(`https://blocksights.info/#/blocks/${activity.block}`);
               setOpenHyperlink(true);
@@ -187,7 +187,7 @@ export default function LiveBlocks(properties) {
       <div style={style} className="border p-2 grid grid-cols-4 gap-2">
         <div>
           <span
-            className="hover:text-purple-500"
+            classnamecontents="hover:text-purple-500"
             onClick={() => {
               setHyperlink(`https://blocksights.info/#/blocks/${block.block}`);
               setOpenHyperlink(true);
@@ -212,7 +212,7 @@ export default function LiveBlocks(properties) {
         </div>
         <div>
           <span
-            className="hover:text-purple-500"
+            classnamecontents="hover:text-purple-500"
             onClick={() => {
               setHyperlink(`https://blocksights.info/#/witness/${block.witness}`);
               setOpenHyperlink(true);
@@ -263,7 +263,7 @@ export default function LiveBlocks(properties) {
                     {
                       recentBlocks && recentBlocks.length
                         ? <span
-                            className="hover:text-purple-500"
+                            classnamecontents="hover:text-purple-500"
                             onClick={() => {
                               setHyperlink(`https://blocksights.info/#/witness/${recentBlocks[0].witness}`);
                               setOpenHyperlink(true);
