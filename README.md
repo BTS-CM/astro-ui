@@ -6,6 +6,7 @@ Integrates with both the [Beet](https://github.com/bitshares/beet) and [BeetEOS]
 
 ## Dev blogs
 
+* [Creating smartcoins](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-development-preview-blog-creating-smartcoins-on-the-bitshares-blockchain-for-use-on-the-bts-dex)
 * [Creating & Browsing User Issued Assets](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-dev-update-creating-user-issued-assets-and-browsing-issued-assets-overview)
 * [Creating Vesting Balances](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-dev-update-creating-vesting-balances)
 * [Same-T Funds](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-dev-update-same-t-fund-support-has-been-added)
