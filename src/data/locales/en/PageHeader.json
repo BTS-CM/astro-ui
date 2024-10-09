@@ -26,6 +26,10 @@
   "predictions": "Predictions",
   "createPrediction": "Create prediction",
   "assetsHeading": "Asset creation",
+  "issuedAssets": "Your issued assets",
+  "create_smartcoin": "Create smartcoin",
+  "create_uia": "Create user issued asset",
+  "blockExplorer": "Live blockchain data",
   "nodes": "Nodes",
   "buyLTM": "Buy LTM",
   "english": "English (en)",
@@ -63,7 +67,9 @@
     "tfunds": "Find, create, update or delete Same-T funds below!",
     "create_vesting": "Use this form to create a vesting balance for any account!",
     "uia": "Create your own user issued asset with the form below!",
-    "issuedAssets": "Manage the blockchain assets you've created within the tabs below!"
+    "issuedAssets": "Manage the blockchain assets you've created within the tabs below!",
+    "create_smartcoin": "Use the form below to create a new smartcoin asset.",
+    "blocks": "View the most recent blockchain data conveniently summarized below!"
   },
   "back": "Go back",
   "usage": "Designed for use with ",

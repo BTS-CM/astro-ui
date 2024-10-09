@@ -3,37 +3,8 @@
     "headerText": "Erstellen des folgenden Prognosemarkt-Assets: {{symbol}}"
   },
   "card": {
-    "title": "Formular zur Erstellung von Prognosemarkt-Assets",
-    "description": "Erstellen Sie ein neues Prognosemarkt-Asset, indem Sie das folgende Formular ausfüllen."
-  },
-  "asset_details": {
-    "title": "Asset-Details",
-    "title_content": "Dies sind die Asset-Einstellungen, die für die DEX-Kernfunktionalität verwendet werden.",
-    "symbol": {
-      "header": "Vermögenssymbol",
-      "header_content": "Das Vermögenswertsymbol ist eine eindeutige Kennung auf der Blockchain, die den Vermögenswert im gesamten DEX identifiziert. ",
-      "placeholder": "Symbol"
-    },
-    "shortName": {
-      "header": "Kurzname des Assets",
-      "header_content": "Dies ist der Kurzname des Assets, der weniger wichtig ist als das Symbol, aber dennoch eine optionale verkürzte eindeutige Kennung ist. ",
-      "placeholder": "Kurzname"
-    },
-    "description": {
-      "header": "Beschreibung des Vermögenswerts",
-      "header_content": "Dies ist die Beschreibung des Vermögenswerts. Sie wird im DEX angezeigt und kann verwendet werden, um weitere Informationen über den Vermögenswert bereitzustellen.",
-      "placeholder": "Beschreibung"
-    },
-    "max_supply": {
-      "header": "Maximale Versorgung",
-      "header_content": "Das maximale Angebot des Vermögenswerts ist der Gesamtbetrag des Vermögenswerts, der jemals von Kreditnehmern geschaffen werden kann, während der prognostizierte Marktwert aktiv ist.",
-      "placeholder": "Maximaler Vorrat"
-    },
-    "precision": {
-      "header": "Präzision der Vermögenswerte",
-      "header_content": "Die Genauigkeit des Assets gibt die Anzahl der unterstützten Dezimalstellen an. ",
-      "placeholder": "Präzision"
-    }
+    "title": "Erstellen eines neuen Prognosemarkt-Assets",
+    "description": "Durch die Schaffung eines Prognosemarktes können Sie gegen eine Provision als Plattform für dezentrale Wetten auf zukünftige Ereignisse fungieren, ohne dass Sie dem Kontrahentenrisiko des Gewinnpools ausgesetzt sind."
   },
   "pma": {
     "title": "Details zum prognostizierten Marktvermögen",
@@ -57,70 +28,6 @@
       "header_content": "Das Auflösungsdatum und die Auflösungszeit sind das Datum und die Uhrzeit, zu denen das prognostizierte Marktvermögenswert aufgelöst wird. "
     }
   },
-  "permissions": {
-    "header": "Berechtigungen des Assets",
-    "header_content": "Hinweis: Das Deaktivieren von Berechtigungen ist eine dauerhafte Entscheidung",
-    "charge_market_fee": {
-      "allowedText": "Erlaubte Marktgebühren (charge_market_fee)",
-      "disabledText": "Marktgebühren deaktiviert"
-    },
-    "white_list": {
-      "allowedText": "Weiße Liste erlaubt (white_list)",
-      "disabledText": "Weiße Liste deaktiviert"
-    },
-    "override_authority": {
-      "allowedText": "Überschreibungsberechtigung zulässig (override_authority)",
-      "disabledText": "Außerkraftsetzungsberechtigung deaktiviert"
-    },
-    "transfer_restricted": {
-      "allowedText": "Übertragung eingeschränkt erlaubt (transfer_restricted)",
-      "disabledText": "Übertragung eingeschränkt deaktiviert"
-    },
-    "disable_confidential": {
-      "allowedText": "Vertraulich deaktivieren erlaubt (disable_confidential)",
-      "disabledText": "Vertraulich deaktivieren deaktiviert"
-    },
-    "witness_fed_asset": {
-      "allowedText": "Zeugenbefragung erlaubt",
-      "disabledText": "Zeugen-Feed-Aktivierung deaktiviert"
-    },
-    "committee_fed_asset": {
-      "allowedText": "Vom Ausschuss gespeistes Vermögen erlaubt",
-      "disabledText": "Ausschuss fütterte Vermögenswert deaktiviert"
-    }
-  },
-  "flags": {
-    "header": "Flaggen des Assets",
-    "header_content": "Jede zulässige Asset-Berechtigung kann ein-/ausgeschaltet werden.",
-    "charge_market_fee": {
-      "allowedText": "Marktgebühren aktiviert",
-      "disabledText": "Marktgebühren deaktiviert"
-    },
-    "white_list": {
-      "allowedText": "Weiße Liste aktiviert",
-      "disabledText": "Weiße Liste deaktiviert"
-    },
-    "override_authority": {
-      "allowedText": "Außerkraftsetzungsberechtigung aktiviert",
-      "disabledText": "Außerkraftsetzungsberechtigung deaktiviert"
-    },
-    "transfer_restricted": {
-      "allowedText": "Übertragungsbeschränkung aktiviert",
-      "disabledText": "Übertragung eingeschränkt deaktiviert"
-    },
-    "disable_confidential": {
-      "allowedText": "Vertraulich deaktivieren aktiviert",
-      "disabledText": "Vertraulich deaktivieren deaktiviert"
-    },
-    "witness_fed_asset": {
-      "allowedText": "Zeugen-Feed-Asset aktiviert",
-      "disabledText": "Zeugen-Feed-Aktivierung deaktiviert"
-    },
-    "committee_fed_asset": {
-      "allowedText": "Vom Ausschuss gespeistes Vermögen aktiviert",
-      "disabledText": "Ausschuss fütterte Vermögenswert deaktiviert"
-    }
-  },
   "buttons": {
     "submit": "Einreichen"
   },
@@ -130,53 +37,5 @@
     "3": "Diese Benutzeroberfläche und die Beet/BEETEOS-Wallets unterstützen keine Multi-Signatur-Konten, daher ist Ihr Hauskonto langfristig ein Single Point of Failure – schützen Sie es gut.",
     "title": "Einige der Risiken, die mit der Erstellung von Prognosemarkt-Assets verbunden sind",
     "description": "Machen Sie Ihre eigenen Recherchen, bevor Sie eine PMA erstellen. Lesen Sie zuerst die Dokumente. "
-  },
-  "extensions": {
-    "header_content": "Bei den Erweiterungen handelt es sich um zusätzliche erweiterte Einstellungen, mit denen das Asset weiter angepasst werden kann.",
-    "header": "Marktgebührenverlängerungen",
-    "reward_percent": {
-      "enabled": "Erweiterung des Referrer-Belohnungsprozentsatzes aktiviert",
-      "enabledInfo": "Den Empfehlungsgebern aktiver Marktteilnehmer wird ein prozentualer Anteil der Marktgebühr zugerechnet.",
-      "disabled": "Erweiterung des Empfehlungsprämienprozentsatzes aktivieren?",
-      "disabledInfo": "Die Erweiterung des Referrer-Belohnungsprozentsatzes ermöglicht es dem Asset-Ersteller, dem Referrer aktiver Marktteilnehmer einen Prozentsatz der Marktgebühr zuzuweisen.",
-      "header": "Prozentsatz der Referrer-Belohnung",
-      "header_content": "Der Empfehlungsprämienprozentsatz ist der Prozentsatz der Marktgebühr, der dem Empfehlungsgeber aktiver Marktteilnehmer zugewiesen wird."
-    },
-    "whitelist_market_fee_sharing": {
-      "enabled": "Erweiterung zur Aufteilung der Marktgebühren auf die Whitelist aktiviert",
-      "enabledInfo": "Den folgenden Empfehlungskonten wird gestattet, einen Teil der eingezogenen Marktgebühren von ihren Empfehlungskonten zu erhalten.",
-      "disabled": "Aktivieren Sie die Whitelist-Marktgebührenteilungserweiterung?",
-      "disabledInfo": "Sie können festlegen, wer einen Anteil der erhobenen Marktgebühren erhalten darf, und zwar auf eine Reihe vorab genehmigter Empfehlungskonten.",
-      "header": "Aufteilung der Marktgebühren auf die Whitelist",
-      "header_content": "Die Gebührenteilungserweiterung für den Whitelist-Markt ermöglicht es dem Haus, Referrer auf diese Konten auf der Whitelist zu beschränken."
-    },
-    "taker_fee_percent": {
-      "enabled": "Erweiterung des Taker-Gebühr-Prozentsatzes aktiviert",
-      "enabledInfo": "Der „Nehmer“-Teilnehmer der Limit-Order erhält einen Prozentsatz der Marktgebühr.",
-      "disabled": "Erweiterung des Prozentsatzes der Abnehmergebühr aktivieren?",
-      "disabledInfo": "Die Erweiterung des Prozentsatzes der Abnehmergebühr ermöglicht es dem Vermögensersteller, dem „Abnehmer“ von Limit-Order-Operationen einen Prozentsatz der Marktgebühr zuzuweisen.",
-      "header": "Prozentsatz der Abnehmergebühr",
-      "header_content": "Der Prozentsatz der Taker-Gebühr ist der Prozentsatz der Marktgebühr, der dem „Nehmer“ der Limit-Orders an der dezentralen Börse zugewiesen wird."
-    },
-    "allowed_markets": {
-      "enabled": "Erweiterung „Zulässige Märkte“ aktiviert",
-      "enabledInfo": "Die folgenden Märkte sind für den Handel mit diesem Vermögenswert zugelassen.",
-      "disabled": "Die Erweiterung „Zulässige Märkte“ aktivieren?",
-      "disabledInfo": "Sie können die Märkte, auf denen dieser Vermögenswert gehandelt werden darf, auf eine Reihe vorab genehmigter Märkte beschränken."
-    },
-    "banned_markets": {
-      "enabled": "Erweiterung für verbotene Märkte aktiviert",
-      "enabledInfo": "Auf den folgenden Märkten ist der Handel mit diesem Vermögenswert verboten.",
-      "disabled": "Die Erweiterung für verbotene Märkte aktivieren?",
-      "disabledInfo": "Mit dieser Funktion können Sie bestimmte Markthandelspaare sperren und so verhindern, dass Ihre Vermögenswerte auf unerwünschten Märkten gehandelt werden."
-    }
-  },
-  "whitelist": {
-    "header_content": "Die Asset-Whitelist-Berechtigungen sind Konten, die die Liste der gelisteten Konten ihres Kontos beisteuern können, um die Interaktion mit diesem Zugriff zu autorisieren.",
-    "header": "Asset-Whitelist-Behörden"
-  },
-  "blacklist": {
-    "header_content": "Bei den Asset Blacklist-Behörden handelt es sich um Konten, die zur Liste der auf der schwarzen Liste ihres Kontos stehenden Konten beitragen können, um eine Liste gesperrter Konten durchzusetzen, die die Interaktion mit diesem Zugriff verhindert.",
-    "header": "Behörden führen eine schwarze Liste für Vermögenswerte auf"
   }
 }

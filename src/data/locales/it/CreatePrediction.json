@@ -3,37 +3,8 @@
     "headerText": "Creazione del seguente asset di mercato di previsione: {{symbol}}"
   },
   "card": {
-    "title": "Modulo per la creazione di asset di mercato di previsione",
-    "description": "Crea un nuovo asset di mercato di previsione compilando il modulo sottostante."
-  },
-  "asset_details": {
-    "title": "Dettagli risorsa",
-    "title_content": "Queste sono le impostazioni delle risorse utilizzate per la funzionalità DEX principale.",
-    "symbol": {
-      "header": "Simbolo della risorsa",
-      "header_content": "Il simbolo dell'asset è un identificatore univoco sulla blockchain che identifica l'asset in tutto il DEX. ",
-      "placeholder": "Simbolo"
-    },
-    "shortName": {
-      "header": "Nome breve della risorsa",
-      "header_content": "Questo è il nome breve della risorsa, meno importante del simbolo ma è comunque un identificatore univoco abbreviato facoltativamente. ",
-      "placeholder": "Nome breve"
-    },
-    "description": {
-      "header": "Descrizione dell'asset",
-      "header_content": "Questa è la descrizione della risorsa, verrà visualizzata nel DEX e potrà essere utilizzata per fornire ulteriori informazioni sulla risorsa.",
-      "placeholder": "Descrizione"
-    },
-    "max_supply": {
-      "header": "Massima fornitura",
-      "header_content": "L'offerta massima dell'asset, ovvero l'importo totale dell'asset che può mai essere creato dai mutuatari mentre l'asset del mercato di previsione è attivo.",
-      "placeholder": "Fornitura massima"
-    },
-    "precision": {
-      "header": "Precisione delle risorse",
-      "header_content": "La precisione dell'asset specifica la quantità di cifre decimali supportate. ",
-      "placeholder": "Precisione"
-    }
+    "title": "Creazione di un nuovo asset del mercato di previsione",
+    "description": "Creando un Prediction Market Assets puoi agire come casa per le scommesse decentralizzate su eventi futuri in cambio di una commissione senza esposizione al rischio di controparte del pool di vincite."
   },
   "pma": {
     "title": "Dettagli sugli asset del mercato di previsione",
@@ -57,70 +28,6 @@
       "header_content": "La data e l'ora di risoluzione rappresentano la data e l'ora in cui l'attività del mercato di previsione verrà risolta. "
     }
   },
-  "permissions": {
-    "header": "Permessi dell'asset",
-    "header_content": "Nota: la disabilitazione delle autorizzazioni è una decisione permanente",
-    "charge_market_fee": {
-      "allowedText": "Commissioni di mercato consentite (charge_market_fee)",
-      "disabledText": "Commissioni di mercato disattivate"
-    },
-    "white_list": {
-      "allowedText": "Lista bianca consentita (white_list)",
-      "disabledText": "Lista bianca disabilitata"
-    },
-    "override_authority": {
-      "allowedText": "Autorizzazione di sostituzione consentita (override_authority)",
-      "disabledText": "Ignora autorizzazione disabilitata"
-    },
-    "transfer_restricted": {
-      "allowedText": "Trasferimento limitato consentito (transfer_restricted)",
-      "disabledText": "Trasferimento limitato disabilitato"
-    },
-    "disable_confidential": {
-      "allowedText": "Disabilita confidenziale consentito (disable_confidential)",
-      "disabledText": "Disabilita riservata disabilitata"
-    },
-    "witness_fed_asset": {
-      "allowedText": "Risorsa alimentata da testimoni consentita",
-      "disabledText": "Risorsa alimentata dal testimone disabilitata"
-    },
-    "committee_fed_asset": {
-      "allowedText": "Risorsa alimentata dal comitato consentita",
-      "disabledText": "Asset alimentato dal comitato disabilitato"
-    }
-  },
-  "flags": {
-    "header": "Flag dell'asset",
-    "header_content": "Ogni autorizzazione per risorsa consentita può essere attivata/disattivata.",
-    "charge_market_fee": {
-      "allowedText": "Commissioni di mercato abilitate",
-      "disabledText": "Commissioni di mercato disattivate"
-    },
-    "white_list": {
-      "allowedText": "Lista bianca abilitata",
-      "disabledText": "Lista bianca disabilitata"
-    },
-    "override_authority": {
-      "allowedText": "Ignora autorizzazione abilitata",
-      "disabledText": "Ignora autorizzazione disabilitata"
-    },
-    "transfer_restricted": {
-      "allowedText": "Trasferimento limitato abilitato",
-      "disabledText": "Trasferimento limitato disabilitato"
-    },
-    "disable_confidential": {
-      "allowedText": "Disabilita riservata abilitata",
-      "disabledText": "Disabilita riservata disabilitata"
-    },
-    "witness_fed_asset": {
-      "allowedText": "Risorsa alimentata con testimone abilitata",
-      "disabledText": "Risorsa alimentata dal testimone disabilitata"
-    },
-    "committee_fed_asset": {
-      "allowedText": "Asset alimentato dal comitato abilitato",
-      "disabledText": "Asset alimentato dal comitato disabilitato"
-    }
-  },
   "buttons": {
     "submit": "Invia"
   },
@@ -130,53 +37,5 @@
     "3": "Questa interfaccia utente e i portafogli Beet/BEETEOS non supportano account multi-firma, quindi il tuo account interno è un singolo punto di fallimento a lungo termine: proteggilo bene.",
     "title": "Alcuni dei rischi associati alla creazione di attività di mercato di previsione",
     "description": "Fai le tue ricerche prima di creare un PMA, leggi prima i documenti; "
-  },
-  "extensions": {
-    "header_content": "Le estensioni sono impostazioni avanzate aggiuntive che possono essere utilizzate per personalizzare ulteriormente la risorsa.",
-    "header": "Estensioni delle commissioni di mercato",
-    "reward_percent": {
-      "enabled": "Estensione percentuale ricompensa referrer abilitata",
-      "enabledInfo": "Al referrer dei partecipanti attivi al mercato verrà assegnata una riduzione percentuale della commissione di mercato.",
-      "disabled": "Abilitare l'estensione della percentuale di ricompensa del referrer?",
-      "disabledInfo": "L'estensione della percentuale di ricompensa del referrer consente al creatore dell'asset di assegnare una percentuale della commissione di mercato al referrer dei partecipanti attivi al mercato.",
-      "header": "Percentuale di ricompensa del referrer",
-      "header_content": "La percentuale di ricompensa del referrer è la percentuale della commissione di mercato assegnata al referrer dei partecipanti attivi al mercato."
-    },
-    "whitelist_market_fee_sharing": {
-      "enabled": "Estensione di condivisione delle commissioni di mercato nella whitelist abilitata",
-      "enabledInfo": "I seguenti conti referrer saranno approvati per ricevere una riduzione delle commissioni di mercato raccolte dai loro conti referrer.",
-      "disabled": "Abilitare l'estensione per la condivisione delle commissioni del mercato whitelist?",
-      "disabledInfo": "Puoi limitare chi è autorizzato a ricevere una riduzione delle commissioni di mercato raccolte a una serie di conti referrer pre-approvati.",
-      "header": "Condivisione delle commissioni di mercato nella whitelist",
-      "header_content": "L'estensione di condivisione delle commissioni del mercato whitelist consente alla casa di limitare i referrer a questi account autorizzati."
-    },
-    "taker_fee_percent": {
-      "enabled": "Estensione percentuale commissione acquirente abilitata",
-      "enabledInfo": "Il partecipante \"acquirente\" dell'ordine limite riceverà una percentuale della commissione di mercato.",
-      "disabled": "Abilitare l'estensione percentuale della commissione dell'acquirente?",
-      "disabledInfo": "L'estensione percentuale della commissione dell'acquirente consente al creatore dell'asset di assegnare una percentuale della commissione di mercato all'acquirente delle operazioni di ordine limite.",
-      "header": "Percentuale della commissione dell'acquirente",
-      "header_content": "La percentuale della commissione taker è la percentuale della commissione di mercato assegnata al \"taker\" degli ordini limite sulla borsa decentralizzata."
-    },
-    "allowed_markets": {
-      "enabled": "Estensione dei mercati consentiti abilitata",
-      "enabledInfo": "I seguenti mercati sono autorizzati a negoziare questo asset.",
-      "disabled": "Abilitare l'estensione dei mercati consentiti?",
-      "disabledInfo": "Puoi limitare i mercati a cui è consentito scambiare questo asset a una serie di mercati pre-approvati."
-    },
-    "banned_markets": {
-      "enabled": "Estensione dei mercati vietati abilitata",
-      "enabledInfo": "Ai seguenti mercati è vietato negoziare questo asset.",
-      "disabled": "Abilitare l'estensione dei mercati vietati?",
-      "disabledInfo": "Questa funzione ti consente di vietare specifiche coppie di trading di mercato, consentendoti di evitare il trading di asset su mercati indesiderati."
-    }
-  },
-  "whitelist": {
-    "header_content": "Le autorità della lista bianca delle risorse sono account che possono contribuire all'elenco degli account autorizzati del proprio account per autorizzare l'interazione con questo accesso.",
-    "header": "Autorità della lista bianca delle risorse"
-  },
-  "blacklist": {
-    "header_content": "Le autorità della lista nera delle risorse sono account che possono contribuire all'elenco degli account nella lista nera del proprio account per imporre un elenco di account vietati che impediscono l'interazione con questo accesso.",
-    "header": "Autorità della lista nera delle risorse"
   }
 }

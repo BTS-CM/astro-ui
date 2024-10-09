@@ -103,6 +103,14 @@ electron__WEBPACK_IMPORTED_MODULE_0__.contextBridge.exposeInMainWorld('electron'
     // REST queries
     fetchTopMarkets: async (args) => electron__WEBPACK_IMPORTED_MODULE_0__.ipcRenderer.invoke('fetchTopMarkets', args),
     fetchAccountHistory: async (args) => electron__WEBPACK_IMPORTED_MODULE_0__.ipcRenderer.invoke('fetchAccountHistory', args),
+    // WS queries
+    requestBlocks: async (args) => electron__WEBPACK_IMPORTED_MODULE_0__.ipcRenderer.send('requestBlocks', args),
+    onBlockResponse: (func) => {
+        electron__WEBPACK_IMPORTED_MODULE_0__.ipcRenderer.on('blockResponse', (event, data) => {
+            func(data);
+        });
+    },
+    stillAlive: async (args) => electron__WEBPACK_IMPORTED_MODULE_0__.ipcRenderer.send('stillAlive', args),
     // API queries
     generateDeepLink: async (args) => electron__WEBPACK_IMPORTED_MODULE_0__.ipcRenderer.invoke('generateDeepLink', args),
     /*

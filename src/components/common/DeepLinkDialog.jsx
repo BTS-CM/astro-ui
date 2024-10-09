@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { useStore } from '@nanostores/react';
 import { useTranslation } from "react-i18next";
-
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -18,15 +18,19 @@ import {
 } from "@/components/ui/dialog";
 
 import { copyToClipboard } from "@/lib/common.js";
+import { $currentNode } from "@/stores/node.ts";
 
 /**
  * Launches a dialog prompt, generating a deep link for the given operation.
  * Buttons link to the Beet/BeetEOS multiwallets
  */
 export default function DeepLinkDialog(properties) {
-  const { trxJSON, operationName, username, usrChain, userID, dismissCallback, headerText } =
+  const { trxJSON, operationNames, username, usrChain, userID, dismissCallback, headerText } =
     properties;
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
+  const currentNode = useStore($currentNode);
+
+
 
   const [activeTab, setActiveTab] = useState("object");
   const [deeplink, setDeeplink] = useState();
@@ -37,7 +41,12 @@ export default function DeepLinkDialog(properties) {
         return;
       }
 
-      let response = await window.electron.generateDeepLink({usrChain, operationName, trxJSON});
+      let response = await window.electron.generateDeepLink({
+        usrChain,
+        currentNode: currentNode ? currentNode.url : "",
+        operationNames,
+        trxJSON
+      });
         
       if (!response) {
         console.log("Failed to fetch deeplink");
@@ -47,10 +56,10 @@ export default function DeepLinkDialog(properties) {
       setDeeplink(response);
     }
 
-    if (usrChain && operationName && trxJSON) {
+    if (usrChain && operationNames && trxJSON) {
       fetchDeeplink();
     }
-  }, [usrChain, operationName, trxJSON]);
+  }, [usrChain, operationNames, trxJSON]);
 
   const [downloadClicked, setDownloadClicked] = useState(false);
   const handleDownloadClick = () => {
@@ -124,7 +133,7 @@ export default function DeepLinkDialog(properties) {
                     </Label>
                     <span className="text-left text-sm">
                       {t("DeepLinkDialog:tabsContent.operationType", {
-                        operationName: operationName,
+                        operationName: operationNames.join(", "),
                       })}
                     </span>
                     <Textarea
@@ -149,7 +158,7 @@ export default function DeepLinkDialog(properties) {
                   <ol className="ml-4">
                     <li type="1">{t("DeepLinkDialog:tabsContent.step1")}</li>
                     <li type="1">
-                      {t("DeepLinkDialog:tabsContent.step2", { operationName: operationName })}
+                      {t("DeepLinkDialog:tabsContent.step2", { operationName: operationNames.join(", ") })}
                     </li>
                     <li type="1">{t("DeepLinkDialog:tabsContent.step3")}</li>
                     <li type="1">{t("DeepLinkDialog:tabsContent.step4")}</li>
@@ -185,7 +194,7 @@ export default function DeepLinkDialog(properties) {
                   <ol className="ml-4">
                     <li type="1">{t("DeepLinkDialog:tabsContent.step1Local")}</li>
                     <li type="1">
-                      {t("DeepLinkDialog:tabsContent.step2Local", { operationName: operationName })}
+                      {t("DeepLinkDialog:tabsContent.step2Local", { operationName: operationNames.join(", ") })}
                     </li>
                     <li type="1">{t("DeepLinkDialog:tabsContent.step3Local")}</li>
                     <li type="1">{t("DeepLinkDialog:tabsContent.step4Local")}</li>
@@ -199,7 +208,7 @@ export default function DeepLinkDialog(properties) {
                   {deeplink && !downloadClicked ? (
                     <a
                       href={`data:text/json;charset=utf-8,${deeplink}`}
-                      download={`${operationName}.json`}
+                      download={`${operationNames.join("_and_")}.json`}
                       target="_blank"
                       rel="noreferrer"
                       onClick={handleDownloadClick}

@@ -3,37 +3,8 @@
     "headerText": "다음 예측 시장 자산 생성: {{symbol}}"
   },
   "card": {
-    "title": "예측 시장 자산 생성 양식",
-    "description": "아래 양식을 작성하여 새로운 예측 시장 자산을 생성하세요."
-  },
-  "asset_details": {
-    "title": "자산 세부정보",
-    "title_content": "이는 핵심 DEX 기능에 사용되는 자산 설정입니다.",
-    "symbol": {
-      "header": "자산 기호",
-      "header_content": "자산 기호는 DEX 전체에서 자산을 식별하는 블록체인의 고유 식별자입니다. ",
-      "placeholder": "상징"
-    },
-    "shortName": {
-      "header": "자산 별칭",
-      "header_content": "이는 자산의 짧은 이름으로 기호보다 덜 중요하지만 선택적으로 단축된 고유 식별자입니다. ",
-      "placeholder": "짧은 이름"
-    },
-    "description": {
-      "header": "자산 설명",
-      "header_content": "이는 자산에 대한 설명으로 DEX에 표시되며 자산에 대한 추가 정보를 제공하는 데 사용될 수 있습니다.",
-      "placeholder": "설명"
-    },
-    "max_supply": {
-      "header": "최대 공급량",
-      "header_content": "자산의 최대 공급량은 예측 시장 자산이 활성화되는 동안 차용자가 생성할 수 있는 자산의 총량입니다.",
-      "placeholder": "최대 공급량"
-    },
-    "precision": {
-      "header": "자산 정밀도",
-      "header_content": "자산의 정밀도는 지원되는 소수 자릿수를 지정합니다. ",
-      "placeholder": "정도"
-    }
+    "title": "새로운 예측 시장 자산 생성",
+    "description": "예측 시장 자산을 생성하면 상금풀 상대방 위험에 노출되지 않고 수수료를 받는 대가로 향후 이벤트에 대한 분산형 베팅을 위한 하우스 역할을 할 수 있습니다."
   },
   "pma": {
     "title": "예측시장 자산 세부정보",
@@ -57,70 +28,6 @@
       "header_content": "해결일자 및 시간은 예측시장자산이 해결되는 날짜 및 시간입니다. "
     }
   },
-  "permissions": {
-    "header": "자산의 권한",
-    "header_content": "참고: 권한 비활성화는 영구적인 결정입니다.",
-    "charge_market_fee": {
-      "allowedText": "허용되는 시장 수수료(charge_market_fee)",
-      "disabledText": "시장 수수료 비활성화"
-    },
-    "white_list": {
-      "allowedText": "허용되는 화이트리스트(white_list)",
-      "disabledText": "화이트리스트 비활성화됨"
-    },
-    "override_authority": {
-      "allowedText": "재정의 권한 허용(override_authority)",
-      "disabledText": "재정의 권한이 비활성화되었습니다."
-    },
-    "transfer_restricted": {
-      "allowedText": "이체 제한 허용(transfer_restricted)",
-      "disabledText": "전송 제한 비활성화됨"
-    },
-    "disable_confidential": {
-      "allowedText": "기밀 비활성화 허용(disable_confidential)",
-      "disabledText": "기밀 비활성화 비활성화"
-    },
-    "witness_fed_asset": {
-      "allowedText": "증인 제공 자산이 허용됨",
-      "disabledText": "증인 제공 자산이 비활성화되었습니다."
-    },
-    "committee_fed_asset": {
-      "allowedText": "위원회 공급 자산 허용",
-      "disabledText": "위원회 공급 자산 비활성화"
-    }
-  },
-  "flags": {
-    "header": "자산의 플래그",
-    "header_content": "허용된 각 자산 권한은 켜거나 끌 수 있습니다.",
-    "charge_market_fee": {
-      "allowedText": "시장 수수료 활성화됨",
-      "disabledText": "시장 수수료 비활성화"
-    },
-    "white_list": {
-      "allowedText": "화이트리스트 활성화됨",
-      "disabledText": "화이트리스트 비활성화됨"
-    },
-    "override_authority": {
-      "allowedText": "재정의 권한이 활성화되었습니다.",
-      "disabledText": "재정의 권한이 비활성화되었습니다."
-    },
-    "transfer_restricted": {
-      "allowedText": "전송 제한 활성화됨",
-      "disabledText": "전송 제한 비활성화됨"
-    },
-    "disable_confidential": {
-      "allowedText": "기밀 비활성화 활성화",
-      "disabledText": "기밀 비활성화 비활성화"
-    },
-    "witness_fed_asset": {
-      "allowedText": "증인 제공 자산이 활성화되었습니다.",
-      "disabledText": "증인 제공 자산이 비활성화되었습니다."
-    },
-    "committee_fed_asset": {
-      "allowedText": "위원회 공급 자산 활성화됨",
-      "disabledText": "위원회 공급 자산 비활성화"
-    }
-  },
   "buttons": {
     "submit": "제출하다"
   },
@@ -130,53 +37,5 @@
     "3": "이 사용자 인터페이스와 Beet/BEETEOS 지갑은 다중 서명 계정을 지원하지 않으므로 귀하의 집 계정은 장기적으로 단일 실패 지점이 됩니다. 잘 보호하십시오.",
     "title": "예측 시장 자산 생성과 관련된 일부 위험",
     "description": "PMA를 만들기 전에 스스로 조사하고 먼저 문서를 읽어보세요. "
-  },
-  "extensions": {
-    "header_content": "확장은 자산을 추가로 사용자 정의하는 데 사용할 수 있는 추가 고급 설정입니다.",
-    "header": "시장 수수료 확장",
-    "reward_percent": {
-      "enabled": "추천인 보상 비율 확장이 활성화되었습니다.",
-      "enabledInfo": "시장 수수료의 일부 삭감은 활성 시장 참여자의 추천인에게 할당됩니다.",
-      "disabled": "추천인 보상 비율 확장을 활성화하시겠습니까?",
-      "disabledInfo": "추천인 보상 비율 확장을 통해 자산 생성자는 활성 시장 참여자의 추천인에게 시장 수수료의 일정 비율을 할당할 수 있습니다.",
-      "header": "추천인 보상 비율",
-      "header_content": "추천인 보상 비율은 활성 시장 참여자의 추천인에게 할당되는 시장 수수료의 비율입니다."
-    },
-    "whitelist_market_fee_sharing": {
-      "enabled": "화이트리스트 시장 수수료 공유 확장 활성화됨",
-      "enabledInfo": "다음 추천인 계정은 추천인 계정에서 징수된 시장 수수료를 삭감하도록 승인됩니다.",
-      "disabled": "화이트리스트 시장 수수료 공유 확장 프로그램을 활성화하시겠습니까?",
-      "disabledInfo": "수집된 시장 수수료의 일부를 받을 수 있는 사람을 사전 승인된 추천 계정 세트로 제한할 수 있습니다.",
-      "header": "화이트리스트 시장 수수료 공유",
-      "header_content": "화이트리스트 시장 수수료 공유 확장을 통해 하우스는 이러한 화이트리스트 계정에 대한 추천인을 제한할 수 있습니다."
-    },
-    "taker_fee_percent": {
-      "enabled": "테이커 수수료 비율 확장 활성화됨",
-      "enabledInfo": "지정가 주문의 '테이커' 참가자는 시장 수수료의 일정 비율을 받게 됩니다.",
-      "disabled": "테이커 수수료 비율 확장을 활성화하시겠습니까?",
-      "disabledInfo": "테이커 수수료 비율 확장을 통해 자산 생성자는 지정가 주문 작업의 '테이커'에게 시장 수수료의 일정 비율을 할당할 수 있습니다.",
-      "header": "테이커 수수료 비율",
-      "header_content": "테이커 수수료 백분율은 분산형 거래소에서 지정가 주문의 '테이커'에게 할당되는 시장 수수료의 백분율입니다."
-    },
-    "allowed_markets": {
-      "enabled": "허용된 시장 확장 활성화됨",
-      "enabledInfo": "다음 시장은 이 자산을 거래하도록 승인되었습니다.",
-      "disabled": "허용된 시장 확장을 활성화하시겠습니까?",
-      "disabledInfo": "이 자산을 거래할 수 있는 시장을 사전 승인된 시장 집합으로 제한할 수 있습니다."
-    },
-    "banned_markets": {
-      "enabled": "금지된 시장 확장 활성화됨",
-      "enabledInfo": "다음 시장에서는 이 자산 거래가 금지됩니다.",
-      "disabled": "금지된 시장 확장을 활성화하시겠습니까?",
-      "disabledInfo": "이 기능을 사용하면 특정 시장 거래 쌍을 금지하여 원하지 않는 시장에서 자산 거래를 피할 수 있습니다."
-    }
-  },
-  "whitelist": {
-    "header_content": "자산 화이트리스트 권한은 이 액세스와의 상호 작용을 승인하기 위해 자신의 계정의 휘스팅된 계정 목록을 제공할 수 있는 계정입니다.",
-    "header": "자산 화이트리스트 권한"
-  },
-  "blacklist": {
-    "header_content": "자산 블랙리스트 권한은 이 액세스와의 상호 작용을 방지하는 금지된 계정 목록을 시행하기 위해 자신의 계정의 블랙리스트에 등록된 계정 목록을 제공할 수 있는 계정입니다.",
-    "header": "자산 블랙리스트 당국"
   }
 }

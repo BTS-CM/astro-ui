@@ -26,6 +26,10 @@
   "predictions": "Ennustused",
   "createPrediction": "Loo ennustus",
   "assetsHeading": "Vara loomine",
+  "issuedAssets": "Teie väljastatud varad",
+  "create_smartcoin": "Loo smartcoin",
+  "create_uia": "Loo kasutaja väljastatud vara",
+  "blockExplorer": "Reaalajas plokiahela andmed",
   "nodes": "Sõlmed",
   "buyLTM": "Osta LTM",
   "english": "inglise keel (et)",
@@ -63,7 +67,9 @@
     "tfunds": "Otsige, looge, värskendage või kustutage Same-T fonde allpool!",
     "create_vesting": "Kasutage seda vormi mis tahes konto omandisaldo loomiseks!",
     "uia": "Looge alloleva vormi abil oma kasutaja väljastatud vara!",
-    "issuedAssets": "Hallake oma loodud plokiahela varasid allolevatel vahekaartidel!"
+    "issuedAssets": "Hallake oma loodud plokiahela varasid allolevatel vahekaartidel!",
+    "create_smartcoin": "Uue smartcoini vara loomiseks kasutage allolevat vormi.",
+    "blocks": "Vaadake kõige värskemaid plokiahela andmeid, mis on mugavalt kokku võetud allpool!"
   },
   "back": "Mine tagasi",
   "usage": "Mõeldud kasutamiseks koos ",

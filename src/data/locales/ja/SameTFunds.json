@@ -5,6 +5,7 @@
     "offering": "オファリング",
     "fee": "手数料",
     "rowTitle": "基金番号{{id}} による {{user}}",
+    "fund": "基金",
     "unpaidAmount": "未払い額",
     "id": "ID",
     "deleteHeader": "削除中 {{owner_account}}さんの基金 {{fund_id}}",

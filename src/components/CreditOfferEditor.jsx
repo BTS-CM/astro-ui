@@ -220,7 +220,8 @@ export default function CreditOfferEditor(properties) {
 
       unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
-          setBalances(data);
+          const filteredData = data.filter((balance) => assets.find((x) => x.id === balance.asset_id));
+          setBalances(filteredData);
         }
       });
     }
@@ -1093,6 +1094,7 @@ export default function CreditOfferEditor(properties) {
                               }
                               marketSearch={marketSearch}
                               storeCallback={setAcceptableCollateral}
+                              chain={usr && usr.chain ? usr.chain : "bitshares"}
                             />
                           </span>
                         </span>
@@ -1211,7 +1213,7 @@ export default function CreditOfferEditor(properties) {
         {transactionJSON && showDialog ? (
           <DeepLinkDialog
             trxJSON={transactionJSON ?? []}
-            operationName={!offerID ? "credit_offer_create" : "credit_offer_update"}
+            operationNames={[!offerID ? "credit_offer_create" : "credit_offer_update"]}
             username={usr.username}
             usrChain={usr.chain}
             userID={usr.id}

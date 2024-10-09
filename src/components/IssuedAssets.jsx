@@ -6,20 +6,25 @@ import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
 import { createIssuedAssetsStore } from "@/nanoeffects/IssuedAssets.ts";
@@ -55,44 +60,6 @@ export default function IssuedAssets(properties) {
 
       requiredStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
-          /*
-            {
-              "id": "1.3.6021",
-              "symbol": "NFTEA",
-              "precision": 0,
-              "issuer": "1.2.1803677",
-              "options": {
-                "max_supply": 1,
-                "market_fee_percent": 0,
-                "max_market_fee": 0,
-                "issuer_permissions": 79,
-                "flags": 0,
-                "core_exchange_rate": {
-                  "base": {
-                    "amount": 100000,
-                    "asset_id": "1.3.0"
-                  },
-                  "quote": {
-                    "amount": 1,
-                    "asset_id": "1.3.6021"
-                  }
-                },
-                "whitelist_authorities": [],
-                "blacklist_authorities": [],
-                "whitelist_markets": [],
-                "blacklist_markets": [],
-                "description": "{\"main\":\"NFTEA.gallery\\n\\nNFT gallery powered by the Bitshares blockchain!\",\"short_name\":\"NFTEA\",\"market\":\"BTS\"}",
-                "extensions": {
-                  "reward_percent": 0,
-                  "whitelist_market_fee_sharing": []
-                }
-              },
-              "dynamic_asset_data_id": "2.3.6021",
-              "creation_block_num": 58742662,
-              "creation_time": "2021-05-26T16:02:15",
-              "total_in_collateral": 0
-            }
-          */
           setLoading(false);
           setIssuedAssets(data);
         }
@@ -170,59 +137,87 @@ export default function IssuedAssets(properties) {
                 />
                 {")"}
               </span>
-              <span className="mb-3 text-right grid grid-cols-4 gap-2">
-                <a href={`/dex/index.html?market=${issuedAsset.symbol}_${parsedDescription && parsedDescription.market ? parsedDescription.market : "BTS"}`}>
-                  <Button className="h-8 hover:shadow-inner" variant="outline">
-                    {t("IssuedAssets:proceedToTrade")}
-                  </Button>
-                </a>
-                <a href={`/borrow/index.html?tab=searchOffers&searchTab=borrow&searchText=${issuedAsset.symbol}`}>
-                  <Button className="h-8 hover:shadow-inner" variant="outline">
-                    {t("IssuedAssets:creditBorrow")}
-                  </Button>
-                </a>
-                <a href={`/borrow/index.html?tab=searchOffers&searchTab=collateral&searchText=${issuedAsset.symbol}`}>
-                  <Button className="h-8 hover:shadow-inner" variant="outline">
-                    {t("IssuedAssets:creditLend")}
-                  </Button>
-                </a>
+              <span className="mb-3 text-right grid grid-cols-2 gap-3">
+
+                <DropdownMenu>
+                  <DropdownMenuTrigger>
+                    <Button className="h-8 hover:shadow-inner" variant="outline">
+                      {t("IssuedAssets:userActions")}
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <a href={`/dex/index.html?market=${issuedAsset.symbol}_${parsedDescription && parsedDescription.market ? parsedDescription.market : "BTS"}`}>
+                      <DropdownMenuItem className="hover:shadow-inner">
+                        {t("IssuedAssets:proceedToTrade")}
+                      </DropdownMenuItem>
+                    </a>
+
+                    <a href={`/borrow/index.html?tab=searchOffers&searchTab=borrow&searchText=${issuedAsset.symbol}`}>
+                      <DropdownMenuItem className="hover:shadow-inner">
+                        {t("IssuedAssets:creditBorrow")}
+                      </DropdownMenuItem>
+                    </a>
+
+                    <a href={`/borrow/index.html?tab=searchOffers&searchTab=collateral&searchText=${issuedAsset.symbol}`}>
+                      <DropdownMenuItem className="hover:shadow-inner">
+                        {t("IssuedAssets:creditLend")}
+                      </DropdownMenuItem>
+                    </a>
+
+                    {
+                      activeTab === "smartcoins"
+                        ? <a href={`/smartcoin/index.html?id=${issuedAsset.id}`}>
+                            <DropdownMenuItem className="hover:shadow-inner">
+                              {t("IssuedAssets:proceedToBorrow")}
+                            </DropdownMenuItem>
+                          </a>
+                        : null
+                    }
+
+                    {
+                      activeTab === "prediction"
+                        ? <a href={`/predictions/index.html?id=${issuedAsset.id}`}>
+                            <DropdownMenuItem className="hover:shadow-inner">
+                              {t("IssuedAssets:pmaBet")}
+                            </DropdownMenuItem>
+                          </a> // TODO: Support hyperlinking directly to a PMA to bet on...
+                        : null
+                    }
+                  </DropdownMenuContent>
+                </DropdownMenu>
+
                 {
-                  activeTab === "smartcoins"
-                    ? <a href={`/smartcoin/index.html?id=${issuedAsset.id}`}>
-                        <Button className="h-8 hover:shadow-inner" variant="outline">
-                          {t("IssuedAssets:proceedToBorrow")}
-                        </Button>
-                      </a>
+                  !["prediction", "nft"].includes(activeTab)
+                    ? <DropdownMenu>
+                        <DropdownMenuTrigger>
+                          <Button className="h-8 hover:shadow-inner" variant="outline">
+                            {t("IssuedAssets:issuerActions")}
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                          {
+                            activeTab === "smartcoins"
+                              ? <a href={`/create_smartcoin/index.html?id=${issuedAsset.id}`}>
+                                  <DropdownMenuItem className="hover:shadow-inner">
+                                    {t("IssuedAssets:manageUIA")}
+                                  </DropdownMenuItem>
+                                </a>
+                              : null
+                          }
+                          {
+                            activeTab === "uia"
+                              ? <a href={`/create_uia/index.html?id=${issuedAsset.id}`}>
+                                  <DropdownMenuItem className="hover:shadow-inner">
+                                    {t("IssuedAssets:manageUIA")}
+                                  </DropdownMenuItem>
+                                </a> 
+                              : null
+                          }
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     : null
                 }
-                {
-                  activeTab === "smartcoins"
-                    ? null // TODO: Support editing smartcoins
-                    : null
-                }
-                {
-                  activeTab === "prediction"
-                    ? null // TODO: Support hyperlinking directly to a PMA to bet on...
-                    : null
-                }
-                {
-                  activeTab === "uia"
-                    ? <a href={`/create_uia/index.html?id=${issuedAsset.id}`}>
-                        <Button className="h-8 hover:shadow-inner" variant="outline">
-                          {t("IssuedAssets:manageUIA")}
-                        </Button>
-                      </a> 
-                    : null
-                }
-                {
-                  activeTab === "prediction"
-                    ? <a href={`/predictions/index.html?id=${issuedAsset.id}`}>
-                        <Button className="h-8 hover:shadow-inner" variant="outline">
-                          {t("IssuedAssets:pmaBet")}
-                        </Button>
-                      </a> // TODO: Support hyperlinking directly to a PMA to bet on...
-                    : null
-                }
+                
               </span>
             </CardTitle>
           </CardHeader>

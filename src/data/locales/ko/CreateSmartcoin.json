@@ -1,0 +1,79 @@
+{
+  "card": {
+    "title_create": "새로운 Smartcoin 자산 생성",
+    "title_edit": "기존 Smartcoin 자산 편집",
+    "description": "스마트코인은 외부 시장 가격 피드를 참조할 수 있는 담보 자산입니다. "
+  },
+  "title": {
+    "header": "스마트코인 설정",
+    "header_content": "아래 설정은 귀하의 스마트코인이 Bitshares 블록체인에서 작동하는 방식을 정의합니다. "
+  },
+  "bsrm": {
+    "header": "Black Swan 리스크 관리 전략",
+    "header_content": "이러한 전략은 과소담보 부채 포지션에 대해 다양한 결과를 제공하여 부채 포지션 청산 위험을 비활성화, 최소화 또는 세계화할 수 있도록 해줍니다. ",
+    "select_0": "글로벌 정산: 모든 부채 포지션이 마감되었습니다. ",
+    "select_1": "정산 없음: 부채 포지션이 마감되지 않습니다. ",
+    "select_2": "개인 정산 기금: 과소담보 부채 포지션이 마감됩니다. ",
+    "select_3": "개별 정산 명령: 과소담보 부채 포지션이 종료됩니다. "
+  },
+  "mcr": {
+    "header": "정적 최소 담보 비율",
+    "header_content": "이는 부채 포지션이 완전히 담보된 것으로 간주되기 위해 필요한 최소 담보 비율입니다. "
+  },
+  "icr": {
+    "header": "정적 초기 담보 비율",
+    "header_content": "이는 부채 포지션이 생성 당시 완전히 담보된 것으로 간주되기 위해 필요한 담보 비율입니다. "
+  },
+  "mssr": {
+    "header": "정적 최대 짧은 압착 비율",
+    "header_content": "이는 부채 포지션이 청산될 수 있는 최대 담보 비율입니다. "
+  },
+  "feed_lifetime": {
+    "header": "피드 수명",
+    "header_content": "가격 피드가 유효한 것으로 간주되는 시간(초)입니다. "
+  },
+  "minimum_feeds": {
+    "header": "최소 피드",
+    "header_content": "현재 피드 가격을 계산하는 데 필요한 최소 가격 피드 수입니다."
+  },
+  "force_settlement_delay": {
+    "header": "강제정산 지연",
+    "header_content": "블록체인에서 정산 작업이 실행되기 전에 강제 정산 후 사용자가 기다려야 하는 시간(초)입니다."
+  },
+  "force_settlement_offset": {
+    "header": "강제 정산 상쇄",
+    "header_content": "정산 작업을 위해 강제 정산 가격이 상쇄되는 피드 가격의 비율입니다."
+  },
+  "maximum_force_settlement_volume": {
+    "header": "최대 강제 정착량",
+    "header_content": "24시간 이내에 강제 정산될 수 있는 자산 공급의 최대 금액입니다."
+  },
+  "extensions": {
+    "margin_call_fee_ratio": {
+      "enabled": "마진콜 수수료 비율 확장 활성화",
+      "disabled": "마진콜 수수료 비율 스마트코인 확장 프로그램을 활성화하시겠습니까?",
+      "extensionInfo": "마진콜 수수료 비율 확장을 통해 스마트코인 소유자는 부채 포지션이 마진콜될 때 사용자에게 수수료를 부과할 수 있습니다. ",
+      "header": "마진콜 수수료 비율",
+      "header_content": "부채 포지션이 마진콜될 때 사용자에게 부과되는 수수료 비율입니다. "
+    },
+    "force_settle_fee": {
+      "enabled": "강제 정산 수수료 연장 활성화됨",
+      "disabled": "강제 정산 수수료 스마트코인 확장 프로그램을 활성화하시겠습니까?",
+      "extensionInfo": "강제 정산 수수료 확장을 통해 스마트코인 소유자는 사용자가 부채 위치를 강제로 정산할 때 사용자에게 수수료를 청구할 수 있습니다. ",
+      "header": "강제정산 수수료",
+      "header_content": "사용자가 채무 상황을 강제로 청산할 때 사용자에게 부과되는 수수료입니다. "
+    }
+  },
+  "editAsset": {
+    "disabled": "자산 설정 편집",
+    "enabled": "자산 설정 편집 취소"
+  },
+  "editSmartcoin": {
+    "disabled": "스마트코인 설정 편집",
+    "enabled": "Smartcoin 설정 편집 취소"
+  },
+  "dialogContent": {
+    "editHeader": "다음 스마트코인 편집: {{symbol}}",
+    "createHeader": "다음 스마트코인 생성: {{symbol}}"
+  }
+}

@@ -1205,7 +1205,7 @@ export default function LimitOrderCard(properties) {
         )}
         {showDialog ? (
           <DeepLinkDialog
-            operationName="limit_order_create"
+            operationNames={["limit_order_create"]}
             username={usr.username}
             usrChain={usr.chain}
             userID={usr.id}

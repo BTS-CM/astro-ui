@@ -1,94 +1,314 @@
 {
-    "permissions": {
-      "header": "Permessi dell'asset",
-      "header_content": "Nota: la disabilitazione delle autorizzazioni è una decisione permanente",
-      "charge_market_fee": {
-        "allowedText": "Sono ammesse commissioni di mercato",
-        "disabledText": "Commissioni di mercato disattivate",
-        "enabledInfo": "È possibile per il creatore dell'asset consentire l'addebito di commissioni di negoziazione sul mercato per questo asset.",
-        "disabledInfo": "Ora è impossibile per il creatore dell'asset addebitare commissioni di negoziazione sul mercato per questo asset."
-      },
-      "white_list": {
-        "allowedText": "Lista bianca consentita",
-        "disabledText": "Lista bianca disabilitata",
-        "enabledInfo": "È possibile che il creatore della risorsa abiliti la configurazione delle autorità della lista bianca per questa risorsa.",
-        "disabledInfo": "Ora è impossibile per il creatore della risorsa configurare le autorità della lista bianca per questa risorsa."
-      },
-      "override_authority": {
-        "allowedText": "Autorizzazione di override consentita",
-        "disabledText": "Ignora autorizzazione disabilitata",
-        "enabledInfo": "È possibile per il creatore della risorsa abilitare la possibilità di eseguire un'operazione di trasferimento sostitutiva su questa risorsa, restituendola al suo saldo dal tuo.",
-        "disabledInfo": "Ora è impossibile per il creatore della risorsa eseguire operazioni di trasferimento sostitutive su questa risorsa."
-      },
-      "transfer_restricted": {
-        "allowedText": "Trasferimento limitato consentito",
-        "enabledInfo": "È possibile per il creatore della risorsa abilitare la possibilità di limitare i trasferimenti di questa risorsa.",
-        "disabledText": "Trasferimento limitato disabilitato",
-        "disabledInfo": "Ora è impossibile per il creatore della risorsa limitare i trasferimenti di questa risorsa."
-      },
-      "disable_confidential": {
-        "allowedText": "Disabilita riservata consentita",
-        "enabledInfo": "È possibile per il creatore della risorsa abilitare la possibilità di disabilitare le operazioni riservate per questa risorsa.",
-        "disabledText": "Disabilita riservata disabilitata",
-        "disabledInfo": "Ora è impossibile per il creatore della risorsa disabilitare le operazioni riservate per questa risorsa."
-      },
-      "witness_fed_asset": {
-        "allowedText": "Risorsa alimentata da testimoni consentita",
-        "enabledInfo": "È possibile per il creatore della risorsa consentire ai testimoni di pubblicare feed di prezzo per questa risorsa.",
-        "disabledText": "Risorsa alimentata dal testimone disabilitata",
-        "disabledInfo": "Ora è impossibile per il creatore della risorsa consentire ai testimoni di pubblicare il feed del prezzo per questa risorsa."
-      },
-      "committee_fed_asset": {
-        "allowedText": "Risorsa alimentata dal comitato consentita",
-        "enabledInfo": "È possibile per il creatore della risorsa consentire ai membri del comitato di pubblicare feed di prezzo per questa risorsa.",
-        "disabledText": "Asset alimentato dal comitato disabilitato",
-        "disabledInfo": "Ora è impossibile per il creatore della risorsa consentire ai membri del comitato di pubblicare feed di prezzo per questa risorsa."
-      }
+  "permissions": {
+    "header": "Permessi dell'asset",
+    "header_content": "Nota: la disabilitazione delle autorizzazioni è una decisione permanente",
+    "charge_market_fee": {
+      "about": "Abilita commissione di mercato",
+      "enabledInfo": "L'emittente/proprietario dell'asset può aggiornare il flag charge_market_fee.",
+      "disabledInfo": "L'emittente/proprietario dell'asset NON può aggiornare il flag charge_market_fee. "
     },
-    "flags": {
-      "header": "Flag dell'asset",
-      "header_content": "Ogni autorizzazione per risorsa consentita può essere attivata/disattivata.",
-      "charge_market_fee": {
-        "allowedText": "Commissioni di mercato abilitate",
-        "enabledInfo": "Il creatore dell'asset può configurare le commissioni di negoziazione di mercato per questo asset, inclusa la funzionalità di condivisione dei premi delle commissioni di mercato.",
-        "disabledText": "Commissioni di mercato disattivate",
-        "disabledInfo": "Il creatore dell'asset ha disattivato l'addebito delle commissioni di negoziazione del mercato per questo asset."
-      },
-      "white_list": {
-        "allowedText": "Lista bianca abilitata",
-        "enabledInfo": "Il creatore della risorsa può configurare le autorità della lista bianca per questa risorsa.",
-        "disabledText": "Lista bianca disabilitata",
-        "disabledInfo": "Il creatore della risorsa ha disabilitato la configurazione delle autorità della lista bianca per questa risorsa."
-      },
-      "override_authority": {
-        "allowedText": "Ignora autorizzazione abilitata",
-        "enabledInfo": "Il creatore della risorsa può eseguire un'operazione di trasferimento sostitutiva su questa risorsa, restituendola al suo saldo dal tuo.",
-        "disabledText": "Ignora autorizzazione disabilitata",
-        "disabledInfo": "Il creatore della risorsa ha disabilitato l'esecuzione di operazioni di trasferimento di sostituzione su questa risorsa."
-      },
-      "transfer_restricted": {
-        "allowedText": "Trasferimento limitato abilitato",
-        "enabledInfo": "Il creatore della risorsa può limitare i trasferimenti di questa risorsa.",
-        "disabledText": "Trasferimento limitato disabilitato",
-        "disabledInfo": "Il creatore della risorsa ha disattivato la limitazione dei trasferimenti di questa risorsa."
-      },
-      "disable_confidential": {
-        "allowedText": "Disabilita riservata abilitata",
-        "enabledInfo": "Il creatore della risorsa ha disattivato le operazioni riservate per questa risorsa.",
-        "disabledText": "Disabilita riservata disabilitata",
-        "disabledInfo": "L'autore della risorsa non ha disattivato le operazioni riservate per questa risorsa."
-      },
-      "witness_fed_asset": {
-        "allowedText": "Risorsa alimentata con testimone abilitata",
-        "enabledInfo": "I testimoni possono pubblicare feed di prezzo per questa risorsa.",
-        "disabledText": "Risorsa alimentata dal testimone disabilitata",
-        "disabledInfo": "I testimoni non sono in grado di pubblicare il feed dei prezzi per questa risorsa."
-      },
-      "committee_fed_asset": {
-        "allowedText": "Asset alimentato dal comitato abilitato",
-        "enabledInfo": "I membri del comitato possono pubblicare feed di prezzo per questo asset.",
-        "disabledText": "Asset alimentato dal comitato disabilitato",
-        "disabledInfo": "I membri del comitato non sono in grado di pubblicare feed di prezzo per questo asset."
-      }
+    "white_list": {
+      "about": "Richiedere che i titolari siano inseriti nella lista bianca",
+      "enabledInfo": "L'emittente/proprietario della risorsa può aggiornare il flag white_list.",
+      "disabledInfo": "L'emittente/proprietario della risorsa NON può aggiornare il flag white_list. "
+    },
+    "override_authority": {
+      "about": "Il proprietario della risorsa può trasferire nuovamente la risorsa a se stesso",
+      "enabledInfo": "L'emittente/proprietario della risorsa può aggiornare il flag override_authority.",
+      "disabledInfo": "L'emittente/proprietario della risorsa NON può aggiornare il flag override_authority."
+    },
+    "transfer_restricted": {
+      "about": "Il proprietario della risorsa deve approvare tutti i trasferimenti",
+      "enabledInfo": "L'emittente/proprietario dell'asset può aggiornare il flag transfer_restricted.",
+      "disabledInfo": "L'emittente/proprietario dell'asset NON può aggiornare il flag transfer_restricted."
+    },
+    "disable_confidential": {
+      "about": "Disabilita transazioni riservate",
+      "enabledInfo": "L'emittente/proprietario della risorsa può aggiornare il flag Disable_Confidential.",
+      "disabledInfo": "L'emittente/proprietario della risorsa NON può aggiornare il flag Disable_Confidential."
+    },
+    "witness_fed_asset": {
+      "about": "Consenti ai testimoni di fornire feed",
+      "enabledInfo": "L'emittente/proprietario dell'asset può aggiornare il flag testimone_fed_asset.",
+      "disabledInfo": "L'emittente/proprietario dell'asset NON può aggiornare il flag testimone_fed_asset."
+    },
+    "committee_fed_asset": {
+      "about": "Consenti ai membri del comitato di fornire feed",
+      "enabledInfo": "L'emittente/proprietario dell'asset può aggiornare il flag Committee_fed_asset.",
+      "disabledInfo": "L'emittente/proprietario dell'asset NON può aggiornare il flag Committee_fed_asset."
+    },
+    "disable_force_settle": {
+      "about": "Disabilita assestamento forzato",
+      "enabledInfo": "L'emittente/proprietario dell'asset può aggiornare il flag Disable_force_settle.",
+      "disabledInfo": "L'emittente/proprietario della risorsa NON può aggiornare il flag Disable_force_settle."
+    },
+    "global_settle": {
+      "about": "Consenti al proprietario della risorsa di forzare una liquidazione globale",
+      "enabledInfo": "L'emittente/proprietario dell'asset può liquidare manualmente l'asset a livello globale.",
+      "disabledInfo": "L'emittente/proprietario dell'asset NON può liquidare manualmente questo asset a livello globale."
+    },
+    "lock_max_supply": {
+      "about": "Blocca la fornitura massima",
+      "enabledInfo": "L'emittente/proprietario della risorsa NON può aggiornare il flag lock_max_supply.",
+      "disabledInfo": "L'emittente/proprietario della risorsa può aggiornare il flag lock_max_supply."
+    },
+    "disable_new_supply": {
+      "about": "Disabilita nuova fornitura",
+      "enabledInfo": "L'emittente/proprietario della risorsa NON può aggiornare il flag Disable_new_supply.",
+      "disabledInfo": "L'emittente/proprietario della risorsa può aggiornare il flag Disable_new_supply."
+    },
+    "disable_collateral_bidding": {
+      "about": "Disabilita le offerte collaterali",
+      "enabledInfo": "L'emittente/proprietario dell'asset NON può aggiornare il flag Disable_collateral_bidding.",
+      "disabledInfo": "L'emittente/proprietario dell'asset può aggiornare il flag Disable_collateral_bidding."
+    },
+    "disable_mcr_update": {
+      "about": "Disabilita aggiornamento proprietario Rapporto collaterale minimo",
+      "enabledInfo": "L'emittente/proprietario dell'asset NON può aggiornare (impostare/modificare/eliminare) l'estensione Maintenance_collateral_ratio dell'asset. ",
+      "disabledInfo": "L'emittente/proprietario dell'asset può aggiornare (impostare/modificare/eliminare) l'estensione Maintenance_collateral_ratio dell'asset. "
+    },
+    "disable_icr_update": {
+      "about": "Disabilita aggiornamento proprietario Rapporto garanzia collaterale iniziale",
+      "enabledInfo": "L'emittente/proprietario dell'asset NON può aggiornare (impostare/modificare/eliminare) l'estensione partial_collateral_ratio dell'asset. ",
+      "disabledInfo": "L'emittente/proprietario dell'asset può aggiornare (impostare/modificare/eliminare) l'estensione partial_collateral_ratio dell'asset. "
+    },
+    "disable_mssr_update": {
+      "about": "Disabilita aggiornamento proprietario Rapporto massimo di compressione breve",
+      "enabledInfo": "L'emittente/proprietario della risorsa NON può aggiornare (impostare/modificare/eliminare) l'estensione Maximum_short_squeeze_ratio della risorsa. ",
+      "disabledInfo": "L'emittente/proprietario della risorsa può aggiornare (impostare/modificare/eliminare) l'estensione Maximum_short_squeeze_ratio della risorsa. "
+    },
+    "disable_bsrm_update": {
+      "about": "Disattiva l'aggiornamento del proprietario della strategia di gestione del rischio Black Swan",
+      "enabledInfo": "L'emittente/proprietario della risorsa NON può aggiornare l'estensione black_swan_response_method della risorsa.",
+      "disabledInfo": "L'emittente/proprietario della risorsa può aggiornare l'estensione black_swan_response_method della risorsa."
     }
+  },
+  "flags": {
+    "header": "Flag dell'asset",
+    "header_content": "Ogni autorizzazione per risorsa consentita può essere attivata/disattivata.",
+    "charge_market_fee": {
+      "about": "Abilita commissione di mercato",
+      "enabledInfo": "Le operazioni di mercato su questo asset potrebbero essere addebitate, a seconda delle impostazioni della tariffa.",
+      "disabledInfo": "Le operazioni di mercato su questo asset non vengono addebitate."
+    },
+    "white_list": {
+      "about": "Richiedere che i titolari siano inseriti nella lista bianca",
+      "enabledInfo": "L'uso di questa risorsa può essere limitato dall'autorizzazione della risorsa (whitelist e/o blacklist), a seconda delle impostazioni delle autorità di whitelist e blacklist.",
+      "disabledInfo": "L'uso di questa risorsa non è limitato dagli elenchi di autorizzazione delle risorse."
+    },
+    "override_authority": {
+      "about": "Il proprietario della risorsa può trasferire nuovamente la risorsa a se stesso",
+      "enabledInfo": "L'emittente/proprietario dell'asset può trasferire questo asset dal saldo di qualsiasi conto a un altro conto (nota che il saldo dopo il trasferimento non può essere negativo).",
+      "disabledInfo": "L'emittente/proprietario dell'asset NON può trasferire questo asset dal saldo di altri conti."
+    },
+    "transfer_restricted": {
+      "about": "Il proprietario della risorsa deve approvare tutti i trasferimenti",
+      "enabledInfo": "I trasferimenti di questa risorsa sono limitati. ",
+      "disabledInfo": "Nessuna limitazione di questo tipo sui trasferimenti."
+    },
+    "disable_force_settle": {
+      "about": "Disabilita assestamento forzato",
+      "enabledInfo": "I detentori di questo asset NON possono richiedere una liquidazione forzata per una parte del loro asset, a meno che tale asset non venga liquidato globalmente o individualmente in un fondo.",
+      "disabledInfo": "I detentori di questo bene possono richiedere una liquidazione forzata."
+    },
+    "disable_confidential": {
+      "about": "Disabilita transazioni riservate",
+      "enabledInfo": "I trasferimenti a indirizzi ciechi/invisibili/confidenziali sono disabilitati. ",
+      "disabledInfo": "I trasferimenti a indirizzi ciechi/invisibili/confidenziali sono abilitati."
+    },
+    "witness_fed_asset": {
+      "about": "Consenti ai testimoni di fornire feed",
+      "enabledInfo": "I testimoni attivi possono pubblicare feed di prezzo per questa risorsa.",
+      "disabledInfo": "I testimoni attivi non possono pubblicare feed di prezzo per questa risorsa."
+    },
+    "committee_fed_asset": {
+      "about": "Consenti ai membri del comitato di fornire feed",
+      "enabledInfo": "I membri attivi del comitato possono pubblicare feed di prezzo per questa risorsa.",
+      "disabledInfo": "I membri attivi del comitato non possono pubblicare feed di prezzo per questa risorsa."
+    },
+    "lock_max_supply": {
+      "about": "Blocca la fornitura massima",
+      "enabledInfo": "La fornitura massima di questo asset è bloccata, il che significa che l'emittente/proprietario dell'asset NON può aggiornare la fornitura massima di questo asset.",
+      "disabledInfo": "L'emittente/proprietario dell'asset può aggiornare la fornitura massima di questo asset."
+    },
+    "disable_new_supply": {
+      "about": "Disabilita nuova fornitura",
+      "enabledInfo": "Impossibile creare una nuova fornitura per questa risorsa (o dire impossibile \"coniare\" più token).",
+      "disabledInfo": "Può creare una nuova fornitura per questa risorsa."
+    },
+    "disable_collateral_bidding": {
+      "about": "Disabilita le offerte collaterali",
+      "enabledInfo": "Le offerte per la garanzia nel pool di regolamento globale sono disabilitate. ",
+      "disabledInfo": "Le offerte per la garanzia nel pool di regolamento globale sono abilitate."
+    }
+  },
+  "asset_details": {
+    "title": "Dettagli risorsa",
+    "title_content": "Queste sono le impostazioni delle risorse utilizzate per la funzionalità DEX principale.",
+    "symbol": {
+      "header": "Simbolo della risorsa",
+      "header_content": "Il simbolo dell'asset è un identificatore univoco sulla blockchain che identifica l'asset in tutto il DEX. ",
+      "placeholder": "Simbolo"
+    },
+    "shortName": {
+      "header": "Nome breve della risorsa",
+      "header_content": "Questo è il nome breve della risorsa, meno importante del simbolo ma è comunque un identificatore univoco abbreviato facoltativamente. ",
+      "placeholder": "Nome breve"
+    },
+    "preferredMarket": {
+      "header": "Coppia di scambi di mercato preferita",
+      "header_content": "La coppia di trading di mercato preferita è l'asset predefinito utilizzato per negoziare contro il tuo asset, questo è un suggerimento informale."
+    },
+    "description": {
+      "header": "Descrizione dell'asset",
+      "header_content": "Questa è la descrizione della risorsa, verrà visualizzata nel DEX e potrà essere utilizzata per fornire ulteriori informazioni sulla risorsa.",
+      "placeholder": "Descrizione"
+    },
+    "max_supply": {
+      "header": "Massima fornitura",
+      "header_content": "L'offerta massima del bene, ovvero l'importo totale del bene che potrà mai essere emesso dal proprietario del bene (tu).",
+      "placeholder": "Fornitura massima"
+    },
+    "precision": {
+      "header": "Precisione delle risorse",
+      "header_content": "La precisione dell'asset specifica la quantità di cifre decimali supportate. ",
+      "placeholder": "Precisione"
+    }
+  },
+  "extensions": {
+    "header_content": "Le estensioni sono impostazioni avanzate aggiuntive che possono essere utilizzate per personalizzare ulteriormente la risorsa.",
+    "header": "Estensioni delle commissioni di mercato",
+    "reward_percent": {
+      "enabled": "Estensione percentuale ricompensa referrer abilitata",
+      "enabledInfo": "Al referrer dei partecipanti attivi al mercato verrà assegnata una riduzione percentuale della commissione di mercato.",
+      "disabled": "Abilitare l'estensione della percentuale di ricompensa del referrer?",
+      "disabledInfo": "L'estensione della percentuale di ricompensa del referrer consente al creatore dell'asset di assegnare una percentuale della commissione di mercato al referrer dei partecipanti attivi al mercato.",
+      "header": "Percentuale di ricompensa del referrer",
+      "header_content": "La percentuale di ricompensa del referrer è la percentuale della commissione di mercato assegnata al referrer dei partecipanti attivi al mercato."
+    },
+    "whitelist_market_fee_sharing": {
+      "enabled": "Estensione di condivisione delle commissioni di mercato nella whitelist abilitata",
+      "enabledInfo": "I seguenti conti referrer saranno approvati per ricevere una riduzione delle commissioni di mercato raccolte dai loro conti referrer.",
+      "disabled": "Abilitare l'estensione per la condivisione delle commissioni del mercato whitelist?",
+      "disabledInfo": "Puoi limitare chi è autorizzato a ricevere una riduzione delle commissioni di mercato raccolte a una serie di conti referrer pre-approvati.",
+      "header": "Condivisione delle commissioni di mercato nella whitelist",
+      "header_content": "L'estensione di condivisione delle commissioni del mercato whitelist consente alla casa di limitare i referrer a questi account autorizzati."
+    },
+    "taker_fee_percent": {
+      "enabled": "Estensione percentuale commissione acquirente abilitata",
+      "enabledInfo": "Il partecipante \"acquirente\" dell'ordine limite riceverà una percentuale della commissione di mercato.",
+      "disabled": "Abilitare l'estensione percentuale della commissione dell'acquirente?",
+      "disabledInfo": "L'estensione percentuale della commissione dell'acquirente consente al creatore dell'asset di assegnare una percentuale della commissione di mercato all'acquirente delle operazioni di ordine limite.",
+      "header": "Percentuale della commissione dell'acquirente",
+      "header_content": "La percentuale della commissione taker è la percentuale della commissione di mercato assegnata al \"taker\" degli ordini limite sulla borsa decentralizzata."
+    },
+    "allowed_markets": {
+      "enabled": "Estensione dei mercati consentiti abilitata",
+      "enabledInfo": "I seguenti mercati sono autorizzati a negoziare questo asset.",
+      "disabled": "Abilitare l'estensione dei mercati consentiti?",
+      "disabledInfo": "Puoi limitare i mercati a cui è consentito scambiare questo asset a una serie di mercati pre-approvati."
+    },
+    "banned_markets": {
+      "enabled": "Estensione dei mercati vietati abilitata",
+      "enabledInfo": "Ai seguenti mercati è vietato negoziare questo asset.",
+      "disabled": "Abilitare l'estensione dei mercati vietati?",
+      "disabledInfo": "Questa funzione ti consente di vietare specifiche coppie di trading di mercato, consentendoti di evitare il trading di asset su mercati indesiderati."
+    },
+    "skipCER": {
+      "enabled": "Saltare il calcolo del tasso di cambio principale",
+      "enabledInfo": "Il creatore della risorsa ha abilitato la possibilità di saltare il controllo principale del tasso di cambio per questa risorsa.",
+      "disabled": "Saltare il calcolo del tasso di cambio principale?",
+      "disabledInfo": "L'estensione Salta tasso di cambio principale consente al creatore della risorsa di ignorare il controllo del tasso di cambio principale per questa risorsa."
+    }
+  },
+  "whitelist": {
+    "header_content": "Le autorità della lista bianca delle risorse sono account che possono contribuire all'elenco degli account autorizzati del proprio account per autorizzare l'interazione con questo accesso.",
+    "header": "Autorità della lista bianca delle risorse"
+  },
+  "blacklist": {
+    "header_content": "Le autorità della lista nera delle risorse sono account che possono contribuire all'elenco degli account nella lista nera del proprio account per imporre un elenco di account vietati che impediscono l'interazione con questo accesso.",
+    "header": "Autorità della lista nera delle risorse"
+  },
+  "market_fee": {
+    "header_content": "La commissione di mercato è la percentuale della commissione addebitata su ogni operazione eseguita su Bitshares DEX. ",
+    "header": "Commissione di mercato percentuale"
+  },
+  "max_market_fee": {
+    "header": "Commissione massima di mercato",
+    "header_content": "La commissione di mercato massima è l'importo massimo dell'asset che può essere addebitato come commissione su ogni operazione eseguita su Bitshares DEX."
+  },
+  "cer": {
+    "quote_asset_amount": {
+      "header": "Importo del preventivo dell'asset",
+      "header_content": "L'importo della risorsa emessa dall'utente necessaria per acquistare l'importo della risorsa di base."
+    },
+    "base_asset_amount": {
+      "header": "Importo del bene di base",
+      "header_content": "L'importo del bene di base ({{symbol}}) necessario per acquistare l'importo dell'asset quotato."
+    },
+    "calculated_cer_price": {
+      "header": "Tasso di cambio principale",
+      "header_content": "Assicurati che il tuo tasso di cambio principale sia superiore al prezzo di mercato, altrimenti le persone acquisteranno il tuo token dal mercato e prosciugheranno il tuo pool di commissioni tramite arbitraggio implicito. "
+    }
+  },
+  "nft": {
+    "NFTTitleContent": "Questo è il titolo del tuo token non fungibile, assicurati che sia univoco e descrittivo in quanto potrebbe essere presentato all'interno di varie gallerie/esploratori di token non fungibili.",
+    "NFTTitleHeader": "Titolo",
+    "TitlePlaceholder": "Titolo",
+    "NFTArtistContent": "Nome o pseudonimo dell'artista. ",
+    "NFTArtistHeader": "Artista",
+    "ArtistPlaceholder": "Artista",
+    "NFTNarrativeContent": "Una dichiarazione personale dell'artista che descrive l'opera, ad esempio cosa significa per lui o cosa l'ha ispirata. ",
+    "NFTNarrativeHeader": "Narrativa",
+    "NarrativePlaceholder": "Narrativa",
+    "NFTTagsContent": "Elenco di parole chiave separate da virgole per facilitare le ricerche di argomenti/interessi.",
+    "NFTTagsHeader": "Tag",
+    "TagsPlaceholder": "Tag",
+    "NFTTypeContent": "Una stringa che descrive il tipo di token non fungibile, ad esempio 'NFT/ART/VISUAL', 'NFT/ART/3D', 'NFT/ART/ANIMATION', 'NFT/ART/AUDIO', 'NFT/ART ",
+    "NFTTypeHeader": "Tipo",
+    "TypePlaceholder": "Tipo",
+    "NFTAttestationContent": "Qui l'artista o l'ideatore del materiale incapsulato impegna o dedica il materiale alla blockchain, nominando espressamente il token o l'ID risorsa sotto il quale vivrà l'opera e attestando la sua unicità qualificata o non qualificata. ",
+    "NFTAttestationHeader": "Attestazione",
+    "AttestationPlaceholder": "Attestazione",
+    "NFTAcknowledgementsContent": "Riconoscimenti o crediti aggiuntivi per il token digitale.",
+    "NFTAcknowledgementsHeader": "Ringraziamenti",
+    "AcknowledgementsPlaceholder": "Ringraziamenti",
+    "NFTHolderLicenseContent": "Se il token concede una licenza aggiuntiva per l'utilizzo dell'opera creativa specificatamente ai titolari del token, ciò può essere specificato qui. ",
+    "NFTHolderLicenseHeader": "Licenza titolari",
+    "HolderLicensePlaceholder": "Licenza titolare",
+    "NFTLicenseContent": "Licenza con la quale l'opera d'arte viene rilasciata. ",
+    "NFTLicenseHeader": "Licenza multimediale",
+    "LicensePlaceholder": "Licenza",
+    "modifyMultimediaContents": "Modifica contenuti multimediali",
+    "modifyingMultimediaContents": "Modificare i contenuti multimediali di questo token non fungibile",
+    "currentIPFSMedia": "Supporti IPFS attuali",
+    "referencesIPFSObjects": "Questo token non fungibile fa attualmente riferimento {{count}} Oggetti IPFS, sentiti libero di aggiungerne/rimuoverne altri.",
+    "noIPFSMediaFound": "Nessun supporto IPFS trovato",
+    "type": "Tipo",
+    "contentIdentifier": "Identificatore del contenuto",
+    "filename": "Nome file",
+    "delete": "Eliminare?",
+    "addNewIPFSMedia": "Aggiungi nuovo supporto IPFS",
+    "noIPFSGateway": "Non includere un host gateway IPFS negli URL multimediali di token non fungibili, poiché terze parti utilizzeranno i propri gateway per accedere al contenuto.",
+    "mediaURLPlaceholder": "/ipfs/cid/image.png",
+    "fileTypePlaceholder": "Tipo di file",
+    "imageFormats": "Formati di immagine",
+    "audioFormats": "Formati audio",
+    "videoFormats": "Formati video",
+    "documentFormats": "Formati dei documenti",
+    "threeDFormats": "File 3D",
+    "submit": "Invia",
+    "ipfsHostingSolutions": "Soluzioni Hosting IPFS",
+    "ipfsHostingDescription": "Dai un'occhiata al seguente esempio di servizi di hosting/blocco IPFS! ",
+    "header": "Dettagli del token non fungibile",
+    "header_content": "Questi sono i dettagli del tuo token non fungibile, assicurati che siano unici e descrittivi in ​​quanto potrebbero essere presentati all'interno di varie gallerie/esploratori NFT.",
+    "disabled": "Abilitare la funzionalità token non fungibile?",
+    "enabled": "Disabilitare la funzionalità token non fungibile?",
+    "multimedia_header": "Dettagli multimediali del token non fungibile",
+    "multimedia_header_content": "Fornisci il tuo non ",
+    "currentIPFSFiles": "Questo token non fungibile attualmente contiene {{count}} Riferimenti ai file multimediali IPFS.",
+    "supportedFiletypes": "I tipi di file supportati includono immagini, video, audio, file 3D, documenti, ecc.",
+    "main_header_content": "Le impostazioni seguenti definiscono come si comporterà il tuo token non fungibile sulla blockchain di Bitshares. ",
+    "main_header": "Configurazione del token non fungibile"
   }
+}

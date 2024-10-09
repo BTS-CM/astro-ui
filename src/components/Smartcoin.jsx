@@ -189,7 +189,8 @@ export default function Smartcoin(properties) {
 
       unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
-          setUsrBalances(data);
+          const filteredData = data.filter((balance) => assets.find((x) => x.id === balance.asset_id));
+          setUsrBalances(filteredData);
         }
       });
     }
@@ -956,7 +957,7 @@ export default function Smartcoin(properties) {
           </a>
           {showClosePositionDialog ? (
             <DeepLinkDialog
-              operationName="call_order_update"
+              operationNames={["call_order_update"]}
               username={usr.username}
               usrChain={usr.chain}
               userID={usr.id}
@@ -2793,7 +2794,7 @@ export default function Smartcoin(properties) {
 
         {showDialog && trxJSON ? (
           <DeepLinkDialog
-            operationName="call_order_update"
+            operationNames={["call_order_update"]}
             username={usr.username}
             usrChain={usr.chain}
             userID={usr.id}

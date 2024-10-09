@@ -3,7 +3,7 @@ import Apis from "@/bts/ws/ApiInstances";
 import { chains } from "@/config/chains";
 
 import { humanReadableFloat } from "@/lib/common";
-import { getDynamicData, getAsset } from "@/lib/cache";
+import { getDynamicData } from "@/lib/cache";
 import { getObjects } from "./src/common";
 
 // Create fetcher store for dynamic data
@@ -11,7 +11,6 @@ const [createDynamicDataStore] = nanoquery({
   fetcher: async (...args: unknown[]) => {
     const chain = args[0] as string;
     const assetID = args[1] as string;
-
     
     const replacedID = assetID.replace("1.3.", "2.3.");
 

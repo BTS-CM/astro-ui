@@ -210,28 +210,28 @@ export default function Vesting(properties) {
         </Card>
         {
           showDialog
-          ? <DeepLinkDialog
-              operationName="vesting_balance_withdraw"
-              username={usr.username}
-              usrChain={usr.chain}
-              userID={usr.id}
-              dismissCallback={setShowDialog}
-              key={`deeplink-dialog-${chosenVestingBalance.res.id}`}
-              headerText={t("Vesting:dialogContent.header", {
-                readable: chosenVestingBalance.readableBalance,
-              })}
-              trxJSON={[
-                {
-                  vesting_balance: chosenVestingBalance.res.id,
-                  owner: usr.id,
-                  amount: {
-                    amount: chosenVestingBalance.res.balance.amount,
-                    asset_id: chosenVestingBalance.res.balance.asset_id,
+            ? <DeepLinkDialog
+                operationNames={["vesting_balance_withdraw"]}
+                username={usr.username}
+                usrChain={usr.chain}
+                userID={usr.id}
+                dismissCallback={setShowDialog}
+                key={`deeplink-dialog-${chosenVestingBalance.res.id}`}
+                headerText={t("Vesting:dialogContent.header", {
+                  readable: chosenVestingBalance.readableBalance,
+                })}
+                trxJSON={[
+                  {
+                    vesting_balance: chosenVestingBalance.res.id,
+                    owner: usr.id,
+                    amount: {
+                      amount: chosenVestingBalance.res.balance.amount,
+                      asset_id: chosenVestingBalance.res.balance.asset_id,
+                    }
                   }
-                }
-              ]}
-            />
-          : null
+                ]}
+              />
+            : null
         }
       </div>
     </div>

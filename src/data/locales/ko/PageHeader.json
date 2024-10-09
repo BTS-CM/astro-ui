@@ -26,6 +26,10 @@
   "predictions": "예측",
   "createPrediction": "예측 만들기",
   "assetsHeading": "자산 생성",
+  "issuedAssets": "발행된 자산",
+  "create_smartcoin": "스마트코인 생성",
+  "create_uia": "사용자 발행 자산 생성",
+  "blockExplorer": "라이브 블록체인 데이터",
   "nodes": "노드",
   "buyLTM": "장기 구매",
   "english": "영어(en)",
@@ -63,7 +67,9 @@
     "tfunds": "아래에서 Same-T 자금을 찾아 생성, 업데이트 또는 삭제하세요!",
     "create_vesting": "이 양식을 사용하여 모든 계정에 대한 베스팅 잔액을 만드세요!",
     "uia": "아래 양식을 사용하여 나만의 사용자 발행 자산을 만들어보세요!",
-    "issuedAssets": "귀하가 생성한 블록체인 자산을 아래 탭에서 관리해보세요!"
+    "issuedAssets": "귀하가 생성한 블록체인 자산을 아래 탭에서 관리해보세요!",
+    "create_smartcoin": "아래 양식을 사용하여 새로운 스마트코인 자산을 생성하세요.",
+    "blocks": "아래에 요약된 최신 블록체인 데이터를 편리하게 확인하세요!"
   },
   "back": "돌아가기",
   "usage": "다음과 함께 사용하도록 설계됨 ",

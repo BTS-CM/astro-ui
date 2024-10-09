@@ -94,9 +94,11 @@ const chains = {
     },
 };
 
-async function generateDeepLink(chain, opType, operations) {
+async function generateDeepLink(chain, nodeURL, opTypes, operations) {
     return new Promise(async (resolve, reject) => {
-        const _node = chains[chain].nodeList[0].url
+        const _node = nodeURL && nodeURL.length
+            ? nodeURL
+            : chains[chain].nodeList[0].url;
 
         try {
             await bitsharesjs_ws__WEBPACK_IMPORTED_MODULE_0__.Apis.instance(
@@ -113,7 +115,7 @@ async function generateDeepLink(chain, opType, operations) {
 
         const tr = new bitsharesjs__WEBPACK_IMPORTED_MODULE_1__.TransactionBuilder();
         for (let i = 0; i < operations.length; i++) {
-            tr.add_type_operation(opType, operations[i]);
+            tr.add_type_operation(opTypes[i], operations[i]);
         }
 
         try {
@@ -348,10 +350,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var url__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(url__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var express__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! express */ "express");
 /* harmony import */ var express__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(express__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var electron__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! electron */ "electron");
-/* harmony import */ var electron__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(electron__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _lib_applicationMenu_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./lib/applicationMenu.js */ "./src/lib/applicationMenu.js");
-/* harmony import */ var _lib_deeplink_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./lib/deeplink.js */ "./src/lib/deeplink.js");
+/* harmony import */ var bitsharesjs_ws__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! bitsharesjs-ws */ "bitsharesjs-ws");
+/* harmony import */ var bitsharesjs_ws__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(bitsharesjs_ws__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var electron__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! electron */ "electron");
+/* harmony import */ var electron__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(electron__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _lib_applicationMenu_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./lib/applicationMenu.js */ "./src/lib/applicationMenu.js");
+/* harmony import */ var _lib_deeplink_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./lib/deeplink.js */ "./src/lib/deeplink.js");
+
+
 
 
 
@@ -366,221 +372,306 @@ let mainWindow = null;
 let tray = null;
 
 const createWindow = async () => {
-    const { width, height } = electron__WEBPACK_IMPORTED_MODULE_4__.screen.getPrimaryDisplay().workAreaSize;
+  mainWindow = new electron__WEBPACK_IMPORTED_MODULE_5__.BrowserWindow({
+    minWidth: 480,
+    minHeight: 695,
+    maximizable: true,
+    useContentSize: true,
+    autoHideMenuBar: true,
+    webPreferences: {
+      nodeIntegration: false,
+      contextIsolation: true,
+      sandbox: true,
+      preload: path__WEBPACK_IMPORTED_MODULE_0___default().join(__dirname, "preload.js"),
+    },
+    icon: __dirname + "/img/taskbar.png",
+  });
 
-    mainWindow = new electron__WEBPACK_IMPORTED_MODULE_4__.BrowserWindow({
-        width: width,
-        height: height,
-        minWidth: 480,
-        minHeight: 695,
-        maxWidth: width,
-        maximizable: true,
-        maxHeight: height,
-        useContentSize: true,
-        autoHideMenuBar: true,
-        webPreferences: {
-            nodeIntegration: false,
-            contextIsolation: true,
-            sandbox: true,
-            preload: path__WEBPACK_IMPORTED_MODULE_0___default().join(__dirname, "preload.js"),
-        },
-        icon: __dirname + "/img/taskbar.png",
-    });
-    
-    const expressApp = express__WEBPACK_IMPORTED_MODULE_3___default()();
+  const expressApp = express__WEBPACK_IMPORTED_MODULE_3___default()();
 
-    let astroDistPath;
-    if (true) {
-        astroDistPath = 'astroDist';
-    } else {}
+  let astroDistPath;
+  if (true) {
+    astroDistPath = "astroDist";
+  } else {}
 
-    expressApp.use(express__WEBPACK_IMPORTED_MODULE_3___default()["static"](astroDistPath));
-    expressApp.listen(8080, () => {
-        console.log("Express server listening on port 8080");
-    });
+  expressApp.use(express__WEBPACK_IMPORTED_MODULE_3___default()["static"](astroDistPath));
+  expressApp.listen(8080, () => {
+    console.log("Express server listening on port 8080");
+  });
 
-    (0,_lib_applicationMenu_js__WEBPACK_IMPORTED_MODULE_5__.initApplicationMenu)(mainWindow);
+  (0,_lib_applicationMenu_js__WEBPACK_IMPORTED_MODULE_6__.initApplicationMenu)(mainWindow);
 
-    mainWindow.loadURL('http://localhost:8080/index.html');
+  mainWindow.loadURL("http://localhost:8080/index.html");
 
-    mainWindow.webContents.setWindowOpenHandler(() => {
-        return { action: "deny" };
-    });
+  mainWindow.webContents.setWindowOpenHandler(() => {
+    return { action: "deny" };
+  });
 
-    tray = new electron__WEBPACK_IMPORTED_MODULE_4__.Tray(path__WEBPACK_IMPORTED_MODULE_0___default().join(__dirname, "img", "tray.png"));
-    const contextMenu = electron__WEBPACK_IMPORTED_MODULE_4__.Menu.buildFromTemplate([
-        {
-            label: "Show App",
-            click: function () {
-                mainWindow?.show();
-            },
-        },
-        {
-            label: "Quit",
-            click: function () {
-                tray = null;
-                electron__WEBPACK_IMPORTED_MODULE_4__.app.quit();
-            },
-        },
-    ]);
+  tray = new electron__WEBPACK_IMPORTED_MODULE_5__.Tray(path__WEBPACK_IMPORTED_MODULE_0___default().join(__dirname, "img", "tray.png"));
+  const contextMenu = electron__WEBPACK_IMPORTED_MODULE_5__.Menu.buildFromTemplate([
+    {
+      label: "Show App",
+      click: function () {
+        mainWindow?.show();
+      },
+    },
+    {
+      label: "Quit",
+      click: function () {
+        tray = null;
+        electron__WEBPACK_IMPORTED_MODULE_5__.app.quit();
+      },
+    },
+  ]);
 
-    tray.setToolTip("Bitshares Astro UI");
+  tray.setToolTip("Bitshares Astro UI");
 
-    tray.on("right-click", (event, bounds) => {
-        tray?.popUpContextMenu(contextMenu);
-    });
+  tray.on("right-click", (event, bounds) => {
+    tray?.popUpContextMenu(contextMenu);
+  });
 
-    electron__WEBPACK_IMPORTED_MODULE_4__.ipcMain.handle("fetchTopMarkets", async (event, arg) => {
-        const { chain } = arg;
+  let stillAlive = true;
+  let continueFetching = true;
+  let activeBlockchainConnection = false;
+  let killBlockchainConnection = false;
+  let latestBlockNumber = 0;
+  let isFetching = false;
 
-        let retrievedData;
+  electron__WEBPACK_IMPORTED_MODULE_5__.ipcMain.on("requestBlocks", async (event, arg) => {
+    const { url } = arg;
+
+    if (isFetching) {
+      continueFetching = false;
+      await new Promise((resolve) => setTimeout(resolve, 3100)); // Wait for the current fetching to stop
+    }
+
+    bitsharesjs_ws__WEBPACK_IMPORTED_MODULE_4__.Apis.instance(url, true)
+      .init_promise.then(async (res) => {
+        console.log("connected to:", res[0].network);
+
+        let globalProperties;
         try {
-            retrievedData = await fetch(
-                chain === "bitshares"
-                    ? `https://api.bitshares.ws/openexplorer/top_markets?top_n=100`
-                    : `https://api.testnet.bitshares.ws/openexplorer/top_markets?top_n=50`
-            );
+          globalProperties = await bitsharesjs_ws__WEBPACK_IMPORTED_MODULE_4__.Apis.instance()
+            .db_api()
+            .exec("get_dynamic_global_properties", []);
         } catch (error) {
-            console.log({error})
+          console.log({ error, location: "globalProperties", url });
+          return;
         }
-      
-        if (!retrievedData || !retrievedData.ok) {
-            console.log("Failed to fetch top markets");
-            return;
+
+        latestBlockNumber = globalProperties.head_block_number;
+
+        const blockPromises = [];
+        for (let i = latestBlockNumber - 1; i > latestBlockNumber - 31; i--) {
+          blockPromises.push(bitsharesjs_ws__WEBPACK_IMPORTED_MODULE_4__.Apis.instance().db_api().exec("get_block", [i]));
         }
-    
-        const topMarkets = await retrievedData.json();
-        return topMarkets ?? null;
-    });
 
-    electron__WEBPACK_IMPORTED_MODULE_4__.ipcMain.handle("fetchAccountHistory", async (event, arg) => {
-        const { chain, accountID } = arg;
-
-        const from = arg.from ?? 0;
-        const size = arg.size ?? 100;
-        const from_date = arg.from_date ?? "2015-10-10";
-        const to_date = arg.to_date ?? "now";
-        const sort_by = arg.sort_by ?? "-operation_id_num";
-        const type = arg.type ?? "data";
-        const agg_field = arg.agg_field ?? "operation_type";
-
-        const url = `https://${
-                        chain === "bitshares" ? "api" : "api.testnet"
-                    }.bitshares.ws/openexplorer/es/account_history` +
-                    `?account_id=${accountID}` +
-                    `&from_=${from}` +
-                    `&size=${size}` +
-                    `&from_date=${from_date}` +
-                    `&to_date=${to_date}` +
-                    `&sort_by=${sort_by}` +
-                    `&type=${type}` +
-                    `&agg_field=${agg_field}`;
-
-        let history;
+        let lastFewBlocks = [];
         try {
-            history = await fetch(url, { method: "GET" });
+          lastFewBlocks = await Promise.all(blockPromises);
         } catch (error) {
-            console.log({ error });
-            return null;
+          console.log({ error });
         }
 
-        if (!history || !history.ok) {
-            console.log("Couldn't fetch account history.");
-            return null;
+        for (let i = lastFewBlocks.length - 1; i >= 0; i--) {
+          mainWindow.webContents.send("blockResponse", {
+            ...lastFewBlocks[i],
+            block: latestBlockNumber - 1 - i,
+          });
         }
 
-        const accountHistory = await history.json();     
-        return accountHistory ?? null;
-    });
-
-    electron__WEBPACK_IMPORTED_MODULE_4__.ipcMain.handle("generateDeepLink", async (event, arg) => {
-        const { usrChain, operationName, trxJSON } = arg;
-
-        let deeplink;
-        try {
-            deeplink = await (0,_lib_deeplink_js__WEBPACK_IMPORTED_MODULE_6__.generateDeepLink)(usrChain, operationName, trxJSON);
-        } catch (error) {
-            console.log({ error });
-        }
-
-        return deeplink ?? null;
-    });
-
-    const safeDomains = [
-        "https://blocksights.info/",
-        "https://bts.exchange/",
-        "https://ex.xbts.io/",
-        "https://kibana.bts.mobi/",
-        "https://www.bitsharescan.info/",
-        "https://github.com/bitshares/beet",
-      ];
-    electron__WEBPACK_IMPORTED_MODULE_4__.ipcMain.on("openURL", (event, arg) => {
-        try {
-            const parsedUrl = new (url__WEBPACK_IMPORTED_MODULE_2___default().URL)(arg);
-            const domain = parsedUrl.hostname;
-
-            const isSafeDomain = safeDomains.some(safeDomain => {
-                const safeDomainHostname = new (url__WEBPACK_IMPORTED_MODULE_2___default().URL)(safeDomain).hostname;
-                return safeDomainHostname === domain;
-            });
-
-            if (isSafeDomain) {
-                electron__WEBPACK_IMPORTED_MODULE_4__.shell.openExternal(arg);
-            } else {
-                console.error(
-                    `Rejected opening URL with unsafe domain: ${domain}`
-                );
+        const fetchBlocks = async () => {
+          isFetching = true;
+          while (continueFetching) {
+            if (!stillAlive) {
+              continueFetching = false;
+              break;
             }
-        } catch (err) {
-            console.error(`Failed to open URL: ${err.message}`);
-        }
-    });    
+            let currentBlock;
+            try {
+              currentBlock = await bitsharesjs_ws__WEBPACK_IMPORTED_MODULE_4__.Apis.instance().db_api().exec("get_block", [latestBlockNumber]);
+            } catch (error) {
+              console.log({ error });
+              continueFetching = false;
+              break;
+            }
+            mainWindow.webContents.send("blockResponse", {
+              ...currentBlock,
+              block: latestBlockNumber,
+            });
+            latestBlockNumber += 1;
+            stillAlive = false;
 
-    tray.on("click", () => {
-        mainWindow?.setAlwaysOnTop(true);
-        mainWindow?.show();
-        mainWindow?.focus();
-        mainWindow?.setAlwaysOnTop(false);
-    });
+            await new Promise((resolve) => setTimeout(resolve, 4200));
+          }
 
-    tray.on("balloon-click", () => {
-        mainWindow?.setAlwaysOnTop(true);
-        mainWindow?.show();
-        mainWindow?.focus();
-        mainWindow?.setAlwaysOnTop(false);
-    });
+          if (!continueFetching) {
+            bitsharesjs_ws__WEBPACK_IMPORTED_MODULE_4__.Apis.instance().close();
+          }
+          isFetching = false;
+        };
+
+        fetchBlocks();
+
+        electron__WEBPACK_IMPORTED_MODULE_5__.ipcMain.on("stillAlive", (event, arg) => {
+          stillAlive = true;
+        });
+      })
+      .catch((err) => {
+        console.log({ err });
+      });
+  });
+
+  electron__WEBPACK_IMPORTED_MODULE_5__.ipcMain.handle("fetchTopMarkets", async (event, arg) => {
+    const { chain } = arg;
+
+    let retrievedData;
+    try {
+      retrievedData = await fetch(
+        chain === "bitshares"
+          ? `https://api.bitshares.ws/openexplorer/top_markets?top_n=100`
+          : `https://api.testnet.bitshares.ws/openexplorer/top_markets?top_n=50`
+      );
+    } catch (error) {
+      console.log({ error });
+    }
+
+    if (!retrievedData || !retrievedData.ok) {
+      console.log("Failed to fetch top markets");
+      return;
+    }
+
+    const topMarkets = await retrievedData.json();
+    return topMarkets ?? null;
+  });
+
+  electron__WEBPACK_IMPORTED_MODULE_5__.ipcMain.handle("fetchAccountHistory", async (event, arg) => {
+    const { chain, accountID } = arg;
+
+    const from = arg.from ?? 0;
+    const size = arg.size ?? 100;
+    const from_date = arg.from_date ?? "2015-10-10";
+    const to_date = arg.to_date ?? "now";
+    const sort_by = arg.sort_by ?? "-operation_id_num";
+    const type = arg.type ?? "data";
+    const agg_field = arg.agg_field ?? "operation_type";
+
+    const url =
+      `https://${
+        chain === "bitshares" ? "api" : "api.testnet"
+      }.bitshares.ws/openexplorer/es/account_history` +
+      `?account_id=${accountID}` +
+      `&from_=${from}` +
+      `&size=${size}` +
+      `&from_date=${from_date}` +
+      `&to_date=${to_date}` +
+      `&sort_by=${sort_by}` +
+      `&type=${type}` +
+      `&agg_field=${agg_field}`;
+
+    let history;
+    try {
+      history = await fetch(url, { method: "GET" });
+    } catch (error) {
+      console.log({ error });
+      return null;
+    }
+
+    if (!history || !history.ok) {
+      console.log("Couldn't fetch account history.");
+      return null;
+    }
+
+    const accountHistory = await history.json();
+    return accountHistory ?? null;
+  });
+
+  electron__WEBPACK_IMPORTED_MODULE_5__.ipcMain.handle("generateDeepLink", async (event, arg) => {
+    const { usrChain, nodeURL, operationNames, trxJSON } = arg;
+
+    let deeplink;
+    try {
+      deeplink = await (0,_lib_deeplink_js__WEBPACK_IMPORTED_MODULE_7__.generateDeepLink)(usrChain, nodeURL, operationNames, trxJSON);
+    } catch (error) {
+      console.log({ error });
+    }
+
+    return deeplink ?? null;
+  });
+
+  const safeDomains = [
+    "https://blocksights.info/",
+    "https://bts.exchange/",
+    "https://ex.xbts.io/",
+    "https://kibana.bts.mobi/",
+    "https://www.bitsharescan.info/",
+    "https://github.com/bitshares/beet",
+  ];
+  electron__WEBPACK_IMPORTED_MODULE_5__.ipcMain.on("openURL", (event, arg) => {
+    try {
+      const parsedUrl = new (url__WEBPACK_IMPORTED_MODULE_2___default().URL)(arg);
+      const domain = parsedUrl.hostname;
+
+      const isSafeDomain = safeDomains.some((safeDomain) => {
+        const safeDomainHostname = new (url__WEBPACK_IMPORTED_MODULE_2___default().URL)(safeDomain).hostname;
+        return safeDomainHostname === domain;
+      });
+
+      if (isSafeDomain) {
+        electron__WEBPACK_IMPORTED_MODULE_5__.shell.openExternal(arg);
+      } else {
+        console.error(`Rejected opening URL with unsafe domain: ${domain}`);
+      }
+    } catch (err) {
+      console.error(`Failed to open URL: ${err.message}`);
+    }
+  });
+
+  tray.on("click", () => {
+    mainWindow?.setAlwaysOnTop(true);
+    mainWindow?.show();
+    mainWindow?.focus();
+    mainWindow?.setAlwaysOnTop(false);
+  });
+
+  tray.on("balloon-click", () => {
+    mainWindow?.setAlwaysOnTop(true);
+    mainWindow?.show();
+    mainWindow?.focus();
+    mainWindow?.setAlwaysOnTop(false);
+  });
 };
 
-electron__WEBPACK_IMPORTED_MODULE_4__.app.disableHardwareAcceleration();
+electron__WEBPACK_IMPORTED_MODULE_5__.app.disableHardwareAcceleration();
 
 const currentOS = os__WEBPACK_IMPORTED_MODULE_1___default().platform();
 if (currentOS === "win32" || currentOS === "linux") {
-    // windows + linux setup phase
-    const gotTheLock = electron__WEBPACK_IMPORTED_MODULE_4__.app.requestSingleInstanceLock();
+  // windows + linux setup phase
+  const gotTheLock = electron__WEBPACK_IMPORTED_MODULE_5__.app.requestSingleInstanceLock();
 
-    if (!gotTheLock) {
-        electron__WEBPACK_IMPORTED_MODULE_4__.app.quit();
-    }
+  if (!gotTheLock) {
+    electron__WEBPACK_IMPORTED_MODULE_5__.app.quit();
+  }
 
-    electron__WEBPACK_IMPORTED_MODULE_4__.app.whenReady().then(() => {
-        createWindow();
-    });
+  electron__WEBPACK_IMPORTED_MODULE_5__.app.whenReady().then(() => {
+    createWindow();
+  });
 } else {
-    electron__WEBPACK_IMPORTED_MODULE_4__.app.whenReady().then(() => {
-        createWindow();
-    });
+  electron__WEBPACK_IMPORTED_MODULE_5__.app.whenReady().then(() => {
+    createWindow();
+  });
 
-    electron__WEBPACK_IMPORTED_MODULE_4__.app.on("window-all-closed", () => {
-        if (process.platform !== "darwin") {
-            electron__WEBPACK_IMPORTED_MODULE_4__.app.quit();
-        }
-    });
+  electron__WEBPACK_IMPORTED_MODULE_5__.app.on("window-all-closed", () => {
+    if (process.platform !== "darwin") {
+      electron__WEBPACK_IMPORTED_MODULE_5__.app.quit();
+    }
+  });
 
-    electron__WEBPACK_IMPORTED_MODULE_4__.app.on("activate", () => {
-        if (mainWindow === null) {
-            createWindow();
-        }
-    });
+  electron__WEBPACK_IMPORTED_MODULE_5__.app.on("activate", () => {
+    if (mainWindow === null) {
+      createWindow();
+    }
+  });
 }
 
 /******/ })()

@@ -5,6 +5,7 @@
     "offering": "Ofrenda",
     "fee": "Tarifa",
     "rowTitle": "Fondo #{{id}} por {{user}}",
+    "fund": "Financiar",
     "unpaidAmount": "Monto impago",
     "id": "Identificación",
     "deleteHeader": "Eliminando {{owner_account}}el fondo {{fund_id}}",

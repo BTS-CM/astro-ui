@@ -8,6 +8,8 @@ import React, {
 import { FixedSizeList as List } from "react-window";
 import { useStore } from '@nanostores/react';
 import Fuse from "fuse.js";
+import { sha256 } from '@noble/hashes/sha2';
+import { bytesToHex as toHex } from '@noble/hashes/utils';
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
@@ -48,6 +50,7 @@ import { $marketSearchCacheBTS, $marketSearchCacheTEST } from "@/stores/cache.ts
 
 import { debounce, humanReadableFloat, blockchainFloat } from "@/lib/common.js";
 import { $currentNode } from "@/stores/node.ts";
+import { $blockList } from "@/stores/blocklist.ts";
 
 import ExternalLink from "./common/ExternalLink.jsx";
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
@@ -55,6 +58,7 @@ import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
 export default function SameTFunds(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
+  const blocklist = useSyncExternalStore($blockList.subscribe, $blockList.get, () => true);
   const currentNode = useStore($currentNode);
 
   const _assetsBTS = useSyncExternalStore($assetCacheBTS.subscribe, $assetCacheBTS.get, () => true);
@@ -106,7 +110,12 @@ export default function SameTFunds(properties) {
 
       sameTFundsStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
-          setSameTFunds(data.filter(x => x));
+          let filteredData = data.filter(x => x);
+          if (_chain === "bitshares") {
+            // filter out any tfunds owned by banned users
+            filteredData = filteredData.filter(x => !blocklist.users.includes(toHex(sha256(x.owner_account))));
+          }
+          setSameTFunds(filteredData);
         }
       });
     }
@@ -170,7 +179,8 @@ export default function SameTFunds(properties) {
 
       unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
-          setUsrBalances(data);
+          const filteredData = data.filter((balance) => assets.find((x) => x.id === balance.asset_id));
+          setUsrBalances(filteredData);
         }
       });
     }
@@ -283,12 +293,36 @@ export default function SameTFunds(properties) {
         <Card className="w-full">
           <CardHeader className="pt-4 pb-0">
             <CardTitle>
+              {t("SameTFunds:fund")}
+              {" #"}
+              <ExternalLink
+                classnamecontents="hover:text-purple-500"
+                type="text"
+                text={fund.id.replace("1.20.", "")}
+                hyperlink={`https://blocksights.info/#/objects/${fund.id}`}
+              />
+              {" "}
+              {t("CreditBorrow:common.by")}
+              {" "}
               {
-                t("SameTFunds:rowTitle", {
-                  id: fund.id.replace("1.20.", ""),
-                  user: `${lender ? lender.name : "???"} (${fund.owner_account})${lender && lender.id === lender.lifetime_referrer ? " - LTM" : ""}`,
-                })
+                lender
+                ? <ExternalLink
+                    classnamecontents="hover:text-purple-500"
+                    type="text"
+                    text={lender.name}
+                    hyperlink={`https://blocksights.info/#/account/${lender.name}`}
+                  />
+                : "???"
               }
+              {" ("}
+              <ExternalLink
+                classnamecontents="hover:text-purple-500"
+                type="text"
+                text={fund.owner_account}
+                hyperlink={`https://blocksights.info/#/account/${fund.owner_account}`}
+              />
+              {") "}
+              {lender && lender.id === lender.lifetime_referrer ? " - LTM" : ""}
             </CardTitle>
             <CardDescription>
             </CardDescription>
@@ -452,7 +486,7 @@ export default function SameTFunds(properties) {
           {
             updateDialog
               ? <DeepLinkDialog
-                  operationName="samet_fund_update"
+                  operationNames={["samet_fund_update"]}
                   username={usr.username}
                   usrChain={usr.chain}
                   userID={usr.id}
@@ -480,7 +514,7 @@ export default function SameTFunds(properties) {
           {
             deleteDialog
               ? <DeepLinkDialog
-                  operationName="samet_fund_delete"
+                  operationNames={["samet_fund_delete"]}
                   username={usr.username}
                   usrChain={usr.chain}
                   userID={usr.id}
@@ -692,7 +726,7 @@ export default function SameTFunds(properties) {
                     {
                       createDialog
                         ? <DeepLinkDialog
-                            operationName="samet_fund_create"
+                            operationNames={["samet_fund_create"]}
                             username={usr.username}
                             usrChain={usr.chain}
                             userID={usr.id}

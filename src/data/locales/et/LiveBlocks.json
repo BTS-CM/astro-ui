@@ -1,0 +1,45 @@
+{
+  "cardTitle": "Reaalajas plokiahela ülevaade",
+  "cardDescription": "Bitsharesi plokiahelal on 3-sekundiline blokeerimisaeg ja see on võimeline käsitlema tuhandeid tehinguid sekundis. ",
+  "currentBlock": {
+    "content": "Viimane ploki number.",
+    "header": "Praegune plokk"
+  },
+  "currentWitness": {
+    "content": "Tunnistaja, kes koostas viimase ploki.",
+    "header": "Praegune tunnistaja"
+  },
+  "tps": {
+    "content": "Tehinguid sekundis viimase aja jooksul {{blockQty}} plokid.",
+    "header": "Tehingud sekundis"
+  },
+  "uniqueWitnesses": {
+    "content": "Unikaalsete tunnistajate arv viimastes plokkides.",
+    "header": "Unikaalsed tunnistajad"
+  },
+  "txPerBlock": {
+    "content": "Keskmine tehingute arv ploki kohta viimase aja jooksul {{blockQty}} plokid.",
+    "header": "Tehingud ploki kohta"
+  },
+  "recentFees": {
+    "content": "Viimasel kogutud tasud kokku {{blockQty}} plokid.",
+    "header": "Viimased tasud"
+  },
+  "chart": {
+    "content": "Tehingute arvu kuvamine ploki kohta viimase aja jooksul {{blockQty}} plokid.",
+    "header": "Tehingud ploki kohta"
+  },
+  "recentActivity": {
+    "content": "Hiljutine tegevus plokiahelas.",
+    "header": "Hiljutine tegevus"
+  },
+  "recentBlocks": {
+    "content": "Viimaste plokkide loend.",
+    "header": "Viimased plokid"
+  },
+  "dialogContent": {
+    "json": "JSON-andmed",
+    "jsonDescription": "Valitud üksuse üksikasjalikud JSON-andmed.",
+    "copy": "Kopeeri"
+  }
+}

@@ -18,12 +18,43 @@ import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/h
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
 import { $currentUser } from "@/stores/users.ts";
+import { $currentNode } from "@/stores/node.ts";
+import { $blockList, updateBlockList } from "@/stores/blocklist.ts";
+
+import { createBlockedAccountStore } from "@/nanoeffects/BlockedAccounts.ts";
 
 export default function Home(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
+  const blocklist = useSyncExternalStore($blockList.subscribe, $blockList.get, () => true);
+  const currentNode = useStore($currentNode);
 
   useInitCache(usr && usr.chain ? usr.chain : "bitshares", []);
+
+  useEffect(() => {
+    if (
+      blocklist && blocklist.timestamp &&
+      usr && usr.chain && usr.chain === "bitshares" && // production only block list
+      currentNode && currentNode.url
+    ) {
+      const currentTime = Date.now();
+      const isOlderThan24Hours = currentTime - blocklist.timestamp > 24 * 60 * 60 * 1000;
+      if (isOlderThan24Hours || !blocklist.users.length) {
+        const blockListStore = createBlockedAccountStore([usr.chain, currentNode.url]);
+        const unsub = blockListStore.subscribe((result) => {
+          if (result.error) {
+            console.error(result.error);
+          }
+          if (!result.loading && result.data) {
+            updateBlockList(result.data);
+          }
+        });
+        return () => {
+          unsub();
+        };
+      }
+    }
+  }, [usr, currentNode]);
 
   return (
     <div className="container mx-auto mt-3 mb-5">
@@ -380,6 +411,26 @@ export default function Home(properties) {
             </ul>
           </HoverCardContent>
         </HoverCard>
+
+        <HoverCard key="blocks">
+          <HoverCardTrigger asChild>
+            <a href="/blocks/index.html" style={{ textDecoration: "none" }}>
+              <Card className="h-full hover:shadow-md hover:shadow-black">
+                <CardHeader>
+                  <CardTitle>{t("Home:blocks.title")}</CardTitle>
+                  <CardDescription>{t("Home:blocks.subtitle")}</CardDescription>
+                </CardHeader>
+              </Card>
+            </a>
+          </HoverCardTrigger>
+          <HoverCardContent className="w-80 text-sm pt-1">
+            <ul className="ml-2 list-disc [&>li]:mt-2">
+              <li>{t("Home:blocks.hover1")}</li>
+              <li>{t("Home:blocks.hover2")}</li>
+              <li>{t("Home:blocks.hover3")}</li>
+            </ul>
+          </HoverCardContent>
+        </HoverCard>
       </div>
 
       <h4 className="mt-3 mb-2">
@@ -422,6 +473,26 @@ export default function Home(properties) {
               <li>{t("Home:create_uia.hover1")}</li>
               <li>{t("Home:create_uia.hover2")}</li>
               <li>{t("Home:create_uia.hover3")}</li>
+            </ul>
+          </HoverCardContent>
+        </HoverCard>
+        
+        <HoverCard key="create_smartcoin">
+          <HoverCardTrigger asChild>
+            <a href="/create_smartcoin/index.html" style={{ textDecoration: "none" }}>
+              <Card className="h-full hover:shadow-md hover:shadow-black">
+                <CardHeader>
+                  <CardTitle>{t("Home:create_smartcoin.title")}</CardTitle>
+                  <CardDescription>{t("Home:create_smartcoin.subtitle")}</CardDescription>
+                </CardHeader>
+              </Card>
+            </a>
+          </HoverCardTrigger>
+          <HoverCardContent className="w-80 text-sm pt-1">
+            <ul className="ml-2 list-disc [&>li]:mt-2">
+              <li>{t("Home:create_smartcoin.hover1")}</li>
+              <li>{t("Home:create_smartcoin.hover2")}</li>
+              <li>{t("Home:create_smartcoin.hover3")}</li>
             </ul>
           </HoverCardContent>
         </HoverCard>

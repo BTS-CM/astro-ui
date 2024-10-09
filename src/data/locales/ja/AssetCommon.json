@@ -1,94 +1,314 @@
 {
-    "permissions": {
-      "header": "アセットの権限",
-      "header_content": "注: アクセス許可の無効化は永続的な決定です。",
-      "charge_market_fee": {
-        "allowedText": "市場手数料が許可される",
-        "disabledText": "市場手数料が無効になっています",
-        "enabledInfo": "アセット作成者は、このアセットに対する市場取引手数料の請求を有効にすることができます。",
-        "disabledInfo": "現在、アセット作成者がこのアセットに対して市場取引手数料を請求することは不可能です。"
-      },
-      "white_list": {
-        "allowedText": "ホワイトリストは許可されています",
-        "disabledText": "ホワイトリストが無効になっています",
-        "enabledInfo": "アセット作成者は、このアセットのホワイト リスト機関の構成を有効にすることができます。",
-        "disabledInfo": "現在、アセット作成者がこのアセットのホワイト リスト機関を構成することはできません。"
-      },
-      "override_authority": {
-        "allowedText": "許可された権限の上書き",
-        "disabledText": "オーバーライド権限が無効になっています",
-        "enabledInfo": "アセット作成者は、このアセットに対して上書き転送操作を実行して、アセットをあなたの残高に戻す機能を有効にすることができます。",
-        "disabledInfo": "アセット作成者がこのアセットに対してオーバーライド転送操作を実行することはできなくなりました。"
-      },
-      "transfer_restricted": {
-        "allowedText": "転送制限許可",
-        "enabledInfo": "アセット作成者は、このアセットの転送を制限する機能を有効にすることができます。",
-        "disabledText": "転送制限が無効になっています",
-        "disabledInfo": "アセット作成者がこのアセットの転送を制限することは現在不可能です。"
-      },
-      "disable_confidential": {
-        "allowedText": "機密許可を無効にする",
-        "enabledInfo": "アセット作成者は、このアセットの機密操作を無効にする機能を有効にすることができます。",
-        "disabledText": "機密を無効にする 無効にする",
-        "disabledInfo": "現在、アセット作成者がこのアセットの機密操作を無効にすることはできません。"
-      },
-      "witness_fed_asset": {
-        "allowedText": "証人によるアセットの提供が許可される",
-        "enabledInfo": "アセット作成者は、証人がこのアセットの価格フィードを公開できるようにすることができます。",
-        "disabledText": "証人が供給したアセットが無効になりました",
-        "disabledInfo": "現在、アセット作成者が証人にこのアセットの価格フィードを公開できるようにすることは不可能です。"
-      },
-      "committee_fed_asset": {
-        "allowedText": "委員会に供給された資産が許可される",
-        "enabledInfo": "アセット作成者は、委員会のメンバーがこのアセットの価格フィードを公開できるようにすることができます。",
-        "disabledText": "委員会に供給されたアセットが無効になりました",
-        "disabledInfo": "アセット作成者が委員会メンバーにこのアセットの価格フィードを公開できるようにすることは現在不可能です。"
-      }
+  "permissions": {
+    "header": "アセットの権限",
+    "header_content": "注: アクセス許可の無効化は永続的な決定です。",
+    "charge_market_fee": {
+      "about": "市場手数料を有効にする",
+      "enabledInfo": "資産の発行者/所有者は、charge_market_fee フラグを更新できます。",
+      "disabledInfo": "資産の発行者/所有者は、charge_market_fee フラグを更新できません。 "
     },
-    "flags": {
-      "header": "アセットのフラグ",
-      "header_content": "許可された各アセットの権限は、オン/オフを切り替えることができます。",
-      "charge_market_fee": {
-        "allowedText": "市場手数料の有効化",
-        "enabledInfo": "アセット作成者は、市場手数料報酬共有機能を含む、このアセットの市場取引手数料を構成できます。",
-        "disabledText": "市場手数料が無効になっています",
-        "disabledInfo": "アセット作成者は、このアセットに対する市場取引手数料の請求を無効にしました。"
-      },
-      "white_list": {
-        "allowedText": "ホワイトリストが有効になっている",
-        "enabledInfo": "アセット作成者は、このアセットのホワイト リスト機関を構成できます。",
-        "disabledText": "ホワイトリストが無効になっています",
-        "disabledInfo": "アセット作成者は、このアセットに対するホワイト リスト権限の構成を無効にしました。"
-      },
-      "override_authority": {
-        "allowedText": "オーバーライド権限が有効になっています",
-        "enabledInfo": "アセット作成者は、このアセットに対して上書き転送操作を実行して、アセットをあなたの残高から元の残高に戻すことができます。",
-        "disabledText": "オーバーライド権限が無効になっています",
-        "disabledInfo": "アセット作成者は、このアセットに対するオーバーライド転送操作の実行を無効にしました。"
-      },
-      "transfer_restricted": {
-        "allowedText": "転送制限が有効になっている",
-        "enabledInfo": "アセット作成者は、このアセットの譲渡を制限できます。",
-        "disabledText": "転送制限が無効になっています",
-        "disabledInfo": "アセット作成者は、このアセットの転送の制限を無効にしました。"
-      },
-      "disable_confidential": {
-        "allowedText": "機密情報を無効にする 有効にする",
-        "enabledInfo": "アセット作成者は、このアセットに対する機密操作を無効にしました。",
-        "disabledText": "機密を無効にする 無効にする",
-        "disabledInfo": "アセット作成者は、このアセットの機密操作を無効にしていません。"
-      },
-      "witness_fed_asset": {
-        "allowedText": "証人フィードアセットが有効化されました",
-        "enabledInfo": "証人は、この資産の価格フィードを公開できます。",
-        "disabledText": "証人が供給したアセットが無効になりました",
-        "disabledInfo": "証人はこの資産の価格フィードを公開できません。"
-      },
-      "committee_fed_asset": {
-        "allowedText": "委員会から提供されたアセットが有効になっています",
-        "enabledInfo": "委員会のメンバーは、この資産の価格フィードを公開できます。",
-        "disabledText": "委員会に供給されたアセットが無効になりました",
-        "disabledInfo": "委員会メンバーは、この資産の価格フィードを公開できません。"
-      }
+    "white_list": {
+      "about": "所有者をホワイトリストに登録することを要求する",
+      "enabledInfo": "資産の発行者/所有者は、white_list フラグを更新できます。",
+      "disabledInfo": "資産の発行者/所有者は、white_list フラグを更新できません。 "
+    },
+    "override_authority": {
+      "about": "資産所有者は資産を自分自身に譲渡することができます",
+      "enabledInfo": "アセットの発行者/所有者は、override_authority フラグを更新できます。",
+      "disabledInfo": "アセットの発行者/所有者は、override_authority フラグを更新できません。"
+    },
+    "transfer_restricted": {
+      "about": "資産所有者はすべての譲渡を承認する必要があります",
+      "enabledInfo": "資産の発行者/所有者は、transfer_restricted フラグを更新できます。",
+      "disabledInfo": "資産の発行者/所有者は transfer_restricted フラグを更新できません。"
+    },
+    "disable_confidential": {
+      "about": "機密取引を無効にする",
+      "enabledInfo": "資産の発行者/所有者は、disable_confidential フラグを更新できます。",
+      "disabledInfo": "アセットの発行者/所有者は、disable_confidential フラグを更新できません。"
+    },
+    "witness_fed_asset": {
+      "about": "証人がフィードを提供できるようにする",
+      "enabledInfo": "資産の発行者/所有者は、witness_fed_asset フラグを更新できます。",
+      "disabledInfo": "アセットの発行者/所有者は、witness_fed_asset フラグを更新できません。"
+    },
+    "committee_fed_asset": {
+      "about": "委員会メンバーがフィードを提供できるようにする",
+      "enabledInfo": "資産の発行者/所有者は、committee_fed_asset フラグを更新できます。",
+      "disabledInfo": "アセットの発行者/所有者は、committee_fed_asset フラグを更新できません。"
+    },
+    "disable_force_settle": {
+      "about": "強制整定を無効にする",
+      "enabledInfo": "アセットの発行者/所有者は、disable_force_settle フラグを更新できます。",
+      "disabledInfo": "アセットの発行者/所有者は disable_force_settle フラグを更新できません。"
+    },
+    "global_settle": {
+      "about": "資産所有者がグローバル決済を強制できるようにする",
+      "enabledInfo": "資産の発行者/所有者は、この資産を手動でグローバルに決済できます。",
+      "disabledInfo": "資産の発行者/所有者は、この資産を手動でグローバルに決済することはできません。"
+    },
+    "lock_max_supply": {
+      "about": "最大供給量をロックする",
+      "enabledInfo": "資産の発行者/所有者は、lock_max_supply フラグを更新できません。",
+      "disabledInfo": "資産の発行者/所有者は、lock_max_supply フラグを更新できます。"
+    },
+    "disable_new_supply": {
+      "about": "新しい供給を無効にする",
+      "enabledInfo": "アセットの発行者/所有者は、disable_new_supply フラグを更新できません。",
+      "disabledInfo": "資産の発行者/所有者は、disable_new_supply フラグを更新できます。"
+    },
+    "disable_collateral_bidding": {
+      "about": "担保入札を無効にする",
+      "enabledInfo": "資産の発行者/所有者は、disable_colternate_bidding フラグを更新できません。",
+      "disabledInfo": "資産の発行者/所有者は、disable_colternate_bidding フラグを更新できます。"
+    },
+    "disable_mcr_update": {
+      "about": "所有者の更新を無効にする 最低担保比率",
+      "enabledInfo": "資産の発行者/所有者は、資産のmaintenance_colternate_ratio拡張を更新(設定/変更/削除)することはできません。 ",
+      "disabledInfo": "資産の発行者/所有者は、資産のmaintenance_colternate_ratio拡張を更新(設定/変更/削除)できます。 "
+    },
+    "disable_icr_update": {
+      "about": "所有者更新の無効化 初期担保比率",
+      "enabledInfo": "資産の発行者/所有者は、資産のinitial_colternate_ratio拡張を更新(設定/変更/削除)することはできません。",
+      "disabledInfo": "資産の発行者/所有者は、資産のinitial_colterior_ratio拡張を更新(設定/変更/削除)できます。"
+    },
+    "disable_mssr_update": {
+      "about": "所有者の更新を無効にする 最大ショートスクイーズ率",
+      "enabledInfo": "アセットの発行者/所有者は、アセットのmaximum_short_squeeze_ratio拡張を更新(設定/変更/削除)することはできません。 ",
+      "disabledInfo": "アセットの発行者/所有者は、アセットのmaximum_short_squeeze_ratio拡張を更新(設定/変更/削除)できます。 "
+    },
+    "disable_bsrm_update": {
+      "about": "所有者の更新を無効にする Black Swan リスク管理戦略",
+      "enabledInfo": "アセットの発行者/所有者は、アセットの black_swan_response_method 拡張機能を更新できません。",
+      "disabledInfo": "アセットの発行者/所有者は、アセットの black_swan_response_method 拡張機能を更新できます。"
     }
+  },
+  "flags": {
+    "header": "アセットのフラグ",
+    "header_content": "許可された各アセットの権限は、オン/オフを切り替えることができます。",
+    "charge_market_fee": {
+      "about": "市場手数料を有効にする",
+      "enabledInfo": "この資産の市場取引は、手数料率の設定に応じて課金される場合があります。",
+      "disabledInfo": "この資産の市場取引は無料です。"
+    },
+    "white_list": {
+      "about": "所有者をホワイトリストに登録することを要求する",
+      "enabledInfo": "この資産の使用は、ホワイトリストおよびブラックリストの当局の設定に応じて、資産の承認 (ホワイトリストおよび/またはブラックリスト) によって制限される場合があります。",
+      "disabledInfo": "この資産の使用は、資産権限リストによって制限されません。"
+    },
+    "override_authority": {
+      "about": "資産所有者は資産を自分自身に譲渡することができます",
+      "enabledInfo": "資産の発行者/所有者は、この資産を任意の口座の残高から別の口座に移管できます（移管後の残高はマイナスにはならないことに注意してください）。",
+      "disabledInfo": "資産の発行者/所有者は、この資産を他の口座の残高から移すことはできません。"
+    },
+    "transfer_restricted": {
+      "about": "資産所有者はすべての譲渡を承認する必要があります",
+      "enabledInfo": "この資産の譲渡は制限されています。",
+      "disabledInfo": "転送にはそのような制限はありません。"
+    },
+    "disable_force_settle": {
+      "about": "強制整定を無効にする",
+      "enabledInfo": "この資産の保有者は、この資産がグローバルに決済されるか、ファンドに個別に決済される場合を除き、資産の一部について強制決済を要求することはできません。",
+      "disabledInfo": "この資産の所有者は強制決済を要求できます。"
+    },
+    "disable_confidential": {
+      "about": "機密取引を無効にする",
+      "enabledInfo": "ブラインド/ステルス/機密アドレスへの転送は無効になります。",
+      "disabledInfo": "ブラインド/ステルス/機密アドレスへの転送が可能です。"
+    },
+    "witness_fed_asset": {
+      "about": "証人がフィードを提供できるようにする",
+      "enabledInfo": "アクティブな証人は、この資産の価格フィードを公開できます。",
+      "disabledInfo": "アクティブな証人は、この資産の価格フィードを公開できません。"
+    },
+    "committee_fed_asset": {
+      "about": "委員会メンバーがフィードを提供できるようにする",
+      "enabledInfo": "アクティブな委員会のメンバーは、この資産の価格フィードを公開できます。",
+      "disabledInfo": "アクティブな委員会のメンバーは、この資産の価格フィードを公開できません。"
+    },
+    "lock_max_supply": {
+      "about": "最大供給量をロックする",
+      "enabledInfo": "この資産の最大供給量はロックされています。これは、資産の発行者/所有者がこの資産の最大供給量を更新できないことを意味します。",
+      "disabledInfo": "資産の発行者/所有者は、この資産の最大供給量を更新できます。"
+    },
+    "disable_new_supply": {
+      "about": "新しい供給を無効にする",
+      "enabledInfo": "この資産の新しい供給を作成できません (または、これ以上のトークンを「鋳造」できないと言えます)。",
+      "disabledInfo": "この資産の新しい供給を作成できます。"
+    },
+    "disable_collateral_bidding": {
+      "about": "担保入札を無効にする",
+      "enabledInfo": "グローバル決済プール内の担保の入札は無効になります。",
+      "disabledInfo": "グローバル決済プールでの担保の入札が有効になります。"
+    }
+  },
+  "asset_details": {
+    "title": "資産の詳細",
+    "title_content": "これらは、コア DEX 機能に使用されるアセット設定です。",
+    "symbol": {
+      "header": "資産記号",
+      "header_content": "資産シンボルは、DEX 全体で資産を識別するブロックチェーン上の一意の識別子です。 ",
+      "placeholder": "シンボル"
+    },
+    "shortName": {
+      "header": "アセットの短縮名",
+      "header_content": "これはアセットの短縮名であり、シンボルほど重要ではありませんが、それでもオプションで短縮された一意の識別子です。",
+      "placeholder": "ショートネーム"
+    },
+    "preferredMarket": {
+      "header": "優先市場取引ペア",
+      "header_content": "優先市場取引ペアは、資産に対して取引するために使用されるデフォルトの資産です。これは非公式の提案です。"
+    },
+    "description": {
+      "header": "資産の説明",
+      "header_content": "これはアセットの説明であり、DEX に表示され、アセットに関する詳細情報を提供するために使用できます。",
+      "placeholder": "説明"
+    },
+    "max_supply": {
+      "header": "最大供給量",
+      "header_content": "資産の最大供給量。これは、資産所有者 (あなた) が発行できる資産の合計額です。",
+      "placeholder": "最大供給量"
+    },
+    "precision": {
+      "header": "アセットの精度",
+      "header_content": "アセットの精度は、サポートされる小数点以下の桁数を指定します。",
+      "placeholder": "精度"
+    }
+  },
+  "extensions": {
+    "header_content": "拡張機能は、アセットをさらにカスタマイズするために使用できる追加の詳細設定です。",
+    "header": "市場手数料の延長",
+    "reward_percent": {
+      "enabled": "紹介者報酬パーセンテージ拡張が有効になっています",
+      "enabledInfo": "市場手数料のパーセントカットは、アクティブな市場参加者の紹介者に割り当てられます。",
+      "disabled": "紹介者報酬パーセンテージ拡張を有効にしますか?",
+      "disabledInfo": "紹介者報酬パーセンテージの拡張により、アセット作成者は市場手数料の一定の割合をアクティブな市場参加者の紹介者に割り当てることができます。",
+      "header": "紹介者の報酬割合",
+      "header_content": "紹介者報酬の割合は、アクティブな市場参加者の紹介者に割り当てられる市場手数料の割合です。"
+    },
+    "whitelist_market_fee_sharing": {
+      "enabled": "ホワイトリスト市場手数料共有拡張機能が有効になっています",
+      "enabledInfo": "以下の紹介者アカウントは、紹介者アカウントから徴収された市場手数料の一部を受け取ることが承認されます。",
+      "disabled": "ホワイトリスト市場手数料共有拡張機能を有効にしますか?",
+      "disabledInfo": "収集した市場手数料の一部を受け取ることを許可されるユーザーを、事前に承認された一連の紹介者アカウントに制限できます。",
+      "header": "ホワイトリスト市場手数料の共有",
+      "header_content": "ホワイトリスト市場手数料共有拡張機能により、ハウスはこれらのホワイトリストに登録されたアカウントへの紹介者を制限することができます。"
+    },
+    "taker_fee_percent": {
+      "enabled": "テイカー手数料パーセンテージ拡張が有効になっています",
+      "enabledInfo": "指値注文の「テイカー」参加者は、市場手数料の一部を受け取ります。",
+      "disabled": "受取手数料パーセンテージの延長を有効にしますか?",
+      "disabledInfo": "テイカー手数料パーセンテージ拡張により、資産作成者は指値注文オペレーションの「テイカー」に市場手数料の一定の割合を割り当てることができます。",
+      "header": "テイカー手数料の割合",
+      "header_content": "テイカー手数料の割合は、分散型取引所で指値注文の「テイカー」に割り当てられる市場手数料の割合です。"
+    },
+    "allowed_markets": {
+      "enabled": "許可されたマーケット拡張機能が有効になっています",
+      "enabledInfo": "以下の市場でこの資産の取引が承認されています。",
+      "disabled": "許可されているマーケット拡張機能を有効にしますか?",
+      "disabledInfo": "この資産の取引を許可される市場を、事前に承認された一連の市場に制限できます。"
+    },
+    "banned_markets": {
+      "enabled": "禁止されたマーケットの拡張機能が有効になりました",
+      "enabledInfo": "以下の市場では、この資産の取引が禁止されています。",
+      "disabled": "禁止されたマーケットの拡張機能を有効にしますか?",
+      "disabledInfo": "この機能を使用すると、特定の市場取引ペアを禁止できるため、望ましくない市場での資産取引を回避できます。"
+    },
+    "skipCER": {
+      "enabled": "コア為替レート計算のスキップ",
+      "enabledInfo": "アセット作成者は、このアセットのコア為替レート チェックをスキップする機能を有効にしました。",
+      "disabled": "コア為替レートの計算をスキップしますか?",
+      "disabledInfo": "コア為替レートのスキップ拡張機能を使用すると、アセット作成者はこのアセットのコア為替レートのチェックをスキップできます。"
+    }
+  },
+  "whitelist": {
+    "header_content": "資産ホワイトリスト権限者は、自分のアカウントの許可リストに登録されたアカウント リストを提供して、このアクセスとの対話を許可できるアカウントです。",
+    "header": "資産ホワイトリストの当局"
+  },
+  "blacklist": {
+    "header_content": "資産ブラックリスト当局は、自分のアカウントのブラックリストに登録されたアカウント リストを提供して、このアクセスとのやり取りを防止する禁止アカウント リストを強制できるアカウントです。",
+    "header": "資産ブラックリスト当局"
+  },
+  "market_fee": {
+    "header_content": "市場手数料は、Bitshares DEX で実行されるすべての取引に請求される手数料の割合です。",
+    "header": "市場手数料の割合"
+  },
+  "max_market_fee": {
+    "header": "市場手数料の上限",
+    "header_content": "最大市場手数料は、Bitshares DEX で実行されるすべての取引で手数料として請求できる資産の最大額です。"
+  },
+  "cer": {
+    "quote_asset_amount": {
+      "header": "見積資産額",
+      "header_content": "基本資産金額を購入するために必要な、ユーザーが発行した資産の金額。"
+    },
+    "base_asset_amount": {
+      "header": "基準資産額",
+      "header_content": "基本資産の額（{{symbol}}) 見積資産金額を購入するために必要です。"
+    },
+    "calculated_cer_price": {
+      "header": "コア為替レート",
+      "header_content": "コア為替レートが市場価格よりも高いことを確認してください。そうしないと、人々が市場からトークンを購入し、暗黙の裁定取引によって手数料プールを使い果たしてしまいます。"
+    }
+  },
+  "nft": {
+    "NFTTitleContent": "これは代替不可能なトークンのタイトルです。さまざまな代替不可能なトークン ギャラリー/エクスプローラー内で表示される可能性があるため、一意でわかりやすいものにしてください。",
+    "NFTTitleHeader": "タイトル",
+    "TitlePlaceholder": "タイトル",
+    "NFTArtistContent": "アーティストの名前またはペンネーム。",
+    "NFTArtistHeader": "アーティスト",
+    "ArtistPlaceholder": "アーティスト",
+    "NFTNarrativeContent": "作品が彼らにとって何を意味するのか、何がインスピレーションを与えたのかなど、作品を説明するアーティストの個人的な声明。",
+    "NFTNarrativeHeader": "物語",
+    "NarrativePlaceholder": "物語",
+    "NFTTagsContent": "トピック/関心のある検索を容易にするキーワードのカンマ区切りリスト。",
+    "NFTTagsHeader": "タグ",
+    "TagsPlaceholder": "タグ",
+    "NFTTypeContent": "「NFT/ART/VISUAL」、「NFT/ART/3D」、「NFT/ART/ANIMATION」、「NFT/ART/AUDIO」、「NFT/ART」など、代替不可能なトークンのタイプを説明する文字列",
+    "NFTTypeHeader": "タイプ",
+    "TypePlaceholder": "タイプ",
+    "NFTAttestationContent": "ここで、カプセル化されたマテリアルのアーティストまたは作成者は、そのマテリアルをブロックチェーンにコミットまたは捧げ、その作品が存続するトークンまたはアセット ID を明示的に指定し、その適格または無修飾の一意性を証明します。",
+    "NFTAttestationHeader": "認証",
+    "AttestationPlaceholder": "認証",
+    "NFTAcknowledgementsContent": "デジタル トークンの確認または追加クレジット。",
+    "NFTAcknowledgementsHeader": "謝辞",
+    "AcknowledgementsPlaceholder": "謝辞",
+    "NFTHolderLicenseContent": "トークンが特にトークン所有者にクリエイティブ作品の使用のための追加ライセンスを付与する場合、これをここで指定できます。",
+    "NFTHolderLicenseHeader": "保有者ライセンス",
+    "HolderLicensePlaceholder": "ホルダーライセンス",
+    "NFTLicenseContent": "アートワークがリリースされるライセンス。",
+    "NFTLicenseHeader": "メディアライセンス",
+    "LicensePlaceholder": "ライセンス",
+    "modifyMultimediaContents": "マルチメディアコンテンツを変更する",
+    "modifyingMultimediaContents": "この代替不可能なトークンのマルチメディア コンテンツを変更する",
+    "currentIPFSMedia": "現在の IPFS メディア",
+    "referencesIPFSObjects": "この代替不可能なトークンは現在参照しています {{count}} IPFS オブジェクト。自由に追加/削除してください。",
+    "noIPFSMediaFound": "IPFS メディアが見つかりません",
+    "type": "タイプ",
+    "contentIdentifier": "コンテンツ識別子",
+    "filename": "ファイル名",
+    "delete": "消去？",
+    "addNewIPFSMedia": "新しい IPFS メディアを追加する",
+    "noIPFSGateway": "サードパーティは独自のゲートウェイを使用してコンテンツにアクセスするため、代替不可能なトークン メディア URL に IPFS ゲートウェイ ホストを含​​めないでください。",
+    "mediaURLPlaceholder": "/ipfs/cid/image.png",
+    "fileTypePlaceholder": "ファイルの種類",
+    "imageFormats": "画像フォーマット",
+    "audioFormats": "オーディオフォーマット",
+    "videoFormats": "ビデオフォーマット",
+    "documentFormats": "文書フォーマット",
+    "threeDFormats": "3Dファイル",
+    "submit": "提出する",
+    "ipfsHostingSolutions": "IPFSホスティングソリューション",
+    "ipfsHostingDescription": "次の IPFS ホスティング/ピンニング サービスの例を確認してください。 ",
+    "header": "代替不可能なトークンの詳細",
+    "header_content": "これらは代替不可能なトークンの詳細です。さまざまな NFT ギャラリー/エクスプローラー内に表示される可能性があるため、一意で説明的なものであることを確認してください。",
+    "disabled": "代替不可能なトークン機能を有効にしますか?",
+    "enabled": "代替不可能なトークン機能を無効にしますか?",
+    "multimedia_header": "代替不可能なトークンのマルチメディアの詳細",
+    "multimedia_header_content": "あなたの非を提供してください ",
+    "currentIPFSFiles": "この代替不可能なトークンには現在次のものが含まれています {{count}} IPFS メディア ファイルの参照。",
+    "supportedFiletypes": "サポートされているファイルタイプには、画像、ビデオ、オーディオ、3D ファイル、ドキュメントなどが含まれます。",
+    "main_header_content": "以下の設定は、代替不可能なトークンが Bitshares ブロックチェーン上でどのように動作するかを定義します。",
+    "main_header": "代替不可能なトークン構成"
   }
+}

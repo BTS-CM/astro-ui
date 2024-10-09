@@ -86,7 +86,7 @@
     "hover3": "Võrrelge turutehingute kogust."
   },
   "deals": {
-    "title": "ℹ️ Krediidipakkumised",
+    "title": "🤝 Krediidipakkumised",
     "subtitle": "Kontrollige oma krediidipakkumisi",
     "hover1": "Jälgige oma aktiivseid krediiditehinguid.",
     "hover2": "Hallake oma krediiditehingute olekut."
@@ -116,6 +116,13 @@
     "hover1": "Vaadake kasutaja väljastatud varasid, ennustusturu varasid, nutikoine ja mittevahetatavaid žetoone!",
     "hover2": "Muutke plokiahelas loodud varasid.",
     "hover3": "Soovi korral väljastage loodud varade kogus."
+  },
+  "blocks": {
+    "title": "💾 Blockchaini andmed",
+    "subtitle": "Vaadake uusimaid plokiahela kokkuvõtlikke andmeid",
+    "hover1": "Hiljutiste tegevuste ja hiljutiste blokkide reaalajas andmetabelid.",
+    "hover2": "Hiljutine plokkide tehingute loenduse reaalajas diagramm.",
+    "hover3": "Summeeritud plokiahela andmete keskmised ja kogusummad."
   },
   "create_prediction": {
     "title": "🔮 Ennustusturu vara",

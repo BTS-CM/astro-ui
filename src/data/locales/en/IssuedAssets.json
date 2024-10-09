@@ -18,5 +18,7 @@
     "listingNFTs": "Listing {{count}} Non-Fungible Token Assets",
     "noNFTs": "No Non-Fungible Token Assets found",
     "title": "Viewing the blockchain assets you've created",
-    "description": "From here you can manage the assets you've created, including updating their details, issuing more of them, and more."
+    "description": "From here you can manage the assets you've created, including updating their details, issuing more of them, and more.",
+    "userActions": "User Actions",
+    "issuerActions": "Issuer Actions"
 }

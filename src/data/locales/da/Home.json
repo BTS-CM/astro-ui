@@ -86,7 +86,7 @@
     "hover3": "Sammenlign mængden af ​​markedshandler."
   },
   "deals": {
-    "title": "ℹ️ Kredittilbud",
+    "title": "🤝 Kredittilbud",
     "subtitle": "Tjek dine kreditaftaler",
     "hover1": "Overvåg dine aktive kreditaftaler.",
     "hover2": "Administrer status for dine kreditaftaler."
@@ -116,6 +116,13 @@
     "hover1": "Se brugerudstedte aktiver, forudsigelige markedsaktiver, smartcoins og ikke-fungible tokens!",
     "hover2": "Rediger de aktiver, du har oprettet på blockchain.",
     "hover3": "Udsted eventuelt en mængde af dine oprettede aktiver."
+  },
+  "blocks": {
+    "title": "💾 Blockchain-data",
+    "subtitle": "Se de seneste opsummerede blockchain-data",
+    "hover1": "Seneste aktivitet og seneste blokerede livedatatabeller.",
+    "hover2": "Livediagram for tælling af seneste bloktransaktioner.",
+    "hover3": "Opsummerede blockchain-datagennemsnit og totaler."
   },
   "create_prediction": {
     "title": "🔮 Forudsigelsesmarkedsaktiv",

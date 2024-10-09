@@ -86,7 +86,7 @@
     "hover3": "Confronta la quantità di scambi di mercato."
   },
   "deals": {
-    "title": "ℹ️ Offerte di credito",
+    "title": "🤝 Offerte di credito",
     "subtitle": "Controlla le tue offerte di credito",
     "hover1": "Monitora le tue operazioni di credito attive.",
     "hover2": "Gestisci lo stato dei tuoi contratti di credito."
@@ -116,6 +116,13 @@
     "hover1": "Visualizza le risorse emesse dagli utenti, le risorse del mercato di previsione, gli smartcoin e i token non fungibili!",
     "hover2": "Modifica le risorse che hai creato sulla blockchain.",
     "hover3": "Facoltativamente, emetti una quantità delle risorse create."
+  },
+  "blocks": {
+    "title": "💾 Dati blockchain",
+    "subtitle": "Visualizza i dati blockchain riepilogativi più recenti",
+    "hover1": "Attività recenti e tabelle di dati in tempo reale del blocco recente.",
+    "hover2": "Grafico in tempo reale del conteggio delle transazioni a blocchi recenti.",
+    "hover3": "Medie e totali riepilogativi dei dati blockchain."
   },
   "create_prediction": {
     "title": "🔮 Asset di mercato di previsione",

@@ -26,6 +26,10 @@
   "predictions": "Forudsigelser",
   "createPrediction": "Opret forudsigelse",
   "assetsHeading": "Oprettelse af aktiver",
+  "issuedAssets": "Dine udstedte aktiver",
+  "create_smartcoin": "Opret smartcoin",
+  "create_uia": "Opret brugerudstedt aktiv",
+  "blockExplorer": "Live blockchain-data",
   "nodes": "Noder",
   "buyLTM": "Køb LTM",
   "english": "engelsk (en)",
@@ -62,7 +66,9 @@
     "tfunds": "Find, opret, opdater eller slet Same-T-midler nedenfor!",
     "create_vesting": "Brug denne formular til at oprette en optjeningssaldo for enhver konto!",
     "uia": "Opret dit eget brugerudstedte aktiv med formularen nedenfor!",
-    "issuedAssets": "Administrer de blockchain-aktiver, du har oprettet, på fanerne nedenfor!"
+    "issuedAssets": "Administrer de blockchain-aktiver, du har oprettet, på fanerne nedenfor!",
+    "create_smartcoin": "Brug formularen nedenfor til at oprette et nyt smartcoin-aktiv.",
+    "blocks": "Se de seneste blockchain-data bekvemt opsummeret nedenfor!"
   },
   "back": "Gå tilbage",
   "usage": "Designet til brug med ",

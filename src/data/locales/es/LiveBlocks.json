@@ -1,0 +1,45 @@
+{
+  "cardTitle": "Descripción general de blockchain en vivo",
+  "cardDescription": "La cadena de bloques Bitshares tiene tiempos de bloque de 3 segundos y es capaz de manejar miles de transacciones por segundo. ",
+  "currentBlock": {
+    "content": "El número de bloque más reciente.",
+    "header": "Bloque actual"
+  },
+  "currentWitness": {
+    "content": "El testigo que produjo el bloque más reciente.",
+    "header": "Testigo actual"
+  },
+  "tps": {
+    "content": "Transacciones por segundo durante los últimos {{blockQty}} bloques.",
+    "header": "Transacciones por segundo"
+  },
+  "uniqueWitnesses": {
+    "content": "Número de testigos únicos en los bloques recientes.",
+    "header": "Testigos únicos"
+  },
+  "txPerBlock": {
+    "content": "Número promedio de transacciones por bloque durante el último {{blockQty}} bloques.",
+    "header": "Transacciones por bloque"
+  },
+  "recentFees": {
+    "content": "Honorarios totales cobrados en los últimos {{blockQty}} bloques.",
+    "header": "Tarifas recientes"
+  },
+  "chart": {
+    "content": "Mostrar el número de transacciones por bloque durante el último {{blockQty}} bloques.",
+    "header": "Transacciones por bloque"
+  },
+  "recentActivity": {
+    "content": "Actividad reciente en la blockchain.",
+    "header": "Actividad reciente"
+  },
+  "recentBlocks": {
+    "content": "Lista de bloques recientes.",
+    "header": "Bloques recientes"
+  },
+  "dialogContent": {
+    "json": "Datos JSON",
+    "jsonDescription": "Datos JSON detallados del elemento seleccionado.",
+    "copy": "Copiar"
+  }
+}

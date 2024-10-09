@@ -48,11 +48,11 @@ async function fetchingIssuedAssets(
         }
 
         if (issuedAssets.length === maximumQuerySize) {
-            for (let i = 1; i < maximumQuerySize; i++) {
+            for (let i = 1; i < maximumIterations; i++) {
               let nextPage;
               try {
                 nextPage = await currentAPI.db_api().exec(
-                  "get_credit_deals_by_offer_owner",
+                  "get_assets_by_issuer",
                   [accountID, issuedAssets[issuedAssets.length - 1].id, maximumQuerySize]
                 );
               } catch (error) {
@@ -66,6 +66,9 @@ async function fetchingIssuedAssets(
   
               if (nextPage && nextPage.length) {
                 issuedAssets = [...issuedAssets, ...nextPage];
+                if (nextPage.length < maximumQuerySize) {
+                  break;
+                }
               } else {
                 break;
               }

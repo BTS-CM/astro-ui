@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useSyncExternalStore, useMemo, useCallback } from "react";
 import { FixedSizeList as List } from "react-window";
 import Fuse from "fuse.js";
+import { sha256 } from '@noble/hashes/sha2';
+import { bytesToHex as toHex } from '@noble/hashes/utils';
 import { useStore } from '@nanostores/react';
 import { useTranslation } from "react-i18next";
 
@@ -23,6 +25,7 @@ import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 import { useInitCache } from "@/nanoeffects/Init.ts";
 
 import { $currentUser } from "@/stores/users.ts";
+import { $blockList } from "@/stores/blocklist.ts";
 import { $currentNode } from "@/stores/node.ts";
 import {
   $assetCacheBTS,
@@ -32,6 +35,7 @@ import {
 } from "@/stores/cache.ts";
 
 import { humanReadableFloat, debounce } from "@/lib/common.js";
+import ExternalLink from "./common/ExternalLink.jsx";
 
 function hoursTillExpiration(expirationTime) {
   var expirationDate = new Date(expirationTime);
@@ -51,6 +55,8 @@ const isValid = (str) => /^[a-zA-Z0-9.-]+$/.test(str);
 export default function CreditBorrow(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
+  const blocklist = useSyncExternalStore($blockList.subscribe, $blockList.get, () => true);
+
   const currentNode = useStore($currentNode);
 
   const _assetsBTS = useSyncExternalStore($assetCacheBTS.subscribe, $assetCacheBTS.get, () => true);
@@ -89,9 +95,19 @@ export default function CreditBorrow(properties) {
 
   const offers = useMemo(() => {
     if (_chain && (_offersBTS || _offersTEST)) {
-      return _chain === "bitshares"
+      let currentOffers = _chain === "bitshares"
         ? _offersBTS.filter((x) => hoursTillExpiration(x.auto_disable_time) >= 0)
         : _offersTEST.filter((x) => hoursTillExpiration(x.auto_disable_time) >= 0);
+      
+      if (_chain === "bitshares" && blocklist && blocklist.users) {
+        // Discard offers from banned users
+        currentOffers = currentOffers.filter(
+          (offer) => !blocklist.users.includes(toHex(sha256(offer.owner_account)))
+        );
+      }
+
+      return currentOffers;
+
     }
     return [];
   }, [_offersBTS, _offersTEST, _chain]);
@@ -111,8 +127,10 @@ export default function CreditBorrow(properties) {
 
       unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
-          setBalanceAssetIDs(data.map((x) => x.asset_id));
-          setUsrBalances(data);
+          const filteredData = data.filter((balance) => assets.find((x) => x.id === balance.asset_id));
+
+          setBalanceAssetIDs(filteredData.map((x) => x.asset_id));
+          setUsrBalances(filteredData);
         }
       });
     }
@@ -246,32 +264,76 @@ export default function CreditBorrow(properties) {
       <div style={{ ...style }} key={`acard-${res.id}`}>
         <Card className="ml-2 mr-2">
           <CardHeader className="pb-1">
-            <CardTitle>
-              {t("CreditBorrow:common.title", {
-                orderID: res.id.replace("1.21.", ""),
-                owner_name: res.owner_name,
-                owner_account: res.owner_account,
-              })}
+          <CardTitle>
+              {t("CreditBorrow:common.offer")}
+              {" #"}
+              <ExternalLink
+                classnamecontents="hover:text-purple-500"
+                type="text"
+                text={res.id.replace("1.21.", "")}
+                hyperlink={`https://blocksights.info/#/credit-offers/${res.id.replace("1.21.", "")}`}
+              />
+              {" "}
+              {t("CreditBorrow:common.by")}
+              {" "}
+              <ExternalLink
+                classnamecontents="hover:text-purple-500"
+                type="text"
+                text={res.owner_name}
+                hyperlink={`https://blocksights.info/#/accounts/${res.owner_name}`}
+              />
+              {" "}
+              (
+                <ExternalLink
+                  classnamecontents="hover:text-purple-500"
+                  type="text"
+                  text={res.owner_account}
+                  hyperlink={`https://blocksights.info/#/accounts/${res.owner_account}`}
+                />
+              )
             </CardTitle>
             <CardDescription>
               {t("CreditBorrow:common.offering")}
               <b>
-                {` ${humanReadableFloat(res.current_balance, foundAsset.precision)} ${
-                  foundAsset.symbol
-                } (${res.asset_type})`}
+                {` ${humanReadableFloat(res.current_balance, foundAsset.precision)} `}
+                <ExternalLink
+                  classnamecontents="hover:text-purple-500"
+                  type="text"
+                  text={foundAsset.symbol}
+                  hyperlink={`https://blocksights.info/#/asset/${foundAsset.symbol}`}
+                />
+                (
+                  <ExternalLink
+                    classnamecontents="hover:text-purple-500"
+                    type="text"
+                    text={res.asset_type}
+                    hyperlink={`https://blocksights.info/#/asset/${res.asset_type}`}
+                  />
+                )
               </b>
               <br />
               {t("CreditBorrow:common.accepting")}
-              <b>
-                {assets && assets.length
-                  ? ` ${res.acceptable_collateral
-                      .map((asset) => asset[0])
-                      .map((x) => {
-                        return assets.find((y) => y.id === x)?.symbol;
-                      })
-                      .map((x) => x)
-                      .join(", ")}`
-                  : t("CreditBorrow:common.loading")}
+              <b className="ml-1">
+                {
+                  assets && assets.length
+                    ? res.acceptable_collateral
+                        .map((asset) => asset[0])
+                        .map((x) => {
+                          return assets.find((y) => y.id === x)?.symbol;
+                        })
+                        .map((x, index, array) => (
+                          <>
+                            <ExternalLink
+                              classnamecontents="hover:text-purple-500"
+                              type="text"
+                              text={x}
+                              hyperlink={`https://blocksights.info/#/asset/${x}`}
+                            />
+                            {index < array.length - 1 && ", "}
+                          </>
+                        ))
+                    : t("CreditBorrow:common.loading")
+                }
               </b>
             </CardDescription>
           </CardHeader>

@@ -211,6 +211,16 @@ export default function PageHeader(properties) {
                         text={t("PageHeader:predictions")}
                         icon="🎲"
                       />
+                      <MenuRow
+                        url="/issued_assets/index.html"
+                        text={t("PageHeader:issuedAssets")}
+                        icon="📃"
+                      />
+                      <MenuRow
+                        url="/blocks/index.html"
+                        text={t("PageHeader:blockExplorer")}
+                        icon="💾"
+                      />
                     </CommandGroup>
                     <CommandSeparator />
                     <CommandGroup heading={t("PageHeader:assetsHeading")}>
@@ -218,6 +228,16 @@ export default function PageHeader(properties) {
                         url="/create_prediction/index.html"
                         text={t("PageHeader:createPrediction")}
                         icon="🔮"
+                      />
+                      <MenuRow
+                        url="/create_uia/index.html"
+                        text={t("PageHeader:create_uia")}
+                        icon="🍬"
+                      />
+                      <MenuRow
+                        url="/create_smartcoin/index.html"
+                        text={t("PageHeader:create_smartcoin")}
+                        icon="💷"
                       />
                     </CommandGroup>
                     <CommandSeparator />

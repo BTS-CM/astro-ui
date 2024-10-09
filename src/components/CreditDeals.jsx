@@ -165,7 +165,8 @@ export default function CreditDeals(properties) {
 
       unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
-          setUsrBalances(data);
+          const filteredData = data.filter((balance) => assets.find((x) => x.id === balance.asset_id));
+          setUsrBalances(filteredData);
         }
       });
     }
@@ -595,7 +596,7 @@ export default function CreditDeals(properties) {
                       </Form>
                       {showDialog ? (
                         <DeepLinkDialog
-                          operationName="credit_deal_repay"
+                          operationNames={["credit_deal_repay"]}
                           username={usr.username}
                           usrChain={usr.chain}
                           userID={usr.id}

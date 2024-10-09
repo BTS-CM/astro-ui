@@ -1,94 +1,314 @@
 {
-    "permissions": {
-      "header": "Permissões do ativo",
-      "header_content": "Nota: Desativar permissões é uma decisão permanente",
-      "charge_market_fee": {
-        "allowedText": "Taxas de mercado permitidas",
-        "disabledText": "Taxas de mercado desativadas",
-        "enabledInfo": "É possível que o criador do ativo permita a cobrança de taxas de negociação no mercado para esse ativo.",
-        "disabledInfo": "Agora é impossível para o criador do ativo cobrar taxas de negociação no mercado por esse ativo."
-      },
-      "white_list": {
-        "allowedText": "Lista branca permitida",
-        "disabledText": "Lista branca desativada",
-        "enabledInfo": "É possível que o criador do ativo permita a configuração de autoridades de lista branca para este ativo.",
-        "disabledInfo": "Agora é impossível para o criador do ativo configurar autoridades de lista branca para este ativo."
-      },
-      "override_authority": {
-        "allowedText": "Substituir autoridade permitida",
-        "disabledText": "Substituir autoridade desativada",
-        "enabledInfo": "É possível que o criador do ativo habilite a capacidade de realizar uma operação de transferência de substituição neste ativo, devolvendo-o ao seu saldo.",
-        "disabledInfo": "Agora é impossível para o criador do ativo realizar operações de transferência de substituição neste ativo."
-      },
-      "transfer_restricted": {
-        "allowedText": "Transferência restrita permitida",
-        "enabledInfo": "É possível que o criador do ativo habilite a capacidade de restringir as transferências deste ativo.",
-        "disabledText": "Transferência restrita desativada",
-        "disabledInfo": "Agora é impossível para o criador do ativo restringir as transferências deste ativo."
-      },
-      "disable_confidential": {
-        "allowedText": "Desativar confidencial permitido",
-        "enabledInfo": "É possível que o criador do ativo habilite a capacidade de desabilitar operações confidenciais para esse ativo.",
-        "disabledText": "Desativar confidencial desativado",
-        "disabledInfo": "Agora é impossível para o criador do ativo desabilitar operações confidenciais para este ativo."
-      },
-      "witness_fed_asset": {
-        "allowedText": "Recurso alimentado por testemunha permitido",
-        "enabledInfo": "É possível que o criador do ativo permita que testemunhas publiquem feeds de preços para esse ativo.",
-        "disabledText": "Recurso alimentado por testemunha desativado",
-        "disabledInfo": "Agora é impossível para o criador do ativo permitir que testemunhas publiquem feeds de preços para este ativo."
-      },
-      "committee_fed_asset": {
-        "allowedText": "Ativo alimentado pelo comitê permitido",
-        "enabledInfo": "É possível que o criador do ativo permita que os membros do comitê publiquem feeds de preços para esse ativo.",
-        "disabledText": "Ativo alimentado pelo comitê desativado",
-        "disabledInfo": "Agora é impossível para o criador do ativo permitir que os membros do comitê publiquem feeds de preços para esse ativo."
-      }
+  "permissions": {
+    "header": "Permissões do ativo",
+    "header_content": "Nota: Desativar permissões é uma decisão permanente",
+    "charge_market_fee": {
+      "about": "Habilitar taxa de mercado",
+      "enabledInfo": "O emissor/proprietário do ativo pode atualizar o sinalizador charge_market_fee.",
+      "disabledInfo": "O emissor/proprietário do ativo NÃO pode atualizar o sinalizador charge_market_fee. "
     },
-    "flags": {
-      "header": "Sinalizadores de ativos",
-      "header_content": "Cada permissão de ativo permitida pode ser ativada/desativada.",
-      "charge_market_fee": {
-        "allowedText": "Taxas de mercado habilitadas",
-        "enabledInfo": "O criador do ativo pode configurar taxas de negociação de mercado para esse ativo, incluindo a funcionalidade de compartilhamento de recompensas de taxas de mercado.",
-        "disabledText": "Taxas de mercado desativadas",
-        "disabledInfo": "O criador do ativo desativou a cobrança de taxas de negociação de mercado para este ativo."
-      },
-      "white_list": {
-        "allowedText": "Lista branca ativada",
-        "enabledInfo": "O criador do ativo pode configurar autoridades de lista branca para este ativo.",
-        "disabledText": "Lista branca desativada",
-        "disabledInfo": "O criador do ativo desativou a configuração de autoridades da lista branca para este ativo."
-      },
-      "override_authority": {
-        "allowedText": "Substituir autoridade ativada",
-        "enabledInfo": "O criador do ativo pode realizar uma operação de transferência de substituição neste ativo, devolvendo-o ao seu saldo.",
-        "disabledText": "Substituir autoridade desativada",
-        "disabledInfo": "O criador do ativo desativou a execução de operações de transferência de substituição neste ativo."
-      },
-      "transfer_restricted": {
-        "allowedText": "Transferência restrita ativada",
-        "enabledInfo": "O criador do ativo pode restringir as transferências deste ativo.",
-        "disabledText": "Transferência restrita desativada",
-        "disabledInfo": "O criador do ativo desativou a restrição de transferências deste ativo."
-      },
-      "disable_confidential": {
-        "allowedText": "Desativar confidencial ativado",
-        "enabledInfo": "O criador do ativo desativou as operações confidenciais para este ativo.",
-        "disabledText": "Desativar confidencial desativado",
-        "disabledInfo": "O criador do ativo não desativou as operações confidenciais deste ativo."
-      },
-      "witness_fed_asset": {
-        "allowedText": "Recurso alimentado por testemunha ativado",
-        "enabledInfo": "As testemunhas podem publicar feeds de preços para este ativo.",
-        "disabledText": "Recurso alimentado por testemunha desativado",
-        "disabledInfo": "As testemunhas não conseguem publicar feeds de preços para este ativo."
-      },
-      "committee_fed_asset": {
-        "allowedText": "Ativo alimentado pelo comitê ativado",
-        "enabledInfo": "Os membros do comitê podem publicar feeds de preços para este ativo.",
-        "disabledText": "Ativo alimentado pelo comitê desativado",
-        "disabledInfo": "Os membros do comitê não podem publicar feeds de preços para este ativo."
-      }
+    "white_list": {
+      "about": "Exigir que os titulares estejam na lista branca",
+      "enabledInfo": "O emissor/proprietário do ativo pode atualizar o sinalizador white_list.",
+      "disabledInfo": "O emissor/proprietário do ativo NÃO pode atualizar o sinalizador white_list. "
+    },
+    "override_authority": {
+      "about": "O proprietário do ativo pode transferir o ativo de volta para si",
+      "enabledInfo": "O emissor/proprietário do ativo pode atualizar o sinalizador override_authority.",
+      "disabledInfo": "O emissor/proprietário do ativo NÃO pode atualizar o sinalizador override_authority."
+    },
+    "transfer_restricted": {
+      "about": "O proprietário do ativo deve aprovar todas as transferências",
+      "enabledInfo": "O emissor/proprietário do ativo pode atualizar o sinalizador transfer_restricted.",
+      "disabledInfo": "O emissor/proprietário do ativo NÃO pode atualizar o sinalizador transfer_restricted."
+    },
+    "disable_confidential": {
+      "about": "Desabilitar transações confidenciais",
+      "enabledInfo": "O emissor/proprietário do ativo pode atualizar o sinalizador disable_confidential.",
+      "disabledInfo": "O emissor/proprietário do ativo NÃO pode atualizar o sinalizador disable_confidential."
+    },
+    "witness_fed_asset": {
+      "about": "Permitir que testemunhas forneçam feeds",
+      "enabledInfo": "O emissor/proprietário do ativo pode atualizar o sinalizador testemunho_fed_asset.",
+      "disabledInfo": "O emissor/proprietário do ativo NÃO pode atualizar o sinalizador testemunho_fed_asset."
+    },
+    "committee_fed_asset": {
+      "about": "Permitir que os membros do comitê forneçam feeds",
+      "enabledInfo": "O emissor/proprietário do ativo pode atualizar o sinalizador Committee_fed_asset.",
+      "disabledInfo": "O emissor/proprietário do ativo NÃO pode atualizar o sinalizador Committee_fed_asset."
+    },
+    "disable_force_settle": {
+      "about": "Desativar liquidação forçada",
+      "enabledInfo": "O emissor/proprietário do ativo pode atualizar o sinalizador disable_force_settle.",
+      "disabledInfo": "O emissor/proprietário do ativo NÃO pode atualizar o sinalizador disable_force_settle."
+    },
+    "global_settle": {
+      "about": "Permitir que o proprietário do ativo force um acordo global",
+      "enabledInfo": "O emissor/proprietário do ativo pode liquidar globalmente este ativo manualmente.",
+      "disabledInfo": "O emissor/proprietário do ativo NÃO pode liquidar globalmente este ativo manualmente."
+    },
+    "lock_max_supply": {
+      "about": "Bloquear suprimento máximo",
+      "enabledInfo": "O emissor/proprietário do ativo NÃO pode atualizar o sinalizador lock_max_supply.",
+      "disabledInfo": "O emissor/proprietário do ativo pode atualizar o sinalizador lock_max_supply."
+    },
+    "disable_new_supply": {
+      "about": "Desativar novo fornecimento",
+      "enabledInfo": "O emissor/proprietário do ativo NÃO pode atualizar o sinalizador disable_new_supply.",
+      "disabledInfo": "O emissor/proprietário do ativo pode atualizar o sinalizador disable_new_supply."
+    },
+    "disable_collateral_bidding": {
+      "about": "Desativar lances colaterais",
+      "enabledInfo": "O emissor/proprietário do ativo NÃO pode atualizar o sinalizador disable_collateral_bidding.",
+      "disabledInfo": "O emissor/proprietário do ativo pode atualizar o sinalizador disable_collateral_bidding."
+    },
+    "disable_mcr_update": {
+      "about": "Desativar atualização do proprietário Proporção mínima de garantia",
+      "enabledInfo": "O emissor/proprietário do ativo NÃO pode atualizar (definir/alterar/excluir) a extensão Maintenance_collateral_ratio do ativo. ",
+      "disabledInfo": "O emissor/proprietário do ativo pode atualizar (definir/alterar/excluir) a extensão Maintenance_collateral_ratio do ativo. "
+    },
+    "disable_icr_update": {
+      "about": "Desativar atualização do proprietário Proporção de garantia inicial",
+      "enabledInfo": "O emissor/proprietário do ativo NÃO pode atualizar (definir/alterar/excluir) a extensão inicial_collateral_ratio do ativo. ",
+      "disabledInfo": "O emissor/proprietário do ativo pode atualizar (definir/alterar/excluir) a extensão inicial_collateral_ratio do ativo. "
+    },
+    "disable_mssr_update": {
+      "about": "Desativar atualização do proprietário Proporção máxima de compressão curta",
+      "enabledInfo": "O emissor/proprietário do ativo NÃO pode atualizar (definir/alterar/excluir) a extensão maximum_short_squeeze_ratio do ativo. ",
+      "disabledInfo": "O emissor/proprietário do ativo pode atualizar (definir/alterar/excluir) a extensão maximum_short_squeeze_ratio do ativo. "
+    },
+    "disable_bsrm_update": {
+      "about": "Desativar atualização do proprietário da estratégia de gerenciamento de risco Black Swan",
+      "enabledInfo": "O emissor/proprietário do ativo NÃO pode atualizar a extensão black_swan_response_method do ativo.",
+      "disabledInfo": "O emissor/proprietário do ativo pode atualizar a extensão black_swan_response_method do ativo."
     }
+  },
+  "flags": {
+    "header": "Sinalizadores de ativos",
+    "header_content": "Cada permissão de ativo permitida pode ser ativada/desativada.",
+    "charge_market_fee": {
+      "about": "Habilitar taxa de mercado",
+      "enabledInfo": "As negociações de mercado neste ativo podem ser cobradas, dependendo das configurações da taxa de comissão.",
+      "disabledInfo": "As negociações de mercado neste ativo não são cobradas."
+    },
+    "white_list": {
+      "about": "Exigir que os titulares estejam na lista branca",
+      "enabledInfo": "O uso deste ativo pode ser restringido por autorização de ativos (lista branca e/ou lista negra), dependendo das configurações das autoridades de lista branca e lista negra.",
+      "disabledInfo": "O uso deste ativo não é restrito por listas de autorização de ativos."
+    },
+    "override_authority": {
+      "about": "O proprietário do ativo pode transferir o ativo de volta para si",
+      "enabledInfo": "O emissor/proprietário do ativo pode transferir este ativo do saldo de qualquer conta para outra conta (observe que o saldo após a transferência não pode ser negativo).",
+      "disabledInfo": "O emissor/proprietário do ativo NÃO pode transferir este ativo do saldo de outras contas."
+    },
+    "transfer_restricted": {
+      "about": "O proprietário do ativo deve aprovar todas as transferências",
+      "enabledInfo": "As transferências deste ativo são restritas. ",
+      "disabledInfo": "Não existe tal limitação nas transferências."
+    },
+    "disable_force_settle": {
+      "about": "Desativar liquidação forçada",
+      "enabledInfo": "Os detentores deste ativo NÃO podem solicitar uma liquidação forçada de algum montante do seu ativo, a menos que este ativo seja liquidado globalmente ou individualmente para um fundo.",
+      "disabledInfo": "Os detentores deste ativo podem solicitar uma liquidação forçada."
+    },
+    "disable_confidential": {
+      "about": "Desabilitar transações confidenciais",
+      "enabledInfo": "As transferências para endereços cegos/furtivos/confidenciais estão desativadas. ",
+      "disabledInfo": "As transferências para endereços cegos/furtivos/confidenciais estão habilitadas."
+    },
+    "witness_fed_asset": {
+      "about": "Permitir que testemunhas forneçam feeds",
+      "enabledInfo": "Testemunhas ativas podem publicar feeds de preços para este ativo.",
+      "disabledInfo": "As testemunhas ativas não podem publicar feeds de preços para este ativo."
+    },
+    "committee_fed_asset": {
+      "about": "Permitir que os membros do comitê forneçam feeds",
+      "enabledInfo": "Os membros ativos do comitê podem publicar feeds de preços para este ativo.",
+      "disabledInfo": "Os membros ativos do comitê não podem publicar feeds de preços para este ativo."
+    },
+    "lock_max_supply": {
+      "about": "Bloquear suprimento máximo",
+      "enabledInfo": "A oferta máxima deste ativo está bloqueada, o que significa que o emissor/proprietário do ativo NÃO pode atualizar a oferta máxima deste ativo.",
+      "disabledInfo": "O emissor/proprietário do ativo pode atualizar a oferta máxima deste ativo."
+    },
+    "disable_new_supply": {
+      "about": "Desativar novo fornecimento",
+      "enabledInfo": "Não é possível criar um novo fornecimento para este ativo (ou dizer, não é possível ‘cunhar’ mais tokens).",
+      "disabledInfo": "Pode criar novo fornecimento para este ativo."
+    },
+    "disable_collateral_bidding": {
+      "about": "Desativar lances colaterais",
+      "enabledInfo": "A licitação de garantias no pool de liquidação global está desativada. ",
+      "disabledInfo": "A licitação de garantias no pool de liquidação global está habilitada."
+    }
+  },
+  "asset_details": {
+    "title": "Detalhes do ativo",
+    "title_content": "Estas são as configurações de ativos usadas para a funcionalidade principal do DEX.",
+    "symbol": {
+      "header": "Símbolo de ativo",
+      "header_content": "O símbolo do ativo é um identificador exclusivo no blockchain que identifica o ativo em todo o DEX. ",
+      "placeholder": "Símbolo"
+    },
+    "shortName": {
+      "header": "Nome abreviado do recurso",
+      "header_content": "Este é o nome abreviado do ativo, menos importante que o símbolo, mas ainda é um identificador exclusivo opcionalmente abreviado. ",
+      "placeholder": "Nome curto"
+    },
+    "preferredMarket": {
+      "header": "Par de negociação de mercado preferido",
+      "header_content": "O par de negociação de mercado preferido é o ativo padrão usado para negociar contra o seu ativo, esta é uma sugestão informal."
+    },
+    "description": {
+      "header": "Descrição do ativo",
+      "header_content": "Esta é a descrição do ativo, ela será exibida no DEX e pode ser utilizada para fornecer mais informações sobre o ativo.",
+      "placeholder": "Descrição"
+    },
+    "max_supply": {
+      "header": "Fornecimento máximo",
+      "header_content": "A oferta máxima do ativo, é o valor total do ativo que pode ser emitido pelo proprietário do ativo (você).",
+      "placeholder": "Fornecimento máximo"
+    },
+    "precision": {
+      "header": "Precisão de ativos",
+      "header_content": "A precisão do ativo especifica a quantidade de casas decimais suportadas. ",
+      "placeholder": "Precisão"
+    }
+  },
+  "extensions": {
+    "header_content": "As extensões são configurações avançadas adicionais que podem ser usadas para personalizar ainda mais o ativo.",
+    "header": "Extensões de taxas de mercado",
+    "reward_percent": {
+      "enabled": "Extensão de porcentagem de recompensa do referenciador ativada",
+      "enabledInfo": "Uma redução percentual da taxa de mercado será atribuída ao referenciador dos participantes ativos do mercado.",
+      "disabled": "Ativar a extensão de porcentagem de recompensa do referenciador?",
+      "disabledInfo": "A extensão da porcentagem de recompensa do referenciador permite que o criador do ativo aloque uma porcentagem da taxa de mercado ao referenciador dos participantes ativos do mercado.",
+      "header": "Porcentagem de recompensa do referenciador",
+      "header_content": "A percentagem de recompensa do referenciador é a percentagem da taxa de mercado que é atribuída ao referenciador dos participantes ativos do mercado."
+    },
+    "whitelist_market_fee_sharing": {
+      "enabled": "Extensão de compartilhamento de taxas de mercado na lista de permissões ativada",
+      "enabledInfo": "As seguintes contas de referência serão aprovadas para receber uma redução nas taxas de mercado cobradas de suas contas de referência.",
+      "disabled": "Ativar a extensão de compartilhamento de taxas de mercado na lista de permissões?",
+      "disabledInfo": "Você pode limitar quem tem permissão para receber uma redução nas taxas de mercado cobradas a um conjunto de contas de referência pré-aprovadas.",
+      "header": "Compartilhamento de taxas de mercado na lista de permissões",
+      "header_content": "A extensão de compartilhamento de taxas de mercado da lista de permissões permite que a empresa limite os referenciadores para essas contas na lista de permissões."
+    },
+    "taker_fee_percent": {
+      "enabled": "Extensão percentual da taxa do tomador ativada",
+      "enabledInfo": "O participante 'tomador' da ordem limitada receberá um percentual da taxa de mercado.",
+      "disabled": "Ativar a extensão percentual da taxa do tomador?",
+      "disabledInfo": "A extensão percentual da taxa do tomador permite que o criador do ativo aloque uma porcentagem da taxa de mercado ao ‘tomador’ das operações de ordem com limite.",
+      "header": "Porcentagem da taxa do tomador",
+      "header_content": "A percentagem da taxa do tomador é a percentagem da taxa de mercado que é atribuída ao 'tomador' das ordens limitadas na bolsa descentralizada."
+    },
+    "allowed_markets": {
+      "enabled": "Extensão de mercados permitidos ativada",
+      "enabledInfo": "Os seguintes mercados estão aprovados para negociar este ativo.",
+      "disabled": "Ativar a extensão dos mercados permitidos?",
+      "disabledInfo": "Você pode limitar os mercados autorizados a negociar este ativo a um conjunto de mercados pré-aprovados."
+    },
+    "banned_markets": {
+      "enabled": "Extensão de mercados banidos ativada",
+      "enabledInfo": "Os seguintes mercados estão proibidos de negociar este ativo.",
+      "disabled": "Ativar a extensão dos mercados proibidos?",
+      "disabledInfo": "Este recurso permite proibir pares de negociação de mercado específicos, ajudando a evitar a negociação de seus ativos em mercados indesejados."
+    },
+    "skipCER": {
+      "enabled": "Ignorando o cálculo da taxa de câmbio principal",
+      "enabledInfo": "O criador do ativo permitiu ignorar a verificação da taxa de câmbio principal para este ativo.",
+      "disabled": "Ignorar o cálculo da taxa de câmbio básica?",
+      "disabledInfo": "A extensão Skip Core Exchange Rate permite que o criador do ativo ignore a verificação da taxa de câmbio principal deste ativo."
+    }
+  },
+  "whitelist": {
+    "header_content": "As autoridades da lista de permissões de ativos são contas que podem contribuir com a lista de contas autorizadas da sua conta para autorizar a interação com esse acesso.",
+    "header": "Autoridades da lista branca de ativos"
+  },
+  "blacklist": {
+    "header_content": "As autoridades da lista negra de ativos são contas que podem contribuir com a lista de contas da lista negra de suas contas para impor uma lista de contas banidas, impedindo a interação com esse acesso.",
+    "header": "Autoridades da lista negra de ativos"
+  },
+  "market_fee": {
+    "header_content": "A taxa de mercado é a porcentagem da taxa cobrada em cada negociação executada no Bitshares DEX. ",
+    "header": "Porcentagem da taxa de mercado"
+  },
+  "max_market_fee": {
+    "header": "Taxa máxima de mercado",
+    "header_content": "A taxa máxima de mercado é o valor máximo do ativo que pode ser cobrado como taxa em cada negociação executada no Bitshares DEX."
+  },
+  "cer": {
+    "quote_asset_amount": {
+      "header": "Cotar o valor do ativo",
+      "header_content": "O valor do ativo emitido pelo usuário necessário para comprar o valor do ativo base."
+    },
+    "base_asset_amount": {
+      "header": "Valor base do ativo",
+      "header_content": "O valor do ativo base ({{symbol}}) que é necessário para comprar o valor do ativo cotado."
+    },
+    "calculated_cer_price": {
+      "header": "Taxa de câmbio básica",
+      "header_content": "Certifique-se de que sua taxa de câmbio básica seja superior ao preço de mercado, caso contrário, as pessoas comprarão seu token no mercado e esgotarão seu conjunto de taxas por meio de arbitragem implícita. "
+    }
+  },
+  "nft": {
+    "NFTTitleContent": "Este é o título do seu token não fungível, certifique-se de que seja único e descritivo, pois pode ser apresentado em várias galerias/exploradores de tokens não fungíveis.",
+    "NFTTitleHeader": "Título",
+    "TitlePlaceholder": "Título",
+    "NFTArtistContent": "Nome ou pseudônimo do artista. ",
+    "NFTArtistHeader": "Artista",
+    "ArtistPlaceholder": "Artista",
+    "NFTNarrativeContent": "Uma declaração pessoal do artista descrevendo a obra, como o que a obra significa para ele ou o que a inspirou. ",
+    "NFTNarrativeHeader": "Narrativa",
+    "NarrativePlaceholder": "Narrativa",
+    "NFTTagsContent": "Lista de palavras-chave separadas por vírgulas para facilitar pesquisas por tópicos/interesses.",
+    "NFTTagsHeader": "Etiquetas",
+    "TagsPlaceholder": "Etiquetas",
+    "NFTTypeContent": "Uma string que descreve o tipo de token não fungível, como 'NFT/ART/VISUAL', 'NFT/ART/3D', 'NFT/ART/ANIMATION', 'NFT/ART/AUDIO', 'NFT/ART ",
+    "NFTTypeHeader": "Tipo",
+    "TypePlaceholder": "Tipo",
+    "NFTAttestationContent": "Aqui, o artista ou originador do material encapsulado compromete ou dedica o material ao blockchain, nomeando expressamente o token ou ID do ativo sob o qual a obra viverá e atesta sua singularidade qualificada ou não qualificada. ",
+    "NFTAttestationHeader": "Atestado",
+    "AttestationPlaceholder": "Atestado",
+    "NFTAcknowledgementsContent": "Agradecimentos ou créditos adicionais pelo token digital.",
+    "NFTAcknowledgementsHeader": "Agradecimentos",
+    "AcknowledgementsPlaceholder": "Agradecimentos",
+    "NFTHolderLicenseContent": "Se o token conceder licença adicional para o uso do trabalho criativo especificamente aos detentores do token, isso poderá ser especificado aqui. ",
+    "NFTHolderLicenseHeader": "Licença de titular",
+    "HolderLicensePlaceholder": "Licença de titular",
+    "NFTLicenseContent": "Licença sob a qual a arte é lançada. ",
+    "NFTLicenseHeader": "Licença de mídia",
+    "LicensePlaceholder": "Licença",
+    "modifyMultimediaContents": "Modifique conteúdos multimídia",
+    "modifyingMultimediaContents": "Modificando o conteúdo multimídia deste token não fungível",
+    "currentIPFSMedia": "Mídia IPFS atual",
+    "referencesIPFSObjects": "Este token não fungível atualmente faz referência {{count}} Objetos IPFS, fique à vontade para adicionar/remover mais.",
+    "noIPFSMediaFound": "Nenhuma mídia IPFS encontrada",
+    "type": "Tipo",
+    "contentIdentifier": "Identificador de conteúdo",
+    "filename": "Nome do arquivo",
+    "delete": "Excluir?",
+    "addNewIPFSMedia": "Adicionar nova mídia IPFS",
+    "noIPFSGateway": "Não inclua um host de gateway IPFS em URLs de mídia de token não fungíveis, pois terceiros usarão seus próprios gateways para acessar o conteúdo.",
+    "mediaURLPlaceholder": "/ipfs/cid/image.png",
+    "fileTypePlaceholder": "Tipo de arquivo",
+    "imageFormats": "Formatos de imagem",
+    "audioFormats": "Formatos de áudio",
+    "videoFormats": "Formatos de vídeo",
+    "documentFormats": "Formatos de documentos",
+    "threeDFormats": "Arquivos 3D",
+    "submit": "Enviar",
+    "ipfsHostingSolutions": "Soluções de hospedagem IPFS",
+    "ipfsHostingDescription": "Confira os seguintes exemplos de serviços de hospedagem/fixação IPFS! ",
+    "header": "Detalhes do token não fungível",
+    "header_content": "Estes são os detalhes do seu token não fungível, certifique-se de que sejam únicos e descritivos, pois podem ser apresentados em várias galerias/exploradores NFT.",
+    "disabled": "Ativar a funcionalidade de token não fungível?",
+    "enabled": "Desativar a funcionalidade de token não fungível?",
+    "multimedia_header": "Detalhes multimídia do token não fungível",
+    "multimedia_header_content": "Forneça o seu não ",
+    "currentIPFSFiles": "Este token não fungível contém atualmente {{count}} Referências de arquivo de mídia IPFS.",
+    "supportedFiletypes": "Os tipos de arquivos suportados incluem imagens, vídeo, áudio, arquivos 3D, documentos, etc.",
+    "main_header_content": "As configurações abaixo definem como seu token não fungível se comportará na blockchain Bitshares. ",
+    "main_header": "Configuração de token não fungível"
   }
+}

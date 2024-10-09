@@ -1,6 +1,8 @@
 {
   "common": {
     "title": " Pakkumine{{orderID}} kõrval {{owner_name}} ({{owner_account}})",
+    "offer": "Pakkumine",
+    "by": "poolt",
     "offering": "Pakkumine",
     "accepting": "Aktsepteerimine",
     "loading": "Laadimine...",

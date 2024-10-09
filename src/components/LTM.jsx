@@ -68,7 +68,7 @@ export default function LTM(properties) {
               ) : null}
               {showDialog ? (
                 <DeepLinkDialog
-                  operationName="account_upgrade"
+                  operationNames={["account_upgrade"]}
                   username={usr.username}
                   usrChain={usr.chain}
                   userID={usr.id}

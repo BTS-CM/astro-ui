@@ -86,7 +86,7 @@
     "hover3": "Compare la cantidad de operaciones en el mercado."
   },
   "deals": {
-    "title": "ℹ️ Ofertas de crédito",
+    "title": "🤝 Ofertas de crédito",
     "subtitle": "Consulta tus ofertas de crédito",
     "hover1": "Supervise sus ofertas de crédito activas.",
     "hover2": "Gestiona el estado de tus operaciones crediticias."
@@ -116,6 +116,13 @@
     "hover1": "¡Vea los activos emitidos por los usuarios, los activos del mercado de predicción, las monedas inteligentes y los tokens no fungibles!",
     "hover2": "Edite los activos que ha creado en blockchain.",
     "hover3": "Opcionalmente, emita una cantidad de sus activos creados."
+  },
+  "blocks": {
+    "title": "💾 Datos de cadena de bloques",
+    "subtitle": "Ver los datos resumidos de blockchain más recientes",
+    "hover1": "Tablas de datos en vivo de actividad reciente y bloques recientes.",
+    "hover2": "Gráfico en vivo del recuento de transacciones en bloque recientes.",
+    "hover3": "Promedios y totales de datos resumidos de blockchain."
   },
   "create_prediction": {
     "title": "🔮 Activo del mercado de predicción",

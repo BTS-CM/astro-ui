@@ -1,7 +1,9 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useSyncExternalStore } from "react";
 import Fuse from "fuse.js";
 import { FixedSizeList as List } from "react-window";
 import { useStore } from '@nanostores/react';
+import { sha256 } from '@noble/hashes/sha2';
+import { bytesToHex as toHex } from '@noble/hashes/utils';
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
@@ -26,11 +28,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-import {
-  $favouriteAssets,
-  addFavouriteAsset,
-  removeFavouriteAsset,
-} from "@/stores/favourites.ts"
+import { $favouriteAssets } from "@/stores/favourites.ts"
+import { $blockList } from "@/stores/blocklist.ts";
 
 /**
  * Creating an asset dropdown component
@@ -51,24 +50,36 @@ export default function AssetDropDown(properties) {
     chain,
   } = properties;
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
+  const blocklist = useSyncExternalStore($blockList.subscribe, $blockList.get, () => true);
 
-  let marketSearchContents;
-  if (!marketSearch || !marketSearch.length) {
-    marketSearchContents = [];
-  } else {
-    marketSearchContents = otherAsset
-      ? marketSearch.filter((asset) => asset.s !== otherAsset && asset.s !== assetSymbol)
-      : marketSearch.filter((asset) => asset.s !== assetSymbol);
-  }
+  const marketSearchContents = useMemo(() => {
+    if (!marketSearch || !marketSearch.length) {
+      return [];
+    } else {
+      let currentContents = otherAsset
+        ? marketSearch.filter((asset) => asset.s !== otherAsset && asset.s !== assetSymbol)
+        : marketSearch.filter((asset) => asset.s !== assetSymbol);
 
-  const fuse = new Fuse(marketSearchContents, {
+      if (chain === "bitshares" && blocklist && blocklist.users) {
+        currentContents = currentContents.filter(
+          (asset) => !blocklist.users.includes(
+            toHex(sha256(asset.u.split(" ")[1].replace("(", "").replace(")", "")))
+          ),
+        );
+      }
+
+      return currentContents;
+    }
+  }, [marketSearch, blocklist, chain]);
+
+  const fuse = useMemo(() => new Fuse(marketSearchContents, {
     includeScore: true,
     keys: [
       "id",
       "s", // symbol
       "u", // `name (id) (ltm?)`
     ],
-  });
+  }), [marketSearchContents]);
 
   const [thisInput, setThisInput] = useState();
   const [thisResult, setThisResult] = useState();
@@ -78,7 +89,7 @@ export default function AssetDropDown(properties) {
       const result = fuse.search(thisInput);
       setThisResult(result);
     }
-  }, [thisInput]);
+  }, [thisInput, fuse]);
 
   const Row = ({ index, style }) => {
     const res = mode === "search"

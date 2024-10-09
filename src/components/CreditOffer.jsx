@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useMemo, useSyncExternalStore } from "react";
 import { useForm } from "react-hook-form";
+import { sha256 } from '@noble/hashes/sha2';
+import { bytesToHex as toHex } from '@noble/hashes/utils';
 import { FixedSizeList as List } from "react-window";
 import { useStore } from '@nanostores/react';
 import { useTranslation } from "react-i18next";
@@ -55,6 +57,7 @@ import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 import { createObjectStore } from "@/nanoeffects/Objects.ts";
 import { useInitCache } from "@/nanoeffects/Init.ts";
 import { $currentNode } from "@/stores/node.ts";
+import { $blockList } from "@/stores/blocklist.ts";
 
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
 import ExternalLink from "./common/ExternalLink.jsx";
@@ -84,9 +87,10 @@ export default function CreditOffer(properties) {
       account: "",
     },
   });
-  const currentNode = useStore($currentNode);
 
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
+  const blocklist = useSyncExternalStore($blockList.subscribe, $blockList.get, () => true);
+  const currentNode = useStore($currentNode);
 
   const _assetsBTS = useSyncExternalStore($assetCacheBTS.subscribe, $assetCacheBTS.get, () => true);
   const _assetsTEST = useSyncExternalStore(
@@ -229,10 +233,24 @@ export default function CreditOffer(properties) {
         offerStore.subscribe(({ data, error, loading }) => {
           if (data && !error && !loading) {
             const foundOffer = data[0];
-            setRelevantOffer(foundOffer);
-            const foundAsset = assets.find((asset) => asset.id === foundOffer.asset_type);
-            setError(false);
-            setFoundAsset(foundAsset);
+            if (foundOffer) {
+
+              if (_chain === "bitshares") {
+                const hashedID = toHex(sha256(foundOffer.owner_account));
+                if (blocklist.users.includes(hashedID)) {
+                  // Credit offer is owned by a banned user
+                  setError(true);
+                  setRelevantOffer();
+                  setFoundAsset();
+                  return;
+                }
+              }
+
+              setRelevantOffer(foundOffer);
+              const foundAsset = assets.find((asset) => asset.id === foundOffer.asset_type);
+              setError(false);
+              setFoundAsset(foundAsset);
+            }
           }
           if (error) {
             setError(true);
@@ -252,8 +270,9 @@ export default function CreditOffer(properties) {
 
       unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
-          setBalanceAssetIDs(data.map((x) => x.asset_id));
-          setUsrBalances(data);
+          const filteredData = data.filter((balance) => assets.find((x) => x.id === balance.asset_id));
+          setBalanceAssetIDs(filteredData.map((x) => x.asset_id));
+          setUsrBalances(filteredData);
         }
       });
     }
@@ -1084,7 +1103,7 @@ export default function CreditOffer(properties) {
         </div>
         {showDialog ? (
           <DeepLinkDialog
-            operationName="credit_offer_accept"
+            operationNames={["credit_offer_accept"]}
             username={usr.username}
             usrChain={usr.chain}
             userID={usr.id}

@@ -161,7 +161,8 @@ export default function Transfer(properties) {
 
       unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
-          setBalances(data);
+          const filteredData = data.filter((balance) => assets.find((x) => x.id === balance.asset_id));
+          setBalances(filteredData);
         }
       });
     }
@@ -554,7 +555,7 @@ export default function Transfer(properties) {
               </Form>
               {showDialog ? (
                 <DeepLinkDialog
-                  operationName="transfer"
+                  operationNames={["transfer"]}
                   username={usr.username}
                   usrChain={usr.chain}
                   userID={usr.id}

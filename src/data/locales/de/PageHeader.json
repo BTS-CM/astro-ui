@@ -26,6 +26,10 @@
   "predictions": "Vorhersagen",
   "createPrediction": "Vorhersage erstellen",
   "assetsHeading": "Vermögenserstellung",
+  "issuedAssets": "Ihre ausgegebenen Vermögenswerte",
+  "create_smartcoin": "Smartcoin erstellen",
+  "create_uia": "Erstellen Sie ein vom Benutzer ausgegebenes Asset",
+  "blockExplorer": "Live-Blockchain-Daten",
   "nodes": "Knoten",
   "buyLTM": "Kaufen Sie LTM",
   "english": "Englisch (en)",
@@ -63,7 +67,9 @@
     "tfunds": "Suchen, erstellen, aktualisieren oder löschen Sie unten Same-T-Fonds!",
     "create_vesting": "Verwenden Sie dieses Formular, um ein Sperrguthaben für jedes Konto zu erstellen!",
     "uia": "Erstellen Sie mit dem untenstehenden Formular Ihr eigenes, vom Benutzer ausgegebenes Asset!",
-    "issuedAssets": "Verwalten Sie die von Ihnen erstellten Blockchain-Assets in den folgenden Registerkarten!"
+    "issuedAssets": "Verwalten Sie die von Ihnen erstellten Blockchain-Assets in den folgenden Registerkarten!",
+    "create_smartcoin": "Verwenden Sie das untenstehende Formular, um ein neues Smartcoin-Asset zu erstellen.",
+    "blocks": "Sehen Sie sich die aktuellsten Blockchain-Daten bequem zusammengefasst unten an!"
   },
   "back": "Geh zurück",
   "usage": "Konzipiert für den Einsatz mit ",

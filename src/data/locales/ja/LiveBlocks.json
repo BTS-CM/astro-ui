@@ -1,0 +1,45 @@
+{
+  "cardTitle": "ライブブロックチェーンの概要",
+  "cardDescription": "Bitshares ブロックチェーンのブロック時間は 3 秒で、1 秒あたり数千のトランザクションを処理できます。",
+  "currentBlock": {
+    "content": "最新のブロック番号。",
+    "header": "現在のブロック"
+  },
+  "currentWitness": {
+    "content": "最新のブロックを作成した証人。",
+    "header": "現在の証人"
+  },
+  "tps": {
+    "content": "過去の 1 秒あたりのトランザクション数 {{blockQty}} ブロック。",
+    "header": "1 秒あたりのトランザクション数"
+  },
+  "uniqueWitnesses": {
+    "content": "最近のブロック内の固有の証人の数。",
+    "header": "ユニークな証人"
+  },
+  "txPerBlock": {
+    "content": "過去のブロックあたりの平均トランザクション数 {{blockQty}} ブロック。",
+    "header": "ブロックごとのトランザクション数"
+  },
+  "recentFees": {
+    "content": "前回徴収した料金の合計 {{blockQty}} ブロック。",
+    "header": "最近の料金"
+  },
+  "chart": {
+    "content": "過去のブロックごとのトランザクション数を表示する {{blockQty}} ブロック。",
+    "header": "ブロックごとのトランザクション数"
+  },
+  "recentActivity": {
+    "content": "ブロックチェーンにおける最近のアクティビティ。",
+    "header": "最近の活動"
+  },
+  "recentBlocks": {
+    "content": "最近のブロックのリスト。",
+    "header": "最近のブロック"
+  },
+  "dialogContent": {
+    "json": "JSONデータ",
+    "jsonDescription": "選択した項目の詳細なJSONデータ。",
+    "copy": "コピー"
+  }
+}

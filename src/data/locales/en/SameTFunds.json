@@ -5,6 +5,7 @@
     "offering": "Offering",
     "fee": "Fee",
     "rowTitle": "Fund #{{id}} by {{user}}",
+    "fund": "Fund",
     "unpaidAmount": "Unpaid Amount",
     "id": "Id",
     "deleteHeader": "Deleting {{owner_account}}'s fund {{fund_id}}",

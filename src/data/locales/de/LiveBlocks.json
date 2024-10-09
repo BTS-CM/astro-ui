@@ -1,0 +1,45 @@
+{
+  "cardTitle": "Live-Blockchain-Übersicht",
+  "cardDescription": "Die Bitshares-Blockchain hat Blockzeiten von 3 Sekunden und ist in der Lage, Tausende von Transaktionen pro Sekunde abzuwickeln. ",
+  "currentBlock": {
+    "content": "Die aktuellste Blocknummer.",
+    "header": "Aktueller Block"
+  },
+  "currentWitness": {
+    "content": "Der Zeuge, der den letzten Block erstellt hat.",
+    "header": "Aktueller Zeuge"
+  },
+  "tps": {
+    "content": "Transaktionen pro Sekunde in der letzten Zeit {{blockQty}} Blöcke.",
+    "header": "Transaktionen pro Sekunde"
+  },
+  "uniqueWitnesses": {
+    "content": "Anzahl der eindeutigen Zeugen in den letzten Blöcken.",
+    "header": "Einzigartige Zeugen"
+  },
+  "txPerBlock": {
+    "content": "Durchschnittliche Anzahl der Transaktionen pro Block im letzten Zeitraum {{blockQty}} Blöcke.",
+    "header": "Transaktionen pro Block"
+  },
+  "recentFees": {
+    "content": "Insgesamt im letzten Jahr erhobene Gebühren {{blockQty}} Blöcke.",
+    "header": "Aktuelle Gebühren"
+  },
+  "chart": {
+    "content": "Anzeige der Anzahl der Transaktionen pro Block im letzten Zeitraum {{blockQty}} Blöcke.",
+    "header": "Transaktionen pro Block"
+  },
+  "recentActivity": {
+    "content": "Aktuelle Aktivität in der Blockchain.",
+    "header": "Letzte Aktivität"
+  },
+  "recentBlocks": {
+    "content": "Liste der letzten Blöcke.",
+    "header": "Aktuelle Blöcke"
+  },
+  "dialogContent": {
+    "json": "JSON-Daten",
+    "jsonDescription": "Detaillierte JSON-Daten des ausgewählten Elements.",
+    "copy": "Kopie"
+  }
+}

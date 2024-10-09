@@ -281,9 +281,11 @@ export default function MarketOrder(properties) {
 
       unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
-          setBalances(data);
-          const foundBase = data.find((x) => x.asset_id === baseAsset.id);
-          const foundQuote = data.find((x) => x.asset_id === quoteAsset.id);
+          const filteredData = data.filter((balance) => assets.find((x) => x.id === balance.asset_id));
+
+          setBalances(filteredData);
+          const foundBase = filteredData.find((x) => x.asset_id === baseAsset.id);
+          const foundQuote = filteredData.find((x) => x.asset_id === quoteAsset.id);
           setBaseBalance(foundBase ? humanReadableFloat(foundBase.amount, baseAsset.precision) : 0);
           setQuoteBalance(
             foundQuote ? humanReadableFloat(foundQuote.amount, quoteAsset.precision) : 0
@@ -1269,7 +1271,7 @@ export default function MarketOrder(properties) {
               </Form>
               {showDialog ? (
                 <DeepLinkDialog
-                  operationName="limit_order_update"
+                  operationNames={["limit_order_update"]}
                   username={usr.username}
                   usrChain={usr.chain}
                   userID={usr.id}
@@ -1329,7 +1331,7 @@ export default function MarketOrder(properties) {
 
               {cancelDialog ? (
                 <DeepLinkDialog
-                  operationName="limit_order_cancel"
+                  operationNames={["limit_order_cancel"]}
                   username={usr.username}
                   usrChain={usr.chain}
                   userID={usr.id}

@@ -26,6 +26,10 @@
   "predictions": "Previsões",
   "createPrediction": "Criar previsão",
   "assetsHeading": "Criação de ativos",
+  "issuedAssets": "Seus ativos emitidos",
+  "create_smartcoin": "Criar moeda inteligente",
+  "create_uia": "Criar ativo emitido pelo usuário",
+  "blockExplorer": "Dados de blockchain ao vivo",
   "nodes": "Nós",
   "buyLTM": "Comprar LTM",
   "english": "Inglês (pt)",
@@ -63,7 +67,9 @@
     "tfunds": "Encontre, crie, atualize ou exclua fundos Same-T abaixo!",
     "create_vesting": "Use este formulário para criar um saldo de aquisição para qualquer conta!",
     "uia": "Crie seu próprio ativo emitido pelo usuário com o formulário abaixo!",
-    "issuedAssets": "Gerencie os ativos blockchain que você criou nas guias abaixo!"
+    "issuedAssets": "Gerencie os ativos blockchain que você criou nas guias abaixo!",
+    "create_smartcoin": "Use o formulário abaixo para criar um novo ativo smartcoin.",
+    "blocks": "Veja os dados mais recentes do blockchain convenientemente resumidos abaixo!"
   },
   "back": "Volte",
   "usage": "Projetado para uso com ",
