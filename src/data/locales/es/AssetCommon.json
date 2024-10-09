@@ -4,83 +4,83 @@
     "header_content": "Nota: Deshabilitar permisos es una decisión permanente",
     "charge_market_fee": {
       "about": "Habilitar tarifa de mercado",
-      "enabledInfo": "El creador del activo puede permitir el cobro de tarifas comerciales en el mercado por este activo.",
-      "disabledInfo": "El creador del activo no puede cobrar tarifas de negociación en el mercado por este activo."
+      "enabledInfo": "El emisor/propietario del activo puede actualizar el indicador charge_market_fee.",
+      "disabledInfo": "El emisor/propietario del activo NO puede actualizar el indicador charge_market_fee. "
     },
     "white_list": {
       "about": "Requerir que los titulares estén en la lista blanca",
-      "enabledInfo": "El creador del activo puede habilitar la configuración de autoridades de lista blanca para este activo.",
-      "disabledInfo": "El creador del activo no puede configurar autoridades de lista blanca para este activo."
+      "enabledInfo": "El emisor/propietario del activo puede actualizar el indicador white_list.",
+      "disabledInfo": "El emisor/propietario del activo NO puede actualizar el indicador white_list. "
     },
     "override_authority": {
       "about": "El propietario del activo puede transferirlo a sí mismo",
-      "enabledInfo": "El creador del activo puede habilitar la capacidad de realizar una operación de transferencia de anulación en este activo.",
-      "disabledInfo": "El creador del activo no puede realizar operaciones de transferencia de anulación en este activo."
+      "enabledInfo": "El emisor/propietario del activo puede actualizar el indicador override_authority.",
+      "disabledInfo": "El emisor/propietario del activo NO puede actualizar el indicador override_authority."
     },
     "transfer_restricted": {
       "about": "El propietario del activo debe aprobar todas las transferencias.",
-      "enabledInfo": "El creador del activo puede habilitar la capacidad de restringir las transferencias de este activo.",
-      "disabledInfo": "El creador del activo no puede restringir las transferencias de este activo."
+      "enabledInfo": "El emisor/propietario del activo puede actualizar el indicador transfer_restricted.",
+      "disabledInfo": "El emisor/propietario del activo NO puede actualizar el indicador transfer_restricted."
     },
     "disable_confidential": {
       "about": "Deshabilitar transacciones confidenciales",
-      "enabledInfo": "El creador del activo puede habilitar la capacidad de deshabilitar operaciones confidenciales para este activo.",
-      "disabledInfo": "El creador del activo no puede desactivar las operaciones confidenciales para este activo."
+      "enabledInfo": "El emisor/propietario del activo puede actualizar el indicador enable_confidential.",
+      "disabledInfo": "El emisor/propietario del activo NO puede actualizar el indicador enable_confidential."
     },
     "witness_fed_asset": {
       "about": "Permitir que los testigos proporcionen información",
-      "enabledInfo": "El creador del activo puede permitir que los testigos publiquen precios de este activo.",
-      "disabledInfo": "El creador del activo no puede permitir que los testigos publiquen precios de este activo."
+      "enabledInfo": "El emisor/propietario del activo puede actualizar el indicador testigo_fed_asset.",
+      "disabledInfo": "El emisor/propietario del activo NO puede actualizar el indicador testigo_fed_asset."
     },
     "committee_fed_asset": {
       "about": "Permitir que los miembros del comité proporcionen feeds",
-      "enabledInfo": "El creador del activo puede permitir que los miembros del comité publiquen precios de este activo.",
-      "disabledInfo": "El creador del activo no puede permitir que los miembros del comité publiquen precios de este activo."
+      "enabledInfo": "El emisor/propietario del activo puede actualizar el indicador comité_fed_asset.",
+      "disabledInfo": "El emisor/propietario del activo NO puede actualizar el indicador comité_fed_asset."
     },
     "disable_force_settle": {
       "about": "Desactivar forzar asentamiento",
-      "enabledInfo": "El creador del activo puede habilitar la capacidad de desactivar la configuración forzada para este activo.",
-      "disabledInfo": "El creador del activo no puede desactivar la liquidación forzada para este activo."
+      "enabledInfo": "El emisor/propietario del activo puede actualizar el indicador enable_force_settle.",
+      "disabledInfo": "El emisor/propietario del activo NO puede actualizar el indicador enable_force_settle."
     },
     "global_settle": {
       "about": "Permitir que el propietario del activo fuerce un acuerdo global",
-      "enabledInfo": "El creador del activo puede habilitar la capacidad de liquidar globalmente este activo.",
-      "disabledInfo": "El creador del activo no puede liquidar globalmente este activo."
+      "enabledInfo": "El emisor/propietario del activo puede liquidar manualmente este activo de forma global.",
+      "disabledInfo": "El emisor/propietario del activo NO puede liquidar manualmente este activo de forma global."
     },
     "lock_max_supply": {
       "about": "Bloquear suministro máximo",
-      "enabledInfo": "El creador del activo no puede bloquear el suministro máximo de este activo.",
-      "disabledInfo": "El creador del activo puede bloquear el suministro máximo de este activo."
+      "enabledInfo": "El emisor/propietario del activo NO puede actualizar el indicador lock_max_supply.",
+      "disabledInfo": "El emisor/propietario del activo puede actualizar el indicador lock_max_supply."
     },
     "disable_new_supply": {
       "about": "Deshabilitar nuevo suministro",
-      "enabledInfo": "El creador del activo no puede desactivar la capacidad de crear un nuevo suministro para este activo.",
-      "disabledInfo": "El creador del activo puede desactivar la capacidad de crear nuevos suministros para este activo."
+      "enabledInfo": "El emisor/propietario del activo NO puede actualizar el indicador enable_new_supply.",
+      "disabledInfo": "El emisor/propietario del activo puede actualizar el indicador enable_new_supply."
     },
     "disable_collateral_bidding": {
       "about": "Deshabilitar ofertas de garantía",
-      "enabledInfo": "El creador del activo no puede desactivar las ofertas de garantía para este activo.",
-      "disabledInfo": "El creador del activo puede desactivar las ofertas de garantía para este activo."
+      "enabledInfo": "El emisor/propietario del activo NO puede actualizar el indicador enable_collateral_bidding.",
+      "disabledInfo": "El emisor/propietario del activo puede actualizar el indicador enable_collateral_bidding."
     },
     "disable_mcr_update": {
       "about": "Desactivar actualización del propietario Ratio mínimo de garantía",
-      "enabledInfo": "El propietario del activo utiliza un requisito de índice de garantía mínimo alimentado por el precio para este activo.",
-      "disabledInfo": "El propietario del activo establece estáticamente el requisito del índice de garantía mínimo para este activo."
+      "enabledInfo": "El emisor/propietario del activo NO puede actualizar (establecer/cambiar/eliminar) la extensión Maintenance_collateral_ratio del activo. ",
+      "disabledInfo": "El emisor/propietario del activo puede actualizar (establecer/cambiar/eliminar) la extensión Maintenance_collateral_ratio del activo. "
     },
     "disable_icr_update": {
       "about": "Desactivar actualización del propietario Ratio de garantía inicial",
-      "enabledInfo": "El propietario del activo utiliza un requisito de índice de garantía inicial alimentado por el precio para este activo.",
-      "disabledInfo": "El propietario del activo establece estáticamente el requisito del índice de garantía inicial para este activo."
+      "enabledInfo": "El emisor/propietario del activo NO puede actualizar (establecer/cambiar/eliminar) la extensión initial_collateral_ratio del activo. ",
+      "disabledInfo": "El emisor/propietario del activo puede actualizar (establecer/cambiar/eliminar) la extensión de la relación_collateral_inicial del activo. "
     },
     "disable_mssr_update": {
       "about": "Deshabilitar la actualización del propietario Máximo índice de compresión corta",
-      "enabledInfo": "El propietario del activo utiliza un índice máximo de compresión corta alimentado por el precio para este activo.",
-      "disabledInfo": "El propietario del activo establece estáticamente el índice máximo de compresión corta para este activo."
+      "enabledInfo": "El emisor/propietario del activo NO puede actualizar (establecer/cambiar/eliminar) la extensión Maximum_short_squeeze_ratio del activo. ",
+      "disabledInfo": "El emisor/propietario del activo puede actualizar (establecer/cambiar/eliminar) la extensión Maximum_short_squeeze_ratio del activo. "
     },
     "disable_bsrm_update": {
       "about": "Deshabilitar la actualización del propietario Estrategia de gestión de riesgos de Black Swan",
-      "enabledInfo": "El propietario del activo utiliza la estrategia de Liquidación Global predeterminada para este activo.",
-      "disabledInfo": "El propietario del activo utiliza una estrategia personalizada de gestión de riesgos Black Swan para este activo."
+      "enabledInfo": "El emisor/propietario del activo NO puede actualizar la extensión black_swan_response_method del activo.",
+      "disabledInfo": "El emisor/propietario del activo puede actualizar la extensión black_swan_response_method del activo."
     }
   },
   "flags": {
@@ -88,58 +88,58 @@
     "header_content": "Cada permiso de activo permitido se puede activar o desactivar.",
     "charge_market_fee": {
       "about": "Habilitar tarifa de mercado",
-      "enabledInfo": "El creador del activo puede configurar las tarifas de negociación del mercado para este activo, incluida la funcionalidad de reparto de recompensas de las tarifas del mercado.",
-      "disabledInfo": "El creador del activo ha inhabilitado el cobro de tarifas comerciales en el mercado para este activo."
+      "enabledInfo": "Es posible que se cobren operaciones de mercado en este activo, según la configuración de la tasa de comisión.",
+      "disabledInfo": "Las operaciones de mercado con este activo no se cobran."
     },
     "white_list": {
       "about": "Requerir que los titulares estén en la lista blanca",
-      "enabledInfo": "El creador del activo puede configurar autoridades de lista blanca para este activo.",
-      "disabledInfo": "El creador del recurso ha inhabilitado la configuración de autoridades de la lista blanca para este recurso."
+      "enabledInfo": "El uso de este activo puede estar restringido por autorización de activos (lista blanca y/o lista negra), dependiendo de la configuración de las autoridades de listas blancas y negras.",
+      "disabledInfo": "El uso de este activo no está restringido por las listas de autorización de activos."
     },
     "override_authority": {
       "about": "El propietario del activo puede transferirlo a sí mismo",
-      "enabledInfo": "El creador del activo puede realizar una operación de transferencia de anulación de este activo y devolverlo a su saldo desde el suyo.",
-      "disabledInfo": "El creador del recurso ha inhabilitado la realización de operaciones de transferencia de anulación en este recurso."
-    },
-    "disable_force_settle": {
-      "about": "Desactivar forzar asentamiento",
-      "enabledInfo": "El creador del recurso ha inhabilitado la configuración forzada para este recurso.",
-      "disabledInfo": "El creador del activo ha permitido la liquidación forzada de este activo."
+      "enabledInfo": "El emisor/propietario del activo puede transferir este activo del saldo de cualquier cuenta a otra cuenta (tenga en cuenta que el saldo después de la transferencia no puede ser negativo).",
+      "disabledInfo": "El emisor/propietario del activo NO puede transferir este activo del saldo de otras cuentas."
     },
     "transfer_restricted": {
       "about": "El propietario del activo debe aprobar todas las transferencias.",
-      "enabledInfo": "El creador del activo puede restringir las transferencias de este activo.",
-      "disabledInfo": "El creador del activo ha desactivado la restricción de transferencias de este activo."
+      "enabledInfo": "Las transferencias de este activo están restringidas. ",
+      "disabledInfo": "No existe tal limitación en las transferencias."
+    },
+    "disable_force_settle": {
+      "about": "Desactivar forzar asentamiento",
+      "enabledInfo": "Los tenedores de este activo NO pueden solicitar una liquidación forzosa por algún monto de su activo, a menos que este activo se liquide globalmente o individualmente a un fondo.",
+      "disabledInfo": "Los tenedores de este activo pueden solicitar una liquidación forzosa."
     },
     "disable_confidential": {
       "about": "Deshabilitar transacciones confidenciales",
-      "enabledInfo": "El creador del activo ha desactivado las operaciones confidenciales para este activo.",
-      "disabledInfo": "El creador del recurso no ha inhabilitado las operaciones confidenciales para este recurso."
+      "enabledInfo": "Las transferencias a direcciones ciegas/ocultas/confidenciales están deshabilitadas. ",
+      "disabledInfo": "Las transferencias a direcciones ciegas/ocultas/confidenciales están habilitadas."
     },
     "witness_fed_asset": {
       "about": "Permitir que los testigos proporcionen información",
-      "enabledInfo": "Los testigos pueden publicar precios de este activo.",
-      "disabledInfo": "Los testigos no pueden publicar precios de este activo."
+      "enabledInfo": "Los testigos activos pueden publicar precios de este activo.",
+      "disabledInfo": "Los testigos activos no pueden publicar feeds de precios para este activo."
     },
     "committee_fed_asset": {
       "about": "Permitir que los miembros del comité proporcionen feeds",
-      "enabledInfo": "Los miembros del comité pueden publicar precios de este activo.",
-      "disabledInfo": "Los miembros del comité no pueden publicar precios de este activo."
+      "enabledInfo": "Los miembros activos del comité pueden publicar precios de este activo.",
+      "disabledInfo": "Los miembros activos del comité no pueden publicar precios de este activo."
     },
     "lock_max_supply": {
       "about": "Bloquear suministro máximo",
-      "enabledInfo": "El propietario del activo ha bloqueado el suministro máximo de este activo.",
-      "disabledInfo": "El propietario del activo no ha bloqueado el suministro máximo de este activo."
+      "enabledInfo": "El suministro máximo de este activo está bloqueado, lo que significa que el emisor/propietario del activo NO puede actualizar el suministro máximo de este activo.",
+      "disabledInfo": "El emisor/propietario del activo puede actualizar la oferta máxima de este activo."
     },
     "disable_new_supply": {
       "about": "Deshabilitar nuevo suministro",
-      "enabledInfo": "El propietario del activo ha desactivado la capacidad de emitir nuevos suministros para este activo.",
-      "disabledInfo": "El propietario del activo permite la emisión de suministro adicional para este activo."
+      "enabledInfo": "No se puede crear un nuevo suministro para este activo (o decir, no se pueden \"acuñar\" más tokens).",
+      "disabledInfo": "Puede crear una nueva oferta para este activo."
     },
     "disable_collateral_bidding": {
       "about": "Deshabilitar ofertas de garantía",
-      "enabledInfo": "El propietario del activo ha inhabilitado la oferta de garantía para este activo.",
-      "disabledInfo": "El propietario del activo ha habilitado la oferta de garantía para este activo."
+      "enabledInfo": "La oferta de garantías en el fondo de liquidación global está deshabilitada. ",
+      "disabledInfo": "Está habilitada la oferta de garantías en el fondo de liquidación global."
     }
   },
   "asset_details": {
@@ -152,7 +152,7 @@
     },
     "shortName": {
       "header": "Nombre corto del activo",
-      "header_content": "Este es el nombre corto del activo, menos importante que el símbolo, pero aún así es un identificador único abreviado opcionalmente. ",
+      "header_content": "Este es el nombre corto del activo, menos importante que el símbolo, pero sigue siendo un identificador único opcionalmente abreviado. ",
       "placeholder": "Nombre corto"
     },
     "preferredMarket": {
@@ -210,7 +210,7 @@
     },
     "banned_markets": {
       "enabled": "Habilitada la extensión de mercados prohibidos",
-      "enabledInfo": "Los siguientes mercados tienen prohibido negociar con este activo.",
+      "enabledInfo": "Los siguientes mercados tienen prohibido negociar este activo.",
       "disabled": "¿Habilitar la extensión de mercados prohibidos?",
       "disabledInfo": "Esta función le permite prohibir pares comerciales de mercado específicos, lo que le permite ayudar a evitar la negociación de activos en mercados no deseados."
     },
@@ -226,7 +226,7 @@
     "header": "Autoridades de la lista blanca de activos"
   },
   "blacklist": {
-    "header_content": "Las autoridades de la lista negra de activos son cuentas que pueden contribuir con la lista de cuentas negras de su cuenta para hacer cumplir una lista de cuentas prohibidas que impida la interacción con este acceso.",
+    "header_content": "Las autoridades de la lista negra de activos son cuentas que pueden contribuir con la lista de cuentas en la lista negra de su cuenta para hacer cumplir una lista de cuentas prohibidas que impida la interacción con este acceso.",
     "header": "Autoridades de la lista negra de activos"
   },
   "market_fee": {

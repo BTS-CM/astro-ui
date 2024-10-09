@@ -4,83 +4,83 @@
     "header_content": "注: アクセス許可の無効化は永続的な決定です。",
     "charge_market_fee": {
       "about": "市場手数料を有効にする",
-      "enabledInfo": "アセット作成者は、このアセットに対する市場取引手数料の請求を有効にすることができます。",
-      "disabledInfo": "アセット作成者は、このアセットに対して市場取引手数料を請求することはできません。"
+      "enabledInfo": "資産の発行者/所有者は、charge_market_fee フラグを更新できます。",
+      "disabledInfo": "資産の発行者/所有者は、charge_market_fee フラグを更新できません。 "
     },
     "white_list": {
       "about": "所有者をホワイトリストに登録することを要求する",
-      "enabledInfo": "アセット作成者は、このアセットのホワイト リスト機関の構成を有効にすることができます。",
-      "disabledInfo": "アセット作成者は、このアセットのホワイト リスト権限を構成できません。"
+      "enabledInfo": "資産の発行者/所有者は、white_list フラグを更新できます。",
+      "disabledInfo": "資産の発行者/所有者は、white_list フラグを更新できません。 "
     },
     "override_authority": {
       "about": "資産所有者は資産を自分自身に譲渡することができます",
-      "enabledInfo": "アセット作成者は、このアセットに対してオーバーライド転送操作を実行できるようにすることができます。",
-      "disabledInfo": "アセット作成者は、このアセットに対してオーバーライド転送操作を実行できません。"
+      "enabledInfo": "アセットの発行者/所有者は、override_authority フラグを更新できます。",
+      "disabledInfo": "アセットの発行者/所有者は、override_authority フラグを更新できません。"
     },
     "transfer_restricted": {
       "about": "資産所有者はすべての譲渡を承認する必要があります",
-      "enabledInfo": "アセット作成者は、このアセットの転送を制限する機能を有効にすることができます。",
-      "disabledInfo": "アセット作成者は、このアセットの譲渡を制限できません。"
+      "enabledInfo": "資産の発行者/所有者は、transfer_restricted フラグを更新できます。",
+      "disabledInfo": "資産の発行者/所有者は transfer_restricted フラグを更新できません。"
     },
     "disable_confidential": {
       "about": "機密取引を無効にする",
-      "enabledInfo": "アセット作成者は、このアセットの機密操作を無効にする機能を有効にすることができます。",
-      "disabledInfo": "アセット作成者は、このアセットの機密操作を無効にすることはできません。"
+      "enabledInfo": "資産の発行者/所有者は、disable_confidential フラグを更新できます。",
+      "disabledInfo": "アセットの発行者/所有者は、disable_confidential フラグを更新できません。"
     },
     "witness_fed_asset": {
       "about": "証人がフィードを提供できるようにする",
-      "enabledInfo": "アセット作成者は、証人がこのアセットの価格フィードを公開できるようにすることができます。",
-      "disabledInfo": "アセット作成者は、証人がこのアセットの価格フィードを公開できるようにすることはできません。"
+      "enabledInfo": "資産の発行者/所有者は、witness_fed_asset フラグを更新できます。",
+      "disabledInfo": "アセットの発行者/所有者は、witness_fed_asset フラグを更新できません。"
     },
     "committee_fed_asset": {
       "about": "委員会メンバーがフィードを提供できるようにする",
-      "enabledInfo": "アセット作成者は、委員会のメンバーがこのアセットの価格フィードを公開できるようにすることができます。",
-      "disabledInfo": "アセット作成者は、委員会メンバーがこのアセットの価格フィードを公開できるようにすることはできません。"
+      "enabledInfo": "資産の発行者/所有者は、committee_fed_asset フラグを更新できます。",
+      "disabledInfo": "アセットの発行者/所有者は、committee_fed_asset フラグを更新できません。"
     },
     "disable_force_settle": {
       "about": "強制整定を無効にする",
-      "enabledInfo": "アセット作成者は、このアセットの強制セトリングを無効にする機能を有効にすることができます。",
-      "disabledInfo": "アセット作成者は、このアセットの強制決済を無効にすることはできません。"
+      "enabledInfo": "アセットの発行者/所有者は、disable_force_settle フラグを更新できます。",
+      "disabledInfo": "アセットの発行者/所有者は disable_force_settle フラグを更新できません。"
     },
     "global_settle": {
       "about": "資産所有者がグローバル決済を強制できるようにする",
-      "enabledInfo": "アセット作成者は、このアセットをグローバルに決済する機能を有効にすることができます。",
-      "disabledInfo": "アセット作成者はこのアセットをグローバルに決済することはできません。"
+      "enabledInfo": "資産の発行者/所有者は、この資産を手動でグローバルに決済できます。",
+      "disabledInfo": "資産の発行者/所有者は、この資産を手動でグローバルに決済することはできません。"
     },
     "lock_max_supply": {
       "about": "最大供給量をロックする",
-      "enabledInfo": "アセット作成者は、このアセットの最大供給量をロックできません。",
-      "disabledInfo": "アセット作成者は、このアセットの最大供給量をロックできます。"
+      "enabledInfo": "資産の発行者/所有者は、lock_max_supply フラグを更新できません。",
+      "disabledInfo": "資産の発行者/所有者は、lock_max_supply フラグを更新できます。"
     },
     "disable_new_supply": {
       "about": "新しい供給を無効にする",
-      "enabledInfo": "アセット作成者は、このアセットの新しい供給を作成する機能を無効にすることはできません。",
-      "disabledInfo": "アセット作成者は、このアセットの新しい供給を作成する機能を無効にすることができます。"
+      "enabledInfo": "アセットの発行者/所有者は、disable_new_supply フラグを更新できません。",
+      "disabledInfo": "資産の発行者/所有者は、disable_new_supply フラグを更新できます。"
     },
     "disable_collateral_bidding": {
       "about": "担保入札を無効にする",
-      "enabledInfo": "アセット作成者は、このアセットの担保入札を無効にすることはできません。",
-      "disabledInfo": "アセット作成者は、このアセットの担保入札を無効にすることができます。"
+      "enabledInfo": "資産の発行者/所有者は、disable_colternate_bidding フラグを更新できません。",
+      "disabledInfo": "資産の発行者/所有者は、disable_colternate_bidding フラグを更新できます。"
     },
     "disable_mcr_update": {
       "about": "所有者の更新を無効にする 最低担保比率",
-      "enabledInfo": "資産所有者は、この資産に対して価格供給型の最低担保比率要件を使用します。",
-      "disabledInfo": "資産所有者は、この資産の最小担保比率要件を静的に設定します。"
+      "enabledInfo": "資産の発行者/所有者は、資産のmaintenance_colternate_ratio拡張を更新(設定/変更/削除)することはできません。 ",
+      "disabledInfo": "資産の発行者/所有者は、資産のmaintenance_colternate_ratio拡張を更新(設定/変更/削除)できます。 "
     },
     "disable_icr_update": {
       "about": "所有者更新の無効化 初期担保比率",
-      "enabledInfo": "資産所有者は、この資産に対して価格指定の初期担保比率要件を使用します。",
-      "disabledInfo": "資産所有者は、この資産の初期担保比率要件を静的に設定します。"
+      "enabledInfo": "資産の発行者/所有者は、資産のinitial_colternate_ratio拡張を更新(設定/変更/削除)することはできません。",
+      "disabledInfo": "資産の発行者/所有者は、資産のinitial_colterior_ratio拡張を更新(設定/変更/削除)できます。"
     },
     "disable_mssr_update": {
       "about": "所有者の更新を無効にする 最大ショートスクイーズ率",
-      "enabledInfo": "アセット所有者は、このアセットに対して価格供給された最大ショートスクイーズ比率を使用します。",
-      "disabledInfo": "アセット所有者は、このアセットの最大ショート スクイーズ率を静的に設定します。"
+      "enabledInfo": "アセットの発行者/所有者は、アセットのmaximum_short_squeeze_ratio拡張を更新(設定/変更/削除)することはできません。 ",
+      "disabledInfo": "アセットの発行者/所有者は、アセットのmaximum_short_squeeze_ratio拡張を更新(設定/変更/削除)できます。 "
     },
     "disable_bsrm_update": {
       "about": "所有者の更新を無効にする Black Swan リスク管理戦略",
-      "enabledInfo": "資産所有者は、この資産に対してデフォルトのグローバル決済戦略を使用します。",
-      "disabledInfo": "資産所有者は、この資産に対してカスタムの Black Swan リスク管理戦略を使用します。"
+      "enabledInfo": "アセットの発行者/所有者は、アセットの black_swan_response_method 拡張機能を更新できません。",
+      "disabledInfo": "アセットの発行者/所有者は、アセットの black_swan_response_method 拡張機能を更新できます。"
     }
   },
   "flags": {
@@ -88,58 +88,58 @@
     "header_content": "許可された各アセットの権限は、オン/オフを切り替えることができます。",
     "charge_market_fee": {
       "about": "市場手数料を有効にする",
-      "enabledInfo": "アセット作成者は、市場手数料報酬共有機能を含む、このアセットの市場取引手数料を構成できます。",
-      "disabledInfo": "アセット作成者は、このアセットに対する市場取引手数料の請求を無効にしました。"
+      "enabledInfo": "この資産の市場取引は、手数料率の設定に応じて課金される場合があります。",
+      "disabledInfo": "この資産の市場取引は無料です。"
     },
     "white_list": {
       "about": "所有者をホワイトリストに登録することを要求する",
-      "enabledInfo": "アセット作成者は、このアセットのホワイト リスト機関を構成できます。",
-      "disabledInfo": "アセット作成者は、このアセットに対するホワイト リスト権限の構成を無効にしました。"
+      "enabledInfo": "この資産の使用は、ホワイトリストおよびブラックリストの当局の設定に応じて、資産の承認 (ホワイトリストおよび/またはブラックリスト) によって制限される場合があります。",
+      "disabledInfo": "この資産の使用は、資産権限リストによって制限されません。"
     },
     "override_authority": {
       "about": "資産所有者は資産を自分自身に譲渡することができます",
-      "enabledInfo": "アセット作成者は、このアセットに対して上書き転送操作を実行して、アセットをあなたの残高から元の残高に戻すことができます。",
-      "disabledInfo": "アセット作成者は、このアセットに対するオーバーライド転送操作の実行を無効にしました。"
-    },
-    "disable_force_settle": {
-      "about": "強制整定を無効にする",
-      "enabledInfo": "アセット作成者は、このアセットの強制決済を無効にしました。",
-      "disabledInfo": "アセット作成者は、このアセットの強制決済を有効にしました。"
+      "enabledInfo": "資産の発行者/所有者は、この資産を任意の口座の残高から別の口座に移管できます（移管後の残高はマイナスにはならないことに注意してください）。",
+      "disabledInfo": "資産の発行者/所有者は、この資産を他の口座の残高から移すことはできません。"
     },
     "transfer_restricted": {
       "about": "資産所有者はすべての譲渡を承認する必要があります",
-      "enabledInfo": "アセット作成者は、このアセットの転送を制限できます。",
-      "disabledInfo": "アセット作成者は、このアセットの転送の制限を無効にしました。"
+      "enabledInfo": "この資産の譲渡は制限されています。",
+      "disabledInfo": "転送にはそのような制限はありません。"
+    },
+    "disable_force_settle": {
+      "about": "強制整定を無効にする",
+      "enabledInfo": "この資産の保有者は、この資産がグローバルに決済されるか、ファンドに個別に決済される場合を除き、資産の一部について強制決済を要求することはできません。",
+      "disabledInfo": "この資産の所有者は強制決済を要求できます。"
     },
     "disable_confidential": {
       "about": "機密取引を無効にする",
-      "enabledInfo": "アセット作成者は、このアセットに対する機密操作を無効にしました。",
-      "disabledInfo": "アセット作成者は、このアセットの機密操作を無効にしていません。"
+      "enabledInfo": "ブラインド/ステルス/機密アドレスへの転送は無効になります。",
+      "disabledInfo": "ブラインド/ステルス/機密アドレスへの転送が可能です。"
     },
     "witness_fed_asset": {
       "about": "証人がフィードを提供できるようにする",
-      "enabledInfo": "証人は、この資産の価格フィードを公開できます。",
-      "disabledInfo": "証人はこの資産の価格フィードを公開できません。"
+      "enabledInfo": "アクティブな証人は、この資産の価格フィードを公開できます。",
+      "disabledInfo": "アクティブな証人は、この資産の価格フィードを公開できません。"
     },
     "committee_fed_asset": {
       "about": "委員会メンバーがフィードを提供できるようにする",
-      "enabledInfo": "委員会のメンバーは、この資産の価格フィードを公開できます。",
-      "disabledInfo": "委員会メンバーは、この資産の価格フィードを公開できません。"
+      "enabledInfo": "アクティブな委員会のメンバーは、この資産の価格フィードを公開できます。",
+      "disabledInfo": "アクティブな委員会のメンバーは、この資産の価格フィードを公開できません。"
     },
     "lock_max_supply": {
       "about": "最大供給量をロックする",
-      "enabledInfo": "資産所有者は、この資産の最大供給をロックしました。",
-      "disabledInfo": "アセット所有者は、このアセットの最大供給量をロックしていません。"
+      "enabledInfo": "この資産の最大供給量はロックされています。これは、資産の発行者/所有者がこの資産の最大供給量を更新できないことを意味します。",
+      "disabledInfo": "資産の発行者/所有者は、この資産の最大供給量を更新できます。"
     },
     "disable_new_supply": {
       "about": "新しい供給を無効にする",
-      "enabledInfo": "資産所有者は、この資産に対して新しい供給を発行する機能を無効にしました。",
-      "disabledInfo": "資産所有者は、この資産に対する追加供給の発行を許可します。"
+      "enabledInfo": "この資産の新しい供給を作成できません (または、これ以上のトークンを「鋳造」できないと言えます)。",
+      "disabledInfo": "この資産の新しい供給を作成できます。"
     },
     "disable_collateral_bidding": {
       "about": "担保入札を無効にする",
-      "enabledInfo": "アセット所有者は、このアセットの担保入札を無効にしました。",
-      "disabledInfo": "アセット所有者は、このアセットの担保入札を有効にしました。"
+      "enabledInfo": "グローバル決済プール内の担保の入札は無効になります。",
+      "disabledInfo": "グローバル決済プールでの担保の入札が有効になります。"
     }
   },
   "asset_details": {
@@ -195,7 +195,7 @@
       "header_content": "ホワイトリスト市場手数料共有拡張機能により、ハウスはこれらのホワイトリストに登録されたアカウントへの紹介者を制限することができます。"
     },
     "taker_fee_percent": {
-      "enabled": "テイカー手数料パーセンテージ拡張が有効になりました",
+      "enabled": "テイカー手数料パーセンテージ拡張が有効になっています",
       "enabledInfo": "指値注文の「テイカー」参加者は、市場手数料の一部を受け取ります。",
       "disabled": "受取手数料パーセンテージの延長を有効にしますか?",
       "disabledInfo": "テイカー手数料パーセンテージ拡張により、資産作成者は指値注文オペレーションの「テイカー」に市場手数料の一定の割合を割り当てることができます。",
@@ -295,7 +295,7 @@
     "imageFormats": "画像フォーマット",
     "audioFormats": "オーディオフォーマット",
     "videoFormats": "ビデオフォーマット",
-    "documentFormats": "文書形式",
+    "documentFormats": "文書フォーマット",
     "threeDFormats": "3Dファイル",
     "submit": "提出する",
     "ipfsHostingSolutions": "IPFSホスティングソリューション",

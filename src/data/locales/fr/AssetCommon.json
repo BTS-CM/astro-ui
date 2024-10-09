@@ -4,83 +4,83 @@
     "header_content": "Remarque : la désactivation des autorisations est une décision permanente",
     "charge_market_fee": {
       "about": "Activer les frais de marché",
-      "enabledInfo": "Le créateur de l'actif peut permettre de facturer des frais de négociation sur le marché pour cet actif.",
-      "disabledInfo": "Le créateur de l'actif ne peut pas facturer de frais de négociation sur le marché pour cet actif."
+      "enabledInfo": "L'émetteur/propriétaire de l'actif peut mettre à jour l'indicateur charge_market_fee.",
+      "disabledInfo": "L'émetteur/propriétaire de l'actif ne peut PAS mettre à jour l'indicateur charge_market_fee. "
     },
     "white_list": {
       "about": "Exiger que les titulaires soient sur la liste blanche",
-      "enabledInfo": "Le créateur de l'actif peut activer la configuration des autorités de liste blanche pour cet actif.",
-      "disabledInfo": "Le créateur de l'actif ne peut pas configurer les autorités de liste blanche pour cet actif."
+      "enabledInfo": "L'émetteur/propriétaire de l'actif peut mettre à jour l'indicateur white_list.",
+      "disabledInfo": "L'émetteur/propriétaire de l'actif ne peut PAS mettre à jour l'indicateur white_list. "
     },
     "override_authority": {
       "about": "Le propriétaire de l'actif peut se retransférer l'actif",
-      "enabledInfo": "Le créateur de l'actif peut permettre d'effectuer une opération de transfert de remplacement sur cet actif.",
-      "disabledInfo": "Le créateur de l'actif ne peut pas effectuer d'opérations de transfert de remplacement sur cet actif."
+      "enabledInfo": "L'émetteur/propriétaire de l'actif peut mettre à jour l'indicateur override_authority.",
+      "disabledInfo": "L'émetteur/propriétaire de l'actif ne peut PAS mettre à jour l'indicateur override_authority."
     },
     "transfer_restricted": {
       "about": "Le propriétaire de l'actif doit approuver tous les transferts",
-      "enabledInfo": "Le créateur de l'actif peut permettre de restreindre les transferts de cet actif.",
-      "disabledInfo": "Le créateur de l'actif ne peut pas restreindre les transferts de cet actif."
+      "enabledInfo": "L'émetteur/propriétaire de l'actif peut mettre à jour l'indicateur transfer_restricted.",
+      "disabledInfo": "L'émetteur/propriétaire de l'actif ne peut PAS mettre à jour l'indicateur transfer_restricted."
     },
     "disable_confidential": {
       "about": "Désactiver les transactions confidentielles",
-      "enabledInfo": "Le créateur de l'actif peut activer la possibilité de désactiver les opérations confidentielles pour cet actif.",
-      "disabledInfo": "Le créateur de l'actif ne peut pas désactiver les opérations confidentielles pour cet actif."
+      "enabledInfo": "L'émetteur/propriétaire de l'actif peut mettre à jour l'indicateur Disable_confidential.",
+      "disabledInfo": "L'émetteur/propriétaire de l'actif ne peut PAS mettre à jour l'indicateur Disable_confidential."
     },
     "witness_fed_asset": {
       "about": "Autoriser les témoins à fournir des flux",
-      "enabledInfo": "Le créateur de l'actif peut permettre aux témoins de publier des flux de prix pour cet actif.",
-      "disabledInfo": "Le créateur de l'actif ne peut pas permettre aux témoins de publier des flux de prix pour cet actif."
+      "enabledInfo": "L'émetteur/propriétaire de l'actif peut mettre à jour l'indicateur Witness_fed_asset.",
+      "disabledInfo": "L'émetteur/propriétaire de l'actif ne peut PAS mettre à jour l'indicateur Witness_fed_asset."
     },
     "committee_fed_asset": {
       "about": "Autoriser les membres du comité à fournir des flux",
-      "enabledInfo": "Le créateur de l'actif peut permettre aux membres du comité de publier des flux de prix pour cet actif.",
-      "disabledInfo": "Le créateur de l'actif ne peut pas permettre aux membres du comité de publier des flux de prix pour cet actif."
+      "enabledInfo": "L'émetteur/propriétaire de l'actif peut mettre à jour l'indicateur comité_fed_asset.",
+      "disabledInfo": "L'émetteur/propriétaire de l'actif ne peut PAS mettre à jour l'indicateur comité_fed_asset."
     },
     "disable_force_settle": {
       "about": "Désactiver la stabilisation des forces",
-      "enabledInfo": "Le créateur de l'actif peut activer la possibilité de désactiver le règlement forcé pour cet actif.",
-      "disabledInfo": "Le créateur de l'actif ne peut pas désactiver le règlement forcé pour cet actif."
+      "enabledInfo": "L'émetteur/propriétaire de l'actif peut mettre à jour l'indicateur Disable_force_settle.",
+      "disabledInfo": "L'émetteur/propriétaire de l'actif ne peut PAS mettre à jour l'indicateur Disable_force_settle."
     },
     "global_settle": {
       "about": "Autoriser le propriétaire de l'actif à forcer un règlement global",
-      "enabledInfo": "Le créateur de l'actif peut permettre le règlement global de cet actif.",
-      "disabledInfo": "Le créateur du bien ne peut pas régler globalement ce bien."
+      "enabledInfo": "L'émetteur/propriétaire de l'actif peut régler manuellement et globalement cet actif.",
+      "disabledInfo": "L’émetteur/propriétaire de l’actif ne peut PAS régler manuellement et globalement cet actif."
     },
     "lock_max_supply": {
       "about": "Verrouiller l'alimentation maximale",
-      "enabledInfo": "Le créateur de l'actif ne peut pas verrouiller l'offre maximale de cet actif.",
-      "disabledInfo": "Le créateur de l'actif peut verrouiller l'offre maximale de cet actif."
+      "enabledInfo": "L'émetteur/propriétaire de l'actif ne peut PAS mettre à jour l'indicateur lock_max_supply.",
+      "disabledInfo": "L'émetteur/propriétaire de l'actif peut mettre à jour l'indicateur lock_max_supply."
     },
     "disable_new_supply": {
       "about": "Désactiver la nouvelle fourniture",
-      "enabledInfo": "Le créateur de l'actif ne peut pas désactiver la possibilité de créer un nouvel approvisionnement pour cet actif.",
-      "disabledInfo": "Le créateur de l'actif peut désactiver la possibilité de créer une nouvelle offre pour cet actif."
+      "enabledInfo": "L'émetteur/propriétaire de l'actif ne peut PAS mettre à jour l'indicateur Disable_new_supply.",
+      "disabledInfo": "L'émetteur/propriétaire de l'actif peut mettre à jour l'indicateur Disable_new_supply."
     },
     "disable_collateral_bidding": {
       "about": "Désactiver les enchères de garantie",
-      "enabledInfo": "Le créateur de l'actif ne peut pas désactiver les enchères de garanties pour cet actif.",
-      "disabledInfo": "Le créateur de l'actif peut désactiver les enchères de garanties pour cet actif."
+      "enabledInfo": "L'émetteur/propriétaire de l'actif ne peut PAS mettre à jour l'indicateur Disable_collateral_bidding.",
+      "disabledInfo": "L'émetteur/propriétaire de l'actif peut mettre à jour l'indicateur Disable_collateral_bidding."
     },
     "disable_mcr_update": {
       "about": "Désactiver la mise à jour du propriétaire Ratio de garantie minimum",
-      "enabledInfo": "Le propriétaire de l'actif utilise une exigence de ratio de garantie minimum alimentée par le prix pour cet actif.",
-      "disabledInfo": "Le propriétaire de l'actif définit de manière statique l'exigence de ratio de garantie minimum pour cet actif."
+      "enabledInfo": "L'émetteur/propriétaire de l'actif ne peut PAS mettre à jour (définir/modifier/supprimer) l'extension maintenance_collateral_ratio de l'actif. ",
+      "disabledInfo": "L'émetteur/propriétaire de l'actif peut mettre à jour (définir/modifier/supprimer) l'extension maintenance_collateral_ratio de l'actif. "
     },
     "disable_icr_update": {
       "about": "Désactiver la mise à jour du propriétaire Ratio de garantie initial",
-      "enabledInfo": "Le propriétaire de l'actif utilise une exigence de ratio de garantie initiale alimentée par le prix pour cet actif.",
-      "disabledInfo": "Le propriétaire de l'actif définit de manière statique l'exigence du ratio de garantie initial pour cet actif."
+      "enabledInfo": "L'émetteur/propriétaire de l'actif ne peut PAS mettre à jour (définir/modifier/supprimer) l'extension initial_collateral_ratio de l'actif. ",
+      "disabledInfo": "L'émetteur/propriétaire de l'actif peut mettre à jour (définir/modifier/supprimer) l'extension initial_collateral_ratio de l'actif. "
     },
     "disable_mssr_update": {
       "about": "Désactiver la mise à jour du propriétaire Maximum Short Squeeze Ratio",
-      "enabledInfo": "Le propriétaire de l'actif utilise un ratio de compression à court terme maximum alimenté par le prix pour cet actif.",
-      "disabledInfo": "Le propriétaire de l'actif définit de manière statique le ratio de compression à court terme maximum pour cet actif."
+      "enabledInfo": "L'émetteur/propriétaire de l'actif ne peut PAS mettre à jour (définir/modifier/supprimer) l'extension maximum_short_squeeze_ratio de l'actif. ",
+      "disabledInfo": "L'émetteur/propriétaire de l'actif peut mettre à jour (définir/modifier/supprimer) l'extension maximum_short_squeeze_ratio de l'actif. "
     },
     "disable_bsrm_update": {
       "about": "Désactiver la mise à jour du propriétaire de la stratégie de gestion des risques Black Swan",
-      "enabledInfo": "Le propriétaire de l'actif utilise la stratégie de règlement global par défaut pour cet actif.",
-      "disabledInfo": "Le propriétaire de l'actif utilise une stratégie personnalisée de gestion des risques Black Swan pour cet actif."
+      "enabledInfo": "L'émetteur/propriétaire de l'actif ne peut PAS mettre à jour l'extension black_swan_response_method de l'actif.",
+      "disabledInfo": "L'émetteur/propriétaire de l'actif peut mettre à jour l'extension black_swan_response_method de l'actif."
     }
   },
   "flags": {
@@ -88,58 +88,58 @@
     "header_content": "Chaque autorisation d'actif autorisée peut être activée/désactivée.",
     "charge_market_fee": {
       "about": "Activer les frais de marché",
-      "enabledInfo": "Le créateur de l'actif peut configurer les frais de négociation sur le marché pour cet actif, y compris la fonctionnalité de partage des récompenses des frais de marché.",
-      "disabledInfo": "Le créateur de l'actif a désactivé la facturation des frais de négociation sur le marché pour cet actif."
+      "enabledInfo": "Les transactions sur le marché sur cet actif peuvent être facturées, en fonction des paramètres de taux de frais.",
+      "disabledInfo": "Les transactions sur le marché sur cet actif ne sont pas facturées."
     },
     "white_list": {
       "about": "Exiger que les titulaires soient sur la liste blanche",
-      "enabledInfo": "Le créateur de l'actif peut configurer les autorités de liste blanche pour cet actif.",
-      "disabledInfo": "Le créateur de l'actif a désactivé la configuration des autorités de liste blanche pour cet actif."
+      "enabledInfo": "L'utilisation de cet actif peut être restreinte par une autorisation d'actif (liste blanche et/ou liste noire), en fonction des paramètres des autorités de liste blanche et de liste noire.",
+      "disabledInfo": "L'utilisation de cet actif n'est pas limitée par les listes d'autorisation d'actifs."
     },
     "override_authority": {
       "about": "Le propriétaire de l'actif peut se retransférer l'actif",
-      "enabledInfo": "Le créateur de l'actif peut effectuer une opération de transfert de remplacement sur cet actif, le ramenant sur son solde depuis le vôtre.",
-      "disabledInfo": "Le créateur de l'élément a désactivé les opérations de transfert de remplacement sur cet élément."
-    },
-    "disable_force_settle": {
-      "about": "Désactiver la stabilisation des forces",
-      "enabledInfo": "Le créateur de l'élément a désactivé le règlement forcé pour cet élément.",
-      "disabledInfo": "Le créateur de l'actif a activé le règlement forcé pour cet actif."
+      "enabledInfo": "L'émetteur/propriétaire de l'actif peut transférer cet actif du solde de n'importe quel compte vers un autre compte (à noter que le solde après transfert ne peut pas être négatif).",
+      "disabledInfo": "L'émetteur/propriétaire de l'actif ne peut PAS transférer cet actif du solde d'autres comptes."
     },
     "transfer_restricted": {
       "about": "Le propriétaire de l'actif doit approuver tous les transferts",
-      "enabledInfo": "Le créateur de l'actif peut restreindre les transferts de cet actif.",
-      "disabledInfo": "Le créateur de l'élément a désactivé la restriction des transferts de cet élément."
+      "enabledInfo": "Les transferts de cet actif sont restreints. ",
+      "disabledInfo": "Aucune limitation de ce type sur les transferts."
+    },
+    "disable_force_settle": {
+      "about": "Désactiver la stabilisation des forces",
+      "enabledInfo": "Les détenteurs de cet actif ne peuvent PAS demander un règlement forcé pour un certain montant de leur actif, à moins que cet actif ne soit réglé globalement ou individuellement dans un fonds.",
+      "disabledInfo": "Les détenteurs de cet actif peuvent demander un règlement forcé."
     },
     "disable_confidential": {
       "about": "Désactiver les transactions confidentielles",
-      "enabledInfo": "Le créateur de l'élément a désactivé les opérations confidentielles pour cet élément.",
-      "disabledInfo": "Le créateur de l'élément n'a pas désactivé les opérations confidentielles pour cet élément."
+      "enabledInfo": "Les transferts vers des adresses aveugles/furtives/confidentielles sont désactivés. ",
+      "disabledInfo": "Les transferts vers des adresses aveugles/furtives/confidentielles sont activés."
     },
     "witness_fed_asset": {
       "about": "Autoriser les témoins à fournir des flux",
-      "enabledInfo": "Les témoins peuvent publier des flux de prix pour cet actif.",
-      "disabledInfo": "Les témoins ne peuvent pas publier de flux de prix pour cet actif."
+      "enabledInfo": "Les témoins actifs peuvent publier des flux de prix pour cet actif.",
+      "disabledInfo": "Les témoins actifs ne peuvent pas publier de flux de prix pour cet actif."
     },
     "committee_fed_asset": {
       "about": "Autoriser les membres du comité à fournir des flux",
-      "enabledInfo": "Les membres du comité peuvent publier des flux de prix pour cet actif.",
-      "disabledInfo": "Les membres du comité ne peuvent pas publier de flux de prix pour cet actif."
+      "enabledInfo": "Les membres actifs du comité peuvent publier des flux de prix pour cet actif.",
+      "disabledInfo": "Les membres actifs du comité ne peuvent pas publier de flux de prix pour cet actif."
     },
     "lock_max_supply": {
       "about": "Verrouiller l'alimentation maximale",
-      "enabledInfo": "Le propriétaire de l'actif a verrouillé l'offre maximale de cet actif.",
-      "disabledInfo": "Le propriétaire de l'actif n'a pas verrouillé l'offre maximale de cet actif."
+      "enabledInfo": "L'offre maximale de cet actif est verrouillée, ce qui signifie que l'émetteur/propriétaire de l'actif ne peut PAS mettre à jour l'offre maximale de cet actif.",
+      "disabledInfo": "L'émetteur/propriétaire de l'actif peut mettre à jour l'offre maximale de cet actif."
     },
     "disable_new_supply": {
       "about": "Désactiver la nouvelle fourniture",
-      "enabledInfo": "Le propriétaire de l'actif a désactivé la possibilité d'émettre un nouvel approvisionnement pour cet actif.",
-      "disabledInfo": "Le propriétaire de l'actif autorise l'émission d'une fourniture supplémentaire pour cet actif."
+      "enabledInfo": "Impossible de créer une nouvelle offre pour cet actif (ou dire impossible de « créer » plus de jetons).",
+      "disabledInfo": "Peut créer une nouvelle offre pour cet actif."
     },
     "disable_collateral_bidding": {
       "about": "Désactiver les enchères de garantie",
-      "enabledInfo": "Le propriétaire de l'actif a désactivé les enchères de garanties pour cet actif.",
-      "disabledInfo": "Le propriétaire de l'actif a activé les offres de garantie pour cet actif."
+      "enabledInfo": "Les enchères pour les garanties dans le pool de règlement global sont désactivées. ",
+      "disabledInfo": "Les enchères pour les garanties dans le pool de règlement global sont activées."
     }
   },
   "asset_details": {

@@ -1,75 +1,79 @@
 {
-    "card": {
-      "title_create": "Uue Smartcoini vara loomine",
-      "title_edit": "Olemasoleva Smartcoini vara redigeerimine",
-      "description": "Smartcoinid on tagatisega varad, mis võivad viidata välisturu hinnavoogudele. "
+  "card": {
+    "title_create": "Uue Smartcoini vara loomine",
+    "title_edit": "Olemasoleva Smartcoini vara redigeerimine",
+    "description": "Smartcoinid on tagatisega varad, mis võivad viidata välisturu hinnavoogudele. "
+  },
+  "title": {
+    "header": "Smartcoini seaded",
+    "header_content": "Allolevad seaded määravad, kuidas teie smartcoin Bitsharesi plokiahelas käitub. "
+  },
+  "bsrm": {
+    "header": "Musta Luige riskijuhtimise strateegia",
+    "header_content": "Need strateegiad pakuvad alatagatisega võlapositsioonidele erinevaid tulemusi, võimaldades teil võlapositsioonide likvideerimise riski keelata, minimeerida või globaliseerida. ",
+    "select_0": "Globaalne arveldus: kõik võlapositsioonid on suletud; ",
+    "select_1": "Arveldust ei toimu: võlapositsioone ei ole suletud; ",
+    "select_2": "Üksikud arveldusfondid: alatagatisega võlapositsioonid on suletud; ",
+    "select_3": "Individuaalsed arvelduskorraldused: Alatagatisega võlapositsioonid on suletud; "
+  },
+  "mcr": {
+    "header": "Staatiline minimaalne tagatissuhe",
+    "header_content": "See on minimaalne tagatise suhe, mis on vajalik selleks, et võlapositsiooni saaks lugeda täielikult tagatiseks. "
+  },
+  "icr": {
+    "header": "Staatiline esialgne tagatissuhe",
+    "header_content": "See on tagatise suhe, mis on vajalik selleks, et võlapositsiooni loetaks loomise ajal täielikult tagatiseks. "
+  },
+  "mssr": {
+    "header": "Staatiline maksimaalne lühikese pigistamise suhe",
+    "header_content": "See on maksimaalne tagatise suhe, mille juures saab võlapositsiooni likvideerida. "
+  },
+  "feed_lifetime": {
+    "header": "Sööda eluiga",
+    "header_content": "Aeg sekundites, mille jooksul hinnavoog loetakse kehtivaks. "
+  },
+  "minimum_feeds": {
+    "header": "Minimaalsed söödad",
+    "header_content": "Minimaalne hinnavoogude arv, mis on vajalik jooksva söödahinna arvutamiseks."
+  },
+  "force_settlement_delay": {
+    "header": "Sundlahenduse viivitus",
+    "header_content": "Aeg sekundites, mille kasutaja peab pärast sundarveldamist ootama, enne kui plokiahelas arveldustoimingut teostatakse."
+  },
+  "force_settlement_offset": {
+    "header": "Sundarvestuse tasaarvestus",
+    "header_content": "Protsent etteandehinnast, millega jõustatud arveldushind tasaarveldatakse arveldustoimingu puhul."
+  },
+  "maximum_force_settlement_volume": {
+    "header": "Maksimaalne väe lahendamise maht",
+    "header_content": "Maksimaalne pakkumise summa, mida saab 24 tunni jooksul sundarveldada."
+  },
+  "extensions": {
+    "margin_call_fee_ratio": {
+      "enabled": "Margin Call Fee Ratio laiendus on lubatud",
+      "disabled": "Kas lubada marginaalkõne tasu suhte smartcoini laiendus?",
+      "extensionInfo": "Margin Call Fee Ratio laiendus võimaldab smartcoini omanikul nõuda kasutajalt tasu, kui tema võlapositsioonile lisatakse. ",
+      "header": "Marginaalne kõnetasu suhe",
+      "header_content": "Tasu suhtarv, mida kasutajalt nõutakse, kui tema võlapositsioon võetakse kasutusele. "
     },
-    "title": {
-      "header": "Smartcoini seaded",
-      "header_content": "Allolevad seaded määravad, kuidas teie smartcoin Bitsharesi plokiahelas käitub. "
-    },
-    "bsrm": {
-      "header": "Musta Luige riskijuhtimise strateegia",
-      "header_content": "Need strateegiad pakuvad alatagatisega võlapositsioonidele erinevaid tulemusi, võimaldades teil võlapositsioonide likvideerimise riski keelata, minimeerida või globaliseerida. ",
-      "select_0": "Globaalne arveldus: kõik võlapositsioonid on suletud; ",
-      "select_1": "Arveldust ei toimu: võlapositsioone ei ole suletud; ",
-      "select_2": "Üksikud arveldusfondid: alatagatisega võlapositsioonid on suletud; ",
-      "select_3": "Individuaalsed arvelduskorraldused: Alatagatisega võlapositsioonid on suletud; "
-    },
-    "mcr": {
-      "header": "Staatiline minimaalne tagatissuhe",
-      "header_content": "See on minimaalne tagatise suhe, mis on vajalik selleks, et võlapositsiooni saaks lugeda täielikult tagatiseks. "
-    },
-    "icr": {
-      "header": "Staatiline esialgne tagatissuhe",
-      "header_content": "See on tagatise suhe, mis on vajalik selleks, et võlapositsiooni loetaks loomise ajal täielikult tagatiseks. "
-    },
-    "mssr": {
-      "header": "Staatiline maksimaalne lühikese pigistamise suhe",
-      "header_content": "See on maksimaalne tagatise suhe, mille juures saab võlapositsiooni likvideerida. "
-    },
-    "feed_lifetime": {
-      "header": "Sööda eluiga",
-      "header_content": "Aeg sekundites, mille jooksul hinnavoog loetakse kehtivaks. "
-    },
-    "minimum_feeds": {
-      "header": "Minimaalsed söödad",
-      "header_content": "Minimaalne hinnavoogude arv, mis on vajalik jooksva söödahinna arvutamiseks."
-    },
-    "force_settlement_delay": {
-      "header": "Sundlahenduse viivitus",
-      "header_content": "Aeg sekundites, mille kasutaja peab pärast sundarveldamist ootama, enne kui plokiahelas arveldustoimingut teostatakse."
-    },
-    "force_settlement_offset": {
-      "header": "Sundarvestuse tasaarvestus",
-      "header_content": "Protsent etteandehinnast, millega jõustatud arveldushind tasaarveldatakse arveldustoimingu puhul."
-    },
-    "maximum_force_settlement_volume": {
-      "header": "Maksimaalne väe lahendamise maht",
-      "header_content": "Maksimaalne pakkumise summa, mida saab 24 tunni jooksul sundarveldada."
-    },
-    "extensions": {
-      "margin_call_fee_ratio": {
-        "enabled": "Margin Call Fee Ratio laiendus on lubatud",
-        "disabled": "Kas lubada marginaalkõne tasu suhte smartcoini laiendus?",
-        "extensionInfo": "Margin Call Fee Ratio laiendus võimaldab smartcoini omanikul nõuda kasutajalt tasu, kui tema võlapositsioonile lisatakse. ",
-        "header": "Marginaalne kõnetasu suhe",
-        "header_content": "Tasu suhtarv, mida kasutajalt nõutakse, kui tema võlapositsioon võetakse kasutusele. "
-      },
-      "force_settle_fee": {
-        "enabled": "Force Settle Fee laiendus on lubatud",
-        "disabled": "Kas lubada Smartcoini laiendus Force Settle Fee?",
-        "extensionInfo": "Force Settle Fee laiendus võimaldab smartcoini omanikul nõuda kasutajalt tasu, kui ta sunnib oma võlapositsiooni tasuma. ",
-        "header": "Sundarvestustasu",
-        "header_content": "Tasu, mida võetakse kasutajalt, kui ta sunnib oma võlapositsiooni tasuma. "
-      }
-    },
-    "editAsset": {
-      "disabled": "Muuda vara seadeid",
-      "enabled": "Tühista Varaseadete muutmine"
-    },
-    "editSmartcoin": {
-      "disabled": "Redigeeri Smartcoini sätteid",
-      "enabled": "Tühistage Smartcoini seadete muutmine"
+    "force_settle_fee": {
+      "enabled": "Force Settle Fee laiendus on lubatud",
+      "disabled": "Kas lubada Smartcoini laiendus Force Settle Fee?",
+      "extensionInfo": "Force Settle Fee laiendus võimaldab smartcoini omanikul nõuda kasutajalt tasu, kui ta sunnib oma võlapositsiooni tasuma. ",
+      "header": "Sundarvestustasu",
+      "header_content": "Tasu, mida võetakse kasutajalt, kui ta sunnib oma võlapositsiooni tasuma. "
     }
+  },
+  "editAsset": {
+    "disabled": "Muuda vara seadeid",
+    "enabled": "Tühista Varaseadete muutmine"
+  },
+  "editSmartcoin": {
+    "disabled": "Redigeeri Smartcoini sätteid",
+    "enabled": "Tühistage Smartcoini seadete muutmine"
+  },
+  "dialogContent": {
+    "editHeader": "Järgmise smartcoini redigeerimine: {{symbol}}",
+    "createHeader": "Järgmise Smartcoini loomine: {{symbol}}"
   }
+}

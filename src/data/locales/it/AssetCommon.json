@@ -4,83 +4,83 @@
     "header_content": "Nota: la disabilitazione delle autorizzazioni è una decisione permanente",
     "charge_market_fee": {
       "about": "Abilita commissione di mercato",
-      "enabledInfo": "Il creatore dell'asset può consentire l'addebito di commissioni di negoziazione sul mercato per questo asset.",
-      "disabledInfo": "Il creatore dell'asset non può addebitare commissioni di negoziazione sul mercato per questo asset."
+      "enabledInfo": "L'emittente/proprietario dell'asset può aggiornare il flag charge_market_fee.",
+      "disabledInfo": "L'emittente/proprietario dell'asset NON può aggiornare il flag charge_market_fee. "
     },
     "white_list": {
       "about": "Richiedere che i titolari siano inseriti nella lista bianca",
-      "enabledInfo": "Il creatore della risorsa può abilitare la configurazione delle autorità della lista bianca per questa risorsa.",
-      "disabledInfo": "Il creatore della risorsa non può configurare le autorità della lista bianca per questa risorsa."
+      "enabledInfo": "L'emittente/proprietario della risorsa può aggiornare il flag white_list.",
+      "disabledInfo": "L'emittente/proprietario della risorsa NON può aggiornare il flag white_list. "
     },
     "override_authority": {
       "about": "Il proprietario della risorsa può trasferire nuovamente la risorsa a se stesso",
-      "enabledInfo": "Il creatore della risorsa può abilitare la possibilità di eseguire un'operazione di trasferimento di sostituzione su questa risorsa.",
-      "disabledInfo": "Il creatore della risorsa non può eseguire operazioni di trasferimento sostitutive su questa risorsa."
+      "enabledInfo": "L'emittente/proprietario della risorsa può aggiornare il flag override_authority.",
+      "disabledInfo": "L'emittente/proprietario della risorsa NON può aggiornare il flag override_authority."
     },
     "transfer_restricted": {
       "about": "Il proprietario della risorsa deve approvare tutti i trasferimenti",
-      "enabledInfo": "Il creatore della risorsa può abilitare la possibilità di limitare i trasferimenti di questa risorsa.",
-      "disabledInfo": "Il creatore della risorsa non può limitare i trasferimenti di questa risorsa."
+      "enabledInfo": "L'emittente/proprietario dell'asset può aggiornare il flag transfer_restricted.",
+      "disabledInfo": "L'emittente/proprietario dell'asset NON può aggiornare il flag transfer_restricted."
     },
     "disable_confidential": {
       "about": "Disabilita transazioni riservate",
-      "enabledInfo": "Il creatore della risorsa può abilitare la possibilità di disabilitare le operazioni riservate per questa risorsa.",
-      "disabledInfo": "Il creatore della risorsa non può disabilitare le operazioni riservate per questa risorsa."
+      "enabledInfo": "L'emittente/proprietario della risorsa può aggiornare il flag Disable_Confidential.",
+      "disabledInfo": "L'emittente/proprietario della risorsa NON può aggiornare il flag Disable_Confidential."
     },
     "witness_fed_asset": {
       "about": "Consenti ai testimoni di fornire feed",
-      "enabledInfo": "Il creatore della risorsa può consentire ai testimoni di pubblicare feed di prezzo per questa risorsa.",
-      "disabledInfo": "Il creatore della risorsa non può consentire ai testimoni di pubblicare feed di prezzo per questa risorsa."
+      "enabledInfo": "L'emittente/proprietario dell'asset può aggiornare il flag testimone_fed_asset.",
+      "disabledInfo": "L'emittente/proprietario dell'asset NON può aggiornare il flag testimone_fed_asset."
     },
     "committee_fed_asset": {
       "about": "Consenti ai membri del comitato di fornire feed",
-      "enabledInfo": "Il creatore della risorsa può consentire ai membri del comitato di pubblicare feed di prezzo per questa risorsa.",
-      "disabledInfo": "Il creatore della risorsa non può consentire ai membri del comitato di pubblicare feed di prezzo per questa risorsa."
+      "enabledInfo": "L'emittente/proprietario dell'asset può aggiornare il flag Committee_fed_asset.",
+      "disabledInfo": "L'emittente/proprietario dell'asset NON può aggiornare il flag Committee_fed_asset."
     },
     "disable_force_settle": {
       "about": "Disabilita assestamento forzato",
-      "enabledInfo": "Il creatore della risorsa può abilitare la possibilità di disabilitare la stabilizzazione forzata per questa risorsa.",
-      "disabledInfo": "Il creatore della risorsa non può disabilitare la liquidazione forzata per questa risorsa."
+      "enabledInfo": "L'emittente/proprietario dell'asset può aggiornare il flag Disable_force_settle.",
+      "disabledInfo": "L'emittente/proprietario della risorsa NON può aggiornare il flag Disable_force_settle."
     },
     "global_settle": {
       "about": "Consenti al proprietario della risorsa di forzare una liquidazione globale",
-      "enabledInfo": "Il creatore della risorsa può abilitare la possibilità di liquidare questa risorsa a livello globale.",
-      "disabledInfo": "Il creatore della risorsa non può liquidare questa risorsa a livello globale."
+      "enabledInfo": "L'emittente/proprietario dell'asset può liquidare manualmente l'asset a livello globale.",
+      "disabledInfo": "L'emittente/proprietario dell'asset NON può liquidare manualmente questo asset a livello globale."
     },
     "lock_max_supply": {
       "about": "Blocca la fornitura massima",
-      "enabledInfo": "Il creatore della risorsa non può bloccare la fornitura massima di questa risorsa.",
-      "disabledInfo": "Il creatore della risorsa può bloccare la fornitura massima di questa risorsa."
+      "enabledInfo": "L'emittente/proprietario della risorsa NON può aggiornare il flag lock_max_supply.",
+      "disabledInfo": "L'emittente/proprietario della risorsa può aggiornare il flag lock_max_supply."
     },
     "disable_new_supply": {
       "about": "Disabilita nuova fornitura",
-      "enabledInfo": "Il creatore della risorsa non può disattivare la possibilità di creare una nuova fornitura per questa risorsa.",
-      "disabledInfo": "Il creatore della risorsa può disabilitare la possibilità di creare una nuova fornitura per questa risorsa."
+      "enabledInfo": "L'emittente/proprietario della risorsa NON può aggiornare il flag Disable_new_supply.",
+      "disabledInfo": "L'emittente/proprietario della risorsa può aggiornare il flag Disable_new_supply."
     },
     "disable_collateral_bidding": {
       "about": "Disabilita le offerte collaterali",
-      "enabledInfo": "Il creatore della risorsa non può disattivare le offerte di garanzia per questa risorsa.",
-      "disabledInfo": "Il creatore della risorsa può disattivare le offerte di garanzia per questa risorsa."
+      "enabledInfo": "L'emittente/proprietario dell'asset NON può aggiornare il flag Disable_collateral_bidding.",
+      "disabledInfo": "L'emittente/proprietario dell'asset può aggiornare il flag Disable_collateral_bidding."
     },
     "disable_mcr_update": {
       "about": "Disabilita aggiornamento proprietario Rapporto collaterale minimo",
-      "enabledInfo": "Il proprietario dell'asset utilizza un requisito di rapporto collaterale minimo alimentato dal prezzo per questo asset.",
-      "disabledInfo": "Il proprietario dell'asset imposta staticamente il requisito del rapporto collaterale minimo per questo asset."
+      "enabledInfo": "L'emittente/proprietario dell'asset NON può aggiornare (impostare/modificare/eliminare) l'estensione Maintenance_collateral_ratio dell'asset. ",
+      "disabledInfo": "L'emittente/proprietario dell'asset può aggiornare (impostare/modificare/eliminare) l'estensione Maintenance_collateral_ratio dell'asset. "
     },
     "disable_icr_update": {
       "about": "Disabilita aggiornamento proprietario Rapporto garanzia collaterale iniziale",
-      "enabledInfo": "Il proprietario dell'asset utilizza per questo asset un requisito di coefficiente di garanzia iniziale alimentato dal prezzo.",
-      "disabledInfo": "Il proprietario dell'asset imposta staticamente il requisito del rapporto di garanzia iniziale per questo asset."
+      "enabledInfo": "L'emittente/proprietario dell'asset NON può aggiornare (impostare/modificare/eliminare) l'estensione partial_collateral_ratio dell'asset. ",
+      "disabledInfo": "L'emittente/proprietario dell'asset può aggiornare (impostare/modificare/eliminare) l'estensione partial_collateral_ratio dell'asset. "
     },
     "disable_mssr_update": {
       "about": "Disabilita aggiornamento proprietario Rapporto massimo di compressione breve",
-      "enabledInfo": "Il proprietario dell'asset utilizza un rapporto massimo di short squeeze alimentato dal prezzo per questo asset.",
-      "disabledInfo": "Il proprietario della risorsa imposta staticamente il rapporto massimo di compressione breve per questa risorsa."
+      "enabledInfo": "L'emittente/proprietario della risorsa NON può aggiornare (impostare/modificare/eliminare) l'estensione Maximum_short_squeeze_ratio della risorsa. ",
+      "disabledInfo": "L'emittente/proprietario della risorsa può aggiornare (impostare/modificare/eliminare) l'estensione Maximum_short_squeeze_ratio della risorsa. "
     },
     "disable_bsrm_update": {
       "about": "Disattiva l'aggiornamento del proprietario della strategia di gestione del rischio Black Swan",
-      "enabledInfo": "Il proprietario della risorsa utilizza la strategia di liquidazione globale predefinita per questa risorsa.",
-      "disabledInfo": "Il proprietario dell'asset utilizza una strategia personalizzata di gestione del rischio del cigno nero per questo asset."
+      "enabledInfo": "L'emittente/proprietario della risorsa NON può aggiornare l'estensione black_swan_response_method della risorsa.",
+      "disabledInfo": "L'emittente/proprietario della risorsa può aggiornare l'estensione black_swan_response_method della risorsa."
     }
   },
   "flags": {
@@ -88,58 +88,58 @@
     "header_content": "Ogni autorizzazione per risorsa consentita può essere attivata/disattivata.",
     "charge_market_fee": {
       "about": "Abilita commissione di mercato",
-      "enabledInfo": "Il creatore dell'asset può configurare le commissioni di negoziazione di mercato per questo asset, inclusa la funzionalità di condivisione dei premi delle commissioni di mercato.",
-      "disabledInfo": "Il creatore dell'asset ha disattivato l'addebito delle commissioni di negoziazione del mercato per questo asset."
+      "enabledInfo": "Le operazioni di mercato su questo asset potrebbero essere addebitate, a seconda delle impostazioni della tariffa.",
+      "disabledInfo": "Le operazioni di mercato su questo asset non vengono addebitate."
     },
     "white_list": {
       "about": "Richiedere che i titolari siano inseriti nella lista bianca",
-      "enabledInfo": "Il creatore della risorsa può configurare le autorità della lista bianca per questa risorsa.",
-      "disabledInfo": "Il creatore della risorsa ha disabilitato la configurazione delle autorità della lista bianca per questa risorsa."
+      "enabledInfo": "L'uso di questa risorsa può essere limitato dall'autorizzazione della risorsa (whitelist e/o blacklist), a seconda delle impostazioni delle autorità di whitelist e blacklist.",
+      "disabledInfo": "L'uso di questa risorsa non è limitato dagli elenchi di autorizzazione delle risorse."
     },
     "override_authority": {
       "about": "Il proprietario della risorsa può trasferire nuovamente la risorsa a se stesso",
-      "enabledInfo": "Il creatore della risorsa può eseguire un'operazione di trasferimento sostitutiva su questa risorsa, restituendola al suo saldo dal tuo.",
-      "disabledInfo": "Il creatore della risorsa ha disabilitato l'esecuzione di operazioni di trasferimento di sostituzione su questa risorsa."
-    },
-    "disable_force_settle": {
-      "about": "Disabilita assestamento forzato",
-      "enabledInfo": "Il creatore della risorsa ha disabilitato la liquidazione forzata per questa risorsa.",
-      "disabledInfo": "Il creatore della risorsa ha abilitato la liquidazione forzata per questa risorsa."
+      "enabledInfo": "L'emittente/proprietario dell'asset può trasferire questo asset dal saldo di qualsiasi conto a un altro conto (nota che il saldo dopo il trasferimento non può essere negativo).",
+      "disabledInfo": "L'emittente/proprietario dell'asset NON può trasferire questo asset dal saldo di altri conti."
     },
     "transfer_restricted": {
       "about": "Il proprietario della risorsa deve approvare tutti i trasferimenti",
-      "enabledInfo": "Il creatore della risorsa può limitare i trasferimenti di questa risorsa.",
-      "disabledInfo": "Il creatore della risorsa ha disattivato la limitazione dei trasferimenti di questa risorsa."
+      "enabledInfo": "I trasferimenti di questa risorsa sono limitati. ",
+      "disabledInfo": "Nessuna limitazione di questo tipo sui trasferimenti."
+    },
+    "disable_force_settle": {
+      "about": "Disabilita assestamento forzato",
+      "enabledInfo": "I detentori di questo asset NON possono richiedere una liquidazione forzata per una parte del loro asset, a meno che tale asset non venga liquidato globalmente o individualmente in un fondo.",
+      "disabledInfo": "I detentori di questo bene possono richiedere una liquidazione forzata."
     },
     "disable_confidential": {
       "about": "Disabilita transazioni riservate",
-      "enabledInfo": "Il creatore della risorsa ha disattivato le operazioni riservate per questa risorsa.",
-      "disabledInfo": "L'autore della risorsa non ha disattivato le operazioni riservate per questa risorsa."
+      "enabledInfo": "I trasferimenti a indirizzi ciechi/invisibili/confidenziali sono disabilitati. ",
+      "disabledInfo": "I trasferimenti a indirizzi ciechi/invisibili/confidenziali sono abilitati."
     },
     "witness_fed_asset": {
       "about": "Consenti ai testimoni di fornire feed",
-      "enabledInfo": "I testimoni possono pubblicare feed di prezzo per questa risorsa.",
-      "disabledInfo": "I testimoni non possono pubblicare feed di prezzo per questa risorsa."
+      "enabledInfo": "I testimoni attivi possono pubblicare feed di prezzo per questa risorsa.",
+      "disabledInfo": "I testimoni attivi non possono pubblicare feed di prezzo per questa risorsa."
     },
     "committee_fed_asset": {
       "about": "Consenti ai membri del comitato di fornire feed",
-      "enabledInfo": "I membri del comitato possono pubblicare feed di prezzo per questa risorsa.",
-      "disabledInfo": "I membri del comitato non possono pubblicare feed di prezzo per questa risorsa."
+      "enabledInfo": "I membri attivi del comitato possono pubblicare feed di prezzo per questa risorsa.",
+      "disabledInfo": "I membri attivi del comitato non possono pubblicare feed di prezzo per questa risorsa."
     },
     "lock_max_supply": {
       "about": "Blocca la fornitura massima",
-      "enabledInfo": "Il proprietario della risorsa ha bloccato la fornitura massima di questa risorsa.",
-      "disabledInfo": "Il proprietario della risorsa non ha bloccato la fornitura massima di questa risorsa."
+      "enabledInfo": "La fornitura massima di questo asset è bloccata, il che significa che l'emittente/proprietario dell'asset NON può aggiornare la fornitura massima di questo asset.",
+      "disabledInfo": "L'emittente/proprietario dell'asset può aggiornare la fornitura massima di questo asset."
     },
     "disable_new_supply": {
       "about": "Disabilita nuova fornitura",
-      "enabledInfo": "Il proprietario della risorsa ha disabilitato la possibilità di emettere nuova fornitura per questa risorsa.",
-      "disabledInfo": "Il proprietario dell'asset consente l'emissione di fornitura aggiuntiva per questo asset."
+      "enabledInfo": "Impossibile creare una nuova fornitura per questa risorsa (o dire impossibile \"coniare\" più token).",
+      "disabledInfo": "Può creare una nuova fornitura per questa risorsa."
     },
     "disable_collateral_bidding": {
       "about": "Disabilita le offerte collaterali",
-      "enabledInfo": "Il proprietario della risorsa ha disattivato le offerte di garanzia per questa risorsa.",
-      "disabledInfo": "Il proprietario della risorsa ha abilitato le offerte di garanzia per questa risorsa."
+      "enabledInfo": "Le offerte per la garanzia nel pool di regolamento globale sono disabilitate. ",
+      "disabledInfo": "Le offerte per la garanzia nel pool di regolamento globale sono abilitate."
     }
   },
   "asset_details": {
@@ -290,7 +290,7 @@
     "delete": "Eliminare?",
     "addNewIPFSMedia": "Aggiungi nuovo supporto IPFS",
     "noIPFSGateway": "Non includere un host gateway IPFS negli URL multimediali di token non fungibili, poiché terze parti utilizzeranno i propri gateway per accedere al contenuto.",
-    "mediaURLPlaceholder": "/ipfs/cid/immagine.png",
+    "mediaURLPlaceholder": "/ipfs/cid/image.png",
     "fileTypePlaceholder": "Tipo di file",
     "imageFormats": "Formati di immagine",
     "audioFormats": "Formati audio",

@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useSyncExternalStore, useMemo } from "react";
 import { FixedSizeList as List } from "react-window";
-import { useStore } from '@nanostores/react';
-import { sha256 } from '@noble/hashes/sha2';
-import { bytesToHex as toHex } from '@noble/hashes/utils';
+import { useStore } from "@nanostores/react";
+import { sha256 } from "@noble/hashes/sha2";
+import { bytesToHex as toHex } from "@noble/hashes/utils";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
@@ -93,39 +93,39 @@ export default function PortfolioTabs(properties) {
     return "bitshares";
   }, [usr]);
 
+  const assets = useMemo(() => {
+    if (!_chain || (!_assetsBTS && !_assetsTEST)) {
+      return [];
+    }
+
+    if (_chain !== "bitshares") {
+      return _assetsTEST;
+    }
+
+    const relevantAssets = _assetsBTS.filter((asset) => {
+      return !blocklist.users.includes(toHex(sha256(asset.issuer)));
+    });
+
+    return relevantAssets;
+  }, [blocklist, _assetsBTS, _assetsTEST, _chain]);
+
   const pools = useMemo(() => {
     if (!_chain || (!_poolsBTS && !_poolsTEST)) {
       return [];
     }
-  
+
     if (_chain !== "bitshares") {
       return _poolsTEST;
     }
-  
+
     const relevantPools = _poolsBTS.filter((pool) => {
       const poolShareAsset = assets.find((asset) => asset.id === pool.share_asset_id);
       if (!poolShareAsset) return false;
       return !blocklist.users.includes(toHex(sha256(poolShareAsset.issuer)));
     });
-  
+
     return relevantPools;
   }, [assets, blocklist, _poolsBTS, _poolsTEST, _chain]);
-
-  const assets = useMemo(() => {
-    if (!_chain || (!_assetsBTS && !_assetsTEST)) {
-      return [];
-    }
-  
-    if (_chain !== "bitshares") {
-      return _assetsTEST;
-    }
-  
-    const relevantAssets = _assetsBTS.filter((asset) => {
-      return !blocklist.users.includes(toHex(sha256(asset.issuer)));
-    });
-  
-    return relevantAssets;
-  }, [blocklist, _assetsBTS, _assetsTEST, _chain]);
 
   useInitCache(_chain ?? "bitshares", ["assets", "pools"]);
 
@@ -141,7 +141,11 @@ export default function PortfolioTabs(properties) {
   useEffect(() => {
     let unsubscribeUserBalancesStore;
     if (usr && usr.id) {
-      const userBalancesStore = createUserBalancesStore([usr.chain, usr.id, currentNode ? currentNode.url : null]);
+      const userBalancesStore = createUserBalancesStore([
+        usr.chain,
+        usr.id,
+        currentNode ? currentNode.url : null,
+      ]);
 
       unsubscribeUserBalancesStore = userBalancesStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
@@ -149,7 +153,7 @@ export default function PortfolioTabs(properties) {
             return {
               ...balance,
               symbol: assets.find((asset) => asset.id === balance.asset_id).symbol,
-            }
+            };
           });
           console.log("Successfully fetched balances");
           if (sortType === "default") {
@@ -183,9 +187,9 @@ export default function PortfolioTabs(properties) {
 
     return () => {
       if (unsubscribeUserBalancesStore) unsubscribeUserBalancesStore();
-    }
+    };
   }, [usr, balanceCounter, sortType, assets]);
-    
+
   const [openOrderCounter, setOpenOrderCounter] = useState(0);
   const [openOrders, setOpenOrders] = useState();
   useEffect(() => {
@@ -193,7 +197,7 @@ export default function PortfolioTabs(properties) {
 
     if (usr && usr.id) {
       const limitOrdersStore = createAccountLimitOrderStore([usr.chain, usr.id]);
-      
+
       unsubscribeLimitOrdersStore = limitOrdersStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
           console.log("Successfully fetched open orders");
@@ -279,7 +283,9 @@ export default function PortfolioTabs(properties) {
     });
 
     const relevantPools = pools.filter(
-      (pool) => pool.asset_a_symbol === currentBalance.symbol || pool.asset_b_symbol === currentBalance.symbol
+      (pool) =>
+        pool.asset_a_symbol === currentBalance.symbol ||
+        pool.asset_b_symbol === currentBalance.symbol
     );
 
     return (
@@ -314,7 +320,9 @@ export default function PortfolioTabs(properties) {
                 <HoverCardTrigger asChild>
                   <PoolDialog
                     poolArray={relevantPools}
-                    dialogTitle={t("PoolDialogs:assetAPoolsDialogTitle", { assetA: currentBalance.symbol })}
+                    dialogTitle={t("PoolDialogs:assetAPoolsDialogTitle", {
+                      assetA: currentBalance.symbol,
+                    })}
                     dialogDescription={t("PoolDialogs:assetAPoolsDialogDescription", {
                       assetA: currentBalance.symbol,
                       assetAId: currentBalance.id,
@@ -553,7 +561,7 @@ export default function PortfolioTabs(properties) {
     if (!poolArray || !poolArray.length) {
       return null;
     }
-  
+
     const PoolRow = ({ index, style }) => {
       const pool = poolArray[index];
       return (
@@ -567,13 +575,11 @@ export default function PortfolioTabs(properties) {
         </a>
       );
     };
-  
+
     return (
       <Dialog>
         <DialogTrigger asChild>
-          <Button variant="outline">
-            {t("PortfolioTabs:pools")}
-          </Button>
+          <Button variant="outline">{t("PortfolioTabs:pools")}</Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[800px] bg-white">
           <DialogHeader>
@@ -594,7 +600,7 @@ export default function PortfolioTabs(properties) {
         </DialogContent>
       </Dialog>
     );
-  };
+  }
 
   return (
     <>
@@ -638,15 +644,24 @@ export default function PortfolioTabs(properties) {
                   </CardTitle>
                   <CardDescription>
                     {t("PortfolioTabs:accountBalancesDescription")}
-                    <br/>
+                    <br />
                     <div className="grid grid-cols-3 gap-3 mt-2">
-                      <Button onClick={() => setSortType("default")} variant={sortType === "default" ? "" : "outline"}>
+                      <Button
+                        onClick={() => setSortType("default")}
+                        variant={sortType === "default" ? "" : "outline"}
+                      >
                         {t("PortfolioTabs:default")}
                       </Button>
-                      <Button onClick={() => setSortType("alphabetical")} variant={sortType === "alphabetical" ? "" : "outline"}>
+                      <Button
+                        onClick={() => setSortType("alphabetical")}
+                        variant={sortType === "alphabetical" ? "" : "outline"}
+                      >
                         {t("PortfolioTabs:alphabetical")}
                       </Button>
-                      <Button onClick={() => setSortType("amount")} variant={sortType === "amount" ? "" : "outline"}>
+                      <Button
+                        onClick={() => setSortType("amount")}
+                        variant={sortType === "amount" ? "" : "outline"}
+                      >
                         {t("PortfolioTabs:amount")}
                       </Button>
                     </div>
@@ -657,12 +672,7 @@ export default function PortfolioTabs(properties) {
                   balances.length &&
                   retrievedBalanceAssets &&
                   retrievedBalanceAssets.length ? (
-                    <List
-                      height={500}
-                      itemCount={balances.length}
-                      itemSize={80}
-                      className="gaps-2"
-                    >
+                    <List height={500} itemCount={balances.length} itemSize={80} className="gaps-2">
                       {BalanceRow}
                     </List>
                   ) : (

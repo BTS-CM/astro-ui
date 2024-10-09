@@ -4,83 +4,83 @@
     "header_content": "Hinweis: Das Deaktivieren von Berechtigungen ist eine dauerhafte Entscheidung",
     "charge_market_fee": {
       "about": "Marktgebühr aktivieren",
-      "enabledInfo": "Der Ersteller des Vermögenswerts kann die Erhebung von Markthandelsgebühren für diesen Vermögenswert aktivieren.",
-      "disabledInfo": "Der Ersteller des Vermögenswerts kann für diesen Vermögenswert keine Markthandelsgebühren erheben."
+      "enabledInfo": "Der Emittent/Eigentümer des Vermögenswerts kann das Flag „charge_market_fee“ aktualisieren.",
+      "disabledInfo": "Der Emittent/Eigentümer des Vermögenswerts kann das Flag „charge_market_fee“ NICHT aktualisieren. "
     },
     "white_list": {
       "about": "Erfordern, dass Inhaber auf die weiße Liste gesetzt werden",
-      "enabledInfo": "Der Asset-Ersteller kann die Konfiguration von Whitelist-Berechtigungen für dieses Asset aktivieren.",
-      "disabledInfo": "Der Asset-Ersteller kann für dieses Asset keine Whitelist-Berechtigungen konfigurieren."
+      "enabledInfo": "Der Asset-Emittent/Eigentümer kann das Flag „white_list“ aktualisieren.",
+      "disabledInfo": "Der Asset-Emittent/Eigentümer kann das Flag „white_list“ NICHT aktualisieren. "
     },
     "override_authority": {
       "about": "Der Vermögenseigentümer kann das Vermögen auf sich selbst zurück übertragen",
-      "enabledInfo": "Der Asset-Ersteller kann die Möglichkeit aktivieren, einen Override-Übertragungsvorgang für dieses Asset durchzuführen.",
-      "disabledInfo": "Der Asset-Ersteller kann für dieses Asset keine außer Kraft gesetzten Übertragungsvorgänge durchführen."
+      "enabledInfo": "Der Asset-Emittent/Eigentümer kann das Flag override_authority aktualisieren.",
+      "disabledInfo": "Der Asset-Emittent/Eigentümer kann das Flag „override_authority“ NICHT aktualisieren."
     },
     "transfer_restricted": {
       "about": "Der Vermögenseigentümer muss allen Übertragungen zustimmen",
-      "enabledInfo": "Der Asset-Ersteller kann die Möglichkeit aktivieren, Übertragungen dieses Assets einzuschränken.",
-      "disabledInfo": "Der Asset-Ersteller kann die Übertragung dieses Assets nicht einschränken."
+      "enabledInfo": "Der Asset-Emittent/Eigentümer kann das Flag „transfer_restricted“ aktualisieren.",
+      "disabledInfo": "Der Asset-Emittent/Eigentümer kann das Flag „transfer_restricted“ NICHT aktualisieren."
     },
     "disable_confidential": {
       "about": "Vertrauliche Transaktionen deaktivieren",
-      "enabledInfo": "Der Asset-Ersteller kann die Möglichkeit aktivieren, vertrauliche Vorgänge für dieses Asset zu deaktivieren.",
-      "disabledInfo": "Der Asset-Ersteller kann vertrauliche Vorgänge für dieses Asset nicht deaktivieren."
+      "enabledInfo": "Der Asset-Emittent/Eigentümer kann das Flag „disable_confidential“ aktualisieren.",
+      "disabledInfo": "Der Asset-Emittent/Eigentümer kann das Flag „disable_confidential“ NICHT aktualisieren."
     },
     "witness_fed_asset": {
       "about": "Erlauben Sie Zeugen, Feeds bereitzustellen",
-      "enabledInfo": "Der Asset-Ersteller kann Zeugen die Veröffentlichung von Preis-Feeds für dieses Asset ermöglichen.",
-      "disabledInfo": "Der Asset-Ersteller kann es Zeugen nicht ermöglichen, Preis-Feeds für dieses Asset zu veröffentlichen."
+      "enabledInfo": "Der Asset-Emittent/Eigentümer kann das Flag „witness_fed_asset“ aktualisieren.",
+      "disabledInfo": "Der Asset-Emittent/Eigentümer kann das Flag „witness_fed_asset“ NICHT aktualisieren."
     },
     "committee_fed_asset": {
       "about": "Erlauben Sie Ausschussmitgliedern, Feeds bereitzustellen",
-      "enabledInfo": "Der Asset-Ersteller kann Ausschussmitgliedern ermöglichen, Preis-Feeds für dieses Asset zu veröffentlichen.",
-      "disabledInfo": "Der Asset-Ersteller kann Ausschussmitgliedern nicht ermöglichen, Preis-Feeds für dieses Asset zu veröffentlichen."
+      "enabledInfo": "Der Emittent/Eigentümer des Vermögenswerts kann das Flag „committee_fed_asset“ aktualisieren.",
+      "disabledInfo": "Der Emittent/Eigentümer des Vermögenswerts kann das Flag „committee_fed_asset“ NICHT aktualisieren."
     },
     "disable_force_settle": {
       "about": "Deaktivieren Sie die erzwungene Setzung",
-      "enabledInfo": "Der Asset-Ersteller kann die Möglichkeit aktivieren, die erzwungene Abrechnung für dieses Asset zu deaktivieren.",
-      "disabledInfo": "Der Asset-Ersteller kann die erzwungene Abrechnung für dieses Asset nicht deaktivieren."
+      "enabledInfo": "Der Asset-Emittent/Eigentümer kann das Flag „disable_force_settle“ aktualisieren.",
+      "disabledInfo": "Der Asset-Emittent/Eigentümer kann das Flag „disable_force_settle“ NICHT aktualisieren."
     },
     "global_settle": {
       "about": "Ermöglichen Sie dem Vermögenseigentümer, eine globale Abrechnung zu erzwingen",
-      "enabledInfo": "Der Vermögensersteller kann die Möglichkeit zur globalen Abrechnung dieses Vermögenswerts aktivieren.",
-      "disabledInfo": "Der Anlagenersteller kann diese Anlage nicht pauschal abrechnen."
+      "enabledInfo": "Der Emittent/Eigentümer des Vermögenswerts kann diesen Vermögenswert manuell global abrechnen.",
+      "disabledInfo": "Der Emittent/Eigentümer des Vermögenswerts kann diesen Vermögenswert NICHT manuell global abrechnen."
     },
     "lock_max_supply": {
       "about": "Maximale Versorgung sperren",
-      "enabledInfo": "Der Asset-Ersteller kann den maximalen Vorrat dieses Assets nicht sperren.",
-      "disabledInfo": "Der Asset-Ersteller kann den maximalen Vorrat dieses Assets sperren."
+      "enabledInfo": "Der Asset-Emittent/Eigentümer kann das Flag lock_max_supply NICHT aktualisieren.",
+      "disabledInfo": "Der Asset-Emittent/Eigentümer kann das Flag lock_max_supply aktualisieren."
     },
     "disable_new_supply": {
       "about": "Neue Versorgung deaktivieren",
-      "enabledInfo": "Der Asset-Ersteller kann die Möglichkeit, ein neues Angebot für dieses Asset zu erstellen, nicht deaktivieren.",
-      "disabledInfo": "Der Asset-Ersteller kann die Möglichkeit deaktivieren, ein neues Angebot für dieses Asset zu erstellen."
+      "enabledInfo": "Der Asset-Emittent/Eigentümer kann das Flag „disable_new_supply“ NICHT aktualisieren.",
+      "disabledInfo": "Der Asset-Emittent/Eigentümer kann das Flag „disable_new_supply“ aktualisieren."
     },
     "disable_collateral_bidding": {
       "about": "Deaktivieren Sie Nebengebote",
-      "enabledInfo": "Der Ersteller des Assets kann das Bieten von Sicherheiten für dieses Asset nicht deaktivieren.",
-      "disabledInfo": "Der Ersteller des Assets kann das Bieten von Sicherheiten für dieses Asset deaktivieren."
+      "enabledInfo": "Der Asset-Emittent/Eigentümer kann das Flag „disable_collateral_bidding“ NICHT aktualisieren.",
+      "disabledInfo": "Der Asset-Emittent/Eigentümer kann das Flag „disable_collateral_bidding“ aktualisieren."
     },
     "disable_mcr_update": {
       "about": "Deaktivieren Sie die Aktualisierung des Mindestsicherheitsverhältnisses durch den Eigentümer",
-      "enabledInfo": "Der Eigentümer des Vermögenswerts verwendet für diesen Vermögenswert eine preisabhängige Mindestsicherheitsquoteanforderung.",
-      "disabledInfo": "Der Eigentümer des Vermögenswerts legt die Mindestanforderung an die Sicherheitenquote für diesen Vermögenswert statisch fest."
+      "enabledInfo": "Der Emittent/Eigentümer des Vermögenswerts kann die Erweiterung „maintenance_collateral_ratio“ des Vermögenswerts NICHT aktualisieren (festlegen/ändern/löschen). ",
+      "disabledInfo": "Der Emittent/Eigentümer des Vermögenswerts kann die Erweiterung „maintenance_collateral_ratio“ des Vermögenswerts aktualisieren (festlegen/ändern/löschen). "
     },
     "disable_icr_update": {
-      "about": "Deaktivieren Sie die Aktualisierung des Anfangssicherheitsverhältnisses durch den Eigentümer",
-      "enabledInfo": "Der Eigentümer des Vermögenswerts verwendet für diesen Vermögenswert eine preisabhängige Anforderung an die Anfangssicherheitsquote.",
-      "disabledInfo": "Der Eigentümer des Vermögenswerts legt die Anforderungen an die anfängliche Sicherheitenquote für diesen Vermögenswert statisch fest."
+      "about": "Deaktivieren Sie die Aktualisierung des anfänglichen Sicherheitenverhältnisses durch den Eigentümer",
+      "enabledInfo": "Der Emittent/Eigentümer des Vermögenswerts kann die Erweiterung „initial_collateral_ratio“ des Vermögenswerts NICHT aktualisieren (festlegen/ändern/löschen). ",
+      "disabledInfo": "Der Emittent/Eigentümer des Vermögenswerts kann die Erweiterung „initial_collateral_ratio“ des Vermögenswerts aktualisieren (festlegen/ändern/löschen). "
     },
     "disable_mssr_update": {
-      "about": "Deaktivieren Sie die Eigentümeraktualisierung „Maximum Short Squeeze Ratio“.",
-      "enabledInfo": "Der Eigentümer des Vermögenswerts verwendet für diesen Vermögenswert eine preisabhängige maximale Short-Squeeze-Ratio.",
-      "disabledInfo": "Der Asset-Eigentümer legt die maximale Short-Squeeze-Ratio für dieses Asset statisch fest."
+      "about": "Deaktivieren Sie die Besitzeraktualisierung „Maximum Short Squeeze Ratio“.",
+      "enabledInfo": "Der Emittent/Eigentümer des Vermögenswerts kann die Erweiterung „maximum_short_squeeze_ratio“ des Vermögenswerts NICHT aktualisieren (festlegen/ändern/löschen). ",
+      "disabledInfo": "Der Emittent/Eigentümer des Vermögenswerts kann die Erweiterung „maximum_short_squeeze_ratio“ des Vermögenswerts aktualisieren (festlegen/ändern/löschen). "
     },
     "disable_bsrm_update": {
       "about": "Deaktivieren Sie die Eigentümeraktualisierung der Black Swan Risk Management-Strategie",
-      "enabledInfo": "Der Asset-Eigentümer verwendet die standardmäßige Global Settlement-Strategie für dieses Asset.",
-      "disabledInfo": "Der Asset-Eigentümer verwendet eine benutzerdefinierte Black Swan-Risikomanagementstrategie für dieses Asset."
+      "enabledInfo": "Der Asset-Emittent/Eigentümer kann die Erweiterung black_swan_response_method des Assets NICHT aktualisieren.",
+      "disabledInfo": "Der Asset-Emittent/Eigentümer kann die Erweiterung black_swan_response_method des Assets aktualisieren."
     }
   },
   "flags": {
@@ -88,58 +88,58 @@
     "header_content": "Jede zulässige Asset-Berechtigung kann ein-/ausgeschaltet werden.",
     "charge_market_fee": {
       "about": "Marktgebühr aktivieren",
-      "enabledInfo": "Der Ersteller des Vermögenswerts kann Markthandelsgebühren für diesen Vermögenswert konfigurieren, einschließlich der Funktion zum Teilen von Marktgebührenprämien.",
-      "disabledInfo": "Der Ersteller des Vermögenswerts hat die Erhebung von Markthandelsgebühren für diesen Vermögenswert deaktiviert."
+      "enabledInfo": "Abhängig von den Gebührensatzeinstellungen können für den Markthandel mit diesem Vermögenswert Gebühren anfallen.",
+      "disabledInfo": "Für den Markthandel mit diesem Vermögenswert fallen keine Gebühren an."
     },
     "white_list": {
       "about": "Erfordern, dass Inhaber auf die weiße Liste gesetzt werden",
-      "enabledInfo": "Der Asset-Ersteller kann Whitelist-Berechtigungen für dieses Asset konfigurieren.",
-      "disabledInfo": "Der Asset-Ersteller hat die Konfiguration von Whitelist-Berechtigungen für dieses Asset deaktiviert."
+      "enabledInfo": "Die Nutzung dieses Assets kann je nach den Einstellungen der Whitelisting- und Blacklisting-Behörden durch die Asset-Autorisierung (Whitelist und/oder Blacklist) eingeschränkt werden.",
+      "disabledInfo": "Die Verwendung dieses Assets ist nicht durch Asset-Autorisierungslisten eingeschränkt."
     },
     "override_authority": {
       "about": "Der Vermögenseigentümer kann das Vermögen auf sich selbst zurück übertragen",
-      "enabledInfo": "Der Ersteller des Vermögenswerts kann einen Überschreibungsübertragungsvorgang für diesen Vermögenswert durchführen und ihn von Ihrem auf sein Guthaben zurückführen.",
-      "disabledInfo": "Der Asset-Ersteller hat die Durchführung von Überschreibungsübertragungsvorgängen für dieses Asset deaktiviert."
-    },
-    "disable_force_settle": {
-      "about": "Deaktivieren Sie die erzwungene Setzung",
-      "enabledInfo": "Der Asset-Ersteller hat die erzwungene Abrechnung für dieses Asset deaktiviert.",
-      "disabledInfo": "Der Asset-Ersteller hat die erzwungene Abrechnung für dieses Asset aktiviert."
+      "enabledInfo": "Der Emittent/Eigentümer des Vermögenswerts kann diesen Vermögenswert vom Saldo eines beliebigen Kontos auf ein anderes Konto übertragen (beachten Sie, dass der Saldo nach der Übertragung nicht negativ sein darf).",
+      "disabledInfo": "Der Emittent/Eigentümer des Vermögenswerts kann diesen Vermögenswert NICHT aus dem Saldo anderer Konten übertragen."
     },
     "transfer_restricted": {
       "about": "Der Vermögenseigentümer muss allen Übertragungen zustimmen",
-      "enabledInfo": "Der Asset-Ersteller kann die Übertragung dieses Assets einschränken.",
-      "disabledInfo": "Der Asset-Ersteller hat die Einschränkung von Übertragungen dieses Assets deaktiviert."
+      "enabledInfo": "Die Übertragung dieses Vermögenswerts ist eingeschränkt. ",
+      "disabledInfo": "Keine solche Beschränkung für Überweisungen."
+    },
+    "disable_force_settle": {
+      "about": "Deaktivieren Sie die erzwungene Setzung",
+      "enabledInfo": "Inhaber dieses Vermögenswerts können KEINE Zwangsabwicklung für einen bestimmten Betrag ihres Vermögens beantragen, es sei denn, dieser Vermögenswert wird global oder einzeln an einen Fonds abgewickelt.",
+      "disabledInfo": "Inhaber dieses Vermögenswerts können eine Zwangsabwicklung beantragen."
     },
     "disable_confidential": {
       "about": "Vertrauliche Transaktionen deaktivieren",
-      "enabledInfo": "Der Asset-Ersteller hat vertrauliche Vorgänge für dieses Asset deaktiviert.",
-      "disabledInfo": "Der Asset-Ersteller hat vertrauliche Vorgänge für dieses Asset nicht deaktiviert."
+      "enabledInfo": "Übertragungen an Blind-/Stealth-/vertrauliche Adressen sind deaktiviert. ",
+      "disabledInfo": "Übertragungen an Blind-/Stealth-/vertrauliche Adressen sind aktiviert."
     },
     "witness_fed_asset": {
       "about": "Erlauben Sie Zeugen, Feeds bereitzustellen",
-      "enabledInfo": "Zeugen können Preis-Feeds für diesen Vermögenswert veröffentlichen.",
-      "disabledInfo": "Zeugen können keine Preis-Feeds für diesen Vermögenswert veröffentlichen."
+      "enabledInfo": "Aktive Zeugen können Preis-Feeds für diesen Vermögenswert veröffentlichen.",
+      "disabledInfo": "Aktive Zeugen können keine Preis-Feeds für diesen Vermögenswert veröffentlichen."
     },
     "committee_fed_asset": {
       "about": "Erlauben Sie Ausschussmitgliedern, Feeds bereitzustellen",
-      "enabledInfo": "Ausschussmitglieder können Preis-Feeds für diesen Vermögenswert veröffentlichen.",
-      "disabledInfo": "Ausschussmitglieder können keine Preis-Feeds für diesen Vermögenswert veröffentlichen."
+      "enabledInfo": "Aktive Ausschussmitglieder können Preis-Feeds für diesen Vermögenswert veröffentlichen.",
+      "disabledInfo": "Aktive Ausschussmitglieder können keine Preis-Feeds für diesen Vermögenswert veröffentlichen."
     },
     "lock_max_supply": {
       "about": "Maximale Versorgung sperren",
-      "enabledInfo": "Der Asset-Eigentümer hat das maximale Angebot dieses Assets gesperrt.",
-      "disabledInfo": "Der Asset-Eigentümer hat das maximale Angebot dieses Assets nicht gesperrt."
+      "enabledInfo": "Der maximale Vorrat dieses Vermögenswerts ist gesperrt, was bedeutet, dass der Emittent/Eigentümer des Vermögenswerts den maximalen Vorrat dieses Vermögenswerts NICHT aktualisieren kann.",
+      "disabledInfo": "Der Emittent/Eigentümer des Vermögenswerts kann das maximale Angebot dieses Vermögenswerts aktualisieren."
     },
     "disable_new_supply": {
       "about": "Neue Versorgung deaktivieren",
-      "enabledInfo": "Der Asset-Eigentümer hat die Möglichkeit zur Ausgabe eines neuen Angebots für dieses Asset deaktiviert.",
-      "disabledInfo": "Der Eigentümer des Vermögenswerts gestattet die Ausgabe zusätzlicher Lieferungen für diesen Vermögenswert."
+      "enabledInfo": "Es kann kein neuer Vorrat für diesen Vermögenswert erstellt werden (oder es können keine weiteren Token „geprägt“ werden).",
+      "disabledInfo": "Kann neues Angebot für diesen Vermögenswert erstellen."
     },
     "disable_collateral_bidding": {
       "about": "Deaktivieren Sie Nebengebote",
-      "enabledInfo": "Der Eigentümer des Vermögenswerts hat das Bieten von Sicherheiten für diesen Vermögenswert deaktiviert.",
-      "disabledInfo": "Der Asset-Eigentümer hat das Bieten von Sicherheiten für dieses Asset aktiviert."
+      "enabledInfo": "Das Bieten für Sicherheiten im Global-Settlement-Pool ist deaktiviert. ",
+      "disabledInfo": "Das Bieten für Sicherheiten im Global-Settlement-Pool ist aktiviert."
     }
   },
   "asset_details": {
@@ -170,7 +170,7 @@
       "placeholder": "Maximaler Vorrat"
     },
     "precision": {
-      "header": "Präzision der Vermögenswerte",
+      "header": "Asset-Präzision",
       "header_content": "Die Genauigkeit des Assets gibt die Anzahl der unterstützten Dezimalstellen an. ",
       "placeholder": "Präzision"
     }
@@ -180,9 +180,9 @@
     "header": "Marktgebührenverlängerungen",
     "reward_percent": {
       "enabled": "Erweiterung des Referrer-Belohnungsprozentsatzes aktiviert",
-      "enabledInfo": "Den Empfehlungsgebern aktiver Marktteilnehmer wird ein prozentualer Anteil der Marktgebühr zugeteilt.",
+      "enabledInfo": "Den Empfehlungsgebern aktiver Marktteilnehmer wird ein prozentualer Anteil der Marktgebühr zugerechnet.",
       "disabled": "Erweiterung des Empfehlungsprämienprozentsatzes aktivieren?",
-      "disabledInfo": "Die Erweiterung des Empfehlungsprämienprozentsatzes ermöglicht es dem Vermögensersteller, dem Empfehlungsgeber aktiver Marktteilnehmer einen Prozentsatz der Marktgebühr zuzuweisen.",
+      "disabledInfo": "Die Erweiterung des Referrer-Belohnungsprozentsatzes ermöglicht es dem Asset-Ersteller, dem Referrer aktiver Marktteilnehmer einen Prozentsatz der Marktgebühr zuzuweisen.",
       "header": "Prozentsatz der Referrer-Belohnung",
       "header_content": "Der Empfehlungsprämienprozentsatz ist der Prozentsatz der Marktgebühr, der dem Empfehlungsgeber aktiver Marktteilnehmer zugewiesen wird."
     },
@@ -192,7 +192,7 @@
       "disabled": "Aktivieren Sie die Whitelist-Marktgebührenteilungserweiterung?",
       "disabledInfo": "Sie können festlegen, wer einen Anteil der erhobenen Marktgebühren erhalten darf, und zwar auf eine Reihe vorab genehmigter Empfehlungskonten.",
       "header": "Aufteilung der Marktgebühren auf die Whitelist",
-      "header_content": "Die Gebührenteilungserweiterung für den Whitelist-Markt ermöglicht es dem Haus, Referrer auf diese Konten auf der Whitelist zu beschränken."
+      "header_content": "Die Gebührenteilungserweiterung für den Whitelist-Markt ermöglicht es dem Haus, Referrer auf diese auf der Whitelist stehenden Konten zu beschränken."
     },
     "taker_fee_percent": {
       "enabled": "Erweiterung des Taker-Gebühr-Prozentsatzes aktiviert",
@@ -205,7 +205,7 @@
     "allowed_markets": {
       "enabled": "Erweiterung „Zulässige Märkte“ aktiviert",
       "enabledInfo": "Die folgenden Märkte sind für den Handel mit diesem Vermögenswert zugelassen.",
-      "disabled": "Die Erweiterung „Zulässige Märkte“ aktivieren?",
+      "disabled": "Erweiterung „Zulässige Märkte“ aktivieren?",
       "disabledInfo": "Sie können die Märkte, auf denen dieser Vermögenswert gehandelt werden darf, auf eine Reihe vorab genehmigter Märkte beschränken."
     },
     "banned_markets": {
@@ -218,7 +218,7 @@
       "enabled": "Berechnung des Kernwechselkurses wird übersprungen",
       "enabledInfo": "Der Ersteller des Vermögenswerts hat die Möglichkeit aktiviert, die grundlegende Wechselkursprüfung für diesen Vermögenswert zu überspringen.",
       "disabled": "Überspringen Sie die Berechnung des Kernwechselkurses?",
-      "disabledInfo": "Mit der Erweiterung „Kernwechselkurs überspringen“ kann der Asset-Ersteller die Prüfung des Kernwechselkurses für diesen Vermögenswert überspringen."
+      "disabledInfo": "Die Erweiterung „Kernwechselkurs überspringen“ ermöglicht es dem Asset-Ersteller, die Prüfung des Kernwechselkurses für dieses Asset zu überspringen."
     }
   },
   "whitelist": {
@@ -226,7 +226,7 @@
     "header": "Asset-Whitelist-Behörden"
   },
   "blacklist": {
-    "header_content": "Bei den Asset-Blacklist-Behörden handelt es sich um Konten, die zur Liste der auf der Blacklist ihres Kontos stehenden Konten beitragen können, um eine Liste gesperrter Konten durchzusetzen, die die Interaktion mit diesem Zugriff verhindert.",
+    "header_content": "Bei den Asset Blacklist-Behörden handelt es sich um Konten, die zur Liste der auf der schwarzen Liste ihres Kontos stehenden Konten beitragen können, um eine Liste gesperrter Konten durchzusetzen, die die Interaktion mit diesem Zugriff verhindert.",
     "header": "Behörden führen eine schwarze Liste für Vermögenswerte auf"
   },
   "market_fee": {

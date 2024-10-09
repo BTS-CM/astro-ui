@@ -1,314 +1,314 @@
 {
-    "permissions": {
-        "header": "Asset's permissions",
-        "header_content": "Note: Disabling permissions is a permanent decision",
-        "charge_market_fee": {
-            "about": "Enable market fee",
-            "enabledInfo": "The asset creator can enable charging market trading fees for this asset.",
-            "disabledInfo": "The asset creator cannot charge market trading fees for this asset."
-        },
-        "white_list": {
-            "about": "Require holders to be white-listed",
-            "enabledInfo": "The asset creator can enable configuring white list authorities for this asset.",
-            "disabledInfo": "The asset creator cannot configure white list authorities for this asset."
-        },
-        "override_authority": {
-            "about": "Asset owner may transfer asset back to themselves",
-            "enabledInfo": "The asset creator can enable the ability to perform an override transfer operation on this asset.",
-            "disabledInfo": "The asset creator cannot perform override transfer operations on this asset."
-        },
-        "transfer_restricted": {
-            "about": "Asset owner must approve all transfers",
-            "enabledInfo": "The asset creator can enable the ability to restrict transfers of this asset.",
-            "disabledInfo": "The asset creator cannot restrict transfers of this asset."
-        },
-        "disable_confidential": {
-            "about": "Disable confidential transactions",
-            "enabledInfo": "The asset creator can enable the ability to disable confidential operations for this asset.",
-            "disabledInfo": "The asset creator cannot disable confidential operations for this asset."
-        },
-        "witness_fed_asset": {
-            "about": "Allow witnesses to provide feeds",
-            "enabledInfo": "The asset creator can enable witnesses to publish price feeds for this asset.",
-            "disabledInfo": "The asset creator cannot enable witnesses to publish price feeds for this asset."
-        },
-        "committee_fed_asset": {
-            "about": "Allow committee members to provide feeds",
-            "enabledInfo": "The asset creator can enable committee members to publish price feeds for this asset.",
-            "disabledInfo": "The asset creator cannot enable committee members to publish price feeds for this asset."
-        },
-        "disable_force_settle": {
-            "about": "Disable force settling",
-            "enabledInfo": "The asset creator can enable the ability to disable force settling for this asset.",
-            "disabledInfo": "The asset creator cannot disable force settling for this asset."
-        },
-        "global_settle": {
-            "about": "Allow asset owner to force a global settling",
-            "enabledInfo": "The asset creator can enable the ability to globally settle this asset.",
-            "disabledInfo": "The asset creator cannot globally settle this asset."
-        },
-        "lock_max_supply": {
-            "about": "Lock max supply",
-            "enabledInfo": "The asset creator cannot lock the max supply of this asset.",
-            "disabledInfo": "The asset creator can lock the max supply of this asset."
-        },
-        "disable_new_supply": {
-            "about": "Disable new supply",
-            "enabledInfo": "The asset creator cannot disable the ability to create new supply for this asset.",
-            "disabledInfo": "The asset creator can disable the ability to create new supply for this asset."
-        },
-        "disable_collateral_bidding": {
-            "about": "Disable collateral bidding",
-            "enabledInfo": "The asset creator cannot disable collateral bidding for this asset.",
-            "disabledInfo": "The asset creator can disable collateral bidding for this asset."
-        },
-        "disable_mcr_update": {
-            "about": "Disable owner update Minimum Collateral Ratio",
-            "enabledInfo": "The asset owner uses a price fed Minimum Collateral Ratio requirement for this asset.",
-            "disabledInfo": "The asset owner statically sets the Minimum Collateral Ratio requirement for this asset."
-        },
-        "disable_icr_update": {
-            "about": "Disable owner update Initial Collateral Ratio",
-            "enabledInfo": "The asset owner uses a price fed Initial Collateral Ratio requirement for this asset.",
-            "disabledInfo": "The asset owner statically sets the Initial Collateral Ratio requirement for this asset."
-        },
-        "disable_mssr_update": {
-            "about": "Disable owner update Maximum Short Squeeze Ratio",
-            "enabledInfo": "The asset owner uses a price fed Maximum Short Squeeze Ratio for this asset.",
-            "disabledInfo": "The asset owner statically sets the Maximum Short Squeeze Ratio for this asset."
-        },
-        "disable_bsrm_update": {
-            "about": "Disable owner update Black Swan Risk Management strategy",
-            "enabledInfo": "The asset owner uses the default Global Settlement strategy for this asset.",
-            "disabledInfo": "The asset owner uses a custom Black Swan Risk Management strategy for this asset."
-        }
+  "permissions": {
+    "header": "Asset's permissions",
+    "header_content": "Note: Disabling permissions is a permanent decision",
+    "charge_market_fee": {
+      "about": "Enable market fee",
+      "enabledInfo": "The asset issuer/owner can update the charge_market_fee flag.",
+      "disabledInfo": "The asset issuer/owner can NOT update the charge_market_fee flag. If the charge_market_fee flag is set to 0, can no longer start charging market trading fees; if the charge_market_fee flag is set to non-zero, the market trading fee rates can still be updated to 0 or non-zero at any time so that trading is not charged or charged."
     },
-    "flags": {
-        "header": "Asset's flags",
-        "header_content": "Each allowed asset permission can be toggled on/off.",
-        "charge_market_fee": {
-            "about": "Enable market fee",
-            "enabledInfo": "The asset creator can configure market trading fees for this asset, including market fee reward sharing functionality.",
-            "disabledInfo": "The asset creator has disabled charging market trading fees for this asset."
-        },
-        "white_list": {
-            "about": "Require holders to be white-listed",
-            "enabledInfo": "The asset creator can configure white list authorities for this asset.",
-            "disabledInfo": "The asset creator has disabled configuring white list authorities for this asset."
-        },
-        "override_authority": {
-            "about": "Asset owner may transfer asset back to themselves",
-            "enabledInfo": "The asset creator can perform an override transfer operation on this asset, returning it to their balance from yours.",
-            "disabledInfo": "The asset creator has disabled performing override transfer operations on this asset."
-        },
-        "disable_force_settle": {
-            "about": "Disable force settling",
-            "enabledInfo": "The asset creator has disabled force settling for this asset.",
-            "disabledInfo": "The asset creator has enabled force settling for this asset."
-        },
-        "transfer_restricted": {
-            "about": "Asset owner must approve all transfers",
-            "enabledInfo": "The asset creator can restrict transfers of this asset.",
-            "disabledInfo": "The asset creator has disabled restricting transfers of this asset."
-        },
-        "disable_confidential": {
-            "about": "Disable confidential transactions",
-            "enabledInfo": "The asset creator has disabled confidential operations for this asset.",
-            "disabledInfo": "The asset creator hasn't disabled confidential operations for this asset."
-        },
-        "witness_fed_asset": {
-            "about": "Allow witnesses to provide feeds",
-            "enabledInfo": "Witnesses can publish price feeds for this asset.",
-            "disabledInfo": "Witnesses cannot publish price feeds for this asset."
-        },
-        "committee_fed_asset": {
-            "about": "Allow committee members to provide feeds",
-            "enabledInfo": "Committee members can publish price feeds for this asset.",
-            "disabledInfo": "Committee members cannot publish price feeds for this asset."
-        },
-        "lock_max_supply": {
-            "about": "Lock max supply",
-            "enabledInfo": "The asset owner has locked the maximum supply of this asset.",
-            "disabledInfo": "The asset owner hasn't locked the maximum supply of this asset."
-        },
-        "disable_new_supply": {
-            "about": "Disable new supply",
-            "enabledInfo": "The asset owner has disabled the ability to issue new supply for this asset.",
-            "disabledInfo": "The asset owner allows the issuance of additional supply for this asset."
-        },
-        "disable_collateral_bidding": {
-            "about": "Disable collateral bidding",
-            "enabledInfo": "The asset owner has disabled collateral bidding for this asset.",
-            "disabledInfo": "The asset owner has enabled collateral bidding for this asset."
-        }
+    "white_list": {
+      "about": "Require holders to be white-listed",
+      "enabledInfo": "The asset issuer/owner can update the white_list flag.",
+      "disabledInfo": "The asset issuer/owner can NOT update the white_list flag. If the white_list flag is set to 0, can no longer start enforcing whitelisting or blacklisting; if the white_list flag is set to non-zero, can still configure to not enforce whitelisting or blacklisting at any time by clearing the whitelisting and blacklisting authorities."
     },
-    "asset_details": {
-        "title": "Asset Details",
-        "title_content": "These are the asset settings used for core DEX functionality.",
-        "symbol": {
-            "header": "Asset symbol",
-            "header_content": "The asset symbol is an unique identifier on the blockchain identifiying the asset throughout the DEX. Cheaper assets can be created by using a subasset name like NFT.TITLE",
-            "placeholder": "Symbol"
-        },
-        "shortName": {
-            "header": "Asset short name",
-            "header_content": "This is the short name of the asset, less important than the symbol but still am optionally shortened unique identifier. You can just re-use the symbol for this field.",
-            "placeholder": "Short Name"
-        },
-        "preferredMarket": {
-            "header": "Preferred market trading pair",
-            "header_content": "The preferred market trading pair is the default asset used to trade against your asset, this is an informal suggestion."
-        },
-        "description": {
-            "header": "Asset description",
-            "header_content": "This is the description of the asset, it will be displayed in the DEX and can be used to provide more information about the asset.",
-            "placeholder": "Description"
-        },
-        "max_supply": {
-            "header": "Maximum supply",
-            "header_content": "The maximum supply of the asset, this is the total amount of the asset that can ever be issued by the asset owner (you).",
-            "placeholder": "Max supply"
-        },
-        "precision": {
-            "header": "Asset precision",
-            "header_content": "The precision of the asset specifies the quantity of supported decimal places. This value cannot be changed after asset creation.",
-            "placeholder": "Precision"
-        }
+    "override_authority": {
+      "about": "Asset owner may transfer asset back to themselves",
+      "enabledInfo": "The asset issuer/owner can update the override_authority flag.",
+      "disabledInfo": "The asset issuer/owner can NOT update the override_authority flag."
     },
-    "extensions": {
-        "header_content": "The extensions are additional advanced settings that can be used to further customize the asset.",
-        "header": "Market Fee Extensions",
-        "reward_percent": {
-            "enabled": "Referrer reward percentage extension enabled",
-            "enabledInfo": "A percentage cut of the market fee will be allocated to the referrer of active market participants.",
-            "disabled": "Enable the referrer reward percentage extension?",
-            "disabledInfo": "The referrer reward percentage extension allows the asset creator to allocate a percentage of the market fee to the referrer of active market participants.",
-            "header": "Referrer reward percentage",
-            "header_content": "The referrer reward percentage is the percentage of the market fee which is allocated to the referrer of active market participants."
-        },
-        "whitelist_market_fee_sharing": {
-            "enabled": "Whitelist market fee sharing extension enabled",
-            "enabledInfo": "The following referrer accounts will be approved to receive a cut of the collected market fees from their referrer accounts.",
-            "disabled": "Enable the whitelist market fee sharing extension?",
-            "disabledInfo": "You can limit who is allowed to receive a cut of the collected market fees to a set of pre-approved referrer accounts.",
-            "header": "Whitelist market fee sharing",
-            "header_content": "The whitelist market fee sharing extension allows the house to limit referrers to these whitelisted accounts."
-        },
-        "taker_fee_percent": {
-            "enabled": "Taker fee percentage extension enabled",
-            "enabledInfo": "The 'taker' participant of the limit order will receive a percentage of the market fee.",
-            "disabled": "Enable the taker fee percentage extension?",
-            "disabledInfo": "The taker fee percentage extension allows the asset creator to allocate a percentage of the market fee to the 'taker' of limit order operations.",
-            "header": "Taker fee percentage",
-            "header_content": "The taker fee percentage is the percentage of the market fee which is allocated to the 'taker' of the limit orders on the decentralized exchange."
-        },
-        "allowed_markets": {
-            "enabled": "Allowed markets extension enabled",
-            "enabledInfo": "The following markets are approved to trade this asset.",
-            "disabled": "Enable the allowed markets extension?",
-            "disabledInfo": "You can limit the markets that are allowed to trade this asset to a set of pre-approved markets."
-        },
-        "banned_markets": {
-            "enabled": "Banned markets extension enabled",
-            "enabledInfo": "The following markets are banned from trading this asset.",
-            "disabled": "Enable the banned markets extension?",
-            "disabledInfo": "This feature enables you to ban specific market trading pairs, enabling you to help avoid your asset trading on undesired markets."
-        },
-        "skipCER": {
-            "enabled": "Skipping Core Exchange Rate calculation",
-            "enabledInfo": "The asset creator has enabled the ability to skip the core exchange rate check for this asset.",
-            "disabled": "Skip the Core Exchange Rate calculation?",
-            "disabledInfo": "The Skip Core Exchange Rate extension allows the asset creator to skip the core exchange rate check for this asset."
-        }
+    "transfer_restricted": {
+      "about": "Asset owner must approve all transfers",
+      "enabledInfo": "The asset issuer/owner can update the transfer_restricted flag.",
+      "disabledInfo": "The asset issuer/owner can NOT update the transfer_restricted flag."
     },
-    "whitelist": {
-        "header_content": "The asset whitelist authorities are accounts who can contribute their account's whistelisted accounts list to authorize interaction with this access.", 
-        "header": "Asset Whitelist authorities"
+    "disable_confidential": {
+      "about": "Disable confidential transactions",
+      "enabledInfo": "The asset issuer/owner can update the disable_confidential flag.",
+      "disabledInfo": "The asset issuer/owner can NOT update the disable_confidential flag."
     },
-    "blacklist": {
-        "header_content": "The asset blacklist authorities are accounts who can contribute their account's blacklisted accounts list to enforce a banned account list preventing interaction with this access.",
-        "header": "Asset blacklist authorities"
+    "witness_fed_asset": {
+      "about": "Allow witnesses to provide feeds",
+      "enabledInfo": "The asset issuer/owner can update the witness_fed_asset flag.",
+      "disabledInfo": "The asset issuer/owner can NOT update the witness_fed_asset flag."
     },
-    "market_fee": {
-        "header_content": "The market fee is the fee percentage that is charged on every trade that is executed on the Bitshares DEX. The fee is charged in the asset that is being traded.",
-        "header": "Market fee percent"
+    "committee_fed_asset": {
+      "about": "Allow committee members to provide feeds",
+      "enabledInfo": "The asset issuer/owner can update the committee_fed_asset flag.",
+      "disabledInfo": "The asset issuer/owner can NOT update the committee_fed_asset flag."
     },
-    "max_market_fee": {
-        "header": "Maximum market fee",
-        "header_content": "The maximum market fee is the maximum amount of the asset that can be charged as a fee on every trade that is executed on the Bitshares DEX."
+    "disable_force_settle": {
+      "about": "Disable force settling",
+      "enabledInfo": "The asset issuer/owner can update the disable_force_settle flag.",
+      "disabledInfo": "The asset issuer/owner can NOT update the disable_force_settle flag."
     },
-    "cer": {
-        "quote_asset_amount": {
-            "header": "Quote asset amount",
-            "header_content": "The amount of the your user issued asset that is required to purchase the base asset amount."
-        },
-        "base_asset_amount": {
-            "header": "Base asset amount",
-            "header_content": "The amount of the base asset ({{symbol}}) that is required to purchase the quote asset amount."
-        },
-        "calculated_cer_price": {
-            "header": "Core exchange rate",
-            "header_content": "Make sure your core exchange rate is higher than the market price, otherwise people will buy your token from the market and drain your fee pool via implicit arbitrage. The core exchange rate should be updated regularly to reflect market pricing of your asset."
-        }
+    "global_settle": {
+      "about": "Allow asset owner to force a global settling",
+      "enabledInfo": "The asset issuer/owner can manually globally settle this asset.",
+      "disabledInfo": "The asset issuer/owner can NOT manually globally settle this asset."
     },
-    "nft": {
-        "NFTTitleContent": "This is the title of your non-fungible token, make sure it's unique and descriptive as it may be presented within various non-fungible token galleries/explorers.",
-        "NFTTitleHeader": "Title",
-        "TitlePlaceholder": "Title",
-        "NFTArtistContent": "Name or pseudonym of the artist. May also include aliases or online names or handles, to include blockchain account names or addresses which might facilitate authenticating a signing key.",
-        "NFTArtistHeader": "Artist",
-        "ArtistPlaceholder": "Artist",
-        "NFTNarrativeContent": "A personal statement from the artist describing the work, such as what the work means to them, or what inspired it. May include details of its creation, etc. It's a freeform field, and can be adapted as appropriate for the piece. Example, if the work is an avatar, playing card, role playing character, etc., then this field may also include stats and abilities, strengths, weaknesses, etc.",
-        "NFTNarrativeHeader": "Narrative",
-        "NarrativePlaceholder": "Narrative",
-        "NFTTagsContent": "Comma-separated list of keywords to facilitate topic/interest searches.",
-        "NFTTagsHeader": "Tags",
-        "TagsPlaceholder": "Tags",
-        "NFTTypeContent": "A string which describes the type of non-fungible token, such as 'NFT/ART/VISUAL', 'NFT/ART/3D', 'NFT/ART/ANIMATION', 'NFT/ART/AUDIO', 'NFT/ART/VIDEO', 'NFT/ART/TEXT', 'NFT/ART/DOCUMENT', 'NFT/ART/OTHER', etc.",
-        "NFTTypeHeader": "Type",
-        "TypePlaceholder": "Type",
-        "NFTAttestationContent": "Here the artist or originator of the encapsulated material commits or dedicates the material to the blockchain, expressly naming the token or asset ID under which the work will live, and attests to its qualified or unqualified uniqueness. E.g., an artist may attest that no other non-fungible token encapsulation of this work exists, and may declare intent as to future re-issues, or tokenization on other chains, etc.",
-        "NFTAttestationHeader": "Attestation",
-        "AttestationPlaceholder": "Attestation",
-        "NFTAcknowledgementsContent": "Acknowledgments or additional credits for the digital token.",
-        "NFTAcknowledgementsHeader": "Acknowledgements",
-        "AcknowledgementsPlaceholder": "Acknowledgements",
-        "NFTHolderLicenseContent": "If the token grants additional license for the use of the creative work specifically to token holders, this can be specified here. An example of such a license might be granting to the holder of the non-fungible token token the right to print and sell physical copies of the tokenized artwork, or to collect royalties for commercial use of the artwork, etc.",
-        "NFTHolderLicenseHeader": "Holders license",
-        "HolderLicensePlaceholder": "Holder license",
-        "NFTLicenseContent": "License under which the artwork is released. Often, this will be a simple license identifier, such as 'CC BY-NC-SA 2.0', though it can also be a fully specified verbose license.",
-        "NFTLicenseHeader": "Media license",
-        "LicensePlaceholder": "License",
-        "modifyMultimediaContents": "Modify multimedia contents",
-        "modifyingMultimediaContents": "Modifying this non-fungible token's multimedia contents",
-        "currentIPFSMedia": "Current IPFS media",
-        "referencesIPFSObjects": "This non-fungible token currently references {{count}} IPFS objects, feel free to add/remove more.",
-        "noIPFSMediaFound": "No IPFS media found",
-        "type": "Type",
-        "contentIdentifier": "Content Identifier",
-        "filename": "Filename",
-        "delete": "Delete?",
-        "addNewIPFSMedia": "Add new IPFS media",
-        "noIPFSGateway": "Don't include an IPFS gateway host in non-fungible token media URLs, as 3rd parties will use their own gateways to access the content.",
-        "mediaURLPlaceholder": "/ipfs/cid/image.png",
-        "fileTypePlaceholder": "File type",
-        "imageFormats": "Image formats",
-        "audioFormats": "Audio formats",
-        "videoFormats": "Video formats",
-        "documentFormats": "Document formats",
-        "threeDFormats": "3D files",
-        "submit": "Submit",
-        "ipfsHostingSolutions": "IPFS Hosting solutions",
-        "ipfsHostingDescription": "Check out the following example IPFS hosting/pinning services! By uploading to IPFS you save yourself considerably on fees!",
-        "header": "Non-Fungible Token Details",
-        "header_content": "These are the details of your non-fungible token, make sure they're unique and descriptive as they may be presented within various NFT galleries/explorers.",
-        "disabled": "Enable Non-fungible token functionality?",
-        "enabled": "Disable Non-fungible token functionality?",
-        "multimedia_header": "Non-fungible token multimedia details",
-        "multimedia_header_content": "Provide your non ",
-        "currentIPFSFiles": "This non-fungible token currently contains {{count}} IPFS media file references.",
-        "supportedFiletypes": "Supported filetypes include images, video, audio, 3D files, documents, etc.",
-        "main_header_content": "The settings below define how your non-fungible token will behave on the Bitshares blockchain. The asset creator is responsible for properly configuring their non-fungible token.",
-        "main_header": "Non-fungible token configuration"
+    "lock_max_supply": {
+      "about": "Lock max supply",
+      "enabledInfo": "The asset issuer/owner can NOT update the lock_max_supply flag.",
+      "disabledInfo": "The asset issuer/owner can update the lock_max_supply flag."
+    },
+    "disable_new_supply": {
+      "about": "Disable new supply",
+      "enabledInfo": "The asset issuer/owner can NOT update the disable_new_supply flag.",
+      "disabledInfo": "The asset issuer/owner can update the disable_new_supply flag."
+    },
+    "disable_collateral_bidding": {
+      "about": "Disable collateral bidding",
+      "enabledInfo": "The asset issuer/owner can NOT update the disable_collateral_bidding flag.",
+      "disabledInfo": "The asset issuer/owner can update the disable_collateral_bidding flag."
+    },
+    "disable_mcr_update": {
+      "about": "Disable owner update Minimum Collateral Ratio",
+      "enabledInfo": "The asset issuer/owner can NOT update (set/change/delete) the maintenance_collateral_ratio extension of the asset. If a value is set in the maintenance_collateral_ratio extension, it takes precedence over the same parameter suggested by the price feed publishers, otherwise the value suggested by the price feed publishers takes effect.",
+      "disabledInfo": "The asset issuer/owner can update (set/change/delete) the maintenance_collateral_ratio extension of the asset. If a value is set in the maintenance_collateral_ratio extension, it takes precedence over the same parameter suggested by the price feed publishers, otherwise the value suggested by the price feed publishers takes effect."
+    },
+    "disable_icr_update": {
+      "about": "Disable owner update Initial Collateral Ratio",
+      "enabledInfo": "The asset issuer/owner can NOT update (set/change/delete) the initial_collateral_ratio extension of the asset. If a value is set in the initial_collateral_ratio extension, it takes precedence over the same parameter suggested by the price feed publishers, otherwise the value suggested by the price feed publishers takes effect.",
+      "disabledInfo": "The asset issuer/owner can update (set/change/delete) the initial_collateral_ratio extension of the asset. If a value is set in the initial_collateral_ratio extension, it takes precedence over the same parameter suggested by the price feed publishers, otherwise the value suggested by the price feed publishers takes effect."
+    },
+    "disable_mssr_update": {
+      "about": "Disable owner update Maximum Short Squeeze Ratio",
+      "enabledInfo": "The asset issuer/owner can NOT update (set/change/delete) the maximum_short_squeeze_ratio extension of the asset. If a value is set in the maximum_short_squeeze_ratio extension, it takes precedence over the same parameter suggested by the price feed publishers, otherwise the value suggested by the price feed publishers takes effect.",
+      "disabledInfo": "The asset issuer/owner can update (set/change/delete) the maximum_short_squeeze_ratio extension of the asset. If a value is set in the maximum_short_squeeze_ratio extension, it takes precedence over the same parameter suggested by the price feed publishers, otherwise the value suggested by the price feed publishers takes effect."
+    },
+    "disable_bsrm_update": {
+      "about": "Disable owner update Black Swan Risk Management strategy",
+      "enabledInfo": "The asset issuer/owner can NOT update the black_swan_response_method extension of the asset.",
+      "disabledInfo": "The asset issuer/owner can update the black_swan_response_method extension of the asset."
     }
+  },
+  "flags": {
+    "header": "Asset's flags",
+    "header_content": "Each allowed asset permission can be toggled on/off.",
+    "charge_market_fee": {
+      "about": "Enable market fee",
+      "enabledInfo": "Market trades in this asset may be charged, depending on the fee rate settings.",
+      "disabledInfo": "Market trades in this asset are not charged."
+    },
+    "white_list": {
+      "about": "Require holders to be white-listed",
+      "enabledInfo": "The use of this asset may be restricted by asset authorization (whitelist and/or blacklist), depending on the settings of whitelisting and blacklisting authorities.",
+      "disabledInfo": "The use of this asset is not restricted by asset authorization lists."
+    },
+    "override_authority": {
+      "about": "Asset owner may transfer asset back to themselves",
+      "enabledInfo": "The asset issuer/owner can transfer this asset from the balance  of any account to another account (note that the balance after transfer cannot be negative).",
+      "disabledInfo": "The asset issuer/owner can NOT transfer this asset from the balance of other accounts."
+    },
+    "transfer_restricted": {
+      "about": "Asset owner must approve all transfers",
+      "enabledInfo": "Transfers of this asset are restricted. When transferring this asset, it can only from the asset issuer/owner or to the asset issuer/owner. The same from or to limitation also applies to HTLCs and withdraw-permission withdrawals. Cannot create vesting balances with this asset. Cannot transfer this asset to blind/stealth/confidential addresses. This limitation does not prevent other operations such as buying from anyone or selling to anyone.",
+      "disabledInfo": "No such limitation on transfers."
+    },
+    "disable_force_settle": {
+      "about": "Disable force settling",
+      "enabledInfo": "Holders of this asset can NOT request a forced settlement for some amount of their asset, unless this asset is globally settled or individually settled to a fund.",
+      "disabledInfo": "Holders of this asset can request a forced settlement."
+    },
+    "disable_confidential": {
+      "about": "Disable confidential transactions",
+      "enabledInfo": "Transfers to blind/stealth/confidential addresses are disabled. Can NOT transfer an amount of this asset from the balance of an account to blind/stealth/confidential addresses. Transferring from blind/stealth/confidential addresses to other blind/stealth/confidential addresses or to the balance of an account is still allowed.",
+      "disabledInfo": "Transfers to blind/stealth/confidential addresses are enabled."
+    },
+    "witness_fed_asset": {
+      "about": "Allow witnesses to provide feeds",
+      "enabledInfo": "Active witnesses can publish price feeds for this asset.",
+      "disabledInfo": "Active witnesses cannot publish price feeds for this asset."
+    },
+    "committee_fed_asset": {
+      "about": "Allow committee members to provide feeds",
+      "enabledInfo": "Active committee members can publish price feeds for this asset.",
+      "disabledInfo": "Active committee members cannot publish price feeds for this asset."
+    },
+    "lock_max_supply": {
+      "about": "Lock max supply",
+      "enabledInfo": "The maximum supply of this asset is locked, which means that the asset issuer/owner can NOT update the maximum supply of this asset.",
+      "disabledInfo": "The asset issuer/owner can update the maximum supply of this asset."
+    },
+    "disable_new_supply": {
+      "about": "Disable new supply",
+      "enabledInfo": "Cannot create new supply for this asset (or say unable to 'mint' more tokens).",
+      "disabledInfo": "Can create new supply for this asset."
+    },
+    "disable_collateral_bidding": {
+      "about": "Disable collateral bidding",
+      "enabledInfo": "Bidding for collateral in the global-settlement pool is disabled. It is NOT allowed to bid for collateral in the global-settlement pool when this asset has been globally settled.",
+      "disabledInfo": "Bidding for collateral in the global-settlement pool is enabled."
+    }
+  },
+  "asset_details": {
+    "title": "Asset Details",
+    "title_content": "These are the asset settings used for core DEX functionality.",
+    "symbol": {
+      "header": "Asset symbol",
+      "header_content": "The asset symbol is an unique identifier on the blockchain identifiying the asset throughout the DEX. Cheaper assets can be created by using a subasset name like NFT.TITLE",
+      "placeholder": "Symbol"
+    },
+    "shortName": {
+      "header": "Asset short name",
+      "header_content": "This is the short name of the asset, less important than the symbol but still am optionally shortened unique identifier. You can just re-use the symbol for this field.",
+      "placeholder": "Short Name"
+    },
+    "preferredMarket": {
+      "header": "Preferred market trading pair",
+      "header_content": "The preferred market trading pair is the default asset used to trade against your asset, this is an informal suggestion."
+    },
+    "description": {
+      "header": "Asset description",
+      "header_content": "This is the description of the asset, it will be displayed in the DEX and can be used to provide more information about the asset.",
+      "placeholder": "Description"
+    },
+    "max_supply": {
+      "header": "Maximum supply",
+      "header_content": "The maximum supply of the asset, this is the total amount of the asset that can ever be issued by the asset owner (you).",
+      "placeholder": "Max supply"
+    },
+    "precision": {
+      "header": "Asset precision",
+      "header_content": "The precision of the asset specifies the quantity of supported decimal places. This value cannot be changed after asset creation.",
+      "placeholder": "Precision"
+    }
+  },
+  "extensions": {
+    "header_content": "The extensions are additional advanced settings that can be used to further customize the asset.",
+    "header": "Market Fee Extensions",
+    "reward_percent": {
+      "enabled": "Referrer reward percentage extension enabled",
+      "enabledInfo": "A percentage cut of the market fee will be allocated to the referrer of active market participants.",
+      "disabled": "Enable the referrer reward percentage extension?",
+      "disabledInfo": "The referrer reward percentage extension allows the asset creator to allocate a percentage of the market fee to the referrer of active market participants.",
+      "header": "Referrer reward percentage",
+      "header_content": "The referrer reward percentage is the percentage of the market fee which is allocated to the referrer of active market participants."
+    },
+    "whitelist_market_fee_sharing": {
+      "enabled": "Whitelist market fee sharing extension enabled",
+      "enabledInfo": "The following referrer accounts will be approved to receive a cut of the collected market fees from their referrer accounts.",
+      "disabled": "Enable the whitelist market fee sharing extension?",
+      "disabledInfo": "You can limit who is allowed to receive a cut of the collected market fees to a set of pre-approved referrer accounts.",
+      "header": "Whitelist market fee sharing",
+      "header_content": "The whitelist market fee sharing extension allows the house to limit referrers to these whitelisted accounts."
+    },
+    "taker_fee_percent": {
+      "enabled": "Taker fee percentage extension enabled",
+      "enabledInfo": "The 'taker' participant of the limit order will receive a percentage of the market fee.",
+      "disabled": "Enable the taker fee percentage extension?",
+      "disabledInfo": "The taker fee percentage extension allows the asset creator to allocate a percentage of the market fee to the 'taker' of limit order operations.",
+      "header": "Taker fee percentage",
+      "header_content": "The taker fee percentage is the percentage of the market fee which is allocated to the 'taker' of the limit orders on the decentralized exchange."
+    },
+    "allowed_markets": {
+      "enabled": "Allowed markets extension enabled",
+      "enabledInfo": "The following markets are approved to trade this asset.",
+      "disabled": "Enable the allowed markets extension?",
+      "disabledInfo": "You can limit the markets that are allowed to trade this asset to a set of pre-approved markets."
+    },
+    "banned_markets": {
+      "enabled": "Banned markets extension enabled",
+      "enabledInfo": "The following markets are banned from trading this asset.",
+      "disabled": "Enable the banned markets extension?",
+      "disabledInfo": "This feature enables you to ban specific market trading pairs, enabling you to help avoid your asset trading on undesired markets."
+    },
+    "skipCER": {
+      "enabled": "Skipping Core Exchange Rate calculation",
+      "enabledInfo": "The asset creator has enabled the ability to skip the core exchange rate check for this asset.",
+      "disabled": "Skip the Core Exchange Rate calculation?",
+      "disabledInfo": "The Skip Core Exchange Rate extension allows the asset creator to skip the core exchange rate check for this asset."
+    }
+  },
+  "whitelist": {
+    "header_content": "The asset whitelist authorities are accounts who can contribute their account's whistelisted accounts list to authorize interaction with this access.",
+    "header": "Asset Whitelist authorities"
+  },
+  "blacklist": {
+    "header_content": "The asset blacklist authorities are accounts who can contribute their account's blacklisted accounts list to enforce a banned account list preventing interaction with this access.",
+    "header": "Asset blacklist authorities"
+  },
+  "market_fee": {
+    "header_content": "The market fee is the fee percentage that is charged on every trade that is executed on the Bitshares DEX. The fee is charged in the asset that is being traded.",
+    "header": "Market fee percent"
+  },
+  "max_market_fee": {
+    "header": "Maximum market fee",
+    "header_content": "The maximum market fee is the maximum amount of the asset that can be charged as a fee on every trade that is executed on the Bitshares DEX."
+  },
+  "cer": {
+    "quote_asset_amount": {
+      "header": "Quote asset amount",
+      "header_content": "The amount of the your user issued asset that is required to purchase the base asset amount."
+    },
+    "base_asset_amount": {
+      "header": "Base asset amount",
+      "header_content": "The amount of the base asset ({{symbol}}) that is required to purchase the quote asset amount."
+    },
+    "calculated_cer_price": {
+      "header": "Core exchange rate",
+      "header_content": "Make sure your core exchange rate is higher than the market price, otherwise people will buy your token from the market and drain your fee pool via implicit arbitrage. The core exchange rate should be updated regularly to reflect market pricing of your asset."
+    }
+  },
+  "nft": {
+    "NFTTitleContent": "This is the title of your non-fungible token, make sure it's unique and descriptive as it may be presented within various non-fungible token galleries/explorers.",
+    "NFTTitleHeader": "Title",
+    "TitlePlaceholder": "Title",
+    "NFTArtistContent": "Name or pseudonym of the artist. May also include aliases or online names or handles, to include blockchain account names or addresses which might facilitate authenticating a signing key.",
+    "NFTArtistHeader": "Artist",
+    "ArtistPlaceholder": "Artist",
+    "NFTNarrativeContent": "A personal statement from the artist describing the work, such as what the work means to them, or what inspired it. May include details of its creation, etc. It's a freeform field, and can be adapted as appropriate for the piece. Example, if the work is an avatar, playing card, role playing character, etc., then this field may also include stats and abilities, strengths, weaknesses, etc.",
+    "NFTNarrativeHeader": "Narrative",
+    "NarrativePlaceholder": "Narrative",
+    "NFTTagsContent": "Comma-separated list of keywords to facilitate topic/interest searches.",
+    "NFTTagsHeader": "Tags",
+    "TagsPlaceholder": "Tags",
+    "NFTTypeContent": "A string which describes the type of non-fungible token, such as 'NFT/ART/VISUAL', 'NFT/ART/3D', 'NFT/ART/ANIMATION', 'NFT/ART/AUDIO', 'NFT/ART/VIDEO', 'NFT/ART/TEXT', 'NFT/ART/DOCUMENT', 'NFT/ART/OTHER', etc.",
+    "NFTTypeHeader": "Type",
+    "TypePlaceholder": "Type",
+    "NFTAttestationContent": "Here the artist or originator of the encapsulated material commits or dedicates the material to the blockchain, expressly naming the token or asset ID under which the work will live, and attests to its qualified or unqualified uniqueness. E.g., an artist may attest that no other non-fungible token encapsulation of this work exists, and may declare intent as to future re-issues, or tokenization on other chains, etc.",
+    "NFTAttestationHeader": "Attestation",
+    "AttestationPlaceholder": "Attestation",
+    "NFTAcknowledgementsContent": "Acknowledgments or additional credits for the digital token.",
+    "NFTAcknowledgementsHeader": "Acknowledgements",
+    "AcknowledgementsPlaceholder": "Acknowledgements",
+    "NFTHolderLicenseContent": "If the token grants additional license for the use of the creative work specifically to token holders, this can be specified here. An example of such a license might be granting to the holder of the non-fungible token token the right to print and sell physical copies of the tokenized artwork, or to collect royalties for commercial use of the artwork, etc.",
+    "NFTHolderLicenseHeader": "Holders license",
+    "HolderLicensePlaceholder": "Holder license",
+    "NFTLicenseContent": "License under which the artwork is released. Often, this will be a simple license identifier, such as 'CC BY-NC-SA 2.0', though it can also be a fully specified verbose license.",
+    "NFTLicenseHeader": "Media license",
+    "LicensePlaceholder": "License",
+    "modifyMultimediaContents": "Modify multimedia contents",
+    "modifyingMultimediaContents": "Modifying this non-fungible token's multimedia contents",
+    "currentIPFSMedia": "Current IPFS media",
+    "referencesIPFSObjects": "This non-fungible token currently references {{count}} IPFS objects, feel free to add/remove more.",
+    "noIPFSMediaFound": "No IPFS media found",
+    "type": "Type",
+    "contentIdentifier": "Content Identifier",
+    "filename": "Filename",
+    "delete": "Delete?",
+    "addNewIPFSMedia": "Add new IPFS media",
+    "noIPFSGateway": "Don't include an IPFS gateway host in non-fungible token media URLs, as 3rd parties will use their own gateways to access the content.",
+    "mediaURLPlaceholder": "/ipfs/cid/image.png",
+    "fileTypePlaceholder": "File type",
+    "imageFormats": "Image formats",
+    "audioFormats": "Audio formats",
+    "videoFormats": "Video formats",
+    "documentFormats": "Document formats",
+    "threeDFormats": "3D files",
+    "submit": "Submit",
+    "ipfsHostingSolutions": "IPFS Hosting solutions",
+    "ipfsHostingDescription": "Check out the following example IPFS hosting/pinning services! By uploading to IPFS you save yourself considerably on fees!",
+    "header": "Non-Fungible Token Details",
+    "header_content": "These are the details of your non-fungible token, make sure they're unique and descriptive as they may be presented within various NFT galleries/explorers.",
+    "disabled": "Enable Non-fungible token functionality?",
+    "enabled": "Disable Non-fungible token functionality?",
+    "multimedia_header": "Non-fungible token multimedia details",
+    "multimedia_header_content": "Provide your non ",
+    "currentIPFSFiles": "This non-fungible token currently contains {{count}} IPFS media file references.",
+    "supportedFiletypes": "Supported filetypes include images, video, audio, 3D files, documents, etc.",
+    "main_header_content": "The settings below define how your non-fungible token will behave on the Bitshares blockchain. The asset creator is responsible for properly configuring their non-fungible token.",
+    "main_header": "Non-fungible token configuration"
+  }
 }
