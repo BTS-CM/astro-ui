@@ -93,6 +93,7 @@
     "bigi": "^1.4.2",
     "bignumber.js": "^9.1.2",
     "bitsharesjs": "https://github.com/bitshares/bitsharesjs#develop",
+    "bitsharesjs-ws": "^6.0.2",
     "bs58": "^6.0.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
