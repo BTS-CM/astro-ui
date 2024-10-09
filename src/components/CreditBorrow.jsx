@@ -127,8 +127,10 @@ export default function CreditBorrow(properties) {
 
       unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
-          setBalanceAssetIDs(data.map((x) => x.asset_id));
-          setUsrBalances(data);
+          const filteredData = data.filter((balance) => assets.find((x) => x.id === balance.asset_id));
+
+          setBalanceAssetIDs(filteredData.map((x) => x.asset_id));
+          setUsrBalances(filteredData);
         }
       });
     }

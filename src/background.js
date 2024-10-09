@@ -76,8 +76,6 @@ const createWindow = async () => {
 
   let stillAlive = true;
   let continueFetching = true;
-  let activeBlockchainConnection = false;
-  let killBlockchainConnection = false;
   let latestBlockNumber = 0;
   let isFetching = false;
 

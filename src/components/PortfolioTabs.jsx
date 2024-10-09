@@ -149,38 +149,16 @@ export default function PortfolioTabs(properties) {
 
       unsubscribeUserBalancesStore = userBalancesStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
-          const updatedData = data.map((balance) => {
-            return {
-              ...balance,
-              symbol: assets.find((asset) => asset.id === balance.asset_id).symbol,
-            };
-          });
+          const updatedData = data.filter((balance) => assets.find((x) => x.id === balance.asset_id))
+                                  .map((balance) => {
+                                    return {
+                                      ...balance,
+                                      symbol: assets.find((x) => x.id === balance.asset_id).symbol,
+                                    }
+                                  });
           console.log("Successfully fetched balances");
-          if (sortType === "default") {
-            setBalances(data);
-          } else if (sortType === "alphabetical") {
-            const alphabetical = updatedData.sort((a, b) => {
-              if (a.symbol < b.symbol) {
-                return -1;
-              }
-              if (a.symbol > b.symbol) {
-                return 1;
-              }
-              return 0;
-            });
-            setBalances(alphabetical);
-          } else if (sortType === "amount") {
-            const amount = updatedData.sort((a, b) => {
-              if (parseInt(a.amount) < parseInt(b.amount)) {
-                return 1;
-              }
-              if (parseInt(a.amount) > parseInt(b.amount)) {
-                return -1;
-              }
-              return 0;
-            });
-            setBalances(amount);
-          }
+          setBalances(updatedData);
+          console.log({updatedData, data, assets})
         }
       });
     }
@@ -188,7 +166,24 @@ export default function PortfolioTabs(properties) {
     return () => {
       if (unsubscribeUserBalancesStore) unsubscribeUserBalancesStore();
     };
-  }, [usr, balanceCounter, sortType, assets]);
+  }, [usr, balanceCounter, assets]);
+
+  const sortedUserBalances = useMemo(() => {
+    if (!balances || !balances.length) {
+      return [];
+    }
+  
+    const balancesCopy = [...balances];
+  
+    switch (sortType) {
+      case "alphabetical":
+        return balancesCopy.sort((a, b) => a.symbol.localeCompare(b.symbol));
+      case "amount":
+        return balancesCopy.sort((a, b) => parseInt(b.amount) - parseInt(a.amount));
+      default:
+        return balancesCopy;
+    }
+  }, [balances, sortType]);
 
   const [openOrderCounter, setOpenOrderCounter] = useState(0);
   const [openOrders, setOpenOrders] = useState();
@@ -262,7 +257,7 @@ export default function PortfolioTabs(properties) {
   const [showDialog, setShowDialog] = useState(false);
 
   const BalanceRow = ({ index, style }) => {
-    const rowBalance = balances[index];
+    const rowBalance = sortedUserBalances[index];
 
     const _balanceAsset = retrievedBalanceAssets.find((asset) => asset.id === rowBalance.asset_id);
     const _balanceAssetSymbol = _balanceAsset.symbol;
@@ -668,11 +663,11 @@ export default function PortfolioTabs(properties) {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-2">
-                  {balances &&
-                  balances.length &&
+                  {sortedUserBalances &&
+                  sortedUserBalances.length &&
                   retrievedBalanceAssets &&
                   retrievedBalanceAssets.length ? (
-                    <List height={500} itemCount={balances.length} itemSize={80} className="gaps-2">
+                    <List height={500} itemCount={sortedUserBalances.length} itemSize={80} className="gaps-2">
                       {BalanceRow}
                     </List>
                   ) : (
