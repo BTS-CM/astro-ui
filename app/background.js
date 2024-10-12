@@ -430,96 +430,124 @@ const createWindow = async () => {
     tray?.popUpContextMenu(contextMenu);
   });
 
-  let stillAlive = true;
-  let continueFetching = true;
-  let activeBlockchainConnection = false;
-  let killBlockchainConnection = false;
+  let continueFetching = false;
   let latestBlockNumber = 0;
   let isFetching = false;
+  let apisInstance = null;
+  let fetchTimeout = null;
+
+  const fetchBlocks = async () => {
+    isFetching = true;
+    while (continueFetching) {
+      let currentBlock;
+      try {
+        currentBlock = await apisInstance.db_api().exec("get_block", [latestBlockNumber]);
+      } catch (error) {
+        console.log({ error });
+        continueFetching = false;
+        isFetching = false;
+        break;
+      }
+      mainWindow.webContents.send("blockResponse", {
+        ...currentBlock,
+        block: latestBlockNumber,
+      });
+      latestBlockNumber += 1;
+
+      await new Promise((resolve) => {
+        fetchTimeout = setTimeout(resolve, 4200);
+      });
+    }
+
+    if (!continueFetching) {
+      apisInstance.close();
+      apisInstance = null;
+    }
+    isFetching = false;
+  };
 
   electron__WEBPACK_IMPORTED_MODULE_5__.ipcMain.on("requestBlocks", async (event, arg) => {
     const { url } = arg;
 
+    // Stop any ongoing fetching process
     if (isFetching) {
       continueFetching = false;
-      await new Promise((resolve) => setTimeout(resolve, 3100)); // Wait for the current fetching to stop
+      clearTimeout(fetchTimeout); // Clear the timeout to stop the current fetching process immediately
+      await new Promise((resolve) => setTimeout(resolve, 100)); // Short wait to ensure the current fetching process stops
     }
 
-    bitsharesjs_ws__WEBPACK_IMPORTED_MODULE_4__.Apis.instance(url, true)
-      .init_promise.then(async (res) => {
-        console.log("connected to:", res[0].network);
+    // Reset state variables
+    continueFetching = true;
+    isFetching = false;
 
-        let globalProperties;
-        try {
-          globalProperties = await bitsharesjs_ws__WEBPACK_IMPORTED_MODULE_4__.Apis.instance()
-            .db_api()
-            .exec("get_dynamic_global_properties", []);
-        } catch (error) {
-          console.log({ error, location: "globalProperties", url });
-          return;
-        }
+    // Create a new Apis instance
+    try {
+      apisInstance = bitsharesjs_ws__WEBPACK_IMPORTED_MODULE_4__.Apis.instance(url, true);
+    } catch (error) {
+      console.log({ error, location: "Apis.instance", url });
+      continueFetching = false;
+      isFetching = false;
+      return;
+    }
 
-        latestBlockNumber = globalProperties.head_block_number;
+    try {
+      await apisInstance.init_promise;
+      console.log("connected to:", apisInstance.chain_id);
+    } catch (err) {
+      console.log({ err });
+      continueFetching = false;
+      isFetching = false;
+      if (apisInstance) {
+        apisInstance.close();
+        apisInstance = null;
+      }
+      return;
+    }
 
-        const blockPromises = [];
-        for (let i = latestBlockNumber - 1; i > latestBlockNumber - 31; i--) {
-          blockPromises.push(bitsharesjs_ws__WEBPACK_IMPORTED_MODULE_4__.Apis.instance().db_api().exec("get_block", [i]));
-        }
+    let globalProperties;
+    try {
+      globalProperties = await apisInstance.db_api().exec("get_dynamic_global_properties", []);
+    } catch (error) {
+      console.log({ error, location: "globalProperties", url });
+      continueFetching = false;
+      isFetching = false;
+      return;
+    }
 
-        let lastFewBlocks = [];
-        try {
-          lastFewBlocks = await Promise.all(blockPromises);
-        } catch (error) {
-          console.log({ error });
-        }
+    latestBlockNumber = globalProperties.head_block_number;
 
-        for (let i = lastFewBlocks.length - 1; i >= 0; i--) {
-          mainWindow.webContents.send("blockResponse", {
-            ...lastFewBlocks[i],
-            block: latestBlockNumber - 1 - i,
-          });
-        }
+    const blockPromises = [];
+    for (let i = latestBlockNumber - 1; i > latestBlockNumber - 31; i--) {
+      blockPromises.push(apisInstance.db_api().exec("get_block", [i]));
+    }
 
-        const fetchBlocks = async () => {
-          isFetching = true;
-          while (continueFetching) {
-            if (!stillAlive) {
-              continueFetching = false;
-              break;
-            }
-            let currentBlock;
-            try {
-              currentBlock = await bitsharesjs_ws__WEBPACK_IMPORTED_MODULE_4__.Apis.instance().db_api().exec("get_block", [latestBlockNumber]);
-            } catch (error) {
-              console.log({ error });
-              continueFetching = false;
-              break;
-            }
-            mainWindow.webContents.send("blockResponse", {
-              ...currentBlock,
-              block: latestBlockNumber,
-            });
-            latestBlockNumber += 1;
-            stillAlive = false;
+    let lastFewBlocks = [];
+    try {
+      lastFewBlocks = await Promise.all(blockPromises);
+    } catch (error) {
+      console.log({ error });
+    }
 
-            await new Promise((resolve) => setTimeout(resolve, 4200));
-          }
-
-          if (!continueFetching) {
-            bitsharesjs_ws__WEBPACK_IMPORTED_MODULE_4__.Apis.instance().close();
-          }
-          isFetching = false;
-        };
-
-        fetchBlocks();
-
-        electron__WEBPACK_IMPORTED_MODULE_5__.ipcMain.on("stillAlive", (event, arg) => {
-          stillAlive = true;
-        });
-      })
-      .catch((err) => {
-        console.log({ err });
+    for (let i = lastFewBlocks.length - 1; i >= 0; i--) {
+      mainWindow.webContents.send("blockResponse", {
+        ...lastFewBlocks[i],
+        block: latestBlockNumber - 1 - i,
       });
+    }
+
+    // Start fetching blocks continuously
+    fetchBlocks();
+  });
+
+  // Handle the user navigating away from the page
+  electron__WEBPACK_IMPORTED_MODULE_5__.ipcMain.on("stopBlocks", () => {
+    continueFetching = false;
+    clearTimeout(fetchTimeout); // Clear the timeout to stop the current fetching process immediately
+    if (apisInstance) {
+      apisInstance.close();
+      apisInstance = null;
+    }
+    isFetching = false;
   });
 
   electron__WEBPACK_IMPORTED_MODULE_5__.ipcMain.handle("fetchTopMarkets", async (event, arg) => {

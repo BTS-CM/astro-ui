@@ -89,31 +89,31 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var electron__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(electron__WEBPACK_IMPORTED_MODULE_0__);
 
 
-electron__WEBPACK_IMPORTED_MODULE_0__.contextBridge.exposeInMainWorld('electron', {
-    // MISC
-    openURL: async (target) => electron__WEBPACK_IMPORTED_MODULE_0__.ipcRenderer.send('openURL', target), // Links to explorers
-    //notify: async (msg) => ipcRenderer.send('notify', msg), // Triggering an electron notification prompt
-    /*
+electron__WEBPACK_IMPORTED_MODULE_0__.contextBridge.exposeInMainWorld("electron", {
+  // MISC
+  openURL: async (target) => electron__WEBPACK_IMPORTED_MODULE_0__.ipcRenderer.send("openURL", target), // Links to explorers
+  //notify: async (msg) => ipcRenderer.send('notify', msg), // Triggering an electron notification prompt
+  /*
     setNode: (func) => { // For storing the current connected blockchain node
         ipcRenderer.on('setNode', (event, args) => {
             func(args);
         });
     },
     */
-    // REST queries
-    fetchTopMarkets: async (args) => electron__WEBPACK_IMPORTED_MODULE_0__.ipcRenderer.invoke('fetchTopMarkets', args),
-    fetchAccountHistory: async (args) => electron__WEBPACK_IMPORTED_MODULE_0__.ipcRenderer.invoke('fetchAccountHistory', args),
-    // WS queries
-    requestBlocks: async (args) => electron__WEBPACK_IMPORTED_MODULE_0__.ipcRenderer.send('requestBlocks', args),
-    onBlockResponse: (func) => {
-        electron__WEBPACK_IMPORTED_MODULE_0__.ipcRenderer.on('blockResponse', (event, data) => {
-            func(data);
-        });
-    },
-    stillAlive: async (args) => electron__WEBPACK_IMPORTED_MODULE_0__.ipcRenderer.send('stillAlive', args),
-    // API queries
-    generateDeepLink: async (args) => electron__WEBPACK_IMPORTED_MODULE_0__.ipcRenderer.invoke('generateDeepLink', args),
-    /*
+  // REST queries
+  fetchTopMarkets: async (args) => electron__WEBPACK_IMPORTED_MODULE_0__.ipcRenderer.invoke("fetchTopMarkets", args),
+  fetchAccountHistory: async (args) => electron__WEBPACK_IMPORTED_MODULE_0__.ipcRenderer.invoke("fetchAccountHistory", args),
+  // WS queries
+  requestBlocks: async (args) => electron__WEBPACK_IMPORTED_MODULE_0__.ipcRenderer.send("requestBlocks", args),
+  onBlockResponse: (func) => {
+    electron__WEBPACK_IMPORTED_MODULE_0__.ipcRenderer.on("blockResponse", (event, data) => {
+      func(data);
+    });
+  },
+  stopBlocks: async () => electron__WEBPACK_IMPORTED_MODULE_0__.ipcRenderer.send("stopBlocks", args),
+  // API queries
+  generateDeepLink: async (args) => electron__WEBPACK_IMPORTED_MODULE_0__.ipcRenderer.invoke("generateDeepLink", args),
+  /*
     // For logging background issues to renderer dev console
     onMainLog: async (func) => {
         ipcRenderer.on("mainLog", (event, data) => {

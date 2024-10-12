@@ -1,28 +1,23 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
-import { GearIcon, HamburgerMenuIcon, ReloadIcon } from "@radix-ui/react-icons";
+import { HamburgerMenuIcon, ReloadIcon } from "@radix-ui/react-icons";
 
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
 import {
   Command,
-  CommandDialog,
   CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
   CommandList,
   CommandSeparator,
-  CommandShortcut,
 } from "@/components/ui/command";
 
 import { Button } from "@/components/ui/button";
@@ -44,6 +39,9 @@ function MenuRow(properties) {
       href={url}
       onClick={() => {
         setClicked(true);
+        if (window.location.pathname === "/blocks/index.html") {
+          window.electron.stopBlocks({});
+        }
       }}
     >
       <CommandItem
@@ -135,16 +133,8 @@ export default function PageHeader(properties) {
                         text={t("PageHeader:poolExchange")}
                         icon="💱"
                       />
-                      <MenuRow
-                        url="/swap/index.html"
-                        text={t("PageHeader:simpleSwap")}
-                        icon="🔄"
-                      />
-                      <MenuRow
-                        url="/stake/index.html"
-                        text={t("PageHeader:poolStake")}
-                        icon="🔒"
-                      />
+                      <MenuRow url="/swap/index.html" text={t("PageHeader:simpleSwap")} icon="🔄" />
+                      <MenuRow url="/stake/index.html" text={t("PageHeader:poolStake")} icon="🔒" />
                       <MenuRow
                         url="/transfer/index.html"
                         text={t("PageHeader:transferAssets")}
@@ -242,16 +232,8 @@ export default function PageHeader(properties) {
                     </CommandGroup>
                     <CommandSeparator />
                     <CommandGroup heading={t("PageHeader:settingsHeading")}>
-                      <MenuRow
-                        url="/ltm/index.html"
-                        text={t("PageHeader:buyLTM")}
-                        icon="🏅"
-                      />
-                      <MenuRow
-                        url="/nodes/index.html"
-                        text={t("PageHeader:nodes")}
-                        icon="🌐"
-                      />
+                      <MenuRow url="/ltm/index.html" text={t("PageHeader:buyLTM")} icon="🏅" />
+                      <MenuRow url="/nodes/index.html" text={t("PageHeader:nodes")} icon="🌐" />
                     </CommandGroup>
                   </CommandList>
                 </Command>
@@ -260,7 +242,14 @@ export default function PageHeader(properties) {
           </div>
           <div className="col-span-8 text-center">
             <h2>
-              <a href="/index.html">
+              <a
+                href="/index.html"
+                onClick={() => {
+                  if (window.location.pathname === "/blocks/index.html") {
+                    window.electron.stopBlocks({});
+                  }
+                }}
+              >
                 {page && page === "index" ? t("PageHeader:welcomeMessage") : ""}
                 <span
                   style={{
@@ -275,9 +264,7 @@ export default function PageHeader(properties) {
                 </span>
               </a>
             </h2>
-            <h4 className="text-muted-foreground">
-              {t(`PageHeader:descText.${page}`)}
-            </h4>
+            <h4 className="text-muted-foreground">{t(`PageHeader:descText.${page}`)}</h4>
           </div>
           <div className="col-span-2 text-right">
             <DropdownMenu>

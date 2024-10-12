@@ -1,12 +1,7 @@
 import React, { useState, useEffect, useMemo, useSyncExternalStore, act } from "react";
-import { useStore } from '@nanostores/react';
+import { useStore } from "@nanostores/react";
 import { FixedSizeList as List } from "react-window";
-import {
-  Bar,
-  BarChart,
-  XAxis,
-  CartesianGrid
-} from "recharts";
+import { Bar, BarChart, XAxis, CartesianGrid } from "recharts";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
@@ -35,11 +30,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 
-import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent
-} from "@/components/ui/chart";
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 
 import HoverInfo from "@/components/common/HoverInfo.tsx";
 import { humanReadableFloat } from "@/lib/common";
@@ -54,16 +45,21 @@ const chartConfig = {
 const RecentBlocksBarChart = ({ data }) => {
   return (
     <ChartContainer config={chartConfig} className="min-h-[200px] mt-5 w-full">
-      <BarChart data={data} margin={{ top: 0, right: 0, bottom: 0, left: 0 }} width={600} height={300}>
+      <BarChart
+        data={data}
+        margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
+        width={600}
+        height={300}
+      >
         <CartesianGrid vertical={false} />
         <XAxis dataKey="block" tickLine={false} tickMargin={5} axisLine={false} tick={false} />
         <ChartTooltip className="bg-white" content={<ChartTooltipContent />} />
-        <Bar 
-          dataKey="trxQuantity" 
-          fill="var(--chart-1)" 
-          radius={2} 
-          animationDuration={500} 
-          animationEasing="ease-in-out" 
+        <Bar
+          dataKey="trxQuantity"
+          fill="var(--chart-1)"
+          radius={2}
+          animationDuration={500}
+          animationEasing="ease-in-out"
         />
       </BarChart>
     </ChartContainer>
@@ -89,40 +85,48 @@ export default function LiveBlocks(properties) {
   let [recentBlocks, setRecentBlocks] = useState([]);
   useEffect(() => {
     if (!currentNode || !currentNode.url) return;
-    // on ipc render process
-    window.electron.requestBlocks({url: currentNode.url});
-    window.electron.onBlockResponse((data) => {
-      if (recentBlocks.find((x) => x.block === data.block)) return;
+
+    // Request blocks from the current node
+    window.electron.requestBlocks({ url: currentNode.url });
+
+    // Event listener for block responses
+    const handleBlockResponse = (data) => {
+      if (recentBlocks.length && recentBlocks.find((x) => x.block === data.block)) return;
       setRecentBlocks((prevBlocks) => {
         return [...prevBlocks, data];
       });
-      window.electron.stillAlive({});
-    });
+    };
+
+    window.electron.onBlockResponse(handleBlockResponse);
+
+    // Cleanup function to remove event listeners and reset state
+    return () => {
+      window.electron.stopBlocks(); // Send stopBlocks message to stop fetching
+    };
   }, [currentNode]);
 
   const activities = useMemo(() => {
     if (!recentBlocks || !recentBlocks.length) return [];
     return recentBlocks
-        .sort(
-            (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
-        )
-        .flatMap(block => {
-            if (!block.transactions) return []; // Check if transactions is defined
-            return block.transactions.map(transaction => {
-                return { ...transaction, block: block.block };
-            });
+      .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+      .flatMap((block) => {
+        if (!block.transactions) return []; // Check if transactions is defined
+        return block.transactions.map((transaction) => {
+          return { ...transaction, block: block.block };
         });
+      });
   }, [recentBlocks]);
 
   const totalRecentFees = useMemo(() => {
     if (!activities || !activities.length) return 0;
     return activities.reduce((acc, cur) => {
-      return acc + cur.operations.reduce((acc, cur) => {
-        const fee = cur[1] && cur[1].hasOwnProperty("fee")
-          ? cur[1].fee.amount
-          : 0;
-        return acc + fee;
-      }, 0);
+      return (
+        acc +
+        cur.operations.reduce((acc, cur) => {
+          const fee = cur[1] && cur[1].hasOwnProperty("fee") ? cur[1].fee.amount : 0;
+          return acc + fee;
+        }, 0)
+      );
     }, 0);
   }, [activities]);
 
@@ -148,33 +152,37 @@ export default function LiveBlocks(properties) {
           </span>
         </div>
         <div className="col-span-4">
-          {
-            activity.operations.length && activity.operations.length > 10
-              ? <Badge onClick={() => {
-                  setViewJSON(true)
+          {activity.operations.length && activity.operations.length > 10 ? (
+            <Badge
+              onClick={() => {
+                setViewJSON(true);
+                setJSON({
+                  transactionData: activity,
+                  blockData: recentBlocks.find((x) => x.block === activity.block),
+                });
+              }}
+            >
+              {activity.operations.length} operations
+            </Badge>
+          ) : (
+            activity.operations.map((x) => (
+              <Badge
+                className="ml-1"
+                onClick={() => {
+                  setViewJSON(true);
+                  let foundBlock = { ...recentBlocks.find((x) => x.block === activity.block) };
+                  delete foundBlock.transactions; // duplicate data
                   setJSON({
+                    operationData: x,
                     transactionData: activity,
-                    blockData: recentBlocks.find(x => x.block === activity.block)
+                    blockData: foundBlock,
                   });
-                }}>
-                  {activity.operations.length} operations
-                </Badge>
-              : activity.operations.map(x => <Badge
-                  className="ml-1"
-                  onClick={() => {
-                    setViewJSON(true)
-                    let foundBlock = { ...recentBlocks.find(x => x.block === activity.block) };
-                    delete foundBlock.transactions; // duplicate data
-                    setJSON({
-                      operationData: x,
-                      transactionData: activity,
-                      blockData: foundBlock
-                    });
-                  }}
-                >
-                  {x[0]}
-                </Badge>)
-          }
+                }}
+              >
+                {x[0]}
+              </Badge>
+            ))
+          )}
         </div>
       </div>
     );
@@ -197,18 +205,12 @@ export default function LiveBlocks(properties) {
           </span>
         </div>
         <div>
-          {
-            new Date(block.timestamp)
-                .toLocaleTimeString(
-                  'en-US',
-                  { 
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    second: '2-digit',
-                    hour12: false 
-                  }
-                )
-          }
+          {new Date(block.timestamp).toLocaleTimeString("en-US", {
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: false,
+          })}
         </div>
         <div>
           <span
@@ -224,7 +226,7 @@ export default function LiveBlocks(properties) {
         <div>{block.transactions?.length ?? 0}</div>
       </div>
     );
-  }
+  };
 
   return (
     <>
@@ -236,115 +238,112 @@ export default function LiveBlocks(properties) {
               <CardDescription>{t("LiveBlocks:cardDescription")}</CardDescription>
             </CardHeader>
             <CardContent>
-              
               <div className="grid grid-cols-2 gap-2 mt-2">
-              <div className="grid grid-cols-2 gap-2">
-                <Card>
-                  <CardContent className="pt-5">
-                    <HoverInfo
+                <div className="grid grid-cols-2 gap-2">
+                  <Card>
+                    <CardContent className="pt-5">
+                      <HoverInfo
                         content={t("LiveBlocks:currentBlock.content")}
                         header={t("LiveBlocks:currentBlock.header")}
                         type="header"
-                    />
-                    #{
-                      currentBlock
-                      ? parseFloat(currentBlock.block).toLocaleString('en-US')
-                      : 0
-                    }
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardContent className="pt-5">
-                    <HoverInfo
+                      />
+                      #{currentBlock ? parseFloat(currentBlock.block).toLocaleString("en-US") : 0}
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardContent className="pt-5">
+                      <HoverInfo
                         content={t("LiveBlocks:currentWitness.content")}
                         header={t("LiveBlocks:currentWitness.header")}
                         type="header"
-                    />
-                    {
-                      recentBlocks && recentBlocks.length
-                        ? <span
-                            className="hover:text-purple-500"
-                            onClick={() => {
-                              setHyperlink(`https://blocksights.info/#/witness/${recentBlocks[0].witness}`);
-                              setOpenHyperlink(true);
-                            }}
-                          >
-                            {recentBlocks[0].witness}
-                          </span>
-                        : "..."
-                    }
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardContent className="pt-5">
-                    <HoverInfo
-                        content={t("LiveBlocks:tps.content", { blockQty: recentBlocks ? recentBlocks.length : 0 })}
+                      />
+                      {recentBlocks && recentBlocks.length ? (
+                        <span
+                          className="hover:text-purple-500"
+                          onClick={() => {
+                            setHyperlink(
+                              `https://blocksights.info/#/witness/${recentBlocks[0].witness}`
+                            );
+                            setOpenHyperlink(true);
+                          }}
+                        >
+                          {recentBlocks[0].witness}
+                        </span>
+                      ) : (
+                        "..."
+                      )}
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardContent className="pt-5">
+                      <HoverInfo
+                        content={t("LiveBlocks:tps.content", {
+                          blockQty: recentBlocks ? recentBlocks.length : 0,
+                        })}
                         header={t("LiveBlocks:tps.header")}
                         type="header"
-                    />
-                    {
-                      ((activities.length / recentBlocks.length) / 3).toFixed(4)
-                    }
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardContent className="pt-5">
-                    <HoverInfo
+                      />
+                      {(activities.length / recentBlocks.length / 3).toFixed(4)}
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardContent className="pt-5">
+                      <HoverInfo
                         content={t("LiveBlocks:uniqueWitnesses.content")}
                         header={t("LiveBlocks:uniqueWitnesses.header")}
                         type="header"
-                    />
-                    {
-                      recentBlocks && recentBlocks.length
-                        ? new Set(recentBlocks.map(x => x.witness)).size
-                        : 0
-                    }
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardContent className="pt-5">
-                    <HoverInfo
-                        content={t("LiveBlocks:txPerBlock.content", { blockQty: recentBlocks ? recentBlocks.length : 0 })}
+                      />
+                      {recentBlocks && recentBlocks.length
+                        ? new Set(recentBlocks.map((x) => x.witness)).size
+                        : 0}
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardContent className="pt-5">
+                      <HoverInfo
+                        content={t("LiveBlocks:txPerBlock.content", {
+                          blockQty: recentBlocks ? recentBlocks.length : 0,
+                        })}
                         header={t("LiveBlocks:txPerBlock.header")}
                         type="header"
-                    />
-                    {
-                      (activities.length / recentBlocks.length).toFixed(4)
-                    }
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardContent className="pt-5">
-                    <HoverInfo
-                        content={t("LiveBlocks:recentFees.content", { blockQty: recentBlocks ? recentBlocks.length : 0 })}
+                      />
+                      {(activities.length / recentBlocks.length).toFixed(4)}
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardContent className="pt-5">
+                      <HoverInfo
+                        content={t("LiveBlocks:recentFees.content", {
+                          blockQty: recentBlocks ? recentBlocks.length : 0,
+                        })}
                         header={t("LiveBlocks:recentFees.header")}
                         type="header"
-                    />
-                    {
-                      totalRecentFees ? humanReadableFloat(totalRecentFees, 5) : 0
-                    } ({usr.chain === "bitshares" ? "BTS" : "TEST"})
-                  </CardContent>
-                </Card> 
-              </div>
+                      />
+                      {totalRecentFees ? humanReadableFloat(totalRecentFees, 5) : 0} (
+                      {usr.chain === "bitshares" ? "BTS" : "TEST"})
+                    </CardContent>
+                  </Card>
+                </div>
                 <div>
                   <Card>
                     <CardContent className="pt-5">
                       <HoverInfo
-                          content={t("LiveBlocks:chart.content", { blockQty: recentBlocks ? recentBlocks.length : 0 })}
-                          header={t("LiveBlocks:chart.header")}
-                          type="header"
+                        content={t("LiveBlocks:chart.content", {
+                          blockQty: recentBlocks ? recentBlocks.length : 0,
+                        })}
+                        header={t("LiveBlocks:chart.header")}
+                        type="header"
                       />
                       <RecentBlocksBarChart
-                        data={
-                          recentBlocks.map((x) => {
-                            if (!x || !x.hasOwnProperty("transactions") || !x.transactions) {
-                              return { block: x.block, trxQuantity: 0 };
-                            }
-                            return {
-                              block: x.block, trxQuantity: x.transactions.length
-                            }
-                          })
-                        } 
+                        data={recentBlocks.map((x) => {
+                          if (!x || !x.hasOwnProperty("transactions") || !x.transactions) {
+                            return { block: x.block, trxQuantity: 0 };
+                          }
+                          return {
+                            block: x.block,
+                            trxQuantity: x.transactions.length,
+                          };
+                        })}
                       />
                     </CardContent>
                   </Card>
@@ -354,9 +353,9 @@ export default function LiveBlocks(properties) {
                 <Card>
                   <CardContent className="pt-5">
                     <HoverInfo
-                        content={t("LiveBlocks:recentActivity.content")}
-                        header={t("LiveBlocks:recentActivity.header")}
-                        type="header"
+                      content={t("LiveBlocks:recentActivity.content")}
+                      header={t("LiveBlocks:recentActivity.header")}
+                      type="header"
                     />
                     <div className="grid grid-cols-5 gap-2">
                       <span className="col-span-1">Block</span>
@@ -375,9 +374,9 @@ export default function LiveBlocks(properties) {
                 <Card>
                   <CardContent className="pt-5">
                     <HoverInfo
-                        content={t("LiveBlocks:recentBlocks.content")}
-                        header={t("LiveBlocks:recentBlocks.header")}
-                        type="header"
+                      content={t("LiveBlocks:recentBlocks.content")}
+                      header={t("LiveBlocks:recentBlocks.header")}
+                      type="header"
                     />
                     <div className="grid grid-cols-4 gap-2">
                       <span>Block ID</span>
@@ -398,81 +397,76 @@ export default function LiveBlocks(properties) {
               </div>
             </CardContent>
           </Card>
-          {
-            openHyperlink && hyperlink && hyperlink.length
-              ? <Dialog
-                  open={open}
-                  onOpenChange={(open) => {
-                    setOpenHyperlink(open);
-                  }}
-                >
-                  <DialogContent className="sm:max-w-[500px] bg-white">
-                    <DialogHeader>
-                      <DialogTitle>{t("ExternalLink:dialogContent.leaveApp")}</DialogTitle>
-                      <DialogDescription>
-                        {t("ExternalLink:dialogContent.navigateToExternal")}
-                      </DialogDescription>
-                    </DialogHeader>
-                    <h3 className="scroll-m-20 text-1xl font-semibold tracking-tight mb-3 mt-1">
-                      {t("ExternalLink:dialogContent.proceedToURL")}
-                    </h3>
-                    <code className="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold">
-                      {hyperlink}
-                    </code>
-                    <h3 className="scroll-m-20 text-1xl font-semibold tracking-tight mb-3 mt-1">
-                      {t("ExternalLink:dialogContent.checkingLeave")}
-                    </h3>
-          
-                    <div className="grid grid-cols-1 gap-3">
-                      {
-                        window.electron
-                        ? <Button color="gray" variant="outline" onClick={() => window.electron.openURL(hyperlink)}>
-                            {t("ExternalLink:dialogContent.openLink")}
-                          </Button>
-                        : <a href={hyperlink} target="_blank">
-                            <Button color="gray" variant="outline">
-                              {t("ExternalLink:dialogContent.openLink")}
-                            </Button>
-                          </a>
-                      }
-                    </div>
-                  </DialogContent>
-                </Dialog>
-              : null
-          }
-          {
-            viewJSON && json
-              ? <Dialog
-                  open={viewJSON}
-                  onOpenChange={(open) => {
-                    setViewJSON(open);
-                  }}
-                >
-                  <DialogContent className="sm:max-w-[500px] bg-white">
-                    <DialogHeader>
-                      <DialogTitle>{t("LiveBlocks:dialogContent.json")}</DialogTitle>
-                      <DialogDescription>
-                        {t("LiveBlocks:dialogContent.jsonDescription")}
-                      </DialogDescription>
-                    </DialogHeader>
-                    <Textarea
-                      placeholder={JSON.stringify(json, null, 2)}
-                      readOnly={true}
-                      rows={10}
-                    />
-                    <Button
-                      className="w-1/4 mt-2"
-                      onClick={() => {
-                        navigator.clipboard.writeText(JSON.stringify(json, null, 2));
-                      }}
-                    >
-                      {t("LiveBlocks:dialogContent.copy")}
-                    </Button>
+          {openHyperlink && hyperlink && hyperlink.length ? (
+            <Dialog
+              open={open}
+              onOpenChange={(open) => {
+                setOpenHyperlink(open);
+              }}
+            >
+              <DialogContent className="sm:max-w-[500px] bg-white">
+                <DialogHeader>
+                  <DialogTitle>{t("ExternalLink:dialogContent.leaveApp")}</DialogTitle>
+                  <DialogDescription>
+                    {t("ExternalLink:dialogContent.navigateToExternal")}
+                  </DialogDescription>
+                </DialogHeader>
+                <h3 className="scroll-m-20 text-1xl font-semibold tracking-tight mb-3 mt-1">
+                  {t("ExternalLink:dialogContent.proceedToURL")}
+                </h3>
+                <code className="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold">
+                  {hyperlink}
+                </code>
+                <h3 className="scroll-m-20 text-1xl font-semibold tracking-tight mb-3 mt-1">
+                  {t("ExternalLink:dialogContent.checkingLeave")}
+                </h3>
 
-                  </DialogContent>
-                </Dialog>
-              : null
-          }
+                <div className="grid grid-cols-1 gap-3">
+                  {window.electron ? (
+                    <Button
+                      color="gray"
+                      variant="outline"
+                      onClick={() => window.electron.openURL(hyperlink)}
+                    >
+                      {t("ExternalLink:dialogContent.openLink")}
+                    </Button>
+                  ) : (
+                    <a href={hyperlink} target="_blank">
+                      <Button color="gray" variant="outline">
+                        {t("ExternalLink:dialogContent.openLink")}
+                      </Button>
+                    </a>
+                  )}
+                </div>
+              </DialogContent>
+            </Dialog>
+          ) : null}
+          {viewJSON && json ? (
+            <Dialog
+              open={viewJSON}
+              onOpenChange={(open) => {
+                setViewJSON(open);
+              }}
+            >
+              <DialogContent className="sm:max-w-[500px] bg-white">
+                <DialogHeader>
+                  <DialogTitle>{t("LiveBlocks:dialogContent.json")}</DialogTitle>
+                  <DialogDescription>
+                    {t("LiveBlocks:dialogContent.jsonDescription")}
+                  </DialogDescription>
+                </DialogHeader>
+                <Textarea placeholder={JSON.stringify(json, null, 2)} readOnly={true} rows={10} />
+                <Button
+                  className="w-1/4 mt-2"
+                  onClick={() => {
+                    navigator.clipboard.writeText(JSON.stringify(json, null, 2));
+                  }}
+                >
+                  {t("LiveBlocks:dialogContent.copy")}
+                </Button>
+              </DialogContent>
+            </Dialog>
+          ) : null}
         </div>
       </div>
     </>
