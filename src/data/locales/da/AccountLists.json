@@ -1,0 +1,19 @@
+{
+  "cardTitle": "Kontolister",
+  "cardDescription": "Administrer dine hvidlistede og sortlistede konti.",
+  "whitelist": "Hvidliste",
+  "blacklist": "Sortliste",
+  "noWhitelistedAccounts": "Ingen hvidlistede konti.",
+  "noBlacklistedAccounts": "Ingen sortlistede konti.",
+  "remove": "Fjerne",
+  "changeTarget": "Skift mål",
+  "provideTarget": "Giv mål",
+  "bitsharesAccountSearch": "BitShares-kontosøgning",
+  "bitsharesAccountSearchBTS": "BitShares Account Search (BTS)",
+  "bitsharesAccountSearchTEST": "BitShares-kontosøgning (TEST)",
+  "searchingForAccount": "Søger efter konto...",
+  "addToWhitelist": "Tilføj til hvidliste",
+  "addToBlacklist": "Tilføj til sortliste",
+  "addAccountToList": "Føj konto til listen",
+  "removeAccountFromList": "Fjerner denne konto fra denne liste."
+}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { useStore } from '@nanostores/react';
+import { useStore } from "@nanostores/react";
 import { useSyncExternalStore } from "react";
 
 import { useTranslation } from "react-i18next";
@@ -33,9 +33,13 @@ export default function Home(properties) {
 
   useEffect(() => {
     if (
-      blocklist && blocklist.timestamp &&
-      usr && usr.chain && usr.chain === "bitshares" && // production only block list
-      currentNode && currentNode.url
+      blocklist &&
+      blocklist.timestamp &&
+      usr &&
+      usr.chain &&
+      usr.chain === "bitshares" && // production only block list
+      currentNode &&
+      currentNode.url
     ) {
       const currentTime = Date.now();
       const isOlderThan24Hours = currentTime - blocklist.timestamp > 24 * 60 * 60 * 1000;
@@ -58,9 +62,7 @@ export default function Home(properties) {
 
   return (
     <div className="container mx-auto mt-3 mb-5">
-      <h4 className="mb-2">
-        {t("PageHeader:exchangingFundsHeading")}
-      </h4>
+      <h4 className="mb-2">{t("PageHeader:exchangingFundsHeading")}</h4>
       <div className="grid grid-cols-3 gap-3">
         <HoverCard key="dex">
           <HoverCardTrigger asChild>
@@ -181,12 +183,9 @@ export default function Home(properties) {
             </ul>
           </HoverCardContent>
         </HoverCard>
-
       </div>
 
-      <h4 className="mt-3 mb-2">
-        {t("PageHeader:formsOfDebtHeading")}
-      </h4>
+      <h4 className="mt-3 mb-2">{t("PageHeader:formsOfDebtHeading")}</h4>
       <div className="grid grid-cols-3 gap-3">
         <HoverCard key="borrow">
           <HoverCardTrigger asChild>
@@ -271,9 +270,7 @@ export default function Home(properties) {
         </HoverCard>
       </div>
 
-      <h4 className="mt-3 mb-2">
-        {t("PageHeader:overviewsHeading")}
-      </h4>
+      <h4 className="mt-3 mb-2">{t("PageHeader:overviewsHeading")}</h4>
       <div className="grid grid-cols-3 gap-3">
         <HoverCard key="portfolio">
           <HoverCardTrigger asChild>
@@ -433,9 +430,7 @@ export default function Home(properties) {
         </HoverCard>
       </div>
 
-      <h4 className="mt-3 mb-2">
-        {t("PageHeader:assetCreation")}
-      </h4>
+      <h4 className="mt-3 mb-2">{t("PageHeader:assetCreation")}</h4>
       <div className="grid grid-cols-3 gap-3">
         <HoverCard key="create_prediction">
           <HoverCardTrigger asChild>
@@ -456,7 +451,7 @@ export default function Home(properties) {
             </ul>
           </HoverCardContent>
         </HoverCard>
-        
+
         <HoverCard key="create_uia">
           <HoverCardTrigger asChild>
             <a href="/create_uia/index.html" style={{ textDecoration: "none" }}>
@@ -476,7 +471,7 @@ export default function Home(properties) {
             </ul>
           </HoverCardContent>
         </HoverCard>
-        
+
         <HoverCard key="create_smartcoin">
           <HoverCardTrigger asChild>
             <a href="/create_smartcoin/index.html" style={{ textDecoration: "none" }}>
@@ -498,10 +493,28 @@ export default function Home(properties) {
         </HoverCard>
       </div>
 
-      <h4 className="mt-3 mb-2">
-        {t("PageHeader:settingsHeading")}
-      </h4>
+      <h4 className="mt-3 mb-2">{t("PageHeader:settingsHeading")}</h4>
       <div className="grid grid-cols-3 gap-3">
+        <HoverCard key="accountLists">
+          <HoverCardTrigger asChild>
+            <a href="/account_lists/index.html" style={{ textDecoration: "none" }}>
+              <Card className="h-full hover:shadow-md hover:shadow-black">
+                <CardHeader>
+                  <CardTitle>{t("Home:accountLists.title")}</CardTitle>
+                  <CardDescription>{t("Home:accountLists.subtitle")}</CardDescription>
+                </CardHeader>
+              </Card>
+            </a>
+          </HoverCardTrigger>
+          <HoverCardContent className="w-80 text-sm pt-1">
+            <ul className="ml-2 list-disc [&>li]:mt-2">
+              <li>{t("Home:accountLists.hover1")}</li>
+              <li>{t("Home:accountLists.hover2")}</li>
+              <li>{t("Home:accountLists.hover3")}</li>
+            </ul>
+          </HoverCardContent>
+        </HoverCard>
+
         <HoverCard key="ltm">
           <HoverCardTrigger asChild>
             <a href="/ltm/index.html" style={{ textDecoration: "none" }}>
@@ -522,7 +535,7 @@ export default function Home(properties) {
             </ul>
           </HoverCardContent>
         </HoverCard>
-        
+
         <HoverCard key="nodes">
           <HoverCardTrigger asChild>
             <a href="/nodes/index.html" style={{ textDecoration: "none" }}>
@@ -542,7 +555,6 @@ export default function Home(properties) {
           </HoverCardContent>
         </HoverCard>
       </div>
-
     </div>
   );
 }

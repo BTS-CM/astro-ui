@@ -1,0 +1,19 @@
+{
+  "cardTitle": "계정 목록",
+  "cardDescription": "화이트리스트 및 블랙리스트에 등록된 계정을 관리하세요.",
+  "whitelist": "화이트리스트",
+  "blacklist": "블랙리스트",
+  "noWhitelistedAccounts": "허용된 계정이 없습니다.",
+  "noBlacklistedAccounts": "블랙리스트에 등록된 계정이 없습니다.",
+  "remove": "제거하다",
+  "changeTarget": "대상 변경",
+  "provideTarget": "타겟 제공",
+  "bitsharesAccountSearch": "BitShares 계정 검색",
+  "bitsharesAccountSearchBTS": "BitShares 계정 검색(BTS)",
+  "bitsharesAccountSearchTEST": "BitShares 계정 검색(테스트)",
+  "searchingForAccount": "계정 검색 중...",
+  "addToWhitelist": "화이트리스트에 추가",
+  "addToBlacklist": "블랙리스트에 추가",
+  "addAccountToList": "목록에 계정 추가",
+  "removeAccountFromList": "이 목록에서 이 계정을 제거합니다."
+}

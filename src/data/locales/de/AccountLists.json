@@ -1,0 +1,19 @@
+{
+  "cardTitle": "Kontolisten",
+  "cardDescription": "Verwalten Sie Ihre Konten auf der Whitelist und der Blacklist.",
+  "whitelist": "Whitelist",
+  "blacklist": "Schwarze Liste",
+  "noWhitelistedAccounts": "Keine Konten auf der Whitelist.",
+  "noBlacklistedAccounts": "Keine Konten auf der schwarzen Liste.",
+  "remove": "Entfernen",
+  "changeTarget": "Ziel ändern",
+  "provideTarget": "Ziel angeben",
+  "bitsharesAccountSearch": "BitShares-Kontosuche",
+  "bitsharesAccountSearchBTS": "BitShares-Kontosuche (BTS)",
+  "bitsharesAccountSearchTEST": "BitShares-Kontosuche (TEST)",
+  "searchingForAccount": "Suche nach Konto...",
+  "addToWhitelist": "Zur Whitelist hinzufügen",
+  "addToBlacklist": "Zur Blacklist hinzufügen",
+  "addAccountToList": "Konto zur Liste hinzufügen",
+  "removeAccountFromList": "Dieses Konto wird aus dieser Liste entfernt."
+}

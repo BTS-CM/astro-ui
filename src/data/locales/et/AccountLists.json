@@ -1,0 +1,19 @@
+{
+  "cardTitle": "Kontode loendid",
+  "cardDescription": "Hallake oma lubatud ja musta nimekirja kantud kontosid.",
+  "whitelist": "Valge nimekiri",
+  "blacklist": "Must nimekiri",
+  "noWhitelistedAccounts": "Lubatud loendisse lisatud kontosid pole.",
+  "noBlacklistedAccounts": "Musta nimekirja kantud kontosid pole.",
+  "remove": "Eemalda",
+  "changeTarget": "Muuda sihtmärki",
+  "provideTarget": "Esitage sihtmärk",
+  "bitsharesAccountSearch": "BitSharesi konto otsing",
+  "bitsharesAccountSearchBTS": "BitSharesi konto otsing (BTS)",
+  "bitsharesAccountSearchTEST": "BitSharesi konto otsing (TEST)",
+  "searchingForAccount": "Konto otsimine...",
+  "addToWhitelist": "Lisa valgesse nimekirja",
+  "addToBlacklist": "Lisa musta nimekirja",
+  "addAccountToList": "Lisa konto loendisse",
+  "removeAccountFromList": "Selle konto eemaldamine loendist."
+}

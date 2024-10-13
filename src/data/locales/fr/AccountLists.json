@@ -1,0 +1,19 @@
+{
+  "cardTitle": "Listes de comptes",
+  "cardDescription": "Gérez vos comptes sur liste blanche et sur liste noire.",
+  "whitelist": "Liste blanche",
+  "blacklist": "Liste noire",
+  "noWhitelistedAccounts": "Aucun compte sur liste blanche.",
+  "noBlacklistedAccounts": "Aucun compte sur liste noire.",
+  "remove": "Retirer",
+  "changeTarget": "Changer la cible",
+  "provideTarget": "Fournir une cible",
+  "bitsharesAccountSearch": "Recherche de compte BitShares",
+  "bitsharesAccountSearchBTS": "Recherche de compte BitShares (BTS)",
+  "bitsharesAccountSearchTEST": "Recherche de compte BitShares (TEST)",
+  "searchingForAccount": "Recherche de compte...",
+  "addToWhitelist": "Ajouter à la liste blanche",
+  "addToBlacklist": "Ajouter à la liste noire",
+  "addAccountToList": "Ajouter un compte à la liste",
+  "removeAccountFromList": "Suppression de ce compte de cette liste."
+}

@@ -1,0 +1,19 @@
+{
+  "cardTitle": "รายการบัญชี",
+  "cardDescription": "จัดการบัญชีที่อนุญาตและบัญชีดำของคุณ",
+  "whitelist": "ไวท์ลิสต์",
+  "blacklist": "บัญชีดำ",
+  "noWhitelistedAccounts": "ไม่มีบัญชีที่อนุญาตพิเศษ",
+  "noBlacklistedAccounts": "ไม่มีบัญชีแบล็คลิสต์",
+  "remove": "ลบ",
+  "changeTarget": "เปลี่ยนเป้าหมาย",
+  "provideTarget": "ระบุเป้าหมาย",
+  "bitsharesAccountSearch": "ค้นหาบัญชี BitShares",
+  "bitsharesAccountSearchBTS": "ค้นหาบัญชี BitShares (BTS)",
+  "bitsharesAccountSearchTEST": "ค้นหาบัญชี BitShares (ทดสอบ)",
+  "searchingForAccount": "กำลังค้นหาบัญชี...",
+  "addToWhitelist": "เพิ่มลงในไวท์ลิสต์",
+  "addToBlacklist": "เพิ่มเข้าแบล็คลิสต์",
+  "addAccountToList": "เพิ่มบัญชีลงในรายการ",
+  "removeAccountFromList": "กำลังลบบัญชีนี้ออกจากรายการนี้"
+}

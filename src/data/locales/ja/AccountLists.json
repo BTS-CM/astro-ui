@@ -1,0 +1,19 @@
+{
+  "cardTitle": "アカウントリスト",
+  "cardDescription": "ホワイトリストに登録されたアカウントとブラックリストに登録されたアカウントを管理します。",
+  "whitelist": "ホワイトリスト",
+  "blacklist": "ブラックリスト",
+  "noWhitelistedAccounts": "ホワイトリストに登録されたアカウントはありません。",
+  "noBlacklistedAccounts": "ブラックリストに登録されたアカウントはありません。",
+  "remove": "取り除く",
+  "changeTarget": "ターゲットの変更",
+  "provideTarget": "ターゲットを提供する",
+  "bitsharesAccountSearch": "BitSharesアカウント検索",
+  "bitsharesAccountSearchBTS": "BitShares アカウント検索 (BTS)",
+  "bitsharesAccountSearchTEST": "BitShares アカウント検索 (テスト)",
+  "searchingForAccount": "アカウントを検索しています...",
+  "addToWhitelist": "ホワイトリストに追加",
+  "addToBlacklist": "ブラックリストに追加",
+  "addAccountToList": "アカウントをリストに追加",
+  "removeAccountFromList": "このアカウントをこのリストから削除します。"
+}

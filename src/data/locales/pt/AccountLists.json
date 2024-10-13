@@ -1,0 +1,19 @@
+{
+  "cardTitle": "Listas de contas",
+  "cardDescription": "Gerencie suas contas na lista branca e na lista negra.",
+  "whitelist": "Lista de permissões",
+  "blacklist": "Lista negra",
+  "noWhitelistedAccounts": "Nenhuma conta na lista de permissões.",
+  "noBlacklistedAccounts": "Nenhuma conta na lista negra.",
+  "remove": "Remover",
+  "changeTarget": "Alterar meta",
+  "provideTarget": "Fornecer alvo",
+  "bitsharesAccountSearch": "Pesquisa de conta BitShares",
+  "bitsharesAccountSearchBTS": "Pesquisa de conta BitShares (BTS)",
+  "bitsharesAccountSearchTEST": "Pesquisa de conta BitShares (TESTE)",
+  "searchingForAccount": "Procurando conta...",
+  "addToWhitelist": "Adicionar à lista de permissões",
+  "addToBlacklist": "Adicionar à lista negra",
+  "addAccountToList": "Adicionar conta à lista",
+  "removeAccountFromList": "Removendo esta conta desta lista."
+}
