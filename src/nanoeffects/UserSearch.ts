@@ -1,10 +1,21 @@
 import { nanoquery } from "@nanostores/query";
 import Apis from "@/bts/ws/ApiInstances";
 import { chains } from "@/config/chains";
+import { $nodes } from "@/stores/node";
 
-async function accountSearch(chain: string, search_string: string, specificNode?: string | null){
+async function accountSearch(chain: string, search_string: string, specificNode?: string | null) {
   return new Promise(async (resolve, reject) => {
-    let node = specificNode ? specificNode : (chains as any)[chain].nodeList[0].url;
+    // access latest $nodes
+
+    let node;
+    if (specificNode) {
+      node = specificNode;
+    } else {
+      const nodes = $nodes.get();
+      const relevantNodes = nodes[chain];
+
+      node = relevantNodes[0].url;
+    }
 
     let currentAPI;
     try {
@@ -39,7 +50,7 @@ const [createUserSearchStore] = nanoquery({
   fetcher: async (...args: unknown[]) => {
     const chain = args[0] as string;
     const searchText = args[1] as string;
-    const specificNode = args[2] ? args[2] as string : null;
+    const specificNode = args[2] ? (args[2] as string) : null;
 
     let response;
     try {

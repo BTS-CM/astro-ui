@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useSyncExternalStore } from "react";
-import { useStore } from '@nanostores/react';
-import { sha256 } from '@noble/hashes/sha2';
-import { bytesToHex as toHex } from '@noble/hashes/utils';
+import { useStore } from "@nanostores/react";
+import { sha256 } from "@noble/hashes/sha2";
+import { bytesToHex as toHex } from "@noble/hashes/utils";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
@@ -49,11 +49,15 @@ export default function AccountSelect(properties) {
   }, [$userStorage]);
 
   const [inProgress, setInProgress] = useState(false);
-  const [searchResponse, setSearchResponse] = useState(); 
+  const [searchResponse, setSearchResponse] = useState();
   async function lookupAccount() {
+    if (!chain) {
+      return;
+    }
+
     let response;
     try {
-      response = await accountSearch(chain, accountInput, currentNode ? currentNode.url : null);
+      response = await accountSearch(chain, accountInput);
     } catch (error) {
       console.log({ error, msg: t("AccountSelect:noAccount") });
       setErrorMessage(t("AccountSelect:noAccount"));
@@ -68,7 +72,7 @@ export default function AccountSelect(properties) {
         try {
           hashedID = toHex(sha256(response.id));
         } catch (error) {
-          console.log({error})
+          console.log({ error });
         }
         if (hashedID && blocklist.users.includes(hashedID)) {
           setErrorMessage(t("AccountSelect:noAccount"));
@@ -193,11 +197,9 @@ export default function AccountSelect(properties) {
       ) : null}
       {chain && !mode ? (
         <>
-          {
-            chain === "bitshares"
-                    ? t("AccountSelect:noMode.titleBTS")
-                    : t("AccountSelect:noMode.titleTEST")
-          }
+          {chain === "bitshares"
+            ? t("AccountSelect:noMode.titleBTS")
+            : t("AccountSelect:noMode.titleTEST")}
           <div className="grid grid-cols-2 gap-2 mt-5">
             <Button className="mr-2" onClick={() => setMode("new")}>
               {t("AccountSelect:noMode.new")}
@@ -213,52 +215,51 @@ export default function AccountSelect(properties) {
       ) : null}
       {chain && mode && mode === "new" && !searchResponse ? (
         <>
-          {chain === "bitshares" ? "🔐 Bitshares (BTS)" : "🔐 Bitshares testnet (TEST)"}<br/>
+          {chain === "bitshares" ? "🔐 Bitshares (BTS)" : "🔐 Bitshares testnet (TEST)"}
+          <br />
           <Input
-              value={accountInput || ""}
-              placeholder="Account name or ID"
-              onKeyDown={(event) => {
-                if (event.key === "Enter" && !inProgress) {
-                  setInProgress(true);
-                  lookupAccount();
-                }
-              }}
-              onChange={(event) => {
-                const regex = /^[a-zA-Z0-9.-]*$/;
-                if (regex.test(event.target.value)) {
-                  setAccountInput(event.target.value);
-                  setErrorMessage();
-                  setSearchResponse();
-                }
-              }}
-              className="mt-4"
-            />
-            {errorMessage ? (
-              <p className="text-red-500 text-xs italic">{errorMessage || "ERROR"}</p>
-            ) : null}
-            <div className="grid grid-cols-2 gap-2 mt-5">
-              <Button className="mr-2" variant="outline" onClick={() => setMode(null)}>
-                {t("AccountSelect:new.back")}
-              </Button>
-              {accountInput && !inProgress ? (
-                <Button onClick={() => lookupAccount()}>{t("AccountSelect:new.continue")}</Button>
-              ) : (
-                <Button disabled>{t("AccountSelect:new.continue")}</Button>
-              )}
-            </div>
+            value={accountInput || ""}
+            placeholder="Account name or ID"
+            onKeyDown={(event) => {
+              if (event.key === "Enter" && !inProgress) {
+                setInProgress(true);
+                lookupAccount();
+              }
+            }}
+            onChange={(event) => {
+              const regex = /^[a-zA-Z0-9.-]*$/;
+              if (regex.test(event.target.value)) {
+                setAccountInput(event.target.value);
+                setErrorMessage();
+                setSearchResponse();
+              }
+            }}
+            className="mt-4"
+          />
+          {errorMessage ? (
+            <p className="text-red-500 text-xs italic">{errorMessage || "ERROR"}</p>
+          ) : null}
+          <div className="grid grid-cols-2 gap-2 mt-5">
+            <Button className="mr-2" variant="outline" onClick={() => setMode(null)}>
+              {t("AccountSelect:new.back")}
+            </Button>
+            {accountInput && !inProgress ? (
+              <Button onClick={() => lookupAccount()}>{t("AccountSelect:new.continue")}</Button>
+            ) : (
+              <Button disabled>{t("AccountSelect:new.continue")}</Button>
+            )}
+          </div>
         </>
       ) : null}
       {searchResponse ? (
         <>
           {t("AccountSelect:new.description")}
           <div className="grid grid-cols-1 mt-3">
-            {
-              usr && chain !== usr.chain ? (
-                <a href={window.location.pathname}>{firstResponse}</a>
-              ) : (
-                firstResponse
-              )
-            }
+            {usr && chain !== usr.chain ? (
+              <a href={window.location.pathname}>{firstResponse}</a>
+            ) : (
+              firstResponse
+            )}
           </div>
           <div className="grid grid-cols-2 gap-2 mt-5">
             <Button
@@ -275,7 +276,8 @@ export default function AccountSelect(properties) {
       ) : null}
       {mode && mode === "existing" ? (
         <>
-          {chain === "bitshares" ? "Bitshares (BTS)" : "Bitshares testnet (TEST)"}<br/>
+          {chain === "bitshares" ? "Bitshares (BTS)" : "Bitshares testnet (TEST)"}
+          <br />
           {t("AccountSelect:existing.description")}
           <div className="grid grid-cols-2 gap-3 mb-5 mt-5">
             {users.filter((user) => user.chain === chain).length ? (
