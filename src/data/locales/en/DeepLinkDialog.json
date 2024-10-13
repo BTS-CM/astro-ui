@@ -11,7 +11,8 @@
   "tabs": {
     "viewTRXObject": "View TRX Object",
     "rawDeeplink": "Raw Deeplink",
-    "localJSONFile": "Local JSON file"
+    "localJSONFile": "Local JSON file",
+    "propose": "Proposal"
   },
   "tabsContent": {
     "transactionObjectJSON": "Transaction object JSON",
@@ -31,6 +32,14 @@
     "step4Local": "From the BEET Local page, upload the JSON file, a prompt should then appear.",
     "step5Local": "Thoroughly verify the prompt's contents before approving any operation, also consider toggling the optional receipt for post broadcast analysis and verification purposes.",
     "downloading": "Downloading...",
-    "downloadBeetOperationJSON": "Download Beet operation JSON"
+    "downloadBeetOperationJSON": "Download Beet operation JSON",
+    "propose": "Creating a new proposal",
+    "proposeDescription": "If you want another account to perform this operation then proceed with the proposal form below."
+  },
+  "proposal": {
+    "targetContent": "Specify the target account for the proposal.",
+    "targetHeader": "Target Account",
+    "revisionPeriodSecondsContent": "Specify the revision period in seconds.",
+    "revisionPeriodSecondsHeader": "Revision Period (Seconds)"
   }
 }

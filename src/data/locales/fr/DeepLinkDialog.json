@@ -1,7 +1,7 @@
 {
   "dialogContent": {
     "generatingDeeplink": "Génération de liens profonds...",
-    "withAccount": "Avec le compte : {{username}} ({{userID}})",
+    "withAccount": "Avec le compte : {{username}} ({{userID}})",
     "readyToBroadcast": "Votre opération Bitshares Beet est prête à être diffusée !",
     "chooseMethod": "Choisissez parmi les méthodes ci-dessous pour diffuser sur le portefeuille de votre choix.",
     "bitsharesBEETMultiwallet": "Portefeuille multi-portefeuille Bitshares BEET",
@@ -11,7 +11,8 @@
   "tabs": {
     "viewTRXObject": "Afficher l'objet TRX",
     "rawDeeplink": "Lien profond brut",
-    "localJSONFile": "Fichier JSON local"
+    "localJSONFile": "Fichier JSON local",
+    "propose": "Proposition"
   },
   "tabsContent": {
     "transactionObjectJSON": "Objet de transaction JSON",
@@ -23,7 +24,7 @@
     "step3": "Une fois que « Prêt pour les liens bruts » s'affiche dans Beet, vous pouvez cliquer sur le bouton ci-dessous pour continuer.",
     "step4": "Une invite BEET s'affichera, vérifiera le contenu, demandera éventuellement un reçu Beet, puis diffusera la transaction sur la blockchain.",
     "step5": "Vous ne recevrez pas de confirmation dans cette fenêtre, mais votre opération sera traitée en quelques secondes sur la blockchain.",
-    "triggerRawBeet": "Déclencher le lien profond de betterave brute",
+    "triggerRawBeet": "Déclencher le lien profond de la betterave brute",
     "viaLocalFile": "Via le téléchargement de fichiers locaux - prêt à continuer",
     "step1Local": "Lancez le portefeuille BEET et accédez à « Local » dans le menu.",
     "step2Local": "Sur cette page, autorisez tout ou autorisez uniquement l'opération '{{operationName}}'.",
@@ -31,6 +32,14 @@
     "step4Local": "Depuis la page BEET Local, téléchargez le fichier JSON, une invite devrait alors apparaître.",
     "step5Local": "Vérifiez soigneusement le contenu de l'invite avant d'approuver toute opération. Pensez également à activer le reçu facultatif à des fins d'analyse et de vérification après diffusion.",
     "downloading": "Téléchargement...",
-    "downloadBeetOperationJSON": "Télécharger l'opération Betterave JSON"
+    "downloadBeetOperationJSON": "Télécharger l'opération Betterave JSON",
+    "propose": "Créer une nouvelle proposition",
+    "proposeDescription": "Si vous souhaitez qu'un autre compte effectue cette opération alors procédez avec le formulaire de proposition ci-dessous."
+  },
+  "proposal": {
+    "targetContent": "Spécifiez le compte cible de la proposition.",
+    "targetHeader": "Compte cible",
+    "revisionPeriodSecondsContent": "Spécifiez la période de révision en secondes.",
+    "revisionPeriodSecondsHeader": "Période de révision (secondes)"
   }
 }

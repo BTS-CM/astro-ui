@@ -1,7 +1,7 @@
 {
   "dialogContent": {
     "generatingDeeplink": "ディープリンクを生成中...",
-    "withAccount": "アカウント: {{username}} ({{userID}})",
+    "withAccount": "アカウントの場合: {{username}} ({{userID}})",
     "readyToBroadcast": "Bitshares Beet オペレーションをブロードキャストする準備ができました。",
     "chooseMethod": "以下の方法から選択して、選択したウォレットにブロードキャストします。",
     "bitsharesBEETMultiwallet": "Bitshares BEET マルチウォレット",
@@ -11,7 +11,8 @@
   "tabs": {
     "viewTRXObject": "TRX オブジェクトの表示",
     "rawDeeplink": "生のディープリンク",
-    "localJSONFile": "ローカルJSONファイル"
+    "localJSONFile": "ローカルJSONファイル",
+    "propose": "提案"
   },
   "tabsContent": {
     "transactionObjectJSON": "トランザクションオブジェクトJSON",
@@ -31,6 +32,14 @@
     "step4Local": "BEET ローカル ページから JSON ファイルをアップロードすると、プロンプトが表示されます。",
     "step5Local": "操作を承認する前にプロンプ​​トの内容を徹底的に確認し、ブロードキャスト後の分析と検証の目的でオプションの受信を切り替えることも検討してください。",
     "downloading": "ダウンロード中...",
-    "downloadBeetOperationJSON": "ビート操作 JSON をダウンロード"
+    "downloadBeetOperationJSON": "ビート操作 JSON をダウンロード",
+    "propose": "新しい提案書の作成",
+    "proposeDescription": "別のアカウントにこの操作を実行してもらいたい場合は、以下の提案フォームに進んでください。"
+  },
+  "proposal": {
+    "targetContent": "プロポーザルの対象アカウントを指定します。",
+    "targetHeader": "対象アカウント",
+    "revisionPeriodSecondsContent": "改訂期間を秒単位で指定します。",
+    "revisionPeriodSecondsHeader": "修正期間 (秒)"
   }
 }

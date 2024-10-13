@@ -1,7 +1,7 @@
 {
   "dialogContent": {
     "generatingDeeplink": "Genererer dybt link...",
-    "withAccount": "Med kontoen: {{brugernavn}} ({{userID}})",
+    "withAccount": "Med kontoen: {{username}} ({{userID}})",
     "readyToBroadcast": "Din Bitshares Beet-operation er klar til at sendes!",
     "chooseMethod": "Vælg mellem metoderne nedenfor for at udsende til din valgte tegnebog.",
     "bitsharesBEETMultiwallet": "Bitshares BEET multiwallet",
@@ -11,7 +11,8 @@
   "tabs": {
     "viewTRXObject": "Se TRX-objekt",
     "rawDeeplink": "Rå dyblink",
-    "localJSONFile": "Lokal JSON-fil"
+    "localJSONFile": "Lokal JSON-fil",
+    "propose": "Forslag"
   },
   "tabsContent": {
     "transactionObjectJSON": "Transaktionsobjekt JSON",
@@ -23,14 +24,22 @@
     "step3": "Når 'Klar til rå links' vises i Beet, kan du klikke på knappen nedenfor for at fortsætte.",
     "step4": "En BEET-prompt vil vise, verificere indholdet, eventuelt anmode om en Beet-kvittering og derefter udsende transaktionen til blockchain.",
     "step5": "Du modtager ikke en bekræftelse i dette vindue, men din handling vil blive behandlet inden for få sekunder på blockchain.",
-    "triggerRawBeet": "Trigger rå Beet deeplink",
+    "triggerRawBeet": "Udløs rå Beet deeplink",
     "viaLocalFile": "Via lokal filupload - klar til at fortsætte",
     "step1Local": "Start BEET-pungen og naviger til 'Lokal' i menuen.",
-    "step2Local": "På denne side tillader du enten alle, eller tillad kun handling '{{operationName}}'.",
+    "step2Local": "På denne side tillad enten alle, eller tillad kun handling '{{operationName}}'.",
     "step3Local": "Når du er på den lokale uploadside, skal du klikke på knappen nedenfor for at downloade JSON-filen til din computer.",
     "step4Local": "Fra BEET Local-siden skal du uploade JSON-filen, en prompt skulle derefter vises.",
     "step5Local": "Kontroller meddelelsens indhold grundigt, før du godkender en handling, og overvej også at slå den valgfrie kvittering til eller fra med henblik på analyse og verifikation efter udsendelse.",
     "downloading": "Downloader...",
-    "downloadBeetOperationJSON": "Download Beet operation JSON"
+    "downloadBeetOperationJSON": "Download Beet operation JSON",
+    "propose": "Oprettelse af et nyt forslag",
+    "proposeDescription": "Hvis du vil have en anden konto til at udføre denne handling, så fortsæt med forslagsformularen nedenfor."
+  },
+  "proposal": {
+    "targetContent": "Angiv målkontoen for forslaget.",
+    "targetHeader": "Målkonto",
+    "revisionPeriodSecondsContent": "Angiv revisionsperioden i sekunder.",
+    "revisionPeriodSecondsHeader": "Revisionsperiode (sekunder)"
   }
 }

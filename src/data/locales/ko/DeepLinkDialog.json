@@ -11,7 +11,8 @@
   "tabs": {
     "viewTRXObject": "TRX 객체 보기",
     "rawDeeplink": "원시 딥링크",
-    "localJSONFile": "로컬 JSON 파일"
+    "localJSONFile": "로컬 JSON 파일",
+    "propose": "제안"
   },
   "tabsContent": {
     "transactionObjectJSON": "거래 객체 JSON",
@@ -31,6 +32,14 @@
     "step4Local": "BEET 로컬 페이지에서 JSON 파일을 업로드하면 프롬프트가 나타납니다.",
     "step5Local": "작업을 승인하기 전에 메시지 내용을 철저히 확인하고, 방송 후 분석 및 확인 목적으로 선택적 수신을 전환하는 것도 고려하세요.",
     "downloading": "다운로드 중...",
-    "downloadBeetOperationJSON": "Beet 작업 JSON 다운로드"
+    "downloadBeetOperationJSON": "Beet 작업 JSON 다운로드",
+    "propose": "새 제안 만들기",
+    "proposeDescription": "다른 계정이 이 작업을 수행하도록 하려면 아래 제안 양식을 진행하세요."
+  },
+  "proposal": {
+    "targetContent": "제안의 대상 계정을 지정합니다.",
+    "targetHeader": "대상 계정",
+    "revisionPeriodSecondsContent": "수정 기간을 초 단위로 지정합니다.",
+    "revisionPeriodSecondsHeader": "개정 기간(초)"
   }
 }

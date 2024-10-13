@@ -11,7 +11,8 @@
   "tabs": {
     "viewTRXObject": "Ver objeto TRX",
     "rawDeeplink": "Enlace profundo sin procesar",
-    "localJSONFile": "Archivo JSON local"
+    "localJSONFile": "Archivo JSON local",
+    "propose": "Propuesta"
   },
   "tabsContent": {
     "transactionObjectJSON": "Objeto de transacción JSON",
@@ -31,6 +32,14 @@
     "step4Local": "Desde la página BEET Local, cargue el archivo JSON; luego debería aparecer un mensaje.",
     "step5Local": "Verifique minuciosamente el contenido del mensaje antes de aprobar cualquier operación; también considere alternar el recibo opcional para fines de verificación y análisis posterior a la transmisión.",
     "downloading": "Descargando...",
-    "downloadBeetOperationJSON": "Descargar operación remolacha JSON"
+    "downloadBeetOperationJSON": "Descargar operación remolacha JSON",
+    "propose": "Creando una nueva propuesta",
+    "proposeDescription": "Si desea que otra cuenta realice esta operación, continúe con el formulario de propuesta a continuación."
+  },
+  "proposal": {
+    "targetContent": "Especifique la cuenta de destino de la propuesta.",
+    "targetHeader": "Cuenta objetivo",
+    "revisionPeriodSecondsContent": "Especifique el período de revisión en segundos.",
+    "revisionPeriodSecondsHeader": "Período de revisión (segundos)"
   }
 }

@@ -11,7 +11,8 @@
   "tabs": {
     "viewTRXObject": "Vaadake TRX objekti",
     "rawDeeplink": "Toores sügavlink",
-    "localJSONFile": "Kohalik JSON-fail"
+    "localJSONFile": "Kohalik JSON-fail",
+    "propose": "Ettepanek"
   },
   "tabsContent": {
     "transactionObjectJSON": "Tehinguobjekti JSON",
@@ -31,6 +32,14 @@
     "step4Local": "Laadige lehelt BEET Local üles JSON-fail, seejärel peaks ilmuma viip.",
     "step5Local": "Kontrollige enne mis tahes toimingu kinnitamist viiba sisu põhjalikult ning kaaluge ka valikulise kviitungi vahetamist saatejärgse analüüsi ja kontrollimise eesmärgil.",
     "downloading": "Allalaadimine...",
-    "downloadBeetOperationJSON": "Laadige alla suhkrupeedi operatsiooni JSON"
+    "downloadBeetOperationJSON": "Laadige alla suhkrupeedi operatsiooni JSON",
+    "propose": "Uue ettepaneku koostamine",
+    "proposeDescription": "Kui soovite, et selle toimingu sooritaks mõni muu konto, jätkake alloleva ettepaneku vormiga."
+  },
+  "proposal": {
+    "targetContent": "Määrake ettepaneku sihtkonto.",
+    "targetHeader": "Sihtkonto",
+    "revisionPeriodSecondsContent": "Määrake läbivaatamise periood sekundites.",
+    "revisionPeriodSecondsHeader": "Läbivaatamise periood (sekundites)"
   }
 }

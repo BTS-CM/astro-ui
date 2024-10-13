@@ -1,7 +1,7 @@
 {
   "dialogContent": {
     "generatingDeeplink": "Generazione del collegamento diretto in corso...",
-    "withAccount": "Con l'account: {{username}} ({{userID}})",
+    "withAccount": "Con il conto: {{username}} ({{userID}})",
     "readyToBroadcast": "La tua operazione Bitshares Beet è pronta per essere trasmessa!",
     "chooseMethod": "Scegli tra i metodi seguenti per trasmettere al tuo portafoglio preferito.",
     "bitsharesBEETMultiwallet": "Multiportafoglio Bitshares BEET",
@@ -11,7 +11,8 @@
   "tabs": {
     "viewTRXObject": "Visualizza oggetto TRX",
     "rawDeeplink": "Collegamento diretto grezzo",
-    "localJSONFile": "File JSON locale"
+    "localJSONFile": "File JSON locale",
+    "propose": "Proposta"
   },
   "tabsContent": {
     "transactionObjectJSON": "Oggetto transazione JSON",
@@ -31,6 +32,14 @@
     "step4Local": "Dalla pagina BEET Local, carica il file JSON, dovrebbe quindi apparire un messaggio.",
     "step5Local": "Verifica attentamente il contenuto della richiesta prima di approvare qualsiasi operazione, valuta anche la possibilità di attivare la ricevuta opzionale per scopi di analisi e verifica post trasmissione.",
     "downloading": "Download in corso...",
-    "downloadBeetOperationJSON": "Scarica Operazione barbabietola JSON"
+    "downloadBeetOperationJSON": "Scarica l'operazione barbabietola JSON",
+    "propose": "Creazione di una nuova proposta",
+    "proposeDescription": "Se desideri che un altro account esegua questa operazione, procedi con il modulo di proposta sottostante."
+  },
+  "proposal": {
+    "targetContent": "Specificare l'account di destinazione per la proposta.",
+    "targetHeader": "Conto di destinazione",
+    "revisionPeriodSecondsContent": "Specificare il periodo di revisione in secondi.",
+    "revisionPeriodSecondsHeader": "Periodo di revisione (secondi)"
   }
 }

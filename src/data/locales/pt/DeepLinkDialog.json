@@ -11,7 +11,8 @@
   "tabs": {
     "viewTRXObject": "Ver objeto TRX",
     "rawDeeplink": "Link direto bruto",
-    "localJSONFile": "Arquivo JSON local"
+    "localJSONFile": "Arquivo JSON local",
+    "propose": "Proposta"
   },
   "tabsContent": {
     "transactionObjectJSON": "Objeto de transação JSON",
@@ -29,8 +30,16 @@
     "step2Local": "Nesta página, permita tudo ou permita apenas a operação '{{operationName}}'.",
     "step3Local": "Uma vez na página de upload local, clique no botão abaixo para baixar o arquivo JSON para o seu computador.",
     "step4Local": "Na página BEET Local, carregue o arquivo JSON e um prompt deverá aparecer.",
-    "step5Local": "Verifique minuciosamente o conteúdo do prompt antes de aprovar qualquer operação e considere também alternar o recibo opcional para fins de análise e verificação pós-transmissão.",
+    "step5Local": "Verifique minuciosamente o conteúdo do prompt antes de aprovar qualquer operação, considere também alternar o recibo opcional para fins de análise e verificação pós-transmissão.",
     "downloading": "Baixando...",
-    "downloadBeetOperationJSON": "Baixe JSON da operação Beet"
+    "downloadBeetOperationJSON": "Baixe JSON da operação Beet",
+    "propose": "Criando uma nova proposta",
+    "proposeDescription": "Se desejar que outra conta realize esta operação, prossiga com o formulário de proposta abaixo."
+  },
+  "proposal": {
+    "targetContent": "Especifique a conta de destino da proposta.",
+    "targetHeader": "Conta alvo",
+    "revisionPeriodSecondsContent": "Especifique o período de revisão em segundos.",
+    "revisionPeriodSecondsHeader": "Período de revisão (segundos)"
   }
 }
