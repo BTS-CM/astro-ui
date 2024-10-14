@@ -2,9 +2,9 @@ import React, { useState, useEffect, useSyncExternalStore, useMemo } from "react
 import Fuse from "fuse.js";
 import { useForm } from "react-hook-form";
 import { FixedSizeList as List } from "react-window";
-import { useStore } from '@nanostores/react';
-import { sha256 } from '@noble/hashes/sha2';
-import { bytesToHex as toHex } from '@noble/hashes/utils';
+import { useStore } from "@nanostores/react";
+import { sha256 } from "@noble/hashes/sha2";
+import { bytesToHex as toHex } from "@noble/hashes/utils";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
@@ -144,15 +144,15 @@ export default function PoolStake() {
     if (!_chain || (!_assetsBTS && !_assetsTEST)) {
       return [];
     }
-  
+
     if (_chain !== "bitshares") {
       return _assetsTEST;
     }
-  
+
     const relevantAssets = _assetsBTS.filter((asset) => {
       return !blocklist.users.includes(toHex(sha256(asset.issuer)));
     });
-  
+
     return relevantAssets;
   }, [blocklist, _assetsBTS, _assetsTEST, _chain]);
 
@@ -160,17 +160,17 @@ export default function PoolStake() {
     if (!_chain || (!_poolsBTS && !_poolsTEST)) {
       return [];
     }
-  
+
     if (_chain !== "bitshares") {
       return _poolsTEST;
     }
-  
+
     const relevantPools = _poolsBTS.filter((pool) => {
       const poolShareAsset = assets.find((asset) => asset.id === pool.share_asset_id);
       if (!poolShareAsset) return false;
       return !blocklist.users.includes(toHex(sha256(poolShareAsset.issuer)));
     });
-  
+
     return relevantPools;
   }, [assets, blocklist, _poolsBTS, _poolsTEST, _chain]);
 
@@ -326,15 +326,15 @@ export default function PoolStake() {
       try {
         poolStore.subscribe(({ data, error, loading }) => {
           if (error) {
-            console.log({error, location: "poolStore.subscribe"});
+            console.log({ error, location: "poolStore.subscribe" });
           }
           if (data && !error && !loading) {
             setFoundPool(data.foundPool);
             setPoolShareDetails(data.poolAsset);
-  
+
             setAssetA(data.assetA);
             setAssetB(data.assetB);
-      
+
             setFoundPoolDetails(data.foundPoolDetails);
             setAssetADetails(data.assetADetails);
             setAssetBDetails(data.assetBDetails);
@@ -347,9 +347,8 @@ export default function PoolStake() {
           }
         });
       } catch (error) {
-        console.log({error});
+        console.log({ error });
       }
-
     }
   }, [usr, pool, pools, assets]);
 
@@ -358,11 +357,17 @@ export default function PoolStake() {
     let unsubscribeUserBalances;
 
     if (usr && usr.id && assetA && assetB) {
-      const userBalancesStore = createUserBalancesStore([usr.chain, usr.id, currentNode ? currentNode.url : null]);
+      const userBalancesStore = createUserBalancesStore([
+        usr.chain,
+        usr.id,
+        currentNode ? currentNode.url : null,
+      ]);
 
       unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
-          const filteredData = data.filter((balance) => assets.find((x) => x.id === balance.asset_id));
+          const filteredData = data.filter((balance) =>
+            assets.find((x) => x.id === balance.asset_id)
+          );
           setUsrBalances(filteredData);
         }
       });
@@ -663,7 +668,9 @@ export default function PoolStake() {
                                       classnamecontents="text-blue-500"
                                       type="text"
                                       text={assetA.symbol}
-                                      hyperlink={`https://blocksights.info/#/assets/${assetA.id}`}
+                                      hyperlink={`https://blocksights.info/#/assets/${assetA.id}${
+                                        usr.chain === "bitshares" ? "" : "?network=testnet"
+                                      }`}
                                     />
                                   </CardTitle>
                                   <CardDescription>
@@ -686,7 +693,9 @@ export default function PoolStake() {
                                       classnamecontents="text-blue-500"
                                       type="text"
                                       text={assetB.symbol}
-                                      hyperlink={`https://blocksights.info/#/assets/${assetB.id}`}
+                                      hyperlink={`https://blocksights.info/#/assets/${assetB.id}${
+                                        usr.chain === "bitshares" ? "" : "?network=testnet"
+                                      }`}
                                     />
                                   </CardTitle>
                                   <CardDescription>
@@ -734,11 +743,7 @@ export default function PoolStake() {
                                     <div className="col-span-1">
                                       <ScrollArea className="h-72 rounded-md border">
                                         <pre>
-                                          {JSON.stringify(
-                                            [foundPool, foundPoolDetails],
-                                            null,
-                                            2
-                                          )}
+                                          {JSON.stringify([foundPool, foundPoolDetails], null, 2)}
                                         </pre>
                                       </ScrollArea>
                                     </div>
@@ -904,17 +909,14 @@ export default function PoolStake() {
                                                               Number(foundPool.balance_a),
                                                               foundPool.asset_a_precision
                                                             ))
-                                                        ).toFixed(
-                                                          foundPool.asset_a_precision
-                                                        )
+                                                        ).toFixed(foundPool.asset_a_precision)
                                                       );
 
                                                       setBStake(_bAmount);
 
                                                       const _supply = humanReadableFloat(
                                                         foundPoolDetails.current_supply,
-                                                        foundPool.share_asset_details
-                                                          .precision
+                                                        foundPool.share_asset_details.precision
                                                       );
 
                                                       const balanceA = humanReadableFloat(
@@ -940,8 +942,7 @@ export default function PoolStake() {
                                                       setTotalReceiving(
                                                         parseFloat(
                                                           shareAssetAmount.toFixed(
-                                                            foundPool.share_asset_details
-                                                              .precision
+                                                            foundPool.share_asset_details.precision
                                                           )
                                                         )
                                                       );
@@ -1019,17 +1020,14 @@ export default function PoolStake() {
                                                               Number(foundPool.balance_b),
                                                               foundPool.asset_b_precision
                                                             ))
-                                                        ).toFixed(
-                                                          foundPool.asset_a_precision
-                                                        )
+                                                        ).toFixed(foundPool.asset_a_precision)
                                                       );
 
                                                       setAStake(_aAmount);
 
                                                       const _supply = humanReadableFloat(
                                                         foundPoolDetails.current_supply,
-                                                        foundPool.share_asset_details
-                                                          .precision
+                                                        foundPool.share_asset_details.precision
                                                       );
 
                                                       const balanceA = humanReadableFloat(
@@ -1055,8 +1053,7 @@ export default function PoolStake() {
                                                       setTotalReceiving(
                                                         parseFloat(
                                                           shareAssetAmount.toFixed(
-                                                            foundPool.share_asset_details
-                                                              .precision
+                                                            foundPool.share_asset_details.precision
                                                           )
                                                         )
                                                       );
@@ -1145,8 +1142,7 @@ export default function PoolStake() {
                                                   if (input && input.length && regex.test(input)) {
                                                     const _input = parseFloat(
                                                       Number(input).toFixed(
-                                                        foundPool.share_asset_details
-                                                          .precision
+                                                        foundPool.share_asset_details.precision
                                                       )
                                                     );
 

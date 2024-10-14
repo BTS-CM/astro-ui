@@ -34,11 +34,11 @@
     "downloading": "다운로드 중...",
     "downloadBeetOperationJSON": "Beet 작업 JSON 다운로드",
     "propose": "새 제안 만들기",
-    "proposeDescription": "다른 계정이 이 작업을 수행하도록 하려면 아래 제안 양식을 진행하세요."
+    "proposeDescription": "귀하가 제안된 작업을 구성하는 데 사용하는 계정의 소유자(또는 공동 소유자)가 아닌 경우 계정 소유자가 재량에 따라 검토하고 방송할 수 있는 제안을 작성할 수 있습니다."
   },
   "proposal": {
-    "targetContent": "제안의 대상 계정을 지정합니다.",
-    "targetHeader": "대상 계정",
+    "targetContent": "이는 제안서를 생성하는 데 사용할 계정입니다. ",
+    "targetHeader": "제안수수료 납부계좌",
     "revisionPeriodSecondsContent": "수정 기간을 초 단위로 지정합니다.",
     "revisionPeriodSecondsHeader": "개정 기간(초)"
   }

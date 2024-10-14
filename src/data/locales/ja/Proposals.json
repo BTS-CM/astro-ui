@@ -1,0 +1,21 @@
+{
+  "proposalID": "提案ID",
+  "proposedBy": "提案者",
+  "expirationTime": "有効期限",
+  "reviewPeriodTime": "レビュー期間の時間",
+  "operations": "プロポサド操作",
+  "operationsDescription": "これらは、この提案に保存されている個々の操作です。",
+  "beginApprovalProcess": "承認プロセスの開始",
+  "reject": "提案を拒否する",
+  "cardTitle": "🤔 提案された操作",
+  "cardDescription": "プロポーザルを使用すると、ブロックチェーン上の別のアカウントによって実行される操作を誰でも提案できます。",
+  "noProposals": "利用できる提案はありません。",
+  "approveProposedOperation": "提案された操作を承認する",
+  "rejectProposedOperation": "提案された操作を拒否する",
+  "launchApproveProposalOperation": "提案を承認する",
+  "approveProposal": "提案された運用の評価",
+  "approveProposalDescription": "提案の詳細を確認し、承認するか拒否するかを決定します。",
+  "operationType": "操作の種類",
+  "operationDescription": "動作説明",
+  "approvedProposalHeader": "以下の提案を承認します"
+}

@@ -144,7 +144,11 @@ export default function LiveBlocks(properties) {
           <span
             className="hover:text-purple-500"
             onClick={() => {
-              setHyperlink(`https://blocksights.info/#/blocks/${activity.block}`);
+              setHyperlink(
+                `https://blocksights.info/#/blocks/${activity.block}${
+                  usr.chain === "bitshares" ? "" : "?network=testnet"
+                }`
+              );
               setOpenHyperlink(true);
             }}
           >
@@ -197,7 +201,11 @@ export default function LiveBlocks(properties) {
           <span
             className="hover:text-purple-500"
             onClick={() => {
-              setHyperlink(`https://blocksights.info/#/blocks/${block.block}`);
+              setHyperlink(
+                `https://blocksights.info/#/blocks/${block.block}${
+                  usr.chain === "bitshares" ? "" : "?network=testnet"
+                }`
+              );
               setOpenHyperlink(true);
             }}
           >
@@ -216,7 +224,11 @@ export default function LiveBlocks(properties) {
           <span
             className="hover:text-purple-500"
             onClick={() => {
-              setHyperlink(`https://blocksights.info/#/witness/${block.witness}`);
+              setHyperlink(
+                `https://blocksights.info/#/witness/${block.witness}${
+                  usr.chain === "bitshares" ? "" : "?network=testnet"
+                }`
+              );
               setOpenHyperlink(true);
             }}
           >
@@ -262,7 +274,9 @@ export default function LiveBlocks(properties) {
                           className="hover:text-purple-500"
                           onClick={() => {
                             setHyperlink(
-                              `https://blocksights.info/#/witness/${recentBlocks[0].witness}`
+                              `https://blocksights.info/#/witness/${recentBlocks[0].witness}${
+                                usr.chain === "bitshares" ? "" : "?network=testnet"
+                              }`
                             );
                             setOpenHyperlink(true);
                           }}

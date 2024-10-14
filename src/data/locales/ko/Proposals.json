@@ -1,0 +1,21 @@
+{
+  "proposalID": "제안 ID",
+  "proposedBy": "제안자:",
+  "expirationTime": "만료 시간",
+  "reviewPeriodTime": "검토기간 시간",
+  "operations": "작전 제안",
+  "operationsDescription": "이 제안서에 저장된 개별 작업은 다음과 같습니다. ",
+  "beginApprovalProcess": "승인 프로세스 시작",
+  "reject": "제안 거부",
+  "cardTitle": "🤔 제안된 운영",
+  "cardDescription": "제안을 통해 누구나 블록체인의 다른 계정에서 실행할 작업을 제안할 수 있습니다. ",
+  "noProposals": "사용할 수 있는 제안이 없습니다.",
+  "approveProposedOperation": "제안된 작업 승인",
+  "rejectProposedOperation": "제안된 작업 거부",
+  "launchApproveProposalOperation": "제안 승인",
+  "approveProposal": "제안된 운영 평가",
+  "approveProposalDescription": "제안 내용을 검토하고 승인 또는 거부 여부를 결정합니다.",
+  "operationType": "작업 유형",
+  "operationDescription": "작업 설명",
+  "approvedProposalHeader": "다음 제안 승인"
+}

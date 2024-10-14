@@ -1,0 +1,21 @@
+{
+  "proposalID": "ID de propuesta",
+  "proposedBy": "Propuesto por",
+  "expirationTime": "Tiempo de vencimiento",
+  "reviewPeriodTime": "Tiempo del período de revisión",
+  "operations": "Operaciones propuestas",
+  "operationsDescription": "Estas son las operaciones individuales almacenadas en esta propuesta. ",
+  "beginApprovalProcess": "Comenzar el proceso de aprobación",
+  "reject": "Rechazar propuesta",
+  "cardTitle": "🤔 Operaciones propuestas",
+  "cardDescription": "Las propuestas permiten a cualquiera sugerir operaciones para que sean ejecutadas por otra cuenta en la cadena de bloques. ",
+  "noProposals": "No hay propuestas disponibles.",
+  "approveProposedOperation": "Aprobar la operación propuesta",
+  "rejectProposedOperation": "Rechazar operación propuesta",
+  "launchApproveProposalOperation": "Aprobar la propuesta",
+  "approveProposal": "Evaluación de operaciones propuestas",
+  "approveProposalDescription": "Revisa los detalles de la propuesta y decide si la apruebas o la rechazas.",
+  "operationType": "Tipo de operación",
+  "operationDescription": "Descripción de la operación",
+  "approvedProposalHeader": "Aprobando la siguiente propuesta"
+}

@@ -149,16 +149,17 @@ export default function PortfolioTabs(properties) {
 
       unsubscribeUserBalancesStore = userBalancesStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
-          const updatedData = data.filter((balance) => assets.find((x) => x.id === balance.asset_id))
-                                  .map((balance) => {
-                                    return {
-                                      ...balance,
-                                      symbol: assets.find((x) => x.id === balance.asset_id).symbol,
-                                    }
-                                  });
+          const updatedData = data
+            .filter((balance) => assets.find((x) => x.id === balance.asset_id))
+            .map((balance) => {
+              return {
+                ...balance,
+                symbol: assets.find((x) => x.id === balance.asset_id).symbol,
+              };
+            });
           console.log("Successfully fetched balances");
           setBalances(updatedData);
-          console.log({updatedData, data, assets})
+          console.log({ updatedData, data, assets });
         }
       });
     }
@@ -172,9 +173,9 @@ export default function PortfolioTabs(properties) {
     if (!balances || !balances.length) {
       return [];
     }
-  
+
     const balancesCopy = [...balances];
-  
+
     switch (sortType) {
       case "alphabetical":
         return balancesCopy.sort((a, b) => a.symbol.localeCompare(b.symbol));
@@ -334,7 +335,9 @@ export default function PortfolioTabs(properties) {
                 classnamecontents="mt-2 ml-2"
                 type="button"
                 text={t("PortfolioTabs:assetInfoButton")}
-                hyperlink={`https://blocksights.info/#/assets/${currentBalance.symbol}`}
+                hyperlink={`https://blocksights.info/#/assets/${currentBalance.symbol}${
+                  usr.chain === "bitshares" ? "" : "?network=testnet"
+                }`}
               />
             </div>
           </div>
@@ -403,7 +406,9 @@ export default function PortfolioTabs(properties) {
                     classnamecontents="text-blue-500"
                     type="text"
                     text={` ${orderId}`}
-                    hyperlink={`https://blocksights.info/#/objects/${orderId}`}
+                    hyperlink={`https://blocksights.info/#/objects/${orderId}${
+                      usr.chain === "bitshares" ? "" : "?network=testnet"
+                    }`}
                   />
                   <br />
                   {t("PortfolioTabs:expires", { timeDiff: timeDiffString })}
@@ -485,7 +490,9 @@ export default function PortfolioTabs(properties) {
                     classnamecontents="text-blue-500"
                     type="text"
                     text={` ${activityItem.account_history.operation_id}`}
-                    hyperlink={`https://blocksights.info/#/objects/${activityItem.account_history.operation_id}`}
+                    hyperlink={`https://blocksights.info/#/objects/${
+                      activityItem.account_history.operation_id
+                    }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
                   />
                   <br />
                   {t("PortfolioTabs:blockNumber")}
@@ -493,7 +500,9 @@ export default function PortfolioTabs(properties) {
                     classnamecontents="text-blue-500"
                     type="text"
                     text={` ${activityItem.block_data.block_num}`}
-                    hyperlink={`https://blocksights.info/#/blocks/${activityItem.block_data.block_num}`}
+                    hyperlink={`https://blocksights.info/#/blocks/${
+                      activityItem.block_data.block_num
+                    }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
                   />
                   <br />
                   {t("PortfolioTabs:timeSinceBroadcast", { timeDiff: timeDiffString })}
@@ -667,7 +676,12 @@ export default function PortfolioTabs(properties) {
                   sortedUserBalances.length &&
                   retrievedBalanceAssets &&
                   retrievedBalanceAssets.length ? (
-                    <List height={500} itemCount={sortedUserBalances.length} itemSize={80} className="gaps-2">
+                    <List
+                      height={500}
+                      itemCount={sortedUserBalances.length}
+                      itemSize={80}
+                      className="gaps-2"
+                    >
                       {BalanceRow}
                     </List>
                   ) : (

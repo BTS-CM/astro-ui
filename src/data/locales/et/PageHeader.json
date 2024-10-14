@@ -69,7 +69,9 @@
     "uia": "Looge alloleva vormi abil oma kasutaja väljastatud vara!",
     "issuedAssets": "Hallake oma loodud plokiahela varasid allolevatel vahekaartidel!",
     "create_smartcoin": "Uue smartcoini vara loomiseks kasutage allolevat vormi.",
-    "blocks": "Vaadake kõige värskemaid plokiahela andmeid, mis on mugavalt kokku võetud allpool!"
+    "blocks": "Vaadake kõige värskemaid plokiahela andmeid, mis on mugavalt kokku võetud allpool!",
+    "AccountLists": "Kasutage allolevat vormi oma konto jaoks valgete või mustade nimekirjade loomiseks.",
+    "proposals": "Vaadake allpool oma konto kinnitusi ja kinnitage need pärast nende põhjalikku hindamist või lükake need tagasi."
   },
   "back": "Mine tagasi",
   "usage": "Mõeldud kasutamiseks koos ",

@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useMemo, useSyncExternalStore } from "react";
 import { useForm } from "react-hook-form";
-import { sha256 } from '@noble/hashes/sha2';
-import { bytesToHex as toHex } from '@noble/hashes/utils';
+import { sha256 } from "@noble/hashes/sha2";
+import { bytesToHex as toHex } from "@noble/hashes/utils";
 import { FixedSizeList as List } from "react-window";
-import { useStore } from '@nanostores/react';
+import { useStore } from "@nanostores/react";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
@@ -147,10 +147,8 @@ export default function CreditOffer(properties) {
   const assetIssuers = useMemo(() => {
     if (
       _chain &&
-      (
-        _marketSearchBTS && _marketSearchBTS.length || 
-        _marketSearchTEST && _marketSearchTEST.length
-      )
+      ((_marketSearchBTS && _marketSearchBTS.length) ||
+        (_marketSearchTEST && _marketSearchTEST.length))
     ) {
       const targetCache = _chain === "bitshares" ? _marketSearchBTS : _marketSearchTEST;
       let mappedCache = targetCache.map((x) => {
@@ -218,7 +216,7 @@ export default function CreditOffer(properties) {
         console.log("Credit offer parameter not found");
         return null;
       }
-      
+
       return id;
     }
 
@@ -229,12 +227,15 @@ export default function CreditOffer(properties) {
           return;
         }
 
-        const offerStore = createObjectStore([_chain, JSON.stringify([id]), currentNode ? currentNode.url : null]);
+        const offerStore = createObjectStore([
+          _chain,
+          JSON.stringify([id]),
+          currentNode ? currentNode.url : null,
+        ]);
         offerStore.subscribe(({ data, error, loading }) => {
           if (data && !error && !loading) {
             const foundOffer = data[0];
             if (foundOffer) {
-
               if (_chain === "bitshares") {
                 const hashedID = toHex(sha256(foundOffer.owner_account));
                 if (blocklist.users.includes(hashedID)) {
@@ -266,11 +267,17 @@ export default function CreditOffer(properties) {
     let unsubscribeUserBalances;
 
     if (usr && usr.id) {
-      const userBalancesStore = createUserBalancesStore([usr.chain, usr.id, currentNode ? currentNode.url : null]);
+      const userBalancesStore = createUserBalancesStore([
+        usr.chain,
+        usr.id,
+        currentNode ? currentNode.url : null,
+      ]);
 
       unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
-          const filteredData = data.filter((balance) => assets.find((x) => x.id === balance.asset_id));
+          const filteredData = data.filter((balance) =>
+            assets.find((x) => x.id === balance.asset_id)
+          );
           setBalanceAssetIDs(filteredData.map((x) => x.asset_id));
           setUsrBalances(filteredData);
         }
@@ -456,7 +463,11 @@ export default function CreditOffer(properties) {
       if (foundOwner) {
         setOwner(foundOwner);
       } else {
-        const userStore = createObjectStore([_chain, JSON.stringify([relevantOffer.owner_account]), currentNode ? currentNode.url : null]);
+        const userStore = createObjectStore([
+          _chain,
+          JSON.stringify([relevantOffer.owner_account]),
+          currentNode ? currentNode.url : null,
+        ]);
         userStore.subscribe(({ data, error, loading }) => {
           if (data && !error && !loading) {
             const foundUser = data[0];
@@ -588,7 +599,9 @@ export default function CreditOffer(properties) {
                                         text={t("CreditOffer:cardContent.viewAccount", {
                                           owner_name: creditOfferOwner.name,
                                         })}
-                                        hyperlink={`https://blocksights.info/#/accounts/${creditOfferOwner.name}`}
+                                        hyperlink={`https://blocksights.info/#/accounts/${
+                                          creditOfferOwner.name
+                                        }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
                                       />
                                     ) : null}
                                   </div>

@@ -69,7 +69,9 @@
     "uia": "Erstellen Sie mit dem untenstehenden Formular Ihr eigenes, vom Benutzer ausgegebenes Asset!",
     "issuedAssets": "Verwalten Sie die von Ihnen erstellten Blockchain-Assets in den folgenden Registerkarten!",
     "create_smartcoin": "Verwenden Sie das untenstehende Formular, um ein neues Smartcoin-Asset zu erstellen.",
-    "blocks": "Sehen Sie sich die aktuellsten Blockchain-Daten bequem zusammengefasst unten an!"
+    "blocks": "Sehen Sie sich die aktuellsten Blockchain-Daten bequem zusammengefasst unten an!",
+    "AccountLists": "Verwenden Sie das untenstehende Formular, um Whitelists oder Blacklists für Ihr Konto zu erstellen.",
+    "proposals": "Sehen Sie sich unten die Genehmigungen für Ihr Konto an und genehmigen Sie sie oder lehnen Sie sie ab, nachdem Sie sie gründlich geprüft haben."
   },
   "back": "Geh zurück",
   "usage": "Konzipiert für den Einsatz mit ",

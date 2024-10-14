@@ -389,6 +389,25 @@ export default function Home(properties) {
           </HoverCardContent>
         </HoverCard>
 
+        <HoverCard key="proposals">
+          <HoverCardTrigger asChild>
+            <a href="/proposals/index.html" style={{ textDecoration: "none" }}>
+              <Card className="h-full hover:shadow-md hover:shadow-black">
+                <CardHeader>
+                  <CardTitle>{t("Home:proposals.title")}</CardTitle>
+                  <CardDescription>{t("Home:proposals.subtitle")}</CardDescription>
+                </CardHeader>
+              </Card>
+            </a>
+          </HoverCardTrigger>
+          <HoverCardContent className="w-80 text-sm pt-1">
+            <ul className="ml-2 list-disc [&>li]:mt-2">
+              <li>{t("Home:proposals.hover1")}</li>
+              <li>{t("Home:proposals.hover2")}</li>
+            </ul>
+          </HoverCardContent>
+        </HoverCard>
+
         <HoverCard key="issued_assets">
           <HoverCardTrigger asChild>
             <a href="/issued_assets/index.html" style={{ textDecoration: "none" }}>

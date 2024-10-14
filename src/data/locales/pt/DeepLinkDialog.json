@@ -34,11 +34,11 @@
     "downloading": "Baixando...",
     "downloadBeetOperationJSON": "Baixe JSON da operação Beet",
     "propose": "Criando uma nova proposta",
-    "proposeDescription": "Se desejar que outra conta realize esta operação, prossiga com o formulário de proposta abaixo."
+    "proposeDescription": "Se você não for o proprietário (ou coproprietário) da conta que está usando para construir a operação proposta, poderá criar uma proposta para o proprietário da conta revisar e transmitir a seu critério."
   },
   "proposal": {
-    "targetContent": "Especifique a conta de destino da proposta.",
-    "targetHeader": "Conta alvo",
+    "targetContent": "Esta é a conta que você usará para criar a proposta. ",
+    "targetHeader": "Conta de pagamento de taxa de proposta",
     "revisionPeriodSecondsContent": "Especifique o período de revisão em segundos.",
     "revisionPeriodSecondsHeader": "Período de revisão (segundos)"
   }

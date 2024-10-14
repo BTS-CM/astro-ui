@@ -16,7 +16,7 @@
   },
   "tabsContent": {
     "transactionObjectJSON": "Tehinguobjekti JSON",
-    "operationType": "Operatsiooni tüüp: {{operationName}}",
+    "operationType": "Toimingu tüüp: {{operationName}}",
     "copyOperationJSON": "Kopeerimistoimingu JSON",
     "usingDeeplink": "Süvalingi kasutamine edastuseks Beet multiwalleti kaudu",
     "step1": "Käivitage BEET rahakott ja navigeerige menüüs 'Raw Link', rahakott peab jääma ülekande ajaks lukustamata.",
@@ -34,11 +34,11 @@
     "downloading": "Allalaadimine...",
     "downloadBeetOperationJSON": "Laadige alla suhkrupeedi operatsiooni JSON",
     "propose": "Uue ettepaneku koostamine",
-    "proposeDescription": "Kui soovite, et selle toimingu sooritaks mõni muu konto, jätkake alloleva ettepaneku vormiga."
+    "proposeDescription": "Kui te ei ole kavandatava toimingu koostamiseks kasutatava konto omanik (või olete kaasomanik), saate luua konto omanikule ettepaneku, mille ta oma äranägemise järgi üle vaatab ja edastab."
   },
   "proposal": {
-    "targetContent": "Määrake ettepaneku sihtkonto.",
-    "targetHeader": "Sihtkonto",
+    "targetContent": "See on konto, mida saate ettepaneku koostamiseks kasutada. ",
+    "targetHeader": "Ettepaneku tasu maksmise konto",
     "revisionPeriodSecondsContent": "Määrake läbivaatamise periood sekundites.",
     "revisionPeriodSecondsHeader": "Läbivaatamise periood (sekundites)"
   }

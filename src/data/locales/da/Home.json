@@ -110,6 +110,12 @@
     "hover2": "Forudsigelsesmarkeder kan handle om alt.",
     "hover3": "Hvert forudsigelsesmarkedsaktiv har et unikt gebyr."
   },
+  "proposals": {
+    "title": "🤔 Foreslåede operationer",
+    "subtitle": "Se og godkend/afvis foreslåede kontooperationer",
+    "hover1": "Se de foreslåede kontooperationer foretaget af andre blockchain-konti for din konto.",
+    "hover2": "Godkend eller afvis de foreslåede kontooperationer."
+  },
   "issued_assets": {
     "title": "📃 Dine udstedte aktiver",
     "subtitle": "Se alle de aktiver, du har oprettet",
@@ -146,6 +152,13 @@
     "hover2": "De kan bruges til en række forskellige formål.",
     "hover3": "De kan bruges som en stablecoin, et token til din virksomhed, et belønningstoken, et token til et spil og mere.",
     "hover4": "Smartcoins kan bakkes op af ethvert aktiv og referere til ethvert eksternt feed."
+  },
+  "accountLists": {
+    "title": "📋 Kontolister",
+    "subtitle": "Se og administrer dine kontolister",
+    "hover1": "Føj konti til din hvidliste.",
+    "hover2": "Føj konti til din sortliste.",
+    "hover3": "Fjern konti fra nævnte lister."
   },
   "ltm": {
     "title": "🏅 Opgrader konto",

@@ -1,0 +1,21 @@
+{
+  "proposalID": "Proposal ID",
+  "proposedBy": "Proposed by",
+  "expirationTime": "Expiration Time",
+  "reviewPeriodTime": "Review Period Time",
+  "operations": "Proposad operations",
+  "operationsDescription": "These are the individual operations stored in this proposal. Click on each operation id below to view their JSON details. Thoroughly review each operation and double check who the proposer is before proceeding with approval. Approvals are irreversible, don't approve transfer of your account to a stranger for example.",
+  "beginApprovalProcess": "Begin Approval Process",
+  "reject": "Reject Proposal",
+  "cardTitle": "🤔 Proposed Operations",
+  "cardDescription": "Proposals allow anyone to suggest operations to be executed by another account on the blockchain. The account owner reviews these proposals and decides whether to approve or reject them.",
+  "noProposals": "No proposals available.",
+  "approveProposedOperation": "Approve Proposed Operation",
+  "rejectProposedOperation": "Reject Proposed Operation",
+  "launchApproveProposalOperation": "Approve the Proposal",
+  "approveProposal": "Evaluating proposed operations",
+  "approveProposalDescription": "Review the details of the proposal and decide whether to approve or reject it.",
+  "operationType": "Operation Type",
+  "operationDescription": "Operation Description",
+  "approvedProposalHeader": "Approving the following proposal"
+}

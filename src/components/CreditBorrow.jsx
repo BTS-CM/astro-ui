@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useSyncExternalStore, useMemo, useCallback } from "react";
 import { FixedSizeList as List } from "react-window";
 import Fuse from "fuse.js";
-import { sha256 } from '@noble/hashes/sha2';
-import { bytesToHex as toHex } from '@noble/hashes/utils';
-import { useStore } from '@nanostores/react';
+import { sha256 } from "@noble/hashes/sha2";
+import { bytesToHex as toHex } from "@noble/hashes/utils";
+import { useStore } from "@nanostores/react";
 import { useTranslation } from "react-i18next";
 
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
@@ -95,10 +95,11 @@ export default function CreditBorrow(properties) {
 
   const offers = useMemo(() => {
     if (_chain && (_offersBTS || _offersTEST)) {
-      let currentOffers = _chain === "bitshares"
-        ? _offersBTS.filter((x) => hoursTillExpiration(x.auto_disable_time) >= 0)
-        : _offersTEST.filter((x) => hoursTillExpiration(x.auto_disable_time) >= 0);
-      
+      let currentOffers =
+        _chain === "bitshares"
+          ? _offersBTS.filter((x) => hoursTillExpiration(x.auto_disable_time) >= 0)
+          : _offersTEST.filter((x) => hoursTillExpiration(x.auto_disable_time) >= 0);
+
       if (_chain === "bitshares" && blocklist && blocklist.users) {
         // Discard offers from banned users
         currentOffers = currentOffers.filter(
@@ -107,7 +108,6 @@ export default function CreditBorrow(properties) {
       }
 
       return currentOffers;
-
     }
     return [];
   }, [_offersBTS, _offersTEST, _chain]);
@@ -123,11 +123,17 @@ export default function CreditBorrow(properties) {
     let unsubscribeUserBalances;
 
     if (usr && usr.id) {
-      const userBalancesStore = createUserBalancesStore([usr.chain, usr.id, currentNode ? currentNode.url : null]);
+      const userBalancesStore = createUserBalancesStore([
+        usr.chain,
+        usr.id,
+        currentNode ? currentNode.url : null,
+      ]);
 
       unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
-          const filteredData = data.filter((balance) => assets.find((x) => x.id === balance.asset_id));
+          const filteredData = data.filter((balance) =>
+            assets.find((x) => x.id === balance.asset_id)
+          );
 
           setBalanceAssetIDs(filteredData.map((x) => x.asset_id));
           setUsrBalances(filteredData);
@@ -264,32 +270,36 @@ export default function CreditBorrow(properties) {
       <div style={{ ...style }} key={`acard-${res.id}`}>
         <Card className="ml-2 mr-2">
           <CardHeader className="pb-1">
-          <CardTitle>
+            <CardTitle>
               {t("CreditBorrow:common.offer")}
               {" #"}
               <ExternalLink
                 classnamecontents="hover:text-purple-500"
                 type="text"
                 text={res.id.replace("1.21.", "")}
-                hyperlink={`https://blocksights.info/#/credit-offers/${res.id.replace("1.21.", "")}`}
-              />
-              {" "}
-              {t("CreditBorrow:common.by")}
-              {" "}
+                hyperlink={`https://blocksights.info/#/credit-offers/${res.id.replace(
+                  "1.21.",
+                  ""
+                )}${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
+              />{" "}
+              {t("CreditBorrow:common.by")}{" "}
               <ExternalLink
                 classnamecontents="hover:text-purple-500"
                 type="text"
                 text={res.owner_name}
-                hyperlink={`https://blocksights.info/#/accounts/${res.owner_name}`}
-              />
-              {" "}
+                hyperlink={`https://blocksights.info/#/accounts/${res.owner_name}${
+                  usr.chain === "bitshares" ? "" : "?network=testnet"
+                }`}
+              />{" "}
               (
-                <ExternalLink
-                  classnamecontents="hover:text-purple-500"
-                  type="text"
-                  text={res.owner_account}
-                  hyperlink={`https://blocksights.info/#/accounts/${res.owner_account}`}
-                />
+              <ExternalLink
+                classnamecontents="hover:text-purple-500"
+                type="text"
+                text={res.owner_account}
+                hyperlink={`https://blocksights.info/#/accounts/${res.owner_account}${
+                  usr.chain === "bitshares" ? "" : "?network=testnet"
+                }`}
+              />
               )
             </CardTitle>
             <CardDescription>
@@ -300,40 +310,44 @@ export default function CreditBorrow(properties) {
                   classnamecontents="hover:text-purple-500"
                   type="text"
                   text={foundAsset.symbol}
-                  hyperlink={`https://blocksights.info/#/asset/${foundAsset.symbol}`}
+                  hyperlink={`https://blocksights.info/#/asset/${foundAsset.symbol}${
+                    usr.chain === "bitshares" ? "" : "?network=testnet"
+                  }`}
                 />
                 (
-                  <ExternalLink
-                    classnamecontents="hover:text-purple-500"
-                    type="text"
-                    text={res.asset_type}
-                    hyperlink={`https://blocksights.info/#/asset/${res.asset_type}`}
-                  />
+                <ExternalLink
+                  classnamecontents="hover:text-purple-500"
+                  type="text"
+                  text={res.asset_type}
+                  hyperlink={`https://blocksights.info/#/asset/${res.asset_type}${
+                    usr.chain === "bitshares" ? "" : "?network=testnet"
+                  }`}
+                />
                 )
               </b>
               <br />
               {t("CreditBorrow:common.accepting")}
               <b className="ml-1">
-                {
-                  assets && assets.length
-                    ? res.acceptable_collateral
-                        .map((asset) => asset[0])
-                        .map((x) => {
-                          return assets.find((y) => y.id === x)?.symbol;
-                        })
-                        .map((x, index, array) => (
-                          <>
-                            <ExternalLink
-                              classnamecontents="hover:text-purple-500"
-                              type="text"
-                              text={x}
-                              hyperlink={`https://blocksights.info/#/asset/${x}`}
-                            />
-                            {index < array.length - 1 && ", "}
-                          </>
-                        ))
-                    : t("CreditBorrow:common.loading")
-                }
+                {assets && assets.length
+                  ? res.acceptable_collateral
+                      .map((asset) => asset[0])
+                      .map((x) => {
+                        return assets.find((y) => y.id === x)?.symbol;
+                      })
+                      .map((x, index, array) => (
+                        <>
+                          <ExternalLink
+                            classnamecontents="hover:text-purple-500"
+                            type="text"
+                            text={x}
+                            hyperlink={`https://blocksights.info/#/asset/${x}${
+                              usr.chain === "bitshares" ? "" : "?network=testnet"
+                            }`}
+                          />
+                          {index < array.length - 1 && ", "}
+                        </>
+                      ))
+                  : t("CreditBorrow:common.loading")}
               </b>
             </CardDescription>
           </CardHeader>
@@ -596,7 +610,7 @@ export default function CreditBorrow(properties) {
                           value={thisSearchInput || ""}
                           onChange={(event) => {
                             setThisSearchInput(event.target.value);
-                            debouncedSetSearchInput(event)
+                            debouncedSetSearchInput(event);
                           }}
                         />
                         <TabsContent value="borrow">

@@ -69,7 +69,9 @@
     "uia": "Create your own user issued asset with the form below!",
     "issuedAssets": "Manage the blockchain assets you've created within the tabs below!",
     "create_smartcoin": "Use the form below to create a new smartcoin asset.",
-    "blocks": "View the most recent blockchain data conveniently summarized below!"
+    "blocks": "View the most recent blockchain data conveniently summarized below!",
+    "AccountLists": "Use the form below to create whitelists or blacklists for your account.",
+    "proposals": "View the approvals for your account below, and either approve or reject them after thoroughly evaluating them."
   },
   "back": "Go back",
   "usage": "Designed for use with ",

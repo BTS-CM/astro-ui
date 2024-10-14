@@ -157,11 +157,17 @@ export default function Transfer(properties) {
     let unsubscribeUserBalances;
 
     if (usr && usr.id) {
-      const userBalancesStore = createUserBalancesStore([usr.chain, usr.id, currentNode ? currentNode.url : null]);
+      const userBalancesStore = createUserBalancesStore([
+        usr.chain,
+        usr.id,
+        currentNode ? currentNode.url : null,
+      ]);
 
       unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
-          const filteredData = data.filter((balance) => assets.find((x) => x.id === balance.asset_id));
+          const filteredData = data.filter((balance) =>
+            assets.find((x) => x.id === balance.asset_id)
+          );
           setBalances(filteredData);
         }
       });
@@ -604,7 +610,9 @@ export default function Transfer(properties) {
                       <ExternalLink
                         type="text"
                         classnamecontents=""
-                        hyperlink={`https://blocksights.info/#/accounts/${targetUser.name}`}
+                        hyperlink={`https://blocksights.info/#/accounts/${targetUser.name}${
+                          usr.chain === "bitshares" ? "" : "?network=testnet"
+                        }`}
                         text={t("Transfer:blocksightsLink", { name: targetUser.name })}
                       />
                     </li>

@@ -77,8 +77,12 @@ export default function CreditOffers(properties) {
   const offers = useMemo(() => {
     if (_chain && (_offersBTS || _offersTEST)) {
       return _chain === "bitshares"
-        ? _offersBTS.filter((x) => hoursTillExpiration(x.auto_disable_time) >= 0 && x.owner_account === usr.id)
-        : _offersTEST.filter((x) => hoursTillExpiration(x.auto_disable_time) >= 0 && x.owner_account === usr.id);
+        ? _offersBTS.filter(
+            (x) => hoursTillExpiration(x.auto_disable_time) >= 0 && x.owner_account === usr.id
+          )
+        : _offersTEST.filter(
+            (x) => hoursTillExpiration(x.auto_disable_time) >= 0 && x.owner_account === usr.id
+          );
     }
     return [];
   }, [_offersBTS, _offersTEST, _chain, usr]);
@@ -95,25 +99,29 @@ export default function CreditOffers(properties) {
                 classnamecontents="hover:text-purple-500"
                 type="text"
                 text={res.id.replace("1.21.", "")}
-                hyperlink={`https://blocksights.info/#/credit-offers/${res.id.replace("1.21.", "")}`}
-              />
-              {" "}
-              {t("CreditBorrow:common.by")}
-              {" "}
+                hyperlink={`https://blocksights.info/#/credit-offers/${res.id.replace(
+                  "1.21.",
+                  ""
+                )}${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
+              />{" "}
+              {t("CreditBorrow:common.by")}{" "}
               <ExternalLink
                 classnamecontents="hover:text-purple-500"
                 type="text"
                 text={res.owner_name}
-                hyperlink={`https://blocksights.info/#/accounts/${res.owner_name}`}
-              />
-              {" "}
+                hyperlink={`https://blocksights.info/#/accounts/${res.owner_name}${
+                  usr.chain === "bitshares" ? "" : "?network=testnet"
+                }`}
+              />{" "}
               (
-                <ExternalLink
-                  classnamecontents="hover:text-purple-500"
-                  type="text"
-                  text={res.owner_account}
-                  hyperlink={`https://blocksights.info/#/accounts/${res.owner_account}`}
-                />
+              <ExternalLink
+                classnamecontents="hover:text-purple-500"
+                type="text"
+                text={res.owner_account}
+                hyperlink={`https://blocksights.info/#/accounts/${res.owner_account}${
+                  usr.chain === "bitshares" ? "" : "?network=testnet"
+                }`}
+              />
               )
             </CardTitle>
             <CardDescription>
@@ -198,25 +206,17 @@ export default function CreditOffers(properties) {
             </CardHeader>
             <CardContent>
               <>
-                {
-                  offers && offers.length
-                  ? (
-                    <List
-                      height={500}
-                      itemCount={offers.length}
-                      itemSize={225}
-                      className="w-full mt-3"
-                    >
-                      {Row}
-                    </List>
-                  )
-                  : null
-                }
-                {
-                  offers && !offers.length
-                    ? t("CreditOffers:card.noResults")
-                    : null
-                }
+                {offers && offers.length ? (
+                  <List
+                    height={500}
+                    itemCount={offers.length}
+                    itemSize={225}
+                    className="w-full mt-3"
+                  >
+                    {Row}
+                  </List>
+                ) : null}
+                {offers && !offers.length ? t("CreditOffers:card.noResults") : null}
               </>
             </CardContent>
           </Card>

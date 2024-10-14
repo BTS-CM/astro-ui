@@ -110,6 +110,12 @@
     "hover2": "Ennustusturgudel võib olla ükskõik mida.",
     "hover3": "Igal ennustusturu varal on ainulaadne tasu."
   },
+  "proposals": {
+    "title": "🤔 Kavandatavad toimingud",
+    "subtitle": "Pakutud kontotoimingute vaatamine ja kinnitamine/lükkamine",
+    "hover1": "Vaadake teiste plokiahela kontode pakutud kontotoiminguid teie konto jaoks.",
+    "hover2": "Kinnitage või lükkake tagasi kavandatud kontotoimingud."
+  },
   "issued_assets": {
     "title": "📃 Teie väljastatud varad",
     "subtitle": "Vaadake kõiki loodud varasid",
@@ -146,6 +152,13 @@
     "hover2": "Neid saab kasutada erinevatel eesmärkidel.",
     "hover3": "Neid saab kasutada stabiilse mündina, teie ettevõtte märgina, preemia märgina, mängu märgina ja palju muud.",
     "hover4": "Nutikamünte saab toetada mis tahes varaga ja viidata mis tahes välisele kanalile."
+  },
+  "accountLists": {
+    "title": "📋 Kontode loendid",
+    "subtitle": "Saate vaadata ja hallata oma kontoloendeid",
+    "hover1": "Lisage kontod oma lubatud loendisse.",
+    "hover2": "Lisage kontod oma musta nimekirja.",
+    "hover3": "Eemaldage nimetatud loenditest kontod."
   },
   "ltm": {
     "title": "🏅 Täiendage kontot",

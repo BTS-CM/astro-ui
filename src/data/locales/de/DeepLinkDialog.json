@@ -34,11 +34,11 @@
     "downloading": "Herunterladen...",
     "downloadBeetOperationJSON": "Laden Sie Beet Operation JSON herunter",
     "propose": "Erstellen eines neuen Vorschlags",
-    "proposeDescription": "Wenn Sie möchten, dass ein anderes Konto diesen Vorgang durchführt, fahren Sie mit dem untenstehenden Vorschlagsformular fort."
+    "proposeDescription": "Wenn Sie nicht der Eigentümer (oder Miteigentümer) des Kontos sind, das Sie zum Erstellen des vorgeschlagenen Vorgangs verwenden, können Sie einen Vorschlag erstellen, den der Kontoinhaber nach eigenem Ermessen prüfen und veröffentlichen kann."
   },
   "proposal": {
-    "targetContent": "Geben Sie das Zielkonto für den Vorschlag an.",
-    "targetHeader": "Zielkonto",
+    "targetContent": "Dies ist das Konto, das Sie zum Erstellen des Angebots verwenden. ",
+    "targetHeader": "Konto zur Zahlung der Angebotsgebühr",
     "revisionPeriodSecondsContent": "Geben Sie den Revisionszeitraum in Sekunden an.",
     "revisionPeriodSecondsHeader": "Revisionszeitraum (Sekunden)"
   }

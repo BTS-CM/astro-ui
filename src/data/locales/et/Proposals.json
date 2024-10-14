@@ -1,0 +1,21 @@
+{
+  "proposalID": "Ettepaneku ID",
+  "proposedBy": "Pakkunud",
+  "expirationTime": "Aegumisaeg",
+  "reviewPeriodTime": "Ülevaate perioodi aeg",
+  "operations": "Paku operatsioonid",
+  "operationsDescription": "Need on sellesse ettepanekusse salvestatud üksikud toimingud. ",
+  "beginApprovalProcess": "Alustage kinnitamisprotsessi",
+  "reject": "Keelduda ettepanek",
+  "cardTitle": "🤔 Kavandatavad toimingud",
+  "cardDescription": "Ettepanekud võimaldavad kõigil soovitada toiminguid, mida plokiahelas mõni teine ​​konto teostab. ",
+  "noProposals": "Ettepanekuid pole.",
+  "approveProposedOperation": "Kinnitage kavandatud toiming",
+  "rejectProposedOperation": "Keeldu kavandatud operatsioonist",
+  "launchApproveProposalOperation": "Kinnitada ettepanek",
+  "approveProposal": "Kavandatud toimingute hindamine",
+  "approveProposalDescription": "Vaadake ettepaneku üksikasjad üle ja otsustage, kas see kinnitada või tagasi lükata.",
+  "operationType": "Operatsiooni tüüp",
+  "operationDescription": "Toimingu kirjeldus",
+  "approvedProposalHeader": "Järgmise ettepaneku heakskiitmine"
+}

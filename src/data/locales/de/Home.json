@@ -110,6 +110,12 @@
     "hover2": "Auf Prognosemärkten kann es um alles Mögliche gehen.",
     "hover3": "Für jedes Prognosemarkt-Asset gibt es eine eigene Gebühr."
   },
+  "proposals": {
+    "title": "🤔 Vorgeschlagene Operationen",
+    "subtitle": "Vorgeschlagene Kontovorgänge anzeigen und genehmigen/ablehnen",
+    "hover1": "Sehen Sie sich die vorgeschlagenen Kontovorgänge an, die von anderen Blockchain-Konten für Ihr Konto durchgeführt wurden.",
+    "hover2": "Genehmigen Sie die vorgeschlagenen Kontovorgänge oder lehnen Sie sie ab."
+  },
   "issued_assets": {
     "title": "📃 Ihre ausgegebenen Vermögenswerte",
     "subtitle": "Sehen Sie sich alle von Ihnen erstellten Assets an",
@@ -146,6 +152,13 @@
     "hover2": "Sie können für verschiedene Zwecke verwendet werden.",
     "hover3": "Sie können als Stablecoin, als Token für Ihr Unternehmen, als Belohnungstoken, als Token für ein Spiel und mehr verwendet werden.",
     "hover4": "Smartcoins können durch jeden Vermögenswert gedeckt sein und auf jeden externen Feed verweisen."
+  },
+  "accountLists": {
+    "title": "📋 Kontolisten",
+    "subtitle": "Zeigen Sie Ihre Kontolisten an und verwalten Sie sie",
+    "hover1": "Fügen Sie Konten zu Ihrer Whitelist hinzu.",
+    "hover2": "Fügen Sie Konten zu Ihrer Blacklist hinzu.",
+    "hover3": "Entfernen Sie Konten aus diesen Listen."
   },
   "ltm": {
     "title": "🏅 Konto aktualisieren",

@@ -34,11 +34,11 @@
     "downloading": "Downloader...",
     "downloadBeetOperationJSON": "Download Beet operation JSON",
     "propose": "Oprettelse af et nyt forslag",
-    "proposeDescription": "Hvis du vil have en anden konto til at udføre denne handling, så fortsæt med forslagsformularen nedenfor."
+    "proposeDescription": "Hvis du ikke er ejer (eller er medejer) af den konto, du bruger til at konstruere den foreslåede handling, kan du oprette et forslag, som kontoejeren kan gennemgå og udsende efter eget skøn."
   },
   "proposal": {
-    "targetContent": "Angiv målkontoen for forslaget.",
-    "targetHeader": "Målkonto",
+    "targetContent": "Dette er den konto, du skal bruge til at oprette forslaget. ",
+    "targetHeader": "Forslagsgebyr betale konto",
     "revisionPeriodSecondsContent": "Angiv revisionsperioden i sekunder.",
     "revisionPeriodSecondsHeader": "Revisionsperiode (sekunder)"
   }

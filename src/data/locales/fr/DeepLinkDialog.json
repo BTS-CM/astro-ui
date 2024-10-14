@@ -34,11 +34,11 @@
     "downloading": "Téléchargement...",
     "downloadBeetOperationJSON": "Télécharger l'opération Betterave JSON",
     "propose": "Créer une nouvelle proposition",
-    "proposeDescription": "Si vous souhaitez qu'un autre compte effectue cette opération alors procédez avec le formulaire de proposition ci-dessous."
+    "proposeDescription": "Si vous n'êtes pas propriétaire (ou copropriétaire) du compte que vous utilisez pour construire l'opération proposée, vous pouvez créer une proposition que le propriétaire du compte pourra examiner et diffuser à sa discrétion."
   },
   "proposal": {
-    "targetContent": "Spécifiez le compte cible de la proposition.",
-    "targetHeader": "Compte cible",
+    "targetContent": "Il s'agit du compte que vous utiliserez pour créer la proposition. ",
+    "targetHeader": "Compte payant les frais de proposition",
     "revisionPeriodSecondsContent": "Spécifiez la période de révision en secondes.",
     "revisionPeriodSecondsHeader": "Période de révision (secondes)"
   }

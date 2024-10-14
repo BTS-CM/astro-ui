@@ -69,7 +69,9 @@
     "uia": "Crea la tua risorsa emessa dall'utente con il modulo sottostante!",
     "issuedAssets": "Gestisci le risorse blockchain che hai creato nelle schede seguenti!",
     "create_smartcoin": "Utilizza il modulo sottostante per creare un nuovo asset smartcoin.",
-    "blocks": "Visualizza i dati blockchain più recenti comodamente riepilogati di seguito!"
+    "blocks": "Visualizza i dati blockchain più recenti comodamente riepilogati di seguito!",
+    "AccountLists": "Utilizza il modulo sottostante per creare whitelist o blacklist per il tuo account.",
+    "proposals": "Visualizza le approvazioni per il tuo account di seguito e approvale o rifiutale dopo averle valutate attentamente."
   },
   "back": "Torna indietro",
   "usage": "Progettato per l'uso con ",

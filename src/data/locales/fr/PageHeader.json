@@ -69,7 +69,9 @@
     "uia": "Créez votre propre actif émis par l'utilisateur avec le formulaire ci-dessous !",
     "issuedAssets": "Gérez les actifs blockchain que vous avez créés dans les onglets ci-dessous !",
     "create_smartcoin": "Utilisez le formulaire ci-dessous pour créer un nouvel actif smartcoin.",
-    "blocks": "Consultez les données blockchain les plus récentes résumées ci-dessous !"
+    "blocks": "Consultez les données blockchain les plus récentes résumées ci-dessous !",
+    "AccountLists": "Utilisez le formulaire ci-dessous pour créer des listes blanches ou des listes noires pour votre compte.",
+    "proposals": "Consultez les approbations pour votre compte ci-dessous et approuvez-les ou rejetez-les après les avoir soigneusement évaluées."
   },
   "back": "Retourner",
   "usage": "Conçu pour être utilisé avec ",

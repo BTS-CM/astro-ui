@@ -110,6 +110,12 @@
     "hover2": "Los mercados de predicción pueden tratar sobre cualquier cosa.",
     "hover3": "Cada activo del mercado de predicción tiene una tarifa única."
   },
+  "proposals": {
+    "title": "🤔 Operaciones propuestas",
+    "subtitle": "Ver y aprobar/rechazar operaciones de cuenta propuestas",
+    "hover1": "Vea las operaciones de cuenta propuestas realizadas por otras cuentas blockchain para su cuenta.",
+    "hover2": "Aprobar o rechazar las operaciones de cuenta propuestas."
+  },
   "issued_assets": {
     "title": "📃 Sus activos emitidos",
     "subtitle": "Ver todos los activos que has creado",
@@ -146,6 +152,13 @@
     "hover2": "Se pueden utilizar para una variedad de propósitos.",
     "hover3": "Se pueden utilizar como moneda estable, token para su negocio, token de recompensa, token para un juego y más.",
     "hover4": "Las Smartcoins pueden estar respaldadas por cualquier activo y hacer referencia a cualquier fuente externa."
+  },
+  "accountLists": {
+    "title": "📋 Listas de cuentas",
+    "subtitle": "Ver y administrar sus listas de cuentas",
+    "hover1": "Agregue cuentas a su lista blanca.",
+    "hover2": "Añade cuentas a tu lista negra.",
+    "hover3": "Eliminar cuentas de dichas listas."
   },
   "ltm": {
     "title": "🏅 Actualizar cuenta",

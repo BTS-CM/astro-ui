@@ -34,11 +34,11 @@
     "downloading": "Descargando...",
     "downloadBeetOperationJSON": "Descargar operación remolacha JSON",
     "propose": "Creando una nueva propuesta",
-    "proposeDescription": "Si desea que otra cuenta realice esta operación, continúe con el formulario de propuesta a continuación."
+    "proposeDescription": "Si no es el propietario (o copropietario) de la cuenta que está utilizando para construir la operación propuesta, puede crear una propuesta para que el propietario de la cuenta la revise y la transmita a su discreción."
   },
   "proposal": {
-    "targetContent": "Especifique la cuenta de destino de la propuesta.",
-    "targetHeader": "Cuenta objetivo",
+    "targetContent": "Esta es la cuenta que utilizará para crear la propuesta. ",
+    "targetHeader": "Cuenta de pago de tasas de propuesta",
     "revisionPeriodSecondsContent": "Especifique el período de revisión en segundos.",
     "revisionPeriodSecondsHeader": "Período de revisión (segundos)"
   }

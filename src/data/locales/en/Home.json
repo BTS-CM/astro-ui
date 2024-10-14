@@ -110,6 +110,12 @@
     "hover2": "Prediction markets can be about anything.",
     "hover3": "Each prediction market asset has an unique fee."
   },
+  "proposals": {
+    "title": "🤔 Proposed Operations",
+    "subtitle": "View and Approve/Reject Proposed Account Operations",
+    "hover1": "View the proposed account operations made by other blockchain accounts for your account.",
+    "hover2": "Approve or reject the proposed account operations."
+  },
   "issued_assets": {
     "title": "📃 Your Issued Assets",
     "subtitle": "View all the assets you've created",
@@ -146,6 +152,13 @@
     "hover2": "They can be used for a variety of purposes.",
     "hover3": "They can be used as a stablecoin, a token for your business, a reward token, a token for a game, and more.",
     "hover4": "Smartcoins can be backed by any asset and reference any external feed."
+  },
+  "accountLists": {
+    "title": "📋 Account Lists",
+    "subtitle": "View and manage your account lists",
+    "hover1": "Add accounts to your whitelist.",
+    "hover2": "Add accounts to your blacklist.",
+    "hover3": "Remove accounts from said lists."
   },
   "ltm": {
     "title": "🏅 Upgrade Account",

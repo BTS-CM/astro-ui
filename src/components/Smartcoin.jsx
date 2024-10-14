@@ -2,7 +2,7 @@ import React, { useState, useEffect, useSyncExternalStore, useMemo, useCallback 
 import { FixedSizeList as List } from "react-window";
 import { useForm } from "react-hook-form";
 import { LockOpen2Icon, LockClosedIcon } from "@radix-ui/react-icons";
-import { useStore } from '@nanostores/react';
+import { useStore } from "@nanostores/react";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
@@ -185,11 +185,17 @@ export default function Smartcoin(properties) {
     let unsubscribeUserBalances;
 
     if (usr && usr.id) {
-      const userBalancesStore = createUserBalancesStore([usr.chain, usr.id, currentNode ? currentNode.url : null]);
+      const userBalancesStore = createUserBalancesStore([
+        usr.chain,
+        usr.id,
+        currentNode ? currentNode.url : null,
+      ]);
 
       unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
-          const filteredData = data.filter((balance) => assets.find((x) => x.id === balance.asset_id));
+          const filteredData = data.filter((balance) =>
+            assets.find((x) => x.id === balance.asset_id)
+          );
           setUsrBalances(filteredData);
         }
       });
@@ -298,7 +304,7 @@ export default function Smartcoin(properties) {
     }
   }, [parsedCollateralBitasset, marketSearch]);
   */
- 
+
   const debtAssetHoldings = useMemo(() => {
     if (parsedAsset && usrBalances && usrBalances.length) {
       const foundAsset = usrBalances.find((x) => x.asset_id === parsedAsset.id);
@@ -342,7 +348,7 @@ export default function Smartcoin(properties) {
         parsedBitasset.id,
         parsedCollateralBitasset && parsedCollateralBitasset.id ? parsedCollateralBitasset.id : "",
         usr.id,
-        currentNode ? currentNode.url : null
+        currentNode ? currentNode.url : null,
       ]);
       unsub = smartcoinDataStore.subscribe(({ data }) => {
         if (data && !data.error && !data.loading) {
@@ -901,16 +907,12 @@ export default function Smartcoin(properties) {
       <Card className="mt-2">
         <CardHeader className="pb-2">
           <CardTitle>
-            {
-              t("Smartcoin:currentMarginPosition", {
-                asset: parsedAsset.s,
-                id: parsedAsset.id,
-              })
-            }
+            {t("Smartcoin:currentMarginPosition", {
+              asset: parsedAsset.s,
+              id: parsedAsset.id,
+            })}
           </CardTitle>
-          <CardDescription>
-            {t("Smartcoin:marginPositionDescription")}
-          </CardDescription>
+          <CardDescription>{t("Smartcoin:marginPositionDescription")}</CardDescription>
         </CardHeader>
         <CardContent className="text-sm">
           {t("Smartcoin:balance")}
@@ -1038,7 +1040,9 @@ export default function Smartcoin(properties) {
                 variant="outline"
                 type="button"
                 text={t("Smartcoin:viewAssetOnBlocksights")}
-                hyperlink={`https://blocksights.info/#/assets/${assetInfo.id}`}
+                hyperlink={`https://blocksights.info/#/assets/${assetInfo.id}${
+                  usr.chain === "bitshares" ? "" : "?network=testnet"
+                }`}
               />
             </div>
           </div>
@@ -1061,7 +1065,7 @@ export default function Smartcoin(properties) {
                         text={t("Smartcoin:viewIssuerOnBlocksights")}
                         hyperlink={`https://blocksights.info/#/accounts/${
                           assetInfo.u.split(" ")[0]
-                        }`}
+                        }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
                       />
                     </ul>
                   }
@@ -1182,7 +1186,9 @@ export default function Smartcoin(properties) {
                     variant="outline"
                     type="button"
                     text={t("Smartcoin:viewBitassetOnBlocksights")}
-                    hyperlink={`https://blocksights.info/#/objects/${bitassetInfo.id}`}
+                    hyperlink={`https://blocksights.info/#/objects/${bitassetInfo.id}${
+                      usr.chain === "bitshares" ? "" : "?network=testnet"
+                    }`}
                   />
                 </div>
               </div>
@@ -1459,7 +1465,9 @@ export default function Smartcoin(properties) {
             classnamecontents="text-blue-500"
             type="text"
             text={res.borrower}
-            hyperlink={`https://blocksights.info/#/accounts/${res.borrower}`}
+            hyperlink={`https://blocksights.info/#/accounts/${res.borrower}${
+              usr.chain === "bitshares" ? "" : "?network=testnet"
+            }`}
           />
         </div>
         <div className="col-span-1">{collateralAmount}</div>
@@ -1537,7 +1545,9 @@ export default function Smartcoin(properties) {
             classnamecontents="text-blue-500"
             type="text"
             text={userID}
-            hyperlink={`https://blocksights.info/#/accounts/${userID}`}
+            hyperlink={`https://blocksights.info/#/accounts/${userID}${
+              usr.chain === "bitshares" ? "" : "?network=testnet"
+            }`}
           />
         </div>
         <div className="col-span-2 ml-1">{timeAgo(date, t)}</div>

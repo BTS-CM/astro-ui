@@ -69,7 +69,9 @@
     "uia": "Crie seu próprio ativo emitido pelo usuário com o formulário abaixo!",
     "issuedAssets": "Gerencie os ativos blockchain que você criou nas guias abaixo!",
     "create_smartcoin": "Use o formulário abaixo para criar um novo ativo smartcoin.",
-    "blocks": "Veja os dados mais recentes do blockchain convenientemente resumidos abaixo!"
+    "blocks": "Veja os dados mais recentes do blockchain convenientemente resumidos abaixo!",
+    "AccountLists": "Use o formulário abaixo para criar listas de permissões ou listas negras para sua conta.",
+    "proposals": "Veja as aprovações para sua conta abaixo e aprove-as ou rejeite-as após avaliá-las minuciosamente."
   },
   "back": "Volte",
   "usage": "Projetado para uso com ",

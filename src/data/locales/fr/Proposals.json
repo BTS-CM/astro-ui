@@ -1,0 +1,21 @@
+{
+  "proposalID": "ID de la proposition",
+  "proposedBy": "Proposé par",
+  "expirationTime": "Délai d'expiration",
+  "reviewPeriodTime": "Durée de la période d'examen",
+  "operations": "Opérations proposées",
+  "operationsDescription": "Ce sont les opérations individuelles stockées dans cette proposition. ",
+  "beginApprovalProcess": "Commencer le processus d'approbation",
+  "reject": "Rejeter la proposition",
+  "cardTitle": "🤔 Opérations proposées",
+  "cardDescription": "Les propositions permettent à quiconque de suggérer des opérations à exécuter par un autre compte sur la blockchain. ",
+  "noProposals": "Aucune proposition disponible.",
+  "approveProposedOperation": "Approuver l'opération proposée",
+  "rejectProposedOperation": "Rejeter l'opération proposée",
+  "launchApproveProposalOperation": "Approuver la proposition",
+  "approveProposal": "Évaluation des opérations proposées",
+  "approveProposalDescription": "Examinez les détails de la proposition et décidez de l’approuver ou de la rejeter.",
+  "operationType": "Type d'opération",
+  "operationDescription": "Description de l'opération",
+  "approvedProposalHeader": "Approuvant la proposition suivante"
+}

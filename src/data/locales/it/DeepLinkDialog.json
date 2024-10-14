@@ -32,13 +32,13 @@
     "step4Local": "Dalla pagina BEET Local, carica il file JSON, dovrebbe quindi apparire un messaggio.",
     "step5Local": "Verifica attentamente il contenuto della richiesta prima di approvare qualsiasi operazione, valuta anche la possibilità di attivare la ricevuta opzionale per scopi di analisi e verifica post trasmissione.",
     "downloading": "Download in corso...",
-    "downloadBeetOperationJSON": "Scarica l'operazione barbabietola JSON",
+    "downloadBeetOperationJSON": "Scarica Operazione barbabietola JSON",
     "propose": "Creazione di una nuova proposta",
-    "proposeDescription": "Se desideri che un altro account esegua questa operazione, procedi con il modulo di proposta sottostante."
+    "proposeDescription": "Se non sei il proprietario (o sei un comproprietario) dell'account che stai utilizzando per costruire l'operazione proposta, puoi creare una proposta che il proprietario dell'account possa rivedere e trasmettere a sua discrezione."
   },
   "proposal": {
-    "targetContent": "Specificare l'account di destinazione per la proposta.",
-    "targetHeader": "Conto di destinazione",
+    "targetContent": "Questo è l'account che utilizzerai per creare la proposta. ",
+    "targetHeader": "Conto per il pagamento della commissione di proposta",
     "revisionPeriodSecondsContent": "Specificare il periodo di revisione in secondi.",
     "revisionPeriodSecondsHeader": "Periodo di revisione (secondi)"
   }

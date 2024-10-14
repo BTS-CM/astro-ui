@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useSyncExternalStore, useMemo } from "react";
 import { FixedSizeList as List } from "react-window";
 import { useForm } from "react-hook-form";
-import { useStore } from '@nanostores/react';
+import { useStore } from "@nanostores/react";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
@@ -123,7 +123,11 @@ export default function CreditDeals(properties) {
     let unsubscribeBorrowerDeals;
 
     if (usr && usr.id) {
-      const borrowerDealsStore = createBorrowerDealsStore([usr.chain, usr.id, currentNode ? currentNode.url : null]);
+      const borrowerDealsStore = createBorrowerDealsStore([
+        usr.chain,
+        usr.id,
+        currentNode ? currentNode.url : null,
+      ]);
 
       unsubscribeBorrowerDeals = borrowerDealsStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
@@ -131,10 +135,10 @@ export default function CreditDeals(properties) {
         }
       });
     }
-    
+
     return () => {
       if (unsubscribeBorrowerDeals) unsubscribeBorrowerDeals();
-    }
+    };
   }, [usr]);
 
   const [lenderDeals, setLenderDeals] = useState();
@@ -142,8 +146,12 @@ export default function CreditDeals(properties) {
     let unsubscribeLenderDeals;
 
     if (usr && usr.id) {
-      const lenderDealsStore = createLenderDealsStore([usr.chain, usr.id, currentNode ? currentNode.url : null]);
-      
+      const lenderDealsStore = createLenderDealsStore([
+        usr.chain,
+        usr.id,
+        currentNode ? currentNode.url : null,
+      ]);
+
       unsubscribeLenderDeals = lenderDealsStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
           setLenderDeals(data);
@@ -153,7 +161,7 @@ export default function CreditDeals(properties) {
 
     return () => {
       if (unsubscribeLenderDeals) unsubscribeLenderDeals();
-    }
+    };
   }, [usr]);
 
   const [usrBalances, setUsrBalances] = useState();
@@ -161,11 +169,17 @@ export default function CreditDeals(properties) {
     let unsubscribeUserBalances;
 
     if (usr && usr.id) {
-      const userBalancesStore = createUserBalancesStore([usr.chain, usr.id, currentNode ? currentNode.url : null]);
+      const userBalancesStore = createUserBalancesStore([
+        usr.chain,
+        usr.id,
+        currentNode ? currentNode.url : null,
+      ]);
 
       unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
-          const filteredData = data.filter((balance) => assets.find((x) => x.id === balance.asset_id));
+          const filteredData = data.filter((balance) =>
+            assets.find((x) => x.id === balance.asset_id)
+          );
           setUsrBalances(filteredData);
         }
       });
@@ -284,7 +298,9 @@ export default function CreditDeals(properties) {
                 classnamecontents="text-blue-500"
                 type="text"
                 text={res.id.replace("1.22.", "")}
-                hyperlink={`https://blocksights.info/#/objects/${res.id}`}
+                hyperlink={`https://blocksights.info/#/objects/${res.id}${
+                  usr.chain === "bitshares" ? "" : "?network=testnet"
+                }`}
               />
               {t("CreditDeals:with")}
               <ExternalLink
@@ -293,7 +309,7 @@ export default function CreditDeals(properties) {
                 text={type === "borrower" ? res.offer_owner : res.borrower}
                 hyperlink={`https://blocksights.info/#/accounts/${
                   type === "borrower" ? res.offer_owner : res.borrower
-                }`}
+                }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
               />
             </CardTitle>
             <CardDescription>
@@ -304,7 +320,9 @@ export default function CreditDeals(properties) {
                   classnamecontents="text-blue-500"
                   type="text"
                   text={res.debt_asset}
-                  hyperlink={`https://blocksights.info/#/assets/${res.debt_asset}`}
+                  hyperlink={`https://blocksights.info/#/assets/${res.debt_asset}${
+                    usr.chain === "bitshares" ? "" : "?network=testnet"
+                  }`}
                 />
                 )
               </b>
@@ -316,7 +334,9 @@ export default function CreditDeals(properties) {
                   classnamecontents="text-blue-500"
                   type="text"
                   text={res.collateral_asset}
-                  hyperlink={`https://blocksights.info/#/assets/${res.collateral_asset}`}
+                  hyperlink={`https://blocksights.info/#/assets/${res.collateral_asset}${
+                    usr.chain === "bitshares" ? "" : "?network=testnet"
+                  }`}
                 />
                 )
               </b>
@@ -694,8 +714,7 @@ export default function CreditDeals(properties) {
                   )}
                 </TabsList>
                 <TabsContent value="borrowings">
-                  {borrowerDeals &&
-                  borrowerDeals.length ? (
+                  {borrowerDeals && borrowerDeals.length ? (
                     <List
                       height={500}
                       itemCount={borrowerDeals.length}
@@ -705,17 +724,13 @@ export default function CreditDeals(properties) {
                       {BorrowerRow}
                     </List>
                   ) : null}
-                  {borrowerDeals &&
-                  !borrowerDeals.length
+                  {borrowerDeals && !borrowerDeals.length
                     ? t("CreditDeals:card.noBorrowers")
                     : null}
-                  {!borrowerDeals
-                    ? t("CreditDeals:card.loading")
-                    : null}
+                  {!borrowerDeals ? t("CreditDeals:card.loading") : null}
                 </TabsContent>
                 <TabsContent value="lendings">
-                  {lenderDeals &&
-                  lenderDeals.length ? (
+                  {lenderDeals && lenderDeals.length ? (
                     <List
                       height={500}
                       itemCount={lenderDeals.length}
@@ -725,12 +740,8 @@ export default function CreditDeals(properties) {
                       {OwnerRow}
                     </List>
                   ) : null}
-                  {lenderDeals && !lenderDeals.length
-                    ? t("CreditDeals:card.noLendings")
-                    : null}
-                  {!lenderDeals
-                    ? t("CreditDeals:card.loading")
-                    : null}
+                  {lenderDeals && !lenderDeals.length ? t("CreditDeals:card.noLendings") : null}
+                  {!lenderDeals ? t("CreditDeals:card.loading") : null}
                 </TabsContent>
               </Tabs>
             </CardContent>

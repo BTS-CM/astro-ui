@@ -68,7 +68,9 @@
     "uia": "Opret dit eget brugerudstedte aktiv med formularen nedenfor!",
     "issuedAssets": "Administrer de blockchain-aktiver, du har oprettet, på fanerne nedenfor!",
     "create_smartcoin": "Brug formularen nedenfor til at oprette et nyt smartcoin-aktiv.",
-    "blocks": "Se de seneste blockchain-data bekvemt opsummeret nedenfor!"
+    "blocks": "Se de seneste blockchain-data bekvemt opsummeret nedenfor!",
+    "AccountLists": "Brug formularen nedenfor til at oprette hvidlister eller sortlister til din konto.",
+    "proposals": "Se godkendelserne for din konto nedenfor, og godkend eller afvis dem efter en grundig evaluering af dem."
   },
   "back": "Gå tilbage",
   "usage": "Designet til brug med ",

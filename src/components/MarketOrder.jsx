@@ -2,7 +2,7 @@ import React, { useState, useEffect, useSyncExternalStore, useMemo, useCallback 
 import { useForm } from "react-hook-form";
 import { CalendarIcon, LockOpen2Icon, LockClosedIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
-import { useStore } from '@nanostores/react';
+import { useStore } from "@nanostores/react";
 import { useTranslation } from "react-i18next";
 
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
@@ -277,11 +277,17 @@ export default function MarketOrder(properties) {
     let unsubscribeUserBalances;
 
     if (usr && usr.id && currentLimitOrder && baseAsset && quoteAsset) {
-      const userBalancesStore = createUserBalancesStore([usr.chain, usr.id, currentNode ? currentNode.url : null]);
+      const userBalancesStore = createUserBalancesStore([
+        usr.chain,
+        usr.id,
+        currentNode ? currentNode.url : null,
+      ]);
 
       unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
-          const filteredData = data.filter((balance) => assets.find((x) => x.id === balance.asset_id));
+          const filteredData = data.filter((balance) =>
+            assets.find((x) => x.id === balance.asset_id)
+          );
 
           setBalances(filteredData);
           const foundBase = filteredData.find((x) => x.asset_id === baseAsset.id);
@@ -429,7 +435,9 @@ export default function MarketOrder(properties) {
                               classnamecontents=""
                               type="button"
                               text={t("MarketOrder:viewObjectOnBlocksightsInfo")}
-                              hyperlink={`https://blocksights.info/#/objects/${limitOrderID}`}
+                              hyperlink={`https://blocksights.info/#/objects/${limitOrderID}${
+                                usr.chain === "bitshares" ? "" : "?network=testnet"
+                              }`}
                             />
                           </div>
                         </div>

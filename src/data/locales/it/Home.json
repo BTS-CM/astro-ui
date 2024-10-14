@@ -110,6 +110,12 @@
     "hover2": "I mercati di previsione possono riguardare qualsiasi cosa.",
     "hover3": "Ogni asset del mercato di previsione ha una tariffa unica."
   },
+  "proposals": {
+    "title": "🤔 Operazioni proposte",
+    "subtitle": "Visualizza e approva/rifiuta le operazioni sull'account proposte",
+    "hover1": "Visualizza le operazioni sull'account proposte effettuate da altri account blockchain per il tuo account.",
+    "hover2": "Approvare o rifiutare le operazioni sul conto proposte."
+  },
   "issued_assets": {
     "title": "📃 I tuoi beni emessi",
     "subtitle": "Visualizza tutte le risorse che hai creato",
@@ -146,6 +152,13 @@
     "hover2": "Possono essere utilizzati per vari scopi.",
     "hover3": "Possono essere utilizzati come stablecoin, token per la tua attività, token di ricompensa, token per un gioco e altro ancora.",
     "hover4": "Gli smartcoin possono essere supportati da qualsiasi asset e fare riferimento a qualsiasi feed esterno."
+  },
+  "accountLists": {
+    "title": "📋 Elenchi di account",
+    "subtitle": "Visualizza e gestisci gli elenchi dei tuoi account",
+    "hover1": "Aggiungi account alla tua lista bianca.",
+    "hover2": "Aggiungi account alla tua lista nera.",
+    "hover3": "Rimuovere gli account da tali elenchi."
   },
   "ltm": {
     "title": "🏅 Aggiorna account",

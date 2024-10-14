@@ -110,6 +110,12 @@
     "hover2": "Os mercados de previsão podem ser sobre qualquer coisa.",
     "hover3": "Cada ativo de mercado de previsão possui uma taxa exclusiva."
   },
+  "proposals": {
+    "title": "🤔 Operações propostas",
+    "subtitle": "Visualizar e aprovar/rejeitar operações de conta propostas",
+    "hover1": "Veja as operações de conta propostas feitas por outras contas blockchain para sua conta.",
+    "hover2": "Aprovar ou rejeitar as operações de conta propostas."
+  },
   "issued_assets": {
     "title": "📃 Seus ativos emitidos",
     "subtitle": "Veja todos os ativos que você criou",
@@ -146,6 +152,13 @@
     "hover2": "Eles podem ser usados ​​para diversos fins.",
     "hover3": "Eles podem ser usados ​​como stablecoin, token para o seu negócio, token de recompensa, token para um jogo e muito mais.",
     "hover4": "Smartcoins podem ser apoiados por qualquer ativo e fazer referência a qualquer feed externo."
+  },
+  "accountLists": {
+    "title": "📋 Listas de contas",
+    "subtitle": "Visualize e gerencie suas listas de contas",
+    "hover1": "Adicione contas à sua lista de permissões.",
+    "hover2": "Adicione contas à sua lista negra.",
+    "hover3": "Remova contas dessas listas."
   },
   "ltm": {
     "title": "🏅 Atualizar conta",

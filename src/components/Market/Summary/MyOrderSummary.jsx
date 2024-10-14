@@ -159,7 +159,9 @@ export default function MyOrderSummary(properties) {
                     classnamecontents=""
                     type="button"
                     text={t("MyOrderSummary:viewObjectOnBlocksights")}
-                    hyperlink={`https://blocksights.info/#/objects/${res.id}`}
+                    hyperlink={`https://blocksights.info/#/objects/${res.id}${
+                      usr.chain === "bitshares" ? "" : "?network=testnet"
+                    }`}
                   />
                 </div>
               </div>

@@ -1,0 +1,21 @@
+{
+  "proposalID": "Angebots-ID",
+  "proposedBy": "Vorgeschlagen von",
+  "expirationTime": "Ablaufzeit",
+  "reviewPeriodTime": "Überprüfungszeitraum",
+  "operations": "Vorgeschlagene Operationen",
+  "operationsDescription": "Dies sind die einzelnen Operationen, die in diesem Vorschlag gespeichert sind. ",
+  "beginApprovalProcess": "Beginnen Sie mit dem Genehmigungsprozess",
+  "reject": "Vorschlag ablehnen",
+  "cardTitle": "🤔 Vorgeschlagene Operationen",
+  "cardDescription": "Mit Vorschlägen kann jeder Vorgänge vorschlagen, die von einem anderen Konto in der Blockchain ausgeführt werden sollen. ",
+  "noProposals": "Keine Vorschläge verfügbar.",
+  "approveProposedOperation": "Genehmigen Sie den vorgeschlagenen Vorgang",
+  "rejectProposedOperation": "Vorgeschlagene Operation ablehnen",
+  "launchApproveProposalOperation": "Genehmigen Sie den Vorschlag",
+  "approveProposal": "Bewertung vorgeschlagener Operationen",
+  "approveProposalDescription": "Überprüfen Sie die Details des Vorschlags und entscheiden Sie, ob Sie ihn genehmigen oder ablehnen.",
+  "operationType": "Operationstyp",
+  "operationDescription": "Vorgangsbeschreibung",
+  "approvedProposalHeader": "Zustimmung zum folgenden Vorschlag"
+}
