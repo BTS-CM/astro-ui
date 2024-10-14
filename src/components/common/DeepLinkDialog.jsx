@@ -584,17 +584,17 @@ export default function DeepLinkDialog(properties) {
                       Submit
                     </Button>
                   </div>
-                  {proposalDialogOpen && !proposal && (
+                  {proposalDialogOpen && !proposal && targetUser && targetUser.id && (
                     <DeepLinkDialog
                       trxJSON={[
                         {
-                          fee_paying_account: usr.id,
-                          expiration_time: parseInt(date.getTime() / 1000),
+                          fee_paying_account: targetUser.id,
+                          expiration_time: date,
                           proposed_ops: trxJSON.map((operation, index) => ({
                             op: [
                               operationNumbers[operationNames[index]],
                               {
-                                ...trxJSON[index],
+                                ...operation,
                                 fee: {
                                   amount: 0,
                                   asset_id: "1.3.0",

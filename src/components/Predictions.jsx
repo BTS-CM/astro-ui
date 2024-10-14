@@ -1115,7 +1115,7 @@ export default function Predictions(properties) {
                                   amount: blockchainFloat(sellAmount, _backingPrecision).toFixed(0),
                                   asset_id: _backingAssetID,
                                 },
-                                expiration: expiry,
+                                expiration: date,
                                 fill_or_kill: expiryType === "fkill" ? true : false,
                                 extensions: {},
                               },
@@ -1364,7 +1364,7 @@ export default function Predictions(properties) {
                                   amount: blockchainFloat(buyAmount, res.precision).toFixed(0),
                                   asset_id: res.id,
                                 },
-                                expiration: expiry,
+                                expiration: date,
                                 fill_or_kill: expiryType === "fkill" ? true : false,
                                 extensions: {},
                               },
@@ -1970,7 +1970,7 @@ export default function Predictions(properties) {
                     amount: 1,
                     asset_id: "1.3.1756"
                   },
-                  expiration: expiry,
+                  expiration: date,
                   fill_or_kill: false,
                   extensions: {}
                 }]}

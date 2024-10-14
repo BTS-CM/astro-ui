@@ -1233,7 +1233,7 @@ export default function LimitOrderCard(properties) {
                         amount: blockchainFloat(amount, assetAData.precision).toFixed(0),
                         asset_id: marketSearch.find((asset) => asset.s === thisAssetA).id,
                       },
-                      expiration: expiry,
+                      expiration: date,
                       fill_or_kill: expiryType === "fkill" ? true : false,
                       extensions: osoEnabled
                         ? {
