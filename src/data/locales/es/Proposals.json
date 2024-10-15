@@ -17,5 +17,9 @@
   "approveProposalDescription": "Revisa los detalles de la propuesta y decide si la apruebas o la rechazas.",
   "operationType": "Tipo de operación",
   "operationDescription": "Descripción de la operación",
-  "approvedProposalHeader": "Aprobando la siguiente propuesta"
+  "approvedProposalHeader": "Aprobando la siguiente propuesta",
+  "risksTitle": "Riesgos de la propuesta",
+  "risksDescription": "Tenga en cuenta los siguientes riesgos al considerar propuestas:",
+  "risk1": "Las propuestas pueden ser peligrosas. ",
+  "risk2": "Las propuestas aprobadas son irreversibles. "
 }

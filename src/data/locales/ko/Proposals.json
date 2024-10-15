@@ -17,5 +17,9 @@
   "approveProposalDescription": "제안 내용을 검토하고 승인 또는 거부 여부를 결정합니다.",
   "operationType": "작업 유형",
   "operationDescription": "작업 설명",
-  "approvedProposalHeader": "다음 제안 승인"
+  "approvedProposalHeader": "다음 제안 승인",
+  "risksTitle": "제안 위험",
+  "risksDescription": "제안을 고려할 때 다음과 같은 위험에 유의하십시오.",
+  "risk1": "제안은 위험할 수 있습니다. ",
+  "risk2": "승인된 제안은 되돌릴 수 없습니다. "
 }

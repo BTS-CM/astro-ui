@@ -17,5 +17,9 @@
   "approveProposalDescription": "Gennemgå detaljerne i forslaget og beslut, om det skal godkendes eller afvises.",
   "operationType": "Operationstype",
   "operationDescription": "Driftsbeskrivelse",
-  "approvedProposalHeader": "Godkender følgende forslag"
+  "approvedProposalHeader": "Godkender følgende forslag",
+  "risksTitle": "Forslagsrisici",
+  "risksDescription": "Vær opmærksom på følgende risici, når du overvejer forslag:",
+  "risk1": "Forslag kan være farlige. ",
+  "risk2": "Godkendte forslag er irreversible. "
 }

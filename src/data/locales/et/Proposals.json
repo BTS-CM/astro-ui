@@ -17,5 +17,9 @@
   "approveProposalDescription": "Vaadake ettepaneku üksikasjad üle ja otsustage, kas see kinnitada või tagasi lükata.",
   "operationType": "Operatsiooni tüüp",
   "operationDescription": "Toimingu kirjeldus",
-  "approvedProposalHeader": "Järgmise ettepaneku heakskiitmine"
+  "approvedProposalHeader": "Järgmise ettepaneku heakskiitmine",
+  "risksTitle": "Ettepanekuga seotud riskid",
+  "risksDescription": "Ettepanekute kaalumisel pidage meeles järgmisi riske:",
+  "risk1": "Ettepanekud võivad olla ohtlikud. ",
+  "risk2": "Heakskiidetud ettepanekud on pöördumatud. "
 }

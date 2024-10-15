@@ -484,6 +484,21 @@ export default function Proposals(properties) {
             </CardContent>
           </Card>
 
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle>{t("Proposals:risksTitle")}</CardTitle>
+              <CardDescription>{t("Proposals:risksDescription")}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <span className="text-sm">
+                <ul className="ml-2 list-disc [&>li]:mt-1 pl-2">
+                  <li>{t("Proposals:risk1")}</li>
+                  <li>{t("Proposals:risk2")}</li>
+                </ul>
+              </span>
+            </CardContent>
+          </Card>
+
           {viewJSON && json ? (
             <Dialog
               open={viewJSON}

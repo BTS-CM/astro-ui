@@ -17,5 +17,9 @@
   "approveProposalDescription": "提案の詳細を確認し、承認するか拒否するかを決定します。",
   "operationType": "操作の種類",
   "operationDescription": "動作説明",
-  "approvedProposalHeader": "以下の提案を承認します"
+  "approvedProposalHeader": "以下の提案を承認します",
+  "risksTitle": "提案のリスク",
+  "risksDescription": "提案を検討する際には、次のリスクに注意してください。",
+  "risk1": "提案は危険を伴う可能性があります。",
+  "risk2": "承認された提案は元に戻すことができません。 "
 }

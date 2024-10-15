@@ -17,5 +17,9 @@
   "approveProposalDescription": "Review the details of the proposal and decide whether to approve or reject it.",
   "operationType": "Operation Type",
   "operationDescription": "Operation Description",
-  "approvedProposalHeader": "Approving the following proposal"
+  "approvedProposalHeader": "Approving the following proposal",
+  "risksTitle": "Proposal Risks",
+  "risksDescription": "Be aware of the following risks when considering proposals:",
+  "risk1": "Proposals can be dangerous. They can be created by anyone and suggest any kind of operation on the blockchain. Be smart and do your due diligence when considering approving proposals. Make sure not to be caught out by a scammer.",
+  "risk2": "Approved proposals are irreversible. The Astro-UI and Beeteos apps/projects offer no user warranty as part of their respective licenses. You are responsible for any choice made in the above user interface. Do not fall for tricks. If you weren't expecting a proposal, you should either ignore it or reject it."
 }

@@ -17,5 +17,9 @@
   "approveProposalDescription": "Überprüfen Sie die Details des Vorschlags und entscheiden Sie, ob Sie ihn genehmigen oder ablehnen.",
   "operationType": "Operationstyp",
   "operationDescription": "Vorgangsbeschreibung",
-  "approvedProposalHeader": "Zustimmung zum folgenden Vorschlag"
+  "approvedProposalHeader": "Zustimmung zum folgenden Vorschlag",
+  "risksTitle": "Angebotsrisiken",
+  "risksDescription": "Seien Sie sich bei der Prüfung von Vorschlägen der folgenden Risiken bewusst:",
+  "risk1": "Vorschläge können gefährlich sein. ",
+  "risk2": "Genehmigte Vorschläge sind unwiderruflich. "
 }
