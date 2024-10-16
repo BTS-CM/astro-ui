@@ -12,6 +12,7 @@
   "noProposals": "Keine Vorschläge verfügbar.",
   "approveProposedOperation": "Genehmigen Sie den vorgeschlagenen Vorgang",
   "rejectProposedOperation": "Vorgeschlagene Operation ablehnen",
+  "rejectedProposalHeader": "Vorschlag ablehnen",
   "launchApproveProposalOperation": "Genehmigen Sie den Vorschlag",
   "approveProposal": "Bewertung vorgeschlagener Operationen",
   "approveProposalDescription": "Überprüfen Sie die Details des Vorschlags und entscheiden Sie, ob Sie ihn genehmigen oder ablehnen.",

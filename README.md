@@ -1,11 +1,13 @@
 # Bitshares astro UI
 
-Created using [Astro](https://docs.astro.build) & React.
+Created using [Astro](https://docs.astro.build), [React](https://react.dev/) & [Electron](https://www.electronjs.org).
 
 Integrates with both the [Beet](https://github.com/bitshares/beet) and [BeetEOS](https://github.com/beetapp/beeteos) multiwallets, for the Bitshares and Bitshares Testnet blockchains.
 
 ## Dev blogs
 
+- [Proposals](https://hive.blog/hive-120117/@nftea.gallery/october-bitshares-astro-ui-development-blog-demonstrating-the-construction-and-resolution-of-bitshares-proposals)
+- [Account lists](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-dev-blog-manage-your-bitshares-account-lists-more-easily)
 - [Creating smartcoins](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-development-preview-blog-creating-smartcoins-on-the-bitshares-blockchain-for-use-on-the-bts-dex)
 - [Creating & Browsing User Issued Assets](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-dev-update-creating-user-issued-assets-and-browsing-issued-assets-overview)
 - [Creating Vesting Balances](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-dev-update-creating-vesting-balances)
@@ -42,6 +44,9 @@ Integrates with both the [Beet](https://github.com/bitshares/beet) and [BeetEOS]
 - Create/update Smartcoins
 - Create NFTs in UIA or Smartcoin form
 - View your issued assets (UIAs, NFTs, Smartcoins & PMAs)
+- Create proposals for all operations
+- View account proposals - approve/reject
+- Configure account lists
 
 ## Dev Commands
 

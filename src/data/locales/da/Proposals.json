@@ -12,6 +12,7 @@
   "noProposals": "Ingen forslag tilgængelige.",
   "approveProposedOperation": "Godkend foreslået drift",
   "rejectProposedOperation": "Afvis foreslået operation",
+  "rejectedProposalHeader": "Afvisning af forslag",
   "launchApproveProposalOperation": "Godkend forslaget",
   "approveProposal": "Evaluering af foreslåede operationer",
   "approveProposalDescription": "Gennemgå detaljerne i forslaget og beslut, om det skal godkendes eller afvises.",

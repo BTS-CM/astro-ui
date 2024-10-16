@@ -314,7 +314,7 @@ export default function SameTFunds(properties) {
                   classnamecontents="hover:text-purple-500"
                   type="text"
                   text={lender.name}
-                  hyperlink={`https://blocksights.info/#/account/${lender.name}${
+                  hyperlink={`https://blocksights.info/#/accounts/${lender.name}${
                     usr.chain === "bitshares" ? "" : "?network=testnet"
                   }`}
                 />
@@ -326,7 +326,7 @@ export default function SameTFunds(properties) {
                 classnamecontents="hover:text-purple-500"
                 type="text"
                 text={fund.owner_account}
-                hyperlink={`https://blocksights.info/#/account/${fund.owner_account}${
+                hyperlink={`https://blocksights.info/#/accounts/${fund.owner_account}${
                   usr.chain === "bitshares" ? "" : "?network=testnet"
                 }`}
               />

@@ -12,6 +12,7 @@
   "noProposals": "No hay propuestas disponibles.",
   "approveProposedOperation": "Aprobar la operación propuesta",
   "rejectProposedOperation": "Rechazar operación propuesta",
+  "rejectedProposalHeader": "Rechazar propuesta",
   "launchApproveProposalOperation": "Aprobar la propuesta",
   "approveProposal": "Evaluación de operaciones propuestas",
   "approveProposalDescription": "Revisa los detalles de la propuesta y decide si la apruebas o la rechazas.",
