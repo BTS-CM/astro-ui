@@ -30,6 +30,8 @@
   "create_smartcoin": "스마트코인 생성",
   "create_uia": "사용자 발행 자산 생성",
   "blockExplorer": "라이브 블록체인 데이터",
+  "accountLists": "계정 목록",
+  "proposals": "제안된 운영",
   "nodes": "노드",
   "buyLTM": "장기 구매",
   "english": "영어(en)",

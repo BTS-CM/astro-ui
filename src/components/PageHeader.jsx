@@ -202,6 +202,11 @@ export default function PageHeader(properties) {
                         icon="🎲"
                       />
                       <MenuRow
+                        url="/proposals/index.html"
+                        text={t("PageHeader:proposals")}
+                        icon="🤔"
+                      />
+                      <MenuRow
                         url="/issued_assets/index.html"
                         text={t("PageHeader:issuedAssets")}
                         icon="📃"
@@ -232,6 +237,11 @@ export default function PageHeader(properties) {
                     </CommandGroup>
                     <CommandSeparator />
                     <CommandGroup heading={t("PageHeader:settingsHeading")}>
+                      <MenuRow
+                        url="/account_lists/index.html"
+                        text={t("PageHeader:accountLists")}
+                        icon="📋"
+                      />
                       <MenuRow url="/ltm/index.html" text={t("PageHeader:buyLTM")} icon="🏅" />
                       <MenuRow url="/nodes/index.html" text={t("PageHeader:nodes")} icon="🌐" />
                     </CommandGroup>

@@ -30,6 +30,8 @@
   "create_smartcoin": "スマートコインを作成する",
   "create_uia": "ユーザー発行アセットの作成",
   "blockExplorer": "ライブブロックチェーンデータ",
+  "accountLists": "アカウントリスト",
+  "proposals": "提案された操作",
   "nodes": "ノード",
   "buyLTM": "LTM を購入する",
   "english": "英語 (en)",
