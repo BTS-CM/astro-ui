@@ -5,7 +5,8 @@
  * @returns {Number}
  */
 function blockchainFloat(satoshis, precision) {
-  return satoshis * 10 ** precision;
+  const factor = 10 ** precision;
+  return Math.round(satoshis * factor);
 }
 
 /**
