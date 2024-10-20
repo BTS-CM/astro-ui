@@ -30,13 +30,13 @@
   "price_feeders_content": "Prognoosi saavad lahendada kas tunnistajad, komisjon või erahinnasöötjad.",
   "feed": "Hind toidetud resolutsioon",
   "seller": "Müük (ennustuse vastu panustamine)",
-  "seller_content": "Müüjad panustavad ennustuse vastu. ",
+  "seller_content": "Müüjad panustavad ennustuse vastu. Kui ennustus on vale, võidavad müüjad kokkuleppehinnaga 0.",
   "buyer": "Ostmine (ennustuse jaoks panustamine)",
-  "buyer_content": "Ostjad panustavad ennustuse peale. ",
+  "buyer_content": "Ostjad panustavad ennustuse peale. Kui ennustus vastab tõele, võidavad ostjad kokkuleppehinnaga 1.",
   "admin": "Admin",
   "admin_content": "Majas on ennustuse lahendamiseks lisakontroll.",
   "about": "Umbes",
-  "winner_content": "Võitjad, kes ostsid (tegelik tulemus), saavad tasuda PMA 1x tagavara sisu eest. ",
+  "winner_content": "Võitjad, kes ostsid (tegelik tulemus), saavad tasuda PMA-ga 1x tagavara sisu eest, võitjad, kes müüsid (vale tulemus), ei pea midagi tegema.",
   "winner_header": "Võitjad",
   "winner_claim": "Taotlege tagatisvarasid",
   "resolve": "Lahenda ennustus",
@@ -52,12 +52,12 @@
     "description": "Tulemuse vastu panustamiseks peate esmalt väljastama ennustusturu varade märgid.",
     "balance": "Kasutage tasakaalu",
     "qtyHeader": "Väljastatav kogus",
-    "qtyContent": "Märkide kogus, mida soovite sellel ennustusturul väljastada. ",
+    "qtyContent": "Märkide kogus, mida soovite sellel ennustusturul väljastada, väljastatud žetoone saab müüa, mis võimaldab teil ennustada vastu panustada.",
     "existingHeader": "Olemasolev tagatis",
-    "existingContent": "Nii palju olete juba väljastanud ennustatud varade žetoone.",
+    "existingContent": "See on see, kui palju ennustusvarade turumärke olete juba väljastanud.",
     "totalHeader": "Tagatis kokku",
     "totalContent": "See on tagatise kogusumma, mille olete panustanud sellele prognoositavale turuvarale.",
-    "receivingContent": "See on ligikaudne prognoositavate turuvarade žetoonide kogusumma, mille saate selle tehingu eest vastutasuks.",
+    "receivingContent": "See on ligikaudu ennustuste turu varade žetoonide kogusumma, mille saate selle tehingu eest vastutasuks.",
     "receivingHeader": "Vastuvõtmine"
   },
   "submit": "Esita",
@@ -78,14 +78,14 @@
     "receivingContent": "See on ligikaudu tagatisvara kogusumma, mille saate selle tehingu eest vastutasuks.",
     "title": "Ennustusturu varade müük",
     "description": "Ennustuse tulemuse vastu panustamiseks peate müüma eelnevalt välja antud ennustuste turu varade märgid.",
-    "expiryContent": "Teie limiittellimus jääb DEX-is aktiivseks kaua, enne kui see enam ei eksisteeri. ",
+    "expiryContent": "Teie limiittellimus jääb DEX-is aktiivseks kaua, enne kui see enam ei eksisteeri. Kui valite \"täitke või tapke\", siis kui sobivat DEX-i müügilimiittellimust pole, toiming nurjub, säästes teie aega ja tasusid.",
     "expiryHeader": "Aegumine"
   },
   "buyDialog": {
     "title": "Ennustusturu varade ostmine",
     "description": "Ennustuse tulemuse kasuks panustamiseks peate ostma ennustuse turu varade märgid müüjalt, kes panustab tulemuse vastu.",
     "receivingHeader": "Vastuvõtmine",
-    "receivingContent": "See on ligikaudne prognoositavate turuvarade žetoonide kogusumma, mille saate selle tehingu eest vastutasuks."
+    "receivingContent": "See on ligikaudu ennustuste turu varade žetoonide kogusumma, mille saate selle tehingu eest vastutasuks."
   },
   "claimDialog": {
     "qtyContent": "Prognoositud turuvarade kogus, mille soovite tagatisvaraks tagasi kanda.",
@@ -93,21 +93,21 @@
   },
   "resolveDialog": {
     "title": "Prognoosi lahendamine",
-    "description": "Ennustus on aegunud ja lahenduseks valmis. ",
+    "description": "Ennustus on aegunud ja on lahendamiseks valmis. Valige ennustuse õige tulemus.",
     "outcomeHeader": "Tulemus",
-    "outcomeContent": "Ennustuse tulemus. ",
+    "outcomeContent": "Ennustuse tulemus Kui ennustus on tõene, võidavad ostjad kokkuleppehinnaga 1, kui ennustus on vale, võidavad müüjad, kui arveldushind on 0.",
     "true": "Tõeline tulemus (ostjad võidavad)",
     "false": "Vale tulemus (müüjad võidavad)"
   },
   "priceFeederDialog": {
     "title": "Määra hinnasöötjad",
-    "description": "Määrake selle prognoosi jaoks hinnasöötjad. ",
+    "description": "Määrake selle prognoosi jaoks hinnasööturid. Hinnatoitjad vastutavad ennustuse arveldushinna esitamise eest.",
     "priceFeedersHeader": "Hinnasööturid",
-    "priceFeedersContent": "Selle ennustuse hinnasöötjad. ",
+    "priceFeedersContent": "Selle ennustuse hinnasöötjad ja hinnasööturid vastutavad ennustuse arveldushinna esitamise eest.",
     "addPriceFeeder": "Lisa hinnasöötur",
     "addPriceFeederDialog": {
       "title": "Lisa hinnasöötur",
-      "description": "Lisage sellele ennustusele hinnasöötja. ",
+      "description": "Lisage sellele prognoosile hinnasöötja. Hinnatoitjad vastutavad ennustuse arveldushinna esitamise eest.",
       "accountHeader": "konto",
       "accountContent": "Konto, mis vastutab ennustuse arveldushinna esitamise eest.",
       "submit": "Lisa"
@@ -117,7 +117,7 @@
     "title": "Ennustusturu lahendamine hinnavoo kaudu",
     "description": "Ennustus on aegunud ja on valmis avaldatud hinnavoo kaudu lahendamiseks.",
     "outcomeHeader": "Tulemus",
-    "outcomeContent": "Ennustuse tulemus. ",
+    "outcomeContent": "Ennustuse tulemus Kui ennustus on tõene, võidavad ostjad kokkuleppehinnaga 1, kui ennustus on vale, võidavad müüjad, kui arveldushind on 0.",
     "true": "Tõeline tulemus (ostjad võidavad)",
     "false": "Vale tulemus (müüjad võidavad)"
   }

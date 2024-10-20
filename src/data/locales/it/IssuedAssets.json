@@ -71,7 +71,7 @@
   "newIssuer": "Nuovo conto emittente",
   "newIssuerInfo": "Questo è l'account che diventerà permanentemente il nuovo emittente (proprietario) di questa risorsa.",
   "currentIssuer": "Emittente attuale",
-  "currentIssuerInfo": "Questo è l'attuale emittente (proprietario) di questa risorsa. ",
+  "currentIssuerInfo": "Questo è l'attuale emittente (proprietario) di questa risorsa. Questa operazione rimuove permanentemente la proprietà di questa risorsa da questo utente.",
   "updateIssuerHeader": "Aggiornamento dell'emittente di {{asset}} A {{newIssuer}} da {{currentIssuer}}",
   "globalSettlement": "Soluzione globale",
   "globallySettle": "Eseguire la liquidazione globale",

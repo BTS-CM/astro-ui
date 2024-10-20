@@ -4,11 +4,11 @@
   "expirationTime": "Expiration Time",
   "reviewPeriodTime": "Review Period Time",
   "operations": "Proposed operations",
-  "operationsDescription": "These are the individual operations stored in this proposal. Click on each operation id below to view their JSON details. Thoroughly review each operation and double check who the proposer is before proceeding with approval. Approvals are irreversible, don't approve transfer of your account to a stranger for example.",
+  "operationsDescription": "These are the individual operations stored in this proposal, Click on each operation id below to view their JSON details, Thoroughly review each operation and double check who the proposer is before proceeding with approval, Approvals are irreversible, don't approve transfer of your account to a stranger for example.",
   "beginApprovalProcess": "Begin Approval Process",
   "reject": "Reject Proposal",
   "cardTitle": "🤔 Proposed Operations",
-  "cardDescription": "Proposals allow anyone to suggest operations to be executed by another account on the blockchain. The account owner reviews these proposals and decides whether to approve or reject them.",
+  "cardDescription": "Proposals allow anyone to suggest operations to be executed by another account on the blockchain, The account owner reviews these proposals and decides whether to approve or reject them.",
   "noProposals": "No proposals available.",
   "approveProposedOperation": "Approve Proposed Operation",
   "rejectProposedOperation": "Reject Proposed Operation",
@@ -21,6 +21,6 @@
   "approvedProposalHeader": "Approving the following proposal",
   "risksTitle": "Proposal Risks",
   "risksDescription": "Be aware of the following risks when considering proposals:",
-  "risk1": "Proposals can be dangerous. They can be created by anyone and suggest any kind of operation on the blockchain. Be smart and do your due diligence when considering approving proposals. Make sure not to be caught out by a scammer.",
-  "risk2": "Approved proposals are irreversible. The Astro-UI and Beeteos apps/projects offer no user warranty as part of their respective licenses. You are responsible for any choice made in the above user interface. Do not fall for tricks. If you weren't expecting a proposal, you should either ignore it or reject it."
+  "risk1": "Proposals can be dangerous, They can be created by anyone and suggest any kind of operation on the blockchain, Be smart and do your due diligence when considering approving proposals, Make sure not to be caught out by a scammer.",
+  "risk2": "Approved proposals are irreversible, The Astro-UI and Beeteos apps/projects offer no user warranty as part of their respective licenses, You are responsible for any choice made in the above user interface, Do not fall for tricks, If you weren't expecting a proposal, you should either ignore it or reject it."
 }

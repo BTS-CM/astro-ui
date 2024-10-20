@@ -5,7 +5,7 @@
     "readyToBroadcast": "Votre opération Bitshares Beet est prête à être diffusée !",
     "chooseMethod": "Choisissez parmi les méthodes ci-dessous pour diffuser sur le portefeuille de votre choix.",
     "bitsharesBEETMultiwallet": "Portefeuille multi-portefeuille Bitshares BEET",
-    "errorOccurred": "Une erreur s'est produite, désolé. ",
+    "errorOccurred": "Une erreur s'est produite, désolé, veuillez fermer cette boîte de dialogue et réessayer.",
     "beetWallet": "Portefeuille multi-portefeuille Bitshares BEET"
   },
   "tabs": {
@@ -37,7 +37,7 @@
     "proposeDescription": "Si vous n'êtes pas propriétaire (ou copropriétaire) du compte que vous utilisez pour construire l'opération proposée, vous pouvez créer une proposition que le propriétaire du compte pourra examiner et diffuser à sa discrétion."
   },
   "proposal": {
-    "targetContent": "Il s'agit du compte que vous utiliserez pour créer la proposition. ",
+    "targetContent": "Il s'agit du compte que vous utiliserez pour créer la proposition, construire des opérations dans l'interface utilisateur Astro en tant qu'utilisateur final, puis fournir ici votre compte payant les frais de proposition.",
     "targetHeader": "Compte payant les frais de proposition",
     "revisionPeriodSecondsContent": "Spécifiez la période de révision en secondes.",
     "revisionPeriodSecondsHeader": "Période de révision (secondes)"

@@ -3,6 +3,7 @@
   "creditBorrow": "Borrow",
   "creditLend": "Lend",
   "proceedToBorrow": "Issue",
+  "collateralBid": "Bid on collateral",
   "issueAssetDescription": "As the the issuer of this asset, you can issue this asset to yourself or to another account on the blockchain, up to the configured maximum supply.",
   "manageUIA": "Edit",
   "pmaBet": "Bet",
@@ -71,7 +72,7 @@
   "newIssuer": "New Issuer Account",
   "newIssuerInfo": "This is the account that will permanently become the new issuer (owner) of this asset.",
   "currentIssuer": "Current Issuer",
-  "currentIssuerInfo": "This is the current issuer (owner) of this asset. This operation permanently removes ownership of this asset from this user.",
+  "currentIssuerInfo": "This is the current issuer (owner) of this asset, This operation permanently removes ownership of this asset from this user.",
   "updateIssuerHeader": "Updating the issuer of {{asset}} to {{newIssuer}} from {{currentIssuer}}",
   "globalSettlement": "Global Settlement",
   "globallySettle": "Perform Global Settlement",
@@ -88,5 +89,5 @@
   "chooseSpecificFeedInfo": "This is the specific price feed that will be used to determine the global settlement price for this asset.",
   "chooseSpecificFeed": "Choose Specific Price Feed",
   "publishTime": "Published {{hours}} hours ago",
-  "inactiveSmartcoin": "This smartcoin doesn't have an active settlement price, it therefore cannot be issued nor settled; It may be in a form of global settlement, which can be resolved through settlement fund bidding."
+  "inactiveSmartcoin": "This smartcoin is inactive and cannot be issued nor settled, It's either in a form of global settlement or its price feeds are insufficient to define a settlement price."
 }

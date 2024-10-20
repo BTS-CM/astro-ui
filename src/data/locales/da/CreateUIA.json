@@ -5,7 +5,7 @@
   "card": {
     "title_create": "Oprettelse af et nyt brugerudstedt aktiv",
     "title_edit": "Redigering af et brugerudstedt aktiv",
-    "description": "Brugerudstedte aktiver kan repræsentere alt, hvad du ønsker, de kan bruges til en række forskellige formål. "
+    "description": "Brugerudstedte aktiver kan repræsentere alt, hvad du ønsker, de kan bruges til en række forskellige formål, de kan bruges som et token for din virksomhed, et belønningstoken, et token til et spil og mere."
   },
   "buttons": {
     "submit": "Indsend"

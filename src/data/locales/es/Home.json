@@ -38,7 +38,7 @@
     "subtitle": "Crear saldos de adquisición de derechos",
     "hover1": "Crear un saldo de adquisición de derechos le permite bloquear una cantidad de activos durante un período de tiempo determinado.",
     "hover2": "Puede utilizar uno de dos tipos de adquisición de derechos: Coin Days Destroyed y Linear Vesting with Cliff.",
-    "hover3": "El efecto de la política Coin Days Destroyed es requerir que se acumule una cierta cantidad de \"interés\" antes de que se pueda retirar el saldo total. ",
+    "hover3": "El efecto de la política de Coin Days Destroyed es requerir que se acumule una cierta cantidad de \"interés\" antes de que se pueda retirar el saldo total. El interés se acumula como coindays (saldo * duración retenida). Si se retira parte del saldo, se debe retener el saldo restante. ",
     "hover4": "La política Linear Vesting with Cliff se utiliza para imitar los contratos tradicionales de adquisición de acciones en los que cada día se concede una cierta cantidad hasta que madura por completo."
   },
   "borrow": {

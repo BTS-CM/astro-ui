@@ -38,7 +38,7 @@
     "subtitle": "Looge omandamise saldod",
     "hover1": "Üleandmisbilansi loomine võimaldab lukustada teatud koguse varasid kindlaksmääratud perioodiks.",
     "hover2": "Võite kasutada ühte kahest omandamise tüübist: Coin Days Destroyed ja Linear Vesting with Cliff.",
-    "hover3": "Coin Days Destroyed poliitika mõju seisneb selles, et enne kogu saldo väljavõtmist nõutakse teatud intresside kogunemist. ",
+    "hover3": "Müntide hävitatud päevade poliitika mõju seisneb selles, et enne kogu saldo väljavõtmist tuleb koguneda teatud summa \"intressi\", intressi koguneb mündipäevadena (saldo * hoitud pikkus), kui osa saldost võetakse välja, tuleb ülejäänud saldo säilitada. ",
     "hover4": "Lineaarse üleandmise koos Cliffiga poliitikat kasutatakse traditsiooniliste aktsiate üleandmise lepingute jäljendamiseks, kus iga päev antakse teatud summa kuni selle täieliku küpsemiseni."
   },
   "borrow": {

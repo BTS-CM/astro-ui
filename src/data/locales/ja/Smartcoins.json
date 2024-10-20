@@ -15,7 +15,7 @@
   "placeholderICR": "ICR: ? ",
   "placeholderProceedToBorrow": "借用を続けますか?",
   "selectBorrowableAsset": "💵 借りられる資産を選択してください",
-  "smartcoinDescription": "Bitshares ブロックチェーンには、ユーザーと委員会が作成した複数のスマートコインがあり、十分な裏付け担保を提供および維持する場合、自分で発行できます。",
+  "smartcoinDescription": "Bitshares ブロックチェーンには、ユーザーと委員会が作成した複数のスマートコインがあり、十分な裏付け担保を提供および維持することを前提として、自分で発行することができます。資産を発行する前に資産を徹底的に調査し、リスクエクスポージャと許容範囲を把握しておきます。",
   "viewingAllAssets": "すべてのアセットの表示",
   "viewAllAssets": "すべてのアセットを表示",
   "viewingCompatible": "視聴対応",

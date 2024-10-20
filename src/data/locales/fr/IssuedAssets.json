@@ -71,7 +71,7 @@
   "newIssuer": "Nouveau compte émetteur",
   "newIssuerInfo": "C'est le compte qui deviendra définitivement le nouvel émetteur (propriétaire) de cet actif.",
   "currentIssuer": "Émetteur actuel",
-  "currentIssuerInfo": "Il s'agit de l'émetteur (propriétaire) actuel de cet actif. ",
+  "currentIssuerInfo": "Il s'agit de l'émetteur (propriétaire) actuel de cet actif. Cette opération supprime définitivement la propriété de cet actif à cet utilisateur.",
   "updateIssuerHeader": "Mise à jour de l'émetteur de {{asset}} à {{newIssuer}} depuis {{currentIssuer}}",
   "globalSettlement": "Règlement Global",
   "globallySettle": "Effectuer un règlement global",

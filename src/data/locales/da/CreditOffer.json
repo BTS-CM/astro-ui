@@ -6,7 +6,7 @@
     "buttonLabel": "Vend tilbage til kredittilbudsoversigt"
   },
   "offerCardHeader": {
-    "viewingOffer": "🏦 Se tilbud{{id}} lavet af {{owner_name}} ({{owner_account}})",
+    "viewingOffer": "🏦 Se tilbud #{{id}} skabt af {{owner_name}} ({{owner_account}})",
     "loadingOfferTerms": "indlæser tilbudsbetingelser...",
     "offerDescription1": "Dette er et brugerskabt kredittilbud på Bitshares DEX.",
     "offerDescription2": "Læs vilkårene for tilbuddet grundigt, før du går videre til Beet."
@@ -18,7 +18,7 @@
     "viewAccount": "Udsigt {{owner_name}}s konto",
     "borrowingDescription": "Dette er den bruger, du vil låne af {{symbol}} fra.",
     "availableAmount": "Mængde af {{symbol}} ({{asset_type}}) kan lånes af denne långiver",
-    "loading": "Indlæser...",
+    "loading": "indlæser...",
     "offerDescription": "{{owner_name}} tilbyder generøst at låne dig så meget {{symbol}}, forudsat at du accepterer deres vilkår.",
     "backingCollateral": "Sikkerhedsstillelse for kreditaftale",
     "selectCollateral": "Vælg din sikkerhedsstillelse..",
@@ -26,7 +26,8 @@
     "borrowDescription2": "Långivers angivne pris: {{price}} {{quote}}/{{base}}",
     "noCollateralMessage": "Kontoen indeholder ikke dette sikkerhedsstillelsesaktiv.",
     "borrowAmount": "Mængde af {{symbol}} du planlægger at låne",
-    "availableAmountRange": "Tilgængelig: {{availableAmount}} {{symbol}} (Minimum: {{minAmount}})",    "inputBorrowAmount": "Indtast mængden af {{symbol}} du gerne vil låne fra {{owner_name}}.",
+    "availableAmountRange": "Tilgængelig: {{availableAmount}} {{symbol}} (Minimum: {{minAmount}})",
+    "inputBorrowAmount": "Indtast mængden af {{symbol}} du gerne vil låne fra {{owner_name}}.",
     "repayMethod": "Kredittilbud tilbagebetalingsmetode",
     "selectRepayMethod": "Vælg din tilbagebetalingsmetode..",
     "noAutoRepayment": "Ingen automatisk tilbagebetaling",
@@ -41,10 +42,10 @@
     "loadingBalance": "Indlæser saldo...",
     "collateralNeeded": "For at låne {{borrowAmount}} {{symbol}} du skal stille følgende sikkerhedsbeløb for at sikre handlen.",
     "enterValidBorrowAmount": "Indtast et gyldigt lånebeløb for at beregne den nødvendige sikkerhed.",
-    "insufficientBalance": "Din konto har en utilstrækkelig {{symbol}} balance.  {{requiredMore}} mere {{symbol}}.",
-    "noAssetHeld": "Din konto indeholder ikke dette aktiv. ",
+    "insufficientBalance": "Din konto har en utilstrækkelig {{symbol}} balance, skal du i det mindste {{requiredMore}} mere {{symbol}}.",
+    "noAssetHeld": "Din konto indeholder ikke dette aktiv. Prøv en anden form for sikkerhedsstillelse, hvis det er muligt.",
     "repayPeriod": "Tilbagebetalingsperiode",
-    "repayPeriodDescription": "Den maksimale varighed af kreditaftalen; ",
+    "repayPeriodDescription": "Den maksimale varighed af kreditaftalen, tilbagebetale lånet inden for denne periode for at undgå tab af sikkerhed.",
     "offerExpiry": "Kredittilbud udløber",
     "offerExpiryDescription": "Når dette tilbud ikke længere eksisterer.",
     "estimatedFee": "Anslået lånegebyr",
@@ -64,11 +65,11 @@
   "risks": {
     "risksTitle": "Risici ved peer-to-peer-lån",
     "risksDescription": "Peer-to-peer-udlån indebærer visse risici, herunder:",
-    "riskCollateral": "Sikkerhedsrisiko: Som låntager kan du undlade at tilbagebetale lånet til tiden, og dermed miste lånesikkerheden fuldt ud.",
-    "riskLiquidity": "Likviditetsrisiko: Hvis du sælger de aktiver, du låner, er det muligvis ikke muligt at generhverve aktiverne i tide til at tilbagebetale lånet, eller du kan gøre det med tab.",
+    "riskCollateral": "Sikkerhedsrisiko: Som låntager kan du undlade at tilbagebetale lånet til tiden, hvorved du mister lånesikkerheden fuldt ud.",
+    "riskLiquidity": "Likviditetsrisiko: Hvis du sælger de aktiver, du låner, er det muligvis ikke muligt at genanskaffe aktiverne i tide til at tilbagebetale lånet, eller du kan gøre det med tab.",
     "riskPlatform": "Platformrisiko: Hvis et aktivs ejerselskab går konkurs og ophører med et børsstøttet aktivs drift, kan du miste midler.",
-    "riskUser": "Brugerrisiko: Da kredittilbud er fuldt brugergenererede, kan du interagere med utroværdige aktiver eller brugere, der sætter penge på spil.",
-    "riskNetwork": "Netværksrisiko: Mens blockchain-nedetid er meget sjælden, er det en risiko at overveje, når du opretter kreditaftaler, der strækker sig over en periode. ",
+    "riskUser": "Brugerrisiko: Da kredittilbud er fuldt ud brugergenererede, kan du interagere med utroværdige aktiver eller brugere, der sætter penge på spil.",
+    "riskNetwork": "Netværksrisiko: Mens blockchain-nedetid er meget sjælden, er det en risiko at overveje, når du opretter kreditaftaler, der strækker sig over en periode, og metoder til automatisk tilbagebetaling af lån er tilgængelige for at udligne en sådan risiko.",
     "risksFooter": "Overvej venligst disse risici og evaluer vilkårene for tilbud grundigt, før du fortsætter med en kreditaftale."
   }
 }

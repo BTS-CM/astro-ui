@@ -2,35 +2,35 @@
   "card": {
     "title_create": "Création d'un nouvel actif Smartcoin",
     "title_edit": "Modification d'un actif Smartcoin existant",
-    "description": "Les smartcoins sont des actifs garantis qui peuvent faire référence à des flux de prix externes sur le marché. "
+    "description": "Les smartcoins sont des actifs garantis qui peuvent faire référence à des flux de prix du marché externe. Vous pouvez facilement créer votre propre stablecoin garanti faisant référence à n'importe quel actif de votre choix, comme USD/CNY/JPY, etc."
   },
   "title": {
     "header": "Paramètres des pièces intelligentes",
-    "header_content": "Les paramètres ci-dessous définissent le comportement de votre smartcoin sur la blockchain Bitshares. "
+    "header_content": "Les paramètres ci-dessous définissent le comportement de votre smartcoin sur la blockchain Bitshares. Le créateur de l'actif est responsable de la configuration correcte de son smartcoin."
   },
   "bsrm": {
     "header": "Stratégie de gestion des risques du cygne noir",
-    "header_content": "Ces stratégies offrent différents résultats pour les positions de dette sous-garanties, vous permettant de désactiver, minimiser ou mondialiser le risque de liquidation des positions de dette. ",
-    "select_0": "Règlement global : toutes les positions de dette fermées ; ",
-    "select_1": "Aucun règlement : aucune position de dette n'est fermée ; ",
-    "select_2": "Fonds de règlement individuels : les positions de dette sous-garantis sont fermées ; ",
-    "select_3": "Ordres de règlement individuels : les positions de dette sous-garantis sont fermées ; "
+    "header_content": "Ces stratégies offrent différents résultats pour les positions de dette sous-garantis, vous permettant de désactiver, minimiser ou globaliser le risque de liquidation de la position de dette. Différentes sélections de stratégies peuvent profiter à des smartcoins uniques et augmenter la tolérance aux marchés volatils.",
+    "select_0": "Règlement global : toutes les positions de dette fermées, la garantie transférée vers le fonds de règlement, les nouvelles positions de dette ne sont pas autorisées jusqu'à ce qu'elles soient résolues.",
+    "select_1": "Aucun règlement : aucune position de dette n'est fermée, le prix de règlement est plafonné par le ratio de garantie le plus bas, nouvelles positions autorisées.",
+    "select_2": "Fonds de règlement individuels : les positions de dette sous-garantis sont fermées, la garantie est transférée vers un fonds récupérable, de nouvelles positions sont autorisées.",
+    "select_3": "Ordres de règlement individuels : les positions de dette sous-garantis sont fermées, la garantie est déplacée vers un ordre à cours limité, pas de plafonnement des prix, nouvelles positions autorisées."
   },
   "mcr": {
     "header": "Ratio de garantie minimum statique",
-    "header_content": "Il s’agit du ratio de garantie minimum requis pour qu’une position de dette soit considérée comme entièrement garantie. "
+    "header_content": "Il s'agit du ratio de garantie minimum requis pour qu'une position de dette soit considérée comme entièrement garantie. Généralement calculé à partir des flux de prix, il est désormais fixé de manière statique par le propriétaire de l'actif."
   },
   "icr": {
     "header": "Ratio de garantie initial statique",
-    "header_content": "Il s’agit du ratio de garantie requis pour qu’une position de dette soit considérée comme entièrement garantie au moment de sa création. "
+    "header_content": "Il s'agit du ratio de garantie requis pour qu'une position de dette soit considérée comme entièrement garantie au moment de sa création. Généralement calculé à partir des flux de prix, il est désormais fixé de manière statique par le propriétaire de l'actif."
   },
   "mssr": {
-    "header": "Taux de compression court maximum statique",
-    "header_content": "Il s’agit du ratio de garantie maximum auquel une position de dette peut être liquidée. "
+    "header": "Taux de compression court maximal statique",
+    "header_content": "Il s'agit du ratio de garantie maximum auquel une position de dette peut être liquidée. Généralement calculé à partir des flux de prix, il est désormais fixé de manière statique par le propriétaire de l'actif."
   },
   "feed_lifetime": {
     "header": "Durée de vie du flux",
-    "header_content": "Durée en secondes pendant laquelle un flux de prix est considéré comme valide. "
+    "header_content": "Temps en secondes pendant lequel un flux de prix est considéré comme valide. Passé ce délai, le flux est considéré comme invalide et le prix n'est plus utilisé pour les calculs du ratio de garantie."
   },
   "minimum_feeds": {
     "header": "Flux minimaux",
@@ -46,22 +46,22 @@
   },
   "maximum_force_settlement_volume": {
     "header": "Volume maximal de règlement de la force",
-    "header_content": "Montant maximum de l'offre d'actifs pouvant être réglé de force sur une période de 24 heures."
+    "header_content": "Montant maximum de la fourniture d'actifs qui peut être réglé de force sur une période de 24 heures."
   },
   "extensions": {
     "margin_call_fee_ratio": {
       "enabled": "Extension du ratio de frais d'appel de marge activée",
       "disabled": "Activer l'extension smartcoin Margin Call Fee Ratio ?",
-      "extensionInfo": "L'extension Margin Call Fee Ratio permet au propriétaire de smartcoin de facturer des frais à un utilisateur lorsque sa position de dette est appelée sur marge. ",
+      "extensionInfo": "L'extension Margin Call Fee Ratio permet au propriétaire du smartcoin de facturer des frais à un utilisateur lorsque sa position de dette est appelée sur marge. Les frais sont calculés en pourcentage de la garantie négociée, payée au propriétaire du smartcoin.",
       "header": "Ratio des frais d’appel de marge",
-      "header_content": "Le ratio de frais facturé à un utilisateur lorsque sa position de dette est appelée sur marge. "
+      "header_content": "Le ratio de frais facturé à un utilisateur lorsque sa position de dette est appelée sur marge. Les frais sont calculés en pourcentage de la garantie négociée, payée au propriétaire du smartcoin."
     },
     "force_settle_fee": {
       "enabled": "Extension des frais de règlement forcé activée",
       "disabled": "Activer l'extension smartcoin Force Settle Fee ?",
-      "extensionInfo": "L'extension Force Settle Fee permet au propriétaire de smartcoin de facturer des frais à un utilisateur lorsqu'il force le règlement de sa dette. ",
+      "extensionInfo": "L'extension Force Settle Fee permet au propriétaire du smartcoin de facturer des frais à un utilisateur lorsqu'il force le règlement de sa dette. Les frais sont calculés en pourcentage de la garantie négociée, payée au propriétaire du smartcoin.",
       "header": "Frais de règlement forcé",
-      "header_content": "Les frais facturés à un utilisateur lorsqu'il force le règlement de sa dette. "
+      "header_content": "Les frais facturés à un utilisateur lorsqu'il force le règlement de sa dette. Les frais sont calculés en pourcentage de la garantie négociée, versée au propriétaire du smartcoin."
     }
   },
   "editAsset": {

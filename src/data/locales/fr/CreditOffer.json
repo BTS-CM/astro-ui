@@ -6,7 +6,7 @@
     "buttonLabel": "Aperçu de l'offre de retour à crédit"
   },
   "offerCardHeader": {
-    "viewingOffer": "🏦 Consultation de l'offre{{id}} créé par {{owner_name}} ({{owner_account}})",
+    "viewingOffer": "🏦 Consultation de l'offre #{{id}} créé par {{owner_name}} ({{owner_account}})",
     "loadingOfferTerms": "chargement des conditions de l'offre...",
     "offerDescription1": "Il s'agit d'une offre de crédit créée par l'utilisateur sur Bitshares DEX.",
     "offerDescription2": "Lisez attentivement les termes de l’offre avant de passer à Beet."
@@ -17,16 +17,17 @@
     "lendingAccount": "Compte de prêt",
     "viewAccount": "Voir {{owner_name}}le compte de",
     "borrowingDescription": "Il s'agit de l'utilisateur auprès duquel vous allez emprunter {{symbol}} depuis.",
-    "availableAmount": "Quantité de {{symbol}} ({{asset_type}}) disponible pour emprunter auprès de ce prêteur",
+    "availableAmount": "Montant de {{symbol}} ({{asset_type}}) disponible pour emprunter auprès de ce prêteur",
     "loading": "chargement...",
     "offerDescription": "{{owner_name}} propose généreusement de vous prêter autant {{symbol}}, en supposant que vous acceptiez leurs conditions.",
     "backingCollateral": "Garantie de garantie pour une opération de crédit",
     "selectCollateral": "Sélectionnez votre garantie de soutien.",
-    "borrowDescription": "Emprunter {{symbol}} depuis {{owner_name}}, choisissez parmi les actifs de garantie acceptés ci-dessus.",
+    "borrowDescription": "Pour emprunter {{symbol}} depuis {{owner_name}}, choisissez parmi les actifs de garantie acceptés ci-dessus.",
     "borrowDescription2": "Prix ​​désigné par le prêteur : {{price}} {{quote}}/{{base}}",
     "noCollateralMessage": "Le compte ne détient pas cet actif de garantie de garantie.",
-    "borrowAmount": "Quantité de {{symbol}} vous envisagez d'emprunter",
-"availableAmountRange": "Disponible : {{availableAmount}} {{symbol}} (Minimum : {{minAmount}})",    "inputBorrowAmount": "Saisissez la quantité de {{symbol}} tu aimerais emprunter à {{owner_name}}.",
+    "borrowAmount": "Montant de {{symbol}} vous envisagez d'emprunter",
+    "availableAmountRange": "Disponible: {{availableAmount}} {{symbol}} (Minimum: {{minAmount}})",
+    "inputBorrowAmount": "Saisissez la quantité de {{symbol}} tu aimerais emprunter à {{owner_name}}.",
     "repayMethod": "Mode de remboursement de l'offre de crédit",
     "selectRepayMethod": "Sélectionnez votre mode de remboursement.",
     "noAutoRepayment": "Pas de remboursement automatique",
@@ -41,10 +42,10 @@
     "loadingBalance": "Solde de chargement...",
     "collateralNeeded": "Pour emprunter {{borrowAmount}} {{symbol}} vous devrez fournir le montant de garantie suivant pour garantir la transaction.",
     "enterValidBorrowAmount": "Saisissez un montant d'emprunt valide pour calculer la garantie requise.",
-    "insufficientBalance": "Votre compte dispose d'un compte insuffisant {{symbol}} équilibre.  {{requiredMore}} plus {{symbol}}.",
-    "noAssetHeld": "Votre compte ne contient pas cet actif. ",
+    "insufficientBalance": "Votre compte dispose d'un compte insuffisant {{symbol}} équilibre, vous aurez besoin d'au moins {{requiredMore}} plus {{symbol}}.",
+    "noAssetHeld": "Votre compte ne détient pas cet actif. Essayez si possible une autre forme de garantie de soutien.",
     "repayPeriod": "Période de remboursement",
-    "repayPeriodDescription": "La durée maximale de l'accord de crédit ; ",
+    "repayPeriodDescription": "La durée maximale de l'accord de crédit, remboursez le prêt dans ce délai pour éviter la perte de garantie.",
     "offerExpiry": "Expiration de l'offre de crédit",
     "offerExpiryDescription": "Quand cette offre n’existera plus.",
     "estimatedFee": "Frais d'emprunt estimés",
@@ -68,7 +69,7 @@
     "riskLiquidity": "Risque de liquidité : si vous vendez les actifs que vous empruntez, il se peut qu'il ne soit pas possible de les acquérir à nouveau à temps pour rembourser le prêt, ou que vous puissiez le faire à perte.",
     "riskPlatform": "Risque de plate-forme : si la société propriétaire d'un actif cesse ses activités et cesse l'exploitation d'un actif adossé à une bourse, vous pourriez perdre des fonds.",
     "riskUser": "Risque utilisateur : étant donné que les offres de crédit sont entièrement générées par les utilisateurs, vous pourriez interagir avec des actifs non fiables ou des utilisateurs qui mettent leurs fonds en danger.",
-    "riskNetwork": "Risque de réseau : bien que les temps d'arrêt de la blockchain soient très rares, il s'agit d'un risque à prendre en compte lors de la création d'accords de crédit qui s'étendent sur une période donnée. ",
+    "riskNetwork": "Risque de réseau : bien que les temps d'arrêt de la blockchain soient très rares, il s'agit d'un risque à prendre en compte lors de la création d'accords de crédit qui s'étendent sur une période donnée. Des méthodes de remboursement de prêt automatique sont disponibles pour compenser ce risque.",
     "risksFooter": "Veuillez considérer ces risques et évaluer minutieusement les conditions des offres avant de procéder à une transaction de crédit."
   }
 }

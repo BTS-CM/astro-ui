@@ -42,10 +42,10 @@
     "loadingBalance": "Loading balance...",
     "collateralNeeded": "In order to borrow {{borrowAmount}} {{symbol}} you'll need to provide the following amount of collateral to secure the deal.",
     "enterValidBorrowAmount": "Enter a valid borrow amount to calculate required collateral.",
-    "insufficientBalance": "Your account has an insufficient {{symbol}} balance. You'll need at least {{requiredMore}} more {{symbol}}.",
-    "noAssetHeld": "Your account does not hold this asset. Try another form of backing collateral if possible.",
+    "insufficientBalance": "Your account has an insufficient {{symbol}} balance, You'll need at least {{requiredMore}} more {{symbol}}.",
+    "noAssetHeld": "Your account does not hold this asset, Try another form of backing collateral if possible.",
     "repayPeriod": "Repay period",
-    "repayPeriodDescription": "The maximum duration of the credit deal; repay the loan within this period to avoid loss of collateral.",
+    "repayPeriodDescription": "The maximum duration of the credit deal, repay the loan within this period to avoid loss of collateral.",
     "offerExpiry": "Credit offer expiry",
     "offerExpiryDescription": "When this offer will no longer exist.",
     "estimatedFee": "Estimated borrow fee",
@@ -69,7 +69,7 @@
     "riskLiquidity": "Liquidity Risk: If you sell the assets you borrow, it may not be possible to re-acquire the assets in time to repay the loan, or you may do so at a loss.",
     "riskPlatform": "Platform Risk: If an asset's owner company goes out of business and ceases an exchange backed asset's operation, you could lose funds.",
     "riskUser": "User Risk: As credit offers are fully user generated, you could be interacting with untrustworthy assets or users who put funds at risk.",
-    "riskNetwork": "Network Risk: Whilst blockchain downtime is very rare, it's a risk to consider when creating credit deals which span a period of time. Auto loan repay methods are available to offset such risk.",
+    "riskNetwork": "Network Risk: Whilst blockchain downtime is very rare, it's a risk to consider when creating credit deals which span a period of time, Auto loan repay methods are available to offset such risk.",
     "risksFooter": "Please consider these risks and thoroughly evaluate the terms of offers before proceeding with a credit deal."
   }
 }

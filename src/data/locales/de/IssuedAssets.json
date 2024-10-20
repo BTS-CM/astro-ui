@@ -71,7 +71,7 @@
   "newIssuer": "Neues Emittentenkonto",
   "newIssuerInfo": "Dies ist das Konto, das dauerhaft zum neuen Emittenten (Eigentümer) dieses Vermögenswerts wird.",
   "currentIssuer": "Aktueller Emittent",
-  "currentIssuerInfo": "Dies ist der aktuelle Emittent (Eigentümer) dieses Vermögenswerts. ",
+  "currentIssuerInfo": "Dies ist der aktuelle Aussteller (Eigentümer) dieses Assets. Durch diesen Vorgang wird diesem Benutzer das Eigentum an diesem Asset dauerhaft entzogen.",
   "updateIssuerHeader": "Aktualisierung des Emittenten von {{asset}} Zu {{newIssuer}} aus {{currentIssuer}}",
   "globalSettlement": "Globale Siedlung",
   "globallySettle": "Globale Abrechnung durchführen",

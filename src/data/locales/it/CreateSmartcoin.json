@@ -2,35 +2,35 @@
   "card": {
     "title_create": "Creazione di un nuovo asset Smartcoin",
     "title_edit": "Modifica di un asset Smartcoin esistente",
-    "description": "Gli smartcoin sono asset collateralizzati che possono fare riferimento ai feed dei prezzi del mercato esterno. "
+    "description": "Gli smartcoin sono asset collateralizzati che possono fare riferimento a feed di prezzi di mercato esterni. Puoi facilmente creare la tua stablecoin collateralizzata facendo riferimento a qualsiasi asset tu voglia, come USD/CNY/JPY, ecc."
   },
   "title": {
     "header": "Impostazioni dello Smartcoin",
-    "header_content": "Le impostazioni seguenti definiscono come si comporterà il tuo smartcoin sulla blockchain di Bitshares. "
+    "header_content": "Le impostazioni seguenti definiscono come si comporterà il tuo smartcoin sulla blockchain di Bitshares. Il creatore dell'asset è responsabile della corretta configurazione del proprio smartcoin."
   },
   "bsrm": {
     "header": "Strategia di gestione del rischio del cigno nero",
-    "header_content": "Queste strategie offrono risultati diversi per le posizioni debitorie sottocollateralizzate, consentendo di disattivare, minimizzare o globalizzare il rischio di liquidazione della posizione debitoria. ",
-    "select_0": "Regolamento globale: tutte le posizioni debitorie chiuse; ",
-    "select_1": "Nessun regolamento: nessuna posizione debitoria viene chiusa; ",
-    "select_2": "Fondi di liquidazione individuali: le posizioni debitorie sottocollateralizzate vengono chiuse; ",
-    "select_3": "Ordini di regolamento individuali: le posizioni debitorie sottocollateralizzate vengono chiuse; "
+    "header_content": "Queste strategie offrono risultati diversi per posizioni debitorie sottocollateralizzate, consentendo di disabilitare, minimizzare o globalizzare il rischio di liquidazione della posizione debitoria. La selezione di strategie diverse può avvantaggiare smartcoin unici e aumentare la tolleranza dei mercati volatili.",
+    "select_0": "Regolamento globale: tutte le posizioni debitorie chiuse, la garanzia collaterale spostata nel fondo di liquidazione, nuove posizioni debitorie non sono consentite finché non vengono risolte.",
+    "select_1": "Nessun regolamento: nessuna posizione debitoria chiusa, prezzo di regolamento limitato dal rapporto di garanzia più basso, nuove posizioni consentite.",
+    "select_2": "Fondi di liquidazione individuali: le posizioni di debito sottocollateralizzate vengono chiuse, la garanzia viene spostata in un fondo richiedibile, sono consentite nuove posizioni.",
+    "select_3": "Ordini di regolamento individuali: le posizioni di debito sottocollateralizzate vengono chiuse, la garanzia viene spostata in un ordine limite, nessun limite di prezzo, sono consentite nuove posizioni."
   },
   "mcr": {
-    "header": "Rapporto collaterale minimo statico",
-    "header_content": "Questo è il rapporto di garanzia minimo richiesto affinché una posizione debitoria sia considerata completamente collateralizzata. "
+    "header": "Rapporto di garanzia minima statica",
+    "header_content": "Questo è il rapporto di garanzia minimo richiesto affinché una posizione debitoria sia considerata completamente collateralizzata. Solitamente calcolato dai feed di prezzo, viene ora impostato staticamente dal proprietario dell'asset."
   },
   "icr": {
     "header": "Rapporto di garanzia iniziale statico",
-    "header_content": "Questo è il rapporto di garanzia richiesto affinché una posizione debitoria sia considerata completamente collateralizzata al momento della creazione. "
+    "header_content": "Questo è il rapporto di garanzia richiesto affinché una posizione debitoria sia considerata completamente collateralizzata al momento della creazione. Solitamente calcolato dai feed di prezzo, viene ora impostato staticamente dal proprietario dell'asset."
   },
   "mssr": {
     "header": "Rapporto di compressione breve massimo statico",
-    "header_content": "Questo è il rapporto di garanzia massimo al quale una posizione debitoria può essere liquidata. "
+    "header_content": "Questo è il rapporto di garanzia massimo al quale una posizione debitoria può essere liquidata. Solitamente calcolato dai feed di prezzo, viene ora fissato staticamente dal proprietario dell'asset."
   },
   "feed_lifetime": {
     "header": "Nutri tutta la vita",
-    "header_content": "Il tempo in secondi in cui un feed di prezzo è considerato valido. "
+    "header_content": "Il tempo in secondi in cui un feed di prezzo è considerato valido. Trascorso questo tempo, il feed è considerato non valido e il prezzo non viene più utilizzato per i calcoli del rapporto collaterale."
   },
   "minimum_feeds": {
     "header": "Feed minimi",
@@ -52,16 +52,16 @@
     "margin_call_fee_ratio": {
       "enabled": "Estensione del rapporto commissioni Margin Call abilitata",
       "disabled": "Abilitare l'estensione smartcoin Margin Call Fee Ratio?",
-      "extensionInfo": "L'estensione Margin Call Fee Ratio consente al proprietario dello smartcoin di addebitare una commissione a un utente quando la sua posizione debitoria viene chiamata a margine. ",
+      "extensionInfo": "L'estensione Margin Call Fee Ratio consente al proprietario dello smartcoin di addebitare una commissione a un utente quando la sua posizione debitoria viene chiamata a margine. La commissione è calcolata come percentuale della garanzia scambiata, pagata al proprietario dello smartcoin.",
       "header": "Rapporto commissione richiesta di margine",
-      "header_content": "Il tasso di commissione addebitato a un utente quando la sua posizione debitoria viene chiamata a margine. "
+      "header_content": "La commissione addebitata a un utente quando la sua posizione debitoria viene chiamata a margine. La commissione è calcolata come percentuale della garanzia scambiata, pagata al proprietario dello smartcoin."
     },
     "force_settle_fee": {
       "enabled": "Estensione della commissione di saldo forzato abilitata",
       "disabled": "Abilitare l'estensione smartcoin Force Settle Fee?",
-      "extensionInfo": "L'estensione Force Settle Fee consente al proprietario dello smartcoin di addebitare una commissione a un utente quando forza il saldo della propria posizione debitoria. ",
+      "extensionInfo": "L'estensione Force Settle Fee consente al proprietario dello smartcoin di addebitare una commissione a un utente quando forza il saldo della propria posizione debitoria. La commissione è calcolata come percentuale della garanzia scambiata, pagata al proprietario dello smartcoin.",
       "header": "Commissione per la risoluzione forzata",
-      "header_content": "La commissione addebitata a un utente quando forza il saldo della propria posizione debitoria. "
+      "header_content": "La commissione addebitata a un utente quando forza il saldo della propria posizione debitoria. La commissione è calcolata come percentuale della garanzia scambiata, pagata al proprietario dello smartcoin."
     }
   },
   "editAsset": {

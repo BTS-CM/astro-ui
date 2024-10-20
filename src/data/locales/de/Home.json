@@ -38,7 +38,7 @@
     "subtitle": "Erstellen Sie Restguthaben",
     "hover1": "Durch die Erstellung eines Sperrguthabens können Sie eine bestimmte Menge an Vermögenswerten für einen bestimmten Zeitraum sperren.",
     "hover2": "Sie können einen von zwei Vesting-Typen verwenden: Coin Days Destroyed und Linear Vesting with Cliff.",
-    "hover3": "Die Wirkung der Coin Days Destroyed-Richtlinie besteht darin, dass ein bestimmter Betrag an „Zinsen“ anfallen muss, bevor der gesamte Restbetrag abgehoben werden kann. ",
+    "hover3": "Der Effekt der Coin Days Destroyed-Richtlinie besteht darin, dass ein bestimmter Betrag an „Zinsen“ anfallen muss, bevor der gesamte Restbetrag abgehoben werden kann. Die Zinsen fallen in Form von Münztagen an (Saldo * Haltedauer). Wenn ein Teil des Restbetrags abgehoben wird, muss der verbleibende Restbetrag einbehalten werden ",
     "hover4": "Die Richtlinie „Linear Vesting with Cliff“ wird verwendet, um traditionelle Aktien-Vesting-Verträge nachzuahmen, bei denen jeden Tag ein bestimmter Betrag bis zur vollständigen Fälligkeit unverfallbar wird."
   },
   "borrow": {

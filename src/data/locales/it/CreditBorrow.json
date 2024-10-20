@@ -1,6 +1,6 @@
 {
   "common": {
-    "title": " Offerta{{orderID}} di {{owner_name}} ({{owner_account}})",
+    "title": " Offerta #{{orderID}} di {{owner_name}} ({{owner_account}})",
     "offer": "Offerta",
     "by": "di",
     "offering": "Offerta",
@@ -10,13 +10,13 @@
     "repayPeriod": "Periodo di rimborso: {{repayPeriod}} ore",
     "validity": "Offerta valida per {{validity}} ore",
     "min": "Importo minimo: {{amount}} {{asset}}",
-    "proceed": "Procedere con l'offerta di credito{{offerID}}",
+    "proceed": "Procedi con l'offerta di credito #{{offerID}}",
     "edit": "Modifica offerta",
     "view": "Visualizza le impostazioni"
   },
   "card": {
     "title": "🏦 Visualizzazione delle offerte di credito disponibili",
-    "description": "Le offerte di credito sono generate dagli utenti, offrono tassi, asset e durate diverse; ",
+    "description": "Le offerte di credito sono generate dagli utenti, offrono tariffe, risorse e durate diverse, valutano i termini prima di creare accordi.",
     "viewingAll": "Visualizzazione di tutte le offerte",
     "viewAll": "Visualizza tutte le offerte",
     "viewingAvailable": "Visualizzazione degli ordini compatibili",
@@ -32,7 +32,7 @@
     "collateralSearch": "Ricerca per beni collaterali",
     "ownerSearching": "Ricerca per nome del proprietario",
     "ownerSearch": "Cerca per nome del proprietario",
-    "noResults": "nessun risultato trovato",
+    "noResults": "Nessun risultato trovato",
     "loading": "Caricamento offerte..."
   }
 }

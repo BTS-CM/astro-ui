@@ -5,12 +5,12 @@
     "charge_market_fee": {
       "about": "Habilitar tarifa de mercado",
       "enabledInfo": "El emisor/propietario del activo puede actualizar el indicador charge_market_fee.",
-      "disabledInfo": "El emisor/propietario del activo NO puede actualizar el indicador charge_market_fee. "
+      "disabledInfo": "El emisor/propietario del activo NO puede actualizar el indicador charge_market_fee. Si el indicador charge_market_fee está configurado en 0, ya no puede comenzar a cobrar tarifas de negociación en el mercado; si el indicador charge_market_fee está configurado en un valor distinto de cero, las tasas de las tarifas de negociación en el mercado aún se pueden actualizar "
     },
     "white_list": {
       "about": "Requerir que los titulares estén en la lista blanca",
       "enabledInfo": "El emisor/propietario del activo puede actualizar el indicador white_list.",
-      "disabledInfo": "El emisor/propietario del activo NO puede actualizar el indicador white_list. "
+      "disabledInfo": "El emisor/propietario del activo NO puede actualizar el indicador white_list. Si el indicador white_list está establecido en 0, ya no puede comenzar a aplicar la inclusión en listas blancas o negras; si el indicador white_list está establecido en un valor distinto de cero, aún puede configurarlo para no aplicar listas blancas o negras. "
     },
     "override_authority": {
       "about": "El propietario del activo puede transferirlo a sí mismo",
@@ -64,18 +64,18 @@
     },
     "disable_mcr_update": {
       "about": "Desactivar actualización del propietario Ratio mínimo de garantía",
-      "enabledInfo": "El emisor/propietario del activo NO puede actualizar (establecer/cambiar/eliminar) la extensión Maintenance_collateral_ratio del activo. ",
-      "disabledInfo": "El emisor/propietario del activo puede actualizar (establecer/cambiar/eliminar) la extensión Maintenance_collateral_ratio del activo. "
+      "enabledInfo": "El emisor/propietario del activo NO puede actualizar (establecer/cambiar/eliminar) la extensión mantenimiento_collateral_ratio del activo. Si se establece un valor en la extensión mantenimiento_collateral_ratio, tiene prioridad sobre el mismo parámetro sugerido por los editores de precios; de lo contrario, el valor sugerido ",
+      "disabledInfo": "El emisor/propietario del activo puede actualizar (establecer/cambiar/eliminar) la extensión mantenimiento_collateral_ratio del activo. Si se establece un valor en la extensión mantenimiento_collateral_ratio, tiene prioridad sobre el mismo parámetro sugerido por los editores de precios; de lo contrario, el valor sugerido por "
     },
     "disable_icr_update": {
       "about": "Desactivar actualización del propietario Ratio de garantía inicial",
-      "enabledInfo": "El emisor/propietario del activo NO puede actualizar (establecer/cambiar/eliminar) la extensión initial_collateral_ratio del activo. ",
-      "disabledInfo": "El emisor/propietario del activo puede actualizar (establecer/cambiar/eliminar) la extensión de la relación_collateral_inicial del activo. "
+      "enabledInfo": "El emisor/propietario del activo NO puede actualizar (establecer/cambiar/eliminar) la extensióninicial_collateral_ratio del activo. Si se establece un valor en la extensióninicial_collateral_ratio, tiene prioridad sobre el mismo parámetro sugerido por los editores de precios; de lo contrario, el valor sugerido ",
+      "disabledInfo": "El emisor/propietario del activo puede actualizar (establecer/cambiar/eliminar) la extensióninicial_collateral_ratio del activo. Si se establece un valor en la extensióninicial_collateral_ratio, tiene prioridad sobre el mismo parámetro sugerido por los editores de precios; de lo contrario, el valor sugerido por "
     },
     "disable_mssr_update": {
       "about": "Deshabilitar la actualización del propietario Máximo índice de compresión corta",
-      "enabledInfo": "El emisor/propietario del activo NO puede actualizar (establecer/cambiar/eliminar) la extensión Maximum_short_squeeze_ratio del activo. ",
-      "disabledInfo": "El emisor/propietario del activo puede actualizar (establecer/cambiar/eliminar) la extensión Maximum_short_squeeze_ratio del activo. "
+      "enabledInfo": "El emisor/propietario del activo NO puede actualizar (establecer/cambiar/eliminar) la extensión Maximum_short_squeeze_ratio del activo. Si se establece un valor en la extensión Maximum_short_squeeze_ratio, tiene prioridad sobre el mismo parámetro sugerido por los editores de precios; de lo contrario, el valor sugerido. ",
+      "disabledInfo": "El emisor/propietario del activo puede actualizar (establecer/cambiar/eliminar) la extensión Maximum_short_squeeze_ratio del activo. Si se establece un valor en la extensión Maximum_short_squeeze_ratio, tiene prioridad sobre el mismo parámetro sugerido por los editores de precios; de lo contrario, el valor sugerido por "
     },
     "disable_bsrm_update": {
       "about": "Deshabilitar la actualización del propietario Estrategia de gestión de riesgos de Black Swan",
@@ -103,7 +103,7 @@
     },
     "transfer_restricted": {
       "about": "El propietario del activo debe aprobar todas las transferencias.",
-      "enabledInfo": "Las transferencias de este activo están restringidas. ",
+      "enabledInfo": "Las transferencias de este activo están restringidas. Al transferir este activo, solo puede hacerlo desde el emisor/propietario del activo o hacia el emisor/propietario del activo. La misma limitación desde o hacia también se aplica a los HTLC y los retiros con permiso de retiro. No se pueden crear saldos de adquisición de derechos con ",
       "disabledInfo": "No existe tal limitación en las transferencias."
     },
     "disable_force_settle": {
@@ -113,7 +113,7 @@
     },
     "disable_confidential": {
       "about": "Deshabilitar transacciones confidenciales",
-      "enabledInfo": "Las transferencias a direcciones ciegas/ocultas/confidenciales están deshabilitadas. ",
+      "enabledInfo": "Las transferencias a direcciones ciegas/ocultas/confidenciales están deshabilitadas, NO se puede transferir una cantidad de este activo del saldo de una cuenta a direcciones ciegas/ocultas/confidenciales, Transferencias de direcciones ciegas/ocultas/confidenciales a otras direcciones ciegas/ocultas/confidenciales o ",
       "disabledInfo": "Las transferencias a direcciones ciegas/ocultas/confidenciales están habilitadas."
     },
     "witness_fed_asset": {
@@ -138,7 +138,7 @@
     },
     "disable_collateral_bidding": {
       "about": "Deshabilitar ofertas de garantía",
-      "enabledInfo": "La oferta de garantías en el fondo de liquidación global está deshabilitada. ",
+      "enabledInfo": "La oferta de garantía en el fondo de liquidación global está deshabilitada. NO está permitido ofertar por garantía en el fondo de liquidación global cuando este activo se haya liquidado globalmente.",
       "disabledInfo": "Está habilitada la oferta de garantías en el fondo de liquidación global."
     }
   },
@@ -147,12 +147,12 @@
     "title_content": "Estas son las configuraciones de activos utilizadas para la funcionalidad principal de DEX.",
     "symbol": {
       "header": "Símbolo de activo",
-      "header_content": "El símbolo del activo es un identificador único en la cadena de bloques que identifica el activo en todo el DEX. ",
+      "header_content": "El símbolo del activo es un identificador único en la cadena de bloques que identifica el activo en todo el DEX. Se pueden crear activos más baratos utilizando un nombre de subactivo como NFT.TITLE",
       "placeholder": "Símbolo"
     },
     "shortName": {
       "header": "Nombre corto del activo",
-      "header_content": "Este es el nombre corto del activo, menos importante que el símbolo, pero sigue siendo un identificador único opcionalmente abreviado. ",
+      "header_content": "Este es el nombre corto del activo, menos importante que el símbolo, pero aún así es un identificador único abreviado opcionalmente. Puede simplemente reutilizar el símbolo para este campo.",
       "placeholder": "Nombre corto"
     },
     "preferredMarket": {
@@ -171,7 +171,7 @@
     },
     "precision": {
       "header": "Precisión de activos",
-      "header_content": "La precisión del activo especifica la cantidad de decimales admitidos. ",
+      "header_content": "La precisión del activo especifica la cantidad de decimales admitidos. Este valor no se puede cambiar después de la creación del activo.",
       "placeholder": "Precisión"
     }
   },
@@ -210,7 +210,7 @@
     },
     "banned_markets": {
       "enabled": "Habilitada la extensión de mercados prohibidos",
-      "enabledInfo": "Los siguientes mercados tienen prohibido negociar este activo.",
+      "enabledInfo": "Los siguientes mercados tienen prohibido negociar con este activo.",
       "disabled": "¿Habilitar la extensión de mercados prohibidos?",
       "disabledInfo": "Esta función le permite prohibir pares comerciales de mercado específicos, lo que le permite ayudar a evitar la negociación de activos en mercados no deseados."
     },
@@ -226,11 +226,11 @@
     "header": "Autoridades de la lista blanca de activos"
   },
   "blacklist": {
-    "header_content": "Las autoridades de la lista negra de activos son cuentas que pueden contribuir con la lista de cuentas en la lista negra de su cuenta para hacer cumplir una lista de cuentas prohibidas que impida la interacción con este acceso.",
+    "header_content": "Las autoridades de la lista negra de activos son cuentas que pueden contribuir con la lista de cuentas negras de su cuenta para hacer cumplir una lista de cuentas prohibidas que impida la interacción con este acceso.",
     "header": "Autoridades de la lista negra de activos"
   },
   "market_fee": {
-    "header_content": "La tarifa de mercado es el porcentaje de tarifa que se cobra en cada operación que se ejecuta en Bitshares DEX. ",
+    "header_content": "La tarifa de mercado es el porcentaje de tarifa que se cobra en cada operación que se ejecuta en Bitshares DEX. La tarifa se cobra en el activo que se comercializa.",
     "header": "Porcentaje de tarifa de mercado"
   },
   "max_market_fee": {
@@ -248,17 +248,17 @@
     },
     "calculated_cer_price": {
       "header": "Tipo de cambio subyacente",
-      "header_content": "Asegúrese de que su tipo de cambio principal sea más alto que el precio de mercado; de lo contrario, la gente comprará su token en el mercado y agotará su fondo de tarifas mediante arbitraje implícito. "
+      "header_content": "Asegúrese de que su tipo de cambio básico sea más alto que el precio de mercado; de lo contrario, la gente comprará su token en el mercado y drenará su fondo de tarifas mediante arbitraje implícito. El tipo de cambio básico debe actualizarse periódicamente para reflejar el precio de mercado de su activo."
     }
   },
   "nft": {
     "NFTTitleContent": "Este es el título de su token no fungible. Asegúrese de que sea único y descriptivo, ya que puede presentarse en varias galerías/exploradores de tokens no fungibles.",
     "NFTTitleHeader": "Título",
     "TitlePlaceholder": "Título",
-    "NFTArtistContent": "Nombre o seudónimo del artista. ",
+    "NFTArtistContent": "Nombre o seudónimo del artista. También puede incluir alias o nombres o identificadores en línea, para incluir nombres de cuentas o direcciones de blockchain que puedan facilitar la autenticación de una clave de firma.",
     "NFTArtistHeader": "Artista",
     "ArtistPlaceholder": "Artista",
-    "NFTNarrativeContent": "Una declaración personal del artista que describe el trabajo, como lo que significa para él o qué lo inspiró. ",
+    "NFTNarrativeContent": "Una declaración personal del artista que describe la obra, como lo que la obra significa para ellos o qué la inspiró. Puede incluir detalles de su creación, etc. Es un campo de forma libre y se puede adaptar según corresponda a la pieza. Ejemplo. ",
     "NFTNarrativeHeader": "Narrativo",
     "NarrativePlaceholder": "Narrativo",
     "NFTTagsContent": "Lista de palabras clave separadas por comas para facilitar las búsquedas de temas/intereses.",
@@ -267,16 +267,16 @@
     "NFTTypeContent": "Una cadena que describe el tipo de token no fungible, como 'NFT/ART/VISUAL', 'NFT/ART/3D', 'NFT/ART/ANIMATION', 'NFT/ART/AUDIO', 'NFT/ART ",
     "NFTTypeHeader": "Tipo",
     "TypePlaceholder": "Tipo",
-    "NFTAttestationContent": "Aquí, el artista u creador del material encapsulado compromete o dedica el material a la cadena de bloques, nombrando expresamente el token o ID del activo bajo el cual vivirá la obra, y da fe de su unicidad calificada o no calificada. ",
+    "NFTAttestationContent": "Aquí, el artista u creador del material encapsulado compromete o dedica el material a la cadena de bloques, nombrando expresamente el token o ID del activo bajo el cual vivirá la obra, y da fe de su unicidad calificada o no calificada. Por ejemplo, un artista puede dar fe de que ningún otro ",
     "NFTAttestationHeader": "Atestación",
     "AttestationPlaceholder": "Atestación",
     "NFTAcknowledgementsContent": "Agradecimientos o créditos adicionales por el token digital.",
     "NFTAcknowledgementsHeader": "Expresiones de gratitud",
     "AcknowledgementsPlaceholder": "Expresiones de gratitud",
-    "NFTHolderLicenseContent": "Si el token otorga una licencia adicional para el uso del trabajo creativo específicamente a los poseedores del token, esto se puede especificar aquí. ",
+    "NFTHolderLicenseContent": "Si el token otorga una licencia adicional para el uso del trabajo creativo específicamente a los titulares de tokens, esto se puede especificar aquí. Un ejemplo de dicha licencia podría ser otorgar al titular del token no fungible el derecho a imprimir y vender físico. ",
     "NFTHolderLicenseHeader": "Licencia de titulares",
     "HolderLicensePlaceholder": "Licencia de titular",
-    "NFTLicenseContent": "Licencia bajo la cual se publica la obra de arte. ",
+    "NFTLicenseContent": "Licencia bajo la cual se publica la obra de arte. A menudo, será un identificador de licencia simple, como 'CC BY-NC-SA 2.0', aunque también puede ser una licencia detallada completamente especificada.",
     "NFTLicenseHeader": "licencia de medios",
     "LicensePlaceholder": "Licencia",
     "modifyMultimediaContents": "Modificar contenidos multimedia",
@@ -307,8 +307,8 @@
     "multimedia_header": "Detalles multimedia del token no fungible",
     "multimedia_header_content": "Proporciona tu no ",
     "currentIPFSFiles": "Este token no fungible contiene actualmente {{count}} Referencias de archivos multimedia IPFS.",
-    "supportedFiletypes": "Los tipos de archivos admitidos incluyen imágenes, vídeos, audio, archivos 3D, documentos, etc.",
-    "main_header_content": "La configuración a continuación define cómo se comportará su token no fungible en la cadena de bloques Bitshares. ",
+    "supportedFiletypes": "Los tipos de archivos admitidos incluyen imágenes, videos, audio, archivos 3D, documentos, etc.",
+    "main_header_content": "Las configuraciones a continuación definen cómo se comportará su token no fungible en la cadena de bloques Bitshares. El creador de activos es responsable de configurar correctamente su token no fungible.",
     "main_header": "Configuración de token no fungible"
   }
 }

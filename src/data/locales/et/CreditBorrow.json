@@ -1,6 +1,6 @@
 {
   "common": {
-    "title": " Pakkumine{{orderID}} kõrval {{owner_name}} ({{owner_account}})",
+    "title": " Pakkumine nr{{orderID}} poolt {{owner_name}} ({{owner_account}})",
     "offer": "Pakkumine",
     "by": "poolt",
     "offering": "Pakkumine",
@@ -10,19 +10,19 @@
     "repayPeriod": "Tagasimakse periood: {{repayPeriod}} tundi",
     "validity": "Pakkumine kehtib {{validity}} tundi",
     "min": "Minimaalne summa: {{amount}} {{asset}}",
-    "proceed": "Jätkake krediidipakkumisega{{offerID}}",
+    "proceed": "Jätkake krediidipakkumisega #{{offerID}}",
     "edit": "Muuda pakkumist",
     "view": "Kuva seaded"
   },
   "card": {
     "title": "🏦 Saadaolevate krediidipakkumiste vaatamine",
-    "description": "Krediidipakkumised on kasutaja loodud, need pakuvad erinevaid intressimäärasid, varasid ja kestusi; ",
+    "description": "Krediidipakkumised on kasutaja loodud, need pakuvad erinevaid intressimäärasid, varasid ja kestusi, hindavad tingimusi enne tehingute tegemist.",
     "viewingAll": "Kõikide pakkumiste vaatamine",
     "viewAll": "Vaata kõiki pakkumisi",
     "viewingAvailable": "Ühilduvate tellimuste vaatamine",
     "viewAvailable": "Vaadake ühilduvaid tellimusi",
     "viewingSearch": "Otsimine",
-    "viewSearch": "Otsing",
+    "viewSearch": "Otsi",
     "allOffers": "Need krediidipakkumised pakuvad erinevaid laenatavaid varasid konkureerivate intressimääradega.",
     "availableOffers": "Need krediidipakkumised aktsepteerivad teile kuuluvaid varasid laenu tagatistagatisena.",
     "searchPrompt": "Kuidas soovite otsida?",

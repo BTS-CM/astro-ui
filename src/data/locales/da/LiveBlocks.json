@@ -1,6 +1,7 @@
 {
   "cardTitle": "Live blockchain oversigt",
-  "cardDescription": "Bitshares blockchain har 3 sekunders blokeringstider og er i stand til at håndtere tusindvis af transaktioner i sekundet. ",
+
+  "cardDescription": "Bitshares blockchain har 3 sekunders blokeringstider og er i stand til at håndtere tusindvis af transaktioner i sekundet. Denne side giver et live overblik over blockchainen.",
   "currentBlock": {
     "content": "Det seneste bloknummer.",
     "header": "Nuværende blok"

@@ -71,7 +71,7 @@
   "newIssuer": "Nova conta de emissor",
   "newIssuerInfo": "Esta é a conta que se tornará permanentemente o novo emissor (proprietário) deste ativo.",
   "currentIssuer": "Emissor Atual",
-  "currentIssuerInfo": "Este é o atual emissor (proprietário) deste ativo. ",
+  "currentIssuerInfo": "Este é o atual emissor (proprietário) deste ativo. Esta operação remove permanentemente a propriedade deste ativo deste usuário.",
   "updateIssuerHeader": "Atualizando o emissor de {{asset}} para {{newIssuer}} de {{currentIssuer}}",
   "globalSettlement": "Liquidação Global",
   "globallySettle": "Realizar liquidação global",

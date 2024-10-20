@@ -30,13 +30,13 @@
   "price_feeders_content": "La prédiction peut être résolue soit par les témoins, soit par le comité, soit par des sources de prix privées.",
   "feed": "Résolution alimentée par les prix",
   "seller": "Vendre (parier contre la prédiction)",
-  "seller_content": "Les vendeurs ont parié contre les prévisions. ",
+  "seller_content": "Les vendeurs parient contre la prédiction. Si la prédiction est fausse, les vendeurs gagnent grâce au prix de règlement passant à 0.",
   "buyer": "Acheter (parier pour le pronostic)",
-  "buyer_content": "Les acheteurs parient pour la prédiction. ",
+  "buyer_content": "Les acheteurs parient pour la prédiction. Si la prédiction est vraie, les acheteurs gagnent avec un prix de règlement passant à 1.",
   "admin": "Administrateur",
   "admin_content": "La maison dispose de contrôles supplémentaires pour résoudre la prédiction.",
   "about": "À propos",
-  "winner_content": "Les gagnants qui ont acheté (résultat réel) peuvent régler le PMA pour le contenu de l'actif de support 1x. ",
+  "winner_content": "Les gagnants qui ont acheté (vrai résultat) peuvent régler le PMA pour le contenu de l'actif de support 1x. Les gagnants qui ont vendu (faux résultat) n'ont rien à faire.",
   "winner_header": "Gagnants",
   "winner_claim": "Actifs de soutien aux réclamations",
   "resolve": "Résoudre la prédiction",
@@ -52,7 +52,7 @@
     "description": "Afin de parier contre le résultat, vous devez d’abord émettre les jetons d’actifs du marché de prédiction.",
     "balance": "Utiliser le solde",
     "qtyHeader": "Quantité à émettre",
-    "qtyContent": "La quantité de jetons que vous souhaitez émettre sur ce marché de prédiction. ",
+    "qtyContent": "La quantité de jetons que vous souhaitez émettre sur ce marché de prédiction. Les jetons émis peuvent être vendus, vous permettant de parier contre les prédictions.",
     "existingHeader": "Garanties engagées existantes",
     "existingContent": "Il s'agit du nombre de jetons d'actifs de marché de prédiction que vous avez déjà émis.",
     "totalHeader": "Garantie totale",
@@ -78,7 +78,7 @@
     "receivingContent": "Il s'agit approximativement du montant total de l'actif de garantie que vous obtiendrez en échange de cette transaction.",
     "title": "Vendre des actifs du marché de prédiction",
     "description": "Pour parier contre le résultat de la prédiction, vous devez vendre les jetons d’actifs du marché de prédiction que vous avez précédemment émis.",
-    "expiryContent": "Votre ordre limité restera actif sur le DEX pendant cette période avant de ne plus exister. ",
+    "expiryContent": "Votre ordre limité restera actif sur le DEX pendant cette période de temps avant de ne plus exister. Si vous sélectionnez « remplir ou tuer », alors s'il n'y a pas d'ordre limite de vente DEX correspondant, l'opération échouera, ce qui vous fera gagner du temps et des frais.",
     "expiryHeader": "Expiration"
   },
   "buyDialog": {
@@ -93,21 +93,21 @@
   },
   "resolveDialog": {
     "title": "Résoudre la prédiction",
-    "description": "La prédiction a expiré et est prête à être résolue. ",
+    "description": "La prédiction a expiré et est prête à être résolue. Veuillez sélectionner le résultat correct de la prédiction.",
     "outcomeHeader": "Résultat",
-    "outcomeContent": "Le résultat de la prédiction. ",
+    "outcomeContent": "Le résultat de la prédiction, si la prédiction est vraie, les acheteurs gagnent par le prix de règlement passant à 1, si la prédiction est fausse, les vendeurs gagnent par le prix de règlement passant à 0.",
     "true": "Résultat réel (les acheteurs gagnent)",
     "false": "Faux résultat (les vendeurs gagnent)"
   },
   "priceFeederDialog": {
     "title": "Fixer les prix des mangeoires",
-    "description": "Définissez les facteurs de prix pour cette prédiction. ",
+    "description": "Définissez les feeders de prix pour cette prédiction. Les feeders de prix sont chargés de fournir le prix de règlement pour la prédiction.",
     "priceFeedersHeader": "Conducteurs de prix",
-    "priceFeedersContent": "Les facteurs de prix pour cette prédiction. ",
+    "priceFeedersContent": "Les fournisseurs de prix pour cette prévision sont chargés de fournir le prix de règlement pour la prévision.",
     "addPriceFeeder": "Ajouter un chargeur de prix",
     "addPriceFeederDialog": {
       "title": "Ajouter un chargeur de prix",
-      "description": "Ajoutez un indicateur de prix à cette prédiction. ",
+      "description": "Ajoutez un fournisseur de prix à cette prévision. Les fournisseurs de prix sont chargés de fournir le prix de règlement pour la prévision.",
       "accountHeader": "Compte",
       "accountContent": "Le compte qui sera chargé de fournir le prix de règlement de la prédiction.",
       "submit": "Ajouter"
@@ -117,7 +117,7 @@
     "title": "Résoudre le marché des prédictions via le flux de prix",
     "description": "La prédiction a expiré et est prête à être résolue via un flux de prix publié.",
     "outcomeHeader": "Résultat",
-    "outcomeContent": "Le résultat de la prédiction. ",
+    "outcomeContent": "Le résultat de la prédiction, si la prédiction est vraie, les acheteurs gagnent par le prix de règlement passant à 1, si la prédiction est fausse, les vendeurs gagnent par le prix de règlement passant à 0.",
     "true": "Résultat réel (les acheteurs gagnent)",
     "false": "Faux résultat (les vendeurs gagnent)"
   }

@@ -31,7 +31,7 @@
   "operation": "Betrieb: {{operation}}",
   "additionalForceSettlementFee": "Zusätzliche Kraftabrechnungsgebühr: {{fee}} %",
   "submit": "Einreichen",
-  "collateralBiddingDisabled": "Das Bieten von Sicherheiten wurde für diesen Vermögenswert deaktiviert. ",
+  "collateralBiddingDisabled": "Das Bieten von Sicherheiten wurde für diesen Vermögenswert deaktiviert. Dieser Vorgang wird abgelehnt.",
   "existingCollateralBids": "Vorhandene Sicherheitenangebote",
   "existingCollateralBidsDescription": "Diese Sicherheitengebote wurden von anderen Benutzern erstellt, die an den global abgewickelten Fonds interessiert sind",
   "bidder": "Bieter",

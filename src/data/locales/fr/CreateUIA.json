@@ -5,7 +5,7 @@
   "card": {
     "title_create": "Création d'un nouvel actif émis par l'utilisateur",
     "title_edit": "Modification d'un actif émis par l'utilisateur",
-    "description": "Les actifs émis par l'utilisateur peuvent représenter tout ce que vous voulez, ils peuvent être utilisés à diverses fins. "
+    "description": "Les actifs émis par l'utilisateur peuvent représenter tout ce que vous voulez, ils peuvent être utilisés à diverses fins, ils peuvent être utilisés comme jeton pour votre entreprise, jeton de récompense, jeton pour un jeu, et plus encore."
   },
   "buttons": {
     "submit": "Soumettre"

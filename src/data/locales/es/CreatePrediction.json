@@ -21,21 +21,21 @@
     },
     "backing_asset": {
       "header": "Activo de respaldo",
-      "header_content": "El activo de respaldo es el activo que se utiliza para respaldar el activo del mercado de predicción. "
+      "header_content": "El activo de respaldo es el activo que se utiliza para respaldar el activo del mercado de predicción. Este activo se utilizará para pagar a los ganadores del activo del mercado de predicción."
     },
     "resolution": {
       "header": "Fecha y hora de resolución de predicción",
-      "header_content": "La fecha y hora de resolución es la fecha y hora en la que se resolverá el activo del mercado de predicción. "
+      "header_content": "La fecha y hora de resolución es la fecha y hora en la que se resolverá el activo del mercado de predicción. Esta es la fecha y hora en la que se evaluará el activo del mercado de predicción y se pagará a los ganadores."
     }
   },
   "buttons": {
     "submit": "Entregar"
   },
   "risks": {
-    "1": "La mala configuración de los activos del mercado de predicción puede llevar a una pobre participación de blockchain, algunas interfaces de usuario pueden filtrar su PMA por completo de la vista; ",
+    "1": "La mala configuración de los activos del mercado de predicción puede llevar a una pobre participación de blockchain, algunas interfaces de usuario pueden filtrar su PMA por completo de la vista, asegúrese de configurar correctamente su PMA, establezca una comisión razonable y pruebe la funcionalidad en testnet primero.",
     "2": "Cuando crea un activo de mercado de predicción, usted es responsable, como casa, de evaluar adecuadamente el resultado; no hacerlo de manera adecuada o oportuna podría generarle problemas legales o fiscales, además de la pérdida de credibilidad como casa.",
     "3": "Esta interfaz de usuario y las billeteras Beet/BEETEOS no admiten cuentas con múltiples firmas, por lo que su cuenta doméstica es un punto único de falla a largo plazo: protéjala bien.",
     "title": "Algunos de los riesgos asociados con la creación de activos de mercado de predicción",
-    "description": "Haga su propia investigación antes de crear una PMA, lea primero los documentos; "
+    "description": "Haga su propia investigación antes de crear una PMA, lea primero los documentos, no el asesoramiento legal."
   }
 }

@@ -5,7 +5,7 @@
   "card": {
     "title_create": "Creazione di una nuova risorsa emessa dall'utente",
     "title_edit": "Modifica di una risorsa emessa dall'utente",
-    "description": "Le risorse emesse dall'utente possono rappresentare tutto ciò che desideri e possono essere utilizzate per vari scopi. "
+    "description": "Le risorse emesse dall'utente possono rappresentare tutto ciò che desideri, possono essere utilizzate per vari scopi, possono essere utilizzate come token per la tua attività, token di ricompensa, token per un gioco e altro ancora."
   },
   "buttons": {
     "submit": "Invia"

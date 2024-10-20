@@ -21,21 +21,21 @@
     },
     "backing_asset": {
       "header": "Ativo de apoio",
-      "header_content": "O ativo de garantia é o ativo usado para respaldar o ativo de mercado de previsão. "
+      "header_content": "O ativo de garantia é o ativo usado para respaldar o ativo do mercado de previsão. Este ativo será usado para pagar os vencedores do ativo do mercado de previsão."
     },
     "resolution": {
       "header": "Data e hora da resolução da previsão",
-      "header_content": "A data e hora de resolução são a data e hora em que o ativo do mercado de previsão será resolvido. "
+      "header_content": "A data e hora de resolução é a data e hora em que o ativo do mercado de previsão será resolvido. Esta é a data e hora em que o ativo do mercado de previsão será avaliado e os vencedores serão pagos."
     }
   },
   "buttons": {
     "submit": "Enviar"
   },
   "risks": {
-    "1": "A configuração incorreta dos ativos de mercado de previsão pode levar a uma participação deficiente do blockchain; algumas interfaces de usuário podem filtrar totalmente o seu PMA; ",
+    "1": "A configuração incorreta dos ativos de mercado de previsão pode levar a uma participação deficiente do blockchain, algumas interfaces de usuário podem filtrar totalmente o seu PMA, certifique-se de configurar corretamente o seu PMA, defina uma taxa de comissão razoável e experimente a funcionalidade primeiro no testnet.",
     "2": "Ao criar um ativo de mercado de previsão, você é responsável como casa por avaliar adequadamente o resultado. Deixar de fazê-lo de maneira adequada ou em tempo hábil pode levar a problemas legais ou fiscais para você, além da perda de credibilidade como casa.",
     "3": "Esta interface de usuário e as carteiras Beet/BEETEOS não suportam contas com múltiplas assinaturas, portanto, sua conta doméstica é um ponto único de falha a longo prazo - proteja-a bem.",
     "title": "Alguns dos riscos associados à criação de ativos de mercado de previsão",
-    "description": "Faça sua própria pesquisa antes de criar um PMA, leia primeiro a documentação; "
+    "description": "Faça sua própria pesquisa antes de criar um PMA, leia primeiro os documentos, não o aconselhamento jurídico."
   }
 }

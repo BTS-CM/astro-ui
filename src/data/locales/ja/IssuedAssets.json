@@ -71,7 +71,7 @@
   "newIssuer": "新しい発行者アカウント",
   "newIssuerInfo": "これは、この資産の新しい発行者 (所有者) となるアカウントです。",
   "currentIssuer": "現在の発行者",
-  "currentIssuerInfo": "これは、この資産の現在の発行者 (所有者) です。",
+  "currentIssuerInfo": "これは、この資産の現在の発行者 (所有者) です。この操作により、この資産の所有権がこのユーザーから永久に削除されます。",
   "updateIssuerHeader": "発行者の更新 {{asset}} に {{newIssuer}} から {{currentIssuer}}",
   "globalSettlement": "グローバル決済",
   "globallySettle": "グローバル決済を実行する",

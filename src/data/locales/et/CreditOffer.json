@@ -6,7 +6,7 @@
     "buttonLabel": "Tagasi krediidipakkumise ülevaate juurde"
   },
   "offerCardHeader": {
-    "viewingOffer": "🏦 Vaata pakkumist{{id}} loodud {{owner_name}} ({{owner_account}})",
+    "viewingOffer": "🏦 Vaata pakkumist #{{id}} poolt loodud {{owner_name}} ({{owner_account}})",
     "loadingOfferTerms": "pakkumistingimuste laadimine...",
     "offerDescription1": "See on kasutaja loodud krediidipakkumine Bitshares DEXis.",
     "offerDescription2": "Enne Beetiga jätkamist lugege pakkumise tingimused põhjalikult läbi."
@@ -26,7 +26,8 @@
     "borrowDescription2": "Laenuandja määratud hind: {{price}} {{quote}}/{{base}}",
     "noCollateralMessage": "Kontol ei ole seda tagatisvara.",
     "borrowAmount": "Kogus {{symbol}} plaanite laenu võtta",
-    "availableAmountRange": "Saadaval: {{availableAmount}} {{symbol}} (minimaalne: {{minAmount}})",    "inputBorrowAmount": "Sisestage summa {{symbol}} soovite laenata {{owner_name}}.",
+    "availableAmountRange": "Saadaval: {{availableAmount}} {{symbol}} (Minimaalne: {{minAmount}})",
+    "inputBorrowAmount": "Sisestage summa {{symbol}} soovite laenata {{owner_name}}.",
     "repayMethod": "Krediidipakkumise tagasimaksmise viis",
     "selectRepayMethod": "Valige oma tagasimakseviis..",
     "noAutoRepayment": "Automaatne tagasimakse puudub",
@@ -41,10 +42,10 @@
     "loadingBalance": "Saldo laadimine...",
     "collateralNeeded": "Selleks, et laenata {{borrowAmount}} {{symbol}} tehingu tagamiseks peate esitama järgmise summa tagatist.",
     "enterValidBorrowAmount": "Nõutava tagatise arvutamiseks sisestage kehtiv laenusumma.",
-    "insufficientBalance": "Teie kontol on ebapiisav {{symbol}} tasakaalu.  {{requiredMore}} rohkem {{symbol}}.",
-    "noAssetHeld": "Teie kontol ei ole seda vara. ",
+    "insufficientBalance": "Teie kontol on ebapiisav {{symbol}} tasakaalu, vajate vähemalt {{requiredMore}} rohkem {{symbol}}.",
+    "noAssetHeld": "Teie kontol ei ole seda vara. Võimalusel proovige mõnda muud tagatist.",
     "repayPeriod": "Tagasimakse periood",
-    "repayPeriodDescription": "Krediiditehingu maksimaalne kestus; ",
+    "repayPeriodDescription": "Krediiditehingu maksimaalne kestus, makske laen selle perioodi jooksul tagasi, et vältida tagatise kaotamist.",
     "offerExpiry": "Krediidipakkumine aegub",
     "offerExpiryDescription": "Millal seda pakkumist enam ei ole.",
     "estimatedFee": "Eeldatav laenutasu",
@@ -68,7 +69,7 @@
     "riskLiquidity": "Likviidsusrisk: kui müüte laenatud varasid, ei pruugi olla võimalik varasid õigeaegselt laenu tagasimaksmiseks tagasi soetada või võite seda teha kahjumiga.",
     "riskPlatform": "Platvormi risk: kui vara omanikfirma lõpetab tegevuse ja lõpetab börsil tagatud vara tegevuse, võite raha kaotada.",
     "riskUser": "Kasutaja risk: kuna krediidipakkumised on täielikult kasutaja loodud, võite suhelda ebausaldusväärsete varade või kasutajatega, kes seavad raha ohtu.",
-    "riskNetwork": "Võrgurisk: kuigi plokiahela seisakuid esineb väga harva, tuleb seda riski arvesse võtta teatud ajaperioodi hõlmavate krediiditehingute tegemisel. ",
+    "riskNetwork": "Võrgurisk: kuigi plokiahela seisakuid on väga harva, tuleb seda riski arvesse võtta teatud ajaperioodi hõlmavate krediiditehingute tegemisel. Sellise riski tasandamiseks on saadaval automaatsed laenu tagasimakse meetodid.",
     "risksFooter": "Enne krediiditehingu jätkamist kaaluge neid riske ja hinnake põhjalikult pakkumiste tingimusi."
   }
 }

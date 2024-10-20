@@ -38,7 +38,7 @@
     "subtitle": "Create vesting balances",
     "hover1": "Creating a vesting balance allows you to lock up a quantity of assets for a set period of time.",
     "hover2": "You can use one of two vesting types: Coin Days Destroyed and Linear Vesting with Cliff.",
-    "hover3": "Coin Days Destroyed policy's effect is to require a certain amount of “interest” to accrue before the full balance may be withdrawn. Interest accrues as coindays (balance * length held). If some of the balance is withdrawn, the remaining balance must be held longer.",
+    "hover3": "Coin Days Destroyed policy's effect is to require a certain amount of “interest” to accrue before the full balance may be withdrawn, Interest accrues as coindays (balance * length held), If some of the balance is withdrawn, the remaining balance must be held longer.",
     "hover4": "Linear Vesting with Cliff policy is used to mimic traditional stock vesting contracts where each day a certain amount vests until it is fully matured."
   },
   "borrow": {

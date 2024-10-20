@@ -15,7 +15,8 @@
   "placeholderICR": "ICR: ? ",
   "placeholderProceedToBorrow": "대출을 진행하시겠습니까?",
   "selectBorrowableAsset": "💵 차용 자산 선택",
-  "smartcoinDescription": "Bitshares 블록체인에는 충분한 지원 담보를 제공하고 유지하는 경우 직접 발행할 수 있는 여러 사용자 및 위원회 생성 스마트코인이 있습니다. ",
+
+  "smartcoinDescription": "Bitshares 블록체인에는 충분한 지원 담보를 제공하고 유지하는 경우 스스로 발행할 수 있는 여러 사용자 및 위원회 생성 스마트코인이 있습니다. 자산을 발행하기 전에 철저하게 조사하고 위험 노출 및 허용 범위를 파악하십시오.",
   "viewingAllAssets": "모든 자산 보기",
   "viewAllAssets": "모든 자산 보기",
   "viewingCompatible": "보기 호환 가능",

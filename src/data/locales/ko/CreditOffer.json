@@ -6,7 +6,7 @@
     "buttonLabel": "크레딧 제안 개요로 돌아가기"
   },
   "offerCardHeader": {
-    "viewingOffer": "🏦 제안 보기{{id}} 에 의해 생성됨 {{owner_name}} ({{owner_account}})",
+    "viewingOffer": "🏦 제안 보기 #{{id}} 에 의해 생성됨 {{owner_name}} ({{owner_account}})",
     "loadingOfferTerms": "제안 조건 로드 중...",
     "offerDescription1": "이는 Bitshares DEX에서 사용자가 만든 크레딧 제안입니다.",
     "offerDescription2": "Beet으로 진행하기 전에 제안 조건을 철저하게 읽으십시오."
@@ -20,13 +20,13 @@
     "availableAmount": "금액 {{symbol}} ({{asset_type}}) 이 대출 기관에서 빌릴 수 있음",
     "loading": "로드 중...",
     "offerDescription": "{{owner_name}} 너에게 이만큼 빌려주겠다고 아낌없이 제안하고 있다 {{symbol}}, 귀하가 해당 약관에 동의한다고 가정합니다.",
-    "backingCollateral": "신용 거래를 위한 담보",
+    "backingCollateral": "신용거래를 위한 담보",
     "selectCollateral": "담보 자료를 선택하세요..",
     "borrowDescription": "빌리다 {{symbol}} ~에서 {{owner_name}}, 위에서 허용된 담보 자산 중에서 선택하세요.",
     "borrowDescription2": "대출 기관이 지정한 가격: {{price}} {{quote}}/{{base}}",
     "noCollateralMessage": "계정에 이 담보 자산이 보관되어 있지 않습니다.",
     "borrowAmount": "금액 {{symbol}} 너는 빌릴 계획이야",
-    "availableAmountRange": "사용 가능: {{availableAmount}} {{symbol}} (최소: {{minAmount}})",
+    "availableAmountRange": "사용 가능: {{availableAmount}} {{symbol}} (최저한의: {{minAmount}})",
     "inputBorrowAmount": "금액을 입력하세요. {{symbol}} 당신은 빌리고 싶어 {{owner_name}}.",
     "repayMethod": "신용 제안 상환 방법",
     "selectRepayMethod": "상환방법을 선택하세요..",
@@ -42,10 +42,10 @@
     "loadingBalance": "잔액 로드 중...",
     "collateralNeeded": "빌리려면 {{borrowAmount}} {{symbol}} 거래를 성사시키려면 다음 금액의 담보를 제공해야 합니다.",
     "enterValidBorrowAmount": "필요한 담보를 계산하려면 유효한 차입 금액을 입력하세요.",
-    "insufficientBalance": "귀하의 계정이 부족합니다. {{symbol}} 균형.  {{requiredMore}} 더 {{symbol}}.",
-    "noAssetHeld": "귀하의 계정에는 이 자산이 보관되어 있지 않습니다. ",
+    "insufficientBalance": "귀하의 계정이 부족합니다. {{symbol}} 균형, 최소한 필요합니다 {{requiredMore}} 더 {{symbol}}.",
+    "noAssetHeld": "귀하의 계정에는 이 자산이 보관되어 있지 않습니다. 가능하다면 다른 형태의 담보를 사용해 보십시오.",
     "repayPeriod": "상환기간",
-    "repayPeriodDescription": "신용 거래의 최대 기간 ",
+    "repayPeriodDescription": "신용 거래의 최대 기간은 담보 손실을 방지하기 위해 이 기간 내에 대출금을 상환합니다.",
     "offerExpiry": "크레딧 제안 만료",
     "offerExpiryDescription": "이 제안이 더 이상 존재하지 않는 경우.",
     "estimatedFee": "예상 대출 수수료",
@@ -69,7 +69,7 @@
     "riskLiquidity": "유동성 위험: 빌린 자산을 매각할 경우, 대출금을 상환하는 데 필요한 자산을 제때에 다시 취득하지 못하거나 손실을 입을 수 있습니다.",
     "riskPlatform": "플랫폼 위험: 자산 소유자 회사가 폐업하고 거래소 담보 자산의 운영을 중단하면 자금을 잃을 수 있습니다.",
     "riskUser": "사용자 위험: 신용 제안은 전적으로 사용자가 생성하므로 신뢰할 수 없는 자산이나 자금을 위험에 빠뜨리는 사용자와 상호 작용할 수 있습니다.",
-    "riskNetwork": "네트워크 위험: 블록체인 가동 중지 시간은 매우 드물지만 일정 기간 동안 신용 거래를 생성할 때 고려해야 할 위험이 있습니다. ",
+    "riskNetwork": "네트워크 위험: 블록체인 가동 중지 시간은 매우 드물지만 일정 기간 동안 신용 거래를 생성할 때 고려해야 할 위험이 있습니다. 자동 대출 상환 방법을 사용하여 이러한 위험을 상쇄할 수 있습니다.",
     "risksFooter": "신용 거래를 진행하기 전에 이러한 위험을 고려하고 제안 조건을 철저히 평가하십시오."
   }
 }

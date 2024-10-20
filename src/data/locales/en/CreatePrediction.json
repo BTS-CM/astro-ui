@@ -1,41 +1,41 @@
 {
-    "dialogContent": {
-        "headerText": "Creating the following prediction market asset: {{symbol}}"
+  "dialogContent": {
+    "headerText": "Creating the following prediction market asset: {{symbol}}"
+  },
+  "card": {
+    "title": "Creating a new Prediction Market Asset",
+    "description": "By creating a Prediction Market Assets you can act as the house for decentralized bets on future events in return for a comission fee without winnings pool counterparty risk exposure."
+  },
+  "pma": {
+    "title": "Prediction Market Asset Details",
+    "title_content": "These are the asset settings used for the prediction market asset.",
+    "condition": {
+      "header": "Condition",
+      "header_content": "Provide the prediction market asset details here",
+      "placeholder": "Prediction conditions"
     },
-    "card": {
-        "title": "Creating a new Prediction Market Asset",
-        "description": "By creating a Prediction Market Assets you can act as the house for decentralized bets on future events in return for a comission fee without winnings pool counterparty risk exposure."
+    "commission": {
+      "header": "Commission (%)",
+      "header_content": "The commission is the fee which the house takes for creating and evaluating the prediction market asset.",
+      "placeholder": "Commission"
     },
-    "pma": {
-        "title": "Prediction Market Asset Details",
-        "title_content": "These are the asset settings used for the prediction market asset.",
-        "condition": {
-            "header": "Condition",
-            "header_content": "Provide the prediction market asset details here",
-            "placeholder": "Prediction conditions"
-        },
-        "commission": {
-            "header": "Commission (%)",
-            "header_content": "The commission is the fee which the house takes for creating and evaluating the prediction market asset.",
-            "placeholder": "Commission"
-        },
-        "backing_asset": {
-            "header": "Backing asset",
-            "header_content": "The backing asset is the asset that is used to back the prediction market asset. This asset will be used to pay out the winners of the prediction market asset."
-        },
-        "resolution": {
-            "header": "Prediction resolution date & time",
-            "header_content": "The resolution date and time is the date and time at which the prediction market asset will be resolved. This is the date and time at which the prediction market asset will be evaluated and the winners will be paid out."
-        }
+    "backing_asset": {
+      "header": "Backing asset",
+      "header_content": "The backing asset is the asset that is used to back the prediction market asset, This asset will be used to pay out the winners of the prediction market asset."
     },
-    "buttons": {
-        "submit": "Submit"
-    },
-    "risks": {
-      "title": "Some of the risks associated with creating prediction market assets",
-      "description": "Do your own research prior to creating a PMA, read the docs first; not legal advice.",
-      "1": "Misconfiguration of prediction market assets can lead to poor blockchain participation, some user interfaces may filter your PMA entirely from view; make sure to correctly configure your PMA, set a reasonable commission fee and try the functionality out on testnet first.",
-      "2": "When you create a prediction market asset you are responsible as the house to properly evaluate the outcome, failure to do so properly or within a timely manner could lead to legal or fiscal issues for you ontop of loss of credibility as a house.",
-      "3": "This user interface and the Beet/BEETEOS wallets do not support multi-signature accounts, so your house account is a long term single point of failure - protect it well."
+    "resolution": {
+      "header": "Prediction resolution date & time",
+      "header_content": "The resolution date and time is the date and time at which the prediction market asset will be resolved, This is the date and time at which the prediction market asset will be evaluated and the winners will be paid out."
     }
+  },
+  "buttons": {
+    "submit": "Submit"
+  },
+  "risks": {
+    "title": "Some of the risks associated with creating prediction market assets",
+    "description": "Do your own research prior to creating a PMA, read the docs first, not legal advice.",
+    "1": "Misconfiguration of prediction market assets can lead to poor blockchain participation, some user interfaces may filter your PMA entirely from view, make sure to correctly configure your PMA, set a reasonable commission fee and try the functionality out on testnet first.",
+    "2": "When you create a prediction market asset you are responsible as the house to properly evaluate the outcome, failure to do so properly or within a timely manner could lead to legal or fiscal issues for you ontop of loss of credibility as a house.",
+    "3": "This user interface and the Beet/BEETEOS wallets do not support multi-signature accounts, so your house account is a long term single point of failure - protect it well."
+  }
 }

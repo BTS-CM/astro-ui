@@ -2,35 +2,35 @@
   "card": {
     "title_create": "Criando um novo ativo Smartcoin",
     "title_edit": "Editando um ativo Smartcoin existente",
-    "description": "Smartcoins são ativos garantidos que podem fazer referência a feeds de preços de mercado externo. "
+    "description": "Smartcoins são ativos garantidos que podem fazer referência a feeds de preços de mercado externos. Você pode facilmente criar seu próprio stablecoin garantido referenciando qualquer ativo que desejar, como USD/CNY/JPY, etc."
   },
   "title": {
     "header": "Configurações de Smartcoin",
-    "header_content": "As configurações abaixo definem como sua smartcoin se comportará na blockchain Bitshares. "
+    "header_content": "As configurações abaixo definem como sua smartcoin se comportará na blockchain Bitshares. O criador do ativo é responsável por configurar corretamente sua smartcoin."
   },
   "bsrm": {
     "header": "Estratégia de gerenciamento de riscos do Cisne Negro",
-    "header_content": "Estas estratégias oferecem resultados diferentes para posições de dívida subcolateralizadas, permitindo-lhe desativar, minimizar ou globalizar o risco de liquidação da posição de dívida. ",
-    "select_0": "Liquidação Global: Todas as posições de dívida encerradas; ",
-    "select_1": "Sem Liquidação: Nenhuma posição de dívida é encerrada; ",
-    "select_2": "Fundos de Liquidação Individuais: As posições de dívida subcolateralizadas são encerradas; ",
-    "select_3": "Ordens de Liquidação Individuais: As posições de dívida subcolateralizadas são encerradas; "
+    "header_content": "Essas estratégias oferecem resultados diferentes para posições de dívida subcolateralizadas, permitindo desabilitar, minimizar ou globalizar o risco de liquidação da posição de dívida. A seleção de estratégias diferentes pode beneficiar smartcoins exclusivas e aumentar a tolerância a mercados voláteis.",
+    "select_0": "Liquidação Global: Todas as posições de dívida encerradas, garantias transferidas para o fundo de liquidação, Novas posições de dívida não são permitidas até serem resolvidas.",
+    "select_1": "Sem Liquidação: Nenhuma posição de dívida é fechada, preço de liquidação limitado pelo menor índice de garantia, Novas posições permitidas.",
+    "select_2": "Fundos de Liquidação Individuais: As posições de dívida subcolateralizadas são encerradas, as garantias são transferidas para um fundo exigível, Novas posições são permitidas.",
+    "select_3": "Ordens de Liquidação Individuais: As posições de dívida com subcolateralização são fechadas, as garantias são movidas para uma ordem com limite, Sem limite de preço, Novas posições permitidas."
   },
   "mcr": {
     "header": "Proporção de garantia mínima estática",
-    "header_content": "Este é o índice de garantia mínimo exigido para que uma posição de dívida seja considerada totalmente garantida. "
+    "header_content": "Este é o rácio de garantia mínimo exigido para que uma posição de dívida seja considerada totalmente garantida. Geralmente calculado a partir de feeds de preços, está agora a ser definido estaticamente pelo proprietário do ativo."
   },
   "icr": {
     "header": "Proporção de garantia inicial estática",
-    "header_content": "Este é o rácio de garantia necessário para que uma posição de dívida seja considerada totalmente garantida no momento da criação. "
+    "header_content": "Este é o rácio de garantia necessário para que uma posição de dívida seja considerada totalmente garantida no momento da criação. Geralmente calculado a partir de feeds de preços, está agora a ser definido estaticamente pelo proprietário do ativo."
   },
   "mssr": {
     "header": "Taxa de compressão curta máxima estática",
-    "header_content": "Este é o rácio de garantia máximo pelo qual uma posição de dívida pode ser liquidada. "
+    "header_content": "Este é o rácio máximo de garantia pelo qual uma posição de dívida pode ser liquidada. Geralmente calculado a partir de feeds de preços, está agora a ser definido estaticamente pelo proprietário do ativo."
   },
   "feed_lifetime": {
     "header": "Vida útil do feed",
-    "header_content": "O tempo em segundos que um feed de preço é considerado válido. "
+    "header_content": "O tempo em segundos que um feed de preço é considerado válido. Após esse período, o feed é considerado inválido e o preço não é mais usado para cálculos de índice de garantia."
   },
   "minimum_feeds": {
     "header": "Feeds mínimos",
@@ -52,16 +52,16 @@
     "margin_call_fee_ratio": {
       "enabled": "Extensão Margin Call Fee Ratio ativada",
       "disabled": "Habilitar a extensão smartcoin Margin Call Fee Ratio?",
-      "extensionInfo": "A extensão Margin Call Fee Ratio permite que o proprietário do smartcoin cobre uma taxa de um usuário quando sua posição de dívida é chamada de margem. ",
+      "extensionInfo": "A extensão Margin Call Fee Ratio permite que o proprietário do smartcoin cobre uma taxa de um usuário quando sua posição de dívida é chamada de margem. A taxa é calculada como uma porcentagem da garantia negociada, paga ao proprietário do smartcoin.",
       "header": "Taxa de taxa de chamada de margem",
-      "header_content": "A taxa cobrada de um usuário quando sua posição de dívida é chamada de margem. "
+      "header_content": "A taxa cobrada de um usuário quando sua posição de dívida é chamada de margem. A taxa é calculada como uma porcentagem da garantia negociada, paga ao proprietário da smartcoin."
     },
     "force_settle_fee": {
       "enabled": "Extensão de taxa de liquidação forçada ativada",
       "disabled": "Habilitar a extensão smartcoin Force Settle Fee?",
-      "extensionInfo": "A extensão Force Settle Fee permite que o proprietário do smartcoin cobre uma taxa de um usuário quando ele força a liquidação de sua posição de dívida. ",
+      "extensionInfo": "A extensão Force Settle Fee permite que o proprietário do smartcoin cobre uma taxa de um usuário quando ele força a liquidação de sua posição de dívida. A taxa é calculada como uma porcentagem da garantia negociada, paga ao proprietário do smartcoin.",
       "header": "Taxa de liquidação forçada",
-      "header_content": "A taxa cobrada de um usuário quando ele força a liquidação de sua dívida. "
+      "header_content": "A taxa cobrada de um usuário quando ele força a liquidação de sua posição de dívida. A taxa é calculada como uma porcentagem da garantia negociada, paga ao proprietário da smartcoin."
     }
   },
   "editAsset": {

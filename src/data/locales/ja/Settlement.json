@@ -31,7 +31,7 @@
   "operation": "手術： {{operation}}",
   "additionalForceSettlementFee": "追加の強制決済手数料: {{fee}} %",
   "submit": "提出する",
-  "collateralBiddingDisabled": "このアセットでは担保入札が無効になっています。",
+  "collateralBiddingDisabled": "このアセットでは担保入札が無効になっているため、この操作は拒否されます。",
   "existingCollateralBids": "既存の担保入札",
   "existingCollateralBidsDescription": "これらの担保入札は、グローバル決済ファンドに関心のある他のユーザーによって作成されました。",
   "bidder": "入札者",

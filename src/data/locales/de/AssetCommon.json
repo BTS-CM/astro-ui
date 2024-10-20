@@ -5,12 +5,12 @@
     "charge_market_fee": {
       "about": "Marktgebühr aktivieren",
       "enabledInfo": "Der Emittent/Eigentümer des Vermögenswerts kann das Flag „charge_market_fee“ aktualisieren.",
-      "disabledInfo": "Der Emittent/Eigentümer des Vermögenswerts kann das Flag „charge_market_fee“ NICHT aktualisieren. "
+      "disabledInfo": "Der Emittent/Eigentümer des Vermögenswerts kann das Flag „charge_market_fee“ NICHT aktualisieren. Wenn das Flag „charge_market_fee“ auf 0 gesetzt ist, können keine Markthandelsgebühren mehr erhoben werden. Wenn das Flag „charge_market_fee“ auf einen Wert ungleich Null gesetzt ist, können die Markthandelsgebührensätze weiterhin aktualisiert werden "
     },
     "white_list": {
       "about": "Erfordern, dass Inhaber auf die weiße Liste gesetzt werden",
       "enabledInfo": "Der Asset-Emittent/Eigentümer kann das Flag „white_list“ aktualisieren.",
-      "disabledInfo": "Der Asset-Emittent/Eigentümer kann das Flag „white_list“ NICHT aktualisieren. "
+      "disabledInfo": "Der Asset-Aussteller/Eigentümer kann das Flag „white_list“ NICHT aktualisieren. Wenn das Flag „white_list“ auf 0 gesetzt ist, kann er nicht mehr mit der Durchsetzung von Whitelisting oder Blacklisting beginnen. Wenn das Flag „white_list“ auf einen Wert ungleich Null gesetzt ist, kann er dennoch so konfiguriert werden, dass kein Whitelisting oder Blacklisting erzwungen wird "
     },
     "override_authority": {
       "about": "Der Vermögenseigentümer kann das Vermögen auf sich selbst zurück übertragen",
@@ -45,12 +45,12 @@
     "global_settle": {
       "about": "Ermöglichen Sie dem Vermögenseigentümer, eine globale Abrechnung zu erzwingen",
       "enabledInfo": "Der Emittent/Eigentümer des Vermögenswerts kann diesen Vermögenswert manuell global abrechnen.",
-      "disabledInfo": "Der Emittent/Eigentümer des Vermögenswerts kann diesen Vermögenswert NICHT manuell global abrechnen."
+      "disabledInfo": "Der Emittent/Eigentümer des Vermögenswerts kann diesen Vermögenswert NICHT manuell global abwickeln."
     },
     "lock_max_supply": {
       "about": "Maximale Versorgung sperren",
-      "enabledInfo": "Der Asset-Emittent/Eigentümer kann das Flag lock_max_supply NICHT aktualisieren.",
-      "disabledInfo": "Der Asset-Emittent/Eigentümer kann das Flag lock_max_supply aktualisieren."
+      "enabledInfo": "Der Asset-Emittent/Eigentümer kann das lock_max_supply-Flag NICHT aktualisieren.",
+      "disabledInfo": "Der Asset-Emittent/Eigentümer kann das lock_max_supply-Flag aktualisieren."
     },
     "disable_new_supply": {
       "about": "Neue Versorgung deaktivieren",
@@ -58,24 +58,24 @@
       "disabledInfo": "Der Asset-Emittent/Eigentümer kann das Flag „disable_new_supply“ aktualisieren."
     },
     "disable_collateral_bidding": {
-      "about": "Deaktivieren Sie Nebengebote",
+      "about": "Deaktivieren Sie das Bieten von Sicherheiten",
       "enabledInfo": "Der Asset-Emittent/Eigentümer kann das Flag „disable_collateral_bidding“ NICHT aktualisieren.",
       "disabledInfo": "Der Asset-Emittent/Eigentümer kann das Flag „disable_collateral_bidding“ aktualisieren."
     },
     "disable_mcr_update": {
       "about": "Deaktivieren Sie die Aktualisierung des Mindestsicherheitsverhältnisses durch den Eigentümer",
-      "enabledInfo": "Der Emittent/Eigentümer des Vermögenswerts kann die Erweiterung „maintenance_collateral_ratio“ des Vermögenswerts NICHT aktualisieren (festlegen/ändern/löschen). ",
-      "disabledInfo": "Der Emittent/Eigentümer des Vermögenswerts kann die Erweiterung „maintenance_collateral_ratio“ des Vermögenswerts aktualisieren (festlegen/ändern/löschen). "
+      "enabledInfo": "Der Asset-Emittent/Eigentümer kann die Erweiterung „maintenance_collateral_ratio“ des Assets NICHT aktualisieren (festlegen/ändern/löschen). Wenn in der Erweiterung „maintenance_collateral_ratio“ ein Wert festgelegt ist, hat dieser Vorrang vor demselben Parameter, der von den Preis-Feed-Herausgebern vorgeschlagen wird, andernfalls vor dem vorgeschlagenen Wert ",
+      "disabledInfo": "Der Asset-Emittent/Eigentümer kann die Erweiterung „maintenance_collateral_ratio“ des Assets aktualisieren (festlegen/ändern/löschen). Wenn in der Erweiterung „maintenance_collateral_ratio“ ein Wert festgelegt ist, hat dieser Vorrang vor demselben Parameter, der von den Preis-Feed-Herausgebern vorgeschlagen wird, andernfalls dem von vorgeschlagenen Wert "
     },
     "disable_icr_update": {
-      "about": "Deaktivieren Sie die Aktualisierung des anfänglichen Sicherheitenverhältnisses durch den Eigentümer",
-      "enabledInfo": "Der Emittent/Eigentümer des Vermögenswerts kann die Erweiterung „initial_collateral_ratio“ des Vermögenswerts NICHT aktualisieren (festlegen/ändern/löschen). ",
-      "disabledInfo": "Der Emittent/Eigentümer des Vermögenswerts kann die Erweiterung „initial_collateral_ratio“ des Vermögenswerts aktualisieren (festlegen/ändern/löschen). "
+      "about": "Deaktivieren Sie die Aktualisierung des Anfangssicherheitsverhältnisses durch den Eigentümer",
+      "enabledInfo": "Der Emittent/Eigentümer des Vermögenswerts kann die Erweiterung „initial_collateral_ratio“ des Vermögenswerts NICHT aktualisieren (festlegen/ändern/löschen). Wenn in der Erweiterung „initial_collateral_ratio“ ein Wert festgelegt ist, hat dieser Vorrang vor demselben Parameter, der von den Preis-Feed-Herausgebern vorgeschlagen wird, andernfalls vor dem vorgeschlagenen Wert ",
+      "disabledInfo": "Der Emittent/Eigentümer des Vermögenswerts kann die Erweiterung „initial_collateral_ratio“ des Vermögenswerts aktualisieren (festlegen/ändern/löschen). Wenn in der Erweiterung „initial_collateral_ratio“ ein Wert festgelegt ist, hat dieser Vorrang vor demselben Parameter, der von den Preis-Feed-Herausgebern vorgeschlagen wird, andernfalls dem von vorgeschlagenen Wert "
     },
     "disable_mssr_update": {
-      "about": "Deaktivieren Sie die Besitzeraktualisierung „Maximum Short Squeeze Ratio“.",
-      "enabledInfo": "Der Emittent/Eigentümer des Vermögenswerts kann die Erweiterung „maximum_short_squeeze_ratio“ des Vermögenswerts NICHT aktualisieren (festlegen/ändern/löschen). ",
-      "disabledInfo": "Der Emittent/Eigentümer des Vermögenswerts kann die Erweiterung „maximum_short_squeeze_ratio“ des Vermögenswerts aktualisieren (festlegen/ändern/löschen). "
+      "about": "Deaktivieren Sie die Eigentümeraktualisierung „Maximum Short Squeeze Ratio“.",
+      "enabledInfo": "Der Asset-Emittent/Eigentümer kann die Maximum_short_squeeze_ratio-Erweiterung des Assets NICHT aktualisieren (festlegen/ändern/löschen). Wenn in der Maximum_short_squeeze_ratio-Erweiterung ein Wert festgelegt ist, hat dieser Vorrang vor demselben Parameter, der von den Preis-Feed-Herausgebern vorgeschlagen wird, andernfalls vor dem vorgeschlagenen Wert ",
+      "disabledInfo": "Der Asset-Emittent/Eigentümer kann die Maximum_short_squeeze_ratio-Erweiterung des Assets aktualisieren (festlegen/ändern/löschen). Wenn in der Maximum_short_squeeze_ratio-Erweiterung ein Wert festgelegt ist, hat dieser Vorrang vor demselben Parameter, der von den Preis-Feed-Herausgebern vorgeschlagen wird, andernfalls dem von vorgeschlagenen Wert "
     },
     "disable_bsrm_update": {
       "about": "Deaktivieren Sie die Eigentümeraktualisierung der Black Swan Risk Management-Strategie",
@@ -103,7 +103,7 @@
     },
     "transfer_restricted": {
       "about": "Der Vermögenseigentümer muss allen Übertragungen zustimmen",
-      "enabledInfo": "Die Übertragung dieses Vermögenswerts ist eingeschränkt. ",
+      "enabledInfo": "Die Übertragung dieses Vermögenswerts ist eingeschränkt. Die Übertragung dieses Vermögenswerts kann nur vom Emittenten/Eigentümer des Vermögenswerts oder an den Emittenten/Eigentümer des Vermögenswerts erfolgen. Die gleiche „von“- oder „bis“-Beschränkung gilt auch für HTLCs und Abhebungen mit Auszahlungsberechtigung. Es können keine Sperrguthaben erstellt werden ",
       "disabledInfo": "Keine solche Beschränkung für Überweisungen."
     },
     "disable_force_settle": {
@@ -113,7 +113,7 @@
     },
     "disable_confidential": {
       "about": "Vertrauliche Transaktionen deaktivieren",
-      "enabledInfo": "Übertragungen an Blind-/Stealth-/vertrauliche Adressen sind deaktiviert. ",
+      "enabledInfo": "Überweisungen an Blind-/Stealth-/Vertraulich-Adressen sind deaktiviert. Ein Betrag dieses Vermögenswerts kann NICHT vom Kontostand an Blind-/Stealth-/Vertraulich-Adressen übertragen werden. Übertragungen von Blind-/Stealth-/Vertraulich-Adressen an andere Blind-/Stealth-/Vertraulich-Adressen oder ",
       "disabledInfo": "Übertragungen an Blind-/Stealth-/vertrauliche Adressen sind aktiviert."
     },
     "witness_fed_asset": {
@@ -137,8 +137,8 @@
       "disabledInfo": "Kann neues Angebot für diesen Vermögenswert erstellen."
     },
     "disable_collateral_bidding": {
-      "about": "Deaktivieren Sie Nebengebote",
-      "enabledInfo": "Das Bieten für Sicherheiten im Global-Settlement-Pool ist deaktiviert. ",
+      "about": "Deaktivieren Sie das Bieten von Sicherheiten",
+      "enabledInfo": "Das Bieten für Sicherheiten im Global-Settlement-Pool ist deaktiviert. Es ist NICHT gestattet, für Sicherheiten im Global-Settlement-Pool zu bieten, wenn dieser Vermögenswert global abgewickelt wurde.",
       "disabledInfo": "Das Bieten für Sicherheiten im Global-Settlement-Pool ist aktiviert."
     }
   },
@@ -147,12 +147,12 @@
     "title_content": "Dies sind die Asset-Einstellungen, die für die DEX-Kernfunktionalität verwendet werden.",
     "symbol": {
       "header": "Vermögenssymbol",
-      "header_content": "Das Vermögenswertsymbol ist eine eindeutige Kennung auf der Blockchain, die den Vermögenswert im gesamten DEX identifiziert. ",
+      "header_content": "Das Asset-Symbol ist eine eindeutige Kennung auf der Blockchain, die den Asset im gesamten DEX identifiziert. Durch die Verwendung eines Sub-Asset-Namens wie NFT.TITLE können günstigere Assets erstellt werden",
       "placeholder": "Symbol"
     },
     "shortName": {
       "header": "Kurzname des Assets",
-      "header_content": "Dies ist der Kurzname des Assets, der weniger wichtig ist als das Symbol, aber dennoch eine optionale verkürzte eindeutige Kennung ist. ",
+      "header_content": "Dies ist der Kurzname des Assets, der weniger wichtig ist als das Symbol, aber dennoch eine optionale verkürzte eindeutige Kennung ist. Sie können das Symbol einfach für dieses Feld wiederverwenden.",
       "placeholder": "Kurzname"
     },
     "preferredMarket": {
@@ -166,12 +166,12 @@
     },
     "max_supply": {
       "header": "Maximale Versorgung",
-      "header_content": "Das maximale Angebot des Vermögenswerts. Dabei handelt es sich um den Gesamtbetrag des Vermögenswerts, der jemals vom Eigentümer des Vermögenswerts (Ihnen) ausgegeben werden kann.",
+      "header_content": "Das maximale Angebot des Vermögenswerts, das ist der Gesamtbetrag des Vermögenswerts, der jemals vom Vermögenseigentümer (Ihnen) ausgegeben werden kann.",
       "placeholder": "Maximaler Vorrat"
     },
     "precision": {
       "header": "Asset-Präzision",
-      "header_content": "Die Genauigkeit des Assets gibt die Anzahl der unterstützten Dezimalstellen an. ",
+      "header_content": "Die Genauigkeit des Assets gibt die Anzahl der unterstützten Dezimalstellen an. Dieser Wert kann nach der Asset-Erstellung nicht mehr geändert werden.",
       "placeholder": "Präzision"
     }
   },
@@ -180,9 +180,9 @@
     "header": "Marktgebührenverlängerungen",
     "reward_percent": {
       "enabled": "Erweiterung des Referrer-Belohnungsprozentsatzes aktiviert",
-      "enabledInfo": "Den Empfehlungsgebern aktiver Marktteilnehmer wird ein prozentualer Anteil der Marktgebühr zugerechnet.",
+      "enabledInfo": "Den Empfehlungsgebern aktiver Marktteilnehmer wird ein prozentualer Anteil der Marktgebühr zugeteilt.",
       "disabled": "Erweiterung des Empfehlungsprämienprozentsatzes aktivieren?",
-      "disabledInfo": "Die Erweiterung des Referrer-Belohnungsprozentsatzes ermöglicht es dem Asset-Ersteller, dem Referrer aktiver Marktteilnehmer einen Prozentsatz der Marktgebühr zuzuweisen.",
+      "disabledInfo": "Die Erweiterung des Empfehlungsprämienprozentsatzes ermöglicht es dem Vermögensersteller, dem Empfehlungsgeber aktiver Marktteilnehmer einen Prozentsatz der Marktgebühr zuzuweisen.",
       "header": "Prozentsatz der Referrer-Belohnung",
       "header_content": "Der Empfehlungsprämienprozentsatz ist der Prozentsatz der Marktgebühr, der dem Empfehlungsgeber aktiver Marktteilnehmer zugewiesen wird."
     },
@@ -192,10 +192,10 @@
       "disabled": "Aktivieren Sie die Whitelist-Marktgebührenteilungserweiterung?",
       "disabledInfo": "Sie können festlegen, wer einen Anteil der erhobenen Marktgebühren erhalten darf, und zwar auf eine Reihe vorab genehmigter Empfehlungskonten.",
       "header": "Aufteilung der Marktgebühren auf die Whitelist",
-      "header_content": "Die Gebührenteilungserweiterung für den Whitelist-Markt ermöglicht es dem Haus, Referrer auf diese auf der Whitelist stehenden Konten zu beschränken."
+      "header_content": "Die Gebührenteilungserweiterung für den Whitelist-Markt ermöglicht es dem Haus, Referrer auf diese Konten auf der Whitelist zu beschränken."
     },
     "taker_fee_percent": {
-      "enabled": "Erweiterung des Taker-Gebühr-Prozentsatzes aktiviert",
+      "enabled": "Erweiterung des Prozentsatzes der Abnehmergebühr aktiviert",
       "enabledInfo": "Der „Nehmer“-Teilnehmer der Limit-Order erhält einen Prozentsatz der Marktgebühr.",
       "disabled": "Erweiterung des Prozentsatzes der Abnehmergebühr aktivieren?",
       "disabledInfo": "Die Erweiterung des Prozentsatzes der Abnehmergebühr ermöglicht es dem Vermögensersteller, dem „Abnehmer“ von Limit-Order-Operationen einen Prozentsatz der Marktgebühr zuzuweisen.",
@@ -218,7 +218,7 @@
       "enabled": "Berechnung des Kernwechselkurses wird übersprungen",
       "enabledInfo": "Der Ersteller des Vermögenswerts hat die Möglichkeit aktiviert, die grundlegende Wechselkursprüfung für diesen Vermögenswert zu überspringen.",
       "disabled": "Überspringen Sie die Berechnung des Kernwechselkurses?",
-      "disabledInfo": "Die Erweiterung „Kernwechselkurs überspringen“ ermöglicht es dem Asset-Ersteller, die Prüfung des Kernwechselkurses für dieses Asset zu überspringen."
+      "disabledInfo": "Mit der Erweiterung „Kernwechselkurs überspringen“ kann der Asset-Ersteller die Prüfung des Kernwechselkurses für diesen Vermögenswert überspringen."
     }
   },
   "whitelist": {
@@ -230,7 +230,7 @@
     "header": "Behörden führen eine schwarze Liste für Vermögenswerte auf"
   },
   "market_fee": {
-    "header_content": "Die Marktgebühr ist der Gebührenprozentsatz, der für jeden Trade erhoben wird, der am Bitshares DEX ausgeführt wird. ",
+    "header_content": "Die Marktgebühr ist der Gebührenprozentsatz, der für jeden am Bitshares DEX ausgeführten Handel erhoben wird. Die Gebühr wird für den gehandelten Vermögenswert erhoben.",
     "header": "Marktgebühr in Prozent"
   },
   "max_market_fee": {
@@ -248,17 +248,17 @@
     },
     "calculated_cer_price": {
       "header": "Kernwechselkurs",
-      "header_content": "Stellen Sie sicher, dass Ihr Kernwechselkurs höher als der Marktpreis ist, da die Leute sonst Ihren Token auf dem Markt kaufen und Ihren Gebührenpool durch implizite Arbitrage aufbrauchen. "
+      "header_content": "Stellen Sie sicher, dass Ihr Kernwechselkurs höher als der Marktpreis ist, da die Leute sonst Ihren Token vom Markt kaufen und Ihren Gebührenpool durch implizite Arbitrage aufbrauchen. Der Kernwechselkurs sollte regelmäßig aktualisiert werden, um den Marktpreis Ihres Vermögenswerts widerzuspiegeln."
     }
   },
   "nft": {
     "NFTTitleContent": "Dies ist der Titel Ihres nicht fungiblen Tokens. Stellen Sie sicher, dass er einzigartig und beschreibend ist, da er in verschiedenen Galerien/Explorern für nicht fungible Token präsentiert werden kann.",
     "NFTTitleHeader": "Titel",
     "TitlePlaceholder": "Titel",
-    "NFTArtistContent": "Name oder Pseudonym des Künstlers. ",
+    "NFTArtistContent": "Name oder Pseudonym des Künstlers. Kann auch Aliase oder Online-Namen oder -Handles umfassen, um Namen oder Adressen von Blockchain-Konten einzuschließen, die die Authentifizierung eines Signaturschlüssels erleichtern könnten.",
     "NFTArtistHeader": "Künstler",
     "ArtistPlaceholder": "Künstler",
-    "NFTNarrativeContent": "Eine persönliche Aussage des Künstlers, die das Werk beschreibt, z. B. was das Werk für ihn bedeutet oder was es inspiriert hat. ",
+    "NFTNarrativeContent": "Eine persönliche Aussage des Künstlers, die das Werk beschreibt, z. B. was das Werk für ihn bedeutet oder was es inspiriert hat. Kann Einzelheiten zu seiner Entstehung usw. enthalten. Es handelt sich um ein Freiformfeld und kann je nach Bedarf an das Werk angepasst werden. Beispiel: ",
     "NFTNarrativeHeader": "Erzählung",
     "NarrativePlaceholder": "Erzählung",
     "NFTTagsContent": "Durch Kommas getrennte Liste von Schlüsselwörtern, um die Suche nach Themen/Interessen zu erleichtern.",
@@ -267,16 +267,16 @@
     "NFTTypeContent": "Eine Zeichenfolge, die den Typ des nicht fungiblen Tokens beschreibt, z. B. „NFT/ART/VISUAL“, „NFT/ART/3D“, „NFT/ART/ANIMATION“, „NFT/ART/AUDIO“, „NFT/ART“. ",
     "NFTTypeHeader": "Typ",
     "TypePlaceholder": "Typ",
-    "NFTAttestationContent": "Hier übergibt oder widmet der Künstler oder Urheber des gekapselten Materials das Material der Blockchain, nennt ausdrücklich den Token oder die Asset-ID, unter der das Werk leben wird, und bescheinigt seine qualifizierte oder uneingeschränkte Einzigartigkeit. ",
+    "NFTAttestationContent": "Hier übergibt oder widmet der Künstler oder Urheber des gekapselten Materials das Material der Blockchain, nennt ausdrücklich den Token oder die Asset-ID, unter der das Werk leben wird, und bescheinigt seine qualifizierte oder uneingeschränkte Einzigartigkeit. Beispielsweise kann ein Künstler bezeugen, dass kein anderer vorhanden ist ",
     "NFTAttestationHeader": "Bescheinigung",
     "AttestationPlaceholder": "Bescheinigung",
     "NFTAcknowledgementsContent": "Danksagungen oder zusätzliche Gutschriften für den digitalen Token.",
     "NFTAcknowledgementsHeader": "Danksagungen",
     "AcknowledgementsPlaceholder": "Danksagungen",
-    "NFTHolderLicenseContent": "Sofern der Token speziell für Token-Inhaber eine zusätzliche Lizenz zur Nutzung des kreativen Werks einräumt, kann dies hier angegeben werden. ",
+    "NFTHolderLicenseContent": "Wenn der Token den Token-Inhabern eine zusätzliche Lizenz für die Nutzung des kreativen Werks speziell gewährt, kann dies hier angegeben werden. Ein Beispiel für eine solche Lizenz könnte die Gewährung des Rechts an den Inhaber des nicht fungiblen Tokens sein, physische Werke zu drucken und zu verkaufen ",
     "NFTHolderLicenseHeader": "Inhaberlizenz",
     "HolderLicensePlaceholder": "Inhaberlizenz",
-    "NFTLicenseContent": "Lizenz, unter der das Kunstwerk veröffentlicht wird. ",
+    "NFTLicenseContent": "Lizenz, unter der das Kunstwerk veröffentlicht wird. Dabei handelt es sich häufig um eine einfache Lizenzkennung, z. B. „CC BY-NC-SA 2.0“, es kann sich jedoch auch um eine vollständig spezifizierte ausführliche Lizenz handeln.",
     "NFTLicenseHeader": "Medienlizenz",
     "LicensePlaceholder": "Lizenz",
     "modifyMultimediaContents": "Ändern Sie Multimedia-Inhalte",
@@ -308,7 +308,7 @@
     "multimedia_header_content": "Geben Sie Ihr Nein an ",
     "currentIPFSFiles": "Dieser nicht fungible Token enthält derzeit {{count}} Verweise auf IPFS-Mediendateien.",
     "supportedFiletypes": "Zu den unterstützten Dateitypen gehören Bilder, Video, Audio, 3D-Dateien, Dokumente usw.",
-    "main_header_content": "Die folgenden Einstellungen definieren, wie sich Ihr nicht fungibler Token auf der Bitshares-Blockchain verhält. ",
+    "main_header_content": "Die folgenden Einstellungen definieren, wie sich Ihr nicht fungibler Token auf der Bitshares-Blockchain verhält. Der Ersteller des Assets ist für die ordnungsgemäße Konfiguration seines nicht fungiblen Tokens verantwortlich.",
     "main_header": "Nicht fungible Token-Konfiguration"
   }
 }

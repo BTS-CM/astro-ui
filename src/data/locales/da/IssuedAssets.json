@@ -71,7 +71,7 @@
   "newIssuer": "Ny udstederkonto",
   "newIssuerInfo": "Dette er den konto, der permanent bliver den nye udsteder (ejer) af dette aktiv.",
   "currentIssuer": "Nuværende udsteder",
-  "currentIssuerInfo": "Dette er den nuværende udsteder (ejer) af dette aktiv. ",
+  "currentIssuerInfo": "Dette er den nuværende udsteder (ejer) af dette aktiv. Denne handling fjerner permanent ejerskabet af dette aktiv fra denne bruger.",
   "updateIssuerHeader": "Opdatering af udsteder af {{asset}} til {{newIssuer}} fra {{currentIssuer}}",
   "globalSettlement": "Globalt afvikling",
   "globallySettle": "Udfør global afregning",

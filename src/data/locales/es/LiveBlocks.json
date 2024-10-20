@@ -1,6 +1,6 @@
 {
   "cardTitle": "Descripción general de blockchain en vivo",
-  "cardDescription": "La cadena de bloques Bitshares tiene tiempos de bloque de 3 segundos y es capaz de manejar miles de transacciones por segundo. ",
+  "cardDescription": "La cadena de bloques Bitshares tiene tiempos de bloque de 3 segundos y es capaz de manejar miles de transacciones por segundo. Esta página proporciona una descripción general en vivo de la cadena de bloques.",
   "currentBlock": {
     "content": "El número de bloque más reciente.",
     "header": "Bloque actual"

@@ -1,11 +1,11 @@
 {
   "dialogContent": {
     "generatingDeeplink": "ディープリンクを生成中...",
-    "withAccount": "アカウントの場合: {{username}} ({{userID}}）",
+    "withAccount": "アカウントの場合: {{username}} ({{userID}})",
     "readyToBroadcast": "Bitshares Beet オペレーションをブロードキャストする準備ができました。",
     "chooseMethod": "以下の方法から選択して、選択したウォレットにブロードキャストします。",
     "bitsharesBEETMultiwallet": "Bitshares BEET マルチウォレット",
-    "errorOccurred": "エラーが発生しました。申し訳ありません。",
+    "errorOccurred": "エラーが発生しました。申し訳ありませんが、このダイアログを閉じて、もう一度お試しください。",
     "beetWallet": "Bitshares BEET マルチウォレット"
   },
   "tabs": {
@@ -37,7 +37,7 @@
     "proposeDescription": "提案された操作の構築に使用しているアカウントの所有者ではない (または共同所有者) 場合は、アカウント所有者が自らの裁量でレビューおよびブロードキャストできる提案を作成できます。"
   },
   "proposal": {
-    "targetContent": "これは、提案の作成に使用するアカウントです。 ",
+    "targetContent": "これは、プロポーザルを作成し、エンド ユーザーとして Astro UI で操作を構築し、プロポーザル料金支払いアカウントをここに指定するために使用するアカウントです。",
     "targetHeader": "提案料支払い口座",
     "revisionPeriodSecondsContent": "改訂期間を秒単位で指定します。",
     "revisionPeriodSecondsHeader": "修正期間 (秒)"

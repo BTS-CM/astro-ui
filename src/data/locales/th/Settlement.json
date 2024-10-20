@@ -31,7 +31,7 @@
   "operation": "การดำเนินการ: {{operation}}",
   "additionalForceSettlementFee": "ค่าธรรมเนียมการบังคับคดีเพิ่มเติม: {{fee}} %",
   "submit": "ส่ง",
-  "collateralBiddingDisabled": "การเสนอราคาหลักประกันถูกปิดใช้งานสำหรับเนื้อหานี้ ",
+  "collateralBiddingDisabled": "การเสนอราคาหลักประกันถูกปิดใช้งานสำหรับเนื้อหานี้ การดำเนินการนี้จะถูกปฏิเสธ",
   "existingCollateralBids": "การเสนอราคาหลักประกันที่มีอยู่",
   "existingCollateralBidsDescription": "การเสนอราคาหลักประกันเหล่านี้ถูกสร้างขึ้นโดยผู้ใช้รายอื่นที่สนใจกองทุนที่ชำระทั่วโลก",
   "bidder": "ผู้ประมูล",

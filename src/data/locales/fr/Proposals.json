@@ -4,11 +4,11 @@
   "expirationTime": "Délai d'expiration",
   "reviewPeriodTime": "Durée de la période d'examen",
   "operations": "Opérations proposées",
-  "operationsDescription": "Ce sont les opérations individuelles stockées dans cette proposition. ",
+  "operationsDescription": "Ce sont les opérations individuelles stockées dans cette proposition, cliquez sur chaque identifiant d'opération ci-dessous pour afficher leurs détails JSON, examinez attentivement chaque opération et vérifiez qui est le proposant avant de procéder à l'approbation, les approbations sont irréversibles, n'approuvez pas le transfert de votre compte ",
   "beginApprovalProcess": "Commencer le processus d'approbation",
   "reject": "Rejeter la proposition",
   "cardTitle": "🤔 Opérations proposées",
-  "cardDescription": "Les propositions permettent à quiconque de suggérer des opérations à exécuter par un autre compte sur la blockchain. ",
+  "cardDescription": "Les propositions permettent à quiconque de suggérer des opérations à exécuter par un autre compte sur la blockchain. Le propriétaire du compte examine ces propositions et décide de les approuver ou de les rejeter.",
   "noProposals": "Aucune proposition disponible.",
   "approveProposedOperation": "Approuver l'opération proposée",
   "rejectProposedOperation": "Rejeter l'opération proposée",
@@ -21,6 +21,6 @@
   "approvedProposalHeader": "Approuvant la proposition suivante",
   "risksTitle": "Risques liés à la proposition",
   "risksDescription": "Soyez conscient des risques suivants lors de l’examen des propositions :",
-  "risk1": "Les propositions peuvent être dangereuses. ",
-  "risk2": "Les propositions approuvées sont irréversibles. "
+  "risk1": "Les propositions peuvent être dangereuses. Elles peuvent être créées par n'importe qui et suggérer tout type d'opération sur la blockchain. Soyez intelligent et faites preuve de diligence raisonnable lorsque vous envisagez d'approuver des propositions. Assurez-vous de ne pas vous laisser surprendre par un escroc.",
+  "risk2": "Les propositions approuvées sont irréversibles, Les applications/projets Astro-UI et Beeteos n'offrent aucune garantie utilisateur dans le cadre de leurs licences respectives, Vous êtes responsable de tout choix effectué dans l'interface utilisateur ci-dessus, Ne vous laissez pas tromper, Si vous ne vous y attendiez pas "
 }

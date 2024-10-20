@@ -5,7 +5,7 @@
     "readyToBroadcast": "Teie Bitshares Beet toiming on edastamiseks valmis!",
     "chooseMethod": "Valige oma rahakotti edastamiseks allolevate meetodite hulgast.",
     "bitsharesBEETMultiwallet": "Bitshares BEET multirahakott",
-    "errorOccurred": "Ilmnes viga, vabandust. ",
+    "errorOccurred": "Ilmnes viga. Vabandust. Sulgege see dialoog ja proovige uuesti.",
     "beetWallet": "Bitshares BEET multirahakott"
   },
   "tabs": {
@@ -16,15 +16,15 @@
   },
   "tabsContent": {
     "transactionObjectJSON": "Tehinguobjekti JSON",
-    "operationType": "Toimingu tüüp: {{operationName}}",
+    "operationType": "Operatsiooni tüüp: {{operationName}}",
     "copyOperationJSON": "Kopeerimistoimingu JSON",
     "usingDeeplink": "Süvalingi kasutamine edastuseks Beet multiwalleti kaudu",
     "step1": "Käivitage BEET rahakott ja navigeerige menüüs 'Raw Link', rahakott peab jääma ülekande ajaks lukustamata.",
     "step2": "Sellel lehel saate lubada kõik toimingud või ainult toimingu \"{{operationName}}' (seejärel klõpsake nuppu Salvesta).",
-    "step3": "Kui Beetis kuvatakse teade „Toores linkide jaoks valmis”, võite jätkata jätkamiseks klõpsata alloleval nupul.",
+    "step3": "Kui Beetis kuvatakse teade „Toores linkide jaoks valmis”, võite jätkamiseks klõpsata alloleval nupul.",
     "step4": "Kuvatakse BEET-viip, kontrollige sisu, taotlege soovi korral Beet-kviitungit ja edastage tehing plokiahelasse.",
     "step5": "Te ei saa selles aknas kinnitust, kuid teie toiming töödeldakse plokiahelas mõne sekundi jooksul.",
-    "triggerRawBeet": "Käivitage töötlemata suhkrupeedi sügavlink",
+    "triggerRawBeet": "Käivitage töötlemata peedi sügavlink",
     "viaLocalFile": "Kohaliku faili üleslaadimise kaudu – jätkamiseks valmis",
     "step1Local": "Käivitage BEET rahakott ja navigeerige menüüs jaotisse „Kohalik”.",
     "step2Local": "Sellel lehel kas lubage kõik või lubage ainult toiming \"{{operationName}}'.",
@@ -37,7 +37,7 @@
     "proposeDescription": "Kui te ei ole kavandatava toimingu koostamiseks kasutatava konto omanik (või olete kaasomanik), saate luua konto omanikule ettepaneku, mille ta oma äranägemise järgi üle vaatab ja edastab."
   },
   "proposal": {
-    "targetContent": "See on konto, mida saate ettepaneku koostamiseks kasutada. ",
+    "targetContent": "See on konto, mida saate kasutada ettepaneku loomiseks, lõppkasutajana Astro kasutajaliideses operatsioonide loomiseks ja seejärel oma ettepaneku tasu maksmise konto sisestamiseks siin.",
     "targetHeader": "Ettepaneku tasu maksmise konto",
     "revisionPeriodSecondsContent": "Määrake läbivaatamise periood sekundites.",
     "revisionPeriodSecondsHeader": "Läbivaatamise periood (sekundites)"

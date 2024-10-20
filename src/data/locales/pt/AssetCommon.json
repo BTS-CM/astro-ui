@@ -5,12 +5,12 @@
     "charge_market_fee": {
       "about": "Habilitar taxa de mercado",
       "enabledInfo": "O emissor/proprietário do ativo pode atualizar o sinalizador charge_market_fee.",
-      "disabledInfo": "O emissor/proprietário do ativo NÃO pode atualizar o sinalizador charge_market_fee. "
+      "disabledInfo": "O emissor/proprietário do ativo NÃO pode atualizar o sinalizador charge_market_fee. Se o sinalizador charge_market_fee estiver definido como 0, não poderá mais começar a cobrar taxas de negociação de mercado, se o sinalizador charge_market_fee estiver definido como diferente de zero, as taxas de taxas de negociação de mercado ainda poderão ser atualizadas "
     },
     "white_list": {
       "about": "Exigir que os titulares estejam na lista branca",
       "enabledInfo": "O emissor/proprietário do ativo pode atualizar o sinalizador white_list.",
-      "disabledInfo": "O emissor/proprietário do ativo NÃO pode atualizar o sinalizador white_list. "
+      "disabledInfo": "O emissor/proprietário do ativo NÃO pode atualizar o sinalizador da lista branca, se o sinalizador da lista branca estiver definido como 0, não poderá mais começar a impor a lista branca ou a lista negra, se o sinalizador da lista branca estiver definido como diferente de zero, ainda poderá configurar para não impor a lista branca ou a lista negra "
     },
     "override_authority": {
       "about": "O proprietário do ativo pode transferir o ativo de volta para si",
@@ -48,12 +48,12 @@
       "disabledInfo": "O emissor/proprietário do ativo NÃO pode liquidar globalmente este ativo manualmente."
     },
     "lock_max_supply": {
-      "about": "Bloquear suprimento máximo",
+      "about": "Bloquear fornecimento máximo",
       "enabledInfo": "O emissor/proprietário do ativo NÃO pode atualizar o sinalizador lock_max_supply.",
       "disabledInfo": "O emissor/proprietário do ativo pode atualizar o sinalizador lock_max_supply."
     },
     "disable_new_supply": {
-      "about": "Desativar novo fornecimento",
+      "about": "Desativar novo suprimento",
       "enabledInfo": "O emissor/proprietário do ativo NÃO pode atualizar o sinalizador disable_new_supply.",
       "disabledInfo": "O emissor/proprietário do ativo pode atualizar o sinalizador disable_new_supply."
     },
@@ -64,18 +64,18 @@
     },
     "disable_mcr_update": {
       "about": "Desativar atualização do proprietário Proporção mínima de garantia",
-      "enabledInfo": "O emissor/proprietário do ativo NÃO pode atualizar (definir/alterar/excluir) a extensão Maintenance_collateral_ratio do ativo. ",
-      "disabledInfo": "O emissor/proprietário do ativo pode atualizar (definir/alterar/excluir) a extensão Maintenance_collateral_ratio do ativo. "
+      "enabledInfo": "O emissor/proprietário do ativo NÃO pode atualizar (definir/alterar/excluir) a extensão Maintenance_collateral_ratio do ativo. Se um valor for definido na extensão Maintenance_collateral_ratio, ele terá precedência sobre o mesmo parâmetro sugerido pelos editores do feed de preços, caso contrário, o valor sugerido ",
+      "disabledInfo": "O emissor/proprietário do ativo pode atualizar (definir/alterar/excluir) a extensão Maintenance_collateral_ratio do ativo. Se um valor for definido na extensão Maintenance_collateral_ratio, ele terá precedência sobre o mesmo parâmetro sugerido pelos editores do feed de preços, caso contrário, o valor sugerido por "
     },
     "disable_icr_update": {
       "about": "Desativar atualização do proprietário Proporção de garantia inicial",
-      "enabledInfo": "O emissor/proprietário do ativo NÃO pode atualizar (definir/alterar/excluir) a extensão inicial_collateral_ratio do ativo. ",
-      "disabledInfo": "O emissor/proprietário do ativo pode atualizar (definir/alterar/excluir) a extensão inicial_collateral_ratio do ativo. "
+      "enabledInfo": "O emissor/proprietário do ativo NÃO pode atualizar (definir/alterar/excluir) a extensão inicial_collateral_ratio do ativo. Se um valor for definido na extensão inicial_collateral_ratio, ele terá precedência sobre o mesmo parâmetro sugerido pelos editores do feed de preços, caso contrário, o valor sugerido ",
+      "disabledInfo": "O emissor/proprietário do ativo pode atualizar (definir/alterar/excluir) a extensão inicial_collateral_ratio do ativo. Se um valor for definido na extensão inicial_collateral_ratio, ele terá precedência sobre o mesmo parâmetro sugerido pelos editores do feed de preços, caso contrário, o valor sugerido por "
     },
     "disable_mssr_update": {
       "about": "Desativar atualização do proprietário Proporção máxima de compressão curta",
-      "enabledInfo": "O emissor/proprietário do ativo NÃO pode atualizar (definir/alterar/excluir) a extensão maximum_short_squeeze_ratio do ativo. ",
-      "disabledInfo": "O emissor/proprietário do ativo pode atualizar (definir/alterar/excluir) a extensão maximum_short_squeeze_ratio do ativo. "
+      "enabledInfo": "O emissor/proprietário do ativo NÃO pode atualizar (definir/alterar/excluir) a extensão Maximum_short_squeeze_ratio do ativo. Se um valor for definido na extensão Maximum_short_squeeze_ratio, ele terá precedência sobre o mesmo parâmetro sugerido pelos editores do feed de preços, caso contrário, o valor sugerido ",
+      "disabledInfo": "O emissor/proprietário do ativo pode atualizar (definir/alterar/excluir) a extensão Maximum_short_squeeze_ratio do ativo. Se um valor for definido na extensão Maximum_short_squeeze_ratio, ele terá precedência sobre o mesmo parâmetro sugerido pelos editores do feed de preços, caso contrário, o valor sugerido por "
     },
     "disable_bsrm_update": {
       "about": "Desativar atualização do proprietário da estratégia de gerenciamento de risco Black Swan",
@@ -103,7 +103,7 @@
     },
     "transfer_restricted": {
       "about": "O proprietário do ativo deve aprovar todas as transferências",
-      "enabledInfo": "As transferências deste ativo são restritas. ",
+      "enabledInfo": "As transferências deste ativo são restritas, Ao transferir este ativo, ele pode apenas do emissor/proprietário do ativo ou para o emissor/proprietário do ativo, O mesmo de ou para limitação também se aplica a HTLCs e retiradas com permissão de retirada, Não é possível criar saldos de aquisição com ",
       "disabledInfo": "Não existe tal limitação nas transferências."
     },
     "disable_force_settle": {
@@ -113,12 +113,12 @@
     },
     "disable_confidential": {
       "about": "Desabilitar transações confidenciais",
-      "enabledInfo": "As transferências para endereços cegos/furtivos/confidenciais estão desativadas. ",
+      "enabledInfo": "As transferências para endereços cegos/furtivos/confidenciais estão desativadas, NÃO é possível transferir uma quantia deste ativo do saldo de uma conta para endereços cegos/furtivos/confidenciais, Transferir de endereços cegos/furtivos/confidenciais para outros endereços cegos/furtivos/confidenciais ou ",
       "disabledInfo": "As transferências para endereços cegos/furtivos/confidenciais estão habilitadas."
     },
     "witness_fed_asset": {
       "about": "Permitir que testemunhas forneçam feeds",
-      "enabledInfo": "Testemunhas ativas podem publicar feeds de preços para este ativo.",
+      "enabledInfo": "As testemunhas ativas podem publicar feeds de preços para este ativo.",
       "disabledInfo": "As testemunhas ativas não podem publicar feeds de preços para este ativo."
     },
     "committee_fed_asset": {
@@ -127,18 +127,18 @@
       "disabledInfo": "Os membros ativos do comitê não podem publicar feeds de preços para este ativo."
     },
     "lock_max_supply": {
-      "about": "Bloquear suprimento máximo",
+      "about": "Bloquear fornecimento máximo",
       "enabledInfo": "A oferta máxima deste ativo está bloqueada, o que significa que o emissor/proprietário do ativo NÃO pode atualizar a oferta máxima deste ativo.",
       "disabledInfo": "O emissor/proprietário do ativo pode atualizar a oferta máxima deste ativo."
     },
     "disable_new_supply": {
-      "about": "Desativar novo fornecimento",
+      "about": "Desativar novo suprimento",
       "enabledInfo": "Não é possível criar um novo fornecimento para este ativo (ou dizer, não é possível ‘cunhar’ mais tokens).",
       "disabledInfo": "Pode criar novo fornecimento para este ativo."
     },
     "disable_collateral_bidding": {
       "about": "Desativar lances colaterais",
-      "enabledInfo": "A licitação de garantias no pool de liquidação global está desativada. ",
+      "enabledInfo": "A licitação de garantias no pool de liquidação global está desativada. NÃO é permitida a licitação de garantias no pool de liquidação global quando este ativo tiver sido liquidado globalmente.",
       "disabledInfo": "A licitação de garantias no pool de liquidação global está habilitada."
     }
   },
@@ -147,12 +147,12 @@
     "title_content": "Estas são as configurações de ativos usadas para a funcionalidade principal do DEX.",
     "symbol": {
       "header": "Símbolo de ativo",
-      "header_content": "O símbolo do ativo é um identificador exclusivo no blockchain que identifica o ativo em todo o DEX. ",
+      "header_content": "O símbolo do ativo é um identificador exclusivo no blockchain que identifica o ativo em todo o DEX. Ativos mais baratos podem ser criados usando um nome de subativo como NFT.TITLE",
       "placeholder": "Símbolo"
     },
     "shortName": {
       "header": "Nome abreviado do recurso",
-      "header_content": "Este é o nome abreviado do ativo, menos importante que o símbolo, mas ainda é um identificador exclusivo opcionalmente abreviado. ",
+      "header_content": "Este é o nome abreviado do ativo, menos importante que o símbolo, mas ainda é um identificador exclusivo opcionalmente abreviado. Você pode simplesmente reutilizar o símbolo para este campo.",
       "placeholder": "Nome curto"
     },
     "preferredMarket": {
@@ -171,7 +171,7 @@
     },
     "precision": {
       "header": "Precisão de ativos",
-      "header_content": "A precisão do ativo especifica a quantidade de casas decimais suportadas. ",
+      "header_content": "A precisão do ativo especifica a quantidade de casas decimais suportadas. Este valor não pode ser alterado após a criação do ativo.",
       "placeholder": "Precisão"
     }
   },
@@ -198,7 +198,7 @@
       "enabled": "Extensão percentual da taxa do tomador ativada",
       "enabledInfo": "O participante 'tomador' da ordem limitada receberá um percentual da taxa de mercado.",
       "disabled": "Ativar a extensão percentual da taxa do tomador?",
-      "disabledInfo": "A extensão percentual da taxa do tomador permite que o criador do ativo aloque uma porcentagem da taxa de mercado ao ‘tomador’ das operações de ordem com limite.",
+      "disabledInfo": "A extensão percentual da taxa do taker permite que o criador do ativo aloque uma porcentagem da taxa de mercado ao ‘taker’ das operações de ordem com limite.",
       "header": "Porcentagem da taxa do tomador",
       "header_content": "A percentagem da taxa do tomador é a percentagem da taxa de mercado que é atribuída ao 'tomador' das ordens limitadas na bolsa descentralizada."
     },
@@ -230,7 +230,7 @@
     "header": "Autoridades da lista negra de ativos"
   },
   "market_fee": {
-    "header_content": "A taxa de mercado é a porcentagem da taxa cobrada em cada negociação executada no Bitshares DEX. ",
+    "header_content": "A taxa de mercado é o percentual da taxa cobrada em cada negociação executada no Bitshares DEX. A taxa é cobrada no ativo que está sendo negociado.",
     "header": "Porcentagem da taxa de mercado"
   },
   "max_market_fee": {
@@ -248,17 +248,17 @@
     },
     "calculated_cer_price": {
       "header": "Taxa de câmbio básica",
-      "header_content": "Certifique-se de que sua taxa de câmbio básica seja superior ao preço de mercado, caso contrário, as pessoas comprarão seu token no mercado e esgotarão seu conjunto de taxas por meio de arbitragem implícita. "
+      "header_content": "Certifique-se de que sua taxa de câmbio principal seja superior ao preço de mercado, caso contrário, as pessoas comprarão seu token no mercado e esgotarão seu conjunto de taxas por meio de arbitragem implícita. A taxa de câmbio básica deve ser atualizada regularmente para refletir o preço de mercado de seu ativo."
     }
   },
   "nft": {
     "NFTTitleContent": "Este é o título do seu token não fungível, certifique-se de que seja único e descritivo, pois pode ser apresentado em várias galerias/exploradores de tokens não fungíveis.",
     "NFTTitleHeader": "Título",
     "TitlePlaceholder": "Título",
-    "NFTArtistContent": "Nome ou pseudônimo do artista. ",
+    "NFTArtistContent": "Nome ou pseudônimo do artista. Também pode incluir pseudônimos ou nomes ou identificadores on-line, para incluir nomes ou endereços de contas blockchain que possam facilitar a autenticação de uma chave de assinatura.",
     "NFTArtistHeader": "Artista",
     "ArtistPlaceholder": "Artista",
-    "NFTNarrativeContent": "Uma declaração pessoal do artista descrevendo a obra, como o que a obra significa para ele ou o que a inspirou. ",
+    "NFTNarrativeContent": "Uma declaração pessoal do artista descrevendo a obra, como o que a obra significa para ele ou o que a inspirou, Pode incluir detalhes de sua criação, etc., É um campo de formato livre e pode ser adaptado conforme apropriado para a peça, Exemplo, ",
     "NFTNarrativeHeader": "Narrativa",
     "NarrativePlaceholder": "Narrativa",
     "NFTTagsContent": "Lista de palavras-chave separadas por vírgulas para facilitar pesquisas por tópicos/interesses.",
@@ -267,16 +267,16 @@
     "NFTTypeContent": "Uma string que descreve o tipo de token não fungível, como 'NFT/ART/VISUAL', 'NFT/ART/3D', 'NFT/ART/ANIMATION', 'NFT/ART/AUDIO', 'NFT/ART ",
     "NFTTypeHeader": "Tipo",
     "TypePlaceholder": "Tipo",
-    "NFTAttestationContent": "Aqui, o artista ou originador do material encapsulado compromete ou dedica o material ao blockchain, nomeando expressamente o token ou ID do ativo sob o qual a obra viverá e atesta sua singularidade qualificada ou não qualificada. ",
+    "NFTAttestationContent": "Aqui, o artista ou originador do material encapsulado compromete ou dedica o material ao blockchain, nomeando expressamente o token ou ID do ativo sob o qual a obra viverá, e atesta sua singularidade qualificada ou não qualificada. Por exemplo, um artista pode atestar que nenhum outro ",
     "NFTAttestationHeader": "Atestado",
     "AttestationPlaceholder": "Atestado",
     "NFTAcknowledgementsContent": "Agradecimentos ou créditos adicionais pelo token digital.",
     "NFTAcknowledgementsHeader": "Agradecimentos",
     "AcknowledgementsPlaceholder": "Agradecimentos",
-    "NFTHolderLicenseContent": "Se o token conceder licença adicional para o uso do trabalho criativo especificamente aos detentores do token, isso poderá ser especificado aqui. ",
+    "NFTHolderLicenseContent": "Se o token conceder licença adicional para o uso do trabalho criativo especificamente aos detentores de token, isso pode ser especificado aqui. Um exemplo de tal licença pode ser conceder ao detentor do token não fungível o direito de imprimir e vender produtos físicos ",
     "NFTHolderLicenseHeader": "Licença de titular",
     "HolderLicensePlaceholder": "Licença de titular",
-    "NFTLicenseContent": "Licença sob a qual a arte é lançada. ",
+    "NFTLicenseContent": "Licença sob a qual a arte é lançada. Muitas vezes, será um identificador de licença simples, como 'CC BY-NC-SA 2.0', embora também possa ser uma licença detalhada totalmente especificada.",
     "NFTLicenseHeader": "Licença de mídia",
     "LicensePlaceholder": "Licença",
     "modifyMultimediaContents": "Modifique conteúdos multimídia",
@@ -308,7 +308,7 @@
     "multimedia_header_content": "Forneça o seu não ",
     "currentIPFSFiles": "Este token não fungível contém atualmente {{count}} Referências de arquivo de mídia IPFS.",
     "supportedFiletypes": "Os tipos de arquivos suportados incluem imagens, vídeo, áudio, arquivos 3D, documentos, etc.",
-    "main_header_content": "As configurações abaixo definem como seu token não fungível se comportará na blockchain Bitshares. ",
+    "main_header_content": "As configurações abaixo definem como seu token não fungível se comportará na blockchain Bitshares. O criador do ativo é responsável por configurar adequadamente seu token não fungível.",
     "main_header": "Configuração de token não fungível"
   }
 }

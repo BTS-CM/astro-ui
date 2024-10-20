@@ -71,7 +71,7 @@
   "newIssuer": "새 발급자 계정",
   "newIssuerInfo": "이는 이 자산의 새로운 발행자(소유자)가 영구적으로 될 계정입니다.",
   "currentIssuer": "현재 발행자",
-  "currentIssuerInfo": "이 자산의 현재 발행자(소유자)입니다. ",
+  "currentIssuerInfo": "이 자산의 현재 발행자(소유자)입니다. 이 작업을 수행하면 이 사용자에게서 이 자산의 소유권이 영구적으로 제거됩니다.",
   "updateIssuerHeader": "발급자 업데이트 중 {{asset}} 에게 {{newIssuer}} ~에서 {{currentIssuer}}",
   "globalSettlement": "글로벌 정착",
   "globallySettle": "글로벌 결제 수행",

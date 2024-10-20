@@ -2,35 +2,35 @@
   "card": {
     "title_create": "Erstellen eines neuen Smartcoin-Assets",
     "title_edit": "Bearbeiten eines vorhandenen Smartcoin-Assets",
-    "description": "Smartcoins sind besicherte Vermögenswerte, die sich auf externe Marktpreisdaten beziehen können. "
+    "description": "Smartcoins sind besicherte Vermögenswerte, die sich auf externe Marktpreis-Feeds beziehen können. Sie können ganz einfach Ihre eigene besicherte Stablecoin erstellen, die auf jeden gewünschten Vermögenswert verweist, wie USD/CNY/JPY usw."
   },
   "title": {
     "header": "Smartcoin-Einstellungen",
-    "header_content": "Die folgenden Einstellungen definieren, wie sich Ihr Smartcoin auf der Bitshares-Blockchain verhält. "
+    "header_content": "Die folgenden Einstellungen definieren, wie sich Ihr Smartcoin in der Bitshares-Blockchain verhält. Der Asset-Ersteller ist für die ordnungsgemäße Konfiguration seines Smartcoins verantwortlich."
   },
   "bsrm": {
     "header": "Black Swan-Risikomanagementstrategie",
-    "header_content": "Diese Strategien bieten unterschiedliche Ergebnisse für unterbesicherte Schuldenpositionen und ermöglichen es Ihnen, das Risiko der Liquidierung von Schuldenpositionen zu verhindern, zu minimieren oder zu globalisieren. ",
-    "select_0": "Globale Abwicklung: Alle Schuldenpositionen geschlossen; ",
-    "select_1": "Keine Abwicklung: Es werden keine Schuldenpositionen geschlossen; ",
-    "select_2": "Individuelle Ausgleichsfonds: Unterbesicherte Schuldenpositionen werden geschlossen; ",
-    "select_3": "Individuelle Abwicklungsaufträge: Unterbesicherte Schuldenpositionen werden geschlossen; "
+    "header_content": "Diese Strategien bieten unterschiedliche Ergebnisse für unterbesicherte Schuldenpositionen und ermöglichen es Ihnen, das Risiko der Liquidierung von Schuldenpositionen zu deaktivieren, zu minimieren oder zu globalisieren. Die Auswahl unterschiedlicher Strategien kann einzigartigen Smartcoins zugute kommen und die Toleranz gegenüber volatilen Märkten erhöhen.",
+    "select_0": "Globale Abwicklung: Alle Schuldenpositionen geschlossen, Sicherheiten in den Abwicklungsfonds verschoben. Neue Schuldenpositionen sind bis zur Lösung nicht zulässig.",
+    "select_1": "Keine Abwicklung: Es werden keine Schuldenpositionen geschlossen, der Abwicklungspreis ist durch die niedrigste Sicherheitenquote begrenzt, neue Positionen sind zulässig.",
+    "select_2": "Individuelle Ausgleichsfonds: Unterbesicherte Schuldenpositionen werden geschlossen, Sicherheiten werden in einen beanspruchbaren Fonds verschoben, neue Positionen sind zulässig.",
+    "select_3": "Individuelle Abwicklungsaufträge: Unterbesicherte Schuldenpositionen werden geschlossen, Sicherheiten werden in einen Limitauftrag verschoben, keine Preisobergrenze, neue Positionen sind zulässig."
   },
   "mcr": {
     "header": "Statisches Mindestsicherheitsverhältnis",
-    "header_content": "Dies ist die Mindestsicherheitsquote, die erforderlich ist, damit eine Schuldenposition als vollständig besichert gilt. "
+    "header_content": "Hierbei handelt es sich um die Mindestsicherheitsquote, die erforderlich ist, damit eine Schuldenposition als vollständig besichert gilt. Sie wird normalerweise anhand von Preisdaten berechnet und wird jetzt statisch vom Eigentümer des Vermögenswerts festgelegt."
   },
   "icr": {
     "header": "Statische anfängliche Sicherheitenquote",
-    "header_content": "Dabei handelt es sich um die Besicherungsquote, die erforderlich ist, damit eine Schuldenposition zum Zeitpunkt ihrer Entstehung als vollständig besichert gilt. "
+    "header_content": "Hierbei handelt es sich um die Besicherungsquote, die erforderlich ist, damit eine Schuldenposition zum Zeitpunkt der Erstellung als vollständig besichert gilt. Sie wird normalerweise anhand von Preisdaten berechnet und wird jetzt statisch vom Eigentümer des Vermögenswerts festgelegt."
   },
   "mssr": {
     "header": "Statisches maximales Short-Squeeze-Verhältnis",
-    "header_content": "Dies ist die maximale Sicherheitenquote, zu der eine Schuldenposition liquidiert werden kann. "
+    "header_content": "Dabei handelt es sich um die maximale Sicherheitenquote, zu der eine Schuldenposition liquidiert werden kann. Sie wird normalerweise anhand von Preisdaten berechnet und wird nun vom Eigentümer des Vermögenswerts statisch festgelegt."
   },
   "feed_lifetime": {
     "header": "Lebenslang füttern",
-    "header_content": "Die Zeit in Sekunden, die ein Preis-Feed als gültig gilt. "
+    "header_content": "Die Zeit in Sekunden, die ein Preis-Feed als gültig gilt. Nach dieser Zeit gilt der Feed als ungültig und der Preis wird nicht mehr für die Berechnung des Sicherheitenverhältnisses verwendet."
   },
   "minimum_feeds": {
     "header": "Mindest-Feeds",
@@ -52,16 +52,16 @@
     "margin_call_fee_ratio": {
       "enabled": "Erweiterung „Margin Call Fee Ratio“ aktiviert",
       "disabled": "Aktivieren Sie die Smartcoin-Erweiterung „Margin Call Fee Ratio“?",
-      "extensionInfo": "Die Erweiterung „Margin Call Fee Ratio“ ermöglicht es dem Smartcoin-Besitzer, einem Benutzer eine Gebühr zu berechnen, wenn seine Schuldenposition einem Margin Call unterliegt. ",
+      "extensionInfo": "Die Erweiterung „Margin Call Fee Ratio“ ermöglicht es dem Smartcoin-Besitzer, einem Benutzer eine Gebühr zu berechnen, wenn seine Schuldenposition einem Margin Call unterliegt. Die Gebühr wird als Prozentsatz der gehandelten Sicherheiten berechnet und an den Smartcoin-Eigentümer gezahlt.",
       "header": "Margin-Call-Gebührenverhältnis",
-      "header_content": "Das Gebührenverhältnis, das einem Benutzer berechnet wird, wenn seine Schuldenposition als Margin Call bezeichnet wird. "
+      "header_content": "Das Gebührenverhältnis, das einem Benutzer berechnet wird, wenn seine Schuldenposition als Marge bezeichnet wird. Die Gebühr wird als Prozentsatz der gehandelten Sicherheiten berechnet und an den Smartcoin-Eigentümer gezahlt."
     },
     "force_settle_fee": {
       "enabled": "Erweiterung „Erzwinge Abrechnungsgebühr“ aktiviert",
       "disabled": "Aktivieren Sie die Smartcoin-Erweiterung „Force Settle Fee“?",
-      "extensionInfo": "Die Erweiterung „Force Settle Fee“ ermöglicht es dem Smartcoin-Besitzer, einem Benutzer eine Gebühr zu berechnen, wenn er die Begleichung seiner Schuldenposition erzwingt. ",
+      "extensionInfo": "Die Erweiterung „Force Settle Fee“ ermöglicht es dem Smartcoin-Besitzer, einem Benutzer eine Gebühr zu berechnen, wenn er die Begleichung seiner Schuldenposition erzwingt. Die Gebühr wird als Prozentsatz der gehandelten Sicherheiten berechnet und an den Smartcoin-Eigentümer gezahlt.",
       "header": "Gebühr für Zwangsabwicklung",
-      "header_content": "Die Gebühr, die einem Benutzer berechnet wird, wenn er die Begleichung seiner Schuldenposition erzwingt. "
+      "header_content": "Die Gebühr, die einem Benutzer berechnet wird, wenn er die Begleichung seiner Schuldenposition erzwingt. Die Gebühr wird als Prozentsatz der gehandelten Sicherheiten berechnet und an den Smartcoin-Eigentümer gezahlt."
     }
   },
   "editAsset": {

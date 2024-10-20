@@ -5,12 +5,12 @@
     "charge_market_fee": {
       "about": "Activer les frais de marché",
       "enabledInfo": "L'émetteur/propriétaire de l'actif peut mettre à jour l'indicateur charge_market_fee.",
-      "disabledInfo": "L'émetteur/propriétaire de l'actif ne peut PAS mettre à jour l'indicateur charge_market_fee. "
+      "disabledInfo": "L'émetteur/propriétaire de l'actif ne peut PAS mettre à jour l'indicateur charge_market_fee. Si l'indicateur charge_market_fee est défini sur 0, il ne peut plus commencer à facturer des frais de négociation sur le marché. Si l'indicateur charge_market_fee est défini sur une valeur différente de zéro, les taux des frais de négociation sur le marché peuvent toujours être mis à jour. "
     },
     "white_list": {
       "about": "Exiger que les titulaires soient sur la liste blanche",
       "enabledInfo": "L'émetteur/propriétaire de l'actif peut mettre à jour l'indicateur white_list.",
-      "disabledInfo": "L'émetteur/propriétaire de l'actif ne peut PAS mettre à jour l'indicateur white_list. "
+      "disabledInfo": "L'émetteur/propriétaire de l'actif ne peut PAS mettre à jour l'indicateur de liste blanche. Si l'indicateur de liste blanche est défini sur 0, il ne peut plus commencer à appliquer la liste blanche ou la liste noire. Si l'indicateur de liste blanche est défini sur une valeur différente de zéro, il peut toujours configurer pour ne pas appliquer la liste blanche ou la liste noire. "
     },
     "override_authority": {
       "about": "Le propriétaire de l'actif peut se retransférer l'actif",
@@ -64,18 +64,18 @@
     },
     "disable_mcr_update": {
       "about": "Désactiver la mise à jour du propriétaire Ratio de garantie minimum",
-      "enabledInfo": "L'émetteur/propriétaire de l'actif ne peut PAS mettre à jour (définir/modifier/supprimer) l'extension maintenance_collateral_ratio de l'actif. ",
-      "disabledInfo": "L'émetteur/propriétaire de l'actif peut mettre à jour (définir/modifier/supprimer) l'extension maintenance_collateral_ratio de l'actif. "
+      "enabledInfo": "L'émetteur/propriétaire de l'actif ne peut PAS mettre à jour (définir/modifier/supprimer) l'extension maintenance_collateral_ratio de l'actif. Si une valeur est définie dans l'extension maintenance_collateral_ratio, elle est prioritaire sur le même paramètre suggéré par les éditeurs du flux de prix, sinon la valeur suggérée ",
+      "disabledInfo": "L'émetteur/propriétaire de l'actif peut mettre à jour (définir/modifier/supprimer) l'extension maintenance_collateral_ratio de l'actif. Si une valeur est définie dans l'extension maintenance_collateral_ratio, elle est prioritaire sur le même paramètre suggéré par les éditeurs du flux de prix, sinon la valeur suggérée par "
     },
     "disable_icr_update": {
       "about": "Désactiver la mise à jour du propriétaire Ratio de garantie initial",
-      "enabledInfo": "L'émetteur/propriétaire de l'actif ne peut PAS mettre à jour (définir/modifier/supprimer) l'extension initial_collateral_ratio de l'actif. ",
-      "disabledInfo": "L'émetteur/propriétaire de l'actif peut mettre à jour (définir/modifier/supprimer) l'extension initial_collateral_ratio de l'actif. "
+      "enabledInfo": "L'émetteur/propriétaire de l'actif ne peut PAS mettre à jour (définir/modifier/supprimer) l'extension initial_collateral_ratio de l'actif. Si une valeur est définie dans l'extension initial_collateral_ratio, elle est prioritaire sur le même paramètre suggéré par les éditeurs du flux de prix, sinon la valeur suggérée ",
+      "disabledInfo": "L'émetteur/propriétaire de l'actif peut mettre à jour (définir/modifier/supprimer) l'extension initial_collateral_ratio de l'actif. Si une valeur est définie dans l'extension initial_collateral_ratio, elle est prioritaire sur le même paramètre suggéré par les éditeurs du flux de prix, sinon la valeur suggérée par "
     },
     "disable_mssr_update": {
       "about": "Désactiver la mise à jour du propriétaire Maximum Short Squeeze Ratio",
-      "enabledInfo": "L'émetteur/propriétaire de l'actif ne peut PAS mettre à jour (définir/modifier/supprimer) l'extension maximum_short_squeeze_ratio de l'actif. ",
-      "disabledInfo": "L'émetteur/propriétaire de l'actif peut mettre à jour (définir/modifier/supprimer) l'extension maximum_short_squeeze_ratio de l'actif. "
+      "enabledInfo": "L'émetteur/propriétaire de l'actif ne peut PAS mettre à jour (définir/modifier/supprimer) l'extension maximum_short_squeeze_ratio de l'actif. Si une valeur est définie dans l'extension maximum_short_squeeze_ratio, elle est prioritaire sur le même paramètre suggéré par les éditeurs du flux de prix, sinon la valeur suggérée ",
+      "disabledInfo": "L'émetteur/propriétaire de l'actif peut mettre à jour (définir/modifier/supprimer) l'extension maximum_short_squeeze_ratio de l'actif. Si une valeur est définie dans l'extension maximum_short_squeeze_ratio, elle est prioritaire sur le même paramètre suggéré par les éditeurs du flux de prix, sinon la valeur suggérée par "
     },
     "disable_bsrm_update": {
       "about": "Désactiver la mise à jour du propriétaire de la stratégie de gestion des risques Black Swan",
@@ -103,7 +103,7 @@
     },
     "transfer_restricted": {
       "about": "Le propriétaire de l'actif doit approuver tous les transferts",
-      "enabledInfo": "Les transferts de cet actif sont restreints. ",
+      "enabledInfo": "Les transferts de cet actif sont restreints. Lors du transfert de cet actif, il ne peut être effectué que depuis l'émetteur/propriétaire de l'actif ou vers l'émetteur/propriétaire de l'actif. La même limitation s'applique également aux HTLC et aux retraits avec autorisation de retrait. Impossible de créer des soldes d'acquisition avec ",
       "disabledInfo": "Aucune limitation de ce type sur les transferts."
     },
     "disable_force_settle": {
@@ -113,7 +113,7 @@
     },
     "disable_confidential": {
       "about": "Désactiver les transactions confidentielles",
-      "enabledInfo": "Les transferts vers des adresses aveugles/furtives/confidentielles sont désactivés. ",
+      "enabledInfo": "Les transferts vers des adresses aveugles/furtives/confidentielles sont désactivés, Impossible de transférer un montant de cet actif du solde d'un compte vers des adresses aveugles/furtives/confidentielles, Transfert d'adresses aveugles/furtives/confidentielles vers d'autres adresses aveugles/furtives/confidentielles ou ",
       "disabledInfo": "Les transferts vers des adresses aveugles/furtives/confidentielles sont activés."
     },
     "witness_fed_asset": {
@@ -138,7 +138,7 @@
     },
     "disable_collateral_bidding": {
       "about": "Désactiver les enchères de garantie",
-      "enabledInfo": "Les enchères pour les garanties dans le pool de règlement global sont désactivées. ",
+      "enabledInfo": "Les enchères pour des garanties dans le pool de règlement global sont désactivées. Il n'est PAS autorisé de soumissionner pour des garanties dans le pool de règlement mondial lorsque cet actif a été réglé globalement.",
       "disabledInfo": "Les enchères pour les garanties dans le pool de règlement global sont activées."
     }
   },
@@ -147,12 +147,12 @@
     "title_content": "Il s’agit des paramètres d’actifs utilisés pour les fonctionnalités DEX de base.",
     "symbol": {
       "header": "Symbole d'actif",
-      "header_content": "Le symbole de l'actif est un identifiant unique sur la blockchain identifiant l'actif dans tout le DEX. ",
+      "header_content": "Le symbole de l'actif est un identifiant unique sur la blockchain identifiant l'actif dans tout le DEX. Des actifs moins chers peuvent être créés en utilisant un nom de sous-actif comme NFT.TITLE.",
       "placeholder": "Symbole"
     },
     "shortName": {
       "header": "Nom abrégé de l'actif",
-      "header_content": "Il s'agit du nom court de l'actif, moins important que le symbole mais qui reste un identifiant unique éventuellement abrégé. ",
+      "header_content": "Il s'agit du nom court de l'actif, moins important que le symbole mais qui reste un identifiant unique éventuellement abrégé. Vous pouvez simplement réutiliser le symbole pour ce champ.",
       "placeholder": "Nom court"
     },
     "preferredMarket": {
@@ -171,7 +171,7 @@
     },
     "precision": {
       "header": "Précision des actifs",
-      "header_content": "La précision de l'actif spécifie la quantité de décimales prises en charge. ",
+      "header_content": "La précision de l'actif spécifie la quantité de décimales prises en charge. Cette valeur ne peut pas être modifiée après la création de l'actif.",
       "placeholder": "Précision"
     }
   },
@@ -230,7 +230,7 @@
     "header": "Autorités de liste noire des actifs"
   },
   "market_fee": {
-    "header_content": "Les frais de marché sont le pourcentage de frais facturé sur chaque transaction exécutée sur le Bitshares DEX. ",
+    "header_content": "Les frais de marché sont le pourcentage de frais facturé sur chaque transaction exécutée sur le Bitshares DEX. Les frais sont facturés sur l'actif négocié.",
     "header": "Pourcentage des frais de marché"
   },
   "max_market_fee": {
@@ -248,17 +248,17 @@
     },
     "calculated_cer_price": {
       "header": "Taux de change de base",
-      "header_content": "Assurez-vous que votre taux de change de base est supérieur au prix du marché, sinon les gens achèteront votre jeton sur le marché et draineront votre pool de frais via un arbitrage implicite. "
+      "header_content": "Assurez-vous que votre taux de change de base est supérieur au prix du marché, sinon les gens achèteront votre jeton sur le marché et draineront votre pool de frais via un arbitrage implicite. Le taux de change de base doit être mis à jour régulièrement pour refléter le prix du marché de votre actif."
     }
   },
   "nft": {
     "NFTTitleContent": "Il s'agit du titre de votre jeton non fongible, assurez-vous qu'il est unique et descriptif car il peut être présenté dans diverses galeries/explorateurs de jetons non fongibles.",
     "NFTTitleHeader": "Titre",
     "TitlePlaceholder": "Titre",
-    "NFTArtistContent": "Nom ou pseudonyme de l'artiste. ",
+    "NFTArtistContent": "Nom ou pseudonyme de l'artiste. Peut également inclure des alias ou des noms ou identifiants en ligne, pour inclure des noms ou des adresses de compte blockchain qui pourraient faciliter l'authentification d'une clé de signature.",
     "NFTArtistHeader": "Artiste",
     "ArtistPlaceholder": "Artiste",
-    "NFTNarrativeContent": "Une déclaration personnelle de l'artiste décrivant l'œuvre, comme ce que l'œuvre signifie pour lui ou ce qui l'a inspirée. ",
+    "NFTNarrativeContent": "Une déclaration personnelle de l'artiste décrivant l'œuvre, comme ce que l'œuvre signifie pour lui ou ce qui l'a inspiré, peut inclure des détails sur sa création, etc., il s'agit d'un champ de forme libre et peut être adapté en fonction de l'œuvre, exemple, ",
     "NFTNarrativeHeader": "Narratif",
     "NarrativePlaceholder": "Narratif",
     "NFTTagsContent": "Liste de mots-clés séparés par des virgules pour faciliter les recherches de sujets/intérêts.",
@@ -267,16 +267,16 @@
     "NFTTypeContent": "Une chaîne qui décrit le type de jeton non fongible, tel que 'NFT/ART/VISUAL', 'NFT/ART/3D', 'NFT/ART/ANIMATION', 'NFT/ART/AUDIO', 'NFT/ART ",
     "NFTTypeHeader": "Taper",
     "TypePlaceholder": "Taper",
-    "NFTAttestationContent": "Ici, l'artiste ou l'auteur du matériel encapsulé engage ou consacre le matériel à la blockchain, en nommant expressément le jeton ou l'ID d'actif sous lequel l'œuvre vivra, et atteste de son caractère unique, qualifié ou non. ",
+    "NFTAttestationContent": "Ici, l'artiste ou l'auteur du matériel encapsulé engage ou consacre le matériel à la blockchain, en nommant expressément le jeton ou l'identifiant d'actif sous lequel l'œuvre vivra, et atteste de son unicité qualifiée ou non. Par exemple, un artiste peut attester qu'aucun autre ",
     "NFTAttestationHeader": "Attestation",
     "AttestationPlaceholder": "Attestation",
     "NFTAcknowledgementsContent": "Remerciements ou crédits supplémentaires pour le jeton numérique.",
     "NFTAcknowledgementsHeader": "Remerciements",
     "AcknowledgementsPlaceholder": "Remerciements",
-    "NFTHolderLicenseContent": "Si le token accorde une licence supplémentaire pour l'utilisation de l'œuvre de création spécifiquement aux détenteurs du token, cela peut être précisé ici. ",
+    "NFTHolderLicenseContent": "Si le jeton accorde une licence supplémentaire pour l'utilisation de l'œuvre de création spécifiquement aux détenteurs du jeton, cela peut être spécifié ici. Un exemple d'une telle licence pourrait être d'accorder au détenteur du jeton non fongible le droit d'imprimer et de vendre des jetons physiques. ",
     "NFTHolderLicenseHeader": "Titulaires du permis",
     "HolderLicensePlaceholder": "Titulaire du permis",
-    "NFTLicenseContent": "Licence sous laquelle l'œuvre est publiée. ",
+    "NFTLicenseContent": "Licence sous laquelle l'œuvre d'art est publiée. Il s'agira souvent d'un simple identifiant de licence, tel que « CC BY-NC-SA 2.0 », bien qu'il puisse également s'agir d'une licence détaillée entièrement spécifiée.",
     "NFTLicenseHeader": "Licence média",
     "LicensePlaceholder": "Licence",
     "modifyMultimediaContents": "Modifier le contenu multimédia",
@@ -308,7 +308,7 @@
     "multimedia_header_content": "Fournissez votre non ",
     "currentIPFSFiles": "Ce jeton non fongible contient actuellement {{count}} Références de fichiers multimédias IPFS.",
     "supportedFiletypes": "Les types de fichiers pris en charge incluent les images, la vidéo, l'audio, les fichiers 3D, les documents, etc.",
-    "main_header_content": "Les paramètres ci-dessous définissent le comportement de votre jeton non fongible sur la blockchain Bitshares. ",
+    "main_header_content": "Les paramètres ci-dessous définissent le comportement de votre jeton non fongible sur la blockchain Bitshares. Le créateur de l'actif est responsable de la configuration correcte de son jeton non fongible.",
     "main_header": "Configuration de jeton non fongible"
   }
 }

@@ -2,35 +2,35 @@
   "card": {
     "title_create": "Creando un nuevo activo Smartcoin",
     "title_edit": "Editar un activo Smartcoin existente",
-    "description": "Las Smartcoins son activos garantizados que pueden hacer referencia a los precios del mercado externo. "
+    "description": "Las Smartcoins son activos garantizados que pueden hacer referencia a los precios del mercado externo. Puede crear fácilmente su propia moneda estable garantizada que haga referencia a cualquier activo que desee, como USD/CNY/JPY, etc."
   },
   "title": {
     "header": "Configuración de monedas inteligentes",
-    "header_content": "La configuración a continuación define cómo se comportará su smartcoin en la cadena de bloques Bitshares. "
+    "header_content": "La configuración a continuación define cómo se comportará su smartcoin en la cadena de bloques de Bitshares. El creador de activos es responsable de configurar correctamente su smartcoin."
   },
   "bsrm": {
     "header": "Estrategia de gestión de riesgos del cisne negro",
-    "header_content": "Estas estrategias ofrecen diferentes resultados para posiciones de deuda con garantía insuficiente, lo que le permite desactivar, minimizar o globalizar el riesgo de liquidación de posiciones de deuda. ",
-    "select_0": "Acuerdo Global: Todas las posiciones de deuda cerradas; ",
-    "select_1": "Sin Liquidación: No se cierran posiciones de deuda; ",
-    "select_2": "Fondos de liquidación individuales: se cierran las posiciones de deuda con garantía insuficiente; ",
-    "select_3": "Órdenes de liquidación individuales: se cierran las posiciones de deuda con garantía insuficiente; "
+    "header_content": "Estas estrategias ofrecen diferentes resultados para posiciones de deuda con garantía insuficiente, lo que le permite desactivar, minimizar o globalizar el riesgo de liquidación de la posición de deuda. Una selección de estrategia diferente puede beneficiar a monedas inteligentes únicas y aumentar la tolerancia a los mercados volátiles.",
+    "select_0": "Liquidación global: todas las posiciones de deuda se cerraron, la garantía se trasladó al fondo de liquidación. No se permiten nuevas posiciones de deuda hasta que se resuelvan.",
+    "select_1": "Sin liquidación: no se cierran posiciones de deuda, el precio de liquidación está limitado por el índice de garantía más bajo, se permiten nuevas posiciones.",
+    "select_2": "Fondos de liquidación individuales: las posiciones de deuda con garantía insuficiente se cierran, la garantía se traslada a un fondo reclamable y se permiten nuevas posiciones.",
+    "select_3": "Órdenes de liquidación individuales: las posiciones de deuda con garantía insuficiente se cierran, la garantía se traslada a una orden limitada, no hay límite de precio y se permiten nuevas posiciones."
   },
   "mcr": {
     "header": "Ratio de garantía mínima estática",
-    "header_content": "Este es el índice de garantía mínimo requerido para que una posición de deuda se considere totalmente garantizada. "
+    "header_content": "Este es el índice de garantía mínimo requerido para que una posición de deuda se considere totalmente garantizada. Generalmente se calcula a partir de precios y ahora lo establece estáticamente el propietario del activo."
   },
   "icr": {
-    "header": "Ratio de garantía inicial estática",
-    "header_content": "Este es el índice de garantía requerido para que una posición de deuda se considere totalmente garantizada en el momento de su creación. "
+    "header": "Relación de garantía inicial estática",
+    "header_content": "Este es el índice de garantía requerido para que una posición de deuda se considere totalmente garantizada en el momento de su creación. Generalmente se calcula a partir de precios y ahora lo establece estáticamente el propietario del activo."
   },
   "mssr": {
     "header": "Relación de compresión corta máxima estática",
-    "header_content": "Este es el índice de garantía máximo al que se puede liquidar una posición de deuda. "
+    "header_content": "Este es el índice de garantía máximo al que se puede liquidar una posición de deuda. Generalmente se calcula a partir de precios y ahora lo establece estáticamente el propietario del activo."
   },
   "feed_lifetime": {
     "header": "Vida útil del alimento",
-    "header_content": "El tiempo en segundos que un feed de precios se considera válido. "
+    "header_content": "El tiempo en segundos que un feed de precios se considera válido. Después de este tiempo, el feed se considera no válido y el precio ya no se utiliza para los cálculos del índice de garantía."
   },
   "minimum_feeds": {
     "header": "Alimentos mínimos",
@@ -52,16 +52,16 @@
     "margin_call_fee_ratio": {
       "enabled": "Extensión de ratio de tarifa de llamada de margen habilitada",
       "disabled": "¿Habilitar la extensión de smartcoin Margin Call Fee Ratio?",
-      "extensionInfo": "La extensión Margin Call Fee Ratio permite al propietario de una smartcoin cobrar una tarifa a un usuario cuando su posición de deuda es llamada de margen. ",
+      "extensionInfo": "La extensión Margin Call Fee Ratio permite al propietario de la smartcoin cobrar una tarifa a un usuario cuando su posición de deuda es llamada de margen. La tarifa se calcula como un porcentaje de la garantía negociada, pagada al propietario de la smartcoin.",
       "header": "Relación de tarifa de llamada de margen",
-      "header_content": "El índice de tarifas que se cobra a un usuario cuando su posición de deuda es llamada de margen. "
+      "header_content": "El índice de tarifa que se cobra a un usuario cuando su posición de deuda es de margen. La tarifa se calcula como un porcentaje de la garantía negociada, pagada al propietario de la moneda inteligente."
     },
     "force_settle_fee": {
       "enabled": "Extensión de tarifa de liquidación forzada habilitada",
       "disabled": "¿Habilitar la extensión de smartcoin Force Settle Fee?",
-      "extensionInfo": "La extensión Force Settle Fee permite al propietario de la moneda inteligente cobrar una tarifa a un usuario cuando obliga a liquidar su posición de deuda. ",
+      "extensionInfo": "La extensión Force Settle Fee permite al propietario de la smartcoin cobrar una tarifa a un usuario cuando obliga a liquidar su posición de deuda. La tarifa se calcula como un porcentaje de la garantía negociada, pagada al propietario de la smartcoin.",
       "header": "Tarifa de liquidación forzada",
-      "header_content": "La tarifa que se cobra a un usuario cuando obliga a liquidar su posición de deuda. "
+      "header_content": "La tarifa que se cobra a un usuario cuando obliga a liquidar su posición de deuda. La tarifa se calcula como un porcentaje de la garantía negociada, pagada al propietario de la smartcoin."
     }
   },
   "editAsset": {

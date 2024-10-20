@@ -606,6 +606,21 @@ export default function IssuedAssets(properties) {
                       </a>
                     ) : null}
 
+                    {activeTab === "smartcoins" &&
+                    relevantBitassetData &&
+                    ((relevantBitassetData.current_feed.settlement_price.base.amount === 0 &&
+                      relevantBitassetData.current_feed.settlement_price.quote.amount === 0) ||
+                      !relevantBitassetData.feeds.length ||
+                      (parseInt(relevantBitassetData.settlement_price.base.amount) > 0 &&
+                        parseInt(relevantBitassetData.settlement_price.quote.amount)) ||
+                      parseInt(relevantBitassetData.settlement_fund) > 0) ? (
+                      <a href={`/settlement/index.html?id=${issuedAsset.id}`}>
+                        <DropdownMenuItem className="hover:shadow-inner">
+                          {t("IssuedAssets:collateralBid")}
+                        </DropdownMenuItem>
+                      </a>
+                    ) : null}
+
                     {activeTab === "prediction" ? (
                       <a href={`/predictions/index.html?id=${issuedAsset.id}`}>
                         <DropdownMenuItem className="hover:shadow-inner">

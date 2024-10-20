@@ -4,11 +4,11 @@
   "expirationTime": "Tempo de expiração",
   "reviewPeriodTime": "Período de revisão",
   "operations": "Operações propostas",
-  "operationsDescription": "Estas são as operações individuais armazenadas nesta proposta. ",
+  "operationsDescription": "Estas são as operações individuais armazenadas nesta proposta, Clique em cada ID de operação abaixo para visualizar seus detalhes JSON, Revise minuciosamente cada operação e verifique quem é o proponente antes de prosseguir com a aprovação, As aprovações são irreversíveis, não aprove a transferência de sua conta ",
   "beginApprovalProcess": "Iniciar processo de aprovação",
   "reject": "Rejeitar proposta",
   "cardTitle": "🤔 Operações propostas",
-  "cardDescription": "As propostas permitem que qualquer pessoa sugira operações a serem executadas por outra conta no blockchain. ",
+  "cardDescription": "As propostas permitem que qualquer pessoa sugira operações a serem executadas por outra conta no blockchain. O proprietário da conta analisa essas propostas e decide se as aprova ou rejeita.",
   "noProposals": "Nenhuma proposta disponível.",
   "approveProposedOperation": "Aprovar operação proposta",
   "rejectProposedOperation": "Rejeitar operação proposta",
@@ -21,6 +21,6 @@
   "approvedProposalHeader": "Aprovando a seguinte proposta",
   "risksTitle": "Riscos da proposta",
   "risksDescription": "Esteja ciente dos seguintes riscos ao considerar propostas:",
-  "risk1": "As propostas podem ser perigosas. ",
-  "risk2": "As propostas aprovadas são irreversíveis. "
+  "risk1": "As propostas podem ser perigosas, podem ser criadas por qualquer pessoa e sugerir qualquer tipo de operação no blockchain. Seja inteligente e faça a devida diligência ao considerar a aprovação de propostas.",
+  "risk2": "As propostas aprovadas são irreversíveis, Os aplicativos/projetos Astro-UI e Beeteos não oferecem nenhuma garantia ao usuário como parte de suas respectivas licenças, Você é responsável por qualquer escolha feita na interface do usuário acima, Não caia em truques, Se você não estava esperando "
 }

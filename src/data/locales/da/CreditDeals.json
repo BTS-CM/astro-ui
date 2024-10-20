@@ -1,5 +1,5 @@
 {
-  "dealNo": "Del",
+  "dealNo": "Aftale #",
   "with": " med ",
   "borrowed": "Du lånte",
   "lent": "De lånte",
@@ -9,14 +9,14 @@
   "remainingTime": "Resterende tid:",
   "repayLoan": "tilbagebetale lån",
   "trade": "Handle {{symbol}} på DEX",
-  "dialogTitle": "Tilbagebetaling af lån",
+  "dialogTitle": "Tilbagebetaling af lån nr. {id}",
   "description": "Brug denne formular til at kontrollere tilbagebetalinger af din kreditaftale.",
   "account": "Konto",
   "balance": "Din nuværende {{symbol}} balance",
   "repayAmount": "Mængde af {{symbol}} at tilbagebetale",
   "remainingDebt": "Resterende gæld: {{amount}} {{symbol}}",
   "repayDesc": "For at få al din sikkerhed tilbage, skal du tilbagebetale gælden fuldt ud.",
-  "redeemCollateral": "Indløs sikkerhedsstillelse",
+  "redeemCollateral": "Indløs sikkerhed",
   "remainingCollateral": "Resterende sikkerhed: {amount} {{symbol}}",
   "collateralRedemption": "Mængde af {{symbol}} sikkerhedsstillelse, du vil indløse",
   "loanLabel": "Anslået lånegebyr",
@@ -26,7 +26,7 @@
   "finalPaymentWarning": "Utilstrækkelig {{symbol}} balance",
   "networkFee": "Netværksgebyr",
   "networkFeeDesc": "Dette er gebyret for at udsende din tilbagebetaling af kreditaftale til blockchain.",
-  "rebate": "Rabat {{fee}} {{chain}} (optjening)",
+  "rebate": "Rabat {{fee}} {{chain}} (vesting)",
   "submit": "Indsend",
   "deepLink": "Tilbagebetaling {{finalRepayAmount}} {{debtAsset}}, for at kræve tilbage {{collateralAsset}}",
   "card": {
@@ -45,15 +45,15 @@
     "lenderTitle": "Advarsel om långiverrisiko",
     "description": "Vigtig information om dit ansvar og risici forbundet med kreditaftaler.",
     "borrower": {
-      "risk1": "dig ( {{username}} ) er ansvarlige for at administrere dine kreditaftaler og tilbagebetale dem rettidigt, ingen andre. ",
-      "risk2": "Vær opmærksom på din eksponering for eksterne volatiliteter i kreditaftalens tilbagebetalingsperiode; ",
-      "risk3": "Manglende tilbagebetaling af en kreditaftale vil resultere i tab af resterende sikkerhedsstillelse. "
+      "risk1": "dig ( {{username}} ) er ansvarlige for at administrere dine kreditaftaler og tilbagebetale dem rettidigt, ingen andre. Overvej at bruge en automatisk tilbagebetalingsmetode for at undgå at gå glip af tilbagebetalingsfristen, hvis du måske glemmer fristen.",
+      "risk2": "Vær opmærksom på din eksponering for eksterne volatiliteter i kreditaftalens tilbagebetalingsperiode, værdien af ​​dine lånte aktiver og din sikkerhedsstillelse vil svinge. Du bør overveje en sådan volatilitetseksponering, når du beslutter dig for hvordan/hvornår du vil tilbagebetale kreditaftalen.",
+      "risk3": "Manglende tilbagebetaling af en kreditaftale vil resultere i tab af resterende sikkerhedsstillelsesaktiver. Der er ikke et kreditscore-system, som straffer misligholdte låntagere, de aftalte vilkår for kreditaftalen vil blive overholdt."
     },
     "lender": {
-      "risk1": "dig ( {{username}} ) er ansvarlige for at administrere dine kredittilbud, deres parametre og deres risikoeksponering, ingen andre. ",
-      "risk2": "Vær opmærksom på din eksponering for eksterne volatiliteter i kreditaftalens tilbagebetalingsperiode; ",
-      "risk3": "Som långiver, når der først er en kreditaftale, kan du ( {{username}} ) ikke kan annullere den, er låntager ansvarlig for handlens varighed inden for tilbagebetalingsperioden. ",
-      "risk4": "Hvis låntagere undlader at tilbagebetale deres kreditaftaler, vil deres sikkerhedsstillelse mistes til dig. "
+      "risk1": "dig ( {{username}} ) er ansvarlige for at administrere dine kredittilbud, deres parametre og deres risikoeksponering, ingen andre. Overvej at oprette automatiserede scripts til at administrere status for dine kredittilbud.",
+      "risk2": "Vær opmærksom på din eksponering for eksterne volatiliteter i løbet af kreditaftalens tilbagebetalingsperiode, værdien af ​​de aktiver, du har udlånt til andre brugere, og den sikkerhedsstillelse, de stillede, vil svinge. Du bør overveje din personlige risikotolerance, når du beslutter dig for dine kredittilbudsparametre. ",
+      "risk3": "Som långiver, når der først er en kreditaftale, kan du ( {{username}} ) ikke kan annullere den, er låntager ansvarlig for handlens varighed inden for tilbagebetalingsperioden. En kreditaftales tilbagebetalingsdato kan også overskride dit kredittilbuds udløbsdato.",
+      "risk4": "Hvis låntagere undlader at tilbagebetale deres kreditaftaler, vil deres sikkerhedsstillelse fortabes til dig. Der er ikke et kreditscore-system, der straffer låntagere for misligholdelse, de aftalte betingelser for kreditaftalen vil altid blive overholdt, så planlæg dine kredittilbud "
     }
   }
 }

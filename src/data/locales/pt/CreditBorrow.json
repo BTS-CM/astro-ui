@@ -1,6 +1,6 @@
 {
   "common": {
-    "title": " Oferecer{{orderID}} por {{owner_name}} ({{owner_account}})",
+    "title": " Oferecer #{{orderID}} por {{owner_name}} ({{owner_account}})",
     "offer": "Oferecer",
     "by": "por",
     "offering": "Oferta",
@@ -10,13 +10,13 @@
     "repayPeriod": "Período de reembolso: {{repayPeriod}} horas",
     "validity": "Oferta válida para {{validity}} horas",
     "min": "Quantidade mínima: {{amount}} {{asset}}",
-    "proceed": "Prossiga com a oferta de crédito{{offerID}}",
+    "proceed": "Prossiga com a oferta de crédito #{{offerID}}",
     "edit": "Editar oferta",
-    "view": "Configurações de exibição"
+    "view": "Ver configurações"
   },
   "card": {
     "title": "🏦 Visualizando ofertas de crédito disponíveis",
-    "description": "As ofertas de crédito são geradas pelo usuário, oferecem diferentes taxas, ativos e durações; ",
+    "description": "As ofertas de crédito são geradas pelo usuário, oferecem diferentes taxas, ativos e durações, avaliam os termos antes de criar negócios.",
     "viewingAll": "Visualizando todas as ofertas",
     "viewAll": "Ver todas as ofertas",
     "viewingAvailable": "Visualizando pedidos compatíveis",

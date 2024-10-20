@@ -5,7 +5,7 @@
     "readyToBroadcast": "Ihr Bitshares Beet-Vorgang ist bereit zur Ausstrahlung!",
     "chooseMethod": "Wählen Sie eine der folgenden Methoden zur Übertragung an die Wallet Ihrer Wahl.",
     "bitsharesBEETMultiwallet": "Bitshares BEET Multiwallet",
-    "errorOccurred": "Es ist ein Fehler aufgetreten, sorry. ",
+    "errorOccurred": "Es ist ein Fehler aufgetreten. Bitte schließen Sie dieses Dialogfeld und versuchen Sie es erneut.",
     "beetWallet": "Bitshares BEET Multiwallet"
   },
   "tabs": {
@@ -27,17 +27,17 @@
     "triggerRawBeet": "Lösen Sie den Deeplink für Rohrüben aus",
     "viaLocalFile": "Per lokalem Datei-Upload – bereit zum Fortfahren",
     "step1Local": "Starten Sie die BEET-Wallet und navigieren Sie im Menü zu „Lokal“.",
-    "step2Local": "Auf dieser Seite entweder alle zulassen oder nur den Vorgang zulassen '{{operationName}}'.",
+    "step2Local": "Auf dieser Seite können Sie entweder alle zulassen oder nur den Vorgang zulassen.{{operationName}}'.",
     "step3Local": "Klicken Sie auf der lokalen Upload-Seite auf die Schaltfläche unten, um die JSON-Datei auf Ihren Computer herunterzuladen.",
     "step4Local": "Laden Sie auf der BEET Local-Seite die JSON-Datei hoch. Anschließend sollte eine Eingabeaufforderung angezeigt werden.",
-    "step5Local": "Überprüfen Sie den Inhalt der Eingabeaufforderung sorgfältig, bevor Sie einen Vorgang genehmigen. Erwägen Sie auch, den optionalen Empfang für Analyse- und Überprüfungszwecke nach der Übertragung einzuschalten.",
+    "step5Local": "Überprüfen Sie den Inhalt der Eingabeaufforderung gründlich, bevor Sie einen Vorgang genehmigen. Erwägen Sie auch, den optionalen Empfang für Analyse- und Überprüfungszwecke nach der Übertragung einzuschalten.",
     "downloading": "Herunterladen...",
     "downloadBeetOperationJSON": "Laden Sie Beet Operation JSON herunter",
     "propose": "Erstellen eines neuen Vorschlags",
     "proposeDescription": "Wenn Sie nicht der Eigentümer (oder Miteigentümer) des Kontos sind, das Sie zum Erstellen des vorgeschlagenen Vorgangs verwenden, können Sie einen Vorschlag erstellen, den der Kontoinhaber nach eigenem Ermessen prüfen und veröffentlichen kann."
   },
   "proposal": {
-    "targetContent": "Dies ist das Konto, das Sie zum Erstellen des Angebots verwenden. ",
+    "targetContent": "Dies ist das Konto, mit dem Sie das Angebot erstellen, als Endbenutzer Vorgänge in der Astro-Benutzeroberfläche erstellen und dann hier Ihr Konto zur Zahlung der Angebotsgebühr angeben.",
     "targetHeader": "Konto zur Zahlung der Angebotsgebühr",
     "revisionPeriodSecondsContent": "Geben Sie den Revisionszeitraum in Sekunden an.",
     "revisionPeriodSecondsHeader": "Revisionszeitraum (Sekunden)"

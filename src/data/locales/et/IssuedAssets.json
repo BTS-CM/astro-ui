@@ -71,7 +71,7 @@
   "newIssuer": "Uus emitendi konto",
   "newIssuerInfo": "See on konto, millest saab jäädavalt selle vara uus väljastaja (omanik).",
   "currentIssuer": "Praegune emitent",
-  "currentIssuerInfo": "See on selle vara praegune väljastaja (omanik). ",
+  "currentIssuerInfo": "See on selle vara praegune väljaandja (omanik). See toiming eemaldab selle vara omandiõiguse sellelt kasutajalt jäädavalt.",
   "updateIssuerHeader": "Väljaandja värskendamine {{asset}} juurde {{newIssuer}} alates {{currentIssuer}}",
   "globalSettlement": "Ülemaailmne arveldus",
   "globallySettle": "Tehke ülemaailmne arveldus",
