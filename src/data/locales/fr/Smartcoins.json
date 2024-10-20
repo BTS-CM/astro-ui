@@ -1,6 +1,7 @@
 {
   "createdBy": "Créé par",
   "backingCollateral": "Garantie de soutien",
+  "collateral": "Collatéral",
   "feedQty": "Quantité d'aliment : {{qty}}",
   "mcr": "MCR : {{mcr}} %",
   "mssr": "MSSR : {{mssr}} %",
@@ -14,7 +15,7 @@
   "placeholderICR": "ICR : ? ",
   "placeholderProceedToBorrow": "Procéder à un emprunt ?",
   "selectBorrowableAsset": "💵 Sélectionnez un actif empruntable",
-  "smartcoinDescription": "Il y a plusieurs utilisateurs",
+  "smartcoinDescription": "Il existe plusieurs smartcoins créés par les utilisateurs et les comités sur la blockchain Bitshares que vous pouvez émettre vous-même, à condition de fournir et de maintenir une garantie de soutien suffisante. ",
   "viewingAllAssets": "Afficher tous les actifs",
   "viewAllAssets": "Afficher tous les actifs",
   "viewingCompatible": "Visionnage compatible",
@@ -23,11 +24,11 @@
   "viewHoldings": "Afficher les fonds",
   "searching": "Recherche",
   "search": "Recherche",
-  "listingAllSmartcoins": "Référencement {{count}} (toutes) les smartcoins",
-  "listingCompatibleSmartcoins": "Référencement {{count}} smartcoins compatibles avec votre compte",
-  "listingHeldSmartcoins": "Référencement {{count}} détenait des smartcoins",
+  "listingAllSmartcoins": "Inscription {{count}} (toutes) les smartcoins",
+  "listingCompatibleSmartcoins": "Inscription {{count}} smartcoins compatibles avec votre compte",
+  "listingHeldSmartcoins": "Inscription {{count}} détenait des smartcoins",
   "howToSearch": "Comment voulez-vous effectuer une recherche ?",
-  "searchingByBorrowable": "Recherche par bien empruntable",
+  "searchingByBorrowable": "Recherche par actif empruntable",
   "searchByBorrowable": "Recherche par bien empruntable",
   "searchingByCollateral": "Recherche par actifs collatéraux",
   "searchByCollateral": "Recherche par actifs collatéraux",
@@ -36,5 +37,7 @@
   "enterSearchText": "Saisissez le texte de recherche",
   "noResultsFound": "Aucun résultat trouvé",
   "bitassets": "Bitactifs",
-  "privateSmartcoins": "Pièces intelligentes privées"
+  "privateSmartcoins": "Pièces intelligentes privées",
+  "currentSettlementPrice": "Prix",
+  "currentSupply": "Fournir"
 }

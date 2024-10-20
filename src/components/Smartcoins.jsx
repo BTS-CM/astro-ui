@@ -25,9 +25,11 @@ import { Input } from "@/components/ui/input";
 
 import { debounce } from "@/lib/common.js";
 import { getFlagBooleans } from "@/lib/common.js";
+import { humanReadableFloat } from "@/lib/common.js";
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
 import { createSmartcoinsStore } from "@/nanoeffects/Smartcoins.ts";
+import { createObjectStore } from "@/nanoeffects/Objects.ts";
 
 import { $currentUser } from "@/stores/users.ts";
 import { $currentNode } from "@/stores/node.ts";
@@ -68,13 +70,24 @@ export default function Smartcoins(properties) {
       requiredStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
           if (data._assets) {
+            console.log({ assets: data._assets });
             setBaseAssetData(data._assets);
           }
           if (data._issuers) {
             setAssetIssuers(data._issuers);
           }
           if (data._smartcoins) {
-            setNewBitassetdata(data._smartcoins);
+            const filteredSmartcoins = data._smartcoins.filter(
+              (x) =>
+                parseInt(x.current_feed.settlement_price.base.amount) !== 0 &&
+                parseInt(x.current_feed.settlement_price.quote.amount) !== 0 &&
+                x.feeds.length &&
+                (parseInt(x.settlement_price.base.amount) === 0 ||
+                  parseInt(x.settlement_price.quote.amount) === 0 ||
+                  parseInt(x.settlement_fund) === 0)
+            );
+            console.log({ filteredSmartcoins });
+            setNewBitassetdata(filteredSmartcoins);
           }
           if (data._balances) {
             setUsrBalances(data._balances);
@@ -87,6 +100,38 @@ export default function Smartcoins(properties) {
       fetching();
     }
   }, [usr, currentNode]);
+
+  const [dynamicData, setDynamicData] = useState([]);
+  useEffect(() => {
+    async function fetching() {
+      const dynamicIDs = newBitassetData
+        .map((x) => baseAssetData.find((y) => y.id === x.asset_id))
+        .map((a) => a.dynamic_asset_data_id);
+
+      const requiredStore = createObjectStore([
+        usr.chain,
+        JSON.stringify(dynamicIDs),
+        currentNode ? currentNode.url : null,
+      ]);
+
+      requiredStore.subscribe(({ data, error, loading }) => {
+        if (data && !error && !loading) {
+          const finalDynamicData = data.map((x) => {
+            return {
+              ...x,
+              asset_id: baseAssetData.find((b) => b.dynamic_asset_data_id === x.id).id,
+            };
+          });
+          console.log({ finalDynamicData });
+          setDynamicData(finalDynamicData);
+        }
+      });
+    }
+
+    if (newBitassetData) {
+      fetching();
+    }
+  }, [newBitassetData, baseAssetData]);
 
   const compatibleSmartcoins = useMemo(() => {
     if (usrBalances && newBitassetData) {
@@ -122,7 +167,6 @@ export default function Smartcoins(properties) {
   const [mode, setMode] = useState("bitassets");
 
   const assetSearch = useMemo(() => {
-    //console.log({newBitassetData, baseAssetData, assetIssuers});
     if (!newBitassetData || !newBitassetData.length || !baseAssetData || !assetIssuers) {
       return;
     }
@@ -250,6 +294,11 @@ export default function Smartcoins(properties) {
     const _flags = getFlagBooleans(thisBitassetData.options.flags);
     const _issuer_permissions = getFlagBooleans(thisBitassetData.options.issuer_permissions);
 
+    const foundDynamicData = dynamicData.find((x) => x.asset_id === thisBitassetData.id);
+    let currentSupply = foundDynamicData
+      ? humanReadableFloat(parseInt(foundDynamicData.current_supply), thisBitassetData.precision)
+      : 0;
+
     return (
       <div style={{ ...style }} key={`acard-${bitasset.asset_id}`}>
         <Card className="ml-2 mr-2">
@@ -299,28 +348,56 @@ export default function Smartcoins(properties) {
               ) : null}
             </CardTitle>
             <CardDescription className="text-md">
-              {t("Smartcoins:backingCollateral")}:
-              <b>
-                {" "}
-                <ExternalLink
-                  classnamecontents="hover:text-purple-500"
-                  type="text"
-                  text={thisCollateralAssetData.symbol}
-                  hyperlink={`https://blocksights.info/#/assets/${thisCollateralAssetData.symbol}${
-                    usr.chain === "bitshares" ? "" : "?network=testnet"
-                  }`}
-                />{" "}
-                {"("}
-                <ExternalLink
-                  classnamecontents="hover:text-purple-500"
-                  type="text"
-                  text={thisCollateralAssetData.id}
-                  hyperlink={`https://blocksights.info/#/assets/${thisCollateralAssetData.id}${
-                    usr.chain === "bitshares" ? "" : "?network=testnet"
-                  }`}
-                />
-                {")"}
-              </b>
+              <div className="grid grid-cols-3 gap-1">
+                <div>
+                  {t("Smartcoins:collateral")}:
+                  <b>
+                    {" "}
+                    <ExternalLink
+                      classnamecontents="hover:text-purple-500"
+                      type="text"
+                      text={thisCollateralAssetData.symbol}
+                      hyperlink={`https://blocksights.info/#/assets/${
+                        thisCollateralAssetData.symbol
+                      }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
+                    />{" "}
+                    {"("}
+                    <ExternalLink
+                      classnamecontents="hover:text-purple-500"
+                      type="text"
+                      text={thisCollateralAssetData.id}
+                      hyperlink={`https://blocksights.info/#/assets/${thisCollateralAssetData.id}${
+                        usr.chain === "bitshares" ? "" : "?network=testnet"
+                      }`}
+                    />
+                    {")"}
+                  </b>
+                </div>
+                <div>
+                  {t("Smartcoins:currentSettlementPrice")}
+                  {": "}
+                  <b>
+                    {parseFloat(
+                      (
+                        humanReadableFloat(
+                          parseInt(bitasset.current_feed.settlement_price.quote.amount),
+                          thisCollateralAssetData.precision
+                        ) /
+                        humanReadableFloat(
+                          parseInt(bitasset.current_feed.settlement_price.base.amount),
+                          thisBitassetData.precision
+                        )
+                      ).toFixed(thisCollateralAssetData.precision)
+                    )}
+                  </b>
+                  {` ${thisCollateralAssetData.symbol}/${thisBitassetData.symbol}`}
+                </div>
+                <div>
+                  {t("Smartcoins:currentSupply")}
+                  {": "}
+                  <b>{currentSupply.toLocaleString()}</b>
+                </div>
+              </div>
             </CardDescription>
           </CardHeader>
           <CardContent className="text-sm pb-3">

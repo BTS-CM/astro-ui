@@ -1,6 +1,7 @@
 {
   "createdBy": "Created by",
   "backingCollateral": "Backing collateral",
+  "collateral": "Collateral",
   "feedQty": "Feed qty: {{qty}}",
   "mcr": "MCR: {{mcr}} %",
   "mssr": "MSSR: {{mssr}} %",
@@ -36,5 +37,7 @@
   "enterSearchText": "Enter search text",
   "noResultsFound": "No results found",
   "bitassets": "Bitassets",
-  "privateSmartcoins": "Private smartcoins"
+  "privateSmartcoins": "Private smartcoins",
+  "currentSettlementPrice": "Price",
+  "currentSupply": "Supply"
 }

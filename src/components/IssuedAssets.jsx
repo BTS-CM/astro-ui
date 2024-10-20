@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useSyncExternalStore, useMemo } from "react";
 import { FixedSizeList as List } from "react-window";
 import { useStore } from "@nanostores/react";
+import { sha256 } from "@noble/hashes/sha2";
+import { bytesToHex as toHex } from "@noble/hashes/utils";
 
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
@@ -9,7 +11,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
-import { MagnifyingGlassIcon, AvatarIcon } from "@radix-ui/react-icons";
+import {
+  MagnifyingGlassIcon,
+  AvatarIcon,
+  CheckIcon,
+  ExclamationTriangleIcon,
+} from "@radix-ui/react-icons";
 
 import {
   DropdownMenu,
@@ -197,6 +204,39 @@ export default function IssuedAssets(properties) {
   }, [issuedAssets]);
   // issuedAssets -> bitasset data (some)
 
+  const priceFeederAccountIDs = useMemo(() => {
+    if (!bitassetData) {
+      return [];
+    }
+
+    const priceFeeders = Array.from(
+      new Set(bitassetData.flatMap((data) => data.feeds.map((feed) => feed[0])))
+    );
+
+    return priceFeeders;
+  }, [bitassetData]);
+
+  const [priceFeederAccounts, setPriceFeederAccounts] = useState([]);
+  useEffect(() => {
+    async function fetching() {
+      const requiredStore = createObjectStore([
+        usr.chain,
+        JSON.stringify(priceFeederAccountIDs),
+        currentNode ? currentNode.url : null,
+      ]);
+
+      requiredStore.subscribe(({ data, error, loading }) => {
+        if (data && !error && !loading) {
+          setPriceFeederAccounts(data);
+        }
+      });
+    }
+
+    if (priceFeederAccountIDs && priceFeederAccountIDs.length) {
+      fetching();
+    }
+  }, [priceFeederAccountIDs]);
+
   const AssetRow = ({ index, style }) => {
     const issuedAsset = relevantAssets[index];
     if (!issuedAsset) {
@@ -257,17 +297,26 @@ export default function IssuedAssets(properties) {
     const [globalSettleDeeplinkDialog, setGlobalSettleDeeplinkDialog] = useState(false);
     const [globalSettlePrice, setGlobalSettlePrice] = useState(0);
 
+    const [priceFeederIndex, setPriceFeederIndex] = useState(0);
+    const [globalSettlementMode, setGlobalSettlementMode] = useState("median");
+
+    const globalSettleObject = useMemo(() => {
+      if (!relevantBitassetData) {
+        return null;
+      }
+
+      switch (globalSettlementMode) {
+        case "median":
+          return relevantBitassetData.median_feed.settlement_price;
+        case "current":
+          return relevantBitassetData.current_feed.settlement_price;
+        case "price_feed":
+          return relevantBitassetData.feeds[priceFeederIndex][1][1].settlement_price;
+      }
+    }, [globalSettlementMode, relevantBitassetData, priceFeederIndex]);
+
     const _flags = getFlagBooleans(issuedAsset.options.flags);
     const _issuer_permissions = getFlagBooleans(issuedAsset.options.issuer_permissions);
-
-    /*
-    let settlementPrice = 0;
-    let settlementObject;
-    if (relevantBitassetData) {
-      settlementObject = relevantBitassetData.settlement_price;
-      settlementPrice = settlementObject.base.amount / settlementObject.quote.amount;
-    }
-    */
 
     const collateralAsset = useMemo(() => {
       if (relevantBitassetData) {
@@ -276,35 +325,31 @@ export default function IssuedAssets(properties) {
     }, [relevantBitassetData]);
 
     const currentFeedSettlementPrice = useMemo(() => {
-      if (!relevantBitassetData || !collateralAsset || !issuedAsset) {
+      if (!globalSettleObject || !collateralAsset || !issuedAsset) {
         return 0;
       }
 
-      if (relevantBitassetData && relevantBitassetData.current_feed) {
+      if (globalSettleObject) {
         return parseFloat(
           (
             humanReadableFloat(
-              parseInt(relevantBitassetData.current_feed.settlement_price.quote.amount),
+              parseInt(globalSettleObject.quote.amount),
               collateralAsset.precision
-            ) /
-            humanReadableFloat(
-              parseInt(relevantBitassetData.current_feed.settlement_price.base.amount),
-              issuedAsset.precision
-            )
+            ) / humanReadableFloat(parseInt(globalSettleObject.base.amount), issuedAsset.precision)
           ).toFixed(collateralAsset.precision)
         );
       }
-    }, [relevantBitassetData, collateralAsset, issuedAsset]);
+    }, [collateralAsset, issuedAsset, globalSettleObject]);
 
-    const UserRow = ({ index, style }) => {
-      const user = users[index];
+    const UserRow = ({ index: x, style: rowStyle }) => {
+      const user = users[x];
       if (!user) {
         return null;
       }
 
       return (
         <div
-          style={{ ...style }}
+          style={{ ...rowStyle }}
           key={`acard-${user.id}`}
           onClick={() => {
             setTargetUser({
@@ -341,12 +386,72 @@ export default function IssuedAssets(properties) {
       );
     };
 
+    const PriceFeedRow = ({ index: x, style: rowStyle }) => {
+      const priceFeed = relevantBitassetData.feeds[x];
+      if (!priceFeed || !priceFeed[1] || !priceFeed[1][1] || !priceFeed[1][1].settlement_price) {
+        console.error("Error: Invalid priceFeed structure", { priceFeed, x });
+        return null;
+      }
+
+      const hexID = toHex(sha256(priceFeed[0]));
+      const settlementPrice = parseFloat(
+        (
+          humanReadableFloat(
+            parseInt(priceFeed[1][1].settlement_price.quote.amount),
+            collateralAsset.precision
+          ) /
+          humanReadableFloat(
+            parseInt(priceFeed[1][1].settlement_price.base.amount),
+            issuedAsset.precision
+          )
+        ).toFixed(collateralAsset.precision)
+      );
+
+      const feedPublishTime = new Date(priceFeed[1][0]);
+      const hoursSincePublished = Math.floor(
+        (new Date().getTime() - feedPublishTime.getTime()) / (1000 * 60 * 60)
+      );
+
+      const foundFeeder = priceFeederAccounts.find((account) => account.id === priceFeed[0]);
+
+      return (
+        <div
+          style={{ ...rowStyle }}
+          key={`priceFeedRow-${hexID}`}
+          onClick={() => {
+            setPriceFeederIndex(x);
+          }}
+        >
+          <Card className="ml-2 mr-2">
+            <div className="flex items-center">
+              {x === priceFeederIndex ? (
+                <div className="ml-5">
+                  <CheckIcon />
+                </div>
+              ) : null}
+              <CardHeader className="pb-1 pt-1">
+                <CardTitle>
+                  <div className="flex items-center">
+                    {foundFeeder ? foundFeeder.name : null} ({priceFeed[0]}){" - "}
+                    {settlementPrice} {collateralAsset.symbol}/{issuedAsset.symbol}
+                  </div>
+                </CardTitle>
+                <CardDescription>
+                  {t("IssuedAssets:publishTime", { hours: hoursSincePublished })}
+                </CardDescription>
+              </CardHeader>
+            </div>
+          </Card>
+        </div>
+      );
+    };
+
     return (
       <div style={{ ...style }} key={`acard-${issuedAsset.id}`}>
         <Card className="ml-2 mr-2">
           <CardHeader className="pb-1">
             <CardTitle className="grid grid-cols-2 gap-5">
-              <span className="pb-5">
+              <span className="pb-5 flex items-center">
                 <ExternalLink
                   classnamecontents="hover:text-purple-500"
                   type="text"
@@ -365,6 +470,20 @@ export default function IssuedAssets(properties) {
                   }`}
                 />
                 {")"}
+                {activeTab === "smartcoins" &&
+                relevantBitassetData &&
+                ((relevantBitassetData.current_feed.settlement_price.base.amount === 0 &&
+                  relevantBitassetData.current_feed.settlement_price.quote.amount === 0) ||
+                  !relevantBitassetData.feeds.length ||
+                  (parseInt(relevantBitassetData.settlement_price.base.amount) > 0 &&
+                    parseInt(relevantBitassetData.settlement_price.quote.amount)) ||
+                  parseInt(relevantBitassetData.settlement_fund) > 0) ? (
+                  <HoverInfo
+                    content={t("IssuedAssets:inactiveSmartcoin")}
+                    header={<ExclamationTriangleIcon className="ml-3 text-md" />}
+                    type="header"
+                  />
+                ) : null}
               </span>
               <span className="mb-3 text-right grid grid-cols-3 gap-3">
                 <DropdownMenu>
@@ -375,6 +494,7 @@ export default function IssuedAssets(properties) {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
                     <DropdownMenuItem
+                      className="hover:shadow-inner"
                       onClick={() => {
                         setJSON(issuedAsset);
                         setViewJSON(true);
@@ -383,6 +503,7 @@ export default function IssuedAssets(properties) {
                       {t("IssuedAssets:issuedAssetData")}
                     </DropdownMenuItem>
                     <DropdownMenuItem
+                      className="hover:shadow-inner"
                       onClick={() => {
                         setJSON(relevantDynamicData);
                         setViewJSON(true);
@@ -392,6 +513,7 @@ export default function IssuedAssets(properties) {
                     </DropdownMenuItem>
                     {parsedDescription && parsedDescription.hasOwnProperty("nft_object") ? (
                       <DropdownMenuItem
+                        className="hover:shadow-inner"
                         onClick={() => {
                           setJSON(parsedDescription.nft_object);
                           setViewJSON(true);
@@ -402,6 +524,7 @@ export default function IssuedAssets(properties) {
                     ) : null}
                     {relevantBitassetData ? (
                       <DropdownMenuItem
+                        className="hover:shadow-inner"
                         onClick={() => {
                           setJSON(relevantBitassetData);
                           setViewJSON(true);
@@ -1399,76 +1522,100 @@ export default function IssuedAssets(properties) {
                           </DialogHeader>
 
                           <div className="grid grid-cols-1 gap-3">
-                            <div>
-                              <div className="grid grid-cols-1 gap-2">
+                            <div className="grid grid-cols-3 gap-2">
+                              <Button
+                                onClick={() => {
+                                  setGlobalSettlementMode("median");
+                                }}
+                                variant={globalSettlementMode === "median" ? "" : "outline"}
+                              >
+                                {t("IssuedAssets:medianFeedPrice")}
+                              </Button>
+                              <Button
+                                onClick={() => {
+                                  setGlobalSettlementMode("current");
+                                }}
+                                variant={globalSettlementMode === "current" ? "" : "outline"}
+                              >
+                                {t("IssuedAssets:currentFeedPrice")}
+                              </Button>
+                              {relevantBitassetData &&
+                              relevantBitassetData.feeds &&
+                              relevantBitassetData.feeds.length ? (
+                                <Button
+                                  onClick={() => {
+                                    setGlobalSettlementMode("price_feed");
+                                  }}
+                                  variant={globalSettlementMode === "price_feed" ? "" : "outline"}
+                                >
+                                  {t("IssuedAssets:specificPriceFeed")}
+                                </Button>
+                              ) : null}
+                            </div>
+
+                            <div className="grid grid-cols-1 gap-2">
+                              {relevantBitassetData &&
+                              relevantBitassetData.feeds &&
+                              relevantBitassetData.feeds.length &&
+                              globalSettlementMode === "price_feed" ? (
+                                <>
+                                  <HoverInfo
+                                    content={t("IssuedAssets:chooseSpecificFeedInfo")}
+                                    header={t("IssuedAssets:chooseSpecificFeed")}
+                                    type="header"
+                                  />
+                                  <List
+                                    height={150}
+                                    itemCount={relevantBitassetData.feeds.length}
+                                    itemSize={60}
+                                    className="w-full rounded border border-black pt-1"
+                                  >
+                                    {PriceFeedRow}
+                                  </List>
+                                </>
+                              ) : null}
+                              <div>
+                                <HoverInfo
+                                  content={t("IssuedAssets:currentSettlementPriceInfo")}
+                                  header={t("IssuedAssets:currentSettlementPrice")}
+                                  type="header"
+                                />
+                                <Input
+                                  value={`${currentFeedSettlementPrice} ${collateralAsset.symbol}/${issuedAsset.symbol}`}
+                                  readOnly={true}
+                                  className="mt-2"
+                                />
+                              </div>
+                              <div className="grid grid-cols-2 gap-2">
                                 <div>
                                   <HoverInfo
-                                    content={t("IssuedAssets:currentSettlementPriceInfo")}
-                                    header={t("IssuedAssets:currentSettlementPrice")}
+                                    content={t("IssuedAssets:quoteInfo")}
+                                    header={t("IssuedAssets:quote")}
                                     type="header"
                                   />
                                   <Input
-                                    value={currentFeedSettlementPrice}
+                                    value={`${humanReadableFloat(
+                                      parseInt(globalSettleObject.quote.amount),
+                                      collateralAsset.precision
+                                    )} ${collateralAsset.symbol} (${collateralAsset.id})`}
                                     readOnly={true}
                                     className="mt-2"
                                   />
                                 </div>
-                                <div className="grid grid-cols-2 gap-2">
-                                  <div>
-                                    <HoverInfo
-                                      content={t("IssuedAssets:quoteInfo")}
-                                      header={t("IssuedAssets:quote")}
-                                      type="header"
-                                    />
-                                    <Input
-                                      value={`${humanReadableFloat(
-                                        parseInt(
-                                          relevantBitassetData.current_feed.settlement_price.quote
-                                            .amount
-                                        ),
-                                        collateralAsset.precision
-                                      )} ${collateralAsset.symbol} (${collateralAsset.id})`}
-                                      readOnly={true}
-                                      className="mt-2"
-                                    />
-                                  </div>
-                                  <div>
-                                    <HoverInfo
-                                      content={t("IssuedAssets:baseInfo")}
-                                      header={t("IssuedAssets:base")}
-                                      type="header"
-                                    />
-                                    <Input
-                                      value={`${humanReadableFloat(
-                                        parseInt(
-                                          relevantBitassetData.current_feed.settlement_price.base
-                                            .amount
-                                        ),
-                                        issuedAsset.precision
-                                      )} ${issuedAsset.symbol} (${issuedAsset.id})`}
-                                      readOnly={true}
-                                      className="mt-2"
-                                    />
-                                  </div>
-                                </div>
                                 <div>
                                   <HoverInfo
-                                    content={t("IssuedAssets:globalSettlePriceInfo")}
-                                    header={t("IssuedAssets:globalSettlePrice")}
+                                    content={t("IssuedAssets:baseInfo")}
+                                    header={t("IssuedAssets:base")}
                                     type="header"
                                   />
-                                  <div className="grid grid-cols-2 gap-2">
-                                    <Input
-                                      value={globalSettlePrice}
-                                      className="mt-2"
-                                      onChange={(e) => {
-                                        setGlobalSettlePrice(e.target.value);
-                                      }}
-                                    />
-                                    <Button variant="outline">
-                                      {t("IssuedAssets:useSettlementPrice")}
-                                    </Button>
-                                  </div>
+                                  <Input
+                                    value={`${humanReadableFloat(
+                                      parseInt(parseInt(globalSettleObject.base.amount)),
+                                      issuedAsset.precision
+                                    )} ${issuedAsset.symbol} (${issuedAsset.id})`}
+                                    readOnly={true}
+                                    className="mt-2"
+                                  />
                                 </div>
                               </div>
                             </div>
@@ -1492,21 +1639,13 @@ export default function IssuedAssets(properties) {
                               headerText={t("IssuedAssets:globalSettlementHeader", {
                                 asset: issuedAsset.symbol,
                                 price: globalSettlePrice,
+                                mode: globalSettlementMode,
                               })}
                               trxJSON={[
                                 {
                                   issuer: usr.id,
                                   asset_to_settle: issuedAsset.id,
-                                  settle_price: {
-                                    base: {
-                                      amount: 1,
-                                      asset_id: "1.3.x",
-                                    },
-                                    quote: {
-                                      amount: 1,
-                                      asset_id: "1.3.x",
-                                    },
-                                  },
+                                  settle_price: globalSettleObject,
                                   extensions: {},
                                 },
                               ]}

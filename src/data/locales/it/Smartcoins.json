@@ -1,6 +1,7 @@
 {
   "createdBy": "Creato da",
   "backingCollateral": "Garanzia di sostegno",
+  "collateral": "Collaterale",
   "feedQty": "Quantità di mangime: {{qty}}",
   "mcr": "MCR: {{mcr}} %",
   "mssr": "RSSR: {{mssr}} %",
@@ -14,7 +15,7 @@
   "placeholderICR": "ICR: ? ",
   "placeholderProceedToBorrow": "Procedere con il prestito?",
   "selectBorrowableAsset": "💵 Seleziona un bene mutuabile",
-  "smartcoinDescription": "Ci sono più utenti",
+  "smartcoinDescription": "Ci sono più smartcoin creati da utenti e comitati sulla blockchain di Bitshares che puoi emettere tu stesso, a condizione che fornisca e mantenga garanzie di supporto sufficienti. ",
   "viewingAllAssets": "Visualizzazione di tutte le risorse",
   "viewAllAssets": "Visualizza tutte le risorse",
   "viewingCompatible": "Visualizzazione compatibile",
@@ -34,7 +35,9 @@
   "searchingByIssuer": "Ricerca per emittente",
   "searchByIssuer": "Cerca per emittente",
   "enterSearchText": "Inserisci il testo di ricerca",
-  "noResultsFound": "nessun risultato trovato",
+  "noResultsFound": "Nessun risultato trovato",
   "bitassets": "Bitasset",
-  "privateSmartcoins": "Smartcoin private"
+  "privateSmartcoins": "Smartcoin private",
+  "currentSettlementPrice": "Prezzo",
+  "currentSupply": "Fornitura"
 }

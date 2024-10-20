@@ -75,5 +75,18 @@
   "updateIssuerHeader": "Updating the issuer of {{asset}} to {{newIssuer}} from {{currentIssuer}}",
   "globalSettlement": "Global Settlement",
   "globallySettle": "Perform Global Settlement",
-  "globalSettlementHeader": "Globally Settling {{asset}} at a price of {{price}}"
+  "globalSettlementHeader": "Globally Settling {{asset}} using the {{mode}} price feed.",
+  "currentSettlementPrice": "Proposed Settlement Price",
+  "currentSettlementPriceInfo": "This is the price which this asset will be settled globally if you proceed with this operation.",
+  "medianFeedPrice": "Median Feed Price",
+  "currentFeedPrice": "Current Feed Price",
+  "specificPriceFeed": "Specific Price Feed",
+  "quote": "Quote",
+  "base": "Base",
+  "selectPriceFeed": "Select Price Feed",
+  "selectPriceFeedInfo": "This is the price feed that will be used to determine the settlement price of this asset.",
+  "chooseSpecificFeedInfo": "This is the specific price feed that will be used to determine the global settlement price for this asset.",
+  "chooseSpecificFeed": "Choose Specific Price Feed",
+  "publishTime": "Published {{hours}} hours ago",
+  "inactiveSmartcoin": "This smartcoin doesn't have an active settlement price, it therefore cannot be issued nor settled; It may be in a form of global settlement, which can be resolved through settlement fund bidding."
 }
