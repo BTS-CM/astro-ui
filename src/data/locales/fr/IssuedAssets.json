@@ -88,5 +88,7 @@
   "chooseSpecificFeedInfo": "Il s'agit du flux de prix spécifique qui sera utilisé pour déterminer le prix de règlement global de cet actif.",
   "chooseSpecificFeed": "Choisissez un flux de prix spécifique",
   "publishTime": "Publié {{hours}} il y a des heures",
-  "inactiveSmartcoin": "Ce smartcoin n'a pas de prix de règlement actif, il ne peut donc pas être émis ni réglé ; "
+  "inactiveSmartcoin": "Ce smartcoin est inactif et ne peut être émis ni réglé. Soit il s'agit d'une forme de règlement global, soit ses flux de prix sont insuffisants pour définir un prix de règlement.",
+  "priceFeedersInfo": "Ce sont les comptes autorisés à publier des flux de prix pour cet actif.",
+  "priceFeeders": "Éditeurs de flux de prix pour {{symbol}}"
 }

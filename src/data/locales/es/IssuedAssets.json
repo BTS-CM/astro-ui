@@ -88,5 +88,7 @@
   "chooseSpecificFeedInfo": "Este es el precio específico que se utilizará para determinar el precio de liquidación global de este activo.",
   "chooseSpecificFeed": "Elija un feed de precios específico",
   "publishTime": "Publicado {{hours}} hace horas",
-  "inactiveSmartcoin": "Esta smartcoin no tiene un precio de liquidación activo, por lo que no puede emitirse ni liquidarse; "
+  "inactiveSmartcoin": "Esta moneda inteligente está inactiva y no se puede emitir ni liquidar. Se trata de una forma de liquidación global o sus precios son insuficientes para definir un precio de liquidación.",
+  "priceFeedersInfo": "Estas son las cuentas que pueden publicar precios de este activo.",
+  "priceFeeders": "Editores de feeds de precios para {{symbol}}"
 }

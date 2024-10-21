@@ -88,5 +88,7 @@
   "chooseSpecificFeedInfo": "Dette er det specifikke prisfeed, der vil blive brugt til at bestemme den globale afregningspris for dette aktiv.",
   "chooseSpecificFeed": "Vælg Specifik Pris Feed",
   "publishTime": "Udgivet {{hours}} timer siden",
-  "inactiveSmartcoin": "Denne smartcoin har ikke en aktiv afregningspris, den kan derfor ikke udstedes eller afregnes; "
+  "inactiveSmartcoin": "Denne smartcoin er inaktiv og kan ikke udstedes eller afregnes. Den er enten i en form for global afregning, eller dens prisfeeds er utilstrækkelige til at definere en afregningspris.",
+  "priceFeedersInfo": "Dette er de konti, som har tilladelse til at offentliggøre prisfeeds for dette aktiv.",
+  "priceFeeders": "Pris feed udgivere for {{symbol}}"
 }

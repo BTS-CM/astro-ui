@@ -88,5 +88,7 @@
   "chooseSpecificFeedInfo": "Dies ist der spezifische Preis-Feed, der zur Bestimmung des globalen Abrechnungspreises für diesen Vermögenswert verwendet wird.",
   "chooseSpecificFeed": "Wählen Sie Spezifischer Preis-Feed",
   "publishTime": "Veröffentlicht {{hours}} Vor Stunden",
-  "inactiveSmartcoin": "Dieser Smartcoin hat keinen aktiven Abrechnungspreis und kann daher weder ausgegeben noch abgerechnet werden; "
+  "inactiveSmartcoin": "Dieser Smartcoin ist inaktiv und kann weder ausgegeben noch abgerechnet werden. Entweder handelt es sich um eine Form der globalen Abrechnung oder seine Preisdaten reichen nicht aus, um einen Abrechnungspreis zu definieren.",
+  "priceFeedersInfo": "Dies sind die Konten, die Preis-Feeds für diesen Vermögenswert veröffentlichen dürfen.",
+  "priceFeeders": "Preis-Feed-Publisher für {{symbol}}"
 }

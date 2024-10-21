@@ -166,7 +166,6 @@ export default function IssuedAssets(properties) {
 
       requiredStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
-          console.log({ dynamicData: data });
           setDynamicData(data);
         }
       });
@@ -192,7 +191,6 @@ export default function IssuedAssets(properties) {
 
       requiredStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
-          console.log({ bitassetData: data });
           setBitassetData(data);
         }
       });
@@ -291,11 +289,20 @@ export default function IssuedAssets(properties) {
     const [priceFeedPublishersOpen, setPriceFeedPublishersOpen] = useState(false);
     const [priceFeedPublishersDeeplinkDialog, setPriceFeedPublishersDeeplinkDialog] =
       useState(false);
+    const [priceSearchDialog, setPriceSearchDialog] = useState(false);
+
     const [priceFeedPublishers, setPriceFeedPublishers] = useState([]);
+    useEffect(() => {
+      if (relevantBitassetData && priceFeederAccounts && priceFeederAccounts.length) {
+        const publishers = relevantBitassetData.feeds
+          .map((x) => x[0])
+          .map((x) => priceFeederAccounts.find((y) => y.id === x));
+        setPriceFeedPublishers(publishers);
+      }
+    }, [relevantBitassetData, priceFeederAccounts]);
 
     const [globalSettleOpen, setGlobalSettleOpen] = useState(false);
     const [globalSettleDeeplinkDialog, setGlobalSettleDeeplinkDialog] = useState(false);
-    const [globalSettlePrice, setGlobalSettlePrice] = useState(0);
 
     const [priceFeederIndex, setPriceFeederIndex] = useState(0);
     const [globalSettlementMode, setGlobalSettlementMode] = useState("median");
@@ -446,30 +453,55 @@ export default function IssuedAssets(properties) {
       );
     };
 
+    const pricefeederRow = ({ index, style }) => {
+      let res = priceFeedPublishers[index];
+      if (!res) {
+        return null;
+      }
+
+      return (
+        <div style={{ ...style }} key={`acard-${res.id}`}>
+          <Card className="ml-2 mr-2 mt-1">
+            <CardHeader className="pb-3 pt-3">
+              <span className="flex items-center w-full">
+                <span className="flex-shrink-0">
+                  <Avatar
+                    size={40}
+                    name={res.name}
+                    extra="Borrower"
+                    expression={{ eye: "normal", mouth: "open" }}
+                    colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]}
+                  />
+                </span>
+                <span className="flex-grow ml-3">
+                  #{index + 1}: {res.name} ({res.id})
+                </span>
+                <span className="flex-shrink-0">
+                  <Button
+                    variant="outline"
+                    className="mr-2"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      const _update = priceFeedPublishers.filter((x) => x.id !== res.id);
+                      setPriceFeedPublishers(_update);
+                    }}
+                  >
+                    ❌
+                  </Button>
+                </span>
+              </span>
+            </CardHeader>
+          </Card>
+        </div>
+      );
+    };
+
     return (
       <div style={{ ...style }} key={`acard-${issuedAsset.id}`}>
         <Card className="ml-2 mr-2">
           <CardHeader className="pb-1">
             <CardTitle className="grid grid-cols-2 gap-5">
-              <span className="pb-5 flex items-center">
-                <ExternalLink
-                  classnamecontents="hover:text-purple-500"
-                  type="text"
-                  text={issuedAsset.symbol}
-                  hyperlink={`https://blocksights.info/#/assets/${issuedAsset.symbol}${
-                    usr.chain === "bitshares" ? "" : "?network=testnet"
-                  }`}
-                />{" "}
-                {"("}
-                <ExternalLink
-                  classnamecontents="hover:text-purple-500"
-                  type="text"
-                  text={issuedAsset.id}
-                  hyperlink={`https://blocksights.info/#/assets/${issuedAsset.id}${
-                    usr.chain === "bitshares" ? "" : "?network=testnet"
-                  }`}
-                />
-                {")"}
+              <span className="pb-5 grid grid-cols-3">
                 {activeTab === "smartcoins" &&
                 relevantBitassetData &&
                 ((relevantBitassetData.current_feed.settlement_price.base.amount === 0 &&
@@ -480,10 +512,32 @@ export default function IssuedAssets(properties) {
                   parseInt(relevantBitassetData.settlement_fund) > 0) ? (
                   <HoverInfo
                     content={t("IssuedAssets:inactiveSmartcoin")}
-                    header={<ExclamationTriangleIcon className="ml-3 text-md" />}
+                    header={<ExclamationTriangleIcon className="ml-3 mt-1 w-6 h-6" />}
                     type="header"
                   />
                 ) : null}
+                <div>
+                  <ExternalLink
+                    classnamecontents="hover:text-purple-500"
+                    type="text"
+                    text={issuedAsset.symbol}
+                    hyperlink={`https://blocksights.info/#/assets/${issuedAsset.symbol}${
+                      usr.chain === "bitshares" ? "" : "?network=testnet"
+                    }`}
+                  />
+                </div>
+                <div>
+                  {" ("}
+                  <ExternalLink
+                    classnamecontents="hover:text-purple-500"
+                    type="text"
+                    text={issuedAsset.id}
+                    hyperlink={`https://blocksights.info/#/assets/${issuedAsset.id}${
+                      usr.chain === "bitshares" ? "" : "?network=testnet"
+                    }`}
+                  />
+                  {")"}
+                </div>
               </span>
               <span className="mb-3 text-right grid grid-cols-3 gap-3">
                 <DropdownMenu>
@@ -701,6 +755,24 @@ export default function IssuedAssets(properties) {
                           </DropdownMenuItem>
                         ) : null}
 
+                        {["smartcoins", "nft"].includes(activeTab) &&
+                        relevantBitassetData &&
+                        (!_issuer_permissions.hasOwnProperty("witness_fed_asset") ||
+                          (_issuer_permissions.hasOwnProperty("witness_fed_asset") &&
+                            !_flags.hasOwnProperty("witness_fed_asset"))) &&
+                        (!_issuer_permissions.hasOwnProperty("committee_fed_asset") ||
+                          (_issuer_permissions.hasOwnProperty("committee_fed_asset") &&
+                            !_flags.hasOwnProperty("committee_fed_asset"))) ? (
+                          <DropdownMenuItem
+                            onClick={() => {
+                              setPriceFeedPublishersOpen(true);
+                            }}
+                            className="hover:shadow-inner"
+                          >
+                            {t(`Predictions:pricefeeder`)}
+                          </DropdownMenuItem>
+                        ) : null}
+
                         {activeTab === "uia" ||
                         (activeTab === "nft" && !issuedAsset.bitasset_data_id) ? (
                           <>
@@ -729,6 +801,121 @@ export default function IssuedAssets(properties) {
                         ) : null}
                       </DropdownMenuContent>
                     </DropdownMenu>
+
+                    {priceFeedPublishersOpen ? (
+                      <Dialog
+                        open={priceFeedPublishersOpen}
+                        onOpenChange={(open) => {
+                          setPriceFeedPublishersOpen(open);
+                        }}
+                      >
+                        <DialogContent className="sm:max-w-[600px] bg-white">
+                          <DialogHeader>
+                            <DialogTitle>{t(`Predictions:priceFeederDialog.title`)}</DialogTitle>
+                            <DialogDescription>
+                              {t(`Predictions:priceFeederDialog.description`)}
+                            </DialogDescription>
+                          </DialogHeader>
+                          <div className="grid grid-cols-1 gap-2">
+                            <HoverInfo
+                              content={t("issuedAssets:priceFeedersInfo")}
+                              header={t("issuedAssets:priceFeeders", {
+                                symbol: issuedAsset.symbol,
+                              })}
+                              type="header"
+                            />
+                            <div className="grid grid-cols-12 mt-1">
+                              <span className="col-span-9 border border-grey rounded">
+                                <List
+                                  height={210}
+                                  itemCount={priceFeedPublishers.length}
+                                  itemSize={80}
+                                  className="w-full"
+                                >
+                                  {pricefeederRow}
+                                </List>
+                              </span>
+                              <span className="col-span-3 ml-3 text-center">
+                                <Dialog
+                                  open={priceSearchDialog}
+                                  onOpenChange={(open) => {
+                                    setPriceSearchDialog(open);
+                                  }}
+                                >
+                                  <DialogTrigger asChild>
+                                    <Button variant="outline" className="ml-3 mt-1">
+                                      ➕ {t("CreditOfferEditor:addUser")}
+                                    </Button>
+                                  </DialogTrigger>
+                                  <DialogContent className="sm:max-w-[375px] bg-white">
+                                    <DialogHeader>
+                                      <DialogTitle>
+                                        {!usr || !usr.chain
+                                          ? t("Transfer:bitsharesAccountSearch")
+                                          : null}
+                                        {usr && usr.chain === "bitshares"
+                                          ? t("Transfer:bitsharesAccountSearchBTS")
+                                          : null}
+                                        {usr && usr.chain !== "bitshares"
+                                          ? t("Transfer:bitsharesAccountSearchTEST")
+                                          : null}
+                                      </DialogTitle>
+                                    </DialogHeader>
+                                    <AccountSearch
+                                      chain={usr && usr.chain ? usr.chain : "bitshares"}
+                                      excludedUsers={[]}
+                                      setChosenAccount={(_account) => {
+                                        if (
+                                          _account &&
+                                          !priceFeedPublishers.find(
+                                            (_usr) => _usr.id === _account.id
+                                          )
+                                        ) {
+                                          setPriceFeedPublishers(
+                                            priceFeedPublishers && priceFeedPublishers.length
+                                              ? [...priceFeedPublishers, _account]
+                                              : [_account]
+                                          );
+                                        }
+                                        setPriceSearchDialog(false);
+                                      }}
+                                    />
+                                  </DialogContent>
+                                </Dialog>
+                              </span>
+                            </div>
+                            <div className="grid grid-cols-2 gap-2">
+                              <Button
+                                className="h-6 mt-1 w-1/2"
+                                onClick={() => {
+                                  setPriceFeedPublishersDeeplinkDialog(true);
+                                }}
+                              >
+                                {t("Predictions:submit")}
+                              </Button>
+                            </div>
+                          </div>
+                          {priceFeedPublishersDeeplinkDialog ? (
+                            <DeepLinkDialog
+                              operationNames={["asset_update_feed_producers"]}
+                              username={usr.username}
+                              usrChain={usr.chain}
+                              userID={usr.id}
+                              dismissCallback={setPriceFeedPublishersDeeplinkDialog}
+                              key={`deeplink-pricefeeddialog-${issuedAsset.id}`}
+                              headerText={t(`Predictions:dialogContent.header_pricefeeder`)}
+                              trxJSON={[
+                                {
+                                  issuer: usr.id,
+                                  asset_to_update: issuedAsset.id,
+                                  new_feed_producers: priceFeedPublishers.map((_usr) => _usr.id),
+                                },
+                              ]}
+                            />
+                          ) : null}
+                        </DialogContent>
+                      </Dialog>
+                    ) : null}
 
                     {(activeTab === "uia" ||
                       (activeTab === "nft" && !issuedAsset.bitasset_data_id)) &&
@@ -1596,7 +1783,11 @@ export default function IssuedAssets(properties) {
                                   type="header"
                                 />
                                 <Input
-                                  value={`${currentFeedSettlementPrice} ${collateralAsset.symbol}/${issuedAsset.symbol}`}
+                                  value={`${
+                                    parseFloat(currentFeedSettlementPrice) > 0
+                                      ? currentFeedSettlementPrice
+                                      : "??? ⚠️"
+                                  } ${collateralAsset.symbol}/${issuedAsset.symbol}`}
                                   readOnly={true}
                                   className="mt-2"
                                 />
@@ -1653,7 +1844,6 @@ export default function IssuedAssets(properties) {
                               key={`globallySettlingAsset_${issuedAsset.id}`}
                               headerText={t("IssuedAssets:globalSettlementHeader", {
                                 asset: issuedAsset.symbol,
-                                price: globalSettlePrice,
                                 mode: globalSettlementMode,
                               })}
                               trxJSON={[

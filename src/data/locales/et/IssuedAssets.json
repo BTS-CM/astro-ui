@@ -88,5 +88,7 @@
   "chooseSpecificFeedInfo": "See on konkreetne hinnavoog, mida kasutatakse selle vara globaalse arveldushinna määramiseks.",
   "chooseSpecificFeed": "Valige konkreetse hinnaga voog",
   "publishTime": "Avaldatud {{hours}} tundi tagasi",
-  "inactiveSmartcoin": "Sellel nutimündil ei ole aktiivset arveldushinda, seetõttu ei saa seda väljastada ega arveldada; "
+  "inactiveSmartcoin": "See nutimünt on passiivne ja seda ei saa emiteerida ega arveldada. See on kas globaalse arvelduse vormis või selle hinnavood ei ole arveldushinna määratlemiseks piisavad.",
+  "priceFeedersInfo": "Need on kontod, millel on lubatud avaldada selle vara hinnavooge.",
+  "priceFeeders": "Hinnavoo avaldajad {{symbol}}"
 }

@@ -89,5 +89,7 @@
   "chooseSpecificFeedInfo": "This is the specific price feed that will be used to determine the global settlement price for this asset.",
   "chooseSpecificFeed": "Choose Specific Price Feed",
   "publishTime": "Published {{hours}} hours ago",
-  "inactiveSmartcoin": "This smartcoin is inactive and cannot be issued nor settled, It's either in a form of global settlement or its price feeds are insufficient to define a settlement price."
+  "inactiveSmartcoin": "This smartcoin is inactive and cannot be issued nor settled, It's either in a form of global settlement or its price feeds are insufficient to define a settlement price.",
+  "priceFeedersInfo": "These are the accounts which are allowed to publish price feeds for this asset.",
+  "priceFeeders": "Price feed publishers for {{symbol}}"
 }

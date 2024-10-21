@@ -88,5 +88,7 @@
   "chooseSpecificFeedInfo": "これは、この資産のグローバル決済価格を決定するために使用される特定の価格フィードです。",
   "chooseSpecificFeed": "特定の価格フィードを選択してください",
   "publishTime": "発行済み {{hours}} 数時間前",
-  "inactiveSmartcoin": "このスマートコインにはアクティブな決済価格がないため、発行も決済もできません。"
+  "inactiveSmartcoin": "このスマートコインは非アクティブであり、発行も決済もできません。グローバル決済の形式であるか、その価格フィードが決済価格を定義するには不十分です。",
+  "priceFeedersInfo": "これらは、この資産の価格フィードを公開できるアカウントです。",
+  "priceFeeders": "価格フィード発行者 {{symbol}}"
 }

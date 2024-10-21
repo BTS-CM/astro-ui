@@ -88,5 +88,7 @@
   "chooseSpecificFeedInfo": "이는 이 자산의 글로벌 결제 가격을 결정하는 데 사용되는 특정 가격 피드입니다.",
   "chooseSpecificFeed": "특정 가격 피드 선택",
   "publishTime": "게시됨 {{hours}} 몇 시간 전",
-  "inactiveSmartcoin": "이 스마트코인에는 활성 결제 가격이 없으므로 발행되거나 결제될 수 없습니다. "
+  "inactiveSmartcoin": "이 스마트코인은 비활성화되어 발행되거나 결제될 수 없습니다. 글로벌 결제 형식이거나 가격 피드가 결제 가격을 정의하기에 충분하지 않습니다.",
+  "priceFeedersInfo": "이는 이 자산에 대한 가격 피드를 게시할 수 있는 계정입니다.",
+  "priceFeeders": "가격 피드 게시자: {{symbol}}"
 }
