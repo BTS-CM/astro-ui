@@ -2,35 +2,35 @@
   "card": {
     "title_create": "Oprettelse af et nyt Smartcoin-aktiv",
     "title_edit": "Redigering af et eksisterende Smartcoin-aktiv",
-    "description": "Smartcoins er sikrede aktiver, som kan referere til eksterne markedsprisfeeds. "
+    "description": "Smartcoins er sikkerhedsstillede aktiver, som kan referere til eksterne markedsprisfeeds. Du kan nemt oprette din egen sikkerhedsstillede stablecoin, der refererer til ethvert aktiv, du ønsker, såsom USD/CNY/JPY osv."
   },
   "title": {
     "header": "Smartcoin-indstillinger",
-    "header_content": "Indstillingerne nedenfor definerer, hvordan din smartcoin vil opføre sig på Bitshares blockchain. "
+    "header_content": "Indstillingerne nedenfor definerer, hvordan din smartcoin vil opføre sig på Bitshares blockchain. Aktivets skaber er ansvarlig for at konfigurere deres smartcoin korrekt."
   },
   "bsrm": {
     "header": "Black Swan Risk Management strategi",
-    "header_content": "Disse strategier tilbyder forskellige resultater for undersikrede gældspositioner, hvilket gør det muligt for dig at deaktivere, minimere eller globalisere risikoen for afvikling af gældspositioner. ",
-    "select_0": "Global Afvikling: Alle gældspositioner lukket; ",
-    "select_1": "Ingen afvikling: Ingen gældspositioner er lukket; ",
-    "select_2": "Individuelle afviklingsfonde: Undersikrede gældspositioner lukkes; ",
-    "select_3": "Individuelle afviklingsordrer: Undersikrede gældspositioner lukkes; "
+    "header_content": "Disse strategier tilbyder forskellige resultater for undersikrede gældspositioner, hvilket gør det muligt for dig at deaktivere, minimere eller globalisere risikoen for likvidering af gældspositioner. Forskellige strategivalg kan gavne unikke smartcoins og øge tolerancen over for volatile markeder.",
+    "select_0": "Global Afvikling: Alle gældspositioner lukket, sikkerhedsstillelse flyttet til afviklingsfond, Nye gældspositioner er ikke tilladt, før de er løst.",
+    "select_1": "Ingen afvikling: Ingen gældspositioner lukkes, afviklingsprisen er begrænset af laveste sikkerhedsforhold, nye positioner tilladt.",
+    "select_2": "Individuelle afviklingsfonde: Undersikrede gældspositioner lukkes, sikkerhed flyttes til en fordringspligtig fond, Nye positioner tilladt.",
+    "select_3": "Individuelle afviklingsordrer: Undersikrede gældspositioner lukkes, sikkerhed flyttes til en limiteret ordre, ingen prisloft, nye positioner tilladt."
   },
   "mcr": {
     "header": "Statisk minimumssikkerhedsforhold",
-    "header_content": "Dette er det minimumssikkerhedsforhold, der kræves for, at en gældsposition kan betragtes som fuldt sikkerhedsstillet. "
+    "header_content": "Dette er det mindste sikkerhedsforhold, der kræves for, at en gældsposition kan betragtes som fuldt sikkerhedsstillet. Normalt beregnet ud fra prisfeeds, er nu statisk fastsat af aktivejeren."
   },
   "icr": {
     "header": "Statisk Initial Collateral Ratio",
-    "header_content": "Dette er det sikkerhedsforhold, der kræves for, at en gældsposition kan betragtes som fuldt sikkerhedsstillet på oprettelsestidspunktet. "
+    "header_content": "Dette er det sikkerhedsforhold, der kræves for, at en gældsposition kan betragtes som fuldt sikkerhedsstillet på oprettelsestidspunktet. Normalt beregnet ud fra prisfeeds, er nu statisk fastsat af aktivejeren."
   },
   "mssr": {
     "header": "Statisk maksimalt kort klemforhold",
-    "header_content": "Dette er det maksimale sikkerhedsforhold, som en gældsposition kan likvideres til. "
+    "header_content": "Dette er det maksimale sikkerhedsforhold, som en gældsposition kan likvideres til, Normalt beregnet ud fra prisfeeds, er nu statisk fastsat af aktivejeren."
   },
   "feed_lifetime": {
-    "header": "Levetid for foder",
-    "header_content": "Tiden i sekunder, som et prisfeed anses for at være gyldigt. "
+    "header": "Foder levetid",
+    "header_content": "Tiden i sekunder, som et prisfeed anses for at være gyldigt. Efter dette tidspunkt betragtes feedet som ugyldigt, og prisen bruges ikke længere til beregninger af sikkerhedsforhold."
   },
   "minimum_feeds": {
     "header": "Minimum feeds",
@@ -38,7 +38,7 @@
   },
   "force_settlement_delay": {
     "header": "Tving afviklingsforsinkelse",
-    "header_content": "Den tid i sekunder, som en bruger skal vente efter tvungen afregning, før afregningsoperationen udføres på blockchain."
+    "header_content": "Den tid i sekunder, som en bruger skal vente efter tvungen afregning, før afviklingsoperationen udføres på blockchain."
   },
   "force_settlement_offset": {
     "header": "Tving afregningsforskydning",
@@ -46,22 +46,22 @@
   },
   "maximum_force_settlement_volume": {
     "header": "Maksimal kraftafregningsvolumen",
-    "header_content": "Det maksimale beløb af aktivforsyningen, der kan tvangsafregnes inden for en 24 timers periode."
+    "header_content": "Det maksimale beløb for aktivforsyningen, der kan tvangsafregnes inden for en 24 timers periode."
   },
   "extensions": {
     "margin_call_fee_ratio": {
       "enabled": "Forlængelse af margenopkaldsgebyr er aktiveret",
       "disabled": "Aktiver smartcoin-udvidelsen Margin Call Fee Ratio?",
-      "extensionInfo": "Margin Call Fee Ratio-udvidelsen giver smartcoin-ejeren mulighed for at opkræve et gebyr til en bruger, når deres gældsposition kaldes margin. ",
+      "extensionInfo": "Margin Call Fee Ratio-udvidelsen giver smartcoin-ejeren mulighed for at opkræve et gebyr til en bruger, når deres gældsposition kaldes margin. Gebyret beregnes som en procentdel af den handlede sikkerhed, der betales til smartcoin-ejeren.",
       "header": "Marginopkaldsgebyrforhold",
-      "header_content": "Gebyrforholdet, der opkræves af en bruger, når deres gældsposition kaldes margin. "
+      "header_content": "Gebyrforholdet, der opkræves af en bruger, når deres gældsposition kaldes margin. Gebyret beregnes som en procentdel af den handlede sikkerhed, der betales til smartcoin-ejeren."
     },
     "force_settle_fee": {
-      "enabled": "Forlængelse af gennemtvingsudligningsgebyr er aktiveret",
+      "enabled": "Forlængelse af tvangsafregningsgebyr er aktiveret",
       "disabled": "Aktiver Smartcoin-udvidelsen Force Settle Fee?",
-      "extensionInfo": "Force Settle Fee-udvidelsen giver smartcoin-ejeren mulighed for at opkræve et gebyr til en bruger, når de tvinger afvikling af deres gældsposition. ",
+      "extensionInfo": "Force Settle Fee-udvidelsen giver smartcoin-ejeren mulighed for at opkræve et gebyr til en bruger, når de tvinger afvikling af deres gældsposition. Gebyret beregnes som en procentdel af den handlede sikkerhed, der betales til smartcoin-ejeren.",
       "header": "Tvangsafregningsgebyr",
-      "header_content": "Gebyret, der opkræves af en bruger, når de tvinger afvikling af deres gældsposition. "
+      "header_content": "Det gebyr, der opkræves af en bruger, når de tvinger afvikling af deres gældsposition. Gebyret beregnes som en procentdel af den handlede sikkerhed, der betales til smartcoin-ejeren."
     }
   },
   "editAsset": {

@@ -21,21 +21,21 @@
     },
     "backing_asset": {
       "header": "Backing aktiv",
-      "header_content": "Backing-aktivet er det aktiv, der bruges til at bakke op om det forudsigelige markedsaktiv. "
+      "header_content": "Backing-aktivet er det aktiv, der bruges til at bakke op om forudsigelsesmarkedsaktivet. Dette aktiv vil blive brugt til at udbetale vinderne af forudsigelsesmarkedsaktivet."
     },
     "resolution": {
       "header": "Forudsigelsesopløsning dato og klokkeslæt",
-      "header_content": "Opløsningsdatoen og -tidspunktet er datoen og tidspunktet, hvor det forudsigelige markedsaktiv vil blive løst. "
+      "header_content": "Opløsningsdatoen og -tidspunktet er den dato og det tidspunkt, hvor forudsigelsesmarkedsaktivet vil blive løst. Dette er datoen og tidspunktet, hvor forudsigelsesmarkedsaktivet vil blive evalueret, og vinderne vil blive udbetalt."
     }
   },
   "buttons": {
     "submit": "Indsend"
   },
   "risks": {
-    "1": "Fejlkonfiguration af forudsigelige markedsaktiver kan føre til dårlig blockchain-deltagelse, nogle brugergrænseflader kan filtrere din PMA helt fra visningen; ",
-    "2": "Når du opretter et forudsigelsesmarkedsaktiv, er du ansvarlig som huset for korrekt at evaluere resultatet. Hvis du ikke gør det korrekt eller rettidigt, kan det føre til juridiske eller skattemæssige problemer for dig og tab af troværdighed som et hus.",
+    "1": "Fejlkonfiguration af forudsigelige markedsaktiver kan føre til dårlig blockchain-deltagelse, nogle brugergrænseflader kan filtrere din PMA helt fra visningen, sørg for at konfigurere din PMA korrekt, sæt et rimeligt kommissionsgebyr og prøv funktionaliteten på testnet først.",
+    "2": "Når du opretter et forudsigelsesmarkedsaktiv, er du ansvarlig som huset for korrekt at evaluere resultatet, hvis du ikke gør det korrekt eller rettidigt, kan det føre til juridiske eller skattemæssige problemer for dig, og tab af troværdighed som et hus.",
     "3": "Denne brugergrænseflade og Beet/BEETEOS-tegnebøgerne understøtter ikke multisignaturkonti, så din huskonto er et langsigtet enkelt fejlpunkt - beskyt den godt.",
     "title": "Nogle af de risici, der er forbundet med at skabe forudsigelige markedsaktiver",
-    "description": "Lav din egen research før du opretter en PMA, læs først dokumenterne; "
+    "description": "Lav din egen research, før du opretter en PMA, læs dokumenterne først, ikke juridisk rådgivning."
   }
 }

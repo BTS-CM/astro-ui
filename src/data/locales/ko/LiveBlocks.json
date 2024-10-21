@@ -1,6 +1,6 @@
 {
   "cardTitle": "라이브 블록체인 개요",
-  "cardDescription": "Bitshares 블록체인은 블록 시간이 3초이며 초당 수천 건의 거래를 처리할 수 있습니다. ",
+  "cardDescription": "Bitshares 블록체인은 3초의 블록 시간을 가지며 초당 수천 건의 거래를 처리할 수 있습니다. 이 페이지는 블록체인의 실시간 개요를 제공합니다.",
   "currentBlock": {
     "content": "가장 최근의 블록 번호입니다.",
     "header": "현재 블록"

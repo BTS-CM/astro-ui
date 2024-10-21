@@ -1,36 +1,36 @@
 {
-  "dealNo": "Handeln",
+  "dealNo": "Handeln #",
   "with": " mit ",
   "borrowed": "Du hast geliehen",
   "lent": "Sie haben geliehen",
   "loanCollateral": "Kreditsicherheiten:",
   "borrower": "Leihgebühr",
-  "lender": "Verdienste",
+  "lender": "Ergebnis",
   "remainingTime": "Verbleibende Zeit:",
-  "repayLoan": "Rückzahlung Darlehen",
+  "repayLoan": "Darlehen zurückzahlen",
   "trade": "Handel {{symbol}} auf DEX",
-  "dialogTitle": "Darlehen zurückzahlen",
+  "dialogTitle": "Darlehen #{id} wird zurückgezahlt",
   "description": "Verwenden Sie dieses Formular, um die Rückzahlungen Ihres Kreditvertrags zu kontrollieren.",
   "account": "Konto",
   "balance": "Ihr aktueller {{symbol}} Gleichgewicht",
   "repayAmount": "Menge von {{symbol}} zurückzahlen",
   "remainingDebt": "Restschuld: {{amount}} {{symbol}}",
-  "repayDesc": "Um alle Ihre Sicherheiten zurückzubekommen, müssen Sie die Schulden vollständig zurückzahlen.",
+  "repayDesc": "Um alle Ihre Sicherheiten zurückzuerhalten, müssen Sie die Schulden vollständig zurückzahlen.",
   "redeemCollateral": "Sicherheiten einlösen",
   "remainingCollateral": "Verbleibende Sicherheit: {amount} {{symbol}}",
   "collateralRedemption": "Menge von {{symbol}} Sicherheiten, die Sie einlösen werden",
   "loanLabel": "Geschätzte Kreditgebühr",
   "loanDesc": "Dies ist die Gebühr, die Sie an den Kreditgeber zahlen.",
-  "finalPaymentLabel": "Restzahlung",
+  "finalPaymentLabel": "Schlusszahlung",
   "finalPaymentDesc": "Nach vollständiger Rückzahlung erhalten Sie Ihre {{symbol}} Sicherheiten werden Ihnen zurückgegeben.",
   "finalPaymentWarning": "Unzureichend {{symbol}} Gleichgewicht",
   "networkFee": "Netzwerkgebühr",
   "networkFeeDesc": "Dies ist die Gebühr für die Übertragung Ihres Kreditrückzahlungsvorgangs auf die Blockchain.",
-  "rebate": "Abzug {{fee}} {{chain}} (Übertragung)",
+  "rebate": "Rabatt {{fee}} {{chain}} (Übertragung)",
   "submit": "Einreichen",
   "deepLink": "Zurückzahlen {{finalRepayAmount}} {{debtAsset}}, zurückfordern {{collateralAsset}}",
   "card": {
-    "title": "💱 Überprüfen Sie Ihre aktiven Kreditangebote",
+    "title": "💱 Überprüfen Sie Ihre aktiven Kreditverträge",
     "description": "Von hier aus können Sie sowohl aktive Kreditgeschäfte überwachen als auch Rückzahlungen verwalten.",
     "viewingBorrowings": "Sehen Sie sich Ihre Ausleihen an",
     "viewBorrowings": "Sehen Sie sich Ihre Kredite an",
@@ -38,22 +38,22 @@
     "viewLendings": "Sehen Sie sich Ihre Kredite an",
     "noBorrowers": "Keine aktiven Ausleihen gefunden",
     "noLendings": "Keine aktiven Ausleihen gefunden",
-    "loading": "Wird geladen..."
+    "loading": "Laden..."
   },
   "risks": {
     "borrowerTitle": "Risikowarnung für Kreditnehmer",
     "lenderTitle": "Warnung vor Kreditgeberrisiken",
     "description": "Wichtige Informationen zu Ihren Verantwortlichkeiten und Risiken im Zusammenhang mit Kreditgeschäften.",
     "borrower": {
-      "risk1": "Du ( {{username}} ) sind für die Verwaltung Ihrer Kreditgeschäfte und deren pünktliche Rückzahlung verantwortlich, kein anderer. ",
-      "risk2": "Seien Sie sich bewusst, dass Sie während der Rückzahlungsfrist des Kreditgeschäfts externen Schwankungen ausgesetzt sind. ",
-      "risk3": "Wird ein Kreditgeschäft nicht zurückgezahlt, führt dies zum Verlust der verbleibenden Sicherungswerte. "
+      "risk1": "Du ( {{username}} ) sind für die Verwaltung Ihrer Kreditverträge und deren pünktliche Rückzahlung verantwortlich, niemand anderes. Erwägen Sie die Verwendung einer automatischen Rückzahlungsmethode, um zu vermeiden, dass Sie die Rückzahlungsfrist verpassen, wenn Sie die Frist vergessen.",
+      "risk2": "Seien Sie sich bewusst, dass Sie während der Rückzahlungsfrist des Kreditgeschäfts externen Schwankungen ausgesetzt sind. Der Wert Ihrer geliehenen Vermögenswerte und Ihrer Sicherheiten wird schwanken. Sie sollten dieses Volatilitätsrisiko berücksichtigen, wenn Sie entscheiden, wie/wann Sie das Kreditgeschäft zurückzahlen.",
+      "risk3": "Die Nichtrückzahlung eines Kreditgeschäfts führt zum Verlust der verbleibenden Sicherheiten. Es gibt kein Kredit-Score-System, das säumige Kreditnehmer bestraft. Die vereinbarten Bedingungen des Kreditgeschäfts werden eingehalten."
     },
     "lender": {
-      "risk1": "Du ( {{username}} ) sind für die Verwaltung Ihrer Kreditangebote, deren Parameter und deren Risikoexposition verantwortlich, niemand sonst. ",
-      "risk2": "Seien Sie sich bewusst, dass Sie während der Rückzahlungsfrist des Kreditgeschäfts externen Schwankungen ausgesetzt sind. ",
-      "risk3": "Sobald ein Kreditvertrag besteht, müssen Sie als Kreditgeber ( {{username}} ) kann es nicht gekündigt werden, der Kreditnehmer ist für die Dauer des Geschäfts innerhalb der Rückzahlungsfrist verantwortlich. ",
-      "risk4": "Wenn Kreditnehmer ihre Kreditverträge nicht zurückzahlen, verfallen Ihnen die Sicherheiten, die sie als Sicherheit bieten. "
+      "risk1": "Du ( {{username}} ) sind für die Verwaltung Ihrer Kreditangebote, ihrer Parameter und ihrer Risikoexposition verantwortlich, niemand sonst. Erwägen Sie die Erstellung automatisierter Skripte, um den Status Ihrer Kreditangebote zu verwalten.",
+      "risk2": "Seien Sie sich bewusst, dass Sie während der Rückzahlungsfrist des Kreditgeschäfts externen Schwankungen ausgesetzt sind, der Wert der Vermögenswerte, die Sie anderen Nutzern geliehen haben, und die von ihnen bereitgestellten Sicherheiten schwanken werden. Sie sollten Ihre persönliche Risikotoleranz berücksichtigen, wenn Sie sich für die Parameter Ihres Kreditangebots entscheiden ",
+      "risk3": "Sobald ein Kreditvertrag besteht, müssen Sie als Kreditgeber ( {{username}} ) nicht stornieren kann, ist der Kreditnehmer für die Dauer des Geschäfts innerhalb der Rückzahlungsfrist verantwortlich. Das Rückzahlungsdatum eines Kreditgeschäfts kann auch über dem Ablaufdatum Ihres Kreditangebots liegen.",
+      "risk4": "Wenn Kreditnehmer ihre Kreditverträge nicht zurückzahlen, verfallen die ihnen als Sicherheit dienenden Vermögenswerte an Sie. Es gibt kein Kredit-Score-System, das Kreditnehmer bei Zahlungsverzug bestraft. Die vereinbarten Bedingungen des Kreditvertrags werden immer eingehalten. Planen Sie daher Ihre Kreditangebote "
     }
   }
 }

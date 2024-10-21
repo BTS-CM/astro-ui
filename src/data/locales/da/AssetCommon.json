@@ -5,12 +5,12 @@
     "charge_market_fee": {
       "about": "Aktiver markedsgebyr",
       "enabledInfo": "Aktivudstederen/ejeren kan opdatere flaget charge_market_fee.",
-      "disabledInfo": "Aktivudstederen/ejeren kan IKKE opdatere flaget charge_market_fee. "
+      "disabledInfo": "Aktivudstederen/ejeren kan IKKE opdatere flaget charge_market_fee. Hvis flaget charge_market_fee er sat til 0, kan ikke længere begynde at opkræve markedsgebyrer, hvis flaget charge_market_fee er sat til ikke-nul, kan markedshandelsgebyrsatserne stadig opdateres "
     },
     "white_list": {
       "about": "Kræv indehavere at være hvidlistet",
       "enabledInfo": "Aktivudstederen/ejeren kan opdatere white_list-flaget.",
-      "disabledInfo": "Aktivudstederen/ejeren kan IKKE opdatere white_list-flaget. "
+      "disabledInfo": "Aktivudstederen/-ejeren kan IKKE opdatere white_list-flaget. Hvis white_list-flaget er sat til 0, kan ikke længere begynde at håndhæve whitelisting eller blacklisting, hvis white_list-flaget er sat til ikke-nul, kan stadig konfigurere til ikke at gennemtvinge whitelisting eller blacklisting "
     },
     "override_authority": {
       "about": "Aktivejer kan overføre aktiv tilbage til sig selv",
@@ -49,7 +49,7 @@
     },
     "lock_max_supply": {
       "about": "Lås max forsyning",
-      "enabledInfo": "Aktivudstederen/ejeren kan IKKE opdatere flaget lock_max_supply.",
+      "enabledInfo": "Aktivudstederen/ejeren kan IKKE opdatere lock_max_supply-flaget.",
       "disabledInfo": "Aktivudstederen/ejeren kan opdatere flaget lock_max_supply."
     },
     "disable_new_supply": {
@@ -64,18 +64,18 @@
     },
     "disable_mcr_update": {
       "about": "Deaktiver ejeropdatering Minimum Collateral Ratio",
-      "enabledInfo": "Aktivudstederen/ejeren kan IKKE opdatere (indstille/ændre/slette) vedligeholdelses_sikkerhedsforholdet for aktivet. ",
-      "disabledInfo": "Aktivudstederen/ejeren kan opdatere (indstille/ændre/slette) vedligeholdelses_sikkerhedsforholdet for aktivet. "
+      "enabledInfo": "Aktivudstederen/ejeren kan IKKE opdatere (indstille/ændre/slette) udvidelsen maintenance_collateral_ratio for aktivet. Hvis en værdi er angivet i udvidelsen maintenance_collateral_ratio, har den forrang frem for den samme parameter foreslået af prisfeedudgiverne, ellers er den foreslåede værdi ",
+      "disabledInfo": "Aktivudstederen/ejeren kan opdatere (indstille/ændre/slette) udvidelsen maintenance_collateral_ratio for aktivet. Hvis en værdi er angivet i udvidelsen maintenance_collateral_ratio, har den forrang frem for den samme parameter foreslået af prisfeedudgiverne, ellers er værdien foreslået af "
     },
     "disable_icr_update": {
       "about": "Deaktiver ejeropdatering Initial Collateral Ratio",
-      "enabledInfo": "Aktivudstederen/ejeren kan IKKE opdatere (indstille/ændre/slette) aktivets initial_collateral_ratio-udvidelse. ",
-      "disabledInfo": "Aktivudstederen/ejeren kan opdatere (indstille/ændre/slette) aktivets initial_collateral_ratio-udvidelse. "
+      "enabledInfo": "Aktivudstederen/ejeren kan IKKE opdatere (indstille/ændre/slette) initial_collateral_ratio-udvidelsen af ​​aktivet. Hvis en værdi er angivet i initial_collateral_ratio-udvidelsen, har den forrang frem for den samme parameter foreslået af prisfeed-udgiverne, ellers den foreslåede værdi ",
+      "disabledInfo": "Aktivudstederen/ejeren kan opdatere (indstille/ændre/slette) aktivets initial_collateral_ratio-udvidelse. Hvis en værdi er angivet i initial_collateral_ratio-udvidelsen, har den forrang over den samme parameter foreslået af prisfeed-udgiverne, ellers er værdien foreslået af "
     },
     "disable_mssr_update": {
       "about": "Deaktiver ejeropdatering Maksimalt kort klemforhold",
-      "enabledInfo": "Aktivudstederen/ejeren kan IKKE opdatere (indstille/ændre/slette) aktivets maximum_short_squeeze_ratio-udvidelse. ",
-      "disabledInfo": "Aktivudstederen/-ejeren kan opdatere (indstille/ændre/slette) aktivets maximum_short_squeeze_ratio-udvidelse. "
+      "enabledInfo": "Aktivudstederen/ejeren kan IKKE opdatere (indstille/ændre/slette) udvidelsen maximum_short_squeeze_ratio af aktivet. Hvis en værdi er angivet i udvidelsen maximum_short_squeeze_ratio, har den forrang frem for den samme parameter foreslået af prisfeedudgiverne, ellers den foreslåede værdi ",
+      "disabledInfo": "Aktivudstederen/ejeren kan opdatere (indstille/ændre/slette) udvidelsen maximum_short_squeeze_ratio for aktivet. Hvis en værdi er angivet i udvidelsen maximum_short_squeeze_ratio, har den forrang frem for den samme parameter foreslået af prisfeedudgiverne, ellers er værdien foreslået af "
     },
     "disable_bsrm_update": {
       "about": "Deaktiver ejeropdatering Black Swan Risk Management-strategi",
@@ -103,7 +103,7 @@
     },
     "transfer_restricted": {
       "about": "Aktivejer skal godkende alle overførsler",
-      "enabledInfo": "Overførsler af dette aktiv er begrænset. ",
+      "enabledInfo": "Overførsler af dette aktiv er begrænset. Ved overførsel af dette aktiv kan det kun fra aktivudstederen/ejeren eller til aktivudstederen/ejeren. Den samme fra eller til begrænsning gælder også for HTLC'er og tilbagetrækningstilladelser, Kan ikke oprette optjeningssaldi med ",
       "disabledInfo": "Ingen sådan begrænsning af overførsler."
     },
     "disable_force_settle": {
@@ -113,7 +113,7 @@
     },
     "disable_confidential": {
       "about": "Deaktiver fortrolige transaktioner",
-      "enabledInfo": "Overførsler til blinde/stealth/fortrolige adresser er deaktiveret. ",
+      "enabledInfo": "Overførsler til blinde/stealth/fortrolige adresser er deaktiveret, Kan IKKE overføre et beløb af dette aktiv fra saldoen på en konto til blinde/stealth/fortrolige adresser, Overførsel fra blinde/stealth/fortrolige adresser til andre blinde/stealth/fortrolige adresser eller ",
       "disabledInfo": "Overførsler til blinde/stealth/fortrolige adresser er aktiveret."
     },
     "witness_fed_asset": {
@@ -138,7 +138,7 @@
     },
     "disable_collateral_bidding": {
       "about": "Deaktiver sikkerhedsstillelse",
-      "enabledInfo": "Bud på sikkerhed i den globale afviklingspulje er deaktiveret. ",
+      "enabledInfo": "Bud på sikkerhed i den globale afviklingspulje er deaktiveret. Det er IKKE tilladt at byde på sikkerhed i den globale afviklingspulje, når dette aktiv er blevet afviklet globalt.",
       "disabledInfo": "Byd på sikkerhed i den globale afviklingspulje er aktiveret."
     }
   },
@@ -146,13 +146,13 @@
     "title": "Aktivdetaljer",
     "title_content": "Disse er aktivindstillingerne, der bruges til kerne DEX-funktionalitet.",
     "symbol": {
-      "header": "Aktivsymbol",
-      "header_content": "Aktivsymbolet er en unik identifikator på blockchain, der identificerer aktivet i hele DEX. ",
+      "header": "Aktiv symbol",
+      "header_content": "Aktivsymbolet er en unik identifikator på blockchain, der identificerer aktivet i hele DEX. Billigere aktiver kan oprettes ved at bruge et underaktivnavn som NFT.TITLE",
       "placeholder": "Symbol"
     },
     "shortName": {
       "header": "Aktivt kort navn",
-      "header_content": "Dette er det korte navn på aktivet, mindre vigtigt end symbolet, men er stadig en forkortet unik identifikator. ",
+      "header_content": "Dette er det korte navn på aktivet, mindre vigtigt end symbolet, men er stadig en forkortet unik identifikator. Du kan bare genbruge symbolet for dette felt.",
       "placeholder": "Kort Navn"
     },
     "preferredMarket": {
@@ -167,11 +167,11 @@
     "max_supply": {
       "header": "Maksimal forsyning",
       "header_content": "Den maksimale levering af aktivet, dette er den samlede mængde af aktivet, der nogensinde kan udstedes af aktivejeren (dig).",
-      "placeholder": "Max udbud"
+      "placeholder": "Max forsyning"
     },
     "precision": {
       "header": "Aktiv præcision",
-      "header_content": "Præcisionen af ​​aktivet angiver antallet af understøttede decimaler. ",
+      "header_content": "Nøjagtigheden af ​​aktivet angiver antallet af understøttede decimaler. Denne værdi kan ikke ændres efter aktivets oprettelse.",
       "placeholder": "Præcision"
     }
   },
@@ -182,13 +182,13 @@
       "enabled": "Forlængelse af referencebelønning i procent er aktiveret",
       "enabledInfo": "En procentnedsættelse af markedsgebyret vil blive tildelt henviseren af ​​aktive markedsdeltagere.",
       "disabled": "Vil du aktivere udvidelsen af ​​henvisningsbelønningsprocenten?",
-      "disabledInfo": "Forlængelsen af ​​henvisningsbelønningsprocenten giver aktivopretteren mulighed for at tildele en procentdel af markedsgebyret til henvisningen af ​​aktive markedsdeltagere.",
+      "disabledInfo": "Forlængelsen af ​​referencebelønningsprocenten gør det muligt for aktivopretteren at tildele en procentdel af markedsgebyret til henvisningen af ​​aktive markedsdeltagere.",
       "header": "Henviserbelønningsprocent",
       "header_content": "Henviserbelønningsprocenten er den procentdel af markedsgebyret, som tildeles henviseren af ​​aktive markedsdeltagere."
     },
     "whitelist_market_fee_sharing": {
       "enabled": "Hvidliste udvidelse af markedsgebyrdeling aktiveret",
-      "enabledInfo": "Følgende henvisningskonti vil blive godkendt til at modtage en nedskæring af de indsamlede markedsgebyrer fra deres henvisningskonti.",
+      "enabledInfo": "Følgende henvisningskonti vil blive godkendt til at modtage en reduktion af de indsamlede markedsgebyrer fra deres henvisningskonti.",
       "disabled": "Vil du aktivere udvidelsen til hvidlistemarkedsgebyrdeling?",
       "disabledInfo": "Du kan begrænse, hvem der har tilladelse til at modtage en nedskæring af de opkrævede markedsgebyrer til et sæt forhåndsgodkendte henvisningskonti.",
       "header": "Hvidliste markedsgebyrdeling",
@@ -200,7 +200,7 @@
       "disabled": "Vil du aktivere udvidelsen af ​​takergebyrsprocenten?",
       "disabledInfo": "Forlængelsen af ​​taker-gebyrets procentdel giver aktivopretteren mulighed for at allokere en procentdel af markedsgebyret til \"tageren\" af limitordre-operationer.",
       "header": "Aftagerhonorarprocent",
-      "header_content": "Taker-fee-procenten er den procentdel af markedsgebyret, som tildeles \"tageren\" af limitordrerne på den decentrale børs."
+      "header_content": "Taker-fee-procenten er den procentdel af markedsgebyret, som tildeles 'tageren' af limitordrerne på den decentrale børs."
     },
     "allowed_markets": {
       "enabled": "Tilladt markedsudvidelse aktiveret",
@@ -218,11 +218,11 @@
       "enabled": "Springer beregning af kernevalutakurs over",
       "enabledInfo": "Aktivopretteren har aktiveret muligheden for at springe kernevalutakurskontrollen over for dette aktiv.",
       "disabled": "Vil du springe beregningen af ​​Core Exchange Rate over?",
-      "disabledInfo": "Skip Core Exchange Rate-udvidelsen gør det muligt for aktivopretteren at springe over kernevalutakurskontrollen for dette aktiv."
+      "disabledInfo": "Skip Core Exchange Rate-udvidelsen giver aktivopretteren mulighed for at springe over kernevalutakurskontrollen for dette aktiv."
     }
   },
   "whitelist": {
-    "header_content": "Hvidlistemyndighederne for aktiver er konti, der kan bidrage med deres kontos liste over hhv. kontoer for at godkende interaktion med denne adgang.",
+    "header_content": "Hvidlistemyndighederne for aktiver er konti, der kan bidrage med deres kontos liste over hvilistlistede konti for at godkende interaktion med denne adgang.",
     "header": "Asset Whitelist myndigheder"
   },
   "blacklist": {
@@ -230,7 +230,7 @@
     "header": "Asset blacklist myndigheder"
   },
   "market_fee": {
-    "header_content": "Markedsgebyret er gebyrprocenten, der opkræves for hver handel, der udføres på Bitshares DEX. ",
+    "header_content": "Markedsgebyret er gebyrprocenten, der opkræves for hver handel, der udføres på Bitshares DEX. Gebyret opkræves i det aktiv, der handles.",
     "header": "Markedsgebyr procent"
   },
   "max_market_fee": {
@@ -240,7 +240,7 @@
   "cer": {
     "quote_asset_amount": {
       "header": "Angiv aktivbeløb",
-      "header_content": "Beløbet for det aktiv, der er udstedt af dit bruger, der kræves for at købe basisaktivbeløbet."
+      "header_content": "Beløbet for det aktiv, der er udstedt af din bruger, der kræves for at købe basisaktivbeløbet."
     },
     "base_asset_amount": {
       "header": "Basisaktivbeløb",
@@ -248,17 +248,17 @@
     },
     "calculated_cer_price": {
       "header": "Kernekurs",
-      "header_content": "Sørg for, at din kernekurs er højere end markedsprisen, ellers vil folk købe dit token fra markedet og dræne din gebyrpulje via implicit arbitrage. "
+      "header_content": "Sørg for, at din kernekurs er højere end markedsprisen, ellers vil folk købe dit token fra markedet og dræne din gebyrpulje via implicit arbitrage. Kernekursen bør opdateres regelmæssigt for at afspejle markedspriserne på dit aktiv."
     }
   },
   "nft": {
     "NFTTitleContent": "Dette er titlen på dit ikke-fungible token, sørg for, at det er unikt og beskrivende, da det kan præsenteres i forskellige ikke-fungible token-gallerier/opdagere.",
     "NFTTitleHeader": "Titel",
     "TitlePlaceholder": "Titel",
-    "NFTArtistContent": "Kunstnerens navn eller pseudonym. ",
+    "NFTArtistContent": "Navn eller pseudonym på kunstneren, kan også inkludere aliaser eller onlinenavne eller -håndtag, for at inkludere blockchain-kontonavne eller adresser, som kan lette autentificering af en signeringsnøgle.",
     "NFTArtistHeader": "Kunstner",
     "ArtistPlaceholder": "Kunstner",
-    "NFTNarrativeContent": "En personlig udtalelse fra kunstneren, der beskriver værket, såsom hvad værket betyder for dem, eller hvad der inspirerede det. ",
+    "NFTNarrativeContent": "En personlig erklæring fra kunstneren, der beskriver værket, såsom hvad værket betyder for dem, eller hvad der inspirerede det, kan indeholde detaljer om dets tilblivelse osv. Det er et fritformet felt, og kan tilpasses efter behov for værket, Eksempel, ",
     "NFTNarrativeHeader": "Fortælling",
     "NarrativePlaceholder": "Fortælling",
     "NFTTagsContent": "Kommasepareret liste over søgeord for at lette emne-/interessesøgninger.",
@@ -267,16 +267,16 @@
     "NFTTypeContent": "En streng, der beskriver typen af ​​ikke-fungibel token, såsom 'NFT/ART/VISUAL', 'NFT/ART/3D', 'NFT/ART/ANIMATION', 'NFT/ART/AUDIO', 'NFT/ART ",
     "NFTTypeHeader": "Type",
     "TypePlaceholder": "Type",
-    "NFTAttestationContent": "Her forpligter eller dedikerer kunstneren eller ophavsmanden til det indkapslede materiale materialet til blockchain, idet han udtrykkeligt navngiver det token eller aktiv-id, som værket vil leve under, og attesterer dets kvalificerede eller ukvalificerede unikke karakter. ",
+    "NFTAttestationContent": "Her forpligter eller dedikerer kunstneren eller ophavsmanden til det indkapslede materiale materialet til blockchain, udtrykkeligt navngiver det token eller aktiv-id, som værket vil leve under, og attesterer dets kvalificerede eller ukvalificerede unikke karakter, f.eks. kan en kunstner attestere, at ingen anden ",
     "NFTAttestationHeader": "Attestation",
     "AttestationPlaceholder": "Attestation",
     "NFTAcknowledgementsContent": "Kvitteringer eller yderligere krediteringer for det digitale token.",
     "NFTAcknowledgementsHeader": "Anerkendelser",
     "AcknowledgementsPlaceholder": "Anerkendelser",
-    "NFTHolderLicenseContent": "Hvis tokenet giver yderligere licens til brug af det kreative arbejde specifikt til token-indehavere, kan dette specificeres her. ",
+    "NFTHolderLicenseContent": "Hvis tokenet giver yderligere licens til brug af det kreative arbejde specifikt til token-indehavere, kan dette specificeres her. Et eksempel på en sådan licens kan være at give indehaveren af ​​det ikke-fungible token ret til at printe og sælge fysisk ",
     "NFTHolderLicenseHeader": "Indehavere licens",
     "HolderLicensePlaceholder": "Indehaverlicens",
-    "NFTLicenseContent": "Licens under hvilken kunstværket frigives. ",
+    "NFTLicenseContent": "Licens, under hvilken illustrationen frigives. Ofte vil dette være en simpel licens-id, såsom 'CC BY-NC-SA 2.0', selvom det også kan være en fuldstændig specificeret udførlig licens.",
     "NFTLicenseHeader": "Medielicens",
     "LicensePlaceholder": "Licens",
     "modifyMultimediaContents": "Rediger multimedieindhold",
@@ -308,7 +308,7 @@
     "multimedia_header_content": "Giv dit ikke ",
     "currentIPFSFiles": "Dette ikke-fungible token indeholder i øjeblikket {{count}} IPFS mediefilreferencer.",
     "supportedFiletypes": "Understøttede filtyper omfatter billeder, video, lyd, 3D-filer, dokumenter osv.",
-    "main_header_content": "Indstillingerne nedenfor definerer, hvordan dit ikke-fungible token vil opføre sig på Bitshares blockchain. ",
+    "main_header_content": "Indstillingerne nedenfor definerer, hvordan dit ikke-fungible token vil opføre sig på Bitshares blockchain. Aktivets skaber er ansvarlig for korrekt at konfigurere deres ikke-fungible token.",
     "main_header": "Ikke-fungibel token-konfiguration"
   }
 }

@@ -1,13 +1,13 @@
 {
-    "dialogContent": {
-        "headerText": "Creating the following User Issued Asset: {{symbol}}"
-    },
-    "card": {
-        "title_create": "Creating a new User Issued Asset",
-        "title_edit": "Editing an User Issued Asset",
-        "description": "User Issued Assets can represent anything you want, they can be used for a variety of purposes. They can be used as a token for your business, a reward token, a token for a game, and more."
-    },
-    "buttons": {
-        "submit": "Submit"
-    }
+  "dialogContent": {
+    "headerText": "Creating the following User Issued Asset: {{symbol}}"
+  },
+  "card": {
+    "title_create": "Creating a new User Issued Asset",
+    "title_edit": "Editing an User Issued Asset",
+    "description": "User Issued Assets can represent anything you want, they can be used for a variety of purposes, They can be used as a token for your business, a reward token, a token for a game, and more."
+  },
+  "buttons": {
+    "submit": "Submit"
+  }
 }

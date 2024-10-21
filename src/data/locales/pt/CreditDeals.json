@@ -1,5 +1,5 @@
 {
-  "dealNo": "Negócio",
+  "dealNo": "Negócio #",
   "with": " com ",
   "borrowed": "Você pegou emprestado",
   "lent": "Eles pegaram emprestado",
@@ -9,23 +9,23 @@
   "remainingTime": "Tempo restante:",
   "repayLoan": "Reembolsar empréstimo",
   "trade": "Troca {{symbol}} em DEX",
-  "dialogTitle": "Reembolsando empréstimo",
+  "dialogTitle": "Reembolsando empréstimo #{id}",
   "description": "Use este formulário para controlar os pagamentos do seu contrato de crédito.",
   "account": "Conta",
   "balance": "Seu atual {{symbol}} equilíbrio",
-  "repayAmount": "Quantidade de {{symbol}} reembolsar",
+  "repayAmount": "Quantidade de {{symbol}} retribuir",
   "remainingDebt": "Dívida restante: {{amount}} {{symbol}}",
   "repayDesc": "Para recuperar todas as suas garantias, pague a dívida integralmente.",
   "redeemCollateral": "Resgatar garantia",
   "remainingCollateral": "Garantia restante: {amount} {{symbol}}",
-  "collateralRedemption": "Quantidade de {{symbol}} garantia que você resgatará",
+  "collateralRedemption": "Quantidade de {{symbol}} garantia de garantia que você resgatará",
   "loanLabel": "Taxa de empréstimo estimada",
   "loanDesc": "Esta é a taxa que você pagará ao credor.",
   "finalPaymentLabel": "Pagamento final",
   "finalPaymentDesc": "Uma vez reembolsado integralmente, seu {{symbol}} a garantia será devolvida a você.",
   "finalPaymentWarning": "Insuficiente {{symbol}} equilíbrio",
   "networkFee": "Taxa de rede",
-  "networkFeeDesc": "Esta é a taxa para transmitir sua operação de reembolso do acordo de crédito no blockchain.",
+  "networkFeeDesc": "Esta é a taxa para transmitir sua operação de reembolso de acordo de crédito no blockchain.",
   "rebate": "Desconto {{fee}} {{chain}} (aquisição)",
   "submit": "Enviar",
   "deepLink": "Reembolsando {{finalRepayAmount}} {{debtAsset}}, para reivindicar de volta {{collateralAsset}}",
@@ -45,15 +45,15 @@
     "lenderTitle": "Aviso de risco do credor",
     "description": "Informações importantes sobre suas responsabilidades e riscos associados a negociações de crédito.",
     "borrower": {
-      "risk1": "Você ( {{username}} ) são responsáveis ​​por gerenciar suas transações de crédito e reembolsá-las em tempo hábil, mais ninguém. ",
-      "risk2": "Esteja ciente da sua exposição a volatilidades externas durante o período de reembolso do contrato de crédito; ",
-      "risk3": "O não reembolso de um acordo de crédito resultará na perda dos ativos colaterais restantes. "
+      "risk1": "Você ( {{username}} ) são responsáveis ​​por gerenciar suas ofertas de crédito e reembolsá-las em tempo hábil, mais ninguém. Considere usar um método de reembolso automático para evitar perder o prazo de reembolso caso você esqueça o prazo.",
+      "risk2": "Esteja ciente de sua exposição a volatilidades externas durante o período de reembolso do acordo de crédito, o valor de seus ativos emprestados e suas garantias irão flutuar. Você deve considerar essa exposição à volatilidade ao decidir como/quando irá reembolsar o acordo de crédito.",
+      "risk3": "O não pagamento de um acordo de crédito resultará na perda dos ativos colaterais restantes. Não existe um sistema de pontuação de crédito que pune os mutuários inadimplentes, os termos acordados do acordo de crédito serão honrados."
     },
     "lender": {
-      "risk1": "Você ( {{username}} ) são responsáveis ​​pela gestão das suas ofertas de crédito, dos seus parâmetros e da sua exposição ao risco, mais ninguém. ",
-      "risk2": "Esteja ciente da sua exposição a volatilidades externas durante o período de reembolso do contrato de crédito; ",
-      "risk3": "Como credor, uma vez existente um acordo de crédito, você ( {{username}} ) não puder cancelá-lo, o mutuário será responsável pela duração do negócio dentro do período de reembolso. ",
-      "risk4": "Se os mutuários não pagarem seus acordos de crédito, seus ativos colaterais serão perdidos para você. "
+      "risk1": "Você ( {{username}} ) são responsáveis ​​pela gestão das suas ofertas de crédito, dos seus parâmetros e da sua exposição ao risco, e mais ninguém. Considere a criação de scripts automatizados para gerir o estado das suas ofertas de crédito.",
+      "risk2": "Esteja ciente de sua exposição a volatilidades externas durante o período de reembolso do negócio de crédito, o valor dos ativos que você emprestou a outros usuários e a garantia que eles forneceram irão flutuar. Você deve considerar sua tolerância ao risco pessoal ao decidir sobre os parâmetros de sua oferta de crédito. ",
+      "risk3": "Como credor, uma vez existente um acordo de crédito, você ( {{username}} ) não pode cancelá-lo, o mutuário é responsável pela duração do negócio dentro do período de reembolso. A data de reembolso de um contrato de crédito também pode exceder a data de vencimento da sua oferta de crédito.",
+      "risk4": "Se os mutuários não pagarem seus acordos de crédito, seus ativos colaterais serão perdidos para você. Não existe um sistema de pontuação de crédito que pune os mutuários por inadimplência, os termos acordados do acordo de crédito serão sempre honrados, então planeje suas ofertas de crédito "
     }
   }
 }

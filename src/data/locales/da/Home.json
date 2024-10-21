@@ -38,7 +38,7 @@
     "subtitle": "Opret optjeningssaldi",
     "hover1": "Oprettelse af en optjeningsbalance giver dig mulighed for at låse en mængde aktiver op i en bestemt periode.",
     "hover2": "Du kan bruge en af ​​to typer optjening: Coin Days Destroyed og Linear Vesting with Cliff.",
-    "hover3": "Coin Days Destroyed-politikkens effekt er at kræve en vis mængde \"rente\", før den fulde saldo kan trækkes tilbage. ",
+    "hover3": "Coin Days Destroyed-politikkens effekt er at kræve, at en vis mængde \"renter\" påløber, før den fulde saldo kan trækkes tilbage, renter påløber som møntdage (saldo * længde holdt), Hvis noget af saldoen trækkes tilbage, skal den resterende saldo tilbageholdes ",
     "hover4": "Lineær Vesting med Cliff-politik bruges til at efterligne traditionelle aktieoptjeningkontrakter, hvor et vist beløb hver dag optjenes, indtil det er fuldt modnet."
   },
   "borrow": {

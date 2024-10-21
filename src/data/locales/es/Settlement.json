@@ -31,7 +31,7 @@
   "operation": "Operación: {{operation}}",
   "additionalForceSettlementFee": "Tarifa de liquidación de fuerza adicional: {{fee}} %",
   "submit": "Entregar",
-  "collateralBiddingDisabled": "Se han desactivado las ofertas de garantía para este activo; ",
+  "collateralBiddingDisabled": "Se ha deshabilitado la licitación de garantías para este activo, esta operación será rechazada.",
   "existingCollateralBids": "Ofertas de garantía existentes",
   "existingCollateralBidsDescription": "Estas ofertas de garantía han sido creadas por otros usuarios interesados ​​en los fondos liquidados globales.",
   "bidder": "Licitador",

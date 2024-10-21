@@ -4,11 +4,11 @@
   "expirationTime": "Tiempo de vencimiento",
   "reviewPeriodTime": "Tiempo del período de revisión",
   "operations": "Operaciones propuestas",
-  "operationsDescription": "Estas son las operaciones individuales almacenadas en esta propuesta. ",
+  "operationsDescription": "Estas son las operaciones individuales almacenadas en esta propuesta. Haga clic en cada ID de operación a continuación para ver sus detalles JSON. Revise minuciosamente cada operación y verifique quién es el proponente antes de proceder con la aprobación. Las aprobaciones son irreversibles, no apruebe la transferencia de su cuenta. ",
   "beginApprovalProcess": "Comenzar el proceso de aprobación",
   "reject": "Rechazar propuesta",
   "cardTitle": "🤔 Operaciones propuestas",
-  "cardDescription": "Las propuestas permiten a cualquiera sugerir operaciones para que sean ejecutadas por otra cuenta en la cadena de bloques. ",
+  "cardDescription": "Las propuestas permiten a cualquiera sugerir operaciones para que sean ejecutadas por otra cuenta en la cadena de bloques. El propietario de la cuenta revisa estas propuestas y decide si las aprueba o rechaza.",
   "noProposals": "No hay propuestas disponibles.",
   "approveProposedOperation": "Aprobar la operación propuesta",
   "rejectProposedOperation": "Rechazar operación propuesta",
@@ -21,6 +21,6 @@
   "approvedProposalHeader": "Aprobando la siguiente propuesta",
   "risksTitle": "Riesgos de la propuesta",
   "risksDescription": "Tenga en cuenta los siguientes riesgos al considerar propuestas:",
-  "risk1": "Las propuestas pueden ser peligrosas. ",
-  "risk2": "Las propuestas aprobadas son irreversibles. "
+  "risk1": "Las propuestas pueden ser peligrosas, pueden ser creadas por cualquier persona y sugieren cualquier tipo de operación en la cadena de bloques, sea inteligente y haga su debida diligencia al considerar aprobar propuestas, asegúrese de no ser descubierto por un estafador.",
+  "risk2": "Las propuestas aprobadas son irreversibles. Las aplicaciones/proyectos Astro-UI y Beeteos no ofrecen garantía de usuario como parte de sus respectivas licencias. Usted es responsable de cualquier elección realizada en la interfaz de usuario anterior. No se deje engañar, si no lo esperaba. "
 }

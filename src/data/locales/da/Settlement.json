@@ -31,7 +31,7 @@
   "operation": "Operation: {{operation}}",
   "additionalForceSettlementFee": "Ekstra tvangsafregningsgebyr: {{fee}} %",
   "submit": "Indsend",
-  "collateralBiddingDisabled": "Sikkerhedsbudgivning er blevet deaktiveret for dette aktiv; ",
+  "collateralBiddingDisabled": "Sikkerhedsbudgivning er blevet deaktiveret for dette aktiv. Denne handling vil blive afvist.",
   "existingCollateralBids": "Eksisterende sikkerhedsstillelsesbud",
   "existingCollateralBidsDescription": "Disse sikkerhedsstillelsesbud er blevet oprettet af andre brugere, der er interesserede i de globale afviklede midler",
   "bidder": "Budgiver",

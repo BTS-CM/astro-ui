@@ -1,5 +1,5 @@
 {
-  "dealNo": "Tehing",
+  "dealNo": "Tehing nr",
   "with": " koos ",
   "borrowed": "Sa laenasid",
   "lent": "Nad laenasid",
@@ -9,14 +9,14 @@
   "remainingTime": "Järelejäänud aeg:",
   "repayLoan": "Laen tagasi maksta",
   "trade": "Kaubandus {{symbol}} DEXis",
-  "dialogTitle": "Laenu tagasimaksmine",
+  "dialogTitle": "Laenu #{id} tagasimaksmine",
   "description": "Kasutage seda vormi oma krediiditehingu tagasimaksete kontrollimiseks.",
-  "account": "Konto",
+  "account": "konto",
   "balance": "Sinu praegune {{symbol}} tasakaalu",
   "repayAmount": "Kogus {{symbol}} tagasi maksma",
   "remainingDebt": "Järelejäänud võlg: {{amount}} {{symbol}}",
   "repayDesc": "Kogu tagatise tagasi saamiseks tasuge võlg täielikult tagasi.",
-  "redeemCollateral": "Lunasta tagatis",
+  "redeemCollateral": "Lunastage tagatis",
   "remainingCollateral": "Järelejäänud tagatis: {amount} {{symbol}}",
   "collateralRedemption": "Kogus {{symbol}} tagatistagatis, mille lunastate",
   "loanLabel": "Eeldatav laenutasu",
@@ -45,15 +45,15 @@
     "lenderTitle": "Laenuandja riskihoiatus",
     "description": "Oluline teave teie krediiditehingutega seotud kohustuste ja riskide kohta.",
     "borrower": {
-      "risk1": "Sina ( {{username}} ) vastutavad teie krediiditehingute haldamise ja nende õigeaegse tagasimaksmise eest, mitte keegi teine. ",
-      "risk2": "Olge teadlik oma kokkupuutest väliste volatiilsustega krediiditehingu tagasimakseperioodil; ",
-      "risk3": "Krediiditehingu tagasimaksmata jätmine toob kaasa ülejäänud tagatistagatisvarade kaotuse. "
+      "risk1": "Sina ( {{username}} ) vastutavad teie krediiditehingute haldamise ja nende õigeaegse tagasimaksmise eest, mitte keegi teine. Kaaluge automaatse tagasimakse meetodi kasutamist, et vältida tagasimaksetähtaja möödumist, kui võite tähtaja unustada.",
+      "risk2": "Olge teadlik sellest, et krediiditehingu tagasimakseperioodi jooksul olete avatud välistele volatiilsustele, teie laenatud varade ja tagatistagatiste väärtus kõigub. Te peaksite seda volatiilsust arvesse võtma, kui otsustate, kuidas/millal krediiditehingu tagasi maksta.",
+      "risk3": "Krediiditehingu tagasimaksmata jätmine toob kaasa allesjäänud tagatistagatisvarade kaotuse. Puudub krediidiskoori süsteem, mis karistaks kohustusi rikkuvaid laenuvõtjaid, krediiditehingu kokkulepitud tingimusi peetakse kinni."
     },
     "lender": {
-      "risk1": "Sina ( {{username}} ) vastutavad teie krediidipakkumiste, nende parameetrite ja riskipositsiooni haldamise eest, mitte keegi teine. ",
-      "risk2": "Olge teadlik oma kokkupuutest väliste volatiilsustega krediiditehingu tagasimakseperioodil; ",
-      "risk3": "Laenuandjana, kui krediiditehing on sõlmitud, {{username}} ) ei saa seda tühistada, vastutab laenusaaja tehingu kestuse eest tagasimaksetähtaja piires. ",
-      "risk4": "Kui laenuvõtjad ei suuda oma krediiditehinguid tagasi maksta, jääb nende tagatisvara teile ilma. "
+      "risk1": "Sina ( {{username}} ) vastutavad teie krediidipakkumiste, nende parameetrite ja riskide haldamise eest, mitte keegi teine. Kaaluge automaatsete skriptide loomist oma krediidipakkumiste oleku haldamiseks.",
+      "risk2": "Olge teadlik sellest, et olete krediiditehingu tagasimakseperioodi ajal avatud välistele volatiilsustele, teistele kasutajatele laenatud varade väärtus ja nende antud tagatistagatis kõikuvad, peaksite oma krediidipakkumise parameetrite üle otsustamisel arvestama oma isikliku riskitaluvusega. ",
+      "risk3": "Laenuandjana, kui krediiditehing on sõlmitud, {{username}} ) ei saa seda tühistada, laenuvõtja vastutab tehingu kestuse eest tagasimakseperioodi piires. Krediiditehingu tagasimakse kuupäev võib ületada ka teie krediidipakkumise aegumiskuupäeva.",
+      "risk4": "Kui laenuvõtjad ei suuda oma krediiditehinguid tagasi maksta, jäävad teie tagatisvarad ilma. Puudub krediidiskoori süsteem, mis karistaks laenuvõtjaid maksejõuetuse eest, krediiditehingu kokkulepitud tingimusi järgitakse alati, nii et planeerige oma krediidipakkumised "
     }
   }
 }

@@ -1,6 +1,6 @@
 {
   "cardTitle": "Visão geral do blockchain ao vivo",
-  "cardDescription": "O blockchain Bitshares tem tempos de bloqueio de 3 segundos e é capaz de lidar com milhares de transações por segundo. ",
+  "cardDescription": "O blockchain Bitshares tem tempos de bloqueio de 3 segundos e é capaz de lidar com milhares de transações por segundo. Esta página fornece uma visão geral ao vivo do blockchain.",
   "currentBlock": {
     "content": "O número do bloco mais recente.",
     "header": "Bloco Atual"

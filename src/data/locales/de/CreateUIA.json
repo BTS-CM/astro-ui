@@ -5,7 +5,7 @@
   "card": {
     "title_create": "Erstellen eines neuen vom Benutzer ausgegebenen Assets",
     "title_edit": "Bearbeiten eines vom Benutzer ausgegebenen Assets",
-    "description": "Vom Benutzer ausgegebene Vermögenswerte können alles darstellen, was Sie wollen, und sie können für eine Vielzahl von Zwecken verwendet werden. "
+    "description": "Vom Benutzer ausgegebene Vermögenswerte können alles darstellen, was Sie wollen, sie können für eine Vielzahl von Zwecken verwendet werden, sie können als Token für Ihr Unternehmen, als Belohnungs-Token, als Token für ein Spiel und mehr verwendet werden."
   },
   "buttons": {
     "submit": "Einreichen"

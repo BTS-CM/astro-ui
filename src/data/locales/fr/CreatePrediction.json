@@ -21,21 +21,21 @@
     },
     "backing_asset": {
       "header": "Actif de support",
-      "header_content": "L'actif de support est l'actif utilisé pour soutenir l'actif du marché de prédiction. "
+      "header_content": "L'actif de support est l'actif utilisé pour soutenir l'actif du marché de prédiction. Cet actif sera utilisé pour payer les gagnants de l'actif du marché de prédiction."
     },
     "resolution": {
       "header": "Date et heure de résolution de la prédiction",
-      "header_content": "La date et l'heure de résolution sont la date et l'heure auxquelles l'actif du marché de prédiction sera résolu. "
+      "header_content": "La date et l'heure de résolution sont la date et l'heure auxquelles l'actif du marché de prédiction sera résolu. Il s'agit de la date et de l'heure auxquelles l'actif du marché de prédiction sera évalué et les gagnants seront payés."
     }
   },
   "buttons": {
     "submit": "Soumettre"
   },
   "risks": {
-    "1": "Une mauvaise configuration des actifs du marché de prédiction peut entraîner une mauvaise participation à la blockchain, certaines interfaces utilisateur peuvent filtrer entièrement votre PMA ; ",
+    "1": "Une mauvaise configuration des actifs du marché de prédiction peut entraîner une mauvaise participation à la blockchain, certaines interfaces utilisateur peuvent filtrer entièrement votre PMA, assurez-vous de configurer correctement votre PMA, fixez des frais de commission raisonnables et essayez d'abord la fonctionnalité sur testnet.",
     "2": "Lorsque vous créez un actif de marché de prédiction, vous êtes responsable, en tant que maison, d'évaluer correctement le résultat. Ne pas le faire correctement ou en temps opportun pourrait entraîner des problèmes juridiques ou fiscaux pour vous, en plus d'une perte de crédibilité en tant que maison.",
     "3": "Cette interface utilisateur et les portefeuilles Beet/BEETEOS ne prennent pas en charge les comptes multi-signatures, votre compte maison est donc un point de défaillance unique à long terme – protégez-le bien.",
     "title": "Certains des risques associés à la création d'actifs de marché de prédiction",
-    "description": "Faites vos propres recherches avant de créer une PMA, lisez d'abord la documentation ; "
+    "description": "Faites vos propres recherches avant de créer une PMA, lisez d'abord la documentation, pas les conseils juridiques."
   }
 }

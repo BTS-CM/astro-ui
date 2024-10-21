@@ -5,7 +5,7 @@
   "card": {
     "title_create": "Criando um novo ativo emitido pelo usuário",
     "title_edit": "Editando um ativo emitido pelo usuário",
-    "description": "Os ativos emitidos pelo usuário podem representar o que você quiser e podem ser usados ​​para diversos fins. "
+    "description": "Os ativos emitidos pelo usuário podem representar o que você quiser, podem ser usados ​​para diversos fins. Eles podem ser usados ​​como um token para o seu negócio, um token de recompensa, um token para um jogo e muito mais."
   },
   "buttons": {
     "submit": "Enviar"

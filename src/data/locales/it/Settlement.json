@@ -31,7 +31,7 @@
   "operation": "Operazione: {{operation}}",
   "additionalForceSettlementFee": "Tariffa aggiuntiva per la transazione forzata: {{fee}} %",
   "submit": "Invia",
-  "collateralBiddingDisabled": "L'offerta di garanzia è stata disabilitata per questa risorsa; ",
+  "collateralBiddingDisabled": "L'offerta di garanzia è stata disabilitata per questa risorsa, l'operazione verrà rifiutata.",
   "existingCollateralBids": "Offerte di garanzia esistenti",
   "existingCollateralBidsDescription": "Queste offerte collaterali sono state create da altri utenti interessati ai fondi regolati globali",
   "bidder": "Offerente",

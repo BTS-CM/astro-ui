@@ -4,11 +4,11 @@
   "expirationTime": "Udløbstid",
   "reviewPeriodTime": "Gennemgangsperiode",
   "operations": "Foreslåede operationer",
-  "operationsDescription": "Det er de enkelte operationer, der er gemt i dette forslag. ",
+  "operationsDescription": "Dette er de individuelle operationer, der er gemt i dette forslag, Klik på hver operations id nedenfor for at se deres JSON detaljer, Gennemgå grundigt hver operation og dobbelttjek hvem forslagsstilleren er, før du fortsætter med godkendelse, Godkendelser er irreversible, godkend ikke overførsel af din konto ",
   "beginApprovalProcess": "Start godkendelsesprocessen",
   "reject": "Forkast forslaget",
   "cardTitle": "🤔 Foreslåede operationer",
-  "cardDescription": "Forslag giver enhver mulighed for at foreslå operationer, der skal udføres af en anden konto på blockchain. ",
+  "cardDescription": "Forslag giver enhver mulighed for at foreslå operationer, der skal udføres af en anden konto på blockchain. Kontoejeren gennemgår disse forslag og beslutter, om de skal godkendes eller afvises.",
   "noProposals": "Ingen forslag tilgængelige.",
   "approveProposedOperation": "Godkend foreslået drift",
   "rejectProposedOperation": "Afvis foreslået operation",
@@ -21,6 +21,6 @@
   "approvedProposalHeader": "Godkender følgende forslag",
   "risksTitle": "Forslagsrisici",
   "risksDescription": "Vær opmærksom på følgende risici, når du overvejer forslag:",
-  "risk1": "Forslag kan være farlige. ",
-  "risk2": "Godkendte forslag er irreversible. "
+  "risk1": "Forslag kan være farlige, De kan oprettes af alle og foreslå enhver form for operation på blockchain, Vær smart og gør din due diligence, når du overvejer at godkende forslag, Sørg for ikke at blive fanget af en svindler.",
+  "risk2": "Godkendte forslag er irreversible, Astro-UI og Beeteos apps/projekter tilbyder ingen brugergaranti som en del af deres respektive licenser, Du er ansvarlig for ethvert valg i ovenstående brugergrænseflade, Fald ikke for tricks, hvis du ikke havde forventet "
 }

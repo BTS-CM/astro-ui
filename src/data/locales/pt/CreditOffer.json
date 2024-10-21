@@ -6,7 +6,7 @@
     "buttonLabel": "Voltar à visão geral da oferta de crédito"
   },
   "offerCardHeader": {
-    "viewingOffer": "🏦 Visualizando oferta{{id}} criado por {{owner_name}} ({{owner_account}})",
+    "viewingOffer": "🏦 Visualizando oferta #{{id}} criado por {{owner_name}} ({{owner_account}})",
     "loadingOfferTerms": "carregando termos de oferta...",
     "offerDescription1": "Esta é uma oferta de crédito criada pelo usuário no Bitshares DEX.",
     "offerDescription2": "Leia atentamente os termos da oferta antes de prosseguir para o Beet."
@@ -22,11 +22,12 @@
     "offerDescription": "{{owner_name}} está generosamente se oferecendo para lhe emprestar tanto {{symbol}}, supondo que você concorde com seus termos.",
     "backingCollateral": "Garantia de garantia para negócio de crédito",
     "selectCollateral": "Selecione sua garantia de apoio.",
-    "borrowDescription": "Emprestar {{symbol}} de {{owner_name}}, escolha entre os ativos colaterais aceitos acima.",
+    "borrowDescription": "Para pedir emprestado {{symbol}} de {{owner_name}}, escolha entre os ativos colaterais aceitos acima.",
     "borrowDescription2": "Preço designado pelo credor: {{price}} {{quote}}/{{base}}",
     "noCollateralMessage": "A conta não contém esse ativo de garantia.",
     "borrowAmount": "Quantidade de {{symbol}} você planeja pedir emprestado",
-    "availableAmountRange": "Disponível: {{availableAmount}} {{symbol}} (Mínimo: {{minAmount}})",    "inputBorrowAmount": "Insira a quantidade de {{symbol}} você gostaria de pedir emprestado {{owner_name}}.",
+    "availableAmountRange": "Disponível: {{availableAmount}} {{symbol}} (Mínimo: {{minAmount}})",
+    "inputBorrowAmount": "Insira a quantidade de {{symbol}} você gostaria de pedir emprestado {{owner_name}}.",
     "repayMethod": "Método de reembolso de oferta de crédito",
     "selectRepayMethod": "Selecione seu método de reembolso.",
     "noAutoRepayment": "Sem reembolso automático",
@@ -41,10 +42,10 @@
     "loadingBalance": "Carregando saldo...",
     "collateralNeeded": "Para pedir emprestado {{borrowAmount}} {{symbol}} você precisará fornecer o seguinte valor de garantia para garantir o negócio.",
     "enterValidBorrowAmount": "Insira um valor de empréstimo válido para calcular a garantia necessária.",
-    "insufficientBalance": "Sua conta tem um número insuficiente {{symbol}} equilíbrio.  {{requiredMore}} mais {{symbol}}.",
-    "noAssetHeld": "Sua conta não possui esse ativo. ",
+    "insufficientBalance": "Sua conta tem um número insuficiente {{symbol}} equilíbrio, você precisará de pelo menos {{requiredMore}} mais {{symbol}}.",
+    "noAssetHeld": "Sua conta não possui esse ativo. Tente outra forma de garantia, se possível.",
     "repayPeriod": "Período de reembolso",
-    "repayPeriodDescription": "A duração máxima da operação de crédito; ",
+    "repayPeriodDescription": "A duração máxima do negócio de crédito, reembolsar o empréstimo dentro deste prazo para evitar perda de garantias.",
     "offerExpiry": "Expiração da oferta de crédito",
     "offerExpiryDescription": "Quando esta oferta não existirá mais.",
     "estimatedFee": "Taxa de empréstimo estimada",
@@ -67,8 +68,8 @@
     "riskCollateral": "Risco de garantia: como mutuário, você pode não pagar o empréstimo no prazo, perdendo totalmente a garantia do empréstimo.",
     "riskLiquidity": "Risco de Liquidez: Se vender os activos que tomou emprestado, poderá não ser possível readquirir os activos a tempo de reembolsar o empréstimo, ou poderá fazê-lo com prejuízo.",
     "riskPlatform": "Risco de plataforma: se a empresa proprietária de um ativo fechar as portas e interromper a operação de um ativo garantido por bolsa, você poderá perder fundos.",
-    "riskUser": "Risco do usuário: como as ofertas de crédito são totalmente geradas pelo usuário, você pode estar interagindo com ativos não confiáveis ​​ou com usuários que colocam fundos em risco.",
-    "riskNetwork": "Risco de rede: embora o tempo de inatividade do blockchain seja muito raro, é um risco a ser considerado ao criar acordos de crédito que abrangem um período de tempo. ",
+    "riskUser": "Risco do usuário: Como as ofertas de crédito são totalmente geradas pelo usuário, você pode estar interagindo com ativos não confiáveis ​​ou com usuários que colocam fundos em risco.",
+    "riskNetwork": "Risco de rede: embora o tempo de inatividade do blockchain seja muito raro, é um risco a ser considerado ao criar acordos de crédito que abrangem um período de tempo. Métodos de reembolso de empréstimos automáticos estão disponíveis para compensar esse risco.",
     "risksFooter": "Considere estes riscos e avalie minuciosamente os termos das ofertas antes de prosseguir com um acordo de crédito."
   }
 }

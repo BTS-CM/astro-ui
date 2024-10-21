@@ -4,11 +4,11 @@
   "expirationTime": "Ablaufzeit",
   "reviewPeriodTime": "Überprüfungszeitraum",
   "operations": "Vorgeschlagene Operationen",
-  "operationsDescription": "Dies sind die einzelnen Operationen, die in diesem Vorschlag gespeichert sind. ",
+  "operationsDescription": "Dies sind die einzelnen Vorgänge, die in diesem Vorschlag gespeichert sind. Klicken Sie unten auf die einzelnen Vorgangs-IDs, um deren JSON-Details anzuzeigen. Überprüfen Sie jeden Vorgang gründlich und überprüfen Sie noch einmal, wer der Antragsteller ist, bevor Sie mit der Genehmigung fortfahren. Genehmigungen sind unwiderruflich. Die Übertragung Ihres Kontos wird nicht genehmigt ",
   "beginApprovalProcess": "Beginnen Sie mit dem Genehmigungsprozess",
   "reject": "Vorschlag ablehnen",
   "cardTitle": "🤔 Vorgeschlagene Operationen",
-  "cardDescription": "Mit Vorschlägen kann jeder Vorgänge vorschlagen, die von einem anderen Konto in der Blockchain ausgeführt werden sollen. ",
+  "cardDescription": "Mit Vorschlägen kann jeder Vorgänge vorschlagen, die von einem anderen Konto in der Blockchain ausgeführt werden sollen. Der Kontoinhaber überprüft diese Vorschläge und entscheidet, ob er sie genehmigt oder ablehnt.",
   "noProposals": "Keine Vorschläge verfügbar.",
   "approveProposedOperation": "Genehmigen Sie den vorgeschlagenen Vorgang",
   "rejectProposedOperation": "Vorgeschlagene Operation ablehnen",
@@ -21,6 +21,6 @@
   "approvedProposalHeader": "Zustimmung zum folgenden Vorschlag",
   "risksTitle": "Angebotsrisiken",
   "risksDescription": "Seien Sie sich bei der Prüfung von Vorschlägen der folgenden Risiken bewusst:",
-  "risk1": "Vorschläge können gefährlich sein. ",
-  "risk2": "Genehmigte Vorschläge sind unwiderruflich. "
+  "risk1": "Vorschläge können gefährlich sein. Sie können von jedem erstellt werden und jede Art von Operation auf der Blockchain vorschlagen. Seien Sie schlau und gehen Sie bei der Genehmigung von Vorschlägen mit der gebotenen Sorgfalt vor. Stellen Sie sicher, dass Sie nicht von Betrügern erwischt werden.",
+  "risk2": "Genehmigte Vorschläge sind unwiderruflich. Die Astro-UI- und Beeteos-Apps/Projekte bieten im Rahmen ihrer jeweiligen Lizenzen keine Benutzergarantie. Sie sind für alle in der oben genannten Benutzeroberfläche getroffenen Entscheidungen verantwortlich. Fallen Sie nicht auf Tricks herein, wenn Sie nicht damit gerechnet haben "
 }

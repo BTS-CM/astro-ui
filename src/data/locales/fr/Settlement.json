@@ -31,7 +31,7 @@
   "operation": "Opération: {{operation}}",
   "additionalForceSettlementFee": "Frais de règlement de force supplémentaire : {{fee}} %",
   "submit": "Soumettre",
-  "collateralBiddingDisabled": "Les enchères de garanties ont été désactivées pour cet actif ; ",
+  "collateralBiddingDisabled": "Les enchères de garanties ont été désactivées pour cet actif, cette opération sera rejetée.",
   "existingCollateralBids": "Offres de garantie existantes",
   "existingCollateralBidsDescription": "Ces offres de garantie ont été créées par d'autres utilisateurs intéressés par les fonds réglés à l'échelle mondiale.",
   "bidder": "Soumissionnaire",

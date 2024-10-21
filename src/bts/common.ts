@@ -2,7 +2,8 @@
  * Convert human readable quantity into the token's blockchain representation
  */
 function blockchainFloat(satoshis: number, precision: number) {
-  return satoshis * 10 ** precision;
+  const factor = 10 ** precision;
+  return Math.round(satoshis * factor);
 }
 
 /**

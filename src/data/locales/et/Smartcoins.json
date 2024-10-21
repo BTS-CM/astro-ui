@@ -1,6 +1,7 @@
 {
   "createdBy": "Loodud",
   "backingCollateral": "Tagatistagatis",
+  "collateral": "Tagatis",
   "feedQty": "Sööda kogus: {{qty}}",
   "mcr": "MCR: {{mcr}} %",
   "mssr": "MSSR: {{mssr}} %",
@@ -14,15 +15,15 @@
   "placeholderICR": "ICR: ? ",
   "placeholderProceedToBorrow": "Kas jätkata laenamisega?",
   "selectBorrowableAsset": "💵 Valige laenatav vara",
-  "smartcoinDescription": "Kasutajaid on mitu",
+  "smartcoinDescription": "Bitsharesi plokiahelas on mitu kasutajate ja komisjonide loodud nutimünte, mida saate ise emiteerida, kui annate ja säilitate piisava tagatistagatise. Uurige varasid enne nende väljastamist põhjalikult, teadke oma riskipositsiooni ja tolerantse.",
   "viewingAllAssets": "Kõigi varade vaatamine",
   "viewAllAssets": "Vaadake kõiki varasid",
-  "viewingCompatible": "Vaatamisega ühilduv",
+  "viewingCompatible": "Vaatamine ühildub",
   "viewCompatible": "Vaade ühildub",
   "viewingHoldings": "Osaluste vaatamine",
   "viewHoldings": "Vaata valdusi",
   "searching": "Otsimine",
-  "search": "Otsing",
+  "search": "Otsi",
   "listingAllSmartcoins": "Nimekiri {{count}} (kõik) smartcoinid",
   "listingCompatibleSmartcoins": "Nimekiri {{count}} teie kontoga ühilduvad smartcoinid",
   "listingHeldSmartcoins": "Nimekiri {{count}} hoidis smartcoine",
@@ -36,5 +37,7 @@
   "enterSearchText": "Sisesta otsingutekst",
   "noResultsFound": "Tulemusi ei leitud",
   "bitassets": "Bitassetid",
-  "privateSmartcoins": "Privaatsed smartcoinid"
+  "privateSmartcoins": "Privaatsed smartcoinid",
+  "currentSettlementPrice": "Hind",
+  "currentSupply": "Pakkumine"
 }

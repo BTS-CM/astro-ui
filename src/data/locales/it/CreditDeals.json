@@ -1,5 +1,5 @@
 {
-  "dealNo": "Affare",
+  "dealNo": "Affare #",
   "with": " con ",
   "borrowed": "Hai preso in prestito",
   "lent": "Hanno preso in prestito",
@@ -9,16 +9,16 @@
   "remainingTime": "Tempo rimanente:",
   "repayLoan": "Rimborsare il prestito",
   "trade": "Commercio {{symbol}} su DEX",
-  "dialogTitle": "Rimborso del prestito",
+  "dialogTitle": "Rimborso del prestito #{id}",
   "description": "Utilizza questo modulo per controllare i rimborsi del tuo contratto di credito.",
   "account": "Account",
-  "balance": "Il tuo attuale {{symbol}} bilancia",
-  "repayAmount": "Quantità di {{symbol}} ripagare",
+  "balance": "La tua corrente {{symbol}} bilancia",
+  "repayAmount": "Importo di {{symbol}} ripagare",
   "remainingDebt": "Debito residuo: {{amount}} {{symbol}}",
   "repayDesc": "Per recuperare tutte le garanzie collaterali, ripagare integralmente il debito.",
   "redeemCollateral": "Riscattare la garanzia",
   "remainingCollateral": "Garanzia rimanente: {importo} {{symbol}}",
-  "collateralRedemption": "Quantità di {{symbol}} garanzia collaterale che riscatterai",
+  "collateralRedemption": "Importo di {{symbol}} garanzia collaterale che riscatterai",
   "loanLabel": "Commissione di prestito stimata",
   "loanDesc": "Questa è la commissione che pagherai al creditore.",
   "finalPaymentLabel": "Pagamento finale",
@@ -45,15 +45,15 @@
     "lenderTitle": "Avvertimento sul rischio del prestatore",
     "description": "Informazioni importanti sulle responsabilità e sui rischi associati alle operazioni di credito.",
     "borrower": {
-      "risk1": "Voi ( {{username}} ) sono responsabili della gestione dei tuoi contratti di credito e del loro rimborso in modo tempestivo, nessun altro. ",
-      "risk2": "Sii consapevole della tua esposizione alle volatilità esterne durante il periodo di rimborso del contratto di credito; ",
-      "risk3": "Il mancato rimborso di un accordo di credito comporterà la perdita delle rimanenti attività collaterali di garanzia. "
+      "risk1": "Voi ( {{username}} ) sono responsabili della gestione dei tuoi contratti di credito e del loro rimborso in modo tempestivo, nessun altro. Prendi in considerazione l'utilizzo di un metodo di rimborso automatico per evitare di perdere la scadenza del rimborso se potresti dimenticarla.",
+      "risk2": "Sii consapevole della tua esposizione alle volatilità esterne durante il periodo di rimborso del contratto di credito, il valore dei tuoi beni presi in prestito e della garanzia collaterale oscillerà, dovresti considerare tale esposizione alla volatilità quando decidi come/quando ripagherai il contratto di credito.",
+      "risk3": "Il mancato rimborso di un contratto di credito comporterà la perdita delle rimanenti attività collaterali di garanzia. Non esiste un sistema di punteggio di credito che punisca i mutuatari inadempienti, i termini concordati del contratto di credito verranno rispettati."
     },
     "lender": {
-      "risk1": "Voi ( {{username}} ) sono responsabili della gestione delle vostre offerte di credito, dei loro parametri e della loro esposizione al rischio, e nessun altro. ",
-      "risk2": "Sii consapevole della tua esposizione alle volatilità esterne durante il periodo di rimborso del contratto di credito; ",
-      "risk3": "Come prestatore, una volta che esiste un contratto di credito, tu ( {{username}} ) non può annullarlo, il mutuatario è responsabile per la durata dell'accordo entro il periodo di rimborso. ",
-      "risk4": "Se i mutuatari non riescono a ripagare i loro accordi di credito, le loro attività collaterali di supporto verranno perse. "
+      "risk1": "Voi ( {{username}} ) sono responsabili della gestione delle tue offerte di credito, dei loro parametri e della loro esposizione al rischio, nessun altro. Prendi in considerazione la creazione di script automatizzati per gestire lo stato delle tue offerte di credito.",
+      "risk2": "Sii consapevole della tua esposizione alle volatilità esterne durante il periodo di rimborso del contratto di credito, il valore dei beni che hai prestato ad altri utenti e la garanzia di supporto da loro fornita fluttueranno, dovresti considerare la tua personale tolleranza al rischio quando decidi i parametri della tua offerta di credito. ",
+      "risk3": "Come prestatore, una volta che esiste un contratto di credito, tu ( {{username}} ) non può annullarlo, il mutuatario è responsabile per la durata dell'accordo entro il periodo di rimborso. La data di rimborso di un accordo di credito può anche superare la data di scadenza dell'offerta di credito.",
+      "risk4": "Se i mutuatari non riescono a ripagare i loro contratti di credito, le loro attività collaterali di supporto verranno perse a te. Non esiste un sistema di punteggio di credito che punisca i mutuatari in caso di inadempienza, i termini concordati del contratto di credito saranno sempre onorati, quindi pianifica le tue offerte di credito "
     }
   }
 }

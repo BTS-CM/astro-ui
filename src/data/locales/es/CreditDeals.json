@@ -1,5 +1,5 @@
 {
-  "dealNo": "Trato",
+  "dealNo": "Trato #",
   "with": " con ",
   "borrowed": "tomaste prestado",
   "lent": "ellos tomaron prestado",
@@ -9,19 +9,19 @@
   "remainingTime": "Tiempo restante:",
   "repayLoan": "Pagar el préstamo",
   "trade": "Comercio {{symbol}} en DEX",
-  "dialogTitle": "Pagar el préstamo",
-  "description": "Utilice este formulario para controlar los pagos de su contrato de crédito.",
+  "dialogTitle": "Reembolso del préstamo #{id}",
+  "description": "Utilice este formulario para controlar los pagos de sus operaciones de crédito.",
   "account": "Cuenta",
-  "balance": "Su actual {{symbol}} balance",
-  "repayAmount": "Cantidad de {{symbol}} volver a pagar",
+  "balance": "Tu actual {{symbol}} balance",
+  "repayAmount": "cantidad de {{symbol}} pagar",
   "remainingDebt": "Deuda restante: {{amount}} {{symbol}}",
   "repayDesc": "Para recuperar toda su garantía, pague la deuda en su totalidad.",
   "redeemCollateral": "Canjear garantía",
   "remainingCollateral": "Garantía restante: {cantidad} {{symbol}}",
-  "collateralRedemption": "Cantidad de {{symbol}} garantía de respaldo que canjearás",
+  "collateralRedemption": "cantidad de {{symbol}} garantía de respaldo que canjearás",
   "loanLabel": "Tarifa de préstamo estimada",
   "loanDesc": "Esta es la tarifa que pagará al prestamista.",
-  "finalPaymentLabel": "Pago final",
+  "finalPaymentLabel": "pago final",
   "finalPaymentDesc": "Una vez pagado en su totalidad, su {{symbol}} la garantía le será devuelta.",
   "finalPaymentWarning": "Insuficiente {{symbol}} balance",
   "networkFee": "Tarifa de red",
@@ -45,15 +45,15 @@
     "lenderTitle": "Advertencia de riesgo del prestamista",
     "description": "Información importante sobre sus responsabilidades y riesgos asociados con las operaciones de crédito.",
     "borrower": {
-      "risk1": "Tú ( {{username}} ) son responsables de administrar sus acuerdos de crédito y pagarlos de manera oportuna, nadie más. ",
-      "risk2": "Sea consciente de su exposición a las volatilidades externas durante el período de amortización del contrato de crédito; ",
-      "risk3": "La falta de reembolso de un acuerdo de crédito resultará en la pérdida de los activos de garantía restantes. "
+      "risk1": "Tú ( {{username}} ) son responsables de administrar sus ofertas de crédito y pagarlas de manera oportuna, nadie más. Considere usar un método de pago automático para evitar perder la fecha límite de pago si olvida la fecha límite.",
+      "risk2": "Tenga en cuenta su exposición a las volatilidades externas durante el período de pago de la oferta de crédito; el valor de sus activos prestados y su garantía de respaldo fluctuarán; debe considerar dicha exposición a la volatilidad al decidir cómo y cuándo pagará la oferta de crédito.",
+      "risk3": "No pagar un acuerdo de crédito resultará en la pérdida de los activos de garantía de respaldo restantes. No existe un sistema de calificación crediticia que castigue a los prestatarios morosos, se respetarán los términos acordados del acuerdo de crédito."
     },
     "lender": {
-      "risk1": "Tú ( {{username}} ) son responsables de gestionar sus ofertas de crédito, sus parámetros y su exposición al riesgo, nadie más. ",
-      "risk2": "Sea consciente de su exposición a las volatilidades externas durante el período de amortización del contrato de crédito; ",
-      "risk3": "Como prestamista, una vez que existe un acuerdo de crédito, usted ( {{username}} ) no puede cancelarlo, el prestatario es responsable de la duración del acuerdo dentro del período de amortización. ",
-      "risk4": "Si los prestatarios no pagan sus acuerdos de crédito, usted perderá sus activos de garantía de respaldo. "
+      "risk1": "Tú ( {{username}} ) son responsables de gestionar sus ofertas de crédito, sus parámetros y su exposición al riesgo, nadie más, considere crear scripts automatizados para gestionar el estado de sus ofertas de crédito.",
+      "risk2": "Tenga en cuenta su exposición a las volatilidades externas durante el período de pago de la oferta de crédito, el valor de los activos que prestó a otros usuarios y la garantía de respaldo que proporcionaron fluctuarán, debe considerar su tolerancia al riesgo personal al decidir los parámetros de su oferta de crédito. ",
+      "risk3": "Como prestamista, una vez que existe un acuerdo de crédito, usted ( {{username}} ) no puede cancelarlo, el prestatario es responsable de la duración del acuerdo dentro del período de pago. La fecha de pago de un acuerdo de crédito también puede exceder la fecha de vencimiento de su oferta de crédito.",
+      "risk4": "Si los prestatarios no pagan sus acuerdos de crédito, usted perderá sus activos de garantía de respaldo. No existe un sistema de calificación crediticia que castigue a los prestatarios por incumplir, los términos acordados del acuerdo de crédito siempre se respetarán, así que planifique sus ofertas de crédito. "
     }
   }
 }

@@ -1,6 +1,7 @@
 {
   "createdBy": "Erstellt von",
   "backingCollateral": "Sicherheiten sichern",
+  "collateral": "Sicherheit",
   "feedQty": "Futtermenge: {{qty}}",
   "mcr": "MCR: {{mcr}} %",
   "mssr": "MSSR: {{mssr}} %",
@@ -14,7 +15,7 @@
   "placeholderICR": "ICR: ? ",
   "placeholderProceedToBorrow": "Mit der Ausleihe fortfahren?",
   "selectBorrowableAsset": "💵 Wählen Sie einen leihbaren Vermögenswert aus",
-  "smartcoinDescription": "Es gibt mehrere Benutzer",
+  "smartcoinDescription": "Es gibt mehrere von Benutzern und Gremien erstellte Smartcoins auf der Bitshares-Blockchain, die Sie selbst ausgeben können, vorausgesetzt, Sie stellen ausreichend Sicherheiten zur Verfügung und halten diese bereit. Informieren Sie sich gründlich über Vermögenswerte, bevor Sie sie ausgeben, und kennen Sie Ihr Risikorisiko und Ihre Toleranzen.",
   "viewingAllAssets": "Alle Assets anzeigen",
   "viewAllAssets": "Alle Assets anzeigen",
   "viewingCompatible": "Anzeigekompatibel",
@@ -24,7 +25,7 @@
   "searching": "Suchen",
   "search": "Suchen",
   "listingAllSmartcoins": "Auflistung {{count}} (alle) Smartcoins",
-  "listingCompatibleSmartcoins": "Auflistung {{count}} Smartcoins, die mit Ihrem Konto kompatibel sind",
+  "listingCompatibleSmartcoins": "Auflistung {{count}} Mit Ihrem Konto kompatible Smartcoins",
   "listingHeldSmartcoins": "Auflistung {{count}} hielt Smartcoins",
   "howToSearch": "Wie möchten Sie suchen?",
   "searchingByBorrowable": "Suche nach leihbarem Vermögenswert",
@@ -34,5 +35,9 @@
   "searchingByIssuer": "Suche nach Emittenten",
   "searchByIssuer": "Suche nach Emittenten",
   "enterSearchText": "Geben Sie den Suchtext ein",
-  "noResultsFound": "keine Ergebnisse gefunden"
+  "noResultsFound": "Keine Ergebnisse gefunden",
+  "bitassets": "Bitassets",
+  "privateSmartcoins": "Private Smartcoins",
+  "currentSettlementPrice": "Preis",
+  "currentSupply": "Liefern"
 }

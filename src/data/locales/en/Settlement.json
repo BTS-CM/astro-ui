@@ -31,7 +31,7 @@
   "operation": "Operation: {{operation}}",
   "additionalForceSettlementFee": "Additional force settlement fee: {{fee}} %",
   "submit": "Submit",
-  "collateralBiddingDisabled": "Collateral bidding has been disabled for this asset; this operation will be rejected.",
+  "collateralBiddingDisabled": "Collateral bidding has been disabled for this asset, this operation will be rejected.",
   "existingCollateralBids": "Existing collateral bids",
   "existingCollateralBidsDescription": "These collateral bids have been created by other users who are interested in the global settled funds",
   "bidder": "Bidder",

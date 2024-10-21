@@ -1,6 +1,6 @@
 {
   "cardTitle": "Reaalajas plokiahela ülevaade",
-  "cardDescription": "Bitsharesi plokiahelal on 3-sekundiline blokeerimisaeg ja see on võimeline käsitlema tuhandeid tehinguid sekundis. ",
+  "cardDescription": "Bitsharesi plokiahelal on 3-sekundiline plokiaeg ja see on võimeline käsitlema tuhandeid tehinguid sekundis. See leht annab plokiahelast reaalajas ülevaate.",
   "currentBlock": {
     "content": "Viimane ploki number.",
     "header": "Praegune plokk"

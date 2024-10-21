@@ -1,6 +1,6 @@
 {
   "common": {
-    "title": " 권하다{{orderID}} ~에 의해 {{owner_name}} ({{owner_account}})",
+    "title": " 권하다 #{{orderID}} ~에 의해 {{owner_name}} ({{owner_account}})",
     "offer": "권하다",
     "by": "~에 의해",
     "offering": "헌금",
@@ -10,20 +10,20 @@
     "repayPeriod": "상환 기간: {{repayPeriod}} 시간",
     "validity": "유효한 제안 {{validity}} 시간",
     "min": "최소 금액: {{amount}} {{asset}}",
-    "proceed": "크레딧 제안을 진행하세요{{offerID}}",
+    "proceed": "크레딧 제안을 진행하세요 #{{offerID}}",
     "edit": "제안 수정",
     "view": "설정 보기"
   },
   "card": {
     "title": "🏦 사용 가능한 크레딧 제안 보기",
-    "description": "크레딧 제안은 사용자가 생성하며 다양한 요율, 자산 및 기간을 제공합니다. ",
+    "description": "크레딧 제안은 사용자가 생성하며 다양한 요율, 자산 및 기간을 제공하며 거래를 생성하기 전에 조건을 평가합니다.",
     "viewingAll": "모든 제안 보기",
     "viewAll": "모든 제안 보기",
     "viewingAvailable": "호환 가능한 주문 보기",
     "viewAvailable": "호환 가능한 주문 보기",
     "viewingSearch": "수색",
     "viewSearch": "찾다",
-    "allOffers": "이러한 신용 제안은 경쟁력 있는 금리로 다양한 차입 가능 자산을 제공합니다.",
+    "allOffers": "이러한 신용 제안은 경쟁력 있는 금리로 다양한 차용 자산을 제공합니다.",
     "availableOffers": "이러한 신용 제안은 귀하가 소유한 자산을 대출 담보로 인정합니다.",
     "searchPrompt": "어떻게 검색하시겠습니까?",
     "borrowSearching": "차용자산으로 검색하기",
@@ -32,7 +32,7 @@
     "collateralSearch": "담보자산으로 검색",
     "ownerSearching": "소유자 이름으로 검색",
     "ownerSearch": "소유자 이름으로 검색",
-    "noResults": "검색 결과가 없습니다",
+    "noResults": "검색결과가 없습니다",
     "loading": "쿠폰 로드 중..."
   }
 }

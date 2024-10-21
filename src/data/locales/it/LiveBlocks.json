@@ -1,6 +1,6 @@
 {
   "cardTitle": "Panoramica della blockchain in tempo reale",
-  "cardDescription": "La blockchain di Bitshares ha tempi di blocco di 3 secondi ed è in grado di gestire migliaia di transazioni al secondo. ",
+  "cardDescription": "La blockchain di Bitshares ha tempi di blocco di 3 secondi ed è in grado di gestire migliaia di transazioni al secondo. Questa pagina fornisce una panoramica in tempo reale della blockchain.",
   "currentBlock": {
     "content": "Il numero di blocco più recente.",
     "header": "Blocco attuale"

@@ -38,7 +38,7 @@
     "subtitle": "Creare saldi di maturazione",
     "hover1": "La creazione di un saldo di maturazione consente di bloccare una quantità di beni per un determinato periodo di tempo.",
     "hover2": "È possibile utilizzare uno dei due tipi di vesting: Coin Days Destroyed e Linear Vesting with Cliff.",
-    "hover3": "L'effetto della politica Coin Days Destroyed è di richiedere che una certa quantità di “interessi” maturi prima che l'intero saldo possa essere ritirato. ",
+    "hover3": "L'effetto della politica Coin Days Destroyed è di richiedere che una certa quantità di \"interessi\" maturi prima che l'intero saldo possa essere ritirato. Gli interessi maturano come coinday (saldo * durata detenuta). Se una parte del saldo viene ritirata, il saldo rimanente deve essere trattenuto ",
     "hover4": "La politica di maturazione lineare con Cliff viene utilizzata per imitare i tradizionali contratti di maturazione azionaria in cui ogni giorno un certo importo matura fino alla completa maturazione."
   },
   "borrow": {

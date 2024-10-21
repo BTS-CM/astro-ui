@@ -21,21 +21,21 @@
     },
     "backing_asset": {
       "header": "Risorsa di supporto",
-      "header_content": "L'asset di supporto è l'asset utilizzato per sostenere l'asset del mercato di previsione. "
+      "header_content": "L'asset di supporto è l'asset utilizzato per sostenere l'asset del mercato di previsione. Questo asset verrà utilizzato per pagare i vincitori dell'asset del mercato di previsione."
     },
     "resolution": {
       "header": "Data e ora di risoluzione della previsione",
-      "header_content": "La data e l'ora di risoluzione rappresentano la data e l'ora in cui l'attività del mercato di previsione verrà risolta. "
+      "header_content": "La data e l'ora di risoluzione sono la data e l'ora in cui l'asset del mercato di previsione verrà risolto. Questa è la data e l'ora in cui l'asset del mercato di previsione verrà valutato e i vincitori verranno pagati."
     }
   },
   "buttons": {
     "submit": "Invia"
   },
   "risks": {
-    "1": "Una configurazione errata delle risorse del mercato di previsione può portare a una scarsa partecipazione alla blockchain, alcune interfacce utente potrebbero filtrare completamente il tuo PMA dalla vista; ",
+    "1": "Una configurazione errata delle risorse del mercato di previsione può portare a una scarsa partecipazione alla blockchain, alcune interfacce utente potrebbero filtrare completamente il tuo PMA dalla vista, assicurati di configurare correttamente il tuo PMA, impostare una commissione ragionevole e provare prima la funzionalità su testnet.",
     "2": "Quando crei un asset di mercato di previsione, sei responsabile come casa di valutare adeguatamente il risultato, l'incapacità di farlo correttamente o in modo tempestivo potrebbe portare a problemi legali o fiscali oltre alla perdita di credibilità come casa.",
     "3": "Questa interfaccia utente e i portafogli Beet/BEETEOS non supportano account multi-firma, quindi il tuo account interno è un singolo punto di fallimento a lungo termine: proteggilo bene.",
     "title": "Alcuni dei rischi associati alla creazione di attività di mercato di previsione",
-    "description": "Fai le tue ricerche prima di creare un PMA, leggi prima i documenti; "
+    "description": "Fai le tue ricerche prima di creare un PMA, leggi prima i documenti, non la consulenza legale."
   }
 }

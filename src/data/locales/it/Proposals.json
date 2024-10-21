@@ -4,11 +4,11 @@
   "expirationTime": "Tempo di scadenza",
   "reviewPeriodTime": "Periodo di revisione",
   "operations": "Operazioni proposte",
-  "operationsDescription": "Queste sono le singole operazioni memorizzate in questa proposta. ",
+  "operationsDescription": "Queste sono le singole operazioni memorizzate in questa proposta, Fai clic sull'ID di ciascuna operazione di seguito per visualizzare i dettagli JSON, Esamina attentamente ogni operazione e ricontrolla chi è il proponente prima di procedere con l'approvazione, Le approvazioni sono irreversibili, non approvare il trasferimento del tuo account ",
   "beginApprovalProcess": "Inizia il processo di approvazione",
   "reject": "Rifiuta la proposta",
   "cardTitle": "🤔 Operazioni proposte",
-  "cardDescription": "Le proposte consentono a chiunque di suggerire operazioni da eseguire da un altro account sulla blockchain. ",
+  "cardDescription": "Le proposte consentono a chiunque di suggerire operazioni da eseguire da un altro account sulla blockchain. Il proprietario dell'account esamina queste proposte e decide se approvarle o rifiutarle.",
   "noProposals": "Nessuna proposta disponibile.",
   "approveProposedOperation": "Approvare l'operazione proposta",
   "rejectProposedOperation": "Rifiutare l'operazione proposta",
@@ -21,6 +21,6 @@
   "approvedProposalHeader": "Approvazione della seguente proposta",
   "risksTitle": "Rischi della proposta",
   "risksDescription": "Essere consapevoli dei seguenti rischi quando si valutano le proposte:",
-  "risk1": "Le proposte possono essere pericolose. ",
-  "risk2": "Le proposte approvate sono irreversibili. "
+  "risk1": "Le proposte possono essere pericolose, possono essere create da chiunque e suggeriscono qualsiasi tipo di operazione sulla blockchain, sii intelligente e fai la dovuta diligenza quando consideri l'approvazione delle proposte, assicurati di non essere sorpreso da un truffatore.",
+  "risk2": "Le proposte approvate sono irreversibili, Le app/progetti Astro-UI e Beeteos non offrono alcuna garanzia per l'utente come parte delle rispettive licenze, Sei responsabile di qualsiasi scelta effettuata nell'interfaccia utente di cui sopra, Non cadere nei trucchi, Se non te lo aspettavi "
 }

@@ -5,7 +5,7 @@
     "readyToBroadcast": "Your Bitshares Beet operation is ready to broadcast!",
     "chooseMethod": "Choose from the methods below to broadcast to your wallet of choice.",
     "bitsharesBEETMultiwallet": "Bitshares BEET multiwallet",
-    "errorOccurred": "An error occurred, sorry. Please close this dialog and try again.",
+    "errorOccurred": "An error occurred, sorry, Please close this dialog and try again.",
     "beetWallet": "Bitshares BEET multiwallet"
   },
   "tabs": {
@@ -37,7 +37,7 @@
     "proposeDescription": "If you're not the owner (or are a co-owner) of the account you're using to construct the proposed operation, then you can create a proposal for the account owner to review and broadcast at their discretion."
   },
   "proposal": {
-    "targetContent": "This is the account which you'll use to create the proposal. Construct operations in the Astro UI as the end user, and then provide your proposal fee paying account here.",
+    "targetContent": "This is the account which you'll use to create the proposal, Construct operations in the Astro UI as the end user, and then provide your proposal fee paying account here.",
     "targetHeader": "Proposal fee paying account",
     "revisionPeriodSecondsContent": "Specify the revision period in seconds.",
     "revisionPeriodSecondsHeader": "Revision Period (Seconds)"

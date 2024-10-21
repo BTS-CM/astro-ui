@@ -5,12 +5,12 @@
     "charge_market_fee": {
       "about": "Enable market fee",
       "enabledInfo": "The asset issuer/owner can update the charge_market_fee flag.",
-      "disabledInfo": "The asset issuer/owner can NOT update the charge_market_fee flag. If the charge_market_fee flag is set to 0, can no longer start charging market trading fees; if the charge_market_fee flag is set to non-zero, the market trading fee rates can still be updated to 0 or non-zero at any time so that trading is not charged or charged."
+      "disabledInfo": "The asset issuer/owner can NOT update the charge_market_fee flag, If the charge_market_fee flag is set to 0, can no longer start charging market trading fees, if the charge_market_fee flag is set to non-zero, the market trading fee rates can still be updated to 0 or non-zero at any time so that trading is not charged or charged."
     },
     "white_list": {
       "about": "Require holders to be white-listed",
       "enabledInfo": "The asset issuer/owner can update the white_list flag.",
-      "disabledInfo": "The asset issuer/owner can NOT update the white_list flag. If the white_list flag is set to 0, can no longer start enforcing whitelisting or blacklisting; if the white_list flag is set to non-zero, can still configure to not enforce whitelisting or blacklisting at any time by clearing the whitelisting and blacklisting authorities."
+      "disabledInfo": "The asset issuer/owner can NOT update the white_list flag, If the white_list flag is set to 0, can no longer start enforcing whitelisting or blacklisting, if the white_list flag is set to non-zero, can still configure to not enforce whitelisting or blacklisting at any time by clearing the whitelisting and blacklisting authorities."
     },
     "override_authority": {
       "about": "Asset owner may transfer asset back to themselves",
@@ -64,18 +64,18 @@
     },
     "disable_mcr_update": {
       "about": "Disable owner update Minimum Collateral Ratio",
-      "enabledInfo": "The asset issuer/owner can NOT update (set/change/delete) the maintenance_collateral_ratio extension of the asset. If a value is set in the maintenance_collateral_ratio extension, it takes precedence over the same parameter suggested by the price feed publishers, otherwise the value suggested by the price feed publishers takes effect.",
-      "disabledInfo": "The asset issuer/owner can update (set/change/delete) the maintenance_collateral_ratio extension of the asset. If a value is set in the maintenance_collateral_ratio extension, it takes precedence over the same parameter suggested by the price feed publishers, otherwise the value suggested by the price feed publishers takes effect."
+      "enabledInfo": "The asset issuer/owner can NOT update (set/change/delete) the maintenance_collateral_ratio extension of the asset, If a value is set in the maintenance_collateral_ratio extension, it takes precedence over the same parameter suggested by the price feed publishers, otherwise the value suggested by the price feed publishers takes effect.",
+      "disabledInfo": "The asset issuer/owner can update (set/change/delete) the maintenance_collateral_ratio extension of the asset, If a value is set in the maintenance_collateral_ratio extension, it takes precedence over the same parameter suggested by the price feed publishers, otherwise the value suggested by the price feed publishers takes effect."
     },
     "disable_icr_update": {
       "about": "Disable owner update Initial Collateral Ratio",
-      "enabledInfo": "The asset issuer/owner can NOT update (set/change/delete) the initial_collateral_ratio extension of the asset. If a value is set in the initial_collateral_ratio extension, it takes precedence over the same parameter suggested by the price feed publishers, otherwise the value suggested by the price feed publishers takes effect.",
-      "disabledInfo": "The asset issuer/owner can update (set/change/delete) the initial_collateral_ratio extension of the asset. If a value is set in the initial_collateral_ratio extension, it takes precedence over the same parameter suggested by the price feed publishers, otherwise the value suggested by the price feed publishers takes effect."
+      "enabledInfo": "The asset issuer/owner can NOT update (set/change/delete) the initial_collateral_ratio extension of the asset, If a value is set in the initial_collateral_ratio extension, it takes precedence over the same parameter suggested by the price feed publishers, otherwise the value suggested by the price feed publishers takes effect.",
+      "disabledInfo": "The asset issuer/owner can update (set/change/delete) the initial_collateral_ratio extension of the asset, If a value is set in the initial_collateral_ratio extension, it takes precedence over the same parameter suggested by the price feed publishers, otherwise the value suggested by the price feed publishers takes effect."
     },
     "disable_mssr_update": {
       "about": "Disable owner update Maximum Short Squeeze Ratio",
-      "enabledInfo": "The asset issuer/owner can NOT update (set/change/delete) the maximum_short_squeeze_ratio extension of the asset. If a value is set in the maximum_short_squeeze_ratio extension, it takes precedence over the same parameter suggested by the price feed publishers, otherwise the value suggested by the price feed publishers takes effect.",
-      "disabledInfo": "The asset issuer/owner can update (set/change/delete) the maximum_short_squeeze_ratio extension of the asset. If a value is set in the maximum_short_squeeze_ratio extension, it takes precedence over the same parameter suggested by the price feed publishers, otherwise the value suggested by the price feed publishers takes effect."
+      "enabledInfo": "The asset issuer/owner can NOT update (set/change/delete) the maximum_short_squeeze_ratio extension of the asset, If a value is set in the maximum_short_squeeze_ratio extension, it takes precedence over the same parameter suggested by the price feed publishers, otherwise the value suggested by the price feed publishers takes effect.",
+      "disabledInfo": "The asset issuer/owner can update (set/change/delete) the maximum_short_squeeze_ratio extension of the asset, If a value is set in the maximum_short_squeeze_ratio extension, it takes precedence over the same parameter suggested by the price feed publishers, otherwise the value suggested by the price feed publishers takes effect."
     },
     "disable_bsrm_update": {
       "about": "Disable owner update Black Swan Risk Management strategy",
@@ -103,7 +103,7 @@
     },
     "transfer_restricted": {
       "about": "Asset owner must approve all transfers",
-      "enabledInfo": "Transfers of this asset are restricted. When transferring this asset, it can only from the asset issuer/owner or to the asset issuer/owner. The same from or to limitation also applies to HTLCs and withdraw-permission withdrawals. Cannot create vesting balances with this asset. Cannot transfer this asset to blind/stealth/confidential addresses. This limitation does not prevent other operations such as buying from anyone or selling to anyone.",
+      "enabledInfo": "Transfers of this asset are restricted, When transferring this asset, it can only from the asset issuer/owner or to the asset issuer/owner, The same from or to limitation also applies to HTLCs and withdraw-permission withdrawals, Cannot create vesting balances with this asset, Cannot transfer this asset to blind/stealth/confidential addresses, This limitation does not prevent other operations such as buying from anyone or selling to anyone.",
       "disabledInfo": "No such limitation on transfers."
     },
     "disable_force_settle": {
@@ -113,7 +113,7 @@
     },
     "disable_confidential": {
       "about": "Disable confidential transactions",
-      "enabledInfo": "Transfers to blind/stealth/confidential addresses are disabled. Can NOT transfer an amount of this asset from the balance of an account to blind/stealth/confidential addresses. Transferring from blind/stealth/confidential addresses to other blind/stealth/confidential addresses or to the balance of an account is still allowed.",
+      "enabledInfo": "Transfers to blind/stealth/confidential addresses are disabled, Can NOT transfer an amount of this asset from the balance of an account to blind/stealth/confidential addresses, Transferring from blind/stealth/confidential addresses to other blind/stealth/confidential addresses or to the balance of an account is still allowed.",
       "disabledInfo": "Transfers to blind/stealth/confidential addresses are enabled."
     },
     "witness_fed_asset": {
@@ -138,7 +138,7 @@
     },
     "disable_collateral_bidding": {
       "about": "Disable collateral bidding",
-      "enabledInfo": "Bidding for collateral in the global-settlement pool is disabled. It is NOT allowed to bid for collateral in the global-settlement pool when this asset has been globally settled.",
+      "enabledInfo": "Bidding for collateral in the global-settlement pool is disabled, It is NOT allowed to bid for collateral in the global-settlement pool when this asset has been globally settled.",
       "disabledInfo": "Bidding for collateral in the global-settlement pool is enabled."
     }
   },
@@ -147,12 +147,12 @@
     "title_content": "These are the asset settings used for core DEX functionality.",
     "symbol": {
       "header": "Asset symbol",
-      "header_content": "The asset symbol is an unique identifier on the blockchain identifiying the asset throughout the DEX. Cheaper assets can be created by using a subasset name like NFT.TITLE",
+      "header_content": "The asset symbol is an unique identifier on the blockchain identifiying the asset throughout the DEX, Cheaper assets can be created by using a subasset name like NFT.TITLE",
       "placeholder": "Symbol"
     },
     "shortName": {
       "header": "Asset short name",
-      "header_content": "This is the short name of the asset, less important than the symbol but still am optionally shortened unique identifier. You can just re-use the symbol for this field.",
+      "header_content": "This is the short name of the asset, less important than the symbol but still am optionally shortened unique identifier, You can just re-use the symbol for this field.",
       "placeholder": "Short Name"
     },
     "preferredMarket": {
@@ -171,7 +171,7 @@
     },
     "precision": {
       "header": "Asset precision",
-      "header_content": "The precision of the asset specifies the quantity of supported decimal places. This value cannot be changed after asset creation.",
+      "header_content": "The precision of the asset specifies the quantity of supported decimal places, This value cannot be changed after asset creation.",
       "placeholder": "Precision"
     }
   },
@@ -230,7 +230,7 @@
     "header": "Asset blacklist authorities"
   },
   "market_fee": {
-    "header_content": "The market fee is the fee percentage that is charged on every trade that is executed on the Bitshares DEX. The fee is charged in the asset that is being traded.",
+    "header_content": "The market fee is the fee percentage that is charged on every trade that is executed on the Bitshares DEX, The fee is charged in the asset that is being traded.",
     "header": "Market fee percent"
   },
   "max_market_fee": {
@@ -248,17 +248,17 @@
     },
     "calculated_cer_price": {
       "header": "Core exchange rate",
-      "header_content": "Make sure your core exchange rate is higher than the market price, otherwise people will buy your token from the market and drain your fee pool via implicit arbitrage. The core exchange rate should be updated regularly to reflect market pricing of your asset."
+      "header_content": "Make sure your core exchange rate is higher than the market price, otherwise people will buy your token from the market and drain your fee pool via implicit arbitrage, The core exchange rate should be updated regularly to reflect market pricing of your asset."
     }
   },
   "nft": {
     "NFTTitleContent": "This is the title of your non-fungible token, make sure it's unique and descriptive as it may be presented within various non-fungible token galleries/explorers.",
     "NFTTitleHeader": "Title",
     "TitlePlaceholder": "Title",
-    "NFTArtistContent": "Name or pseudonym of the artist. May also include aliases or online names or handles, to include blockchain account names or addresses which might facilitate authenticating a signing key.",
+    "NFTArtistContent": "Name or pseudonym of the artist, May also include aliases or online names or handles, to include blockchain account names or addresses which might facilitate authenticating a signing key.",
     "NFTArtistHeader": "Artist",
     "ArtistPlaceholder": "Artist",
-    "NFTNarrativeContent": "A personal statement from the artist describing the work, such as what the work means to them, or what inspired it. May include details of its creation, etc. It's a freeform field, and can be adapted as appropriate for the piece. Example, if the work is an avatar, playing card, role playing character, etc., then this field may also include stats and abilities, strengths, weaknesses, etc.",
+    "NFTNarrativeContent": "A personal statement from the artist describing the work, such as what the work means to them, or what inspired it, May include details of its creation, etc, It's a freeform field, and can be adapted as appropriate for the piece, Example, if the work is an avatar, playing card, role playing character, etc., then this field may also include stats and abilities, strengths, weaknesses, etc.",
     "NFTNarrativeHeader": "Narrative",
     "NarrativePlaceholder": "Narrative",
     "NFTTagsContent": "Comma-separated list of keywords to facilitate topic/interest searches.",
@@ -267,16 +267,16 @@
     "NFTTypeContent": "A string which describes the type of non-fungible token, such as 'NFT/ART/VISUAL', 'NFT/ART/3D', 'NFT/ART/ANIMATION', 'NFT/ART/AUDIO', 'NFT/ART/VIDEO', 'NFT/ART/TEXT', 'NFT/ART/DOCUMENT', 'NFT/ART/OTHER', etc.",
     "NFTTypeHeader": "Type",
     "TypePlaceholder": "Type",
-    "NFTAttestationContent": "Here the artist or originator of the encapsulated material commits or dedicates the material to the blockchain, expressly naming the token or asset ID under which the work will live, and attests to its qualified or unqualified uniqueness. E.g., an artist may attest that no other non-fungible token encapsulation of this work exists, and may declare intent as to future re-issues, or tokenization on other chains, etc.",
+    "NFTAttestationContent": "Here the artist or originator of the encapsulated material commits or dedicates the material to the blockchain, expressly naming the token or asset ID under which the work will live, and attests to its qualified or unqualified uniqueness, E.g., an artist may attest that no other non-fungible token encapsulation of this work exists, and may declare intent as to future re-issues, or tokenization on other chains, etc.",
     "NFTAttestationHeader": "Attestation",
     "AttestationPlaceholder": "Attestation",
     "NFTAcknowledgementsContent": "Acknowledgments or additional credits for the digital token.",
     "NFTAcknowledgementsHeader": "Acknowledgements",
     "AcknowledgementsPlaceholder": "Acknowledgements",
-    "NFTHolderLicenseContent": "If the token grants additional license for the use of the creative work specifically to token holders, this can be specified here. An example of such a license might be granting to the holder of the non-fungible token token the right to print and sell physical copies of the tokenized artwork, or to collect royalties for commercial use of the artwork, etc.",
+    "NFTHolderLicenseContent": "If the token grants additional license for the use of the creative work specifically to token holders, this can be specified here, An example of such a license might be granting to the holder of the non-fungible token token the right to print and sell physical copies of the tokenized artwork, or to collect royalties for commercial use of the artwork, etc.",
     "NFTHolderLicenseHeader": "Holders license",
     "HolderLicensePlaceholder": "Holder license",
-    "NFTLicenseContent": "License under which the artwork is released. Often, this will be a simple license identifier, such as 'CC BY-NC-SA 2.0', though it can also be a fully specified verbose license.",
+    "NFTLicenseContent": "License under which the artwork is released, Often, this will be a simple license identifier, such as 'CC BY-NC-SA 2.0', though it can also be a fully specified verbose license.",
     "NFTLicenseHeader": "Media license",
     "LicensePlaceholder": "License",
     "modifyMultimediaContents": "Modify multimedia contents",
@@ -308,7 +308,7 @@
     "multimedia_header_content": "Provide your non ",
     "currentIPFSFiles": "This non-fungible token currently contains {{count}} IPFS media file references.",
     "supportedFiletypes": "Supported filetypes include images, video, audio, 3D files, documents, etc.",
-    "main_header_content": "The settings below define how your non-fungible token will behave on the Bitshares blockchain. The asset creator is responsible for properly configuring their non-fungible token.",
+    "main_header_content": "The settings below define how your non-fungible token will behave on the Bitshares blockchain, The asset creator is responsible for properly configuring their non-fungible token.",
     "main_header": "Non-fungible token configuration"
   }
 }

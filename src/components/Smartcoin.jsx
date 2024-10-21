@@ -55,7 +55,10 @@ import { createFullSmartcoinStore } from "@/nanoeffects/FullSmartcoin.ts";
 
 import { $currentUser } from "@/stores/users.ts";
 import { $currentNode } from "@/stores/node.ts";
+
 import {
+  $assetCacheBTS,
+  $assetCacheTEST,
   $marketSearchCacheBTS,
   $marketSearchCacheTEST,
   $globalParamsCacheBTS,
@@ -157,7 +160,21 @@ export default function Smartcoin(properties) {
     return "bitshares";
   }, [usr]);
 
-  useInitCache(_chain ?? "bitshares", ["bitAssetData", "globalParams", "marketSearch"]);
+  useInitCache(_chain ?? "bitshares", ["bitAssetData", "globalParams", "marketSearch", "assets"]);
+
+  const _assetsBTS = useSyncExternalStore($assetCacheBTS.subscribe, $assetCacheBTS.get, () => true);
+  const _assetsTEST = useSyncExternalStore(
+    $assetCacheTEST.subscribe,
+    $assetCacheTEST.get,
+    () => true
+  );
+
+  const assets = useMemo(() => {
+    if (_chain && (_assetsBTS || _assetsTEST)) {
+      return _chain === "bitshares" ? _assetsBTS : _assetsTEST;
+    }
+    return [];
+  }, [_assetsBTS, _assetsTEST, _chain]);
 
   const bitAssetData = useMemo(() => {
     if (_chain && (bitAssetDataBTS || bitAssetDataTEST)) {
@@ -173,39 +190,6 @@ export default function Smartcoin(properties) {
     return [];
   }, [_globalParamsBTS, _globalParamsTEST, _chain]);
 
-  const marketSearch = useMemo(() => {
-    if (_chain && (_marketSearchBTS || _marketSearchTEST)) {
-      return _chain === "bitshares" ? _marketSearchBTS : _marketSearchTEST;
-    }
-    return [];
-  }, [_marketSearchBTS, _marketSearchTEST, _chain]);
-
-  const [usrBalances, setUsrBalances] = useState();
-  useEffect(() => {
-    let unsubscribeUserBalances;
-
-    if (usr && usr.id) {
-      const userBalancesStore = createUserBalancesStore([
-        usr.chain,
-        usr.id,
-        currentNode ? currentNode.url : null,
-      ]);
-
-      unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
-        if (data && !error && !loading) {
-          const filteredData = data.filter((balance) =>
-            assets.find((x) => x.id === balance.asset_id)
-          );
-          setUsrBalances(filteredData);
-        }
-      });
-    }
-
-    return () => {
-      if (unsubscribeUserBalances) unsubscribeUserBalances();
-    };
-  }, [usr]);
-
   const [fee, setFee] = useState(0);
   useEffect(() => {
     if (globalParams && globalParams.length) {
@@ -214,6 +198,13 @@ export default function Smartcoin(properties) {
       setFee(finalFee);
     }
   }, [globalParams]);
+
+  const marketSearch = useMemo(() => {
+    if (_chain && (_marketSearchBTS || _marketSearchTEST)) {
+      return _chain === "bitshares" ? _marketSearchBTS : _marketSearchTEST;
+    }
+    return [];
+  }, [_marketSearchBTS, _marketSearchTEST, _chain]);
 
   const parsedUrlParams = useMemo(() => {
     if (marketSearch && marketSearch.length && window.location.search) {
@@ -296,36 +287,33 @@ export default function Smartcoin(properties) {
     }
   }, [parsedCollateralAsset, bitAssetData]);
 
+  const [usrBalances, setUsrBalances] = useState();
   /*
-  const parsedCollateralBitassetCollateralAsset = useMemo(() => {
-    if (parsedCollateralBitasset && marketSearch) {
-      const foundAsset = marketSearch.find((x) => x.id === parsedCollateralBitasset.collateral);
-      return foundAsset;
+  useEffect(() => {
+    let unsubscribeUserBalances;
+
+    if (usr && usr.id) {
+      const userBalancesStore = createUserBalancesStore([
+        usr.chain,
+        usr.id,
+        currentNode ? currentNode.url : null,
+      ]);
+
+      unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
+        if (data && !error && !loading) {
+          const filteredData = data.filter((balance) =>
+            assets.find((x) => x.id === balance.asset_id)
+          );
+          setUsrBalances(filteredData);
+        }
+      });
     }
-  }, [parsedCollateralBitasset, marketSearch]);
+
+    return () => {
+      if (unsubscribeUserBalances) unsubscribeUserBalances();
+    };
+  }, [usr]);
   */
-
-  const debtAssetHoldings = useMemo(() => {
-    if (parsedAsset && usrBalances && usrBalances.length) {
-      const foundAsset = usrBalances.find((x) => x.asset_id === parsedAsset.id);
-      if (!foundAsset) {
-        return 0;
-      }
-      const finalAmount = humanReadableFloat(foundAsset.amount, parsedAsset.p);
-      return finalAmount;
-    }
-  }, [parsedAsset, usrBalances]);
-
-  const collateralAssetHoldings = useMemo(() => {
-    if (parsedCollateralAsset && usrBalances && usrBalances.length) {
-      const foundAsset = usrBalances.find((x) => x.asset_id === parsedCollateralAsset.id);
-      if (!foundAsset) {
-        return 0;
-      }
-      const finalAmount = humanReadableFloat(foundAsset.amount, parsedCollateralAsset.p);
-      return finalAmount;
-    }
-  }, [parsedCollateralAsset, usrBalances]);
 
   const [finalAsset, setFinalAsset] = useState();
   const [finalBitasset, setFinalBitasset] = useState();
@@ -352,17 +340,22 @@ export default function Smartcoin(properties) {
       ]);
       unsub = smartcoinDataStore.subscribe(({ data }) => {
         if (data && !data.error && !data.loading) {
-          setFinalAsset(data[0]);
-          setFinalCollateralAsset(data[1]);
-          setFinalBitasset(data[2]);
-          if (data[3].id) {
-            setFinalCollateralBitasset(data[3]);
+          console.log({ data });
+          const filteredData = data[0].filter((balance) =>
+            assets.find((x) => x.id === balance.asset_id)
+          );
+          setUsrBalances(filteredData);
+          setFinalAsset(data[1]);
+          setFinalCollateralAsset(data[2]);
+          setFinalBitasset(data[3]);
+          if (data[4].id) {
+            setFinalCollateralBitasset(data[4]);
           }
-          setUsrMarginPositions(data[4]);
-          setAssetCallOrders(data[5]);
-          setAssetSettleOrders(data[6]);
-          setBuyOrders(data[7].asks);
-          setSellOrders(data[7].bids);
+          setUsrMarginPositions(data[5]);
+          setAssetCallOrders(data[6]);
+          setAssetSettleOrders(data[7]);
+          setBuyOrders(data[8].asks);
+          setSellOrders(data[8].bids);
         }
       });
     }
@@ -371,6 +364,28 @@ export default function Smartcoin(properties) {
       if (unsub) unsub();
     };
   }, [parsedAsset, parsedBitasset, usr]);
+
+  const debtAssetHoldings = useMemo(() => {
+    if (parsedAsset && usrBalances && usrBalances.length) {
+      const foundAsset = usrBalances.find((x) => x.asset_id === parsedAsset.id);
+      if (!foundAsset) {
+        return 0;
+      }
+      const finalAmount = humanReadableFloat(foundAsset.amount, parsedAsset.p);
+      return finalAmount;
+    }
+  }, [parsedAsset, usrBalances]);
+
+  const collateralAssetHoldings = useMemo(() => {
+    if (parsedCollateralAsset && usrBalances && usrBalances.length) {
+      const foundAsset = usrBalances.find((x) => x.asset_id === parsedCollateralAsset.id);
+      if (!foundAsset) {
+        return 0;
+      }
+      const finalAmount = humanReadableFloat(foundAsset.amount, parsedCollateralAsset.p);
+      return finalAmount;
+    }
+  }, [parsedCollateralAsset, usrBalances]);
 
   const currentFeedSettlementPrice = useMemo(() => {
     if (finalBitasset && finalBitasset.current_feed && parsedCollateralAsset && parsedAsset) {

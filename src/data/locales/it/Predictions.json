@@ -30,13 +30,13 @@
   "price_feeders_content": "La previsione può essere risolta dai testimoni, dal comitato o dai fornitori di prezzi privati.",
   "feed": "Risoluzione basata sul prezzo",
   "seller": "Vendere (scommettere contro il pronostico)",
-  "seller_content": "I venditori scommettono contro la previsione. ",
+  "seller_content": "I venditori scommettono contro la previsione. Se la previsione è falsa, i venditori vincono se il prezzo di chiusura arriva a 0.",
   "buyer": "Acquistare (scommettere sul pronostico)",
-  "buyer_content": "Gli acquirenti scommettono sulla previsione. ",
+  "buyer_content": "Gli acquirenti scommettono per la previsione. Se la previsione è vera, gli acquirenti vincono quando il prezzo di chiusura arriva a 1.",
   "admin": "Ammin",
   "admin_content": "La casa dispone di controlli aggiuntivi per risolvere la previsione.",
   "about": "Di",
-  "winner_content": "I vincitori che hanno acquistato (risultato reale) possono saldare il PMA per il contenuto della risorsa di supporto 1x. ",
+  "winner_content": "I vincitori che hanno acquistato (risultato vero) possono saldare il PMA per il contenuto della risorsa di supporto 1x, i vincitori che hanno venduto (risultato falso) non devono fare nulla.",
   "winner_header": "Vincitori",
   "winner_claim": "Richiedi risorse di supporto",
   "resolve": "Risolvi la previsione",
@@ -52,7 +52,7 @@
     "description": "Per scommettere contro il risultato, devi prima emettere i token degli asset del mercato di previsione.",
     "balance": "Usa l'equilibrio",
     "qtyHeader": "Quantità da emettere",
-    "qtyContent": "La quantità di token che desideri emettere in questo mercato di previsione. ",
+    "qtyContent": "La quantità di token che desideri emettere in questo mercato di previsione. I token emessi possono essere venduti, consentendoti di scommettere contro le previsioni.",
     "existingHeader": "Garanzie impegnate esistenti",
     "existingContent": "Questo è il numero di token di asset del mercato di previsione che hai già emesso.",
     "totalHeader": "Garanzia totale",
@@ -78,7 +78,7 @@
     "receivingContent": "Questo è approssimativamente l'importo totale dell'asset di garanzia che riceverai in cambio di questa operazione.",
     "title": "Vendita di asset del mercato di previsione",
     "description": "Per scommettere contro il risultato della previsione, devi vendere i token asset del mercato di previsione che hai emesso in precedenza.",
-    "expiryContent": "Il tuo ordine limite rimarrà attivo sul DEX per tutto questo tempo prima di non esistere più. ",
+    "expiryContent": "Il tuo ordine limite rimarrà attivo sul DEX per questo tempo prima di non esistere più. Se selezioni \"riempi o uccidi\", se non esiste un ordine limite di vendita DEX corrispondente l'operazione fallirà, risparmiando tempo e commissioni.",
     "expiryHeader": "Scadenza"
   },
   "buyDialog": {
@@ -93,21 +93,21 @@
   },
   "resolveDialog": {
     "title": "Risoluzione della previsione",
-    "description": "Il pronostico è scaduto ed è pronto per essere risolto. ",
+    "description": "Il pronostico è scaduto ed è pronto per essere risolto. Seleziona il risultato corretto del pronostico.",
     "outcomeHeader": "Risultato",
-    "outcomeContent": "L'esito della previsione. ",
+    "outcomeContent": "Il risultato della previsione, se la previsione è vera, gli acquirenti vincono quando il prezzo di chiusura arriva a 1, se la previsione è falsa, i venditori vincono quando il prezzo di chiusura arriva a 0.",
     "true": "Risultato reale (gli acquirenti vincono)",
     "false": "Risultato falso (i venditori vincono)"
   },
   "priceFeederDialog": {
     "title": "Imposta gli alimentatori di prezzo",
-    "description": "Imposta i feeder dei prezzi per questa previsione. ",
+    "description": "Imposta i feeder dei prezzi per questa previsione. I feeder dei prezzi sono responsabili di fornire il prezzo di liquidazione per la previsione.",
     "priceFeedersHeader": "Alimentatori di prezzi",
-    "priceFeedersContent": "Gli alimentatori di prezzo per questa previsione. ",
+    "priceFeedersContent": "Gli alimentatori di prezzo per questa previsione, gli alimentatori di prezzo sono responsabili di fornire il prezzo di liquidazione per la previsione.",
     "addPriceFeeder": "Aggiungi alimentatore prezzo",
     "addPriceFeederDialog": {
       "title": "Aggiungi alimentatore prezzo",
-      "description": "Aggiungi un alimentatore di prezzo a questa previsione. ",
+      "description": "Aggiungi un feeder di prezzo a questa previsione. I feeder di prezzo sono responsabili di fornire il prezzo di liquidazione per la previsione.",
       "accountHeader": "Account",
       "accountContent": "Il conto che sarà responsabile di fornire il prezzo di liquidazione per la previsione.",
       "submit": "Aggiungere"
@@ -117,7 +117,7 @@
     "title": "Risoluzione del mercato delle previsioni tramite feed dei prezzi",
     "description": "La previsione è scaduta ed è pronta per essere risolta tramite un feed di prezzo pubblicato.",
     "outcomeHeader": "Risultato",
-    "outcomeContent": "L'esito della previsione. ",
+    "outcomeContent": "Il risultato della previsione, se la previsione è vera, gli acquirenti vincono quando il prezzo di chiusura arriva a 1, se la previsione è falsa, i venditori vincono quando il prezzo di chiusura arriva a 0.",
     "true": "Risultato reale (gli acquirenti vincono)",
     "false": "Risultato falso (i venditori vincono)"
   }

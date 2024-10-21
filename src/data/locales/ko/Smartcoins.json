@@ -1,6 +1,7 @@
 {
   "createdBy": "작성자:",
   "backingCollateral": "뒷받침하는 담보",
+  "collateral": "방계친",
   "feedQty": "피드 수량: {{qty}}",
   "mcr": "MCR: {{mcr}} %",
   "mssr": "MSSR: {{mssr}} %",
@@ -14,7 +15,8 @@
   "placeholderICR": "ICR: ? ",
   "placeholderProceedToBorrow": "대출을 진행하시겠습니까?",
   "selectBorrowableAsset": "💵 차용 자산 선택",
-  "smartcoinDescription": "사용자가 여러 명 있습니다",
+
+  "smartcoinDescription": "Bitshares 블록체인에는 충분한 지원 담보를 제공하고 유지하는 경우 스스로 발행할 수 있는 여러 사용자 및 위원회 생성 스마트코인이 있습니다. 자산을 발행하기 전에 철저하게 조사하고 위험 노출 및 허용 범위를 파악하십시오.",
   "viewingAllAssets": "모든 자산 보기",
   "viewAllAssets": "모든 자산 보기",
   "viewingCompatible": "보기 호환 가능",
@@ -34,7 +36,9 @@
   "searchingByIssuer": "발급자별 검색",
   "searchByIssuer": "발행자로 검색",
   "enterSearchText": "검색어를 입력하세요",
-  "noResultsFound": "검색 결과가 없습니다",
+  "noResultsFound": "검색결과가 없습니다",
   "bitassets": "비트자산",
-  "privateSmartcoins": "프라이빗 스마트코인"
+  "privateSmartcoins": "프라이빗 스마트코인",
+  "currentSettlementPrice": "가격",
+  "currentSupply": "공급"
 }

@@ -6,7 +6,7 @@
     "buttonLabel": "Zurück zur Kreditangebotsübersicht"
   },
   "offerCardHeader": {
-    "viewingOffer": "🏦 Besichtigungsangebot{{id}} erstellt von {{owner_name}} ({{owner_account}})",
+    "viewingOffer": "🏦 Angebot ansehen #{{id}} erstellt von {{owner_name}} ({{owner_account}})",
     "loadingOfferTerms": "Angebotsbedingungen werden geladen...",
     "offerDescription1": "Dies ist ein vom Benutzer erstelltes Kreditangebot auf dem Bitshares DEX.",
     "offerDescription2": "Lesen Sie die Angebotsbedingungen sorgfältig durch, bevor Sie sich an Beet wenden."
@@ -18,7 +18,7 @@
     "viewAccount": "Sicht {{owner_name}}'s Konto",
     "borrowingDescription": "Dies ist der Benutzer, von dem Sie etwas ausleihen {{symbol}} aus.",
     "availableAmount": "Menge von {{symbol}} ({{asset_type}}) können bei diesem Kreditgeber ausgeliehen werden",
-    "loading": "Wird geladen...",
+    "loading": "Laden...",
     "offerDescription": "{{owner_name}} bietet Ihnen großzügigerweise an, Ihnen diesen Betrag zu leihen {{symbol}}, vorausgesetzt, Sie stimmen den Bedingungen zu.",
     "backingCollateral": "Sicherheiten für Kreditgeschäfte",
     "selectCollateral": "Wählen Sie Ihre Sicherheiten aus.",
@@ -26,7 +26,8 @@
     "borrowDescription2": "Vom Kreditgeber festgelegter Preis: {{price}} {{quote}}/{{base}}",
     "noCollateralMessage": "Das Konto enthält diesen Sicherungswert nicht.",
     "borrowAmount": "Menge von {{symbol}} Sie planen, einen Kredit aufzunehmen",
-"availableAmountRange": "Verfügbar: {{availableAmount}} {{symbol}} (Minimum: {{minAmount}})",    "inputBorrowAmount": "Geben Sie die Menge ein {{symbol}} von dem Sie etwas ausleihen möchten {{owner_name}}.",
+    "availableAmountRange": "Verfügbar: {{availableAmount}} {{symbol}} (Minimum: {{minAmount}})",
+    "inputBorrowAmount": "Geben Sie die Menge ein {{symbol}} von dem Sie etwas ausleihen möchten {{owner_name}}.",
     "repayMethod": "Rückzahlungsmethode für Kreditangebote",
     "selectRepayMethod": "Wählen Sie Ihre Rückzahlungsmethode.",
     "noAutoRepayment": "Keine automatische Rückzahlung",
@@ -41,10 +42,10 @@
     "loadingBalance": "Guthaben wird geladen...",
     "collateralNeeded": "Um zu leihen {{borrowAmount}} {{symbol}} Sie müssen den folgenden Betrag an Sicherheiten bereitstellen, um das Geschäft abzusichern.",
     "enterValidBorrowAmount": "Geben Sie einen gültigen Kreditbetrag ein, um die erforderlichen Sicherheiten zu berechnen.",
-    "insufficientBalance": "Ihr Konto ist unzureichend {{symbol}} Gleichgewicht.  {{requiredMore}} mehr {{symbol}}.",
-    "noAssetHeld": "Ihr Konto enthält dieses Guthaben nicht. ",
+    "insufficientBalance": "Ihr Konto ist unzureichend {{symbol}} Gleichgewicht, Du brauchst mindestens {{requiredMore}} mehr {{symbol}}.",
+    "noAssetHeld": "Ihr Konto enthält diesen Vermögenswert nicht. Versuchen Sie es nach Möglichkeit mit einer anderen Form der Sicherheit.",
     "repayPeriod": "Rückzahlungszeitraum",
-    "repayPeriodDescription": "Die maximale Laufzeit des Kreditgeschäfts; ",
+    "repayPeriodDescription": "Die maximale Laufzeit des Kreditgeschäfts, zahlen Sie den Kredit innerhalb dieser Frist zurück, um einen Verlust von Sicherheiten zu vermeiden.",
     "offerExpiry": "Ablauf des Kreditangebots",
     "offerExpiryDescription": "Ab wann wird es dieses Angebot nicht mehr geben.",
     "estimatedFee": "Geschätzte Leihgebühr",
@@ -68,7 +69,7 @@
     "riskLiquidity": "Liquiditätsrisiko: Wenn Sie die von Ihnen geliehenen Vermögenswerte verkaufen, ist es möglicherweise nicht möglich, die Vermögenswerte rechtzeitig zurückzuerhalten, um den Kredit zurückzuzahlen, oder Sie tun dies mit Verlust.",
     "riskPlatform": "Plattformrisiko: Wenn das Eigentümerunternehmen eines Vermögenswerts seine Geschäftstätigkeit aufgibt und den Betrieb eines börsenbesicherten Vermögenswerts einstellt, könnten Sie Geld verlieren.",
     "riskUser": "Benutzerrisiko: Da Kreditangebote vollständig vom Benutzer generiert werden, könnten Sie mit nicht vertrauenswürdigen Vermögenswerten oder Benutzern interagieren, die Gelder einem Risiko aussetzen.",
-    "riskNetwork": "Netzwerkrisiko: Während Blockchain-Ausfallzeiten sehr selten sind, ist es ein Risiko, das bei der Erstellung von Kreditgeschäften über einen bestimmten Zeitraum berücksichtigt werden muss. ",
+    "riskNetwork": "Netzwerkrisiko: Blockchain-Ausfallzeiten sind zwar sehr selten, stellen jedoch ein Risiko dar, das bei der Erstellung von Kreditverträgen über einen bestimmten Zeitraum berücksichtigt werden muss. Es stehen Methoden zur Rückzahlung von Autokrediten zur Verfügung, um dieses Risiko auszugleichen.",
     "risksFooter": "Bitte berücksichtigen Sie diese Risiken und prüfen Sie die Angebotsbedingungen gründlich, bevor Sie mit einem Kreditgeschäft fortfahren."
   }
 }

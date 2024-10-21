@@ -1,6 +1,7 @@
 {
-  "createdBy": "Lavet af",
+  "createdBy": "Skabt af",
   "backingCollateral": "Sikkerhedsstillelse",
+  "collateral": "Sikkerhed",
   "feedQty": "Antal foder: {{qty}}",
   "mcr": "MCR: {{mcr}} %",
   "mssr": "MSSR: {{mssr}} %",
@@ -8,13 +9,13 @@
   "proceedToBorrow": "Fortsæt med at låne {{asset}}",
   "placeholderSmartcoinCreated": "Smartcoin \"...\" (1.3.x) oprettet af ... (1.2.x)",
   "placeholderBackingCollateral": "Sikkerhedsstillelse:",
-  "placeholderFeedQty": "Foderantal: ?",
+  "placeholderFeedQty": "Fodermængde: ?",
   "placeholderMCR": "MCR: ? ",
   "placeholderMSSR": "MSSR: ? ",
   "placeholderICR": "ICR: ? ",
   "placeholderProceedToBorrow": "Fortsæt med at låne?",
   "selectBorrowableAsset": "💵 Vælg et lånbart aktiv",
-  "smartcoinDescription": "Der er flere brugere",
+  "smartcoinDescription": "Der er flere bruger- og udvalgsskabte smartcoins på Bitshares blockchain, som du selv kan udstede, forudsat at du giver og vedligeholder tilstrækkelig sikkerhedsstillelse. Undersøg aktiver grundigt, før du udsteder dem til at eksistere, kend din risikoeksponering og tolerancer.",
   "viewingAllAssets": "Viser alle aktiver",
   "viewAllAssets": "Se alle aktiver",
   "viewingCompatible": "Visningskompatibel",
@@ -22,7 +23,7 @@
   "viewingHoldings": "Visning af beholdninger",
   "viewHoldings": "Se beholdninger",
   "searching": "Søger",
-  "search": "Søg",
+  "search": "Søge",
   "listingAllSmartcoins": "Fortegnelse {{count}} (alle) smartcoins",
   "listingCompatibleSmartcoins": "Fortegnelse {{count}} smartcoins, der er kompatible med din konto",
   "listingHeldSmartcoins": "Fortegnelse {{count}} holdt smartcoins",
@@ -36,5 +37,7 @@
   "enterSearchText": "Indtast søgetekst",
   "noResultsFound": "Ingen resultater fundet",
   "bitassets": "Bitassets",
-  "privateSmartcoins": "Private smartcoins"
+  "privateSmartcoins": "Private smartcoins",
+  "currentSettlementPrice": "Pris",
+  "currentSupply": "Levere"
 }

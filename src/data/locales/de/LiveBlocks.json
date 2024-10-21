@@ -1,6 +1,6 @@
 {
   "cardTitle": "Live-Blockchain-Übersicht",
-  "cardDescription": "Die Bitshares-Blockchain hat Blockzeiten von 3 Sekunden und ist in der Lage, Tausende von Transaktionen pro Sekunde abzuwickeln. ",
+  "cardDescription": "Die Bitshares-Blockchain hat Blockzeiten von 3 Sekunden und ist in der Lage, Tausende von Transaktionen pro Sekunde abzuwickeln. Diese Seite bietet einen Live-Überblick über die Blockchain.",
   "currentBlock": {
     "content": "Die aktuellste Blocknummer.",
     "header": "Aktueller Block"

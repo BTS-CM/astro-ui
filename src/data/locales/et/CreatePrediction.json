@@ -3,8 +3,8 @@
     "headerText": "Järgmise prognoositava turuvara loomine: {{symbol}}"
   },
   "card": {
-    "title": "Uue ennustusturu vara loomine",
-    "description": "Prognoositud turuvarade loomisel saate toimida tulevikusündmustele detsentraliseeritud panuste tegemisel vahendustasu eest ilma võitude kogumi vastaspoole riskita."
+    "title": "Uue ennustatava turuvara loomine",
+    "description": "Prognoositud turuvarade loomisel saate tegutseda tulevikusündmustele detsentraliseeritud panuste tegemisel vahendustasu eest ilma võitude kogumi vastaspoole riskita."
   },
   "pma": {
     "title": "Prognoositud turuvarade üksikasjad",
@@ -16,26 +16,26 @@
     },
     "commission": {
       "header": "vahendustasu (%)",
-      "header_content": "Komisjonitasu on tasu, mida maja ennustusturu vara loomise ja hindamise eest võtab.",
+      "header_content": "Komisjonitasu on tasu, mida maja võtab prognoositava turuvara loomise ja hindamise eest.",
       "placeholder": "komisjon"
     },
     "backing_asset": {
       "header": "Tagavara",
-      "header_content": "Tagavara on vara, mida kasutatakse prognoositava turu vara tagamiseks. "
+      "header_content": "Tagatisvara on vara, mida kasutatakse prognoositava turuvara tagamiseks. Seda vara kasutatakse prognoositava turuvara võitjate väljamaksmiseks."
     },
     "resolution": {
-      "header": "Prognoosilahutuse kuupäev ja kellaaeg",
-      "header_content": "Lahendamise kuupäev ja kellaaeg on kuupäev ja kellaaeg, mil prognoositav turuvara lahendatakse. "
+      "header": "Prognoositava lahenduse kuupäev ja kellaaeg",
+      "header_content": "Lahendamise kuupäev ja kellaaeg on kuupäev ja kellaaeg, mil prognoositava turu vara lahendatakse. See on kuupäev ja kellaaeg, mil prognoositava turu vara hinnatakse ja võitjatele välja makstakse."
     }
   },
   "buttons": {
     "submit": "Esita"
   },
   "risks": {
-    "1": "Prognoositud turuvarade vale konfigureerimine võib põhjustada kehva osaluse plokiahelas, mõned kasutajaliidesed võivad teie PMA-d täielikult välja filtreerida; ",
+    "1": "Ennustusturu varade vale konfigureerimine võib kaasa tuua kehva osaluse plokiahelas, mõned kasutajaliidesed võivad teie PMA täielikult välja filtreerida, veenduge, et PMA oleks õigesti konfigureeritud, määrake mõistlik vahendustasu ja proovige funktsioone esmalt testnetis.",
     "2": "Kui loote prognoositava turuvara, vastutate majana tulemuste nõuetekohase hindamise eest, kui seda õigesti või õigeaegselt ei tee, võib teie jaoks lisaks maja usaldusväärsuse kaotamisele kaasa tuua juriidilisi või fiskaalprobleeme.",
-    "3": "See kasutajaliides ja Beet/BEETEOSe rahakotid ei toeta mitme allkirjaga kontosid, seega on teie majakonto pikaajaline üksik tõrkepunkt – kaitske seda hästi.",
+    "3": "See kasutajaliides ja Beet/BEETEOSe rahakotid ei toeta mitme allkirjaga kontosid, seega on teie majakonto pikaajaline üksainus tõrkepunkt – kaitske seda hästi.",
     "title": "Mõned riskid, mis on seotud prognoositava turu varade loomisega",
-    "description": "Enne PMA loomist tehke oma uurimistööd, lugege esmalt dokumente; "
+    "description": "Tehke enne PMA loomist oma uurimistööd, lugege kõigepealt dokumente, mitte juriidilist nõu."
   }
 }

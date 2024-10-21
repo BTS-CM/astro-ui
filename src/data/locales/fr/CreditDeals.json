@@ -1,24 +1,24 @@
 {
-  "dealNo": "Accord",
+  "dealNo": "Accord #",
   "with": " avec ",
   "borrowed": "tu as emprunté",
   "lent": "Ils ont emprunté",
   "loanCollateral": "Garantie de prêt :",
   "borrower": "Frais d'emprunt",
   "lender": "Gains",
-  "remainingTime": "Temps restant:",
+  "remainingTime": "Temps restant :",
   "repayLoan": "Rembourser le prêt",
   "trade": "Commerce {{symbol}} sur DEX",
-  "dialogTitle": "Remboursement du prêt",
+  "dialogTitle": "Remboursement du prêt n° {id}",
   "description": "Utilisez ce formulaire pour contrôler les remboursements de vos opérations de crédit.",
   "account": "Compte",
   "balance": "Votre actuel {{symbol}} équilibre",
-  "repayAmount": "Quantité de {{symbol}} rembourser",
+  "repayAmount": "Montant de {{symbol}} rembourser",
   "remainingDebt": "Dette restante : {{amount}} {{symbol}}",
   "repayDesc": "Pour récupérer toutes vos garanties, remboursez intégralement la dette.",
   "redeemCollateral": "Échanger des garanties",
   "remainingCollateral": "Garantie restante : {montant} {{symbol}}",
-  "collateralRedemption": "Quantité de {{symbol}} garantie de garantie que vous rachèterez",
+  "collateralRedemption": "Montant de {{symbol}} garantie de garantie que vous rachèterez",
   "loanLabel": "Frais de prêt estimés",
   "loanDesc": "Il s'agit des frais que vous paierez au prêteur.",
   "finalPaymentLabel": "Paiement final",
@@ -45,15 +45,15 @@
     "lenderTitle": "Avertissement de risque pour le prêteur",
     "description": "Informations importantes sur vos responsabilités et les risques associés aux opérations de crédit.",
     "borrower": {
-      "risk1": "Toi ( {{username}} ) sont responsables de la gestion de vos opérations de crédit et de leur remboursement en temps opportun, personne d'autre. ",
-      "risk2": "Soyez conscient de votre exposition aux volatilités externes pendant la période de remboursement de l’accord de crédit ; ",
-      "risk3": "Le non-remboursement d’une opération de crédit entraînera la perte des actifs de garantie restants. "
+      "risk1": "Toi ( {{username}} ) sont responsables de la gestion de vos opérations de crédit et de leur remboursement dans les délais, personne d'autre. Pensez à utiliser une méthode de remboursement automatique pour éviter de manquer la date limite de remboursement si vous risquez de l'oublier.",
+      "risk2": "Soyez conscient de votre exposition aux volatilités externes pendant la période de remboursement de l'opération de crédit, la valeur de vos actifs empruntés et de votre garantie de soutien fluctuera, vous devez tenir compte de cette exposition à la volatilité lorsque vous décidez comment/quand vous rembourserez l'opération de crédit.",
+      "risk3": "Le non-remboursement d'une opération de crédit entraînera la perte des actifs de garantie restants. Il n'existe pas de système de notation de crédit qui punit les emprunteurs défaillants, les conditions convenues de l'accord de crédit seront honorées."
     },
     "lender": {
-      "risk1": "Toi ( {{username}} ) sont responsables de la gestion de vos offres de crédit, de leurs paramètres et de leur exposition aux risques, personne d'autre. ",
-      "risk2": "Soyez conscient de votre exposition aux volatilités externes pendant la période de remboursement de l’accord de crédit ; ",
-      "risk3": "En tant que prêteur, une fois qu'une opération de crédit existe, vous ( {{username}} ) ne peut pas l'annuler, l'emprunteur est responsable de la durée de la transaction pendant la période de remboursement. ",
-      "risk4": "Si les emprunteurs ne parviennent pas à rembourser leurs opérations de crédit, leurs actifs de garantie vous seront perdus. "
+      "risk1": "Toi ( {{username}} ) sont responsables de la gestion de vos offres de crédit, de leurs paramètres et de leur exposition aux risques, personne d'autre. Pensez à créer des scripts automatisés pour gérer l'état de vos offres de crédit.",
+      "risk2": "Soyez conscient de votre exposition aux volatilités externes pendant la période de remboursement de l'opération de crédit, la valeur des actifs que vous avez prêtés à d'autres utilisateurs et la garantie de soutien qu'ils ont fournie fluctuent, vous devez tenir compte de votre tolérance au risque personnelle lorsque vous décidez des paramètres de votre offre de crédit. ",
+      "risk3": "En tant que prêteur, une fois qu'une opération de crédit existe, vous ( {{username}} ) ne peut pas l'annuler, l'emprunteur est responsable de la durée de l'opération pendant la période de remboursement. La date de remboursement d'une opération de crédit peut également dépasser la date d'expiration de votre offre de crédit.",
+      "risk4": "Si les emprunteurs ne remboursent pas leurs opérations de crédit, leurs actifs de garantie seront perdus. Il n'existe pas de système de pointage de crédit qui punit les emprunteurs en cas de défaut de paiement, les conditions convenues de l'accord de crédit seront toujours honorées, alors planifiez vos offres de crédit. "
     }
   }
 }

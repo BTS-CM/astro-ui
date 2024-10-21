@@ -6,7 +6,7 @@
     "buttonLabel": "Torna alla panoramica dell'offerta di credito"
   },
   "offerCardHeader": {
-    "viewingOffer": "🏦 Offerta di visione{{id}} creato da {{owner_name}} ({{owner_account}})",
+    "viewingOffer": "🏦Visualizzazione dell'offerta #{{id}} creato da {{owner_name}} ({{owner_account}})",
     "loadingOfferTerms": "caricamento termini dell'offerta...",
     "offerDescription1": "Questa è un'offerta di credito creata dall'utente su Bitshares DEX.",
     "offerDescription2": "Leggere attentamente i termini dell'offerta prima di procedere a Beet."
@@ -17,7 +17,7 @@
     "lendingAccount": "Conto di prestito",
     "viewAccount": "Visualizzazione {{owner_name}}conto di",
     "borrowingDescription": "Questo è l'utente da cui riceverai il prestito {{symbol}} da.",
-    "availableAmount": "Quantità di {{symbol}} ({{asset_type}}) disponibili a prendere in prestito da questo prestatore",
+    "availableAmount": "Importo di {{symbol}} ({{asset_type}}) disponibile per prendere in prestito da questo prestatore",
     "loading": "caricamento...",
     "offerDescription": "{{owner_name}} si offre generosamente di prestarti così tanto {{symbol}}, presupponendo che tu accetti i loro termini.",
     "backingCollateral": "Garanzia di supporto per l'accordo di credito",
@@ -25,8 +25,9 @@
     "borrowDescription": "Prendere in prestito {{symbol}} da {{owner_name}}, scegliere tra le attività collaterali di supporto accettate sopra.",
     "borrowDescription2": "Prezzo designato dal prestatore: {{price}} {{quote}}/{{base}}",
     "noCollateralMessage": "Il conto non detiene questa risorsa collaterale di supporto.",
-    "borrowAmount": "Quantità di {{symbol}} hai intenzione di prendere in prestito",
-"availableAmountRange": "Disponibile: {{availableAmount}} {{symbol}} (Minimo: {{minAmount}})",    "inputBorrowAmount": "Immettere l'importo di {{symbol}} da cui vorresti prendere in prestito {{owner_name}}.",
+    "borrowAmount": "Importo di {{symbol}} hai intenzione di prendere in prestito",
+    "availableAmountRange": "Disponibile: {{availableAmount}} {{symbol}} (Minimo: {{minAmount}})",
+    "inputBorrowAmount": "Immettere l'importo di {{symbol}} da cui vorresti prendere in prestito {{owner_name}}.",
     "repayMethod": "Metodo di rimborso dell'offerta di credito",
     "selectRepayMethod": "Seleziona il tuo metodo di rimborso..",
     "noAutoRepayment": "Nessun rimborso automatico",
@@ -41,10 +42,10 @@
     "loadingBalance": "Caricamento saldo...",
     "collateralNeeded": "Per prendere in prestito {{borrowAmount}} {{symbol}} dovrai fornire il seguente importo di garanzia per garantire l'accordo.",
     "enterValidBorrowAmount": "Immettere un importo di prestito valido per calcolare la garanzia collaterale richiesta.",
-    "insufficientBalance": "Il tuo account ha un numero insufficiente {{symbol}} bilancia.  {{requiredMore}} Di più {{symbol}}.",
-    "noAssetHeld": "Il tuo account non contiene questa risorsa. ",
+    "insufficientBalance": "Il tuo account ha un numero insufficiente {{symbol}} equilibrio, ne avrai bisogno almeno {{requiredMore}} Di più {{symbol}}.",
+    "noAssetHeld": "Il tuo account non detiene questa risorsa. Prova un'altra forma di garanzia collaterale, se possibile.",
     "repayPeriod": "Periodo di rimborso",
-    "repayPeriodDescription": "La durata massima del contratto di credito; ",
+    "repayPeriodDescription": "La durata massima del contratto di credito è di rimborsare il prestito entro questo periodo per evitare la perdita delle garanzie.",
     "offerExpiry": "Scadenza dell'offerta di credito",
     "offerExpiryDescription": "Quando questa offerta non esisterà più.",
     "estimatedFee": "Commissione di prestito stimata",
@@ -68,7 +69,7 @@
     "riskLiquidity": "Rischio di liquidità: se vendi le attività prese in prestito, potrebbe non essere possibile riacquistarle in tempo per rimborsare il prestito, oppure potresti farlo in perdita.",
     "riskPlatform": "Rischio della piattaforma: se la società proprietaria di un asset fallisce e cessa l'attività di un asset garantito da scambio, potresti perdere fondi.",
     "riskUser": "Rischio utente: poiché le offerte di credito sono completamente generate dagli utenti, potresti interagire con risorse non affidabili o utenti che mettono a rischio i fondi.",
-    "riskNetwork": "Rischio di rete: sebbene i tempi di inattività della blockchain siano molto rari, è un rischio da considerare quando si creano accordi di credito che abbracciano un periodo di tempo. ",
+    "riskNetwork": "Rischio di rete: sebbene i tempi di inattività della blockchain siano molto rari, è un rischio da considerare quando si creano accordi di credito che abbracciano un periodo di tempo. Sono disponibili metodi di rimborso automatico del prestito per compensare tale rischio.",
     "risksFooter": "Si prega di considerare questi rischi e valutare attentamente i termini delle offerte prima di procedere con un accordo di credito."
   }
 }

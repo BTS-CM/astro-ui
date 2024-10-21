@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { useSyncExternalStore } from "react";
 import { useForm } from "react-hook-form";
 import { FixedSizeList as List } from "react-window";
-import { useStore } from '@nanostores/react';
+import { useStore } from "@nanostores/react";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
@@ -130,29 +130,6 @@ export default function Settlement(properties) {
   const [finalBitasset, setFinalBitasset] = useState();
   const [finalCollateralAsset, setFinalCollateralAsset] = useState();
 
-  /*
-  // For future checking balance against bid amount & force settle amount
-  const [usrBalances, setUsrBalances] = useState();
-  useEffect(() => {
-    let unsubscribeUserBalances;
-
-    if (usr && usr.id) {
-      const userBalancesStore = createUserBalancesStore([usr.chain, usr.id, currentNode ? currentNode.url : null]);
-
-      unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
-        if (data && !error && !loading) {
-          const filteredData = data.filter((balance) => assets.find((x) => x.id === balance.asset_id));
-          setUsrBalances(filteredData);
-        }
-      });
-    }
-
-    return () => {
-      if (unsubscribeUserBalances) unsubscribeUserBalances();
-    };
-  }, [usr]);
-  */
-
   const [bidFee, setBidFee] = useState(0);
   const [settleFee, setSettleFee] = useState(0);
   useEffect(() => {
@@ -273,17 +250,12 @@ export default function Settlement(properties) {
 
   const [collateralBids, setCollateralBids] = useState();
 
-  
   useEffect(() => {
     if (parsedBitasset && parsedBitasset && usr && usr.chain) {
       const smartcoinDataStore = createObjectStore([
         usr.chain,
-        JSON.stringify([
-          parsedAsset.id,
-          parsedBitasset.collateral,
-          parsedBitasset.id
-        ]),
-        currentNode ? currentNode.url : null
+        JSON.stringify([parsedAsset.id, parsedBitasset.collateral, parsedBitasset.id]),
+        currentNode ? currentNode.url : null,
       ]);
       smartcoinDataStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
@@ -302,7 +274,7 @@ export default function Settlement(properties) {
       const collateralBidsStore = createCollateralBidStore([
         usr.chain,
         parsedAsset.id,
-        currentNode ? currentNode.url : null
+        currentNode ? currentNode.url : null,
       ]);
 
       unsub = collateralBidsStore.subscribe(({ data, error, loading }) => {
@@ -997,7 +969,7 @@ export default function Settlement(properties) {
               operationNames={[
                 settlementFund && settlementFund.finalSettlementFund
                   ? "bid_collateral" // op: 45
-                  : "asset_settle" // op: 17
+                  : "asset_settle", // op: 17
               ]}
               username={usr.username}
               usrChain={usr.chain}

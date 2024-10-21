@@ -5,7 +5,7 @@
     "readyToBroadcast": "Din Bitshares Beet-operation er klar til at sendes!",
     "chooseMethod": "Vælg mellem metoderne nedenfor for at udsende til din valgte tegnebog.",
     "bitsharesBEETMultiwallet": "Bitshares BEET multiwallet",
-    "errorOccurred": "Der opstod en fejl, beklager. ",
+    "errorOccurred": "Der opstod en fejl. Beklager, luk denne dialogboks og prøv igen.",
     "beetWallet": "Bitshares BEET multiwallet"
   },
   "tabs": {
@@ -37,7 +37,7 @@
     "proposeDescription": "Hvis du ikke er ejer (eller er medejer) af den konto, du bruger til at konstruere den foreslåede handling, kan du oprette et forslag, som kontoejeren kan gennemgå og udsende efter eget skøn."
   },
   "proposal": {
-    "targetContent": "Dette er den konto, du skal bruge til at oprette forslaget. ",
+    "targetContent": "Dette er den konto, du vil bruge til at oprette forslaget, Konstruere operationer i Astro-brugergrænsefladen som slutbruger, og derefter angive din betalingskonto for forslagsgebyr her.",
     "targetHeader": "Forslagsgebyr betale konto",
     "revisionPeriodSecondsContent": "Angiv revisionsperioden i sekunder.",
     "revisionPeriodSecondsHeader": "Revisionsperiode (sekunder)"

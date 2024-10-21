@@ -25,9 +25,11 @@ import { Input } from "@/components/ui/input";
 
 import { debounce } from "@/lib/common.js";
 import { getFlagBooleans } from "@/lib/common.js";
+import { humanReadableFloat } from "@/lib/common.js";
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
 import { createSmartcoinsStore } from "@/nanoeffects/Smartcoins.ts";
+import { createObjectStore } from "@/nanoeffects/Objects.ts";
 
 import { $currentUser } from "@/stores/users.ts";
 import { $currentNode } from "@/stores/node.ts";
@@ -74,7 +76,16 @@ export default function Smartcoins(properties) {
             setAssetIssuers(data._issuers);
           }
           if (data._smartcoins) {
-            setNewBitassetdata(data._smartcoins);
+            const filteredSmartcoins = data._smartcoins.filter(
+              (x) =>
+                parseInt(x.current_feed.settlement_price.base.amount) !== 0 &&
+                parseInt(x.current_feed.settlement_price.quote.amount) !== 0 &&
+                x.feeds.length &&
+                (parseInt(x.settlement_price.base.amount) === 0 ||
+                  parseInt(x.settlement_price.quote.amount) === 0 ||
+                  parseInt(x.settlement_fund) === 0)
+            );
+            setNewBitassetdata(filteredSmartcoins);
           }
           if (data._balances) {
             setUsrBalances(data._balances);
@@ -87,6 +98,37 @@ export default function Smartcoins(properties) {
       fetching();
     }
   }, [usr, currentNode]);
+
+  const [dynamicData, setDynamicData] = useState([]);
+  useEffect(() => {
+    async function fetching() {
+      const dynamicIDs = newBitassetData
+        .map((x) => baseAssetData.find((y) => y.id === x.asset_id))
+        .map((a) => a.dynamic_asset_data_id);
+
+      const requiredStore = createObjectStore([
+        usr.chain,
+        JSON.stringify(dynamicIDs),
+        currentNode ? currentNode.url : null,
+      ]);
+
+      requiredStore.subscribe(({ data, error, loading }) => {
+        if (data && !error && !loading) {
+          const finalDynamicData = data.map((x) => {
+            return {
+              ...x,
+              asset_id: baseAssetData.find((b) => b.dynamic_asset_data_id === x.id).id,
+            };
+          });
+          setDynamicData(finalDynamicData);
+        }
+      });
+    }
+
+    if (newBitassetData) {
+      fetching();
+    }
+  }, [newBitassetData, baseAssetData]);
 
   const compatibleSmartcoins = useMemo(() => {
     if (usrBalances && newBitassetData) {
@@ -122,7 +164,6 @@ export default function Smartcoins(properties) {
   const [mode, setMode] = useState("bitassets");
 
   const assetSearch = useMemo(() => {
-    //console.log({newBitassetData, baseAssetData, assetIssuers});
     if (!newBitassetData || !newBitassetData.length || !baseAssetData || !assetIssuers) {
       return;
     }
@@ -219,7 +260,7 @@ export default function Smartcoins(properties) {
       } else if (mode === "honest") {
         return _issuerData.name === "honest-quorum";
       } else if (mode === "privateSmartcoins") {
-        return _issuerData.name !== "committee-account";
+        return _issuerData.name !== "committee-account" && _issuerData.name !== "honest-quorum";
       }
     });
   }, [
@@ -249,6 +290,24 @@ export default function Smartcoins(properties) {
 
     const _flags = getFlagBooleans(thisBitassetData.options.flags);
     const _issuer_permissions = getFlagBooleans(thisBitassetData.options.issuer_permissions);
+
+    const foundDynamicData = dynamicData.find((x) => x.asset_id === thisBitassetData.id);
+    let currentSupply = foundDynamicData
+      ? humanReadableFloat(parseInt(foundDynamicData.current_supply), thisBitassetData.precision)
+      : 0;
+
+    const _price = parseFloat(
+      (
+        humanReadableFloat(
+          parseInt(bitasset.current_feed.settlement_price.quote.amount),
+          thisCollateralAssetData.precision
+        ) /
+        humanReadableFloat(
+          parseInt(bitasset.current_feed.settlement_price.base.amount),
+          thisBitassetData.precision
+        )
+      ).toFixed(thisCollateralAssetData.precision)
+    );
 
     return (
       <div style={{ ...style }} key={`acard-${bitasset.asset_id}`}>
@@ -299,28 +358,48 @@ export default function Smartcoins(properties) {
               ) : null}
             </CardTitle>
             <CardDescription className="text-md">
-              {t("Smartcoins:backingCollateral")}:
-              <b>
-                {" "}
-                <ExternalLink
-                  classnamecontents="hover:text-purple-500"
-                  type="text"
-                  text={thisCollateralAssetData.symbol}
-                  hyperlink={`https://blocksights.info/#/assets/${thisCollateralAssetData.symbol}${
-                    usr.chain === "bitshares" ? "" : "?network=testnet"
-                  }`}
-                />{" "}
-                {"("}
-                <ExternalLink
-                  classnamecontents="hover:text-purple-500"
-                  type="text"
-                  text={thisCollateralAssetData.id}
-                  hyperlink={`https://blocksights.info/#/assets/${thisCollateralAssetData.id}${
-                    usr.chain === "bitshares" ? "" : "?network=testnet"
-                  }`}
-                />
-                {")"}
-              </b>
+              <div className="grid grid-cols-2 gap-1">
+                <div>
+                  {t("Smartcoins:collateral")}:
+                  <b>
+                    {" "}
+                    <ExternalLink
+                      classnamecontents="hover:text-purple-500"
+                      type="text"
+                      text={thisCollateralAssetData.symbol}
+                      hyperlink={`https://blocksights.info/#/assets/${
+                        thisCollateralAssetData.symbol
+                      }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
+                    />{" "}
+                    {"("}
+                    <ExternalLink
+                      classnamecontents="hover:text-purple-500"
+                      type="text"
+                      text={thisCollateralAssetData.id}
+                      hyperlink={`https://blocksights.info/#/assets/${thisCollateralAssetData.id}${
+                        usr.chain === "bitshares" ? "" : "?network=testnet"
+                      }`}
+                    />
+                    {")"}
+                  </b>
+                </div>
+                <div>
+                  {t("Smartcoins:currentSupply")}
+                  {": "}
+                  <b>
+                    {currentSupply.toLocaleString()} {thisBitassetData.symbol}
+                  </b>
+                </div>
+                <div>
+                  {t("Smartcoins:currentSettlementPrice")}
+                  {": "}
+                  <b>
+                    {_price > 0
+                      ? `${_price} ${thisCollateralAssetData.symbol}/${thisBitassetData.symbol}`
+                      : "??? ⚠️"}
+                  </b>
+                </div>
+              </div>
             </CardDescription>
           </CardHeader>
           <CardContent className="text-sm pb-3">
@@ -368,11 +447,17 @@ export default function Smartcoins(properties) {
             )}
           </CardContent>
           <CardFooter className="pb-5">
-            <a href={`/smartcoin/index.html?id=${bitasset.asset_id}`}>
-              <Button className="h-8">
+            {_price > 0 ? (
+              <a href={`/smartcoin/index.html?id=${bitasset.asset_id}`}>
+                <Button className="h-8">
+                  {t("Smartcoins:proceedToBorrow", { asset: thisBitassetData.s })}
+                </Button>
+              </a>
+            ) : (
+              <Button disabled className="h-8">
                 {t("Smartcoins:proceedToBorrow", { asset: thisBitassetData.s })}
               </Button>
-            </a>
+            )}
           </CardFooter>
         </Card>
       </div>
@@ -495,9 +580,6 @@ export default function Smartcoins(properties) {
                   )}
                 </TabsList>
                 <TabsContent value="all">
-                  <h5 className="mb-2 text-center">
-                    {t("Smartcoins:listingAllSmartcoins", { count: relevantBitassetData.length })}
-                  </h5>
                   <div className="grid grid-cols-3 gap-5">
                     <Button
                       onClick={() => {
@@ -527,13 +609,16 @@ export default function Smartcoins(properties) {
                       {t("Smartcoins:privateSmartcoins")}
                     </Button>
                   </div>
+                  <h5 className="mb-2 text-center">
+                    {t("Smartcoins:listingAllSmartcoins", { count: relevantBitassetData.length })}
+                  </h5>
                   {!assetIssuers || !assetIssuers.length ? (
                     <div className="text-center mt-5">{t("CreditBorrow:common.loading")}</div>
                   ) : (
                     <List
-                      height={500}
+                      height={600}
                       itemCount={relevantBitassetData.length}
-                      itemSize={200}
+                      itemSize={235}
                       className="w-full"
                     >
                       {BitassetRow}
@@ -541,11 +626,6 @@ export default function Smartcoins(properties) {
                   )}
                 </TabsContent>
                 <TabsContent value="compatible">
-                  <h5 className="mb-2 text-center">
-                    {t("Smartcoins:listingCompatibleSmartcoins", {
-                      count: relevantBitassetData.length,
-                    })}
-                  </h5>
                   <div className="grid grid-cols-3 gap-5">
                     <Button
                       onClick={() => {
@@ -575,13 +655,18 @@ export default function Smartcoins(properties) {
                       {t("Smartcoins:privateSmartcoins")}
                     </Button>
                   </div>
+                  <h5 className="mb-2 text-center">
+                    {t("Smartcoins:listingCompatibleSmartcoins", {
+                      count: relevantBitassetData.length,
+                    })}
+                  </h5>
                   {!assetIssuers || !assetIssuers.length ? (
                     <div className="text-center mt-5">{t("CreditBorrow:common.loading")}</div>
                   ) : (
                     <List
-                      height={500}
+                      height={600}
                       itemCount={relevantBitassetData.length}
-                      itemSize={200}
+                      itemSize={235}
                       className="w-full"
                     >
                       {BitassetRow}
@@ -589,11 +674,6 @@ export default function Smartcoins(properties) {
                   )}
                 </TabsContent>
                 <TabsContent value="holdings">
-                  <h5 className="mb-2 text-center">
-                    {t("Smartcoins:listingHeldSmartcoins", {
-                      count: relevantBitassetData ? relevantBitassetData.length : 0,
-                    })}
-                  </h5>
                   <div className="grid grid-cols-3 gap-5">
                     <Button
                       onClick={() => {
@@ -623,13 +703,18 @@ export default function Smartcoins(properties) {
                       {t("Smartcoins:privateSmartcoins")}
                     </Button>
                   </div>
+                  <h5 className="mb-2 text-center">
+                    {t("Smartcoins:listingHeldSmartcoins", {
+                      count: relevantBitassetData ? relevantBitassetData.length : 0,
+                    })}
+                  </h5>
                   {!assetIssuers || !assetIssuers.length ? (
                     <div className="text-center mt-5">{t("CreditBorrow:common.loading")}</div>
                   ) : (
                     <List
-                      height={500}
+                      height={600}
                       itemCount={relevantBitassetData ? relevantBitassetData.length : 0}
-                      itemSize={200}
+                      itemSize={235}
                       className="w-full"
                     >
                       {BitassetRow}
@@ -701,9 +786,9 @@ export default function Smartcoins(properties) {
                     <TabsContent value="borrow">
                       {thisResult && thisResult.length ? (
                         <List
-                          height={500}
+                          height={600}
                           itemCount={thisResult.length}
-                          itemSize={200}
+                          itemSize={235}
                           className="w-full"
                         >
                           {SearchRow}
@@ -716,9 +801,9 @@ export default function Smartcoins(properties) {
                     <TabsContent value="collateral">
                       {thisResult && thisResult.length ? (
                         <List
-                          height={500}
+                          height={600}
                           itemCount={thisResult.length}
-                          itemSize={200}
+                          itemSize={235}
                           className="w-full"
                         >
                           {SearchRow}
@@ -731,9 +816,9 @@ export default function Smartcoins(properties) {
                     <TabsContent value="issuer">
                       {thisResult && thisResult.length ? (
                         <List
-                          height={500}
+                          height={600}
                           itemCount={thisResult.length}
-                          itemSize={200}
+                          itemSize={235}
                           className="w-full"
                         >
                           {SearchRow}

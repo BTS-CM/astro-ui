@@ -1,22 +1,22 @@
 {
   "common": {
-    "title": " オファー{{orderID}} による {{owner_name}} ({{owner_account}})",
+    "title": " オファー ＃{{orderID}} による {{owner_name}} ({{owner_account}})",
     "offer": "オファー",
     "by": "による",
-    "offering": "募集",
+    "offering": "オファリング",
     "accepting": "受け入れる",
     "loading": "読み込み中...",
     "fee": "手数料： {{fee}}%",
     "repayPeriod": "返済期間： {{repayPeriod}} 時間",
     "validity": "オファーの有効期限 {{validity}} 時間",
-    "min": "最小金額: {{amount}} {{asset}}",
-    "proceed": "クレジットオファーを続行する{{offerID}}",
+    "min": "最低金額: {{amount}} {{asset}}",
+    "proceed": "クレジットオファーを続行します #{{offerID}}",
     "edit": "オファーを編集する",
     "view": "設定を表示する"
   },
   "card": {
     "title": "🏦 利用可能なクレジット特典の表示",
-    "description": "クレジットオファーはユーザーが生成し、さまざまなレート、資産、期間を提供します。",
+    "description": "クレジットオファーはユーザーが生成し、さまざまなレート、資産、期間を提供し、取引を作成する前に条件を評価します。",
     "viewingAll": "すべてのオファーを表示する",
     "viewAll": "すべてのオファーを表示",
     "viewingAvailable": "互換性のある注文の表示",
@@ -32,7 +32,7 @@
     "collateralSearch": "担保資産から探す",
     "ownerSearching": "所有者名で検索する",
     "ownerSearch": "所有者名で検索",
-    "noResults": "結果が見つかりません",
+    "noResults": "結果が見つかりませんでした",
     "loading": "オファーを読み込んでいます..."
   }
 }
