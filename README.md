@@ -6,11 +6,13 @@ Integrates with both the [Beet](https://github.com/bitshares/beet) and [BeetEOS]
 
 ## Dev blogs
 
+- [Evaluating worker proposal support progress](https://hive.blog/hive-120117/@nftea.gallery/evaluating-worker-proposal-support-from-all-bitshares-blockchain-accounts)
+- [Issued Asset Actions & Smartcoin UX improvements!](https://hive.blog/hive-120117/@nftea.gallery/another-october-bitshares-astro-ui-development-blog-issued-asset-actions-and-smartcoin-ux-improvements)
 - [Proposals](https://hive.blog/hive-120117/@nftea.gallery/october-bitshares-astro-ui-development-blog-demonstrating-the-construction-and-resolution-of-bitshares-proposals)
 - [Account lists](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-dev-blog-manage-your-bitshares-account-lists-more-easily)
-- [Creating smartcoins](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-development-preview-blog-creating-smartcoins-on-the-bitshares-blockchain-for-use-on-the-bts-dex)
-- [Creating & Browsing User Issued Assets](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-dev-update-creating-user-issued-assets-and-browsing-issued-assets-overview)
-- [Creating Vesting Balances](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-dev-update-creating-vesting-balances)
+- [Smartcoins](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-development-preview-blog-creating-smartcoins-on-the-bitshares-blockchain-for-use-on-the-bts-dex)
+- [User Issued Assets](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-dev-update-creating-user-issued-assets-and-browsing-issued-assets-overview)
+- [Vesting Balances](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-dev-update-creating-vesting-balances)
 - [Same-T Funds](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-dev-update-same-t-fund-support-has-been-added)
 - [Prediction Market Assets](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-dev-update-prediction-market-assets)
 - [Credit offer overviews & Vesting balance claims](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-dev-update-credit-offer-owner-overview-page-and-vesting-balance-claim-page)
