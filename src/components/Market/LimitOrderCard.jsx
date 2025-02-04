@@ -568,6 +568,23 @@ export default function LimitOrderCard(properties) {
                         </span>
                       </span>
                     </FormControl>
+                    
+                    {orderType === "sell" &&
+                    amount &&
+                    price &&
+                    assetABalance &&
+                    parseFloat(assetABalance.replaceAll(",", "")) < parseFloat(amount) ? (
+                      <FormMessage>
+                        {t("LimitOrderCard:sellTotal.requireMore", {
+                          requiredAmount:
+                            amount -
+                            parseFloat(assetABalance.replaceAll(",", "")).toFixed(
+                              assetAData.precision
+                            ),
+                          asset: thisAssetA,
+                        })}
+                      </FormMessage>
+                    ) : null}
                   </FormItem>
                 )}
               />
@@ -642,7 +659,8 @@ export default function LimitOrderCard(properties) {
                         </span>
                       </span>
                     </FormControl>
-                    {amount &&
+                    {orderType === "buy" &&
+                    amount &&
                     price &&
                     assetBBalance &&
                     parseFloat(assetBBalance.replaceAll(",", "")) < parseFloat(total) ? (

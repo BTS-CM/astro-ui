@@ -176,8 +176,8 @@ export default function AccountLists(properties) {
           {showRowDialog ? (
             <DeepLinkDialog
               operationNames={["account_whitelist"]}
-              username={usr.username}
-              usrChain={usr.chain}
+              username={usr && usr.username ? usr.username : ""}
+              usrChain={usr && usr.chain ? usr.chain : "bitshares"}
               userID={usr.id}
               dismissCallback={setShowRowDialog}
               key={`RemovingAccountFromList${mode}${account}`}

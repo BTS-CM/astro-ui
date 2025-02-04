@@ -13,7 +13,7 @@
     "useHighestBid": "Utilizza l'offerta più alta"
   },
   "sellAmount": {
-    "label": "Importo di vendita",
+    "label": "Quantità",
     "buyDescription": "La quantità di {{asset}} prevedi di acquistare",
     "sellDescription": "La quantità di {{asset}} hai intenzione di vendere",
     "provideNewLabel": "Fornire un nuovo importo"

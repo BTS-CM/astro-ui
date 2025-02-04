@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useSyncExternalStore } from "react";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
@@ -18,10 +18,12 @@ import { Button } from "@/components/ui/button";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 
 import ExternalLink from "@/components/common/ExternalLink.jsx";
+import { $currentUser } from "@/stores/users.ts";
 
 export default function MyOrderSummary(properties) {
   const { type, assetAData, assetBData, usrLimitOrders } = properties;
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
+  const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
 
   const filteredUsrLimitOrders = useMemo(
     () =>
@@ -159,9 +161,9 @@ export default function MyOrderSummary(properties) {
                     classnamecontents=""
                     type="button"
                     text={t("MyOrderSummary:viewObjectOnBlocksights")}
-                    hyperlink={`https://blocksights.info/#/objects/${res.id}${
+                    hyperlink={usr && usr.chain ? `https://blocksights.info/#/objects/${res.id}${
                       usr.chain === "bitshares" ? "" : "?network=testnet"
-                    }`}
+                    }` : ''}
                   />
                 </div>
               </div>

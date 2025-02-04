@@ -13,7 +13,7 @@
     "useHighestBid": "Utiliser l'enchère la plus élevée"
   },
   "sellAmount": {
-    "label": "Montant de la vente",
+    "label": "Montant",
     "buyDescription": "La quantité de {{asset}} tu comptes acheter",
     "sellDescription": "La quantité de {{asset}} tu comptes vendre",
     "provideNewLabel": "Fournir un nouveau montant"

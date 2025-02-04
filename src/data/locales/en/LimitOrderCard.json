@@ -13,7 +13,7 @@
     "useHighestBid": "Use highest bid"
   },
   "sellAmount": {
-    "label": "Sell Amount",
+    "label": "Amount",
     "buyDescription": "The amount of {{asset}} you plan on buying",
     "sellDescription": "The amount of {{asset}} you plan on selling",
     "provideNewLabel": "Provide a new amount"

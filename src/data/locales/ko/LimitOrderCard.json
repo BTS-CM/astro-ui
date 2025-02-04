@@ -13,7 +13,7 @@
     "useHighestBid": "최고 입찰가 사용"
   },
   "sellAmount": {
-    "label": "판매금액",
+    "label": "양",
     "buyDescription": "양 {{asset}} 당신은 구입할 계획입니다",
     "sellDescription": "양 {{asset}} 당신은 판매할 계획이에요",
     "provideNewLabel": "새로운 금액 제공"

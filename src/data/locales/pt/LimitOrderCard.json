@@ -13,7 +13,7 @@
     "useHighestBid": "Usar o lance mais alto"
   },
   "sellAmount": {
-    "label": "Valor de venda",
+    "label": "Quantia",
     "buyDescription": "A quantidade de {{asset}} você planeja comprar",
     "sellDescription": "A quantidade de {{asset}} você planeja vender",
     "provideNewLabel": "Forneça um novo valor"

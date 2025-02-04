@@ -298,9 +298,11 @@ export default function CreditDeals(properties) {
                 classnamecontents="text-blue-500"
                 type="text"
                 text={res.id.replace("1.22.", "")}
-                hyperlink={`https://blocksights.info/#/objects/${res.id}${
-                  usr.chain === "bitshares" ? "" : "?network=testnet"
-                }`}
+                hyperlink={
+                  usr && usr.chain
+                    ? `https://blocksights.info/#/objects/${res.id}${usr.chain === "bitshares" ? "" : "?network=testnet"}`
+                    : ''
+                }
               />
               {t("CreditDeals:with")}
               <ExternalLink

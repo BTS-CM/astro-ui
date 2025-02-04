@@ -13,7 +13,7 @@
     "useHighestBid": "最高入札額を使用する"
   },
   "sellAmount": {
-    "label": "販売額",
+    "label": "額",
     "buyDescription": "の量 {{asset}} 購入するつもりですか",
     "sellDescription": "の量 {{asset}} 販売するつもりですか",
     "provideNewLabel": "新しい金額を入力してください"

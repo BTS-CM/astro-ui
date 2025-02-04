@@ -13,7 +13,7 @@
     "useHighestBid": "Kasutage kõrgeimat pakkumist"
   },
   "sellAmount": {
-    "label": "Müügisumma",
+    "label": "Summa",
     "buyDescription": "Summa {{asset}} plaanite osta",
     "sellDescription": "Summa {{asset}} plaanite müüa",
     "provideNewLabel": "Esitage uus summa"

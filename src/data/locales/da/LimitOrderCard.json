@@ -13,7 +13,7 @@
     "useHighestBid": "Brug højeste bud"
   },
   "sellAmount": {
-    "label": "Salgsbeløb",
+    "label": "Beløb",
     "buyDescription": "Mængden af {{asset}} du planlægger at købe",
     "sellDescription": "Mængden af {{asset}} du planlægger at sælge",
     "provideNewLabel": "Angiv et nyt beløb"
