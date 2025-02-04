@@ -44,10 +44,10 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     
-    - name: Use Node.js 21.6.2
-      uses: actions/setup-node@v3
+    - name: Use Node.js
+      uses: actions/setup-node@v4
       with:
         node-version: 'node'
         cache: 'npm'
@@ -65,28 +65,28 @@ jobs:
     - run: npm run-script dist:${{ matrix.os }}
 
     - name: Upload .${{ matrix.release_format }} file
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: BTSAstroUI.${{ matrix.release_format }}
         path: dist/BTSAstroUI.${{ matrix.release_format }}
 
     - name: Upload linux appimage
       if: matrix.os == 'ubuntu-latest'
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: BTSAstroUI.AppImage
         path: dist/BTSAstroUI.AppImage
 
     - name: Upload .exe.blockmap
       if: matrix.release_format == 'exe'
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: BTSAstroUI.exe.blockmap
         path: dist/BTSAstroUI.exe.blockmap
 
     - name: Upload latest.yml file
       if: matrix.release_format == 'exe'
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: latest.yml
         path: dist/latest.yml
@@ -107,32 +107,32 @@ jobs:
     - name: Prepare
       run: chmod +x vt
     - name: Download exe
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: BTSAstroUI.exe
         path: ~/
     - name: Download exe blockmap
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: BTSAstroUI.exe.blockmap
         path: ~/
     - name: Download latest yml
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: latest.yml
         path: ~/
     - name: Download dmg
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: BTSAstroUI.dmg
         path: ~/
     - name: Download deb
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: BTSAstroUI.deb
         path: ~/
     - name: Download AppImage
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: BTSAstroUI.AppImage
         path: ~/
