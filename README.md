@@ -6,6 +6,7 @@ Integrates with both the [Beet](https://github.com/bitshares/beet) and [BeetEOS]
 
 ## Dev blogs
 
+- [DEX Limit order improvements](https://hive.blog/hive-120117/@nftea.gallery/feb-2025-bitshares-astro-ui-development-blog-several-improvements-to-the-dex-limit-order-page-v0-2-91-released)
 - [Evaluating worker proposal support progress](https://hive.blog/hive-120117/@nftea.gallery/evaluating-worker-proposal-support-from-all-bitshares-blockchain-accounts)
 - [Issued Asset Actions & Smartcoin UX improvements!](https://hive.blog/hive-120117/@nftea.gallery/another-october-bitshares-astro-ui-development-blog-issued-asset-actions-and-smartcoin-ux-improvements)
 - [Proposals](https://hive.blog/hive-120117/@nftea.gallery/october-bitshares-astro-ui-development-blog-demonstrating-the-construction-and-resolution-of-bitshares-proposals)
