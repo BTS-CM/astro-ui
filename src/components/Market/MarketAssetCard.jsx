@@ -38,6 +38,7 @@ import { Button } from "@/components/ui/button";
 
 import ExternalLink from "../common/ExternalLink.jsx";
 import CardRow from "../common/CardRow.jsx";
+import AssetDropDown from "./AssetDropDownCard.jsx";
 
 import { humanReadableFloat } from "@/lib/common";
 import {
@@ -47,8 +48,18 @@ import {
 } from "@/stores/favourites.ts"
 
 export default function MarketAssetCard(properties) {
-  const { asset, assetData, assetDetails, bitassetData, marketSearch, chain, usrBalances, type } =
-    properties;
+  const { 
+    asset,
+    assetData,
+    assetDetails,
+    bitassetData,
+    marketSearch,
+    chain,
+    usrBalances,
+    type,
+    otherAsset,
+    storeCallback
+  } = properties;
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
 
   const favouriteAssets = useStore($favouriteAssets);
@@ -90,6 +101,10 @@ export default function MarketAssetCard(properties) {
     }
   }, [bitassetData, marketSearch]);
 
+  const max_supply = useMemo(() => {
+    return assetData.options ? assetData.options.max_supply : assetData.max_supply;
+  }, [assetData]);
+
   return (
     <Card>
       <CardHeader className="pb-2 pt-4">
@@ -99,36 +114,55 @@ export default function MarketAssetCard(properties) {
               {asset} {assetData ? `(${assetData.id})` : ""}
             </div>
             <div className="flex justify-end mt-1">
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    {
-                      isFavourite
-                      ? <HeartFilledIcon
-                          onClick={() => {
-                            removeFavouriteAsset(chain, {
-                              id: assetData.id,
-                              symbol: assetData.symbol,
-                              issuer: assetData.issuer
-                            })
-                          }}
-                        />
-                      : <HeartIcon
-                          onClick={() => {
-                            addFavouriteAsset(chain, {
-                              id: assetData.id,
-                              symbol: assetData.symbol,
-                              issuer: assetData.issuer
-                            })
-                          }}
-                        />
-                    }
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    Favourite
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+              <div className="grid grid-cols-2 gap-2">
+
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      {
+                        isFavourite
+                        ? <HeartFilledIcon
+                            onClick={() => {
+                              removeFavouriteAsset(chain, {
+                                id: assetData.id,
+                                symbol: assetData.symbol,
+                                issuer: assetData.issuer
+                              })
+                            }}
+                          />
+                        : <HeartIcon
+                            onClick={() => {
+                              addFavouriteAsset(chain, {
+                                id: assetData.id,
+                                symbol: assetData.symbol,
+                                issuer: assetData.issuer
+                              })
+                            }}
+                          />
+                      }
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      Favourite
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+
+                {
+                  otherAsset
+                    ? <AssetDropDown
+                        assetSymbol={assetData.symbol}
+                        assetData={assetData}
+                        storeCallback={storeCallback}
+                        otherAsset={otherAsset}
+                        marketSearch={marketSearch}
+                        type={"base"}
+                        size="cog"
+                        chain={chain}
+                      />
+                    : null
+                }             
+              </div>
+
             </div>
           </div>
         </CardTitle>
@@ -159,33 +193,50 @@ export default function MarketAssetCard(properties) {
             <DialogContent className="sm:max-w-[400px] bg-white">
               <DialogHeader>
                 <DialogTitle>
-                  {asset} {assetData ? `(${assetData.id})` : ""} {t("MarketAssetCard:supplyInfo")}
+                  {asset} {assetData ? `(${assetData.id})` : ""}
                 </DialogTitle>
                 <DialogDescription>
+                  {assetDetails && assetDetails.current_supply && assetData
+                    ? <>
+                      {
+                        humanReadableFloat(
+                          assetDetails.current_supply,
+                          assetData.precision
+                        ).toLocaleString(undefined, {
+                          minimumFractionDigits: assetData.precision,
+                        })
+                      }
+                      {" "}
+                      {t("MarketAssetCard:totalCirculation", { asset: asset })}
+                      <br />
+                    </>
+                    : null
+                  } 
                   {assetDetails && assetData
-                    ? humanReadableFloat(
-                        assetDetails.current_supply,
-                        assetData.precision
-                      ).toLocaleString(undefined, {
-                        minimumFractionDigits: assetData.precision,
-                      })
-                    : "???"}{" "}
-                  {t("MarketAssetCard:totalCirculation", { asset: asset })}
-                  <br />
-                  {assetDetails && assetData
-                    ? humanReadableFloat(assetData.max_supply, assetData.precision).toLocaleString(
+                    ? humanReadableFloat(max_supply, assetData.precision).toLocaleString(
                         undefined,
                         {
                           minimumFractionDigits: assetData.precision,
                         }
                       )
-                    : "???"}{" "}
+                    : "???"}
+                  {" "}
                   {t("MarketAssetCard:maximumSupply")}
                   <br />
-                  {assetDetails && assetData
-                    ? humanReadableFloat(assetDetails.confidential_supply, assetData.precision)
-                    : "???"}{" "}
-                  {t("MarketAssetCard:confidentialSupply", { asset: asset })}
+                  {assetDetails && assetDetails.confidential_supply && assetData
+                    ? <>
+                        {humanReadableFloat(assetDetails.confidential_supply, assetData.precision).toLocaleString(
+                          undefined,
+                          {
+                            minimumFractionDigits: assetData.precision,
+                          }
+                        )}
+                        {" "}
+                        {t("MarketAssetCard:confidentialSupply", { asset: asset })}
+                      </>
+                    : null
+                  }
+                  
                 </DialogDescription>
               </DialogHeader>
             </DialogContent>
@@ -278,6 +329,15 @@ export default function MarketAssetCard(properties) {
                   <ScrollArea className="h-72 rounded-md border text-sm">
                     <pre>{JSON.stringify({ assetData, assetDetails, bitassetData }, null, 2)}</pre>
                   </ScrollArea>
+                  <Button
+                    variant="outline"
+                    className="mt-2"
+                    onClick={() => {
+                      navigator.clipboard.writeText(JSON.stringify({ assetData, assetDetails, bitassetData }, null, 2));
+                    }}
+                  >
+                    {t("DeepLinkDialog:tabsContent.copyOperationJSON")}
+                  </Button>
                 </div>
               </div>
             </DialogContent>

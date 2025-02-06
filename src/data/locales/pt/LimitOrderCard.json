@@ -6,8 +6,8 @@
   "submit": "Enviar",
   "useBalance": "Usar saldo",
   "priceAmount": {
-    "label": "Valor do preço",
-    "description": "O valor do preço de {{assetA}} em {{assetB}}",
+    "label": "Preço",
+    "description": "O preço de {{assetA}} em {{assetB}}",
     "provideNewLabel": "Forneça um novo preço",
     "useLowestAsk": "Use o pedido mais baixo",
     "useHighestBid": "Usar o lance mais alto"

@@ -6,8 +6,8 @@
   "submit": "提出する",
   "useBalance": "残高を使用する",
   "priceAmount": {
-    "label": "価格金額",
-    "description": "価格の金額は、 {{assetA}} で {{assetB}}",
+    "label": "価格",
+    "description": "の価格 {{assetA}} で {{assetB}}",
     "provideNewLabel": "新しい価格を提供する",
     "useLowestAsk": "最低のアスクを使用する",
     "useHighestBid": "最高入札額を使用する"

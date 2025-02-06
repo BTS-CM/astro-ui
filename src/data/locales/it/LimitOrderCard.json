@@ -6,8 +6,8 @@
   "submit": "Invia",
   "useBalance": "Usa l'equilibrio",
   "priceAmount": {
-    "label": "Importo del prezzo",
-    "description": "L'importo del prezzo di {{assetA}} In {{assetB}}",
+    "label": "Prezzo",
+    "description": "Il prezzo di {{assetA}} In {{assetB}}",
     "provideNewLabel": "Fornire un nuovo prezzo",
     "useLowestAsk": "Usa la richiesta più bassa",
     "useHighestBid": "Utilizza l'offerta più alta"

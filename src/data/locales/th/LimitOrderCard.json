@@ -6,8 +6,8 @@
   "submit": "ส่ง",
   "useBalance": "ใช้ความสมดุล",
   "priceAmount": {
-    "label": "ราคา จำนวน",
-    "description": "ราคาจำนวน {{assetA}} ใน {{assetB}}",
+    "label": "ราคา",
+    "description": "ราคา {{assetA}} ใน {{assetB}}",
     "provideNewLabel": "ให้ราคาใหม่",
     "useLowestAsk": "ใช้ราคาถามต่ำสุด",
     "useHighestBid": "ใช้ราคาเสนอสูงสุด"

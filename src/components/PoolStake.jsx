@@ -1433,6 +1433,11 @@ export default function PoolStake() {
                   </CardContent>
                 </Card>
 
+                {console.log({
+                  share_asset_details: foundPool.share_asset_details,
+                  poolShareDetails,
+                })}
+
                 {foundPoolDetails && marketSearch && usrBalances ? (
                   <MarketAssetCard
                     asset={foundPool.share_asset_symbol}

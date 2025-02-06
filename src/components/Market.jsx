@@ -529,6 +529,8 @@ export default function Market(properties) {
                     chain={usr.chain}
                     usrBalances={usrBalances}
                     type={activeLimitCard === "buy" ? "buy" : "sell"}
+                    otherAsset={assetB}
+                    storeCallback={setAssetA}
                   />
                 ) : (
                   <Card>
@@ -561,6 +563,8 @@ export default function Market(properties) {
                     chain={usr.chain}
                     usrBalances={usrBalances}
                     type={activeLimitCard === "sell" ? "buy" : "sell"}
+                    otherAsset={assetA}
+                    storeCallback={setAssetB}
                   />
                 ) : (
                   <Card>

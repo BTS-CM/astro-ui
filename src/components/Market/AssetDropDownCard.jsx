@@ -6,6 +6,7 @@ import { sha256 } from '@noble/hashes/sha2';
 import { bytesToHex as toHex } from '@noble/hashes/utils';
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
+import { GearIcon } from "@radix-ui/react-icons";
 
 import {
   Card,
@@ -168,16 +169,21 @@ export default function AssetDropDown(properties) {
       }}
     >
       <DialogTrigger asChild>
-        <Button
-          variant={type === "base" || type === "backing" ? "outline" : "primary"}
-          className={`${size && size === "small" ? "h-7 " : ""}p-3 ${type === "quote" ? "bg-black hover:bg-gray-700 text-white" : ""} hover:shadow-lg`}
-          onClick={() => setDialogOpen(true)}
-        >
-          {!assetSymbol ? t("AssetDropDownCard:select") : null}
-          {!size && assetSymbol ? t("AssetDropDownCard:change") : null}
-          {size && assetSymbol && assetSymbol.length < 12 ? assetSymbol : null}
-          {size && assetSymbol && assetSymbol.length >= 12 ? assetData.id : null}
-        </Button>
+        {
+          size && size === "cog"
+            ? <GearIcon onClick={() => setDialogOpen(true)} />
+            : <Button
+                variant={type === "base" || type === "backing" ? "outline" : "primary"}
+                className={`${size && size === "small" ? "h-7 " : ""}p-3 ${type === "quote" ? "bg-black hover:bg-gray-700 text-white" : ""} hover:shadow-lg`}
+                onClick={() => setDialogOpen(true)}
+              >
+                {!assetSymbol ? t("AssetDropDownCard:select") : null}
+                {!size && assetSymbol ? t("AssetDropDownCard:change") : null}
+                {size && assetSymbol && assetSymbol.length < 12 ? assetSymbol : null}
+                {size && assetSymbol && assetSymbol.length >= 12 ? assetData.id : null}
+              </Button>
+        }
+        
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] bg-white">
         <>
