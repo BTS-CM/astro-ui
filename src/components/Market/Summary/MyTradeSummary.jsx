@@ -66,14 +66,14 @@ export default function MyTradeSummary(properties) {
   return (
     <>
       <div className="grid grid-cols-4">
-        <div className="col-span-1 pl-3">{t("MyTradeSummary:priceColumnTitle")}</div>
-        <div className="col-span-1 pl-3 text-md">
+        <div className="col-span-1 pl-3 text-right">{t("MyTradeSummary:priceColumnTitle")}</div>
+        <div className="col-span-1 pl-3 text-md text-right">
           {type === "buy" ? assetAData.symbol : assetBData.symbol}
         </div>
-        <div className="col-span-1 pl-3 text-md">
+        <div className="col-span-1 pl-3 text-md text-right">
           {type === "buy" ? assetBData.symbol : assetAData.symbol}
         </div>
-        <div className="col-span-1 pl-3">{t("MyTradeSummary:dateColumnTitle")}</div>
+        <div className="col-span-1 pl-3 text-right">{t("MyTradeSummary:dateColumnTitle")}</div>
       </div>
       <ScrollArea className="h-72 w-full rounded-md border">
         <div className="grid grid-cols-4">
@@ -81,14 +81,14 @@ export default function MyTradeSummary(properties) {
             return (
               <div className="col-span-4" key={`mts_${index}_${type}`}>
                 <div className="grid grid-cols-4 text-sm">
-                  <div className="col-span-1 border-r-2 pl-3">{res.price}</div>
-                  <div className="col-span-1 border-r-2 pl-3">
+                  <div className="col-span-1 border-r-2 pl-3 text-right">{res.price}</div>
+                  <div className="col-span-1 border-r-2 pl-3 text-right">
                     {type === "buy" ? res.baseAmount : res.quoteAmount}
                   </div>
-                  <div className="col-span-1 border-r-2 pl-3">
+                  <div className="col-span-1 border-r-2 pl-3 text-right">
                     {type === "buy" ? res.quoteAmount : res.baseAmount}
                   </div>
-                  <div className="col-span-1 border-r-2 pl-3">{getTimeSince(res.date)}</div>
+                  <div className="col-span-1 border-r-2 pl-3 text-right">{getTimeSince(res.date)}</div>
                 </div>
               </div>
             );

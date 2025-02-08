@@ -42,18 +42,6 @@ export default function MarketSummaryTabs(properties) {
     color: "white",
   };
 
-  /*
-    {activeTab === "usrHistory" ? (
-      <TabsTrigger value="usrHistory" style={activeTabStyle}>
-        Your trades
-      </TabsTrigger>
-    ) : (
-      <TabsTrigger value="usrHistory" onClick={() => setActiveTab("usrHistory")}>
-        Your trades
-      </TabsTrigger>
-    )}
-  */
-
   return (
     <>
       <div className="grid grid-cols-1 mt-5">
