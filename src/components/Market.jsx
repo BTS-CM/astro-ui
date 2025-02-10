@@ -188,7 +188,7 @@ export default function Market(properties) {
   const marketHoverCard = (
     <HoverCard>
       <HoverCardTrigger asChild style={{ position: "relative" }}>
-        <Card className="mt-5">
+        <Card>
           <CardHeader className="pt-4 pb-2">
             <CardTitle>{t("Market:marketSummary")}</CardTitle>
             <CardDescription className="text-lg">
@@ -315,6 +315,53 @@ export default function Market(properties) {
       <div className="container mx-auto mt-5 mb-5">
         <div className="grid grid-cols-2 gap-5">
           <div className="col-span-1">
+
+            <div className="flex-grow mb-2">
+              <Card>
+                <CardHeader className="pt-2 pb-2">
+                  <CardTitle className="text-lg">
+                    {usr.chain === "bitshares" ? "Bitshares " : "Bitshares (Testnet) "}
+                    {t("Market:controls")}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="pb-3">
+                  <div className="grid grid-cols-3 gap-1">
+                    <AssetDropDown
+                      assetSymbol={assetA}
+                      assetData={assetAData}
+                      storeCallback={setAssetA}
+                      otherAsset={assetB}
+                      marketSearch={marketSearch}
+                      type={activeLimitCard === "buy" ? "quote" : "base"}
+                      size="small"
+                      chain={usr.chain}
+                    />
+
+                    <a
+                      style={{ lineHeight: 1 }}
+                      href={`/dex/index.html?market=${assetB}_${assetA}`}
+                      onClick={() => setClicked(true)}
+                    >
+                      <Button variant="outline" className="w-full h-7">
+                        {clicked ? <ReloadIcon className="animate-spin" /> : <ReloadIcon />}
+                      </Button>
+                    </a>
+
+                    <AssetDropDown
+                      assetSymbol={assetB}
+                      assetData={assetBData}
+                      storeCallback={setAssetB}
+                      otherAsset={assetA}
+                      marketSearch={marketSearch}
+                      type={activeLimitCard === "sell" ? "quote" : "base"}
+                      size="small"
+                      chain={usr.chain}
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
             <Tabs defaultValue={activeLimitCard} value={activeLimitCard} className="w-full">
               <TabsList className="grid w-full grid-cols-2 gap-2">
                 {!assetAData || !assetBData ? (
@@ -410,113 +457,9 @@ export default function Market(properties) {
                 />
               </TabsContent>
             </Tabs>
-
-            {!tickerData || !assetAData || !assetBData ? (
-              <Card className="mt-5">
-                <CardHeader className="pt-4 pb-2">
-                  <CardTitle>{t("Market:marketSummary")}</CardTitle>
-                  <CardDescription className="text-lg">❔/❔</CardDescription>
-                </CardHeader>
-                <CardContent className="text-sm pb-4">
-                  <div className="grid grid-cols-1 gap-2">
-                    <div className="grid grid-cols-5">
-                      <div className="col-span-2">{t("Market:latestPrice")}</div>
-                      <div className="col-span-3">
-                        <Badge variant="outline" className="ml-2 mb-1">
-                          ❔
-                        </Badge>
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-5">
-                      <div className="col-span-2">{t("Market:24HrChange")}</div>
-                      <div className="col-span-3">❔</div>
-                    </div>
-                    <div className="grid grid-cols-5">
-                      <div className="col-span-2">{t("Market:24HrBaseVolume")}</div>
-                      <div className="col-span-3">
-                        <Badge variant="outline" className="ml-2 mb-1">
-                          ❔
-                        </Badge>
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-5">
-                      <div className="col-span-2">{t("Market:24HrQuoteVolume")}</div>
-                      <div className="col-span-3">
-                        <Badge variant="outline" className="ml-2 mb-1">
-                          ❔
-                        </Badge>
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-5">
-                      <div className="col-span-2">{t("Market:lowestAsk")}</div>
-                      <div className="col-span-3">
-                        <Badge variant="outline" className="ml-2 mb-1">
-                          ❔
-                        </Badge>
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-5">
-                      <div className="col-span-2">{t("Market:highestBid")}</div>
-                      <div className="col-span-3">
-                        <Badge variant="outline" className="ml-2">
-                          ❔
-                        </Badge>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ) : null}
-
-            {tickerData && assetAData && assetBData ? marketHoverCard : null}
           </div>
           <div className="col-span-1">
             <div className="grid grid-cols-1 gap-y-2">
-              <div className="flex-grow">
-                <Card>
-                  <CardHeader className="pt-2 pb-2">
-                    <CardTitle className="text-lg">
-                      {usr.chain === "bitshares" ? "Bitshares " : "Bitshares (Testnet) "}
-                      {t("Market:controls")}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="pb-3">
-                    <div className="grid grid-cols-3 gap-1">
-                      <AssetDropDown
-                        assetSymbol={assetA}
-                        assetData={assetAData}
-                        storeCallback={setAssetA}
-                        otherAsset={assetB}
-                        marketSearch={marketSearch}
-                        type={activeLimitCard === "buy" ? "quote" : "base"}
-                        size="small"
-                        chain={usr.chain}
-                      />
-
-                      <a
-                        style={{ lineHeight: 1 }}
-                        href={`/dex/index.html?market=${assetB}_${assetA}`}
-                        onClick={() => setClicked(true)}
-                      >
-                        <Button variant="outline" className="w-full h-7">
-                          {clicked ? <ReloadIcon className="animate-spin" /> : <ReloadIcon />}
-                        </Button>
-                      </a>
-
-                      <AssetDropDown
-                        assetSymbol={assetB}
-                        assetData={assetBData}
-                        storeCallback={setAssetB}
-                        otherAsset={assetA}
-                        marketSearch={marketSearch}
-                        type={activeLimitCard === "sell" ? "quote" : "base"}
-                        size="small"
-                        chain={usr.chain}
-                      />
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
 
               <div className="flex-grow" style={{ paddingBottom: "0px" }}>
                 {assetADetails ? (
@@ -529,6 +472,8 @@ export default function Market(properties) {
                     chain={usr.chain}
                     usrBalances={usrBalances}
                     type={activeLimitCard === "buy" ? "buy" : "sell"}
+                    otherAsset={assetB}
+                    storeCallback={setAssetA}
                   />
                 ) : (
                   <Card>
@@ -561,6 +506,8 @@ export default function Market(properties) {
                     chain={usr.chain}
                     usrBalances={usrBalances}
                     type={activeLimitCard === "sell" ? "buy" : "sell"}
+                    otherAsset={assetA}
+                    storeCallback={setAssetB}
                   />
                 ) : (
                   <Card>
@@ -585,6 +532,66 @@ export default function Market(properties) {
                   </Card>
                 )}
               </div>
+
+              {!tickerData || !assetAData || !assetBData ? (
+                <Card className="mt-2">
+                  <CardHeader className="pt-4 pb-2">
+                    <CardTitle>{t("Market:marketSummary")}</CardTitle>
+                    <CardDescription className="text-lg">❔/❔</CardDescription>
+                  </CardHeader>
+                  <CardContent className="text-sm pb-4">
+                    <div className="grid grid-cols-1 gap-2">
+                      <div className="grid grid-cols-5">
+                        <div className="col-span-2">{t("Market:latestPrice")}</div>
+                        <div className="col-span-3">
+                          <Badge variant="outline" className="ml-2 mb-1">
+                            ❔
+                          </Badge>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-5">
+                        <div className="col-span-2">{t("Market:24HrChange")}</div>
+                        <div className="col-span-3">❔</div>
+                      </div>
+                      <div className="grid grid-cols-5">
+                        <div className="col-span-2">{t("Market:24HrBaseVolume")}</div>
+                        <div className="col-span-3">
+                          <Badge variant="outline" className="ml-2 mb-1">
+                            ❔
+                          </Badge>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-5">
+                        <div className="col-span-2">{t("Market:24HrQuoteVolume")}</div>
+                        <div className="col-span-3">
+                          <Badge variant="outline" className="ml-2 mb-1">
+                            ❔
+                          </Badge>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-5">
+                        <div className="col-span-2">{t("Market:lowestAsk")}</div>
+                        <div className="col-span-3">
+                          <Badge variant="outline" className="ml-2 mb-1">
+                            ❔
+                          </Badge>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-5">
+                        <div className="col-span-2">{t("Market:highestBid")}</div>
+                        <div className="col-span-3">
+                          <Badge variant="outline" className="ml-2">
+                            ❔
+                          </Badge>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ) : null}
+
+              {tickerData && assetAData && assetBData ? marketHoverCard : null}
+
             </div>
           </div>
         </div>
@@ -602,66 +609,42 @@ export default function Market(properties) {
         <div className="grid grid-cols-1 gap-5 mt-5">
           {assetAData && assetBData ? (
             <>
-              <Tabs defaultValue="buy" className="w-full">
-                <TabsList className="grid w-full grid-cols-2 gap-1">
-                  {activeMOC === "buy" ? (
-                    <TabsTrigger value="buy" style={activeTabStyle}>
-                      {t("Market:buyOrders")}
-                    </TabsTrigger>
-                  ) : (
-                    <TabsTrigger value="buy" onClick={() => setActiveMOC("buy")}>
-                      {t("Market:buyOrders")}
-                    </TabsTrigger>
-                  )}
-                  {activeMOC === "sell" ? (
-                    <TabsTrigger value="sell" style={activeTabStyle}>
-                      {t("Market:sellOrders")}
-                    </TabsTrigger>
-                  ) : (
-                    <TabsTrigger value="sell" onClick={() => setActiveMOC("sell")}>
-                      {t("Market:sellOrders")}
-                    </TabsTrigger>
-                  )}
-                </TabsList>
-                <TabsContent value="buy">
-                  <MarketOrderCard
-                    cardType="buy"
-                    activeLimitCard={activeLimitCard}
-                    assetA={assetA}
-                    assetAData={assetAData}
-                    assetB={assetB}
-                    assetBData={assetBData}
-                    buyOrders={buyOrders}
-                    previousBuyOrders={previousBuyOrders}
-                    sellOrders={sellOrders}
-                    previousSellOrders={previousSellOrders}
-                    marketOrdersLoading={marketOrdersLoading}
-                    orderBookItr={orderBookItr}
-                    setOrderBookItr={setOrderBookItr}
-                    _resetOrders={_resetOrders}
-                    invertedMarket={invertedMarket}
-                  />
-                </TabsContent>
-                <TabsContent value="sell">
-                  <MarketOrderCard
-                    cardType="sell"
-                    activeLimitCard={activeLimitCard}
-                    assetA={assetA}
-                    assetAData={assetAData}
-                    assetB={assetB}
-                    assetBData={assetBData}
-                    buyOrders={buyOrders}
-                    previousBuyOrders={previousBuyOrders}
-                    sellOrders={sellOrders}
-                    previousSellOrders={previousSellOrders}
-                    marketOrdersLoading={marketOrdersLoading}
-                    orderBookItr={orderBookItr}
-                    setOrderBookItr={setOrderBookItr}
-                    _resetOrders={_resetOrders}
-                    invertedMarket={invertedMarket}
-                  />
-                </TabsContent>
-              </Tabs>
+              <div className="w-full grid grid-cols-2 gap-5">
+                <MarketOrderCard
+                  cardType="buy"
+                  activeLimitCard={activeLimitCard}
+                  assetA={assetA}
+                  assetAData={assetAData}
+                  assetB={assetB}
+                  assetBData={assetBData}
+                  buyOrders={buyOrders}
+                  previousBuyOrders={previousBuyOrders}
+                  sellOrders={sellOrders}
+                  previousSellOrders={previousSellOrders}
+                  marketOrdersLoading={marketOrdersLoading}
+                  orderBookItr={orderBookItr}
+                  setOrderBookItr={setOrderBookItr}
+                  _resetOrders={_resetOrders}
+                  invertedMarket={invertedMarket}
+                />
+                <MarketOrderCard
+                  cardType="sell"
+                  activeLimitCard={activeLimitCard}
+                  assetA={assetA}
+                  assetAData={assetAData}
+                  assetB={assetB}
+                  assetBData={assetBData}
+                  buyOrders={buyOrders}
+                  previousBuyOrders={previousBuyOrders}
+                  sellOrders={sellOrders}
+                  previousSellOrders={previousSellOrders}
+                  marketOrdersLoading={marketOrdersLoading}
+                  orderBookItr={orderBookItr}
+                  setOrderBookItr={setOrderBookItr}
+                  _resetOrders={_resetOrders}
+                  invertedMarket={invertedMarket}
+                />
+              </div>
             </>
           ) : null}
         </div>

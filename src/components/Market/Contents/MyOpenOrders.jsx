@@ -55,7 +55,15 @@ export default function MyOpenOrders(properties) {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-2">
-        {relevantOpenOrders && !marketHistoryInProgress ? (
+        {marketHistoryInProgress ? <Skeleton count={5} /> : null}
+        {(!relevantOpenOrders || !relevantOpenOrders.length) && !marketHistoryInProgress ? (
+          type === "buy" ? (
+            <>{t("MyOpenOrders:noOpenBuyOrders")}</>
+          ) : (
+            <>{t("MyOpenOrders:noOpenSellOrders")}</>
+          )
+        ) : null}
+        {relevantOpenOrders && relevantOpenOrders.length ? (
           <MyOrderSummary
             type={type}
             assetAData={assetAData}

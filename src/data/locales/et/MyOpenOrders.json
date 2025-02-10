@@ -2,5 +2,7 @@
   "openBuyOrdersTitle": "Minu avatud ostutellimused",
   "openSellOrdersTitle": "Minu avatud müügitellimused",
   "openBuyOrdersDescription": "Teie avatud ostulimiidi tellimused turule {{assetA}}/{{assetB}}",
-  "openSellOrdersDescription": "Teie avatud müügilimiidi orderid turule {{assetA}}/{{assetB}}"
+  "openSellOrdersDescription": "Teie avatud müügilimiidi orderid turule {{assetA}}/{{assetB}}",
+  "noOpenBuyOrders": "Ei leitud avatud ostutellimusi",
+  "noOpenSellOrders": "Ei leitud avatud müügi tellimusi"
 }

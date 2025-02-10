@@ -5,5 +5,5 @@
   "proceedToUpdateButton": "Proceed to update this open limit order",
   "viewObjectOnBlocksights": "View object on blocksights.info",
   "priceColumnTitle": "Price",
-  "expirationDateColumnTitle": "Expiration date"
+  "expirationDateColumnTitle": "Expiry"
 }

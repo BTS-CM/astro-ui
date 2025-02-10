@@ -11,5 +11,6 @@
   "openBuyLimitOrdersTitle": "เปิดคำสั่งจำกัดการซื้อ",
   "openSellLimitOrdersTitle": "เปิดคำสั่งจำกัดการขาย",
   "buyLimitOrdersDescription": "ตารางต่อไปนี้แสดงข้อเสนอของเครือข่ายที่จะซื้อ {{assetA}} กับ {{assetB}}",
-  "sellLimitOrdersDescription": "ตารางต่อไปนี้แสดงข้อเสนอของเครือข่ายที่จะขาย {{assetA}} สำหรับ {{assetB}}"
+  "sellLimitOrdersDescription": "ตารางต่อไปนี้แสดงข้อเสนอของเครือข่ายที่จะขาย {{assetA}} สำหรับ {{assetB}}",
+  "noOpenOrders": "ไม่มีคำสั่งซื้อเปิด"
 }

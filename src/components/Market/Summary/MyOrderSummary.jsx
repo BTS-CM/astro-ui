@@ -103,7 +103,7 @@ export default function MyOrderSummary(properties) {
             <DialogTrigger asChild>
               <div className="col-span-3" key={`mos_${index}_${type}`}>
                 <div className="grid grid-cols-4 border-b-2 text-sm">
-                  <div className="col-span-1 border-r-2 pl-3">
+                  <div className="col-span-1 border-r-2 pl-3 text-right">
                     {type === "buy" && res.price < minQuoteAmount ? (
                       <HoverCard key={`hover_less_than_min_${res.id.replace("1.7.", "")}`}>
                         <HoverCardTrigger>{`< ${minQuoteAmount}`}</HoverCardTrigger>
@@ -128,9 +128,9 @@ export default function MyOrderSummary(properties) {
                       : null}
                   </div>
 
-                  <div className="col-span-1 border-r-2 pl-3">{res.receiving}</div>
-                  <div className="col-span-1 border-r-2 pl-3">{res.paying}</div>
-                  <div className="col-span-1 border-r-2 pl-3">
+                  <div className="col-span-1 border-r-2 pl-3 text-right">{res.receiving}</div>
+                  <div className="col-span-1 border-r-2 pl-3 text-right">{res.paying}</div>
+                  <div className="col-span-1 border-r-2 pl-3 text-right">
                     {res.expiration.replace("T", " ")}
                   </div>
                 </div>
@@ -177,10 +177,10 @@ export default function MyOrderSummary(properties) {
   return (
     <>
       <div className="grid grid-cols-4">
-        <div className="col-span-1 pl-3">{t("MyOrderSummary:priceColumnTitle")}</div>
-        <div className="col-span-1 pl-3 text-md">{assetAData.symbol}</div>
-        <div className="col-span-1 pl-3 text-md">{assetBData.symbol}</div>
-        <div className="col-span-1 pl-3">{t("MyOrderSummary:expirationDateColumnTitle")}</div>
+        <div className="col-span-1 pl-3 text-right">{t("MyOrderSummary:priceColumnTitle")}</div>
+        <div className="col-span-1 pl-3 text-md text-right">{assetAData.symbol}</div>
+        <div className="col-span-1 pl-3 text-md text-right">{assetBData.symbol}</div>
+        <div className="col-span-1 pl-3 text-right">{t("MyOrderSummary:expirationDateColumnTitle")}</div>
       </div>
       <ScrollArea className="h-72 w-full rounded-md border">
         <div className="grid grid-cols-3">{orderElements}</div>

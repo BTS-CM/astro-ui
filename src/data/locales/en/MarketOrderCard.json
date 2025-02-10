@@ -11,5 +11,6 @@
   "openBuyLimitOrdersTitle": "Open buy limit orders",
   "openSellLimitOrdersTitle": "Open sell limit orders",
   "buyLimitOrdersDescription": "The following table displays network offers to purchase {{assetA}} with {{assetB}}",
-  "sellLimitOrdersDescription": "The following table displays network offers to sell {{assetA}} for {{assetB}}"
+  "sellLimitOrdersDescription": "The following table displays network offers to sell {{assetA}} for {{assetB}}",
+  "noOpenOrders": "No open orders"
 }

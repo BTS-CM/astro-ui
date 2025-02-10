@@ -6,8 +6,8 @@
   "submit": "Esita",
   "useBalance": "Kasutage tasakaalu",
   "priceAmount": {
-    "label": "Hind Summa",
-    "description": "Hind summa {{assetA}} sisse {{assetB}}",
+    "label": "Hind",
+    "description": "Hind {{assetA}} sisse {{assetB}}",
     "provideNewLabel": "Pakkuge uus hind",
     "useLowestAsk": "Kasutage madalaimat küsimust",
     "useHighestBid": "Kasutage kõrgeimat pakkumist"

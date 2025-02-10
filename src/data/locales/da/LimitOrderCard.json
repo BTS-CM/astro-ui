@@ -6,8 +6,8 @@
   "submit": "Indsend",
   "useBalance": "Brug balance",
   "priceAmount": {
-    "label": "Pris Beløb",
-    "description": "Prisbeløbet på {{assetA}} i {{assetB}}",
+    "label": "Pris",
+    "description": "Prisen på {{assetA}} i {{assetB}}",
     "provideNewLabel": "Angiv en ny pris",
     "useLowestAsk": "Brug laveste spørge",
     "useHighestBid": "Brug højeste bud"

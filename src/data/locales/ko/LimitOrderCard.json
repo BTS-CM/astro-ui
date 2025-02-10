@@ -6,8 +6,8 @@
   "submit": "제출하다",
   "useBalance": "잔액 사용",
   "priceAmount": {
-    "label": "가격 금액",
-    "description": "가격 금액 {{assetA}} ~에 {{assetB}}",
+    "label": "가격",
+    "description": "가격 {{assetA}} ~에 {{assetB}}",
     "provideNewLabel": "새로운 가격 제공",
     "useLowestAsk": "가장 낮은 요청을 사용하세요",
     "useHighestBid": "최고 입찰가 사용"

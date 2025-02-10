@@ -6,8 +6,8 @@
   "submit": "Submit",
   "useBalance": "Use balance",
   "priceAmount": {
-    "label": "Price Amount",
-    "description": "The price amount of {{assetA}} in {{assetB}}",
+    "label": "Price",
+    "description": "The price of {{assetA}} in {{assetB}}",
     "provideNewLabel": "Provide a new price",
     "useLowestAsk": "Use lowest ask",
     "useHighestBid": "Use highest bid"

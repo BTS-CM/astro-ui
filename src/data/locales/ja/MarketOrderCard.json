@@ -11,5 +11,6 @@
   "openBuyLimitOrdersTitle": "買い指値注文をオープンする",
   "openSellLimitOrdersTitle": "オープン売り指値注文",
   "buyLimitOrdersDescription": "次の表に、購入できるネットワーク オファーを示します。 {{assetA}} と {{assetB}}",
-  "sellLimitOrdersDescription": "次の表に、販売するネットワーク オファーを示します。 {{assetA}} のために {{assetB}}"
+  "sellLimitOrdersDescription": "次の表に、販売するネットワーク オファーを示します。 {{assetA}} のために {{assetB}}",
+  "noOpenOrders": "オープン注文はありません"
 }

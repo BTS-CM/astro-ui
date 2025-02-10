@@ -6,8 +6,8 @@
   "submit": "Einreichen",
   "useBalance": "Nutzen Sie das Gleichgewicht",
   "priceAmount": {
-    "label": "Preisbetrag",
-    "description": "Der Preisbetrag von {{assetA}} In {{assetB}}",
+    "label": "Preis",
+    "description": "Der Preis von {{assetA}} In {{assetB}}",
     "provideNewLabel": "Geben Sie einen neuen Preis an",
     "useLowestAsk": "Verwenden Sie die niedrigste Frage",
     "useHighestBid": "Höchstgebot verwenden"

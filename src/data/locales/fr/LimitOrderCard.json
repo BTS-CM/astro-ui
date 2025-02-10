@@ -6,8 +6,8 @@
   "submit": "Soumettre",
   "useBalance": "Utiliser le solde",
   "priceAmount": {
-    "label": "Montant du prix",
-    "description": "Le montant du prix de {{assetA}} dans {{assetB}}",
+    "label": "Prix",
+    "description": "Le prix de {{assetA}} dans {{assetB}}",
     "provideNewLabel": "Fournir un nouveau prix",
     "useLowestAsk": "Utiliser la demande la plus basse",
     "useHighestBid": "Utiliser l'enchère la plus élevée"
