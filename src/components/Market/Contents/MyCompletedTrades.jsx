@@ -31,6 +31,7 @@ export default function MyCompletedTrades(properties) {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-2">
+        {marketHistoryInProgress ? <Skeleton count={5} /> : null}
         {(!usrHistory || !usrHistory.length) && !marketHistoryInProgress ? (
           type === "buy" ? (
             <>{t("MyCompletedTrades:noRecentlyCompletedPurchases")}</>

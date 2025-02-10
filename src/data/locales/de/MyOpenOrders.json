@@ -2,5 +2,7 @@
   "openBuyOrdersTitle": "Meine offenen Kaufaufträge",
   "openSellOrdersTitle": "Meine offenen Verkaufsaufträge",
   "openBuyOrdersDescription": "Ihre offenen Kauflimitaufträge für den Markt {{assetA}}/{{assetB}}",
-  "openSellOrdersDescription": "Ihre offenen Verkaufslimitaufträge für den Markt {{assetA}}/{{assetB}}"
+  "openSellOrdersDescription": "Ihre offenen Verkaufslimitaufträge für den Markt {{assetA}}/{{assetB}}",
+  "noOpenBuyOrders": "Keine offenen Kaufbestellungen gefunden",
+  "noOpenSellOrders": "Keine Eröffnungsbestellungen gefunden"
 }

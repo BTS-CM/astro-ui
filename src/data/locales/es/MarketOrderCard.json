@@ -11,5 +11,6 @@
   "openBuyLimitOrdersTitle": "Abrir órdenes límite de compra",
   "openSellLimitOrdersTitle": "Abrir órdenes de límite de venta",
   "buyLimitOrdersDescription": "La siguiente tabla muestra las ofertas de la red para comprar {{assetA}} con {{assetB}}",
-  "sellLimitOrdersDescription": "La siguiente tabla muestra las ofertas de la red para vender. {{assetA}} para {{assetB}}"
+  "sellLimitOrdersDescription": "La siguiente tabla muestra las ofertas de la red para vender. {{assetA}} para {{assetB}}",
+  "noOpenOrders": "No hay órdenes abiertas"
 }

@@ -46,6 +46,14 @@ export default function MarketOrderCard(properties) {
   } = properties;
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
 
+  const quantityOrders = useMemo(() => {
+    if (cardType === "buy") {
+      return buyOrders ? buyOrders.length : 0;
+    } else {
+      return sellOrders ? sellOrders.length : 0;
+    }
+  }, [cardType, buyOrders, sellOrders]);
+
   const Row = ({ index, style }) => {
     let refOrders;
     if (cardType === "buy" && buyOrders) {
@@ -233,33 +241,40 @@ export default function MarketOrderCard(properties) {
         <CardDescription>{cardDescription}</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-4">
-          <div className="col-span-1 pl-3 text-right pr-2">Price</div>
-          <div className="col-span-1 pl-3 text-md text-right pr-2">
-            {cardType === "sell" && assetA && assetA.length < 12 ? assetA : null}
-            {cardType === "sell" && assetA && assetA.length >= 12 && assetAData ? assetAData.id : null}
-            {cardType === "buy" && assetB && assetB.length < 12 ? assetB : null}
-            {cardType === "buy" && assetB && assetB.length >= 12 && assetBData ? assetBData.id : null}
-          </div>
-          <div className="col-span-1 pl-3 text-right pr-2">
-            {cardType === "sell" && assetB && assetB.length < 12 ? assetB : null}
-            {cardType === "sell" && assetB && assetB.length >= 12 && assetBData ? assetBData.id : null}
-            {cardType === "buy" && assetA && assetA.length < 12 ? assetA : null}
-            {cardType === "buy" && assetA && assetA.length >= 12 && assetAData ? assetAData.id : null}
-          </div>
-          <div className="col-span-1 pl-3 text-right pr-2">
-            {assetB && assetB.length < 7 ? `Total (${assetB})` : null}
-            {assetB && assetB.length >= 7 && assetBData ? `Total (${assetBData.id})` : null}
-          </div>
-        </div>
+        {
+          quantityOrders
+          ? <>
+              <div className="grid grid-cols-4">
+                <div className="col-span-1 pl-3 text-right pr-2">Price</div>
+                <div className="col-span-1 pl-3 text-md text-right pr-2">
+                  {cardType === "sell" && assetA && assetA.length < 12 ? assetA : null}
+                  {cardType === "sell" && assetA && assetA.length >= 12 && assetAData ? assetAData.id : null}
+                  {cardType === "buy" && assetB && assetB.length < 12 ? assetB : null}
+                  {cardType === "buy" && assetB && assetB.length >= 12 && assetBData ? assetBData.id : null}
+                </div>
+                <div className="col-span-1 pl-3 text-right pr-2">
+                  {cardType === "sell" && assetB && assetB.length < 12 ? assetB : null}
+                  {cardType === "sell" && assetB && assetB.length >= 12 && assetBData ? assetBData.id : null}
+                  {cardType === "buy" && assetA && assetA.length < 12 ? assetA : null}
+                  {cardType === "buy" && assetA && assetA.length >= 12 && assetAData ? assetAData.id : null}
+                </div>
+                <div className="col-span-1 pl-3 text-right pr-2">
+                  {assetB && assetB.length < 7 ? `Total (${assetB})` : null}
+                  {assetB && assetB.length >= 7 && assetBData ? `Total (${assetBData.id})` : null}
+                </div>
+              </div>
 
-        <List
-          height={300} // Set the height of the list
-          itemCount={cardListCount} // Set the number of items
-          itemSize={20} // Set the height of each item
-        >
-          {cardListContents}
-        </List>
+              <List
+                height={300} // Set the height of the list
+                itemCount={cardListCount} // Set the number of items
+                itemSize={20} // Set the height of each item
+              >
+                {cardListContents}
+              </List>
+            </>
+          : t("MarketOrderCard:noOpenOrders")
+        }
+        
       </CardContent>
     </Card>
   );

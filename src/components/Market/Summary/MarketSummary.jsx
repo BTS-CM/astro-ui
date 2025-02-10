@@ -36,41 +36,44 @@ export default function MarketSummary(properties) {
     });
   }, [filteredMarketHistory, assetAData, assetBData, type]);
 
-  return (
-    <>
-      <div className="grid grid-cols-4 pl-3 text-md">
-        <div className="col-span-1">
-          <div className="grid grid-cols-1">
-            <div className="col-span-1 text-right">Price</div>
-            <div className="col-span-1 text-sm text-right">
-              {assetAData ? assetAData.symbol : "?"}/{assetBData ? assetBData.symbol : "?"}
+  return marketHistoryElements.length
+    ? (
+        <>
+          <div className="grid grid-cols-4 pl-3 text-md">
+            <div className="col-span-1">
+              <div className="grid grid-cols-1">
+                <div className="col-span-1 text-right">Price</div>
+                <div className="col-span-1 text-sm text-right">
+                  {assetAData ? assetAData.symbol : "?"}/{assetBData ? assetBData.symbol : "?"}
+                </div>
+              </div>
+            </div>
+            <div className="col-span-1">
+              <div className="grid grid-cols-1">
+                <div className="col-span-1 text-right">Amount</div>
+                <div className="col-span-1 text-sm text-right">{assetAData ? assetAData.symbol : "?"}</div>
+              </div>
+            </div>
+            <div className="col-span-1">
+              <div className="grid grid-cols-1">
+                <div className="col-span-1 text-right">Date</div>
+                <div className="col-span-1 text-sm text-right">Time since trade</div>
+              </div>
+            </div>
+            <div className="col-span-1">
+              <div className="grid grid-cols-1">
+                <div className="col-span-1 text-right">Total value</div>
+                <div className="col-span-1 text-sm text-right">{assetBData ? assetBData.symbol : "?"}</div>
+              </div>
             </div>
           </div>
-        </div>
-        <div className="col-span-1">
-          <div className="grid grid-cols-1">
-            <div className="col-span-1 text-right">Amount</div>
-            <div className="col-span-1 text-sm text-right">{assetAData ? assetAData.symbol : "?"}</div>
-          </div>
-        </div>
-        <div className="col-span-1">
-          <div className="grid grid-cols-1">
-            <div className="col-span-1 text-right">Date</div>
-            <div className="col-span-1 text-sm text-right">Time since trade</div>
-          </div>
-        </div>
-        <div className="col-span-1">
-          <div className="grid grid-cols-1">
-            <div className="col-span-1 text-right">Total value</div>
-            <div className="col-span-1 text-sm text-right">{assetBData ? assetBData.symbol : "?"}</div>
-          </div>
-        </div>
-      </div>
-      <ScrollArea className="h-72 w-full rounded-md border">
-        <div className="grid grid-cols-4">
-          {marketHistoryElements.length ? marketHistoryElements : null}
-        </div>
-      </ScrollArea>
-    </>
-  );
+          <ScrollArea className="h-72 w-full rounded-md border">
+            <div className="grid grid-cols-4">
+              {marketHistoryElements}
+            </div>
+          </ScrollArea>
+        </>
+      )
+    : t("MarketTradeContents:noMarketHistoryFound");
+  return ;
 }

@@ -2,5 +2,7 @@
   "openBuyOrdersTitle": "คำสั่งซื้อที่เปิดอยู่ของฉัน",
   "openSellOrdersTitle": "คำสั่งขายที่เปิดของฉัน",
   "openBuyOrdersDescription": "คำสั่งจำกัดการซื้อแบบเปิดของคุณสำหรับตลาด {{assetA}}/{{assetB}}",
-  "openSellOrdersDescription": "คำสั่งจำกัดการขายแบบเปิดของคุณสำหรับตลาด {{assetA}}/{{assetB}}"
+  "openSellOrdersDescription": "คำสั่งจำกัดการขายแบบเปิดของคุณสำหรับตลาด {{assetA}}/{{assetB}}",
+  "noOpenBuyOrders": "ไม่พบคำสั่งซื้อแบบเปิด",
+  "noOpenSellOrders": "ไม่พบคำสั่งซื้อแบบเปิดขาย"
 }

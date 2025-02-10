@@ -2,5 +2,7 @@
   "openBuyOrdersTitle": "Minhas ordens de compra abertas",
   "openSellOrdersTitle": "Minhas ordens de venda abertas",
   "openBuyOrdersDescription": "Suas ordens de limite de compra abertas para o mercado {{assetA}}/{{assetB}}",
-  "openSellOrdersDescription": "Suas ordens com limite de venda abertas para o mercado {{assetA}}/{{assetB}}"
+  "openSellOrdersDescription": "Suas ordens com limite de venda abertas para o mercado {{assetA}}/{{assetB}}",
+  "noOpenBuyOrders": "Sem pedidos de compra aberta encontrados",
+  "noOpenSellOrders": "Nenhum ordens de venda aberta encontradas"
 }

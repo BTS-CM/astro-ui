@@ -11,5 +11,6 @@
   "openBuyLimitOrdersTitle": "Avatud ostulimiidi orderid",
   "openSellLimitOrdersTitle": "Avatud müügilimiit orderid",
   "buyLimitOrdersDescription": "Järgmises tabelis kuvatakse võrgu ostupakkumised {{assetA}} koos {{assetB}}",
-  "sellLimitOrdersDescription": "Järgmises tabelis kuvatakse võrgu müügipakkumised {{assetA}} jaoks {{assetB}}"
+  "sellLimitOrdersDescription": "Järgmises tabelis kuvatakse võrgu müügipakkumised {{assetA}} jaoks {{assetB}}",
+  "noOpenOrders": "Avatud tellimusi pole"
 }

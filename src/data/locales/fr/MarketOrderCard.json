@@ -11,5 +11,6 @@
   "openBuyLimitOrdersTitle": "Ordres d'achat limités ouverts",
   "openSellLimitOrdersTitle": "Ordres de vente limités ouverts",
   "buyLimitOrdersDescription": "Le tableau suivant présente les offres d'achat du réseau {{assetA}} avec {{assetB}}",
-  "sellLimitOrdersDescription": "Le tableau suivant présente les offres du réseau à vendre {{assetA}} pour {{assetB}}"
+  "sellLimitOrdersDescription": "Le tableau suivant présente les offres du réseau à vendre {{assetA}} pour {{assetB}}",
+  "noOpenOrders": "Aucune commande ouverte"
 }

@@ -11,5 +11,6 @@
   "openBuyLimitOrdersTitle": "Åbne købsgrænseordrer",
   "openSellLimitOrdersTitle": "Åbne salgsgrænseordrer",
   "buyLimitOrdersDescription": "Følgende tabel viser netværkstilbud til køb {{assetA}} med {{assetB}}",
-  "sellLimitOrdersDescription": "Følgende tabel viser netværkstilbud til salg {{assetA}} til {{assetB}}"
+  "sellLimitOrdersDescription": "Følgende tabel viser netværkstilbud til salg {{assetA}} til {{assetB}}",
+  "noOpenOrders": "Ingen åbne ordrer"
 }
