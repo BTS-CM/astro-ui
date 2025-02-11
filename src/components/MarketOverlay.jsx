@@ -292,7 +292,7 @@ export default function MarketOverlay(properties) {
             />
           </>
         ) : (
-          <MarketPlaceholder />
+          <MarketPlaceholder usr={usr} />
         )}
       </div>
     </>
