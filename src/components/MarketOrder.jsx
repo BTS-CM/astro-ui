@@ -63,15 +63,6 @@ import { $currentUser } from "@/stores/users.ts";
 import { $currentNode } from "@/stores/node.ts";
 
 import {
-  $assetCacheBTS,
-  $assetCacheTEST,
-  $globalParamsCacheBTS,
-  $globalParamsCacheTEST,
-  $poolCacheBTS,
-  $poolCacheTEST,
-} from "@/stores/cache.ts";
-
-import {
   humanReadableFloat,
   trimPrice,
   blockchainFloat,
@@ -142,26 +133,14 @@ export default function MarketOrder(properties) {
 
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
 
-  const _assetsBTS = useSyncExternalStore($assetCacheBTS.subscribe, $assetCacheBTS.get, () => true);
-  const _assetsTEST = useSyncExternalStore(
-    $assetCacheTEST.subscribe,
-    $assetCacheTEST.get,
-    () => true
-  );
-
-  const _globalParamsBTS = useSyncExternalStore(
-    $globalParamsCacheBTS.subscribe,
-    $globalParamsCacheBTS.get,
-    () => true
-  );
-  const _globalParamsTEST = useSyncExternalStore(
-    $globalParamsCacheTEST.subscribe,
-    $globalParamsCacheTEST.get,
-    () => true
-  );
-
-  const _poolsBTS = useSyncExternalStore($poolCacheBTS.subscribe, $poolCacheBTS.get, () => true);
-  const _poolsTEST = useSyncExternalStore($poolCacheTEST.subscribe, $poolCacheTEST.get, () => true);
+  const {
+    _assetsBTS,
+    _assetsTEST,
+    _poolsBTS,
+    _poolsTEST,
+    _globalParamsBTS,
+    _globalParamsTEST
+  } = properties;
 
   const _chain = useMemo(() => {
     if (usr && usr.chain) {
@@ -170,7 +149,7 @@ export default function MarketOrder(properties) {
     return "bitshares";
   }, [usr]);
 
-  useInitCache(_chain ?? "bitshares", ["assets", "globalParams", "pools"]);
+  useInitCache(_chain ?? "bitshares", []);
 
   const assets = useMemo(() => {
     if (_chain && (_assetsBTS || _assetsTEST)) {
@@ -1434,6 +1413,10 @@ export default function MarketOrder(properties) {
             assetB={baseAsset.symbol}
             assetBData={baseAsset}
             chain={usr.chain}
+            _assetsBTS={_assetsBTS}
+            _assetsTEST={_assetsTEST}
+            _poolsBTS={_poolsBTS}
+            _poolsTEST={_poolsTEST}
           />
         ) : null}
       </div>

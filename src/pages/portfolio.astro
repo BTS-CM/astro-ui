@@ -1,14 +1,28 @@
 ---
+import { getCollection } from 'astro:content';
+
 import Layout from '../layouts/Layout.astro';
 import PortfolioTabs from '../components/PortfolioTabs.jsx';
 import PageHeader from '../components/PageHeader';
 import PageFooter from '../components/PageFooter';
+
+const btsAllAssets = await getCollection('btsAllAssets');
+const testAllAssets = await getCollection('testAllAssets');
+
+const btsPools = await getCollection('btsPools');
+const testPools = await getCollection('testPools');
 ---
 
 <Layout title="Bitshares user portfolio - balances, open orders and recent activity">
 	<main>
 		<PageHeader client:only="react" page="portfolio" backURL="../index.html" />
-		<PortfolioTabs client:only="react" />
+		<PortfolioTabs
+			client:only="react"
+			_assetsBTS={btsAllAssets}
+			_assetsTEST={testAllAssets}
+			_poolsBTS={btsPools}
+			_poolsTEST={testPools}
+		/>
 		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/portfolio.astro" />
 	</main>
 </Layout>

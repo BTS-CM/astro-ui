@@ -1,14 +1,23 @@
 ---
+import { getCollection } from 'astro:content';
+
 import Layout from '../layouts/Layout.astro';
 import AccountLists from '../components/AccountLists.jsx';
 import PageHeader from '../components/PageHeader';
 import PageFooter from '../components/PageFooter';
+
+const btsFeeSchedule = await getCollection('btsFeeSchedule');
+const testFeeSchedule = await getCollection('testFeeSchedule');
 ---
 
 <Layout title="Bitshares Account List configuration">
 	<main>
 		<PageHeader client:only="react" page="AccountLists" backURL="../index.html" />
-		<AccountLists client:only="react" />
+		<AccountLists
+			client:only="react"
+			_globalParamsBTS={btsFeeSchedule}
+			_globalParamsTEST={testFeeSchedule}
+		/>
 		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/account_lists.astro" />
 	</main>
 </Layout>

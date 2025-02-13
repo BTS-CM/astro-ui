@@ -1,14 +1,38 @@
 ---
+import { getCollection } from 'astro:content';
+
 import Layout from '../layouts/Layout.astro';
 import PoolStake from '../components/PoolStake.jsx';
 import PageHeader from '../components/PageHeader';
 import PageFooter from '../components/PageFooter';
+
+const btsAllAssets = await getCollection('btsAllAssets');
+const testAllAssets = await getCollection('testAllAssets');
+
+const btsMarketData = await getCollection('btsMarketData');
+const testMarketData = await getCollection('testMarketData');
+
+const btsFeeSchedule = await getCollection('btsFeeSchedule');
+const testFeeSchedule = await getCollection('testFeeSchedule');
+
+const btsPools = await getCollection('btsPools');
+const testPools = await getCollection('testPools');
 ---
 
 <Layout title="Bitshares pool staking form">
 	<main>
 		<PageHeader client:only="react" page="stake" backURL="../index.html" />
-		<PoolStake client:only="react" />
+		<PoolStake
+			client:only="react"
+			_assetsBTS={btsAllAssets}
+			_assetsTEST={testAllAssets}
+			_marketSearchBTS={btsMarketData}
+			_marketSearchTEST={testMarketData}
+			_poolsBTS={btsPools}
+			_poolsTEST={testPools}
+			_globalParamsBTS={btsFeeSchedule}
+			_globalParamsTEST={testFeeSchedule}
+		/>
 		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/stake.astro" />
 	</main>
 </Layout>

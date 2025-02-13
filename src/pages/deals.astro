@@ -1,14 +1,27 @@
 ---
+import { getCollection } from 'astro:content';
+
 import Layout from '../layouts/Layout.astro';
 import CreditDeals from '../components/CreditDeals.jsx';
 import PageHeader from '../components/PageHeader';
 import PageFooter from '../components/PageFooter';
----
 
+const btsAllAssets = await getCollection('btsAllAssets');
+const testAllAssets = await getCollection('testAllAssets');
+
+const btsFeeSchedule = await getCollection('btsFeeSchedule');
+const testFeeSchedule = await getCollection('testFeeSchedule');
+---
 <Layout title="Bitshares credit deal listings">
 	<main>
 		<PageHeader client:only="react" page="deals" backURL="../index.html" />
-		<CreditDeals client:only="react" />
+		<CreditDeals
+			client:only="react"
+			_assetsBTS={btsAllAssets}
+			_assetsTEST={testAllAssets}
+			_globalParamsBTS={btsFeeSchedule}
+			_globalParamsTEST={testFeeSchedule}
+		/>
 		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/deals.astro" />
 	</main>
 </Layout>

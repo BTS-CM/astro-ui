@@ -1,14 +1,33 @@
 ---
+import { getCollection } from 'astro:content';
+
 import Layout from '../layouts/Layout.astro';
 import PageHeader from '../components/PageHeader';
 import Settlement from '@/components/Settlement';
 import PageFooter from '../components/PageFooter';
+
+const btsMinBitassets = await getCollection('btsMinBitassets');
+const testMinBitassets = await getCollection('testMinBitassets');
+
+const btsMarketData = await getCollection('btsMarketData');
+const testMarketData = await getCollection('testMarketData');
+
+const btsFeeSchedule = await getCollection('btsFeeSchedule');
+const testFeeSchedule = await getCollection('testFeeSchedule');
 ---
 
 <Layout title="Bitshares smartcoin issuance form">
 	<main>
 		<PageHeader client:only="react" page="settlement" backURL="../smartcoins/index.html" />
-		<Settlement client:only="react" />
+		<Settlement
+			client:only="react"
+			_bitAssetDataBTS={btsMinBitassets}
+			_bitAssetDataTEST={testMinBitassets}
+			_marketSearchBTS={btsMarketData}
+			_marketSearchTEST={testMarketData}
+			_globalParamsBTS={btsFeeSchedule}
+			_globalParamsTEST={testFeeSchedule}
+		/>
 		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/settlement.astro" />
 	</main>
 </Layout>

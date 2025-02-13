@@ -1,14 +1,28 @@
 ---
+import { getCollection } from 'astro:content';
+
 import Layout from '../layouts/Layout.astro';
 import PageHeader from '../components/PageHeader';
 import PageFooter from '../components/PageFooter';
 import Predictions from '../components/Predictions';
+
+const btsAllAssets = await getCollection('btsAllAssets');
+const testAllAssets = await getCollection('testAllAssets');
+
+const btsMarketData = await getCollection('btsMarketData');
+const testMarketData = await getCollection('testMarketData');
 ---
 
 <Layout title="Bitshares Beet Astro UI - Viewing prediction market assets">
 	<main>
 		<PageHeader client:only="react" page="predictions" backURL="" />
-		<Predictions client:only="react" />
+		<Predictions
+			client:only="react"
+			_assetsBTS={btsAllAssets}
+			_assetsTEST={testAllAssets}
+			_marketSearchBTS={btsMarketData}
+			_marketSearchTEST={testMarketData}
+		/>
 		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/predictions/index.astro" />
 	</main>
 </Layout>

@@ -1,14 +1,28 @@
 ---
+import { getCollection } from 'astro:content';
+
 import Layout from '../layouts/Layout.astro';
 import SameTFunds from '../components/SameTFunds.jsx';
 import PageHeader from '../components/PageHeader.jsx';
 import PageFooter from '../components/PageFooter.jsx';
+
+const btsAllAssets = await getCollection('btsAllAssets');
+const testAllAssets = await getCollection('testAllAssets');
+
+const btsMarketData = await getCollection('btsMarketData');
+const testMarketData = await getCollection('testMarketData');
 ---
 
 <Layout title="Bitshares credit offer editor">
 	<main>
 		<PageHeader client:only="react" page="tfunds" backURL="../index.html" />
-		<SameTFunds client:only="react" />
+		<SameTFunds
+			client:only="react"
+			_assetsBTS={btsAllAssets}
+			_assetsTEST={testAllAssets}
+			_marketSearchBTS={btsMarketData}
+			_marketSearchTEST={testMarketData}
+		/>
 		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/tfunds.astro" />
 	</main>
 </Layout>

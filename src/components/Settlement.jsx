@@ -38,14 +38,6 @@ import { createObjectStore } from "@/nanoeffects/Objects.ts";
 
 import { $currentUser } from "@/stores/users.ts";
 import { $currentNode } from "@/stores/node.ts";
-import {
-  $marketSearchCacheBTS,
-  $marketSearchCacheTEST,
-  $globalParamsCacheBTS,
-  $globalParamsCacheTEST,
-  $bitAssetDataCacheBTS,
-  $bitAssetDataCacheTEST,
-} from "@/stores/cache.ts";
 
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
 
@@ -60,41 +52,14 @@ export default function Settlement(properties) {
 
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
 
-  const bitAssetDataBTS = useSyncExternalStore(
-    $bitAssetDataCacheBTS.subscribe,
-    $bitAssetDataCacheBTS.get,
-    () => true
-  );
-
-  const bitAssetDataTEST = useSyncExternalStore(
-    $bitAssetDataCacheTEST.subscribe,
-    $bitAssetDataCacheTEST.get,
-    () => true
-  );
-
-  const _marketSearchBTS = useSyncExternalStore(
-    $marketSearchCacheBTS.subscribe,
-    $marketSearchCacheBTS.get,
-    () => true
-  );
-
-  const _marketSearchTEST = useSyncExternalStore(
-    $marketSearchCacheTEST.subscribe,
-    $marketSearchCacheTEST.get,
-    () => true
-  );
-
-  const _globalParamsBTS = useSyncExternalStore(
-    $globalParamsCacheBTS.subscribe,
-    $globalParamsCacheBTS.get,
-    () => true
-  );
-
-  const _globalParamsTEST = useSyncExternalStore(
-    $globalParamsCacheTEST.subscribe,
-    $globalParamsCacheTEST.get,
-    () => true
-  );
+  const {
+    _marketSearchBTS,
+    _marketSearchTEST,
+    _bitAssetDataBTS,
+    _bitAssetDataTEST,
+    _globalParamsBTS,
+    _globalParamsTEST
+  } = properties;
 
   const _chain = useMemo(() => {
     if (usr && usr.chain) {
@@ -103,14 +68,14 @@ export default function Settlement(properties) {
     return "bitshares";
   }, [usr]);
 
-  useInitCache(_chain ?? "bitshares", ["bitAssetData", "globalParams", "marketSearch"]);
+  useInitCache(_chain ?? "bitshares", []);
 
   const bitAssetData = useMemo(() => {
-    if (_chain && (bitAssetDataBTS || bitAssetDataTEST)) {
-      return _chain === "bitshares" ? bitAssetDataBTS : bitAssetDataTEST;
+    if (_chain && (_bitAssetDataBTS || _bitAssetDataTEST)) {
+      return _chain === "bitshares" ? _bitAssetDataBTS : _bitAssetDataTEST;
     }
     return [];
-  }, [bitAssetDataBTS, bitAssetDataTEST, _chain]);
+  }, [_bitAssetDataBTS, _bitAssetDataTEST, _chain]);
 
   const globalParams = useMemo(() => {
     if (_chain && (_globalParamsBTS || _globalParamsTEST)) {

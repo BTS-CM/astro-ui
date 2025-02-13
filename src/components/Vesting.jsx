@@ -20,10 +20,6 @@ import { useInitCache } from "@/nanoeffects/Init.ts";
 
 import { $currentUser } from "@/stores/users.ts";
 import { $currentNode } from "@/stores/node.ts";
-import {
-  $assetCacheBTS,
-  $assetCacheTEST,
-} from "@/stores/cache.ts";
 
 import {
   createVestingBalanceStore
@@ -50,12 +46,7 @@ export default function Vesting(properties) {
 
   const [vestingType, setVestingType] = useState("cashback");
 
-  const _assetsBTS = useSyncExternalStore($assetCacheBTS.subscribe, $assetCacheBTS.get, () => true);
-  const _assetsTEST = useSyncExternalStore(
-    $assetCacheTEST.subscribe,
-    $assetCacheTEST.get,
-    () => true
-  );
+  const { _assetsBTS, _assetsTEST } = properties;
 
   const _chain = useMemo(() => {
     if (usr && usr.chain) {
@@ -64,7 +55,7 @@ export default function Vesting(properties) {
     return "bitshares";
   }, [usr]);
 
-  useInitCache(_chain ?? "bitshares", ["assets"]);
+  useInitCache(_chain ?? "bitshares", []);
 
   const assets = useMemo(() => {
     if (_chain && (_assetsBTS || _assetsTEST)) {

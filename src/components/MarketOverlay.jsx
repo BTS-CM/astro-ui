@@ -8,14 +8,6 @@ import { humanReadableFloat } from "@/lib/common";
 import { useInitCache } from "@/nanoeffects/Init.ts";
 
 import { $currentUser } from "@/stores/users.ts";
-import {
-  $assetCacheBTS,
-  $assetCacheTEST,
-  $marketSearchCacheBTS,
-  $marketSearchCacheTEST,
-  $globalParamsCacheBTS,
-  $globalParamsCacheTEST,
-} from "@/stores/cache.ts";
 
 import { createAssetFromSymbolStore } from "@/nanoeffects/Assets.ts";
 
@@ -29,26 +21,18 @@ export default function MarketOverlay(properties) {
     return "bitshares";
   }, [usr]);
 
-  useInitCache(_chain ?? "bitshares", ["assets", "globalParams", "marketSearch", "pools"]);
+  const {
+    _assetsBTS,
+    _assetsTEST,
+    _marketSearchBTS,
+    _marketSearchTEST,
+    _poolsBTS,
+    _poolsTEST,
+    _globalParamsBTS,
+    _globalParamsTEST
+  } = properties;
 
-  const _assetsBTS = useSyncExternalStore($assetCacheBTS.subscribe, $assetCacheBTS.get, () => true);
-  const _assetsTEST = useSyncExternalStore(
-    $assetCacheTEST.subscribe,
-    $assetCacheTEST.get,
-    () => true
-  );
-
-  const _marketSearchBTS = useSyncExternalStore(
-    $marketSearchCacheBTS.subscribe,
-    $marketSearchCacheBTS.get,
-    () => true
-  );
-
-  const _marketSearchTEST = useSyncExternalStore(
-    $marketSearchCacheTEST.subscribe,
-    $marketSearchCacheTEST.get,
-    () => true
-  );
+  useInitCache(_chain ?? "bitshares", []);
 
   const assets = useMemo(() => {
     if (_chain && (_assetsBTS || _assetsTEST)) {
@@ -63,18 +47,6 @@ export default function MarketOverlay(properties) {
     }
     return [];
   }, [_marketSearchBTS, _marketSearchTEST, _chain]);
-
-  const _globalParamsBTS = useSyncExternalStore(
-    $globalParamsCacheBTS.subscribe,
-    $globalParamsCacheBTS.get,
-    () => true
-  );
-
-  const _globalParamsTEST = useSyncExternalStore(
-    $globalParamsCacheTEST.subscribe,
-    $globalParamsCacheTEST.get,
-    () => true
-  );
 
   const globalParams = useMemo(() => {
     if (_chain && (_globalParamsBTS || _globalParamsTEST)) {
@@ -289,6 +261,12 @@ export default function MarketOverlay(properties) {
               setAssetA={handleAssetAChange}
               setAssetB={handleAssetBChange}
               key={`Market_${assetA}_${assetB}`}
+              _assetsBTS={_assetsBTS}
+              _assetsTEST={_assetsTEST}
+              _marketSearchBTS={_marketSearchBTS}
+              _marketSearchTEST={_marketSearchTEST}
+              _poolsBTS={_poolsBTS}
+              _poolsTEST={_poolsTEST}
             />
           </>
         ) : (

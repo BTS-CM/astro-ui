@@ -38,40 +38,22 @@ import { Avatar } from "./Avatar.tsx";
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
 import { $currentUser } from "@/stores/users.ts";
-import { $assetCacheBTS, $assetCacheTEST } from "@/stores/cache.ts";
 import { getPermissions, getFlags, debounce, humanReadableFloat } from "@/lib/common.js";
-import { $marketSearchCacheBTS, $marketSearchCacheTEST } from "@/stores/cache.ts";
 
 import { blockchainFloat } from "@/bts/common";
 
 export default function Prediction(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
-
-  const _assetsBTS = useSyncExternalStore($assetCacheBTS.subscribe, $assetCacheBTS.get, () => true);
-  const _assetsTEST = useSyncExternalStore(
-    $assetCacheTEST.subscribe,
-    $assetCacheTEST.get,
-    () => true
-  );
+  
+  const { _assetsBTS, _assetsTEST, _marketSearchBTS, _marketSearchTEST } = properties;
+  
   const _chain = useMemo(() => {
     if (usr && usr.chain) {
       return usr.chain;
     }
     return "bitshares";
   }, [usr]);
-
-  const _marketSearchBTS = useSyncExternalStore(
-    $marketSearchCacheBTS.subscribe,
-    $marketSearchCacheBTS.get,
-    () => true
-  );
-
-  const _marketSearchTEST = useSyncExternalStore(
-    $marketSearchCacheTEST.subscribe,
-    $marketSearchCacheTEST.get,
-    () => true
-  );
 
   const marketSearch = useMemo(() => {
     if (usr && usr.chain && (_marketSearchBTS || _marketSearchTEST)) {
@@ -80,7 +62,7 @@ export default function Prediction(properties) {
     return [];
   }, [_marketSearchBTS, _marketSearchTEST, usr]);
 
-  useInitCache(_chain ?? "bitshares", ["assets", "marketSearch"]);
+  useInitCache(_chain ?? "bitshares", []);
 
   const assets = useMemo(() => {
     if (_chain && (_assetsBTS || _assetsTEST)) {

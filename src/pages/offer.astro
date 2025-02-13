@@ -1,14 +1,38 @@
 ---
+import { getCollection } from 'astro:content';
+
 import Layout from '../layouts/Layout.astro';
 import CreditOffer from '../components/CreditOffer.jsx';
 import PageHeader from '../components/PageHeader';
 import PageFooter from '../components/PageFooter';
+
+const btsAllAssets = await getCollection('btsAllAssets');
+const testAllAssets = await getCollection('testAllAssets');
+
+const btsMarketData = await getCollection('btsMarketData');
+const testMarketData = await getCollection('testMarketData');
+
+const btsFeeSchedule = await getCollection('btsFeeSchedule');
+const testFeeSchedule = await getCollection('testFeeSchedule');
+
+const btsOffers = await getCollection('btsOffers');
+const testOffers = await getCollection('testOffers');
 ---
 
 <Layout title="Bitshares credit deal">
 	<main>
 		<PageHeader client:only="react" page="offer" backURL="../borrow/index.html" />
-		<CreditOffer  client:only="react" />
+		<CreditOffer
+			client:only="react"
+			_assetsBTS={btsAllAssets}
+			_assetsTEST={testAllAssets}
+			_marketSearchBTS={btsMarketData}
+			_marketSearchTEST={testMarketData}
+			_offersBTS={btsOffers}
+			_offersTEST={testOffers}
+			_globalParamsBTS={btsFeeSchedule}
+			_globalParamsTEST={testFeeSchedule}
+		/>
 		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/offer.astro" />
 	</main>
 </Layout>

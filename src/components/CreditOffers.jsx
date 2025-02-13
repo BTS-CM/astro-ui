@@ -18,12 +18,6 @@ import {
 import { useInitCache } from "@/nanoeffects/Init.ts";
 
 import { $currentUser } from "@/stores/users.ts";
-import {
-  $assetCacheBTS,
-  $assetCacheTEST,
-  $offersCacheBTS,
-  $offersCacheTEST,
-} from "@/stores/cache.ts";
 
 import { humanReadableFloat } from "@/lib/common.js";
 import ExternalLink from "./common/ExternalLink.jsx";
@@ -40,23 +34,7 @@ export default function CreditOffers(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
 
-  const _assetsBTS = useSyncExternalStore($assetCacheBTS.subscribe, $assetCacheBTS.get, () => true);
-  const _assetsTEST = useSyncExternalStore(
-    $assetCacheTEST.subscribe,
-    $assetCacheTEST.get,
-    () => true
-  );
-
-  const _offersBTS = useSyncExternalStore(
-    $offersCacheBTS.subscribe,
-    $offersCacheBTS.get,
-    () => true
-  );
-  const _offersTEST = useSyncExternalStore(
-    $offersCacheTEST.subscribe,
-    $offersCacheTEST.get,
-    () => true
-  );
+  const { _assetsBTS, _assetsTEST, _offersBTS, _offersTEST } = properties;
 
   const _chain = useMemo(() => {
     if (usr && usr.chain) {
@@ -65,7 +43,7 @@ export default function CreditOffers(properties) {
     return "bitshares";
   }, [usr]);
 
-  useInitCache(_chain ?? "bitshares", ["assets", "offers"]);
+  useInitCache(_chain ?? "bitshares", []);
 
   const assets = useMemo(() => {
     if (_chain && (_assetsBTS || _assetsTEST)) {

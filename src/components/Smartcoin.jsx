@@ -56,17 +56,6 @@ import { createFullSmartcoinStore } from "@/nanoeffects/FullSmartcoin.ts";
 import { $currentUser } from "@/stores/users.ts";
 import { $currentNode } from "@/stores/node.ts";
 
-import {
-  $assetCacheBTS,
-  $assetCacheTEST,
-  $marketSearchCacheBTS,
-  $marketSearchCacheTEST,
-  $globalParamsCacheBTS,
-  $globalParamsCacheTEST,
-  $bitAssetDataCacheBTS,
-  $bitAssetDataCacheTEST,
-} from "@/stores/cache.ts";
-
 import DeepLinkDialog from "./common/DeepLinkDialog";
 import ExternalLink from "./common/ExternalLink.jsx";
 import CardRow from "./common/CardRow.jsx";
@@ -117,41 +106,14 @@ export default function Smartcoin(properties) {
 
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
 
-  const bitAssetDataBTS = useSyncExternalStore(
-    $bitAssetDataCacheBTS.subscribe,
-    $bitAssetDataCacheBTS.get,
-    () => true
-  );
-
-  const bitAssetDataTEST = useSyncExternalStore(
-    $bitAssetDataCacheTEST.subscribe,
-    $bitAssetDataCacheTEST.get,
-    () => true
-  );
-
-  const _marketSearchBTS = useSyncExternalStore(
-    $marketSearchCacheBTS.subscribe,
-    $marketSearchCacheBTS.get,
-    () => true
-  );
-
-  const _marketSearchTEST = useSyncExternalStore(
-    $marketSearchCacheTEST.subscribe,
-    $marketSearchCacheTEST.get,
-    () => true
-  );
-
-  const _globalParamsBTS = useSyncExternalStore(
-    $globalParamsCacheBTS.subscribe,
-    $globalParamsCacheBTS.get,
-    () => true
-  );
-
-  const _globalParamsTEST = useSyncExternalStore(
-    $globalParamsCacheTEST.subscribe,
-    $globalParamsCacheTEST.get,
-    () => true
-  );
+  const {
+    _assetsBTS,
+    _assetsTEST,
+    _marketSearchBTS,
+    _marketSearchTEST,
+    _globalParamsBTS,
+    _globalParamsTEST
+  } = properties;
 
   const _chain = useMemo(() => {
     if (usr && usr.chain) {
@@ -160,14 +122,7 @@ export default function Smartcoin(properties) {
     return "bitshares";
   }, [usr]);
 
-  useInitCache(_chain ?? "bitshares", ["bitAssetData", "globalParams", "marketSearch", "assets"]);
-
-  const _assetsBTS = useSyncExternalStore($assetCacheBTS.subscribe, $assetCacheBTS.get, () => true);
-  const _assetsTEST = useSyncExternalStore(
-    $assetCacheTEST.subscribe,
-    $assetCacheTEST.get,
-    () => true
-  );
+  useInitCache(_chain ?? "bitshares", []);
 
   const assets = useMemo(() => {
     if (_chain && (_assetsBTS || _assetsTEST)) {

@@ -63,15 +63,6 @@ import AssetDropDown from "./Market/AssetDropDownCard.jsx";
 import CollateralDropDownCard from "./Market/CollateralDropDownCard.jsx";
 import AccountSearch from "./AccountSearch.jsx";
 
-import {
-  $assetCacheBTS,
-  $assetCacheTEST,
-  $marketSearchCacheBTS,
-  $marketSearchCacheTEST,
-  $globalParamsCacheBTS,
-  $globalParamsCacheTEST,
-} from "@/stores/cache.ts";
-
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Avatar as Av, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
@@ -136,42 +127,16 @@ export default function CreditOfferEditor(properties) {
   );
 
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
-  useInitCache(usr && usr.chain ? usr.chain : "bitshares", [
-    "assets",
-    "offers",
-    "marketSearch",
-    "globalParams",
-  ]);
+  useInitCache(usr && usr.chain ? usr.chain : "bitshares", []);
 
-  const _assetsBTS = useSyncExternalStore($assetCacheBTS.subscribe, $assetCacheBTS.get, () => true);
-  const _assetsTEST = useSyncExternalStore(
-    $assetCacheTEST.subscribe,
-    $assetCacheTEST.get,
-    () => true
-  );
-
-  const _globalParamsBTS = useSyncExternalStore(
-    $globalParamsCacheBTS.subscribe,
-    $globalParamsCacheBTS.get,
-    () => true
-  );
-  const _globalParamsTEST = useSyncExternalStore(
-    $globalParamsCacheTEST.subscribe,
-    $globalParamsCacheTEST.get,
-    () => true
-  );
-
-  const _marketSearchBTS = useSyncExternalStore(
-    $marketSearchCacheBTS.subscribe,
-    $marketSearchCacheBTS.get,
-    () => true
-  );
-
-  const _marketSearchTEST = useSyncExternalStore(
-    $marketSearchCacheTEST.subscribe,
-    $marketSearchCacheTEST.get,
-    () => true
-  );
+  const {
+    _assetsBTS,
+    _assetsTEST,
+    _marketSearchBTS,
+    _marketSearchTEST,
+    _globalParamsBTS,
+    _globalParamsTEST
+  } = properties;
 
   const _chain = useMemo(() => {
     if (usr && usr.chain) {

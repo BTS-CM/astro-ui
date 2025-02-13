@@ -41,7 +41,6 @@ import { useInitCache } from "@/nanoeffects/Init.ts";
 import { createIssuedAssetsStore } from "@/nanoeffects/IssuedAssets.ts";
 import { createObjectStore } from "@/nanoeffects/Objects.ts";
 
-import { $assetCacheBTS, $assetCacheTEST } from "@/stores/cache.ts";
 import { $currentUser, $userStorage } from "@/stores/users.ts";
 import { $currentNode } from "@/stores/node.ts";
 
@@ -67,14 +66,9 @@ export default function IssuedAssets(properties) {
     return "bitshares";
   }, [usr]);
 
-  useInitCache(_chain ?? "bitshares", ["assets"]);
+  useInitCache(_chain ?? "bitshares", []);
 
-  const _assetsBTS = useSyncExternalStore($assetCacheBTS.subscribe, $assetCacheBTS.get, () => true);
-  const _assetsTEST = useSyncExternalStore(
-    $assetCacheTEST.subscribe,
-    $assetCacheTEST.get,
-    () => true
-  );
+  const { _assetsBTS, _assetsTEST } = properties;
 
   const assets = useMemo(() => {
     if (_chain && (_assetsBTS || _assetsTEST)) {

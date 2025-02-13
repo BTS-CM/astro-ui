@@ -51,37 +51,35 @@ const testFeeSchedule = defineCollection({
     schema: feeSchema
 });
 
-const offerSchema = z.array(
-    z.object({
-        id: z.string(),
-        owner_account: z.string(),
-        asset_type: z.string(),
-        total_balance: z.number(),
-        current_balance: z.number(),
-        fee_rate: z.number(),
-        max_duration_seconds: z.number(),
-        min_deal_amount: z.number(),
-        enabled: z.boolean(),
-        auto_disable_time: z.string(),
-        acceptable_collateral: z.array(
-            z.tuple([
-                z.string(),
-                z.object({
-                    base: z.object({
-                        amount: z.number(),
-                        asset_id: z.string()
-                    }),
-                    quote: z.object({
-                        amount: z.number(),
-                        asset_id: z.string()
-                    })
+const offerSchema = z.object({
+    id: z.string(),
+    owner_account: z.string(),
+    asset_type: z.string(),
+    total_balance: z.union([z.string(), z.number()]), // Adjusted to accept both string and number
+    current_balance: z.union([z.string(), z.number()]), // Adjusted to accept both string and number
+    fee_rate: z.number(),
+    max_duration_seconds: z.number(),
+    min_deal_amount: z.number(),
+    enabled: z.boolean(),
+    auto_disable_time: z.string(),
+    acceptable_collateral: z.array(
+        z.tuple([
+            z.string(),
+            z.object({
+                base: z.object({
+                    amount: z.number(),
+                    asset_id: z.string()
+                }),
+                quote: z.object({
+                    amount: z.number(),
+                    asset_id: z.string()
                 })
-            ])
-        ),
-        acceptable_borrowers: z.array(z.unknown()),
-        owner_name: z.string()
-    })
-);
+            })
+        ])
+    ),
+    acceptable_borrowers: z.array(z.unknown()),
+    owner_name: z.string()
+});
 
 const btsOffers = defineCollection({
     loader: file("./src/data/bitshares/allOffers.json", {
@@ -105,20 +103,18 @@ const testOffers = defineCollection({
     schema: offerSchema
 });
 
-const poolSchema = z.array(
-    z.object({
-        id: z.string(),
-        asset_a_id: z.string(),
-        asset_a_symbol: z.string(),
-        asset_b_id: z.string(),
-        asset_b_symbol: z.string(),
-        share_asset_symbol: z.string(),
-        share_asset_id: z.string(),
-        balance_a: z.union([z.string(), z.number()]), // Adjusted to accept both string and number
-        balance_b: z.union([z.string(), z.number()]), // Adjusted to accept both string and number
-        taker_fee_percent: z.number()
-    })
-);
+const poolSchema = z.object({
+    id: z.string(),
+    asset_a_id: z.string(),
+    asset_a_symbol: z.string(),
+    asset_b_id: z.string(),
+    asset_b_symbol: z.string(),
+    share_asset_symbol: z.string(),
+    share_asset_id: z.string(),
+    balance_a: z.union([z.string(), z.number()]), // Adjusted to accept both string and number
+    balance_b: z.union([z.string(), z.number()]), // Adjusted to accept both string and number
+    taker_fee_percent: z.number()
+});
 
 const btsPools = defineCollection({
     loader: file("./src/data/bitshares/pools.json", {
@@ -152,109 +148,107 @@ const testPools = defineCollection({
     schema: poolSchema
 });
 
-const allPoolSchema = z.array(
-    z.object({
+const allPoolSchema = z.object({
+    id: z.string(),
+    asset_a: z.string(),
+    asset_b: z.string(),
+    balance_a: z.union([z.string(), z.number()]),
+    balance_b: z.union([z.string(), z.number()]),
+    share_asset: z.string(),
+    taker_fee_percent: z.number(),
+    withdrawal_fee_percent: z.number(),
+    virtual_value: z.string(),
+    statistics: z.object({
         id: z.string(),
-        asset_a: z.string(),
-        asset_b: z.string(),
-        balance_a: z.union([z.string(), z.number()]),
-        balance_b: z.union([z.string(), z.number()]),
-        share_asset: z.string(),
-        taker_fee_percent: z.number(),
-        withdrawal_fee_percent: z.number(),
-        virtual_value: z.string(),
-        statistics: z.object({
-            id: z.string(),
-            _24h_deposit_count: z.number(),
-            _24h_deposit_amount_a: z.string(),
-            _24h_deposit_amount_b: z.string(),
-            _24h_deposit_share_amount: z.string(),
-            _24h_withdrawal_count: z.number(),
-            _24h_withdrawal_amount_a: z.string(),
-            _24h_withdrawal_amount_b: z.string(),
-            _24h_withdrawal_share_amount: z.string(),
-            _24h_withdrawal_fee_a: z.string(),
-            _24h_withdrawal_fee_b: z.string(),
-            _24h_exchange_a2b_count: z.number(),
-            _24h_exchange_a2b_amount_a: z.string(),
-            _24h_exchange_a2b_amount_b: z.string(),
-            _24h_exchange_b2a_count: z.number(),
-            _24h_exchange_b2a_amount_a: z.string(),
-            _24h_exchange_b2a_amount_b: z.string(),
-            _24h_exchange_fee_a: z.string(),
-            _24h_exchange_fee_b: z.string(),
-            _24h_balance_delta_a: z.number(),
-            _24h_balance_delta_b: z.number(),
-            total_deposit_count: z.number(),
-            total_deposit_amount_a: z.string(),
-            total_deposit_amount_b: z.string(),
-            total_deposit_share_amount: z.string(),
-            total_withdrawal_count: z.number(),
-            total_withdrawal_amount_a: z.string(),
-            total_withdrawal_amount_b: z.string(),
-            total_withdrawal_share_amount: z.string(),
-            total_withdrawal_fee_a: z.string(),
-            total_withdrawal_fee_b: z.string(),
-            total_exchange_a2b_count: z.number(),
-            total_exchange_a2b_amount_a: z.string(),
-            total_exchange_a2b_amount_b: z.string(),
-            total_exchange_b2a_count: z.number(),
-            total_exchange_b2a_amount_a: z.string(),
-            total_exchange_b2a_amount_b: z.string(),
-            total_exchange_fee_a: z.string(),
-            total_exchange_fee_b: z.string()
+        _24h_deposit_count: z.number(),
+        _24h_deposit_amount_a: z.string(),
+        _24h_deposit_amount_b: z.string(),
+        _24h_deposit_share_amount: z.string(),
+        _24h_withdrawal_count: z.number(),
+        _24h_withdrawal_amount_a: z.string(),
+        _24h_withdrawal_amount_b: z.string(),
+        _24h_withdrawal_share_amount: z.string(),
+        _24h_withdrawal_fee_a: z.string(),
+        _24h_withdrawal_fee_b: z.string(),
+        _24h_exchange_a2b_count: z.number(),
+        _24h_exchange_a2b_amount_a: z.string(),
+        _24h_exchange_a2b_amount_b: z.string(),
+        _24h_exchange_b2a_count: z.number(),
+        _24h_exchange_b2a_amount_a: z.string(),
+        _24h_exchange_b2a_amount_b: z.string(),
+        _24h_exchange_fee_a: z.string(),
+        _24h_exchange_fee_b: z.string(),
+        _24h_balance_delta_a: z.union([z.number(), z.string()]),
+        _24h_balance_delta_b: z.union([z.number(), z.string()]),
+        total_deposit_count: z.number(),
+        total_deposit_amount_a: z.string(),
+        total_deposit_amount_b: z.string(),
+        total_deposit_share_amount: z.string(),
+        total_withdrawal_count: z.number(),
+        total_withdrawal_amount_a: z.string(),
+        total_withdrawal_amount_b: z.string(),
+        total_withdrawal_share_amount: z.string(),
+        total_withdrawal_fee_a: z.string(),
+        total_withdrawal_fee_b: z.string(),
+        total_exchange_a2b_count: z.number(),
+        total_exchange_a2b_amount_a: z.string(),
+        total_exchange_a2b_amount_b: z.string(),
+        total_exchange_b2a_count: z.number(),
+        total_exchange_b2a_amount_a: z.string(),
+        total_exchange_b2a_amount_b: z.string(),
+        total_exchange_fee_a: z.string(),
+        total_exchange_fee_b: z.string()
+    }),
+    details: z.object({
+        asset_a: z.object({
+            symbol: z.string(),
+            float: z.number()
         }),
-        details: z.object({
-            asset_a: z.object({
-                symbol: z.string(),
-                float: z.number()
+        asset_b: z.object({
+            symbol: z.string(),
+            float: z.number()
+        }),
+        share_asset: z.object({
+            symbol: z.string(),
+            float: z.number(),
+            holders: z.number(),
+            value: z.object({
+                total_withdraw_value_in_core: z.union([z.null(), z.number()]),
+                withdraw_value_a: z.union([z.null(), z.number()]),
+                withdraw_value_b: z.union([z.null(), z.number()]),
+                market_value_in_core: z.number()
             }),
-            asset_b: z.object({
-                symbol: z.string(),
-                float: z.number()
-            }),
-            share_asset: z.object({
-                symbol: z.string(),
-                float: z.number(),
-                holders: z.number(),
-                value: z.object({
-                    total_withdraw_value_in_core: z.number(),
-                    withdraw_value_a: z.number(),
-                    withdraw_value_b: z.number(),
-                    market_value_in_core: z.number()
-                }),
-                warnings: z.object({
-                    may_use_override_transfer: z.boolean(),
-                    may_whitelist: z.boolean()
-                })
-            }),
-            price_sell_a_per_percent: z.object({
-                "1": z.number(),
-                "5": z.number(),
-                "10": z.number(),
-                unit: z.string()
-            }),
-            price_sell_b_per_percent: z.object({
-                "1": z.number(),
-                "5": z.number(),
-                "10": z.number(),
-                unit: z.string()
-            }),
-            value_in_core: z.number(),
-            ticker: z.object({
-                volume_a_24h: z.number(),
-                volume_b_24h: z.number(),
-                delta_a_24h: z.number(),
-                delta_b_24h: z.number(),
-                apy_24h_in_core: z.number(),
-                apy_in_core: z.number(),
-                total_volume_24h_in_core: z.number()
-            }),
-            activity: z.number(),
-            score: z.number()
-        })
+            warnings: z.object({
+                may_use_override_transfer: z.boolean(),
+                may_whitelist: z.boolean()
+            })
+        }),
+        price_sell_a_per_percent: z.object({
+            "1": z.number(),
+            "5": z.number(),
+            "10": z.number(),
+            unit: z.string()
+        }),
+        price_sell_b_per_percent: z.object({
+            "1": z.number(),
+            "5": z.number(),
+            "10": z.number(),
+            unit: z.string()
+        }),
+        value_in_core: z.number(),
+        ticker: z.object({
+            volume_a_24h: z.number(),
+            volume_b_24h: z.number(),
+            delta_a_24h: z.number(),
+            delta_b_24h: z.number(),
+            apy_24h_in_core: z.union([z.null(), z.number()]),
+            apy_in_core: z.union([z.null(), z.number()]),
+            total_volume_24h_in_core: z.number()
+        }),
+        activity: z.number(),
+        score: z.number()
     })
-);
+});
 
 const btsAllPools = defineCollection({
     loader: file("./src/data/bitshares/allPools.json"),
@@ -266,22 +260,20 @@ const testAllPools = defineCollection({
     schema: allPoolSchema
 });
 
-const minBitassetSchema = z.array(
-    z.object({
+const minBitassetSchema = z.object({
+    id: z.string(),
+    assetID: z.string(),
+    issuer: z.object({
         id: z.string(),
-        assetID: z.string(),
-        issuer: z.object({
-            id: z.string(),
-            ltm: z.boolean(),
-            name: z.string()
-        }),
-        feeds: z.array(z.unknown()), // Assuming feeds is an array of unknown objects
-        collateral: z.string(),
-        mcr: z.number(),
-        mssr: z.number(),
-        icr: z.number()
-    })
-);
+        ltm: z.boolean(),
+        name: z.string()
+    }),
+    feeds: z.array(z.unknown()), // Assuming feeds is an array of unknown objects
+    collateral: z.string(),
+    mcr: z.number(),
+    mssr: z.number(),
+    icr: z.number()
+});
 
 const btsMinBitassets = defineCollection({
     loader: file("./src/data/bitshares/minBitassetData.json"),
@@ -293,18 +285,16 @@ const testMinBitassets = defineCollection({
     schema: minBitassetSchema
 });
 
-const assetSchema = z.array(
-    z.object({
-        id: z.string(),
-        symbol: z.string(),
-        precision: z.number(),
-        issuer: z.string(),
-        market_fee_percent: z.number(),
-        max_market_fee: z.string(),
-        max_supply: z.string(),
-        bitasset_data_id: z.string().optional()
-    })
-);
+const assetSchema = z.object({
+    id: z.string(),
+    symbol: z.string(),
+    precision: z.number(),
+    issuer: z.string(),
+    market_fee_percent: z.number(),
+    max_market_fee: z.union([z.number(), z.string()]),
+    max_supply: z.union([z.number(), z.string()]),
+    bitasset_data_id: z.string().optional()
+});
 
 const btsAllAssets = defineCollection({
     loader: file("./src/data/bitshares/allAssets.json", {
@@ -338,14 +328,12 @@ const testAllAssets = defineCollection({
     schema: assetSchema
 });
 
-const marketDataSchema = z.array(
-    z.object({
-        id: z.string(),
-        s: z.string(),
-        u: z.string(),
-        p: z.number()
-    })
-);
+const marketDataSchema = z.object({
+    id: z.string(),
+    s: z.string(),
+    u: z.string(),
+    p: z.number()
+});
 
 const compressMarketData = (assets: any, issuers: any) => {
   return assets.map((asset: any) => {
@@ -394,18 +382,16 @@ const testMarketData = defineCollection({
     schema: marketDataSchema
 });
 
-const minAssetSchema = z.array(
-    z.object({
-        id: z.string(),
-        s: z.string(),
-        p: z.number(),
-        i: z.string(),
-        mfp: z.number(),
-        mmf: z.string(),
-        ms: z.string(),
-        bdi: z.string().optional()
-    })
-);
+const minAssetSchema = z.object({
+    id: z.string(),
+    s: z.string(),
+    p: z.number(),
+    i: z.string(),
+    mfp: z.number(),
+    mmf: z.union([z.number(), z.string()]),
+    ms: z.union([z.number(), z.string()]),
+    bdi: z.string().optional()
+});
 
 const btsMinAssets = defineCollection({
     loader: file("./src/data/bitshares/minAssets.json"),
@@ -417,16 +403,14 @@ const testMinAssets = defineCollection({
     schema: minAssetSchema
 });
 
-const dynamicDataSchema = z.array(
-    z.object({
-        id: z.string(),
-        current_supply: z.string(),
-        confidential_supply: z.string(),
-        accumulated_fees: z.number(),
-        accumulated_collateral_fees: z.number(),
-        fee_pool: z.string()
-    })
-);
+const dynamicDataSchema = z.object({
+    id: z.string(),
+    current_supply: z.union([z.number(), z.string()]),
+    confidential_supply: z.union([z.number(), z.string()]),
+    accumulated_fees: z.union([z.number(), z.string()]),
+    accumulated_collateral_fees: z.union([z.number(), z.string()]),
+    fee_pool: z.union([z.number(), z.string()])
+});
 
 const btsAllDynamicData = defineCollection({
     loader: file("./src/data/bitshares/dynamicData.json"),
@@ -438,13 +422,11 @@ const testAllDynamicData = defineCollection({
     schema: dynamicDataSchema
 });
 
-const assetIssuerSchema = z.array(
-    z.object({
-        id: z.string(),
-        ltm: z.boolean(),
-        name: z.string()
-    })
-);
+const assetIssuerSchema = z.object({
+    id: z.string(),
+    ltm: z.boolean(),
+    name: z.string()
+});
 
 const btsAssetIssuers = defineCollection({
     loader: file("./src/data/bitshares/assetIssuers.json"),
@@ -456,20 +438,18 @@ const testAssetIssuers = defineCollection({
     schema: assetIssuerSchema
 });
 
-const minPoolSchema = z.array(
-    z.object({
-        id: z.string(),
-        a: z.string(),
-        as: z.string(),
-        b: z.string(),
-        bs: z.string(),
-        sa: z.string(),
-        said: z.string(),
-        ba: z.union([z.string(), z.number()]), // todo: clean up ETL scripts
-        bb: z.union([z.string(), z.number()]), // todo: clean up ETL scripts
-        tfp: z.number()
-    })
-);
+const minPoolSchema = z.object({
+    id: z.string(),
+    a: z.string(),
+    as: z.string(),
+    b: z.string(),
+    bs: z.string(),
+    sa: z.string(),
+    said: z.string(),
+    ba: z.union([z.string(), z.number()]), // todo: clean up ETL scripts
+    bb: z.union([z.string(), z.number()]), // todo: clean up ETL scripts
+    tfp: z.number()
+});
 
 const btsMinPools = defineCollection({
     loader: file("./src/data/bitshares/minPools.json"),

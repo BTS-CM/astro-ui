@@ -56,8 +56,6 @@ import {
 import { $currentUser } from "@/stores/users.ts";
 import { $blockList } from "@/stores/blocklist.ts";
 import { $currentNode } from "@/stores/node.ts";
-import { $assetCacheBTS, $assetCacheTEST } from "@/stores/cache.ts";
-import { $marketSearchCacheBTS, $marketSearchCacheTEST } from "@/stores/cache.ts";
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
 import { createEveryObjectStore, createObjectStore } from "@/nanoeffects/Objects.ts";
@@ -96,12 +94,7 @@ export default function Predictions(properties) {
 
   const [view, setView] = useState("active"); // active, expired, mine
 
-  const _assetsBTS = useSyncExternalStore($assetCacheBTS.subscribe, $assetCacheBTS.get, () => true);
-  const _assetsTEST = useSyncExternalStore(
-    $assetCacheTEST.subscribe,
-    $assetCacheTEST.get,
-    () => true
-  );
+  const { _assetsBTS, _assetsTEST, _marketSearchBTS, _marketSearchTEST } = properties;
 
   const _chain = useMemo(() => {
     if (usr && usr.chain) {
@@ -110,19 +103,7 @@ export default function Predictions(properties) {
     return "bitshares";
   }, [usr]);
 
-  useInitCache(_chain ?? "bitshares", ["assets", "marketSearch"]);
-
-  const _marketSearchBTS = useSyncExternalStore(
-    $marketSearchCacheBTS.subscribe,
-    $marketSearchCacheBTS.get,
-    () => true
-  );
-
-  const _marketSearchTEST = useSyncExternalStore(
-    $marketSearchCacheTEST.subscribe,
-    $marketSearchCacheTEST.get,
-    () => true
-  );
+  useInitCache(_chain ?? "bitshares", []);
 
   const marketSearch = useMemo(() => {
     if (_chain && (_marketSearchBTS || _marketSearchTEST)) {

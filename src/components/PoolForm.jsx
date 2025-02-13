@@ -57,16 +57,6 @@ import { Avatar } from "@/components/Avatar.tsx";
 
 import { blockchainFloat, humanReadableFloat } from "@/lib/common";
 
-import {
-  $assetCacheBTS,
-  $assetCacheTEST,
-  $poolCacheBTS,
-  $poolCacheTEST,
-  $marketSearchCacheBTS,
-  $marketSearchCacheTEST,
-  $globalParamsCacheBTS,
-  $globalParamsCacheTEST,
-} from "@/stores/cache.ts";
 import { $currentUser } from "@/stores/users.ts";
 import { $currentNode } from "@/stores/node.ts";
 import { $blockList } from "@/stores/blocklist.ts";
@@ -81,7 +71,7 @@ import MarketAssetCard from "./Market/MarketAssetCard.jsx";
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
 import ExternalLink from "./common/ExternalLink.jsx";
 
-export default function PoolForm() {
+export default function PoolForm(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
   const form = useForm({
     defaultValues: {
@@ -95,39 +85,16 @@ export default function PoolForm() {
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
   const blocklist = useSyncExternalStore($blockList.subscribe, $blockList.get, () => true);
 
-  const _assetsBTS = useSyncExternalStore($assetCacheBTS.subscribe, $assetCacheBTS.get, () => true);
-  const _assetsTEST = useSyncExternalStore(
-    $assetCacheTEST.subscribe,
-    $assetCacheTEST.get,
-    () => true
-  );
-
-  const _poolsBTS = useSyncExternalStore($poolCacheBTS.subscribe, $poolCacheBTS.get, () => true);
-  const _poolsTEST = useSyncExternalStore($poolCacheTEST.subscribe, $poolCacheTEST.get, () => true);
-
-  const _marketSearchBTS = useSyncExternalStore(
-    $marketSearchCacheBTS.subscribe,
-    $marketSearchCacheBTS.get,
-    () => true
-  );
-
-  const _marketSearchTEST = useSyncExternalStore(
-    $marketSearchCacheTEST.subscribe,
-    $marketSearchCacheTEST.get,
-    () => true
-  );
-
-  const _globalParamsBTS = useSyncExternalStore(
-    $globalParamsCacheBTS.subscribe,
-    $globalParamsCacheBTS.get,
-    () => true
-  );
-
-  const _globalParamsTEST = useSyncExternalStore(
-    $globalParamsCacheTEST.subscribe,
-    $globalParamsCacheTEST.get,
-    () => true
-  );
+  const {
+    _marketSearchBTS,
+    _marketSearchTEST,
+    _assetsBTS,
+    _assetsTEST,
+    _poolsBTS,
+    _poolsTEST,
+    _globalParamsBTS,
+    _globalParamsTEST
+  } = properties;
 
   const _chain = useMemo(() => {
     if (usr && usr.chain) {
@@ -136,7 +103,7 @@ export default function PoolForm() {
     return "bitshares";
   }, [usr]);
 
-  useInitCache(_chain ?? "bitshares", ["marketSearch", "assets", "pools", "globalParams"]);
+  useInitCache(_chain ?? "bitshares", []);
 
   const assets = useMemo(() => {
     if (!_chain || (!_assetsBTS && !_assetsTEST)) {
@@ -1190,6 +1157,10 @@ export default function PoolForm() {
             assetB={!inverted ? assetB.symbol : assetA.symbol}
             assetBData={!inverted ? assetB : assetA}
             chain={usr.chain}
+            _assetsBTS={_assetsBTS}
+            _assetsTEST={_assetsTEST}
+            _poolsBTS={_poolsBTS}
+            _poolsTEST={_poolsTEST}
           />
         ) : null}
 

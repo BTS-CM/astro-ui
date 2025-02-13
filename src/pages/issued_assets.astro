@@ -1,14 +1,24 @@
 ---
+import { getCollection } from 'astro:content';
+
 import Layout from '../layouts/Layout.astro';
 import IssuedAssets from '../components/IssuedAssets.jsx';
 import PageHeader from '../components/PageHeader';
 import PageFooter from '../components/PageFooter';
+
+const btsAllAssets = await getCollection('btsAllAssets');
+const testAllAssets = await getCollection('testAllAssets');
+
 ---
 
 <Layout title="Bitshares - Issued Asset Overview">
 	<main>
 		<PageHeader client:only="react" page="issuedAssets" backURL="../index.html" />
-		<IssuedAssets client:only="react" />
+		<IssuedAssets
+			client:only="react"
+			_assetsBTS={btsAllAssets}
+			_assetsTEST={testAllAssets}
+		/>
 		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/issued_assets.astro" />
 	</main>
 </Layout>
