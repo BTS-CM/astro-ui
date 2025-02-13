@@ -57,7 +57,6 @@ export default function AssetDropDown(properties) {
     if (!marketSearch || !marketSearch.length) {
       return [];
     } else {
-      console.log({marketSearch})
       let currentContents = otherAsset
         ? marketSearch.filter((asset) => asset.s !== otherAsset && asset.s !== assetSymbol)
         : marketSearch.filter((asset) => asset.s !== assetSymbol);

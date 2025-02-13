@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useSyncExternalStore, useMemo } from "react";
-import { useStore } from '@nanostores/react';
+import { useTranslation } from "react-i18next";
+import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
 import Market from "./Market";
 import MarketPlaceholder from "./MarketPlaceholder";
@@ -12,6 +13,7 @@ import { $currentUser } from "@/stores/users.ts";
 import { createAssetFromSymbolStore } from "@/nanoeffects/Assets.ts";
 
 export default function MarketOverlay(properties) {
+  const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
   
   const _chain = useMemo(() => {
@@ -58,8 +60,8 @@ export default function MarketOverlay(properties) {
   const [limitOrderFee, setLimitOrderFee] = useState(0);
   useEffect(() => {
     if (globalParams && globalParams.parameters) {
-      const foundFee = globalParams.find((x) => x[0] === 1);
-      const finalFee = humanReadableFloat(foundFee[1].fee, 5);
+      const foundFee = globalParams.find((x) => x.id === 1);
+      const finalFee = humanReadableFloat(foundFee.data.fee, 5);
       setLimitOrderFee(finalFee);
     }
   }, [globalParams]);
@@ -235,44 +237,53 @@ export default function MarketOverlay(properties) {
     }
   }, [assets, assetB, usr]);
   
-  return (
-    <>
+  if (
+    !usr ||
+    !usr.chain ||
+    !assetA || !assetB
+  ) {
+    return (
       <div className="container mx-auto mt-5 mb-5">
-        {usr &&
-        usr.chain &&
-        assetA &&
-        assetB &&
-        assetAData &&
-        assetBData &&
-        assetADetails &&
-        assetBDetails ? (
-          <>
-            <Market
-              usr={usr}
-              assetA={assetA}
-              assetB={assetB}
-              assetAData={assetAData}
-              assetADetails={assetADetails}
-              assetABitassetData={aBitassetData}
-              assetBData={assetBData}
-              assetBDetails={assetBDetails}
-              assetBBitassetData={bBitassetData}
-              limitOrderFee={limitOrderFee}
-              setAssetA={handleAssetAChange}
-              setAssetB={handleAssetBChange}
-              key={`Market_${assetA}_${assetB}`}
-              _assetsBTS={_assetsBTS}
-              _assetsTEST={_assetsTEST}
-              _marketSearchBTS={_marketSearchBTS}
-              _marketSearchTEST={_marketSearchTEST}
-              _poolsBTS={_poolsBTS}
-              _poolsTEST={_poolsTEST}
-            />
-          </>
-        ) : (
-          <MarketPlaceholder usr={usr} />
-        )}
+        <div className="grid grid-cols-1 gap-3 text-center">
+          <p>{t("MarketPlaceholder:loadingAssetDescription")}</p>
+        </div>
       </div>
-    </>
+    );
+  }
+
+  if (assetA && assetB && (!assetAData || !assetADetails || !assetBData || !assetBDetails)) {
+    return <MarketPlaceholder
+            usr={usr}
+            assetA={assetA}
+            assetB={assetB}
+            assets={assets}
+            marketSearch={marketSearch}
+          />
+  }
+
+  return (
+    <div className="container mx-auto mt-5 mb-5">
+      <Market
+        usr={usr}
+        assetA={assetA}
+        assetB={assetB}
+        assetAData={assetAData}
+        assetADetails={assetADetails}
+        assetABitassetData={aBitassetData}
+        assetBData={assetBData}
+        assetBDetails={assetBDetails}
+        assetBBitassetData={bBitassetData}
+        limitOrderFee={limitOrderFee}
+        setAssetA={handleAssetAChange}
+        setAssetB={handleAssetBChange}
+        key={`Market_${assetA}_${assetB}`}
+        _assetsBTS={_assetsBTS}
+        _assetsTEST={_assetsTEST}
+        _marketSearchBTS={_marketSearchBTS}
+        _marketSearchTEST={_marketSearchTEST}
+        _poolsBTS={_poolsBTS}
+        _poolsTEST={_poolsTEST}
+      />
+    </div>
   );
 }

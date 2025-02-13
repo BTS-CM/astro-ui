@@ -14,6 +14,17 @@ const testMarketData = await getCollection('testMarketData');
 
 const btsFeeSchedule = await getCollection('btsFeeSchedule');
 const testFeeSchedule = await getCollection('testFeeSchedule');
+
+
+const _minBitassetsBTS = btsMinBitassets.map(collection => collection.data);
+const _minBitassetsTEST = testMinBitassets.map(collection => collection.data);
+
+const _marketSearchBTS = btsMarketData.map(collection => collection.data);
+const _marketSearchTEST = testMarketData.map(collection => collection.data);
+
+const btsGlobalParams = btsFeeSchedule.map(collection => collection.data);
+const testGlobalParams = testFeeSchedule.map(collection => collection.data);
+
 ---
 
 <Layout title="Bitshares smartcoin issuance form">
@@ -21,12 +32,12 @@ const testFeeSchedule = await getCollection('testFeeSchedule');
 		<PageHeader client:only="react" page="settlement" backURL="../smartcoins/index.html" />
 		<Settlement
 			client:only="react"
-			_bitAssetDataBTS={btsMinBitassets}
-			_bitAssetDataTEST={testMinBitassets}
-			_marketSearchBTS={btsMarketData}
-			_marketSearchTEST={testMarketData}
-			_globalParamsBTS={btsFeeSchedule}
-			_globalParamsTEST={testFeeSchedule}
+			_bitAssetDataBTS={_minBitassetsBTS}
+			_bitAssetDataTEST={_minBitassetsTEST}
+			_marketSearchBTS={_marketSearchBTS}
+			_marketSearchTEST={_marketSearchTEST}
+			_globalParamsBTS={btsGlobalParams}
+			_globalParamsTEST={testGlobalParams}
 		/>
 		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/settlement.astro" />
 	</main>

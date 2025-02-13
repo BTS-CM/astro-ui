@@ -14,6 +14,13 @@ const testMarketData = await getCollection('testMarketData');
 
 const btsFeeSchedule = await getCollection('btsFeeSchedule');
 const testFeeSchedule = await getCollection('testFeeSchedule');
+
+const btsAssets = btsAllAssets.map(collection => collection.data);
+const testAssets = testAllAssets.map(collection => collection.data);
+const marketSearchBTS = btsMarketData.map(collection => collection.data);
+const marketSearchTEST = testMarketData.map(collection => collection.data);
+const feeScheduleBTS = btsFeeSchedule.map(collection => collection.data);
+const feeScheduleTEST = testFeeSchedule.map(collection => collection.data);
 ---
 
 <Layout title="Bitshares smartcoin issuance form">
@@ -21,12 +28,12 @@ const testFeeSchedule = await getCollection('testFeeSchedule');
 		<PageHeader client:only="react" page="smartcoin" backURL="../smartcoins/index.html" />
 		<Smartcoin
 			client:only="react"
-			_assetsBTS={btsAllAssets}
-			_assetsTEST={testAllAssets}
-			_marketSearchBTS={btsMarketData}
-			_marketSearchTEST={testMarketData}
-			_globalParamsBTS={btsFeeSchedule}
-			_globalParamsTEST={testFeeSchedule}
+			_assetsBTS={btsAssets}
+			_assetsTEST={testAssets}
+			_marketSearchBTS={marketSearchBTS}
+			_marketSearchTEST={marketSearchTEST}
+			_globalParamsBTS={feeScheduleBTS}
+			_globalParamsTEST={feeScheduleTEST}
 		/>
 		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/smartcoin.astro" />
 	</main>

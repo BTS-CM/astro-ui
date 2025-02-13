@@ -8,6 +8,9 @@ import PageFooter from '../components/PageFooter';
 
 const btsFeeSchedule = await getCollection('btsFeeSchedule');
 const testFeeSchedule = await getCollection('testFeeSchedule');
+
+const btsGlobalParams = btsFeeSchedule.map(collection => collection.data);
+const testGlobalParams = testFeeSchedule.map(collection => collection.data);
 ---
 
 <Layout title="Bitshares Account List configuration">
@@ -15,8 +18,8 @@ const testFeeSchedule = await getCollection('testFeeSchedule');
 		<PageHeader client:only="react" page="AccountLists" backURL="../index.html" />
 		<AccountLists
 			client:only="react"
-			_globalParamsBTS={btsFeeSchedule}
-			_globalParamsTEST={testFeeSchedule}
+			_globalParamsBTS={btsGlobalParams}
+			_globalParamsTEST={testGlobalParams}
 		/>
 		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/account_lists.astro" />
 	</main>

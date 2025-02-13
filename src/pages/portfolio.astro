@@ -11,6 +11,11 @@ const testAllAssets = await getCollection('testAllAssets');
 
 const btsPools = await getCollection('btsPools');
 const testPools = await getCollection('testPools');
+
+const btsAssets = btsAllAssets.map(collection => collection.data);
+const testAssets = testAllAssets.map(collection => collection.data);
+const poolsBTS = btsPools.map(collection => collection.data);
+const poolsTEST = testPools.map(collection => collection.data);
 ---
 
 <Layout title="Bitshares user portfolio - balances, open orders and recent activity">
@@ -18,10 +23,10 @@ const testPools = await getCollection('testPools');
 		<PageHeader client:only="react" page="portfolio" backURL="../index.html" />
 		<PortfolioTabs
 			client:only="react"
-			_assetsBTS={btsAllAssets}
-			_assetsTEST={testAllAssets}
-			_poolsBTS={btsPools}
-			_poolsTEST={testPools}
+			_assetsBTS={btsAssets}
+			_assetsTEST={testAssets}
+			_poolsBTS={poolsBTS}
+			_poolsTEST={poolsTEST}
 		/>
 		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/portfolio.astro" />
 	</main>

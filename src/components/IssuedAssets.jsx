@@ -495,7 +495,7 @@ export default function IssuedAssets(properties) {
         <Card className="ml-2 mr-2">
           <CardHeader className="pb-1">
             <CardTitle className="grid grid-cols-2 gap-5">
-              <span className="pb-5 grid grid-cols-3">
+              <span className="pb-5 grid grid-cols-2">
                 {activeTab === "smartcoins" &&
                 relevantBitassetData &&
                 ((relevantBitassetData.current_feed.settlement_price.base.amount === 0 &&
@@ -519,8 +519,7 @@ export default function IssuedAssets(properties) {
                       usr.chain === "bitshares" ? "" : "?network=testnet"
                     }`}
                   />
-                </div>
-                <div>
+                  <br/>
                   {" ("}
                   <ExternalLink
                     classnamecontents="hover:text-purple-500"

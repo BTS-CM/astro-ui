@@ -17,6 +17,15 @@ const testFeeSchedule = await getCollection('testFeeSchedule');
 
 const btsPools = await getCollection('btsPools');
 const testPools = await getCollection('testPools');
+
+const btsAssets = btsAllAssets.map(collection => collection.data);
+const testAssets = testAllAssets.map(collection => collection.data);
+const marketSearchBTS = btsMarketData.map(collection => collection.data);
+const marketSearchTEST = testMarketData.map(collection => collection.data);
+const poolsBTS = btsPools.map(collection => collection.data);
+const poolsTEST = testPools.map(collection => collection.data);
+const feeScheduleBTS = btsFeeSchedule.map(collection => collection.data);
+const feeScheduleTEST = testFeeSchedule.map(collection => collection.data);
 ---
 
 <Layout title="Bitshares pool exchange form">
@@ -24,14 +33,14 @@ const testPools = await getCollection('testPools');
 		<PageHeader client:only="react" page="pool" backURL="../index.html" />
 		<PoolForm
 			client:only="react"
-			_assetsBTS={btsAllAssets}
-			_assetsTEST={testAllAssets}
-			_marketSearchBTS={btsMarketData}
-			_marketSearchTEST={testMarketData}
-			_poolsBTS={btsPools}
-			_poolsTEST={testPools}
-			_globalParamsBTS={btsFeeSchedule}
-			_globalParamsTEST={testFeeSchedule}
+			_assetsBTS={btsAssets}
+			_assetsTEST={testAssets}
+			_marketSearchBTS={marketSearchBTS}
+			_marketSearchTEST={marketSearchTEST}
+			_poolsBTS={poolsBTS}
+			_poolsTEST={poolsTEST}
+			_globalParamsBTS={feeScheduleBTS}
+			_globalParamsTEST={feeScheduleTEST}
 		/>
 		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/pool.astro" />
 	</main>

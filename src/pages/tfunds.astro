@@ -11,6 +11,11 @@ const testAllAssets = await getCollection('testAllAssets');
 
 const btsMarketData = await getCollection('btsMarketData');
 const testMarketData = await getCollection('testMarketData');
+
+const btsAssets = btsAllAssets.map((collection) => collection.data);
+const testAssets = testAllAssets.map((collection) => collection.data);
+const btsMarkets = btsMarketData.map((collection) => collection.data);
+const testMarkets = testMarketData.map((collection) => collection.data);
 ---
 
 <Layout title="Bitshares credit offer editor">
@@ -18,10 +23,10 @@ const testMarketData = await getCollection('testMarketData');
 		<PageHeader client:only="react" page="tfunds" backURL="../index.html" />
 		<SameTFunds
 			client:only="react"
-			_assetsBTS={btsAllAssets}
-			_assetsTEST={testAllAssets}
-			_marketSearchBTS={btsMarketData}
-			_marketSearchTEST={testMarketData}
+			_assetsBTS={btsAssets}
+			_assetsTEST={testAssets}
+			_marketSearchBTS={btsMarkets}
+			_marketSearchTEST={testMarkets}
 		/>
 		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/tfunds.astro" />
 	</main>

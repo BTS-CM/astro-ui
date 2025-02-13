@@ -11,6 +11,11 @@ const testAllAssets = await getCollection('testAllAssets');
 
 const btsOffers = await getCollection('btsOffers');
 const testOffers = await getCollection('testOffers');
+
+const btsAssets = btsAllAssets.map(collection => collection.data);
+const testAssets = testAllAssets.map(collection => collection.data);
+const offersBTS = btsOffers.map(collection => collection.data);
+const offersTEST = testOffers.map(collection => collection.data);
 ---
 
 <Layout title="Bitshares credit offer listings">
@@ -18,10 +23,10 @@ const testOffers = await getCollection('testOffers');
 		<PageHeader client:only="react" page="borrow" backURL="../index.html" />
 		<CreditBorrow
 			client:only="react"
-			_assetsBTS={btsAllAssets}
-			_assetsTEST={testAllAssets}
-			_offersBTS={btsOffers}
-			_offersTEST={testOffers}
+			_assetsBTS={btsAssets}
+			_assetsTEST={testAssets}
+			_offersBTS={offersBTS}
+			_offersTEST={offersTEST}
 		/>
 		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/borrow.astro" />
 	</main>

@@ -158,8 +158,8 @@ export default function PoolStake(properties) {
   const [fee, setFee] = useState(); // staking deposit fee
   useEffect(() => {
     if (globalParams && globalParams.length) {
-      const foundFee = globalParams.find((x) => x[0] === 61);
-      const finalFee = humanReadableFloat(foundFee[1].fee, 5);
+      const foundFee = globalParams.find((x) => x.id === 61);
+      const finalFee = humanReadableFloat(foundFee.data.fee, 5);
       setFee(finalFee);
     }
   }, [globalParams]);
@@ -167,8 +167,8 @@ export default function PoolStake(properties) {
   const [unstakeFee, setUnstakeFee] = useState(); // staking withdraw fee
   useEffect(() => {
     if (globalParams && globalParams.length) {
-      const foundFee = globalParams.find((x) => x[0] === 62);
-      const finalFee = humanReadableFloat(foundFee[1].fee, 5);
+      const foundFee = globalParams.find((x) => x.id === 62);
+      const finalFee = humanReadableFloat(foundFee.data.fee, 5);
       setUnstakeFee(finalFee);
     }
   }, [globalParams]);

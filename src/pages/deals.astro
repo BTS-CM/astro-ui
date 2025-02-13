@@ -11,16 +11,21 @@ const testAllAssets = await getCollection('testAllAssets');
 
 const btsFeeSchedule = await getCollection('btsFeeSchedule');
 const testFeeSchedule = await getCollection('testFeeSchedule');
+
+const btsAssets = btsAllAssets.map(collection => collection.data);
+const testAssets = testAllAssets.map(collection => collection.data);
+const feeScheduleBTS = btsFeeSchedule.map(collection => collection.data);
+const feeScheduleTEST = testFeeSchedule.map(collection => collection.data);
 ---
 <Layout title="Bitshares credit deal listings">
 	<main>
 		<PageHeader client:only="react" page="deals" backURL="../index.html" />
 		<CreditDeals
 			client:only="react"
-			_assetsBTS={btsAllAssets}
-			_assetsTEST={testAllAssets}
-			_globalParamsBTS={btsFeeSchedule}
-			_globalParamsTEST={testFeeSchedule}
+			_assetsBTS={btsAssets}
+			_assetsTEST={testAssets}
+			_globalParamsBTS={feeScheduleBTS}
+			_globalParamsTEST={feeScheduleTEST}
 		/>
 		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/deals.astro" />
 	</main>

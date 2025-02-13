@@ -17,6 +17,15 @@ const testFeeSchedule = await getCollection('testFeeSchedule');
 
 const btsOffers = await getCollection('btsOffers');
 const testOffers = await getCollection('testOffers');
+
+const btsAllAssetsData = btsAllAssets.map(collection => collection.data);
+const testAllAssetsData = testAllAssets.map(collection => collection.data);
+const btsMarketDataData = btsMarketData.map(collection => collection.data);
+const testMarketDataData = testMarketData.map(collection => collection.data);
+const btsFeeScheduleData = btsFeeSchedule.map(collection => collection.data);
+const testFeeScheduleData = testFeeSchedule.map(collection => collection.data);
+const btsOffersData = btsOffers.map(collection => collection.data);
+const testOffersData = testOffers.map(collection => collection.data);
 ---
 
 <Layout title="Bitshares credit deal">
@@ -24,14 +33,14 @@ const testOffers = await getCollection('testOffers');
 		<PageHeader client:only="react" page="offer" backURL="../borrow/index.html" />
 		<CreditOffer
 			client:only="react"
-			_assetsBTS={btsAllAssets}
-			_assetsTEST={testAllAssets}
-			_marketSearchBTS={btsMarketData}
-			_marketSearchTEST={testMarketData}
-			_offersBTS={btsOffers}
-			_offersTEST={testOffers}
-			_globalParamsBTS={btsFeeSchedule}
-			_globalParamsTEST={testFeeSchedule}
+			_assetsBTS={btsAllAssetsData}
+			_assetsTEST={testAllAssetsData}
+			_marketSearchBTS={btsMarketDataData}
+			_marketSearchTEST={testMarketDataData}
+			_offersBTS={btsFeeScheduleData}
+			_offersTEST={testFeeScheduleData}
+			_globalParamsBTS={btsOffersData}
+			_globalParamsTEST={testOffersData}
 		/>
 		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/offer.astro" />
 	</main>
