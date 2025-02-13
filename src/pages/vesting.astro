@@ -5,12 +5,22 @@ import Layout from '../layouts/Layout.astro';
 import VestingOverview from '../components/Vesting.jsx';
 import PageHeader from '../components/PageHeader';
 import PageFooter from '../components/PageFooter';
+
+const btsAllAssets = await getCollection('btsAllAssets');
+const testAllAssets = await getCollection('testAllAssets');
+
+const btsAssets = btsAllAssets.map(collection => collection.data);
+const testAssets = testAllAssets.map(collection => collection.data);
 ---
 
 <Layout title="Bitshares vesting balances">
 	<main>
 		<PageHeader client:only="react" page="vesting" backURL="../index.html" />
-		<VestingOverview client:only="react" />
+		<VestingOverview
+			client:only="react"
+			_assetsBTS={btsAssets}
+			_assetsTEST={testAssets}
+		 />
 		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/vesting.astro" />
 	</main>
 </Layout>

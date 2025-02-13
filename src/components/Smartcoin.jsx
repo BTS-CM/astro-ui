@@ -109,6 +109,8 @@ export default function Smartcoin(properties) {
   const {
     _assetsBTS,
     _assetsTEST,
+    _bitAssetDataBTS,
+    _bitAssetDataTEST,
     _marketSearchBTS,
     _marketSearchTEST,
     _globalParamsBTS,
@@ -132,11 +134,11 @@ export default function Smartcoin(properties) {
   }, [_assetsBTS, _assetsTEST, _chain]);
 
   const bitAssetData = useMemo(() => {
-    if (_chain && (bitAssetDataBTS || bitAssetDataTEST)) {
-      return _chain === "bitshares" ? bitAssetDataBTS : bitAssetDataTEST;
+    if (_chain && (_bitAssetDataBTS || _bitAssetDataTEST)) {
+      return _chain === "bitshares" ? _bitAssetDataBTS : _bitAssetDataTEST;
     }
     return [];
-  }, [bitAssetDataBTS, bitAssetDataTEST, _chain]);
+  }, [_bitAssetDataBTS, _bitAssetDataTEST, _chain]);
 
   const globalParams = useMemo(() => {
     if (_chain && (_globalParamsBTS || _globalParamsTEST)) {

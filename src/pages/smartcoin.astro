@@ -9,6 +9,9 @@ import PageFooter from '../components/PageFooter';
 const btsAllAssets = await getCollection('btsAllAssets');
 const testAllAssets = await getCollection('testAllAssets');
 
+const btsMinBitassets = await getCollection('btsMinBitassets');
+const testMinBitassets = await getCollection('testMinBitassets');
+
 const btsMarketData = await getCollection('btsMarketData');
 const testMarketData = await getCollection('testMarketData');
 
@@ -17,6 +20,8 @@ const testFeeSchedule = await getCollection('testFeeSchedule');
 
 const btsAssets = btsAllAssets.map(collection => collection.data);
 const testAssets = testAllAssets.map(collection => collection.data);
+const _minBitassetsBTS = btsMinBitassets.map(collection => collection.data);
+const _minBitassetsTEST = testMinBitassets.map(collection => collection.data);
 const marketSearchBTS = btsMarketData.map(collection => collection.data);
 const marketSearchTEST = testMarketData.map(collection => collection.data);
 const feeScheduleBTS = btsFeeSchedule.map(collection => collection.data);
@@ -30,6 +35,8 @@ const feeScheduleTEST = testFeeSchedule.map(collection => collection.data);
 			client:only="react"
 			_assetsBTS={btsAssets}
 			_assetsTEST={testAssets}
+			_bitAssetDataBTS={_minBitassetsBTS}
+			_bitAssetDataTEST={_minBitassetsTEST}
 			_marketSearchBTS={marketSearchBTS}
 			_marketSearchTEST={marketSearchTEST}
 			_globalParamsBTS={feeScheduleBTS}

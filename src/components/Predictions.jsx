@@ -94,7 +94,12 @@ export default function Predictions(properties) {
 
   const [view, setView] = useState("active"); // active, expired, mine
 
-  const { _assetsBTS, _assetsTEST, _marketSearchBTS, _marketSearchTEST } = properties;
+  const {
+    _assetsBTS,
+    _assetsTEST,
+    _marketSearchBTS,
+    _marketSearchTEST
+  } = properties;
 
   const _chain = useMemo(() => {
     if (usr && usr.chain) {
@@ -273,31 +278,28 @@ export default function Predictions(properties) {
       _store.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
           const outcomes = data
-            .map((x) => {
-              if (!x.settlement_price) {
-                return;
-              }
+          .filter((x) => x.settlement_price) // Filter out items with no settlement price
+          .map((x) => {
+            const baseAmount = parseInt(x.settlement_price.base.amount);
+            if (baseAmount === 0) {
+              return { ...x, outcome: -1 };
+            }
 
-              const baseAmount = parseInt(x.settlement_price.base.amount);
-              if (baseAmount === 0) {
-                return { ...x, outcome: -1 };
-              }
+            const quoteAsset = assets.find((y) => x.options.short_backing_asset === y.id);
+            const baseAsset = assets.find((y) => x.asset_id === y.id);
 
-              const quoteAsset = assets.find((y) => x.options.short_backing_asset === y.id);
-              const baseAsset = assets.find((y) => x.id === y.id);
+            const _outcome = parseFloat(
+              (
+                humanReadableFloat(
+                  parseInt(x.settlement_price.quote.amount),
+                  quoteAsset.precision
+                ) / humanReadableFloat(baseAmount, baseAsset.precision)
+              ).toFixed(quoteAsset.precision)
+            );
 
-              const _outcome = parseFloat(
-                (
-                  humanReadableFloat(
-                    parseInt(x.settlement_price.quote.amount),
-                    quoteAsset.precision
-                  ) / humanReadableFloat(baseAmount, baseAsset.precision)
-                ).toFixed(quoteAsset.precision)
-              );
+            return { ...x, outcome: _outcome > 0 ? 1 : 0 };
+          });
 
-              return { ...x, outcome: _outcome > 0 ? 1 : 0 };
-            })
-            .filter((x) => x);
           setCompletedPMAs(outcomes);
         }
       });
@@ -363,6 +365,8 @@ export default function Predictions(properties) {
     } else if (view === "mine") {
       res = myPMAs[index];
     }
+
+    console.log({res, index, completedPMAs})
 
     const relevantBitassetData = completedPMAs.find((x) => x.id === res.bitasset_data_id);
 
@@ -1931,33 +1935,6 @@ export default function Predictions(properties) {
             </>
           </CardContent>
         </Card>
-        {/*
-          buyDialog || sellDialog
-            ? <DeepLinkDialog
-                operationNames={["limit_order_create"]}
-                username={usr.username}
-                usrChain={usr.chain}
-                userID={usr.id}
-                dismissCallback={buyDialog ? setBuyDialog : setSellDialog}
-                key={`deeplink-dialog-${chosenPMA.id}`}
-                headerText={t(`Predictions:dialogContent.header_${buyDialog ? "buy" : "sell"}`)}
-                trxJSON={[{
-                  seller: usr.id,
-                  amount_to_sell: {
-                    amount: 1,
-                    asset_id: sellDialog ? chosenPMA.id : chosenPMA.id // JSON.parse(chosenPMA.options.description).market
-                  },
-                  min_to_receive: {
-                    amount: 1,
-                    asset_id: "1.3.1756"
-                  },
-                  expiration: date,
-                  fill_or_kill: false,
-                  extensions: {}
-                }]}
-              />
-            : null
-            */}
       </div>
     </div>
   );
