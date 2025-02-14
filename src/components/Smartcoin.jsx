@@ -343,23 +343,6 @@ export default function Smartcoin(properties) {
     }
   }, [parsedCollateralAsset, usrBalances]);
 
-  const currentFeedSettlementPrice = useMemo(() => {
-    if (finalBitasset && finalBitasset.current_feed && parsedCollateralAsset && parsedAsset) {
-      return parseFloat(
-        (
-          humanReadableFloat(
-            parseInt(finalBitasset.current_feed.settlement_price.quote.amount),
-            parsedCollateralAsset.p
-          ) /
-          humanReadableFloat(
-            parseInt(finalBitasset.current_feed.settlement_price.base.amount),
-            parsedAsset.p
-          )
-        ).toFixed(parsedCollateralAsset.p)
-      );
-    }
-  }, [finalBitasset, parsedAsset, parsedCollateralAsset]);
-
   const settlementFund = useMemo(() => {
     if (finalAsset && parsedAsset && parsedCollateralAsset) {
       const finalSettlementFund = humanReadableFloat(
@@ -396,6 +379,48 @@ export default function Smartcoin(properties) {
         _debt,
         _fund,
       };
+    }
+  }, [finalBitasset, parsedAsset, parsedCollateralAsset]);
+
+  const currentFeedSettlementPrice = useMemo(() => {
+    if (finalBitasset && finalBitasset.current_feed && parsedCollateralAsset && parsedAsset) {
+      return parseFloat(
+        (
+          humanReadableFloat(
+            parseInt(
+              individualSettlementFund && individualSettlementFund._debt
+                ? finalBitasset.median_feed.settlement_price.quote.amount
+                : finalBitasset.current_feed.settlement_price.quote.amount
+            ),
+            parsedCollateralAsset.p
+          ) /
+          humanReadableFloat(
+            parseInt(
+              individualSettlementFund && individualSettlementFund._debt
+                ? finalBitasset.median_feed.settlement_price.base.amount
+                : finalBitasset.current_feed.settlement_price.base.amount
+            ),
+            parsedAsset.p
+          )
+        ).toFixed(parsedCollateralAsset.p)
+      );
+    }
+  }, [finalBitasset, parsedAsset, parsedCollateralAsset, individualSettlementFund]);
+
+  const individualSettlementPrice = useMemo(() => {
+    if (finalBitasset && finalBitasset.current_feed && parsedCollateralAsset && parsedAsset) {
+      return parseFloat(
+        (
+          humanReadableFloat(
+            parseInt(finalBitasset.current_feed.settlement_price.quote.amount),
+            parsedCollateralAsset.p
+          ) /
+          humanReadableFloat(
+            parseInt(finalBitasset.current_feed.settlement_price.base.amount),
+            parsedAsset.p
+          )
+        ).toFixed(parsedCollateralAsset.p)
+      );
     }
   }, [finalBitasset, parsedAsset, parsedCollateralAsset]);
 
@@ -2555,7 +2580,7 @@ export default function Smartcoin(properties) {
                       {t("Smartcoin:feedPrice")}
                       <br />
                       <span className="text-sm">
-                        {currentFeedSettlementPrice.toFixed(parsedAsset.p)}
+                        {individualSettlementPrice.toFixed(parsedAsset.p)}
                       </span>
                     </div>
                     <div className="col-span-1">
@@ -2563,7 +2588,7 @@ export default function Smartcoin(properties) {
                       <br />
                       <span className="text-sm">
                         {(
-                          ((individualSettlementFund._debt * currentFeedSettlementPrice) /
+                          ((individualSettlementFund._debt * individualSettlementPrice) /
                             individualSettlementFund._fund) *
                           100
                         ).toFixed(2)}
@@ -2572,7 +2597,7 @@ export default function Smartcoin(properties) {
                           {"-"}
                           {(
                             100 -
-                            ((individualSettlementFund._debt * currentFeedSettlementPrice) /
+                            ((individualSettlementFund._debt * individualSettlementPrice) /
                               individualSettlementFund._fund) *
                               100
                           ).toFixed(2)}

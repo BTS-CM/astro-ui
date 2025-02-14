@@ -101,8 +101,8 @@ export default function Settlement(properties) {
     if (globalParams && globalParams.length) {
       const foundFee1 = globalParams.find((x) => x.id === 45);
       const foundFee2 = globalParams.find((x) => x.id === 17);
-      const finalFee1 = humanReadableFloat(foundFee1[1].fee, 5);
-      const finalFee2 = humanReadableFloat(foundFee2[1].fee, 5);
+      const finalFee1 = humanReadableFloat(foundFee1.data.fee, 5);
+      const finalFee2 = humanReadableFloat(foundFee2.data.fee, 5);
       setBidFee(finalFee1);
       setSettleFee(finalFee2);
     }
