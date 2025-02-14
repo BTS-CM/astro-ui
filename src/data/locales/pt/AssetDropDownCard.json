@@ -10,5 +10,11 @@
   "issued": "Emitida pela {{user}}",
   "search2": "찾다",
   "favourites": "즐겨찾기",
-  "backingType": "Selecione um novo ativo de garantia"
+  "backingType": "Selecione um novo ativo de apoio",
+  "price": "Fornecer preço para {{symbol}}",
+  "addCollateral": "➕ Adicione garantia",
+  "missingLendingAsset": "⛔ Sem ativo de empréstimo",
+  "whichCollateral": "Qual ativo colateral?",
+  "collateralSearch": "Por favor, procure um novo ativo colateral abaixo",
+  "addAsset": "Adicione ativo"
 }

@@ -1,14 +1,47 @@
 ---
+import { getCollection } from 'astro:content';
+
 import Layout from '../layouts/Layout.astro';
 import SimpleSwap from '../components/SimpleSwap.jsx';
 import PageHeader from '../components/PageHeader';
 import PageFooter from '../components/PageFooter';
+
+const btsAllAssets = await getCollection('btsAllAssets');
+const testAllAssets = await getCollection('testAllAssets');
+
+const btsMarketData = await getCollection('btsMarketData');
+const testMarketData = await getCollection('testMarketData');
+
+const btsPools = await getCollection('btsPools');
+const testPools = await getCollection('testPools');
+
+const btsFeeSchedule = await getCollection('btsFeeSchedule');
+const testFeeSchedule = await getCollection('testFeeSchedule');
+
+const btsAssets = btsAllAssets.map((collection) => collection.data);
+const testAssets = testAllAssets.map((collection) => collection.data);
+const btsMarkets = btsMarketData.map((collection) => collection.data);
+const testMarkets = testMarketData.map((collection) => collection.data);
+const btsPoolsList = btsPools.map((collection) => collection.data);
+const testPoolsList = testPools.map((collection) => collection.data);
+const btsFeeScheduleList = btsFeeSchedule.map((collection) => collection.data);
+const testFeeScheduleList = testFeeSchedule.map((collection) => collection.data);
 ---
 
 <Layout title="Bitshares simple asset swap form">
 	<main>
 		<PageHeader client:only="react" page="pool" backURL="../index.html" />
-		<SimpleSwap client:only="react" />
+		<SimpleSwap
+			client:only="react"
+			_assetsBTS={btsAssets}
+			_assetsTEST={testAssets}
+			_marketSearchBTS={btsMarkets}
+			_marketSearchTEST={testMarkets}
+			_poolsBTS={btsPoolsList}
+			_poolsTEST={testPoolsList}
+			_globalParamsBTS={btsFeeScheduleList}
+			_globalParamsTEST={testFeeScheduleList}
+		/>
 		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/swap.astro" />
 	</main>
 </Layout>

@@ -42,16 +42,6 @@ import { Input } from "@/components/ui/input";
 import { blockchainFloat, humanReadableFloat } from "@/lib/common.js";
 
 import { $currentUser } from "@/stores/users.ts";
-import {
-  $assetCacheBTS,
-  $assetCacheTEST,
-  $offersCacheBTS,
-  $offersCacheTEST,
-  $globalParamsCacheBTS,
-  $globalParamsCacheTEST,
-  $marketSearchCacheBTS,
-  $marketSearchCacheTEST,
-} from "@/stores/cache.ts";
 
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 import { createObjectStore } from "@/nanoeffects/Objects.ts";
@@ -92,48 +82,16 @@ export default function CreditOffer(properties) {
   const blocklist = useSyncExternalStore($blockList.subscribe, $blockList.get, () => true);
   const currentNode = useStore($currentNode);
 
-  const _assetsBTS = useSyncExternalStore($assetCacheBTS.subscribe, $assetCacheBTS.get, () => true);
-  const _assetsTEST = useSyncExternalStore(
-    $assetCacheTEST.subscribe,
-    $assetCacheTEST.get,
-    () => true
-  );
-
-  const _globalParamsBTS = useSyncExternalStore(
-    $globalParamsCacheBTS.subscribe,
-    $globalParamsCacheBTS.get,
-    () => true
-  );
-
-  const _globalParamsTEST = useSyncExternalStore(
-    $globalParamsCacheTEST.subscribe,
-    $globalParamsCacheTEST.get,
-    () => true
-  );
-
-  const _offersBTS = useSyncExternalStore(
-    $offersCacheBTS.subscribe,
-    $offersCacheBTS.get,
-    () => true
-  );
-
-  const _offersTEST = useSyncExternalStore(
-    $offersCacheTEST.subscribe,
-    $offersCacheTEST.get,
-    () => true
-  );
-
-  const _marketSearchBTS = useSyncExternalStore(
-    $marketSearchCacheBTS.subscribe,
-    $marketSearchCacheBTS.get,
-    () => true
-  );
-
-  const _marketSearchTEST = useSyncExternalStore(
-    $marketSearchCacheTEST.subscribe,
-    $marketSearchCacheTEST.get,
-    () => true
-  );
+  const {
+    _assetsBTS,
+    _assetsTEST,
+    _globalParamsBTS,
+    _globalParamsTEST,
+    _offersBTS,
+    _offersTEST,
+    _marketSearchBTS,
+    _marketSearchTEST
+  } = properties;
 
   const _chain = useMemo(() => {
     if (usr && usr.chain) {
@@ -142,7 +100,7 @@ export default function CreditOffer(properties) {
     return "bitshares";
   }, [usr]);
 
-  useInitCache(_chain ?? "bitshares", ["assets", "globalParams", "offers", "marketSearch"]);
+  useInitCache(_chain ?? "bitshares", []);
 
   const assetIssuers = useMemo(() => {
     if (
@@ -196,8 +154,8 @@ export default function CreditOffer(properties) {
   const [fee, setFee] = useState(0);
   useEffect(() => {
     if (globalParams && globalParams.length) {
-      const foundFee = globalParams.find((x) => x[0] === 72);
-      const finalFee = humanReadableFloat(foundFee[1].fee, 5);
+      const foundFee = globalParams.find((x) => x.id === 72);
+      const finalFee = humanReadableFloat(foundFee.data.fee, 5);
       setFee(finalFee);
     }
   }, [globalParams]);

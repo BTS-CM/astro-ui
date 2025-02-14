@@ -41,15 +41,6 @@ import { useInitCache } from "@/nanoeffects/Init.ts";
 import { $currentUser } from "@/stores/users.ts";
 import { $currentNode } from "@/stores/node.ts";
 
-import {
-  $assetCacheBTS,
-  $assetCacheTEST,
-  $marketSearchCacheBTS,
-  $marketSearchCacheTEST,
-  $globalParamsCacheBTS,
-  $globalParamsCacheTEST,
-} from "@/stores/cache.ts";
-
 import { humanReadableFloat, trimPrice, blockchainFloat } from "@/lib/common";
 
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
@@ -81,36 +72,14 @@ export default function Transfer(properties) {
 
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
 
-  const _assetsBTS = useSyncExternalStore($assetCacheBTS.subscribe, $assetCacheBTS.get, () => true);
-  const _assetsTEST = useSyncExternalStore(
-    $assetCacheTEST.subscribe,
-    $assetCacheTEST.get,
-    () => true
-  );
-
-  const _globalParamsBTS = useSyncExternalStore(
-    $globalParamsCacheBTS.subscribe,
-    $globalParamsCacheBTS.get,
-    () => true
-  );
-
-  const _globalParamsTEST = useSyncExternalStore(
-    $globalParamsCacheTEST.subscribe,
-    $globalParamsCacheTEST.get,
-    () => true
-  );
-
-  const _marketSearchBTS = useSyncExternalStore(
-    $marketSearchCacheBTS.subscribe,
-    $marketSearchCacheBTS.get,
-    () => true
-  );
-
-  const _marketSearchTEST = useSyncExternalStore(
-    $marketSearchCacheTEST.subscribe,
-    $marketSearchCacheTEST.get,
-    () => true
-  );
+  const {
+    _marketSearchBTS,
+    _marketSearchTEST,
+    _assetsBTS,
+    _assetsTEST,
+    _globalParamsBTS,
+    _globalParamsTEST
+  } = properties;
 
   const _chain = useMemo(() => {
     if (usr && usr.chain) {
@@ -119,7 +88,7 @@ export default function Transfer(properties) {
     return "bitshares";
   }, [usr]);
 
-  useInitCache(_chain ?? "bitshares", ["assets", "globalParams", "marketSearch"]);
+  useInitCache(_chain ?? "bitshares", []);
 
   const assets = useMemo(() => {
     if (_chain && (_assetsBTS || _assetsTEST)) {
@@ -145,8 +114,8 @@ export default function Transfer(properties) {
   const [fee, setFee] = useState(0);
   useEffect(() => {
     if (globalParams && globalParams.length) {
-      const foundFee = globalParams.find((x) => x[0] === 0);
-      const finalFee = humanReadableFloat(foundFee[1].fee, 5);
+      const foundFee = globalParams.find((x) => x.id === 0);
+      const finalFee = humanReadableFloat(foundFee.data.fee, 5);
       setFee(finalFee);
     }
   }, [globalParams]);

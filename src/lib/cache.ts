@@ -1,112 +1,85 @@
-import btsFeeSchedule from "@/data/bitshares/fees.json";
-import bts_offers from "@/data/bitshares/allOffers.json";
-import btsPools from "@/data/bitshares/pools.json";
-import bts_allPools from "@/data/bitshares/allPools.json";
-import btsMinBitassets from "@/data/bitshares/minBitassetData.json";
-import bts_allAssets from "@/data/bitshares/allAssets.json";
-import bts_minAssets from "@/data/bitshares/minAssets.json";
-import bts_allDynamicData from "@/data/bitshares/dynamicData.json";
-import bts_assetIssuers from "@/data/bitshares/assetIssuers.json";
-
-import btsMinPools from "@/data/bitshares/minPools.json";
-import testMinPools from "@/data/bitshares_testnet/minPools.json";
-
-import testFeeSchedule from "@/data/bitshares_testnet/fees.json";
-import test_offers from "@/data/bitshares_testnet/allOffers.json";
-import testPools from "@/data/bitshares_testnet/pools.json";
-import test_allPools from "@/data/bitshares_testnet/allPools.json";
-import testMinBitassets from "@/data/bitshares_testnet/minBitassetData.json";
-import test_allAssets from "@/data/bitshares_testnet/allAssets.json";
-import test_minAssets from "@/data/bitshares_testnet/minAssets.json";
-import test_allDynamicData from "@/data/bitshares_testnet/dynamicData.json";
-import test_assetIssuers from "@/data/bitshares_testnet/assetIssuers.json";
-
-const compressMarketData = (assets: any, issuers: any) => {
-  return assets.map((asset: any) => {
-      const thisIssuer = issuers.find((issuer: any) => issuer.id === asset.issuer);
-      const issuerString = `${thisIssuer?.name ?? "???"} (${asset.issuer}) ${
-        thisIssuer?.ltm ? "(LTM)" : ""
-      }`;
-      return {
-        id: asset.id,
-        s: asset.symbol,
-        u: issuerString,
-        p: asset.precision,
-      };
-    });
-};
-
-const btsOffers = bts_offers
-    .filter((x) => x.enabled === true) // only provide active offers
-    .filter((x) => x.fee_rate < 500000); // max fee rate of 50%
-
-const testOffers = test_offers.filter((x) => x.enabled === true);
-
-const btsMarketData = compressMarketData(bts_allAssets, bts_assetIssuers);
-const testMarketData = compressMarketData(test_allAssets, test_assetIssuers);
+import { getCollection } from 'astro:content';
 
 /**
  * Returns all cached assets for one/many blockchain(s)
  */
-function getAllAssets() {
-    return { bitshares: bts_allAssets, bitshares_testnet: test_allAssets }
+async function getAllAssets() {
+  const btsAllAssets = await getCollection('btsAllAssets');
+  const testAllAssets = await getCollection('testAllAssets');
+  return { bitshares: btsAllAssets, bitshares_testnet: testAllAssets }
 }
 
 /**
  * Returns all minimised cached assets for one/many blockchain(s)
  */
-function getMinAssets() {
-    return { bitshares: bts_minAssets, bitshares_testnet: test_minAssets };
+async function getMinAssets() {
+  const btsMinAssets = await getCollection('btsMinAssets');
+  const testMinAssets = await getCollection('testMinAssets');
+  return { bitshares: btsMinAssets, bitshares_testnet: testMinAssets };
 }
 
 /**
  * Retrieves the requested market search data for one/many blockchain(s)
  */
-function getMarketSearch() {
-    return { bitshares: btsMarketData, bitshares_testnet: testMarketData };
+async function getMarketSearch() {
+  const btsMarketData = await getCollection('btsMarketData');
+  const testMarketData = await getCollection('testMarketData');
+  return { bitshares: btsMarketData, bitshares_testnet: testMarketData };
 }
 
 /**
  * Retrieves the pool summary data for one/many blockchain(s)
  */
-function getPools() {
-    return { bitshares: btsPools, bitshares_testnet: testPools }
+async function getPools() {
+  const btsPools = await getCollection('btsPools');
+  const testPools = await getCollection('testPools');
+  return { bitshares: btsPools, bitshares_testnet: testPools }
 }
 
-function getMinPools() {
-    return { bitshares: btsMinPools, bitshares_testnet: testMinPools };
+async function getMinPools() {
+  const btsMinPools = await getCollection('btsMinPools');
+  const testMinPools = await getCollection('testMinPools');
+  return { bitshares: btsMinPools, bitshares_testnet: testMinPools };
 }
 
 /**
  * Retrieves the minimum bitassets for one/many blockchain(s)
  */
-function getMinBitassets() {
-    return { bitshares: btsMinBitassets, bitshares_testnet: testMinBitassets };
+async function getMinBitassets() {
+  const btsMinBitassets = await getCollection('btsMinBitassets');
+  const testMinBitassets = await getCollection('testMinBitassets');
+  return { bitshares: btsMinBitassets, bitshares_testnet: testMinBitassets };
 }
 
 /**
  * Retrieves the active offers for one/many blockchain(s)
  */
-function getActiveOffers() {
-    return { bitshares: btsOffers, bitshares_testnet: testOffers };
+async function getActiveOffers() {
+  const btsOffers = await getCollection('btsOffers');
+  const testOffers = await getCollection('testOffers');
+  return { bitshares: btsOffers, bitshares_testnet: testOffers };
 }
 
 /**
  * Retrieves the requested fee schedule for one/many blockchain(s)
  */
-function getFeeSchedule() {
-    return { bitshares: btsFeeSchedule, bitshares_testnet: testFeeSchedule };
+async function getFeeSchedule() {
+  const btsFeeSchedule = await getCollection('btsFeeSchedule');
+  const testFeeSchedule = await getCollection('testFeeSchedule');
+  return { bitshares: btsFeeSchedule, bitshares_testnet: testFeeSchedule };
 }
 
 /**
  * Retrieves the requested asset from cached assets
  */
-function getAsset(chain: string, id: string) {
+async function getAsset(chain: string, id: string) {
   let foundAsset;
   if (chain === "bitshares") {
-    foundAsset = bts_allAssets.find((asset: any) => asset.id === id || asset.symbol === id);
+    const btsAllAssets = await getCollection('btsAllAssets');
+    foundAsset = btsAllAssets.find((asset: any) => asset.id === id || asset.symbol === id);
   } else if (chain === "bitshares_testnet") {
-    foundAsset = test_allAssets.find((asset: any) => asset.id === id || asset.symbol === id);
+    const testAllAssets = await getCollection('testAllAssets');
+    foundAsset = testAllAssets.find((asset: any) => asset.id === id || asset.symbol === id);
   }
 
   if (foundAsset) {
@@ -117,12 +90,14 @@ function getAsset(chain: string, id: string) {
 /**
  * Get the dynamic data of an asset
  */
-function getDynamicData(chain: string, id: string) {
+async function getDynamicData(chain: string, id: string) {
   let foundDynamicData;
   if (chain === "bitshares") {
-    foundDynamicData = bts_allDynamicData.find((dynamicData: any) => dynamicData.id === id);
+    const btsAllDynamicData = await getCollection('btsAllDynamicData');
+    foundDynamicData = btsAllDynamicData.find((dynamicData: any) => dynamicData.id === id);
   } else if (chain === "bitshares_testnet") {
-    foundDynamicData = test_allDynamicData.find((dynamicData: any) => dynamicData.id === id);
+    const testAllDynamicData = await getCollection('testAllDynamicData');
+    foundDynamicData = testAllDynamicData.find((dynamicData: any) => dynamicData.id === id);
   }
 
   if (!foundDynamicData) {
@@ -135,12 +110,14 @@ function getDynamicData(chain: string, id: string) {
 /**
  * Retrieves the requested pool from cached assets
  */
-function getPool(chain: string, id: string) {
+async function getPool(chain: string, id: string) {
   let foundPool;
   if (chain === "bitshares") {
-    foundPool = bts_allPools.find((asset: any) => asset.id === id);
+    const btsAllPools = await getCollection('btsAllPools');
+    foundPool = btsAllPools.find((asset: any) => asset.id === id);
   } else if (chain === "bitshares_testnet") {
-    foundPool = test_allPools.find((asset: any) => asset.id === id);
+    const testAllPools = await getCollection('testAllPools');
+    foundPool = testAllPools.find((asset: any) => asset.id === id);
   }
 
   if (!foundPool) {

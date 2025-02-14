@@ -1,14 +1,40 @@
 ---
+import { getCollection } from 'astro:content';
+
 import Layout from '../layouts/Layout.astro';
 import MarketOrder from '../components/MarketOrder';
 import PageHeader from '../components/PageHeader';
 import PageFooter from '../components/PageFooter';
+
+const btsAllAssets = await getCollection('btsAllAssets');
+const testAllAssets = await getCollection('testAllAssets');
+
+const btsPools = await getCollection('btsPools');
+const testPools = await getCollection('testPools');
+
+const btsFeeSchedule = await getCollection('btsFeeSchedule');
+const testFeeSchedule = await getCollection('testFeeSchedule');
+
+const btsAssets = btsAllAssets.map(collection => collection.data);
+const testAssets = testAllAssets.map(collection => collection.data);
+const poolsBTS = btsPools.map(collection => collection.data);
+const poolsTEST = testPools.map(collection => collection.data);
+const globalParamsBTS = btsFeeSchedule.map(collection => collection.data);
+const globalParamsTEST = testFeeSchedule.map(collection => collection.data);
 ---
 
 <Layout title="Bitshares decentralized cryptocurrency exchange - limit order update page">
 	<main>
 		<PageHeader client:only="react" page="order" backURL="../index.html" />
-		<MarketOrder  client:only="react" />
+		<MarketOrder
+			client:only="react"
+			_assetsBTS={btsAssets}
+			_assetsTEST={testAssets}
+			_poolsBTS={poolsBTS}
+			_poolsTEST={poolsTEST}
+			_globalParamsBTS={globalParamsBTS}
+			_globalParamsTEST={globalParamsTEST}
+		/>
 		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/order.astro" />
 	</main>
 </Layout>

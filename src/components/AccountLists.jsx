@@ -34,8 +34,6 @@ import { useInitCache } from "@/nanoeffects/Init.ts";
 import { $currentUser } from "@/stores/users.ts";
 import { $currentNode } from "@/stores/node.ts";
 
-import { $globalParamsCacheBTS, $globalParamsCacheTEST } from "@/stores/cache.ts";
-
 import { humanReadableFloat } from "@/lib/common";
 
 import { createObjectStore } from "@/nanoeffects/Objects.ts";
@@ -49,23 +47,15 @@ export default function AccountLists(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
   const currentNode = useStore($currentNode);
 
-  const [showDialog, setShowDialog] = useState(false);
+  const {
+    _globalParamsBTS,
+    _globalParamsTEST
+  } = properties;
 
+  const [showDialog, setShowDialog] = useState(false);
   const [targetUser, setTargetUser] = useState();
 
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
-
-  const _globalParamsBTS = useSyncExternalStore(
-    $globalParamsCacheBTS.subscribe,
-    $globalParamsCacheBTS.get,
-    () => true
-  );
-
-  const _globalParamsTEST = useSyncExternalStore(
-    $globalParamsCacheTEST.subscribe,
-    $globalParamsCacheTEST.get,
-    () => true
-  );
 
   const _chain = useMemo(() => {
     if (usr && usr.chain) {
@@ -74,7 +64,7 @@ export default function AccountLists(properties) {
     return "bitshares";
   }, [usr]);
 
-  useInitCache(_chain ?? "bitshares", ["globalParams"]);
+  useInitCache(_chain ?? "bitshares", []);
 
   const globalParams = useMemo(() => {
     if (_chain && (_globalParamsBTS || _globalParamsTEST)) {
@@ -86,8 +76,8 @@ export default function AccountLists(properties) {
   const [fee, setFee] = useState(0);
   useEffect(() => {
     if (globalParams && globalParams.length) {
-      const foundFee = globalParams.find((x) => x[0] === 7); // operation: account_whitelist
-      const finalFee = humanReadableFloat(foundFee[1].fee, 5);
+      const foundFee = globalParams.find((x) => x.id === 7); // operation: account_whitelist
+      const finalFee = humanReadableFloat(foundFee.data.fee, 5);
       setFee(finalFee);
     }
   }, [globalParams]);

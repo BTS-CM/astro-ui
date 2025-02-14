@@ -10,5 +10,11 @@
   "issued": "Välja andnud {{user}}",
   "search2": "Otsi",
   "favourites": "Lemmikud",
-  "backingType": "Valige uus tugivara"
+  "backingType": "Valige uus tagavara",
+  "price": "Hinda andma {{symbol}}",
+  "addCollateral": "➕ Lisage tagatis",
+  "missingLendingAsset": "⛔ Laenuvara pole",
+  "whichCollateral": "Milline tagatisvara?",
+  "collateralSearch": "Palun otsige allpool uut tagatise vara",
+  "addAsset": "Lisage vara"
 }

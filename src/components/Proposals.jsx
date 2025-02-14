@@ -34,8 +34,6 @@ import { $currentUser } from "@/stores/users.ts";
 import { $currentNode } from "@/stores/node.ts";
 import { $blockList } from "@/stores/blocklist.ts";
 
-import { $globalParamsCacheBTS, $globalParamsCacheTEST } from "@/stores/cache.ts";
-
 import { humanReadableFloat } from "@/lib/common";
 
 import { createAccountProposalStore } from "@/nanoeffects/AccountProposedTransactions.ts";
@@ -135,17 +133,7 @@ export default function Proposals(properties) {
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
   const blocklist = useSyncExternalStore($blockList.subscribe, $blockList.get, () => true);
 
-  const _globalParamsBTS = useSyncExternalStore(
-    $globalParamsCacheBTS.subscribe,
-    $globalParamsCacheBTS.get,
-    () => true
-  );
-
-  const _globalParamsTEST = useSyncExternalStore(
-    $globalParamsCacheTEST.subscribe,
-    $globalParamsCacheTEST.get,
-    () => true
-  );
+  const { _globalParamsBTS, _globalParamsTEST } = properties;
 
   const _chain = useMemo(() => {
     if (usr && usr.chain) {
@@ -154,7 +142,7 @@ export default function Proposals(properties) {
     return "bitshares";
   }, [usr]);
 
-  useInitCache(_chain ?? "bitshares", ["globalParams"]);
+  useInitCache(_chain ?? "bitshares", []);
 
   const globalParams = useMemo(() => {
     if (_chain && (_globalParamsBTS || _globalParamsTEST)) {
@@ -166,8 +154,8 @@ export default function Proposals(properties) {
   const [fee, setFee] = useState(0);
   useEffect(() => {
     if (globalParams && globalParams.length) {
-      const foundFee = globalParams.find((x) => x[0] === 7); // operation: account_whitelist
-      const finalFee = humanReadableFloat(foundFee[1].fee, 5);
+      const foundFee = globalParams.find((x) => x.id === 7); // operation: account_whitelist
+      const finalFee = humanReadableFloat(foundFee.data.fee, 5);
       setFee(finalFee);
     }
   }, [globalParams]);

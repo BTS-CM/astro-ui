@@ -27,12 +27,6 @@ import { useInitCache } from "@/nanoeffects/Init.ts";
 import { $currentUser } from "@/stores/users.ts";
 import { $blockList } from "@/stores/blocklist.ts";
 import { $currentNode } from "@/stores/node.ts";
-import {
-  $assetCacheBTS,
-  $assetCacheTEST,
-  $offersCacheBTS,
-  $offersCacheTEST,
-} from "@/stores/cache.ts";
 
 import { humanReadableFloat, debounce } from "@/lib/common.js";
 import ExternalLink from "./common/ExternalLink.jsx";
@@ -59,23 +53,7 @@ export default function CreditBorrow(properties) {
 
   const currentNode = useStore($currentNode);
 
-  const _assetsBTS = useSyncExternalStore($assetCacheBTS.subscribe, $assetCacheBTS.get, () => true);
-  const _assetsTEST = useSyncExternalStore(
-    $assetCacheTEST.subscribe,
-    $assetCacheTEST.get,
-    () => true
-  );
-
-  const _offersBTS = useSyncExternalStore(
-    $offersCacheBTS.subscribe,
-    $offersCacheBTS.get,
-    () => true
-  );
-  const _offersTEST = useSyncExternalStore(
-    $offersCacheTEST.subscribe,
-    $offersCacheTEST.get,
-    () => true
-  );
+  const { _assetsBTS, _assetsTEST, _offersBTS, _offersTEST } = properties;
 
   const _chain = useMemo(() => {
     if (usr && usr.chain) {
@@ -84,7 +62,7 @@ export default function CreditBorrow(properties) {
     return "bitshares";
   }, [usr]);
 
-  useInitCache(_chain ?? "bitshares", ["assets", "offers"]);
+  useInitCache(_chain ?? "bitshares", []);
 
   const assets = useMemo(() => {
     if (_chain && (_assetsBTS || _assetsTEST)) {

@@ -10,5 +10,11 @@
   "issued": "Ausgestellt von {{user}}",
   "search2": "Suchen",
   "favourites": "Favoriten",
-  "backingType": "Bitte wählen Sie ein neues Backing-Asset aus"
+  "backingType": "Bitte wählen Sie ein neues Backing -Asset aus",
+  "price": "Preis für {{symbol}}",
+  "addCollateral": "➕ Kollateral hinzufügen",
+  "missingLendingAsset": "⛔ Kein Kreditvermögen",
+  "whichCollateral": "Welches Kollateral -Asset?",
+  "collateralSearch": "Bitte suchen Sie unten nach einem neuen Kollateral -Asset",
+  "addAsset": "Asset hinzufügen"
 }

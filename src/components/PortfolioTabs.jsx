@@ -39,9 +39,6 @@ import { createAccountLimitOrderStore } from "@/nanoeffects/AccountLimitOrders.t
 import { $currentUser } from "@/stores/users.ts";
 import { $blockList } from "@/stores/blocklist.ts";
 import { $currentNode } from "@/stores/node.ts";
-import { $poolCacheBTS, $poolCacheTEST } from "@/stores/cache.ts";
-
-import { $assetCacheBTS, $assetCacheTEST } from "@/stores/cache.ts";
 
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
 import ExternalLink from "./common/ExternalLink.jsx";
@@ -76,15 +73,12 @@ export default function PortfolioTabs(properties) {
 
   const [sortType, setSortType] = useState("default");
 
-  const _assetsBTS = useSyncExternalStore($assetCacheBTS.subscribe, $assetCacheBTS.get, () => true);
-  const _assetsTEST = useSyncExternalStore(
-    $assetCacheTEST.subscribe,
-    $assetCacheTEST.get,
-    () => true
-  );
-
-  const _poolsBTS = useSyncExternalStore($poolCacheBTS.subscribe, $poolCacheBTS.get, () => true);
-  const _poolsTEST = useSyncExternalStore($poolCacheTEST.subscribe, $poolCacheTEST.get, () => true);
+  const {
+    _assetsBTS,
+    _assetsTEST,
+    _poolsBTS,
+    _poolsTEST
+  } = properties;
 
   const _chain = useMemo(() => {
     if (usr && usr.chain) {
@@ -127,7 +121,7 @@ export default function PortfolioTabs(properties) {
     return relevantPools;
   }, [assets, blocklist, _poolsBTS, _poolsTEST, _chain]);
 
-  useInitCache(_chain ?? "bitshares", ["assets", "pools"]);
+  useInitCache(_chain ?? "bitshares", []);
 
   const activeTabStyle = {
     backgroundColor: "#252526",
@@ -159,7 +153,7 @@ export default function PortfolioTabs(properties) {
             });
           console.log("Successfully fetched balances");
           setBalances(updatedData);
-          console.log({ updatedData, data, assets });
+          //console.log({ updatedData, data, assets });
         }
       });
     }

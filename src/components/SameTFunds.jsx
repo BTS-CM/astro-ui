@@ -39,8 +39,6 @@ import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 import { createObjectStore } from "@/nanoeffects/Objects.ts";
 
 import { $currentUser } from "@/stores/users.ts";
-import { $assetCacheBTS, $assetCacheTEST } from "@/stores/cache.ts";
-import { $marketSearchCacheBTS, $marketSearchCacheTEST } from "@/stores/cache.ts";
 
 import { debounce, humanReadableFloat, blockchainFloat } from "@/lib/common.js";
 import { $currentNode } from "@/stores/node.ts";
@@ -55,12 +53,7 @@ export default function SameTFunds(properties) {
   const blocklist = useSyncExternalStore($blockList.subscribe, $blockList.get, () => true);
   const currentNode = useStore($currentNode);
 
-  const _assetsBTS = useSyncExternalStore($assetCacheBTS.subscribe, $assetCacheBTS.get, () => true);
-  const _assetsTEST = useSyncExternalStore(
-    $assetCacheTEST.subscribe,
-    $assetCacheTEST.get,
-    () => true
-  );
+  const { _assetsBTS, _assetsTEST, _marketSearchBTS, _marketSearchTEST } = properties;
 
   const _chain = useMemo(() => {
     if (usr && usr.chain) {
@@ -69,7 +62,7 @@ export default function SameTFunds(properties) {
     return "bitshares";
   }, [usr]);
 
-  useInitCache(_chain ?? "bitshares", ["assets", "marketSearch"]);
+  useInitCache(_chain ?? "bitshares", []);
 
   const assets = useMemo(() => {
     if (_chain && (_assetsBTS || _assetsTEST)) {
@@ -77,18 +70,6 @@ export default function SameTFunds(properties) {
     }
     return [];
   }, [_assetsBTS, _assetsTEST, _chain]);
-
-  const _marketSearchBTS = useSyncExternalStore(
-    $marketSearchCacheBTS.subscribe,
-    $marketSearchCacheBTS.get,
-    () => true
-  );
-
-  const _marketSearchTEST = useSyncExternalStore(
-    $marketSearchCacheTEST.subscribe,
-    $marketSearchCacheTEST.get,
-    () => true
-  );
 
   const marketSearch = useMemo(() => {
     if (usr && usr.chain && (_marketSearchBTS || _marketSearchTEST)) {

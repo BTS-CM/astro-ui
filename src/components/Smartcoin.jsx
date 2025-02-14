@@ -56,17 +56,6 @@ import { createFullSmartcoinStore } from "@/nanoeffects/FullSmartcoin.ts";
 import { $currentUser } from "@/stores/users.ts";
 import { $currentNode } from "@/stores/node.ts";
 
-import {
-  $assetCacheBTS,
-  $assetCacheTEST,
-  $marketSearchCacheBTS,
-  $marketSearchCacheTEST,
-  $globalParamsCacheBTS,
-  $globalParamsCacheTEST,
-  $bitAssetDataCacheBTS,
-  $bitAssetDataCacheTEST,
-} from "@/stores/cache.ts";
-
 import DeepLinkDialog from "./common/DeepLinkDialog";
 import ExternalLink from "./common/ExternalLink.jsx";
 import CardRow from "./common/CardRow.jsx";
@@ -117,41 +106,16 @@ export default function Smartcoin(properties) {
 
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
 
-  const bitAssetDataBTS = useSyncExternalStore(
-    $bitAssetDataCacheBTS.subscribe,
-    $bitAssetDataCacheBTS.get,
-    () => true
-  );
-
-  const bitAssetDataTEST = useSyncExternalStore(
-    $bitAssetDataCacheTEST.subscribe,
-    $bitAssetDataCacheTEST.get,
-    () => true
-  );
-
-  const _marketSearchBTS = useSyncExternalStore(
-    $marketSearchCacheBTS.subscribe,
-    $marketSearchCacheBTS.get,
-    () => true
-  );
-
-  const _marketSearchTEST = useSyncExternalStore(
-    $marketSearchCacheTEST.subscribe,
-    $marketSearchCacheTEST.get,
-    () => true
-  );
-
-  const _globalParamsBTS = useSyncExternalStore(
-    $globalParamsCacheBTS.subscribe,
-    $globalParamsCacheBTS.get,
-    () => true
-  );
-
-  const _globalParamsTEST = useSyncExternalStore(
-    $globalParamsCacheTEST.subscribe,
-    $globalParamsCacheTEST.get,
-    () => true
-  );
+  const {
+    _assetsBTS,
+    _assetsTEST,
+    _bitAssetDataBTS,
+    _bitAssetDataTEST,
+    _marketSearchBTS,
+    _marketSearchTEST,
+    _globalParamsBTS,
+    _globalParamsTEST
+  } = properties;
 
   const _chain = useMemo(() => {
     if (usr && usr.chain) {
@@ -160,14 +124,7 @@ export default function Smartcoin(properties) {
     return "bitshares";
   }, [usr]);
 
-  useInitCache(_chain ?? "bitshares", ["bitAssetData", "globalParams", "marketSearch", "assets"]);
-
-  const _assetsBTS = useSyncExternalStore($assetCacheBTS.subscribe, $assetCacheBTS.get, () => true);
-  const _assetsTEST = useSyncExternalStore(
-    $assetCacheTEST.subscribe,
-    $assetCacheTEST.get,
-    () => true
-  );
+  useInitCache(_chain ?? "bitshares", []);
 
   const assets = useMemo(() => {
     if (_chain && (_assetsBTS || _assetsTEST)) {
@@ -177,11 +134,11 @@ export default function Smartcoin(properties) {
   }, [_assetsBTS, _assetsTEST, _chain]);
 
   const bitAssetData = useMemo(() => {
-    if (_chain && (bitAssetDataBTS || bitAssetDataTEST)) {
-      return _chain === "bitshares" ? bitAssetDataBTS : bitAssetDataTEST;
+    if (_chain && (_bitAssetDataBTS || _bitAssetDataTEST)) {
+      return _chain === "bitshares" ? _bitAssetDataBTS : _bitAssetDataTEST;
     }
     return [];
-  }, [bitAssetDataBTS, bitAssetDataTEST, _chain]);
+  }, [_bitAssetDataBTS, _bitAssetDataTEST, _chain]);
 
   const globalParams = useMemo(() => {
     if (_chain && (_globalParamsBTS || _globalParamsTEST)) {
@@ -193,8 +150,8 @@ export default function Smartcoin(properties) {
   const [fee, setFee] = useState(0);
   useEffect(() => {
     if (globalParams && globalParams.length) {
-      const foundFee = globalParams.find((x) => x[0] === 3);
-      const finalFee = humanReadableFloat(foundFee[1].fee, 5);
+      const foundFee = globalParams.find((x) => x.id === 3);
+      const finalFee = humanReadableFloat(foundFee.data.fee, 5);
       setFee(finalFee);
     }
   }, [globalParams]);
@@ -340,7 +297,6 @@ export default function Smartcoin(properties) {
       ]);
       unsub = smartcoinDataStore.subscribe(({ data }) => {
         if (data && !data.error && !data.loading) {
-          console.log({ data });
           const filteredData = data[0].filter((balance) =>
             assets.find((x) => x.id === balance.asset_id)
           );
@@ -1506,6 +1462,10 @@ export default function Smartcoin(properties) {
       reference = sellOrders;
       res = sellOrders[index];
       precision = parsedCollateralAsset.p;
+    }
+
+    if (!reference || !res) {
+      return null;
     }
 
     return (

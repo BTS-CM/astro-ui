@@ -10,5 +10,11 @@
   "issued": "Udstedt af {{user}}",
   "search2": "Søge",
   "favourites": "Favoritter",
-  "backingType": "Vælg venligst et nyt støtteaktiv"
+  "backingType": "Vælg et nyt opbakningsaktiv",
+  "price": "Give pris for {{symbol}}",
+  "addCollateral": "➕ Tilføj sikkerhedsstillelse",
+  "missingLendingAsset": "⛔ Intet udlånsaktiv",
+  "whichCollateral": "Hvilket sikkerhedsaktivt?",
+  "collateralSearch": "Søg efter et nyt sikkerhedsaktiv",
+  "addAsset": "Tilføj aktiv"
 }

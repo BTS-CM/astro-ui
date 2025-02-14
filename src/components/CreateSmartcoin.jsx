@@ -50,8 +50,6 @@ import { Avatar } from "./Avatar.tsx";
 import { useInitCache } from "@/nanoeffects/Init.ts";
 import { $currentUser } from "@/stores/users.ts";
 import { $currentNode } from "@/stores/node.ts";
-import { $assetCacheBTS, $assetCacheTEST } from "@/stores/cache.ts";
-import { $marketSearchCacheBTS, $marketSearchCacheTEST } from "@/stores/cache.ts";
 import { createObjectStore } from "@/nanoeffects/Objects.ts";
 
 import {
@@ -97,24 +95,7 @@ export default function CreateSmartcoin(properties) {
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
   const currentNode = useStore($currentNode);
 
-  const _assetsBTS = useSyncExternalStore($assetCacheBTS.subscribe, $assetCacheBTS.get, () => true);
-  const _assetsTEST = useSyncExternalStore(
-    $assetCacheTEST.subscribe,
-    $assetCacheTEST.get,
-    () => true
-  );
-
-  const _marketSearchBTS = useSyncExternalStore(
-    $marketSearchCacheBTS.subscribe,
-    $marketSearchCacheBTS.get,
-    () => true
-  );
-
-  const _marketSearchTEST = useSyncExternalStore(
-    $marketSearchCacheTEST.subscribe,
-    $marketSearchCacheTEST.get,
-    () => true
-  );
+  const { _assetsBTS, _assetsTEST, _marketSearchBTS, _marketSearchTEST } = properties;
 
   const marketSearch = useMemo(() => {
     if (usr && usr.chain && (_marketSearchBTS || _marketSearchTEST)) {
@@ -130,7 +111,7 @@ export default function CreateSmartcoin(properties) {
     return "bitshares";
   }, [usr]);
 
-  useInitCache(_chain ?? "bitshares", ["assets", "marketSearch"]);
+  useInitCache(_chain ?? "bitshares", []);
 
   const assets = useMemo(() => {
     if (_chain && (_assetsBTS || _assetsTEST)) {
@@ -495,7 +476,7 @@ export default function CreateSmartcoin(properties) {
           if (!_bitassetData || !_dynamicData) {
             return;
           }
-          console.log({ _bitassetData, _dynamicData, existingAssetData });
+          //console.log({ _bitassetData, _dynamicData, existingAssetData });
           setDynamicData(_dynamicData);
 
           if (_bitassetData.options.extensions.hasOwnProperty("force_settle_fee_percent")) {

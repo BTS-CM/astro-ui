@@ -3,28 +3,7 @@ import Apis from "@/bts/ws/ApiInstances";
 import { chains } from "@/config/chains";
 
 import { humanReadableFloat } from "@/lib/common";
-import { getDynamicData } from "@/lib/cache";
 import { getObjects } from "./src/common";
-
-// Create fetcher store for dynamic data
-const [createDynamicDataStore] = nanoquery({
-  fetcher: async (...args: unknown[]) => {
-    const chain = args[0] as string;
-    const assetID = args[1] as string;
-    
-    const replacedID = assetID.replace("1.3.", "2.3.");
-
-    let response;
-    try {
-      response = await getDynamicData(chain, replacedID);
-    } catch (error) {
-      console.log(`Failed to fetch dynamic data: ${replacedID}`);
-      return;
-    }
-
-    return response;
-  },
-});
 
 /**
  * Retrieving a single asset
@@ -186,4 +165,4 @@ const [createPoolAssetStore] = nanoquery({
   },
 });
 
-export { createAssetFromSymbolStore, createDynamicDataStore, createPoolAssetStore };
+export { createAssetFromSymbolStore, createPoolAssetStore };

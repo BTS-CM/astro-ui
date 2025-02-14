@@ -10,5 +10,11 @@
   "issued": "ออกโดย {{user}}",
   "search2": "ค้นหา",
   "favourites": "รายการโปรด",
-  "backingType": "โปรดเลือกเนื้อหาสำรองใหม่"
+  "backingType": "โปรดเลือกสินทรัพย์สำรองใหม่",
+  "price": "ให้ราคาสำหรับ {{symbol}}",
+  "addCollateral": "➕เพิ่มหลักประกัน",
+  "missingLendingAsset": "⛔ไม่มีสินทรัพย์สินเชื่อ",
+  "whichCollateral": "สินทรัพย์หลักประกันใด",
+  "collateralSearch": "กรุณาค้นหาสินทรัพย์หลักประกันใหม่ด้านล่าง",
+  "addAsset": "เพิ่มสินทรัพย์"
 }

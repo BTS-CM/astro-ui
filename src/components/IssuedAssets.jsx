@@ -41,7 +41,6 @@ import { useInitCache } from "@/nanoeffects/Init.ts";
 import { createIssuedAssetsStore } from "@/nanoeffects/IssuedAssets.ts";
 import { createObjectStore } from "@/nanoeffects/Objects.ts";
 
-import { $assetCacheBTS, $assetCacheTEST } from "@/stores/cache.ts";
 import { $currentUser, $userStorage } from "@/stores/users.ts";
 import { $currentNode } from "@/stores/node.ts";
 
@@ -67,14 +66,9 @@ export default function IssuedAssets(properties) {
     return "bitshares";
   }, [usr]);
 
-  useInitCache(_chain ?? "bitshares", ["assets"]);
+  useInitCache(_chain ?? "bitshares", []);
 
-  const _assetsBTS = useSyncExternalStore($assetCacheBTS.subscribe, $assetCacheBTS.get, () => true);
-  const _assetsTEST = useSyncExternalStore(
-    $assetCacheTEST.subscribe,
-    $assetCacheTEST.get,
-    () => true
-  );
+  const { _assetsBTS, _assetsTEST } = properties;
 
   const assets = useMemo(() => {
     if (_chain && (_assetsBTS || _assetsTEST)) {
@@ -501,7 +495,7 @@ export default function IssuedAssets(properties) {
         <Card className="ml-2 mr-2">
           <CardHeader className="pb-1">
             <CardTitle className="grid grid-cols-2 gap-5">
-              <span className="pb-5 grid grid-cols-3">
+              <span className="pb-5 grid grid-cols-2">
                 {activeTab === "smartcoins" &&
                 relevantBitassetData &&
                 ((relevantBitassetData.current_feed.settlement_price.base.amount === 0 &&
@@ -525,8 +519,7 @@ export default function IssuedAssets(properties) {
                       usr.chain === "bitshares" ? "" : "?network=testnet"
                     }`}
                   />
-                </div>
-                <div>
+                  <br/>
                   {" ("}
                   <ExternalLink
                     classnamecontents="hover:text-purple-500"

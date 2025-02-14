@@ -19,7 +19,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 
 import { trimPrice, isInvertedMarket } from "@/lib/common";
-import { $marketSearchCacheBTS, $marketSearchCacheTEST } from "@/stores/cache.ts";
 import { createMarketTradeHistoryStore } from "@/nanoeffects/MarketTradeHistory.ts";
 import { createMarketOrderStore } from "@/nanoeffects/MarketOrderBook.ts";
 
@@ -46,20 +45,15 @@ export default function Market(properties) {
     //
     setAssetA,
     setAssetB,
+    //
+    _assetsBTS,
+    _assetsTEST,
+    _marketSearchBTS,
+    _marketSearchTEST,
+    _poolsBTS,
+    _poolsTEST
   } = properties;
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
-
-  const _marketSearchBTS = useSyncExternalStore(
-    $marketSearchCacheBTS.subscribe,
-    $marketSearchCacheBTS.get,
-    () => true
-  );
-
-  const _marketSearchTEST = useSyncExternalStore(
-    $marketSearchCacheTEST.subscribe,
-    $marketSearchCacheTEST.get,
-    () => true
-  );
 
   const marketSearch = useMemo(() => {
     if (usr && usr.chain && (_marketSearchBTS || _marketSearchTEST)) {
@@ -603,6 +597,10 @@ export default function Market(properties) {
             assetB={assetB}
             assetBData={assetBData}
             chain={usr.chain}
+            _assetsBTS={_assetsBTS}
+            _assetsTEST={_assetsTEST}
+            _poolsBTS={_poolsBTS}
+            _poolsTEST={_poolsTEST}
           />
         ) : null}
 

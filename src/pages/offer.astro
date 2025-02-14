@@ -1,14 +1,47 @@
 ---
+import { getCollection } from 'astro:content';
+
 import Layout from '../layouts/Layout.astro';
 import CreditOffer from '../components/CreditOffer.jsx';
 import PageHeader from '../components/PageHeader';
 import PageFooter from '../components/PageFooter';
+
+const btsAllAssets = await getCollection('btsAllAssets');
+const testAllAssets = await getCollection('testAllAssets');
+
+const btsMarketData = await getCollection('btsMarketData');
+const testMarketData = await getCollection('testMarketData');
+
+const btsFeeSchedule = await getCollection('btsFeeSchedule');
+const testFeeSchedule = await getCollection('testFeeSchedule');
+
+const btsOffers = await getCollection('btsOffers');
+const testOffers = await getCollection('testOffers');
+
+const btsAllAssetsData = btsAllAssets.map(collection => collection.data);
+const testAllAssetsData = testAllAssets.map(collection => collection.data);
+const btsMarketDataData = btsMarketData.map(collection => collection.data);
+const testMarketDataData = testMarketData.map(collection => collection.data);
+const btsFeeScheduleData = btsFeeSchedule.map(collection => collection.data);
+const testFeeScheduleData = testFeeSchedule.map(collection => collection.data);
+const btsOffersData = btsOffers.map(collection => collection.data);
+const testOffersData = testOffers.map(collection => collection.data);
 ---
 
 <Layout title="Bitshares credit deal">
 	<main>
 		<PageHeader client:only="react" page="offer" backURL="../borrow/index.html" />
-		<CreditOffer  client:only="react" />
+		<CreditOffer
+			client:only="react"
+			_assetsBTS={btsAllAssetsData}
+			_assetsTEST={testAllAssetsData}
+			_marketSearchBTS={btsMarketDataData}
+			_marketSearchTEST={testMarketDataData}
+			_offersBTS={btsOffersData}
+			_offersTEST={testOffersData}
+			_globalParamsBTS={btsFeeScheduleData}
+			_globalParamsTEST={testFeeScheduleData}
+		/>
 		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/offer.astro" />
 	</main>
 </Layout>
