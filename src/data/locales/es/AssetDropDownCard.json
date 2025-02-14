@@ -10,5 +10,11 @@
   "issued": "Expedido por {{user}}",
   "search2": "Buscar",
   "favourites": "Favoritos",
-  "backingType": "Seleccione un nuevo recurso de respaldo"
+  "backingType": "Seleccione un nuevo activo de respaldo",
+  "price": "Proporcionar precio para {{symbol}}",
+  "addCollateral": "➕ Agregar colateral",
+  "missingLendingAsset": "⛔ Sin activo de préstamo",
+  "whichCollateral": "¿Qué activo colateral?",
+  "collateralSearch": "Busque un nuevo activo de garantía a continuación",
+  "addAsset": "Agregar activo"
 }

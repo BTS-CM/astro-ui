@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { CalendarIcon } from "@radix-ui/react-icons";
-import { format } from "date-fns";
+import { format, set } from "date-fns";
 import { useSyncExternalStore } from "react";
 import { useTranslation } from "react-i18next";
 import { FixedSizeList as List } from "react-window";
@@ -209,6 +209,21 @@ export default function CreditOfferEditor(properties) {
       setFoundAsset(found[0]);
     }
   }, [found]);
+
+  const [foundAssetBalance, setFoundAssetBalance] = useState(0);
+  useEffect(() => {
+    if (foundAsset && foundAsset.id && balances && balances.length) {
+      const _balance = balances.find((x) => x.asset_id === foundAsset.id);
+      if (!_balance) {
+        setFoundAssetBalance(0);
+        return;
+      }
+      const readableBalance = humanReadableFloat(_balance.amount, foundAsset.precision);
+      setFoundAssetBalance(readableBalance);
+    } else {
+      setFoundAssetBalance(0);
+    }
+  }, [foundAsset]);
 
   const [offerID, setOfferID] = useState();
   useEffect(() => {
@@ -462,8 +477,17 @@ export default function CreditOfferEditor(properties) {
                       name="price"
                       className="mt-4"
                       placeholder={res.price}
+                      onKeyPress={(event) => {
+                        if (event.key === '.' && event.target.value.includes('.')) {
+                          event.preventDefault();
+                        }
+                        const regex = /^[0-9]*\.?[0-9]*$/;
+                        if (!regex.test(event.key)) {
+                          event.preventDefault();
+                        }
+                      }}
                       onChange={(event) => {
-                        const regex = /^[a-zA-Z0-9.-]*$/;
+                        const regex = /^[0-9]*\.?[0-9]*$/;
                         if (regex.test(event.target.value)) {
                           _updatedCollateral = acceptableCollateral.map((x) => {
                             if (x.symbol === res.symbol) {
@@ -556,8 +580,17 @@ export default function CreditOfferEditor(properties) {
                       name="price"
                       className="mt-4"
                       placeholder={res.price}
+                      onKeyPress={(event) => {
+                        if (event.key === '.' && event.target.value.includes('.')) {
+                          event.preventDefault();
+                        }
+                        const regex = /^[0-9]*\.?[0-9]*$/;
+                        if (!regex.test(event.key)) {
+                          event.preventDefault();
+                        }
+                      }}
                       onChange={(event) => {
-                        const regex = /^[a-zA-Z0-9.-]*$/;
+                        const regex = /^[0-9]*\.?[0-9]*$/;
                         if (regex.test(event.target.value)) {
                           _updatedAllowedAccounts = allowedAccounts.map((x) => {
                             if (x.id === res.id) {
@@ -801,35 +834,59 @@ export default function CreditOfferEditor(properties) {
                     </FormItem>
                   )}
                 />
-
-                <FormField
-                  control={form.control}
-                  name="lendingAmount"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t("CreditOfferEditor:amountToLend")}</FormLabel>{" "}
-                      <FormControl
-                        onChange={(event) => {
-                          const input = event.target.value;
-                          const inputDecimals = !foundAsset ? 2 : foundAsset.precision;
-                          let regex = new RegExp(`^[0-9]*\\.?[0-9]{0,${inputDecimals}}$`);
-                          if (regex.test(input)) {
-                            setLendingAmount(input);
+                
+                    <FormField
+                      control={form.control}
+                      name="lendingAmount"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{t("CreditOfferEditor:amountToLend")}</FormLabel>{" "}
+                          <FormControl
+                            onChange={(event) => {
+                              const input = event.target.value;
+                              const inputDecimals = !foundAsset ? 2 : foundAsset.precision;
+                              let regex = new RegExp(`^[0-9]*\\.?[0-9]{0,${inputDecimals}}$`);
+                              if (regex.test(input)) {
+                                setLendingAmount(input);
+                              }
+                            }}
+                          >
+                            <div className="grid grid-cols-12 gap-3">
+                              <div className="col-span-9">
+                                <Input
+                                  value={lendingAmount}
+                                  placeholder={lendingAmount}
+                                  className="mb-1"
+                                />
+                              </div>
+                              <div className="col-span-3 text-center">
+                                {
+                                  foundAsset
+                                    ? <Button
+                                        variant="outline"
+                                        onClick={() => {
+                                          event.preventDefault(); // Prevent default form submission
+                                          setLendingAmount(foundAssetBalance);
+                                        }}
+                                      >
+                                        {t("LimitOrderCard:useBalance")}
+                                      </Button>
+                                    : <Button disabled>{t("LimitOrderCard:useBalance")}</Button>
+                                }
+                              </div>
+                            </div>
+                          </FormControl>
+                          <FormDescription>
+                            {t("CreditOfferEditor:lendingAmountDescription")}
+                          </FormDescription>
+                          {
+                            !foundAssetBalance && lendingAmount > 0 || foundAssetBalance && foundAssetBalance < lendingAmount
+                              ? <FormMessage>{t("Predictions:insufficient_funds")}</FormMessage>
+                              : null
                           }
-                        }}
-                      >
-                        <Input
-                          value={lendingAmount}
-                          placeholder={lendingAmount}
-                          className="mb-1 w-3/4"
-                        />
-                      </FormControl>
-                      <FormDescription>
-                        {t("CreditOfferEditor:lendingAmountDescription")}
-                      </FormDescription>
-                    </FormItem>
-                  )}
-                />
+                        </FormItem>
+                      )}
+                    />
 
                 <FormField
                   control={form.control}
@@ -958,6 +1015,15 @@ export default function CreditOfferEditor(properties) {
                         <FormItem>
                           <FormLabel>{t("CreditOfferEditor:minimumAmount")}</FormLabel>
                           <FormControl
+                            onKeyPress={(event) => {
+                              if (event.key === '.' && event.target.value.includes('.')) {
+                                event.preventDefault();
+                              }
+                              const regex = /^[0-9]*\.?[0-9]*$/;
+                              if (!regex.test(event.key)) {
+                                event.preventDefault();
+                              }
+                            }}
                             onChange={(event) => {
                               const input = event.target.value;
                               const regex = /^[0-9]*\.?[0-9]*$/;

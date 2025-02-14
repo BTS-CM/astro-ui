@@ -1465,6 +1465,11 @@ export default function Smartcoin(properties) {
       precision = parsedCollateralAsset.p;
     }
 
+    if (!reference || !res) {
+      console.log({res});
+      return null;
+    }
+
     return (
       <div className="grid grid-cols-4 text-sm" style={style}>
         <div className="col-span-1">{parseFloat(res.price).toFixed(precision)}</div>

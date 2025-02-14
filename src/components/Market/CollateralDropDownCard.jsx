@@ -100,13 +100,24 @@ export default function CollateralDropDownCard(properties) {
             </Card>
           </PopoverTrigger>
           <PopoverContent>
-            <Label>Provide price for {res.item.s}</Label>
+            <Label>
+              {t("AssetDropDownCard:price", { symbol: res.item.s })}
+            </Label>
             <Input
               name="price"
               className="mt-5"
               placeholder={_value}
+              onKeyPress={(event) => {
+                if (event.key === '.' && event.target.value.includes('.')) {
+                  event.preventDefault();
+                }
+                const regex = /^[0-9]*\.?[0-9]*$/;
+                if (!regex.test(event.key)) {
+                  event.preventDefault();
+                }
+              }}
               onChange={(event) => {
-                const regex = /^[a-zA-Z0-9.-]*$/;
+                const regex = /^[0-9]*\.?[0-9]*$/;
                 if (regex.test(event.target.value)) {
                   _value = event.target.value;
                 }
@@ -125,7 +136,7 @@ export default function CollateralDropDownCard(properties) {
               }}
               className="mt-5"
             >
-              Add asset
+              {t("AssetDropDownCard:addAsset")}
             </Button>
           </PopoverContent>
         </Popover>
@@ -152,17 +163,23 @@ export default function CollateralDropDownCard(properties) {
             }}
             className="inline-block border border-grey rounded pl-4 pb-1 pr-4 text-lg"
           >
-            <Label>➕ Add collateral</Label>
+            <Label>
+              {t("AssetDropDownCard:addCollateral")}
+            </Label>
           </span>
         </DialogTrigger>
       ) : (
-        <Label>⛔ No lending asset</Label>
+        <Label>
+          {t("AssetDropDownCard:missingLendingAsset")}
+        </Label>
       )}
       <DialogContent className="sm:max-w-[425px] bg-white">
         <>
-          <h3 className="text-2xl font-extrabold tracking-tight">Which collateral asset?</h3>
+          <h3 className="text-2xl font-extrabold tracking-tight">
+            {t("AssetDropDownCard:whichCollateral")}
+          </h3>
           <h4 className="text-md font-bold tracking-tight">
-            Please search for a new collateral asset below
+            {t("AssetDropDownCard:collateralSearch")}
           </h4>
           <Input
             name="assetSearch"

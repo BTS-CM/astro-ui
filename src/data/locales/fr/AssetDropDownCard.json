@@ -10,5 +10,11 @@
   "issued": "Délivré par {{user}}",
   "search2": "Recherche",
   "favourites": "Favoris",
-  "backingType": "Veuillez sélectionner un nouvel actif de support"
+  "backingType": "Veuillez sélectionner un nouvel actif de support",
+  "price": "Fournir un prix à {{symbol}}",
+  "addCollateral": "➕ Ajouter des garanties",
+  "missingLendingAsset": "⛔ Pas d'actif de prêt",
+  "whichCollateral": "Quel actif collatéral?",
+  "collateralSearch": "Veuillez rechercher un nouvel actif collatéral ci-dessous",
+  "addAsset": "Ajouter un actif"
 }

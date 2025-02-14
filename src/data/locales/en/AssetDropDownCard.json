@@ -10,5 +10,11 @@
   "issued": "Issued by {{user}}",
   "search2": "Search",
   "favourites": "Favourites",
-  "backingType": "Please select a new backing asset"
+  "backingType": "Please select a new backing asset",
+  "price": "Provide price for {{symbol}}",
+  "addCollateral": "➕ Add collateral",
+  "missingLendingAsset": "⛔ No lending asset",
+  "whichCollateral": "Which collateral asset?",
+  "collateralSearch": "Please search for a new collateral asset below",
+  "addAsset": "Add asset"
 }
