@@ -325,20 +325,11 @@ export default function CreditOfferEditor(properties) {
 
     if (identityChunks && usr && usr.chain && chunkIndex < identityChunks.length) {
       const _identityBatch = identityChunks[chunkIndex];
-      //_identityBatch looks like: [{"1.2.x": 1}]
       const _batchIDs = _identityBatch.flatMap(Object.keys);
-      console.log({ _batchIDs });
 
       const usernameDataStore = createUsernameStore([usr.chain, _batchIDs, currentNode ? currentNode.url : null]);
       unsub = usernameDataStore.subscribe(({ data }) => {
         if (data && !data.error && !data.loading) {
-          /*
-            {
-              "name": "tusc.trader1",
-              "id": "1.2.1811495",
-              "amount": 1
-            }
-          */
           setAllowedAccounts(
             allowedAccounts.concat(
               data.map((x, i) => {

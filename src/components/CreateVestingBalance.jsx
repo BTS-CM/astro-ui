@@ -201,7 +201,7 @@ export default function CreateVestingBalance(properties) {
                       excludedUsers={[]}
                       setChosenAccount={(_account) => {
                         if (_account) {
-                          console.log({ _account, usr });
+                          //console.log({ _account, usr });
                           setTargetUser(_account);
                         }
                         setTargetUserDialogOpen(false);

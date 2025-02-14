@@ -476,7 +476,7 @@ export default function CreateSmartcoin(properties) {
           if (!_bitassetData || !_dynamicData) {
             return;
           }
-          console.log({ _bitassetData, _dynamicData, existingAssetData });
+          //console.log({ _bitassetData, _dynamicData, existingAssetData });
           setDynamicData(_dynamicData);
 
           if (_bitassetData.options.extensions.hasOwnProperty("force_settle_fee_percent")) {

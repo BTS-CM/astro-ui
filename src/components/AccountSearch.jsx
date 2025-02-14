@@ -59,7 +59,7 @@ export default function AccountSearch(properties) {
     setInProgress(false);
 
     if (response && response.id) {
-      console.log({ skipCheck, id: response.id, blocklist: blocklist });
+      //console.log({ skipCheck, id: response.id, blocklist: blocklist });
       if (usr.chain === "bitshares" && !skipCheck) {
         let hashedID;
         try {

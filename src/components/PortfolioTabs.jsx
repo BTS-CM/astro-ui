@@ -153,7 +153,7 @@ export default function PortfolioTabs(properties) {
             });
           console.log("Successfully fetched balances");
           setBalances(updatedData);
-          console.log({ updatedData, data, assets });
+          //console.log({ updatedData, data, assets });
         }
       });
     }

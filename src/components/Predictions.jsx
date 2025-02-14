@@ -366,8 +366,6 @@ export default function Predictions(properties) {
       res = myPMAs[index];
     }
 
-    console.log({res, index, completedPMAs})
-
     const relevantBitassetData = completedPMAs.find((x) => x.id === res.bitasset_data_id);
 
     if (!res || !relevantBitassetData) {

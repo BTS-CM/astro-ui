@@ -297,7 +297,6 @@ export default function Smartcoin(properties) {
       ]);
       unsub = smartcoinDataStore.subscribe(({ data }) => {
         if (data && !data.error && !data.loading) {
-          console.log({ data });
           const filteredData = data[0].filter((balance) =>
             assets.find((x) => x.id === balance.asset_id)
           );
@@ -1466,7 +1465,6 @@ export default function Smartcoin(properties) {
     }
 
     if (!reference || !res) {
-      console.log({res});
       return null;
     }
 
