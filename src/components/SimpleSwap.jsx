@@ -5,6 +5,7 @@ import { sha256 } from '@noble/hashes/sha2';
 import { bytesToHex as toHex } from '@noble/hashes/utils';
 import { QuestionMarkCircledIcon, CircleIcon, CheckCircledIcon } from '@radix-ui/react-icons'
 import { useTranslation } from "react-i18next";
+import { FixedSizeList as List } from "react-window";
 
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 import { blockchainFloat, humanReadableFloat } from "@/lib/common";
@@ -17,17 +18,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableFooter,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
 
 import {
   Command,
@@ -56,14 +46,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 import {
   Form,
@@ -478,24 +460,6 @@ export default function SimpleSwap(properties) {
     }
   }, [pool]);
 
-  const RowA = ({ index, style }) => {
-    const selectedAsset = poolAssets[index];
-    return (
-      <SelectItem value={selectedAsset} key={`asset_a_${selectedAsset}`} style={style}>
-        {selectedAsset}
-      </SelectItem>
-    );
-  };
-
-  const RowB = ({ index, style }) => {
-    const selectedAsset = possiblePoolAssets[index];
-    return (
-      <SelectItem value={selectedAsset} key={`asset_b_${selectedAsset}`} style={style}>
-        {selectedAsset}
-      </SelectItem>
-    );
-  };
-
   const [isRotating, setIsRotating] = useState(false);
   const rotateStyle = isRotating
     ? {
@@ -503,6 +467,62 @@ export default function SimpleSwap(properties) {
         transform: "rotate(360deg)",
       }
     : {};
+
+  const poolRow = ({ index, style }) => {
+    const _pool = finalPools[index];
+
+    const _poolAssetA = _pool.asset_a_symbol;
+    const _poolAssetB = _pool.asset_b_symbol;
+
+    let _A, _B;
+    if (_poolAssetA === assetA.symbol && _poolAssetB === assetB.symbol) {
+      _A = assetA;
+      _B = assetB;
+    } else {
+      _A = assetB;
+      _B = assetA;
+    }
+
+    return (
+      <div
+        className="grid grid-cols-12 hover:bg-purple-300"
+        key={`pool_${_pool.id}`}
+        onClick={() => {
+          setPool(_pool.id);
+        }}
+      >
+        <div className="col-span-1">
+          {
+            _pool.id === pool
+            ? <CheckCircledIcon className="mt-1" />
+            : <CircleIcon
+                className="mt-1"
+                onClick={() => {
+                  setPool(_pool.id);
+                }}
+              />
+          }
+        </div>
+        <div className="col-span-1 text-sm">{_pool.id}</div>
+        <div className="col-span-4 text-sm">
+          {
+            `${(
+              (_pool.taker_fee_percent / 10000) *
+              sellAmount
+            ).toFixed(!inverted ? _A.precision : _B.precision)} (${!inverted ? _A.symbol : _B.symbol}) (${
+              _pool.taker_fee_percent / 100
+            }% ${t("SimpleSwap:fee")})`
+          }
+        </div>
+        <div className="col-span-3 text-sm">
+          {humanReadableFloat(_pool.balance_a, _A.precision)}
+        </div>
+        <div className="col-span-3 text-sm">
+          {humanReadableFloat(_pool.balance_b, _B.precision)}
+        </div>
+      </div>
+    );
+  };
 
   return (
     <>
@@ -751,70 +771,45 @@ export default function SimpleSwap(properties) {
 
                       {
                         foundPool
-                          ? <Table className="mt-5">
-                              <TableCaption>
-                                {
-                                  finalPools && finalPools.length > 1
-                                  ? t("SimpleSwap:noPoolDetails")
-                                  : null
-                                }
-                              </TableCaption>
-                              <TableHeader>
-                                <TableRow>
-                                  <TableHead></TableHead>
-                                  <TableHead>ID</TableHead>
-                                  <TableHead>
-                                    
-                                    <TooltipProvider>
-                                      <Tooltip>
-                                        <TooltipTrigger asChild>
-                                          <div className="grid grid-cols-2"><span>Pool fee</span><QuestionMarkCircledIcon /></div>
-                                        </TooltipTrigger>
-                                        <TooltipContent>
-                                          <p>{t("SimpleSwap:poolFeeDescription")}</p>
-                                        </TooltipContent>
-                                      </Tooltip>
-                                    </TooltipProvider>
-                                  </TableHead>
-                                  <TableHead>{selectedAssetA}</TableHead>
-                                  <TableHead>{selectedAssetB}</TableHead>
-                                </TableRow>
-                              </TableHeader>
-                              <TableBody>
-                                {finalPools && finalPools.length ? finalPools.map((_pool) => (
-                                  <TableRow key={`pool_${_pool.id}`}>
-                                    <TableCell>
-                                      {
-                                        _pool.id === pool
-                                        ? <CheckCircledIcon />
-                                        : <CircleIcon 
-                                            onClick={() => {
-                                              setPool(_pool.id);
-                                            }}
-                                          />
-                                      }
-                                    </TableCell>
-                                    <TableCell>{_pool.id}</TableCell>
-                                    <TableCell>
-                                      {
-                                        `${(
-                                          (_pool.taker_fee_percent / 10000) *
-                                          sellAmount
-                                        ).toFixed(!inverted ? assetA.precision : assetB.precision)} (${!inverted ? assetA.symbol : assetB.symbol}) (${
-                                          _pool.taker_fee_percent / 100
-                                        }% ${t("SimpleSwap:fee")})`
-                                      }
-                                    </TableCell>
-                                    <TableCell>
-                                      {humanReadableFloat(_pool.balance_a, assetA.precision)}
-                                    </TableCell>
-                                    <TableCell>
-                                      {humanReadableFloat(_pool.balance_b, assetB.precision)}
-                                    </TableCell>
-                                  </TableRow>
-                                )) : null}
-                              </TableBody>
-                            </Table>
+                          ?
+                            <div className="grid grid-cols-12 mt-5">
+                              {
+                                finalPools && finalPools.length > 1
+                                ? <div className="col-span-12">{t("SimpleSwap:noPoolDetails")}</div>
+                                : null
+                              }
+
+                              <div className="col-span-1">
+                                
+                              </div>
+                              <div className="col-span-1 text-md">
+                                ID
+                              </div>
+                              <div className="col-span-4 text-md">
+                                <TooltipProvider>
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <div className="grid grid-cols-2"><span>Pool fee</span><QuestionMarkCircledIcon /></div>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                      <p>{t("SimpleSwap:poolFeeDescription")}</p>
+                                    </TooltipContent>
+                                  </Tooltip>
+                                </TooltipProvider>
+                              </div>
+                              <div className="col-span-3 text-md">{selectedAssetA}</div>
+                              <div className="col-span-3 text-md">{selectedAssetB}</div>
+                              <div className="col-span-12">
+                                <List
+                                  height={210}
+                                  itemCount={finalPools.length}
+                                  itemSize={50}
+                                  className="w-full"
+                                >
+                                  {poolRow}
+                                </List>
+                              </div>
+                            </div>
                           : null
                       }
 
