@@ -513,7 +513,7 @@ export default function Smartcoins(properties) {
             </CardHeader>
             <CardContent>
               <Tabs
-                key={`Tabs_${activeTab ?? ""}${activeSearch ?? ""}${thisInput ?? ""}`}
+                key={`Tabs_${activeTab ?? ""}${activeSearch ?? ""}`}
                 defaultValue={activeTab ?? "all"}
                 className="w-full"
               >
