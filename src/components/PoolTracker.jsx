@@ -32,12 +32,7 @@ export default function PoolTracker(properties) {
 
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
 
-  const {
-    _assetsBTS,
-    _assetsTEST,
-    _poolsBTS,
-    _poolsTEST
-  } = properties;
+  const { _assetsBTS, _assetsTEST } = properties;
 
   const _chain = useMemo(() => {
     if (usr && usr.chain) {
@@ -59,24 +54,6 @@ export default function PoolTracker(properties) {
 
     return _assetsBTS;
   }, [blocklist, _assetsBTS, _assetsTEST, _chain]);
-
-  const pools = useMemo(() => {
-    if (!_chain || (!_poolsBTS && !_poolsTEST)) {
-      return [];
-    }
-
-    if (_chain !== "bitshares") {
-      return _poolsTEST;
-    }
-
-    const relevantPools = _poolsBTS.filter((pool) => {
-      const poolShareAsset = assets.find((asset) => asset.id === pool.share_asset_id);
-      if (!poolShareAsset) return false;
-      return !blocklist.users.includes(toHex(sha256(poolShareAsset.issuer)));
-    });
-
-    return relevantPools;
-  }, [assets, blocklist, _poolsBTS, _poolsTEST, _chain]);
 
   // main assets
   const assetBTS = useMemo(() => {
@@ -241,6 +218,7 @@ export default function PoolTracker(properties) {
       ]);
       objStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
+          // pool data
           setLp43(data[0]);
           setLp65(data[1]);
           setLp66(data[2]);
@@ -251,11 +229,13 @@ export default function PoolTracker(properties) {
           setLp523(data[7]);
           setLp524(data[8]);
           setLp525(data[9]);
+          // dynamic data (main assets)
           setDynamicDataBTS(data[10]);
           setDynamicDataHonestMoney(data[11]);
           setDynamicDataHonestUSD(data[12]);
           setDynamicDataHonestBTC(data[13]);
           setDynamicDataHonestXAU(data[14]);
+          // dynamic data (pool share assets)
           setDdHonestBTSMoney(data[15]);
           setDdHonestM2USD(data[16]);
           setDdHonestUSDBTSMM(data[17]);
@@ -266,6 +246,7 @@ export default function PoolTracker(properties) {
           setDdHonestXAU2USD(data[22]);
           setDdHonestXAU2BTS(data[23]);
           setDdHonestXAU2BTC(data[24]);
+          // smartcoin data
           setSmartcoinHonestUSD(data[25]);
           setSmartcoinHonestBTC(data[26]);
           setSmartcoinHonestXAU(data[27]);
@@ -278,7 +259,7 @@ export default function PoolTracker(properties) {
   useEffect(() => {
     let unsubscribeUserBalances;
 
-    if (usr && usr.id && assetA && assetB) {
+    if (usr && usr.id && assets && assets.length) {
       const userBalancesStore = createUserBalancesStore([
         usr.chain,
         usr.id,
@@ -298,7 +279,7 @@ export default function PoolTracker(properties) {
     return () => {
       if (unsubscribeUserBalances) unsubscribeUserBalances();
     };
-  }, [usr, assetA, assetB]);
+  }, [usr, assets]);
 
   return (
     <>
@@ -310,8 +291,26 @@ export default function PoolTracker(properties) {
               <CardDescription>{t("PoolForm:description")}</CardDescription>
             </CardHeader>
             <CardContent>
-              {!pools ? <p>{t("PoolForm:loadingPoolData")}</p> : null}
               {!assets ? <p>{t("PoolForm:loadingAssetData")}</p> : null}
+              <div className="grid grid-cols-17">
+                <div>1</div>
+                <div>2</div>
+                <div>3</div>
+                <div>4</div>
+                <div>5</div>
+                <div>6</div>
+                <div>7</div>
+                <div>8</div>
+                <div>9</div>
+                <div>10</div>
+                <div>11</div>
+                <div>12</div>
+                <div>13</div>
+                <div>14</div>
+                <div>15</div>
+                <div>16</div>
+                <div>17</div>
+              </div>
             </CardContent>
           </Card>
         </div>

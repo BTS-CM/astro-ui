@@ -14,6 +14,13 @@
     "hover2": "Los pools tienen diferentes pares comerciales y tarifas.",
     "hover3": "Más simple pero más costoso que una orden limitada."
   },
+  "pool_tracker": {
+    "title": "📊 Tracker de piscina destacado",
+    "subtitle": "Ver datos y estadísticas del grupo de liquidez",
+    "hover1": "Ver grupos de liquidez presentados en Bitshares Dex.",
+    "hover2": "Ver estimaciones de ganancias de la piscina.",
+    "hover3": "Ver análisis de piscinas consolodadas."
+  },
   "swap": {
     "title": "🔄 Intercambio de activos simple",
     "subtitle": "Intercambie activos más fácilmente a través de grupos",

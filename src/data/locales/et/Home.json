@@ -14,6 +14,13 @@
     "hover2": "Pooltel on erinevad kauplemispaarid ja tasud.",
     "hover3": "Lihtsam, kuid kulukam kui piirtellimus."
   },
+  "pool_tracker": {
+    "title": "📊 esiletoodud basseini jälgija",
+    "subtitle": "Vaadake likviidsuse kogumi andmeid ja statistikat",
+    "hover1": "Vaade esitletud likviidsusbasseinid Bitshares Dexil.",
+    "hover2": "Vaadake basseini kasumi hinnanguid.",
+    "hover3": "Vaata loiditud basseinianalüütikat."
+  },
   "swap": {
     "title": "🔄 Lihtne varade vahetus",
     "subtitle": "Vahetage varasid hõlpsamini basseinide kaudu",
