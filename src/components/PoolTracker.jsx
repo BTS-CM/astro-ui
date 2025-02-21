@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useSyncExternalStore, useMemo } from "react";
 import { useStore } from "@nanostores/react";
-import { sha256 } from "@noble/hashes/sha2";
-import { bytesToHex as toHex } from "@noble/hashes/utils";
+import { FixedSizeList as List } from "react-window";
+
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
@@ -16,12 +16,13 @@ import {
 
 import { Skeleton } from "@/components/ui/skeleton";
 
-import { blockchainFloat, humanReadableFloat } from "@/lib/common";
+import { humanReadableFloat } from "@/lib/common";
 
 import { $currentUser } from "@/stores/users.ts";
 import { $currentNode } from "@/stores/node.ts";
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
+import { createObjectStore } from "@/nanoeffects/Objects.js";
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 
 import ExternalLink from "./common/ExternalLink.jsx";
@@ -53,68 +54,68 @@ export default function PoolTracker(properties) {
     }
 
     return _assetsBTS;
-  }, [blocklist, _assetsBTS, _assetsTEST, _chain]);
+  }, [_assetsBTS, _assetsTEST, _chain]);
 
   // main assets
   const assetBTS = useMemo(() => {
-    return assets.find((x) => x.asset_id === "1.3.0");
+    return assets.find((x) => x.id === "1.3.0");
   }, [assets]); // 1.3.0
 
   const assetHonestMoney = useMemo(() => {
-    return assets.find((x) => x.asset_id === "1.3.6301");
+    return assets.find((x) => x.id === "1.3.6301");
   }, [assets]); // 1.3.6301
 
   const assetHonestUSD = useMemo(() => {
-    return assets.find((x) => x.asset_id === "1.3.5649");
+    return assets.find((x) => x.id === "1.3.5649");
   }, [assets]); // 1.3.5649
 
   const assetHonestBTC = useMemo(() => {
-    return assets.find((x) => x.asset_id === "1.3.5650");
+    return assets.find((x) => x.id === "1.3.5650");
   }, [assets]); // 1.3.5650
 
   const assetHonestXAU = useMemo(() => {
-    return assets.find((x) => x.asset_id === "1.3.5651");
+    return assets.find((x) => x.id === "1.3.5651");
   }, [assets]); // 1.3.5651
 
   // pool share assets
   const assetHonestBTSMoney = useMemo(() => {
-    return assets.find((x) => x.asset_id === "1.3.6430");
+    return assets.find((x) => x.id === "1.3.6430");
   }, [assets]); // 1.3.6430
 
   const assetHonestM2USD = useMemo(() => {
-    return assets.find((x) => x.asset_id === "1.3.6359");
+    return assets.find((x) => x.id === "1.3.6359");
   }, [assets]); // 1.3.6359
 
   const assetHonestUSDBTSMM = useMemo(() => {
-    return assets.find((x) => x.asset_id === "1.3.5901");
+    return assets.find((x) => x.id === "1.3.5901");
   }, [assets]); // 1.3.5901
 
   const assetHonestBTCBTSMM = useMemo(() => {
-    return assets.find((x) => x.asset_id === "1.3.5939");
+    return assets.find((x) => x.id === "1.3.5939");
   }, [assets]); // 1.3.5939
 
   const assetHonestBTCUSDMM = useMemo(() => {
-    return assets.find((x) => x.asset_id === "1.3.5938");
+    return assets.find((x) => x.id === "1.3.5938");
   }, [assets]); // 1.3.5938
 
   const assetHonestBTC2Money = useMemo(() => {
-    return assets.find((x) => x.asset_id === "1.3.6342");
+    return assets.find((x) => x.id === "1.3.6342");
   }, [assets]); // 1.3.6342
 
   const assetHonestM2XAU = useMemo(() => {
-    return assets.find((x) => x.asset_id === "1.3.6364");
+    return assets.find((x) => x.id === "1.3.6364");
   }, [assets]); // 1.3.6364
 
   const assetHonestXAU2USD = useMemo(() => {
-    return assets.find((x) => x.asset_id === "1.3.6610");
+    return assets.find((x) => x.id === "1.3.6610");
   }, [assets]); // 1.3.6610
 
   const assetHonestXAU2BTS = useMemo(() => {
-    return assets.find((x) => x.asset_id === "1.3.6608");
+    return assets.find((x) => x.id === "1.3.6608");
   }, [assets]); // 1.3.6608
 
   const assetHonestXAU2BTC = useMemo(() => {
-    return assets.find((x) => x.asset_id === "1.3.6609");
+    return assets.find((x) => x.id === "1.3.6609");
   }, [assets]); // 1.3.6609
 
   // liquidity pool data
@@ -281,6 +282,180 @@ export default function PoolTracker(properties) {
     };
   }, [usr, assets]);
 
+  const featuredPoolRow = ({ index, style }) => {
+    let res = [
+      lp43,
+      lp65,
+      lp66,
+      lp305,
+      lp320,
+      lp325,
+      lp330,
+      lp523,
+      lp524,
+      lp525,
+    ][index];
+
+    if (!res) {
+      return null;
+    }
+
+    const _psAssets = [
+      assetHonestBTSMoney,
+      assetHonestM2USD,
+      assetHonestUSDBTSMM,
+      assetHonestBTCBTSMM,
+      assetHonestBTCUSDMM,
+      assetHonestBTC2Money,
+      assetHonestM2XAU,
+      assetHonestXAU2USD,
+      assetHonestXAU2BTS,
+      assetHonestXAU2BTC
+    ];
+
+    const _currentPSA = _psAssets.find((x) => x.id === res.share_asset); // pool share asset
+
+    const _psAssetDD = [
+      ddHonestBTSMoney,
+      ddHonestM2USD,
+      ddHonestUSDBTSMM,
+      ddHonestBTCBTSMM,
+      ddHonestBTCUSDMM,
+      ddHonestBTC2Money,
+      ddHonestM2XAU,
+      ddHonestXAU2USD,
+      ddHonestXAU2BTS,
+      ddHonestXAU2BTC,
+    ];
+    
+    const _psaDD = _psAssetDD.find((x) => x.id === res.share_asset.replace("1.3.", "2.3."));
+
+    const _psaBalance = usrBalances && usrBalances.length ? usrBalances.find((x) => x.id === res.share_asset) : null;
+
+    const poolAssets = [
+      assetBTS,
+      assetHonestMoney,
+      assetHonestUSD,
+      assetHonestBTC,
+      assetHonestXAU
+    ];
+
+    const _poolAssetA = poolAssets.find((x) => x.id === res.asset_a); // swappable asset a
+    const _poolAssetB = poolAssets.find((x) => x.id === res.asset_b); // swappable asset b
+
+    const swappableAssetDD = [
+      dynamicDataBTS,
+      dynamicDataHonestMoney,
+      dynamicDataHonestUSD,
+      dynamicDataHonestBTC,
+      dynamicDataHonestXAU,
+    ];
+
+    const _assetADD = swappableAssetDD.find((x) => x.id === _poolAssetA.asset_id);
+    const _assetBDD = swappableAssetDD.find((x) => x.id === _poolAssetB.asset_id);
+
+    const _amountA = humanReadableFloat(res.balance_a, _poolAssetA.precision);
+    const _amountB = humanReadableFloat(res.balance_b, _poolAssetB.precision);
+
+    return (
+      <div style={{ ...style }} key={`poolRow-${res.id}`} className="grid grid-cols-12 text-xs border border-gray-300">
+        <div>
+          {res.id}<br/>
+          {_currentPSA.id}
+        </div>
+        <div>
+          {_poolAssetA.symbol}<br/>
+          {_poolAssetB.symbol}
+        </div>
+        <div className="ml-1">
+          $0.00<br/>
+          $0.00
+        </div>
+        <div className="ml-1 border-l border-gray-300">
+          {humanReadableFloat(_psaDD.current_supply, _currentPSA.precision)}
+        </div>
+        <div className="ml-1 border-l border-gray-300">
+          {
+            _psaBalance
+              ? <>
+                  {humanReadableFloat(_psaBalance.amount, _currentPSA.precision)}<br/>
+                  {(_psaBalance.amount / _psaDD.current_supply * 100).toFixed(2)}%
+                </>
+              : <>0<br/>0%</>
+          }
+        </div>
+        <div className="ml-2 border-l border-gray-300">
+          {
+            _poolAssetA.id === "1.3.0"
+              ? _amountA
+              : null
+          }
+          {
+            _poolAssetB.id === "1.3.0"
+              ? _amountB
+              : null
+          }
+        </div>
+        <div className="ml-2">
+          {
+            _poolAssetA.id === "1.3.6301"
+              ? _amountA
+              : null
+          }
+          {
+            _poolAssetB.id === "1.3.6301"
+              ? _amountB
+              : null
+          }
+        </div>
+        <div className="ml-2">
+          {
+            _poolAssetA.id === "1.3.5649"
+              ? _amountA
+              : null
+          }
+          {
+            _poolAssetB.id === "1.3.5649"
+              ? _amountB
+              : null
+          }
+        </div>
+        <div className="ml-2">
+          {
+            _poolAssetA.id === "1.3.5650"
+              ? _amountA
+              : null
+          }
+          {
+            _poolAssetB.id === "1.3.5650"
+              ? _amountB
+              : null
+          }
+        </div>
+        <div className="ml-2">
+          {
+            _poolAssetA.id === "1.3.5651"
+              ? _amountA
+              : null
+          }
+          {
+            _poolAssetB.id === "1.3.5651"
+              ? _amountB
+              : null
+          }
+        </div>
+        <div className="ml-3 border-l border-gray-300">
+          24hr
+        </div>
+        <div className="ml-3">
+          0.00 %<br/>
+          0.00 % / Month<br/>
+          0.00 % / Year
+        </div>
+      </div>
+    );
+  };
+
   return (
     <>
       <div className="container mx-auto mt-5 mb-5">
@@ -292,24 +467,169 @@ export default function PoolTracker(properties) {
             </CardHeader>
             <CardContent>
               {!assets ? <p>{t("PoolForm:loadingAssetData")}</p> : null}
-              <div className="grid grid-cols-17">
-                <div>1</div>
-                <div>2</div>
-                <div>3</div>
-                <div>4</div>
-                <div>5</div>
-                <div>6</div>
-                <div>7</div>
-                <div>8</div>
-                <div>9</div>
-                <div>10</div>
-                <div>11</div>
-                <div>12</div>
-                <div>13</div>
-                <div>14</div>
-                <div>15</div>
-                <div>16</div>
-                <div>17</div>
+              <div className="grid grid-cols-12 text-xs">
+                <div>Pool</div>
+                <div>Asset Pair</div>
+                <div>Value (USD)</div>
+                <div>Pool Total</div>
+                <div>Balance</div>
+                <div>BTS</div>
+                <div>Honest.MONEY</div>
+                <div>Honest.USD</div>
+                <div>Honest.BTC</div>
+                <div>Honest.XAU</div>
+                <div>24Hr Volume</div>
+                <div>Fees</div>
+              </div>
+              {
+                smartcoinHonestUSD && smartcoinHonestBTC && smartcoinHonestXAU
+                  ? <List
+                      height={500}
+                      itemCount={10}
+                      itemSize={90}
+                      className="w-full"
+                    >
+                      {featuredPoolRow}
+                    </List>
+                  : null
+              }
+              <div className="grid grid-cols-12 text-xs">
+                <div className="col-span-5"></div>
+                <div className="col-span-5 text-center border border-gray-300">
+                  <div className="grid grid-cols-5">
+                    <div>
+                      In Pool<br/>
+                      0
+                    </div>
+                    <div>
+                      In Pool<br/>
+                      0
+                    </div>
+                    <div>
+                      In Pool<br/>
+                      0
+                    </div>
+                    <div>
+                      In Pool<br/>
+                      0
+                    </div>
+                    <div>
+                      In Pool<br/>
+                      0
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-5">
+                    <div>
+                      Liquid<br/>
+                      0
+                    </div>
+                    <div>
+                      Liquid<br/>
+                      0
+                    </div>
+                    <div>
+                      Liquid<br/>
+                      0
+                    </div>
+                    <div>
+                      Liquid<br/>
+                      0
+                    </div>
+                    <div>
+                      Liquid<br/>
+                      0
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-5">
+                    <div className="col-span-2"></div>
+                    <div>
+                      Debt<br/>
+                      0
+                    </div>
+                    <div>
+                      Debt<br/>
+                      0
+                    </div>
+                    <div>
+                      Debt<br/>
+                      0
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-5">
+                    <div>
+                      Total Collateral<br/>
+                      12345
+                    </div>
+                    <div></div>
+                    <div>
+                      Collateral<br/>
+                      2
+                    </div>
+                    <div>
+                      Collateral<br/>
+                      3
+                    </div>
+                    <div>
+                      Collateral<br/>
+                      4
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-5">
+                    <div>
+                      Total<br/>
+                      1<br/>
+                      1234<br/>
+                      1%
+                    </div>
+                    <div>
+                      Total<br/>
+                      1<br/>
+                      1234<br/>
+                      1%
+                    </div>
+                    <div>
+                      Total<br/>
+                      1<br/>
+                      1234<br/>
+                      1%
+                    </div>
+                    <div>
+                      Total<br/>
+                      1<br/>
+                      1234<br/>
+                      1%
+                    </div>
+                    <div>
+                      Total<br/>
+                      1<br/>
+                      1234<br/>
+                      1%
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-5">
+                    <div>
+                      $1
+                    </div>
+                    <div>
+                      $1
+                    </div>
+                    <div>
+                      $1
+                    </div>
+                    <div>
+                      $1
+                    </div>
+                    <div>
+                      $1
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-5">
+                    <div className="col-span-5">
+                      $1
+                    </div>
+                  </div>
+                </div>
+                <div className="col-span-2"></div>
               </div>
             </CardContent>
           </Card>
