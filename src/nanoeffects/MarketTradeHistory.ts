@@ -2,6 +2,44 @@ import { nanoquery } from "@nanostores/query";
 import Apis from "@/bts/ws/ApiInstances";
 import { chains } from "@/config/chains";
 
+function getTicker (
+  chain: string,
+  base: string,
+  quote: string,
+  specificNode?: string | null
+) {
+  return new Promise(async (resolve, reject) => {
+    let node = specificNode ? specificNode : (chains as any)[chain].nodeList[0].url;
+
+    let currentAPI;
+    try {
+      currentAPI = await Apis.instance(node, true, 4000, { enableDatabase: true, enableHistory: true }, (error: Error) =>
+        console.log({ error })
+      );
+    } catch (error) {
+      console.log({ error });
+      reject(error);
+      return;
+    }
+
+    try {
+      const _ticker = await currentAPI.db_api().exec("get_ticker", [base, quote]);
+      resolve(_ticker);
+    } catch (error) {
+      console.log({ error });
+      currentAPI.close();
+      reject(error);
+    } finally {
+      try {
+        currentAPI.close();
+      } catch (error) {
+        console.log({ error });
+      }
+    }
+    
+  });
+}
+
 function getMarketTradeHistory (
   chain: string,
   base: string,
@@ -105,6 +143,31 @@ function getMarketTradeHistory (
   });
 }
 
+const [createTickerStore] = nanoquery({
+  fetcher: async (...args: unknown[]) => {
+    const chain = args[0] as string;
+    const quote = args[1] as string;
+    const base = args[2] as string;
+
+    let specificNode = args[3] ? args[3] as string : null;
+
+    let response;
+    try {
+      response =  await getTicker(chain, base, quote, specificNode);
+    } catch (error) {
+      console.log({ error });
+      return;
+    }
+
+    if (!response) {
+      console.log(`Failed to fetch ticker`);
+      return;
+    }
+
+    return response;
+  },
+});
+
 const [createMarketTradeHistoryStore] = nanoquery({
   fetcher: async (...args: unknown[]) => {
     const chain = args[0] as string;
@@ -131,4 +194,9 @@ const [createMarketTradeHistoryStore] = nanoquery({
   },
 });
 
-export { createMarketTradeHistoryStore, getMarketTradeHistory };
+export {
+  createMarketTradeHistoryStore,
+  getMarketTradeHistory,
+  createTickerStore,
+  getTicker,
+};

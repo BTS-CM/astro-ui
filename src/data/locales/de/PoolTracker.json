@@ -1,0 +1,17 @@
+{
+    "title": "Bitshares enthielt Liquiditätspoolübersicht",
+    "description": "Eine Schnittstelle maßgeschneiderte für die ehrlichen Liquiditätspools!",
+    "pool": "Pool",
+    "assetPair": "Vermögenspaar",
+    "value": "Wert (USD)",
+    "poolTotal": "Pool insgesamt",
+    "balance": "Gleichgewicht",
+    "24hVolume": "24H Volumen",
+    "fees": "Gebühren",
+    "inPool": "Im Pool",
+    "liquid": "Flüssig",
+    "debt": "Schulden",
+    "totalCollateral": "Total Sicherheiten",
+    "total": "Gesamt",
+    "circulating": "Zirkulierender Versorgung"
+  }

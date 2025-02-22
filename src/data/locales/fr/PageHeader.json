@@ -1,4 +1,5 @@
 {
+  "poolTracker": "Présentation de la piscine en vedette",
   "assetCreation": "Création d'actifs",
   "welcomeMessage": "Bienvenue à la ",
   "uiName": "Interface utilisateur Bitshares Beet Astro",
@@ -73,7 +74,8 @@
     "create_smartcoin": "Utilisez le formulaire ci-dessous pour créer un nouvel actif smartcoin.",
     "blocks": "Consultez les données blockchain les plus récentes résumées ci-dessous !",
     "AccountLists": "Utilisez le formulaire ci-dessous pour créer des listes blanches ou des listes noires pour votre compte.",
-    "proposals": "Consultez les approbations pour votre compte ci-dessous et approuvez-les ou rejetez-les après les avoir soigneusement évaluées."
+    "proposals": "Consultez les approbations pour votre compte ci-dessous et approuvez-les ou rejetez-les après les avoir soigneusement évaluées.",
+    "pool_tracker": "Surveillez facilement le Honest Liquidity Pool et les statistiques intéressantes pertinentes !"
   },
   "back": "Retourner",
   "usage": "Conçu pour être utilisé avec ",

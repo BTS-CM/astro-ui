@@ -1,0 +1,17 @@
+{
+    "title": "Bitsharesは、流動性プールの概要を特徴としています",
+    "description": "正直な流動性プールのためのテーラーメイド！",
+    "pool": "プール",
+    "assetPair": "資産ペア",
+    "value": "値（USD）",
+    "poolTotal": "プール合計",
+    "balance": "バランス",
+    "24hVolume": "24時間のボリューム",
+    "fees": "料金",
+    "inPool": "プールで",
+    "liquid": "液体",
+    "debt": "借金",
+    "totalCollateral": "総担保",
+    "total": "合計",
+    "circulating": "循環供給"
+  }

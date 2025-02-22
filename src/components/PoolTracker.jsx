@@ -14,7 +14,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator"
 
 import { humanReadableFloat } from "@/lib/common";
@@ -29,6 +28,9 @@ import {
   createLPTradingVolumeStore,
   createEveryLiquidityPoolStore
 } from "@/nanoeffects/LiquidityPools.js";
+
+import { createTickerStore } from "@/nanoeffects/MarketTradeHistory.js";
+import { createAssetCallOrdersStore } from "@/nanoeffects/AssetCallOrders.ts";
 
 import ExternalLink from "./common/ExternalLink.jsx";
 
@@ -261,6 +263,124 @@ export default function PoolTracker(properties) {
     }
   }, [assets]);
 
+  const honestUSDPrice = useMemo(() => { // USD in BTS
+    if (!smartcoinHonestUSD) {
+      return 0.0;
+    }
+
+    const _debt = smartcoinHonestUSD.individual_settlement_debt
+      ? humanReadableFloat(
+          parseInt(smartcoinHonestUSD.individual_settlement_debt),
+          5
+        )
+      : 0;
+
+    const _usdPrice = parseFloat(
+      (
+        humanReadableFloat(
+          parseInt(
+            _debt && _debt > 0
+              ? smartcoinHonestUSD.median_feed.settlement_price.quote.amount
+              : smartcoinHonestUSD.current_feed.settlement_price.quote.amount
+          ),
+          5
+        ) /
+        humanReadableFloat(
+          parseInt(
+            _debt && _debt > 0
+              ? smartcoinHonestUSD.median_feed.settlement_price.base.amount
+              : smartcoinHonestUSD.current_feed.settlement_price.base.amount
+          ),
+          4
+        )
+      ).toFixed(4)
+    );
+
+    return _usdPrice;
+  }, [smartcoinHonestUSD]);
+
+  const btsPrice = useMemo(() => {
+    if (!honestUSDPrice) {
+      return;
+    }
+
+    return (1 / honestUSDPrice).toFixed(4);
+  }, [honestUSDPrice]);
+
+  const honestBTCPrice = useMemo(() => { // BTC in USD
+    if (!smartcoinHonestBTC || !smartcoinHonestUSD) {
+      return 0.0;
+    }
+
+    const _debt = smartcoinHonestBTC.individual_settlement_debt
+      ? humanReadableFloat(
+          parseInt(smartcoinHonestBTC.individual_settlement_debt),
+          5
+        ) 
+      : 0;
+
+    const _btcPrice = parseFloat(
+      (
+        humanReadableFloat(
+          parseInt(
+            _debt && _debt > 0
+              ? smartcoinHonestBTC.median_feed.settlement_price.quote.amount
+              : smartcoinHonestBTC.current_feed.settlement_price.quote.amount
+          ),
+          5
+        ) /
+        humanReadableFloat(
+          parseInt(
+            _debt && _debt > 0
+              ? smartcoinHonestBTC.median_feed.settlement_price.base.amount
+              : smartcoinHonestBTC.current_feed.settlement_price.base.amount
+          ),
+          8
+        )
+      ).toFixed(5)
+    );
+
+    return (_btcPrice / honestUSDPrice).toFixed(4);
+  }, [smartcoinHonestBTC, smartcoinHonestUSD, honestUSDPrice]);
+
+  const honestXAUPrice = useMemo(() => { // XAU in USD
+    if (!smartcoinHonestXAU || !smartcoinHonestUSD) { 
+      return 0.0;
+    }
+
+    const _debt = smartcoinHonestXAU.individual_settlement_debt
+      ? humanReadableFloat(
+          parseInt(smartcoinHonestXAU.individual_settlement_debt),
+          8
+        )
+      : 0;
+
+    const _xauPrice = parseFloat(
+      (
+        humanReadableFloat(
+          parseInt(
+            _debt && _debt > 0
+              ? smartcoinHonestXAU.median_feed.settlement_price.quote.amount
+              : smartcoinHonestXAU.current_feed.settlement_price.quote.amount
+          ),
+          5
+        ) /
+        humanReadableFloat(
+          parseInt(
+            _debt && _debt > 0
+              ? smartcoinHonestXAU.median_feed.settlement_price.base.amount
+              : smartcoinHonestXAU.current_feed.settlement_price.base.amount
+          ),
+          8
+        )
+      ).toFixed(4)
+    );
+
+    console.log({ _xauPrice, usdXAU: (_xauPrice/honestUSDPrice).toFixed(4) });
+
+    return (_xauPrice/honestUSDPrice).toFixed(4);
+  }, [smartcoinHonestXAU, smartcoinHonestUSD]);
+
   const [usrBalances, setUsrBalances] = useState();
   useEffect(() => {
     let unsubscribeUserBalances;
@@ -325,6 +445,29 @@ export default function PoolTracker(properties) {
     }, [usr]);
   */
 
+  const [honestMoneyPrice, setHonestMoneyPrice] = useState();
+  useEffect(() => {
+    let unsubscribeStore;
+    if (usr && usr.id && currentNode) {
+      const tickerStore = createTickerStore([
+        usr.chain,
+        "HONEST.MONEY",
+        "BTS",
+        currentNode.url
+      ]);
+
+      unsubscribeStore = tickerStore.subscribe(({ data, error, loading }) => {
+        if (data && !error && !loading) {
+          setHonestMoneyPrice(data);
+        }
+      });
+    }
+
+    return () => {
+      if (unsubscribeStore) unsubscribeStore();
+    };
+  }, [usr, currentNode]);
+
   // < v7.10 liquidity pool trading volume implementation
   const [lpTradingVolumes, setLPTradingVolumes] = useState();
   useEffect(() => {
@@ -351,7 +494,6 @@ export default function PoolTracker(properties) {
             "1.19.525"
           ].includes(x.id));
           setLPTradingVolumes(filteredData);
-          console.log({filteredData});
         }
       }
       );
@@ -362,55 +504,312 @@ export default function PoolTracker(properties) {
     }
   }, [usr, currentNode]);
 
+  // This is the amount of BTS the user has staked in the 4 targeted pools
   const stakedBTS = useMemo(() => { // 1.3.0
-    if (lp43 && lp66 && lp305 && lp524) {
-      let _total = [lp43, lp66, lp305, lp524].reduce((acc, val) => {
-        return acc + parseInt(val.asset_a === "1.3.0" ? val.balance_a : val.balance_b);
+    if (lp43 && lp66 && lp305 && lp524 && ddHonestUSDBTSMM && ddHonestBTCBTSMM && ddHonestBTSMoney && ddHonestXAU2BTS) {
+      const _supply5901 = parseInt(ddHonestUSDBTSMM.current_supply);
+      const _supply5939 = parseInt(ddHonestBTCBTSMM.current_supply);
+      const _supply6430 = parseInt(ddHonestBTSMoney.current_supply);
+      const _supply6608 = parseInt(ddHonestXAU2BTS.current_supply);
+
+      const _psaBalance5901 = usrBalances && usrBalances.length ? usrBalances.find((x) => x.asset_id === "1.3.5901") : null;
+      const _psaBalance5939 = usrBalances && usrBalances.length ? usrBalances.find((x) => x.asset_id === "1.3.5939") : null;
+      const _psaBalance6430 = usrBalances && usrBalances.length ? usrBalances.find((x) => x.asset_id === "1.3.6430") : null;
+      const _psaBalance6608 = usrBalances && usrBalances.length ? usrBalances.find((x) => x.asset_id === "1.3.6608") : null;
+    
+      const ownership5901 = _supply5901 && _psaBalance5901 && _psaBalance5901.amount
+        ? parseInt(_psaBalance5901.amount) / _supply5901
+        : 0;
+
+      const ownership5939 = _supply5939 && _psaBalance5939 && _psaBalance5939.amount
+        ? parseInt(_psaBalance5939.amount) / _supply5939
+        : 0;
+      
+      const ownership6430 = _supply6430 && _psaBalance6430 && _psaBalance6430.amount
+        ? parseInt(_psaBalance6430.amount) / _supply6430
+        : 0;
+      
+      const ownership6608 = _supply6608 && _psaBalance6608 && _psaBalance6608.amount
+        ? parseInt(_psaBalance6608.amount) / _supply6608
+        : 0;
+
+      let _total = [lp43, lp66, lp305, lp523].reduce((acc, val) => {
+        if (val.id === "1.19.43") {
+          return acc + (
+            parseInt(val.asset_a === "1.3.0" ? val.balance_a : val.balance_b) * ownership5901
+          );
+        } else if (val.id === "1.19.66") {
+          return acc + (
+            parseInt(val.asset_a === "1.3.0" ? val.balance_a : val.balance_b) * ownership5939
+          );
+        } else if (val.id === "1.19.305") {
+          return acc + (
+            parseInt(val.asset_a === "1.3.0" ? val.balance_a : val.balance_b) * ownership6430
+          );
+        } else if (val.id === "1.19.523") {
+          return acc + (
+            parseInt(val.asset_a === "1.3.0" ? val.balance_a : val.balance_b) * ownership6608
+          );
+        }
+        return 0;
       }, 0);
+
+      /*
+        ddHonestUSDBTSMM,  // HONEST.USDBTSMM  1.3.5901 1.19.43
+        ddHonestBTCBTSMM,  // HONEST.BTCBTSMM  1.3.5939 1.19.66
+        ddHonestBTSMoney,  // HONEST.BTSMONEY  1.3.6430 1.19.305
+        ddHonestXAU2BTS,   // HONEST.XAU2BTS   1.3.6608 1.19.523
+      */
+
+      console.log({_total})
+
       return humanReadableFloat(_total, 5);
     }
     return 0;
-  }, [lp43, lp66, lp305, lp524]);
-
-  const stakedHonestMoney = useMemo(() => { // 1.3.6301
-    if (lp305 && lp320 && lp325 && lp330) {
-      let _total = [lp305, lp320, lp325, lp330].reduce((acc, val) => {
-        return acc + parseInt(val.asset_a === "1.3.6301" ? val.balance_a : val.balance_b);
-      }, 0);
-      return humanReadableFloat(_total, 8);
-    }
-    return 0;
-  }, [lp305, lp320, lp325, lp330]);
+  }, [lp43, lp66, lp305, lp524, ddHonestUSDBTSMM, ddHonestBTCBTSMM, ddHonestBTSMoney, ddHonestXAU2BTS, usrBalances]);
 
   const stakedHonestUSD = useMemo(() => { // 1.3.5649
-    if (lp43 && lp65 && lp320 && lp525) {
+    if (lp43 && lp65 && lp320 && lp525 && ddHonestUSDBTSMM && ddHonestBTCUSDMM && ddHonestM2USD && ddHonestXAU2USD && usrBalances) {
+
+      const _supply5901 = parseInt(ddHonestUSDBTSMM.current_supply);
+      const _supply5938 = parseInt(ddHonestBTCUSDMM.current_supply);
+      const _supply6359 = parseInt(ddHonestM2USD.current_supply);
+      const _supply6610 = parseInt(ddHonestXAU2USD.current_supply);
+
+      const _psaBalance5901 = usrBalances && usrBalances.length ? usrBalances.find((x) => x.asset_id === "1.3.5901") : null;
+      const _psaBalance5938 = usrBalances && usrBalances.length ? usrBalances.find((x) => x.asset_id === "1.3.5938") : null;
+      const _psaBalance6359 = usrBalances && usrBalances.length ? usrBalances.find((x) => x.asset_id === "1.3.6359") : null;
+      const _psaBalance6610 = usrBalances && usrBalances.length ? usrBalances.find((x) => x.asset_id === "1.3.6610") : null;
+
+      const ownership5901 = _supply5901 && _psaBalance5901 && _psaBalance5901.amount
+        ? parseInt(_psaBalance5901.amount) / _supply5901
+        : 0;
+
+      const ownership5938 = _supply5938 && _psaBalance5938 && _psaBalance5938.amount
+        ? parseInt(_psaBalance5938.amount) / _supply5938
+        : 0;
+      
+      const ownership6359 = _supply6359 && _psaBalance6359 && _psaBalance6359.amount
+        ? parseInt(_psaBalance6359.amount) / _supply6359
+        : 0;
+      
+      const ownership6610 = _supply6610 && _psaBalance6610 && _psaBalance6610.amount
+        ? parseInt(_psaBalance6610.amount) / _supply6610
+        : 0;
+
+
       let _total = [lp43, lp65, lp320, lp525].reduce((acc, val) => {
-        return acc + parseInt(val.asset_a === "1.3.5649" ? val.balance_a : val.balance_b);
+        if (val.id === "1.19.43") {
+          return acc + (
+            parseInt(val.asset_a === "1.3.5649" ? val.balance_a : val.balance_b) * ownership5901
+          );
+        } else if (val.id === "1.19.65") {
+          return acc + (
+            parseInt(val.asset_a === "1.3.5649" ? val.balance_a : val.balance_b) * ownership5938
+          );
+        } else if (val.id === "1.19.320") {
+          return acc + (
+            parseInt(val.asset_a === "1.3.5649" ? val.balance_a : val.balance_b) * ownership6359
+          );
+        } else if (val.id === "1.19.525") {
+          return acc + (
+            parseInt(val.asset_a === "1.3.5649" ? val.balance_a : val.balance_b) * ownership6610
+          );
+        }
+        return 0;
       }, 0);
+      /*
+        ddHonestUSDBTSMM,  // HONEST.USDBTSMM  1.3.5901
+        ddHonestBTCUSDMM,  // HONEST.BTCUSDMM  1.3.5938
+        ddHonestM2USD,     // HONEST.M2USD     1.3.6359
+        ddHonestXAU2USD,   // HONEST.XAU2USD   1.3.6610
+      */
       return humanReadableFloat(_total, 4);
     }
     return 0;
-  }, [lp43, lp65, lp320, lp525]);
+  }, [lp43, lp65, lp320, lp525, ddHonestUSDBTSMM, ddHonestBTCUSDMM, ddHonestM2USD, ddHonestXAU2USD, usrBalances]);
 
   const stakedHonestBTC = useMemo(() => { // 1.3.5650
-    if (lp65 && lp66 && lp325 && lp330 && lp524) {
-      let _total = [lp65, lp66, lp325, lp330, lp524].reduce((acc, val) => {
-        return acc + parseInt(val.asset_a === "1.3.5650" ? val.balance_a : val.balance_b);
+    if (lp65 && lp66 && lp330 && lp524 && ddHonestBTCBTSMM && ddHonestBTCUSDMM && ddHonestBTC2Money && ddHonestXAU2BTC && usrBalances) {
+
+      const _supply5939 = parseInt(ddHonestBTCBTSMM.current_supply);
+      const _supply5938 = parseInt(ddHonestBTCUSDMM.current_supply);
+      const _supply6342 = parseInt(ddHonestBTC2Money.current_supply);
+      const _supply6609 = parseInt(ddHonestXAU2BTC.current_supply);
+
+      const _psaBalance5939 = usrBalances && usrBalances.length ? usrBalances.find((x) => x.asset_id === "1.3.5939") : null;
+      const _psaBalance5938 = usrBalances && usrBalances.length ? usrBalances.find((x) => x.asset_id === "1.3.5938") : null;
+      const _psaBalance6342 = usrBalances && usrBalances.length ? usrBalances.find((x) => x.asset_id === "1.3.6342") : null;
+      const _psaBalance6609 = usrBalances && usrBalances.length ? usrBalances.find((x) => x.asset_id === "1.3.6609") : null;
+
+      const ownership5939 = _supply5939 && _psaBalance5939 && _psaBalance5939.amount
+        ? parseInt(_psaBalance5939.amount) / _supply5939
+        : 0;
+
+      const ownership5938 = _supply5938 && _psaBalance5938 && _psaBalance5938.amount
+        ? parseInt(_psaBalance5938.amount) / _supply5938
+        : 0;
+
+      const ownership6342 = _supply6342 && _psaBalance6342 && _psaBalance6342.amount
+        ? parseInt(_psaBalance6342.amount) / _supply6342
+        : 0;
+      
+      const ownership6609 = _supply6609 && _psaBalance6609 && _psaBalance6609.amount
+        ? parseInt(_psaBalance6609.amount) / _supply6609
+        : 0;
+
+
+      let _total = [lp65, lp66, lp330, lp524].reduce((acc, val) => {
+        if (val.id === "1.19.65") {
+          return acc + (
+            parseInt(val.asset_a === "1.3.5650" ? val.balance_a : val.balance_b) * ownership5939
+          );
+        } else if (val.id === "1.19.66") {
+          return acc + (
+            parseInt(val.asset_a === "1.3.5650" ? val.balance_a : val.balance_b) * ownership5938
+          );
+        } else if (val.id === "1.19.330") {
+          return acc + (
+            parseInt(val.asset_a === "1.3.5650" ? val.balance_a : val.balance_b) * ownership6342
+          );
+        } else if (val.id === "1.19.524") {
+          return acc + (
+            parseInt(val.asset_a === "1.3.5650" ? val.balance_a : val.balance_b) * ownership6609
+          );
+        }
+        return 0;        
       }, 0);
+
+      /*
+        ddHonestBTCBTSMM,  // HONEST.BTCBTSMM  1.3.5939 1.19.65
+        ddHonestBTCUSDMM,  // HONEST.BTCUSDMM  1.3.5938 1.19.66
+        ddHonestBTC2Money, // HONEST.BTC2MONEY 1.3.6342 1.19.330
+        ddHonestXAU2BTC,   // HONEST.XAU2BTC   1.3.6609 1.19.524      
+      */
       return humanReadableFloat(_total, 8);
     }
     return 0;
-  }, [lp65, lp66, lp330, lp524]);
+  }, [lp65, lp66, lp330, lp524, ddHonestBTCBTSMM, ddHonestBTCUSDMM, ddHonestBTC2Money, ddHonestXAU2BTC]);
 
   const stakedHonestXAU = useMemo(() => { // 1.3.5651
-    if (lp325 && lp523 && lp524 && lp525) {
+    if (lp325 && lp523 && lp524 && lp525 && ddHonestXAU2BTC && ddHonestXAU2USD && ddHonestXAU2BTS && ddHonestM2XAU && usrBalances) {
+      const _supply6609 = parseInt(ddHonestXAU2BTC.current_supply);
+      const _supply6610 = parseInt(ddHonestXAU2USD.current_supply);
+      const _supply6608 = parseInt(ddHonestXAU2BTS.current_supply);
+      const _supply6364 = parseInt(ddHonestM2XAU.current_supply);
+
+      const _psaBalance6609 = usrBalances && usrBalances.length ? usrBalances.find((x) => x.asset_id === "1.3.6609") : null;
+      const _psaBalance6610 = usrBalances && usrBalances.length ? usrBalances.find((x) => x.asset_id === "1.3.6610") : null;
+      const _psaBalance6608 = usrBalances && usrBalances.length ? usrBalances.find((x) => x.asset_id === "1.3.6608") : null;
+      const _psaBalance6364 = usrBalances && usrBalances.length ? usrBalances.find((x) => x.asset_id === "1.3.6364") : null;
+
+      const ownership6609 = _supply6609 && _psaBalance6609 && _psaBalance6609.amount
+        ? parseInt(_psaBalance6609.amount) / _supply6609
+        : 0;
+      
+      const ownership6610 = _supply6610 && _psaBalance6610 && _psaBalance6610.amount
+        ? parseInt(_psaBalance6610.amount) / _supply6610
+        : 0;
+      
+      const ownership6608 = _supply6608 && _psaBalance6608 && _psaBalance6608.amount
+        ? parseInt(_psaBalance6608.amount) / _supply6608
+        : 0;
+
+      const ownership6364 = _supply6364 && _psaBalance6364 && _psaBalance6364.amount
+        ? parseInt(_psaBalance6364.amount) / _supply6364
+        : 0;
+
       let _total = [lp325, lp523, lp524, lp525].reduce((acc, val) => {
-        return acc + parseInt(val.asset_a === "1.3.5651" ? val.balance_a : val.balance_b);
+        if (val.id === "1.19.325") {
+          return acc + (
+            parseInt(val.asset_a === "1.3.5651" ? val.balance_a : val.balance_b) * ownership6364
+          );
+        } else if (val.id === "1.19.523") {
+          return acc + (
+            parseInt(val.asset_a === "1.3.5651" ? val.balance_a : val.balance_b) * ownership6608
+          );
+        } else if (val.id === "1.19.524") {
+          return acc + (
+            parseInt(val.asset_a === "1.3.5651" ? val.balance_a : val.balance_b) * ownership6609
+          );
+        } else if (val.id === "1.19.525") {
+          return acc + (
+            parseInt(val.asset_a === "1.3.5651" ? val.balance_a : val.balance_b) * ownership6610
+          );
+        }
+        return 0;
       }, 0);
+     
+      /*
+        ddHonestXAU2BTC,   // HONEST.XAU2BTC   1.3.6609 1.19.524      
+        ddHonestXAU2USD,   // HONEST.XAU2USD   1.3.6610
+        ddHonestXAU2BTS,   // HONEST.XAU2BTS   1.3.6608 1.19.523
+        ddHonestM2XAU,     // HONEST.M2XAU     1.3.6364 1.19.525
+      */
       return humanReadableFloat(_total, 8);
     }
     return 0;
-  }, [lp325, lp523, lp524, lp525]);
+  }, [lp325, lp523, lp524, lp525, ddHonestXAU2BTC, ddHonestXAU2USD, ddHonestXAU2BTS, ddHonestM2XAU, usrBalances]);
+
+  const stakedHonestMoney = useMemo(() => { // 1.3.6301
+    if (lp305 && lp320 && lp325 && lp330 && ddHonestBTSMoney && ddHonestM2USD && ddHonestM2XAU && ddHonestBTC2Money && usrBalances) {
+      const _supply6430 = parseInt(ddHonestBTSMoney.current_supply);
+      const _supply6359 = parseInt(ddHonestM2USD.current_supply);
+      const _supply6364 = parseInt(ddHonestM2XAU.current_supply);
+      const _supply6342 = parseInt(ddHonestBTC2Money.current_supply);
+
+      const _psaBalance6430 = usrBalances && usrBalances.length ? usrBalances.find((x) => x.asset_id === "1.3.6430") : null;
+      const _psaBalance6359 = usrBalances && usrBalances.length ? usrBalances.find((x) => x.asset_id === "1.3.6359") : null;
+      const _psaBalance6364 = usrBalances && usrBalances.length ? usrBalances.find((x) => x.asset_id === "1.3.6364") : null;
+      const _psaBalance6342 = usrBalances && usrBalances.length ? usrBalances.find((x) => x.asset_id === "1.3.6342") : null;
+
+      const ownership6430 = _supply6430 && _psaBalance6430 && _psaBalance6430.amount
+        ? parseInt(_psaBalance6430.amount) / _supply6430
+        : 0;
+
+      const ownership6359 = _supply6359 && _psaBalance6359 && _psaBalance6359.amount
+        ? parseInt(_psaBalance6359.amount) / _supply6359
+        : 0;
+      
+      const ownership6364 = _supply6364 && _psaBalance6364 && _psaBalance6364.amount
+        ? parseInt(_psaBalance6364.amount) / _supply6364
+        : 0;
+      
+      const ownership6342 = _supply6342 && _psaBalance6342 && _psaBalance6342.amount
+        ? parseInt(_psaBalance6342.amount) / _supply6342
+        : 0;
+
+      const _total = [lp305, lp320, lp325, lp330].reduce((acc, val) => {
+        if (val.id === "1.19.305") {
+          return acc + (
+            parseInt(val.asset_a === "1.3.6301" ? val.balance_a : val.balance_b) * ownership6430
+          );
+        } else if (val.id === "1.19.320") {
+          return acc + (
+            parseInt(val.asset_a === "1.3.6301" ? val.balance_a : val.balance_b) * ownership6359
+          );
+        } else if (val.id === "1.19.325") {
+          return acc + (
+            parseInt(val.asset_a === "1.3.6301" ? val.balance_a : val.balance_b) * ownership6364
+          );
+        } else if (val.id === "1.19.330") {
+          return acc + (
+            parseInt(val.asset_a === "1.3.6301" ? val.balance_a : val.balance_b) * ownership6342
+          );
+        }
+        return 0;
+      }, 0);
+
+      /*
+        ddHonestBTSMoney,  // HONEST.BTSMONEY  1.3.6430
+        ddHonestM2USD,     // HONEST.M2USD     1.3.6359
+        ddHonestM2XAU,     // HONEST.M2XAU     1.3.6364
+        ddHonestBTC2Money, // HONEST.BTC2MONEY 1.3.6342
+      */
+      return humanReadableFloat(_total, 8);
+    }
+    return 0;
+  }, [lp305, lp320, lp325, lp330, ddHonestBTSMoney, ddHonestM2USD, ddHonestM2XAU, ddHonestBTC2Money, usrBalances]);
 
   const featuredPoolRow = ({ index, style }) => {
     let res = [
@@ -519,6 +918,10 @@ export default function PoolTracker(properties) {
         )
       : "0.00";
 
+    const poolOwnershipPercentage = _psaBalance && _psaBalance.amount
+      ? _psaBalance.amount / _psaDD.current_supply
+      : 0;
+
     return (
       <div style={{ ...style }} key={`poolRow-${res.id}`} className="grid grid-cols-12 text-xs border border-gray-300">
         <div>
@@ -530,8 +933,102 @@ export default function PoolTracker(properties) {
           {_poolAssetB.symbol}
         </div>
         <div className="ml-1">
-          $0.00<br/>
-          $0.00
+          {
+            res.id === "1.19.43"
+            ? <>
+              ${btsPrice ?? 0}<br/>
+              $1.00
+            </>
+            : null
+          }
+          {
+            res.id === "1.19.65"
+            ? <>
+              $1.00<br/>
+              ${honestBTCPrice ?? 0}
+            </>
+            : null
+          }
+          {
+            res.id === "1.19.66"
+            ? <>
+              ${btsPrice ?? 0}<br/>
+              ${honestBTCPrice ?? 0}
+            </>
+            : null
+          }
+          {
+            res.id === "1.19.305"
+            ? <>
+              ${btsPrice ?? 0}<br/>
+              ${
+                honestMoneyPrice && honestMoneyPrice.latest && btsPrice
+                  ? (honestMoneyPrice.latest * btsPrice).toFixed(4)
+                  : 0
+              }
+            </>
+            : null
+          }
+          {
+            res.id === "1.19.320"
+            ? <>
+              $1.00<br/>
+              ${
+                honestMoneyPrice && honestMoneyPrice.latest && btsPrice
+                  ? (honestMoneyPrice.latest * btsPrice).toFixed(4)
+                  : 0
+              }
+            </>
+            : null
+          }
+          {
+            res.id === "1.19.325"
+            ? <>
+              ${honestXAUPrice}<br/>
+              ${
+                honestMoneyPrice && honestMoneyPrice.latest && btsPrice
+                  ? (honestMoneyPrice.latest * btsPrice).toFixed(4)
+                  : 0
+              }
+            </>
+            : null
+          }
+          {
+            res.id === "1.19.330"
+            ? <>
+              ${honestBTCPrice ?? 0}<br/>
+              ${
+                honestMoneyPrice && honestMoneyPrice.latest && btsPrice
+                  ? (honestMoneyPrice.latest * btsPrice).toFixed(4)
+                  : 0
+              }
+            </>
+            : null
+          }
+          {
+            res.id === "1.19.523"
+            ? <>
+              ${btsPrice ?? 0}<br/>
+              ${honestXAUPrice}
+            </>
+            : null
+          }
+          {
+            res.id === "1.19.524"
+            ? <>
+              ${honestBTCPrice ?? 0}<br/>
+              ${honestXAUPrice}
+            </>
+            : null
+          }
+          {
+            res.id === "1.19.525"
+            ? <>
+              ${honestUSDPrice ?? 0}<br/>
+              ${honestXAUPrice}
+            </>
+            : null
+          }
         </div>
         <div className="ml-1 border-l border-gray-300">
           {humanReadableFloat(_psaDD.current_supply, _currentPSA.precision)}
@@ -541,7 +1038,7 @@ export default function PoolTracker(properties) {
             _psaBalance && _psaBalance.amount
               ? <>
                   {humanReadableFloat(_psaBalance.amount, _currentPSA.precision)}<br/>
-                  {(_psaBalance.amount / _psaDD.current_supply * 100).toFixed(2)}%
+                  {(poolOwnershipPercentage * 100).toFixed(2)}%
                 </>
               : <>0<br/>0%</>
           }
@@ -549,60 +1046,90 @@ export default function PoolTracker(properties) {
         <div className="ml-2 border-l border-gray-300 text-center">
           {
             _poolAssetA.id === "1.3.0"
-              ? _amountA
+              ? <>
+                🌐 {_amountA}<br/>
+                📊 {(_amountA * poolOwnershipPercentage).toFixed(5)}
+              </>
               : null
           }
           {
             _poolAssetB.id === "1.3.0"
-              ? _amountB
+              ? <>
+                🌐 {_amountB}<br/>
+                📊 {(_amountB * poolOwnershipPercentage).toFixed(5)}
+              </>
               : null
           }
         </div>
         <div className="ml-2 text-center">
           {
             _poolAssetA.id === "1.3.6301"
-              ? _amountA
+              ? <>
+              🌐 {_amountA.toFixed(5)}<br/>
+              📊 {(_amountA * poolOwnershipPercentage).toFixed(5)}
+            </>
               : null
           }
           {
             _poolAssetB.id === "1.3.6301"
-              ? _amountB
+              ? <>
+                🌐 {_amountB.toFixed(5)}<br/>
+                📊 {(_amountB * poolOwnershipPercentage).toFixed(5)}
+              </>
               : null
           }
         </div>
         <div className="ml-2 text-center">
           {
             _poolAssetA.id === "1.3.5649"
-              ? _amountA
+              ? <>
+                🌐 {_amountA}<br/>
+                📊 {(_amountA * poolOwnershipPercentage).toFixed(4)}
+              </>
               : null
           }
           {
             _poolAssetB.id === "1.3.5649"
-              ? _amountB
+              ? <>
+                🌐 {_amountB}<br/>
+                📊 {(_amountB * poolOwnershipPercentage).toFixed(4)}
+              </>
               : null
           }
         </div>
         <div className="ml-2 text-center">
           {
             _poolAssetA.id === "1.3.5650"
-              ? _amountA
+              ? <>
+                🌐 {_amountA}<br/>
+                📊 {(_amountA * poolOwnershipPercentage).toFixed(8)}
+              </>
               : null
           }
           {
             _poolAssetB.id === "1.3.5650"
-              ? _amountB
+              ? <>
+                🌐 {_amountB}<br/>
+                📊 {(_amountB * poolOwnershipPercentage).toFixed(8)}
+              </>
               : null
           }
         </div>
         <div className="ml-2 text-center">
           {
             _poolAssetA.id === "1.3.5651"
-              ? _amountA
+              ? <>
+                🌐 {_amountA}<br/>
+                📊 {(_amountA * poolOwnershipPercentage).toFixed(8)}
+              </>
               : null
           }
           {
             _poolAssetB.id === "1.3.5651"
-              ? _amountB
+              ? <>
+                🌐 {_amountB}<br/>
+                📊 {(_amountB * poolOwnershipPercentage).toFixed(8)}
+              </>
               : null
           }
         </div>
@@ -620,28 +1147,189 @@ export default function PoolTracker(properties) {
           <Separator />
           A: {
             _psaBalance && _psaBalance.amount
-              ? ((((_24hFeeA / _amountA) * 100) * (_psaBalance.amount / _psaDD.current_supply)) * 30).toFixed(3)
+              ? (((_24hFeeA / _amountA) * 100) * 30).toFixed(3)
               : "0.00"
-          } % (30d)<br/>
+          } % ~30d<br/>
           B: {
             _psaBalance && _psaBalance.amount
-              ? ((((_24hFeeB / _amountB) * 100) * (_psaBalance.amount / _psaDD.current_supply)) * 30).toFixed(3)
+              ? (((_24hFeeB / _amountB) * 100) * 30).toFixed(3)
               : "0.00"
-          } % (30d)<br/>
+          } % ~30d<br/>
           A: {
             _psaBalance && _psaBalance.amount
-              ? ((((_24hFeeA / _amountA) * 100) * (_psaBalance.amount / _psaDD.current_supply)) * 365).toFixed(3)
+              ? (((_24hFeeA / _amountA) * 100) * 365).toFixed(3)
               : "0.00"
-          } % (1yr)<br/>
+          } % ~1yr<br/>
           B: {
             _psaBalance && _psaBalance.amount
-              ? ((((_24hFeeB / _amountB) * 100) * (_psaBalance.amount / _psaDD.current_supply)) * 365).toFixed(3)
+              ? (((_24hFeeB / _amountB) * 100) * 365).toFixed(3)
               : "0.00"
-          } % (1yr)
+          } % ~1yr
         </div>
       </div>
     );
   };
+
+  const [callOrdersHonestUSD, setCallOrdersHonestUSD] = useState();
+  const [callOrdersHonestBTC, setCallOrdersHonestBTC] = useState();
+  const [callOrdersHonestXAU, setCallOrdersHonestXAU] = useState();
+  useEffect(() => {
+    async function fetching() {
+      const _assetStore = createAssetCallOrdersStore([
+        _chain,
+        JSON.stringify([
+          "1.3.5649", // HONEST.USD
+          "1.3.5650", // HONEST.BTC
+          "1.3.5651"  // HONEST.XAU
+        ]),
+        currentNode.url,
+      ]);
+
+      _assetStore.subscribe(({ data, error, loading }) => {
+        if (data && !error && !loading) {
+          const _usd = data[0]["1.3.5649"];
+          const _btc = data[1]["1.3.5650"];
+          const _xau = data[2]["1.3.5651"];
+          const foundUSD = _usd.find((x) => x.borrower === usr.id);
+          const foundBTC = _btc.find((x) => x.borrower === usr.id);
+          const foundXAU = _xau.find((x) => x.borrower === usr.id);
+          setCallOrdersHonestUSD(foundUSD);
+          setCallOrdersHonestBTC(foundBTC);
+          setCallOrdersHonestXAU(foundXAU);
+        }
+      });
+    }
+
+    if (currentNode && usr && usr.id) {
+      fetching();
+    }
+  }, [currentNode, usr]);
+
+  const totalHonestMoney = useMemo(() => {
+    let _total = 0;
+    if (stakedHonestMoney) {
+      _total += stakedHonestMoney;
+    }
+    if (usrBalances && usrBalances.length) {
+      _total += humanReadableFloat(usrBalances.find((x) => x.asset_id === "1.3.6301").amount, 8);
+    }
+    return _total;
+  }, [stakedHonestMoney, usrBalances]);
+
+  const totalHonestUSD = useMemo(() => {
+    let _total = 0;
+    if (stakedHonestUSD) {
+      _total += stakedHonestUSD;
+    }
+    if (usrBalances && usrBalances.length) {
+      _total += humanReadableFloat(usrBalances.find((x) => x.asset_id === "1.3.5649").amount, 4);
+    }
+    /*
+    if (callOrdersHonestUSD) {
+      _total += humanReadableFloat(callOrdersHonestUSD.debt, 4);
+    }
+    */
+    return _total;
+  }, [stakedHonestUSD, usrBalances, callOrdersHonestUSD]);
+
+  const totalHonestBTC = useMemo(() => {
+    let _total = 0;
+    if (stakedHonestBTC) {
+      _total += stakedHonestBTC;
+    }
+    if (usrBalances && usrBalances.length) {
+      _total += humanReadableFloat(usrBalances.find((x) => x.asset_id === "1.3.5650").amount, 8);
+    }
+    /*
+    if (callOrdersHonestBTC) {
+      _total += humanReadableFloat(callOrdersHonestBTC.debt, 8);
+    }
+    */
+    return _total;
+  }, [stakedHonestBTC, usrBalances, callOrdersHonestBTC]);
+
+  const totalHonestXAU = useMemo(() => {
+    let _total = 0;
+    if (stakedHonestXAU) {
+      _total += stakedHonestXAU;
+    }
+    if (usrBalances && usrBalances.length) {
+      _total += humanReadableFloat(usrBalances.find((x) => x.asset_id === "1.3.5651").amount, 8);
+    }
+    /*
+    if (callOrdersHonestXAU) {
+      _total += humanReadableFloat(callOrdersHonestXAU.debt, 8);
+    }
+    */
+    return _total;
+  }, [stakedHonestXAU, usrBalances, callOrdersHonestXAU]);  
+
+  const btsTotalCollateral = useMemo(() => {
+    return humanReadableFloat(
+      callOrdersHonestUSD
+        ? callOrdersHonestUSD.collateral
+        : 0,
+      5
+    ) +
+    humanReadableFloat(
+      callOrdersHonestBTC
+        ? callOrdersHonestBTC.collateral
+        : 0,
+      5
+    ) +
+    humanReadableFloat(
+      callOrdersHonestXAU
+        ? callOrdersHonestXAU.collateral
+        : 0,
+      5
+    )
+  }, [callOrdersHonestUSD, callOrdersHonestBTC, callOrdersHonestXAU]);
+
+  const totalBTS = useMemo(() => {
+    let _total = 0;
+    if (stakedBTS) {
+      _total += stakedBTS;
+    }
+    if (usrBalances && usrBalances.length) {
+      _total += humanReadableFloat(usrBalances.find((x) => x.asset_id === "1.3.0").amount, 5);
+    }
+    if (btsTotalCollateral) {
+      _total += btsTotalCollateral;
+    }
+    return _total;
+  }, [stakedBTS, usrBalances, callOrdersHonestUSD, btsTotalCollateral]);
+
+  const finalUSD = useMemo(() => {
+    let _total = 0;
+
+    if (totalBTS && btsPrice) {
+      _total += totalBTS * btsPrice;
+    }
+    if (totalHonestMoney && honestMoneyPrice && honestMoneyPrice.latest && btsPrice) {
+      _total += totalHonestMoney * honestMoneyPrice.latest * btsPrice;
+    }
+    if (totalHonestUSD) {
+      _total += totalHonestUSD;
+    }
+    if (totalHonestBTC && honestBTCPrice) {
+      _total += totalHonestBTC * honestBTCPrice;
+    }
+    if (totalHonestXAU && honestXAUPrice) {
+      _total += totalHonestXAU * honestXAUPrice;
+    }
+
+    return _total.toFixed(4);
+  }, [
+    totalBTS,
+    btsPrice,
+    totalHonestMoney,
+    honestMoneyPrice,
+    totalHonestUSD,
+    totalHonestBTC,
+    honestBTCPrice,
+    totalHonestXAU,
+    honestXAUPrice
+  ]);
 
   return (
     <>
@@ -649,24 +1337,23 @@ export default function PoolTracker(properties) {
         <div className="grid grid-cols-1 gap-3">
           <Card className="p-2">
             <CardHeader>
-              <CardTitle>{t("PoolForm:title")}</CardTitle>
-              <CardDescription>{t("PoolForm:description")}</CardDescription>
+              <CardTitle>{t("PoolTracker:title")}</CardTitle>
+              <CardDescription>{t("PoolTracker:description")}</CardDescription>
             </CardHeader>
             <CardContent>
-              {!assets ? <p>{t("PoolForm:loadingAssetData")}</p> : null}
               <div className="grid grid-cols-12 text-xs">
-                <div>Pool</div>
-                <div>Asset Pair</div>
-                <div>Value (USD)</div>
-                <div>Pool Total</div>
-                <div>Balance</div>
+                <div>{t("PoolTracker:pool")}</div>
+                <div>{t("PoolTracker:assetPair")}</div>
+                <div>{t("PoolTracker:value")}</div>
+                <div>{t("PoolTracker:poolTotal")}</div>
+                <div>{t("PoolTracker:balance")}</div>
                 <div className="text-center">BTS</div>
                 <div className="text-center">Honest.MONEY</div>
                 <div className="text-center">Honest.USD</div>
                 <div className="text-center">Honest.BTC</div>
                 <div className="text-center">Honest.XAU</div>
-                <div>24Hr Volume</div>
-                <div>Fees</div>
+                <div>{t("PoolTracker:24hVolume")}</div>
+                <div>{t("PoolTracker:fees")}</div>
               </div>
               {
                 smartcoinHonestUSD && smartcoinHonestBTC && smartcoinHonestXAU
@@ -681,33 +1368,51 @@ export default function PoolTracker(properties) {
                   : null
               }
               <div className="grid grid-cols-12 text-xs">
-                <div className="col-span-5"></div>
+                <div className="col-span-4"></div>
+                <div className="col-span-1 text-right">
+                  <br/>
+                  <br/>
+                  <br/>
+                  <br/>
+                  <br/>
+                  <br/>
+                  <br/>
+                  <br/>
+                  <br/>
+                  <br/>
+                  <br/>
+                  <br/>
+                  {t("PoolTracker:circulating")}<br/>
+                  <br/>
+                  <br/>
+                  <b>{t("PoolTracker:total")}</b>
+                </div>
                 <div className="col-span-5 text-center border border-gray-300">
                   <div className="grid grid-cols-5">
                     <div>
-                      In Pool<br/>
+                      <b>{t("PoolTracker:inPool")}</b><br/>
                       {stakedBTS}
                     </div>
                     <div>
-                      In Pool<br/>
+                      <b>{t("PoolTracker:inPool")}</b><br/>
                       {stakedHonestMoney}
                     </div>
                     <div>
-                      In Pool<br/>
+                      <b>{t("PoolTracker:inPool")}</b><br/>
                       {stakedHonestUSD}
                     </div>
                     <div>
-                      In Pool<br/>
+                      <b>{t("PoolTracker:inPool")}</b><br/>
                       {stakedHonestBTC}
                     </div>
                     <div>
-                      In Pool<br/>
+                      <b>{t("PoolTracker:inPool")}</b><br/>
                       {stakedHonestXAU}
                     </div>
                   </div>
-                  <div className="grid grid-cols-5">
+                  <div className="grid grid-cols-5 mt-2">
                     <div>
-                      Liquid<br/>
+                      <b>{t("PoolTracker:liquid")}</b><br/>
                       {
                         usrBalances && usrBalances.length
                           ? humanReadableFloat(usrBalances.find((x) => x.asset_id === "1.3.0").amount, 5)
@@ -715,7 +1420,7 @@ export default function PoolTracker(properties) {
                       }
                     </div>
                     <div>
-                      Liquid<br/>
+                      <b>{t("PoolTracker:liquid")}</b><br/>
                       {
                         usrBalances && usrBalances.length
                           ? humanReadableFloat(usrBalances.find((x) => x.asset_id === "1.3.6301").amount, 8)
@@ -723,7 +1428,7 @@ export default function PoolTracker(properties) {
                       }
                     </div>
                     <div>
-                      Liquid<br/>
+                      <b>{t("PoolTracker:liquid")}</b><br/>
                       {
                         usrBalances && usrBalances.length
                           ? humanReadableFloat(usrBalances.find((x) => x.asset_id === "1.3.5649").amount, 4)
@@ -731,7 +1436,7 @@ export default function PoolTracker(properties) {
                       }
                     </div>
                     <div>
-                      Liquid<br/>
+                      <b>{t("PoolTracker:liquid")}</b><br/>
                       {
                         usrBalances && usrBalances.length
                           ? humanReadableFloat(usrBalances.find((x) => x.asset_id === "1.3.5650").amount, 8)
@@ -739,7 +1444,7 @@ export default function PoolTracker(properties) {
                       }
                     </div>
                     <div>
-                      Liquid<br/>
+                      <b>{t("PoolTracker:liquid")}</b><br/>
                       {
                         usrBalances && usrBalances.length
                           ? humanReadableFloat(usrBalances.find((x) => x.asset_id === "1.3.5651").amount, 8)
@@ -747,93 +1452,183 @@ export default function PoolTracker(properties) {
                       }
                     </div>
                   </div>
-                  <div className="grid grid-cols-5">
+                  <div className="grid grid-cols-5 mt-3">
                     <div className="col-span-2"></div>
                     <div>
-                      Debt<br/>
-                      0
+                      <b>{t("PoolTracker:debt")}</b><br/>
+                      {
+                        callOrdersHonestUSD
+                          ? humanReadableFloat(callOrdersHonestUSD.debt, 4)
+                          : null
+                      }
                     </div>
                     <div>
-                      Debt<br/>
-                      0
+                      <b>{t("PoolTracker:debt")}</b><br/>
+                      {
+                        callOrdersHonestBTC
+                          ? humanReadableFloat(callOrdersHonestBTC.debt, 8)
+                          : null
+                      }
                     </div>
                     <div>
-                      Debt<br/>
-                      0
+                      <b>{t("PoolTracker:debt")}</b><br/>
+                      {
+                        callOrdersHonestXAU
+                          ? humanReadableFloat(callOrdersHonestXAU.debt, 8)
+                          : null
+                      }
                     </div>
                   </div>
                   <div className="grid grid-cols-5">
                     <div>
-                      Total Collateral<br/>
-                      12345
+                      <b>{t("PoolTracker:totalCollateral")}</b><br/>
+                      <b>{btsTotalCollateral}</b> BTS
                     </div>
                     <div></div>
                     <div>
-                      Collateral<br/>
-                      2
+                      <b>{t("PoolTracker:totalCollateral")}</b><br/>
+                      {
+                        callOrdersHonestUSD
+                          ? humanReadableFloat(callOrdersHonestUSD.collateral, 5)
+                          : null
+                      } BTS
                     </div>
                     <div>
-                      Collateral<br/>
-                      3
+                      <b>{t("PoolTracker:totalCollateral")}</b><br/>
+                      {
+                        callOrdersHonestBTC
+                          ? humanReadableFloat(callOrdersHonestBTC.collateral, 5)
+                          : null
+                      } BTS
                     </div>
                     <div>
-                      Collateral<br/>
-                      4
+                      <b>{t("PoolTracker:totalCollateral")}</b><br/>
+                      {
+                        callOrdersHonestXAU
+                          ? humanReadableFloat(callOrdersHonestXAU.collateral, 5)
+                          : null
+                      } BTS
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-5 mt-3">
+                    <div>
+                      <b>{t("PoolTracker:total")}</b><br/>
+                      <b>{totalBTS}</b>
+                      <br/>
+                      {
+                        dynamicDataBTS
+                          ? humanReadableFloat(dynamicDataBTS.current_supply, 5)
+                          : null
+                      }<br/>
+                      <b>
+                        {
+                          dynamicDataBTS
+                            ? ((totalBTS / humanReadableFloat(dynamicDataBTS.current_supply, 5)) * 100).toFixed(3)
+                            : null
+                        }
+                      </b>%
+                    </div>
+                    <div>
+                      <b>{t("PoolTracker:total")}</b><br/>
+                      <b>{totalHonestMoney}</b><br/>
+                      {
+                        dynamicDataHonestMoney
+                          ? humanReadableFloat(dynamicDataHonestMoney.current_supply, 5)
+                          : null
+                      }<br/>
+                      <b>
+                        {
+                          dynamicDataHonestMoney
+                            ? ((totalHonestMoney / humanReadableFloat(dynamicDataHonestMoney.current_supply, 5)) * 100).toFixed(3)
+                            : null
+                        }
+                      </b>%
+                    </div>
+                    <div>
+                      <b>{t("PoolTracker:total")}</b><br/>
+                      <b>{totalHonestUSD}</b><br/>
+                      {
+                        dynamicDataHonestUSD
+                          ? humanReadableFloat(dynamicDataHonestUSD.current_supply, 4)
+                          : null
+                      }<br/>
+                      <b>
+                        {
+                          dynamicDataHonestUSD
+                            ? ((totalHonestUSD / humanReadableFloat(dynamicDataHonestUSD.current_supply, 4)) * 100).toFixed(3)
+                            : null
+                        }
+                      </b>%
+                    </div>
+                    <div>
+                      <b>{t("PoolTracker:total")}</b><br/>
+                      <b>{totalHonestBTC}</b><br/>
+                      {
+                        dynamicDataHonestBTC
+                          ? humanReadableFloat(dynamicDataHonestBTC.current_supply, 8)
+                          : null
+                      }<br/>
+                      <b>
+                        {
+                          dynamicDataHonestBTC
+                            ? ((totalHonestBTC / humanReadableFloat(dynamicDataHonestBTC.current_supply, 8)) * 100).toFixed(3)
+                            : null
+                        }
+                      </b>%
+                    </div>
+                    <div>
+                      <b>{t("PoolTracker:total")}</b><br/>
+                      <b>{totalHonestXAU}</b><br/>
+                      {
+                        dynamicDataHonestXAU
+                          ? humanReadableFloat(dynamicDataHonestXAU.current_supply, 8)
+                          : null
+                      }<br/>
+                      <b>
+                        {
+                          dynamicDataHonestXAU
+                            ? ((totalHonestXAU / humanReadableFloat(dynamicDataHonestXAU.current_supply, 8)) * 100).toFixed(3)
+                            : null
+                        }
+                      </b>%
                     </div>
                   </div>
                   <div className="grid grid-cols-5">
                     <div>
-                      Total<br/>
-                      1<br/>
-                      1234<br/>
-                      1%
+                      <b>
+                        ${(totalBTS * btsPrice).toFixed(4)}
+                      </b>
                     </div>
                     <div>
-                      Total<br/>
-                      1<br/>
-                      1234<br/>
-                      1%
+                      <b>
+                        ${
+                          honestMoneyPrice && honestMoneyPrice.latest && btsPrice
+                            ? (totalHonestMoney * honestMoneyPrice.latest * btsPrice).toFixed(4)
+                            : 0
+                        }
+                      </b>
                     </div>
                     <div>
-                      Total<br/>
-                      1<br/>
-                      1234<br/>
-                      1%
+                      <b>
+                        ${(totalHonestUSD).toFixed(4)}
+                      </b>
                     </div>
                     <div>
-                      Total<br/>
-                      1<br/>
-                      1234<br/>
-                      1%
+                      <b>
+                        ${(totalHonestBTC * honestBTCPrice).toFixed(4)}
+                      </b>
                     </div>
                     <div>
-                      Total<br/>
-                      1<br/>
-                      1234<br/>
-                      1%
+                      <b>
+                        ${(totalHonestXAU * honestXAUPrice).toFixed(4)}
+                      </b>
                     </div>
                   </div>
                   <div className="grid grid-cols-5">
-                    <div>
-                      $1
+                    <div className="col-span-1">
+                      ${finalUSD}
                     </div>
-                    <div>
-                      $1
-                    </div>
-                    <div>
-                      $1
-                    </div>
-                    <div>
-                      $1
-                    </div>
-                    <div>
-                      $1
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-5">
-                    <div className="col-span-5">
-                      $1
-                    </div>
+                    <div className="col-span-4"></div>
                   </div>
                 </div>
                 <div className="col-span-2"></div>

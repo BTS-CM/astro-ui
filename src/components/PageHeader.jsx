@@ -182,6 +182,11 @@ export default function PageHeader(properties) {
                         icon="🏆"
                       />
                       <MenuRow
+                        url="/pool_tracker/index.html"
+                        text={t("PageHeader:poolTracker")}
+                        icon="📊"
+                      />
+                      <MenuRow
                         url="/deals/index.html"
                         text={t("PageHeader:creditDeals")}
                         icon="🤝"

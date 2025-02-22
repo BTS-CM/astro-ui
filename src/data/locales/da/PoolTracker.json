@@ -1,0 +1,17 @@
+{
+    "title": "Bitshares indeholdt likviditetspooloversigt",
+    "description": "En grænseflade skræddersyet til de ærlige likviditetspooler!",
+    "pool": "Pool",
+    "assetPair": "Aktivpar",
+    "value": "Værdi (USD)",
+    "poolTotal": "Pool i alt",
+    "balance": "Balance",
+    "24hVolume": "24 timer volumen",
+    "fees": "Gebyrer",
+    "inPool": "I pool",
+    "liquid": "Flydende",
+    "debt": "Gæld",
+    "totalCollateral": "Samlet sikkerhed",
+    "total": "Total",
+    "circulating": "Cirkulerende forsyning"
+  }
