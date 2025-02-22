@@ -1,0 +1,17 @@
+{
+    "title": "Bitshares ha caratterizzato la panoramica del pool di liquidità",
+    "description": "Un'interfaccia su misura per i pool di liquidità onesti!",
+    "pool": "Piscina",
+    "assetPair": "Coppia di attività",
+    "value": "Valore (USD)",
+    "poolTotal": "Totale del pool",
+    "balance": "Bilancia",
+    "24hVolume": "Volume 24h",
+    "fees": "Commissioni",
+    "inPool": "In piscina",
+    "liquid": "Liquido",
+    "debt": "Debito",
+    "totalCollateral": "Garanzia totale",
+    "total": "Totale",
+    "circulating": "Alimentazione circolante"
+  }

@@ -1,0 +1,17 @@
+{
+    "title": "Bitshares는 유동성 풀 개요를 특징으로했습니다",
+    "description": "정직한 유동성 풀을위한 인터페이스가 제작되었습니다!",
+    "pool": "수영장",
+    "assetPair": "자산 쌍",
+    "value": "값 (USD)",
+    "poolTotal": "풀 합계",
+    "balance": "균형",
+    "24hVolume": "24 시간 볼륨",
+    "fees": "수수료",
+    "inPool": "수영장에서",
+    "liquid": "액체",
+    "debt": "빚",
+    "totalCollateral": "총 담보",
+    "total": "총",
+    "circulating": "순환 공급"
+  }

@@ -1,4 +1,5 @@
 {
+  "poolTracker": "Ausgewählter Poolüberblick",
   "assetCreation": "Vermögenserstellung",
   "welcomeMessage": "Willkommen zu ",
   "uiName": "Bitshares Beet Astro-Benutzeroberfläche",
@@ -73,7 +74,8 @@
     "create_smartcoin": "Verwenden Sie das untenstehende Formular, um ein neues Smartcoin-Asset zu erstellen.",
     "blocks": "Sehen Sie sich die aktuellsten Blockchain-Daten bequem zusammengefasst unten an!",
     "AccountLists": "Verwenden Sie das untenstehende Formular, um Whitelists oder Blacklists für Ihr Konto zu erstellen.",
-    "proposals": "Sehen Sie sich unten die Genehmigungen für Ihr Konto an und genehmigen Sie sie oder lehnen Sie sie ab, nachdem Sie sie gründlich geprüft haben."
+    "proposals": "Sehen Sie sich unten die Genehmigungen für Ihr Konto an und genehmigen Sie sie oder lehnen Sie sie ab, nachdem Sie sie gründlich geprüft haben.",
+    "pool_tracker": "Überwachen Sie ganz einfach den Honest Liquidity Pool und relevante interessante Statistiken!"
   },
   "back": "Geh zurück",
   "usage": "Konzipiert für den Einsatz mit ",

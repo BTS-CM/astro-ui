@@ -1,0 +1,17 @@
+{
+    "title": "Bitshares presentado visión general de la piscina de liquidez",
+    "description": "¡Una interfaz hecha a medida para los grupos de liquidez honestos!",
+    "pool": "Piscina",
+    "assetPair": "Par de activos",
+    "value": "Valor (USD)",
+    "poolTotal": "Total de la piscina",
+    "balance": "Balance",
+    "24hVolume": "Volumen de 24 h",
+    "fees": "Honorarios",
+    "inPool": "En la piscina",
+    "liquid": "Líquido",
+    "debt": "Deuda",
+    "totalCollateral": "Garantía total",
+    "total": "Total",
+    "circulating": "Suministro circulante"
+  }

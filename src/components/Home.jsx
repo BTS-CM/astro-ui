@@ -311,6 +311,26 @@ export default function Home(properties) {
             </ul>
           </HoverCardContent>
         </HoverCard>
+        
+        <HoverCard key="pool_tracker">
+          <HoverCardTrigger asChild>
+            <a href="/pool_tracker/index.html" style={{ textDecoration: "none" }}>
+              <Card className="h-full hover:shadow-md hover:shadow-black">
+                <CardHeader>
+                  <CardTitle>{t("Home:pool_tracker.title")}</CardTitle>
+                  <CardDescription>{t("Home:pool_tracker.subtitle")}</CardDescription>
+                </CardHeader>
+              </Card>
+            </a>
+          </HoverCardTrigger>
+          <HoverCardContent className="w-80 text-sm pt-1">
+            <ul className="ml-2 list-disc [&>li]:mt-2">
+              <li>{t("Home:pool_tracker.hover1")}</li>
+              <li>{t("Home:pool_tracker.hover2")}</li>
+              <li>{t("Home:pool_tracker.hover3")}</li>
+            </ul>
+          </HoverCardContent>
+        </HoverCard>
 
         <HoverCard key="deals">
           <HoverCardTrigger asChild>

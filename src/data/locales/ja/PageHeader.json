@@ -1,4 +1,5 @@
 {
+  "poolTracker": "特集プールの概要",
   "assetCreation": "アセットの作成",
   "welcomeMessage": "へようこそ ",
   "uiName": "Bitshares Beet Astro UI",
@@ -73,7 +74,8 @@
     "create_smartcoin": "新しいスマートコイン資産を作成するには、以下のフォームを使用してください。",
     "blocks": "最新のブロックチェーン データを以下にわかりやすくまとめましたのでご覧ください。",
     "AccountLists": "以下のフォームを使用して、アカウントのホワイトリストまたはブラックリストを作成します。",
-    "proposals": "以下のアカウントの承認を表示し、徹底的に評価した後、承認または拒否します。"
+    "proposals": "以下のアカウントの承認を表示し、徹底的に評価した後、承認または拒否します。",
+    "pool_tracker": "Honest Liquidity Pool と関連する興味深い統計を簡単に監視できます。"
   },
   "back": "戻る",
   "usage": "で使用するように設計されています ",

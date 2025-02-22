@@ -1,4 +1,5 @@
 {
+  "poolTracker": "Fremhævet pooloversigt",
   "assetCreation": "Oprettelse af aktiver",
   "welcomeMessage": "Velkommen til ",
   "uiName": "Bitshares Beet Astro UI",
@@ -72,7 +73,8 @@
     "create_smartcoin": "Brug formularen nedenfor til at oprette et nyt smartcoin-aktiv.",
     "blocks": "Se de seneste blockchain-data bekvemt opsummeret nedenfor!",
     "AccountLists": "Brug formularen nedenfor til at oprette hvidlister eller sortlister til din konto.",
-    "proposals": "Se godkendelserne for din konto nedenfor, og godkend eller afvis dem efter en grundig evaluering af dem."
+    "proposals": "Se godkendelserne for din konto nedenfor, og godkend eller afvis dem efter en grundig evaluering af dem.",
+    "pool_tracker": "Overvåg nemt den ærlige likviditetspulje og relevante interessante statistikker!"
   },
   "back": "Gå tilbage",
   "usage": "Designet til brug med ",

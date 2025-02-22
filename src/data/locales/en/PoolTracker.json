@@ -1,0 +1,17 @@
+{
+    "title": "Bitshares Featured Liquidity Pool Overview",
+    "description": "An interface tailor-made for the Honest Liquidity Pools!",
+    "pool": "Pool",
+    "assetPair": "Asset Pair",
+    "value": "Value (USD)",
+    "poolTotal": "Pool Total",
+    "balance": "Balance",
+    "24hVolume": "24h Volume",
+    "fees": "Fees",
+    "inPool": "In Pool",
+    "liquid": "Liquid",
+    "debt": "Debt",
+    "totalCollateral": "Total Collateral",
+    "total": "Total",
+    "circulating": "Circulating Supply"
+}

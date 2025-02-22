@@ -14,6 +14,13 @@
     "hover2": "Pools have different trading pairs and fees.",
     "hover3": "Simpler but more costly than a limit order."
   },
+  "pool_tracker": {
+    "title": "📊 Featured Pool Tracker",
+    "subtitle": "View liquidity pool data and stats",
+    "hover1": "View featured liquidity pools on the Bitshares DEX.",
+    "hover2": "View pool earnings estimates.",
+    "hover3": "View consolodated pool analytics."
+  },
   "swap": {
     "title": "🔄 Simple Asset Swap",
     "subtitle": "More easily swap assets via pools",

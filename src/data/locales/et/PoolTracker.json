@@ -1,0 +1,17 @@
+{
+    "title": "Bitshares sisaldas likviidsusbasseini ülevaadet",
+    "description": "Liides kohandatud ausate likviidsusbasseinide jaoks!",
+    "pool": "Bassein",
+    "assetPair": "Varapaar",
+    "value": "Väärtus (USD)",
+    "poolTotal": "Bassein kokku",
+    "balance": "Tasakaal",
+    "24hVolume": "24h maht",
+    "fees": "Tasud",
+    "inPool": "Basseinis",
+    "liquid": "Vedelik",
+    "debt": "Võlg",
+    "totalCollateral": "Tagatis",
+    "total": "Kogusumma",
+    "circulating": "Tsirkuleeriv varustus"
+  }

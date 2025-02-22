@@ -14,6 +14,13 @@
     "hover2": "Puljer har forskellige handelspar og gebyrer.",
     "hover3": "Enklere men dyrere end en limiteret ordre."
   },
+  "pool_tracker": {
+    "title": "📊 Featured Pool Tracker",
+    "subtitle": "Se likviditetspooldata og statistik",
+    "hover1": "Vis indeholdt likviditetspooler på Bitshares Dex.",
+    "hover2": "Se poolindtjeningsestimater.",
+    "hover3": "Se konsoloderet poolanalyse."
+  },
   "swap": {
     "title": "🔄 Simpel aktivbytte",
     "subtitle": "Det er nemmere at bytte aktiver via puljer",
