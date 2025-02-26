@@ -1155,6 +1155,7 @@ export default function PoolTracker(properties) {
     if (balances && balances.balance6301) {
       _total += humanReadableFloat(balances.balance6301.amount, 8);
     }
+
     return _total;
   }, [stakedHonestMoney, balances]);
 
@@ -1166,6 +1167,7 @@ export default function PoolTracker(properties) {
     if (balances && balances.balance5649) {
       _total += humanReadableFloat(balances.balance5649.amount, 4);
     }
+
     return _total;
   }, [stakedHonestUSD, balances]);
 
@@ -1177,6 +1179,7 @@ export default function PoolTracker(properties) {
     if (balances && balances.balance5650) {
       _total += humanReadableFloat(balances.balance5650.amount, 8);
     }
+
     return _total;
   }, [stakedHonestBTC, balances]);
 
@@ -1188,6 +1191,7 @@ export default function PoolTracker(properties) {
     if (balances && balances.balance5651) {
       _total += humanReadableFloat(balances.balance5651.amount, 8);
     }
+
     return _total;
   }, [stakedHonestXAU, balances]);  
 
@@ -1223,8 +1227,8 @@ export default function PoolTracker(properties) {
     if (btsTotalCollateral) {
       _total += btsTotalCollateral;
     }
-    return _total;
-  }, [stakedBTS, usrBalances, callOrdersHonestUSD, btsTotalCollateral]);
+    return _total.toFixed(5);
+  }, [stakedBTS, usrBalances, btsTotalCollateral]);
 
   const finalUSD = useMemo(() => {
     let _total = 0;
@@ -1301,23 +1305,41 @@ export default function PoolTracker(properties) {
                     <div></div>
                     <div>
                       <b>{t("PoolTracker:inPool")}</b><br/>
-                      {stakedBTS}
+                      {stakedBTS}<br/>
+                      {(stakedBTS * btsPrice).toFixed(4)}
                     </div>
                     <div>
                       <b>{t("PoolTracker:inPool")}</b><br/>
-                      {stakedHonestMoney}
+                      {stakedHonestMoney}<br/>
+                      ${
+                        honestMoneyPrice && honestMoneyPrice.latest
+                          ? (stakedHonestMoney * honestMoneyPrice.latest * btsPrice).toFixed(4)
+                          : 0
+                      }
+                    </div>
+                    <div>
+                      <b>{t("PoolTracker:inPool")}</b>
+                      <br/>
+                      <br/>
+                      ${stakedHonestUSD}
                     </div>
                     <div>
                       <b>{t("PoolTracker:inPool")}</b><br/>
-                      {stakedHonestUSD}
+                      {stakedHonestBTC}<br/>
+                      ${
+                        honestBTCPrice
+                          ? (stakedHonestBTC * honestBTCPrice).toFixed(4)
+                          : 0
+                      }
                     </div>
                     <div>
                       <b>{t("PoolTracker:inPool")}</b><br/>
-                      {stakedHonestBTC}
-                    </div>
-                    <div>
-                      <b>{t("PoolTracker:inPool")}</b><br/>
-                      {stakedHonestXAU}
+                      {stakedHonestXAU}<br/>
+                      ${
+                        honestXAUPrice
+                          ? (stakedHonestXAU * honestXAUPrice).toFixed(4)
+                          : 0
+                      }
                     </div>
                   </div>
                   <div className="grid grid-cols-6 mt-2">
@@ -1528,8 +1550,7 @@ export default function PoolTracker(properties) {
                   </div>
                   <div className="grid grid-cols-6">
                     <div>
-                      <span className="text-right"><b>USD</b></span>
-                      <span className="text-right"><b>{t("PoolTracker:total")}</b></span>
+                      <span className="text-right"><b>USD</b></span><br/>
                     </div>
                     <div>
                       <b>
@@ -1562,7 +1583,9 @@ export default function PoolTracker(properties) {
                     </div>
                   </div>
                   <div className="grid grid-cols-6">
-                    <div></div>
+                    <div>
+                      <span className="text-right"><b>{t("PoolTracker:total")}</b></span>
+                    </div>
                     <div className="col-span-1">
                       ${finalUSD}
                     </div>
