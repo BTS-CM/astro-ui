@@ -120,6 +120,18 @@ export default function PoolTracker(properties) {
     return _assetsBTS;
   }, [_assetsBTS, _assetsTEST, _chain]);
 
+  if (_chain !== "bitshares") {
+    return (
+      <div className="flex justify-center">
+        <Card className="w-1/4">
+          <CardHeader>
+            <CardTitle>⚠️ Error 404</CardTitle>
+          </CardHeader>
+        </Card>
+      </div>
+    );
+  }
+
   // main assets
   const assetBTS = useMemo(() => {
     return assets.find((x) => x.id === "1.3.0");
@@ -1273,11 +1285,11 @@ export default function PoolTracker(properties) {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-12 text-xs">
-                <div>{t("PoolTracker:pool")}</div>
-                <div>{t("PoolTracker:assetPair")}</div>
-                <div>{t("PoolTracker:value")}</div>
-                <div>{t("PoolTracker:poolTotal")}</div>
-                <div>{t("PoolTracker:balance")}</div>
+                <div className="text-center">{t("PoolTracker:pool")}</div>
+                <div className="text-center">{t("PoolTracker:assetPair")}</div>
+                <div className="text-center">{t("PoolTracker:value")}</div>
+                <div className="text-center">{t("PoolTracker:poolTotal")}</div>
+                <div className="text-center">{t("PoolTracker:balance")}</div>
                 <div className="text-center">BTS</div>
                 <div className="text-center">Honest.MONEY</div>
                 <div className="text-center">Honest.USD</div>

@@ -193,7 +193,7 @@ export const Avatar = ({
   useEffect(() => {
     function calculate() {
       const avatar = document.querySelector(
-        `#avatar${extra}_${name ? name.replace(".", "") : ""}`
+        `#avatar${extra}_${name ? name.replaceAll(".", "") : ""}`
       ) as HTMLElement;
 
       const { left, top, width, height } = avatar.getBoundingClientRect();
@@ -332,7 +332,7 @@ export const Avatar = ({
           rx={SIZE}
         />
         <g
-          id={`avatar${extra}_${name ? name.replace(".", "") : ""}`}
+          id={`avatar${extra}_${name ? name.replaceAll(".", "") : ""}`}
           transform={`rotate(${
             direction === "left" ? adjustedDegrees + 65 : adjustedDegrees - 65
           }, ${SIZE / 2} ${SIZE / 2})`}
