@@ -1306,7 +1306,7 @@ export default function PoolTracker(properties) {
                     <div>
                       <b>{t("PoolTracker:inPool")}</b><br/>
                       {stakedBTS}<br/>
-                      {(stakedBTS * btsPrice).toFixed(4)}
+                      ${(stakedBTS * btsPrice).toFixed(4)}
                     </div>
                     <div>
                       <b>{t("PoolTracker:inPool")}</b><br/>
