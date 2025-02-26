@@ -13,5 +13,16 @@
     "debt": "Gæld",
     "totalCollateral": "Samlet sikkerhed",
     "total": "Total",
-    "circulating": "Cirkulerende forsyning"
+    "circulating": "Cirkulerende forsyning",
+    "supplyPercent": "% af udbuddet",
+    "myTotal": "Min i alt",
+    "simpleSwap": "Udfør et simpelt swap",
+    "normalSwap": "Likviditetspooludveksling",
+    "stakeAssets": "Stakeaktiver i poolen",
+    "buy": "Handelspools aktieaktiver",
+    "buyAsset": "Handle {{asset}}",
+    "borrow": "Låne pool aktie aktiver",
+    "borrowAsset": "Låne {{asset}}",
+    "createDebt": "Opret gældsposition",
+    "psa": "Pool Share Asset"
   }

@@ -13,5 +13,16 @@
     "debt": "Dette",
     "totalCollateral": "Garantie totale",
     "total": "Total",
-    "circulating": "Alimentation en circulation"
+    "circulating": "Alimentation en circulation",
+    "supplyPercent": "% de l'offre",
+    "myTotal": "Min total",
+    "simpleSwap": "Effectuer un échange simple",
+    "normalSwap": "Échange de piscine de liquidité",
+    "stakeAssets": "Actifs de pieu en piscine",
+    "buy": "Échangez des actifs d'actions de pool",
+    "buyAsset": "Commerce {{asset}}",
+    "borrow": "Emprunter des actifs de partage de pool",
+    "borrowAsset": "Emprunter {{asset}}",
+    "createDebt": "Créer une position de dette",
+    "psa": "Actif de partage de piscine"
   }

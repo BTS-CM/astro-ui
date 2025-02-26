@@ -13,5 +13,16 @@
     "debt": "Schulden",
     "totalCollateral": "Total Sicherheiten",
     "total": "Gesamt",
-    "circulating": "Zirkulierender Versorgung"
+    "circulating": "Zirkulierender Versorgung",
+    "supplyPercent": "% des Angebots",
+    "myTotal": "Min Gesamt",
+    "simpleSwap": "Einen einfachen Tausch durchführen",
+    "normalSwap": "Liquiditätspool -Austausch",
+    "stakeAssets": "Pfahlgüter im Pool",
+    "buy": "Vermögenswerte für Handelspoolanteile",
+    "buyAsset": "Handel {{asset}}",
+    "borrow": "Leihen Sie sich Poolanteilungsvermögen aus",
+    "borrowAsset": "Ausleihen {{asset}}",
+    "createDebt": "Schuldenposition schaffen",
+    "psa": "Poolanteils -Vermögenswert"
   }

@@ -13,5 +13,16 @@
     "debt": "Võlg",
     "totalCollateral": "Tagatis",
     "total": "Kogusumma",
-    "circulating": "Tsirkuleeriv varustus"
+    "circulating": "Tsirkuleeriv varustus",
+    "supplyPercent": "% pakkumisest",
+    "myTotal": "Min kokku",
+    "simpleSwap": "Tehke lihtne vahetus",
+    "normalSwap": "Likviidsusbasseinivahetus",
+    "stakeAssets": "Basseinis olevad varad",
+    "buy": "Kaubanduskogumik",
+    "buyAsset": "Kaubavahetus {{asset}}",
+    "borrow": "Laenubasseini aktsiad",
+    "borrowAsset": "Laenama {{asset}}",
+    "createDebt": "Luua võlapositsioon",
+    "psa": "Basseini aktsia vara"
   }

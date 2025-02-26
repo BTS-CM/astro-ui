@@ -13,5 +13,16 @@
     "debt": "Debito",
     "totalCollateral": "Garanzia totale",
     "total": "Totale",
-    "circulating": "Alimentazione circolante"
+    "circulating": "Alimentazione circolante",
+    "supplyPercent": "% di fornitura",
+    "myTotal": "Min Total",
+    "simpleSwap": "Eseguire un semplice scambio",
+    "normalSwap": "Scambio di pool di liquidità",
+    "stakeAssets": "Palli di palo in pool",
+    "buy": "Asset a condivisione del pool commerciale",
+    "buyAsset": "Commercio {{asset}}",
+    "borrow": "Prendi in prestito le attività di condivisione del pool",
+    "borrowAsset": "Prestito {{asset}}",
+    "createDebt": "Crea posizione del debito",
+    "psa": "Pool condividi attività"
   }

@@ -13,5 +13,16 @@
     "debt": "Debt",
     "totalCollateral": "Total Collateral",
     "total": "Total",
-    "circulating": "Circulating Supply"
+    "circulating": "Circulating Supply",
+    "supplyPercent": "% of Supply",
+    "myTotal": "My Total",
+    "simpleSwap": "Perform a simple swap",
+    "normalSwap": "Liquidity pool exchange",
+    "stakeAssets": "Stake assets in pool",
+    "buy": "Trade pool share assets",
+    "buyAsset": "Trade {{asset}}",
+    "borrow": "Borrow pool share assets",
+    "borrowAsset": "Borrow {{asset}}",
+    "createDebt": "Create debt position",
+    "psa": "Pool Share Asset"
 }

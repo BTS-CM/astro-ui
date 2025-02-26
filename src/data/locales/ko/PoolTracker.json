@@ -13,5 +13,16 @@
     "debt": "빚",
     "totalCollateral": "총 담보",
     "total": "총",
-    "circulating": "순환 공급"
+    "circulating": "순환 공급",
+    "supplyPercent": "공급의 %",
+    "myTotal": "최소 총",
+    "simpleSwap": "간단한 교환을 수행하십시오",
+    "normalSwap": "유동성 수영장 교환",
+    "stakeAssets": "수영장의 스테이크 자산",
+    "buy": "무역 풀 공유 자산",
+    "buyAsset": "거래 {{asset}}",
+    "borrow": "수영장 공유 자산",
+    "borrowAsset": "빌리다 {{asset}}",
+    "createDebt": "부채 위치를 만듭니다",
+    "psa": "수영장 공유 자산"
   }

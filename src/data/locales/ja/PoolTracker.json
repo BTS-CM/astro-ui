@@ -13,5 +13,16 @@
     "debt": "借金",
     "totalCollateral": "総担保",
     "total": "合計",
-    "circulating": "循環供給"
+    "circulating": "循環供給",
+    "supplyPercent": "供給の%",
+    "myTotal": "最小合計",
+    "simpleSwap": "簡単なスワップを実行します",
+    "normalSwap": "流動性プール交換",
+    "stakeAssets": "プールの利害関係資産",
+    "buy": "貿易プール共有資産",
+    "buyAsset": "貿易 {{asset}}",
+    "borrow": "プールシェア資産を借ります",
+    "borrowAsset": "借りる {{asset}}",
+    "createDebt": "借金の位置を作成します",
+    "psa": "プール共有資産"
   }

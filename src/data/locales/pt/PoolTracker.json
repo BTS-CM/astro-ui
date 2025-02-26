@@ -13,5 +13,16 @@
     "debt": "Dívida",
     "totalCollateral": "Garantia total",
     "total": "Total",
-    "circulating": "Fornecimento circulante"
+    "circulating": "Fornecimento circulante",
+    "supplyPercent": "% de Fornecimento",
+    "myTotal": "Min total",
+    "simpleSwap": "Execute uma troca simples",
+    "normalSwap": "Troca de pool de liquidez",
+    "stakeAssets": "Ativos de estaca na piscina",
+    "buy": "Ativos de participação em piscinas comerciais",
+    "buyAsset": "Troca {{asset}}",
+    "borrow": "Emprestar piscina compartilhar ativos",
+    "borrowAsset": "Emprestar {{asset}}",
+    "createDebt": "Criar posição da dívida",
+    "psa": "Pool Share Asset"
   }
