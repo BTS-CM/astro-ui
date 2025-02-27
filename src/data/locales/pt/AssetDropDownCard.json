@@ -16,5 +16,6 @@
   "missingLendingAsset": "⛔ Sem ativo de empréstimo",
   "whichCollateral": "Qual ativo colateral?",
   "collateralSearch": "Por favor, procure um novo ativo colateral abaixo",
-  "addAsset": "Adicione ativo"
+  "addAsset": "Adicione ativo",
+  "featured": "Ativos em destaque"
 }

@@ -16,5 +16,6 @@
   "missingLendingAsset": "⛔ No lending asset",
   "whichCollateral": "Which collateral asset?",
   "collateralSearch": "Please search for a new collateral asset below",
-  "addAsset": "Add asset"
+  "addAsset": "Add asset",
+  "featured": "Featured assets"
 }

@@ -16,5 +16,6 @@
   "missingLendingAsset": "⛔ Nessuna risorsa di prestito",
   "whichCollateral": "Quale attività collaterale?",
   "collateralSearch": "Si prega di cercare una nuova risorsa collaterale di seguito",
-  "addAsset": "Aggiungi risorsa"
+  "addAsset": "Aggiungi risorsa",
+  "featured": "Risorse in evidenza"
 }

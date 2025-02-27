@@ -16,5 +16,6 @@
   "missingLendingAsset": "⛔ 대출 자산이 없습니다",
   "whichCollateral": "어떤 담보 자산?",
   "collateralSearch": "아래의 새로운 담보 자산을 검색하십시오",
-  "addAsset": "자산 추가"
+  "addAsset": "자산 추가",
+  "featured": "추천 자산"
 }

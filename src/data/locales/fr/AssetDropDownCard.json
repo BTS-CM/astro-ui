@@ -16,5 +16,6 @@
   "missingLendingAsset": "⛔ Pas d'actif de prêt",
   "whichCollateral": "Quel actif collatéral?",
   "collateralSearch": "Veuillez rechercher un nouvel actif collatéral ci-dessous",
-  "addAsset": "Ajouter un actif"
+  "addAsset": "Ajouter un actif",
+  "featured": "Actifs en vedette"
 }

@@ -16,5 +16,6 @@
   "missingLendingAsset": "⛔ Kein Kreditvermögen",
   "whichCollateral": "Welches Kollateral -Asset?",
   "collateralSearch": "Bitte suchen Sie unten nach einem neuen Kollateral -Asset",
-  "addAsset": "Asset hinzufügen"
+  "addAsset": "Asset hinzufügen",
+  "featured": "Ausgewählte Assets"
 }

@@ -16,5 +16,6 @@
   "missingLendingAsset": "⛔ Laenuvara pole",
   "whichCollateral": "Milline tagatisvara?",
   "collateralSearch": "Palun otsige allpool uut tagatise vara",
-  "addAsset": "Lisage vara"
+  "addAsset": "Lisage vara",
+  "featured": "Esiletõstetud varad"
 }

@@ -48,7 +48,7 @@ export default function AssetDropDown(properties) {
     marketSearch,
     type,
     size,
-    chain,
+    chain
   } = properties;
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
   const blocklist = useSyncExternalStore($blockList.subscribe, $blockList.get, () => true);
@@ -93,25 +93,27 @@ export default function AssetDropDown(properties) {
   }, [thisInput, fuse]);
 
   const Row = ({ index, style }) => {
-    const res = mode === "search"
-      ? thisResult[index]
-      : relevantAssets[index];
+    let res;
+    if (mode === "search") {
+      res = thisResult[index].item;
+    } else if (mode === "featured") {
+      res = featuredAssets[index];
+    } else if (mode === "favourites") {
+      res = relevantAssets[index];
+    }
+    
     return (
       <div style={{ ...style, marginBottom: "10px", paddingRight: "10px" }}>
         <Card
-          key={
-            mode === "search"
-            ? `acard-${res.item.id}`
-            : `acard-${res.id}`
-          }
+          key={`acard-${res.id}`}
           style={{ marginBottom: "2px" }}
           onClick={() => {
             setTimeout(() => {
-              storeCallback(
-                mode === "search"
-                  ? res.item.s
-                  : res.symbol,
-              );
+              if (mode === "search" || mode === "featured") {
+                storeCallback(res.s);
+              } else if (mode === "favourites") {
+                storeCallback(res.symbol);
+              }
             }, 0);
             setDialogOpen(false);
           }}
@@ -119,16 +121,33 @@ export default function AssetDropDown(properties) {
           <CardHeader className="p-3">
             <CardTitle className="h-3">
               {
-                mode === "search"
-                ? `${res.item.s} (${res.item.id})`
-                : `${res.symbol} (${res.id})`
+                mode === "search" || mode === "featured"
+                ? `${res.s} (${res.id})`
+                : null
+              }
+              {
+                mode === "favourites"
+                ? `${res.symbol} (${res.id})`
+                : null
               }
             </CardTitle>
             <CardDescription>
-              {t(
-                "AssetDropDownCard:issued",
-                { user: mode === "search" ? res.item.u : res.issuer }
-              )}
+              {
+                mode === "search" || mode === "featured"
+                ? t(
+                    "AssetDropDownCard:issued",
+                    { user: res.u }
+                  )
+                : null
+              }
+              {
+                mode === "favourites"
+                ? t(
+                    "AssetDropDownCard:issued",
+                    { user: res.issuer }
+                  )
+                : null
+              }
             </CardDescription>
           </CardHeader>
         </Card>
@@ -139,6 +158,30 @@ export default function AssetDropDown(properties) {
   const [mode, setMode] = useState("search");
 
   const favouriteAssets = useStore($favouriteAssets);
+
+  const featuredAssets = useMemo(() => {
+    if (!chain || !marketSearchContents) {
+      return [];
+    }
+    const _featuredSymbols = ["XBTSX.", "xbtsx.", "BTWTY.", "btwty.", "HONEST.", "honest.", "NFTEA.", "nftea."];
+    const _featuredIssuers = ["committee-account", "honest-quorum", "nftprofessional1"];
+
+    let _featuredAssets = marketSearchContents.filter(
+      (asset) => {
+        if (chain === "bitshares") {
+          if (_featuredIssuers.includes(asset.u.split(" ")[0])) {
+            return true;
+          }
+          if (_featuredSymbols.some(str => asset.s.includes(str))) {
+            return true;
+          }
+        }
+        return false
+      }
+    );
+
+    return _featuredAssets;
+  }, [assetSymbol, otherAsset, marketSearchContents, chain]);
 
   const relevantAssets = useMemo(() => {
     if (!chain || !favouriteAssets) {
@@ -183,23 +226,32 @@ export default function AssetDropDown(properties) {
                 {size && assetSymbol && assetSymbol.length >= 12 ? assetData.id : null}
               </Button>
         }
-        
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] bg-white">
+      <DialogContent className="sm:max-w-[550px] bg-white">
+        <DialogHeader>
+          <DialogTitle>
+            <h3 className="text-2xl font-extrabold tracking-tight">
+              {assetSymbol
+                ? t("AssetDropDownCard:replacing", { assetSymbol: assetSymbol })
+                : t("AssetDropDownCard:selecting")}
+            </h3>
+          </DialogTitle>
+        </DialogHeader>
         <>
-          <h3 className="text-2xl font-extrabold tracking-tight">
-            {assetSymbol
-              ? t("AssetDropDownCard:replacing", { assetSymbol: assetSymbol })
-              : t("AssetDropDownCard:selecting")}
-          </h3>
-
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-3 gap-2">
             <Button
               variant={mode === "search" ? "" : "outline"}
               size="sm"
               onClick={() => setMode("search")}
             >
               {t("AssetDropDownCard:search")}
+            </Button>
+            <Button
+              variant={mode === "featured" ? "" : "outline"}
+              size="sm"
+              onClick={() => setMode("featured")}
+            >
+              {t("AssetDropDownCard:featured")}
             </Button>
             <Button
               variant={mode === "favourites" ? "" : "outline"}
@@ -228,12 +280,33 @@ export default function AssetDropDown(properties) {
                 />
                 {thisResult && thisResult.length ? (
                   <>
-                    <List height={200} itemCount={thisResult.length} itemSize={70} className="w-full">
+                    <List height={350} itemCount={thisResult.length} itemSize={70} className="w-full">
                       {Row}
                     </List>
                   </>
                 ) : null}
               </>
+            : null
+          }
+
+          {
+            mode === "featured"
+            ? <>
+                <h4 className="text-md font-bold tracking-tight">
+                  {!type ? t("AssetDropDownCard:noType") : null}
+                  {type && type === "base" ? t("AssetDropDownCard:baseType") : null}
+                  {type && type === "quote" ? t("AssetDropDownCard:quoteType") : null}
+                  {type && type === "backing" ? t("AssetDropDownCard:backingType") : null}
+                </h4>
+                {featuredAssets && featuredAssets.length ? (
+                  <>
+                    <List height={350} itemCount={featuredAssets.length} itemSize={70} className="w-full">
+                      {Row}
+                    </List>
+                  </>
+                ) : "No featured assets..."}
+
+            </>
             : null
           }
 
@@ -248,7 +321,7 @@ export default function AssetDropDown(properties) {
                 </h4>
                 {relevantAssets && relevantAssets.length ? (
                   <>
-                    <List height={200} itemCount={relevantAssets.length} itemSize={70} className="w-full">
+                    <List height={350} itemCount={relevantAssets.length} itemSize={70} className="w-full">
                       {Row}
                     </List>
                   </>
