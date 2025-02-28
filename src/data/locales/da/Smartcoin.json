@@ -1,4 +1,8 @@
 {
+  "minimum": "Minimum",
+  "maximum": "Maksimum",
+  "lockDebtAmount": "Lås gældsbeløb",
+  "debtAmountLocked": "Lås gældsbeløb op",
   "chargeMarketFee": "Aktivudstederen kan aktivere markedsgebyrer.",
   "whiteList": "Aktivudstederen kan oprette en liste over godkendte markeder",
   "overrideAuthority": "Aktivudstederen kan overføre denne NFT tilbage til sig selv.",

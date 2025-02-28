@@ -1,4 +1,8 @@
 {
+  "minimum": "Minimum",
+  "maximum": "Maximum",
+  "lockDebtAmount": "Verrouiller le montant de la dette",
+  "debtAmountLocked": "Déverrouiller le montant de la dette",
   "chargeMarketFee": "L'émetteur d'actifs peut activer les frais de marché.",
   "whiteList": "L'émetteur d'actifs peut créer une liste de marchés approuvés",
   "overrideAuthority": "L'émetteur d'actifs peut se retransférer ce NFT.",

@@ -321,28 +321,6 @@ export default function Smartcoin(properties) {
     };
   }, [parsedAsset, parsedBitasset, usr]);
 
-  const debtAssetHoldings = useMemo(() => {
-    if (parsedAsset && usrBalances && usrBalances.length) {
-      const foundAsset = usrBalances.find((x) => x.asset_id === parsedAsset.id);
-      if (!foundAsset) {
-        return 0;
-      }
-      const finalAmount = humanReadableFloat(foundAsset.amount, parsedAsset.p);
-      return finalAmount;
-    }
-  }, [parsedAsset, usrBalances]);
-
-  const collateralAssetHoldings = useMemo(() => {
-    if (parsedCollateralAsset && usrBalances && usrBalances.length) {
-      const foundAsset = usrBalances.find((x) => x.asset_id === parsedCollateralAsset.id);
-      if (!foundAsset) {
-        return 0;
-      }
-      const finalAmount = humanReadableFloat(foundAsset.amount, parsedCollateralAsset.p);
-      return finalAmount;
-    }
-  }, [parsedCollateralAsset, usrBalances]);
-
   const settlementFund = useMemo(() => {
     if (finalAsset && parsedAsset && parsedCollateralAsset) {
       const finalSettlementFund = humanReadableFloat(
@@ -501,6 +479,10 @@ export default function Smartcoin(properties) {
   const [collateralAmount, setCollateralAmount] = useState(0);
   const [ratioValue, setRatioValue] = useState(0);
 
+  const [originalDebtAmount, setOriginalDebtAmount] = useState(0);
+  const [originalCollateralAmount, setOriginalCollateralAmount] = useState(0);
+  const [originalRatioValue, setOriginalRatioValue] = useState(0);
+
   const [tcrEnabled, setTCREnabled] = useState(false);
   const [tcrValue, setTCRValue] = useState(0);
 
@@ -532,9 +514,12 @@ export default function Smartcoin(properties) {
             );
 
         setCollateralAmount(collateralAmount);
+        setOriginalCollateralAmount(collateralAmount);
         setDebtAmount(debtAmount);
-
+        setOriginalDebtAmount(debtAmount);
         setRatioValue(ratio);
+        setOriginalRatioValue(ratio);
+
         setFormCallPrice(callPrice);
         if (tcr) {
           setTCREnabled(true);
@@ -587,6 +572,76 @@ export default function Smartcoin(properties) {
       setFormCallPrice(callPrice);
     }
   }, [currentFeedSettlementPrice, parsedCollateralAsset, debtAmount, collateralAmount, ratioValue]);
+
+  /*
+  const originalDebtAssetHoldings = useMemo(() => {
+    if (parsedAsset && usrBalances && usrBalances.length) {
+      const currentDebtAssetBalance = usrBalances.find((x) => x.asset_id === parsedAsset.id);
+      return currentDebtAssetBalance && currentDebtAssetBalance.amount
+        ? humanReadableFloat(currentDebtAssetBalance.amount, parsedAsset.p)
+        : 0;
+    }
+  }, [parsedAsset, usrBalances]);
+  */
+
+  const debtAssetHoldings = useMemo(() => {
+    if (parsedAsset && usrBalances && usrBalances.length) {
+      const currentDebtAssetBalance = usrBalances.find((x) => x.asset_id === parsedAsset.id);
+      const _balance = currentDebtAssetBalance && currentDebtAssetBalance.amount 
+        ? humanReadableFloat(currentDebtAssetBalance.amount, parsedAsset.p)
+        : 0;
+
+      let _output = 0;
+      if (debtAmount === originalDebtAmount) {
+        _output = _balance;
+      } else if (debtAmount < originalDebtAmount) {
+        _output = _balance - (originalDebtAmount - debtAmount);
+      } else if (debtAmount > originalDebtAmount) {
+        _output = _balance + (debtAmount - originalDebtAmount);
+      }
+
+      return parseFloat(_output.toFixed(parsedAsset.p));
+    }
+  }, [
+    parsedAsset,
+    usrBalances,
+    // checks
+    debtLock,
+    // dynamic
+    debtAmount,
+    // static
+    originalDebtAmount,
+  ]);
+
+  const collateralAssetHoldings = useMemo(() => {
+    if (parsedCollateralAsset && usrBalances && usrBalances.length) {
+      const foundAsset = usrBalances.find((x) => x.asset_id === parsedCollateralAsset.id);
+      
+      const _collateralBalance = humanReadableFloat(foundAsset.amount, parsedCollateralAsset.p);
+      let _output = 0;
+      if (collateralAmount === originalCollateralAmount) {
+        _output = _collateralBalance;
+      }
+
+      if (collateralAmount < originalCollateralAmount) {
+        _output = _collateralBalance + (originalCollateralAmount - collateralAmount)
+      }
+      if (collateralAmount > originalCollateralAmount) {
+        _output =  _collateralBalance - (collateralAmount - originalCollateralAmount)
+      }
+
+      return parseFloat(_output.toFixed(parsedCollateralAsset.p));
+    }
+  }, [
+    parsedCollateralAsset,
+    usrBalances,
+    // checks
+    collateralLock,
+    // dynamic
+    collateralAmount,
+    // static
+    originalCollateralAmount,
+  ]);
 
   const debouncedDebtAmount = useCallback(
     debounce(
@@ -908,26 +963,31 @@ export default function Smartcoin(properties) {
               id: parsedAsset.id,
             })}
           </CardTitle>
-          <CardDescription>{t("Smartcoin:marginPositionDescription")}</CardDescription>
+          <CardDescription>{t("Smartcoin:ongoingMarginPosition")}</CardDescription>
         </CardHeader>
         <CardContent className="text-sm">
           {t("Smartcoin:balance")}
+          {" "}
           <b>{debtAssetHoldings ?? 0}</b>
           {parsedAsset ? ` ${parsedAsset.s}` : " ?"}
           <br />
           {t("Smartcoin:debt")}
+          {" "}
           <b>{humanReadableFloat(usrMarginPositions[0].debt, parsedAsset.p)}</b> {parsedAsset.s}
           <br />
           {t("Smartcoin:collateralAtRisk")}
+          {" "}
           <b>
             {humanReadableFloat(usrMarginPositions[0].collateral, parsedCollateralAsset.p)}
           </b>{" "}
           {parsedCollateralAsset.s}
           <br />
           {t("Smartcoin:currentRatio")}
+          {" "}
           <b>{ratio}</b>
           <br />
           {t("Smartcoin:marginCallPrice")}
+          {" "}
           <b>{callPrice}</b> {parsedCollateralAsset.s}
           {" ("}
           {(1 / callPrice).toFixed(parsedAsset.p)} {parsedAsset.s}/{parsedCollateralAsset.s}
@@ -940,9 +1000,15 @@ export default function Smartcoin(properties) {
             </>
           ) : null}
           <br />
-          <Button className="mt-3 mr-2" onClick={() => setShowClosePositionDialog(true)}>
-            {t("Smartcoin:closePosition")}
-          </Button>
+          <br />
+          {
+            debtAssetHoldings >= humanReadableFloat(usrMarginPositions[0].debt, parsedAsset.p)
+              ? <Button className="mt-3 mr-2" onClick={() => setShowClosePositionDialog(true)}>
+                  {t("Smartcoin:closePosition")}
+                </Button>
+              : null
+          }
+          
           <a
             href={`/borrow/index.html?tab=searchOffers&searchTab=borrow&searchText=${parsedAsset.s}`}
           >
@@ -1782,7 +1848,9 @@ export default function Smartcoin(properties) {
                                 asset: parsedAsset ? parsedAsset.s : "?",
                               })}
                             </span>
-                            <span className="col-span-1 text-right">
+                            <span
+                              className={`col-span-1 text-right ${debtAssetHoldings && debtAssetHoldings.toString().includes("-") ? "text-red-500" : ""}`}
+                            >
                               {t("Smartcoin:debtAmountBalance", {
                                 balance: debtAssetHoldings ?? "",
                                 asset: parsedAsset ? parsedAsset.s : "",
@@ -1833,42 +1901,105 @@ export default function Smartcoin(properties) {
                               />
                             </span>
                             <span className="col-span-4 ml-3">
-                              <Popover>
-                                <PopoverTrigger>
-                                  <span
-                                    onClick={() => {
-                                      event.preventDefault();
-                                    }}
-                                    className="inline-block border border-grey rounded pl-4 pb-1 pr-4"
-                                  >
-                                    <Label>{t("Smartcoin:changeDebtAmount")}</Label>
-                                  </span>
-                                </PopoverTrigger>
-                                <PopoverContent>
-                                  <Label>{t("Smartcoin:provideNewDebtAmount")}</Label>{" "}
-                                  <Input
-                                    placeholder={debtAmount}
-                                    className="mb-2 mt-1"
-                                    onChange={(event) => {
-                                      const input = event.target.value;
-                                      const regex = /^[0-9]*\.?[0-9]*$/;
-                                      if (input && input.length && regex.test(input)) {
-                                        debouncedDebtAmount(
-                                          input,
-                                          currentFeedSettlementPrice,
-                                          collateralAmount,
-                                          ratioValue,
-                                          parsedAsset.p,
-                                          parsedCollateralAsset.p,
-                                          debtLock,
-                                          collateralLock,
-                                          ratioLock
-                                        );
-                                      }
-                                    }}
-                                  />
-                                </PopoverContent>
-                              </Popover>
+                              {
+                                debtLock === "editable"
+                                ? <Popover>
+                                    <PopoverTrigger>
+                                      <span
+                                        onClick={() => {
+                                          event.preventDefault();
+                                        }}
+                                        className="inline-block border border-grey rounded pl-4 pb-1 pr-4"
+                                      >
+                                        <Label>{t("Smartcoin:changeDebtAmount")}</Label>
+                                      </span>
+                                    </PopoverTrigger>
+                                    <PopoverContent>
+                                      <Label>{t("Smartcoin:provideNewDebtAmount")}</Label>{" "}
+                                      <Input
+                                        placeholder={debtAmount}
+                                        className="mb-2 mt-1"
+                                        onChange={(event) => {
+                                          const input = event.target.value;
+                                          const regex = /^[0-9]*\.?[0-9]*$/;
+                                          if (input && input.length && regex.test(input)) {
+                                            debouncedDebtAmount(
+                                              input,
+                                              currentFeedSettlementPrice,
+                                              collateralAmount,
+                                              ratioValue,
+                                              parsedAsset.p,
+                                              parsedCollateralAsset.p,
+                                              debtLock,
+                                              collateralLock,
+                                              ratioLock
+                                            );
+                                          }
+                                        }}
+                                      />
+                                      <div className="grid grid-cols-3 gap-2">
+                                      
+                                        <Button
+                                          variant="outline"
+                                          onClick={() => {
+                                            debouncedDebtAmount(
+                                              debtAmount * 0.9,
+                                              currentFeedSettlementPrice,
+                                              collateralAmount,
+                                              ratioValue,
+                                              parsedAsset.p,
+                                              parsedCollateralAsset.p,
+                                              debtLock,
+                                              collateralLock,
+                                              ratioLock
+                                            );
+                                          }}
+                                        >
+                                          - 10%
+                                        </Button>
+                                        <Button
+                                          variant="outline"
+                                          onClick={() => {
+                                            debouncedDebtAmount(
+                                              originalDebtAmount,
+                                              currentFeedSettlementPrice,
+                                              collateralAmount,
+                                              ratioValue,
+                                              parsedAsset.p,
+                                              parsedCollateralAsset.p,
+                                              debtLock,
+                                              collateralLock,
+                                              ratioLock
+                                            );
+                                          }}
+                                        >
+                                          🔃
+                                        </Button>
+                                        <Button
+                                          variant="outline"
+                                          onClick={() => {
+                                            debouncedDebtAmount(
+                                              debtAmount * 1.1,
+                                              currentFeedSettlementPrice,
+                                              collateralAmount,
+                                              ratioValue,
+                                              parsedAsset.p,
+                                              parsedCollateralAsset.p,
+                                              debtLock,
+                                              collateralLock,
+                                              ratioLock
+                                            );
+                                          }}
+                                        >
+                                          + 10%
+                                        </Button>
+                                      
+                                      </div>
+                                    </PopoverContent>
+                                  </Popover>
+                                : null
+                              }
+                              
                             </span>
                           </span>
                         </FormControl>
@@ -1889,7 +2020,9 @@ export default function Smartcoin(properties) {
                                 asset: parsedCollateralAsset ? parsedCollateralAsset.s : "?",
                               })}
                             </span>
-                            <span className="col-span-1 text-right">
+                            <span
+                              className={`col-span-1 text-right ${collateralAssetHoldings && collateralAssetHoldings.toString().includes("-") ? "text-red-500" : ""}`}
+                            >
                               {t("Smartcoin:collateralAmountBalance", {
                                 balance: collateralAssetHoldings ?? 0,
                                 asset: parsedCollateralAsset ? parsedCollateralAsset.s : "",
@@ -1940,43 +2073,106 @@ export default function Smartcoin(properties) {
                               />
                             </span>
                             <span className="col-span-4 ml-3">
-                              <Popover>
-                                <PopoverTrigger>
-                                  <span
-                                    onClick={() => {
-                                      event.preventDefault();
-                                    }}
-                                    className="inline-block border border-grey rounded pl-4 pb-1 pr-4"
-                                  >
-                                    <Label>{t("Smartcoin:changeCollateralAmount")}</Label>
-                                  </span>
-                                </PopoverTrigger>
-                                <PopoverContent>
-                                  <Label>{t("Smartcoin:provideNewCollateralAmount")}</Label>{" "}
-                                  <Input
-                                    placeholder={collateralAmount}
-                                    className="mb-2 mt-1"
-                                    onChange={(event) => {
-                                      const input = event.target.value;
-                                      const regex = /^[0-9]*\.?[0-9]*$/;
-                                      if (input && input.length && regex.test(input)) {
-                                        debouncedCollateralAmount(
-                                          input,
-                                          currentFeedSettlementPrice,
-                                          debtAmount,
-                                          collateralAmount,
-                                          parsedAsset.p,
-                                          parsedCollateralAsset.p,
-                                          ratioValue,
-                                          debtLock,
-                                          collateralLock,
-                                          ratioLock
-                                        );
-                                      }
-                                    }}
-                                  />
-                                </PopoverContent>
-                              </Popover>
+                              {
+                                collateralLock === "editable"
+                                ? <Popover>
+                                    <PopoverTrigger>
+                                      <span
+                                        onClick={() => {
+                                          event.preventDefault();
+                                        }}
+                                        className="inline-block border border-grey rounded pl-4 pb-1 pr-4"
+                                      >
+                                        <Label>{t("Smartcoin:changeCollateralAmount")}</Label>
+                                      </span>
+                                    </PopoverTrigger>
+                                    <PopoverContent>
+                                      <Label>{t("Smartcoin:provideNewCollateralAmount")}</Label>{" "}
+                                      <Input
+                                        placeholder={collateralAmount}
+                                        className="mb-2 mt-1"
+                                        onChange={(event) => {
+                                          const input = event.target.value;
+                                          const regex = /^[0-9]*\.?[0-9]*$/;
+                                          if (input && input.length && regex.test(input)) {
+                                            debouncedCollateralAmount(
+                                              input,
+                                              currentFeedSettlementPrice,
+                                              debtAmount,
+                                              collateralAmount,
+                                              parsedAsset.p,
+                                              parsedCollateralAsset.p,
+                                              ratioValue,
+                                              debtLock,
+                                              collateralLock,
+                                              ratioLock
+                                            );
+                                          }
+                                        }}
+                                      />
+                                      <div className="grid grid-cols-3 gap-2">
+                                        <Button
+                                          variant="outline"
+                                          onClick={() => {
+                                            debouncedCollateralAmount(
+                                              collateralAmount * 0.9,
+                                              currentFeedSettlementPrice,
+                                              debtAmount,
+                                              collateralAmount,
+                                              parsedAsset.p,
+                                              parsedCollateralAsset.p,
+                                              ratioValue,
+                                              debtLock,
+                                              collateralLock,
+                                              ratioLock
+                                            );
+                                          }}
+                                        >
+                                          - 10%
+                                        </Button>
+                                        <Button
+                                          variant="outline"
+                                          onClick={() => {
+                                            debouncedCollateralAmount(
+                                              originalCollateralAmount,
+                                              currentFeedSettlementPrice,
+                                              debtAmount,
+                                              collateralAmount,
+                                              parsedAsset.p,
+                                              parsedCollateralAsset.p,
+                                              ratioValue,
+                                              debtLock,
+                                              collateralLock,
+                                              ratioLock
+                                            );
+                                          }}
+                                        >
+                                          🔃
+                                        </Button>
+                                        <Button
+                                          variant="outline"
+                                          onClick={() => {
+                                            debouncedCollateralAmount(
+                                              collateralAmount * 1.1,
+                                              currentFeedSettlementPrice,
+                                              debtAmount,
+                                              collateralAmount,
+                                              parsedAsset.p,
+                                              parsedCollateralAsset.p,
+                                              ratioValue,
+                                              debtLock,
+                                              collateralLock,
+                                              ratioLock
+                                            );
+                                          }}
+                                        >
+                                          + 10%
+                                        </Button>
+                                      </div>
+                                    </PopoverContent>
+                                  </Popover>
+                                : null
+                              }
                             </span>
                           </span>
                         </FormControl>
@@ -2052,66 +2248,184 @@ export default function Smartcoin(properties) {
                                   readOnly
                                 />
                               )}
-                              <Slider
-                                defaultValue={[ratioValue]}
-                                value={[ratioValue]}
-                                max={20}
-                                min={parsedBitasset.mcr / 1000}
-                                step={0.01}
-                                onValueChange={(value) => {
-                                  debouncedSetRatioValue(
-                                    value[0],
-                                    currentFeedSettlementPrice,
-                                    debtAmount,
-                                    collateralAmount,
-                                    parsedBitasset.mcr,
-                                    parsedAsset.p,
-                                    parsedCollateralAsset.p,
-                                    debtLock,
-                                    collateralLock,
-                                    ratioLock
-                                  );
-                                }}
-                              />
-                            </span>
-                            <span className="col-span-4 ml-3">
-                              <Popover>
-                                <PopoverTrigger>
-                                  <span
-                                    onClick={() => {
-                                      event.preventDefault();
-                                    }}
-                                    className="inline-block border border-grey rounded pl-4 pb-1 pr-4"
-                                  >
-                                    <Label>{t("Smartcoin:changeRatioValue")}</Label>
-                                  </span>
-                                </PopoverTrigger>
-                                <PopoverContent>
-                                  <Label>{t("Smartcoin:provideNewRatio")}</Label>{" "}
-                                  <Input
-                                    placeholder={ratioValue}
-                                    className="mb-2 mt-1"
-                                    onChange={(event) => {
-                                      const input = event.target.value;
-                                      const regex = /^[0-9]*\.?[0-9]*$/;
-                                      if (input && input.length && regex.test(input)) {
-                                        debouncedSetRatioValue(
-                                          input,
-                                          currentFeedSettlementPrice,
-                                          debtAmount,
-                                          collateralAmount,
-                                          parsedBitasset.mcr,
-                                          parsedAsset.p,
-                                          parsedCollateralAsset.p,
-                                          debtLock,
-                                          collateralLock,
-                                          ratioLock
-                                        );
-                                      }
+                              {
+                                ratioLock === "editable"
+                                ? <Slider
+                                    defaultValue={[ratioValue]}
+                                    value={[ratioValue]}
+                                    max={20}
+                                    min={parsedBitasset.mcr / 1000}
+                                    step={0.01}
+                                    onValueChange={(value) => {
+                                      debouncedSetRatioValue(
+                                        value[0],
+                                        currentFeedSettlementPrice,
+                                        debtAmount,
+                                        collateralAmount,
+                                        parsedBitasset.mcr,
+                                        parsedAsset.p,
+                                        parsedCollateralAsset.p,
+                                        debtLock,
+                                        collateralLock,
+                                        ratioLock
+                                      );
                                     }}
                                   />
-                                </PopoverContent>
-                              </Popover>
+                                : null
+                              }
+                              
+                            </span>
+                            <span className="col-span-4 ml-3">
+                              {
+                                ratioLock === "editable"
+                                ? <Popover>
+                                    <PopoverTrigger>
+                                      <span
+                                        onClick={() => {
+                                          event.preventDefault();
+                                        }}
+                                        className="inline-block border border-grey rounded pl-4 pb-1 pr-4"
+                                      >
+                                        <Label>{t("Smartcoin:changeRatioValue")}</Label>
+                                      </span>
+                                    </PopoverTrigger>
+                                    <PopoverContent>
+                                      <Label>{t("Smartcoin:provideNewRatio")}</Label>{" "}
+                                      <Input
+                                        placeholder={ratioValue}
+                                        className="mb-2 mt-1"
+                                        onChange={(event) => {
+                                          const input = event.target.value;
+                                          const regex = /^[0-9]*\.?[0-9]*$/;
+                                          if (input && input.length && regex.test(input)) {
+                                            debouncedSetRatioValue(
+                                              input,
+                                              currentFeedSettlementPrice,
+                                              debtAmount,
+                                              collateralAmount,
+                                              parsedBitasset.mcr,
+                                              parsedAsset.p,
+                                              parsedCollateralAsset.p,
+                                              debtLock,
+                                              collateralLock,
+                                              ratioLock
+                                            );
+                                          }
+                                        }}
+                                      />
+                                      <div className="grid grid-cols-1 gap-2">
+                                        <div className="grid grid-cols-3 gap-2">
+                                          <Button
+                                            variant="outline"
+                                            onClick={() => {
+                                              debouncedSetRatioValue(
+                                                ratioValue * 0.9,
+                                                currentFeedSettlementPrice,
+                                                debtAmount,
+                                                collateralAmount,
+                                                parsedBitasset.mcr,
+                                                parsedAsset.p,
+                                                parsedCollateralAsset.p,
+                                                debtLock,
+                                                collateralLock,
+                                                ratioLock
+                                              );
+                                            }}
+                                          >
+                                            - 10%
+                                          </Button>
+                                          <Button
+                                            variant="outline"
+                                            onClick={() => {
+                                              debouncedSetRatioValue(
+                                                originalRatioValue,
+                                                currentFeedSettlementPrice,
+                                                debtAmount,
+                                                collateralAmount,
+                                                parsedBitasset.mcr,
+                                                parsedAsset.p,
+                                                parsedCollateralAsset.p,
+                                                debtLock,
+                                                collateralLock,
+                                                ratioLock
+                                              );
+                                            }}
+                                          >
+                                            🔃
+                                          </Button>
+                                          <Button
+                                            variant="outline"
+                                            onClick={() => {
+                                              debouncedSetRatioValue(
+                                                ratioValue * 1.1,
+                                                currentFeedSettlementPrice,
+                                                debtAmount,
+                                                collateralAmount,
+                                                parsedBitasset.mcr,
+                                                parsedAsset.p,
+                                                parsedCollateralAsset.p,
+                                                debtLock,
+                                                collateralLock,
+                                                ratioLock
+                                              );
+                                            }}
+                                          >
+                                            + 10%
+                                          </Button>
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-2">
+                                            <Button
+                                              variant="outline"
+                                              onClick={() => {
+                                                debouncedSetRatioValue(
+                                                  parsedBitasset.mcr / 1000,
+                                                  currentFeedSettlementPrice,
+                                                  debtAmount,
+                                                  collateralAmount,
+                                                  parsedBitasset.mcr,
+                                                  parsedAsset.p,
+                                                  parsedCollateralAsset.p,
+                                                  debtLock,
+                                                  collateralLock,
+                                                  ratioLock
+                                                );
+                                              }}
+                                            >
+                                              {t("Smartcoin:minimum")}
+                                            </Button>
+                                            {
+                                              debtAmount && collateralAmount && collateralLock === "editable"
+                                                ? <Button
+                                                    variant="outline"
+                                                    onClick={() => {
+                                                      const _1xBacking = currentFeedSettlementPrice * debtAmount;
+                                                      const _maxRatio = (collateralAmount + collateralAssetHoldings) / _1xBacking;
+                                                      const _calculatedMaxRatio = parseFloat(_maxRatio.toFixed(3));
+
+                                                      debouncedSetRatioValue(
+                                                        _calculatedMaxRatio,
+                                                        currentFeedSettlementPrice,
+                                                        debtAmount,
+                                                        collateralAmount,
+                                                        parsedBitasset.mcr,
+                                                        parsedAsset.p,
+                                                        parsedCollateralAsset.p,
+                                                        debtLock,
+                                                        collateralLock,
+                                                        ratioLock
+                                                      );
+                                                    }}
+                                                  >
+                                                    {t("Smartcoin:maximum")}
+                                                  </Button>
+                                                : null
+                                            }
+                                        </div>
+                                      </div>
+                                    </PopoverContent>
+                                  </Popover>
+                                : null
+                              }
                             </span>
                           </span>
                         </FormControl>
@@ -2239,9 +2553,18 @@ export default function Smartcoin(properties) {
                     )}
                   />
 
-                  <Button className="mt-5 mb-3" type="submit">
-                    {t("Smartcoin:submit")}
-                  </Button>
+                  {
+                    debtAssetHoldings && debtAssetHoldings.toString().includes("-")
+                    || collateralAssetHoldings && collateralAssetHoldings.toString().includes("-")
+                    ? <>
+                        <Button className="mt-5 mb-3" disabled>
+                          {t("Smartcoin:submit")}
+                        </Button>
+                    </>
+                    : <Button className="mt-5 mb-3" type="submit">
+                        {t("Smartcoin:submit")}
+                      </Button>
+                  }
                 </form>
               </Form>
             </CardContent>

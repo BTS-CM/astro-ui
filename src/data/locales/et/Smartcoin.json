@@ -1,4 +1,8 @@
 {
+  "minimum": "Minimaalne",
+  "maximum": "Maksimaalne",
+  "lockDebtAmount": "Lock debt amount",
+  "debtAmountLocked": "Unlock debt amount",
   "chargeMarketFee": "Varade väljaandja saab lubada turutasusid.",
   "whiteList": "Varade väljaandja saab koostada heakskiidetud turgude nimekirja",
   "overrideAuthority": "Varade väljaandja saab selle NFT endale tagasi anda.",

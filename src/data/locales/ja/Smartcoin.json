@@ -1,4 +1,8 @@
 {
+  "minimum": "最小",
+  "maximum": "最大",
+  "lockDebtAmount": "ロック債務額",
+  "debtAmountLocked": "負債額のロックを解除します",
   "chargeMarketFee": "資産発行者は市場手数料を有効にすることができます。",
   "whiteList": "資産発行者は承認された市場のリストを作成できます",
   "overrideAuthority": "資産発行者は、この NFT を自分自身に転送できます。",

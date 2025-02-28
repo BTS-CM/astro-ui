@@ -1,4 +1,8 @@
 {
+  "minimum": "Minimum",
+  "maximum": "Maximum",
+  "lockDebtAmount": "Lock debt amount",
+  "debtAmountLocked": "Unlock debt amount",
   "chargeMarketFee": "The asset issuer can enable market fees.",
   "whiteList": "The asset issuer can create a list of approved markets",
   "overrideAuthority": "The asset issuer can transfer this NFT back to themselves.",

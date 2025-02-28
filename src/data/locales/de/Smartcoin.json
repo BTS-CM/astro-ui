@@ -1,4 +1,8 @@
 {
+  "minimum": "Minimum",
+  "maximum": "Maximal",
+  "lockDebtAmount": "Verschuldungsbetrag",
+  "debtAmountLocked": "Schuldenbetrag entsperren",
   "chargeMarketFee": "Der Vermögensemittent kann Marktgebühren ermöglichen.",
   "whiteList": "Der Vermögensemittent kann eine Liste zugelassener Märkte erstellen",
   "overrideAuthority": "Der Vermögensemittent kann diesen NFT an sich selbst zurückübertragen.",
