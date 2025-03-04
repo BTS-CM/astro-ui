@@ -199,95 +199,111 @@ const createWindow = async () => {
     return key.get_random_key().toWif();
   });
 
-  ipcMain.handle("genAccount", (event, arg) => {
-    function _generateKeyFromPassword(accountName, role, password) {
-      let seed = accountName + role + password;
-      let privKey = PrivateKey.fromSeed(seed);
-      let pubKey = privKey.toPublicKey().toString();
-    
-      return { privKey, pubKey };
-    }
-
+  ipcMain.handle("genAccount", async (event, arg) => {
     const {
       userID,
       username,
       password,
-      method
+      method,
+      nodeURL
     } = arg;
 
-    let { privKey: owner_private } = _generateKeyFromPassword(
-      username,
-      "owner",
-      password
-    );
+    let apiInstance;
+    try {
+      apiInstance = Apis.instance(nodeURL, true);
+    } catch (error) {
+      console.log({ error, location: "Apis.instance", nodeURL });
+      return;
+    }
 
-    let { privKey: active_private } = _generateKeyFromPassword(
-      username,
-      "active",
-      password
-    );
+    try {
+      await apiInstance.init_promise;
+      console.log("connected to:", apiInstance.chain_id);
+    } catch (err) {
+      console.log({ err });
+      return;
+    }
 
-    let { privKey: memo_private } = _generateKeyFromPassword(
+    apiInstance.close();
+    apiInstance = null;
+
+    function _generateKeyFromPassword(accountName, role, password) {
+      let seed = accountName + role + password;
+      let privKey = PrivateKey.fromSeed(seed);
+      let pubKey = privKey.toPublicKey().toPublicKeyString();
+      return { privKey, pubKey };
+    }
+ 
+    if (!userID || !username || !password || !method) {
+      console.log(`Missing required parameters for account generation`);
+      return { success: false };
+    }
+  
+    let {
+      privKey: owner_private,
+      pubKey: owner_public
+    } = _generateKeyFromPassword(username, "owner", password);
+  
+    let { privKey: active_private, pubKey: active_public } = _generateKeyFromPassword(
+                                                              username, "active", password
+                                                            );
+  
+    let { privKey: memo_private, pubKey: memo_public } = _generateKeyFromPassword(
       username,
       "memo",
       password
     );
-
+    
     if (method === "ltm") {
       // BeetEOS broadcast by LTM account creating premium account names
-
+  
       if (!userID) {
         console.log(`User ID is required for this method`);
-        return reject({ success: false });
+        return { success: false };
       }
-      
+  
       return {
         fee: {
-            amount: 0,
-            asset_id: "1.3.0"
+          amount: 0,
+          asset_id: "1.3.0"
         },
         registrar: userID,
         referrer: userID,
         referrer_percent: 100,
         name: username,
         owner: {
-            weight_threshold: 1,
-            account_auths: [],
-            key_auths: [[
-              owner_private.toPublicKey().toPublicKeyString(), 1
-            ]],
-            address_auths: []
+          weight_threshold: 1,
+          account_auths: [],
+          key_auths: [[owner_public, 1]],
+          address_auths: []
         },
         active: {
-            weight_threshold: 1,
-            account_auths: [],
-            key_auths: [[
-              active_private.toPublicKey().toPublicKeyString(), 1
-            ]],
-            address_auths: []
+          weight_threshold: 1,
+          account_auths: [],
+          key_auths: [[active_public, 1]],
+          address_auths: []
         },
         options: {
-            memo_key: memo_private.toPublicKey().toPublicKeyString(),
-            voting_account: "1.2.5", // proxy-to-self
-            votes: [],
-            num_witness: 0,
-            num_committee: 0,
+          memo_key: memo_public,
+          voting_account: "1.2.5", // proxy-to-self
+          votes: [],
+          num_witness: 0,
+          num_committee: 0,
         }
       };
     } else {
       // Creating user with the public account faucet
       return {
         account: {
-            name: username,
-            owner_key: owner_private.toPublicKey().toPublicKeyString(),
-            active_key: active_private.toPublicKey().toPublicKeyString(),
-            memo_key: memo_private.toPublicKey().toPublicKeyString(),
-            refcode: "1.2.1803677",
-            referrer: "1.2.1803677"
+          name: username,
+          owner_key: owner_public,
+          active_key: active_public,
+          memo_key: memo_public,
+          refcode: "1.2.1803677",
+          referrer: "1.2.1803677"
         }
       };
     }
-    
   });
 
 
@@ -353,6 +369,26 @@ const createWindow = async () => {
 
     const accountHistory = await history.json();
     return accountHistory ?? null;
+  });
+
+  ipcMain.on("notify", (event, arg) => {
+    const NOTIFICATION_TITLE = "Error!";
+    const NOTIFICATION_BODY = arg;
+
+    if (os.platform === "win32") {
+        app.setAppUserModelId(app.name);
+    }
+
+    function showNotification() {
+        new Notification({
+            title: NOTIFICATION_TITLE,
+            subtitle: "subtitle",
+            body: NOTIFICATION_BODY,
+            icon: __dirname + "/img/tray.png",
+        }).show();
+    }
+
+    showNotification();
   });
 
   ipcMain.handle("faucetRegistration", async (event, arg) => {

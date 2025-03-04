@@ -119,7 +119,8 @@ const CreateAccount = () => {
           userID: usr.id,
           username: username,
           password: password,
-          method: method
+          method: method,
+          nodeURL: currentNode ? currentNode.url : null
         });
       } catch (error) {
         console.log({ error });
@@ -130,17 +131,18 @@ const CreateAccount = () => {
       }
     }
 
-    if (usr && usr.id && username && password && password === generatedPassword) {
+    if (
+      usr && usr.id && username &&
+      password && password === generatedPassword
+    ) {
       generate();
     }
   }, [usr, username, password, generatedPassword, method]);
 
   const [faucetInProgress, setFaucetInProgress] = useState(false);
-  const [faucetError, setFaucetError] = useState(false);
   //const [accountResponse, setAccountResponse] = useState();
   const faucetConfirm = async () => {
     setFaucetInProgress(true);
-    setFaucetError(false);
     let registeredAccount;
     try {
       registeredAccount = await window.electron.faucetRegistration({
@@ -149,7 +151,7 @@ const CreateAccount = () => {
       });
     } catch (error) {
       console.log({ error });
-      setFaucetError(true);
+      window.electron.notify(t("CreateAccount:faucetError"));
     }
     setFaucetInProgress(false);
 
@@ -193,8 +195,12 @@ const CreateAccount = () => {
                   username &&
                   username.length &&
                   (
+                    username.length > 63 || // accounts can't be longer than 64 characters
                     (method === "faucet" && isNaN(username[username.length - 1])) || // free accounts must end in a number
-                    (username.split(".").length > 2) // accounts can't include more than 1 period
+                    username[username.length - 1] === "." || // accounts can't end in a period 
+                    username.includes("--") || // No 2 dashes in a row
+                    (username.split(".").length > 2) || // accounts can't include more than 1 period
+                    /[^a-zA-Z0-9-.]/.test(username) // only allow letters, numbers, dashes, and one dot
                   )
                     ? <p className="mt-2 text-sm text-red-600">{t("CreateAccount:invalidUsername")}</p>
                     : null
@@ -323,14 +329,19 @@ const CreateAccount = () => {
               {
                 username &&
                 username.length &&
+                username.length < 64 &&
                 username.split(".").length <= 2 &&
+                !username.includes("--") &&
+                !/[^a-zA-Z0-9-.]/.test(username) &&
                 (
                   method === "ltm" ||
-                  (method === "faucet" && !isNaN(username[username.length - 1]))
+                  (
+                    method === "faucet" &&
+                    !isNaN(username[username.length - 1]) &&
+                    username[username.length - 1] !== "."
+                  )
                 ) &&
-                password &&
-                generatedPassword &&
-                password === generatedPassword &&
+                password && generatedPassword && password === generatedPassword &&
                 generatedAccountData &&
                 loseAccessChecked && noRecoveryChecked && writtenDownChecked
                   ? <>
@@ -338,7 +349,7 @@ const CreateAccount = () => {
                         method === "ltm" && !deeplinkDialog
                           ? <Button
                               onClick={() => setDeeplinkDialog(true)}
-                              className="w-1/4 text-left"
+                              className="w-1/3 text-left"
                             >
                               {t("CreateAccount:generateDeeplink")}
                             </Button>
@@ -348,14 +359,14 @@ const CreateAccount = () => {
                         method === "faucet"
                           ? <Button
                               onClick={faucetConfirm}
-                              className="w-1/4 text-left"
+                              className="w-1/3 text-left"
                             >
                               {t("CreateAccount:submit")}
                             </Button>
                           : null
                       }
                     </> 
-                  : <Button className="w-1/4 text-left" disabled>
+                  : <Button className="w-1/3 text-left" disabled>
                       {t("CreateAccount:submit")}
                     </Button>
               }
@@ -368,11 +379,6 @@ const CreateAccount = () => {
           {
             faucetInProgress
               ? <p>{t("CreateAccount:faucetInProgress")}</p>
-              : null
-          }
-          {
-            faucetError
-              ? <p>{t("CreateAccount:faucetError")}</p>
               : null
           }
           </CardContent>
