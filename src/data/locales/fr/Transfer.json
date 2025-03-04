@@ -36,5 +36,8 @@
   "scamAlertDescription": "Soyez vigilant face aux escrocs !",
   "scamAlertPoint1": "Les échanges cryptographiques ne vous enverront JAMAIS de message avec des instructions de transfert spéciales à suivre pour les dépôts ou les retraits.",
   "scamAlertPoint2": "Les opérations de transfert d'actifs sont permanentes et la majorité des actifs sont irrécupérables en cas de transfert erroné.",
-  "scamAlertPoint3": "Si quelque chose semble trop beau pour être vrai, c'est probablement le cas, ne soyez pas victime des astuces des escrocs."
+  "scamAlertPoint3": "Si quelque chose semble trop beau pour être vrai, c'est probablement le cas, ne soyez pas victime des astuces des escrocs.",
+  "optionalMemo": "Mémo en option",
+  "memoFieldLabel": "Champ de mémo",
+  "memoFieldDescription": "Un message crypté pour {{targetUser}}les yeux seulement.\n"
 }

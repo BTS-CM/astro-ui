@@ -180,5 +180,11 @@
     "subtitle": "Konfiguration des Blockchain-Knotens",
     "hover1": "Stellen Sie eine Verbindung zu einem Bitshares-Knoten Ihrer Wahl her.",
     "hover2": "Fügen Sie Ihrer Verbindungsliste Knoten hinzu bzw. entfernen Sie sie."
+  },
+  "create_account": {
+    "title": "🆕 Konto erstellen",
+    "subtitle": "Erstellen Sie ein neues Cloud Wallet -Konto auf der Bitshares -Blockchain.",
+    "hover1": "Erstellen Sie ein kostenloses Konto mit einem öffentlichen Wasserhahn.",
+    "hover2": "Generieren Sie ein Premium -Konto mit einem vorhandenen LTM -Konto."
   }
 }

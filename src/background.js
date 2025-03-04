@@ -3,6 +3,7 @@ import os from "os";
 import url from "url";
 import express from "express";
 
+import { key, PrivateKey } from "bitsharesjs";
 import { Apis } from "bitsharesjs-ws";
 
 import { app, BrowserWindow, Menu, Tray, ipcMain, screen, shell } from "electron";
@@ -194,6 +195,102 @@ const createWindow = async () => {
     isFetching = false;
   });
 
+  ipcMain.handle("genKey", async () => {
+    return key.get_random_key().toWif();
+  });
+
+  ipcMain.handle("genAccount", (event, arg) => {
+    function _generateKeyFromPassword(accountName, role, password) {
+      let seed = accountName + role + password;
+      let privKey = PrivateKey.fromSeed(seed);
+      let pubKey = privKey.toPublicKey().toString();
+    
+      return { privKey, pubKey };
+    }
+
+    const {
+      userID,
+      username,
+      password,
+      method
+    } = arg;
+
+    let { privKey: owner_private } = _generateKeyFromPassword(
+      username,
+      "owner",
+      password
+    );
+
+    let { privKey: active_private } = _generateKeyFromPassword(
+      username,
+      "active",
+      password
+    );
+
+    let { privKey: memo_private } = _generateKeyFromPassword(
+      username,
+      "memo",
+      password
+    );
+
+    if (method === "ltm") {
+      // BeetEOS broadcast by LTM account creating premium account names
+
+      if (!userID) {
+        console.log(`User ID is required for this method`);
+        return reject({ success: false });
+      }
+      
+      return {
+        fee: {
+            amount: 0,
+            asset_id: "1.3.0"
+        },
+        registrar: userID,
+        referrer: userID,
+        referrer_percent: 100,
+        name: username,
+        owner: {
+            weight_threshold: 1,
+            account_auths: [],
+            key_auths: [[
+              owner_private.toPublicKey().toPublicKeyString(), 1
+            ]],
+            address_auths: []
+        },
+        active: {
+            weight_threshold: 1,
+            account_auths: [],
+            key_auths: [[
+              active_private.toPublicKey().toPublicKeyString(), 1
+            ]],
+            address_auths: []
+        },
+        options: {
+            memo_key: memo_private.toPublicKey().toPublicKeyString(),
+            voting_account: "1.2.5", // proxy-to-self
+            votes: [],
+            num_witness: 0,
+            num_committee: 0,
+        }
+      };
+    } else {
+      // Creating user with the public account faucet
+      return {
+        account: {
+            name: username,
+            owner_key: owner_private.toPublicKey().toPublicKeyString(),
+            active_key: active_private.toPublicKey().toPublicKeyString(),
+            memo_key: memo_private.toPublicKey().toPublicKeyString(),
+            refcode: "1.2.1803677",
+            referrer: "1.2.1803677"
+        }
+      };
+    }
+    
+  });
+
+
   ipcMain.handle("fetchTopMarkets", async (event, arg) => {
     const { chain } = arg;
 
@@ -257,6 +354,45 @@ const createWindow = async () => {
     const accountHistory = await history.json();
     return accountHistory ?? null;
   });
+
+  ipcMain.handle("faucetRegistration", async (event, arg) => {
+    const { chain, bodyParameters } = arg;
+
+    function createAccountWithPassword(chain, bodyParameters) {
+        return new Promise((resolve, reject) => {
+            const faucetAddress = chain === "bitshares"
+                ? "https://faucet.bitshares.eu/onboarding"
+                : "https://faucet.testnet.bitshares.eu";
+
+            fetch(faucetAddress + "/api/v1/accounts", {
+                method: "post",
+                mode: "cors",
+                headers: {
+                    Accept: "application/json",
+                    "Content-type": "application/json"
+                },
+                body: bodyParameters
+            })
+            .then(response => response.json())
+            .then(res => {
+                if (!res || (res && res.error)) {
+                    reject(res.error);
+                } else {
+                    resolve(res);
+                }
+            })
+            .catch(reject);
+        });
+    }
+
+    try {
+        const result = await createAccountWithPassword(chain, bodyParameters);
+        return result;
+    } catch (error) {
+        console.error("Error during faucet registration:", error);
+        return { error };
+    }
+});
 
   ipcMain.handle("generateDeepLink", async (event, arg) => {
     const { usrChain, nodeURL, operationNames, trxJSON } = arg;

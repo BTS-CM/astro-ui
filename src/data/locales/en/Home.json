@@ -180,5 +180,11 @@
     "subtitle": "Blockchain node configuration",
     "hover1": "Connect to a Bitshares node of your choice.",
     "hover2": "Add/remove nodes to your connection list."
+  },
+  "create_account": {
+    "title": "🆕 Create Account",
+    "subtitle": "Create a new cloud wallet account on the BitShares blockchain.",
+    "hover1": "Create a free account using a public faucet.",
+    "hover2": "Generate a premium account using an existing LTM account."
   }
 }

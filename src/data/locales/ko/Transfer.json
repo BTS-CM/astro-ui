@@ -36,5 +36,8 @@
   "scamAlertDescription": "사기꾼을 조심하세요!",
   "scamAlertPoint1": "암호화폐 거래소에서는 입금이나 출금 시 따라야 할 특별 이체 지침을 사용자에게 직접 메시지로 보내지 않습니다.",
   "scamAlertPoint2": "자산 양도 작업은 영구적이며 잘못 양도된 경우 대부분의 자산은 복구할 수 없습니다.",
-  "scamAlertPoint3": "어떤 것이 사실이라고 믿기에는 너무 좋아 보인다면 사기꾼의 속임수에 넘어가지 마세요."
+  "scamAlertPoint3": "어떤 것이 사실이라고 믿기에는 너무 좋아 보인다면 사기꾼의 속임수에 넘어가지 마세요.",
+  "optionalMemo": "선택적 메모",
+  "memoFieldLabel": "메모 필드",
+  "memoFieldDescription": "암호화 된 메시지 {{targetUser}}눈 만.\n"
 }

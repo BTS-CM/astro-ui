@@ -55,7 +55,8 @@ const pages = [
   "AccountLists",
   "Proposals",
   "Operations",
-  "PoolTracker"
+  "PoolTracker",
+  "CreateAccount"
 ];
 
 const locale = persistentAtom("locale", "en");

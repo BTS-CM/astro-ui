@@ -593,6 +593,26 @@ export default function Home(properties) {
             </ul>
           </HoverCardContent>
         </HoverCard>
+
+        <HoverCard key="create_account">
+          <HoverCardTrigger asChild>
+            <a href="/create_account/index.html" style={{ textDecoration: "none" }}>
+              <Card className="h-full hover:shadow-md hover:shadow-black">
+                <CardHeader>
+                  <CardTitle>{t("Home:create_account.title")}</CardTitle>
+                  <CardDescription>{t("Home:create_account.subtitle")}</CardDescription>
+                </CardHeader>
+              </Card>
+            </a>
+          </HoverCardTrigger>
+          <HoverCardContent className="w-80 text-sm pt-1">
+            <ul className="ml-2 list-disc [&>li]:mt-2">
+              <li>{t("Home:create_account.hover1")}</li>
+              <li>{t("Home:create_account.hover2")}</li>
+            </ul>
+          </HoverCardContent>
+        </HoverCard>
+
       </div>
     </div>
   );

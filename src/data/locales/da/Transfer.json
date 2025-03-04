@@ -36,5 +36,8 @@
   "scamAlertDescription": "Vær på vagt over for svindlere!",
   "scamAlertPoint1": "Krypto-udvekslinger vil ALDRIG sende dig besked med særlige overførselsinstruktioner, du skal følge for ind- eller udbetalinger.",
   "scamAlertPoint2": "Aktivoverførselsoperationer er permanente, og størstedelen af ​​aktiverne er uinddrivelige, hvis de er overført ved en fejl.",
-  "scamAlertPoint3": "Hvis noget lyder for godt til at være sandt, så er det sandsynligt, at du ikke bliver offer for svindlere."
+  "scamAlertPoint3": "Hvis noget lyder for godt til at være sandt, så er det sandsynligt, at du ikke bliver offer for svindlere.",
+  "optionalMemo": "Valgfri memo",
+  "memoFieldLabel": "Memo Field",
+  "memoFieldDescription": "En krypteret besked til {{targetUser}}kun øjne.\n"
 }

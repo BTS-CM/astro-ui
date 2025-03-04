@@ -180,5 +180,11 @@
     "subtitle": "Configuration du nœud blockchain",
     "hover1": "Connectez-vous à un nœud Bitshares de votre choix.",
     "hover2": "Ajoutez/supprimez des nœuds à votre liste de connexions."
+  },
+  "create_account": {
+    "title": "🆕 Créer un compte",
+    "subtitle": "Créez un nouveau compte de portefeuille Cloud sur la blockchain BitShares.",
+    "hover1": "Créez un compte gratuit à l'aide d'un robinet public.",
+    "hover2": "Générez un compte premium à l'aide d'un compte LTM existant."
   }
 }

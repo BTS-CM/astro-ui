@@ -180,5 +180,11 @@
     "subtitle": "Configurazione del nodo blockchain",
     "hover1": "Connettiti a un nodo Bitshares di tua scelta.",
     "hover2": "Aggiungi/rimuovi nodi all'elenco delle connessioni."
+  },
+  "create_account": {
+    "title": "🆕 Crea account",
+    "subtitle": "Crea un nuovo account di portafoglio cloud sulla blockchain BitShares.",
+    "hover1": "Crea un account gratuito utilizzando un rubinetto pubblico.",
+    "hover2": "Genera un account premium utilizzando un account LTM esistente."
   }
 }

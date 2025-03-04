@@ -180,5 +180,11 @@
     "subtitle": "Blockchain node konfiguration",
     "hover1": "Opret forbindelse til en Bitshares-node efter eget valg.",
     "hover2": "Tilføj/fjern noder til din forbindelsesliste."
+  },
+  "create_account": {
+    "title": "🆕 Opret konto",
+    "subtitle": "Opret en ny Cloud -tegnebogskonto på Bitshares blockchain.",
+    "hover1": "Opret en gratis konto ved hjælp af en offentlig vandhane.",
+    "hover2": "Generer en premium -konto ved hjælp af en eksisterende LTM -konto."
   }
 }
