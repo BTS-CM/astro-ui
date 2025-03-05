@@ -2,7 +2,7 @@
 import { getCollection } from 'astro:content';
 
 import Layout from '../layouts/Layout.astro';
-import SameTFunds from '../components/SameTFunds.jsx';
+import TFundUser from '../components/TFundUser.jsx';
 import PageHeader from '../components/PageHeader.jsx';
 import PageFooter from '../components/PageFooter.jsx';
 
@@ -18,17 +18,17 @@ const btsMarkets = btsMarketData.map((collection) => collection.data);
 const testMarkets = testMarketData.map((collection) => collection.data);
 ---
 
-<Layout title="Bitshares Same-Transaction Funds">
+<Layout title="Bitshares Same-T Fund Wizard">
 	<main>
 		<PageHeader client:only="react" page="tfunds" backURL="../index.html" />
-		<SameTFunds
+		<TFundUser
 			client:only="react"
 			_assetsBTS={btsAssets}
 			_assetsTEST={testAssets}
 			_marketSearchBTS={btsMarkets}
 			_marketSearchTEST={testMarkets}
 		/>
-		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/tfunds.astro" />
+		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/tfund_user.astro" />
 	</main>
 </Layout>
 

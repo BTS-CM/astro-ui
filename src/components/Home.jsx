@@ -268,6 +268,26 @@ export default function Home(properties) {
             </ul>
           </HoverCardContent>
         </HoverCard>
+
+        <HoverCard key="tfunds">
+          <HoverCardTrigger asChild>
+            <a href="/tfund_user/index.html" style={{ textDecoration: "none" }}>
+              <Card className="h-full hover:shadow-md hover:shadow-black">
+                <CardHeader>
+                  <CardTitle>{t("Home:tfund_user.title")}</CardTitle>
+                  <CardDescription>{t("Home:tfund_user.subtitle")}</CardDescription>
+                </CardHeader>
+              </Card>
+            </a>
+          </HoverCardTrigger>
+          <HoverCardContent className="w-80 text-sm pt-1">
+            <ul className="ml-2 list-disc [&>li]:mt-2">
+              <li>{t("Home:tfund_user.hover1")}</li>
+              <li>{t("Home:tfund_user.hover2")}</li>
+              <li>{t("Home:tfund_user.hover3")}</li>
+            </ul>
+          </HoverCardContent>
+        </HoverCard>
       </div>
 
       <h4 className="mt-3 mb-2">{t("PageHeader:overviewsHeading")}</h4>
