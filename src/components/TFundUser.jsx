@@ -1,10 +1,8 @@
 import React, { useSyncExternalStore, useMemo, useState, useEffect, useCallback } from "react";
 import { FixedSizeList as List } from "react-window";
 import { useStore } from "@nanostores/react";
-import Fuse from "fuse.js";
 import { sha256 } from "@noble/hashes/sha2";
 import { bytesToHex as toHex } from "@noble/hashes/utils";
-import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
@@ -30,12 +28,13 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-import AssetDropDown from "@/components/Market/AssetDropDownCard.jsx";
+import BasicAssetDropDownCard from "@/components/Market/BasicAssetDropDownCard.jsx";
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
 import { createEverySameTFundStore } from "@/nanoeffects/SameTFunds.ts";
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 import { createObjectStore } from "@/nanoeffects/Objects.ts";
+import { createLimitOrdersStore } from "@/nanoeffects/MarketLimitOrders.ts";
 
 import { $currentUser } from "@/stores/users.ts";
 
@@ -72,7 +71,14 @@ export default function SameTFunds(properties) {
 
   const marketSearch = useMemo(() => {
     if (usr && usr.chain && (_marketSearchBTS || _marketSearchTEST)) {
-      return usr.chain === "bitshares" ? _marketSearchBTS : _marketSearchTEST;
+      let _ref = usr.chain === "bitshares" ? _marketSearchBTS : _marketSearchTEST;
+      return usr.chain === "bitshares" && blocklist && blocklist.users
+        ? _ref.filter(
+            (asset) => !blocklist.users.includes(
+              toHex(sha256(asset.u.split(" ")[1].replace("(", "").replace(")", "")))
+            ),
+          )
+        : _ref;
     }
     return [];
   }, [_marketSearchBTS, _marketSearchTEST, usr]);
@@ -204,7 +210,9 @@ export default function SameTFunds(properties) {
     const unpaidAmount = humanReadableFloat(fund.unpaid_amount, asset.precision);
     const lender = lenderAccounts.find((x) => x.id === fund.owner_account);
 
-    const [borrowAmount, setBorrowAmount] = useState(0);
+    const [borrowAmount, setBorrowAmount] = useState(
+      borrowPositions.find((x) => x.id === fund.id)?.borrow_amount || 0
+    );
     const [borrowPositionDialog, setBorrowPositionDialog] = useState(false);
 
     return (
@@ -265,7 +273,7 @@ export default function SameTFunds(properties) {
                     Borrow
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="bg-white w-full max-w-4xl bg-gray-100">
+                <DialogContent className="bg-white w-1/2 max-w-4xl bg-gray-100">
                   <DialogHeader>
                     <DialogTitle>How much would you like to borrow?</DialogTitle>
                     <DialogDescription>
@@ -273,25 +281,59 @@ export default function SameTFunds(properties) {
                       Fee rate: {feeRate}%
                     </DialogDescription>
                   </DialogHeader>
-                  <div className="grid grid-cols-3 gap-5">
+                  <div className="grid grid-cols-1 gap-3">
                     <Input
                       value={borrowAmount}
                       type="text"
                       onInput={(e) => {
                         const value = e.currentTarget.value;
                         if (regex.test(value)) {
-                          setBorrowAmount(value);
+                          setBorrowAmount(balance - unpaidAmount < value ? balance - unpaidAmount : value);
                         }
                       }}
                     />
-                    <Button
-                      variant="outline"
-                      onClick={() => {
-                        setBorrowAmount(balance - unpaidAmount);
-                      }}
-                    >
-                      100%
-                    </Button>
+                    <div className="grid grid-cols-5 gap-2">
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          setBorrowAmount(0);
+                        }}
+                      >
+                        0%
+                      </Button>
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          setBorrowAmount((balance - unpaidAmount) * 0.25);
+                        }}
+                      >
+                        25%
+                      </Button>
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          setBorrowAmount((balance - unpaidAmount) * 0.50);
+                        }}
+                      >
+                        50%
+                      </Button>
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          setBorrowAmount((balance - unpaidAmount) * 0.75);
+                        }}
+                      >
+                        75%
+                      </Button>
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          setBorrowAmount(balance - unpaidAmount);
+                        }}
+                      >
+                        100%
+                      </Button>
+                    </div>
                     {
                       borrowAmount > 0
                       ? <Button
@@ -308,6 +350,7 @@ export default function SameTFunds(properties) {
                                   id: fund.id,
                                   asset_id: fund.asset_type,
                                   borrow_amount: parseFloat(borrowAmount),
+                                  fee_rate: fund.fee_rate
                                 });
                               }
                         
@@ -319,7 +362,17 @@ export default function SameTFunds(properties) {
                         >
                           Submit
                         </Button>
-                      : <Button variant="outline" disabled>
+                      : <Button
+                          variant="outline"
+                          onClick={() => {
+                            setBorrowPositions((prevBorrowPositions) => {
+                              const _borrows = prevBorrowPositions.filter((x) => x.id !== fund.id);
+                              return _borrows;
+                            });
+                        
+                            setBorrowPositionDialog(false);
+                          }}
+                        >
                           Submit
                         </Button>
                     }
@@ -335,22 +388,8 @@ export default function SameTFunds(properties) {
     );
   };
 
-  const [operations, setOperations] = useState([]);
-  const OpRow = ({ index, style }) => {
-    let _operation = operations[index];
-
-    if (!_operation) {
-      return null;
-    }
-
-    return (
-      <div className="grid grid-cols-1">
-        Trading x for y
-      </div>
-    );
-  };
-
   const [deeplinkDialog, setDeeplinkDialog] = useState(false);
+  const [operations, setOperations] = useState([]);
 
   const operationsJSON = useMemo(() => {
     let _operations = [];
@@ -360,51 +399,348 @@ export default function SameTFunds(properties) {
       !sameTFunds ||
       !sameTFunds.length ||
       !operations.length ||
-      !Object.keys(borrowPositions).length
+      !borrowPositions.length
     ) {
       return _operations;
     }
 
-    Object.keys(borrowPositions).map((key) => {
-      const _referenceFund = sameTFunds.find((x) => x.id === key.replaceAll("_", "."));
-      const _referenceFundAsset = assets.find((x) => x.id === _referenceFund.asset_type);
+    /*
+      {
+        id: fund.id,
+        asset_id: fund.asset_type,
+        borrow_amount: parseFloat(borrowAmount),
+      }
+    */
+
+    borrowPositions.map((x) => {
+      const _id = x.id;
+      const _borrowAssetID = x.asset_id;
+      const _borrowAmount = x.borrow_amount;
+
+      const _referenceFundAsset = assets.find((x) => x.id === _borrowAssetID);
       _operations.push({
         borrower: usr.id,
-        fund_id: _referenceFund.id,
+        fund_id: _id,
         borrow_amount: {
-          amount: blockchainFloat(borrowPositions[key], _referenceFundAsset.precision),
+          amount: blockchainFloat(_borrowAmount, _referenceFundAsset.precision),
           asset_id: _referenceFundAsset.id
         },
-        extensions: []
+        extensions: {}
       });
     });
 
     _operations.concat(operations);
 
-    Objects.keys(borrowPositions).map((key) => {
-      const _referenceFund = sameTFunds.find((x) => x.id === key.replaceAll("_", "."));
-      const _referenceFundAsset = assets.find((x) => x.id === _referenceFund.asset_type);
+    borrowPositions.map((x) => {
+      const _id = x.id;
+      const _borrowAssetID = x.asset_id;
+      const _borrowAmount = x.borrow_amount;
+      const _feeRate = x.fee_rate;
 
-      const _debtAmount = blockchainFloat(borrowPositions[key], _referenceFundAsset.precision);
-      const _feeAmount = _debtAmount * _referenceFund.fee_rate / 100;
+      const _referenceFundAsset = assets.find((x) => x.id === _borrowAssetID);
+
+      const _feeAmount = _borrowAmount * _feeRate / 100;
 
       _operations.push({
         account: usr.id,
-        fund_id: _referenceFund.id,
+        fund_id: _id,
         repay_amount: {
-          amount: blockchainFloat(borrowPositions[key], _referenceFundAsset.precision),
+          amount: blockchainFloat(_borrowAmount, _referenceFundAsset.precision),
           asset_id: _referenceFundAsset.id
         },
         fund_fee: {
-          amount: _feeAmount,
+          amount: blockchainFloat(_feeAmount, _referenceFundAsset.precision),
           asset_id: _referenceFundAsset.id
         },
-        extensions: []
+        extensions: {}
       });
     });
 
     return _operations;
   }, [borrowPositions, operations, sameTFunds, usr]);
+
+  const [sellingAsset, setSellingAsset] = useState(null);
+  const [buyingAsset, setBuyingAsset] = useState(null);
+
+  const sellingAssetData = useMemo(() => {
+    if (sellingAsset && assets && assets.length) {
+      return assets.find((x) => x.symbol === sellingAsset);
+    }
+    return null; 
+  }, [sellingAsset, assets]);
+
+  const buyingAssetData = useMemo(() => {
+    if (buyingAsset && assets && assets.length) {
+      return assets.find((x) => x.symbol === buyingAsset);
+    }
+    return null;
+  }, [buyingAsset, assets]);
+
+  const [marketLimitOrders, setMarketLimitOrders] = useState([]);
+  useEffect(() => {
+    async function fetching() {
+      const limitOrdersStore = createLimitOrdersStore([
+        _chain,
+        sellingAsset,
+        buyingAsset,
+        100,
+        currentNode ? currentNode.url : null,
+      ]);
+
+      limitOrdersStore.subscribe(({ data, error, loading }) => {
+        if (data && !error && !loading) {
+          setMarketLimitOrders(data.filter((_limitOrder) => {
+            return _limitOrder.sell_price.base.asset_id === sellingAssetData.id && _limitOrder.sell_price.quote.asset_id === buyingAssetData.id;
+          }));
+        }
+      });
+    }
+
+    if (sellingAsset && buyingAsset && sellingAssetData && buyingAssetData && _chain && currentNode) {
+      fetching();
+    }
+  }, [sellingAsset, sellingAssetData, buyingAsset, buyingAssetData, _chain, currentNode]);
+
+  const limitOrderRow = ({ index, style }) => {
+    let _order = marketLimitOrders[index];
+
+    if (!_order) {
+      return null;
+    }
+
+    const regex = new RegExp(`^[0-9]*\\.?[0-9]{0,${sellingAssetData.precision}}$`);
+
+    /*
+      {
+          "id": "1.7.558989518",
+          "expiration": "2025-11-26T05:56:04",
+          "seller": "1.2.114122",
+          "for_sale": 90000,
+          "sell_price": {
+              "base": {
+                  "amount": 2988000,
+                  "asset_id": "1.3.0"
+              },
+              "quote": {
+                  "amount": 498,
+                  "asset_id": "1.3.106"
+              }
+          },
+          "filled_amount": "2898000",
+          "deferred_fee": 0,
+          "deferred_paid_fee": {
+              "amount": 0,
+              "asset_id": "1.3.0"
+          },
+          "is_settled_debt": false,
+          "on_fill": []
+      }
+    */
+
+    const existingOperation = operations.find(op => op.id === _order.id);
+    const [limitOrderBuyAmount, setLimitOrderBuyAmount] = useState(
+      existingOperation
+        ? existingOperation.final_buy_amount
+        : 0
+    );
+        
+    const _baseAmount = humanReadableFloat(_order.sell_price.base.amount, sellingAssetData.precision);
+    const _quoteAmount = humanReadableFloat(_order.sell_price.quote.amount, buyingAssetData.precision);
+
+    const percentageCommitted = limitOrderBuyAmount > 0
+      ? ((limitOrderBuyAmount / _quoteAmount) * 100).toFixed(3)
+      : 0;
+
+    return (
+      <div
+        style={style}
+        key={`marketLimitOrder-${_order.id}`}
+        className="grid grid-cols-5 gap-3 border rounded border-gray-300 p-2 text-center"
+      >
+        <div>
+          {_quoteAmount}
+        </div>
+        <div className="border-l border-r border-gray-300">
+          {_baseAmount}
+        </div>
+        <div className="border-r border-gray-300">
+          {(_quoteAmount / _baseAmount).toFixed(sellingAssetData.precision)}
+        </div>
+        <div className="border-r border-gray-300">
+          {percentageCommitted}
+        </div>
+        <Dialog>
+          <DialogTrigger>
+            <Button variant="outline">
+              Buy
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="bg-white">
+            <DialogHeader>
+              <DialogTitle>Buying into open limit order</DialogTitle>
+              <DialogDescription>
+                How much of the following open market order do you want to buy?
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid grid-cols-1 gap-3">
+              <Input
+                value={limitOrderBuyAmount}
+                type="text"
+                onInput={(e) => {
+                  const value = e.currentTarget.value;
+                  if (regex.test(value)) {
+                    setLimitOrderBuyAmount(value > _quoteAmount ? _quoteAmount : value);
+                  }
+                }}
+              />
+              <div className="grid grid-cols-5 gap-2">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setLimitOrderBuyAmount(0);
+                  }}
+                >
+                  0%
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setLimitOrderBuyAmount(_quoteAmount * 0.25);
+                  }}
+                >
+                  25%
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setLimitOrderBuyAmount(_quoteAmount * 0.50);
+                  }}
+                >
+                  50%
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setLimitOrderBuyAmount(_quoteAmount * 0.75);
+                  }}
+                >
+                  75%
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setLimitOrderBuyAmount(_quoteAmount);
+                  }}
+                >
+                  100%
+                </Button>
+              </div>
+              {
+                limitOrderBuyAmount > 0
+                  ? <Button
+                      variant="outline"
+                      onClick={() => {
+                        setOperations((prevOperations) => {
+                          const _ops = [...prevOperations];
+                      
+                          const hasLaterOrders = _ops.some(op => {
+                            const orderIndex = marketLimitOrders.findIndex(order => order.id === op.id);
+                            return orderIndex > index;
+                          });
+                      
+                          if (limitOrderBuyAmount === 0 || (limitOrderBuyAmount < _quoteAmount && hasLaterOrders)) {
+                            // Remove subsequent market limit orders if the current order is set to 0% or less than 100% and there are later orders
+                            for (let i = index + 1; i < marketLimitOrders.length; i++) {
+                              const subsequentOrder = marketLimitOrders[i];
+                              const existingSubsequentOperationIndex = _ops.findIndex(op => op.id === subsequentOrder.id);
+                      
+                              if (existingSubsequentOperationIndex !== -1) {
+                                // Remove existing subsequent operation
+                                _ops.splice(existingSubsequentOperationIndex, 1);
+                              }
+                            }
+                          }
+                      
+                          // Set prior market limit orders to 100%
+                          for (let i = 0; i < index; i++) {
+                            const priorOrder = marketLimitOrders[i];
+                            const priorOrderAmount = humanReadableFloat(priorOrder.sell_price.quote.amount, buyingAssetData.precision);
+                            const existingPriorOperationIndex = _ops.findIndex(op => op.id === priorOrder.id);
+                      
+                            if (existingPriorOperationIndex !== -1) {
+                              // Update existing prior operation
+                              _ops[existingPriorOperationIndex] = {
+                                ..._ops[existingPriorOperationIndex],
+                                final_buy_amount: priorOrderAmount
+                              };
+                            } else {
+                              // Add new prior operation
+                              priorOrder["final_buy_amount"] = priorOrderAmount;
+                              _ops.push(priorOrder);
+                            }
+                          }
+                      
+                          // Set current order to the specified buy amount
+                          const existingOperationIndex = _ops.findIndex(op => op.id === _order.id);
+                          if (existingOperationIndex !== -1) {
+                            // Update existing operation
+                            _ops[existingOperationIndex] = {
+                              ..._ops[existingOperationIndex],
+                              final_buy_amount: limitOrderBuyAmount
+                            };
+                          } else {
+                            // Add new operation
+                            _order["final_buy_amount"] = limitOrderBuyAmount;
+                            _ops.push(_order);
+                          }
+                      
+                          return _ops;
+                        });
+                      }}
+                    >
+                      Submit
+                    </Button>
+                  : <Button
+                      variant="outline"
+                      onClick={() => {
+                        setOperations((prevOperations) => {
+                          const _ops = prevOperations.filter(op => op.id !== _order.id);
+                          return _ops;
+                        });
+                      }}
+                    >
+                      Submit
+                    </Button>
+              }
+            </div>
+          </DialogContent>
+        </Dialog>
+      </div>
+    );
+  };
+
+  const OpRow = ({ index, style }) => {
+    let _operation = operations[index];
+
+    console.log({
+      operations
+    });
+
+    if (!_operation) {
+      return null;
+    }
+
+    const _baseAsset = assets.find((x) => x.id === _operation.sell_price.base.asset_id);
+    const _quoteAsset = assets.find((x) => x.id === _operation.sell_price.quote.asset_id);
+
+    return null;
+
+    return (
+      <div className="grid grid-cols-1">
+        Trading {_quoteAmount} {_quoteAsset.symbol} for {_baseAmount} {_baseAsset.symbol} from {_operation.seller}
+      </div>
+    );
+  };
 
   return (
     <>
@@ -441,84 +777,181 @@ export default function SameTFunds(properties) {
                   <label className="block text-sm font-medium text-gray-700">
                     Same-T Fund Borrow Positions
                   </label>
-                  <div className="grid grid-cols-3 border rounded border-gray-300 p-2">
-                    <div>
-                      Fund
-                    </div>
-                    <div>
-                      Borrowed
-                    </div>
-                    <div>
-                      Owed
-                    </div>
-                    <div className="col-span-3">
-                      {
-                        borrowPositions && borrowPositions.length
-                          ? (
+                  {
+                    borrowPositions && borrowPositions.length
+                      ? (
+                        <div className="grid grid-cols-3 border rounded border-gray-300 p-2">
+                          <div>
+                            Fund
+                          </div>
+                          <div>
+                            Borrowed
+                          </div>
+                          <div>
+                            Borrow Fees
+                          </div>
+                          <div className="col-span-3">
                             <List
                               height={250}
                               itemCount={borrowPositions.length}
                               itemSize={65}
                               key={`list-borrowpositions`}
-                              className="w-full mt-3"
+                              className="w-full mt-1"
                             >
                               {BorrowPositionRow}
                             </List>
-                          ) : (
-                            <div className="mt-5">{t("SameTFunds:noBorrowPositions")}</div>
-                          )
-                      }
-                    </div>
-                  </div>
+                          </div>
+                        </div>
+                      ) : <div className="mt-3">
+                            No borrow positions
+                          </div>
+                  }
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
                     Chain of operations
                   </label>
-                  <div className="grid grid-cols-6 gap-2">
-                    <div className="col-span-5 rounded border border-gray-300 p-2">
-                      <List
-                        height={200}
-                        itemCount={operations.length}
-                        itemSize={50}
-                        key={`list-operations`}
-                        className="w-full mt-3"
-                      >
-                        {OpRow}
-                      </List>
-                    </div>
-                    <div>
-
-                      <Dialog>
-                        <DialogTrigger>
-                          <Button
-                            variant="outline"
-                            onClick={() => {
-                              console.log("Adding an operation")
-                            }}  
-                          >
-                            + Add
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent className="bg-white w-full max-w-4xl bg-gray-100">
-                          <DialogHeader>
-                            <DialogTitle>What would you like to trade?</DialogTitle>
-                            <DialogDescription>
-                              Configure your limit orders with this form.
-                            </DialogDescription>
-                          </DialogHeader>
-                          <div className="grid grid-cols-3 gap-5">
-                            Select Borrowed asset<br/>
-                            Establish trading pair<br/>
-                            Fetch latest order book for trading pair<br/>
-                            Show order book<br/>
-                            Enable user to buy into order book with borrowed funds
+                  {
+                    borrowPositions && borrowPositions.length
+                      ? <div className="grid grid-cols-6 gap-2">
+                          <div className="col-span-5 rounded border border-gray-300 p-2">
+                            <List
+                              height={200}
+                              itemCount={operations.length}
+                              itemSize={50}
+                              key={`list-operations`}
+                              className="w-full mt-3"
+                            >
+                              {OpRow}
+                            </List>
                           </div>
-                        </DialogContent>
-                      </Dialog>
-
-                    </div>
-                  </div>
+                          <div>
+      
+                            <Dialog>
+                              <DialogTrigger>
+                                <Button
+                                  variant="outline"
+                                  onClick={() => {
+                                    console.log("Adding an operation")
+                                  }}  
+                                >
+                                  + Add
+                                </Button>
+                              </DialogTrigger>
+                              <DialogContent className="sm:max-w-[750px] bg-white">
+                                <DialogHeader>
+                                  <DialogTitle>What would you like to trade?</DialogTitle>
+                                  <DialogDescription>
+                                    Configure your limit orders with this form.
+                                  </DialogDescription>
+                                </DialogHeader>
+                                <div className="grid grid-cols-2 gap-5">
+                                  <Card>
+                                    <CardHeader>
+                                      <CardTitle>
+                                        <div className="grid grid-cols-2 gap-2">
+                                          <div className="text-left">
+                                            Buying
+                                          </div>
+                                          <div className="text-right">
+                                            <BasicAssetDropDownCard
+                                              assetSymbol={buyingAsset ?? ""}
+                                              assetData={buyingAssetData}
+                                              storeCallback={setBuyingAsset}
+                                              otherAsset={sellingAsset}
+                                              marketSearch={marketSearch}
+                                              type={"quote"}
+                                              size="small"
+                                              chain={usr && usr.chain ? usr.chain : "bitshares"}
+                                              borrowPositions={borrowPositions}
+                                              usrBalances={usrBalances}
+                                            />
+                                          </div>
+                                        </div>
+                                      </CardTitle>
+                                    </CardHeader>
+                                    <CardContent>
+                                      Balance: 0
+                                    </CardContent>
+                                  </Card>
+                                  <Card>
+                                    <CardHeader>
+                                      <CardTitle>
+                                        <div className="grid grid-cols-2 gap-2">
+                                          <div className="text-left">
+                                            Selling
+                                          </div>
+                                          <div className="text-right">
+                                            <BasicAssetDropDownCard
+                                              assetSymbol={sellingAsset ?? ""}
+                                              assetData={sellingAssetData}
+                                              storeCallback={setSellingAsset}
+                                              otherAsset={buyingAsset}
+                                              marketSearch={marketSearch}
+                                              type={"base"}
+                                              size="small"
+                                              chain={usr && usr.chain ? usr.chain : "bitshares"}
+                                              borrowPositions={borrowPositions}
+                                              usrBalances={usrBalances}
+                                            />
+                                          </div>
+                                        </div>
+                                      </CardTitle>
+                                    </CardHeader>
+                                    <CardContent>
+                                      Balance: 0
+                                    </CardContent>
+                                  </Card>
+                                </div>
+                                <div className="grid grid-cols-1 gap-2">
+                                  {
+                                    buyingAsset && sellingAsset
+                                      ? <Card>
+                                          <CardHeader>
+                                            <CardTitle>
+                                              Market Limit Orders
+                                            </CardTitle>
+                                          </CardHeader>
+                                          <CardContent>
+                                            <div className="grid grid-cols-5 gap-2 text-center">
+                                              <div>
+                                                {buyingAssetData ? buyingAssetData.symbol : null}
+                                              </div>
+                                              <div>
+                                                {sellingAssetData ? sellingAssetData.symbol : null}
+                                              </div>
+                                              <div>Price</div>
+                                              <div>Buying %</div>
+                                              <div></div>
+                                            </div>
+                                            {
+                                              marketLimitOrders && marketLimitOrders.length
+                                                ? <List
+                                                    height={200}
+                                                    itemCount={marketLimitOrders.length}
+                                                    itemSize={50}
+                                                    key={`list-limitorders`}
+                                                    className="w-full mt-3"
+                                                  >
+                                                    {limitOrderRow}
+                                                  </List>
+                                                : "No orders available"
+                                            }
+                                          </CardContent>
+                                        </Card>
+                                      : null
+                                  }
+                                </div>
+                              </DialogContent>
+                            </Dialog>
+      
+                          </div>
+                        </div>
+                      : <div className="mt-3">
+                          No borrow positions
+                        </div>
+                  }
+                  
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
