@@ -186,5 +186,12 @@
     "subtitle": "Create a new cloud wallet account on the BitShares blockchain.",
     "hover1": "Create a free account using a public faucet.",
     "hover2": "Generate a premium account using an existing LTM account."
+  },
+  "tfund_user": {
+    "title": "🚀 Same-T Fund Trade",
+    "subtitle": "Borrow, trade, repay, simple!",
+    "hover1": "Borrow assets from a same-t fund.",
+    "hover2": "Trade these same-t funds on the DEX.",
+    "hover3": "Repay the borrowed assets."
   }
 }

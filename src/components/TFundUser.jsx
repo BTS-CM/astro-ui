@@ -99,7 +99,7 @@ export default function SameTFunds(properties) {
             filteredData = filteredData.filter(
               (x) => !blocklist.users.includes(toHex(sha256(x.owner_account)))
             ).filter(
-              (x) => x.fee_rate < 10000
+              (x) => x.fee_rate < 500000 // 50% max fee...
             );
           }
           setSameTFunds(filteredData);
@@ -178,19 +178,25 @@ export default function SameTFunds(properties) {
     const borrowAsset = assets.find((x) => x.id === _borrowPosition.asset_id);
 
     return (
-      <div className="grid grid-cols-3">
-        <div>
-          {_borrowPosition.id}
-        </div>
-        <div>
-          {_borrowPosition.borrow_amount} {borrowAsset.symbol} 
-        </div>
-        <div>
-          {(_borrowPosition.borrow_amount * sameTFunds.find((x) => x.id === _borrowPosition.id).fee_rate / 10000).toFixed(borrowAsset.precision)}
-          {" "}
-          {borrowAsset.symbol}
-        </div>
-      </div>
+        <Card className="w-full">
+          <CardHeader className="pt-1 pb-1">
+            <CardDescription>
+              <div className="grid grid-cols-3">
+                <div>
+                  {_borrowPosition.id}
+                </div>
+                <div>
+                  {_borrowPosition.borrow_amount} {borrowAsset.symbol} 
+                </div>
+                <div>
+                  {(_borrowPosition.borrow_amount * sameTFunds.find((x) => x.id === _borrowPosition.id).fee_rate / 1000000).toFixed(borrowAsset.precision)}
+                  {" "}
+                  {borrowAsset.symbol}
+                </div>
+              </div>
+            </CardDescription>
+          </CardHeader>
+        </Card>
     )
   };
 
@@ -206,7 +212,7 @@ export default function SameTFunds(properties) {
 
     const assetName = asset ? asset.symbol : fund.asset_type;
     const balance = humanReadableFloat(fund.balance, asset.precision);
-    const feeRate = fund.fee_rate / 100;
+    const feeRate = fund.fee_rate / 10000;
     const unpaidAmount = humanReadableFloat(fund.unpaid_amount, asset.precision);
     const lender = lenderAccounts.find((x) => x.id === fund.owner_account);
 
@@ -220,8 +226,8 @@ export default function SameTFunds(properties) {
         <Card className="w-full">
           <div className="grid grid-cols-12 gap-2">
             <div className="col-span-10">
-              <CardHeader className="pt-2 pb-0">
-                <CardTitle>
+              <CardHeader className="pt-1 pb-1">
+                <CardDescription>
                   {t("SameTFunds:fund")}
                   {" #"}
                   <ExternalLink
@@ -245,8 +251,6 @@ export default function SameTFunds(properties) {
                   ) : (
                     "???"
                   )}
-                </CardTitle>
-                <CardDescription>
                   <div className="grid grid-cols-3 gap-2 text-sm">
                     <div className="col-span-2">
                       <div className="grid grid-cols-2">
@@ -336,45 +340,45 @@ export default function SameTFunds(properties) {
                     </div>
                     {
                       borrowAmount > 0
-                      ? <Button
-                          variant="outline"
-                          onClick={() => {
-                            setBorrowPositions((prevBorrowPositions) => {
-                              const _borrows = [...prevBorrowPositions];
-                              const existingBorrow = _borrows.find((x) => x.id === fund.id);
-                        
-                              if (existingBorrow) {
-                                existingBorrow.borrow_amount += parseFloat(borrowAmount);
-                              } else {
-                                _borrows.push({
-                                  id: fund.id,
-                                  asset_id: fund.asset_type,
-                                  borrow_amount: parseFloat(borrowAmount),
-                                  fee_rate: fund.fee_rate
-                                });
-                              }
-                        
-                              return _borrows;
-                            });
+                        ? <Button
+                            variant="outline"
+                            onClick={() => {
+                              setBorrowPositions((prevBorrowPositions) => {
+                                const _borrows = [...prevBorrowPositions];
+                                const existingBorrow = _borrows.find((x) => x.id === fund.id);
+                          
+                                if (existingBorrow) {
+                                  existingBorrow.borrow_amount = parseFloat(borrowAmount);
+                                } else {
+                                  _borrows.push({
+                                    id: fund.id,
+                                    asset_id: fund.asset_type,
+                                    borrow_amount: parseFloat(borrowAmount),
+                                    fee_rate: fund.fee_rate
+                                  });
+                                }
+                          
+                                return _borrows;
+                              });
 
-                            setBorrowPositionDialog(false);
-                          }}
-                        >
-                          Submit
-                        </Button>
-                      : <Button
-                          variant="outline"
-                          onClick={() => {
-                            setBorrowPositions((prevBorrowPositions) => {
-                              const _borrows = prevBorrowPositions.filter((x) => x.id !== fund.id);
-                              return _borrows;
-                            });
-                        
-                            setBorrowPositionDialog(false);
-                          }}
-                        >
-                          Submit
-                        </Button>
+                              setBorrowPositionDialog(false);
+                            }}
+                          >
+                            Submit
+                          </Button>
+                        : <Button
+                            variant="outline"
+                            onClick={() => {
+                              setBorrowPositions((prevBorrowPositions) => {
+                                const _borrows = prevBorrowPositions.filter((x) => x.id !== fund.id);
+                                return _borrows;
+                              });
+                          
+                              setBorrowPositionDialog(false);
+                            }}
+                          >
+                            Submit
+                          </Button>
                     }
                     
                   </div>
@@ -439,7 +443,7 @@ export default function SameTFunds(properties) {
 
       const _referenceFundAsset = assets.find((x) => x.id === _borrowAssetID);
 
-      const _feeAmount = _borrowAmount * _feeRate / 100;
+      const _feeAmount = _borrowAmount * _feeRate / 1000000;
 
       _operations.push({
         account: usr.id,
@@ -496,7 +500,15 @@ export default function SameTFunds(properties) {
       });
     }
 
-    if (sellingAsset && buyingAsset && sellingAssetData && buyingAssetData && _chain && currentNode) {
+    if (
+      sellingAsset &&
+      buyingAsset &&
+      sellingAsset !== buyingAsset && // prevent invalid market pairs
+      sellingAssetData &&
+      buyingAssetData &&
+      _chain &&
+      currentNode
+    ) {
       fetching();
     }
   }, [sellingAsset, sellingAssetData, buyingAsset, buyingAssetData, _chain, currentNode]);
@@ -635,83 +647,81 @@ export default function SameTFunds(properties) {
                   100%
                 </Button>
               </div>
-              {
-                limitOrderBuyAmount > 0
-                  ? <Button
-                      variant="outline"
-                      onClick={() => {
-                        setOperations((prevOperations) => {
-                          const _ops = [...prevOperations];
-                      
-                          const hasLaterOrders = _ops.some(op => {
-                            const orderIndex = marketLimitOrders.findIndex(order => order.id === op.id);
-                            return orderIndex > index;
-                          });
-                      
-                          if (limitOrderBuyAmount === 0 || (limitOrderBuyAmount < _quoteAmount && hasLaterOrders)) {
-                            // Remove subsequent market limit orders if the current order is set to 0% or less than 100% and there are later orders
-                            for (let i = index + 1; i < marketLimitOrders.length; i++) {
-                              const subsequentOrder = marketLimitOrders[i];
-                              const existingSubsequentOperationIndex = _ops.findIndex(op => op.id === subsequentOrder.id);
-                      
-                              if (existingSubsequentOperationIndex !== -1) {
-                                // Remove existing subsequent operation
-                                _ops.splice(existingSubsequentOperationIndex, 1);
-                              }
-                            }
-                          }
-                      
-                          // Set prior market limit orders to 100%
-                          for (let i = 0; i < index; i++) {
-                            const priorOrder = marketLimitOrders[i];
-                            const priorOrderAmount = humanReadableFloat(priorOrder.sell_price.quote.amount, buyingAssetData.precision);
-                            const existingPriorOperationIndex = _ops.findIndex(op => op.id === priorOrder.id);
-                      
-                            if (existingPriorOperationIndex !== -1) {
-                              // Update existing prior operation
-                              _ops[existingPriorOperationIndex] = {
-                                ..._ops[existingPriorOperationIndex],
-                                final_buy_amount: priorOrderAmount
-                              };
-                            } else {
-                              // Add new prior operation
-                              priorOrder["final_buy_amount"] = priorOrderAmount;
-                              _ops.push(priorOrder);
-                            }
-                          }
-                      
-                          // Set current order to the specified buy amount
-                          const existingOperationIndex = _ops.findIndex(op => op.id === _order.id);
-                          if (existingOperationIndex !== -1) {
-                            // Update existing operation
-                            _ops[existingOperationIndex] = {
-                              ..._ops[existingOperationIndex],
-                              final_buy_amount: limitOrderBuyAmount
-                            };
-                          } else {
-                            // Add new operation
-                            _order["final_buy_amount"] = limitOrderBuyAmount;
-                            _ops.push(_order);
-                          }
-                      
-                          return _ops;
-                        });
-                      }}
-                    >
-                      Submit
-                    </Button>
-                  : <Button
-                      variant="outline"
-                      onClick={() => {
-                        setOperations((prevOperations) => {
-                          const _ops = prevOperations.filter(op => op.id !== _order.id);
-                          return _ops;
-                        });
-                      }}
-                    >
-                      Submit
-                    </Button>
-              }
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setOperations((prevOperations) => {
+                    const _ops = [...prevOperations];
+                
+                    const existingOperationIndex = _ops.findIndex(op => op.id === _order.id);
+                    const existingOperation = existingOperationIndex !== -1 ? _ops[existingOperationIndex] : null;
+                
+                    // Early return if the value is already set
+                    if (existingOperation && existingOperation.final_buy_amount === limitOrderBuyAmount) {
+                      return _ops;
+                    }
+                
+                    const hasLaterOrders = _ops.some(op => {
+                      const orderIndex = marketLimitOrders.findIndex(order => order.id === op.id);
+                      return orderIndex > index;
+                    });
+                
+                    if (limitOrderBuyAmount === 0) {
+                      // Remove the current order if set to 0%
+                      return _ops.filter(op => op.id !== _order.id);
+                    } else if (limitOrderBuyAmount < _quoteAmount && hasLaterOrders) {
+                      // Remove subsequent market limit orders if the current order is less than 100% and there are later orders
+                      for (let i = index + 1; i < marketLimitOrders.length; i++) {
+                        const subsequentOrder = marketLimitOrders[i];
+                        const existingSubsequentOperationIndex = _ops.findIndex(op => op.id === subsequentOrder.id);
+                
+                        if (existingSubsequentOperationIndex !== -1) {
+                          // Remove existing subsequent operation
+                          _ops.splice(existingSubsequentOperationIndex, 1);
+                        }
+                      }
+                    }
+                
+                    if (limitOrderBuyAmount !== 0) {
+                      // Set prior market limit orders to 100% only if the current order is not set to 0%
+                      for (let i = 0; i < index; i++) {
+                        const priorOrder = marketLimitOrders[i];
+                        const priorOrderAmount = humanReadableFloat(priorOrder.sell_price.quote.amount, buyingAssetData.precision);
+                        const existingPriorOperationIndex = _ops.findIndex(op => op.id === priorOrder.id);
+                
+                        if (existingPriorOperationIndex !== -1) {
+                          // Update existing prior operation
+                          _ops[existingPriorOperationIndex] = {
+                            ..._ops[existingPriorOperationIndex],
+                            final_buy_amount: priorOrderAmount
+                          };
+                        } else {
+                          // Add new prior operation
+                          priorOrder["final_buy_amount"] = priorOrderAmount;
+                          _ops.push(priorOrder);
+                        }
+                      }
+                    }
+                
+                    // Set current order to the specified buy amount
+                    if (existingOperationIndex !== -1) {
+                      // Update existing operation
+                      _ops[existingOperationIndex] = {
+                        ..._ops[existingOperationIndex],
+                        final_buy_amount: limitOrderBuyAmount
+                      };
+                    } else {
+                      // Add new operation
+                      _order["final_buy_amount"] = limitOrderBuyAmount;
+                      _ops.push(_order);
+                    }
+                
+                    return _ops;
+                  });
+                }}
+              >
+                Submit
+              </Button>
             </div>
           </DialogContent>
         </Dialog>
@@ -733,14 +743,74 @@ export default function SameTFunds(properties) {
     const _baseAsset = assets.find((x) => x.id === _operation.sell_price.base.asset_id);
     const _quoteAsset = assets.find((x) => x.id === _operation.sell_price.quote.asset_id);
 
-    return null;
+    const _baseAmount = humanReadableFloat(_operation.sell_price.base.amount, _baseAsset.precision);
+    const _quoteAmount = humanReadableFloat(_operation.sell_price.quote.amount, _quoteAsset.precision);
 
+    /*
+      {
+          "id": "1.7.560724540",
+          "expiration": "2027-01-28T05:37:09",
+          "seller": "1.2.1811273",
+          "for_sale": 2011688,
+          "sell_price": {
+              "base": {
+                  "amount": 2011688,
+                  "asset_id": "1.3.5286"
+              },
+              "quote": {
+                  "amount": 20116880,
+                  "asset_id": "1.3.0"
+              }
+          },
+          "filled_amount": "0",
+          "deferred_fee": 48260,
+          "deferred_paid_fee": {
+              "amount": 0,
+              "asset_id": "1.3.0"
+          },
+          "is_settled_debt": false,
+          "on_fill": [],
+          "final_buy_amount": 50.2922
+      }
+    */
+    
     return (
-      <div className="grid grid-cols-1">
-        Trading {_quoteAmount} {_quoteAsset.symbol} for {_baseAmount} {_baseAsset.symbol} from {_operation.seller}
+      <div style={style} key={`operation-summary-${_operation.id}-${index}`}>
+        <Card className="w-full">
+          <CardHeader className="pt-1 pb-1">
+            <CardDescription>
+              <div className="grid grid-cols-10">
+                <div className="col-span-3">
+                  {_quoteAmount}<br/>
+                  {_quoteAsset.symbol}
+                </div>
+                <div className="col-span-3">
+                  {_baseAmount}<br/>
+                  {_baseAsset.symbol}
+                </div>
+                <div className="col-span-3">
+                  {(_quoteAmount / _baseAmount).toFixed(_baseAsset.precision)}
+                </div>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    console.log("Editing operation");
+                    setBuyingAsset(_quoteAsset.symbol);
+                    setSellingAsset(_baseAsset.symbol);
+                    setAddOperationDialog(true);
+                  }}
+                >
+                  ⚙️
+                </Button>
+              </div>
+            </CardDescription>
+          </CardHeader>
+        </Card>
       </div>
     );
   };
+
+  const [addOperationDialog, setAddOperationDialog] = useState(false);
 
   return (
     <>
@@ -757,21 +827,23 @@ export default function SameTFunds(properties) {
                   <label className="block text-sm font-medium text-gray-700">
                     Available Same-T Funds
                   </label>
-                  {
-                    sameTFunds && sameTFunds.length > 0 ? (
-                      <List
-                        height={250}
-                        itemCount={sameTFunds.length}
-                        itemSize={65}
-                        key={`list-sametfunds`}
-                        className="w-full mt-3"
-                      >
-                        {FundRow}
-                      </List>
-                    ) : (
-                      <div className="mt-5">{t("SameTFunds:noFunds")}</div>
-                    )
-                  }
+                  <div className="border rounded border-gray-300 p-2">
+                    {
+                      sameTFunds && sameTFunds.length > 0 ? (
+                        <List
+                          height={250}
+                          itemCount={sameTFunds.length}
+                          itemSize={55}
+                          key={`list-sametfunds`}
+                          className="w-full mt-3"
+                        >
+                          {FundRow}
+                        </List>
+                      ) : (
+                        <div className="mt-5">{t("SameTFunds:noFunds")}</div>
+                      )
+                    }
+                  </div>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
@@ -792,7 +864,7 @@ export default function SameTFunds(properties) {
                           </div>
                           <div className="col-span-3">
                             <List
-                              height={250}
+                              height={200}
                               itemCount={borrowPositions.length}
                               itemSize={65}
                               key={`list-borrowpositions`}
@@ -815,10 +887,23 @@ export default function SameTFunds(properties) {
                     borrowPositions && borrowPositions.length
                       ? <div className="grid grid-cols-6 gap-2">
                           <div className="col-span-5 rounded border border-gray-300 p-2">
+                            <div className="grid grid-cols-10">
+                              <div className="col-span-3">
+                                Buying
+                              </div>
+                              <div className="col-span-3">
+                                Selling
+                              </div>
+                              <div className="col-span-3">
+                                Price
+                              </div>
+                              <div>
+                              </div>
+                            </div>
                             <List
                               height={200}
                               itemCount={operations.length}
-                              itemSize={50}
+                              itemSize={55}
                               key={`list-operations`}
                               className="w-full mt-3"
                             >
@@ -826,8 +911,7 @@ export default function SameTFunds(properties) {
                             </List>
                           </div>
                           <div>
-      
-                            <Dialog>
+                            <Dialog open={addOperationDialog} onOpenChange={setAddOperationDialog}>
                               <DialogTrigger>
                                 <Button
                                   variant="outline"
@@ -838,7 +922,7 @@ export default function SameTFunds(properties) {
                                   + Add
                                 </Button>
                               </DialogTrigger>
-                              <DialogContent className="sm:max-w-[750px] bg-white">
+                              <DialogContent className="sm:max-w-[1080px] bg-white">
                                 <DialogHeader>
                                   <DialogTitle>What would you like to trade?</DialogTitle>
                                   <DialogDescription>
@@ -870,9 +954,7 @@ export default function SameTFunds(properties) {
                                         </div>
                                       </CardTitle>
                                     </CardHeader>
-                                    <CardContent>
-                                      Balance: 0
-                                    </CardContent>
+                                    <CardContent></CardContent>
                                   </Card>
                                   <Card>
                                     <CardHeader>
@@ -898,9 +980,7 @@ export default function SameTFunds(properties) {
                                         </div>
                                       </CardTitle>
                                     </CardHeader>
-                                    <CardContent>
-                                      Balance: 0
-                                    </CardContent>
+                                    <CardContent></CardContent>
                                   </Card>
                                 </div>
                                 <div className="grid grid-cols-1 gap-2">
@@ -925,7 +1005,7 @@ export default function SameTFunds(properties) {
                                               <div></div>
                                             </div>
                                             {
-                                              marketLimitOrders && marketLimitOrders.length
+                                              marketLimitOrders && marketLimitOrders.length && sellingAsset !== buyingAsset
                                                 ? <List
                                                     height={200}
                                                     itemCount={marketLimitOrders.length}
@@ -958,12 +1038,37 @@ export default function SameTFunds(properties) {
                     Summary
                   </label>
                   <div className="grid grid-cols-3 gap-2">
-                    <div>
-                      Limit orders: {operations.length}
-                    </div>
-                    <div className="col-span-2">
-                      Earnings: x BTS, y USD, z EUR
-                    </div>
+                    <Card>
+                      <CardHeader className="p-1">
+                        <CardDescription>
+                          Limit orders: {operations.length}<br/>
+                          Network fees: {operations.length * 0.01} BTS<br/>
+                          Market fees:<br/>
+                          x HONEST.USD<br/>
+                          y HONEST.CNY
+                        </CardDescription>
+                      </CardHeader>
+                    </Card>
+                    <Card>
+                      <CardHeader className="p-1">
+                        <CardDescription>
+                          Balances before:<br/>
+                          BTS: 1234<br/>
+                          TEST: 1234<br/>
+                          NFTEA: 1234<br/>
+                        </CardDescription>
+                      </CardHeader>
+                    </Card>
+                    <Card>
+                      <CardHeader className="p-1">
+                        <CardDescription>
+                          Balances after:<br/>
+                          BTS: 1235 (+ 1)<br/>
+                          TEST: 1235 (+ 1)<br/>
+                          NFTEA: 1235 (+ 1)
+                        </CardDescription>
+                      </CardHeader>
+                    </Card>
                   </div>
                 </div>
               </div>

@@ -48,19 +48,73 @@ export default function BasicAssetDropDown(properties) {
   } = properties;
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
 
-  const marketSearchContents = useMemo(() => {
-    if (!marketSearch || !marketSearch.length) {
-      return [];
-    } else {
-      let currentContents = otherAsset
-        ? marketSearch.filter((asset) => asset.s !== otherAsset && asset.s !== assetSymbol)
-        : marketSearch.filter((asset) => asset.s !== assetSymbol);
-
-      return currentContents;
-    }
-  }, [marketSearch, chain]);
-
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [mode, setMode] = useState(
+    type === "quote" ? "balance" : "borrowed"
+  );
+  const favouriteAssets = useStore($favouriteAssets);
+
+  const [featuredMode, setFeaturedMode] = useState("bitAssets");
+  const featuredAssets = useMemo(() => {
+    if (!chain || !marketSearch || !marketSearch.length) {
+      return [];
+    }
+    let _featuredSymbols = [];
+    let _featuredIssuers = [];
+    if (featuredMode === "bitAssets") {
+      _featuredSymbols = [];
+      _featuredIssuers = ["committee-account"];
+    } else if (featuredMode === "HONEST") {
+      _featuredSymbols = ["HONEST.", "honest."];
+      _featuredIssuers = ["honest-quorum"];
+    } else if (featuredMode === "XBTS") {
+      _featuredSymbols = ["XBTSX.", "xbtsx."];
+      _featuredIssuers = [];
+    } else if (featuredMode === "BTWTY") {
+      _featuredSymbols = ["BTWTY.", "btwty."];
+      _featuredIssuers = [];
+    } else if (featuredMode === "ARTCASA") {
+      _featuredSymbols = ["ARTCASA.", "artcasa."];
+      _featuredIssuers = ["artcasa-fine"];
+    } else if (featuredMode === "NFTEA") {
+      _featuredSymbols = ["NFTEA.", "nftea."];
+      _featuredIssuers = ["nftprofessional1"];
+    }
+
+    let _featuredAssets = marketSearch.filter(
+      (asset) => {
+        if (chain === "bitshares") {
+          if (_featuredIssuers.includes(asset.u.split(" ")[0])) {
+            return true;
+          }
+          if (_featuredSymbols.some(str => asset.s.includes(str))) {
+            return true;
+          }
+        }
+        return false
+      }
+    );
+
+    return _featuredAssets;
+  }, [assetSymbol, otherAsset, marketSearch, chain, featuredMode]);
+
+  const _favouriteAssets = useMemo(() => {
+    if (!chain || !favouriteAssets) {
+      return [];
+    }
+    
+    const _chainAssets = favouriteAssets[chain];
+
+    if (!assetSymbol && !otherAsset) {
+      return _chainAssets;
+    }
+
+    return _chainAssets.filter(
+      (asset) => assetSymbol && otherAsset
+        ? asset.symbol !== assetSymbol && asset.symbol !== otherAsset
+        : asset.symbol !== assetSymbol
+    );
+  }, [favouriteAssets, assetSymbol, otherAsset, chain]);
 
   const Row = ({ index, style }) => {
     let res;
@@ -73,6 +127,23 @@ export default function BasicAssetDropDown(properties) {
     } else if (mode === "balance") {
       res = usrBalances[index];
     }
+
+    if (!res || !marketSearch) {
+      return;
+    }
+
+    console.log({res, marketSearch, inputs: {
+      assetSymbol,
+    assetData,
+    storeCallback,
+    otherAsset,
+    marketSearch,
+    type,
+    size,
+    chain,
+    borrowPositions,
+    usrBalances
+    }});
 
     // borrowPositions: [{id: '1.20.5', asset_id: '1.3.5286', borrow_amount: 3000, fee_rate: 300}]
     // usrBalances: [{amount: '72281224658', asset_id: '1.3.0'}]
@@ -89,9 +160,8 @@ export default function BasicAssetDropDown(properties) {
               } else if (mode === "favourites") {
                 storeCallback(res.symbol);
               } else if (mode === "borrowed" || mode === "balance") {
-                storeCallback(
-                  marketSearchContents.find((asset) => asset.id === res.asset_id).s
-                );
+                const _asset = marketSearch.find((asset) => asset.id === res.asset_id);
+                storeCallback(_asset ? _asset.s : "");
               }
             }, 0);
             setDialogOpen(false);
@@ -110,8 +180,11 @@ export default function BasicAssetDropDown(properties) {
                   : null
               }
               {
-                mode === "borrowed" || mode === "balance"
-                  ? `${marketSearchContents.find((asset) => asset.id === res.asset_id).s} (${res.asset_id})`
+                mode === "borrowed" ||
+                mode === "balance" &&
+                marketSearch && marketSearch.length &&
+                res
+                  ? `${marketSearch.find((asset) => asset.id === res.asset_id).s} (${res.asset_id})`
                   : null
               }
             </CardTitle>
@@ -136,7 +209,7 @@ export default function BasicAssetDropDown(properties) {
                 mode === "borrowed" || mode === "balance"
                   ? t(
                       "AssetDropDownCard:issued",
-                      { user: marketSearchContents.find((asset) => asset.id === res.asset_id).u }
+                      { user: marketSearch.find((asset) => asset.id === res.asset_id).u }
                     )
                   : null
               }
@@ -146,52 +219,6 @@ export default function BasicAssetDropDown(properties) {
       </div>
     );
   };
-
-  const [mode, setMode] = useState("featured");
-
-  const favouriteAssets = useStore($favouriteAssets);
-
-  const featuredAssets = useMemo(() => {
-    if (!chain || !marketSearchContents) {
-      return [];
-    }
-    const _featuredSymbols = ["XBTSX.", "xbtsx.", "BTWTY.", "btwty.", "HONEST.", "honest.", "NFTEA.", "nftea."];
-    const _featuredIssuers = ["committee-account", "honest-quorum", "nftprofessional1"];
-
-    let _featuredAssets = marketSearchContents.filter(
-      (asset) => {
-        if (chain === "bitshares") {
-          if (_featuredIssuers.includes(asset.u.split(" ")[0])) {
-            return true;
-          }
-          if (_featuredSymbols.some(str => asset.s.includes(str))) {
-            return true;
-          }
-        }
-        return false
-      }
-    );
-
-    return _featuredAssets;
-  }, [assetSymbol, otherAsset, marketSearchContents, chain]);
-
-  const _favouriteAssets = useMemo(() => {
-    if (!chain || !favouriteAssets) {
-      return [];
-    }
-    
-    const _chainAssets = favouriteAssets[chain];
-
-    if (!assetSymbol && !otherAsset) {
-      return _chainAssets;
-    }
-
-    return _chainAssets.filter(
-      (asset) => assetSymbol && otherAsset
-        ? asset.symbol !== assetSymbol && asset.symbol !== otherAsset
-        : asset.symbol !== assetSymbol
-    );
-  }, [favouriteAssets, assetSymbol, otherAsset, chain]);
 
   return (
     <Dialog
@@ -311,6 +338,50 @@ export default function BasicAssetDropDown(properties) {
                   {type && type === "quote" ? t("AssetDropDownCard:quoteType") : null}
                   {type && type === "backing" ? t("AssetDropDownCard:backingType") : null}
                 </h4>
+                <div className="grid grid-cols-6 gap-1">
+                  <Button
+                    variant={featuredMode === "bitAssets" ? "" : "outline"}
+                    size="sm"
+                    onClick={() => setFeaturedMode("bitAssets")}
+                  >
+                    bitAssets
+                  </Button>
+                  <Button
+                    variant={featuredMode === "HONEST" ? "" : "outline"}
+                    size="sm"
+                    onClick={() => setFeaturedMode("HONEST")}
+                  >
+                    HONEST
+                  </Button>
+                  <Button
+                    variant={featuredMode === "XBTS" ? "" : "outline"}
+                    size="sm"
+                    onClick={() => setFeaturedMode("XBTS")}
+                  >
+                    XBTS
+                  </Button>
+                  <Button
+                    variant={featuredMode === "BTWTY" ? "" : "outline"}
+                    size="sm"
+                    onClick={() => setFeaturedMode("BTWTY")}
+                  >
+                    BTWTY
+                  </Button>
+                  <Button
+                    variant={featuredMode === "ARTCASA" ? "" : "outline"}
+                    size="sm"
+                    onClick={() => setFeaturedMode("ARTCASA")}
+                  >
+                    ARTCASA
+                  </Button>
+                  <Button
+                    variant={featuredMode === "NFTEA" ? "" : "outline"}
+                    size="sm"
+                    onClick={() => setFeaturedMode("NFTEA")}
+                  >
+                    NFTEA
+                  </Button>
+                </div>
                 {featuredAssets && featuredAssets.length ? (
                   <>
                     <List

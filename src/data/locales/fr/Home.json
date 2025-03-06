@@ -186,5 +186,12 @@
     "subtitle": "Créez un nouveau compte de portefeuille Cloud sur la blockchain BitShares.",
     "hover1": "Créez un compte gratuit à l'aide d'un robinet public.",
     "hover2": "Générez un compte premium à l'aide d'un compte LTM existant."
+  },
+  "tfund_user": {
+    "title": "🚀 Trade de fonds Same-T",
+    "subtitle": "Emprunter, échanger, rembourser, simple!",
+    "hover1": "Emprunter des actifs à un fonds de même T.",
+    "hover2": "Échangez ces fonds de la même chose sur le dex.",
+    "hover3": "Rembourser les actifs empruntés."
   }
 }

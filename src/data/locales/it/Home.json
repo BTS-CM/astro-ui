@@ -186,5 +186,12 @@
     "subtitle": "Crea un nuovo account di portafoglio cloud sulla blockchain BitShares.",
     "hover1": "Crea un account gratuito utilizzando un rubinetto pubblico.",
     "hover2": "Genera un account premium utilizzando un account LTM esistente."
+  },
+  "tfund_user": {
+    "title": "🚀 Trade del fondo dello stesso T",
+    "subtitle": "Prendi in prestito, commercio, rimborso, semplice!",
+    "hover1": "Prendi in prestito attività da un fondo dello stesso T.",
+    "hover2": "Scambia questi fondi omogenei sul DEX.",
+    "hover3": "Rimborsare le attività prese in prestito."
   }
 }

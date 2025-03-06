@@ -246,7 +246,7 @@ export default function SameTFunds(properties) {
 
     const assetName = asset ? asset.symbol : fund.asset_type;
     const balance = humanReadableFloat(fund.balance, asset.precision);
-    const feeRate = fund.fee_rate / 100;
+    const feeRate = fund.fee_rate / 10000;
     const unpaidAmount = humanReadableFloat(fund.unpaid_amount, asset.precision);
     const lender = lenderAccounts.find((x) => x.id === fund.owner_account);
 
