@@ -75,7 +75,9 @@
     "blocks": "Vaadake kõige värskemaid plokiahela andmeid, mis on mugavalt kokku võetud allpool!",
     "AccountLists": "Kasutage allolevat vormi oma konto jaoks valgete või mustade nimekirjade loomiseks.",
     "proposals": "Vaadake allpool oma konto kinnitusi ja kinnitage need pärast nende põhjalikku hindamist või lükake need tagasi.",
-    "pool_tracker": "Jälgige hõlpsalt ausat likviidsusfondi ja asjakohast huvitavat statistikat!"
+    "pool_tracker": "Jälgige hõlpsalt ausat likviidsusfondi ja asjakohast huvitavat statistikat!",
+    "create_account": "Use the form below to create a new cloud account on the Bitshares blockchain.",
+    "tfund_user": "Use the form below to craft complex chains of Bitshares limit orders and same-t fund borrow/repay operations."
   },
   "back": "Mine tagasi",
   "usage": "Mõeldud kasutamiseks koos ",

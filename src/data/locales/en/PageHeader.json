@@ -75,7 +75,9 @@
     "blocks": "View the most recent blockchain data conveniently summarized below!",
     "AccountLists": "Use the form below to create whitelists or blacklists for your account.",
     "proposals": "View the approvals for your account below, and either approve or reject them after thoroughly evaluating them.",
-    "pool_tracker": "Easily monitor the Honest Liquidity Pool and relevant interesting stats!"
+    "pool_tracker": "Easily monitor the Honest Liquidity Pool and relevant interesting stats!",
+    "create_account": "Use the form below to create a new cloud account on the Bitshares blockchain.",
+    "tfund_user": "Use the form below to craft complex chains of Bitshares limit orders and same-t fund borrow/repay operations."
   },
   "back": "Go back",
   "usage": "Designed for use with ",

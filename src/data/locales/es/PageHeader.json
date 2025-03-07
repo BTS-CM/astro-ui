@@ -75,7 +75,9 @@
     "blocks": "¡Vea los datos más recientes de blockchain convenientemente resumidos a continuación!",
     "AccountLists": "Utilice el siguiente formulario para crear listas blancas o listas negras para su cuenta.",
     "proposals": "Vea las aprobaciones para su cuenta a continuación y apruébelas o rechácelas después de evaluarlas minuciosamente.",
-    "pool_tracker": "¡Monitoree fácilmente el Honest Liquidity Pool y las estadísticas interesantes relevantes!"
+    "pool_tracker": "¡Monitoree fácilmente el Honest Liquidity Pool y las estadísticas interesantes relevantes!",
+    "create_account": "Use the form below to create a new cloud account on the Bitshares blockchain.",
+    "tfund_user": "Use the form below to craft complex chains of Bitshares limit orders and same-t fund borrow/repay operations."
   },
   "back": "Regresa",
   "usage": "Diseñado para usar con ",

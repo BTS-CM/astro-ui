@@ -53,6 +53,20 @@ export default function SameTFunds(properties) {
 
   const { _assetsBTS, _assetsTEST, _marketSearchBTS, _marketSearchTEST } = properties;
 
+  const [sameTFunds, setSameTFunds] = useState();
+  const [lenderAccounts, setLenderAccounts] = useState([]);
+  const [usrBalances, setUsrBalances] = useState();
+
+  const [borrowPositions, setBorrowPositions] = useState([]);
+  const [operations, setOperations] = useState([]);
+
+  const [sellingAsset, setSellingAsset] = useState(null);
+  const [buyingAsset, setBuyingAsset] = useState(null);
+  const [marketLimitOrders, setMarketLimitOrders] = useState([]);
+
+  const [addOperationDialog, setAddOperationDialog] = useState(false);
+  const [deeplinkDialog, setDeeplinkDialog] = useState(false);
+
   const _chain = useMemo(() => {
     if (usr && usr.chain) {
       return usr.chain;
@@ -83,7 +97,6 @@ export default function SameTFunds(properties) {
     return [];
   }, [_marketSearchBTS, _marketSearchTEST, usr]);
 
-  const [sameTFunds, setSameTFunds] = useState();
   useEffect(() => {
     async function fetching() {
       const sameTFundsStore = createEverySameTFundStore([
@@ -120,7 +133,6 @@ export default function SameTFunds(properties) {
     return [];
   }, [sameTFunds]);
 
-  const [lenderAccounts, setLenderAccounts] = useState([]);
   useEffect(() => {
     async function fetching() {
       const objectsStore = createObjectStore([
@@ -141,7 +153,6 @@ export default function SameTFunds(properties) {
     }
   }, [allUserIDs, _chain, currentNode]);
 
-  const [usrBalances, setUsrBalances] = useState();
   useEffect(() => {
     let unsubscribeUserBalances;
 
@@ -166,234 +177,6 @@ export default function SameTFunds(properties) {
       if (unsubscribeUserBalances) unsubscribeUserBalances();
     };
   }, [usr]);
-
-  const [borrowPositions, setBorrowPositions] = useState([]);
-  const BorrowPositionRow = ({ index, style }) => {
-    let _borrowPosition = borrowPositions[index];
-
-    if (!_borrowPosition) {
-      return null;
-    }
-
-    const borrowAsset = assets.find((x) => x.id === _borrowPosition.asset_id);
-
-    return (
-        <Card className="w-full">
-          <CardHeader className="pt-1 pb-1">
-            <CardDescription>
-              <div className="grid grid-cols-3">
-                <div>
-                  {_borrowPosition.id}
-                </div>
-                <div>
-                  {_borrowPosition.borrow_amount} {borrowAsset.symbol} 
-                </div>
-                <div>
-                  {(_borrowPosition.borrow_amount * sameTFunds.find((x) => x.id === _borrowPosition.id).fee_rate / 1000000).toFixed(borrowAsset.precision)}
-                  {" "}
-                  {borrowAsset.symbol}
-                </div>
-              </div>
-            </CardDescription>
-          </CardHeader>
-        </Card>
-    )
-  };
-
-  const FundRow = ({ index, style }) => {
-    let fund = sameTFunds[index];
-
-    if (!fund || !assets || !assets.length) {
-      return null;
-    }
-
-    const asset = assets.find((x) => x.id === fund.asset_type);
-    const regex = new RegExp(`^[0-9]*\\.?[0-9]{0,${asset.precision}}$`);
-
-    const assetName = asset ? asset.symbol : fund.asset_type;
-    const balance = humanReadableFloat(fund.balance, asset.precision);
-    const feeRate = fund.fee_rate / 10000;
-    const unpaidAmount = humanReadableFloat(fund.unpaid_amount, asset.precision);
-    const lender = lenderAccounts.find((x) => x.id === fund.owner_account);
-
-    const [borrowAmount, setBorrowAmount] = useState(
-      borrowPositions.find((x) => x.id === fund.id)?.borrow_amount || 0
-    );
-    const [borrowPositionDialog, setBorrowPositionDialog] = useState(false);
-
-    return (
-      <div style={style} key={`sametfund-${fund.id}`}>
-        <Card className="w-full">
-          <div className="grid grid-cols-12 gap-2">
-            <div className="col-span-10">
-              <CardHeader className="pt-1 pb-1">
-                <CardDescription>
-                  {t("SameTFunds:fund")}
-                  {" #"}
-                  <ExternalLink
-                    classnamecontents="hover:text-purple-500"
-                    type="text"
-                    text={fund.id.replace("1.20.", "")}
-                    hyperlink={`https://blocksights.info/#/objects/${fund.id}${
-                      usr.chain === "bitshares" ? "" : "?network=testnet"
-                    }`}
-                  />{" "}
-                  {t("CreditBorrow:common.by")}{" "}
-                  {lender ? (
-                    <ExternalLink
-                      classnamecontents="hover:text-purple-500"
-                      type="text"
-                      text={lender.name}
-                      hyperlink={`https://blocksights.info/#/accounts/${lender.name}${
-                        usr.chain === "bitshares" ? "" : "?network=testnet"
-                      }`}
-                    />
-                  ) : (
-                    "???"
-                  )}
-                  <div className="grid grid-cols-3 gap-2 text-sm">
-                    <div className="col-span-2">
-                      <div className="grid grid-cols-2">
-                        <div>
-                          {t("SameTFunds:offering")}:<b>{` ${balance - unpaidAmount} ${assetName}`}</b>
-                        </div>
-                        <div>
-                          {t("SameTFunds:fee")}:<b>{` ${feeRate} %`}</b>
-                          {feeRate > 20 ? "⚠️" : null}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </CardDescription>
-              </CardHeader>
-            </div>
-            <div className="col-span-2 flex items-center justify-center">
-              <Dialog open={borrowPositionDialog} onOpenChange={setBorrowPositionDialog}>
-                <DialogTrigger>
-                  <Button
-                    variant="outline"
-                    className="self-center"
-                  >
-                    Borrow
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="bg-white w-1/2 max-w-4xl bg-gray-100">
-                  <DialogHeader>
-                    <DialogTitle>How much would you like to borrow?</DialogTitle>
-                    <DialogDescription>
-                      Amount available: {balance - unpaidAmount} {assetName}<br/>
-                      Fee rate: {feeRate}%
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="grid grid-cols-1 gap-3">
-                    <Input
-                      value={borrowAmount}
-                      type="text"
-                      onInput={(e) => {
-                        const value = e.currentTarget.value;
-                        if (regex.test(value)) {
-                          setBorrowAmount(balance - unpaidAmount < value ? balance - unpaidAmount : value);
-                        }
-                      }}
-                    />
-                    <div className="grid grid-cols-5 gap-2">
-                      <Button
-                        variant="outline"
-                        onClick={() => {
-                          setBorrowAmount(0);
-                        }}
-                      >
-                        0%
-                      </Button>
-                      <Button
-                        variant="outline"
-                        onClick={() => {
-                          setBorrowAmount((balance - unpaidAmount) * 0.25);
-                        }}
-                      >
-                        25%
-                      </Button>
-                      <Button
-                        variant="outline"
-                        onClick={() => {
-                          setBorrowAmount((balance - unpaidAmount) * 0.50);
-                        }}
-                      >
-                        50%
-                      </Button>
-                      <Button
-                        variant="outline"
-                        onClick={() => {
-                          setBorrowAmount((balance - unpaidAmount) * 0.75);
-                        }}
-                      >
-                        75%
-                      </Button>
-                      <Button
-                        variant="outline"
-                        onClick={() => {
-                          setBorrowAmount(balance - unpaidAmount);
-                        }}
-                      >
-                        100%
-                      </Button>
-                    </div>
-                    {
-                      borrowAmount > 0
-                        ? <Button
-                            variant="outline"
-                            onClick={() => {
-                              setBorrowPositions((prevBorrowPositions) => {
-                                const _borrows = [...prevBorrowPositions];
-                                const existingBorrow = _borrows.find((x) => x.id === fund.id);
-                          
-                                if (existingBorrow) {
-                                  existingBorrow.borrow_amount = parseFloat(borrowAmount);
-                                } else {
-                                  _borrows.push({
-                                    id: fund.id,
-                                    asset_id: fund.asset_type,
-                                    borrow_amount: parseFloat(borrowAmount),
-                                    fee_rate: fund.fee_rate
-                                  });
-                                }
-                          
-                                return _borrows;
-                              });
-
-                              setBorrowPositionDialog(false);
-                            }}
-                          >
-                            Submit
-                          </Button>
-                        : <Button
-                            variant="outline"
-                            onClick={() => {
-                              setBorrowPositions((prevBorrowPositions) => {
-                                const _borrows = prevBorrowPositions.filter((x) => x.id !== fund.id);
-                                return _borrows;
-                              });
-                          
-                              setBorrowPositionDialog(false);
-                            }}
-                          >
-                            Submit
-                          </Button>
-                    }
-                    
-                  </div>
-                </DialogContent>
-              </Dialog>
-
-            </div>
-          </div>
-        </Card>
-      </div>
-    );
-  };
-
-  const [deeplinkDialog, setDeeplinkDialog] = useState(false);
-  const [operations, setOperations] = useState([]);
 
   const operationsJSON = useMemo(() => {
     let _operations = [];
@@ -463,9 +246,6 @@ export default function SameTFunds(properties) {
     return _operations;
   }, [borrowPositions, operations, sameTFunds, usr]);
 
-  const [sellingAsset, setSellingAsset] = useState(null);
-  const [buyingAsset, setBuyingAsset] = useState(null);
-
   const sellingAssetData = useMemo(() => {
     if (sellingAsset && assets && assets.length) {
       return assets.find((x) => x.symbol === sellingAsset);
@@ -480,7 +260,6 @@ export default function SameTFunds(properties) {
     return null;
   }, [buyingAsset, assets]);
 
-  const [marketLimitOrders, setMarketLimitOrders] = useState([]);
   useEffect(() => {
     async function fetching() {
       const limitOrdersStore = createLimitOrdersStore([
@@ -512,6 +291,83 @@ export default function SameTFunds(properties) {
       fetching();
     }
   }, [sellingAsset, sellingAssetData, buyingAsset, buyingAssetData, _chain, currentNode]);
+
+  const [updatedBalances, setUpdatedBalances] = useState([]);
+  useEffect(() => {
+    if (!borrowPositions || !usrBalances) {
+      return;
+    }
+
+    const relevantAssetIds = new Set();
+  
+    // Collect asset IDs from borrow positions
+    borrowPositions.forEach((position) => {
+      relevantAssetIds.add(position.asset_id);
+    });
+  
+    // Collect asset IDs from operations
+    operations.forEach((operation) => {
+      relevantAssetIds.add(operation.sell_price.base.asset_id);
+      relevantAssetIds.add(operation.sell_price.quote.asset_id);
+    });
+  
+    const newBalances = usrBalances
+      .filter((balance) => relevantAssetIds.has(balance.asset_id))
+      .map((balance) => {
+        const asset = assets.find((x) => x.id === balance.asset_id);
+        return {
+          asset_id: balance.asset_id,
+          amount: humanReadableFloat(balance.amount, asset.precision),
+          symbol: asset.symbol,
+        };
+      });
+  
+    borrowPositions.forEach((position) => {
+      const asset = assets.find((x) => x.id === position.asset_id);
+      const balance = newBalances.find((b) => b.asset_id === position.asset_id);
+      if (balance) {
+        balance.amount += position.borrow_amount;
+      } else {
+        newBalances.push({
+          asset_id: position.asset_id,
+          amount: position.borrow_amount,
+          symbol: asset.symbol,
+        });
+      }
+    });
+  
+    operations.forEach((operation) => {
+      const sellAsset = assets.find((x) => x.id === operation.sell_price.base.asset_id);
+      const buyAsset = assets.find((x) => x.id === operation.sell_price.quote.asset_id);
+      const sellAmount = humanReadableFloat(operation.sell_price.base.amount, sellAsset.precision);
+      const buyAmount = humanReadableFloat(operation.sell_price.quote.amount, buyAsset.precision);
+  
+      const sellBalance = newBalances.find((b) => b.asset_id === operation.sell_price.base.asset_id);
+      const buyBalance = newBalances.find((b) => b.asset_id === operation.sell_price.quote.asset_id);
+  
+      if (sellBalance) {
+        sellBalance.amount -= sellAmount;
+      } else {
+        newBalances.push({
+          asset_id: operation.sell_price.base.asset_id,
+          amount: -sellAmount,
+          symbol: sellAsset.symbol,
+        });
+      }
+  
+      if (buyBalance) {
+        buyBalance.amount += buyAmount;
+      } else {
+        newBalances.push({
+          asset_id: operation.sell_price.quote.asset_id,
+          amount: buyAmount,
+          symbol: buyAsset.symbol,
+        });
+      }
+    });
+  
+    setUpdatedBalances(newBalances);
+  }, [operations, usrBalances, borrowPositions]);
 
   const limitOrderRow = ({ index, style }) => {
     let _order = marketLimitOrders[index];
@@ -732,10 +588,6 @@ export default function SameTFunds(properties) {
   const OpRow = ({ index, style }) => {
     let _operation = operations[index];
 
-    console.log({
-      operations
-    });
-
     if (!_operation) {
       return null;
     }
@@ -745,34 +597,6 @@ export default function SameTFunds(properties) {
 
     const _baseAmount = humanReadableFloat(_operation.sell_price.base.amount, _baseAsset.precision);
     const _quoteAmount = humanReadableFloat(_operation.sell_price.quote.amount, _quoteAsset.precision);
-
-    /*
-      {
-          "id": "1.7.560724540",
-          "expiration": "2027-01-28T05:37:09",
-          "seller": "1.2.1811273",
-          "for_sale": 2011688,
-          "sell_price": {
-              "base": {
-                  "amount": 2011688,
-                  "asset_id": "1.3.5286"
-              },
-              "quote": {
-                  "amount": 20116880,
-                  "asset_id": "1.3.0"
-              }
-          },
-          "filled_amount": "0",
-          "deferred_fee": 48260,
-          "deferred_paid_fee": {
-              "amount": 0,
-              "asset_id": "1.3.0"
-          },
-          "is_settled_debt": false,
-          "on_fill": [],
-          "final_buy_amount": 50.2922
-      }
-    */
     
     return (
       <div style={style} key={`operation-summary-${_operation.id}-${index}`}>
@@ -810,7 +634,293 @@ export default function SameTFunds(properties) {
     );
   };
 
-  const [addOperationDialog, setAddOperationDialog] = useState(false);
+  const BorrowPositionRow = ({ index, style }) => {
+    let _borrowPosition = borrowPositions[index];
+
+    if (!_borrowPosition) {
+      return null;
+    }
+
+    const borrowAsset = assets.find((x) => x.id === _borrowPosition.asset_id);
+
+    return (
+        <Card className="w-full">
+          <CardHeader className="pt-1 pb-1">
+            <CardDescription>
+              <div className="grid grid-cols-3">
+                <div>
+                  {_borrowPosition.id}
+                </div>
+                <div>
+                  {_borrowPosition.borrow_amount} {borrowAsset.symbol} 
+                </div>
+                <div>
+                  {(_borrowPosition.borrow_amount * sameTFunds.find((x) => x.id === _borrowPosition.id).fee_rate / 1000000).toFixed(borrowAsset.precision)}
+                  {" "}
+                  {borrowAsset.symbol}
+                </div>
+              </div>
+            </CardDescription>
+          </CardHeader>
+        </Card>
+    )
+  };
+
+  const FundRow = ({ index, style }) => {
+    let fund = sameTFunds[index];
+
+    if (!fund || !assets || !assets.length) {
+      return null;
+    }
+
+    const asset = assets.find((x) => x.id === fund.asset_type);
+    const regex = new RegExp(`^[0-9]*\\.?[0-9]{0,${asset.precision}}$`);
+
+    const assetName = asset ? asset.symbol : fund.asset_type;
+    const balance = humanReadableFloat(fund.balance, asset.precision);
+    const feeRate = fund.fee_rate / 10000;
+    const unpaidAmount = humanReadableFloat(fund.unpaid_amount, asset.precision);
+    const lender = lenderAccounts.find((x) => x.id === fund.owner_account);
+
+    const [borrowAmount, setBorrowAmount] = useState(
+      borrowPositions.find((x) => x.id === fund.id)?.borrow_amount || 0
+    );
+    const [borrowPositionDialog, setBorrowPositionDialog] = useState(false);
+
+    return (
+      <div style={style} key={`sametfund-${fund.id}`}>
+        <Card className="w-full">
+          <div className="grid grid-cols-12 gap-2">
+            <div className="col-span-10">
+              <CardHeader className="pt-1 pb-1">
+                <CardDescription>
+                  {t("TFundUser:fund")}
+                  {" #"}
+                  <ExternalLink
+                    classnamecontents="hover:text-purple-500"
+                    type="text"
+                    text={fund.id.replace("1.20.", "")}
+                    hyperlink={`https://blocksights.info/#/objects/${fund.id}${
+                      usr.chain === "bitshares" ? "" : "?network=testnet"
+                    }`}
+                  />{" "}
+                  {t("CreditBorrow:common.by")}{" "}
+                  {lender ? (
+                    <ExternalLink
+                      classnamecontents="hover:text-purple-500"
+                      type="text"
+                      text={lender.name}
+                      hyperlink={`https://blocksights.info/#/accounts/${lender.name}${
+                        usr.chain === "bitshares" ? "" : "?network=testnet"
+                      }`}
+                    />
+                  ) : (
+                    "???"
+                  )}
+                  <div className="grid grid-cols-3 gap-2 text-sm">
+                    <div className="col-span-2">
+                      <div className="grid grid-cols-2">
+                        <div>
+                          {t("TFundUser:offering")}:<b>{` ${balance - unpaidAmount} ${assetName}`}</b>
+                        </div>
+                        <div>
+                          {t("TFundUser:fee")}:<b>{` ${feeRate} %`}</b>
+                          {feeRate > 20 ? "⚠️" : null}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </CardDescription>
+              </CardHeader>
+            </div>
+            <div className="col-span-2 flex items-center justify-center">
+              <Dialog open={borrowPositionDialog} onOpenChange={setBorrowPositionDialog}>
+                <DialogTrigger>
+                  <Button
+                    variant="outline"
+                    className="self-center"
+                  >
+                    Borrow
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="bg-white w-1/2 max-w-4xl bg-gray-100">
+                  <DialogHeader>
+                    <DialogTitle>How much would you like to borrow?</DialogTitle>
+                    <DialogDescription>
+                      Amount available: {balance - unpaidAmount} {assetName}<br/>
+                      Fee rate: {feeRate}%
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="grid grid-cols-1 gap-3">
+                    <Input
+                      value={borrowAmount}
+                      type="text"
+                      onInput={(e) => {
+                        const value = e.currentTarget.value;
+                        if (regex.test(value)) {
+                          setBorrowAmount(balance - unpaidAmount < value ? balance - unpaidAmount : value);
+                        }
+                      }}
+                    />
+                    <div className="grid grid-cols-5 gap-2">
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          setBorrowAmount(0);
+                        }}
+                      >
+                        0%
+                      </Button>
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          setBorrowAmount((balance - unpaidAmount) * 0.25);
+                        }}
+                      >
+                        25%
+                      </Button>
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          setBorrowAmount((balance - unpaidAmount) * 0.50);
+                        }}
+                      >
+                        50%
+                      </Button>
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          setBorrowAmount((balance - unpaidAmount) * 0.75);
+                        }}
+                      >
+                        75%
+                      </Button>
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          setBorrowAmount(balance - unpaidAmount);
+                        }}
+                      >
+                        100%
+                      </Button>
+                    </div>
+                    {
+                      borrowAmount > 0
+                        ? <Button
+                            variant="outline"
+                            onClick={() => {
+                              setBorrowPositions((prevBorrowPositions) => {
+                                const _borrows = [...prevBorrowPositions];
+                                const existingBorrow = _borrows.find((x) => x.id === fund.id);
+                          
+                                if (existingBorrow) {
+                                  existingBorrow.borrow_amount = parseFloat(borrowAmount);
+                                } else {
+                                  _borrows.push({
+                                    id: fund.id,
+                                    asset_id: fund.asset_type,
+                                    borrow_amount: parseFloat(borrowAmount),
+                                    fee_rate: fund.fee_rate
+                                  });
+                                }
+                          
+                                return _borrows;
+                              });
+
+                              setBorrowPositionDialog(false);
+                            }}
+                          >
+                            Submit
+                          </Button>
+                        : <Button
+                            variant="outline"
+                            onClick={() => {
+                              setBorrowPositions((prevBorrowPositions) => {
+                                const _borrows = prevBorrowPositions.filter((x) => x.id !== fund.id);
+                                return _borrows;
+                              });
+                          
+                              setBorrowPositionDialog(false);
+                            }}
+                          >
+                            Submit
+                          </Button>
+                    }
+                    
+                  </div>
+                </DialogContent>
+              </Dialog>
+
+            </div>
+          </div>
+        </Card>
+      </div>
+    );
+  };
+
+  const BalanceRow = ({ index, style }) => {
+    const _balance = updatedBalances[index];
+    const _priorBalance = usrBalances.find((x) => x.asset_id === _balance.asset_id);
+    const _asset = assets.find((x) => x.id === _balance.asset_id);
+    const _diff = (_balance.amount - humanReadableFloat(
+      _priorBalance ? _priorBalance.amount : 0,
+      _asset.precision
+    )).toFixed(_asset.precision);
+    const _borrowedAmount = borrowPositions.find((x) => x.asset_id === _balance.asset_id)?.borrow_amount || 0;
+    const _borrowFee = borrowPositions.find((x) => x.asset_id === _balance.asset_id)?.fee_rate || 0;
+    const _owedAmount = _borrowedAmount && _borrowFee ? _borrowedAmount * (_borrowFee / 1000000) : 0;
+    const _finalAmount = (_balance.amount - (_borrowedAmount + _owedAmount)).toFixed(_asset.precision);
+    let _finalAmountStle = "";
+    if (_finalAmount < 0) {
+      _finalAmountStle = "text-red-500";
+    } else if (_finalAmount > 0) {
+      _finalAmountStle = "text-green-500";
+    }
+
+    return <div style={style} key={`balance-${_balance.asset_id}`}>
+              <Card>
+                <CardHeader className="pt-1 pb-1">
+                  <CardDescription>
+                    <div className="grid grid-cols-5 gap-2">
+                      <div>
+                        {_balance.symbol}
+                      </div>
+                      <div>
+                        {_balance.amount.toFixed(_asset.precision)}
+                      </div>
+                      <div>
+                        {
+                          _diff === 0
+                            ? ""
+                            : null
+                        }
+                        {
+                          _diff < 0
+                            ? `-${_diff}`
+                            : `+${_diff}`
+                        }
+                      </div>
+                      <div>
+                        {
+                          _diff === 0
+                            ? ""
+                            : null
+                        }
+                        {
+                          _borrowedAmount > 0
+                            ? (_borrowedAmount + _owedAmount).toFixed(_asset.precision)
+                            : null
+                        }
+                      </div>
+                      <div className={_finalAmount < 0 ? "text-red-500" : "text-green-500"}>
+                        {_finalAmount}
+                      </div>
+                    </div>
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            </div>
+  };
 
   return (
     <>
@@ -818,8 +928,8 @@ export default function SameTFunds(properties) {
         <div className="grid grid-cols-1 gap-3">
           <Card>
             <CardHeader className="pb-1">
-              <CardTitle>{t("SameTFunds:title")}</CardTitle>
-              <CardDescription>{t("SameTFunds:description")}</CardDescription>
+              <CardTitle>{t("TFundUser:title")}</CardTitle>
+              <CardDescription>{t("TFundUser:description")}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 gap-3">
@@ -827,7 +937,10 @@ export default function SameTFunds(properties) {
                   <label className="block text-sm font-medium text-gray-700">
                     Available Same-T Funds
                   </label>
-                  <div className="border rounded border-gray-300 p-2">
+                  <label className="block text-xs font-medium text-gray-700">
+                    Description of same-t funds...
+                  </label>
+                  <div className="border rounded border-gray-300 p-2 mt-2">
                     {
                       sameTFunds && sameTFunds.length > 0 ? (
                         <List
@@ -840,7 +953,7 @@ export default function SameTFunds(properties) {
                           {FundRow}
                         </List>
                       ) : (
-                        <div className="mt-5">{t("SameTFunds:noFunds")}</div>
+                        <div className="mt-5">{t("TFundUser:noFunds")}</div>
                       )
                     }
                   </div>
@@ -849,10 +962,13 @@ export default function SameTFunds(properties) {
                   <label className="block text-sm font-medium text-gray-700">
                     Same-T Fund Borrow Positions
                   </label>
+                  <label className="block text-xs font-medium text-gray-700">
+                    These are the Same-T funds which you will borrow and repay within the one transaction!
+                  </label>
                   {
                     borrowPositions && borrowPositions.length
                       ? (
-                        <div className="grid grid-cols-3 border rounded border-gray-300 p-2">
+                        <div className="grid grid-cols-3 border rounded border-gray-300 p-2 mt-2">
                           <div>
                             Fund
                           </div>
@@ -866,7 +982,7 @@ export default function SameTFunds(properties) {
                             <List
                               height={200}
                               itemCount={borrowPositions.length}
-                              itemSize={65}
+                              itemSize={70}
                               key={`list-borrowpositions`}
                               className="w-full mt-1"
                             >
@@ -874,7 +990,7 @@ export default function SameTFunds(properties) {
                             </List>
                           </div>
                         </div>
-                      ) : <div className="mt-3">
+                      ) : <div className="mt-3 text-sm text-red-500">
                             No borrow positions
                           </div>
                   }
@@ -883,10 +999,13 @@ export default function SameTFunds(properties) {
                   <label className="block text-sm font-medium text-gray-700">
                     Chain of operations
                   </label>
+                  <label className="block text-xs font-medium text-gray-700">
+                    Chain together a series of limit order operations... more info needed to be given...
+                  </label>
                   {
                     borrowPositions && borrowPositions.length
                       ? <div className="grid grid-cols-6 gap-2">
-                          <div className="col-span-5 rounded border border-gray-300 p-2">
+                          <div className="col-span-5 rounded border border-gray-300 p-2 mt-2">
                             <div className="grid grid-cols-10">
                               <div className="col-span-3">
                                 Buying
@@ -915,6 +1034,7 @@ export default function SameTFunds(properties) {
                               <DialogTrigger>
                                 <Button
                                   variant="outline"
+                                  className="mt-1"
                                   onClick={() => {
                                     console.log("Adding an operation")
                                   }}  
@@ -1027,61 +1147,85 @@ export default function SameTFunds(properties) {
       
                           </div>
                         </div>
-                      : <div className="mt-3">
+                      : <div className="mt-3 text-sm text-red-500">
                           No borrow positions
                         </div>
                   }
                   
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Summary
-                  </label>
-                  <div className="grid grid-cols-3 gap-2">
-                    <Card>
-                      <CardHeader className="p-1">
-                        <CardDescription>
-                          Limit orders: {operations.length}<br/>
-                          Network fees: {operations.length * 0.01} BTS<br/>
-                          Market fees:<br/>
-                          x HONEST.USD<br/>
-                          y HONEST.CNY
-                        </CardDescription>
-                      </CardHeader>
-                    </Card>
-                    <Card>
-                      <CardHeader className="p-1">
-                        <CardDescription>
-                          Balances before:<br/>
-                          BTS: 1234<br/>
-                          TEST: 1234<br/>
-                          NFTEA: 1234<br/>
-                        </CardDescription>
-                      </CardHeader>
-                    </Card>
-                    <Card>
-                      <CardHeader className="p-1">
-                        <CardDescription>
-                          Balances after:<br/>
-                          BTS: 1235 (+ 1)<br/>
-                          TEST: 1235 (+ 1)<br/>
-                          NFTEA: 1235 (+ 1)
-                        </CardDescription>
-                      </CardHeader>
-                    </Card>
-                  </div>
-                </div>
+                {
+                  updatedBalances && updatedBalances.length
+                    ? <div>
+                        <label className="block text-sm font-medium text-gray-700">
+                          Summary of user balances
+                        </label>
+                        <div className="rounded border border-gray-300 p-2 mt-2">
+                          <div className="grid grid-cols-5 gap-2">
+                            <div>
+                              Asset
+                            </div>
+                            <div>
+                              Balance
+                            </div>
+                            <div>
+                              Difference
+                            </div>
+                            <div>
+                              Borrowed
+                            </div>
+                            <div>
+                              Final amount
+                            </div>
+                          </div>
+                          <List
+                            height={200}
+                            itemCount={updatedBalances.length}
+                            itemSize={35}
+                            key={`list-updatedbalances`}
+                            className="w-full mt-3"
+                          >
+                            {BalanceRow}
+                          </List>
+                        </div>
+                      </div>
+                    : null
+                }
+
+                {
+                  operations && operations.length
+                  ? <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Estimated fees:
+                      </label>
+                      <Card>
+                        <CardHeader className="p-1">
+                          <CardDescription>
+                            Limit orders: {operations.length}<br/>
+                            Network fees: {operations.length * 0.01} BTS<br/>
+                            Market fees:<br/>
+                            x HONEST.USD<br/>
+                            y HONEST.CNY
+                          </CardDescription>
+                        </CardHeader>
+                      </Card>
+                    </div>
+                  : null
+                }
               </div>
 
-              <Button
-                className="w-1/4 mt-3"
-                variant="outline"
-                onClick={() => {
-                  setDeeplinkDialog(true);
-                }}
-              >
-                Generate Deeplink
-              </Button>
+              {
+                operations && operations.length
+                ? <Button
+                    className="w-1/4 mt-3"
+                    variant="outline"
+                    onClick={() => {
+                      setDeeplinkDialog(true);
+                    }}
+                  >
+                    Generate Deeplink
+                  </Button>
+                : null
+              }
             </CardContent>
           </Card>
 
