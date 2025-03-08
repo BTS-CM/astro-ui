@@ -9,6 +9,7 @@ import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
 
 import {
   Card,
@@ -28,13 +29,11 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-import BasicAssetDropDownCard from "@/components/Market/BasicAssetDropDownCard.jsx";
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
 import { createEverySameTFundStore } from "@/nanoeffects/SameTFunds.ts";
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 import { createObjectStore } from "@/nanoeffects/Objects.ts";
-import { createLimitOrdersStore } from "@/nanoeffects/MarketLimitOrders.ts";
 
 import { $currentUser } from "@/stores/users.ts";
 
@@ -44,6 +43,7 @@ import { $blockList } from "@/stores/blocklist.ts";
 
 import ExternalLink from "./common/ExternalLink.jsx";
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
+import LimitOrderWizard from "./Market/LimitOrderWizard.jsx";
 
 export default function SameTFunds(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
@@ -51,7 +51,14 @@ export default function SameTFunds(properties) {
   const blocklist = useSyncExternalStore($blockList.subscribe, $blockList.get, () => true);
   const currentNode = useStore($currentNode);
 
-  const { _assetsBTS, _assetsTEST, _marketSearchBTS, _marketSearchTEST } = properties;
+  const {
+    _assetsBTS,
+    _assetsTEST,
+    _marketSearchBTS,
+    _marketSearchTEST,
+    _globalParamsBTS,
+    _globalParamsTEST
+  } = properties;
 
   const [sameTFunds, setSameTFunds] = useState();
   const [lenderAccounts, setLenderAccounts] = useState([]);
@@ -62,7 +69,6 @@ export default function SameTFunds(properties) {
 
   const [sellingAsset, setSellingAsset] = useState(null);
   const [buyingAsset, setBuyingAsset] = useState(null);
-  const [marketLimitOrders, setMarketLimitOrders] = useState([]);
 
   const [addOperationDialog, setAddOperationDialog] = useState(false);
   const [deeplinkDialog, setDeeplinkDialog] = useState(false);
@@ -76,8 +82,35 @@ export default function SameTFunds(properties) {
 
   useInitCache(_chain ?? "bitshares", []);
 
+  const globalParams = useMemo(() => {
+    if (_chain && (_globalParamsBTS || _globalParamsTEST)) {
+      return _chain === "bitshares" ? _globalParamsBTS : _globalParamsTEST;
+    }
+    return [];
+  }, [_globalParamsBTS, _globalParamsTEST, _chain]);
+
+  const [limitOrderFee, setLimitOrderFee] = useState(0);
+  const [sameTFundBorrowFee, setSameTFundBorrowFee] = useState(0);
+  const [sameTFundRepayFee, setSameTFundRepayFee] = useState(0);
+  useEffect(() => {
+    if (globalParams && globalParams.length) {
+      const fee1 = globalParams.find((x) => x.id === 1); // operation: limit_order_create
+      const finalFee = humanReadableFloat(fee1.data.fee, 5);
+      setLimitOrderFee(finalFee);
+
+      const fee67 = globalParams.find((x) => x.id === 67); // operation: same_tfund_borrow
+      const finalFee67 = humanReadableFloat(fee67.data.fee, 5);
+      setSameTFundBorrowFee(finalFee67);
+
+      const fee68 = globalParams.find((x) => x.id === 68); // operation: same_tfund_repay
+      const finalFee68 = humanReadableFloat(fee68.data.fee, 5);
+      setSameTFundRepayFee(finalFee68);
+    }
+  }, [globalParams]);
+
   const assets = useMemo(() => {
     if (_chain && (_assetsBTS || _assetsTEST)) {
+      console.log({_assetsBTS})
       return _chain === "bitshares" ? _assetsBTS : _assetsTEST;
     }
     return [];
@@ -246,52 +279,6 @@ export default function SameTFunds(properties) {
     return _operations;
   }, [borrowPositions, operations, sameTFunds, usr]);
 
-  const sellingAssetData = useMemo(() => {
-    if (sellingAsset && assets && assets.length) {
-      return assets.find((x) => x.symbol === sellingAsset);
-    }
-    return null; 
-  }, [sellingAsset, assets]);
-
-  const buyingAssetData = useMemo(() => {
-    if (buyingAsset && assets && assets.length) {
-      return assets.find((x) => x.symbol === buyingAsset);
-    }
-    return null;
-  }, [buyingAsset, assets]);
-
-  useEffect(() => {
-    async function fetching() {
-      const limitOrdersStore = createLimitOrdersStore([
-        _chain,
-        sellingAsset,
-        buyingAsset,
-        100,
-        currentNode ? currentNode.url : null,
-      ]);
-
-      limitOrdersStore.subscribe(({ data, error, loading }) => {
-        if (data && !error && !loading) {
-          setMarketLimitOrders(data.filter((_limitOrder) => {
-            return _limitOrder.sell_price.base.asset_id === sellingAssetData.id && _limitOrder.sell_price.quote.asset_id === buyingAssetData.id;
-          }));
-        }
-      });
-    }
-
-    if (
-      sellingAsset &&
-      buyingAsset &&
-      sellingAsset !== buyingAsset && // prevent invalid market pairs
-      sellingAssetData &&
-      buyingAssetData &&
-      _chain &&
-      currentNode
-    ) {
-      fetching();
-    }
-  }, [sellingAsset, sellingAssetData, buyingAsset, buyingAssetData, _chain, currentNode]);
-
   const [updatedBalances, setUpdatedBalances] = useState([]);
   useEffect(() => {
     if (!borrowPositions || !usrBalances) {
@@ -342,6 +329,10 @@ export default function SameTFunds(properties) {
       const sellAmount = humanReadableFloat(operation.sell_price.base.amount, sellAsset.precision);
       const buyAmount = humanReadableFloat(operation.sell_price.quote.amount, buyAsset.precision);
   
+      const marketFeePercent = buyAsset.market_fee_percent ? buyAsset.market_fee_percent / 100 : 0;
+      const marketFee = buyAmount * marketFeePercent;
+      const netBuyAmount = buyAmount - marketFee;
+
       const sellBalance = newBalances.find((b) => b.asset_id === operation.sell_price.base.asset_id);
       const buyBalance = newBalances.find((b) => b.asset_id === operation.sell_price.quote.asset_id);
   
@@ -356,11 +347,11 @@ export default function SameTFunds(properties) {
       }
   
       if (buyBalance) {
-        buyBalance.amount += buyAmount;
+        buyBalance.amount += netBuyAmount;
       } else {
         newBalances.push({
           asset_id: operation.sell_price.quote.asset_id,
-          amount: buyAmount,
+          amount: netBuyAmount,
           symbol: buyAsset.symbol,
         });
       }
@@ -369,221 +360,35 @@ export default function SameTFunds(properties) {
     setUpdatedBalances(newBalances);
   }, [operations, usrBalances, borrowPositions]);
 
-  const limitOrderRow = ({ index, style }) => {
-    let _order = marketLimitOrders[index];
-
-    if (!_order) {
-      return null;
+  const [marketFees, setMarketFees] = useState([]);
+  useEffect(() => {
+    if (!operations.length || !assets.length) {
+      setMarketFees([]);
+      return;
     }
-
-    const regex = new RegExp(`^[0-9]*\\.?[0-9]{0,${sellingAssetData.precision}}$`);
-
-    /*
-      {
-          "id": "1.7.558989518",
-          "expiration": "2025-11-26T05:56:04",
-          "seller": "1.2.114122",
-          "for_sale": 90000,
-          "sell_price": {
-              "base": {
-                  "amount": 2988000,
-                  "asset_id": "1.3.0"
-              },
-              "quote": {
-                  "amount": 498,
-                  "asset_id": "1.3.106"
-              }
-          },
-          "filled_amount": "2898000",
-          "deferred_fee": 0,
-          "deferred_paid_fee": {
-              "amount": 0,
-              "asset_id": "1.3.0"
-          },
-          "is_settled_debt": false,
-          "on_fill": []
+  
+    const totalFees = {};
+    operations.forEach((operation) => {
+      const buyAsset = assets.find((x) => x.id === operation.sell_price.quote.asset_id);
+      const buyAmount = humanReadableFloat(operation.sell_price.quote.amount, buyAsset.precision);
+  
+      const marketFeePercent = buyAsset.market_fee_percent ? buyAsset.market_fee_percent / 100 : 0;
+      const marketFee = buyAmount * marketFeePercent;
+  
+      if (totalFees[buyAsset.symbol]) {
+        totalFees[buyAsset.symbol] += marketFee;
+      } else {
+        totalFees[buyAsset.symbol] = marketFee;
       }
-    */
-
-    const existingOperation = operations.find(op => op.id === _order.id);
-    const [limitOrderBuyAmount, setLimitOrderBuyAmount] = useState(
-      existingOperation
-        ? existingOperation.final_buy_amount
-        : 0
-    );
-        
-    const _baseAmount = humanReadableFloat(_order.sell_price.base.amount, sellingAssetData.precision);
-    const _quoteAmount = humanReadableFloat(_order.sell_price.quote.amount, buyingAssetData.precision);
-
-    const percentageCommitted = limitOrderBuyAmount > 0
-      ? ((limitOrderBuyAmount / _quoteAmount) * 100).toFixed(3)
-      : 0;
-
-    return (
-      <div
-        style={style}
-        key={`marketLimitOrder-${_order.id}`}
-        className="grid grid-cols-5 gap-3 border rounded border-gray-300 p-2 text-center"
-      >
-        <div>
-          {_quoteAmount}
-        </div>
-        <div className="border-l border-r border-gray-300">
-          {_baseAmount}
-        </div>
-        <div className="border-r border-gray-300">
-          {(_quoteAmount / _baseAmount).toFixed(sellingAssetData.precision)}
-        </div>
-        <div className="border-r border-gray-300">
-          {percentageCommitted}
-        </div>
-        <Dialog>
-          <DialogTrigger>
-            <Button variant="outline">
-              Buy
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="bg-white">
-            <DialogHeader>
-              <DialogTitle>Buying into open limit order</DialogTitle>
-              <DialogDescription>
-                How much of the following open market order do you want to buy?
-              </DialogDescription>
-            </DialogHeader>
-            <div className="grid grid-cols-1 gap-3">
-              <Input
-                value={limitOrderBuyAmount}
-                type="text"
-                onInput={(e) => {
-                  const value = e.currentTarget.value;
-                  if (regex.test(value)) {
-                    setLimitOrderBuyAmount(value > _quoteAmount ? _quoteAmount : value);
-                  }
-                }}
-              />
-              <div className="grid grid-cols-5 gap-2">
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    setLimitOrderBuyAmount(0);
-                  }}
-                >
-                  0%
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    setLimitOrderBuyAmount(_quoteAmount * 0.25);
-                  }}
-                >
-                  25%
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    setLimitOrderBuyAmount(_quoteAmount * 0.50);
-                  }}
-                >
-                  50%
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    setLimitOrderBuyAmount(_quoteAmount * 0.75);
-                  }}
-                >
-                  75%
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    setLimitOrderBuyAmount(_quoteAmount);
-                  }}
-                >
-                  100%
-                </Button>
-              </div>
-              <Button
-                variant="outline"
-                onClick={() => {
-                  setOperations((prevOperations) => {
-                    const _ops = [...prevOperations];
-                
-                    const existingOperationIndex = _ops.findIndex(op => op.id === _order.id);
-                    const existingOperation = existingOperationIndex !== -1 ? _ops[existingOperationIndex] : null;
-                
-                    // Early return if the value is already set
-                    if (existingOperation && existingOperation.final_buy_amount === limitOrderBuyAmount) {
-                      return _ops;
-                    }
-                
-                    const hasLaterOrders = _ops.some(op => {
-                      const orderIndex = marketLimitOrders.findIndex(order => order.id === op.id);
-                      return orderIndex > index;
-                    });
-                
-                    if (limitOrderBuyAmount === 0) {
-                      // Remove the current order if set to 0%
-                      return _ops.filter(op => op.id !== _order.id);
-                    } else if (limitOrderBuyAmount < _quoteAmount && hasLaterOrders) {
-                      // Remove subsequent market limit orders if the current order is less than 100% and there are later orders
-                      for (let i = index + 1; i < marketLimitOrders.length; i++) {
-                        const subsequentOrder = marketLimitOrders[i];
-                        const existingSubsequentOperationIndex = _ops.findIndex(op => op.id === subsequentOrder.id);
-                
-                        if (existingSubsequentOperationIndex !== -1) {
-                          // Remove existing subsequent operation
-                          _ops.splice(existingSubsequentOperationIndex, 1);
-                        }
-                      }
-                    }
-                
-                    if (limitOrderBuyAmount !== 0) {
-                      // Set prior market limit orders to 100% only if the current order is not set to 0%
-                      for (let i = 0; i < index; i++) {
-                        const priorOrder = marketLimitOrders[i];
-                        const priorOrderAmount = humanReadableFloat(priorOrder.sell_price.quote.amount, buyingAssetData.precision);
-                        const existingPriorOperationIndex = _ops.findIndex(op => op.id === priorOrder.id);
-                
-                        if (existingPriorOperationIndex !== -1) {
-                          // Update existing prior operation
-                          _ops[existingPriorOperationIndex] = {
-                            ..._ops[existingPriorOperationIndex],
-                            final_buy_amount: priorOrderAmount
-                          };
-                        } else {
-                          // Add new prior operation
-                          priorOrder["final_buy_amount"] = priorOrderAmount;
-                          _ops.push(priorOrder);
-                        }
-                      }
-                    }
-                
-                    // Set current order to the specified buy amount
-                    if (existingOperationIndex !== -1) {
-                      // Update existing operation
-                      _ops[existingOperationIndex] = {
-                        ..._ops[existingOperationIndex],
-                        final_buy_amount: limitOrderBuyAmount
-                      };
-                    } else {
-                      // Add new operation
-                      _order["final_buy_amount"] = limitOrderBuyAmount;
-                      _ops.push(_order);
-                    }
-                
-                    return _ops;
-                  });
-                }}
-              >
-                Submit
-              </Button>
-            </div>
-          </DialogContent>
-        </Dialog>
-      </div>
-    );
-  };
+    });
+  
+    const feesArray = Object.entries(totalFees).map(([symbol, fee]) => ({
+      symbol,
+      fee: fee.toFixed(assets.find((x) => x.symbol === symbol).precision),
+    }));
+  
+    setMarketFees(feesArray);
+  }, [operations, assets]);
 
   const OpRow = ({ index, style }) => {
     let _operation = operations[index];
@@ -870,11 +675,11 @@ export default function SameTFunds(properties) {
     const _borrowFee = borrowPositions.find((x) => x.asset_id === _balance.asset_id)?.fee_rate || 0;
     const _owedAmount = _borrowedAmount && _borrowFee ? _borrowedAmount * (_borrowFee / 1000000) : 0;
     const _finalAmount = (_balance.amount - (_borrowedAmount + _owedAmount)).toFixed(_asset.precision);
-    let _finalAmountStle = "";
+    let _finalAmountStyle = "";
     if (_finalAmount < 0) {
-      _finalAmountStle = "text-red-500";
+      _finalAmountStyle = "text-red-500";
     } else if (_finalAmount > 0) {
-      _finalAmountStle = "text-green-500";
+      _finalAmountStyle = "text-green-500";
     }
 
     return <div style={style} key={`balance-${_balance.asset_id}`}>
@@ -912,7 +717,7 @@ export default function SameTFunds(properties) {
                             : null
                         }
                       </div>
-                      <div className={_finalAmount < 0 ? "text-red-500" : "text-green-500"}>
+                      <div className={_finalAmountStyle}>
                         {_finalAmount}
                       </div>
                     </div>
@@ -928,17 +733,19 @@ export default function SameTFunds(properties) {
         <div className="grid grid-cols-1 gap-3">
           <Card>
             <CardHeader className="pb-1">
-              <CardTitle>{t("TFundUser:title")}</CardTitle>
-              <CardDescription>{t("TFundUser:description")}</CardDescription>
+              <CardTitle>🚀 Same-T Fund Trade Wizard!</CardTitle>
+              <CardDescription>
+                Manually construct Same-T DeFi Limit Order operation chain transactions with the following wizard!
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 gap-3">
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
-                    Available Same-T Funds
+                    Step 1: Borrow assets from the following Same-T Funds to proceed!
                   </label>
                   <label className="block text-xs font-medium text-gray-700">
-                    Description of same-t funds...
+                    Debt positions are immediately repaid within your chain of transactions, including fees.
                   </label>
                   <div className="border rounded border-gray-300 p-2 mt-2">
                     {
@@ -948,26 +755,30 @@ export default function SameTFunds(properties) {
                           itemCount={sameTFunds.length}
                           itemSize={55}
                           key={`list-sametfunds`}
-                          className="w-full mt-3"
+                          className="w-full"
                         >
                           {FundRow}
                         </List>
                       ) : (
-                        <div className="mt-5">{t("TFundUser:noFunds")}</div>
+                        <div className="space-y-2 mt-5">
+                          <Skeleton className="h-4 w-[250px]" />
+                          <Skeleton className="h-4 w-[200px]" />
+                          <Skeleton className="h-4 w-[250px]" />
+                          <Skeleton className="h-4 w-[200px]" />
+                        </div>
                       )
                     }
                   </div>
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Same-T Fund Borrow Positions
-                  </label>
-                  <label className="block text-xs font-medium text-gray-700">
-                    These are the Same-T funds which you will borrow and repay within the one transaction!
-                  </label>
-                  {
+                {
                     borrowPositions && borrowPositions.length
-                      ? (
+                      ? <>
+                        <label className="block text-sm font-medium text-gray-700">
+                          Same-T Fund Borrow Positions
+                        </label>
+                        <label className="block text-xs font-medium text-gray-700">
+                          These are the Same-T funds which you will borrow and repay within the one transaction!
+                        </label>
                         <div className="grid grid-cols-3 border rounded border-gray-300 p-2 mt-2">
                           <div>
                             Fund
@@ -990,21 +801,19 @@ export default function SameTFunds(properties) {
                             </List>
                           </div>
                         </div>
-                      ) : <div className="mt-3 text-sm text-red-500">
-                            No borrow positions
-                          </div>
-                  }
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Chain of operations
-                  </label>
-                  <label className="block text-xs font-medium text-gray-700">
-                    Chain together a series of limit order operations... more info needed to be given...
-                  </label>
-                  {
-                    borrowPositions && borrowPositions.length
-                      ? <div className="grid grid-cols-6 gap-2">
+                      </>
+                      : null
+                }
+                {
+                  borrowPositions && borrowPositions.length
+                    ? <div>
+                        <label className="block text-sm font-medium text-gray-700">
+                          Step 2: Construct your chain of operations
+                        </label>
+                        <label className="block text-xs font-medium text-gray-700">
+                          Chain together a series of limit order operations taking advantage of borrowed funds!
+                        </label>
+                        <div className="grid grid-cols-6 gap-2">
                           <div className="col-span-5 rounded border border-gray-300 p-2 mt-2">
                             <div className="grid grid-cols-10">
                               <div className="col-span-3">
@@ -1030,134 +839,36 @@ export default function SameTFunds(properties) {
                             </List>
                           </div>
                           <div>
-                            <Dialog open={addOperationDialog} onOpenChange={setAddOperationDialog}>
-                              <DialogTrigger>
-                                <Button
-                                  variant="outline"
-                                  className="mt-1"
-                                  onClick={() => {
-                                    console.log("Adding an operation")
-                                  }}  
-                                >
-                                  + Add
-                                </Button>
-                              </DialogTrigger>
-                              <DialogContent className="sm:max-w-[1080px] bg-white">
-                                <DialogHeader>
-                                  <DialogTitle>What would you like to trade?</DialogTitle>
-                                  <DialogDescription>
-                                    Configure your limit orders with this form.
-                                  </DialogDescription>
-                                </DialogHeader>
-                                <div className="grid grid-cols-2 gap-5">
-                                  <Card>
-                                    <CardHeader>
-                                      <CardTitle>
-                                        <div className="grid grid-cols-2 gap-2">
-                                          <div className="text-left">
-                                            Buying
-                                          </div>
-                                          <div className="text-right">
-                                            <BasicAssetDropDownCard
-                                              assetSymbol={buyingAsset ?? ""}
-                                              assetData={buyingAssetData}
-                                              storeCallback={setBuyingAsset}
-                                              otherAsset={sellingAsset}
-                                              marketSearch={marketSearch}
-                                              type={"quote"}
-                                              size="small"
-                                              chain={usr && usr.chain ? usr.chain : "bitshares"}
-                                              borrowPositions={borrowPositions}
-                                              usrBalances={usrBalances}
-                                            />
-                                          </div>
-                                        </div>
-                                      </CardTitle>
-                                    </CardHeader>
-                                    <CardContent></CardContent>
-                                  </Card>
-                                  <Card>
-                                    <CardHeader>
-                                      <CardTitle>
-                                        <div className="grid grid-cols-2 gap-2">
-                                          <div className="text-left">
-                                            Selling
-                                          </div>
-                                          <div className="text-right">
-                                            <BasicAssetDropDownCard
-                                              assetSymbol={sellingAsset ?? ""}
-                                              assetData={sellingAssetData}
-                                              storeCallback={setSellingAsset}
-                                              otherAsset={buyingAsset}
-                                              marketSearch={marketSearch}
-                                              type={"base"}
-                                              size="small"
-                                              chain={usr && usr.chain ? usr.chain : "bitshares"}
-                                              borrowPositions={borrowPositions}
-                                              usrBalances={usrBalances}
-                                            />
-                                          </div>
-                                        </div>
-                                      </CardTitle>
-                                    </CardHeader>
-                                    <CardContent></CardContent>
-                                  </Card>
-                                </div>
-                                <div className="grid grid-cols-1 gap-2">
-                                  {
-                                    buyingAsset && sellingAsset
-                                      ? <Card>
-                                          <CardHeader>
-                                            <CardTitle>
-                                              Market Limit Orders
-                                            </CardTitle>
-                                          </CardHeader>
-                                          <CardContent>
-                                            <div className="grid grid-cols-5 gap-2 text-center">
-                                              <div>
-                                                {buyingAssetData ? buyingAssetData.symbol : null}
-                                              </div>
-                                              <div>
-                                                {sellingAssetData ? sellingAssetData.symbol : null}
-                                              </div>
-                                              <div>Price</div>
-                                              <div>Buying %</div>
-                                              <div></div>
-                                            </div>
-                                            {
-                                              marketLimitOrders && marketLimitOrders.length && sellingAsset !== buyingAsset
-                                                ? <List
-                                                    height={200}
-                                                    itemCount={marketLimitOrders.length}
-                                                    itemSize={50}
-                                                    key={`list-limitorders`}
-                                                    className="w-full mt-3"
-                                                  >
-                                                    {limitOrderRow}
-                                                  </List>
-                                                : "No orders available"
-                                            }
-                                          </CardContent>
-                                        </Card>
-                                      : null
-                                  }
-                                </div>
-                              </DialogContent>
-                            </Dialog>
-      
+                            <LimitOrderWizard
+                              addOperationDialog={addOperationDialog}
+                              setAddOperationDialog={setAddOperationDialog}
+                              buyingAsset={buyingAsset}
+                              setBuyingAsset={setBuyingAsset}
+                              sellingAsset={sellingAsset}
+                              setSellingAsset={setSellingAsset}
+                              marketSearch={marketSearch}
+                              assets={assets}
+                              chain={usr && usr.chain ? usr.chain : "bitshares"}
+                              borrowPositions={borrowPositions}
+                              operations={operations}
+                              setOperations={setOperations}
+                              usrBalances={usrBalances}
+                              updatedBalances={updatedBalances}
+                            />
                           </div>
                         </div>
-                      : <div className="mt-3 text-sm text-red-500">
-                          No borrow positions
-                        </div>
-                  }
-                  
-                </div>
+                      </div>
+                    : null
+                }
+                
                 {
                   updatedBalances && updatedBalances.length
                     ? <div>
                         <label className="block text-sm font-medium text-gray-700">
-                          Summary of user balances
+                          Step 3: Analyze outcome of chained limit order transaction
+                        </label>
+                        <label className="block text-xs font-medium text-gray-700">
+                          Ensure no final amounts are in the negative, otherwise the transaction will fail to broadcast!
                         </label>
                         <div className="rounded border border-gray-300 p-2 mt-2">
                           <div className="grid grid-cols-5 gap-2">
@@ -1201,10 +912,19 @@ export default function SameTFunds(properties) {
                         <CardHeader className="p-1">
                           <CardDescription>
                             Limit orders: {operations.length}<br/>
-                            Network fees: {operations.length * 0.01} BTS<br/>
+                            Network fees: {
+                            (operations.length * limitOrderFee) + 
+                            ((borrowPositions.length * 2) * sameTFundBorrowFee) +
+                            ((borrowPositions.length * 2) * sameTFundRepayFee)
+                            } {usr && usr.chain === "bitshares" ? "BTS" : "TEST"}<br/>
                             Market fees:<br/>
-                            x HONEST.USD<br/>
-                            y HONEST.CNY
+                            {
+                              marketFees.map(({ symbol, fee }) => (
+                                <Badge key={symbol}>
+                                  {fee} {symbol}
+                                </Badge>
+                              ))
+                            }
                           </CardDescription>
                         </CardHeader>
                       </Card>

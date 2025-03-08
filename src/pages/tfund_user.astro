@@ -12,10 +12,15 @@ const testAllAssets = await getCollection('testAllAssets');
 const btsMarketData = await getCollection('btsMarketData');
 const testMarketData = await getCollection('testMarketData');
 
+const btsFeeSchedule = await getCollection('btsFeeSchedule');
+const testFeeSchedule = await getCollection('testFeeSchedule');
+
 const btsAssets = btsAllAssets.map((collection) => collection.data);
 const testAssets = testAllAssets.map((collection) => collection.data);
 const btsMarkets = btsMarketData.map((collection) => collection.data);
 const testMarkets = testMarketData.map((collection) => collection.data);
+const globalParamsBTS = btsFeeSchedule.map(collection => collection.data);
+const globalParamsTEST = testFeeSchedule.map(collection => collection.data);
 ---
 
 <Layout title="Bitshares Same-T Fund Wizard">
@@ -27,6 +32,8 @@ const testMarkets = testMarketData.map((collection) => collection.data);
 			_assetsTEST={testAssets}
 			_marketSearchBTS={btsMarkets}
 			_marketSearchTEST={testMarkets}
+			_globalParamsBTS={globalParamsBTS}
+			_globalParamsTEST={globalParamsTEST}
 		/>
 		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/tfund_user.astro" />
 	</main>
