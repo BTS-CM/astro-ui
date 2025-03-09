@@ -29,7 +29,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-
 import { useInitCache } from "@/nanoeffects/Init.ts";
 import { createEverySameTFundStore } from "@/nanoeffects/SameTFunds.ts";
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
@@ -110,7 +109,6 @@ export default function SameTFunds(properties) {
 
   const assets = useMemo(() => {
     if (_chain && (_assetsBTS || _assetsTEST)) {
-      console.log({_assetsBTS})
       return _chain === "bitshares" ? _assetsBTS : _assetsTEST;
     }
     return [];
@@ -212,7 +210,7 @@ export default function SameTFunds(properties) {
   }, [usr]);
 
   const operationsJSON = useMemo(() => {
-    let _operations = [];
+    let _operationChain = [];
     if (
       !usr ||
       !usr.id ||
@@ -221,7 +219,7 @@ export default function SameTFunds(properties) {
       !operations.length ||
       !borrowPositions.length
     ) {
-      return _operations;
+      return _operationChain;
     }
 
     /*
@@ -238,7 +236,7 @@ export default function SameTFunds(properties) {
       const _borrowAmount = x.borrow_amount;
   
       const _referenceFundAsset = assets.find((x) => x.id === _borrowAssetID);
-      _operations.push({
+      _operationChain.push({
         borrower: usr.id,
         fund_id: _id,
         borrow_amount: {
@@ -249,7 +247,29 @@ export default function SameTFunds(properties) {
       });
     });
   
-    _operations = _operations.concat(operations);
+    operations.forEach((operation) => {
+      const _purchasedAsset = assets.find((x) => x.id === operation.final_asset_purchased);
+      const _soldAsset = assets.find((x) => x.id === operation.final_asset_sold);
+      const date = new Date(Date.now() + 1 * 24 * 60 * 60 * 1000);
+
+      _operationChain.push({
+        seller: usr.id,
+        amount_to_sell: {
+          amount: blockchainFloat(
+            operation.final_buy_amount * operation.final_price,
+            _soldAsset.precision
+          ),
+          asset_id: _soldAsset.id
+        },
+        min_to_receive: {
+          amount: blockchainFloat(operation.final_buy_amount, _purchasedAsset.precision),
+          asset_id: _purchasedAsset.id
+        },
+        expiration: date,
+        fill_or_kill: true,
+        extensions: {}
+      });
+    });
   
     borrowPositions.forEach((x) => {
       const _id = x.id;
@@ -261,7 +281,7 @@ export default function SameTFunds(properties) {
   
       const _feeAmount = _borrowAmount * _feeRate / 1000000;
   
-      _operations.push({
+      _operationChain.push({
         account: usr.id,
         fund_id: _id,
         repay_amount: {
@@ -276,7 +296,7 @@ export default function SameTFunds(properties) {
       });
     });
 
-    return _operations;
+    return _operationChain;
   }, [borrowPositions, operations, sameTFunds, usr]);
 
   const [updatedBalances, setUpdatedBalances] = useState([]);
@@ -324,25 +344,35 @@ export default function SameTFunds(properties) {
     });
   
     operations.forEach((operation) => {
-      const sellAsset = assets.find((x) => x.id === operation.sell_price.base.asset_id);
-      const buyAsset = assets.find((x) => x.id === operation.sell_price.quote.asset_id);
-      const sellAmount = humanReadableFloat(operation.sell_price.base.amount, sellAsset.precision);
-      const buyAmount = humanReadableFloat(operation.sell_price.quote.amount, buyAsset.precision);
+      /*
+        final_buy_amount
+        final_asset_purchased
+        final_asset_sold
+        final_price
+      */
+      if (!operation) {
+        return;
+      }
+
+      const _purchasedAsset = assets.find((x) => x.id === operation.final_asset_purchased);
+      const _soldAsset = assets.find((x) => x.id === operation.final_asset_sold);
+      const buyAmount = operation.final_buy_amount;
   
-      const marketFeePercent = buyAsset.market_fee_percent ? buyAsset.market_fee_percent / 100 : 0;
+      const sellAmount = buyAmount * operation.final_price;
+      const marketFeePercent = _purchasedAsset.market_fee_percent ? _purchasedAsset.market_fee_percent / 100 : 0;
       const marketFee = buyAmount * marketFeePercent;
       const netBuyAmount = buyAmount - marketFee;
 
-      const sellBalance = newBalances.find((b) => b.asset_id === operation.sell_price.base.asset_id);
-      const buyBalance = newBalances.find((b) => b.asset_id === operation.sell_price.quote.asset_id);
+      const sellBalance = newBalances.find((b) => b.asset_id === _soldAsset.id);
+      const buyBalance = newBalances.find((b) => b.asset_id === _purchasedAsset.id);
   
       if (sellBalance) {
         sellBalance.amount -= sellAmount;
       } else {
         newBalances.push({
-          asset_id: operation.sell_price.base.asset_id,
+          asset_id: operation.final_buy_amount,
           amount: -sellAmount,
-          symbol: sellAsset.symbol,
+          symbol: _purchasedAsset.symbol,
         });
       }
   
@@ -350,9 +380,9 @@ export default function SameTFunds(properties) {
         buyBalance.amount += netBuyAmount;
       } else {
         newBalances.push({
-          asset_id: operation.sell_price.quote.asset_id,
+          asset_id: _purchasedAsset.id,
           amount: netBuyAmount,
-          symbol: buyAsset.symbol,
+          symbol: _purchasedAsset.symbol,
           display: true
         });
       }
@@ -370,16 +400,16 @@ export default function SameTFunds(properties) {
   
     const totalFees = {};
     operations.forEach((operation) => {
-      const buyAsset = assets.find((x) => x.id === operation.sell_price.quote.asset_id);
-      const buyAmount = humanReadableFloat(operation.sell_price.quote.amount, buyAsset.precision);
+      const _purchasedAsset = assets.find((x) => x.id === operation.final_asset_purchased);     
+      const buyAmount = operation.final_buy_amount;
   
-      const marketFeePercent = buyAsset.market_fee_percent ? buyAsset.market_fee_percent / 100 : 0;
+      const marketFeePercent = _purchasedAsset.market_fee_percent ? _purchasedAsset.market_fee_percent / 100 : 0;
       const marketFee = buyAmount * marketFeePercent;
   
-      if (totalFees[buyAsset.symbol]) {
-        totalFees[buyAsset.symbol] += marketFee;
+      if (totalFees[_purchasedAsset.symbol]) {
+        totalFees[_purchasedAsset.symbol] += marketFee;
       } else {
-        totalFees[buyAsset.symbol] = marketFee;
+        totalFees[_purchasedAsset.symbol] = marketFee;
       }
     });
   
@@ -391,87 +421,6 @@ export default function SameTFunds(properties) {
   
     setMarketFees(feesArray);
   }, [operations, assets]);
-
-  const OpRow = ({ index, style }) => {
-    let _operation = operations[index];
-
-    if (!_operation) {
-      return null;
-    }
-
-    const _baseAsset = assets.find((x) => x.id === _operation.sell_price.base.asset_id);
-    const _quoteAsset = assets.find((x) => x.id === _operation.sell_price.quote.asset_id);
-
-    const _baseAmount = humanReadableFloat(_operation.sell_price.base.amount, _baseAsset.precision);
-    const _quoteAmount = humanReadableFloat(_operation.sell_price.quote.amount, _quoteAsset.precision);
-    
-    return (
-      <div style={style} key={`operation-summary-${_operation.id}-${index}`}>
-        <Card className="w-full">
-          <CardHeader className="pt-1 pb-1">
-            <CardDescription>
-              <div className="grid grid-cols-10">
-                <div className="col-span-3">
-                  {_quoteAmount}<br/>
-                  {_quoteAsset.symbol}
-                </div>
-                <div className="col-span-3">
-                  {_baseAmount}<br/>
-                  {_baseAsset.symbol}
-                </div>
-                <div className="col-span-3">
-                  {(_quoteAmount / _baseAmount).toFixed(_baseAsset.precision)}
-                </div>
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    console.log("Editing operation");
-                    setBuyingAsset(_quoteAsset.symbol);
-                    setSellingAsset(_baseAsset.symbol);
-                    setAddOperationDialog(true);
-                  }}
-                >
-                  ⚙️
-                </Button>
-              </div>
-            </CardDescription>
-          </CardHeader>
-        </Card>
-      </div>
-    );
-  };
-
-  const BorrowPositionRow = ({ index, style }) => {
-    let _borrowPosition = borrowPositions[index];
-
-    if (!_borrowPosition) {
-      return null;
-    }
-
-    const borrowAsset = assets.find((x) => x.id === _borrowPosition.asset_id);
-
-    return (
-        <Card className="w-full">
-          <CardHeader className="pt-1 pb-1">
-            <CardDescription>
-              <div className="grid grid-cols-3">
-                <div>
-                  {_borrowPosition.id}
-                </div>
-                <div>
-                  {_borrowPosition.borrow_amount} {borrowAsset.symbol} 
-                </div>
-                <div>
-                  {(_borrowPosition.borrow_amount * sameTFunds.find((x) => x.id === _borrowPosition.id).fee_rate / 1000000).toFixed(borrowAsset.precision)}
-                  {" "}
-                  {borrowAsset.symbol}
-                </div>
-              </div>
-            </CardDescription>
-          </CardHeader>
-        </Card>
-    )
-  };
 
   const FundRow = ({ index, style }) => {
     let fund = sameTFunds[index];
@@ -665,6 +614,38 @@ export default function SameTFunds(properties) {
     );
   };
 
+  const BorrowPositionRow = ({ index, style }) => {
+    let _borrowPosition = borrowPositions[index];
+
+    if (!_borrowPosition) {
+      return null;
+    }
+
+    const borrowAsset = assets.find((x) => x.id === _borrowPosition.asset_id);
+
+    return (
+        <Card className="w-full">
+          <CardHeader className="pt-1 pb-1">
+            <CardDescription>
+              <div className="grid grid-cols-3">
+                <div>
+                  {_borrowPosition.id}
+                </div>
+                <div>
+                  {_borrowPosition.borrow_amount} {borrowAsset.symbol} 
+                </div>
+                <div>
+                  {(_borrowPosition.borrow_amount * sameTFunds.find((x) => x.id === _borrowPosition.id).fee_rate / 1000000).toFixed(borrowAsset.precision)}
+                  {" "}
+                  {borrowAsset.symbol}
+                </div>
+              </div>
+            </CardDescription>
+          </CardHeader>
+        </Card>
+    )
+  };
+
   const BalanceRow = ({ index, style }) => {
     const _balance = updatedBalances.filter((x) => x.display)[index];
     const _priorBalance = usrBalances.find((x) => x.asset_id === _balance.asset_id);
@@ -730,6 +711,55 @@ export default function SameTFunds(properties) {
               </Card>
             </div>
   };
+  
+  const OpRow = ({ index, style }) => {
+    let _operation = operations[index];
+
+    if (!_operation) {
+      return null;
+    }
+
+    const _purchasedAsset = assets.find((x) => x.id === _operation.final_asset_purchased);
+    const _soldAsset = assets.find((x) => x.id === _operation.final_asset_sold);
+    const _marketPurchaseFee = _purchasedAsset.market_fee_percent ? _purchasedAsset.market_fee_percent / 100 : 0;
+    const _amountPurchased = (_operation.final_buy_amount - (_operation.final_buy_amount * _marketPurchaseFee)).toFixed(_purchasedAsset.precision);
+    const _amountSold = (_amountPurchased * _operation.final_price).toFixed(_soldAsset.precision);
+    
+    return (
+      <div style={style} key={`operation-summary-${_operation.id}-${index}`}>
+        <Card className="w-full">
+          <CardHeader className="pt-1 pb-1">
+            <CardDescription>
+              <div className="grid grid-cols-10">
+                <div className="col-span-3">
+                  {_amountPurchased}<br/>
+                  {_purchasedAsset.symbol}
+                </div>
+                <div className="col-span-3">
+                  {_amountSold}<br/>
+                  {_soldAsset.symbol}
+                </div>
+                <div className="col-span-3">
+                  {_operation.final_price}
+                </div>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    console.log("Editing operation");
+                    setBuyingAsset(_purchasedAsset.symbol);
+                    setSellingAsset(_soldAsset.symbol);
+                    setAddOperationDialog(true);
+                  }}
+                >
+                  ⚙️
+                </Button>
+              </div>
+            </CardDescription>
+          </CardHeader>
+        </Card>
+      </div>
+    );
+  };
 
   return (
     <>
@@ -753,24 +783,22 @@ export default function SameTFunds(properties) {
                   </label>
                   <div className="border rounded border-gray-300 p-2 mt-2">
                     {
-                      sameTFunds && sameTFunds.length > 0 ? (
-                        <List
-                          height={250}
-                          itemCount={sameTFunds.length}
-                          itemSize={55}
-                          key={`list-sametfunds`}
-                          className="w-full"
-                        >
-                          {FundRow}
-                        </List>
-                      ) : (
-                        <div className="space-y-2 mt-5">
-                          <Skeleton className="h-4 w-[250px]" />
-                          <Skeleton className="h-4 w-[200px]" />
-                          <Skeleton className="h-4 w-[250px]" />
-                          <Skeleton className="h-4 w-[200px]" />
-                        </div>
-                      )
+                      lenderAccounts && lenderAccounts.length && sameTFunds && sameTFunds.length > 0
+                        ? <List
+                            height={250}
+                            itemCount={sameTFunds.length}
+                            itemSize={55}
+                            key={`list-sametfunds`}
+                            className="w-full"
+                          >
+                            {FundRow}
+                          </List>
+                        : <div className="space-y-2 mt-5">
+                            <Skeleton className="h-4 w-[250px]" />
+                            <Skeleton className="h-4 w-[200px]" />
+                            <Skeleton className="h-4 w-[250px]" />
+                            <Skeleton className="h-4 w-[200px]" />
+                          </div>
                     }
                   </div>
                 </div>
@@ -866,7 +894,7 @@ export default function SameTFunds(properties) {
                 }
                 
                 {
-                  updatedBalances && updatedBalances.length
+                  borrowPositions && borrowPositions.length && updatedBalances && updatedBalances.length
                     ? <div>
                         <label className="block text-sm font-medium text-gray-700">
                           Step 3: Analyze outcome of chained limit order transaction

@@ -16,7 +16,7 @@
   },
   "tabsContent": {
     "transactionObjectJSON": "Transaktionsobjekt JSON",
-    "operationType": "Operationstype: {{operationName}}",
+    "operationType": "Operationstype:",
     "copyOperationJSON": "Kopier operation JSON",
     "usingDeeplink": "Brug af et dybt link til at udsende via Beet multiwallet",
     "step1": "Start BEET-pungen og naviger til 'Raw Link' i menuen, tegnebogen skal forblive ulåst under udsendelsens varighed.",

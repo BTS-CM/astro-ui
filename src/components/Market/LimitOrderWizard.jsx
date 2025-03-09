@@ -1,18 +1,33 @@
 import React, { useSyncExternalStore, useMemo, useState, useEffect, useCallback } from "react";
 import { FixedSizeList as List } from "react-window";
 import { useStore } from "@nanostores/react";
-import { ReloadIcon } from "@radix-ui/react-icons";
+import {
+    ReloadIcon,
+    HeartFilledIcon,
+    HeartIcon
+} from "@radix-ui/react-icons";
 
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+
 import { createLimitOrdersStore } from "@/nanoeffects/MarketLimitOrders.ts";
 import { $currentNode } from "@/stores/node.ts";
+import {
+  $favouriteAssets,
+  addFavouriteAsset,
+  removeFavouriteAsset,
+} from "@/stores/favourites.ts"
 
 import {
   Card,
@@ -32,7 +47,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-import { debounce, humanReadableFloat, blockchainFloat } from "@/lib/common.js";
+import { humanReadableFloat } from "@/lib/common.js";
 
 import BasicAssetDropDownCard from "@/components/Market/BasicAssetDropDownCard.jsx";
 
@@ -56,12 +71,15 @@ export default function LimitOrderWizard(properties) {
 
     const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
     const currentNode = useStore($currentNode);
+    const favouriteAssets = useStore($favouriteAssets);
 
     const [marketLimitOrders, setMarketLimitOrders] = useState([]);
     const [clicked, setClicked] = useState(false);
 
     const handleClick = () => {
         setClicked(true);
+
+        setMarketLimitOrders([]);
 
         const _previousBuyingAsset = buyingAsset;
         const _previousSellingAsset = sellingAsset;
@@ -87,8 +105,24 @@ export default function LimitOrderWizard(properties) {
         return null;
     }, [buyingAsset, assets]);
 
+    const isFavouriteBuy = useMemo(() => {
+        if (!favouriteAssets[chain] || !buyingAssetData) {
+            return false;
+        }
+        return favouriteAssets[chain].map(x => x.id).includes(buyingAssetData.id);
+    }, [favouriteAssets, chain, buyingAssetData]);
+
+    const isFavouriteSell = useMemo(() => {
+        if (!favouriteAssets[chain] || !sellingAssetData) {
+            return false;
+        }
+        return favouriteAssets[chain].map(x => x.id).includes(sellingAssetData.id);
+    }, [favouriteAssets, chain, sellingAssetData]);
+
+    const [isFetching, setIsFetching] = useState(false);
     useEffect(() => {
         async function fetching() {
+            setIsFetching(true);
             const limitOrdersStore = createLimitOrdersStore([
                 chain,
                 sellingAsset,
@@ -99,8 +133,9 @@ export default function LimitOrderWizard(properties) {
 
             limitOrdersStore.subscribe(({ data, error, loading }) => {
                 if (data && !error && !loading) {
+                    setIsFetching(false);
                     setMarketLimitOrders(data.filter((_limitOrder) => {
-                        return _limitOrder.sell_price.base.asset_id === sellingAssetData.id && _limitOrder.sell_price.quote.asset_id === buyingAssetData.id;
+                        return _limitOrder.sell_price.base.asset_id === buyingAssetData.id && _limitOrder.sell_price.quote.asset_id === sellingAssetData.id;
                     }));
                 }
             });
@@ -134,18 +169,30 @@ export default function LimitOrderWizard(properties) {
                 ? existingOperation.final_buy_amount
                 : 0
         );
-            
-        const _baseAmount = humanReadableFloat(_order.sell_price.base.amount, sellingAssetData.precision);
-        const _quoteAmount = humanReadableFloat(_order.sell_price.quote.amount, buyingAssetData.precision);
+
+        const [tempBuyAmount, setTempBuyAmount] = useState(
+            existingOperation
+                ? existingOperation.final_buy_amount
+                : 0
+        );
+        
+        const _assetLimitOrderOffers = assets.find((x) => x.id === _order.sell_price.base.asset_id);
+        const _assetLimitOrderWants = assets.find((x) => x.id === _order.sell_price.quote.asset_id);
+        const _amountOffered = humanReadableFloat(_order.sell_price.base.amount, _assetLimitOrderOffers.precision);
+        const _amountSellerDesires = humanReadableFloat(_order.sell_price.quote.amount, _assetLimitOrderWants.precision);
 
         const percentageCommitted = limitOrderBuyAmount > 0
-            ? ((limitOrderBuyAmount / _quoteAmount) * 100).toFixed(3)
+            ? ((limitOrderBuyAmount / _amountOffered) * 100).toFixed(3)
             : 0;
 
-        const price = (_quoteAmount / _baseAmount).toFixed(sellingAssetData.precision);
+        const price = (_amountSellerDesires / _amountOffered).toFixed(_assetLimitOrderWants.precision);
 
-        const _quoteAsset = assets.find((x) => x.id === _order.sell_price.quote.asset_id);
-        const _quoteFee = _quoteAsset && _quoteAsset.market_fee_percent ? _quoteAsset.market_fee_percent / 100 : 0;
+        const _quoteFee = _assetLimitOrderOffers && _assetLimitOrderOffers.market_fee_percent ? _assetLimitOrderOffers.market_fee_percent / 100 : 0;
+
+        const sellingAssetBalance = updatedBalances.find((x) => x.asset_id === _assetLimitOrderWants.id);
+        const percentPossible = sellingAssetBalance && sellingAssetBalance.amount && sellingAssetBalance.amount > 0 
+            ? sellingAssetBalance.amount / _amountSellerDesires
+            : 0;
 
         return (
             <div
@@ -154,10 +201,10 @@ export default function LimitOrderWizard(properties) {
                 className="grid grid-cols-5 gap-3 border rounded border-gray-300 p-2 text-center"
             >
                 <div>
-                    {_quoteAmount}
+                    {_amountOffered}
                 </div>
                 <div className="border-l border-r border-gray-300">
-                    {_baseAmount}
+                    {_amountSellerDesires}
                 </div>
                 <div className="border-r border-gray-300">
                     {price}
@@ -167,7 +214,12 @@ export default function LimitOrderWizard(properties) {
                 </div>
                 <Dialog>
                     <DialogTrigger>
-                        <Button variant="outline">
+                        <Button
+                            variant="outline"
+                            onClick={() => {
+                                setTempBuyAmount(limitOrderBuyAmount);
+                            }}
+                        >
                             Buy
                         </Button>
                     </DialogTrigger>
@@ -186,12 +238,12 @@ export default function LimitOrderWizard(properties) {
                                     </label>
                                 </div>
                                 <Input
-                                    value={limitOrderBuyAmount}
+                                    value={tempBuyAmount}
                                     type="text"
                                     onInput={(e) => {
                                         const value = e.currentTarget.value;
                                         if (regex.test(value)) {
-                                            setLimitOrderBuyAmount(value > _quoteAmount ? _quoteAmount : value);
+                                            setTempBuyAmount(value > _amountOffered ? _amountOffered : value);
                                         }
                                     }}
                                 />
@@ -208,7 +260,7 @@ export default function LimitOrderWizard(properties) {
                                     </label>
                                 </div>
                                 <Input
-                                    value={(limitOrderBuyAmount / price).toFixed(sellingAssetData.precision)}
+                                    value={(tempBuyAmount * price).toFixed(sellingAssetData.precision)}
                                     type="text"
                                     disabled
                                 />
@@ -230,7 +282,7 @@ export default function LimitOrderWizard(properties) {
                                     disabled
                                 />
                                 <Input
-                                    value={`${buyingAssetData.symbol}/${sellingAssetData.symbol}`}
+                                    value={`${_assetLimitOrderWants.symbol}/${_assetLimitOrderOffers.symbol}`}
                                     type="text"
                                     disabled
                                 />
@@ -244,7 +296,9 @@ export default function LimitOrderWizard(properties) {
                                             </label>
                                         </div>
                                         <Input
-                                            value={(_quoteFee * limitOrderBuyAmount).toFixed(buyingAssetData.precision)}
+                                            value={
+                                                `${(_quoteFee * tempBuyAmount).toFixed(buyingAssetData.precision)} (${_quoteFee * 100}%)`
+                                            }
                                             type="text"
                                             disabled
                                         />
@@ -260,52 +314,90 @@ export default function LimitOrderWizard(properties) {
                                 <Button
                                     variant="outline"
                                     onClick={() => {
-                                        setLimitOrderBuyAmount(0);
+                                        setTempBuyAmount(0);
                                     }}
                                 >
                                     0%
                                 </Button>
+                                {
+                                    percentPossible >= 0.25
+                                        ? <Button
+                                            variant="outline"
+                                            onClick={() => {
+                                                setTempBuyAmount((_amountOffered * 0.25).toFixed(buyingAssetData.precision));
+                                            }}
+                                        >
+                                            25%
+                                        </Button>
+                                        : <Button
+                                            variant="outline"
+                                            disabled
+                                        >
+                                            25%
+                                        </Button>
+                                }
+                                {
+                                    percentPossible >= 0.50
+                                        ? <Button
+                                            variant="outline"
+                                            onClick={() => {
+                                                setTempBuyAmount((_amountOffered * 0.50).toFixed(buyingAssetData.precision));
+                                            }}
+                                        >
+                                            50%
+                                        </Button>
+                                        : <Button
+                                            variant="outline"
+                                            disabled
+                                        >
+                                            50%
+                                        </Button>
+                                }
+                                {
+                                    percentPossible >= 0.75
+                                        ? <Button
+                                            variant="outline"
+                                            onClick={() => {
+                                                setTempBuyAmount((_amountOffered * 0.75).toFixed(buyingAssetData.precision));
+                                            }}
+                                        >
+                                            75%
+                                        </Button>
+                                        : <Button
+                                            variant="outline"
+                                            disabled
+                                        >
+                                            75%
+                                        </Button>
+                                }
+                                {
+                                    percentPossible >= 1
+                                        ? <Button
+                                            variant="outline"
+                                            onClick={() => {
+                                                setTempBuyAmount(_amountOffered);
+                                            }}
+                                        >
+                                            100%
+                                        </Button>
+                                        : <Button
+                                            variant="outline"
+                                            disabled
+                                        >
+                                            100%
+                                        </Button>
+                                }
                                 <Button
                                     variant="outline"
                                     onClick={() => {
-                                        setLimitOrderBuyAmount(_quoteAmount * 0.25);
-                                    }}
-                                >
-                                    25%
-                                </Button>
-                                <Button
-                                    variant="outline"
-                                    onClick={() => {
-                                        setLimitOrderBuyAmount(_quoteAmount * 0.50);
-                                    }}
-                                >
-                                    50%
-                                </Button>
-                                <Button
-                                    variant="outline"
-                                    onClick={() => {
-                                        setLimitOrderBuyAmount(_quoteAmount * 0.75);
-                                    }}
-                                >
-                                    75%
-                                </Button>
-                                <Button
-                                    variant="outline"
-                                    onClick={() => {
-                                        setLimitOrderBuyAmount(_quoteAmount);
-                                    }}
-                                >
-                                    100%
-                                </Button>
-                                <Button
-                                    variant="outline"
-                                    onClick={() => {
-                                        const sellingAssetBalance = updatedBalances.find((x) => x.asset_id === sellingAssetData.id);
-                                        const percentPossible = sellingAssetBalance.amount / _baseAmount;
+                                        if (!sellingAssetBalance || !sellingAssetBalance.amount || sellingAssetBalance.amount <= 0) {
+                                            setTempBuyAmount(0);
+                                            return;
+                                        }
                                         if (percentPossible > 1) {
-                                            setLimitOrderBuyAmount(_quoteAmount);
+                                            setTempBuyAmount(_amountOffered);
                                         } else {
-                                            setLimitOrderBuyAmount(_quoteAmount * percentPossible);
+                                            setTempBuyAmount(_amountOffered * percentPossible);
                                         }
                                     }}
                                 >
@@ -315,72 +407,84 @@ export default function LimitOrderWizard(properties) {
                             <Button
                                 variant="outline"
                                 onClick={() => {
+                                    setLimitOrderBuyAmount(tempBuyAmount);
                                     setOperations((prevOperations) => {
                                         const _ops = [...prevOperations];
-                                    
+
                                         const existingOperationIndex = _ops.findIndex(op => op.id === _order.id);
                                         const existingOperation = existingOperationIndex !== -1 ? _ops[existingOperationIndex] : null;
-                                    
+
                                         // Early return if the value is already set
-                                        if (existingOperation && existingOperation.final_buy_amount === limitOrderBuyAmount) {
+                                        if (existingOperation && existingOperation.final_buy_amount === tempBuyAmount) {
                                             return _ops;
                                         }
-                                    
-                                        const hasLaterOrders = _ops.some(op => {
-                                            const orderIndex = marketLimitOrders.findIndex(order => order.id === op.id);
-                                            return orderIndex > index;
-                                        });
-                                    
-                                        if (limitOrderBuyAmount === 0) {
-                                            // Remove the current order if set to 0%
-                                            return _ops.filter(op => op.id !== _order.id);
-                                        } else if (limitOrderBuyAmount < _quoteAmount && hasLaterOrders) {
-                                            // Remove subsequent market limit orders if the current order is less than 100% and there are later orders
+
+                                        // Update prior orders to 100%
+                                        for (let i = 0; i < index; i++) {
+                                            const priorOrder = marketLimitOrders[i];
+
+                                            const _assetPurchased = assets.find((x) => x.id === priorOrder.sell_price.quote.asset_id);
+                                            const _assetSold = assets.find((x) => x.id === priorOrder.sell_price.base.asset_id);
+
+                                            const _amountBought = humanReadableFloat(priorOrder.sell_price.quote.amount, _assetPurchased.precision);
+                                            const _amountSold = humanReadableFloat(priorOrder.sell_price.base.amount, _assetSold.precision);
+                                            
+                                            const _price = parseFloat((_amountSold / _amountBought).toFixed(_assetPurchased.precision));
+
+                                            const existingPriorOperationIndex = _ops.findIndex(op => op.id === priorOrder.id);
+                                            if (existingPriorOperationIndex !== -1) {
+                                                // Update existing prior operation
+                                                _ops[existingPriorOperationIndex] = {
+                                                    ..._ops[existingPriorOperationIndex],
+                                                    final_buy_amount: _amountSold,
+                                                    final_asset_purchased: _assetLimitOrderOffers.id,
+                                                    final_asset_sold: _assetLimitOrderWants.id,
+                                                    final_price: _price
+                                                };
+                                            } else {
+                                                // Add new prior operation
+                                                priorOrder["final_buy_amount"] = _amountSold;
+                                                priorOrder["final_asset_purchased"] = _assetLimitOrderOffers.id;
+                                                priorOrder["final_asset_sold"] = _assetLimitOrderWants.id;
+                                                priorOrder["final_price"] = _price;
+                                                _ops.push(priorOrder);
+                                            }
+                                        }
+
+                                        // Remove subsequent orders if the current order is less than 100%
+                                        if (tempBuyAmount < _amountOffered) {
                                             for (let i = index + 1; i < marketLimitOrders.length; i++) {
                                                 const subsequentOrder = marketLimitOrders[i];
                                                 const existingSubsequentOperationIndex = _ops.findIndex(op => op.id === subsequentOrder.id);
-                                        
+
                                                 if (existingSubsequentOperationIndex !== -1) {
                                                     // Remove existing subsequent operation
                                                     _ops.splice(existingSubsequentOperationIndex, 1);
                                                 }
                                             }
-                                        }
-                                    
-                                        if (limitOrderBuyAmount !== 0) {
-                                        // Set prior market limit orders to 100% only if the current order is not set to 0%
-                                        for (let i = 0; i < index; i++) {
-                                            const priorOrder = marketLimitOrders[i];
-                                            const priorOrderAmount = humanReadableFloat(priorOrder.sell_price.quote.amount, buyingAssetData.precision);
-                                            const existingPriorOperationIndex = _ops.findIndex(op => op.id === priorOrder.id);
-                                    
-                                            if (existingPriorOperationIndex !== -1) {
-                                                // Update existing prior operation
-                                                _ops[existingPriorOperationIndex] = {
-                                                    ..._ops[existingPriorOperationIndex],
-                                                    final_buy_amount: priorOrderAmount
-                                                };
-                                            } else {
-                                                // Add new prior operation
-                                                priorOrder["final_buy_amount"] = priorOrderAmount;
-                                                _ops.push(priorOrder);
+
+                                            if (tempBuyAmount === 0) {
+                                                // Remove the current order if set to 0%
+                                                return _ops.filter(op => op.id !== _order.id);
                                             }
                                         }
-                                        }
-                                    
+
                                         // Set current order to the specified buy amount
                                         if (existingOperationIndex !== -1) {
                                             // Update existing operation
                                             _ops[existingOperationIndex] = {
                                                 ..._ops[existingOperationIndex],
-                                                final_buy_amount: limitOrderBuyAmount
+                                                final_buy_amount: tempBuyAmount
                                             };
                                         } else {
                                             // Add new operation
-                                            _order["final_buy_amount"] = limitOrderBuyAmount;
+                                            _order["final_buy_amount"] = tempBuyAmount;
+                                            _order["final_asset_purchased"] = _assetLimitOrderOffers.id;
+                                            _order["final_asset_sold"] = _assetLimitOrderWants.id;
+                                            _order["final_price"] = price;
                                             _ops.push(_order);
                                         }
-                                    
+
                                         return _ops;
                                     });
                                 }}
@@ -437,11 +541,45 @@ export default function LimitOrderWizard(properties) {
                         {
                             buyingAssetData
                                 ? <CardContent>
-                                    {
-                                        updatedBalances && updatedBalances.length && updatedBalances.find((x) => x.asset_id === buyingAssetData.id)
-                                            ? `${updatedBalances.find((x) => x.asset_id === buyingAssetData.id).amount} ${buyingAssetData.symbol}`
-                                            : `0 ${buyingAssetData.symbol}`
-                                    }
+                                        <div style={{ display: 'flex', alignItems: 'left' }}>
+                                        {
+                                                updatedBalances && updatedBalances.length && updatedBalances.find((x) => x.asset_id === buyingAssetData.id)
+                                                    ? `${updatedBalances.find((x) => x.asset_id === buyingAssetData.id).amount.toFixed(buyingAssetData.precision)} ${buyingAssetData.symbol} `
+                                                    : `0 ${buyingAssetData.symbol} `
+                                            }
+                                            <TooltipProvider>
+                                                <Tooltip>
+                                                    <TooltipTrigger asChild>
+                                                    {
+                                                        isFavouriteBuy
+                                                            ? <HeartFilledIcon
+                                                                className="mt-1 ml-2"
+                                                                onClick={() => {
+                                                                    removeFavouriteAsset(chain, {
+                                                                        id: buyingAssetData.id,
+                                                                        symbol: buyingAssetData.symbol,
+                                                                        issuer: marketSearch.find((x) => x.s === buyingAssetData.symbol).u
+                                                                    })
+                                                                }}
+                                                            />
+                                                            : <HeartIcon
+                                                                className="mt-1 ml-2"
+                                                                onClick={() => {
+                                                                    addFavouriteAsset(chain, {
+                                                                        id: buyingAssetData.id,
+                                                                        symbol: buyingAssetData.symbol,
+                                                                        issuer: marketSearch.find((x) => x.s === buyingAssetData.symbol).u
+                                                                    })
+                                                                }}
+                                                            />
+                                                    }
+                                                    </TooltipTrigger>
+                                                    <TooltipContent>
+                                                        Favourite
+                                                    </TooltipContent>
+                                                </Tooltip>
+                                            </TooltipProvider>
+                                        </div>
                                     </CardContent>
                                 : null
                         }
@@ -494,11 +632,45 @@ export default function LimitOrderWizard(properties) {
                         {
                             sellingAssetData
                                 ? <CardContent>
-                                    {
-                                        updatedBalances && updatedBalances.length && updatedBalances.find((x) => x.asset_id === sellingAssetData.id)
-                                            ? `${updatedBalances.find((x) => x.asset_id === sellingAssetData.id).amount} ${sellingAssetData.symbol}`
-                                            : `0 ${sellingAssetData.symbol}`
-                                    }
+                                        <div style={{ display: 'flex', alignItems: 'left' }}>
+                                            {
+                                                updatedBalances && updatedBalances.length && updatedBalances.find((x) => x.asset_id === sellingAssetData.id)
+                                                    ? `${updatedBalances.find((x) => x.asset_id === sellingAssetData.id).amount.toFixed(sellingAssetData.precision)} ${sellingAssetData.symbol} `
+                                                    : `0 ${sellingAssetData.symbol} `
+                                            }
+                                            <TooltipProvider>
+                                                <Tooltip>
+                                                    <TooltipTrigger asChild>
+                                                        {
+                                                            isFavouriteSell
+                                                                ? <HeartFilledIcon
+                                                                    className="mt-1 ml-2"
+                                                                    onClick={() => {
+                                                                        removeFavouriteAsset(chain, {
+                                                                            id: sellingAssetData.id,
+                                                                            symbol: sellingAssetData.symbol,
+                                                                            issuer: marketSearch.find((x) => x.s === sellingAssetData.symbol).u
+                                                                        })
+                                                                    }}
+                                                                />
+                                                                : <HeartIcon
+                                                                    className="mt-1 ml-2"
+                                                                    onClick={() => {
+                                                                        addFavouriteAsset(chain, {
+                                                                            id: sellingAssetData.id,
+                                                                            symbol: sellingAssetData.symbol,
+                                                                            issuer: marketSearch.find((x) => x.s === sellingAssetData.symbol).u
+                                                                        })
+                                                                    }}
+                                                                />
+                                                        }
+                                                    </TooltipTrigger>
+                                                    <TooltipContent>
+                                                        Favourite
+                                                    </TooltipContent>
+                                                </Tooltip>
+                                            </TooltipProvider>
+                                        </div>
                                     </CardContent>
                                 : null
                         }
@@ -513,6 +685,9 @@ export default function LimitOrderWizard(properties) {
                                 <CardTitle>
                                     Market Limit Orders
                                 </CardTitle>
+                                <CardDescription>
+                                    The following limit orders are offering to sell {buyingAssetData ? buyingAssetData.symbol : null} for {sellingAssetData ? sellingAssetData.symbol : null}.
+                                </CardDescription>
                             </CardHeader>
                             <CardContent>
                                 <div className="grid grid-cols-5 gap-2 text-center">
@@ -527,7 +702,27 @@ export default function LimitOrderWizard(properties) {
                                     <div></div>
                                 </div>
                                 {
-                                    marketLimitOrders && marketLimitOrders.length && sellingAsset !== buyingAsset
+                                    isFetching && sellingAsset !== buyingAsset
+                                        ? <div className="space-y-2 mt-5">
+                                            <Skeleton className="h-4 w-full" />
+                                            <Skeleton className="h-4 w-full" />
+                                            <Skeleton className="h-4 w-full" />
+                                            <Skeleton className="h-4 w-full" />
+                                        </div>
+                                        : null
+                                }
+                                {
+                                    !isFetching && (!marketLimitOrders || !marketLimitOrders.length) && sellingAsset !== buyingAsset
+                                        ? <div className="text-center mt-5">No orders available</div>
+                                        : null
+                                }
+                                {
+                                    sellingAsset === buyingAsset
+                                        ? <div className="text-center mt-5">Invalid trading pair selected!</div>
+                                        : null
+                                }
+                                {
+                                    !isFetching && marketLimitOrders && marketLimitOrders.length && sellingAsset !== buyingAsset
                                         ? <List
                                             height={200}
                                             itemCount={marketLimitOrders.length}
@@ -535,9 +730,9 @@ export default function LimitOrderWizard(properties) {
                                             key={`list-limitorders`}
                                             className="w-full mt-3"
                                             >
-                                            {limitOrderRow}
+                                                {limitOrderRow}
                                             </List>
-                                        : <div className="text-center mt-5">No orders available</div>
+                                        : null
                                 }
                             </CardContent>
                         </Card>

@@ -16,7 +16,7 @@
   },
   "tabsContent": {
     "transactionObjectJSON": "Tehinguobjekti JSON",
-    "operationType": "Operatsiooni tüüp: {{operationName}}",
+    "operationType": "Operatsiooni tüüp:",
     "copyOperationJSON": "Kopeerimistoimingu JSON",
     "usingDeeplink": "Süvalingi kasutamine edastuseks Beet multiwalleti kaudu",
     "step1": "Käivitage BEET rahakott ja navigeerige menüüs 'Raw Link', rahakott peab jääma ülekande ajaks lukustamata.",

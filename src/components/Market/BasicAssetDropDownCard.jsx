@@ -131,22 +131,6 @@ export default function BasicAssetDropDown(properties) {
     if (!res || !marketSearch) {
       return;
     }
-
-    console.log({res, marketSearch, inputs: {
-      assetSymbol,
-    assetData,
-    storeCallback,
-    otherAsset,
-    marketSearch,
-    type,
-    size,
-    chain,
-    borrowPositions,
-    usrBalances
-    }});
-
-    // borrowPositions: [{id: '1.20.5', asset_id: '1.3.5286', borrow_amount: 3000, fee_rate: 300}]
-    // usrBalances: [{amount: '72281224658', asset_id: '1.3.0'}]
     
     return (
       <div style={{ ...style, marginBottom: "10px", paddingRight: "10px" }}>
