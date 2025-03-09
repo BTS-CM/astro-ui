@@ -220,21 +220,21 @@ export default function LimitOrderWizard(properties) {
                                 setTempBuyAmount(limitOrderBuyAmount);
                             }}
                         >
-                            Buy
+                            {t('LimitOrderWizard:buy')}
                         </Button>
                     </DialogTrigger>
                     <DialogContent className="bg-white">
                         <DialogHeader>
-                            <DialogTitle>Buying into open limit order</DialogTitle>
+                            <DialogTitle>{t('LimitOrderWizard:buyingIntoOpenLimitOrder')}</DialogTitle>
                             <DialogDescription>
-                                How much of the following open market order do you want to buy?
+                                {t('LimitOrderWizard:howMuchToBuy')}
                             </DialogDescription>
                         </DialogHeader>
                         <div className="grid grid-cols-1 gap-3">
                             <div className="grid grid-cols-2 gap-2">
                                 <div className="col-span-2">
                                     <label className="block text-sm font-medium text-gray-700">
-                                        Buying
+                                        {t('LimitOrderWizard:buying')}
                                     </label>
                                 </div>
                                 <Input
@@ -256,7 +256,7 @@ export default function LimitOrderWizard(properties) {
                             <div className="grid grid-cols-2 gap-2">
                                 <div className="col-span-2">
                                     <label className="block text-sm font-medium text-gray-700">
-                                        Selling
+                                        {t('LimitOrderWizard:selling')}
                                     </label>
                                 </div>
                                 <Input
@@ -273,7 +273,7 @@ export default function LimitOrderWizard(properties) {
                             <div className="grid grid-cols-2 gap-2">
                                 <div className="col-span-2">
                                     <label className="block text-sm font-medium text-gray-700">
-                                        Price
+                                        {t('LimitOrderWizard:price')}
                                     </label>
                                 </div>
                                 <Input
@@ -292,7 +292,7 @@ export default function LimitOrderWizard(properties) {
                                     ? <div className="grid grid-cols-2 gap-2">
                                         <div className="col-span-2">
                                             <label className="block text-sm font-medium text-gray-700">
-                                                Market fee
+                                                {t('LimitOrderWizard:marketFee')}
                                             </label>
                                         </div>
                                         <Input
@@ -317,7 +317,7 @@ export default function LimitOrderWizard(properties) {
                                         setTempBuyAmount(0);
                                     }}
                                 >
-                                    0%
+                                    {t('LimitOrderWizard:zeroPercent')}
                                 </Button>
                                 {
                                     percentPossible >= 0.25
@@ -327,13 +327,13 @@ export default function LimitOrderWizard(properties) {
                                                 setTempBuyAmount((_amountOffered * 0.25).toFixed(buyingAssetData.precision));
                                             }}
                                         >
-                                            25%
+                                            {t('LimitOrderWizard:twentyFivePercent')}
                                         </Button>
                                         : <Button
                                             variant="outline"
                                             disabled
                                         >
-                                            25%
+                                            {t('LimitOrderWizard:twentyFivePercent')}
                                         </Button>
                                 }
                                 {
@@ -344,13 +344,13 @@ export default function LimitOrderWizard(properties) {
                                                 setTempBuyAmount((_amountOffered * 0.50).toFixed(buyingAssetData.precision));
                                             }}
                                         >
-                                            50%
+                                            {t('LimitOrderWizard:fiftyPercent')}
                                         </Button>
                                         : <Button
                                             variant="outline"
                                             disabled
                                         >
-                                            50%
+                                            {t('LimitOrderWizard:fiftyPercent')}
                                         </Button>
                                 }
                                 {
@@ -361,13 +361,13 @@ export default function LimitOrderWizard(properties) {
                                                 setTempBuyAmount((_amountOffered * 0.75).toFixed(buyingAssetData.precision));
                                             }}
                                         >
-                                            75%
+                                            {t('LimitOrderWizard:seventyFivePercent')}
                                         </Button>
                                         : <Button
                                             variant="outline"
                                             disabled
                                         >
-                                            75%
+                                            {t('LimitOrderWizard:seventyFivePercent')}
                                         </Button>
                                 }
                                 {
@@ -378,13 +378,13 @@ export default function LimitOrderWizard(properties) {
                                                 setTempBuyAmount(_amountOffered);
                                             }}
                                         >
-                                            100%
+                                            {t('LimitOrderWizard:hundredPercent')}
                                         </Button>
                                         : <Button
                                             variant="outline"
                                             disabled
                                         >
-                                            100%
+                                            {t('LimitOrderWizard:hundredPercent')}
                                         </Button>
                                 }
                                 <Button
@@ -401,7 +401,7 @@ export default function LimitOrderWizard(properties) {
                                         }
                                     }}
                                 >
-                                    Max
+                                    {t('LimitOrderWizard:max')}
                                 </Button>
                             </div>
                             <Button
@@ -489,7 +489,7 @@ export default function LimitOrderWizard(properties) {
                                     });
                                 }}
                             >
-                                Submit
+                                {t('LimitOrderWizard:submit')}
                             </Button>
                         </div>
                     </DialogContent>
@@ -502,14 +502,14 @@ export default function LimitOrderWizard(properties) {
         <Dialog open={addOperationDialog} onOpenChange={setAddOperationDialog}>
             <DialogTrigger>
                 <Button variant="outline" className="mt-3">
-                    + Add
+                    {t('LimitOrderWizard:add')}
                 </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[1080px] bg-white">
             <DialogHeader>
-                <DialogTitle>What would you like to trade?</DialogTitle>
+                <DialogTitle>{t('LimitOrderWizard:title')}</DialogTitle>
                 <DialogDescription>
-                    Configure your limit orders with this form.
+                    {t('LimitOrderWizard:description')}
                 </DialogDescription>
             </DialogHeader>
             <div className="grid grid-cols-7 gap-5">
@@ -519,7 +519,7 @@ export default function LimitOrderWizard(properties) {
                             <CardTitle>
                             <div className="grid grid-cols-2 gap-2">
                                 <div className="text-left">
-                                    Buying
+                                    {t('LimitOrderWizard:buying')}
                                 </div>
                                 <div className="text-right">
                                     <BasicAssetDropDownCard
@@ -575,7 +575,7 @@ export default function LimitOrderWizard(properties) {
                                                     }
                                                     </TooltipTrigger>
                                                     <TooltipContent>
-                                                        Favourite
+                                                        {t('LimitOrderWizard:favourite')}
                                                     </TooltipContent>
                                                 </Tooltip>
                                             </TooltipProvider>
@@ -610,7 +610,7 @@ export default function LimitOrderWizard(properties) {
                             <CardTitle>
                                 <div className="grid grid-cols-2 gap-2">
                                     <div className="text-left">
-                                        Selling
+                                        {t('LimitOrderWizard:selling')}
                                     </div>
                                     <div className="text-right">
                                         <BasicAssetDropDownCard
@@ -666,7 +666,7 @@ export default function LimitOrderWizard(properties) {
                                                         }
                                                     </TooltipTrigger>
                                                     <TooltipContent>
-                                                        Favourite
+                                                        {t('LimitOrderWizard:favourite')}
                                                     </TooltipContent>
                                                 </Tooltip>
                                             </TooltipProvider>
@@ -683,10 +683,10 @@ export default function LimitOrderWizard(properties) {
                         ? <Card>
                             <CardHeader>
                                 <CardTitle>
-                                    Market Limit Orders
+                                    {t('LimitOrderWizard:marketLimitOrders')}
                                 </CardTitle>
                                 <CardDescription>
-                                    The following limit orders are offering to sell {buyingAssetData ? buyingAssetData.symbol : null} for {sellingAssetData ? sellingAssetData.symbol : null}.
+                                    {t('LimitOrderWizard:marketLimitOrdersDescription', { buyingAsset: buyingAssetData ? buyingAssetData.symbol : '', sellingAsset: sellingAssetData ? sellingAssetData.symbol : '' })}
                                 </CardDescription>
                             </CardHeader>
                             <CardContent>
@@ -697,8 +697,8 @@ export default function LimitOrderWizard(properties) {
                                     <div>
                                         {sellingAssetData ? sellingAssetData.symbol : null}
                                     </div>
-                                    <div>Price</div>
-                                    <div>Buying %</div>
+                                    <div>{t('LimitOrderWizard:price')}</div>
+                                    <div>{t('LimitOrderWizard:buyingPercentage')}</div>
                                     <div></div>
                                 </div>
                                 {
@@ -713,12 +713,12 @@ export default function LimitOrderWizard(properties) {
                                 }
                                 {
                                     !isFetching && (!marketLimitOrders || !marketLimitOrders.length) && sellingAsset !== buyingAsset
-                                        ? <div className="text-center mt-5">No orders available</div>
+                                        ? <div className="text-center mt-5">{t('LimitOrderWizard:noOrdersAvailable')}</div>
                                         : null
                                 }
                                 {
                                     sellingAsset === buyingAsset
-                                        ? <div className="text-center mt-5">Invalid trading pair selected!</div>
+                                        ? <div className="text-center mt-5">{t('LimitOrderWizard:invalidTradingPair')}</div>
                                         : null
                                 }
                                 {

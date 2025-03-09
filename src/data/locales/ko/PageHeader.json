@@ -76,8 +76,8 @@
     "AccountLists": "아래 양식을 사용하여 귀하의 계정에 대한 화이트리스트 또는 블랙리스트를 만드십시오.",
     "proposals": "아래에서 귀하의 계정에 대한 승인을 확인하고, 철저히 평가한 후 승인하거나 거부하세요.",
     "pool_tracker": "정직한 유동성 풀과 관련된 흥미로운 통계를 쉽게 모니터링하세요!",
-    "create_account": "Use the form below to create a new cloud account on the Bitshares blockchain.",
-    "tfund_user": "Use the form below to craft complex chains of Bitshares limit orders and same-t fund borrow/repay operations."
+    "create_account": "아래 양식을 사용하여 Bitshares 블록체인에 새로운 클라우드 계정을 만드세요.",
+    "tfund_user": "아래 양식을 사용하여 Bitshares 한도 주문과 동일 펀드 차용/상환 작업의 복잡한 체인을 만들어 보세요."
   },
   "back": "돌아가기",
   "usage": "다음과 함께 사용하도록 설계됨 ",

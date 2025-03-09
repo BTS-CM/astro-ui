@@ -17,5 +17,7 @@
   "whichCollateral": "どの担保資産？",
   "collateralSearch": "以下の新しい担保資産を検索してください",
   "addAsset": "資産を追加します",
-  "featured": "注目の資産"
+  "featured": "注目の資産",
+  "borrowed": "借りた",
+  "balance": "残高"
 }

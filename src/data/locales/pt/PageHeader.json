@@ -76,8 +76,8 @@
     "AccountLists": "Use o formulário abaixo para criar listas de permissões ou listas negras para sua conta.",
     "proposals": "Veja as aprovações para sua conta abaixo e aprove-as ou rejeite-as após avaliá-las minuciosamente.",
     "pool_tracker": "Monitore facilmente o Honest Liquidity Pool e estatísticas relevantes e interessantes!",
-    "create_account": "Use the form below to create a new cloud account on the Bitshares blockchain.",
-    "tfund_user": "Use the form below to craft complex chains of Bitshares limit orders and same-t fund borrow/repay operations."
+    "create_account": "Use o formulário abaixo para criar uma nova conta na nuvem no blockchain Bitshares.",
+    "tfund_user": "Use o formulário abaixo para criar cadeias complexas de ordens de limite do Bitshares e operações de empréstimo/pagamento de fundos do mesmo tipo."
   },
   "back": "Volte",
   "usage": "Projetado para uso com ",

@@ -17,5 +17,7 @@
   "whichCollateral": "Hvilket sikkerhedsaktivt?",
   "collateralSearch": "Søg efter et nyt sikkerhedsaktiv",
   "addAsset": "Tilføj aktiv",
-  "featured": "Udvalgte aktiver"
+  "featured": "Udvalgte aktiver",
+  "borrowed": "Lånt",
+  "balance": "Balance"
 }

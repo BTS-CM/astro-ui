@@ -17,5 +17,7 @@
   "whichCollateral": "Quale attività collaterale?",
   "collateralSearch": "Si prega di cercare una nuova risorsa collaterale di seguito",
   "addAsset": "Aggiungi risorsa",
-  "featured": "Risorse in evidenza"
+  "featured": "Risorse in evidenza",
+  "borrowed": "Preso in prestito",
+  "saldo": "Saldo"
 }

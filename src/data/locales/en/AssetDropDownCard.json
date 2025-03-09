@@ -17,5 +17,7 @@
   "whichCollateral": "Which collateral asset?",
   "collateralSearch": "Please search for a new collateral asset below",
   "addAsset": "Add asset",
-  "featured": "Featured assets"
+  "featured": "Featured assets",
+  "borrowed": "Borrowed",
+  "balance": "Balance"
 }

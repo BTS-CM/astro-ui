@@ -76,8 +76,8 @@
     "AccountLists": "Kasutage allolevat vormi oma konto jaoks valgete või mustade nimekirjade loomiseks.",
     "proposals": "Vaadake allpool oma konto kinnitusi ja kinnitage need pärast nende põhjalikku hindamist või lükake need tagasi.",
     "pool_tracker": "Jälgige hõlpsalt ausat likviidsusfondi ja asjakohast huvitavat statistikat!",
-    "create_account": "Use the form below to create a new cloud account on the Bitshares blockchain.",
-    "tfund_user": "Use the form below to craft complex chains of Bitshares limit orders and same-t fund borrow/repay operations."
+    "create_account": "Kasutage allolevat vormi, et luua Bitsharesi plokiahelas uus pilvekonto.",
+    "tfund_user": "Kasutage allolevat vormi, et koostada keerulisi Bitsharesi limiitkorralduste kette ja sama fondi laenu-/tagasimaksete toiminguid."
   },
   "back": "Mine tagasi",
   "usage": "Mõeldud kasutamiseks koos ",

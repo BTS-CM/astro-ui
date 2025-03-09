@@ -496,15 +496,15 @@ export default function SameTFunds(properties) {
                     variant="outline"
                     className="self-center"
                   >
-                    Borrow
+                    {t("TFundUser:borrow")}
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="bg-white w-1/2 max-w-4xl bg-gray-100">
                   <DialogHeader>
-                    <DialogTitle>How much would you like to borrow?</DialogTitle>
+                    <DialogTitle>{t("TFundUser:dialogTitle")}</DialogTitle>
                     <DialogDescription>
-                      Amount available: {balance - unpaidAmount} {assetName}<br/>
-                      Fee rate: {feeRate}%
+                      {t("TFundUser:amountAvailable")}: {balance - unpaidAmount} {assetName}<br/>
+                      {t("TFundUser:feeRate")}: {feeRate}%
                     </DialogDescription>
                   </DialogHeader>
                   <div className="grid grid-cols-1 gap-3">
@@ -525,7 +525,7 @@ export default function SameTFunds(properties) {
                           setBorrowAmount(0);
                         }}
                       >
-                        0%
+                        {t("TFundUser:zeroPercent")}
                       </Button>
                       <Button
                         variant="outline"
@@ -533,7 +533,7 @@ export default function SameTFunds(properties) {
                           setBorrowAmount((balance - unpaidAmount) * 0.25);
                         }}
                       >
-                        25%
+                        {t("TFundUser:twentyFivePercent")}
                       </Button>
                       <Button
                         variant="outline"
@@ -541,7 +541,7 @@ export default function SameTFunds(properties) {
                           setBorrowAmount((balance - unpaidAmount) * 0.50);
                         }}
                       >
-                        50%
+                        {t("TFundUser:fiftyPercent")}
                       </Button>
                       <Button
                         variant="outline"
@@ -549,7 +549,7 @@ export default function SameTFunds(properties) {
                           setBorrowAmount((balance - unpaidAmount) * 0.75);
                         }}
                       >
-                        75%
+                        {t("TFundUser:seventyFivePercent")}
                       </Button>
                       <Button
                         variant="outline"
@@ -557,7 +557,7 @@ export default function SameTFunds(properties) {
                           setBorrowAmount(balance - unpaidAmount);
                         }}
                       >
-                        100%
+                        {t("TFundUser:hundredPercent")}
                       </Button>
                     </div>
                     {
@@ -586,7 +586,7 @@ export default function SameTFunds(properties) {
                               setBorrowPositionDialog(false);
                             }}
                           >
-                            Submit
+                            {t("TFundUser:submit")}
                           </Button>
                         : <Button
                             variant="outline"
@@ -599,7 +599,7 @@ export default function SameTFunds(properties) {
                               setBorrowPositionDialog(false);
                             }}
                           >
-                            Submit
+                            {t("TFundUser:submit")}
                           </Button>
                     }
                     
@@ -767,19 +767,17 @@ export default function SameTFunds(properties) {
         <div className="grid grid-cols-1 gap-3">
           <Card>
             <CardHeader className="pb-1">
-              <CardTitle>🚀 Same-T Fund Trade Wizard!</CardTitle>
-              <CardDescription>
-                Manually construct Same-T DeFi Limit Order operation chain transactions with the following wizard!
-              </CardDescription>
+              <CardTitle>{t("TFundUser:title")}</CardTitle>
+              <CardDescription>{t("TFundUser:description")}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 gap-3">
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
-                    Step 1: Borrow assets from the following Same-T Funds to proceed!
+                    {t("TFundUser:step1")}
                   </label>
                   <label className="block text-xs font-medium text-gray-700">
-                    Debt positions are immediately repaid within your chain of transactions, including fees.
+                    {t("TFundUser:step1Description")}
                   </label>
                   <div className="border rounded border-gray-300 p-2 mt-2">
                     {
@@ -806,21 +804,21 @@ export default function SameTFunds(properties) {
                     borrowPositions && borrowPositions.length
                       ? <div>
                           <label className="block text-sm font-medium text-gray-700">
-                            Same-T Fund Borrow Positions
+                            {t("TFundUser:borrowPositions")}
                           </label>
                           <label className="block text-xs font-medium text-gray-700">
-                            These are the Same-T funds which you will borrow and repay within the one transaction!
+                            {t("TFundUser:borrowPositionsDescription")}
                           </label>
                           <div className="grid grid-cols-3 border rounded border-gray-300 p-2 mt-2">
-                            <div>
-                              Fund
-                            </div>
-                            <div>
-                              Borrowed
-                            </div>
-                            <div>
-                              Borrow Fees
-                            </div>
+                            <label className="block text-sm font-medium text-gray-700">
+                              {t("TFundUser:fund")}
+                            </label>
+                            <label className="block text-sm font-medium text-gray-700">
+                              {t("TFundUser:borrowed")}
+                            </label>
+                            <label className="block text-sm font-medium text-gray-700">
+                              {t("TFundUser:borrowFees")}
+                            </label>
                             <div className="col-span-3">
                               <List
                                 height={200}
@@ -840,23 +838,23 @@ export default function SameTFunds(properties) {
                   borrowPositions && borrowPositions.length
                     ? <div>
                         <label className="block text-sm font-medium text-gray-700">
-                          Step 2: Construct your chain of operations
+                          {t("TFundUser:step2")}
                         </label>
                         <label className="block text-xs font-medium text-gray-700">
-                          Chain together a series of limit order operations taking advantage of borrowed funds!
+                          {t("TFundUser:step2Description")}
                         </label>
                         <div className="grid grid-cols-6 gap-2">
                           <div className="col-span-5 rounded border border-gray-300 p-2 mt-2">
                             <div className="grid grid-cols-10">
-                              <div className="col-span-3">
-                                Buying
-                              </div>
-                              <div className="col-span-3">
-                                Selling
-                              </div>
-                              <div className="col-span-3">
-                                Price
-                              </div>
+                              <label className="block text-sm font-medium text-gray-700">
+                                {t("TFundUser:buying")}
+                              </label>
+                              <label className="block text-sm font-medium text-gray-700">
+                                {t("TFundUser:selling")}
+                              </label>
+                              <label className="block text-sm font-medium text-gray-700">
+                                {t("TFundUser:price")}
+                              </label>
                               <div>
                               </div>
                             </div>
@@ -897,28 +895,28 @@ export default function SameTFunds(properties) {
                   borrowPositions && borrowPositions.length && updatedBalances && updatedBalances.length
                     ? <div>
                         <label className="block text-sm font-medium text-gray-700">
-                          Step 3: Analyze outcome of chained limit order transaction
+                          {t("TFundUser:step3")}
                         </label>
                         <label className="block text-xs font-medium text-gray-700">
-                          Ensure no final amounts are in the negative, otherwise the transaction will fail to broadcast!
+                          {t("TFundUser:step3Description")}
                         </label>
                         <div className="rounded border border-gray-300 p-2 mt-2">
                           <div className="grid grid-cols-5 gap-2">
-                            <div>
-                              Asset
-                            </div>
-                            <div>
-                              Balance
-                            </div>
-                            <div>
-                              Difference
-                            </div>
-                            <div>
-                              Borrowed
-                            </div>
-                            <div>
-                              Final amount
-                            </div>
+                            <label className="block text-sm font-medium text-gray-700">
+                              {t("TFundUser:asset")}
+                            </label>
+                            <label className="block text-sm font-medium text-gray-700">
+                              {t("TFundUser:balance")}
+                            </label>
+                            <label className="block text-sm font-medium text-gray-700">
+                              {t("TFundUser:difference")}
+                            </label>
+                            <label className="block text-sm font-medium text-gray-700">
+                              {t("TFundUser:borrowed")}
+                            </label>
+                            <label className="block text-sm font-medium text-gray-700">
+                              {t("TFundUser:finalAmount")}
+                            </label>
                           </div>
                           <List
                             height={200}
@@ -938,7 +936,7 @@ export default function SameTFunds(properties) {
                   operations && operations.length
                   ? <div>
                       <label className="block text-sm font-medium text-gray-700">
-                        Estimated fees
+                        {t("TFundUser:estimatedFees")}
                       </label>
                       <Card>
                         <CardHeader className="p-1">
@@ -978,7 +976,7 @@ export default function SameTFunds(properties) {
                         setDeeplinkDialog(true);
                       }}
                     >
-                      Generate Deeplink
+                      {t("TFundUser:generateDeeplink")}
                     </Button>
                   : null
               }

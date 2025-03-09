@@ -17,5 +17,7 @@
   "whichCollateral": "Milline tagatisvara?",
   "collateralSearch": "Palun otsige allpool uut tagatise vara",
   "addAsset": "Lisage vara",
-  "featured": "Esiletõstetud varad"
+  "featured": "Esiletõstetud varad",
+  "laenatud": "Laenatud",
+  "saldo": "saldo"
 }

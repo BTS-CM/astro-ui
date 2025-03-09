@@ -76,8 +76,8 @@
     "AccountLists": "ใช้แบบฟอร์มด้านล่างเพื่อสร้างบัญชีขาวหรือบัญชีดำสำหรับบัญชีของคุณ",
     "proposals": "ดูการอนุมัติสำหรับบัญชีของคุณด้านล่าง และอนุมัติหรือปฏิเสธหลังจากประเมินอย่างละเอียดแล้ว",
     "pool_tracker": "ตรวจสอบ Honest Liquidity Pool และสถิติที่เกี่ยวข้องที่น่าสนใจได้อย่างง่ายดาย!",
-    "create_account": "Use the form below to create a new cloud account on the Bitshares blockchain.",
-    "tfund_user": "Use the form below to craft complex chains of Bitshares limit orders and same-t fund borrow/repay operations."
+    "create_account": "ใช้แบบฟอร์มด้านล่างเพื่อสร้างบัญชีคลาวด์ใหม่บนบล็อคเชน Bitshares",
+    "tfund_user": "ใช้แบบฟอร์มด้านล่างในการสร้างคำสั่งจำกัด Bitshares ที่ซับซ้อนและการดำเนินการยืม/ชำระคืนกองทุนเดียวกัน"
   },
   "back": "กลับไป",
   "usage": "ออกแบบมาเพื่อใช้กับ ",

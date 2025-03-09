@@ -75,8 +75,8 @@
     "AccountLists": "Brug formularen nedenfor til at oprette hvidlister eller sortlister til din konto.",
     "proposals": "Se godkendelserne for din konto nedenfor, og godkend eller afvis dem efter en grundig evaluering af dem.",
     "pool_tracker": "Overvåg nemt den ærlige likviditetspulje og relevante interessante statistikker!",
-    "create_account": "Use the form below to create a new cloud account on the Bitshares blockchain.",
-    "tfund_user": "Use the form below to craft complex chains of Bitshares limit orders and same-t fund borrow/repay operations."
+    "create_account": "Brug formularen nedenfor til at oprette en ny cloud-konto på Bitshares blockchain.",
+    "tfund_user": "Brug formularen nedenfor til at lave komplekse kæder af Bitshares limit-ordrer og same-t fund låne-/tilbagebetalingsoperationer."
   },
   "back": "Gå tilbage",
   "usage": "Designet til brug med ",
