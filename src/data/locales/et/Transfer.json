@@ -36,5 +36,8 @@
   "scamAlertDescription": "Olge petturite suhtes valvsad!",
   "scamAlertPoint1": "Krüptovahetused EI suuna teile KUNAGI sõnumeid spetsiaalsete ülekandejuhistega, mida sissemaksete või väljamaksete puhul järgida.",
   "scamAlertPoint2": "Vara üleandmise toimingud on püsivad ja suurem osa varadest on eksliku üleandmise korral tagastamatud.",
-  "scamAlertPoint3": "Kui miski kõlab liiga hästi, et tõsi olla, siis see tõenäoliselt nii on. Ärge langege petturite trikkide ohvriks."
+  "scamAlertPoint3": "Kui miski kõlab liiga hästi, et tõsi olla, siis see tõenäoliselt nii on. Ärge langege petturite trikkide ohvriks.",
+  "optionalMemo": "Valikuline memo",
+  "memoFieldLabel": "Memoväli",
+  "memoFieldDescription": "Krüptitud teade {{targetUser}}Ainult silmad.\n"
 }

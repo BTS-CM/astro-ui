@@ -16,7 +16,7 @@
   },
   "tabsContent": {
     "transactionObjectJSON": "Transaction object JSON",
-    "operationType": "Operation type: {{operationName}}",
+    "operationType": "Operation type:",
     "copyOperationJSON": "Copy operation JSON",
     "usingDeeplink": "Using a deeplink to broadcast via the Beet multiwallet",
     "step1": "Launch the BEET wallet and navigate to 'Raw Link' in the menu, the wallet has to remain unlocked for the duration of the broadcast.",

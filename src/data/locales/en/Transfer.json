@@ -36,5 +36,8 @@
   "scamAlertDescription": "Be vigilant against scammers!",
   "scamAlertPoint1": "Crypto exchanges will NEVER direct message you in with special transfer instructions to follow for deposits nor withdrawals.",
   "scamAlertPoint2": "Asset transfer operations are permanent and the majority of assets are irrecoverable if erroneously transferred.",
-  "scamAlertPoint3": "If something sounds too good to be true, then it likely is, don't fall victim to scammers tricks."
+  "scamAlertPoint3": "If something sounds too good to be true, then it likely is, don't fall victim to scammers tricks.",
+  "optionalMemo": "Optional memo",
+  "memoFieldLabel": "Memo field",
+  "memoFieldDescription": "An encrypted message for {{targetUser}}'s eyes only.\nOften used by exchanges and 3rd party services."
 }

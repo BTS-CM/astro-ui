@@ -180,5 +180,18 @@
     "subtitle": "Configuración del nodo blockchain",
     "hover1": "Conéctese a un nodo Bitshares de su elección.",
     "hover2": "Agregue o elimine nodos a su lista de conexiones."
+  },
+  "create_account": {
+    "title": "🆕 Crear cuenta",
+    "subtitle": "Cree una nueva cuenta de billetera en la nube en Bitshares blockchain.",
+    "hover1": "Cree una cuenta gratuita utilizando un grifo público.",
+    "hover2": "Genere una cuenta premium utilizando una cuenta LTM existente."
+  },
+  "tfund_user": {
+    "title": "🚀 Comercio de fondos del mismo T",
+    "subtitle": "¡Toma prestado, comercio, reembolso, simple!",
+    "hover1": "Tomar activos de un mismo fondo.",
+    "hover2": "Cambia estos mismos fondos T en el Dex.",
+    "hover3": "Reembolsar los activos prestados."
   }
 }

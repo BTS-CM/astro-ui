@@ -36,5 +36,8 @@
   "scamAlertDescription": "¡Esté atento a los estafadores!",
   "scamAlertPoint1": "Los intercambios de criptomonedas NUNCA le enviarán mensajes directos con instrucciones de transferencia especiales a seguir para depósitos o retiros.",
   "scamAlertPoint2": "Las operaciones de transferencia de activos son permanentes y la mayoría de los activos son irrecuperables si se transfieren erróneamente.",
-  "scamAlertPoint3": "Si algo suena demasiado bueno para ser verdad, entonces probablemente lo sea; no sea víctima de los trucos de los estafadores."
+  "scamAlertPoint3": "Si algo suena demasiado bueno para ser verdad, entonces probablemente lo sea; no sea víctima de los trucos de los estafadores.",
+  "optionalMemo": "Memo opcional",
+  "memoFieldLabel": "Campo de memo",
+  "memoFieldDescription": "Un mensaje encriptado para {{targetUser}}Solo los ojos.\n"
 }

@@ -16,7 +16,7 @@
   },
   "tabsContent": {
     "transactionObjectJSON": "거래 객체 JSON",
-    "operationType": "작업 유형: {{operationName}}",
+    "operationType": "작업 유형:",
     "copyOperationJSON": "복사 작업 JSON",
     "usingDeeplink": "딥링크를 사용하여 Beet 다중 지갑을 통해 브로드캐스트",
     "step1": "BEET 지갑을 실행하고 메뉴에서 'Raw Link'로 이동하세요. 방송이 진행되는 동안 지갑은 잠금 해제된 상태로 유지되어야 합니다.",

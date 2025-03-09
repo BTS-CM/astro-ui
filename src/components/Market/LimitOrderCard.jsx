@@ -106,7 +106,7 @@ export default function LimitOrderCard(properties) {
     return new Date(now.getTime() + oneHour);
   });
 
-  const [date, setDate] = useState(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)); // Solely for the calendar component to display a date string
+  const [date, setDate] = useState(new Date(Date.now() + 1 * 24 * 60 * 60 * 1000));
 
   useEffect(() => {
     if (expiryType === "specific" && date) {

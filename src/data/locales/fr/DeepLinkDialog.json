@@ -16,7 +16,7 @@
   },
   "tabsContent": {
     "transactionObjectJSON": "Objet de transaction JSON",
-    "operationType": "Type d'opération : {{operationName}}",
+    "operationType": "Type d'opération :",
     "copyOperationJSON": "Opération de copie JSON",
     "usingDeeplink": "Utiliser un lien profond pour diffuser via le multiwallet Beet",
     "step1": "Lancez le portefeuille BEET et accédez à « Raw Link » dans le menu, le portefeuille doit rester déverrouillé pendant toute la durée de la diffusion.",

@@ -180,5 +180,18 @@
     "subtitle": "Plokiahela sõlme konfiguratsioon",
     "hover1": "Ühendage oma valitud Bitsharesi sõlmega.",
     "hover2": "Lisage/eemaldage sõlmed oma ühenduste loendisse."
+  },
+  "create_account": {
+    "title": "🆕 Loo konto",
+    "subtitle": "Looge Bitshares Blockchainis uus pilve rahakoti konto.",
+    "hover1": "Looge tasuta konto, kasutades avalikku kraani.",
+    "hover2": "Genereerige olemasoleva LTM -konto abil esmaklassiline konto."
+  },
+  "tfund_user": {
+    "title": "🚀 SAMA-T Fondi kaubandus",
+    "subtitle": "Laenake, kaubelda, tagasi maksta, lihtne!",
+    "hover1": "Laenake varasid sama-T fondilt.",
+    "hover2": "Kauplege need sama-T fondidega DEX-iga.",
+    "hover3": "Laenatud varad tagasi maksta."
   }
 }

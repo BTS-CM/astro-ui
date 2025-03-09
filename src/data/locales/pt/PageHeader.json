@@ -75,9 +75,13 @@
     "blocks": "Veja os dados mais recentes do blockchain convenientemente resumidos abaixo!",
     "AccountLists": "Use o formulário abaixo para criar listas de permissões ou listas negras para sua conta.",
     "proposals": "Veja as aprovações para sua conta abaixo e aprove-as ou rejeite-as após avaliá-las minuciosamente.",
-    "pool_tracker": "Monitore facilmente o Honest Liquidity Pool e estatísticas relevantes e interessantes!"
+    "pool_tracker": "Monitore facilmente o Honest Liquidity Pool e estatísticas relevantes e interessantes!",
+    "create_account": "Use o formulário abaixo para criar uma nova conta na nuvem no blockchain Bitshares.",
+    "tfund_user": "Use o formulário abaixo para criar cadeias complexas de ordens de limite do Bitshares e operações de empréstimo/pagamento de fundos do mesmo tipo."
   },
   "back": "Volte",
   "usage": "Projetado para uso com ",
-  "multiwallet": "carteira múltipla"
+  "multiwallet": "carteira múltipla",
+  "tfund_user": "Negociação de Fundo Same-T",
+  "createAccount": "Criar Conta"
 }

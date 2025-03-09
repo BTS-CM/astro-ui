@@ -36,5 +36,8 @@
   "scamAlertDescription": "Attenzione ai truffatori!",
   "scamAlertPoint1": "Gli scambi di criptovalute non ti invieranno MAI un messaggio con istruzioni speciali di trasferimento da seguire per depositi o prelievi.",
   "scamAlertPoint2": "Le operazioni di trasferimento dei beni sono permanenti e la maggior parte dei beni sono irrecuperabili se trasferiti erroneamente.",
-  "scamAlertPoint3": "Se qualcosa sembra troppo bello per essere vero, allora probabilmente lo è, non cadere vittima dei trucchi dei truffatori."
+  "scamAlertPoint3": "Se qualcosa sembra troppo bello per essere vero, allora probabilmente lo è, non cadere vittima dei trucchi dei truffatori.",
+  "optionalMemo": "Memo opzionale",
+  "memoFieldLabel": "Memo Campo",
+  "memoFieldDescription": "Un messaggio crittografato per {{targetUser}}Solo gli occhi.\n"
 }

@@ -16,7 +16,7 @@
   },
   "tabsContent": {
     "transactionObjectJSON": "Objeto de transacción JSON",
-    "operationType": "Tipo de operación: {{operationName}}",
+    "operationType": "Tipo de operación:",
     "copyOperationJSON": "Operación de copia JSON",
     "usingDeeplink": "Usar un enlace profundo para transmitir a través del multiwallet Beet",
     "step1": "Inicie la billetera BEET y navegue hasta 'Enlace sin formato' en el menú; la billetera debe permanecer desbloqueada durante la transmisión.",

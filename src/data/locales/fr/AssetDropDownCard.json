@@ -17,5 +17,7 @@
   "whichCollateral": "Quel actif collatéral?",
   "collateralSearch": "Veuillez rechercher un nouvel actif collatéral ci-dessous",
   "addAsset": "Ajouter un actif",
-  "featured": "Actifs en vedette"
+  "featured": "Actifs en vedette",
+  "borrowed": "Emprunté",
+  "balance": "Solde"
 }

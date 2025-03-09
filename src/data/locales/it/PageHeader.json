@@ -75,9 +75,13 @@
     "blocks": "Visualizza i dati blockchain più recenti comodamente riepilogati di seguito!",
     "AccountLists": "Utilizza il modulo sottostante per creare whitelist o blacklist per il tuo account.",
     "proposals": "Visualizza le approvazioni per il tuo account di seguito e approvale o rifiutale dopo averle valutate attentamente.",
-    "pool_tracker": "Monitora facilmente l'Honest Liquidity Pool e le statistiche più interessanti!"
+    "pool_tracker": "Monitora facilmente l'Honest Liquidity Pool e le statistiche più interessanti!",
+    "create_account": "Utilizza il modulo sottostante per creare un nuovo account cloud sulla blockchain di Bitshares.",
+    "tfund_user": "Utilizza il modulo sottostante per creare catene complesse di ordini limite Bitshares e operazioni di prestito/rimborso di fondi same-t."
   },
   "back": "Torna indietro",
   "usage": "Progettato per l'uso con ",
-  "multiwallet": "multiportafoglio"
+  "multiwallet": "multiportafoglio",
+  "tfund_user": "Commercio di fondi Same-T",
+  "createAccount": "Crea account"
 }

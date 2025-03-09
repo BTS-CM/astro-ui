@@ -16,7 +16,7 @@
   },
   "tabsContent": {
     "transactionObjectJSON": "Objeto de transação JSON",
-    "operationType": "Tipo de operação: {{operationName}}",
+    "operationType": "Tipo de operação:",
     "copyOperationJSON": "Copiar operação JSON",
     "usingDeeplink": "Usando um deeplink para transmitir através da multiwallet Beet",
     "step1": "Inicie a carteira BEET e navegue até ‘Raw Link’ no menu, a carteira deve permanecer desbloqueada durante a transmissão.",

@@ -16,7 +16,7 @@
   },
   "tabsContent": {
     "transactionObjectJSON": "トランザクションオブジェクトJSON",
-    "operationType": "操作タイプ: {{operationName}}",
+    "operationType": "操作タイプ:",
     "copyOperationJSON": "コピー操作 JSON",
     "usingDeeplink": "ディープリンクを使用して Beet マルチウォレット経由でブロードキャストする",
     "step1": "BEET ウォレットを起動し、メニューの「Raw Link」に移動します。ブロードキャスト中はウォレットのロックが解除されている必要があります。",

@@ -75,9 +75,13 @@
     "blocks": "最新のブロックチェーン データを以下にわかりやすくまとめましたのでご覧ください。",
     "AccountLists": "以下のフォームを使用して、アカウントのホワイトリストまたはブラックリストを作成します。",
     "proposals": "以下のアカウントの承認を表示し、徹底的に評価した後、承認または拒否します。",
-    "pool_tracker": "Honest Liquidity Pool と関連する興味深い統計を簡単に監視できます。"
+    "pool_tracker": "Honest Liquidity Pool と関連する興味深い統計を簡単に監視できます。",
+    "create_account": "以下のフォームを使用して、Bitshares ブロックチェーン上に新しいクラウド アカウントを作成します。",
+    "tfund_user": "以下のフォームを使用して、Bitshares 指値注文および同じ資金の借入/返済操作の複雑なチェーンを作成します。"
   },
   "back": "戻る",
   "usage": "で使用するように設計されています ",
-  "multiwallet": "マルチウォレット"
+  "multiwallet": "マルチウォレット",
+  "tfund_user": "Same-T ファンド取引",
+  "createAccount": "アカウントの作成"
 }

@@ -168,6 +168,11 @@ export default function PageHeader(properties) {
                         text={t("PageHeader:sameTFunds")}
                         icon="🤖"
                       />
+                      <MenuRow
+                        url="/tfund_user/index.html"
+                        text={t("PageHeader:tfund_user")}
+                        icon="🚀"
+                      />
                     </CommandGroup>
                     <CommandSeparator />
                     <CommandGroup heading={t("PageHeader:overviewsHeading")}>
@@ -247,6 +252,11 @@ export default function PageHeader(properties) {
                         text={t("PageHeader:accountLists")}
                         icon="📋"
                       />
+                      <MenuRow
+                        url="/create_account/index.html"
+                        text={t("PageHeader:createAccount")}
+                        icon="🆕"
+                      />                      
                       <MenuRow url="/ltm/index.html" text={t("PageHeader:buyLTM")} icon="🏅" />
                       <MenuRow url="/nodes/index.html" text={t("PageHeader:nodes")} icon="🌐" />
                     </CommandGroup>

@@ -36,5 +36,8 @@
   "scamAlertDescription": "Seien Sie wachsam gegenüber Betrügern!",
   "scamAlertPoint1": "Krypto-Börsen werden Ihnen NIEMALS direkte Nachrichten mit speziellen Überweisungsanweisungen senden, die Sie bei Ein- oder Auszahlungen befolgen müssen.",
   "scamAlertPoint2": "Die Übertragung von Vermögenswerten ist dauerhaft und die meisten Vermögenswerte sind im Falle einer irrtümlichen Übertragung unwiederbringlich.",
-  "scamAlertPoint3": "Wenn etwas zu gut klingt, um wahr zu sein, dann ist es wahrscheinlich auch so: Fallen Sie nicht den Tricks von Betrügern zum Opfer."
+  "scamAlertPoint3": "Wenn etwas zu gut klingt, um wahr zu sein, dann ist es wahrscheinlich auch so: Fallen Sie nicht den Tricks von Betrügern zum Opfer.",
+  "optionalMemo": "Optionales Memo",
+  "memoFieldLabel": "Memofeld",
+  "memoFieldDescription": "Eine verschlüsselte Nachricht für {{targetUser}}Nur Augen.\n"
 }

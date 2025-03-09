@@ -75,9 +75,13 @@
     "blocks": "Vaadake kõige värskemaid plokiahela andmeid, mis on mugavalt kokku võetud allpool!",
     "AccountLists": "Kasutage allolevat vormi oma konto jaoks valgete või mustade nimekirjade loomiseks.",
     "proposals": "Vaadake allpool oma konto kinnitusi ja kinnitage need pärast nende põhjalikku hindamist või lükake need tagasi.",
-    "pool_tracker": "Jälgige hõlpsalt ausat likviidsusfondi ja asjakohast huvitavat statistikat!"
+    "pool_tracker": "Jälgige hõlpsalt ausat likviidsusfondi ja asjakohast huvitavat statistikat!",
+    "create_account": "Kasutage allolevat vormi, et luua Bitsharesi plokiahelas uus pilvekonto.",
+    "tfund_user": "Kasutage allolevat vormi, et koostada keerulisi Bitsharesi limiitkorralduste kette ja sama fondi laenu-/tagasimaksete toiminguid."
   },
   "back": "Mine tagasi",
   "usage": "Mõeldud kasutamiseks koos ",
-  "multiwallet": "multirahakott"
+  "multiwallet": "multirahakott",
+  "tfund_user": "Same-T Fund Trade",
+  "createAccount": "Loo konto"
 }

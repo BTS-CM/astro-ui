@@ -177,40 +177,6 @@ export default function Transfer(properties) {
     }
   }, [targetUser]);
 
-  /*
-    {selectedAsset && targetUser ? (
-      <FormField
-        control={form.control}
-        name="memoField"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Optional memo</FormLabel>
-            <FormControl
-              onChange={(event) => {
-                const input = event.target.value;
-                setMemoContents(input);
-              }}
-            >
-              <Input
-                label={`Memo field`}
-                value={memoContents}
-                placeholder={memoContents}
-                className="mb-1"
-              />
-            </FormControl>
-            <FormDescription>
-              An encrypted message for {targetUser.name}'s eyes
-              only.
-              <br /> Often used by exchanges and 3rd party
-              services.
-            </FormDescription>
-            
-          </FormItem>
-        )}
-      />
-    ) : null}
-  */
-
   return (
     <>
       <div className="container mx-auto mt-5 mb-5">
@@ -496,6 +462,34 @@ export default function Transfer(properties) {
                   {selectedAsset && targetUser ? (
                     <FormField
                       control={form.control}
+                      name="memoField"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{t("Transfer:optionalMemo")}</FormLabel>
+                          <FormControl
+                            onChange={(event) => {
+                              const input = event.target.value;
+                              setMemoContents(input);
+                            }}
+                          >
+                            <Input
+                              label={t("Transfer:memoFieldLabel")}
+                              value={memoContents}
+                              placeholder={memoContents}
+                              className="mb-1"
+                            />
+                          </FormControl>
+                          <FormDescription>
+                            {t("Transfer:memoFieldDescription", { targetUser: targetUser.name })}
+                          </FormDescription>
+                        </FormItem>
+                      )}
+                    />
+                  ) : null}
+
+                  {selectedAsset && targetUser ? (
+                    <FormField
+                      control={form.control}
                       name="networkFee"
                       render={({ field }) => (
                         <FormItem>
@@ -555,6 +549,7 @@ export default function Transfer(properties) {
                         amount: blockchainFloat(transferAmount, foundAsset.precision).toFixed(0),
                         asset_id: foundAsset.id,
                       },
+                      memo: memoContents ?? "",
                       extensions: [],
                     },
                   ]}

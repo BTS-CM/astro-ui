@@ -36,5 +36,8 @@
   "scamAlertDescription": "Esteja vigilante contra golpistas!",
   "scamAlertPoint1": "As trocas de criptografia NUNCA enviarão mensagens diretas a você com instruções especiais de transferência a serem seguidas para depósitos ou retiradas.",
   "scamAlertPoint2": "As operações de transferência de ativos são permanentes e a maioria dos ativos é irrecuperável se transferidos erroneamente.",
-  "scamAlertPoint3": "Se algo parece bom demais para ser verdade, então provavelmente é, não seja vítima de truques de golpistas."
+  "scamAlertPoint3": "Se algo parece bom demais para ser verdade, então provavelmente é, não seja vítima de truques de golpistas.",
+  "optionalMemo": "Memorando opcional",
+  "memoFieldLabel": "Campo de memorando",
+  "memoFieldDescription": "Uma mensagem criptografada para {{targetUser}}apenas os olhos.\n"
 }

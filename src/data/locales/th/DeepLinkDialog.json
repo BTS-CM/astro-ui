@@ -16,7 +16,7 @@
   },
   "tabsContent": {
     "transactionObjectJSON": "วัตถุธุรกรรม JSON",
-    "operationType": "ประเภทการดำเนินงาน: {{operationName}}",
+    "operationType": "ประเภทการดำเนินงาน:",
     "copyOperationJSON": "การดำเนินการคัดลอก JSON",
     "usingDeeplink": "การใช้ Deep Link เพื่อออกอากาศผ่าน Beet multiwallet",
     "step1": "เปิดกระเป๋าสตางค์ BEET และไปที่ 'Raw Link' ในเมนู โดยกระเป๋าสตางค์จะต้องยังคงถูกปลดล็อคตลอดระยะเวลาการออกอากาศ",

@@ -180,5 +180,18 @@
     "subtitle": "Configuração do nó Blockchain",
     "hover1": "Conecte-se a um nó Bitshares de sua escolha.",
     "hover2": "Adicione/remova nós à sua lista de conexões."
+  },
+  "create_account": {
+    "title": "🆕 Crie conta",
+    "subtitle": "Crie uma nova conta de carteira em nuvem na blockchain Bitshares.",
+    "hover1": "Crie uma conta gratuita usando uma torneira pública.",
+    "hover2": "Gere uma conta premium usando uma conta LTM existente."
+  },
+  "tfund_user": {
+    "title": "🚀 Comércio de fundos do mesmo T",
+    "subtitle": "Pedir emprestado, comércio, reembolso, simples!",
+    "hover1": "Emprestar ativos de um fundo T-T.",
+    "hover2": "Trocar esses fundos do mesmo T no DEX.",
+    "hover3": "Reembolsar os ativos emprestados."
   }
 }
