@@ -145,7 +145,7 @@ const CreateAccount = () => {
     setFaucetInProgress(true);
     let registeredAccount;
     try {
-      registeredAccount = await window.electron.faucetRegistration({
+      registeredAccount = await window.electron.registerFaucetAccount({
         chain: usr.chain,
         bodyParameters: JSON.stringify(generatedAccountData)
       });

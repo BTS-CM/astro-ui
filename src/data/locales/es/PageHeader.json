@@ -81,5 +81,7 @@
   },
   "back": "Regresa",
   "usage": "Diseñado para usar con ",
-  "multiwallet": "billetera múltiple"
+  "multiwallet": "billetera múltiple",
+  "tfund_user": "Operación con el mismo fondo",
+  "createAccount": "Crear cuenta"
 }

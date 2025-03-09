@@ -81,5 +81,7 @@
   },
   "back": "Torna indietro",
   "usage": "Progettato per l'uso con ",
-  "multiwallet": "multiportafoglio"
+  "multiwallet": "multiportafoglio",
+  "tfund_user": "Commercio di fondi Same-T",
+  "createAccount": "Crea account"
 }

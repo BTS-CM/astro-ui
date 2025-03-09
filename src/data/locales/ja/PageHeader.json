@@ -81,5 +81,7 @@
   },
   "back": "戻る",
   "usage": "で使用するように設計されています ",
-  "multiwallet": "マルチウォレット"
+  "multiwallet": "マルチウォレット",
+  "tfund_user": "Same-T ファンド取引",
+  "createAccount": "アカウントの作成"
 }

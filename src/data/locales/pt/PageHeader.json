@@ -81,5 +81,7 @@
   },
   "back": "Volte",
   "usage": "Projetado para uso com ",
-  "multiwallet": "carteira múltipla"
+  "multiwallet": "carteira múltipla",
+  "tfund_user": "Negociação de Fundo Same-T",
+  "createAccount": "Criar Conta"
 }

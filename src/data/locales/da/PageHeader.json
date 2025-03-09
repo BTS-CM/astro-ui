@@ -80,5 +80,7 @@
   },
   "back": "Gå tilbage",
   "usage": "Designet til brug med ",
-  "multiwallet": "multiwallet"
+  "multiwallet": "multiwallet",
+  "tfund_user": "Same-T Fund Trade",
+  "createAccount": "Opret konto"
 }

@@ -81,5 +81,7 @@
   },
   "back": "돌아가기",
   "usage": "다음과 함께 사용하도록 설계됨 ",
-  "multiwallet": "다중 지갑"
+  "multiwallet": "다중 지갑",
+  "tfund_user": "Same-T Fund 거래",
+  "createAccount": "계정 만들기"
 }
