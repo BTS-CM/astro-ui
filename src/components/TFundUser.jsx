@@ -232,11 +232,11 @@ export default function SameTFunds(properties) {
       }
     */
 
-    borrowPositions.map((x) => {
+    borrowPositions.forEach((x) => {
       const _id = x.id;
       const _borrowAssetID = x.asset_id;
       const _borrowAmount = x.borrow_amount;
-
+  
       const _referenceFundAsset = assets.find((x) => x.id === _borrowAssetID);
       _operations.push({
         borrower: usr.id,
@@ -248,19 +248,19 @@ export default function SameTFunds(properties) {
         extensions: {}
       });
     });
-
-    _operations.concat(operations);
-
-    borrowPositions.map((x) => {
+  
+    _operations = _operations.concat(operations);
+  
+    borrowPositions.forEach((x) => {
       const _id = x.id;
       const _borrowAssetID = x.asset_id;
       const _borrowAmount = x.borrow_amount;
       const _feeRate = x.fee_rate;
-
+  
       const _referenceFundAsset = assets.find((x) => x.id === _borrowAssetID);
-
+  
       const _feeAmount = _borrowAmount * _feeRate / 1000000;
-
+  
       _operations.push({
         account: usr.id,
         fund_id: _id,
@@ -298,27 +298,27 @@ export default function SameTFunds(properties) {
       relevantAssetIds.add(operation.sell_price.quote.asset_id);
     });
   
-    const newBalances = usrBalances
-      .filter((balance) => relevantAssetIds.has(balance.asset_id))
-      .map((balance) => {
-        const asset = assets.find((x) => x.id === balance.asset_id);
-        return {
-          asset_id: balance.asset_id,
-          amount: humanReadableFloat(balance.amount, asset.precision),
-          symbol: asset.symbol,
-        };
-      });
+    const newBalances = usrBalances.map((balance) => {
+      const asset = assets.find((x) => x.id === balance.asset_id);
+      return {
+        asset_id: balance.asset_id,
+        amount: humanReadableFloat(balance.amount, asset.precision),
+        symbol: asset.symbol,
+        display: relevantAssetIds.has(balance.asset_id)
+      };
+    });
   
     borrowPositions.forEach((position) => {
       const asset = assets.find((x) => x.id === position.asset_id);
       const balance = newBalances.find((b) => b.asset_id === position.asset_id);
       if (balance) {
-        balance.amount += position.borrow_amount;
+        balance.amount = (balance.amount + position.borrow_amount).toFixed(asset.precision);
       } else {
         newBalances.push({
           asset_id: position.asset_id,
           amount: position.borrow_amount,
           symbol: asset.symbol,
+          display: true
         });
       }
     });
@@ -353,6 +353,7 @@ export default function SameTFunds(properties) {
           asset_id: operation.sell_price.quote.asset_id,
           amount: netBuyAmount,
           symbol: buyAsset.symbol,
+          display: true
         });
       }
     });
@@ -383,9 +384,10 @@ export default function SameTFunds(properties) {
     });
   
     const feesArray = Object.entries(totalFees).map(([symbol, fee]) => ({
-      symbol,
-      fee: fee.toFixed(assets.find((x) => x.symbol === symbol).precision),
-    }));
+        symbol,
+        fee: fee.toFixed(assets.find((x) => x.symbol === symbol).precision),
+      }))
+      .filter(({ fee }) => fee > 0);
   
     setMarketFees(feesArray);
   }, [operations, assets]);
@@ -664,7 +666,7 @@ export default function SameTFunds(properties) {
   };
 
   const BalanceRow = ({ index, style }) => {
-    const _balance = updatedBalances[index];
+    const _balance = updatedBalances.filter((x) => x.display)[index];
     const _priorBalance = usrBalances.find((x) => x.asset_id === _balance.asset_id);
     const _asset = assets.find((x) => x.id === _balance.asset_id);
     const _diff = (_balance.amount - humanReadableFloat(
@@ -679,8 +681,10 @@ export default function SameTFunds(properties) {
     if (_finalAmount < 0) {
       _finalAmountStyle = "text-red-500";
     } else if (_finalAmount > 0) {
-      _finalAmountStyle = "text-green-500";
+      _finalAmountStyle = _diff > 0 ? "text-green-500" : "";
     }
+
+
 
     return <div style={style} key={`balance-${_balance.asset_id}`}>
               <Card>
@@ -701,7 +705,7 @@ export default function SameTFunds(properties) {
                         }
                         {
                           _diff < 0
-                            ? `-${_diff}`
+                            ? _diff
                             : `+${_diff}`
                         }
                       </div>
@@ -772,36 +776,36 @@ export default function SameTFunds(properties) {
                 </div>
                 {
                     borrowPositions && borrowPositions.length
-                      ? <>
-                        <label className="block text-sm font-medium text-gray-700">
-                          Same-T Fund Borrow Positions
-                        </label>
-                        <label className="block text-xs font-medium text-gray-700">
-                          These are the Same-T funds which you will borrow and repay within the one transaction!
-                        </label>
-                        <div className="grid grid-cols-3 border rounded border-gray-300 p-2 mt-2">
-                          <div>
-                            Fund
-                          </div>
-                          <div>
-                            Borrowed
-                          </div>
-                          <div>
-                            Borrow Fees
-                          </div>
-                          <div className="col-span-3">
-                            <List
-                              height={200}
-                              itemCount={borrowPositions.length}
-                              itemSize={70}
-                              key={`list-borrowpositions`}
-                              className="w-full mt-1"
-                            >
-                              {BorrowPositionRow}
-                            </List>
+                      ? <div>
+                          <label className="block text-sm font-medium text-gray-700">
+                            Same-T Fund Borrow Positions
+                          </label>
+                          <label className="block text-xs font-medium text-gray-700">
+                            These are the Same-T funds which you will borrow and repay within the one transaction!
+                          </label>
+                          <div className="grid grid-cols-3 border rounded border-gray-300 p-2 mt-2">
+                            <div>
+                              Fund
+                            </div>
+                            <div>
+                              Borrowed
+                            </div>
+                            <div>
+                              Borrow Fees
+                            </div>
+                            <div className="col-span-3">
+                              <List
+                                height={200}
+                                itemCount={borrowPositions.length}
+                                itemSize={70}
+                                key={`list-borrowpositions`}
+                                className="w-full mt-1"
+                              >
+                                {BorrowPositionRow}
+                              </List>
+                            </div>
                           </div>
                         </div>
-                      </>
                       : null
                 }
                 {
@@ -890,7 +894,7 @@ export default function SameTFunds(properties) {
                           </div>
                           <List
                             height={200}
-                            itemCount={updatedBalances.length}
+                            itemCount={updatedBalances.filter((x) => x.display).length}
                             itemSize={35}
                             key={`list-updatedbalances`}
                             className="w-full mt-3"
@@ -906,25 +910,29 @@ export default function SameTFunds(properties) {
                   operations && operations.length
                   ? <div>
                       <label className="block text-sm font-medium text-gray-700">
-                        Estimated fees:
+                        Estimated fees
                       </label>
                       <Card>
                         <CardHeader className="p-1">
                           <CardDescription>
-                            Limit orders: {operations.length}<br/>
-                            Network fees: {
-                            (operations.length * limitOrderFee) + 
-                            ((borrowPositions.length * 2) * sameTFundBorrowFee) +
-                            ((borrowPositions.length * 2) * sameTFundRepayFee)
-                            } {usr && usr.chain === "bitshares" ? "BTS" : "TEST"}<br/>
-                            Market fees:<br/>
-                            {
-                              marketFees.map(({ symbol, fee }) => (
-                                <Badge key={symbol}>
-                                  {fee} {symbol}
-                                </Badge>
-                              ))
-                            }
+                            <div className="grid grid-cols-6 gap-2">
+                              <Badge className="m-1" key={"core_asset"}>
+                                {(
+                                  (operations.length * limitOrderFee) + 
+                                  ((borrowPositions.length * 2) * sameTFundBorrowFee) +
+                                  ((borrowPositions.length * 2) * sameTFundRepayFee)
+                                ).toFixed(5)} {usr && usr.chain === "bitshares" ? "BTS" : "TEST"}
+                              </Badge>
+                              {
+                                marketFees && marketFees.length
+                                  ? marketFees.map(({ symbol, fee }) => (
+                                      <Badge className="m-1" key={symbol}>
+                                        {fee} {symbol}
+                                      </Badge>
+                                    ))
+                                  : null
+                              }
+                            </div>
                           </CardDescription>
                         </CardHeader>
                       </Card>
@@ -935,16 +943,16 @@ export default function SameTFunds(properties) {
 
               {
                 operations && operations.length
-                ? <Button
-                    className="w-1/4 mt-3"
-                    variant="outline"
-                    onClick={() => {
-                      setDeeplinkDialog(true);
-                    }}
-                  >
-                    Generate Deeplink
-                  </Button>
-                : null
+                  ? <Button
+                      className="w-1/4 mt-3"
+                      variant="outline"
+                      onClick={() => {
+                        setDeeplinkDialog(true);
+                      }}
+                    >
+                      Generate Deeplink
+                    </Button>
+                  : null
               }
             </CardContent>
           </Card>
@@ -953,15 +961,15 @@ export default function SameTFunds(properties) {
             usr && deeplinkDialog
               ? <DeepLinkDialog
                   operationNames={[
-                    "samet_fund_borrow",
-                    // ....
-                    "samet_fund_repay"
+                    ...Array(borrowPositions.length).fill("samet_fund_borrow"),
+                    ...operations.map(() => "limit_order_create"),
+                    ...Array(borrowPositions.length).fill("samet_fund_repay")
                   ]}
                   username={usr && usr.username ? usr.username : ""}
                   usrChain={usr && usr.chain ? usr.chain : "bitshares"}
                   userID={usr.id}
                   dismissCallback={setDeeplinkDialog}
-                  key={`constructing_samet_fund_trades_${username}`}
+                  key={`constructing_deeplink_${usr && usr.username ? usr.username : ""}`}
                   headerText={t("TFundUser:deeplinkHeaderText")}
                   trxJSON={operationsJSON}
                 />

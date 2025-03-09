@@ -142,6 +142,11 @@ export default function LimitOrderWizard(properties) {
             ? ((limitOrderBuyAmount / _quoteAmount) * 100).toFixed(3)
             : 0;
 
+        const price = (_quoteAmount / _baseAmount).toFixed(sellingAssetData.precision);
+
+        const _quoteAsset = assets.find((x) => x.id === _order.sell_price.quote.asset_id);
+        const _quoteFee = _quoteAsset && _quoteAsset.market_fee_percent ? _quoteAsset.market_fee_percent / 100 : 0;
+
         return (
             <div
                 style={style}
@@ -155,7 +160,7 @@ export default function LimitOrderWizard(properties) {
                     {_baseAmount}
                 </div>
                 <div className="border-r border-gray-300">
-                    {(_quoteAmount / _baseAmount).toFixed(sellingAssetData.precision)}
+                    {price}
                 </div>
                 <div className="border-r border-gray-300">
                     {percentageCommitted}
@@ -175,13 +180,18 @@ export default function LimitOrderWizard(properties) {
                         </DialogHeader>
                         <div className="grid grid-cols-1 gap-3">
                             <div className="grid grid-cols-2 gap-2">
+                                <div className="col-span-2">
+                                    <label className="block text-sm font-medium text-gray-700">
+                                        Buying
+                                    </label>
+                                </div>
                                 <Input
                                     value={limitOrderBuyAmount}
                                     type="text"
                                     onInput={(e) => {
                                         const value = e.currentTarget.value;
                                         if (regex.test(value)) {
-                                        setLimitOrderBuyAmount(value > _quoteAmount ? _quoteAmount : value);
+                                            setLimitOrderBuyAmount(value > _quoteAmount ? _quoteAmount : value);
                                         }
                                     }}
                                 />
@@ -191,6 +201,61 @@ export default function LimitOrderWizard(properties) {
                                     disabled
                                 />
                             </div>
+                            <div className="grid grid-cols-2 gap-2">
+                                <div className="col-span-2">
+                                    <label className="block text-sm font-medium text-gray-700">
+                                        Selling
+                                    </label>
+                                </div>
+                                <Input
+                                    value={(limitOrderBuyAmount / price).toFixed(sellingAssetData.precision)}
+                                    type="text"
+                                    disabled
+                                />
+                                <Input
+                                    value={sellingAssetData.symbol}
+                                    type="text"
+                                    disabled
+                                />
+                            </div>
+                            <div className="grid grid-cols-2 gap-2">
+                                <div className="col-span-2">
+                                    <label className="block text-sm font-medium text-gray-700">
+                                        Price
+                                    </label>
+                                </div>
+                                <Input
+                                    value={price}
+                                    type="text"
+                                    disabled
+                                />
+                                <Input
+                                    value={`${buyingAssetData.symbol}/${sellingAssetData.symbol}`}
+                                    type="text"
+                                    disabled
+                                />
+                            </div>
+                            {
+                                _quoteFee > 0
+                                    ? <div className="grid grid-cols-2 gap-2">
+                                        <div className="col-span-2">
+                                            <label className="block text-sm font-medium text-gray-700">
+                                                Market fee
+                                            </label>
+                                        </div>
+                                        <Input
+                                            value={(_quoteFee * limitOrderBuyAmount).toFixed(buyingAssetData.precision)}
+                                            type="text"
+                                            disabled
+                                        />
+                                        <Input
+                                            value={buyingAssetData.symbol}
+                                            type="text"
+                                            disabled
+                                        />
+                                    </div>
+                                    : null
+                            }
                             <div className="grid grid-cols-6 gap-2">
                                 <Button
                                     variant="outline"
@@ -237,16 +302,10 @@ export default function LimitOrderWizard(properties) {
                                     onClick={() => {
                                         const sellingAssetBalance = updatedBalances.find((x) => x.asset_id === sellingAssetData.id);
                                         const percentPossible = sellingAssetBalance.amount / _baseAmount;
-                                        console.log({
-                                        sellingAssetBalance,
-                                        percentPossible,
-                                        _quoteAmount,
-                                        else: _quoteAmount * percentPossible
-                                        })
                                         if (percentPossible > 1) {
-                                        setLimitOrderBuyAmount(_quoteAmount);
+                                            setLimitOrderBuyAmount(_quoteAmount);
                                         } else {
-                                        setLimitOrderBuyAmount(_quoteAmount * percentPossible);
+                                            setLimitOrderBuyAmount(_quoteAmount * percentPossible);
                                         }
                                     }}
                                 >
@@ -256,74 +315,74 @@ export default function LimitOrderWizard(properties) {
                             <Button
                                 variant="outline"
                                 onClick={() => {
-                                setOperations((prevOperations) => {
-                                    const _ops = [...prevOperations];
-                                
-                                    const existingOperationIndex = _ops.findIndex(op => op.id === _order.id);
-                                    const existingOperation = existingOperationIndex !== -1 ? _ops[existingOperationIndex] : null;
-                                
-                                    // Early return if the value is already set
-                                    if (existingOperation && existingOperation.final_buy_amount === limitOrderBuyAmount) {
-                                    return _ops;
-                                    }
-                                
-                                    const hasLaterOrders = _ops.some(op => {
-                                    const orderIndex = marketLimitOrders.findIndex(order => order.id === op.id);
-                                    return orderIndex > index;
-                                    });
-                                
-                                    if (limitOrderBuyAmount === 0) {
-                                    // Remove the current order if set to 0%
-                                    return _ops.filter(op => op.id !== _order.id);
-                                    } else if (limitOrderBuyAmount < _quoteAmount && hasLaterOrders) {
-                                    // Remove subsequent market limit orders if the current order is less than 100% and there are later orders
-                                    for (let i = index + 1; i < marketLimitOrders.length; i++) {
-                                        const subsequentOrder = marketLimitOrders[i];
-                                        const existingSubsequentOperationIndex = _ops.findIndex(op => op.id === subsequentOrder.id);
-                                
-                                        if (existingSubsequentOperationIndex !== -1) {
-                                        // Remove existing subsequent operation
-                                        _ops.splice(existingSubsequentOperationIndex, 1);
+                                    setOperations((prevOperations) => {
+                                        const _ops = [...prevOperations];
+                                    
+                                        const existingOperationIndex = _ops.findIndex(op => op.id === _order.id);
+                                        const existingOperation = existingOperationIndex !== -1 ? _ops[existingOperationIndex] : null;
+                                    
+                                        // Early return if the value is already set
+                                        if (existingOperation && existingOperation.final_buy_amount === limitOrderBuyAmount) {
+                                            return _ops;
                                         }
-                                    }
-                                    }
-                                
-                                    if (limitOrderBuyAmount !== 0) {
-                                    // Set prior market limit orders to 100% only if the current order is not set to 0%
-                                    for (let i = 0; i < index; i++) {
-                                        const priorOrder = marketLimitOrders[i];
-                                        const priorOrderAmount = humanReadableFloat(priorOrder.sell_price.quote.amount, buyingAssetData.precision);
-                                        const existingPriorOperationIndex = _ops.findIndex(op => op.id === priorOrder.id);
-                                
-                                        if (existingPriorOperationIndex !== -1) {
-                                        // Update existing prior operation
-                                        _ops[existingPriorOperationIndex] = {
-                                            ..._ops[existingPriorOperationIndex],
-                                            final_buy_amount: priorOrderAmount
-                                        };
+                                    
+                                        const hasLaterOrders = _ops.some(op => {
+                                            const orderIndex = marketLimitOrders.findIndex(order => order.id === op.id);
+                                            return orderIndex > index;
+                                        });
+                                    
+                                        if (limitOrderBuyAmount === 0) {
+                                            // Remove the current order if set to 0%
+                                            return _ops.filter(op => op.id !== _order.id);
+                                        } else if (limitOrderBuyAmount < _quoteAmount && hasLaterOrders) {
+                                            // Remove subsequent market limit orders if the current order is less than 100% and there are later orders
+                                            for (let i = index + 1; i < marketLimitOrders.length; i++) {
+                                                const subsequentOrder = marketLimitOrders[i];
+                                                const existingSubsequentOperationIndex = _ops.findIndex(op => op.id === subsequentOrder.id);
+                                        
+                                                if (existingSubsequentOperationIndex !== -1) {
+                                                    // Remove existing subsequent operation
+                                                    _ops.splice(existingSubsequentOperationIndex, 1);
+                                                }
+                                            }
+                                        }
+                                    
+                                        if (limitOrderBuyAmount !== 0) {
+                                        // Set prior market limit orders to 100% only if the current order is not set to 0%
+                                        for (let i = 0; i < index; i++) {
+                                            const priorOrder = marketLimitOrders[i];
+                                            const priorOrderAmount = humanReadableFloat(priorOrder.sell_price.quote.amount, buyingAssetData.precision);
+                                            const existingPriorOperationIndex = _ops.findIndex(op => op.id === priorOrder.id);
+                                    
+                                            if (existingPriorOperationIndex !== -1) {
+                                                // Update existing prior operation
+                                                _ops[existingPriorOperationIndex] = {
+                                                    ..._ops[existingPriorOperationIndex],
+                                                    final_buy_amount: priorOrderAmount
+                                                };
+                                            } else {
+                                                // Add new prior operation
+                                                priorOrder["final_buy_amount"] = priorOrderAmount;
+                                                _ops.push(priorOrder);
+                                            }
+                                        }
+                                        }
+                                    
+                                        // Set current order to the specified buy amount
+                                        if (existingOperationIndex !== -1) {
+                                            // Update existing operation
+                                            _ops[existingOperationIndex] = {
+                                                ..._ops[existingOperationIndex],
+                                                final_buy_amount: limitOrderBuyAmount
+                                            };
                                         } else {
-                                        // Add new prior operation
-                                        priorOrder["final_buy_amount"] = priorOrderAmount;
-                                        _ops.push(priorOrder);
+                                            // Add new operation
+                                            _order["final_buy_amount"] = limitOrderBuyAmount;
+                                            _ops.push(_order);
                                         }
-                                    }
-                                    }
-                                
-                                    // Set current order to the specified buy amount
-                                    if (existingOperationIndex !== -1) {
-                                    // Update existing operation
-                                    _ops[existingOperationIndex] = {
-                                        ..._ops[existingOperationIndex],
-                                        final_buy_amount: limitOrderBuyAmount
-                                    };
-                                    } else {
-                                    // Add new operation
-                                    _order["final_buy_amount"] = limitOrderBuyAmount;
-                                    _ops.push(_order);
-                                    }
-                                
-                                    return _ops;
-                                });
+                                    
+                                        return _ops;
+                                    });
                                 }}
                             >
                                 Submit
@@ -458,10 +517,10 @@ export default function LimitOrderWizard(properties) {
                             <CardContent>
                                 <div className="grid grid-cols-5 gap-2 text-center">
                                     <div>
-                                    {buyingAssetData ? buyingAssetData.symbol : null}
+                                        {buyingAssetData ? buyingAssetData.symbol : null}
                                     </div>
                                     <div>
-                                    {sellingAssetData ? sellingAssetData.symbol : null}
+                                        {sellingAssetData ? sellingAssetData.symbol : null}
                                     </div>
                                     <div>Price</div>
                                     <div>Buying %</div>
@@ -469,16 +528,16 @@ export default function LimitOrderWizard(properties) {
                                 </div>
                                 {
                                     marketLimitOrders && marketLimitOrders.length && sellingAsset !== buyingAsset
-                                    ? <List
-                                        height={200}
-                                        itemCount={marketLimitOrders.length}
-                                        itemSize={50}
-                                        key={`list-limitorders`}
-                                        className="w-full mt-3"
-                                        >
-                                        {limitOrderRow}
-                                        </List>
-                                    : <div className="text-center mt-5">No orders available</div>
+                                        ? <List
+                                            height={200}
+                                            itemCount={marketLimitOrders.length}
+                                            itemSize={50}
+                                            key={`list-limitorders`}
+                                            className="w-full mt-3"
+                                            >
+                                            {limitOrderRow}
+                                            </List>
+                                        : <div className="text-center mt-5">No orders available</div>
                                 }
                             </CardContent>
                         </Card>
