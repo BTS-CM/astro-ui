@@ -123,7 +123,16 @@ export default function BasicAssetDropDown(properties) {
     } else if (mode === "favourites") {
       res = _favouriteAssets[index];
     } else if (mode === "borrowed") {
-      res = borrowPositions[index];
+      const uniqueBorrowPositions = [];
+      const seenAssetTypes = new Set();
+      borrowPositions.forEach(position => {
+        if (!seenAssetTypes.has(position.asset_id)) {
+          uniqueBorrowPositions.push(position);
+          seenAssetTypes.add(position.asset_id);
+        }
+      });
+
+      res = uniqueBorrowPositions[index];
     } else if (mode === "balance") {
       res = usrBalances[index];
     }

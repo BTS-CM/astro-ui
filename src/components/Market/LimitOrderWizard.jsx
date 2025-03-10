@@ -182,16 +182,16 @@ export default function LimitOrderWizard(properties) {
         const _amountSellerDesires = humanReadableFloat(_order.sell_price.quote.amount, _assetLimitOrderWants.precision);
 
         const percentageCommitted = limitOrderBuyAmount > 0
-            ? ((limitOrderBuyAmount / _amountOffered) * 100).toFixed(3)
+            ? (parseFloat(limitOrderBuyAmount) / parseFloat(_amountOffered) * 100).toFixed(3)
             : 0;
 
-        const price = (_amountSellerDesires / _amountOffered).toFixed(_assetLimitOrderWants.precision);
+        const price = (parseFloat(_amountSellerDesires) / parseFloat(_amountOffered)).toFixed(_assetLimitOrderWants.precision);
 
         const _quoteFee = _assetLimitOrderOffers && _assetLimitOrderOffers.market_fee_percent ? _assetLimitOrderOffers.market_fee_percent / 100 : 0;
 
         const sellingAssetBalance = updatedBalances.find((x) => x.asset_id === _assetLimitOrderWants.id);
         const percentPossible = sellingAssetBalance && sellingAssetBalance.amount && sellingAssetBalance.amount > 0 
-            ? sellingAssetBalance.amount / _amountSellerDesires
+            ? parseFloat(sellingAssetBalance.amount) / parseFloat(_amountSellerDesires)
             : 0;
 
         return (
@@ -260,7 +260,7 @@ export default function LimitOrderWizard(properties) {
                                     </label>
                                 </div>
                                 <Input
-                                    value={(tempBuyAmount * price).toFixed(sellingAssetData.precision)}
+                                    value={parseFloat(tempBuyAmount * price).toFixed(sellingAssetData.precision)}
                                     type="text"
                                     disabled
                                 />
@@ -297,7 +297,7 @@ export default function LimitOrderWizard(properties) {
                                         </div>
                                         <Input
                                             value={
-                                                `${(_quoteFee * tempBuyAmount).toFixed(buyingAssetData.precision)} (${_quoteFee * 100}%)`
+                                                `${(parseFloat(_quoteFee) * parseFloat(tempBuyAmount)).toFixed(buyingAssetData.precision)} (${_quoteFee * 100}%)`
                                             }
                                             type="text"
                                             disabled
@@ -314,7 +314,7 @@ export default function LimitOrderWizard(properties) {
                                 <Button
                                     variant="outline"
                                     onClick={() => {
-                                        setTempBuyAmount(0);
+                                        setTempBuyAmount(parseFloat(0));
                                     }}
                                 >
                                     {t('LimitOrderWizard:zeroPercent')}
@@ -324,7 +324,7 @@ export default function LimitOrderWizard(properties) {
                                         ? <Button
                                             variant="outline"
                                             onClick={() => {
-                                                setTempBuyAmount((_amountOffered * 0.25).toFixed(buyingAssetData.precision));
+                                                setTempBuyAmount(parseFloat(_amountOffered * 0.25).toFixed(buyingAssetData.precision));
                                             }}
                                         >
                                             {t('LimitOrderWizard:twentyFivePercent')}
@@ -341,7 +341,7 @@ export default function LimitOrderWizard(properties) {
                                         ? <Button
                                             variant="outline"
                                             onClick={() => {
-                                                setTempBuyAmount((_amountOffered * 0.50).toFixed(buyingAssetData.precision));
+                                                setTempBuyAmount(parseFloat(_amountOffered * 0.50).toFixed(buyingAssetData.precision));
                                             }}
                                         >
                                             {t('LimitOrderWizard:fiftyPercent')}
@@ -358,7 +358,7 @@ export default function LimitOrderWizard(properties) {
                                         ? <Button
                                             variant="outline"
                                             onClick={() => {
-                                                setTempBuyAmount((_amountOffered * 0.75).toFixed(buyingAssetData.precision));
+                                                setTempBuyAmount(parseFloat(_amountOffered * 0.75).toFixed(buyingAssetData.precision));
                                             }}
                                         >
                                             {t('LimitOrderWizard:seventyFivePercent')}
@@ -375,7 +375,7 @@ export default function LimitOrderWizard(properties) {
                                         ? <Button
                                             variant="outline"
                                             onClick={() => {
-                                                setTempBuyAmount(_amountOffered);
+                                                setTempBuyAmount(parseFloat(_amountOffered));
                                             }}
                                         >
                                             {t('LimitOrderWizard:hundredPercent')}
@@ -391,13 +391,13 @@ export default function LimitOrderWizard(properties) {
                                     variant="outline"
                                     onClick={() => {
                                         if (!sellingAssetBalance || !sellingAssetBalance.amount || sellingAssetBalance.amount <= 0) {
-                                            setTempBuyAmount(0);
+                                            setTempBuyAmount(parseFloat(0));
                                             return;
                                         }
                                         if (percentPossible > 1) {
-                                            setTempBuyAmount(_amountOffered);
+                                            setTempBuyAmount(parseFloat(_amountOffered));
                                         } else {
-                                            setTempBuyAmount(_amountOffered * percentPossible);
+                                            setTempBuyAmount(parseFloat(_amountOffered * percentPossible));
                                         }
                                     }}
                                 >
@@ -544,7 +544,7 @@ export default function LimitOrderWizard(properties) {
                                         <div style={{ display: 'flex', alignItems: 'left' }}>
                                         {
                                                 updatedBalances && updatedBalances.length && updatedBalances.find((x) => x.asset_id === buyingAssetData.id)
-                                                    ? `${updatedBalances.find((x) => x.asset_id === buyingAssetData.id).amount.toFixed(buyingAssetData.precision)} ${buyingAssetData.symbol} `
+                                                    ? `${parseFloat(updatedBalances.find((x) => x.asset_id === buyingAssetData.id).amount).toFixed(buyingAssetData.precision)} ${buyingAssetData.symbol} `
                                                     : `0 ${buyingAssetData.symbol} `
                                             }
                                             <TooltipProvider>
@@ -635,7 +635,7 @@ export default function LimitOrderWizard(properties) {
                                         <div style={{ display: 'flex', alignItems: 'left' }}>
                                             {
                                                 updatedBalances && updatedBalances.length && updatedBalances.find((x) => x.asset_id === sellingAssetData.id)
-                                                    ? `${updatedBalances.find((x) => x.asset_id === sellingAssetData.id).amount.toFixed(sellingAssetData.precision)} ${sellingAssetData.symbol} `
+                                                    ? `${parseFloat(updatedBalances.find((x) => x.asset_id === sellingAssetData.id).amount).toFixed(sellingAssetData.precision)} ${sellingAssetData.symbol} `
                                                     : `0 ${sellingAssetData.symbol} `
                                             }
                                             <TooltipProvider>

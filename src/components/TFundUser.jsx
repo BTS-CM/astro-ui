@@ -233,7 +233,7 @@ export default function SameTFunds(properties) {
     borrowPositions.forEach((x) => {
       const _id = x.id;
       const _borrowAssetID = x.asset_id;
-      const _borrowAmount = x.borrow_amount;
+      const _borrowAmount = parseFloat(x.borrow_amount);
   
       const _referenceFundAsset = assets.find((x) => x.id === _borrowAssetID);
       _operationChain.push({
@@ -256,13 +256,13 @@ export default function SameTFunds(properties) {
         seller: usr.id,
         amount_to_sell: {
           amount: blockchainFloat(
-            operation.final_buy_amount * operation.final_price,
+            parseFloat(operation.final_buy_amount) * parseFloat(operation.final_price),
             _soldAsset.precision
           ),
           asset_id: _soldAsset.id
         },
         min_to_receive: {
-          amount: blockchainFloat(operation.final_buy_amount, _purchasedAsset.precision),
+          amount: blockchainFloat(parseFloat(operation.final_buy_amount), _purchasedAsset.precision),
           asset_id: _purchasedAsset.id
         },
         expiration: date,
@@ -274,7 +274,7 @@ export default function SameTFunds(properties) {
     borrowPositions.forEach((x) => {
       const _id = x.id;
       const _borrowAssetID = x.asset_id;
-      const _borrowAmount = x.borrow_amount;
+      const _borrowAmount = parseFloat(x.borrow_amount);
       const _feeRate = x.fee_rate;
   
       const _referenceFundAsset = assets.find((x) => x.id === _borrowAssetID);
@@ -332,7 +332,9 @@ export default function SameTFunds(properties) {
       const asset = assets.find((x) => x.id === position.asset_id);
       const balance = newBalances.find((b) => b.asset_id === position.asset_id);
       if (balance) {
-        balance.amount = (balance.amount + position.borrow_amount).toFixed(asset.precision);
+        balance.amount = (
+          parseFloat(balance.amount) + parseFloat(position.borrow_amount)
+        ).toFixed(asset.precision);
       } else {
         newBalances.push({
           asset_id: position.asset_id,
@@ -356,9 +358,9 @@ export default function SameTFunds(properties) {
 
       const _purchasedAsset = assets.find((x) => x.id === operation.final_asset_purchased);
       const _soldAsset = assets.find((x) => x.id === operation.final_asset_sold);
-      const buyAmount = operation.final_buy_amount;
+      const buyAmount = parseFloat(operation.final_buy_amount);
   
-      const sellAmount = buyAmount * operation.final_price;
+      const sellAmount = buyAmount * parseFloat(operation.final_price);
       const marketFeePercent = _purchasedAsset.market_fee_percent ? _purchasedAsset.market_fee_percent / 100 : 0;
       const marketFee = buyAmount * marketFeePercent;
       const netBuyAmount = buyAmount - marketFee;
@@ -401,7 +403,7 @@ export default function SameTFunds(properties) {
     const totalFees = {};
     operations.forEach((operation) => {
       const _purchasedAsset = assets.find((x) => x.id === operation.final_asset_purchased);     
-      const buyAmount = operation.final_buy_amount;
+      const buyAmount = parseFloat(operation.final_buy_amount);
   
       const marketFeePercent = _purchasedAsset.market_fee_percent ? _purchasedAsset.market_fee_percent / 100 : 0;
       const marketFee = buyAmount * marketFeePercent;
@@ -415,7 +417,7 @@ export default function SameTFunds(properties) {
   
     const feesArray = Object.entries(totalFees).map(([symbol, fee]) => ({
         symbol,
-        fee: fee.toFixed(assets.find((x) => x.symbol === symbol).precision),
+        fee: parseFloat(fee).toFixed(assets.find((x) => x.symbol === symbol).precision),
       }))
       .filter(({ fee }) => fee > 0);
   
@@ -616,14 +618,19 @@ export default function SameTFunds(properties) {
 
   const BorrowPositionRow = ({ index, style }) => {
     let _borrowPosition = borrowPositions[index];
-
+  
     if (!_borrowPosition) {
       return null;
     }
-
+  
     const borrowAsset = assets.find((x) => x.id === _borrowPosition.asset_id);
-
+    const sameTFund = sameTFunds.find((x) => x.id === _borrowPosition.id);
+    const borrowAmount = parseFloat(_borrowPosition.borrow_amount);
+    const feeRate = sameTFund ? sameTFund.fee_rate : 0;
+    const feeAmount = (parseFloat(borrowAmount) * feeRate / 1000000).toFixed(borrowAsset.precision);
+  
     return (
+      <div style={style} key={`borrowposition-${_borrowPosition.id}`}>
         <Card className="w-full">
           <CardHeader className="pt-1 pb-1">
             <CardDescription>
@@ -632,40 +639,49 @@ export default function SameTFunds(properties) {
                   {_borrowPosition.id}
                 </div>
                 <div>
-                  {_borrowPosition.borrow_amount} {borrowAsset.symbol} 
+                  {borrowAmount} {borrowAsset.symbol}
                 </div>
                 <div>
-                  {(_borrowPosition.borrow_amount * sameTFunds.find((x) => x.id === _borrowPosition.id).fee_rate / 1000000).toFixed(borrowAsset.precision)}
-                  {" "}
-                  {borrowAsset.symbol}
+                  {feeAmount} {borrowAsset.symbol}
                 </div>
               </div>
             </CardDescription>
           </CardHeader>
         </Card>
-    )
+      </div>
+    );
   };
 
   const BalanceRow = ({ index, style }) => {
     const _balance = updatedBalances.filter((x) => x.display)[index];
     const _priorBalance = usrBalances.find((x) => x.asset_id === _balance.asset_id);
     const _asset = assets.find((x) => x.id === _balance.asset_id);
-    const _diff = (_balance.amount - humanReadableFloat(
+    const _diff = (parseFloat(_balance.amount) - humanReadableFloat(
       _priorBalance ? _priorBalance.amount : 0,
       _asset.precision
     )).toFixed(_asset.precision);
-    const _borrowedAmount = borrowPositions.find((x) => x.asset_id === _balance.asset_id)?.borrow_amount || 0;
-    const _borrowFee = borrowPositions.find((x) => x.asset_id === _balance.asset_id)?.fee_rate || 0;
-    const _owedAmount = _borrowedAmount && _borrowFee ? _borrowedAmount * (_borrowFee / 1000000) : 0;
-    const _finalAmount = (_balance.amount - (_borrowedAmount + _owedAmount)).toFixed(_asset.precision);
+
+    const _allBorrowPositionsInScope = borrowPositions.filter((x) => x.asset_id === _balance.asset_id);
+
+    let _totalBorrowedAmount = 0;
+    let _totalOwedAmount = 0;
+  
+    _allBorrowPositionsInScope.forEach((position) => {
+      const _borrowedAmount = parseFloat(position.borrow_amount);
+      const _borrowFee = position.fee_rate || 0;
+      const _owedAmount = _borrowedAmount * (_borrowFee / 1000000);
+      _totalBorrowedAmount += _borrowedAmount;
+      _totalOwedAmount += _owedAmount;
+    });
+  
+    const _finalAmount = (parseFloat(_balance.amount) - (_totalBorrowedAmount + _totalOwedAmount)).toFixed(_asset.precision);
+
     let _finalAmountStyle = "";
     if (_finalAmount < 0) {
       _finalAmountStyle = "text-red-500";
     } else if (_finalAmount > 0) {
       _finalAmountStyle = _diff > 0 ? "text-green-500" : "";
     }
-
-
 
     return <div style={style} key={`balance-${_balance.asset_id}`}>
               <Card>
@@ -676,7 +692,7 @@ export default function SameTFunds(properties) {
                         {_balance.symbol}
                       </div>
                       <div>
-                        {_balance.amount.toFixed(_asset.precision)}
+                        {parseFloat(_balance.amount).toFixed(_asset.precision)}
                       </div>
                       <div>
                         {
@@ -697,8 +713,8 @@ export default function SameTFunds(properties) {
                             : null
                         }
                         {
-                          _borrowedAmount > 0
-                            ? (_borrowedAmount + _owedAmount).toFixed(_asset.precision)
+                          _totalBorrowedAmount > 0
+                            ? (_totalBorrowedAmount + _totalOwedAmount).toFixed(_asset.precision)
                             : null
                         }
                       </div>
@@ -722,8 +738,8 @@ export default function SameTFunds(properties) {
     const _purchasedAsset = assets.find((x) => x.id === _operation.final_asset_purchased);
     const _soldAsset = assets.find((x) => x.id === _operation.final_asset_sold);
     const _marketPurchaseFee = _purchasedAsset.market_fee_percent ? _purchasedAsset.market_fee_percent / 100 : 0;
-    const _amountPurchased = (_operation.final_buy_amount - (_operation.final_buy_amount * _marketPurchaseFee)).toFixed(_purchasedAsset.precision);
-    const _amountSold = (_amountPurchased * _operation.final_price).toFixed(_soldAsset.precision);
+    const _amountPurchased = (parseFloat(_operation.final_buy_amount) - (parseFloat(_operation.final_buy_amount) * _marketPurchaseFee)).toFixed(_purchasedAsset.precision);
+    const _amountSold = (parseFloat(_amountPurchased) * _operation.final_price).toFixed(_soldAsset.precision);
     
     return (
       <div style={style} key={`operation-summary-${_operation.id}-${index}`}>
@@ -823,7 +839,7 @@ export default function SameTFunds(properties) {
                               <List
                                 height={200}
                                 itemCount={borrowPositions.length}
-                                itemSize={70}
+                                itemSize={35}
                                 key={`list-borrowpositions`}
                                 className="w-full mt-1"
                               >
@@ -845,7 +861,7 @@ export default function SameTFunds(properties) {
                         </label>
                         <div className="grid grid-cols-6 gap-2">
                           <div className="col-span-5 rounded border border-gray-300 p-2 mt-2">
-                            <div className="grid grid-cols-10">
+                            <div className="grid grid-cols-4">
                               <label className="block text-sm font-medium text-gray-700">
                                 {t("TFundUser:buying")}
                               </label>
