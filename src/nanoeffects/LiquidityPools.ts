@@ -97,8 +97,6 @@ function fetchLPTradingVolume(
   return new Promise(async (resolve, reject) => {
     let node = specificNode ? specificNode : (chains as any)[chain].nodeList[0].url;
 
-    console.log({specificNode, node})
-
     let currentAPI;
     try {
       currentAPI = existingAPI
@@ -151,13 +149,9 @@ function fetchLPTradingVolume(
       }
     }
 
-    console.log({results})
-
     let finalResult = results.reduce((acc, curr) => {
       return { ...acc, ...curr };
     }, {});
-
-    console.log({finalResult})
 
     return resolve(finalResult);
   });

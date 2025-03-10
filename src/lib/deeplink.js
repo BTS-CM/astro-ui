@@ -53,8 +53,21 @@ async function generateDeepLink(chain, nodeURL, opTypes, operations) {
             return reject(error);
         }
 
+        let includesMemos = false;
         const tr = new TransactionBuilder();
         for (let i = 0; i < operations.length; i++) {
+            // Convert the memo message to bytes
+            if (operations[i].memo && operations[i].memo.message) {
+                let encodedMessage;
+                try {
+                    encodedMessage = Buffer.from(operations[i].memo.message, "utf-8");
+                } catch (error) {
+                    console.log({ error, location: "encode memo failed" });
+                    return reject(error);
+                }
+                includesMemos = true;
+                operations[i].memo.message = encodedMessage
+            }
             tr.add_type_operation(opTypes[i], operations[i]);
         }
 
@@ -109,6 +122,7 @@ async function generateDeepLink(chain, nodeURL, opTypes, operations) {
                 chain: chain === "bitshares" ? "BTS" : "BTS_TEST",
                 browser: "web browser",
                 origin: "localhost",
+                memo: includesMemos
             },
         };
 

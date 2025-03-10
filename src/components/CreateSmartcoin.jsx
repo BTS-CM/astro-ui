@@ -1093,7 +1093,6 @@ export default function CreateSmartcoin(properties) {
 
           const _flags = getFlagBooleans(propsAsset.options.flags);
           const _issuer_permissions = getFlagBooleans(propsAsset.options.issuer_permissions);
-          console.log({ _flags, _issuer_permissions });
 
           // Enable-bit permissions
           if (_issuer_permissions.hasOwnProperty("charge_market_fee")) {

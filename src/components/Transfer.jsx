@@ -44,6 +44,7 @@ import { $currentNode } from "@/stores/node.ts";
 import { humanReadableFloat, trimPrice, blockchainFloat } from "@/lib/common";
 
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
+import { createObjectStore } from "@/nanoeffects/Objects.ts";
 
 import { Avatar } from "./Avatar.tsx";
 import AccountSearch from "./AccountSearch.jsx";
@@ -125,7 +126,7 @@ export default function Transfer(properties) {
   useEffect(() => {
     let unsubscribeUserBalances;
 
-    if (usr && usr.id) {
+    if (usr && usr.id && currentNode && assets && assets.length) {
       const userBalancesStore = createUserBalancesStore([
         usr.chain,
         usr.id,
@@ -145,7 +146,26 @@ export default function Transfer(properties) {
     return () => {
       if (unsubscribeUserBalances) unsubscribeUserBalances();
     };
-  }, [usr, balanceCounter]);
+  }, [usr, assets, currentNode, balanceCounter]);
+
+  const [bothUsers, setBothUsers] = useState(false);
+  useEffect(() => {
+    if (usr && usr.chain && currentNode && targetUser) {
+      const userStore = createObjectStore([
+        usr.chain,
+        JSON.stringify([
+          usr.id,
+          targetUser.id,
+        ]),
+        currentNode ? currentNode.url : null,
+      ]);
+      userStore.subscribe(({ data, error, loading }) => {
+        if (data && !error && !loading) {
+          setBothUsers(data);
+        }
+      });
+    }
+  }, [usr, currentNode, targetUser]);
 
   const [foundAsset, setFoundAsset] = useState();
   const found = useMemo(() => {
@@ -522,7 +542,7 @@ export default function Transfer(properties) {
                   )}
                 </form>
               </Form>
-              {showDialog ? (
+              {showDialog && bothUsers ? (
                 <DeepLinkDialog
                   operationNames={["transfer"]}
                   username={usr.username}
@@ -549,7 +569,14 @@ export default function Transfer(properties) {
                         amount: blockchainFloat(transferAmount, foundAsset.precision).toFixed(0),
                         asset_id: foundAsset.id,
                       },
-                      memo: memoContents ?? "",
+                      memo: memoContents
+                        ? { // clear-text until processed by beeteos!
+                            from: bothUsers[0].options.memo_key,
+                            to: bothUsers[1].options.memo_key,
+                            nonce: String(Date.now()),
+                            message: memoContents,
+                        }
+                        : null,
                       extensions: [],
                     },
                   ]}
