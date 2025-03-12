@@ -351,6 +351,26 @@ export default function Home(properties) {
             </ul>
           </HoverCardContent>
         </HoverCard>
+        
+        <HoverCard key="custom_pool_overview">
+          <HoverCardTrigger asChild>
+            <a href="/custom_pool_overview/index.html" style={{ textDecoration: "none" }}>
+              <Card className="h-full hover:shadow-md hover:shadow-black">
+                <CardHeader>
+                  <CardTitle>{t("Home:custom_pool_overview.title")}</CardTitle>
+                  <CardDescription>{t("Home:custom_pool_overview.subtitle")}</CardDescription>
+                </CardHeader>
+              </Card>
+            </a>
+          </HoverCardTrigger>
+          <HoverCardContent className="w-80 text-sm pt-1">
+            <ul className="ml-2 list-disc [&>li]:mt-2">
+              <li>{t("Home:custom_pool_overview.hover1")}</li>
+              <li>{t("Home:custom_pool_overview.hover2")}</li>
+              <li>{t("Home:custom_pool_overview.hover3")}</li>
+            </ul>
+          </HoverCardContent>
+        </HoverCard>
 
         <HoverCard key="deals">
           <HoverCardTrigger asChild>
