@@ -40,6 +40,46 @@ function getTicker (
   });
 }
 
+function getMultipleTickers (
+  chain: string,
+  tradingPairs: string[],
+  specificNode?: string | null
+) {
+  return new Promise(async (resolve, reject) => {
+    let node = specificNode ? specificNode : (chains as any)[chain].nodeList[0].url;
+
+    let currentAPI;
+    try {
+      currentAPI = await Apis.instance(node, true, 4000, { enableDatabase: true, enableHistory: true }, (error: Error) =>
+        console.log({ error })
+      );
+    } catch (error) {
+      console.log({ error });
+      reject(error);
+      return;
+    }
+
+    let marketTickers = {};
+    for (let i = 0; i < tradingPairs.length; i++) {
+      const pair = tradingPairs[i];
+      let _result;
+      try {
+        _result = await currentAPI.db_api().exec("get_ticker", [pair.split("_")[0], pair.split("_")[1]]);
+      } catch (error) {
+        console.log({ error });
+        currentAPI.close();
+        reject(error);
+        return;
+      }
+
+      marketTickers[pair] = _result;
+    }
+
+    currentAPI.close();
+    return resolve(marketTickers);
+  });
+}
+
 function getMarketTradeHistory (
   chain: string,
   base: string,
@@ -168,6 +208,30 @@ const [createTickerStore] = nanoquery({
   },
 });
 
+const [createMultipleTickerStore] = nanoquery({
+  fetcher: async (...args: unknown[]) => {
+    const chain = args[0] as string;
+    const pairs = args[1] as string[];
+
+    let specificNode = args[2] ? args[2] as string : null;
+
+    let response;
+    try {
+      response =  await getMultipleTickers(chain, pairs, specificNode);
+    } catch (error) {
+      console.log({ error });
+      return;
+    }
+
+    if (!response) {
+      console.log(`Failed to fetch multiple tickers`);
+      return;
+    }
+
+    return response;
+  },
+});
+
 const [createMarketTradeHistoryStore] = nanoquery({
   fetcher: async (...args: unknown[]) => {
     const chain = args[0] as string;
@@ -198,5 +262,7 @@ export {
   createMarketTradeHistoryStore,
   getMarketTradeHistory,
   createTickerStore,
+  createMultipleTickerStore,
   getTicker,
+  getMultipleTickers,
 };
