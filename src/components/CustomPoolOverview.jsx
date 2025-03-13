@@ -78,7 +78,7 @@ export default function CustomPoolOverview(properties) {
     }, [_marketSearchBTS, _marketSearchTEST, usr]);
 
     const pools = useMemo(() => {
-        if (!_chain || (!_poolsBTS && !_poolsTEST)) {
+        if (!_chain || !blocklist || (!_poolsBTS && !_poolsTEST)) {
             return [];
         }
 
@@ -93,7 +93,7 @@ export default function CustomPoolOverview(properties) {
         });
         
         return relevantPools;
-    }, [assets, _poolsBTS, _poolsTEST, _chain]);
+    }, [assets, blocklist, _poolsBTS, _poolsTEST, _chain]);
 
     const [usrBalances, setUsrBalances] = useState();
     useEffect(() => {
@@ -157,10 +157,16 @@ export default function CustomPoolOverview(properties) {
     }, [pools, selectedPools, buyingAssetData, sellingAssetData, assets]);
 
     const chosenPools = useMemo(() => {
+        if (!pools || !selectedPools || !selectedPools.length) {
+            return null;
+        }
         return pools.filter((pool) => selectedPools.includes(pool.id));
     }, [pools, selectedPools]);
 
     const chosenPoolSwappableAssets = useMemo(() => {
+        if (!assets || !chosenPools || !chosenPools.length) {
+            return null;
+        }
         const _assets = [];
         chosenPools.forEach((pool) => {
             const assetA = assets.find((asset) => asset.id === pool.asset_a_id);
@@ -271,15 +277,14 @@ export default function CustomPoolOverview(properties) {
 
         const _pools = _tracker.pools.map((poolId) => pools.find((pool) => pool.id === poolId));
         const _uniqueAssets = [];
-        const _uniqueAssetIDs = [];
         
         _pools.forEach((_pool) => {
             const _assetA = assets.find((asset) => asset.id === _pool.asset_a_id);
             const _assetB = assets.find((asset) => asset.id === _pool.asset_b_id);
-            if (_assetA && !_uniqueAssetIDs.includes(_assetA.symbol)) {
+            if (_assetA && !_uniqueAssets.includes(_assetA.symbol)) {
                 _uniqueAssets.push(_assetA.symbol);
             }
-            if (_assetB && !_uniqueAssetIDs.includes(_assetB.symbol)) {
+            if (_assetB && !_uniqueAssets.includes(_assetB.symbol)) {
                 _uniqueAssets.push(_assetB.symbol);
             }
         });
@@ -293,7 +298,7 @@ export default function CustomPoolOverview(properties) {
                 className="grid grid-cols-6 gap-2"
             >
                 <div className="col-span-5">
-                    <a href={`/custom_pool_tracker/index.html?tracker=${_tracker.id}`}>
+                    <a href={`/custom_pool_tracker/index.html?id=${_tracker.id}`}>
                         <Card>
                             <CardHeader className="pt-2 pb-2">
                                 <CardDescription>
@@ -549,87 +554,6 @@ export default function CustomPoolOverview(properties) {
                     </div>
                 </DialogContent>
             </Dialog>
-        </div>
-    );
-};
-
-const TrackerRow = ({ index, style }) => {
-    const _tracker = trackers[_chain][index];
-
-    const _pools = _tracker.pools.map((poolId) => pools.find((pool) => pool.id === poolId));
-    const _uniqueAssets = [];
-    const _uniqueAssetIDs = [];
-    
-    _pools.forEach((_pool) => {
-        const _assetA = assets.find((asset) => asset.id === _pool.asset_a_id);
-        const _assetB = assets.find((asset) => asset.id === _pool.asset_b_id);
-        if (_assetA && !_uniqueAssetIDs.includes(_assetA.id)) {
-            _uniqueAssets.push(_assetA.symbol);
-        }
-        if (_assetB && !_uniqueAssetIDs.includes(_assetB.id)) {
-            _uniqueAssets.push(_assetB.symbol);
-        }
-    });
-
-    const [deletePrompt, setDeletePrompt] = useState(false);
-
-    return (
-        <div
-            style={style}
-            key={`poolTrackerNo${index}`}
-            className="grid grid-cols-6 gap-2"
-        >
-            <div className="col-span-5">
-                <Card>
-                    <CardHeader>
-                        <CardDescription>
-                            <b>{_tracker.name}</b><br/>
-                            <p>{t("CustomPoolOverview:assets")}: {_uniqueAssets.join(', ')}</p>
-                            <p>{t("CustomPoolOverview:pools")}: {_pools.map(x => x.id).join(', ')}</p>
-                        </CardDescription>
-                    </CardHeader>
-                </Card>
-            </div>
-            <div className="flex items-center justify-center">
-                <Dialog
-                    open={deletePrompt}
-                    onOpenChange={setDeletePrompt}
-                >
-                    <DialogTrigger asChild>
-                        <Button
-                            variant="outline"
-                            className="w-3/4"
-                        >
-                            {t("CustomPoolOverview:delete")}
-                        </Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-[375px] bg-white">
-                        <DialogHeader>
-                            <DialogTitle>{t("CustomPoolOverview:areYouSure")}</DialogTitle>
-                        </DialogHeader>
-                        <p>{t("CustomPoolOverview:deleteTracker")}</p>
-                        <div className="grid grid-cols-2 gap-3">
-                            <Button
-                                onClick={() => {
-                                    const updatedTrackers = trackers[_chain].filter((thisTracker) => thisTracker.name !== _tracker.name);
-                                    updateTrackers(_chain, updatedTrackers);
-                                    setDeletePrompt(false);
-                                }}
-                            >
-                                {t("CustomPoolOverview:yes")}
-                            </Button>
-                            <Button
-                                onClick={() => {
-                                    setDeletePrompt(false)
-                                }}
-                                variant="outline"
-                            >
-                                {t("CustomPoolOverview:no")}
-                            </Button>
-                        </div>
-                    </DialogContent>
-                </Dialog>
-            </div>
         </div>
     );
 };
