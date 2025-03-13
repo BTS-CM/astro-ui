@@ -39,12 +39,6 @@ import HoverInfo from "@/components/common/HoverInfo.tsx";
 import BasicAssetDropDownCard from "@/components/Market/BasicAssetDropDownCard.jsx";
 
 export default function CustomPoolOverview(properties) {
-    const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
-    const currentNode = useStore($currentNode);
-
-    const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
-    const blocklist = useSyncExternalStore($blockList.subscribe, $blockList.get, () => true);
-        
     const {
         _assetsBTS,
         _assetsTEST,
@@ -53,6 +47,11 @@ export default function CustomPoolOverview(properties) {
         _marketSearchBTS,
         _marketSearchTEST
     } = properties;
+    
+    const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
+    const currentNode = useStore($currentNode);
+    const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
+    const blocklist = useSyncExternalStore($blockList.subscribe, $blockList.get, () => true);
 
     const _chain = useMemo(() => {
         if (usr && usr.chain) {
@@ -69,6 +68,26 @@ export default function CustomPoolOverview(properties) {
         }
         return [];
     }, [_assetsBTS, _assetsTEST, _chain]);
+
+    const [usrBalances, setUsrBalances] = useState();
+    useEffect(() => {
+      let unsubscribeUserBalances;
+  
+      if (usr && usr.id && assets && assets.length) {
+        const userBalancesStore = createUserBalancesStore([usr.chain, usr.id, currentNode ? currentNode.url : null]);
+  
+        unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
+          if (data && !error && !loading) {
+            const filteredData = data.filter((balance) => assets.find((x) => x.id === balance.asset_id));
+            setUsrBalances(filteredData);
+          }
+        });
+      }
+  
+      return () => {
+        if (unsubscribeUserBalances) unsubscribeUserBalances();
+      };
+    }, [usr, assets]);
 
     const marketSearch = useMemo(() => {
         if (usr && usr.chain && (_marketSearchBTS || _marketSearchTEST)) {
@@ -94,67 +113,12 @@ export default function CustomPoolOverview(properties) {
         
         return relevantPools;
     }, [assets, blocklist, _poolsBTS, _poolsTEST, _chain]);
-
-    const [usrBalances, setUsrBalances] = useState();
-    useEffect(() => {
-      let unsubscribeUserBalances;
-  
-      if (usr && usr.id) {
-        const userBalancesStore = createUserBalancesStore([usr.chain, usr.id, currentNode ? currentNode.url : null]);
-  
-        unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
-          if (data && !error && !loading) {
-            const filteredData = data.filter((balance) => assets.find((x) => x.id === balance.asset_id));
-            setUsrBalances(filteredData);
-          }
-        });
-      }
-  
-      return () => {
-        if (unsubscribeUserBalances) unsubscribeUserBalances();
-      };
-    }, [usr]);
     
     const trackers = useStore($poolTrackers);
     const [modalOpen, setModalOpen] = useState(false);
 
     const [newTrackerTitle, setNewTrackerTitle] = useState('');
     const [selectedPools, setSelectedPools] = useState([]);
-
-    const [sellingAsset, setSellingAsset] = useState(null);
-    const [buyingAsset, setBuyingAsset] = useState(null);
-
-    const buyingAssetData = useMemo(() => {
-        return assets.find((asset) => asset.symbol === buyingAsset);
-    }, [assets, buyingAsset]);
-
-    const sellingAssetData = useMemo(() => {
-        return assets.find((asset) => asset.symbol === sellingAsset);
-    }, [assets, sellingAsset]);
-
-    const remainingPools = useMemo(() => {
-        return pools.filter((pool) => {
-            const assetA = assets.find((asset) => asset.id === pool.asset_a_id);
-            const assetB = assets.find((asset) => asset.id === pool.asset_b_id);
-    
-            if (!assetA || !assetB) {
-                return false;
-            }
-    
-            const matchesBuyingAsset = buyingAssetData ? (assetA.symbol === buyingAssetData.symbol || assetB.symbol === buyingAssetData.symbol) : true;
-            const matchesSellingAsset = sellingAssetData ? (assetA.symbol === sellingAssetData.symbol || assetB.symbol === sellingAssetData.symbol) : true;
-    
-            if (buyingAssetData && !sellingAssetData) {
-                return !selectedPools.includes(pool.id) && matchesBuyingAsset;
-            }
-    
-            if (!buyingAssetData && sellingAssetData) {
-                return !selectedPools.includes(pool.id) && matchesSellingAsset;
-            }
-    
-            return !selectedPools.includes(pool.id) && matchesBuyingAsset && matchesSellingAsset;
-        });
-    }, [pools, selectedPools, buyingAssetData, sellingAssetData, assets]);
 
     const chosenPools = useMemo(() => {
         if (!pools || !selectedPools || !selectedPools.length) {
@@ -181,6 +145,87 @@ export default function CustomPoolOverview(properties) {
         return _assets;
     }, [assets, chosenPools]);
 
+    const [sellingAsset, setSellingAsset] = useState(null);
+    const [buyingAsset, setBuyingAsset] = useState(null);
+
+    const buyingAssetData = useMemo(() => {
+        if (!assets || !buyingAsset) {
+            return null;
+        }
+        return assets.find((asset) => asset.symbol === buyingAsset);
+    }, [assets, buyingAsset]);
+
+    const sellingAssetData = useMemo(() => {
+        if (!assets || !sellingAsset) {
+            return null;
+        }
+        return assets.find((asset) => asset.symbol === sellingAsset);
+    }, [assets, sellingAsset]);
+
+    const remainingPools = useMemo(() => {
+        if (!pools || !assets) {
+            return null;
+        }
+
+        let _remainingPools = pools;
+
+        if (buyingAssetData || sellingAssetData) {
+            _remainingPools = pools.filter((pool) => {
+                const assetA = assets.find((asset) => asset.id === pool.asset_a_id);
+                const assetB = assets.find((asset) => asset.id === pool.asset_b_id);
+        
+                if (!assetA || !assetB) {
+                    return false;
+                }
+        
+                const matchesBuyingAsset = buyingAssetData
+                    ? (assetA.symbol === buyingAssetData.symbol || assetB.symbol === buyingAssetData.symbol)
+                    : true;
+    
+                const matchesSellingAsset = sellingAssetData
+                    ? (assetA.symbol === sellingAssetData.symbol || assetB.symbol === sellingAssetData.symbol)
+                    : true;
+        
+                if (buyingAssetData && !sellingAssetData) {
+                    return !selectedPools.includes(pool.id) && matchesBuyingAsset;
+                }
+        
+                if (!buyingAssetData && sellingAssetData) {
+                    return !selectedPools.includes(pool.id) && matchesSellingAsset;
+                }
+        
+                return !selectedPools.includes(pool.id) && matchesBuyingAsset && matchesSellingAsset;
+            });
+        }
+        
+        if (chosenPoolSwappableAssets && chosenPoolSwappableAssets.length >= 4) {
+            // only show pools which swap the max 5 trackable assets
+            _remainingPools = _remainingPools.filter((pool) => {
+                const assetA = assets.find((asset) => asset.id === pool.asset_a_id);
+                const assetB = assets.find((asset) => asset.id === pool.asset_b_id);
+                if (!assetA || !assetB) {
+                    return false;
+                }
+                return chosenPoolSwappableAssets.length >= 5
+                    ? chosenPoolSwappableAssets.includes(assetA.symbol) && chosenPoolSwappableAssets.includes(assetB.symbol)
+                    : chosenPoolSwappableAssets.includes(assetA.symbol) || chosenPoolSwappableAssets.includes(assetB.symbol);
+            })
+        }
+
+        if (selectedPools && selectedPools.length) {
+            _remainingPools = _remainingPools.filter((pool) => !selectedPools.includes(pool.id));
+        }
+
+        return _remainingPools;
+    }, [
+        pools,
+        assets,
+        selectedPools,
+        buyingAssetData,
+        sellingAssetData,
+        chosenPoolSwappableAssets
+    ]);
+
     const PoolRow = ({ index, style }) => {
         const pool = remainingPools[index];
         const assetA = assets.find((asset) => asset.id === pool.asset_a_id);
@@ -197,10 +242,10 @@ export default function CustomPoolOverview(properties) {
                     onClick={() => {
                         if (!selectedPools.includes(pool.id)) {
                             const newAssets = [assetA.symbol, assetB.symbol].filter(
-                                (symbol) => !chosenPoolSwappableAssets.includes(symbol)
+                                (symbol) => !chosenPoolSwappableAssets || !chosenPoolSwappableAssets.includes(symbol)
                             );
-                
-                            if (chosenPoolSwappableAssets.length + newAssets.length > 5) {
+
+                            if (chosenPoolSwappableAssets && chosenPoolSwappableAssets.length + newAssets.length > 5) {
                                 console.log("Unable to track more than 5 swappable assets.");
                                 return; // can't have more than 5!
                             }

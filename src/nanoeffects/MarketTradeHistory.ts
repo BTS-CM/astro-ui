@@ -211,7 +211,7 @@ const [createTickerStore] = nanoquery({
 const [createMultipleTickerStore] = nanoquery({
   fetcher: async (...args: unknown[]) => {
     const chain = args[0] as string;
-    const pairs = args[1] as string[];
+    const pairs = JSON.parse(args[1] as string);
 
     let specificNode = args[2] ? args[2] as string : null;
 

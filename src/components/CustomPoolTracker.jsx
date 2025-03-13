@@ -42,6 +42,7 @@ import { createEveryLiquidityPoolStore } from "@/nanoeffects/LiquidityPools.js";
 
 import { createMultipleTickerStore } from "@/nanoeffects/MarketTradeHistory.js";
 import { createAssetCallOrdersStore } from "@/nanoeffects/AssetCallOrders.ts";
+import { symbol } from "astro:schema";
 
 const convertToSatoshis = (value) => value.toString().includes('e-') ? `${(value * 1e8).toFixed(0)} sats` : value.toString();
 
@@ -78,13 +79,14 @@ const calculateSmartcoinPrice = (smartcoin, usdPrice, quotePrecision, basePrecis
   return usdPrice ? (_price / usdPrice).toFixed(4) : _price;
 };
 
-const calculateStaked = (pools, ownerships, assetId) => {
+const calculateStaked = (allUniqueAssets, pools, ownerships, assetId) => {
   if (!pools || !ownerships || !assetId) {
     return 0;
   }
 
   let _calculated = pools.reduce((acc, val) => {
-    const ownership = ownerships[`ownership${val.share_asset.replace("1.3.", "")}`];
+    const _asset = allUniqueAssets.find((x) => x.id === val.share_asset);
+    const ownership = ownerships[_asset.symbol];
     return ownership
       ? acc + parseInt(val.asset_a === assetId ? val.balance_a : val.balance_b) * ownership
       : acc;
@@ -106,8 +108,8 @@ export default function CustomPoolTracker(properties) {
     _assetsTEST,
     _poolsBTS,
     _poolsTEST,
-    _marketSearchBTS,
-    _marketSearchTEST
+    //_marketSearchBTS,
+    //_marketSearchTEST
   } = properties;
 
   const _chain = useMemo(() => {
@@ -216,7 +218,6 @@ export default function CustomPoolTracker(properties) {
       const urlSearchParams = new URLSearchParams(window.location.search);
       const params = Object.fromEntries(urlSearchParams.entries());
       const id = params.id;
-      console.log({params})
 
       if (!id) {
         console.log("Credit offer parameter not found");
@@ -355,7 +356,7 @@ export default function CustomPoolTracker(properties) {
   ]);
 
   useEffect(() => {
-    if (requestResponse) {
+    if (chosenPools && requestResponse) {
       // liquidity pool data
       const lpLength = chosenPools.length;
       const liquidityPoolSlice = requestResponse.slice(0, lpLength);
@@ -403,11 +404,9 @@ export default function CustomPoolTracker(properties) {
       setSmartcoinData(_sc);
 
       const _backingAssetIDs = [...new Set(_smartcoinData.map((x) => x.options.short_backing_asset))];
-      //console.log({ _backingAssetIDs, _smartcoinData });
       setBackingAssets(assets.filter((x) => _backingAssetIDs.includes(x.id)));
     }
-  }, [requestResponse]);
-
+  }, [chosenPools, requestResponse]);
 
   const [backingAssetDD, setBackingAssetDD] = useState();
   useEffect(() => {
@@ -457,108 +456,112 @@ export default function CustomPoolTracker(properties) {
       _combined[key] = backingAssetDD[key];
     });
 
-    console.log({
-      _combined,
-      dynamicData,
-      backingAssetDD
-    })
-
     return _combined;
   }, [dynamicData, backingAssetDD]);
 
-  const balances = useMemo(() => {
-    if (!usrBalances || !usrBalances.length) {
+  const uniqueAssets = (assets) => {
+    const seen = new Set();
+    return assets.filter((asset) => {
+      const duplicate = seen.has(asset.id);
+      seen.add(asset.id);
+      return !duplicate;
+    });
+  };
+
+  const allUniqueAssets = useMemo(() => {
+    if (!assets || !swappableAssets || !poolShareAssets) {
       return null;
     }
 
-    let _targetIDs = [];
+    let _inputs = [];
     if (swappableAssets) {
-      _targetIDs = [..._targetIDs, ...swappableAssets.map((x) => x.id)];
+      _inputs = _inputs.concat(swappableAssets);
     }
     if (poolShareAssets) {
-      _targetIDs = [..._targetIDs, ...poolShareAssets.map((x) => x.id)];
+      _inputs = _inputs.concat(poolShareAssets);
     }
     if (backingAssets) {
-      _targetIDs = [..._targetIDs, ...backingAssets.map((x) => x.id)];
+      _inputs = _inputs.concat(backingAssets);
     }
-    let _ids = [...new Set(_targetIDs)];
 
+    return uniqueAssets(_inputs);
+  }, [assets, swappableAssets, poolShareAssets, backingAssets]);
+
+  const balances = useMemo(() => {
+    if (!allUniqueAssets || !allUniqueAssets.length) {
+      return null;
+    }
+
+    if (!usrBalances || !usrBalances.length) {
+      return [];
+    }
+
+    let _targetIDs = allUniqueAssets.map((x) => x.id);
+    let _ids = [...new Set(_targetIDs)];
 
     let _result = {};
     _ids.forEach((id) => {
       const balance = usrBalances.find((x) => x.asset_id === id);
+      const _asset = allUniqueAssets.find((x) => x.id === id);
       if (balance) {
-        const key = `balance${id.replace("1.3.", "")}`;
-        _result[key] = balance;
+        _result[_asset.symbol] = balance;
       }
     });
 
-    console.log({
-      location: "balances",
-      _result,
-      _targetIDs,
-      _ids
-    })
-
     return _result;
-  }, [usrBalances, swappableAssets, poolShareAssets, backingAssets]);
+  }, [usrBalances, allUniqueAssets]);
 
   const ownerships = useMemo(() => {
-    if (!combinedAssetDynamicData) {
+    if (!balances || !allUniqueAssets || !combinedAssetDynamicData) {
       return null;
     }
     
     const calculateOwnership = (supply, balance) => {
-      return supply && balance && balance.amount ? parseInt(balance.amount) / supply : 0;
+      return supply && balance
+        ? parseInt(balance) / parseInt(supply)
+        : 0;
     };
 
     let ownerships = {};
     // iterate over keys
     Object.keys(combinedAssetDynamicData).forEach((key) => {
-      const _asset = assets.find((x) => x.symbol === key);
-      const _balance = balances[`balance${key.replace("1.3.", "")}`] ?? null;
-      const _owner = `ownership${key.replace("2.3.", "")}`;
-      ownerships[_owner] = calculateOwnership(
+      const _asset = allUniqueAssets.find((x) => x.symbol === key);
+      const _balance = balances[_asset.symbol] ?? null;
+      ownerships[_asset.symbol] = calculateOwnership(
         combinedAssetDynamicData[key].current_supply,
         _balance ? _balance.amount : 0
       );
     });
 
-    console.log({ownerships, balances})
-
     return ownerships;
-  }, [combinedAssetDynamicData, balances]);
-/*
-  
+  }, [
+    balances,
+    allUniqueAssets,
+    combinedAssetDynamicData
+  ]);
+
   // Summarizing the amount of each swappable asset staked in many pools
   const stakedAssets = useMemo(() => {
-    if (!liquidityPools || !swappableAssets || !ownerships) {
+    if (!liquidityPools || !swappableAssets || !ownerships || !allUniqueAssets) {
       return null;
     }
 
     let _stakedAssets = {};
     swappableAssets.forEach((asset) => {
-      _stakedAssets[`staked${asset.id.replace("1.3.", "")}`] = humanReadableFloat(
-        calculateStaked(
-          liquidityPools.filter((x) => x.asset_a === asset.id || x.asset_b === asset.id),
-          ownerships,
-          asset.id
-        ),
-        asset.precision
-      );
+      const filteredPools = liquidityPools.filter((x) => x.asset_a === asset.id || x.asset_b === asset.id);
+      const _stakedAmount = calculateStaked(allUniqueAssets, filteredPools, ownerships, asset.id);
+      const _finalAmount = humanReadableFloat(_stakedAmount, asset.precision);
+      _stakedAssets[asset.symbol] = _finalAmount;
     });
 
-    console.log({_stakedAssets})
-
     return _stakedAssets;
-  }, [liquidityPools, swappableAssets, ownerships]);
+  }, [liquidityPools, swappableAssets, ownerships, allUniqueAssets]);
 
   const psaDD = useMemo(() => {
     if (!combinedAssetDynamicData || !poolShareAssets) {
       return null;
     }
     const _result = poolShareAssets.map(x => x.symbol).map((x) => combinedAssetDynamicData[x]);
-    console.log({_result, location: "psaDD"})
     return _result;
   }, [combinedAssetDynamicData, poolShareAssets]);
 
@@ -578,14 +581,13 @@ export default function CustomPoolTracker(properties) {
           const userCallOrders = {};
           data.forEach((x) => {
             const _callOrders = Object.values(x)[0];
-            const userCallOrders = _callOrders.find((y) => y.borrower === usr.id);
-            
+            const _foundCallOrders = _callOrders.find((y) => y.borrower === usr.id);
+
             const _key = Object.keys(data[0])[0];
             const _refAsset = assets.find((x) => x.id === _key);
-            userCallOrders[_refAsset.symbol] = userCallOrders;
+            userCallOrders[_refAsset.symbol] = _foundCallOrders;
           });
           setSmartcoinCallOrders(userCallOrders);
-          console.log({ userCallOrders, _inputs });
         } else if (error) {
           console.log({error, location: "smartcoinCallOrders"});
         }
@@ -603,44 +605,38 @@ export default function CustomPoolTracker(properties) {
     if (
       usr && currentNode &&
       assets && assets.length &&
-      swappableAssets && poolShareAssets && backingAssets
+      swappableAssets && poolShareAssets
     ) {
+      let allTradingPairs = [];
 
-      const assetTradingPairs = swappableAssets.map((x) => {
+      swappableAssets.forEach((x) => {
         const _coreAsset = usr.chain === "bitshares" ? "BTS" : "TEST";
         const _coreTradeAsset = usr.chain === "bitshares" ? "HONEST.USD" : "NFTEA"; // TODO: Replace with other assets?
-        return `${x.symbol}_${x.symbol !== _coreAsset ? _coreAsset : _coreTradeAsset}`;
+        allTradingPairs.push(`${x.symbol}_${x.symbol !== _coreAsset ? _coreAsset : _coreTradeAsset}`);
       });
-
-      const poolTradingPairs = poolShareAssets.map(
-        (x) => `${x.symbol}_${usr.chain === "bitshares" ? "BTS" : "TEST"}`
-      );
       
-      const backingAssetPairs = backingAssets.map((x) => {
-        const _coreAsset = usr.chain === "bitshares" ? "BTS" : "TEST";
-        const _coreTradeAsset = usr.chain === "bitshares" ? "HONEST.USD" : "NFTEA"; // TODO: Replace with other assets?
-        return `${x.symbol}_${x.symbol !== _coreAsset ? _coreAsset : _coreTradeAsset}`;
+      poolShareAssets.forEach((x) => {
+        allTradingPairs.push(`${x.symbol}_${usr.chain === "bitshares" ? "BTS" : "TEST"}`);
       });
-
-      console.log({
-        assetTradingPairs,
-        poolTradingPairs,
-        backingAssetPairs
-      })
+      
+      if (backingAssets) {
+        backingAssets.forEach((x) => {
+          const _coreAsset = usr.chain === "bitshares" ? "BTS" : "TEST";
+          const _coreTradeAsset = usr.chain === "bitshares" ? "HONEST.USD" : "NFTEA"; // TODO: Replace with other assets?
+          allTradingPairs.push(`${x.symbol}_${x.symbol !== _coreAsset ? _coreAsset : _coreTradeAsset}`);
+        });
+      }
 
       const assetTickerStore = createMultipleTickerStore([
         usr.chain,
-        [...new Set([
-          ...assetTradingPairs,
-          ...poolTradingPairs,
-          ...backingAssetPairs
-        ])],
+        JSON.stringify([...new Set(allTradingPairs)]),
         currentNode.url
       ]);
 
       unsubscribeStore = assetTickerStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
           // { "BTS_HONEST.USD": { tickerdata } }
+          //console.log({data})
           setAllAssetsMarketTickers(data);
         } else if (error) {
           console.log({error, location: "assetTickerStore"});
@@ -651,102 +647,149 @@ export default function CustomPoolTracker(properties) {
     return () => {
       if (unsubscribeStore) unsubscribeStore();
     }
-  }, [usr, swappableAssets, poolShareAssets , backingAssets, currentNode]);
+  }, [
+    usr,
+    currentNode,
+    assets,
+    swappableAssets,
+    poolShareAssets,
+    backingAssets
+  ]);
 
-  const [allAssetPrices, setAllAssetPrices] = useState();
-  const [allSettlementPrices, setAllSettlementPrices] = useState();
+  const [allAssetPrices, setAllAssetPrices] = useState({});
+  const [allSettlementPrices, setAllSettlementPrices] = useState({});
+  
   useEffect(() => {
-    if (!allAssetsMarketTickers) {
-      return null;
+    if (!allAssetsMarketTickers || !smartcoinData || !backingAssets) {
+      return;
     }
-
-    const honestUSDPrice = calculateSmartcoinPrice( // honest settlement price in bts
-      smartcoinData["HONEST.USD"], // smartcoin
-      null,               // usd price
-      5,                  // quote precision
-      4,                  // base precision
+  
+    const honestUSDPrice = calculateSmartcoinPrice(
+      smartcoinData["HONEST.USD"],
+      null,
+      5,
+      4
     );
-
-    let _prices = {};
-    let _settlementPrices = {};
+  
+    const _prices = {};
+    const _settlementPrices = {};
+  
     Object.keys(allAssetsMarketTickers).forEach((key) => {
       const _ticker = allAssetsMarketTickers[key];
       const _asset = assets.find((x) => x.symbol === key.split("_")[0]);
+  
+      if (!_asset) {
+        console.warn(`Asset not found for key: ${key}`);
+        return;
+      }
+  
       if (_asset.bitasset_data_id) {
-        // smartcoin
         const _bitassetData = smartcoinData[_asset.symbol];
         const _backingAssetID = _bitassetData.options.short_backing_asset;
         const _backingAsset = backingAssets.find((x) => x.id === _backingAssetID);
+  
+        if (!_backingAsset) {
+          console.warn(`Backing asset not found for asset: ${_asset.symbol}`);
+          return;
+        }
+  
         _settlementPrices[_asset.symbol] = calculateSmartcoinPrice(
-          _bitassetData,            // smartcoin
+          _bitassetData,
           null,
-          _backingAsset.precision,  // quote precision (backing | trading pair)
-          _asset.precision,         // base precision (smartcoin)
-        )
-
-        _prices[_asset.symbol] = calculateSmartcoinPrice( // honest settlement price in bts
-          smartcoinData[_asset.symbol],       // smartcoin
-          _asset.symbol !== "HONEST.USD"
-            ? honestUSDPrice                  // usd price
-            : null,                           
-          _backingAsset.precision,            // quote precision
-          _asset.precision,                   // base precision
-        )
+          _backingAsset.precision,
+          _asset.precision
+        );
+  
+        _prices[_asset.symbol] = {
+          price: parseFloat(
+              calculateSmartcoinPrice(
+              _bitassetData,
+              _asset.symbol !== "HONEST.USD" ? honestUSDPrice : null,
+              _backingAsset.precision,
+              _asset.precision
+            )
+          ),
+          inUSD: _asset.symbol !== "HONEST.USD" ? true : false
+        };
       } else {
-        // non smartcoin
         if (_asset.symbol === "BTS") {
-          _prices["BTS"] = (1 / honestUSDPrice).toFixed(4);
+          _prices[_asset.symbol] = {
+            price: _ticker.latest && parseFloat(_ticker.latest) > 0
+              ? parseFloat((1 / parseFloat(_ticker.latest)).toFixed(4))
+              : 0,
+            inUSD: true
+          }
         } else {
-          _prices[key] = (_ticker.latest * (1 / honestUSDPrice)).toFixed(_asset.precision);
+          _prices[_asset.symbol] = {
+            price: _ticker.latest && parseFloat(_ticker.latest) > 0
+              ? parseFloat(1 / parseFloat(_ticker.latest)).toFixed(_asset.precision)
+              : 0,
+            inUSD: false
+          }
         }
       }
     });
-
-    console.log({_prices, _settlementPrices})
-
+    
     setAllAssetPrices(_prices);
     setAllSettlementPrices(_settlementPrices);
-  }, [allAssetsMarketTickers, swappableAssets, poolShareAssets, backingAssets]);
-
+  }, [allAssetsMarketTickers, smartcoinData, backingAssets, assets]);
+  
   let [totalBalances, setTotalBalances] = useState();
   useEffect(() => {
-    if (!swappableAssets || !poolShareAssets || !backingAssets || !assets) {
+    if (
+      !swappableAssets || !poolShareAssets || !assets) {
       return;
     }
 
-    let allAssetIDs = [...new Set([
-      ...swappableAssets.map((x) => x.id),
-      ...poolShareAssets.map((x) => x.id),
-      ...backingAssets.map((x) => x.id)
-    ])];
+    let _assetIDs = [];
+    _assetIDs = _assetIDs.concat(swappableAssets.map((x) => x.id));
+    _assetIDs = _assetIDs.concat(poolShareAssets.map((x) => x.id));
+
+    if (backingAssets && backingAssets.length) {
+      _assetIDs = _assetIDs.concat(backingAssets.map((x) => x.id));
+    }
+
+    let allAssetIDs = [...new Set(_assetIDs)];
 
     let _totalBalances = {};
     allAssetIDs.forEach((id) => {
       const _asset  = assets.find((x) => x.id === id);
-      const key = `balance${id.replace("1.3.", "")}`;
-      if (balances && balances[key]) {
-        _totalBalances[_asset.symbol] = balances[key];
+
+      // Check liquid balances
+      if (balances && balances[_asset.symbol]) {
+        const _liquidAmount = humanReadableFloat(
+          balances[_asset.symbol].amount,
+          _asset.precision 
+        );
+        _totalBalances[_asset.symbol] = _liquidAmount;
       }
-      if (stakedAssets && stakedAssets[`staked${id.replace("1.3.", "")}`]) {
-        const _stakedAmount = stakedAssets[`balance${id.replace("1.3.", "")}`]
+      
+      // Check balance staked in liquidity pools
+      if (stakedAssets && stakedAssets[_asset.symbol]) {
+        const _stakedAmount = parseFloat(stakedAssets[_asset.symbol]);
         _totalBalances[_asset.symbol] = _totalBalances[_asset.symbol]
           ? _totalBalances[_asset.symbol] + _stakedAmount
           : _stakedAmount;
       }
+      
+      // Check balance held in collateral positions
       if (smartcoinCallOrders && smartcoinCallOrders[_asset.symbol]) {
-        const smartcoinCollateral = humanReadableFloat(
-          smartcoinCallOrders[_asset.symbol]
-            ? smartcoinCallOrders[_asset.symbol].collateral
-            : 0,
-          _precision
+        const _currentSmartcoin = smartcoinData[_asset.symbol];
+        const _backingAsset = assets.find((x) => x.id === _currentSmartcoin.options.short_backing_asset);
+        const smartcoinCollateral = parseFloat(
+          humanReadableFloat(
+            smartcoinCallOrders[_asset.symbol]
+              ? smartcoinCallOrders[_asset.symbol].collateral
+              : 0,
+            _backingAsset.precision
+          )
         );
-        _totalBalances[_asset.symbol] = _totalBalances[_asset.symbol]
-          ? _totalBalances[_asset.symbol] + smartcoinCollateral
+        _totalBalances[_backingAsset.symbol] = _totalBalances[_backingAsset.symbol]
+          ? _totalBalances[_backingAsset.symbol] + smartcoinCollateral
           : smartcoinCollateral;
       }
     });
     setTotalBalances(_totalBalances);
-    console.log({_totalBalances});
   }, [
     swappableAssets,
     poolShareAssets,
@@ -756,48 +799,54 @@ export default function CustomPoolTracker(properties) {
     stakedAssets,
     smartcoinCallOrders
   ]);
-  */
 
-  /*
-  const finalUSD = useMemo(() => {
+  const finalBalanceUSDValue = useMemo(() => {
     let _total = 0;
+  
+    if (totalBalances && allAssetPrices) {
+      const honestUSDPrice = allAssetPrices["HONEST.USD"]
+        ? parseFloat(allAssetPrices["HONEST.USD"].price)
+        : 0.001; // should never occur
+  
+      const btsPrice = allAssetPrices["BTS"]
+        ? parseFloat(allAssetPrices["BTS"].price)
+        : parseFloat((1 / honestUSDPrice).toFixed(4));
+  
+      Object.keys(totalBalances).forEach((key) => {
+        const assetPrice = allAssetPrices[key];
+        const balance = totalBalances[key];
+  
+        if (assetPrice && balance) {
+          const price = parseFloat(assetPrice.price);
+          const balanceValue = parseFloat(balance);
+  
+          if (!isNaN(price) && !isNaN(balanceValue)) {
+            if (assetPrice.inUSD && balanceValue && price) {
+              _total += balanceValue * price; // in USD
+            }
+            
+            if (!assetPrice.inUSD && balanceValue && price) {
+              _total += (balanceValue * price) / honestUSDPrice; // BTS -> USD
+            }
+          }
+        }
+      });
+    }
+  
+    const _finalAmount = _total.toFixed(4);
+    /*
+    console.log({
+      finalBalanceUSDValue: _finalAmount,
+      totalBalances,
+      allAssetPrices,
+      allSettlementPrices
+    });
+    */
+  
+    return _finalAmount;
+  }, [totalBalances, allAssetPrices, allSettlementPrices]);
 
-    if (totalBTS && btsPrice) {
-      _total += totalBTS * btsPrice;
-    }
-    if (totalHonestMoney && honestMoneyPrice && honestMoneyPrice.latest && btsPrice) {
-      _total += totalHonestMoney * honestMoneyPrice.latest * btsPrice;
-    }
-    if (totalHonestUSD) {
-      _total += totalHonestUSD;
-    }
-    if (totalHonestBTC && honestBTCPrice) {
-      _total += totalHonestBTC * honestBTCPrice;
-    }
-    if (totalHonestXAU && honestXAUPrice) {
-      _total += totalHonestXAU * honestXAUPrice;
-    }
-
-    return _total.toFixed(4);
-  }, [
-    totalBalances,
-    btsPrice,
-    totalHonestMoney,
-    honestMoneyPrice,
-    totalHonestUSD,
-    totalHonestBTC,
-    honestBTCPrice,
-    totalHonestXAU,
-    honestXAUPrice
-  ]);
-  */
-
-  /*
   const featuredPoolRow = ({ index, style }) => {
-    if (!liquidityPools || !dynamicData || !psaDD) {
-      return null;
-    }
-
     let res = liquidityPools[index];
 
     if (!res) {
@@ -806,6 +855,7 @@ export default function CustomPoolTracker(properties) {
 
     const _currentPSA = poolShareAssets.find((x) => x.id === res.share_asset);
     const _psaDD = psaDD.find((x) => x.id === res.share_asset.replace("1.3.", "2.3."));
+
     const _psaBalance = usrBalances && usrBalances.length
       ? usrBalances.find((x) => x.asset_id === res.share_asset)
       : null;
@@ -813,8 +863,8 @@ export default function CustomPoolTracker(properties) {
     const _poolAssetA = swappableAssets.find((x) => x.id === res.asset_a);
     const _poolAssetB = swappableAssets.find((x) => x.id === res.asset_b);
 
-    const _assetAPrice = allAssetPrices[_poolAssetA.symbol];
-    const _assetBPrice = allAssetPrices[_poolAssetB.symbol];
+    const _assetAPrice = allAssetPrices[_poolAssetA.symbol]?.price || 0;
+    const _assetBPrice = allAssetPrices[_poolAssetB.symbol]?.price || 0;
 
     const _amountA = humanReadableFloat(res.balance_a, _poolAssetA.precision);
     const _amountB = humanReadableFloat(res.balance_b, _poolAssetB.precision);
@@ -856,8 +906,6 @@ export default function CustomPoolTracker(properties) {
       : 0;
 
     const smartcoinSymbols = swappableAssets.filter((x) => x.bitasset_data_id).map((x) => x.symbol);
-
-    return <p>hellooo</p>
 
     return (
       <div style={{ ...style }} key={`poolRow-${res.id}`} className="grid grid-cols-12 text-xs border border-gray-300">
@@ -1069,9 +1117,6 @@ export default function CustomPoolTracker(properties) {
       </div>
     );
   };
-  */
-
-  return <p>testing...</p>
 
   return (
     <>
@@ -1085,7 +1130,10 @@ export default function CustomPoolTracker(properties) {
             <CardContent>
               
               {
-                liquidityPools && liquidityPools.length
+                liquidityPools && liquidityPools.length &&
+                swappableAssets && swappableAssets.length &&
+                allAssetPrices && 
+                psaDD && lpTradingVolumes
                   ? <>
                       <div className={`grid grid-cols-${swappableAssets ? swappableAssets.length + 7 : 0 + 7} text-xs`}>
                         <div className="text-center">{t("CustomPoolTracker:pool")}</div>
