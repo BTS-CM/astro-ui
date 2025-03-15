@@ -32,5 +32,7 @@
     "swappableAssets": "교환 가능한 자산",
     "poolShareAssets": "수영장 공유 자산",
     "assetAQty": "자산 수량",
-    "assetBQty": "자산 B 수량"
+    "assetBQty": "자산 B 수량",
+    "takerFee": "테이커 요금",
+    "withdrawalFee": "인출 수수료"
 }

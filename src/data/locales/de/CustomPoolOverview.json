@@ -32,5 +32,7 @@
     "swappableAssets": "Swappbare Vermögenswerte",
     "poolShareAssets": "Poolanteils -Vermögen",
     "assetAQty": "Asset eine Menge",
-    "assetBQty": "Asset B -Menge"
+    "assetBQty": "Asset B -Menge",
+    "takerFee": "Takergebühr",
+    "withdrawalFee": "Auszahlungsgebühr"
 }

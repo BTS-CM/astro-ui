@@ -32,5 +32,7 @@
     "swappableAssets": "สินทรัพย์ที่เปลี่ยนได้",
     "poolShareAssets": "สินทรัพย์ส่วนแบ่งพูล",
     "assetAQty": "สินทรัพย์ปริมาณ",
-    "assetBQty": "ปริมาณสินทรัพย์ B"
+    "assetBQty": "ปริมาณสินทรัพย์ B",
+    "takerFee": "ค่าธรรมเนียมผู้รับ",
+    "withdrawalFee": "ค่าธรรมเนียมการถอน"
 }

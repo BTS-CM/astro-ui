@@ -32,5 +32,7 @@
     "swappableAssets": "Activos ajustables",
     "poolShareAssets": "Activos para compartir la piscina",
     "assetAQty": "Activo una cantidad",
-    "assetBQty": "Cantidad del activo B"
+    "assetBQty": "Cantidad del activo B",
+    "takerFee": "Tarifa de tomador",
+    "withdrawalFee": "Tarifa de retiro"
 }

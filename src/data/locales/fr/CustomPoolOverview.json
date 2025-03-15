@@ -32,5 +32,7 @@
     "swappableAssets": "Actifs swappables",
     "poolShareAssets": "Actifs de partage de pool",
     "assetAQty": "Asset une quantité",
-    "assetBQty": "Asset B Quantité"
+    "assetBQty": "Asset B Quantité",
+    "takerFee": "Frais de preuve",
+    "withdrawalFee": "Frais de retrait"
 }

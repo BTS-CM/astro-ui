@@ -32,5 +32,7 @@
     "swappableAssets": "Ativos trocáveis",
     "poolShareAssets": "Pool Share ativos",
     "assetAQty": "Ativo uma quantidade",
-    "assetBQty": "Quantidade do ativo B."
+    "assetBQty": "Quantidade do ativo B.",
+    "takerFee": "Taxa de tomador",
+    "withdrawalFee": "Taxa de retirada"
 }

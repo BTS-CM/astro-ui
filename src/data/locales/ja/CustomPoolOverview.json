@@ -32,5 +32,7 @@
     "swappableAssets": "スワップ可能な資産",
     "poolShareAssets": "プール共有資産",
     "assetAQty": "数量の資産",
-    "assetBQty": "資産B量"
+    "assetBQty": "資産B量",
+    "takerFee": "テイカー料金",
+    "withdrawalFee": "引き出し料"
 }

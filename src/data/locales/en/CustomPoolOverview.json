@@ -32,5 +32,7 @@
     "swappableAssets": "Swappable assets",
     "poolShareAssets": "Pool share assets",
     "assetAQty": "Asset A Quantity",
-    "assetBQty": "Asset B Quantity"
+    "assetBQty": "Asset B Quantity",
+    "takerFee": "Taker Fee",
+    "withdrawalFee": "Withdrawal Fee"
 }
