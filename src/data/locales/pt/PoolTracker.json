@@ -24,5 +24,7 @@
     "borrow": "Emprestar piscina compartilhar ativos",
     "borrowAsset": "Emprestar {{asset}}",
     "createDebt": "Criar posição da dívida",
-    "psa": "Pool Share Asset"
+    "psa": "Ativo de ação de pool",
+    "customTitle": "Rastreador de pool de liquidez personalizado: {{name}}",
+    "customDescription": "Rastreie seus pools de liquidez favoritos com facilidade!"
   }

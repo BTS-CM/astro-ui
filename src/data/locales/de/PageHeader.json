@@ -1,5 +1,7 @@
 {
   "poolTracker": "Ausgewählter Poolüberblick",
+  "customPoolTracker": "Benutzerdefinierte Pool-Tracker",
+  "pools": "Liquiditätspools",
   "assetCreation": "Vermögenserstellung",
   "welcomeMessage": "Willkommen zu ",
   "uiName": "Bitshares Beet Astro-Benutzeroberfläche",

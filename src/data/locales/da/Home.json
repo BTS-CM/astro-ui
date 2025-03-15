@@ -193,5 +193,18 @@
     "hover1": "Låne aktiver fra en samme T-fond.",
     "hover2": "Handel disse samme-T-midler på DEX.",
     "hover3": "Tilbagebetale de lånte aktiver."
+  },
+  "custom_pool_tracker": {
+    "title": "📊 Likviditetspool tracker",
+    "subtitle": "Spor dine foretrukne likviditetsbassiner let!",
+    "hover1": "Konfigurer din egen brugerdefinerede likviditetspuls tracker.",
+    "hover2": "Spor op til 5 byttelige aktiver."
+  },
+  "pools": {
+    "title": "📊 Likviditetsbassiner",
+    "subtitle": "Se og administrer dine likviditetspooler",
+    "hover1": "Se dine likviditetspooler.",
+    "hover2": "Tilføj eller fjern likviditeten fra dine puljer.",
+    "hover3": "Handelspoolsandele på børsen."
   }
 }

@@ -41,13 +41,20 @@ export default function PageFooter(properties) {
             gradient
             hyperlink={`https://astro.build/`}
           />
-          {" & "}
+          {", "}
           <ExternalLink
             type="text"
             text="React"
             gradient
             hyperlink={`https://react.dev/`}
-          />.
+          />
+          {" & "}
+          <ExternalLink
+            type="text"
+            text="Electron"
+            gradient
+            hyperlink={`https://www.electronjs.org/`}
+          />
         </h4>
         
         <h3 className="text-muted-foreground text-center">

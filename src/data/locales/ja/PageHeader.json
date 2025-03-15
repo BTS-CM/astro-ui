@@ -1,5 +1,7 @@
 {
   "poolTracker": "特集プールの概要",
+  "customPoolTracker": "カスタムプールトラッカー",
+  "pools": "流動性プール",
   "assetCreation": "アセットの作成",
   "welcomeMessage": "へようこそ ",
   "uiName": "Bitshares Beet Astro UI",

@@ -581,8 +581,8 @@ export default function CustomPoolTracker(properties) {
           data.forEach((x) => {
             const _callOrders = Object.values(x)[0];
             const _foundCallOrders = _callOrders.find((y) => y.borrower === usr.id);
-
-            const _key = Object.keys(data[0])[0];
+          
+            const _key = Object.keys(x)[0]; // Extract the key from the current element
             const _refAsset = assets.find((x) => x.id === _key);
             userCallOrders[_refAsset.symbol] = _foundCallOrders;
           });
@@ -835,14 +835,6 @@ export default function CustomPoolTracker(properties) {
     }
   
     const _finalAmount = _total.toFixed(4);
-    /*
-    console.log({
-      finalBalanceUSDValue: _finalAmount,
-      totalBalances,
-      allAssetPrices,
-      allSettlementPrices
-    });
-    */
   
     return _finalAmount;
   }, [totalBalances, allAssetPrices, allSettlementPrices]);
@@ -1119,6 +1111,13 @@ export default function CustomPoolTracker(properties) {
             )
           })
         }
+        {
+          swappableAssets && swappableAssets.length < 5
+            ? Array.from({ length: 5 - swappableAssets.length }).map((_, index) => (
+                <div key={`blankRowCol${index}`} className="text-center"></div>
+              ))
+            : null
+        }
         <div className="ml-3 mt-3 ml-1">
           A: {_24hVolumeA}<br/>
           B: {_24hVolumeB}<br/>
@@ -1171,7 +1170,7 @@ export default function CustomPoolTracker(properties) {
               allAssetPrices && 
               psaDD && lpTradingVolumes
                 ? <>
-                    <div className={`grid grid-cols-${swappableAssets ? swappableAssets.length + 7 : 0 + 7} text-xs`}>
+                    <div className={`grid grid-cols-12 text-xs`}>
                       <div className="text-center">{t("PoolTracker:pool")}</div>
                       <div className="text-center">{t("PoolTracker:assetPair")}</div>
                       <div className="text-center">{t("PoolTracker:value")}</div>
@@ -1189,6 +1188,13 @@ export default function CustomPoolTracker(properties) {
                             ))
                           : null
                       }
+                      {
+                        swappableAssets && swappableAssets.length < 5
+                          ? Array.from({ length: 5 - swappableAssets.length }).map((_, index) => (
+                              <div key={`blank${index}`} className="text-center"></div>
+                            ))
+                          : null
+                      }
                       <div>{t("PoolTracker:24hVolume")}</div>
                       <div>{t("PoolTracker:fees")}</div>
                     </div>
@@ -1203,38 +1209,67 @@ export default function CustomPoolTracker(properties) {
                     <div className="grid grid-cols-12 text-xs">
                       <div className="col-span-4"></div>
                       <div className="col-span-6 text-center border border-gray-300">
-                        <div className={`grid grid-cols-${swappableAssets.length + 1}`}>
+                        <div className={`grid grid-cols-6`}>
                           <div></div>
-                          {swappableAssets.map((asset) => (
-                            <div key={asset.symbol}>
-                              <b>{t("PoolTracker:inPool")}</b><br/>
-                              {stakedAssets[asset.symbol]}<br/>
-                              ${(
-                                stakedAssets[asset.symbol] * 
-                                (allAssetPrices[asset.symbol]?.price || 0)
-                              ).toFixed(4)}
-                            </div>
-                          ))}
+                          {
+                            swappableAssets.map((asset) => (
+                              <div key={`staked${asset.symbol}`}>
+                                <b>{t("PoolTracker:inPool")}</b><br/>
+                                📊 {stakedAssets[asset.symbol]}<br/>
+                                ${(
+                                  stakedAssets[asset.symbol] * 
+                                  (allAssetPrices[asset.symbol]?.price || 0)
+                                ).toFixed(4)}
+                              </div>
+                            ))
+                          }
+                          {
+                            swappableAssets && swappableAssets.length < 5
+                              ? Array.from({ length: 5 - swappableAssets.length }).map((_, index) => (
+                                  <div key={`blankStaked${index}`} className="text-center"></div>
+                                ))
+                              : null
+                          }
                         </div>
-                        <div className={`grid grid-cols-${swappableAssets.length + 1} mt-2`}>
+                        <div className={`grid grid-cols-6 mt-2`}>
                           <div></div>
                           {swappableAssets.map((asset) => (
-                            <div key={asset.symbol}>
+                            <div key={`liquid${asset.symbol}`}>
                               <b>{t("PoolTracker:liquid")}</b><br/>
                               {
                                 balances && balances[asset.symbol]
                                   ? humanReadableFloat(balances[asset.symbol].amount, asset.precision)
                                   : 0
+                              }<br/>
+                              ${
+                                balances && balances[asset.symbol]
+                                  ? (
+                                    humanReadableFloat(balances[asset.symbol].amount, asset.precision) * 
+                                    (allAssetPrices[asset.symbol]?.price || 0)
+                                  ).toFixed(4)
+                                  : 0
                               }
                             </div>
                           ))}
+                          {
+                            swappableAssets && swappableAssets.length < 5
+                              ? Array.from({ length: 5 - swappableAssets.length }).map((_, index) => (
+                                  <div key={`blankLiqidity${index}`} className="text-center"></div>
+                                ))
+                              : null
+                          }
                         </div>
-                        <div className={`grid grid-cols-${swappableAssets.length + 1} mt-3`}>
+                        <div className={`grid grid-cols-6 mt-3`}>
                           <div></div>
-                          <div className="col-span-2"></div>
                           {swappableAssets.map((asset) => (
-                            <div key={asset.symbol}>
-                              <b>{t("PoolTracker:debt")}</b><br/>
+                            <div key={`debt${asset.symbol}`}>
+                              {
+                                asset.bitasset_data_id &&
+                                smartcoinCallOrders &&
+                                smartcoinCallOrders[asset.symbol]
+                                  ? <><b>{t("PoolTracker:debt")}</b><br/></>
+                                  : null
+                              }
                               {
                                 smartcoinCallOrders && smartcoinCallOrders[asset.symbol]
                                   ? humanReadableFloat(smartcoinCallOrders[asset.symbol].debt, asset.precision)
@@ -1242,44 +1277,143 @@ export default function CustomPoolTracker(properties) {
                               }
                             </div>
                           ))}
+                          {
+                            swappableAssets && swappableAssets.length < 5
+                              ? Array.from({ length: 5 - swappableAssets.length }).map((_, index) => (
+                                  <div key={`blankDebt${index}`} className="text-center"></div>
+                                ))
+                              : null
+                          }
                         </div>
-                        <div className={`grid grid-cols-${swappableAssets.length + 1} mt-2`}>
+                        <div className={`grid grid-cols-6 mt-3`}>
                           <div></div>
-                          {swappableAssets.map((asset) => (
-                            <div key={`tc${asset.symbol}`}>
-                              {
-                                console.log({smartcoinCallOrders})
-                              }
-                              {
-                                asset.bitasset_data_id &&
-                                smartcoinCallOrders &&
-                                smartcoinCallOrders[asset.symbol]
-                                  ? <b>{t("PoolTracker:totalCollateral")}</b>
-                                  : null
-                              }
-                              <br/>
-                              {
-                                asset.bitasset_data_id &&
-                                smartcoinCallOrders &&
-                                smartcoinCallOrders[asset.symbol]
-                                  ? humanReadableFloat(smartcoinCallOrders[asset.symbol].collateral, asset.precision)
-                                  : null
-                              }
-                              <br/>
-                              {
-                                asset.bitasset_data_id &&
-                                smartcoinCallOrders &&
-                                smartcoinCallOrders[asset.symbol] &&
-                                allAssetPrices[asset.symbol]
-                                  ? (humanReadableFloat(smartcoinCallOrders[asset.symbol].collateral, asset.precision) / 
-                                    (humanReadableFloat(smartcoinCallOrders[asset.symbol].debt, asset.precision) * 
-                                      allAssetPrices[asset.symbol].price)).toFixed(3)
-                                  : null
-                              }
-                            </div>
-                          ))}
+                          {
+                            swappableAssets.map((asset) => {
+                              const _display = asset.bitasset_data_id && smartcoinData && smartcoinCallOrders && smartcoinCallOrders[asset.symbol];
+
+                              const _collateralAsset = _display 
+                                ? allUniqueAssets.find((x) => x.id === smartcoinData[asset.symbol].options.short_backing_asset)
+                                : null
+
+                              const _collateralAmount = _display && _collateralAsset
+                                ? humanReadableFloat(smartcoinCallOrders[asset.symbol].collateral, _collateralAsset.precision)
+                                : 0;
+
+                              const _debtAmount = _display
+                                ? humanReadableFloat(smartcoinCallOrders[asset.symbol].debt, asset.precision)
+                                : 0;
+
+                              const _debtSettlementPrice = _display
+                                ? allSettlementPrices[asset.symbol]
+                                : 0;
+
+                              return (
+                                <div key={`tc${asset.symbol}`}>
+                                  {
+                                    _display
+                                      ? <b>{t("PoolTracker:totalCollateral")}</b>
+                                      : null
+                                  }
+                                  <br/>
+                                  {
+                                    _display
+                                      ? _collateralAmount
+                                      : null
+                                  }
+                                  <br/>
+                                  {
+                                    _display && allAssetPrices[asset.symbol]
+                                      ? (_collateralAmount / (_debtAmount * _debtSettlementPrice)).toFixed(3)
+                                      : null
+                                  }
+                                </div>
+                              )
+                            })
+                          }
+                          {
+                            swappableAssets && swappableAssets.length < 5
+                              ? Array.from({ length: 5 - swappableAssets.length }).map((_, index) => (
+                                  <div key={`blankCollaterals${index}`} className="text-center"></div>
+                                ))
+                              : null
+                          }
                         </div>
-                        
+                        <div className={`grid grid-cols-6 mt-3`}>
+                          <div className="mt-2">
+                            {t("PoolTracker:total")}<br/>
+                            {t("PoolTracker:circulating")}<br/>
+                            {t("PoolTracker:supplyPercent")}
+                          </div>
+                          {
+                            swappableAssets.map((asset) => {
+                              const _currentSupply = dynamicData && dynamicData[asset.symbol]
+                                ? humanReadableFloat(dynamicData[asset.symbol].current_supply, asset.precision)
+                                : 0;
+                              const _total = totalBalances[asset.symbol] || 0;
+                              return (
+                                <div key={`totals${asset.symbol}`}>
+                                  <b>{t("PoolTracker:total")}</b><br/>
+                                  <b>{_total}</b><br/>
+                                  {_currentSupply}<br/>
+                                  <b>
+                                    {
+                                      _currentSupply && _total
+                                        ? ((_total / _currentSupply) * 100).toFixed(3)
+                                        : 0
+                                    }
+                                  </b>%
+                                </div>
+                              )
+                            })
+                          }
+                          {
+                            swappableAssets && swappableAssets.length < 5
+                              ? Array.from({ length: 5 - swappableAssets.length }).map((_, index) => (
+                                  <div key={`blankTotals${index}`} className="text-center"></div>
+                                ))
+                              : null
+                          }
+                        </div>
+                        <div className={`grid grid-cols-6 mt-3`}>
+                          <div>
+                            <span className="text-right"><b>USD</b></span><br/>
+                          </div>
+                          {swappableAssets.map((asset) => (
+                            <div key={`usd${asset.symbol}`}>
+                              <b>
+                                ${
+                                  allAssetPrices[asset.symbol] && allAssetPrices[asset.symbol].price
+                                    ? (
+                                        parseFloat(totalBalances[asset.symbol]) *
+                                        parseFloat(allAssetPrices[asset.symbol].price)
+                                      ).toFixed(4)
+                                    : 0
+                                }
+                              </b>
+                            </div>
+                          ))}{
+                            swappableAssets && swappableAssets.length < 5
+                              ? Array.from({ length: 5 - swappableAssets.length }).map((_, index) => (
+                                  <div key={`blankPrices${index}`} className="text-center"></div>
+                                ))
+                              : null
+                          }
+                        </div>
+                        <div className="grid grid-cols-6">
+                          <div>
+                            <span className="text-right"><b>{t("PoolTracker:total")}</b></span>
+                          </div>
+                          <div className="col-span-1">
+                            ${
+                              swappableAssets.reduce((acc, asset) => acc + (
+                                allAssetPrices[asset.symbol] && allAssetPrices[asset.symbol].price
+                                  ? parseFloat(totalBalances[asset.symbol]) * parseFloat(allAssetPrices[asset.symbol].price)
+                                  : 0
+                              ), 0).toFixed(4)
+                            }
+                          </div>
+                          <div className="col-span-4"></div>
+                        </div>
 
 
                       </div>
@@ -1294,141 +1428,3 @@ export default function CustomPoolTracker(properties) {
     </>
   );
 }
-
-
-
-
-                 /*       
-                        <div className="grid grid-cols-6 mt-3">
-                          <div className="mt-4">
-                            {t("PoolTracker:total")}<br/>
-                            {t("PoolTracker:circulating")}<br/>
-                            {t("PoolTracker:supplyPercent")}
-                          </div>
-                          <div>
-                            <b>{t("PoolTracker:total")}</b><br/>
-                            <b>{totalBTS}</b>
-                            <br/>
-                            {
-                              dynamicData
-                                ? humanReadableFloat(dynamicData.BTS.current_supply, 5)
-                                : null
-                            }<br/>
-                            <b>
-                              {
-                                dynamicData
-                                  ? ((totalBTS / humanReadableFloat(dynamicData.BTS.current_supply, 5)) * 100).toFixed(3)
-                                  : null
-                              }
-                            </b>%
-                          </div>
-                          <div>
-                            <b>{t("PoolTracker:total")}</b><br/>
-                            <b>{totalHonestMoney}</b><br/>
-                            {
-                              dynamicData
-                                ? humanReadableFloat(dynamicData.HonestMoney.current_supply, 8)
-                                : null
-                            }<br/>
-                            <b>
-                              {
-                                dynamicData
-                                  ? ((totalHonestMoney / humanReadableFloat(dynamicData.HonestMoney.current_supply, 8)) * 100).toFixed(3)
-                                  : null
-                              }
-                            </b>%
-                          </div>
-                          <div>
-                            <b>{t("PoolTracker:total")}</b><br/>
-                            <b>{totalHonestUSD}</b><br/>
-                            {
-                              dynamicData
-                                ? humanReadableFloat(dynamicData.HonestUSD.current_supply, 4)
-                                : null
-                            }<br/>
-                            <b>
-                              {
-                                dynamicData
-                                  ? ((totalHonestUSD / humanReadableFloat(dynamicData.HonestUSD.current_supply, 4)) * 100).toFixed(3)
-                                  : null
-                              }
-                            </b>%
-                          </div>
-                          <div>
-                            <b>{t("PoolTracker:total")}</b><br/>
-                            <b>{totalHonestBTC}</b><br/>
-                            {
-                              dynamicData
-                                ? humanReadableFloat(dynamicData.HonestBTC.current_supply, 8)
-                                : null
-                            }<br/>
-                            <b>
-                              {
-                                dynamicData
-                                  ? ((totalHonestBTC / humanReadableFloat(dynamicData.HonestBTC.current_supply, 8)) * 100).toFixed(3)
-                                  : null
-                              }
-                            </b>%
-                          </div>
-                          <div>
-                            <b>{t("PoolTracker:total")}</b><br/>
-                            <b>{totalHonestXAU}</b><br/>
-                            {
-                              dynamicData
-                                ? humanReadableFloat(dynamicData.HonestXAU.current_supply, 8)
-                                : null
-                            }<br/>
-                            <b>
-                              {
-                                dynamicData
-                                  ? ((totalHonestXAU / humanReadableFloat(dynamicData.HonestXAU.current_supply, 8)) * 100).toFixed(3)
-                                  : null
-                              }
-                            </b>%
-                          </div>
-                        </div>
-
-                        <div className="grid grid-cols-6">
-                          <div>
-                            <span className="text-right"><b>USD</b></span><br/>
-                          </div>
-                          <div>
-                            <b>
-                              ${(totalBTS * btsPrice).toFixed(4)}
-                            </b>
-                          </div>
-                          <div>
-                            <b>
-                              ${
-                                honestMoneyPrice && honestMoneyPrice.latest && btsPrice
-                                  ? (totalHonestMoney * honestMoneyPrice.latest * btsPrice).toFixed(4)
-                                  : 0
-                              }
-                            </b>
-                          </div>
-                          <div>
-                            <b>
-                              ${(totalHonestUSD).toFixed(4)}
-                            </b>
-                          </div>
-                          <div>
-                            <b>
-                              ${(totalHonestBTC * honestBTCPrice).toFixed(4)}
-                            </b>
-                          </div>
-                          <div>
-                            <b>
-                              ${(totalHonestXAU * honestXAUPrice).toFixed(4)}
-                            </b>
-                          </div>
-                        </div>
-                        <div className="grid grid-cols-6">
-                          <div>
-                            <span className="text-right"><b>{t("PoolTracker:total")}</b></span>
-                          </div>
-                          <div className="col-span-1">
-                            ${finalUSD}
-                            </div>
-                            <div className="col-span-4"></div>
-                        </div>  
-*/

@@ -113,7 +113,8 @@ const poolSchema = z.object({
     share_asset_id: z.string(),
     balance_a: z.union([z.string(), z.number()]), // Adjusted to accept both string and number
     balance_b: z.union([z.string(), z.number()]), // Adjusted to accept both string and number
-    taker_fee_percent: z.number()
+    taker_fee_percent: z.number(),
+    withdrawal_fee_percent: z.number(),
 });
 
 const btsPools = defineCollection({

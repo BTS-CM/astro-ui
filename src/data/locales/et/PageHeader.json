@@ -1,5 +1,7 @@
 {
   "poolTracker": "Esitatud basseini ülevaade",
+  "customPoolTracker": "Kohandatud basseini jälgijad",
+  "pools": "Likviidsusbasseinid",
   "assetCreation": "Vara loomine",
   "welcomeMessage": "Tere tulemast ",
   "uiName": "Bitshares Beet Astro kasutajaliides",

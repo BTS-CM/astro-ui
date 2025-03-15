@@ -193,5 +193,18 @@
     "hover1": "Tomar activos de un mismo fondo.",
     "hover2": "Cambia estos mismos fondos T en el Dex.",
     "hover3": "Reembolsar los activos prestados."
+  },
+  "custom_pool_tracker": {
+    "title": "📊 Rastreador de la piscina de liquidez",
+    "subtitle": "¡Rastree sus piscinas de liquidez favoritas con facilidad!",
+    "hover1": "Configure su propio rastreador de piscinas de liquidez personalizada.",
+    "hover2": "Seguimiento de hasta 5 activos intercambiables."
+  },
+  "pools": {
+    "title": "📊 Piscinas de liquidez",
+    "subtitle": "Ver y administrar sus grupos de liquidez",
+    "hover1": "Vea sus piscinas de liquidez.",
+    "hover2": "Agregue o elimine la liquidez de sus piscinas.",
+    "hover3": "Activos de participación en el grupo comercial en el intercambio."
   }
 }

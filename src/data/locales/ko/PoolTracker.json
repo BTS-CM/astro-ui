@@ -24,5 +24,7 @@
     "borrow": "수영장 공유 자산",
     "borrowAsset": "빌리다 {{asset}}",
     "createDebt": "부채 위치를 만듭니다",
-    "psa": "수영장 공유 자산"
+    "psa": "수영장 공유 자산",
+    "customTitle": "맞춤 유동성 풀 추적기 : {{name}}",
+    "customDescription": "좋아하는 유동성 풀을 쉽게 추적하십시오!"
   }

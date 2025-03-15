@@ -193,5 +193,18 @@
     "hover1": "Emprestar ativos de um fundo T-T.",
     "hover2": "Trocar esses fundos do mesmo T no DEX.",
     "hover3": "Reembolsar os ativos emprestados."
+  },
+  "custom_pool_tracker": {
+    "title": "📊 Rastreador de pool de liquidez",
+    "subtitle": "Rastreie seus pools de liquidez favoritos com facilidade!",
+    "hover1": "Configure seu próprio rastreador de pool de liquidez personalizado.",
+    "hover2": "Rastreie até 5 ativos trocáveis."
+  },
+  "pools": {
+    "title": "📊 Pools de liquidez",
+    "subtitle": "Veja e gerencie seus pools de liquidez",
+    "hover1": "Veja seus pools de liquidez.",
+    "hover2": "Adicione ou remova a liquidez de suas piscinas.",
+    "hover3": "Comércio de participação em ativos de participação na troca."
   }
 }

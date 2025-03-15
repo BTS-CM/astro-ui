@@ -1,0 +1,13 @@
+{
+    "title": "Pool di liquidità",
+    "description": "Individua rapidamente pool di liquidità per commerciare, scambiare, palo, ecc.!",
+    "simpleSwap": "Semplice scambio",
+    "poolSwap": "Swap sulla piscina di liquidità",
+    "stakeAssets": "Attività di palo",
+    "buyPoolShareAsset": "Acquista Asset azionario",
+    "dialogTitle": "Procedere con il pool di liquidità: {{id}}",
+    "dialogDescription": "Scambia, palo, scambia le risorse di questo pool di seguito!",
+    "buyAsset": "Commercio",
+    "borrowAsset": "Prestito",
+    "issueAsset": "Problema"
+}

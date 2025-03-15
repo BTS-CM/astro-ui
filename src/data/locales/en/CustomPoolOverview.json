@@ -30,5 +30,7 @@
     "hoverSelectedPoolDetailsContent": "You've selected the following pools to track.",
     "hoverSelectedPoolDetailsHeader": "Pools to track",
     "swappableAssets": "Swappable assets",
-    "poolShareAssets": "Pool share assets"
+    "poolShareAssets": "Pool share assets",
+    "assetAQty": "Asset A Quantity",
+    "assetBQty": "Asset B Quantity"
 }

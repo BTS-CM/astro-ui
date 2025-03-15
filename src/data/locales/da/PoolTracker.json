@@ -24,5 +24,7 @@
     "borrow": "Låne pool aktie aktiver",
     "borrowAsset": "Låne {{asset}}",
     "createDebt": "Opret gældsposition",
-    "psa": "Pool Share Asset"
+    "psa": "Poolandelsaktiv",
+    "customTitle": "Custom Liquidity Pool Tracker: {{name}}",
+    "customDescription": "Track your favorite liquidity pools with ease!"
   }

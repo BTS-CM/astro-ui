@@ -193,5 +193,18 @@
     "hover1": "Laenake varasid sama-T fondilt.",
     "hover2": "Kauplege need sama-T fondidega DEX-iga.",
     "hover3": "Laenatud varad tagasi maksta."
+  },
+  "custom_pool_tracker": {
+    "title": "📊 likviidsuse basseini jälgija",
+    "subtitle": "Jälgige oma lemmik likviidsusbasseine hõlpsalt!",
+    "hover1": "Seadistage oma kohandatud likviidsuse basseini jälgija.",
+    "hover2": "Jälgige kuni 5 vahetatavat vara."
+  },
+  "pools": {
+    "title": "📊 likviidsusbasseinid",
+    "subtitle": "Vaadake ja hallake oma likviidsusbasseine",
+    "hover1": "Vaadake oma likviidsusbasseine.",
+    "hover2": "Lisage või eemaldage oma basseinidest likviidsus.",
+    "hover3": "Kaubanduskogumik aktsiate aktsiad börsil."
   }
 }

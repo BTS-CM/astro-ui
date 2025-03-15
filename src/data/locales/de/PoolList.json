@@ -1,0 +1,13 @@
+{
+    "title": "Liquiditätspools",
+    "description": "Suchen Sie schnell Liquiditätspools, um zu handeln, auszutauschen, zu beteiligen usw.!",
+    "simpleSwap": "Einfacher Tausch",
+    "poolSwap": "Liquiditätspool -Tausch",
+    "stakeAssets": "Pfahlgüter",
+    "buyPoolShareAsset": "Aktienvermögen kaufen",
+    "dialogTitle": "Fortschritte mit Liquiditätspool: {{id}}",
+    "dialogDescription": "Tauschen, stecken, tauschen Sie das Vermögen dieses Pools unten aus!",
+    "buyAsset": "Handel",
+    "borrowAsset": "Ausleihen",
+    "issueAsset": "Ausgabe"
+}

@@ -1,5 +1,7 @@
 {
   "poolTracker": "Descripción general de la piscina",
+  "customPoolTracker": "Rastreadores de piscina personalizados",
+  "pools": "Fondos de liquidez",
   "assetCreation": "Creación de activos",
   "welcomeMessage": "Bienvenida a la ",
   "uiName": "Interfaz de usuario de Bitshares Beet Astro",

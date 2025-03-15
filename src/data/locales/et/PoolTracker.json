@@ -24,5 +24,7 @@
     "borrow": "Laenubasseini aktsiad",
     "borrowAsset": "Laenama {{asset}}",
     "createDebt": "Luua võlapositsioon",
-    "psa": "Basseini aktsia vara"
+    "psa": "Basseini aktsia vara",
+    "customTitle": "Kohandatud likviidsuse basseini jälgija: {{name}}",
+    "customDescription": "Jälgige oma lemmik likviidsusbasseine hõlpsalt!"
   }

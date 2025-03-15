@@ -1,0 +1,13 @@
+{
+    "title": "Liquidity Pools",
+    "description": "Quickly locate liquidity pools to trade, swap, stake, etc!",
+    "simpleSwap": "Simple Swap",
+    "poolSwap": "Liquidity Pool Swap",
+    "stakeAssets": "Stake Assets",
+    "buyPoolShareAsset": "Buy Share Asset",
+    "dialogTitle": "Proceeding with liquidity pool: {{id}}",
+    "dialogDescription": "Swap, Stake, Exchange this pool's assets below!",
+    "buyAsset": "Trade",
+    "borrowAsset": "Borrow",
+    "issueAsset": "Issue"
+}

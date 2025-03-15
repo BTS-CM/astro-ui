@@ -1,5 +1,7 @@
 {
   "poolTracker": "Fremhævet pooloversigt",
+  "customPoolTracker": "Tilpassede Pool Trackers",
+  "pools": "Likviditetspuljer",
   "assetCreation": "Oprettelse af aktiver",
   "welcomeMessage": "Velkommen til ",
   "uiName": "Bitshares Beet Astro UI",
