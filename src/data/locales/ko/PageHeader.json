@@ -1,5 +1,7 @@
 {
   "poolTracker": "추천 풀 개요",
+  "customPoolTracker": "맞춤형 풀 추적기",
+  "pools": "유동성 풀",
   "assetCreation": "자산 생성",
   "welcomeMessage": "에 오신 것을 환영합니다 ",
   "uiName": "Bitshares 비트 애스트로 UI",

@@ -24,5 +24,7 @@
     "borrow": "Leihen Sie sich Poolanteilungsvermögen aus",
     "borrowAsset": "Ausleihen {{asset}}",
     "createDebt": "Schuldenposition schaffen",
-    "psa": "Poolanteils -Vermögenswert"
+    "psa": "Poolanteils -Vermögenswert",
+    "customTitle": "Benutzerdefinierte Liquiditätspool Tracker: {{name}}",
+    "customDescription": "Verfolgen Sie Ihre bevorzugten Liquiditätspools mit Leichtigkeit!"
   }

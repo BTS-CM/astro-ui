@@ -24,5 +24,7 @@
     "borrow": "Emprunter des actifs de partage de pool",
     "borrowAsset": "Emprunter {{asset}}",
     "createDebt": "Créer une position de dette",
-    "psa": "Actif de partage de piscine"
+    "psa": "Actif de partage de piscine",
+    "customTitle": "Tracker de piscine de liquidité personnalisé: {{name}}",
+    "customDescription": "Suivez facilement vos piscines de liquidité préférées!"
   }

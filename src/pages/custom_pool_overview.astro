@@ -1,0 +1,54 @@
+---
+import { getCollection } from 'astro:content';
+
+import Layout from '../layouts/Layout.astro';
+import CustomPoolOverviewComponent from '../components/CustomPoolOverview.jsx';
+import PageHeader from '../components/PageHeader';
+import PageFooter from '../components/PageFooter';
+
+const btsPools = await getCollection('btsPools');
+const testPools = await getCollection('testPools');
+
+const poolsBTS = btsPools.map(collection => collection.data);
+const poolsTEST = testPools.map(collection => collection.data);
+
+const btsAllAssets = await getCollection('btsAllAssets');
+const testAllAssets = await getCollection('testAllAssets');
+
+const btsAssets = btsAllAssets.map(collection => collection.data);
+const testAssets = testAllAssets.map(collection => collection.data);
+
+const btsMarketData = await getCollection('btsMarketData');
+const testMarketData = await getCollection('testMarketData');
+
+const marketSearchBTS = btsMarketData.map(collection => collection.data);
+const marketSearchTEST = testMarketData.map(collection => collection.data);
+---
+
+<Layout title="Custom Pool Overview">
+	<main>
+		<PageHeader client:only="react" page="custom_pool_overview" backURL="../index.html" />
+		<CustomPoolOverviewComponent
+			client:only="react"
+			_assetsBTS={btsAssets}
+			_assetsTEST={testAssets}
+			_poolsBTS={poolsBTS}
+			_poolsTEST={poolsTEST}
+			_marketSearchBTS={marketSearchBTS}
+			_marketSearchTEST={marketSearchTEST}
+		/>
+		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/custom_pool_overview.astro" />
+	</main>
+</Layout>
+
+<style>
+	main {
+		margin: auto;
+		padding: 1rem;
+		width: 100%;
+		color: white;
+		font-size: 20px;
+		line-height: 1.6;
+		min-height: 100vh;
+	}
+</style>

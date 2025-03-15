@@ -193,5 +193,18 @@
     "hover1": "Emprunter des actifs à un fonds de même T.",
     "hover2": "Échangez ces fonds de la même chose sur le dex.",
     "hover3": "Rembourser les actifs empruntés."
+  },
+  "custom_pool_tracker": {
+    "title": "📊 Tracker de piscine de liquidité",
+    "subtitle": "Suivez facilement vos piscines de liquidité préférées!",
+    "hover1": "Configurez votre propre tracker de pool de liquidité personnalisé.",
+    "hover2": "Suivre jusqu'à 5 actifs swappables."
+  },
+  "pools": {
+    "title": "📊 Pools de liquidité",
+    "subtitle": "Afficher et gérer vos pools de liquidité",
+    "hover1": "Consultez vos pools de liquidité.",
+    "hover2": "Ajouter ou retirer la liquidité de vos piscines.",
+    "hover3": "Trade Pool actions des actifs sur la bourse."
   }
 }

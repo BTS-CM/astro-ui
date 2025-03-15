@@ -24,5 +24,7 @@
     "borrow": "プールシェア資産を借ります",
     "borrowAsset": "借りる {{asset}}",
     "createDebt": "借金の位置を作成します",
-    "psa": "プール共有資産"
+    "psa": "プール共有資産",
+    "customTitle": "カスタム流動性プールトラッカー： {{name}}",
+    "customDescription": "お気に入りの流動性プールを簡単に追跡してください！"
   }

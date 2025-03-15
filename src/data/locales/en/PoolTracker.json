@@ -24,5 +24,7 @@
     "borrow": "Borrow pool share assets",
     "borrowAsset": "Borrow {{asset}}",
     "createDebt": "Create debt position",
-    "psa": "Pool Share Asset"
+    "psa": "Pool Share Asset",
+    "customTitle": "Custom Liquidity Pool Tracker: {{name}}",
+    "customDescription": "Track your favorite liquidity pools with ease!"
 }

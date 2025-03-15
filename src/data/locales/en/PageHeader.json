@@ -1,5 +1,7 @@
 {
   "poolTracker": "Featured Pool Overview",
+  "customPoolTracker": "Custom Pool Trackers",
+  "pools": "Liquidity Pools",
   "assetCreation": "Asset creation",
   "welcomeMessage": "Welcome to the ",
   "uiName": "Bitshares Beet Astro UI",
@@ -77,7 +79,9 @@
     "proposals": "View the approvals for your account below, and either approve or reject them after thoroughly evaluating them.",
     "pool_tracker": "Easily monitor the Honest Liquidity Pool and relevant interesting stats!",
     "create_account": "Use the form below to create a new cloud account on the Bitshares blockchain.",
-    "tfund_user": "Use the form below to craft complex chains of Bitshares limit orders and same-t fund borrow/repay operations."
+    "tfund_user": "Use the form below to craft complex chains of Bitshares limit orders and same-t fund borrow/repay operations.",
+    "custom_pool_overview": "",
+    "custom_pool_tracker": ""
   },
   "back": "Go back",
   "usage": "Designed for use with ",

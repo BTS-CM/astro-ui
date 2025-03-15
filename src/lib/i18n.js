@@ -58,7 +58,9 @@ const pages = [
   "PoolTracker",
   "CreateAccount",
   "TFundUser",
-  "LimitOrderWizard"
+  "LimitOrderWizard",
+  "CustomPoolOverview",
+  "PoolList"
 ];
 
 const locale = persistentAtom("locale", "en");

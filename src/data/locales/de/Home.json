@@ -193,5 +193,18 @@
     "hover1": "Leihen Sie Vermögenswerte aus einem gleich-T-Fonds aus.",
     "hover2": "Tauschen Sie diese Same-T-Mittel gegen den Dex ein.",
     "hover3": "Zahlen Sie das geliehene Vermögen zurück."
+  },
+  "custom_pool_tracker": {
+    "title": "📊 Liquiditätspool Tracker",
+    "subtitle": "Verfolgen Sie Ihre bevorzugten Liquiditätspools mit Leichtigkeit!",
+    "hover1": "Konfigurieren Sie Ihren eigenen benutzerdefinierten Liquiditätspool -Tracker.",
+    "hover2": "Space bis zu 5 austauschbare Vermögenswerte."
+  },
+  "pools": {
+    "title": "📊 Liquiditätspools",
+    "subtitle": "Sehen Sie sich Ihre Liquiditätspools an und verwalten Sie",
+    "hover1": "Sehen Sie sich Ihre Liquiditätspools an.",
+    "hover2": "Fügen Sie Liquidität aus Ihren Pools hinzu oder entfernen Sie sie.",
+    "hover3": "Handelspool -Aktien -Vermögen an der Börse."
   }
 }

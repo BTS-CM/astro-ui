@@ -193,5 +193,18 @@
     "hover1": "Prendi in prestito attività da un fondo dello stesso T.",
     "hover2": "Scambia questi fondi omogenei sul DEX.",
     "hover3": "Rimborsare le attività prese in prestito."
+  },
+  "custom_pool_tracker": {
+    "title": "📊 Tracker del pool di liquidità",
+    "subtitle": "Traccia facilmente le tue piscine di liquidità preferite!",
+    "hover1": "Configura il tuo tracker del pool di liquidità personalizzato.",
+    "hover2": "Traccia fino a 5 risorse scambiabili."
+  },
+  "pools": {
+    "title": "📊 Pool di liquidità",
+    "subtitle": "Visualizza e gestisci i pool di liquidità",
+    "hover1": "Visualizza i tuoi pool di liquidità.",
+    "hover2": "Aggiungere o rimuovere la liquidità dalle piscine.",
+    "hover3": "Asset a condivisione del pool commerciale sullo scambio."
   }
 }

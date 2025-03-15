@@ -33,6 +33,7 @@ for (const chain of chains) {
           balance_a: pool.balance_a,
           balance_b: pool.balance_b,
           taker_fee_percent: pool.taker_fee_percent,
+          withdrawal_fee_percent: pool.withdrawal_fee_percent,
         };
       });
 

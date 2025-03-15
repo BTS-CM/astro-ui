@@ -193,5 +193,18 @@
     "hover1": "Borrow assets from a same-t fund.",
     "hover2": "Trade these same-t funds on the DEX.",
     "hover3": "Repay the borrowed assets."
+  },
+  "custom_pool_tracker": {
+    "title": "📊 Liquidity Pool Tracker",
+    "subtitle": "Track your favorite liquidity pools with ease!",
+    "hover1": "Configure your own custom liquidity pool tracker.",
+    "hover2": "Track up to 5 swappable assets."
+  },
+  "pools": {
+    "title": "📊 Liquidity Pools",
+    "subtitle": "View and manage your liquidity pools",
+    "hover1": "View your liquidity pools.",
+    "hover2": "Add or remove liquidity from your pools.",
+    "hover3": "Trade pool share assets on the exchange."
   }
 }

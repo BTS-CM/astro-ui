@@ -24,5 +24,7 @@
     "borrow": "Toma prestado activos de compartir el grupo",
     "borrowAsset": "Pedir prestado {{asset}}",
     "createDebt": "Crear posición de deuda",
-    "psa": "Activo de compartir la piscina"
+    "psa": "Activo de compartir la piscina",
+    "customTitle": "Rastreador de piscina de liquidez personalizada: {{name}}",
+    "customDescription": "¡Rastree sus piscinas de liquidez favoritas con facilidad!"
   }

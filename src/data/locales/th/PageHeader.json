@@ -1,5 +1,7 @@
 {
   "poolTracker": "ภาพรวมกลุ่มที่โดดเด่น",
+  "customPoolTracker": "ติดตามสระว่ายน้ำที่กำหนดเอง",
+  "pools": "สระสภาพคล่อง",
   "assetCreation": "การสร้างสินทรัพย์",
   "welcomeMessage": "ยินดีต้อนรับสู่ ",
   "uiName": "Bitshares Beet Astro UI",
