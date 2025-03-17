@@ -244,8 +244,18 @@ export default function IssuedAssets(properties) {
       : null;
 
     const description = issuedAsset.options.description;
-    const parsedDescription =
-      description.length && description.includes("main") ? JSON.parse(description) : null;
+    let parsedDescription;
+    if (description && description.length) {
+      let _desc;
+      try {
+        _desc = JSON.parse(description);
+      } catch (e) {
+        console.log({e, id: issuedAsset.id, description});
+      }
+      if (_desc && _desc.hasOwnProperty("main")) {
+        parsedDescription = _desc;
+      }
+    }
 
     const [viewJSON, setViewJSON] = useState(false);
     const [json, setJSON] = useState();

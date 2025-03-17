@@ -743,7 +743,18 @@ export default function UIA(properties) {
           setMaxSupply(humanReadableFloat(propsAsset.options.max_supply, propsAsset.precision));
 
           const desc = propsAsset.options.description;
-          const parsedJSON = desc && desc.length && desc.includes("main") ? JSON.parse(desc) : null;
+          let parsedJSON;
+          if (desc && desc.length) {
+            let _desc;
+            try {
+              _desc = JSON.parse(desc);
+            } catch (e) {
+              console.log({e, id: propsAsset.id, desc});
+            }
+            if (_desc && _desc.hasOwnProperty("main")) {
+              parsedJSON = _desc;
+            }
+          }
 
           // NFT logic
           if (parsedJSON && parsedJSON.hasOwnProperty("nft_object")) {
