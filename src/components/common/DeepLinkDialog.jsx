@@ -184,7 +184,6 @@ export default function DeepLinkDialog(properties) {
 
   const [targetUserDialogOpen, setTargetUserDialogOpen] = useState(false);
   const [targetUser, setTargetUser] = useState();
-
   const [proposalDialogOpen, setProposalDialogOpen] = useState(false);
 
   useEffect(() => {
@@ -363,7 +362,7 @@ export default function DeepLinkDialog(properties) {
                   {deeplink && !downloadClicked ? (
                     <a
                       href={`data:text/json;charset=utf-8,${deeplink}`}
-                      download={`${operationNames.join("_and_")}.json`}
+                      download={"transaction.json"}
                       target="_blank"
                       rel="noreferrer"
                       onClick={handleDownloadClick}
