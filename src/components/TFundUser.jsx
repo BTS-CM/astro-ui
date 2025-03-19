@@ -36,7 +36,7 @@ import { createObjectStore } from "@/nanoeffects/Objects.ts";
 
 import { $currentUser } from "@/stores/users.ts";
 
-import { debounce, humanReadableFloat, blockchainFloat } from "@/lib/common.js";
+import { humanReadableFloat, blockchainFloat } from "@/lib/common.js";
 import { $currentNode } from "@/stores/node.ts";
 import { $blockList } from "@/stores/blocklist.ts";
 
@@ -252,17 +252,21 @@ export default function SameTFunds(properties) {
       const _soldAsset = assets.find((x) => x.id === operation.final_asset_sold);
       const date = new Date(Date.now() + 1 * 24 * 60 * 60 * 1000);
 
+      const _amountToSell = blockchainFloat(
+        parseFloat(operation.final_buy_amount) * parseFloat(operation.final_price),
+        _soldAsset.precision
+      );
+
+      const _amountToReceive = blockchainFloat(parseFloat(operation.final_buy_amount), _purchasedAsset.precision);
+
       _operationChain.push({
         seller: usr.id,
         amount_to_sell: {
-          amount: blockchainFloat(
-            parseFloat(operation.final_buy_amount) * parseFloat(operation.final_price),
-            _soldAsset.precision
-          ),
+          amount: _amountToSell,
           asset_id: _soldAsset.id
         },
         min_to_receive: {
-          amount: blockchainFloat(parseFloat(operation.final_buy_amount), _purchasedAsset.precision),
+          amount: _amountToReceive,
           asset_id: _purchasedAsset.id
         },
         expiration: date,
@@ -736,9 +740,13 @@ export default function SameTFunds(properties) {
     }
 
     const _purchasedAsset = assets.find((x) => x.id === _operation.final_asset_purchased);
+
     const _soldAsset = assets.find((x) => x.id === _operation.final_asset_sold);
+
     const _marketPurchaseFee = _purchasedAsset.market_fee_percent ? _purchasedAsset.market_fee_percent / 100 : 0;
+
     const _amountPurchased = (parseFloat(_operation.final_buy_amount) - (parseFloat(_operation.final_buy_amount) * _marketPurchaseFee)).toFixed(_purchasedAsset.precision);
+    
     const _amountSold = (parseFloat(_amountPurchased) * _operation.final_price).toFixed(_soldAsset.precision);
     
     return (

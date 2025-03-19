@@ -1,4 +1,4 @@
-import React, { useSyncExternalStore, useMemo, useState, useEffect, useCallback } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { FixedSizeList as List } from "react-window";
 import { useStore } from "@nanostores/react";
 import {
@@ -223,6 +223,18 @@ export default function LimitOrderWizard(properties) {
         
         const hasEnoughFunds = sellingAssetBalance && parseFloat(sellingAssetBalance.amount) >= totalAmountRequired;
 
+        const previousOperation = index > 0 ? operations.find(op => op.id === marketLimitOrders[index - 1].id) : null;
+
+        const previousRowAmount = previousOperation
+            ? parseFloat(previousOperation.final_buy_amount)
+            : 0;
+
+        const previousRowOfferedAmount = previousOperation && marketLimitOrders[index - 1]
+            ? humanReadableFloat(marketLimitOrders[index - 1].sell_price.base.amount, _assetLimitOrderOffers.precision)
+            : 0;
+
+        const boughtMax = previousRowAmount > 0 && previousRowAmount >= previousRowOfferedAmount;
+
         return (
             <div
                 style={style}
@@ -241,34 +253,51 @@ export default function LimitOrderWizard(properties) {
                 <div className="border-r border-gray-300">
                     {percentageCommitted}
                 </div>
-                {
-                    hasEnoughFunds || percentageCommitted > 0
-                        ? <Dialog>
-                            <DialogTrigger>
-                                <Button
-                                    variant="outline"
-                                    onClick={() => {
-                                        setTempBuyAmount(limitOrderBuyAmount);
-                                    }}
-                                >
-                                    {t('LimitOrderWizard:buy')}
-                                </Button>
-                            </DialogTrigger>
-                            <DialogContent className="bg-white">
-                                <DialogHeader>
-                                    <DialogTitle>{t('LimitOrderWizard:buyingIntoOpenLimitOrder')}</DialogTitle>
-                                    <DialogDescription>
-                                        {t('LimitOrderWizard:howMuchToBuy')}
-                                    </DialogDescription>
-                                </DialogHeader>
-                                <div className="grid grid-cols-1 gap-3">
-                                    <div className="grid grid-cols-5 gap-2">
-                                        <div className="col-span-5">
-                                            <label className="block text-sm font-medium text-gray-700">
-                                                {t('LimitOrderWizard:buying')}
-                                            </label>
+                <div className="grid grid-cols-2 gap-2">
+                    {
+                        index === 0 || // first row
+                        hasEnoughFunds && boughtMax || // has enough funds and has bought max in previous row
+                        percentageCommitted > 0 // has bought something in this row
+                            ? <Dialog>
+                                <DialogTrigger>
+                                    <Button
+                                        variant="outline"
+                                        onClick={() => {
+                                            setTempBuyAmount(limitOrderBuyAmount);
+                                        }}
+                                    >
+                                        {t('LimitOrderWizard:buy')}
+                                    </Button>
+                                </DialogTrigger>
+                                <DialogContent className="bg-white">
+                                    <DialogHeader>
+                                        <DialogTitle>{t('LimitOrderWizard:buyingIntoOpenLimitOrder')}</DialogTitle>
+                                        <DialogDescription>
+                                            {t('LimitOrderWizard:howMuchToBuy')}
+                                        </DialogDescription>
+                                    </DialogHeader>
+                                    <div className="grid grid-cols-1 gap-3">
+                                        <div className="grid grid-cols-2 gap-2">
+                                            <div className="col-span-2">
+                                                <label className="block text-sm font-medium text-gray-700">
+                                                    {t('TFundUser:amountAvailable')}
+                                                </label>
+                                            </div>
+                                            <Input
+                                                value={_amountOffered}
+                                                type="text"
+                                                disabled
+                                            />
+                                            <Input
+                                                value={_assetLimitOrderOffers.symbol}
+                                                type="text"
+                                                disabled
+                                            />
                                         </div>
-                                        <div className="col-span-2">
+                                        <label className="block text-sm font-medium text-gray-700">
+                                            {t('LimitOrderWizard:buying')}
+                                        </label>
+                                        <div className="grid grid-cols-2 gap-2">
                                             <Input
                                                 value={tempBuyAmount}
                                                 type="text"
@@ -279,39 +308,32 @@ export default function LimitOrderWizard(properties) {
                                                     }
                                                 }}
                                             />
+                                            {
+                                                percentPossible > 0
+                                                    ? <Button
+                                                        variant="outline"
+                                                        onClick={() => {
+                                                            if (!sellingAssetBalance || !sellingAssetBalance.amount || sellingAssetBalance.amount <= 0) {
+                                                                setTempBuyAmount(parseFloat(0));
+                                                                return;
+                                                            }
+                                                            if (percentPossible > 1) {
+                                                                setTempBuyAmount(parseFloat(_amountOffered));
+                                                            } else {
+                                                                setTempBuyAmount(parseFloat(_amountOffered * percentPossible));
+                                                            }
+                                                        }}
+                                                    >
+                                                        {t('LimitOrderWizard:max')}
+                                                    </Button>
+                                                    : <Button
+                                                        variant="outline"
+                                                        disabled
+                                                    >
+                                                        {t('LimitOrderWizard:max')}
+                                                    </Button>
+                                            }
                                         </div>
-                                        <div className="col-span-2">
-                                            <Input
-                                                value={buyingAssetData.symbol}
-                                                type="text"
-                                                disabled
-                                            />
-                                        </div>
-                                        {
-                                            percentPossible > 0
-                                                ? <Button
-                                                    variant="outline"
-                                                    onClick={() => {
-                                                        if (!sellingAssetBalance || !sellingAssetBalance.amount || sellingAssetBalance.amount <= 0) {
-                                                            setTempBuyAmount(parseFloat(0));
-                                                            return;
-                                                        }
-                                                        if (percentPossible > 1) {
-                                                            setTempBuyAmount(parseFloat(_amountOffered));
-                                                        } else {
-                                                            setTempBuyAmount(parseFloat(_amountOffered * percentPossible));
-                                                        }
-                                                    }}
-                                                >
-                                                    {t('LimitOrderWizard:max')}
-                                                </Button>
-                                                : <Button
-                                                    variant="outline"
-                                                    disabled
-                                                >
-                                                    {t('LimitOrderWizard:max')}
-                                                </Button>
-                                        }
                                     </div>
                                     <div className="grid grid-cols-2 gap-2">
                                         <div className="col-span-2">
@@ -370,7 +392,7 @@ export default function LimitOrderWizard(properties) {
                                             </div>
                                             : null
                                     }
-                                    <div className="grid grid-cols-2 gap-2">     
+                                    <div className="grid grid-cols-1 gap-2">     
                                         <Button
                                             variant="outline"
                                             onClick={() => {
@@ -457,27 +479,43 @@ export default function LimitOrderWizard(properties) {
                                             }}
                                         >
                                             {t('LimitOrderWizard:submit')}
-                                        </Button>
-                                        {
-                                            operations.find(op => op.id === _order.id)
-                                                ? <Button
-                                                    variant="outline"
-                                                    onClick={() => {
-                                                        setTempBuyAmount(parseFloat(0));
-                                                    }}
-                                                >
-                                                    {t('CustomPoolOverview:delete')}
-                                                </Button>
-                                                : <Button variant="outline" disabled>
-                                                    {t('CustomPoolOverview:delete')}
-                                                </Button>
-                                        }                               
+                                        </Button>                           
                                     </div>    
-                                </div>
-                            </DialogContent>
-                        </Dialog>
-                        : null
-                }
+                                </DialogContent>
+                            </Dialog>
+                            : null
+                    }
+                    {
+                        operations && operations.length && operations.find(op => op.id === _order.id)
+                            ? <Button
+                                variant="outline"
+                                onClick={() => {
+                                    setOperations((prevOperations) => {
+                                        const _ops = [...prevOperations];
+                                        const existingOperationIndex = _ops.findIndex(op => op.id === _order.id);
+                                        if (existingOperationIndex !== -1) {
+                                            // Remove the current operation
+                                            _ops.splice(existingOperationIndex, 1);
+
+                                            // Remove subsequent operations that rely on the current operation
+                                            for (let i = index + 1; i < marketLimitOrders.length; i++) {
+                                                const subsequentOrder = marketLimitOrders[i];
+                                                const existingSubsequentOperationIndex = _ops.findIndex(op => op.id === subsequentOrder.id);
+
+                                                if (existingSubsequentOperationIndex !== -1) {
+                                                    _ops.splice(existingSubsequentOperationIndex, 1);
+                                                }
+                                            }
+                                        }
+                                        return _ops;
+                                    });
+                                }}
+                            >
+                                {t('CustomPoolOverview:delete')}
+                            </Button>
+                            : null
+                    }
+                </div>
             </div>
         );
     };
