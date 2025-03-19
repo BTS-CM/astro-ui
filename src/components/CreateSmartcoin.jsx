@@ -504,7 +504,7 @@ export default function CreateSmartcoin(properties) {
           }
 
           if (_bitassetData.options.extensions.hasOwnProperty("black_swan_response_method")) {
-            setBsrmStrategy(_bitassetData.options.extensions.black_swan_response_method);
+            setBsrmStrategy(_bitassetData.options.extensions.black_swan_response_method.toString());
           }
 
           setFeedLifetimeSeconds(_bitassetData.options.feed_lifetime_sec);
