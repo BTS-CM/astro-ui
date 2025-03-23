@@ -1,12 +1,11 @@
-import path from "path";
+import path from "node:path";
 import os from "os";
-import url from "url";
-import express from "express";
+import url from "node:url";
 
 import { key, PrivateKey } from "bitsharesjs";
 import { Apis } from "bitsharesjs-ws";
 
-import { app, BrowserWindow, Menu, Tray, ipcMain, screen, shell } from "electron";
+import { app, BrowserWindow, Menu, Tray, ipcMain, protocol, shell } from "electron";
 
 import { initApplicationMenu } from "./lib/applicationMenu.js";
 import { generateDeepLink } from "./lib/deeplink.js";
@@ -30,23 +29,10 @@ const createWindow = async () => {
     icon: __dirname + "/img/taskbar.png",
   });
 
-  const expressApp = express();
-
-  let astroDistPath;
-  if (process.env.NODE_ENV === "development") {
-    astroDistPath = "astroDist";
-  } else {
-    astroDistPath = path.join(process.resourcesPath, "astroDist");
-  }
-
-  expressApp.use(express.static(astroDistPath));
-  expressApp.listen(8080, () => {
-    console.log("Express server listening on port 8080");
-  });
-
   initApplicationMenu(mainWindow);
 
-  mainWindow.loadURL("http://localhost:8080/index.html");
+  // Load the local HTML file using the custom protocol
+  mainWindow.loadURL('file://index.html');
 
   mainWindow.webContents.setWindowOpenHandler(() => {
     return { action: "deny" };
@@ -498,6 +484,22 @@ if (currentOS === "win32" || currentOS === "linux") {
   }
 
   app.whenReady().then(() => {
+    protocol.interceptFileProtocol('file', (request, callback) => {
+      let filePath = request.url.slice('file://'.length);
+
+      if (filePath.endsWith('/')) {
+        filePath = filePath.slice(0, -1);
+      }
+
+      filePath = filePath.replace(/[^/]+\.html\//, '');
+
+      const fullPath = process.env.NODE_ENV === "development"
+        ? path.join('astroDist', filePath)
+        : path.join(process.resourcesPath, 'astroDist', filePath);
+
+      callback({ path: fullPath });
+    });
+
     createWindow();
   });
 } else {
