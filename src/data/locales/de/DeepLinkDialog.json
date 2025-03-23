@@ -20,7 +20,7 @@
     "copyOperationJSON": "Kopiervorgang JSON",
     "usingDeeplink": "Verwendung eines Deeplinks zur Übertragung über das Beet-Multiwallet",
     "step1": "Starten Sie das BEET-Wallet und navigieren Sie im Menü zu „Raw Link“. Das Wallet muss für die Dauer der Übertragung entsperrt bleiben.",
-    "step2": "Auf dieser Seite können Sie entweder alle Vorgänge zulassen oder nur den Vorgang zulassen.{{operationName}}' (klicken Sie dann auf Speichern).",
+    "step2": "Auf dieser Seite können Sie entweder alle Vorgänge zulassen oder nur den Vorgang „{{operationName}}“ sowie „injectedCall“ zulassen (klicken Sie anschließend auf „Speichern“).",
     "step3": "Sobald in Beet „Bereit für Rohlinks“ angezeigt wird, können Sie auf die Schaltfläche unten klicken, um fortzufahren.",
     "step4": "Es wird eine BEET-Eingabeaufforderung angezeigt, die den Inhalt überprüft, optional eine Beet-Quittung anfordert und dann die Transaktion an die Blockchain sendet.",
     "step5": "Sie erhalten in diesem Fenster keine Bestätigung, aber Ihr Vorgang wird innerhalb von Sekunden auf der Blockchain verarbeitet.",

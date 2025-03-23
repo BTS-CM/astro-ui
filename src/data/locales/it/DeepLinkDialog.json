@@ -20,7 +20,7 @@
     "copyOperationJSON": "Operazione di copia JSON",
     "usingDeeplink": "Utilizzo di un deeplink per trasmettere tramite il multiwallet Beet",
     "step1": "Avvia il portafoglio BEET e vai a \"Raw Link\" nel menu, il portafoglio deve rimanere sbloccato per tutta la durata della trasmissione.",
-    "step2": "Da questa pagina è possibile consentire tutte le operazioni oppure consentire solo l'operazione '{{operationName}}' (quindi fare clic su Salva).",
+    "step2": "Da questa pagina puoi consentire tutte le operazioni oppure consentire solo l'operazione '{{operationName}}' e 'injectedCall' (quindi fai clic su Salva).",
     "step3": "Una volta visualizzato \"Pronto per i collegamenti grezzi\" in Beet, puoi fare clic sul pulsante in basso per procedere.",
     "step4": "Verrà visualizzato un messaggio BEET, verificherà il contenuto, facoltativamente richiederà una ricevuta di BEET e quindi trasmetterà la transazione sulla blockchain.",
     "step5": "Non riceverai una conferma in questa finestra, ma la tua operazione verrà elaborata in pochi secondi sulla blockchain.",

@@ -20,7 +20,7 @@
     "copyOperationJSON": "Kopeerimistoimingu JSON",
     "usingDeeplink": "Süvalingi kasutamine edastuseks Beet multiwalleti kaudu",
     "step1": "Käivitage BEET rahakott ja navigeerige menüüs 'Raw Link', rahakott peab jääma ülekande ajaks lukustamata.",
-    "step2": "Sellel lehel saate lubada kõik toimingud või ainult toimingu \"{{operationName}}' (seejärel klõpsake nuppu Salvesta).",
+    "step2": "Sellel lehel saate lubada kõik toimingud või ainult toimingu '{{operationName}}' ja 'injectedCall' (seejärel klõpsake nuppu Salvesta).",
     "step3": "Kui Beetis kuvatakse teade „Toores linkide jaoks valmis”, võite jätkamiseks klõpsata alloleval nupul.",
     "step4": "Kuvatakse BEET-viip, kontrollige sisu, taotlege soovi korral Beet-kviitungit ja edastage tehing plokiahelasse.",
     "step5": "Te ei saa selles aknas kinnitust, kuid teie toiming töödeldakse plokiahelas mõne sekundi jooksul.",

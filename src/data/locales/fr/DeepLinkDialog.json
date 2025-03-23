@@ -20,7 +20,7 @@
     "copyOperationJSON": "Opération de copie JSON",
     "usingDeeplink": "Utiliser un lien profond pour diffuser via le multiwallet Beet",
     "step1": "Lancez le portefeuille BEET et accédez à « Raw Link » dans le menu, le portefeuille doit rester déverrouillé pendant toute la durée de la diffusion.",
-    "step2": "À partir de cette page, vous pouvez soit autoriser toutes les opérations, soit autoriser uniquement l'opération '{{operationName}}' (puis cliquez sur Enregistrer).",
+    "step2": "À partir de cette page, vous pouvez soit autoriser toutes les opérations, soit autoriser uniquement l'opération « {{operationName}} » ainsi que « injectedCall » (puis cliquez sur Enregistrer).",
     "step3": "Une fois que « Prêt pour les liens bruts » s'affiche dans Beet, vous pouvez cliquer sur le bouton ci-dessous pour continuer.",
     "step4": "Une invite BEET s'affichera, vérifiera le contenu, demandera éventuellement un reçu Beet, puis diffusera la transaction sur la blockchain.",
     "step5": "Vous ne recevrez pas de confirmation dans cette fenêtre, mais votre opération sera traitée en quelques secondes sur la blockchain.",

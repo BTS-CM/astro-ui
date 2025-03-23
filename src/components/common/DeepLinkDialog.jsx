@@ -281,7 +281,7 @@ export default function DeepLinkDialog(properties) {
                       {t("DeepLinkDialog:tabsContent.operationType")}
                     </span>
                     <Textarea
-                      value={JSON.stringify(operationNames, null, 4)}
+                      value={JSON.stringify([...new Set(operationNames)], null, 4)}
                       className="min-h-[125px]"
                       id="trxJSON"
                       readOnly
@@ -311,7 +311,7 @@ export default function DeepLinkDialog(properties) {
                     <li type="1">{t("DeepLinkDialog:tabsContent.step1")}</li>
                     <li type="1">
                       {t("DeepLinkDialog:tabsContent.step2", {
-                        operationName: operationNames.join(", "),
+                        operationName: [...new Set(operationNames)].join(", "),
                       })}
                     </li>
                     <li type="1">{t("DeepLinkDialog:tabsContent.step3")}</li>
@@ -347,7 +347,7 @@ export default function DeepLinkDialog(properties) {
                     <li type="1">{t("DeepLinkDialog:tabsContent.step1Local")}</li>
                     <li type="1">
                       {t("DeepLinkDialog:tabsContent.step2Local", {
-                        operationName: operationNames.join(", "),
+                        operationName: [...new Set(operationNames)].join(", "),
                       })}
                     </li>
                     <li type="1">{t("DeepLinkDialog:tabsContent.step3Local")}</li>

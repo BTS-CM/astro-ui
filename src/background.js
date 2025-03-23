@@ -504,6 +504,22 @@ if (currentOS === "win32" || currentOS === "linux") {
   });
 } else {
   app.whenReady().then(() => {
+    protocol.interceptFileProtocol('file', (request, callback) => {
+      let filePath = request.url.slice('file://'.length);
+
+      if (filePath.endsWith('/')) {
+        filePath = filePath.slice(0, -1);
+      }
+
+      filePath = filePath.replace(/[^/]+\.html\//, '');
+
+      const fullPath = process.env.NODE_ENV === "development"
+        ? path.join('astroDist', filePath)
+        : path.join(process.resourcesPath, 'astroDist', filePath);
+
+      callback({ path: fullPath });
+    });
+    
     createWindow();
   });
 

@@ -336,13 +336,13 @@ export default function SameTFunds(properties) {
       const asset = assets.find((x) => x.id === position.asset_id);
       const balance = newBalances.find((b) => b.asset_id === position.asset_id);
       if (balance) {
-        balance.amount = (
-          parseFloat(balance.amount) + parseFloat(position.borrow_amount)
-        ).toFixed(asset.precision);
+        balance.amount = parseFloat(
+          (parseFloat(balance.amount) + parseFloat(position.borrow_amount)).toFixed(asset.precision)
+        );
       } else {
         newBalances.push({
           asset_id: position.asset_id,
-          amount: position.borrow_amount,
+          amount: parseFloat(position.borrow_amount),
           symbol: asset.symbol,
           display: true
         });
@@ -350,12 +350,6 @@ export default function SameTFunds(properties) {
     });
   
     operations.forEach((operation) => {
-      /*
-        final_buy_amount
-        final_asset_purchased
-        final_asset_sold
-        final_price
-      */
       if (!operation) {
         return;
       }
@@ -371,7 +365,7 @@ export default function SameTFunds(properties) {
 
       const sellBalance = newBalances.find((b) => b.asset_id === _soldAsset.id);
       const buyBalance = newBalances.find((b) => b.asset_id === _purchasedAsset.id);
-  
+
       if (sellBalance) {
         sellBalance.amount -= sellAmount;
       } else {

@@ -187,27 +187,23 @@ export default function LimitOrderWizard(properties) {
 
         const price = (parseFloat(_amountSellerDesires) / parseFloat(_amountOffered)).toFixed(_assetLimitOrderWants.precision);
 
-        const _quoteFee = _assetLimitOrderOffers && _assetLimitOrderOffers.market_fee_percent ? _assetLimitOrderOffers.market_fee_percent / 100 : 0;
+        const _quoteFee = _assetLimitOrderOffers && _assetLimitOrderOffers.market_fee_percent
+            ? _assetLimitOrderOffers.market_fee_percent / 100
+            : 0;
 
         const sellingAssetBalance = updatedBalances.find((x) => x.asset_id === _assetLimitOrderWants.id);
         
-        const percentPossible = sellingAssetBalance && sellingAssetBalance.amount && sellingAssetBalance.amount > 0 
-            ? (parseFloat(sellingAssetBalance.amount) + parseFloat(limitOrderBuyAmount * price)) / parseFloat(_amountSellerDesires)
+        const percentPossible = sellingAssetBalance && sellingAssetBalance.amount && parseFloat(sellingAssetBalance.amount) > 0 
+            ? (parseFloat(sellingAssetBalance.amount) + (parseFloat(limitOrderBuyAmount) * parseFloat(price))) / parseFloat(_amountSellerDesires)
             : 0;
 
-        //let _totalPriorRowAmount = 0;
-        //let _currentRowAmount = 0;
-
         let totalAmountRequired = 0;
-        let currentRowRequired = 0;
         for (let i = 0; i < index; i++) {
-            // Iterating over the market limir orders to calculate total amounts
             const priorOrder = marketLimitOrders[i];
             const priorOrderAsset = assets.find((x) => x.id === priorOrder.sell_price.quote.asset_id);
             const priorOrderAmount = humanReadableFloat(priorOrder.sell_price.quote.amount, priorOrderAsset.precision);
             const priorOrderOperation = operations.find(op => op.id === priorOrder.id);
 
-            // Skip rows which already have 100% of the offered amount set to be purchased
             if (priorOrderOperation) {
                 const remainingAmount = parseFloat(priorOrderAmount) - parseFloat(
                     priorOrderOperation.final_buy_amount * priorOrderOperation.final_price
@@ -222,7 +218,6 @@ export default function LimitOrderWizard(properties) {
         }
         
         const hasEnoughFunds = sellingAssetBalance && parseFloat(sellingAssetBalance.amount) >= totalAmountRequired;
-
         const previousOperation = index > 0 ? operations.find(op => op.id === marketLimitOrders[index - 1].id) : null;
 
         const previousRowAmount = previousOperation

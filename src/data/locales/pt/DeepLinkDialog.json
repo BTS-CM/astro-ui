@@ -20,7 +20,7 @@
     "copyOperationJSON": "Copiar operação JSON",
     "usingDeeplink": "Usando um deeplink para transmitir através da multiwallet Beet",
     "step1": "Inicie a carteira BEET e navegue até ‘Raw Link’ no menu, a carteira deve permanecer desbloqueada durante a transmissão.",
-    "step2": "Nesta página você pode permitir todas as operações ou permitir apenas a operação '{{operationName}}' (depois clique em salvar).",
+    "step2": "Nesta página, você pode permitir todas as operações ou permitir apenas a operação '{{operationName}}' e 'injectedCall' (depois clique em salvar).",
     "step3": "Assim que 'Pronto para links brutos' aparecer no Beet, você pode clicar no botão abaixo para continuar.",
     "step4": "Um prompt BEET será exibido, verificará o conteúdo, opcionalmente solicitará um recibo do Beet e, em seguida, transmitirá a transação para o blockchain.",
     "step5": "Você não receberá uma confirmação nesta janela, mas sua operação será processada em segundos no blockchain.",

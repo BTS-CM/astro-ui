@@ -20,7 +20,7 @@
     "copyOperationJSON": "Kopier operation JSON",
     "usingDeeplink": "Brug af et dybt link til at udsende via Beet multiwallet",
     "step1": "Start BEET-pungen og naviger til 'Raw Link' i menuen, tegnebogen skal forblive ulåst under udsendelsens varighed.",
-    "step2": "Fra denne side kan du enten tillade alle operationer eller udelukkende tillade operation '{{operationName}}' (klik derefter på Gem).",
+    "step2": "Fra denne side kan du enten tillade alle operationer eller udelukkende tillade operation '{{operationName}}' samt 'injectedCall' (klik derefter på Gem).",
     "step3": "Når 'Klar til rå links' vises i Beet, kan du klikke på knappen nedenfor for at fortsætte.",
     "step4": "En BEET-prompt vil vise, verificere indholdet, eventuelt anmode om en Beet-kvittering og derefter udsende transaktionen til blockchain.",
     "step5": "Du modtager ikke en bekræftelse i dette vindue, men din handling vil blive behandlet inden for få sekunder på blockchain.",
