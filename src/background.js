@@ -1,6 +1,8 @@
 import path from "node:path";
 import os from "os";
 import url from "node:url";
+import { readFile } from 'fs/promises';
+import mime from 'mime-types';
 
 import { key, PrivateKey } from "bitsharesjs";
 import { Apis } from "bitsharesjs-ws";
@@ -12,6 +14,17 @@ import { generateDeepLink } from "./lib/deeplink.js";
 
 let mainWindow = null;
 let tray = null;
+
+protocol.registerSchemesAsPrivileged([
+  {
+    scheme: 'file',
+    privileges: {
+      standard: true,
+      secure: true,
+      supportFetchAPI: true
+    }
+  }
+]);
 
 const createWindow = async () => {
   mainWindow = new BrowserWindow({
@@ -483,45 +496,75 @@ if (currentOS === "win32" || currentOS === "linux") {
     app.quit();
   }
 
-  app.whenReady().then(() => {
-    protocol.interceptFileProtocol('file', (request, callback) => {
-      let filePath = request.url.slice('file://'.length);
+  app.whenReady()
+    .then(() => {
+      protocol.handle('file', async (req) => {
+        const { pathname } = new URL(req.url);
+        if (!pathname) {
+          return;
+        }
+        
+        let fullPath = process.env.NODE_ENV === "development"
+          ? path.join('astroDist', pathname)
+          : path.join(process.resourcesPath, 'astroDist', pathname);
+      
+        if (pathname === '/') {
+          fullPath = path.join(fullPath, 'index.html');
+        }
 
-      if (filePath.endsWith('/')) {
-        filePath = filePath.slice(0, -1);
-      }
+        if (fullPath.includes("..") || fullPath.includes("~")) {
+          return; // Prevent directory traversal attacks
+        }
 
-      filePath = filePath.replace(/[^/]+\.html\//, '');
+        let _res;
+        try {
+          _res = await readFile(fullPath);
+        } catch (error) {
+          console.log({ error });
+        }
 
-      const fullPath = process.env.NODE_ENV === "development"
-        ? path.join('astroDist', filePath)
-        : path.join(process.resourcesPath, 'astroDist', filePath);
+        const mimeType = mime.lookup(fullPath) || 'application/octet-stream';
 
-      callback({ path: fullPath });
-    });
-
-    createWindow();
-  });
+        return new Response(_res, {
+          headers: { 'content-type': mimeType }
+        });
+      });
+    })
+    .then(createWindow);
 } else {
   app.whenReady().then(() => {
-    protocol.interceptFileProtocol('file', (request, callback) => {
-      let filePath = request.url.slice('file://'.length);
-
-      if (filePath.endsWith('/')) {
-        filePath = filePath.slice(0, -1);
+    protocol.handle('file', async (req) => {
+      const { pathname } = new URL(req.url);
+      if (!pathname) {
+        return;
+      }
+      
+      let fullPath = process.env.NODE_ENV === "development"
+        ? path.join('astroDist', pathname)
+        : path.join(process.resourcesPath, 'astroDist', pathname);
+    
+      if (pathname === '/') {
+        fullPath = path.join(fullPath, 'index.html');
       }
 
-      filePath = filePath.replace(/[^/]+\.html\//, '');
+      if (fullPath.includes("..") || fullPath.includes("~")) {
+        return; // Prevent directory traversal attacks
+      }
 
-      const fullPath = process.env.NODE_ENV === "development"
-        ? path.join('astroDist', filePath)
-        : path.join(process.resourcesPath, 'astroDist', filePath);
+      let _res;
+      try {
+        _res = await readFile(fullPath);
+      } catch (error) {
+        console.log({ error });
+      }
 
-      callback({ path: fullPath });
+      const mimeType = mime.lookup(fullPath) || 'application/octet-stream';
+
+      return new Response(_res, {
+        headers: { 'content-type': mimeType }
+      });
     });
-    
-    createWindow();
-  });
+  }).then(createWindow);
 
   app.on("window-all-closed", () => {
     if (process.platform !== "darwin") {
