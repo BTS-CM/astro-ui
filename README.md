@@ -4,37 +4,29 @@ Created using [Astro](https://docs.astro.build), [React](https://react.dev/) & [
 
 Integrates with both the [Beet](https://github.com/bitshares/beet) and [BeetEOS](https://github.com/beetapp/beeteos) multiwallets, for the Bitshares and Bitshares Testnet blockchains.
 
-## Dev blogs
-
-- [DEX Limit order improvements](https://hive.blog/hive-120117/@nftea.gallery/feb-2025-bitshares-astro-ui-development-blog-several-improvements-to-the-dex-limit-order-page-v0-2-91-released)
-- [Evaluating worker proposal support progress](https://hive.blog/hive-120117/@nftea.gallery/evaluating-worker-proposal-support-from-all-bitshares-blockchain-accounts)
-- [Issued Asset Actions & Smartcoin UX improvements!](https://hive.blog/hive-120117/@nftea.gallery/another-october-bitshares-astro-ui-development-blog-issued-asset-actions-and-smartcoin-ux-improvements)
-- [Proposals](https://hive.blog/hive-120117/@nftea.gallery/october-bitshares-astro-ui-development-blog-demonstrating-the-construction-and-resolution-of-bitshares-proposals)
-- [Account lists](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-dev-blog-manage-your-bitshares-account-lists-more-easily)
-- [Smartcoins](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-development-preview-blog-creating-smartcoins-on-the-bitshares-blockchain-for-use-on-the-bts-dex)
-- [User Issued Assets](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-dev-update-creating-user-issued-assets-and-browsing-issued-assets-overview)
-- [Vesting Balances](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-dev-update-creating-vesting-balances)
-- [Same-T Funds](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-dev-update-same-t-fund-support-has-been-added)
-- [Prediction Market Assets](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-dev-update-prediction-market-assets)
-- [Credit offer overviews & Vesting balance claims](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-dev-update-credit-offer-owner-overview-page-and-vesting-balance-claim-page)
-- [Favourite assets & Portfolio tweaks](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-dev-update-favourite-assets-and-portfolio-tweaks)
-- [Simple swaps & node configuration](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-dev-update-swaps-and-nodes)
-- [Electron packaging](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-worker-proposal-electron-release)
-- [Announcement thread](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-development-worker-proposal)
+## Recent dev blogs
+- [Why you should support the Bitshares Astro-UI Development Worker Proposal!](https://hive.blog/bitshares/@nftea.gallery/why-you-should-support-the-bitshares-astro-ui-development-worker-proposal)
+- [Custom Liquidity Pool Tracker Page & Liquidity Pool Overview Page!](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-dev-blog-custom-liquidity-pool-tracker-page-and-liquidity-pool-overview-page)
+- [Creating cloud accounts, crafting same-t fund limit order transactions and transfer memos!](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-dev-blog-creating-cloud-accounts-crafting-same-t-fund-limit-order-transactions-and-transfer-memos)
+- [New Featured Liquidity Pool Overview page!](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-dev-blog-new-featured-liquidity-pool-overview-page-in-v0-3-31)
 
 ## Functionality
 
+- Create a new account (cloud wallets)
+- Craft complex Same-T Fund limit order transactions
+- Create your own featured liquidity pool analytics tracker
 - Switch between Bitshares (mainnet) and the Bitshares Testnet blockchains
 - Fully translated to 10 languages!
-- Place limit orders
-- Perform liquidity pool swaps
+- Place DEX limit orders
+- Perform liquidity pool swaps (simple swap & pool exchange swap pages)
 - Stake assets in liquidity pools
-- Transfer assets to other blockchain users
+- Transfer assets to other blockchain users (memo supported)
 - Borrow funds from other users (credit deals)
 - Lend funds to other users (credit offers)
 - Issue Collateralized Debt Positions (smartcoins & market pegged assets)
 - View portfolio (balance, activity, open orders)
 - View top markets (24hr trading rankings)
+- View liquidity pools (in table format)
 - Credit deal overview
 - Credit offer overview
 - Claim vesting balances
@@ -50,6 +42,10 @@ Integrates with both the [Beet](https://github.com/bitshares/beet) and [BeetEOS]
 - Create proposals for all operations
 - View account proposals - approve/reject
 - Configure account lists
+
+## Screenshot
+
+![image](https://github.com/user-attachments/assets/7b6b6094-65e4-4950-b997-6d6f1deb37b4)
 
 ## Dev Commands
 
