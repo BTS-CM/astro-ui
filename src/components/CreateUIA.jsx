@@ -52,6 +52,7 @@ import { useInitCache } from "@/nanoeffects/Init.ts";
 import { $currentUser } from "@/stores/users.ts";
 import { $currentNode } from "@/stores/node.ts";
 import { createObjectStore } from "@/nanoeffects/Objects.ts";
+import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 
 import {
   getPermissions,
@@ -119,6 +120,34 @@ export default function UIA(properties) {
     }
     return [];
   }, [_assetsBTS, _assetsTEST, _chain]);
+
+  const [balanceCounter, setBalanceCoutner] = useState(0);
+  const [balances, setBalances] = useState();
+  useEffect(() => {
+    let unsubscribeUserBalances;
+
+    if (usr && usr.id && currentNode && assets && assets.length) {
+      const userBalancesStore = createUserBalancesStore([
+        usr.chain,
+        usr.id,
+        currentNode ? currentNode.url : null,
+      ]);
+
+      unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
+        if (data && !error && !loading) {
+          const filteredData = data.filter((balance) =>
+            assets.find((x) => x.id === balance.asset_id)
+          );
+          console.log({ filteredData })
+          setBalances(filteredData);
+        }
+      });
+    }
+
+    return () => {
+      if (unsubscribeUserBalances) unsubscribeUserBalances();
+    };
+  }, [usr, assets, currentNode, balanceCounter]);
 
   // Asset info
   const [shortName, setShortName] = useState("");
@@ -1157,6 +1186,7 @@ export default function UIA(properties) {
                         marketSearch={marketSearch}
                         type={"backing"}
                         chain={usr && usr.chain ? usr.chain : "bitshares"}
+                        balances={balances}
                       />
                     ) : null}
                   </div>

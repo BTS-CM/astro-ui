@@ -14,13 +14,6 @@
     "hover2": "I pool hanno coppie di trading e commissioni di trading diverse.",
     "hover3": "Più semplice ma più costoso di un ordine limite."
   },
-  "pool_tracker": {
-    "title": "📊 Tracker in piscina in primo piano",
-    "subtitle": "Visualizza i dati e le statistiche del pool di liquidità",
-    "hover1": "Visualizza pool di liquidità in primo piano su BitShares Dex.",
-    "hover2": "Visualizza le stime degli utili del pool.",
-    "hover3": "Visualizza l'analisi del pool consolodata."
-  },
   "swap": {
     "title": "🔄 Scambio di risorse semplice",
     "subtitle": "Scambiare più facilmente le risorse tramite pool",

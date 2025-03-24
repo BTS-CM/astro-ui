@@ -14,13 +14,6 @@
     "hover2": "Os pools têm diferentes pares de negociação e taxas.",
     "hover3": "Mais simples, mas mais caro do que um pedido com limite."
   },
-  "pool_tracker": {
-    "title": "📊 Rastreador de piscina em destaque",
-    "subtitle": "Ver dados e estatísticas do pool de liquidez",
-    "hover1": "Visualize pools de liquidez no Bitshares Dex.",
-    "hover2": "Veja as estimativas de ganhos do pool.",
-    "hover3": "Veja a análise consolodada do pool."
-  },
   "swap": {
     "title": "🔄 Troca simples de ativos",
     "subtitle": "Trocar ativos com mais facilidade por meio de pools",

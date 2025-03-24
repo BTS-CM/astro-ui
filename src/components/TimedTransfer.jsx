@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useSyncExternalStore, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { useStore } from "@nanostores/react";
+import { CalendarIcon } from "@radix-ui/react-icons";
+import { format } from "date-fns";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
@@ -31,9 +33,20 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import HoverInfo from "@/components/common/HoverInfo.tsx";
+
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 import { Avatar as Av, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -42,6 +55,7 @@ import { $currentUser } from "@/stores/users.ts";
 import { $currentNode } from "@/stores/node.ts";
 
 import { humanReadableFloat, trimPrice, blockchainFloat } from "@/lib/common";
+import { cn } from "@/lib/utils";
 
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 import { createObjectStore } from "@/nanoeffects/Objects.ts";
@@ -54,7 +68,7 @@ import ExternalLink from "./common/ExternalLink.jsx";
 
 import AssetDropDown from "./Market/AssetDropDownCard.jsx";
 
-export default function Transfer(properties) {
+export default function TimedTransfer(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
   const form = useForm({
     defaultValues: {
@@ -69,7 +83,7 @@ export default function Transfer(properties) {
   const [targetUser, setTargetUser] = useState();
   const [selectedAsset, setSelectedAsset] = useState();
   const [transferAmount, setTransferAmount] = useState(0);
-  const [memoContents, setMemoContents] = useState();
+  const [reviewPeriodSeconds, setReviewPeriodSeconds] = useState(60000);
 
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
 
@@ -138,6 +152,7 @@ export default function Transfer(properties) {
           const filteredData = data.filter((balance) =>
             assets.find((x) => x.id === balance.asset_id)
           );
+          console.log({ filteredData })
           setBalances(filteredData);
         }
       });
@@ -197,6 +212,22 @@ export default function Transfer(properties) {
     }
   }, [targetUser]);
 
+  // Proposal dialog state
+  const [expiryType, setExpiryType] = useState("1hr");
+  const [expiry, setExpiry] = useState(() => {
+    const now = new Date();
+    const oneHour = 60 * 60 * 1000;
+    return new Date(now.getTime() + oneHour);
+  });
+
+  const [date, setDate] = useState(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)); // Solely for the calendar component to display a date string
+
+  useEffect(() => {
+    if (expiryType === "specific" && date) {
+      setExpiry(date);
+    }
+  }, [expiryType, date]);
+  
   return (
     <>
       <div className="container mx-auto mt-5 mb-5">
@@ -401,11 +432,13 @@ export default function Transfer(properties) {
                           {t("Transfer:assetToTransferDescription")}
                         </FormDescription>
                         <FormMessage>
-                          {foundAsset &&
-                          balances &&
-                          !balances.map((x) => x.asset_id).includes(foundAsset.id)
-                            ? t("Transfer:noAssetInAccount", { username: usr.username })
-                            : null}
+                          {
+                            foundAsset &&
+                            balances &&
+                            !balances.map((x) => x.asset_id).includes(foundAsset.id)
+                              ? t("Transfer:noAssetInAccount", { username: usr.username })
+                              : null
+                          }
                         </FormMessage>
                       </FormItem>
                     )}
@@ -480,33 +513,128 @@ export default function Transfer(properties) {
                     />
                   ) : null}
 
-                  {selectedAsset && targetUser ? (
-                    <FormField
-                      control={form.control}
-                      name="memoField"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{t("Transfer:optionalMemo")}</FormLabel>
-                          <FormControl
-                            onChange={(event) => {
-                              const input = event.target.value;
-                              setMemoContents(input);
-                            }}
-                          >
-                            <Input
-                              label={t("Transfer:memoFieldLabel")}
-                              value={memoContents}
-                              placeholder={memoContents}
-                              className="mb-1"
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 gap-3">
+                      <HoverInfo
+                        content={t("Predictions:sellDialog.expiryContent")}
+                        header={t("Predictions:sellDialog.expiryHeader")}
+                      />
+                      <Select
+                        onValueChange={(selectedExpiry) => {
+                          setExpiryType(selectedExpiry);
+                          const oneHour = 60 * 60 * 1000;
+                          const oneDay = 24 * oneHour;
+                          if (selectedExpiry !== "specific") {
+                            const now = new Date();
+                            let expiryDate;
+                            if (selectedExpiry === "1hr") {
+                              expiryDate = new Date(now.getTime() + oneHour);
+                            } else if (selectedExpiry === "12hr") {
+                              const duration = oneHour * 12;
+                              expiryDate = new Date(now.getTime() + duration);
+                            } else if (selectedExpiry === "24hr") {
+                              const duration = oneDay;
+                              expiryDate = new Date(now.getTime() + duration);
+                            } else if (selectedExpiry === "7d") {
+                              const duration = oneDay * 7;
+                              expiryDate = new Date(now.getTime() + duration);
+                            } else if (selectedExpiry === "30d") {
+                              const duration = oneDay * 30;
+                              expiryDate = new Date(now.getTime() + duration);
+                            }
+
+                            if (expiryDate) {
+                              setDate(expiryDate);
+                            }
+                            setExpiry(selectedExpiry);
+                          } else if (selectedExpiry === "specific") {
+                            // Setting a default date expiry
+                            setExpiry();
+                          }
+                        }}
+                      >
+                        <SelectTrigger className="mb-3 mt-1 w-3/4">
+                          <SelectValue placeholder="1hr" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-white">
+                          <SelectItem value="1hr">{t("LimitOrderCard:expiry.1hr")}</SelectItem>
+                          <SelectItem value="12hr">{t("LimitOrderCard:expiry.12hr")}</SelectItem>
+                          <SelectItem value="24hr">{t("LimitOrderCard:expiry.24hr")}</SelectItem>
+                          <SelectItem value="7d">{t("LimitOrderCard:expiry.7d")}</SelectItem>
+                          <SelectItem value="30d">{t("LimitOrderCard:expiry.30d")}</SelectItem>
+                          <SelectItem value="specific">
+                            {t("LimitOrderCard:expiry.specific")}
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                      {expiryType === "specific" ? (
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant={"outline"}
+                              className={cn(
+                                "w-[240px] justify-start text-left font-normal",
+                                !date && "text-muted-foreground"
+                              )}
+                            >
+                              <CalendarIcon className="mr-2 h-4 w-4" />
+                              {date ? (
+                                format(date, "PPP")
+                              ) : (
+                                <span>{t("LimitOrderCard:expiry.pickDate")}</span>
+                              )}
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0" align="start">
+                            <Calendar
+                              mode="single"
+                              selected={date}
+                              onSelect={(e) => {
+                                const parsedDate = new Date(e);
+                                const now = new Date();
+                                if (parsedDate < now) {
+                                  //console.log("Not a valid date");
+                                  setDate(new Date(Date.now() + 1 * 24 * 60 * 60 * 1000));
+                                  return;
+                                }
+                                //console.log("Setting expiry date");
+                                setDate(e);
+                              }}
+                              initialFocus
                             />
-                          </FormControl>
-                          <FormDescription>
-                            {t("Transfer:memoFieldDescription", { targetUser: targetUser.name })}
-                          </FormDescription>
-                        </FormItem>
-                      )}
-                    />
-                  ) : null}
+                          </PopoverContent>
+                        </Popover>
+                      ) : null}
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-3">
+                      <HoverInfo
+                        content={t("DeepLinkDialog:proposal.revisionPeriodSecondsContent")}
+                        header={t("DeepLinkDialog:proposal.revisionPeriodSecondsHeader")}
+                      />
+                      <Select
+                        onValueChange={(selectedReviewPeriod) => {
+                          setReviewPeriodSeconds(selectedReviewPeriod);
+                        }}
+                      >
+                        <SelectTrigger className="mb-3 mt-1 w-3/4">
+                          <SelectValue placeholder="1 mins" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-white">
+                          <SelectItem value={"60000"}>1 mins</SelectItem>
+                          <SelectItem value={"300000"}>5 mins</SelectItem>
+                          <SelectItem value={"600000"}>10 mins</SelectItem>
+                          <SelectItem value={"1800000"}>30 mins</SelectItem>
+                          <SelectItem value={"3600000"}>1 hour</SelectItem>
+                          <SelectItem value={"21600000"}>6 hours</SelectItem>
+                          <SelectItem value={"43200000"}>12 hours</SelectItem>
+                          <SelectItem value={"86400000"}>24 hours</SelectItem>
+                          <SelectItem value={"604800000"}>7 days</SelectItem>
+                          <SelectItem value={"2592000000"}>30 days</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
 
                   {selectedAsset && targetUser ? (
                     <FormField
@@ -545,7 +673,7 @@ export default function Transfer(properties) {
               </Form>
               {showDialog && bothUsers ? (
                 <DeepLinkDialog
-                  operationNames={["transfer"]}
+                  operationNames={["proposal_create"]}
                   username={usr.username}
                   usrChain={usr.chain}
                   userID={usr.id}
@@ -560,25 +688,31 @@ export default function Transfer(properties) {
                   })}
                   trxJSON={[
                     {
-                      fee: {
-                        amount: 0,
-                        asset_id: "1.3.0",
-                      },
-                      from: usr.id,
-                      to: targetUser.id,
-                      amount: {
-                        amount: blockchainFloat(transferAmount, foundAsset.precision).toFixed(0),
-                        asset_id: foundAsset.id,
-                      },
-                      memo: memoContents
-                        ? { // clear-text until processed by beeteos!
-                            from: bothUsers[0].options.memo_key,
-                            to: bothUsers[1].options.memo_key,
-                            nonce: String(Date.now()),
-                            message: memoContents,
-                        }
-                        : null,
-                      extensions: [],
+                      fee_paying_account: targetUser.id,
+                      expiration_time: date,
+                      proposed_ops: [{
+                        op: [
+                          0,
+                          {
+                            fee: {
+                              amount: 0,
+                              asset_id: "1.3.0",
+                            },
+                            from: usr.id,
+                            to: targetUser.id,
+                            amount: {
+                              amount: blockchainFloat(
+                                transferAmount,
+                                foundAsset.precision
+                              ).toFixed(0),
+                              asset_id: foundAsset.id,
+                            },
+                            extensions: {},
+                          },
+                        ],
+                      }],
+                      review_period_seconds: reviewPeriodSeconds,
+                      extensions: {},
                     },
                   ]}
                 />

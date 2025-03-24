@@ -51,7 +51,9 @@ export default function Market(properties) {
     _marketSearchBTS,
     _marketSearchTEST,
     _poolsBTS,
-    _poolsTEST
+    _poolsTEST,
+    //
+    balances
   } = properties;
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
 
@@ -329,6 +331,7 @@ export default function Market(properties) {
                       type={activeLimitCard === "buy" ? "quote" : "base"}
                       size="small"
                       chain={usr.chain}
+                      balances={balances}
                     />
 
                     <a
@@ -350,6 +353,7 @@ export default function Market(properties) {
                       type={activeLimitCard === "sell" ? "quote" : "base"}
                       size="small"
                       chain={usr.chain}
+                      balances={balances}
                     />
                   </div>
                 </CardContent>

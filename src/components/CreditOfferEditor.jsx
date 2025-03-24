@@ -807,6 +807,7 @@ export default function CreditOfferEditor(properties) {
                                 marketSearch={marketSearch}
                                 type={null}
                                 chain={usr.chain}
+                                balances={balances}
                               />
                             ) : null}
                           </div>
@@ -816,11 +817,13 @@ export default function CreditOfferEditor(properties) {
                         {t("CreditOfferEditor:lendingAssetDescription")}
                       </FormDescription>
                       <FormMessage>
-                        {foundAsset &&
-                        balances &&
-                        !balances.map((x) => x.asset_id).includes(foundAsset.id)
-                          ? t("Transfer:noAssetInAccount", { username: usr.username })
-                          : null}
+                        {
+                          foundAsset &&
+                          balances &&
+                          !balances.map((x) => x.asset_id).includes(foundAsset.id)
+                            ? t("Transfer:noAssetInAccount", { username: usr.username })
+                            : null
+                        }
                       </FormMessage>
                     </FormItem>
                   )}

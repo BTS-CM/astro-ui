@@ -14,13 +14,6 @@
     "hover2": "Pools haben unterschiedliche Handelspaare und Gebühren.",
     "hover3": "Einfacher, aber teurer als eine Limit-Order."
   },
-  "pool_tracker": {
-    "title": "📊 Speaked Pool Tracker",
-    "subtitle": "Sehen Sie sich Liquiditätspooldaten und Statistiken an",
-    "hover1": "View Liquidity Pools auf den Bitshares Dex.",
-    "hover2": "Schätzungen der Pooleinnahmen anzeigen.",
-    "hover3": "Konsolodierte Poolanalytik anzeigen."
-  },
   "swap": {
     "title": "🔄 Einfacher Asset-Swap",
     "subtitle": "Einfacherer Austausch von Vermögenswerten über Pools",

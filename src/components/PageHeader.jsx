@@ -141,6 +141,11 @@ export default function PageHeader(properties) {
                         icon="💸"
                       />
                       <MenuRow
+                        url="/timed_transfer/index.html"
+                        text={t("PageHeader:timed_transfer")}
+                        icon="⏱️"
+                      />
+                      <MenuRow
                         url="/create_vesting/index.html"
                         text={t("PageHeader:vestAssets")}
                         icon="🫰"
@@ -185,11 +190,6 @@ export default function PageHeader(properties) {
                         url="/featured/index.html"
                         text={t("PageHeader:topMarkets")}
                         icon="🏆"
-                      />
-                      <MenuRow
-                        url="/pool_tracker/index.html"
-                        text={t("PageHeader:poolTracker")}
-                        icon="📊"
                       />
                       <MenuRow
                         url="/custom_pool_overview/index.html"

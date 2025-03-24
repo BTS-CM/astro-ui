@@ -614,6 +614,7 @@ export default function Prediction(properties) {
                       marketSearch={marketSearch}
                       type={"backing"}
                       chain={usr && usr.chain ? usr.chain : "bitshares"}
+                      balances={balances}
                     />
                   </div>
                   <HoverInfo

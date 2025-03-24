@@ -9,13 +9,15 @@ import { humanReadableFloat } from "@/lib/common";
 import { useInitCache } from "@/nanoeffects/Init.ts";
 
 import { $currentUser } from "@/stores/users.ts";
+import { $currentNode } from "@/stores/node.ts";
 
 import { createAssetFromSymbolStore } from "@/nanoeffects/Assets.ts";
 
 export default function MarketOverlay(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
-  
+  const currentNode = useStore($currentNode);
+
   const _chain = useMemo(() => {
     if (usr && usr.chain) {
       return usr.chain;
@@ -42,6 +44,34 @@ export default function MarketOverlay(properties) {
     }
     return [];
   }, [_assetsBTS, _assetsTEST, _chain]);
+
+  const [balanceCounter, setBalanceCoutner] = useState(0);
+  const [balances, setBalances] = useState();
+  useEffect(() => {
+    let unsubscribeUserBalances;
+
+    if (usr && usr.id && currentNode && assets && assets.length) {
+      const userBalancesStore = createUserBalancesStore([
+        usr.chain,
+        usr.id,
+        currentNode ? currentNode.url : null,
+      ]);
+
+      unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
+        if (data && !error && !loading) {
+          const filteredData = data.filter((balance) =>
+            assets.find((x) => x.id === balance.asset_id)
+          );
+          console.log({ filteredData })
+          setBalances(filteredData);
+        }
+      });
+    }
+
+    return () => {
+      if (unsubscribeUserBalances) unsubscribeUserBalances();
+    };
+  }, [usr, assets, currentNode, balanceCounter]);
 
   const marketSearch = useMemo(() => {
     if (_chain && (_marketSearchBTS || _marketSearchTEST)) {
@@ -283,6 +313,7 @@ export default function MarketOverlay(properties) {
         _marketSearchTEST={_marketSearchTEST}
         _poolsBTS={_poolsBTS}
         _poolsTEST={_poolsTEST}
+        balances={balances}
       />
     </div>
   );
