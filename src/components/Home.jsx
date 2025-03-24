@@ -181,6 +181,24 @@ export default function Home(properties) {
           </HoverCardContent>
         </HoverCard>
 
+        <HoverCard key="withdraw_permissions">
+          <HoverCardTrigger asChild>
+            <a href="/withdraw_permissions/index.html" style={{ textDecoration: "none" }}>
+              <Card className="h-full hover:shadow-md hover:shadow-black">
+                <CardHeader>
+                  <CardTitle>{t("Home:withdraw_permissions.title")}</CardTitle>
+                  <CardDescription>{t("Home:withdraw_permissions.subtitle")}</CardDescription>
+                </CardHeader>
+              </Card>
+            </a>
+          </HoverCardTrigger>
+          <HoverCardContent className="w-80 text-sm pt-1">
+            <ul className="ml-2 list-disc [&>li]:mt-2">
+              <li>{t("Home:withdraw_permissions.hover1")}</li>
+            </ul>
+          </HoverCardContent>
+        </HoverCard>
+
         <HoverCard key="create_vesting">
           <HoverCardTrigger asChild>
             <a href="/create_vesting/index.html" style={{ textDecoration: "none" }}>

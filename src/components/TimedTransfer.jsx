@@ -234,7 +234,7 @@ export default function TimedTransfer(properties) {
         <div className="grid grid-cols-1 gap-3">
           <Card>
             <CardHeader>
-              <CardTitle>{t("Transfer:transferAssets")}</CardTitle>
+              <CardTitle>{t("Transfer:timedTransferAssets")}</CardTitle>
               <CardDescription>
                 <p>{t("Transfer:sendFundsDescription")}</p>
               </CardDescription>

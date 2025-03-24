@@ -71,34 +71,6 @@ export default function SameTFunds(properties) {
     return [];
   }, [_assetsBTS, _assetsTEST, _chain]);
 
-  const [balanceCounter, setBalanceCoutner] = useState(0);
-  const [balances, setBalances] = useState();
-  useEffect(() => {
-    let unsubscribeUserBalances;
-
-    if (usr && usr.id && currentNode && assets && assets.length) {
-      const userBalancesStore = createUserBalancesStore([
-        usr.chain,
-        usr.id,
-        currentNode ? currentNode.url : null,
-      ]);
-
-      unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
-        if (data && !error && !loading) {
-          const filteredData = data.filter((balance) =>
-            assets.find((x) => x.id === balance.asset_id)
-          );
-          console.log({ filteredData })
-          setBalances(filteredData);
-        }
-      });
-    }
-
-    return () => {
-      if (unsubscribeUserBalances) unsubscribeUserBalances();
-    };
-  }, [usr, assets, currentNode, balanceCounter]);
-
   const marketSearch = useMemo(() => {
     if (usr && usr.chain && (_marketSearchBTS || _marketSearchTEST)) {
       return usr.chain === "bitshares" ? _marketSearchBTS : _marketSearchTEST;
@@ -649,7 +621,7 @@ export default function SameTFunds(properties) {
                           marketSearch={marketSearch}
                           type={"backing"}
                           chain={usr && usr.chain ? usr.chain : "bitshares"}
-                          balances={balances}
+                          balances={usrBalances}
                         />
                       </div>
                       <div className="grid grid-cols-2 gap-2">

@@ -50,7 +50,7 @@ function fetchReceiverWithdrawPermissions(
         }
 
         if (!withdrawPermissions || !withdrawPermissions.length) {
-          reject(new Error("No withdraw permissions found"));
+          resolve([]);
           return;
         }
 

@@ -146,6 +146,11 @@ export default function PageHeader(properties) {
                         icon="⏱️"
                       />
                       <MenuRow
+                        url="/withdraw_permissions/index.html"
+                        text={t("PageHeader:withdraw_permissions")}
+                        icon="📥"
+                      />
+                      <MenuRow
                         url="/create_vesting/index.html"
                         text={t("PageHeader:vestAssets")}
                         icon="🫰"

@@ -2,7 +2,7 @@
 import { getCollection } from 'astro:content';
 
 import Layout from '../layouts/Layout.astro';
-import TimedTransfer from '../components/TimedTransfer.jsx';
+import WithdrawPermissions from '../components/WithdrawPermissions';
 import PageHeader from '../components/PageHeader';
 import PageFooter from '../components/PageFooter';
 
@@ -23,10 +23,10 @@ const btsFeeScheduleList = btsFeeSchedule.map((collection) => collection.data);
 const testFeeScheduleList = testFeeSchedule.map((collection) => collection.data);
 ---
 
-<Layout title="Bitshares timed assed transfer form">
+<Layout title="Bitshares withdraw permissions form">
 	<main>
-		<PageHeader client:only="react" page="timed_transfer" backURL="../index.html" />
-		<TimedTransfer
+		<PageHeader client:only="react" page="withdraw_permissions" backURL="../index.html" />
+		<WithdrawPermissions
 			client:only="react"
 			_assetsBTS={btsAssets}
 			_assetsTEST={testAssets}
@@ -35,7 +35,7 @@ const testFeeScheduleList = testFeeSchedule.map((collection) => collection.data)
 			_globalParamsBTS={btsFeeScheduleList}
 			_globalParamsTEST={testFeeScheduleList}
 		/>
-		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/timed_transfer.astro" />
+		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/withdraw_permissions.astro" />
 	</main>
 </Layout>
 
