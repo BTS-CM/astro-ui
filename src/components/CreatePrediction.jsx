@@ -705,7 +705,7 @@ export default function Prediction(properties) {
                         header={t("AssetCommon:extensions.whitelist_market_fee_sharing.header")}
                       />
                       <div className="grid grid-cols-12 mt-1">
-                        <span className="col-span-9 border border-grey rounded">
+                        <span className="col-span-9 border border-gray-300 rounded">
                           <List
                             height={210}
                             itemCount={feeSharingWhitelist.length}
@@ -947,7 +947,7 @@ export default function Prediction(properties) {
                       type="header"
                     />
                     <div className="grid grid-cols-12 mt-1">
-                      <span className="col-span-9 border border-grey rounded">
+                      <span className="col-span-9 border border-gray-300 rounded">
                         <List
                           height={210}
                           itemCount={whitelistAuthorities.length}
@@ -1012,7 +1012,7 @@ export default function Prediction(properties) {
                       type="header"
                     />
                     <div className="grid grid-cols-12 mt-1">
-                      <span className="col-span-9 border border-grey rounded">
+                      <span className="col-span-9 border border-gray-300 rounded">
                         <List
                           height={210}
                           itemCount={blacklistAuthorities.length}

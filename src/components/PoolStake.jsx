@@ -844,7 +844,7 @@ export default function PoolStake(properties) {
                                                 onClick={() => {
                                                   event.preventDefault();
                                                 }}
-                                                className="inline-block border border-grey rounded pl-4 pb-1 pr-4"
+                                                className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4"
                                               >
                                                 <Label>{t("PoolStake:changeAmount")}</Label>
                                               </span>
@@ -955,7 +955,7 @@ export default function PoolStake(properties) {
                                                 onClick={() => {
                                                   event.preventDefault();
                                                 }}
-                                                className="inline-block border border-grey rounded pl-4 pb-1 pr-4"
+                                                className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4"
                                               >
                                                 <Label>{t("PoolStake:changeAmount")}</Label>
                                               </span>
@@ -1093,7 +1093,7 @@ export default function PoolStake(properties) {
                                                 onClick={() => {
                                                   event.preventDefault();
                                                 }}
-                                                className="inline-block border border-grey rounded pl-4 pb-1 pr-4"
+                                                className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4"
                                               >
                                                 <Label>{t("PoolStake:changeAmount")}</Label>
                                               </span>

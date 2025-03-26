@@ -4,7 +4,7 @@ import { useStore } from "@nanostores/react";
 import { FixedSizeList as List } from "react-window";
 
 import { CalendarIcon } from "@radix-ui/react-icons";
-import { format } from "date-fns";
+import { format, set } from "date-fns";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
@@ -278,20 +278,40 @@ export default function WithdrawPermissions(properties) {
     )
   };
 
+  const [openCreateWithdrawPermission, setOpenCreateWithdrawPermission] = useState(false);
+  const [withdrawalPeriodSec, setWithdrawalPeriodSec] = useState(1);
+  const [periodsUntilExpiration, setPeriodsUntilExpiration] = useState(1);
+
+  const periodStartTime = useMemo(() => {
+    if (!expiry) {
+      return null;
+    }
+
+    const secondsSinceEpoch = Math.floor(expiry.getTime() / 1000);
+    return secondsSinceEpoch;
+  }, [expiry]);
+
   return (
     <>
       <div className="container mx-auto mt-5 mb-5">
         <div className="grid grid-cols-1 gap-3">
           <Card>
             <CardHeader>
-              <CardTitle>{t("withdraw_permissions:title")}</CardTitle>
+              <CardTitle>{t("WithdrawPermissions:title")}</CardTitle>
               <CardDescription>
-                <p>{t("withdraw_permissions:description")}</p>
+                <p>{t("WithdrawPermissions:description")}</p>
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-12 gap-3">
-                <div className="col-span-9">
+                <div className="col-span-12">
+                  <HoverInfo
+                    content={t("WithdrawPermissions:outbound_description")}
+                    header={t("WithdrawPermissions:outbound")}
+                    type="header"
+                  />
+                </div>
+                <div className="col-span-9 border border-gray-300 rounded">
                   {
                     payerWithdrawalPermissions && payerWithdrawalPermissions.length
                       ? <List
@@ -302,7 +322,7 @@ export default function WithdrawPermissions(properties) {
                       >
                         {PayingWithdrawPermissionRow}
                       </List>
-                      : <p>{t("withdraw_permissions:not_sending_anything")}</p>
+                      : <p>{t("WithdrawPermissions:not_sending_anything")}</p>
                   }
                 </div>
                 <div className="col-span-3">
@@ -313,16 +333,16 @@ export default function WithdrawPermissions(properties) {
                         size="icon"
                         className="mr-2 w-full"
                       >
-                        {t("withdraw_permissions:create_permission")}
+                        {t("WithdrawPermissions:create_permission")}
                       </Button>
                     </DialogTrigger>
                     <DialogContent className="sm:max-w-[750px] bg-white">
                       <DialogHeader>
                         <DialogTitle>
-                          {t("withdraw_permissions:create_permission_title")}
+                          {t("WithdrawPermissions:create_permission_title")}
                         </DialogTitle>
                         <DialogDescription>
-                          {t("withdraw_permissions:create_permission_description")}
+                          {t("WithdrawPermissions:create_permission_description")}
                         </DialogDescription>
                       </DialogHeader>
                       <div className="grid grid-cols-1 gap-3">
@@ -330,7 +350,7 @@ export default function WithdrawPermissions(properties) {
                           <form
                             onSubmit={(e) => {
                               e.preventDefault();
-                              // Handle form submission logic here
+                              setOpenCreateWithdrawPermission(true);
                             }}
                           >
                             <FormField
@@ -341,12 +361,12 @@ export default function WithdrawPermissions(properties) {
                                   <HoverInfo
                                     content={
                                       !targetUser || !targetUser.name
-                                        ? t("Transfer:targetAccountDescription")
-                                        : t("Transfer:targetAccountDescriptionWithName", {
+                                        ? t("WithdrawPermissions:targetAccountDescription")
+                                        : t("WithdrawPermissions:targetAccountDescriptionWithName", {
                                             name: targetUser.name,
                                           })
                                     }
-                                    header={t("withdraw_permissions:targetAccount")}
+                                    header={t("WithdrawPermissions:targetAccount")}
                                   />
                                   <FormControl>
                                     <div className="grid grid-cols-8 mt-4">
@@ -432,8 +452,8 @@ export default function WithdrawPermissions(properties) {
                               render={({ field }) => (
                                 <FormItem className="mb-2">
                                   <HoverInfo
-                                    content={t("Predictions:sellDialog.assetToTransfer_description")}
-                                    header={t("withdraw_permissions:assetToTransfer")}
+                                    content={t("WithdrawPermissions:limitedAssetsToWithdraw_description")}
+                                    header={t("WithdrawPermissions:limitedAssetsToWithdraw")}
                                   />
                                   <FormControl>
                                     <div className="grid grid-cols-8 mt-4">
@@ -542,14 +562,29 @@ export default function WithdrawPermissions(properties) {
                                     />
                                     <FormControl
                                       onChange={(event) => {
-                                        const input = event.target.value;
-                                        const regex = /^[0-9]*\.?[0-9]*$/;
+                                        let input = event.target.value;
+                                        const inputDecimals = !foundAsset ? 2 : foundAsset.precision;
+                                        //let regex = new RegExp(`^[0-9]*\.?[0-9]{0,${inputDecimals}}$`);
+                                        let regex = new RegExp(`^[^+-]*[0-9]*\\.?[0-9]{0,${inputDecimals}}$`);
                                         if (regex.test(input)) {
-                                          setTransferAmount(input);
+                                          console.log({input})
+                                          if (input === "0" || input === "0.") {
+                                            setTransferAmount(input);
+                                          } else if (input.startsWith(".")) {
+                                            let newValue = `0.${input.split(".")[1]}`;
+                                            console.log({newValue, input})
+                                            setTransferAmount(newValue);
+                                          } else if (input.startsWith("0") && !input.startsWith("0.")) {
+                                            input = input.replace(/^0+/, "");
+                                            setTransferAmount(input);
+                                          } else {
+                                            setTransferAmount(input);
+                                          }
                                         }
                                       }}
                                     >
                                       <Input
+                                        type="number"
                                         label={t("Transfer:amountToTransferLabel")}
                                         value={transferAmount}
                                         placeholder={transferAmount}
@@ -568,16 +603,41 @@ export default function WithdrawPermissions(properties) {
                                 render={({ field }) => (
                                   <FormItem className="mb-2">
                                     <HoverInfo
-                                      content={t("Predictions:sellDialog.withdrawal_period_sec_description")}
-                                      header={t("withdraw_permissions:withdrawal_period_sec")}
+                                      content={t("WithdrawPermissions:withdrawal_period_sec_description")}
+                                      header={t("WithdrawPermissions:withdrawal_period_sec")}
                                     />
                                     <FormControl>
-                                      <Input
-                                        type="number"
-                                        value={field.value}
-                                        onChange={(e) => field.onChange(Number(e.target.value))}
-                                        placeholder="60000"
-                                      />
+                                      <Select
+                                        onValueChange={(value) => {
+                                          const hoursToSeconds = {
+                                            "1hr": 3600,
+                                            "6hrs": 21600,
+                                            "12hrs": 43200,
+                                            "24hrs": 86400,
+                                            "7d": 604800,
+                                            "14d": 1209600,
+                                            "30d": 2592000,
+                                            "6m": 15552000,
+                                            "12m": 31104000,
+                                          };
+                                          setWithdrawalPeriodSec(hoursToSeconds[value]);
+                                        }}
+                                      >
+                                        <SelectTrigger className="mb-3 mt-1 w-full">
+                                          <SelectValue placeholder="1hr" />
+                                        </SelectTrigger>
+                                        <SelectContent className="bg-white">
+                                          <SelectItem value="1hr">1 Hour</SelectItem>
+                                          <SelectItem value="6hrs">6 Hours</SelectItem>
+                                          <SelectItem value="12hrs">12 Hours</SelectItem>
+                                          <SelectItem value="24hrs">24 Hours</SelectItem>
+                                          <SelectItem value="7d">7 Days</SelectItem>
+                                          <SelectItem value="14d">14 Days</SelectItem>
+                                          <SelectItem value="30d">30 Days</SelectItem>
+                                          <SelectItem value="6m">6 Months</SelectItem>
+                                          <SelectItem value="12m">12 Months</SelectItem>
+                                        </SelectContent>
+                                      </Select>
                                     </FormControl>
                                   </FormItem>
                                 )}
@@ -588,15 +648,14 @@ export default function WithdrawPermissions(properties) {
                                 render={({ field }) => (
                                   <FormItem className="mb-2">
                                     <HoverInfo
-                                      content={t("Predictions:sellDialog.periods_until_expiration_description")}
-                                      header={t("withdraw_permissions:periods_until_expiration")}
+                                      content={t("WithdrawPermissions:periods_until_expiration_description")}
+                                      header={t("WithdrawPermissions:periods_until_expiration")}
                                     />
                                     <FormControl>
                                       <Input
                                         type="number"
-                                        value={field.value}
-                                        onChange={(e) => field.onChange(Number(e.target.value))}
-                                        placeholder="60000"
+                                        onChange={(e) => setPeriodsUntilExpiration(Number(e.target.value))}
+                                        placeholder={periodsUntilExpiration}
                                       />
                                     </FormControl>
                                   </FormItem>
@@ -606,8 +665,8 @@ export default function WithdrawPermissions(properties) {
 
                             <div className="grid grid-cols-1 gap-3">
                               <HoverInfo
-                                content={t("Predictions:sellDialog.period_start_time_description")}
-                                header={t("Predictions:sellDialog.period_start_time")}
+                                content={t("WithdrawPermissions:period_start_time_description")}
+                                header={t("WithdrawPermissions:period_start_time")}
                               />
                               <Select
                                 onValueChange={(selectedExpiry) => {
@@ -617,7 +676,9 @@ export default function WithdrawPermissions(properties) {
                                   if (selectedExpiry !== "specific") {
                                     const now = new Date();
                                     let expiryDate;
-                                    if (selectedExpiry === "1hr") {
+                                    if (selectedExpiry === "now") {
+                                      expiryDate = now;
+                                    } else if (selectedExpiry === "1hr") {
                                       expiryDate = new Date(now.getTime() + oneHour);
                                     } else if (selectedExpiry === "12hr") {
                                       const duration = oneHour * 12;
@@ -644,9 +705,10 @@ export default function WithdrawPermissions(properties) {
                                 }}
                               >
                                 <SelectTrigger className="mb-3 mt-1 w-1/4">
-                                  <SelectValue placeholder="1hr" />
+                                  <SelectValue placeholder="now" />
                                 </SelectTrigger>
                                 <SelectContent className="bg-white">
+                                  <SelectItem value="now">{t("WithdrawPermissions:now")}</SelectItem>
                                   <SelectItem value="1hr">{t("LimitOrderCard:expiry.1hr")}</SelectItem>
                                   <SelectItem value="12hr">{t("LimitOrderCard:expiry.12hr")}</SelectItem>
                                   <SelectItem value="24hr">{t("LimitOrderCard:expiry.24hr")}</SelectItem>
@@ -697,16 +759,61 @@ export default function WithdrawPermissions(properties) {
                               ) : null}
                             </div>
 
-                            <Button type="submit" variant="outline" className="mt-4">
-                              {t("withdraw_permissions:submit")}
-                            </Button>
+                            {
+                              targetUser &&
+                              transferAmount &&
+                              foundAsset &&
+                              withdrawalPeriodSec &&
+                              periodsUntilExpiration &&
+                              periodStartTime
+                                ? <Button type="submit" variant="outline" className="mt-4">
+                                    {t("WithdrawPermissions:submit")}
+                                  </Button>
+                                : <Button disabled variant="outline" className="mt-4">
+                                    {t("WithdrawPermissions:submit")}
+                                  </Button>
+                            }
+
+                            {
+                              openCreateWithdrawPermission
+                                ? <DeepLinkDialog
+                                    operationNames={["withdraw_permission_create"]}
+                                    username={usr && usr.username ? usr.username : ""}
+                                    usrChain={usr && usr.chain ? usr.chain : "bitshares"}
+                                    userID={usr.id}
+                                    dismissCallback={setOpenCreateWithdrawPermission}
+                                    key={`CreatingWithdrawPermission`}
+                                    headerText={t("WithdrawPermissions:createWithdrawPermissionHeader")}
+                                    trxJSON={[
+                                      {
+                                        withdraw_from_account: usr.id,
+                                        authorized_account: targetUser.id,
+                                        withdrawal_limit: {
+                                          amount: blockchainFloat(transferAmount, foundAsset.precision),
+                                          asset_id: foundAsset.id,
+                                        },
+                                        withdrawal_period_sec: withdrawalPeriodSec,
+                                        periods_until_expiration: periodsUntilExpiration,
+                                        period_start_time: periodStartTime
+                                      },
+                                    ]}
+                                  />
+                                : null
+                            }
                           </form>
                         </Form>
                       </div>
                     </DialogContent>
                   </Dialog>
                 </div>
-                <div className="col-span-12">
+                <div className="col-span-12 mt-2">
+                  <HoverInfo
+                    content={t("WithdrawPermissions:inbound_description")}
+                    header={t("WithdrawPermissions:inbound")}
+                    type="header"
+                  />
+                </div>
+                <div className="col-span-12 border border-gray-300 rounded mt-2">
                   {
                     receivingWithdrawalPermissions && receivingWithdrawalPermissions.length
                       ? <List
@@ -717,7 +824,7 @@ export default function WithdrawPermissions(properties) {
                       >
                         {ReceivingWithdrawPermissionRow}
                       </List>
-                      : <p>{t("withdraw_permissions:not_receiving_anything")}</p>
+                      : <p>{t("WithdrawPermissions:not_receiving_anything")}</p>
                   }
                 </div>
               </div>

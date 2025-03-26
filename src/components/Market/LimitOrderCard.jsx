@@ -394,7 +394,7 @@ export default function LimitOrderCard(properties) {
                         <span className="col-span-3 ml-3 text-center">
                           <Popover>
                             <PopoverTrigger>
-                              <span className="inline-block border border-grey rounded pl-4 pb-1 pr-4 text-lg">
+                              <span className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4 text-lg">
                                 <Label>{t("LimitOrderCard:editLabel")}</Label>
                               </span>
                             </PopoverTrigger>
@@ -517,7 +517,7 @@ export default function LimitOrderCard(properties) {
                         <span className="col-span-3 ml-3 text-center">
                           <Popover>
                             <PopoverTrigger>
-                              <span className="inline-block border border-grey rounded pl-4 pb-1 pr-4 text-lg">
+                              <span className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4 text-lg">
                                 <Label>{t("LimitOrderCard:editLabel")}</Label>
                               </span>
                             </PopoverTrigger>
@@ -608,7 +608,7 @@ export default function LimitOrderCard(properties) {
                         <span className="col-span-3 ml-3 text-center">
                           <Popover>
                             <PopoverTrigger>
-                              <span className="inline-block border border-grey rounded pl-4 pb-1 pr-4 text-lg">
+                              <span className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4 text-lg">
                                 <Label>{t("LimitOrderCard:editLabel")}</Label>
                               </span>
                             </PopoverTrigger>
@@ -864,7 +864,7 @@ export default function LimitOrderCard(properties) {
                                     onClick={() => {
                                       event.preventDefault();
                                     }}
-                                    className="inline-block border border-grey rounded pl-4 pb-1 pr-4 text-lg"
+                                    className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4 text-lg"
                                   >
                                     <Label>{t("LimitOrderCard:editLabel")}</Label>
                                   </span>
@@ -935,7 +935,7 @@ export default function LimitOrderCard(properties) {
                                     onClick={() => {
                                       event.preventDefault();
                                     }}
-                                    className="inline-block border border-grey rounded pl-4 pb-1 pr-4 text-lg"
+                                    className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4 text-lg"
                                   >
                                     <Label>{t("LimitOrderCard:editLabel")}</Label>
                                   </span>

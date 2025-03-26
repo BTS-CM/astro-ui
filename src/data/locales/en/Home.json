@@ -38,6 +38,12 @@
     "subtitle": "Send assets to other users at a later date.",
     "hover1": "Schedule transfer of assets to another user after proposal review period passes."
   },
+  "withdraw_permission": {
+    "title": "📥 Withdraw Permission",
+    "subtitle": "Manage your withdraw permissions",
+    "hover1": "Create/edit/delete your payment withdraw permissions.",
+    "hover2": "View your receive withdraw permissions."
+  },
   "create_vesting": {
     "title": "🫰 Vest Assets",
     "subtitle": "Create vesting balances",

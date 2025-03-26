@@ -529,7 +529,7 @@ export default function Settlement(properties) {
                                 <span className="col-span-4 ml-3">
                                   <Popover>
                                     <PopoverTrigger>
-                                      <span className="inline-block border border-grey rounded pl-4 pb-1 pr-4">
+                                      <span className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4">
                                         <Label>{t("Settlement:changeAmount")}</Label>
                                       </span>
                                     </PopoverTrigger>
@@ -582,7 +582,7 @@ export default function Settlement(properties) {
                                 <span className="col-span-4 ml-3">
                                   <Popover>
                                     <PopoverTrigger>
-                                      <span className="inline-block border border-grey rounded pl-4 pb-1 pr-4">
+                                      <span className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4">
                                         <Label>{t("Settlement:changeTotal")}</Label>
                                       </span>
                                     </PopoverTrigger>
@@ -725,7 +725,7 @@ export default function Settlement(properties) {
                                 <span className="col-span-4 ml-3">
                                   <Popover>
                                     <PopoverTrigger>
-                                      <span className="inline-block border border-grey rounded pl-4 pb-1 pr-4">
+                                      <span className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4">
                                         <Label>{t("Settlement:changeAmount")}</Label>
                                       </span>
                                     </PopoverTrigger>
@@ -795,7 +795,7 @@ export default function Settlement(properties) {
                                 <span className="col-span-4 ml-3">
                                   <Popover>
                                     <PopoverTrigger>
-                                      <span className="inline-block border border-grey rounded pl-4 pb-1 pr-4">
+                                      <span className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4">
                                         <Label>{t("Settlement:changeTotal")}</Label>
                                       </span>
                                     </PopoverTrigger>

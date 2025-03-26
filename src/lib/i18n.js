@@ -60,7 +60,8 @@ const pages = [
   "TFundUser",
   "LimitOrderWizard",
   "CustomPoolOverview",
-  "PoolList"
+  "PoolList",
+  "WithdrawPermissions"
 ];
 
 const locale = persistentAtom("locale", "en");
