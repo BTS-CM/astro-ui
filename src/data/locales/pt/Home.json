@@ -33,6 +33,17 @@
     "subtitle": "Envie ativos para outros usuários",
     "hover1": "Transfira ativos para qualquer pessoa na blockchain Bitshares em segundos."
   },
+  "timed_transfer": {
+    "title": "⏱️ Transferência cronometrada",
+    "subtitle": "Envie ativos para outros usuários posteriormente.",
+    "hover1": "Agendar a transferência de ativos para outro usuário após o passar do período de revisão da proposta."
+  },
+  "withdraw_permission": {
+    "title": "📥 Retire a permissão",
+    "subtitle": "Gerencie suas permissões de retirada",
+    "hover1": "Crie/edite/exclua suas permissões de retirada de pagamento.",
+    "hover2": "Veja suas permissões de retirada de retirada."
+  },
   "create_vesting": {
     "title": "🫰 Colete ativos",
     "subtitle": "Criar saldos de aquisição",

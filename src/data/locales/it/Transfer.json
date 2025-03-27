@@ -1,5 +1,6 @@
 {
   "transferAssets": "Trasferire beni",
+  "timedTransferAssets": "Trasferimento di asset temporizzato",
   "sendFundsDescription": "Invia fondi da un conto che controlli a un altro titolare di un conto BitShares.",
   "transferLimitations": "⛔ Non supporta ancora un promemoria, quindi non utilizzare questo modulo durante il trasferimento a servizi esterni.\n",
   "sendingAccount": "Invio conto",

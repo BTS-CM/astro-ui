@@ -33,6 +33,17 @@
     "subtitle": "Enviar activos a otros usuarios",
     "hover1": "Transfiera activos a cualquier persona en la cadena de bloques Bitshares en segundos."
   },
+  "timed_transfer": {
+    "title": "⏱️ Transferencia cronometrada",
+    "subtitle": "Envíe activos a otros usuarios en una fecha posterior.",
+    "hover1": "Programe la transferencia de activos a otro usuario después del período de revisión de la propuesta."
+  },
+  "withdraw_permission": {
+    "title": "📥 Retirar permiso",
+    "subtitle": "Administre sus permisos de retiro",
+    "hover1": "Crear/editar/eliminar sus permisos de retiro de pago.",
+    "hover2": "Vea sus permisos de retiro de recepción."
+  },
   "create_vesting": {
     "title": "🫰 Activos de chaleco",
     "subtitle": "Crear saldos de adquisición de derechos",

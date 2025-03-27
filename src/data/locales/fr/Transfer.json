@@ -1,5 +1,6 @@
 {
   "transferAssets": "Transférer des actifs",
+  "timedTransferAssets": "Transfert d'actifs programmé",
   "sendFundsDescription": "Envoyez des fonds d'un compte que vous contrôlez à un autre titulaire de compte BitShares.",
   "transferLimitations": "⛔ Ne prend pas encore en charge les mémos, n'utilisez donc pas ce formulaire lors d'un transfert vers des services externes.\n",
   "sendingAccount": "Envoi du compte",

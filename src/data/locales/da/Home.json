@@ -33,6 +33,17 @@
     "subtitle": "Send aktiver til andre brugere",
     "hover1": "Overfør aktiver til enhver på Bitshares blockchain på få sekunder."
   },
+  "timed_transfer": {
+    "title": "⏱ Tidsbestemt overførsel",
+    "subtitle": "Send aktiver til andre brugere på et senere tidspunkt.",
+    "hover1": "Planlæg overførsel af aktiver til en anden bruger efter gennemgangsperioden for forslag."
+  },
+  "withdraw_permission": {
+    "title": "📥 Træk tilladelse",
+    "subtitle": "Administrer dine tilbagetrækningstilladelser",
+    "hover1": "Opret/rediger/slet din betaling tilbagetrækning tilladelser.",
+    "hover2": "Se dine modtagende tilbagetrækningstilladelser."
+  },
   "create_vesting": {
     "title": "🫰 Vestaktiver",
     "subtitle": "Opret optjeningssaldi",

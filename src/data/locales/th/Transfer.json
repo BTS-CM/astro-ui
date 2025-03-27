@@ -1,5 +1,6 @@
 {
   "transferAssets": "โอนสินทรัพย์",
+  "timedTransferAssets": "การโอนสินทรัพย์แบบกำหนดเวลา",
   "sendFundsDescription": "ส่งเงินจากบัญชีที่คุณควบคุมไปยังเจ้าของบัญชี BitShares รายอื่น",
   "transferLimitations": "❌ ยังไม่รองรับบันทึกช่วยจำ ดังนั้นอย่าใช้แบบฟอร์มนี้เมื่อถ่ายโอนไปยังบริการภายนอก\n",
   "sendingAccount": "บัญชีส่ง",

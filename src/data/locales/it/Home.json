@@ -33,6 +33,17 @@
     "subtitle": "Invia risorse ad altri utenti",
     "hover1": "Trasferisci risorse a chiunque sulla blockchain di Bitshares in pochi secondi."
   },
+  "timed_transfer": {
+    "title": "⏱️ Trasferimento a tempo",
+    "subtitle": "Invia risorse ad altri utenti in un secondo momento.",
+    "hover1": "Pianifica il trasferimento di attività a un altro utente dopo il periodo di revisione della proposta."
+  },
+  "withdraw_permission": {
+    "title": "📥 Prelevare il permesso",
+    "subtitle": "Gestisci le autorizzazioni di prelievo",
+    "hover1": "Crea/Modifica/Elimina le autorizzazioni di prelievo di pagamento.",
+    "hover2": "Visualizza le autorizzazioni di prelievo."
+  },
   "create_vesting": {
     "title": "🫰 Vesti i beni",
     "subtitle": "Creare saldi di maturazione",

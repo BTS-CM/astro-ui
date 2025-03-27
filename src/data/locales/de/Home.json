@@ -33,6 +33,17 @@
     "subtitle": "Senden Sie Assets an andere Benutzer",
     "hover1": "Übertragen Sie Vermögenswerte in Sekundenschnelle an jeden in der Bitshares-Blockchain."
   },
+  "timed_transfer": {
+    "title": "⏱️ zeitgesteuerte Übertragung",
+    "subtitle": "Senden Sie Vermögenswerte zu einem späteren Zeitpunkt an andere Benutzer.",
+    "hover1": "Planen Sie die Übertragung von Vermögenswerten an einen anderen Benutzer nach Überprüfungszeitraum von Vorschlägen."
+  },
+  "withdraw_permission": {
+    "title": "📥 Erlaubnis zurückziehen",
+    "subtitle": "Verwalten Sie Ihre Rückzugsberechtigungen",
+    "hover1": "Erstellen/Bearbeiten/Löschen/Löschen Ihrer Zahlung Abheben Berechtigungen.",
+    "hover2": "Sehen Sie sich Ihre Empfehlungsberechtigungen an."
+  },
   "create_vesting": {
     "title": "🫰 Vermögenswerte übertragen",
     "subtitle": "Erstellen Sie Restguthaben",

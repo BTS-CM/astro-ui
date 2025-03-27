@@ -33,6 +33,17 @@
     "subtitle": "다른 사용자에게 자산 보내기",
     "hover1": "몇 초 만에 Bitshares 블록체인의 누구에게나 자산을 전송할 수 있습니다."
   },
+  "timed_transfer": {
+    "title": "⏱️ 시간 시간 전송",
+    "subtitle": "나중에 다른 사용자에게 자산을 보냅니다.",
+    "hover1": "제안 검토 기간이 통과 한 후 다른 사용자에게 자산을 전송 일정을 잡으십시오."
+  },
+  "withdraw_permission": {
+    "title": "📥 허가를 철회하십시오",
+    "subtitle": "철수 권한을 관리하십시오",
+    "hover1": "지불/편집/삭제/편집/삭제 인출 권한.",
+    "hover2": "수신 권한을보십시오."
+  },
   "create_vesting": {
     "title": "🫰 조끼 자산",
     "subtitle": "베스팅 잔액 생성",

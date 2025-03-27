@@ -70,19 +70,64 @@ export default function WithdrawPermissions(properties) {
     mode,
     // editing
     _existingWithdrawPermissionID,
-    _senderUser,
     _targetUser,
     _selectedAsset,
     _transferAmount,
+    _withdrawalPeriodSec,
+    _periodsUntilExpiration,
+    _expiration,
   } = properties;
 
-  const [senderUser, setSenderUser] = useState(_senderUser ?? null);
-  const [targetUser, setTargetUser] = useState(_targetUser ?? null);
-  const [selectedAsset, setSelectedAsset] = useState(_selectedAsset ?? null);
-  const [transferAmount, setTransferAmount] = useState(_transferAmount ?? null);
+  /*
+    {
+        "creating": {
+            "usr": {
+                "username": "nfttestnet1",
+                "id": "1.2.26299",
+                "chain": "bitshares_testnet",
+                "referrer": "1.2.26299"
+            },
+            "assets": [],
+            "marketSearch": [],
+            "balances": [],
+            "showDialog": true
+        },
+        "mode": "edit",
+        "editing": {
+            "_existingWithdrawPermissionID": "1.12.137",
+            "_targetUser": {id: "1.2.26300", name: "nfttestnet2"},
+            "_selectedAsset": "TEST",
+            "_transferAmount": 1,
+            "_withdrawalPeriodSec": 31104,
+            "_periodsUntilExpiration": "1.999"
+        }
+    }
+  */
 
-  const [withdrawalPeriodSec, setWithdrawalPeriodSec] = useState(1);
-  const [periodsUntilExpiration, setPeriodsUntilExpiration] = useState(1);
+  const [targetUser, setTargetUser] = useState(_targetUser || null);
+  const [selectedAsset, setSelectedAsset] = useState(_selectedAsset || null);
+  const [transferAmount, setTransferAmount] = useState(_transferAmount || null);
+  const [withdrawalPeriodSec, setWithdrawalPeriodSec] = useState(_withdrawalPeriodSec || 1);
+  const [periodsUntilExpiration, setPeriodsUntilExpiration] = useState(
+    _periodsUntilExpiration ? Math.round(_periodsUntilExpiration) : 1
+  );
+  
+  useEffect(() => {
+    if (mode && mode === "edit") {
+      setTargetUser(_targetUser);
+      setSelectedAsset(_selectedAsset);
+      setTransferAmount(_transferAmount);
+      setWithdrawalPeriodSec(_withdrawalPeriodSec);
+      setPeriodsUntilExpiration(Math.round(_periodsUntilExpiration));
+    }
+  }, [
+    mode,
+    _targetUser,
+    _selectedAsset,
+    _transferAmount,
+    _withdrawalPeriodSec,
+    _periodsUntilExpiration,
+  ]);
 
   const [openCreateWithdrawPermission, setOpenCreateWithdrawPermission] = useState(false); // deeplinkdialog create permission
   const [openEditWithdrawPermission, setOpenEditWithdrawPermission] = useState(false); // deeplinkdialog edit permission
@@ -97,18 +142,12 @@ export default function WithdrawPermissions(properties) {
 
   useEffect(() => {
     if (found && found.length) {
+      console.log({foundAsset: found[0]});
       setFoundAsset(found[0]);
     }
   }, [found]);
 
   const [targetUserDialogOpen, setTargetUserDialogOpen] = useState(false);
-
-  useEffect(() => {
-    if (senderUser) {
-      // close dialog on sender account selection
-      setSenderUser(false);
-    }
-  }, [senderUser]);
 
   useEffect(() => {
     if (targetUser) {
@@ -118,14 +157,26 @@ export default function WithdrawPermissions(properties) {
   }, [targetUser]);
   
   // Proposal dialog state
-  const [expiryType, setExpiryType] = useState("1hr");
+  const [expiryType, setExpiryType] = useState(
+    mode === "edit"
+      ? "specific"
+      : "1hr"
+  );
+
   const [expiry, setExpiry] = useState(() => {
+    if (mode === "edit") {
+      return new Date(_expiration);
+    }
     const now = new Date();
     const oneHour = 60 * 60 * 1000;
     return new Date(now.getTime() + oneHour);
   });
 
-  const [date, setDate] = useState(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)); // Solely for the calendar component to display a date string
+  const [date, setDate] = useState(
+    mode === "edit"
+      ? new Date(_expiration)
+      : new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+  ); // Solely for the calendar component to display a date string
 
   useEffect(() => {
     if (expiryType === "specific" && date) {
@@ -157,8 +208,8 @@ export default function WithdrawPermissions(properties) {
         >
           {
             mode === "edit"
-            ? t("WithdrawPermissions:edit_permission")
-            : t("WithdrawPermissions:create_permission")
+              ? t("WithdrawPermissions:edit_permission")
+              : t("WithdrawPermissions:create_permission")
           }
         </Button>
       </DialogTrigger>
@@ -403,7 +454,6 @@ export default function WithdrawPermissions(properties) {
                           //let regex = new RegExp(`^[0-9]*\.?[0-9]{0,${inputDecimals}}$`);
                           let regex = new RegExp(`^[^+-]*[0-9]*\\.?[0-9]{0,${inputDecimals}}$`);
                           if (regex.test(input)) {
-                            console.log({input})
                             if (input === "0" || input === "0.") {
                               setTransferAmount(input);
                             } else if (input.startsWith(".")) {
@@ -458,9 +508,62 @@ export default function WithdrawPermissions(properties) {
                             };
                             setWithdrawalPeriodSec(hoursToSeconds[value]);
                           }}
+                          value={Object.keys({
+                            "1hr": 3600,
+                            "6hrs": 21600,
+                            "12hrs": 43200,
+                            "24hrs": 86400,
+                            "7d": 604800,
+                            "14d": 1209600,
+                            "30d": 2592000,
+                            "6m": 15552000,
+                            "12m": 31104000,
+                          }).find(
+                            (key) => {
+                              const hoursToSeconds = {
+                                "1hr": 3600,
+                                "6hrs": 21600,
+                                "12hrs": 43200,
+                                "24hrs": 86400,
+                                "7d": 604800,
+                                "14d": 1209600,
+                                "30d": 2592000,
+                                "6m": 15552000,
+                                "12m": 31104000,
+                              };
+                              return hoursToSeconds[key] === withdrawalPeriodSec;
+                            }
+                          )}
                         >
                           <SelectTrigger className="mb-3 mt-1 w-full">
-                            <SelectValue placeholder="1hr" />
+                            <SelectValue placeholder={
+                              Object.keys({
+                                "1hr": 3600,
+                                "6hrs": 21600,
+                                "12hrs": 43200,
+                                "24hrs": 86400,
+                                "7d": 604800,
+                                "14d": 1209600,
+                                "30d": 2592000,
+                                "6m": 15552000,
+                                "12m": 31104000,
+                              }).find(
+                                (key) => {
+                                  const hoursToSeconds = {
+                                    "1hr": 3600,
+                                    "6hrs": 21600,
+                                    "12hrs": 43200,
+                                    "24hrs": 86400,
+                                    "7d": 604800,
+                                    "14d": 1209600,
+                                    "30d": 2592000,
+                                    "6m": 15552000,
+                                    "12m": 31104000,
+                                  };
+                                  return hoursToSeconds[key] === withdrawalPeriodSec;
+                                }
+                              ) || "1hr"
+                            } />
                           </SelectTrigger>
                           <SelectContent className="bg-white">
                             <SelectItem value="1hr">1 Hour</SelectItem>
@@ -490,7 +593,7 @@ export default function WithdrawPermissions(properties) {
                       <FormControl>
                         <Input
                           type="number"
-                          onChange={(e) => setPeriodsUntilExpiration(Number(e.target.value))}
+                          onChange={(e) => setPeriodsUntilExpiration(Math.floor(Number(e.target.value)))}
                           placeholder={periodsUntilExpiration}
                         />
                       </FormControl>
@@ -613,13 +716,21 @@ export default function WithdrawPermissions(properties) {
               {
                 openCreateWithdrawPermission
                   ? <DeepLinkDialog
-                      operationNames={["withdraw_permission_create"]}
+                      operationNames={
+                        mode === "edit"
+                          ? ["withdraw_permission_update"]
+                          : ["withdraw_permission_create"]
+                      }
                       username={usr && usr.username ? usr.username : ""}
                       usrChain={usr && usr.chain ? usr.chain : "bitshares"}
                       userID={usr.id}
                       dismissCallback={setOpenCreateWithdrawPermission}
                       key={`CreatingWithdrawPermission`}
-                      headerText={t("WithdrawPermissions:createWithdrawPermissionHeader")}
+                      headerText={
+                        mode === "edit"
+                          ? t("WithdrawPermissions:editWithdrawPermissionHeader")
+                          : t("WithdrawPermissions:createWithdrawPermissionHeader")
+                      }
                       trxJSON={[
                         {
                           withdraw_from_account: usr.id,

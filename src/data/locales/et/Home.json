@@ -33,6 +33,17 @@
     "subtitle": "Saatke vara teistele kasutajatele",
     "hover1": "Kandke varad mõne sekundi jooksul üle kellelegi Bitsharesi plokiahelas."
   },
+  "timed_transfer": {
+    "title": "⏱️ ajastatud ülekanne",
+    "subtitle": "Saada vara teistele kasutajatele hiljem.",
+    "hover1": "Ajakava varade edastamine teisele kasutajale pärast ettepaneku ülevaatamise perioodi möödumist."
+  },
+  "withdraw_permission": {
+    "title": "📥 Luba tagasi võtta",
+    "subtitle": "Hallake oma tagasivõtmist",
+    "hover1": "Looge/redigeerige/kustutage makse väljavõtmise õigused.",
+    "hover2": "Vaadake oma vastuvõtuõigusi."
+  },
   "create_vesting": {
     "title": "🫰 Vestivarad",
     "subtitle": "Looge omandamise saldod",

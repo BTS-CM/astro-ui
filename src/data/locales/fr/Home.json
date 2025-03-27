@@ -33,6 +33,17 @@
     "subtitle": "Envoyer des actifs à d'autres utilisateurs",
     "hover1": "Transférez des actifs à n'importe qui sur la blockchain Bitshares en quelques secondes."
   },
+  "timed_transfer": {
+    "title": "⏱️ transfert chronométré",
+    "subtitle": "Envoyez des actifs à d'autres utilisateurs à une date ultérieure.",
+    "hover1": "Planifier le transfert d'actifs à un autre utilisateur après la période d'examen de la proposition."
+  },
+  "withdraw_permission": {
+    "title": "📥 Autorisation de retrait",
+    "subtitle": "Gérez vos autorisations de retrait",
+    "hover1": "Créer / modifier / supprimer vos autorisations de retrait de paiement.",
+    "hover2": "Consultez vos autorisations de retrait."
+  },
   "create_vesting": {
     "title": "🫰 Gilet d'actifs",
     "subtitle": "Créer des soldes d'acquisition",
