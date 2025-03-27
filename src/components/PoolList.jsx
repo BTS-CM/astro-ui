@@ -167,9 +167,7 @@ export default function CustomPoolOverview(properties) {
                 return matchesBuyingAsset && matchesSellingAsset;
             });
         }
-
-        console.log({_remainingPools});
-
+        
         return _remainingPools;
     }, [
         pools,

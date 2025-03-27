@@ -48,6 +48,8 @@
   "portuguese": "Portoghese (pt)",
   "thai": "Tailandese (th)",
   "descText": {
+    "timed_transfer": "Utilizza il modulo sottostante per creare un trasferimento temporizzato di asset su un altro account.",
+    "withdraw_permissions": "Utilizza questa pagina per creare operazioni di autorizzazione di creazione, aggiornamento, eliminazione e richiesta di prelievo.",
     "borrow": "Utilizza questa pagina per individuare potenziali offerte di credito",
     "deals": "Controlla le tue offerte attuali qui sotto!",
     "dex": "Utilizza il modulo sottostante per creare un ordine limite su Bitshares DEX.",

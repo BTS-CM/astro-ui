@@ -107,7 +107,6 @@ export default function WithdrawPermissions(properties) {
           const filteredData = data.filter((balance) =>
             assets.find((x) => x.id === balance.asset_id)
           );
-          console.log({ filteredData })
           setBalances(filteredData);
         }
       });
@@ -129,7 +128,6 @@ export default function WithdrawPermissions(properties) {
       ]);
       withdrawPermissionsStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
-          console.log({ data });
           if (data.recieving) {
             setReceivingWithdrawalPermissions(data.recieving);
           }
@@ -169,7 +167,6 @@ export default function WithdrawPermissions(properties) {
 
       userStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
-          console.log({accountData: data});
           setAccounts(data);
         }
       });
@@ -199,7 +196,11 @@ export default function WithdrawPermissions(properties) {
     const periodStartTime = currentWithdrawPermission.period_start_time;
     const withdrawal_period_sec = currentWithdrawPermission.withdrawal_period_sec / 1000;
     const withdrawalStartTime = (Date.now() - new Date(periodStartTime).getTime()) / 1000;
-    const timeTillNextPeriod = ((withdrawal_period_sec - (withdrawalStartTime % withdrawal_period_sec)) % withdrawal_period_sec).toFixed(0);
+    const timeTillNextPeriod = parseInt(
+      (
+        (withdrawal_period_sec - (withdrawalStartTime % withdrawal_period_sec)) % withdrawal_period_sec
+      ).toFixed(0)
+    );
 
     const formattedPeriodStartTime = format(new Date(currentWithdrawPermission.period_start_time), 'dd-MM-yyyy HH:mm:ss');
     const formattedExpiration = format(new Date(currentWithdrawPermission.expiration), 'dd-MM-yyyy HH:mm:ss');
@@ -208,7 +209,7 @@ export default function WithdrawPermissions(properties) {
 
     const remainingTime = (new Date(currentWithdrawPermission.expiration).getTime() - Date.now()) / 1000;
     const remainingPeriods = claimed_this_period >= withdrawAmount
-      ? (remainingTime / (withdrawal_period_sec * 1000)).toString().split(".")[0]
+      ? parseInt((remainingTime / (withdrawal_period_sec * 1000)).toString().split(".")[0])
       : (remainingTime / (withdrawal_period_sec * 1000)).toFixed(3);
 
     const maximumClaimable = (
@@ -307,14 +308,18 @@ export default function WithdrawPermissions(properties) {
     const periodStartTime = currentWithdrawPermission.period_start_time;
     const withdrawal_period_sec = currentWithdrawPermission.withdrawal_period_sec / 1000;
     const withdrawalStartTime = (Date.now() - new Date(periodStartTime).getTime()) / 1000;
-    const timeTillNextPeriod = ((withdrawal_period_sec - (withdrawalStartTime % withdrawal_period_sec)) % withdrawal_period_sec).toFixed(0);
+    const timeTillNextPeriod = parseInt(
+      (
+        (withdrawal_period_sec - (withdrawalStartTime % withdrawal_period_sec)) % withdrawal_period_sec
+      ).toFixed(0)
+    );
 
     const formattedPeriodStartTime = format(new Date(currentWithdrawPermission.period_start_time), 'dd-MM-yyyy HH:mm:ss');
     const formattedExpiration = format(new Date(currentWithdrawPermission.expiration), 'dd-MM-yyyy HH:mm:ss');
 
     const remainingTime = (new Date(currentWithdrawPermission.expiration).getTime() - Date.now()) / 1000;
     const remainingPeriods = claimed_this_period >= withdrawAmount
-      ? (remainingTime / (withdrawal_period_sec * 1000)).toString().split(".")[0]
+      ? parseInt((remainingTime / (withdrawal_period_sec * 1000)).toString().split(".")[0])
       : (remainingTime / (withdrawal_period_sec * 1000)).toFixed(3);
     
     const maximumClaimable = (
@@ -325,7 +330,7 @@ export default function WithdrawPermissions(properties) {
 
     return (
       <div style={style}>
-        <Card className="m-2">
+        <Card className="m-2 pt-5">
           <CardContent>
             <div className="grid grid-cols-1 text-sm">
               <div className="grid grid-cols-2 gap-2">
@@ -345,18 +350,28 @@ export default function WithdrawPermissions(properties) {
                 <div><b>{t("WithdrawPermissions:time_remaining")}</b>: {formatDuration(timeTillNextPeriod)}</div>
               </div>
               <div className="grid grid-cols-2 gap-2">
-                <div><b>{t("WithdrawPermissions:remaining_periods")}</b>: {remainingPeriods / 1000}</div>
+                <div><b>{t("WithdrawPermissions:remaining_periods")}</b>: {remainingPeriods}</div>
                 <div><b>{t("WithdrawPermissions:maximum_claimable")}</b>:<br/>{maximumClaimable} {withdrawAsset.symbol}</div>
               </div>
-              <Button
-                variant="outline"
-                onClick={() => {
-                  setOpenClaimDialog(true);
-                }}
-                className="w-1/4 mt-2"
-              >
-                {t("WithdrawPermissions:claim")}
-              </Button>
+              {
+                claimed_this_period < withdrawAmount
+                  ? <Button
+                      variant="outline"
+                      onClick={() => {
+                        setOpenClaimDialog(true);
+                      }}
+                      className="w-1/4 mt-2"
+                    >
+                      {t("WithdrawPermissions:claim")}
+                    </Button>
+                  : <Button
+                      variant="outline"
+                      disabled
+                      className="w-1/4 mt-2"
+                    >
+                      {t("WithdrawPermissions:claim")}
+                    </Button>
+              }
               {
                 openClaimDialog
                   ? <DeepLinkDialog

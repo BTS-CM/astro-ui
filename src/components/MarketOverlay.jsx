@@ -62,7 +62,6 @@ export default function MarketOverlay(properties) {
           const filteredData = data.filter((balance) =>
             assets.find((x) => x.id === balance.asset_id)
           );
-          console.log({ filteredData })
           setBalances(filteredData);
         }
       });

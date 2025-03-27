@@ -128,7 +128,6 @@ export default function WithdrawPermissions(properties) {
 
   useEffect(() => {
     if (found && found.length) {
-      console.log({foundAsset: found[0]});
       setFoundAsset(found[0]);
     }
   }, [found]);
@@ -447,7 +446,6 @@ export default function WithdrawPermissions(properties) {
                                 setTransferAmount(input);
                               } else if (input.startsWith(".")) {
                                 let newValue = `0.${input.split(".")[1]}`;
-                                console.log({newValue, input})
                                 setTransferAmount(newValue);
                               } else if (input.startsWith("0") && !input.startsWith("0.")) {
                                 input = input.replace(/^0+/, "");

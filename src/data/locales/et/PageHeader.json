@@ -48,6 +48,8 @@
   "portuguese": "portugali (pt)",
   "thai": "Tai (th)",
   "descText": {
+    "timed_transfer": "Varade ajastatud ülekandmiseks teisele kontole kasutage allolevat vormi.",
+    "withdraw_permissions": "Kasutage seda lehte, et luua, värskendada, kustutada ja taotleda loa tühistamise toiminguid.",
     "borrow": "Kasutage seda lehte potentsiaalsete krediidipakkumiste leidmiseks",
     "deals": "Vaadake allpool oma praeguseid pakkumisi!",
     "dex": "Kasutage allolevat vormi, et luua Bitshares DEXis piirtellimus.",

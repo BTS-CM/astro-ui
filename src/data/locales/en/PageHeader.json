@@ -48,6 +48,8 @@
   "portuguese": "Portuguese (pt)",
   "thai": "Thai (th)",
   "descText": {
+    "timed_transfer": "Use the form below to create a timed transfer of assets to another account.",
+    "withdraw_permissions": "Use this page to craft create, update, delete and claim withdraw permission operations.",
     "borrow": "Use this page to locate prospective credit offers",
     "deals": "Check out your current deals below!",
     "dex": "Use the form below to create a limit order on the Bitshares DEX.",
