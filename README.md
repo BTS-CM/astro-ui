@@ -45,7 +45,7 @@ Integrates with both the [Beet](https://github.com/bitshares/beet) and [BeetEOS]
 
 ## Screenshot
 
-![image](https://github.com/user-attachments/assets/7b6b6094-65e4-4950-b997-6d6f1deb37b4)
+![image](https://github.com/user-attachments/assets/86442278-deb6-46f3-af75-eb07122d5056)
 
 ## Dev Commands
 
