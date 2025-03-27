@@ -1,5 +1,6 @@
 {
   "transferAssets": "Varade üleandmine",
+  "timedTransferAssets": "Ajastatud vara ülekanne",
   "sendFundsDescription": "Saatke oma juhitavalt kontolt raha teisele BitSharesi konto omanikule.",
   "transferLimitations": "⛔ Ei toeta veel memo, seega ärge kasutage seda vormi välisteenustele üleminekul.\n",
   "sendingAccount": "Konto saatmine",

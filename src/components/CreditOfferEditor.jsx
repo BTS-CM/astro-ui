@@ -807,6 +807,7 @@ export default function CreditOfferEditor(properties) {
                                 marketSearch={marketSearch}
                                 type={null}
                                 chain={usr.chain}
+                                balances={balances}
                               />
                             ) : null}
                           </div>
@@ -816,11 +817,13 @@ export default function CreditOfferEditor(properties) {
                         {t("CreditOfferEditor:lendingAssetDescription")}
                       </FormDescription>
                       <FormMessage>
-                        {foundAsset &&
-                        balances &&
-                        !balances.map((x) => x.asset_id).includes(foundAsset.id)
-                          ? t("Transfer:noAssetInAccount", { username: usr.username })
-                          : null}
+                        {
+                          foundAsset &&
+                          balances &&
+                          !balances.map((x) => x.asset_id).includes(foundAsset.id)
+                            ? t("Transfer:noAssetInAccount", { username: usr.username })
+                            : null
+                        }
                       </FormMessage>
                     </FormItem>
                   )}
@@ -914,7 +917,7 @@ export default function CreditOfferEditor(properties) {
                                   onClick={() => {
                                     event.preventDefault();
                                   }}
-                                  className="inline-block border border-grey rounded pl-4 pb-1 pr-4 text-lg"
+                                  className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4 text-lg"
                                 >
                                   <Label>{t("CreditOfferEditor:editLendingRate")}</Label>{" "}
                                 </span>
@@ -1098,7 +1101,7 @@ export default function CreditOfferEditor(properties) {
                       <FormLabel>{t("CreditOfferEditor:acceptedCollateral")}</FormLabel>
                       <FormControl>
                         <span className="grid grid-cols-12">
-                          <span className="col-span-9 border border-grey rounded">
+                          <span className="col-span-9 border border-gray-300 rounded">
                             <List
                               height={210}
                               itemCount={acceptableCollateral.length}
@@ -1136,7 +1139,7 @@ export default function CreditOfferEditor(properties) {
                       <FormLabel>{t("CreditOfferEditor:preApprovedUsers")}</FormLabel>
                       <FormControl>
                         <span className="grid grid-cols-12">
-                          <span className="col-span-9 border border-grey rounded">
+                          <span className="col-span-9 border border-gray-300 rounded">
                             <List
                               height={210}
                               itemCount={allowedAccounts.length}

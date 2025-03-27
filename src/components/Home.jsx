@@ -163,6 +163,43 @@ export default function Home(properties) {
           </HoverCardContent>
         </HoverCard>
 
+        <HoverCard key="timed_transfer">
+          <HoverCardTrigger asChild>
+            <a href="/timed_transfer/index.html" style={{ textDecoration: "none" }}>
+              <Card className="h-full hover:shadow-md hover:shadow-black">
+                <CardHeader>
+                  <CardTitle>{t("Home:timed_transfer.title")}</CardTitle>
+                  <CardDescription>{t("Home:timed_transfer.subtitle")}</CardDescription>
+                </CardHeader>
+              </Card>
+            </a>
+          </HoverCardTrigger>
+          <HoverCardContent className="w-80 text-sm pt-1">
+            <ul className="ml-2 list-disc [&>li]:mt-2">
+              <li>{t("Home:timed_transfer.hover1")}</li>
+            </ul>
+          </HoverCardContent>
+        </HoverCard>
+
+        <HoverCard key="withdraw_permissions">
+          <HoverCardTrigger asChild>
+            <a href="/withdraw_permissions/index.html" style={{ textDecoration: "none" }}>
+              <Card className="h-full hover:shadow-md hover:shadow-black">
+                <CardHeader>
+                  <CardTitle>{t("Home:withdraw_permission.title")}</CardTitle>
+                  <CardDescription>{t("Home:withdraw_permission.subtitle")}</CardDescription>
+                </CardHeader>
+              </Card>
+            </a>
+          </HoverCardTrigger>
+          <HoverCardContent className="w-80 text-sm pt-1">
+            <ul className="ml-2 list-disc [&>li]:mt-2">
+              <li>{t("Home:withdraw_permission.hover1")}</li>
+              <li>{t("Home:withdraw_permission.hover2")}</li>
+            </ul>
+          </HoverCardContent>
+        </HoverCard>
+
         <HoverCard key="create_vesting">
           <HoverCardTrigger asChild>
             <a href="/create_vesting/index.html" style={{ textDecoration: "none" }}>
@@ -328,26 +365,6 @@ export default function Home(properties) {
               <li>{t("Home:featured.hover1")}</li>
               <li>{t("Home:featured.hover2")}</li>
               <li>{t("Home:featured.hover3")}</li>
-            </ul>
-          </HoverCardContent>
-        </HoverCard>
-        
-        <HoverCard key="pool_tracker">
-          <HoverCardTrigger asChild>
-            <a href="/pool_tracker/index.html" style={{ textDecoration: "none" }}>
-              <Card className="h-full hover:shadow-md hover:shadow-black">
-                <CardHeader>
-                  <CardTitle>{t("Home:pool_tracker.title")}</CardTitle>
-                  <CardDescription>{t("Home:pool_tracker.subtitle")}</CardDescription>
-                </CardHeader>
-              </Card>
-            </a>
-          </HoverCardTrigger>
-          <HoverCardContent className="w-80 text-sm pt-1">
-            <ul className="ml-2 list-disc [&>li]:mt-2">
-              <li>{t("Home:pool_tracker.hover1")}</li>
-              <li>{t("Home:pool_tracker.hover2")}</li>
-              <li>{t("Home:pool_tracker.hover3")}</li>
             </ul>
           </HoverCardContent>
         </HoverCard>

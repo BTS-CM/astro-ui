@@ -14,13 +14,6 @@
     "hover2": "Os pools têm diferentes pares de negociação e taxas.",
     "hover3": "Mais simples, mas mais caro do que um pedido com limite."
   },
-  "pool_tracker": {
-    "title": "📊 Rastreador de piscina em destaque",
-    "subtitle": "Ver dados e estatísticas do pool de liquidez",
-    "hover1": "Visualize pools de liquidez no Bitshares Dex.",
-    "hover2": "Veja as estimativas de ganhos do pool.",
-    "hover3": "Veja a análise consolodada do pool."
-  },
   "swap": {
     "title": "🔄 Troca simples de ativos",
     "subtitle": "Trocar ativos com mais facilidade por meio de pools",
@@ -39,6 +32,17 @@
     "title": "💸 Transferir ativos",
     "subtitle": "Envie ativos para outros usuários",
     "hover1": "Transfira ativos para qualquer pessoa na blockchain Bitshares em segundos."
+  },
+  "timed_transfer": {
+    "title": "⏱️ Transferência cronometrada",
+    "subtitle": "Envie ativos para outros usuários posteriormente.",
+    "hover1": "Agendar a transferência de ativos para outro usuário após o passar do período de revisão da proposta."
+  },
+  "withdraw_permission": {
+    "title": "📥 Retire a permissão",
+    "subtitle": "Gerencie suas permissões de retirada",
+    "hover1": "Crie/edite/exclua suas permissões de retirada de pagamento.",
+    "hover2": "Veja suas permissões de retirada de retirada."
   },
   "create_vesting": {
     "title": "🫰 Colete ativos",

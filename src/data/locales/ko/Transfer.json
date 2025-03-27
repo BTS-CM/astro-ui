@@ -1,5 +1,6 @@
 {
   "transferAssets": "자산 양도",
+  "timedTransferAssets": "정시 자산 이전",
   "sendFundsDescription": "귀하가 관리하는 계정에서 다른 BitShares 계정 소유자에게 자금을 보내십시오.",
   "transferLimitations": "⛔ 아직 메모 기능을 지원하지 않으므로, 외부 서비스로 이관 시 이 양식을 사용하지 마세요.\n",
   "sendingAccount": "보내는 계좌",

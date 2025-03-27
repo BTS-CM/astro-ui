@@ -1,0 +1,17 @@
+{
+    "editing": "인출 허가 편집 {id}",
+    "editingDescription": "아래 양식을 작성하여 기존 인출 허가를 업데이트하세요.",
+    "withdrawAmountLimitHeader": "인출 금액 한도",
+    "withdrawAmountLimitDescription": "이것은 사용자가 각 인출 기간 동안 인출할 수 있는 최대 금액입니다.",
+    "amountAvailable": "사용 가능한 금액",
+    "amountAvailableDescription": "이것은 직불 인출 생성자 잔액에서 사용 가능한 인출 가능한 자산 금액입니다.",
+    "1hr": "1시간",
+    "6hrs": "6시간",
+    "12hrs": "12시간",
+    "24hrs": "24시간",
+    "7d": "7일",
+    "14d": "14일",
+    "30d": "30일",
+    "6m": "6개월",
+    "12m": "12개월"
+}

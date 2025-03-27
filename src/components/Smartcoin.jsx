@@ -1909,7 +1909,7 @@ export default function Smartcoin(properties) {
                                         onClick={() => {
                                           event.preventDefault();
                                         }}
-                                        className="inline-block border border-grey rounded pl-4 pb-1 pr-4"
+                                        className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4"
                                       >
                                         <Label>{t("Smartcoin:changeDebtAmount")}</Label>
                                       </span>
@@ -2081,7 +2081,7 @@ export default function Smartcoin(properties) {
                                         onClick={() => {
                                           event.preventDefault();
                                         }}
-                                        className="inline-block border border-grey rounded pl-4 pb-1 pr-4"
+                                        className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4"
                                       >
                                         <Label>{t("Smartcoin:changeCollateralAmount")}</Label>
                                       </span>
@@ -2284,7 +2284,7 @@ export default function Smartcoin(properties) {
                                         onClick={() => {
                                           event.preventDefault();
                                         }}
-                                        className="inline-block border border-grey rounded pl-4 pb-1 pr-4"
+                                        className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4"
                                       >
                                         <Label>{t("Smartcoin:changeRatioValue")}</Label>
                                       </span>
@@ -2509,7 +2509,7 @@ export default function Smartcoin(properties) {
                                       onClick={() => {
                                         event.preventDefault();
                                       }}
-                                      className="inline-block border border-grey rounded pl-4 pb-1 pr-4"
+                                      className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4"
                                     >
                                       <Label>{t("Smartcoin:changeTCRValue")}</Label>
                                     </span>

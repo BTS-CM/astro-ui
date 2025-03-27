@@ -1636,7 +1636,7 @@ export default function Predictions(properties) {
                             type="header"
                           />
                           <div className="grid grid-cols-12 mt-1">
-                            <span className="col-span-9 border border-grey rounded">
+                            <span className="col-span-9 border border-gray-300 rounded">
                               <List
                                 height={210}
                                 itemCount={priceFeeders.length}

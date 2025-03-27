@@ -151,9 +151,7 @@ export default function PortfolioTabs(properties) {
                 symbol: assets.find((x) => x.id === balance.asset_id).symbol,
               };
             });
-          console.log("Successfully fetched balances");
           setBalances(updatedData);
-          //console.log({ updatedData, data, assets });
         }
       });
     }

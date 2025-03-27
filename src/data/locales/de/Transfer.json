@@ -1,5 +1,6 @@
 {
   "transferAssets": "Vermögenswerte übertragen",
+  "timedTransferAssets": "Zeitgesteuerte Vermögensübertragung",
   "sendFundsDescription": "Senden Sie Geld von einem von Ihnen kontrollierten Konto an einen anderen BitShares-Kontoinhaber.",
   "transferLimitations": "⛔ Unterstützt noch kein Memo, verwenden Sie dieses Formular daher nicht bei der Übertragung an externe Dienste.\n",
   "sendingAccount": "Konto senden",

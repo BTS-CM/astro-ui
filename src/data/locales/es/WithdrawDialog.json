@@ -1,0 +1,17 @@
+{
+    "editing": "Editando el permiso de retiro {id}",
+    "editingDescription": "Complete el formulario a continuación para actualizar su permiso de retiro existente.",
+    "withdrawAmountLimitHeader": "Límite de monto de retiro",
+    "withdrawAmountLimitDescription": "Este es el monto máximo que el usuario estará autorizado a retirar en cada período de retiro.",
+    "amountAvailable": "Monto disponible",
+    "amountAvailableDescription": "Esta es la cantidad de activos retirables disponibles en el saldo del creador de la domiciliación bancaria.",
+    "1hr": "1 hora",
+    "6hrs": "6 horas",
+    "12hrs": "12 horas",
+    "24hrs": "24 horas",
+    "7d": "7 días",
+    "14d": "14 días",
+    "30d": "30 días",
+    "6m": "6 meses",
+    "12m": "12 meses"
+}

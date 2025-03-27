@@ -48,6 +48,8 @@
   "portuguese": "Portugiesisch (pt)",
   "thai": "Thai (th)",
   "descText": {
+    "timed_transfer": "Verwenden Sie das untenstehende Formular, um eine zeitgesteuerte Übertragung von Vermögenswerten auf ein anderes Konto zu veranlassen.",
+    "withdraw_permissions": "Auf dieser Seite können Sie Vorgänge zum Erstellen, Aktualisieren, Löschen und Einfordern von Widerrufsberechtigungen durchführen.",
     "borrow": "Auf dieser Seite finden Sie potenzielle Kreditangebote",
     "deals": "Schauen Sie sich unten Ihre aktuellen Angebote an!",
     "dex": "Verwenden Sie das untenstehende Formular, um eine Limit-Order für den Bitshares DEX zu erstellen.",

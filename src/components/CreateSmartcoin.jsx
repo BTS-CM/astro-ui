@@ -51,6 +51,7 @@ import { useInitCache } from "@/nanoeffects/Init.ts";
 import { $currentUser } from "@/stores/users.ts";
 import { $currentNode } from "@/stores/node.ts";
 import { createObjectStore } from "@/nanoeffects/Objects.ts";
+import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 
 import {
   getPermissions,
@@ -119,6 +120,33 @@ export default function CreateSmartcoin(properties) {
     }
     return [];
   }, [_assetsBTS, _assetsTEST, _chain]);
+
+  const [balanceCounter, setBalanceCoutner] = useState(0);
+  const [balances, setBalances] = useState();
+  useEffect(() => {
+    let unsubscribeUserBalances;
+
+    if (usr && usr.id && currentNode && assets && assets.length) {
+      const userBalancesStore = createUserBalancesStore([
+        usr.chain,
+        usr.id,
+        currentNode ? currentNode.url : null,
+      ]);
+
+      unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
+        if (data && !error && !loading) {
+          const filteredData = data.filter((balance) =>
+            assets.find((x) => x.id === balance.asset_id)
+          );
+          setBalances(filteredData);
+        }
+      });
+    }
+
+    return () => {
+      if (unsubscribeUserBalances) unsubscribeUserBalances();
+    };
+  }, [usr, assets, currentNode, balanceCounter]);
 
   // Asset info
   const [shortName, setShortName] = useState("");
@@ -1529,6 +1557,7 @@ export default function CreateSmartcoin(properties) {
                               marketSearch={marketSearch}
                               type={"backing"}
                               chain={usr && usr.chain ? usr.chain : "bitshares"}
+                              balances={balances}
                             />
                           </div>
                         </div>
@@ -1648,11 +1677,12 @@ export default function CreateSmartcoin(properties) {
                             marketSearch={marketSearch}
                             type={"backing"}
                             chain={usr && usr.chain ? usr.chain : "bitshares"}
+                            balances={balances}
                           />
                         ) : null}
                       </div>
                       {allowedMarketsEnabled ? (
-                        <div className="mt-3 border border-grey rounded">
+                        <div className="mt-3 border border-gray-300 rounded">
                           <List
                             height={210}
                             itemCount={allowedMarkets.length}
@@ -1692,11 +1722,12 @@ export default function CreateSmartcoin(properties) {
                             marketSearch={marketSearch}
                             type={"backing"}
                             chain={usr && usr.chain ? usr.chain : "bitshares"}
+                            balances={balances}
                           />
                         ) : null}
                       </div>
                       {bannedMarketsEnabled ? (
-                        <div className="mt-2 border border-grey rounded">
+                        <div className="mt-2 border border-gray-300 rounded">
                           <List
                             height={210}
                             itemCount={bannedMarkets.length}
@@ -2228,7 +2259,7 @@ export default function CreateSmartcoin(properties) {
                             header={t("AssetCommon:extensions.whitelist_market_fee_sharing.header")}
                           />
                           <div className="grid grid-cols-12 mt-1">
-                            <span className="col-span-9 border border-grey rounded">
+                            <span className="col-span-9 border border-gray-300 rounded">
                               <List
                                 height={210}
                                 itemCount={feeSharingWhitelist.length}
@@ -2332,7 +2363,7 @@ export default function CreateSmartcoin(properties) {
                         type="header"
                       />
                       <div className="grid grid-cols-12 mt-1">
-                        <span className="col-span-9 border border-grey rounded">
+                        <span className="col-span-9 border border-gray-300 rounded">
                           <List
                             height={210}
                             itemCount={whitelistAuthorities.length}
@@ -2399,7 +2430,7 @@ export default function CreateSmartcoin(properties) {
                         type="header"
                       />
                       <div className="grid grid-cols-12 mt-1">
-                        <span className="col-span-9 border border-grey rounded">
+                        <span className="col-span-9 border border-gray-300 rounded">
                           <List
                             height={210}
                             itemCount={blacklistAuthorities.length}
@@ -2523,6 +2554,7 @@ export default function CreateSmartcoin(properties) {
                           marketSearch={marketSearch}
                           type={"backing"}
                           chain={usr && usr.chain ? usr.chain : "bitshares"}
+                          balances={balances}
                         />
                       ) : null}
                     </div>

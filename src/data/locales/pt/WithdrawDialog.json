@@ -1,0 +1,17 @@
+{
+    "editing": "Editando a Permissão de Saque {id}",
+    "editingDescription": "Preencha o formulário abaixo para atualizar sua permissão de saque existente.",
+    "withdrawAmountLimitHeader": "Limite do Valor de Saque",
+    "withdrawAmountLimitDescription": "Este é o valor máximo que o usuário estará autorizado a sacar a cada período de saque.",
+    "amountAvailable": "Valor Disponível",
+    "amountAvailableDescription": "Este é o valor de ativos sacáveis ​​disponíveis no saldo do criador do débito direto.",
+    "1hr": "1 Hora",
+    "6hrs": "6 Horas",
+    "12hrs": "12 Horas",
+    "24hrs": "24 Horas",
+    "7d": "7 Dias",
+    "14d": "14 Dias",
+    "30d": "30 Dias",
+    "6m": "6 Meses",
+    "12m": "12 meses"
+}

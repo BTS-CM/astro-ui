@@ -1,5 +1,6 @@
 {
   "transferAssets": "Transfer assets",
+  "timedTransferAssets": "Timed asset transfer",
   "sendFundsDescription": "Send funds from an account you control to another BitShares account holder.",
   "transferLimitations": "⛔ Doesn't yet support a memo, so don't use this form when transferring to external services.\n✅ Use for simple transfers between accounts.",
   "sendingAccount": "Sending account",

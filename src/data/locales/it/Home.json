@@ -14,13 +14,6 @@
     "hover2": "I pool hanno coppie di trading e commissioni di trading diverse.",
     "hover3": "Più semplice ma più costoso di un ordine limite."
   },
-  "pool_tracker": {
-    "title": "📊 Tracker in piscina in primo piano",
-    "subtitle": "Visualizza i dati e le statistiche del pool di liquidità",
-    "hover1": "Visualizza pool di liquidità in primo piano su BitShares Dex.",
-    "hover2": "Visualizza le stime degli utili del pool.",
-    "hover3": "Visualizza l'analisi del pool consolodata."
-  },
   "swap": {
     "title": "🔄 Scambio di risorse semplice",
     "subtitle": "Scambiare più facilmente le risorse tramite pool",
@@ -39,6 +32,17 @@
     "title": "💸 Trasferisci beni",
     "subtitle": "Invia risorse ad altri utenti",
     "hover1": "Trasferisci risorse a chiunque sulla blockchain di Bitshares in pochi secondi."
+  },
+  "timed_transfer": {
+    "title": "⏱️ Trasferimento a tempo",
+    "subtitle": "Invia risorse ad altri utenti in un secondo momento.",
+    "hover1": "Pianifica il trasferimento di attività a un altro utente dopo il periodo di revisione della proposta."
+  },
+  "withdraw_permission": {
+    "title": "📥 Prelevare il permesso",
+    "subtitle": "Gestisci le autorizzazioni di prelievo",
+    "hover1": "Crea/Modifica/Elimina le autorizzazioni di prelievo di pagamento.",
+    "hover2": "Visualizza le autorizzazioni di prelievo."
   },
   "create_vesting": {
     "title": "🫰 Vesti i beni",

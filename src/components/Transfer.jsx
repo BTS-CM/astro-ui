@@ -392,6 +392,7 @@ export default function Transfer(properties) {
                                 marketSearch={marketSearch}
                                 type={null}
                                 chain={usr && usr.chain ? usr.chain : "bitshares"}
+                                balances={balances}
                               />
                             </div>
                           </div>

@@ -14,13 +14,6 @@
     "hover2": "Pools have different trading pairs and fees.",
     "hover3": "Simpler but more costly than a limit order."
   },
-  "pool_tracker": {
-    "title": "📊 Featured Pool Tracker",
-    "subtitle": "View liquidity pool data and stats",
-    "hover1": "View featured liquidity pools on the Bitshares DEX.",
-    "hover2": "View pool earnings estimates.",
-    "hover3": "View consolodated pool analytics."
-  },
   "swap": {
     "title": "🔄 Simple Asset Swap",
     "subtitle": "More easily swap assets via pools",
@@ -39,6 +32,17 @@
     "title": "💸 Transfer Assets",
     "subtitle": "Send assets to other users",
     "hover1": "Transfer assets to anyone on the Bitshares blockchain in seconds."
+  },
+  "timed_transfer": {
+    "title": "⏱️ Timed Transfer",
+    "subtitle": "Send assets to other users at a later date.",
+    "hover1": "Schedule transfer of assets to another user after proposal review period passes."
+  },
+  "withdraw_permission": {
+    "title": "📥 Withdraw Permission",
+    "subtitle": "Manage your withdraw permissions",
+    "hover1": "Create/edit/delete your payment withdraw permissions.",
+    "hover2": "View your receive withdraw permissions."
   },
   "create_vesting": {
     "title": "🫰 Vest Assets",

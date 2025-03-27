@@ -48,7 +48,8 @@ export default function AssetDropDown(properties) {
     marketSearch,
     type,
     size,
-    chain
+    chain,
+    balances
   } = properties;
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
   const blocklist = useSyncExternalStore($blockList.subscribe, $blockList.get, () => true);
@@ -100,6 +101,15 @@ export default function AssetDropDown(properties) {
       res = featuredAssets[index];
     } else if (mode === "favourites") {
       res = relevantAssets[index];
+    } else if (mode === "balances" && balances && balances.length) {
+      const _balance = balances[index];
+      res = marketSearchContents.find(
+        (asset) => asset.id === _balance.asset_id
+      );
+    }
+
+    if (!res) {
+      return null;
     }
     
     return (
@@ -109,7 +119,7 @@ export default function AssetDropDown(properties) {
           style={{ marginBottom: "2px" }}
           onClick={() => {
             setTimeout(() => {
-              if (mode === "search" || mode === "featured") {
+              if (mode === "search" || mode === "featured" || mode === "balances") {
                 storeCallback(res.s);
               } else if (mode === "favourites") {
                 storeCallback(res.symbol);
@@ -121,7 +131,7 @@ export default function AssetDropDown(properties) {
           <CardHeader className="p-3">
             <CardTitle className="h-3">
               {
-                mode === "search" || mode === "featured"
+                mode === "search" || mode === "featured" || mode === "balances"
                 ? `${res.s} (${res.id})`
                 : null
               }
@@ -133,7 +143,7 @@ export default function AssetDropDown(properties) {
             </CardTitle>
             <CardDescription>
               {
-                mode === "search" || mode === "featured"
+                mode === "search" || mode === "featured" || mode === "balances"
                 ? t(
                     "AssetDropDownCard:issued",
                     { user: res.u }
@@ -238,7 +248,7 @@ export default function AssetDropDown(properties) {
           </DialogTitle>
         </DialogHeader>
         <>
-          <div className="grid grid-cols-3 gap-2">
+          <div className={`grid grid-cols-${balances && balances.length ? 4 : 3} gap-2`}>
             <Button
               variant={mode === "search" ? "" : "outline"}
               size="sm"
@@ -246,6 +256,17 @@ export default function AssetDropDown(properties) {
             >
               {t("AssetDropDownCard:search")}
             </Button>
+            {
+              balances && balances.length
+              ? <Button
+                  variant={mode === "balances" ? "" : "outline"}
+                  size="sm"
+                  onClick={() => setMode("balances")}
+                >
+                  {t("PortfolioTabs:balances")}
+                </Button>
+              : null
+            }
             <Button
               variant={mode === "featured" ? "" : "outline"}
               size="sm"
@@ -285,6 +306,30 @@ export default function AssetDropDown(properties) {
                     </List>
                   </>
                 ) : null}
+              </>
+            : null
+          }
+          {
+            mode === "balances"
+            ? <>
+                <h4 className="text-md font-bold tracking-tight">
+                  {!type ? t("AssetDropDownCard:noType") : null}
+                  {type && type === "base" ? t("AssetDropDownCard:baseType") : null}
+                  {type && type === "quote" ? t("AssetDropDownCard:quoteType") : null}
+                  {type && type === "backing" ? t("AssetDropDownCard:backingType") : null}
+                </h4>
+                {balances && balances.length ? (
+                  <>
+                    <List
+                      height={350}
+                      itemCount={balances.length}
+                      itemSize={70}
+                      className="w-full"
+                    >
+                      {Row}
+                    </List>
+                  </>
+                ) : "No balances..."}
               </>
             : null
           }

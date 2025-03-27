@@ -1,5 +1,6 @@
 {
   "transferAssets": "Overfør aktiver",
+  "timedTransferAssets": "Tidsbestemt aktivoverførsel",
   "sendFundsDescription": "Send penge fra en konto, du kontrollerer, til en anden BitShares-kontoindehaver.",
   "transferLimitations": "⛔ Understøtter endnu ikke et notat, så brug ikke denne formular, når du overfører til eksterne tjenester.\n",
   "sendingAccount": "Afsender konto",

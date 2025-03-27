@@ -1,5 +1,6 @@
 {
   "transferAssets": "資産の譲渡",
+  "timedTransferAssets": "時間指定資産移転",
   "sendFundsDescription": "あなたが管理するアカウントから別の BitShares アカウント所有者に資金を送金します。",
   "transferLimitations": "⛔ メモにはまだ対応していないため、外部サービスに転送する場合はこのフォームを使用しないでください。\n",
   "sendingAccount": "送信アカウント",

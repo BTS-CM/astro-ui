@@ -621,6 +621,7 @@ export default function SameTFunds(properties) {
                           marketSearch={marketSearch}
                           type={"backing"}
                           chain={usr && usr.chain ? usr.chain : "bitshares"}
+                          balances={usrBalances}
                         />
                       </div>
                       <div className="grid grid-cols-2 gap-2">

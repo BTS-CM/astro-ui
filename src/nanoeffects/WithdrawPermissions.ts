@@ -30,14 +30,14 @@ const [createWithdrawPermissionsStore] = nanoquery({
       try {
         receiverWithdrawalPermissions =  await fetchReceiverWithdrawPermissions(chain, account_id, specificNode, currentAPI);
       } catch (error) {
-        console.log({ error });
+        console.log({ error, msg: "Error fetching receiver permissions" });
       }
 
       let payerWithdrawalPermissions;
       try {
         payerWithdrawalPermissions =  await fetchPayerWithdrawPermissions(chain, account_id, specificNode, currentAPI);
       } catch (error) {
-        console.log({ error });
+        console.log({ error, msg: "Error fetching payer permissions" });
       }
 
       currentAPI.close();

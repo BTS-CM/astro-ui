@@ -14,13 +14,6 @@
     "hover2": "Puljer har forskellige handelspar og gebyrer.",
     "hover3": "Enklere men dyrere end en limiteret ordre."
   },
-  "pool_tracker": {
-    "title": "📊 Featured Pool Tracker",
-    "subtitle": "Se likviditetspooldata og statistik",
-    "hover1": "Vis indeholdt likviditetspooler på Bitshares Dex.",
-    "hover2": "Se poolindtjeningsestimater.",
-    "hover3": "Se konsoloderet poolanalyse."
-  },
   "swap": {
     "title": "🔄 Simpel aktivbytte",
     "subtitle": "Det er nemmere at bytte aktiver via puljer",
@@ -39,6 +32,17 @@
     "title": "💸 Overfør aktiver",
     "subtitle": "Send aktiver til andre brugere",
     "hover1": "Overfør aktiver til enhver på Bitshares blockchain på få sekunder."
+  },
+  "timed_transfer": {
+    "title": "⏱ Tidsbestemt overførsel",
+    "subtitle": "Send aktiver til andre brugere på et senere tidspunkt.",
+    "hover1": "Planlæg overførsel af aktiver til en anden bruger efter gennemgangsperioden for forslag."
+  },
+  "withdraw_permission": {
+    "title": "📥 Træk tilladelse",
+    "subtitle": "Administrer dine tilbagetrækningstilladelser",
+    "hover1": "Opret/rediger/slet din betaling tilbagetrækning tilladelser.",
+    "hover2": "Se dine modtagende tilbagetrækningstilladelser."
   },
   "create_vesting": {
     "title": "🫰 Vestaktiver",

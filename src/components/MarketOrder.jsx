@@ -1085,7 +1085,7 @@ export default function MarketOrder(properties) {
                                         onClick={() => {
                                           event.preventDefault();
                                         }}
-                                        className="inline-block border border-grey rounded pl-4 pb-1 pr-4 text-lg"
+                                        className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4 text-lg"
                                       >
                                         <Label>{t("MarketOrder:editSpreadLabel")}</Label>
                                       </span>
@@ -1154,7 +1154,7 @@ export default function MarketOrder(properties) {
                                         onClick={() => {
                                           event.preventDefault();
                                         }}
-                                        className="inline-block border border-grey rounded pl-4 pb-1 pr-4 text-lg"
+                                        className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4 text-lg"
                                       >
                                         <Label>{t("MarketOrder:editSizeLabel")}</Label>
                                       </span>

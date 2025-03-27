@@ -1,0 +1,17 @@
+{
+    "editing": "Editing the Withdraw Permission {id}",
+    "editingDescription": "Fill out the form below to update your existing withdraw permission.",
+    "withdrawAmountLimitHeader": "Withdraw Amount Limit",
+    "withdrawAmountLimitDescription": "This is the maximum amount the user will be authorized to withdraw each withdraw period.",
+    "amountAvailable": "Amount Available",
+    "amountAvailableDescription": "This is the amount of withdrawable assets available in the direct debit creator's balance.",
+    "1hr": "1 Hour",
+    "6hrs": "6 Hours",
+    "12hrs": "12 Hours",
+    "24hrs": "24 Hours",
+    "7d": "7 Days",
+    "14d": "14 Days",
+    "30d": "30 Days",
+    "6m": "6 Months",
+    "12m": "12 Months"
+}

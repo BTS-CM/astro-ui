@@ -1,0 +1,17 @@
+{
+    "editing": "Bearbeitung der Auszahlungsberechtigung {id}",
+    "editingDescription": "Füllen Sie das untenstehende Formular aus, um Ihre bestehende Auszahlungsberechtigung zu aktualisieren.",
+    "withdrawAmountLimitHeader": "Auszahlungsbetragslimit",
+    "withdrawAmountLimitDescription": "Dies ist der maximale Betrag, den der Benutzer pro Auszahlungszeitraum abheben darf.",
+    "amountAvailable": "Verfügbarer Betrag",
+    "amountAvailableDescription": "Dies ist der Betrag des verfügbaren auszahlbaren Guthabens im Konto des Lastschrifterstellers.",
+    "1hr": "1 Stunde",
+    "6hrs": "6 Stunden",
+    "12hrs": "12 Stunden",
+    "24hrs": "24 Stunden",
+    "7d": "7 Tage",
+    "14d": "14 Tage",
+    "30d": "30 Tage",
+    "6m": "6 Monate",
+    "12m": "12 Monate"
+}
