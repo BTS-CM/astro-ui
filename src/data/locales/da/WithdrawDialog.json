@@ -1,0 +1,17 @@
+{
+    "editing": "Redigering af tilbagetrækningstilladelsen {id}",
+    "editingDescription": "Udfyld formularen nedenfor for at opdatere din eksisterende tilbagetrækningstilladelse.",
+    "withdrawAmountLimitHeader": "Tilbagetrækningsbeløbsgrænse",
+    "withdrawAmountLimitDescription": "Dette er det maksimale beløb, som brugeren får tilladelse til at hæve hver tilbagetrækningsperiode.",
+    "amountAvailable": "Tilgængelig mængde",
+    "amountAvailableDescription": "Dette er mængden af ​​udtagelige aktiver, der er tilgængelige på den direkte debiteringsopretters saldo.",
+    "1hr": "1 time",
+    "6hrs": "6 timer",
+    "12hrs": "12 timer",
+    "24hrs": "24 timer",
+    "7d": "7 dage",
+    "14d": "14 dage",
+    "30d": "30 dage",
+    "6m": "6 måneder",
+    "12m": "12 måneder"
+}

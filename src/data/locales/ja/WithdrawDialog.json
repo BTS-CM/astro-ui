@@ -1,0 +1,17 @@
+{
+    "editing": "引き出し権限 {id} の編集",
+    "editingDescription": "既存の引き出し権限を更新するには、以下のフォームに記入してください。",
+    "withdrawAmountLimitHeader": "引き出し金額の制限",
+    "withdrawAmountLimitDescription": "これは、ユーザーが各引き出し期間に引き出すことが許可される最大金額です。",
+    "amountAvailable": "利用可能な金額",
+    "amountAvailableDescription": "これは、口座引き落とし作成者の残高にある引き出し可能な資産の金額です。",
+    "1hr": "1 時間",
+    "6hrs": "6 時間",
+    "12hrs": "12 時間",
+    "24hrs": "24 時間",
+    "7d": "7 日",
+    "14d": "14 日",
+    "30d": "30 日",
+    "6m": "6 か月",
+    "12m": "12 か月"
+}

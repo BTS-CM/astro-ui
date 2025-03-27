@@ -1,0 +1,17 @@
+{
+    "editing": "Modifica dell'autorizzazione di prelievo {id}",
+    "editingDescription": "Compila il modulo sottostante per aggiornare l'autorizzazione di prelievo esistente.",
+    "withdrawAmountLimitHeader": "Limite importo prelievo",
+    "withdrawAmountLimitDescription": "Questo è l'importo massimo che l'utente sarà autorizzato a prelevare per ogni periodo di prelievo.",
+    "amountAvailable": "Importo disponibile",
+    "amountAvailableDescription": "Questo è l'importo di asset prelevabili disponibili nel saldo del creatore dell'addebito diretto.",
+    "1hr": "1 ora",
+    "6hrs": "6 ore",
+    "12hrs": "12 ore",
+    "24hrs": "24 ore",
+    "7d": "7 giorni",
+    "14d": "14 giorni",
+    "30d": "30 giorni",
+    "6m": "6 mesi",
+    "12m": "12 mesi"
+}

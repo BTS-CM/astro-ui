@@ -207,8 +207,13 @@ export default function WithdrawPermissions(properties) {
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
     const remainingTime = (new Date(currentWithdrawPermission.expiration).getTime() - Date.now()) / 1000;
-    const remainingPeriods = (remainingTime / (withdrawal_period_sec * 1000)).toFixed(3);
-    const maximumClaimable = (withdrawAmount - claimed_this_period + ((remainingPeriods - 1) * withdrawAmount)).toFixed(withdrawAsset.precision);
+    const remainingPeriods = claimed_this_period >= withdrawAmount
+      ? (remainingTime / (withdrawal_period_sec * 1000)).toString().split(".")[0]
+      : (remainingTime / (withdrawal_period_sec * 1000)).toFixed(3);
+
+    const maximumClaimable = (
+      withdrawAmount - claimed_this_period + ((remainingPeriods) * withdrawAmount)
+    ).toFixed(withdrawAsset.precision);
 
     return (
       <div style={style}>
@@ -228,8 +233,8 @@ export default function WithdrawPermissions(properties) {
                 <div><b>{t("WithdrawPermissions:expiration")}</b>: {formattedExpiration}</div>
               </div>
               <div className="grid grid-cols-2 gap-2">
-                <div><b>{t("WithdrawPermissions:withdrawal_period_sec")}</b>: {withdrawal_period_sec}s</div>
-                <div><b>{t("WithdrawPermissions:time_remaining")}</b>: {timeTillNextPeriod}s</div>
+                <div><b>{t("WithdrawPermissions:withdrawal_period_sec")}</b>: {formatDuration(withdrawal_period_sec)}</div>
+                <div><b>{t("WithdrawPermissions:time_remaining")}</b>: {formatDuration(timeTillNextPeriod)}</div>
               </div>
               <div className="grid grid-cols-2 gap-2">
                 <div><b>{t("WithdrawPermissions:remaining_periods")}</b>: {remainingPeriods}</div>
@@ -308,8 +313,13 @@ export default function WithdrawPermissions(properties) {
     const formattedExpiration = format(new Date(currentWithdrawPermission.expiration), 'dd-MM-yyyy HH:mm:ss');
 
     const remainingTime = (new Date(currentWithdrawPermission.expiration).getTime() - Date.now()) / 1000;
-    const remainingPeriods = (remainingTime / (withdrawal_period_sec * 1000)).toFixed(3);
-    const maximumClaimable = (withdrawAmount - claimed_this_period + ((remainingPeriods - 1) * withdrawAmount)).toFixed(withdrawAsset.precision);
+    const remainingPeriods = claimed_this_period >= withdrawAmount
+      ? (remainingTime / (withdrawal_period_sec * 1000)).toString().split(".")[0]
+      : (remainingTime / (withdrawal_period_sec * 1000)).toFixed(3);
+    
+    const maximumClaimable = (
+      withdrawAmount - claimed_this_period + ((remainingPeriods) * withdrawAmount)
+    ).toFixed(withdrawAsset.precision);
 
     const [openClaimDialog, setOpenClaimDialog] = useState(false);
 
@@ -331,11 +341,11 @@ export default function WithdrawPermissions(properties) {
                 <div><b>{t("WithdrawPermissions:expiration")}</b>:<br/>{formattedExpiration}</div>
               </div>
               <div className="grid grid-cols-2 gap-2">
-                <div><b>{t("WithdrawPermissions:withdrawal_period_sec")}</b>: {withdrawal_period_sec}s</div>
-                <div><b>{t("WithdrawPermissions:time_remaining")}</b>: {timeTillNextPeriod}s</div>
+                <div><b>{t("WithdrawPermissions:withdrawal_period_sec")}</b>: {formatDuration(withdrawal_period_sec)}</div>
+                <div><b>{t("WithdrawPermissions:time_remaining")}</b>: {formatDuration(timeTillNextPeriod)}</div>
               </div>
               <div className="grid grid-cols-2 gap-2">
-                <div><b>{t("WithdrawPermissions:remaining_periods")}</b>: {remainingPeriods}</div>
+                <div><b>{t("WithdrawPermissions:remaining_periods")}</b>: {remainingPeriods / 1000}</div>
                 <div><b>{t("WithdrawPermissions:maximum_claimable")}</b>:<br/>{maximumClaimable} {withdrawAsset.symbol}</div>
               </div>
               <Button
@@ -455,4 +465,20 @@ export default function WithdrawPermissions(properties) {
       </div>
     </>
   );
+}
+
+// Helper function to format seconds into human-readable duration
+function formatDuration(seconds) {
+  const days = Math.floor(seconds / 86400);
+  const hours = Math.floor((seconds % 86400) / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  //const secs = seconds % 60;
+
+  const parts = [];
+  if (days > 0) parts.push(`${days}d`);
+  if (hours > 0) parts.push(`${hours}h`);
+  if (minutes > 0) parts.push(`${minutes}m`);
+  //if (secs > 0) parts.push(`${secs}s`);
+
+  return parts.join(' ');
 }

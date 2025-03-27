@@ -61,7 +61,8 @@ const pages = [
   "LimitOrderWizard",
   "CustomPoolOverview",
   "PoolList",
-  "WithdrawPermissions"
+  "WithdrawPermissions",
+  "WithdrawDialog"
 ];
 
 const locale = persistentAtom("locale", "en");

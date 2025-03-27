@@ -1,0 +1,17 @@
+{
+    "editing": "Modification de l'autorisation de retrait {id}",
+    "editingDescription": "Remplissez le formulaire ci-dessous pour mettre à jour votre autorisation de retrait.",
+    "withdrawAmountLimitHeader": "Limite de retrait",
+    "withdrawAmountLimitDescription": "Montant maximal que l'utilisateur sera autorisé à retirer à chaque période de retrait.",
+    "amountAvailable": "Montant disponible",
+    "amountAvailableDescription": "Montant des actifs retirables disponibles sur le solde du créateur du prélèvement automatique.",
+    "1hr": "1 heure",
+    "6hrs": "6 heures",
+    "12hrs": "12 heures",
+    "24hrs": "24 heures",
+    "7d": "7 jours",
+    "14d": "14 jours",
+    "30d": "30 jours",
+    "6m": "6 mois",
+    "12m": "12 mois"
+    }

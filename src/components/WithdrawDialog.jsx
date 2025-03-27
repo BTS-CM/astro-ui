@@ -50,6 +50,18 @@ import AccountSearch from "./AccountSearch.jsx";
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
 import AssetDropDown from "./Market/AssetDropDownCard.jsx";
 
+const hoursToSeconds = {
+  "1hr": 3600,
+  "6hrs": 21600,
+  "12hrs": 43200,
+  "24hrs": 86400,
+  "7d": 604800,
+  "14d": 1209600,
+  "30d": 2592000,
+  "6m": 15552000,
+  "12m": 31104000,
+};
+
 export default function WithdrawPermissions(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
   const form = useForm({
@@ -77,32 +89,6 @@ export default function WithdrawPermissions(properties) {
     _periodsUntilExpiration,
     _expiration,
   } = properties;
-
-  /*
-    {
-        "creating": {
-            "usr": {
-                "username": "nfttestnet1",
-                "id": "1.2.26299",
-                "chain": "bitshares_testnet",
-                "referrer": "1.2.26299"
-            },
-            "assets": [],
-            "marketSearch": [],
-            "balances": [],
-            "showDialog": true
-        },
-        "mode": "edit",
-        "editing": {
-            "_existingWithdrawPermissionID": "1.12.137",
-            "_targetUser": {id: "1.2.26300", name: "nfttestnet2"},
-            "_selectedAsset": "TEST",
-            "_transferAmount": 1,
-            "_withdrawalPeriodSec": 31104,
-            "_periodsUntilExpiration": "1.999"
-        }
-    }
-  */
 
   const [targetUser, setTargetUser] = useState(_targetUser || null);
   const [selectedAsset, setSelectedAsset] = useState(_selectedAsset || null);
@@ -157,11 +143,7 @@ export default function WithdrawPermissions(properties) {
   }, [targetUser]);
   
   // Proposal dialog state
-  const [expiryType, setExpiryType] = useState(
-    mode === "edit"
-      ? "specific"
-      : "1hr"
-  );
+  const [expiryType, setExpiryType] = useState("now");
 
   const [expiry, setExpiry] = useState(() => {
     if (mode === "edit") {
@@ -216,10 +198,18 @@ export default function WithdrawPermissions(properties) {
       <DialogContent className="sm:max-w-[750px] bg-white">
         <DialogHeader>
           <DialogTitle>
-            {t("WithdrawPermissions:create_permission_title")}
+            {
+              mode === "edit"
+              ? t("WithdrawDialog:editing")
+              : t("WithdrawPermissions:create_permission_title")
+            }
           </DialogTitle>
           <DialogDescription>
-            {t("WithdrawPermissions:create_permission_description")}
+            {
+              mode === "edit"
+              ? t("WithdrawDialog:editingDescription")
+              : t("WithdrawPermissions:create_permission_description")
+            }
           </DialogDescription>
         </DialogHeader>
         <div className="grid grid-cols-1 gap-3">
@@ -403,84 +393,83 @@ export default function WithdrawPermissions(properties) {
                 )}
               />
 
-              {selectedAsset && targetUser ? (
-                <FormField
-                  control={form.control}
-                  name="transferAmount"
-                  render={({ field }) => (
-                    <FormItem className="mb-2">
-                      <HoverInfo
-                        content={t("Transfer:amountAvailableToTransferDescription")}
-                        header={t("Transfer:amountAvailableToTransfer", {
-                          asset: selectedAsset ?? "???",
-                        })}
-                      />
-                      <FormControl>
-                        <Input
-                          disabled
-                          label={t("Transfer:amountAvailableToTransferLabel")}
-                          value={
-                            foundAsset &&
-                            balances &&
-                            balances.find((x) => x.asset_id === foundAsset.id)
-                              ? `${humanReadableFloat(
-                                  balances.find((x) => x.asset_id === foundAsset.id).amount,
-                                  foundAsset.precision
-                                )} ${foundAsset.symbol}`
-                              : "0"
-                          }
-                          className="mb-1"
+              <div className="grid grid-cols-2 gap-3">
+                {selectedAsset && targetUser ? (
+                  <FormField
+                    control={form.control}
+                    name="amountAvailable"
+                    render={({ field }) => (
+                      <FormItem className="mb-2">
+                        <HoverInfo
+                          header={t("WithdrawDialog:amountAvailable")}
+                          content={t("WithdrawDialog:amountAvailableDescription")}
                         />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-              ) : null}
-
-              {selectedAsset && targetUser ? (
-                <FormField
-                  control={form.control}
-                  name="transferAmount"
-                  render={({ field }) => (
-                    <FormItem className="mb-2">
-                      <HoverInfo
-                        content={t("Transfer:amountToTransferDescription")}
-                        header={t("Transfer:amountToTransfer", { asset: selectedAsset ?? "???" })}
-                      />
-                      <FormControl
-                        onChange={(event) => {
-                          let input = event.target.value;
-                          const inputDecimals = !foundAsset ? 2 : foundAsset.precision;
-                          //let regex = new RegExp(`^[0-9]*\.?[0-9]{0,${inputDecimals}}$`);
-                          let regex = new RegExp(`^[^+-]*[0-9]*\\.?[0-9]{0,${inputDecimals}}$`);
-                          if (regex.test(input)) {
-                            if (input === "0" || input === "0.") {
-                              setTransferAmount(input);
-                            } else if (input.startsWith(".")) {
-                              let newValue = `0.${input.split(".")[1]}`;
-                              console.log({newValue, input})
-                              setTransferAmount(newValue);
-                            } else if (input.startsWith("0") && !input.startsWith("0.")) {
-                              input = input.replace(/^0+/, "");
-                              setTransferAmount(input);
-                            } else {
-                              setTransferAmount(input);
+                        <FormControl>
+                          <Input
+                            disabled
+                            value={
+                              foundAsset &&
+                              balances &&
+                              balances.find((x) => x.asset_id === foundAsset.id)
+                                ? `${humanReadableFloat(
+                                    balances.find((x) => x.asset_id === foundAsset.id).amount,
+                                    foundAsset.precision
+                                  )} ${foundAsset.symbol}`
+                                : "0"
                             }
-                          }
-                        }}
-                      >
-                        <Input
-                          type="number"
-                          label={t("Transfer:amountToTransferLabel")}
-                          value={transferAmount}
-                          placeholder={transferAmount}
-                          className="mb-1"
+                            className="mb-1"
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                ) : null}
+
+                {selectedAsset && targetUser ? (
+                  <FormField
+                    control={form.control}
+                    name="withdrawAmount"
+                    className="w-1/2"
+                    render={({ field }) => (
+                      <FormItem className="mb-2">
+                        <HoverInfo
+                          content={t("WithdrawDialog:withdrawAmountLimitDescription")}
+                          header={t("WithdrawDialog:withdrawAmountLimitHeader")}
                         />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-              ) : null}
+                        <FormControl
+                          onChange={(event) => {
+                            let input = event.target.value;
+                            const inputDecimals = !foundAsset ? 2 : foundAsset.precision;
+                            //let regex = new RegExp(`^[0-9]*\.?[0-9]{0,${inputDecimals}}$`);
+                            let regex = new RegExp(`^[^+-]*[0-9]*\\.?[0-9]{0,${inputDecimals}}$`);
+                            if (regex.test(input)) {
+                              if (input === "0" || input === "0.") {
+                                setTransferAmount(input);
+                              } else if (input.startsWith(".")) {
+                                let newValue = `0.${input.split(".")[1]}`;
+                                console.log({newValue, input})
+                                setTransferAmount(newValue);
+                              } else if (input.startsWith("0") && !input.startsWith("0.")) {
+                                input = input.replace(/^0+/, "");
+                                setTransferAmount(input);
+                              } else {
+                                setTransferAmount(input);
+                              }
+                            }
+                          }}
+                        >
+                          <Input
+                            type="number"
+                            value={transferAmount}
+                            placeholder={transferAmount}
+                            className="mb-1"
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                ) : null}
+              </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <FormField
@@ -495,86 +484,37 @@ export default function WithdrawPermissions(properties) {
                       <FormControl>
                         <Select
                           onValueChange={(value) => {
-                            const hoursToSeconds = {
-                              "1hr": 3600,
-                              "6hrs": 21600,
-                              "12hrs": 43200,
-                              "24hrs": 86400,
-                              "7d": 604800,
-                              "14d": 1209600,
-                              "30d": 2592000,
-                              "6m": 15552000,
-                              "12m": 31104000,
-                            };
                             setWithdrawalPeriodSec(hoursToSeconds[value]);
                           }}
-                          value={Object.keys({
-                            "1hr": 3600,
-                            "6hrs": 21600,
-                            "12hrs": 43200,
-                            "24hrs": 86400,
-                            "7d": 604800,
-                            "14d": 1209600,
-                            "30d": 2592000,
-                            "6m": 15552000,
-                            "12m": 31104000,
-                          }).find(
-                            (key) => {
-                              const hoursToSeconds = {
-                                "1hr": 3600,
-                                "6hrs": 21600,
-                                "12hrs": 43200,
-                                "24hrs": 86400,
-                                "7d": 604800,
-                                "14d": 1209600,
-                                "30d": 2592000,
-                                "6m": 15552000,
-                                "12m": 31104000,
-                              };
-                              return hoursToSeconds[key] === withdrawalPeriodSec;
-                            }
-                          )}
+                          value={
+                            Object.keys(hoursToSeconds).find((key) => hoursToSeconds[key] === withdrawalPeriodSec) ||
+                            Object.keys(hoursToSeconds).reduce((prev, curr) => {
+                              return Math.abs(hoursToSeconds[curr] - withdrawalPeriodSec) <
+                                Math.abs(hoursToSeconds[prev] - withdrawalPeriodSec)
+                                ? curr
+                                : prev;
+                            }, Object.keys(hoursToSeconds)[0])
+                          }
                         >
                           <SelectTrigger className="mb-3 mt-1 w-full">
                             <SelectValue placeholder={
-                              Object.keys({
-                                "1hr": 3600,
-                                "6hrs": 21600,
-                                "12hrs": 43200,
-                                "24hrs": 86400,
-                                "7d": 604800,
-                                "14d": 1209600,
-                                "30d": 2592000,
-                                "6m": 15552000,
-                                "12m": 31104000,
-                              }).find(
+                              Object.keys(hoursToSeconds).find(
                                 (key) => {
-                                  const hoursToSeconds = {
-                                    "1hr": 3600,
-                                    "6hrs": 21600,
-                                    "12hrs": 43200,
-                                    "24hrs": 86400,
-                                    "7d": 604800,
-                                    "14d": 1209600,
-                                    "30d": 2592000,
-                                    "6m": 15552000,
-                                    "12m": 31104000,
-                                  };
                                   return hoursToSeconds[key] === withdrawalPeriodSec;
                                 }
                               ) || "1hr"
                             } />
                           </SelectTrigger>
                           <SelectContent className="bg-white">
-                            <SelectItem value="1hr">1 Hour</SelectItem>
-                            <SelectItem value="6hrs">6 Hours</SelectItem>
-                            <SelectItem value="12hrs">12 Hours</SelectItem>
-                            <SelectItem value="24hrs">24 Hours</SelectItem>
-                            <SelectItem value="7d">7 Days</SelectItem>
-                            <SelectItem value="14d">14 Days</SelectItem>
-                            <SelectItem value="30d">30 Days</SelectItem>
-                            <SelectItem value="6m">6 Months</SelectItem>
-                            <SelectItem value="12m">12 Months</SelectItem>
+                            <SelectItem value="1hr">{t("WithdrawDialog:1hr")}</SelectItem>
+                            <SelectItem value="6hrs">{t("WithdrawDialog:6hrs")}</SelectItem>
+                            <SelectItem value="12hrs">{t("WithdrawDialog:12hrs")}</SelectItem>
+                            <SelectItem value="24hrs">{t("WithdrawDialog:24hrs")}</SelectItem>
+                            <SelectItem value="7d">{t("WithdrawDialog:7d")}</SelectItem>
+                            <SelectItem value="14d">{t("WithdrawDialog:14d")}</SelectItem>
+                            <SelectItem value="30d">{t("WithdrawDialog:30d")}</SelectItem>
+                            <SelectItem value="6m">{t("WithdrawDialog:6m")}</SelectItem>
+                            <SelectItem value="12m">{t("WithdrawDialog:12m")}</SelectItem>
                           </SelectContent>
                         </Select>
                       </FormControl>
@@ -593,8 +533,10 @@ export default function WithdrawPermissions(properties) {
                       <FormControl>
                         <Input
                           type="number"
+                          value={periodsUntilExpiration}
                           onChange={(e) => setPeriodsUntilExpiration(Math.floor(Number(e.target.value)))}
                           placeholder={periodsUntilExpiration}
+                          min={1}
                         />
                       </FormControl>
                     </FormItem>
@@ -608,6 +550,7 @@ export default function WithdrawPermissions(properties) {
                   header={t("WithdrawPermissions:period_start_time")}
                 />
                 <Select
+                  value={expiryType}
                   onValueChange={(selectedExpiry) => {
                     setExpiryType(selectedExpiry);
                     const oneHour = 60 * 60 * 1000;
@@ -636,7 +579,6 @@ export default function WithdrawPermissions(properties) {
                       if (expiryDate) {
                         setDate(expiryDate);
                       }
-                      setExpiry(selectedExpiry);
                     } else if (selectedExpiry === "specific") {
                       // Setting a default date expiry
                       setExpiry();
@@ -644,7 +586,7 @@ export default function WithdrawPermissions(properties) {
                   }}
                 >
                   <SelectTrigger className="mb-3 mt-1 w-1/4">
-                    <SelectValue placeholder="now" />
+                    <SelectValue placeholder={expiry} />
                   </SelectTrigger>
                   <SelectContent className="bg-white">
                     <SelectItem value="now">{t("WithdrawPermissions:now")}</SelectItem>

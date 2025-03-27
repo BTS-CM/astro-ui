@@ -1,0 +1,17 @@
+{
+    "editing": "Tühistamisloa {id} muutmine",
+    "editingDescription": "Olemasoleva tagasivõtmise loa värskendamiseks täitke allolev vorm.",
+    "withdrawAmountLimitHeader": "Tühista summa limiit",
+    "withdrawAmountLimitDescription": "See on maksimaalne summa, mille kasutajal on õigus igal taganemisperioodil välja võtta.",
+    "amountAvailable": "Saadaval summa",
+    "amountAvailableDescription": "See on otsekorralduse looja saldos saadaolevate väljavõetavate varade summa.",
+    "1h": "1 tund",
+    "6 tundi": "6 tundi",
+    "12 tundi": "12 tundi",
+    "24 tundi": "24 tundi",
+    "7d": "7 päeva",
+    "14d": "14 päeva",
+    "30d": "30 päeva",
+    "6m": "6 kuud",
+    "12m": "12 kuud"
+}
