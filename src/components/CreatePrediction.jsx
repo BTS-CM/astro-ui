@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useSyncExternalStore, useMemo, useCallback } from "react";
+import { useStore } from "@nanostores/react";
 import { FixedSizeList as List } from "react-window";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
@@ -37,7 +38,10 @@ import AccountSearch from "@/components/AccountSearch.jsx";
 import { Avatar } from "./Avatar.tsx";
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
+import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
+
 import { $currentUser } from "@/stores/users.ts";
+import { $currentNode } from "@/stores/node.ts";
 import { getPermissions, getFlags, debounce, humanReadableFloat } from "@/lib/common.js";
 
 import { blockchainFloat } from "@/bts/common";
@@ -45,6 +49,7 @@ import { blockchainFloat } from "@/bts/common";
 export default function Prediction(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
   const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
+  const currentNode = useStore($currentNode);
   
   const { _assetsBTS, _assetsTEST, _marketSearchBTS, _marketSearchTEST } = properties;
   
@@ -70,6 +75,33 @@ export default function Prediction(properties) {
     }
     return [];
   }, [_assetsBTS, _assetsTEST, _chain]);
+
+  const [balanceCounter, setBalanceCoutner] = useState(0);
+  const [balances, setBalances] = useState();
+  useEffect(() => {
+    let unsubscribeUserBalances;
+
+    if (usr && usr.id && currentNode && assets && assets.length) {
+      const userBalancesStore = createUserBalancesStore([
+        usr.chain,
+        usr.id,
+        currentNode ? currentNode.url : null,
+      ]);
+
+      unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
+        if (data && !error && !loading) {
+          const filteredData = data.filter((balance) =>
+            assets.find((x) => x.id === balance.asset_id)
+          );
+          setBalances(filteredData);
+        }
+      });
+    }
+
+    return () => {
+      if (unsubscribeUserBalances) unsubscribeUserBalances();
+    };
+  }, [usr, assets, currentNode, balanceCounter]);
 
   // Asset info
   const [shortName, setShortName] = useState("");

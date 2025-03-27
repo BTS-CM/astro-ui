@@ -1062,6 +1062,7 @@ export default function UIA(properties) {
                           marketSearch={marketSearch}
                           type={"backing"}
                           chain={usr && usr.chain ? usr.chain : "bitshares"}
+                          balances={balances}
                         />
                       </div>
                     </div>
@@ -1144,6 +1145,7 @@ export default function UIA(properties) {
                         marketSearch={marketSearch}
                         type={"backing"}
                         chain={usr && usr.chain ? usr.chain : "bitshares"}
+                        balances={balances}
                       />
                     ) : null}
                   </div>

@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useSyncExternalStore, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
+import { useStore } from "@nanostores/react";
 
 import Market from "./Market";
 import MarketPlaceholder from "./MarketPlaceholder";
 
 import { humanReadableFloat } from "@/lib/common";
 import { useInitCache } from "@/nanoeffects/Init.ts";
+import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 
 import { $currentUser } from "@/stores/users.ts";
 import { $currentNode } from "@/stores/node.ts";
