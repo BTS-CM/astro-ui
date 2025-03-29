@@ -5,6 +5,9 @@ Created using [Astro](https://docs.astro.build), [React](https://react.dev/) & [
 Integrates with both the [Beet](https://github.com/bitshares/beet) and [BeetEOS](https://github.com/beetapp/beeteos) multiwallets, for the Bitshares and Bitshares Testnet blockchains.
 
 ## Recent dev blogs
+- [Hash Time-Locked Contracts - Create / Extend / Redeem!](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-dev-blog-hash-time-locked-contracts-create-extend-redeem)
+- [User Feedback Request - What feature do you want to see introduced next?](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-user-feedback-request-what-feature-do-you-want-to-see-introduced-next)
+- [Direct Debit & Timed Transfers!](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-dev-blog-direct-debit-and-timed-transfers)
 - [Why you should support the Bitshares Astro-UI Development Worker Proposal!](https://hive.blog/bitshares/@nftea.gallery/why-you-should-support-the-bitshares-astro-ui-development-worker-proposal)
 - [Custom Liquidity Pool Tracker Page & Liquidity Pool Overview Page!](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-dev-blog-custom-liquidity-pool-tracker-page-and-liquidity-pool-overview-page)
 - [Creating cloud accounts, crafting same-t fund limit order transactions and transfer memos!](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-dev-blog-creating-cloud-accounts-crafting-same-t-fund-limit-order-transactions-and-transfer-memos)
@@ -12,6 +15,8 @@ Integrates with both the [Beet](https://github.com/bitshares/beet) and [BeetEOS]
 
 ## Functionality
 
+- Create/Extend/Redeem Hash Time-Locked Contracts (HTLC)
+- Create/Claim direct debits (withdraw permissions)
 - Create a new account (cloud wallets)
 - Craft complex Same-T Fund limit order transactions
 - Create your own featured liquidity pool analytics tracker
@@ -45,7 +50,7 @@ Integrates with both the [Beet](https://github.com/bitshares/beet) and [BeetEOS]
 
 ## Screenshot
 
-![image](https://github.com/user-attachments/assets/86442278-deb6-46f3-af75-eb07122d5056)
+![image](https://github.com/user-attachments/assets/828b8491-a25e-4b4f-b89c-39b1e2455a27)
 
 ## Dev Commands
 
