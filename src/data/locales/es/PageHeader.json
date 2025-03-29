@@ -48,6 +48,7 @@
   "portuguese": "portugués (pt)",
   "thai": "tailandés (th)",
   "descText": {
+    "htlc":  "Utilice el formulario a continuación para crear, ampliar y canjear contratos bloqueados por tiempo en hash.",
     "timed_transfer": "Utilice el formulario a continuación para crear una transferencia programada de activos a otra cuenta.",
     "withdraw_permissions": "Utilice esta página para crear, actualizar, eliminar y solicitar permisos de retirada.",
     "borrow": "Utilice esta página para localizar posibles ofertas de crédito",

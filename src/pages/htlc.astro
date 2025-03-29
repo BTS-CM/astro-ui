@@ -1,0 +1,53 @@
+---
+import { getCollection } from 'astro:content';
+
+import Layout from '../layouts/Layout.astro';
+import HTLC from '../components/HTLC';
+import PageHeader from '../components/PageHeader';
+import PageFooter from '../components/PageFooter';
+
+const btsAllAssets = await getCollection('btsAllAssets');
+const testAllAssets = await getCollection('testAllAssets');
+
+const btsMarketData = await getCollection('btsMarketData');
+const testMarketData = await getCollection('testMarketData');
+
+const btsFeeSchedule = await getCollection('btsFeeSchedule');
+const testFeeSchedule = await getCollection('testFeeSchedule');
+
+const btsAssets = btsAllAssets.map((collection) => collection.data);
+const testAssets = testAllAssets.map((collection) => collection.data);
+const btsMarkets = btsMarketData.map((collection) => collection.data);
+const testMarkets = testMarketData.map((collection) => collection.data);
+const btsFeeScheduleList = btsFeeSchedule.map((collection) => collection.data);
+const testFeeScheduleList = testFeeSchedule.map((collection) => collection.data);
+---
+
+<Layout title="Bitshares Hack Time Locked Contracts">
+	<main>
+		<PageHeader client:only="react" page="htlc" backURL="../index.html" />
+		<HTLC
+			client:only="react"
+			_assetsBTS={btsAssets}
+			_assetsTEST={testAssets}
+			_marketSearchBTS={btsMarkets}
+			_marketSearchTEST={testMarkets}
+			_globalParamsBTS={btsFeeScheduleList}
+			_globalParamsTEST={testFeeScheduleList}
+		/>
+		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/htlc.astro" />
+	</main>
+</Layout>
+
+<style>
+	main {
+		margin: auto;
+		padding: 1rem;
+		width: 800px;
+		max-width: calc(100% - 2rem);
+		color: white;
+		font-size: 20px;
+		line-height: 1.6;
+		min-height: 100vh;
+	}
+</style>

@@ -200,6 +200,26 @@ export default function Home(properties) {
           </HoverCardContent>
         </HoverCard>
 
+        <HoverCard key="htlc">
+          <HoverCardTrigger asChild>
+            <a href="/htlc/index.html" style={{ textDecoration: "none" }}>
+              <Card className="h-full hover:shadow-md hover:shadow-black">
+                <CardHeader>
+                  <CardTitle>{t("Home:htlc.title")}</CardTitle>
+                  <CardDescription>{t("Home:htlc.subtitle")}</CardDescription>
+                </CardHeader>
+              </Card>
+            </a>
+          </HoverCardTrigger>
+          <HoverCardContent className="w-80 text-sm pt-1">
+            <ul className="ml-2 list-disc [&>li]:mt-2">
+              <li>{t("Home:htlc.hover1")}</li>
+              <li>{t("Home:htlc.hover2")}</li>
+              <li>{t("Home:htlc.hover3")}</li>
+            </ul>
+          </HoverCardContent>
+        </HoverCard>
+
         <HoverCard key="create_vesting">
           <HoverCardTrigger asChild>
             <a href="/create_vesting/index.html" style={{ textDecoration: "none" }}>

@@ -44,6 +44,12 @@
     "hover1": "Créer / modifier / supprimer vos autorisations de retrait de paiement.",
     "hover2": "Consultez vos autorisations de retrait."
   },
+  "htlc": {
+    "title": "⏳ Contrats à emploi du hachage (HTLC)",
+    "subtitle": "Créez des fonds réclamables verrouillés derrière des clés de cryptographie secrètes.",
+    "hover1": "Un HTLC verrouille les fonds pour le destinataire donné, qui peuvent échanger ces fonds en fournissant un préimage secret (mot de passe) qui a été utilisé par l'expéditeur pour créer le contrat.",
+    "hover2": "La divulgation du mot de passe se produit hors chaîne."
+  },
   "create_vesting": {
     "title": "🫰 Gilet d'actifs",
     "subtitle": "Créer des soldes d'acquisition",

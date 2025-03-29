@@ -44,6 +44,12 @@
     "hover1": "Crie/edite/exclua suas permissões de retirada de pagamento.",
     "hover2": "Veja suas permissões de retirada de retirada."
   },
+  "htlc": {
+    "title": "⏳ Contratos de travamento de tempo de hash (HTLC)",
+    "subtitle": "Crie fundos reivindicáveis ​​trancados atrás das teclas de criptografia secretas.",
+    "hover1": "Um HTLC bloqueia os fundos para determinado destinatário, que pode resgatar esses fundos, fornecendo uma previmagem secreta (senha) usada pelo remetente para criar o contrato.",
+    "hover2": "A divulgação da senha acontece fora da cadeia."
+  },
   "create_vesting": {
     "title": "🫰 Colete ativos",
     "subtitle": "Criar saldos de aquisição",

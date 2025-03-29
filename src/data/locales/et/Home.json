@@ -44,6 +44,12 @@
     "hover1": "Looge/redigeerige/kustutage makse väljavõtmise õigused.",
     "hover2": "Vaadake oma vastuvõtuõigusi."
   },
+  "htlc": {
+    "title": "⏳ Rashi ajalukustatud lepingud (HTLC)",
+    "subtitle": "Looge väidetavaid vahendeid, mis on lukustatud salajaste krüptoklahvide taha.",
+    "hover1": "HTLC lukustab eraldajale raha, kes saab need raha lunastada, pakkudes salajast preimage (parooli), mida saatja kasutas lepingu loomiseks.",
+    "hover2": "Parooli avalikustamine toimub ahelaväliselt."
+  },
   "create_vesting": {
     "title": "🫰 Vestivarad",
     "subtitle": "Looge omandamise saldod",

@@ -44,6 +44,12 @@
     "hover1": "Opret/rediger/slet din betaling tilbagetrækning tilladelser.",
     "hover2": "Se dine modtagende tilbagetrækningstilladelser."
   },
+  "htlc": {
+    "title": "⏳ Hash-tidslåste kontrakter (HTLC)",
+    "subtitle": "Opret påstande, der er låst fast bag hemmelige kryptotaster.",
+    "hover1": "En HTLC låser midler til den givne modtager, der kan indløse disse midler ved at give et hemmeligt pre-billy (adgangskode), der blev brugt af afsenderen til at oprette kontrakten.",
+    "hover2": "At afsløre adgangskoden sker off-chain."
+  },
   "create_vesting": {
     "title": "🫰 Vestaktiver",
     "subtitle": "Opret optjeningssaldi",

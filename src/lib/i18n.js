@@ -62,7 +62,9 @@ const pages = [
   "CustomPoolOverview",
   "PoolList",
   "WithdrawPermissions",
-  "WithdrawDialog"
+  "WithdrawDialog",
+  "HTLC",
+  "HTLCCreate",
 ];
 
 const locale = persistentAtom("locale", "en");

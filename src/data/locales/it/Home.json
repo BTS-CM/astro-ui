@@ -44,6 +44,12 @@
     "hover1": "Crea/Modifica/Elimina le autorizzazioni di prelievo di pagamento.",
     "hover2": "Visualizza le autorizzazioni di prelievo."
   },
+  "htlc": {
+    "title": "⏳ Contratti con blocco di tempo hash (HTLC)",
+    "subtitle": "Crea fondi rivendicabili bloccati dietro le chiavi cripto segrete.",
+    "hover1": "Un HTLC blocca i fondi per il destinatario dato, che può riscattare tali fondi fornendo una preimage segreta (password) utilizzata dal mittente per creare il contratto.",
+    "hover2": "La divulgazione della password avviene fuori catena."
+  },
   "create_vesting": {
     "title": "🫰 Vesti i beni",
     "subtitle": "Creare saldi di maturazione",
