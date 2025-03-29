@@ -41,9 +41,7 @@
         "AppImage"
       ],
       "mimeTypes": [],
-      "desktop": {
-        "exec": "BTSAstroUI %U"
-      }
+      "executableName": "BTSAstroUI %U"
     }
   },
   "dependencies": {
