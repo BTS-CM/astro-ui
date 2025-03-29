@@ -44,6 +44,12 @@
     "hover1": "Crear/editar/eliminar sus permisos de retiro de pago.",
     "hover2": "Vea sus permisos de retiro de recepción."
   },
+  "htlc": {
+    "title": "⏳ Contratos de hash bloqueados por tiempo (HTLC)",
+    "subtitle": "Cree fondos reclamantes bloqueados detrás de las teclas secretas de criptografía.",
+    "hover1": "Un HTLC bloquea los fondos para el destinatario dado, que puede canjear esos fondos proporcionando una preimagen secreta (contraseña) que el remitente utilizaron para crear el contrato.",
+    "hover2": "La revelación de la contraseña ocurre fuera de la cadena."
+  },
   "create_vesting": {
     "title": "🫰 Activos de chaleco",
     "subtitle": "Crear saldos de adquisición de derechos",

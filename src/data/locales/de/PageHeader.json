@@ -48,6 +48,7 @@
   "portuguese": "Portugiesisch (pt)",
   "thai": "Thai (th)",
   "descText": {
+    "htlc":  "Verwenden Sie das untenstehende Formular, um gehashte, zeitgesperrte Verträge zu erstellen, zu verlängern und einzulösen.",
     "timed_transfer": "Verwenden Sie das untenstehende Formular, um eine zeitgesteuerte Übertragung von Vermögenswerten auf ein anderes Konto zu veranlassen.",
     "withdraw_permissions": "Auf dieser Seite können Sie Vorgänge zum Erstellen, Aktualisieren, Löschen und Einfordern von Widerrufsberechtigungen durchführen.",
     "borrow": "Auf dieser Seite finden Sie potenzielle Kreditangebote",

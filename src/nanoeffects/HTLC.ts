@@ -51,7 +51,7 @@ function get_htlc(
         }
 
         if (!objects || !objects.length) {
-          reject(new Error("No HTLC items found"));
+          resolve([]);
           return;
         }
 

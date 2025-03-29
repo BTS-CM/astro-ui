@@ -48,6 +48,7 @@
   "portuguese": "portugisisk (pt)",
   "thai": "Thai (th)",
   "descText": {
+    "htlc":  "Brug formularen nedenfor til at oprette, forlænge og indløse hash-låste kontrakter.",
     "timed_transfer": "Brug formularen nedenfor til at oprette en tidsbestemt overførsel af aktiver til en anden konto.",
     "withdraw_permissions": "Brug denne side til at oprette, opdatere, slette og gøre krav på tilbagetrækningstilladelser.",
     "borrow": "Brug denne side til at finde potentielle kredittilbud",

@@ -44,6 +44,12 @@
     "hover1": "Erstellen/Bearbeiten/Löschen/Löschen Ihrer Zahlung Abheben Berechtigungen.",
     "hover2": "Sehen Sie sich Ihre Empfehlungsberechtigungen an."
   },
+  "htlc": {
+    "title": "⏳ Hash-Zeitverriegelungsverträge (HTLC)",
+    "subtitle": "Erstellen Sie Anspruchsfähige Mittel, die hinter geheimen Kryptoschlüsseln gesperrt sind.",
+    "hover1": "Ein HTLC sperrt Mittel für einen bestimmten Empfänger ab, der diese Mittel einlösen kann, indem er ein geheimes Vorbereitungsbetrag (Passwort) bereitstellt, das vom Absender verwendet wurde, um den Vertrag zu erstellen.",
+    "hover2": "Die Offenlegung des Passworts erfolgt außerhalb der Kette."
+  },
   "create_vesting": {
     "title": "🫰 Vermögenswerte übertragen",
     "subtitle": "Erstellen Sie Restguthaben",

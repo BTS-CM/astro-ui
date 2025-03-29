@@ -44,6 +44,12 @@
     "hover1": "Create/edit/delete your payment withdraw permissions.",
     "hover2": "View your receive withdraw permissions."
   },
+  "htlc": {
+    "title": "⏳ Hash Time-Locked Contracts (HTLC)",
+    "subtitle": "Create claimable funds locked behind secret crypto keys.",
+    "hover1": "A HTLC locks away funds for given recipient, who can redeem those funds by providing a secret preimage (password) that was used by the sender to create the contract.",
+    "hover2": "Disclosing the password happens off-chain."
+  },
   "create_vesting": {
     "title": "🫰 Vest Assets",
     "subtitle": "Create vesting balances",
