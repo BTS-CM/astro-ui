@@ -1,0 +1,18 @@
+{
+    "authSectionTitle": "Authorization Configuration",
+    "weightThresholdLabel": "Weight Threshold",
+    "weightThresholdDescription": "Minimum total weight required from included auths to authorize.",
+    "accountAuthsLabel": "Account Authorizations",
+    "addAccountAuth": "Add Account Auth",
+    "accountIDPlaceholder": "Account ID (1.2.x)",
+    "selectAccountButton": "Select Account",
+    "weightPlaceholder": "Weight",
+    "keyAuthsLabel": "Key Authorizations",
+    "addKeyAuth": "Add Key Auth",
+    "publicKeyPlaceholder": "Public Key (BTS...)",
+    "addressAuthsLabel": "Address Authorizations",
+    "addAddressAuth": "Add Address Auth",
+    "addressPlaceholder": "Address (BTS...)",
+    "accountSearchTitle": "Search for Bitshares Account",
+    "accountSearchDescription": "Find an account to add to the authorizations."
+}

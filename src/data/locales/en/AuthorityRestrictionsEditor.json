@@ -1,0 +1,12 @@
+{
+    "restrictionsSectionTitle": "Restrictions (Advanced)",
+    "addRestriction": "Add Restriction",
+    "memberIndexLabel": "Operation Member",
+    "memberIndexPlaceholder": "Select operation member...",
+    "selectOperationFirst": "Select Operation Type first",
+    "restrictionTypeLabel": "Restriction Type",
+    "restrictionTypePlaceholder": "Select restriction type...",
+    "argumentLabel": "Argument",
+    "argumentDescription": "The value required by the restriction type.",
+    "argumentPlaceholderGeneric": "Enter value"
+}

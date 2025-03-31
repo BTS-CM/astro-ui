@@ -1,0 +1,21 @@
+{
+    "argumentVoid": "(No argument required)",
+    "argumentPlaceholderString": "Enter text value",
+    "argumentPlaceholderInteger": "Enter whole number",
+    "argumentPlaceholderAmount": "Enter amount",
+    "argumentPlaceholderAccountID": "Select or enter Account ID (1.2.x)",
+    "argumentPlaceholderAssetID": "Select or enter Asset ID (1.3.x)",
+    "errorInvalidAmountFormat": "Invalid number format.",
+    "errorTooManyDecimals": "Maximum {{precision}} decimal places allowed.",
+    "errorAmountOutOfRange": "Amount is outside the valid int64 range.",
+    "amountPrecisionInfo": "{{symbol}} | Precision: {{precision}}",
+    "selectAccountButton": "Select Account",
+    "selectAssetButton": "Select Asset",
+    "accountSearchTitle": "Search Account",
+    "assetSearchTitle": "Search Asset",
+    "accountAllowBlockList": "Account Allow/Block List",
+    "assetAllowBlockList": "Asset Allow/Block List",
+    "addAccountToList": "Add Account",
+    "addAssetToList": "Add Asset",
+    "listEmpty": "List is empty."
+}
