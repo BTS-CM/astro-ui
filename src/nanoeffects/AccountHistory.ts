@@ -26,7 +26,6 @@ async function getAccountHistory(
   agg_field?: String
 ) {
   return new Promise(async (resolve, reject) => {
-
     if (!(window as any).electron) {
       console.log("No electron window found");
       reject(new Error("No electron window found"));
@@ -44,8 +43,8 @@ async function getAccountHistory(
         to_date,
         sort_by,
         type,
-        agg_field
-      })
+        agg_field,
+      });
     } catch (error) {
       console.log({ error });
     }
@@ -72,7 +71,7 @@ const [createAccountHistoryStore] = nanoquery({
     }
 
     return response ?? null;
-  }
+  },
 });
 
 export { createAccountHistoryStore, getAccountHistory };

@@ -14,7 +14,11 @@ export default function CardRowPlaceholder(properties) {
           </Badge>
         </div>
         <div className="col-span-1">
-          <Button variant="outline" size="icon" className="h-6 w-6 text-gray-400">
+          <Button
+            variant="outline"
+            size="icon"
+            className="h-6 w-6 text-gray-400"
+          >
             ?
           </Button>
         </div>

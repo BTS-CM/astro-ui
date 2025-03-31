@@ -10,10 +10,18 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 
-import { Avatar as Av, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Avatar as Av,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/ui/avatar";
 import HoverInfo from "@/components/common/HoverInfo.tsx";
 
 import {
@@ -139,7 +147,11 @@ export default function DeepLinkDialog(properties) {
     proposal = false,
   } = properties;
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
-  const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
+  const usr = useSyncExternalStore(
+    $currentUser.subscribe,
+    $currentUser.get,
+    () => true
+  );
 
   const currentNode = useStore($currentNode);
 
@@ -201,7 +213,9 @@ export default function DeepLinkDialog(properties) {
     return new Date(now.getTime() + oneHour);
   });
 
-  const [date, setDate] = useState(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)); // Solely for the calendar component to display a date string
+  const [date, setDate] = useState(
+    new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+  ); // Solely for the calendar component to display a date string
 
   useEffect(() => {
     if (expiryType === "specific" && date) {
@@ -221,10 +235,17 @@ export default function DeepLinkDialog(properties) {
       <DialogContent className="sm:max-w-[800px] bg-white">
         <DialogHeader>
           <DialogTitle>
-            {!deeplink ? t("DeepLinkDialog:dialogContent.generatingDeeplink") : <>{headerText}</>}
+            {!deeplink ? (
+              t("DeepLinkDialog:dialogContent.generatingDeeplink")
+            ) : (
+              <>{headerText}</>
+            )}
           </DialogTitle>
           <DialogDescription>
-            {t("DeepLinkDialog:dialogContent.withAccount", { username: username, userID: userID })}
+            {t("DeepLinkDialog:dialogContent.withAccount", {
+              username: username,
+              userID: userID,
+            })}
             {deeplink ? (
               <>
                 <br />
@@ -281,7 +302,11 @@ export default function DeepLinkDialog(properties) {
                       {t("DeepLinkDialog:tabsContent.operationType")}
                     </span>
                     <Textarea
-                      value={JSON.stringify([...new Set(operationNames)], null, 4)}
+                      value={JSON.stringify(
+                        [...new Set(operationNames)],
+                        null,
+                        4
+                      )}
                       className="min-h-[125px]"
                       id="trxJSON"
                       readOnly
@@ -344,15 +369,23 @@ export default function DeepLinkDialog(properties) {
                     {t("DeepLinkDialog:tabsContent.viaLocalFile")}
                   </Label>
                   <ol className="ml-4">
-                    <li type="1">{t("DeepLinkDialog:tabsContent.step1Local")}</li>
+                    <li type="1">
+                      {t("DeepLinkDialog:tabsContent.step1Local")}
+                    </li>
                     <li type="1">
                       {t("DeepLinkDialog:tabsContent.step2Local", {
                         operationName: [...new Set(operationNames)].join(", "),
                       })}
                     </li>
-                    <li type="1">{t("DeepLinkDialog:tabsContent.step3Local")}</li>
-                    <li type="1">{t("DeepLinkDialog:tabsContent.step4Local")}</li>
-                    <li type="1">{t("DeepLinkDialog:tabsContent.step5Local")}</li>
+                    <li type="1">
+                      {t("DeepLinkDialog:tabsContent.step3Local")}
+                    </li>
+                    <li type="1">
+                      {t("DeepLinkDialog:tabsContent.step4Local")}
+                    </li>
+                    <li type="1">
+                      {t("DeepLinkDialog:tabsContent.step5Local")}
+                    </li>
                   </ol>
                   {deeplink && downloadClicked ? (
                     <Button className="mt-4" variant="outline" disabled>
@@ -368,7 +401,9 @@ export default function DeepLinkDialog(properties) {
                       onClick={handleDownloadClick}
                     >
                       <Button className="mt-4">
-                        {t("DeepLinkDialog:tabsContent.downloadBeetOperationJSON")}
+                        {t(
+                          "DeepLinkDialog:tabsContent.downloadBeetOperationJSON"
+                        )}
                       </Button>
                     </a>
                   ) : null}
@@ -398,7 +433,13 @@ export default function DeepLinkDialog(properties) {
                             eye: "normal",
                             mouth: "open",
                           }}
-                          colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]}
+                          colors={[
+                            "#92A1C6",
+                            "#146A7C",
+                            "#F0AB3D",
+                            "#C271B4",
+                            "#C20D90",
+                          ]}
                         />
                       ) : (
                         <Av>
@@ -434,7 +475,9 @@ export default function DeepLinkDialog(properties) {
                         <DialogContent className="sm:max-w-[375px] bg-white">
                           <DialogHeader>
                             <DialogTitle>
-                              {!usr || !usr.chain ? t("AccountLists:bitsharesAccountSearch") : null}
+                              {!usr || !usr.chain
+                                ? t("AccountLists:bitsharesAccountSearch")
+                                : null}
                               {usr && usr.chain === "bitshares"
                                 ? t("AccountLists:bitsharesAccountSearchBTS")
                                 : null}
@@ -502,11 +545,21 @@ export default function DeepLinkDialog(properties) {
                           <SelectValue placeholder="1hr" />
                         </SelectTrigger>
                         <SelectContent className="bg-white">
-                          <SelectItem value="1hr">{t("LimitOrderCard:expiry.1hr")}</SelectItem>
-                          <SelectItem value="12hr">{t("LimitOrderCard:expiry.12hr")}</SelectItem>
-                          <SelectItem value="24hr">{t("LimitOrderCard:expiry.24hr")}</SelectItem>
-                          <SelectItem value="7d">{t("LimitOrderCard:expiry.7d")}</SelectItem>
-                          <SelectItem value="30d">{t("LimitOrderCard:expiry.30d")}</SelectItem>
+                          <SelectItem value="1hr">
+                            {t("LimitOrderCard:expiry.1hr")}
+                          </SelectItem>
+                          <SelectItem value="12hr">
+                            {t("LimitOrderCard:expiry.12hr")}
+                          </SelectItem>
+                          <SelectItem value="24hr">
+                            {t("LimitOrderCard:expiry.24hr")}
+                          </SelectItem>
+                          <SelectItem value="7d">
+                            {t("LimitOrderCard:expiry.7d")}
+                          </SelectItem>
+                          <SelectItem value="30d">
+                            {t("LimitOrderCard:expiry.30d")}
+                          </SelectItem>
                           <SelectItem value="specific">
                             {t("LimitOrderCard:expiry.specific")}
                           </SelectItem>
@@ -526,7 +579,9 @@ export default function DeepLinkDialog(properties) {
                               {date ? (
                                 format(date, "PPP")
                               ) : (
-                                <span>{t("LimitOrderCard:expiry.pickDate")}</span>
+                                <span>
+                                  {t("LimitOrderCard:expiry.pickDate")}
+                                </span>
                               )}
                             </Button>
                           </PopoverTrigger>
@@ -539,7 +594,11 @@ export default function DeepLinkDialog(properties) {
                                 const now = new Date();
                                 if (parsedDate < now) {
                                   //console.log("Not a valid date");
-                                  setDate(new Date(Date.now() + 1 * 24 * 60 * 60 * 1000));
+                                  setDate(
+                                    new Date(
+                                      Date.now() + 1 * 24 * 60 * 60 * 1000
+                                    )
+                                  );
                                   return;
                                 }
                                 //console.log("Setting expiry date");
@@ -554,8 +613,12 @@ export default function DeepLinkDialog(properties) {
 
                     <div className="grid grid-cols-1 gap-3">
                       <HoverInfo
-                        content={t("DeepLinkDialog:proposal.revisionPeriodSecondsContent")}
-                        header={t("DeepLinkDialog:proposal.revisionPeriodSecondsHeader")}
+                        content={t(
+                          "DeepLinkDialog:proposal.revisionPeriodSecondsContent"
+                        )}
+                        header={t(
+                          "DeepLinkDialog:proposal.revisionPeriodSecondsHeader"
+                        )}
                         type="header"
                       />
                       <Select
@@ -587,37 +650,40 @@ export default function DeepLinkDialog(properties) {
                       Submit
                     </Button>
                   </div>
-                  {proposalDialogOpen && !proposal && targetUser && targetUser.id && (
-                    <DeepLinkDialog
-                      trxJSON={[
-                        {
-                          fee_paying_account: targetUser.id,
-                          expiration_time: date,
-                          proposed_ops: trxJSON.map((operation, index) => ({
-                            op: [
-                              operationNumbers[operationNames[index]],
-                              {
-                                ...operation,
-                                fee: {
-                                  amount: 0,
-                                  asset_id: "1.3.0",
+                  {proposalDialogOpen &&
+                    !proposal &&
+                    targetUser &&
+                    targetUser.id && (
+                      <DeepLinkDialog
+                        trxJSON={[
+                          {
+                            fee_paying_account: targetUser.id,
+                            expiration_time: date,
+                            proposed_ops: trxJSON.map((operation, index) => ({
+                              op: [
+                                operationNumbers[operationNames[index]],
+                                {
+                                  ...operation,
+                                  fee: {
+                                    amount: 0,
+                                    asset_id: "1.3.0",
+                                  },
                                 },
-                              },
-                            ],
-                          })),
-                          review_period_seconds: reviewPeriodSeconds,
-                          extensions: {},
-                        },
-                      ]}
-                      operationNames={["proposal_create"]}
-                      username={username}
-                      usrChain={usrChain}
-                      userID={userID}
-                      dismissCallback={dismissCallback}
-                      headerText={headerText}
-                      proposal={true}
-                    />
-                  )}
+                              ],
+                            })),
+                            review_period_seconds: reviewPeriodSeconds,
+                            extensions: {},
+                          },
+                        ]}
+                        operationNames={["proposal_create"]}
+                        username={username}
+                        usrChain={usrChain}
+                        userID={userID}
+                        dismissCallback={dismissCallback}
+                        headerText={headerText}
+                        proposal={true}
+                      />
+                    )}
                 </>
               ) : null}
             </div>

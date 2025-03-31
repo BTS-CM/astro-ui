@@ -1,4 +1,9 @@
-import React, { useState, useEffect, useMemo, useSyncExternalStore } from "react";
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  useSyncExternalStore,
+} from "react";
 import { useForm } from "react-hook-form";
 import { sha256 } from "@noble/hashes/sha2";
 import { bytesToHex as toHex } from "@noble/hashes/utils";
@@ -34,7 +39,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { Avatar as Av, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Avatar as Av,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/ui/avatar";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -78,8 +87,16 @@ export default function CreditOffer(properties) {
     },
   });
 
-  const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
-  const blocklist = useSyncExternalStore($blockList.subscribe, $blockList.get, () => true);
+  const usr = useSyncExternalStore(
+    $currentUser.subscribe,
+    $currentUser.get,
+    () => true
+  );
+  const blocklist = useSyncExternalStore(
+    $blockList.subscribe,
+    $blockList.get,
+    () => true
+  );
   const currentNode = useStore($currentNode);
 
   const {
@@ -90,7 +107,7 @@ export default function CreditOffer(properties) {
     _offersBTS,
     _offersTEST,
     _marketSearchBTS,
-    _marketSearchTEST
+    _marketSearchTEST,
   } = properties;
 
   const _chain = useMemo(() => {
@@ -108,7 +125,8 @@ export default function CreditOffer(properties) {
       ((_marketSearchBTS && _marketSearchBTS.length) ||
         (_marketSearchTEST && _marketSearchTEST.length))
     ) {
-      const targetCache = _chain === "bitshares" ? _marketSearchBTS : _marketSearchTEST;
+      const targetCache =
+        _chain === "bitshares" ? _marketSearchBTS : _marketSearchTEST;
       let mappedCache = targetCache.map((x) => {
         const split = x.u.split("(");
         const name = split[0].replace(" ", "");
@@ -206,7 +224,9 @@ export default function CreditOffer(properties) {
               }
 
               setRelevantOffer(foundOffer);
-              const foundAsset = assets.find((asset) => asset.id === foundOffer.asset_type);
+              const foundAsset = assets.find(
+                (asset) => asset.id === foundOffer.asset_type
+              );
               setError(false);
               setFoundAsset(foundAsset);
             }
@@ -231,15 +251,17 @@ export default function CreditOffer(properties) {
         currentNode ? currentNode.url : null,
       ]);
 
-      unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
-        if (data && !error && !loading) {
-          const filteredData = data.filter((balance) =>
-            assets.find((x) => x.id === balance.asset_id)
-          );
-          setBalanceAssetIDs(filteredData.map((x) => x.asset_id));
-          setUsrBalances(filteredData);
+      unsubscribeUserBalances = userBalancesStore.subscribe(
+        ({ data, error, loading }) => {
+          if (data && !error && !loading) {
+            const filteredData = data.filter((balance) =>
+              assets.find((x) => x.id === balance.asset_id)
+            );
+            setBalanceAssetIDs(filteredData.map((x) => x.asset_id));
+            setUsrBalances(filteredData);
+          }
         }
-      });
+      );
     }
 
     return () => {
@@ -271,7 +293,10 @@ export default function CreditOffer(properties) {
 
   const availableAmount = useMemo(() => {
     if (relevantOffer && foundAsset) {
-      return humanReadableFloat(relevantOffer.current_balance, foundAsset.precision);
+      return humanReadableFloat(
+        relevantOffer.current_balance,
+        foundAsset.precision
+      );
     } else {
       return 0;
     }
@@ -279,7 +304,10 @@ export default function CreditOffer(properties) {
 
   const minAmount = useMemo(() => {
     if (relevantOffer && foundAsset) {
-      return humanReadableFloat(relevantOffer.min_deal_amount, foundAsset.precision);
+      return humanReadableFloat(
+        relevantOffer.min_deal_amount,
+        foundAsset.precision
+      );
     } else {
       return 1;
     }
@@ -290,14 +318,19 @@ export default function CreditOffer(properties) {
 
   const collateralInfo = useMemo(() => {
     if (chosenCollateral && balanceAssetIDs && assets && usrBalances) {
-      const collateralAsset = assets.find((asset) => asset.id === chosenCollateral);
+      const collateralAsset = assets.find(
+        (asset) => asset.id === chosenCollateral
+      );
       const collateralBalance = usrBalances.find(
         (balance) => balance.asset_id === chosenCollateral
       );
 
       return {
         amount: collateralBalance
-          ? humanReadableFloat(collateralBalance.amount, collateralAsset.precision)
+          ? humanReadableFloat(
+              collateralBalance.amount,
+              collateralAsset.precision
+            )
           : 0,
         holding: balanceAssetIDs.includes(chosenCollateral),
         symbol: collateralAsset.symbol,
@@ -321,7 +354,9 @@ export default function CreditOffer(properties) {
       if (hours > 24) {
         return `${Math.floor(hours / 24)} days (due by ${formattedDate})`;
       } else {
-        return `${hours.toFixed(hours < 1 ? 2 : 0)} hours (due by ${formattedDate})`;
+        return `${hours.toFixed(
+          hours < 1 ? 2 : 0
+        )} hours (due by ${formattedDate})`;
       }
     }
   }, [relevantOffer]);
@@ -330,12 +365,16 @@ export default function CreditOffer(properties) {
     if (relevantOffer) {
       const hours = hoursTillExpiration(relevantOffer.auto_disable_time);
       let date = new Date(relevantOffer.auto_disable_time);
-      let formattedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+      let formattedDate = `${date.getDate()}/${
+        date.getMonth() + 1
+      }/${date.getFullYear()}`;
 
       if (hours > 24) {
         return `${Math.floor(hours / 24)} days (on ${formattedDate})`;
       } else {
-        return `${hours.toFixed(hours < 1 ? 2 : 0)} hours (on ${formattedDate})`;
+        return `${hours.toFixed(
+          hours < 1 ? 2 : 0
+        )} hours (on ${formattedDate})`;
       }
     }
   }, [relevantOffer]);
@@ -351,7 +390,10 @@ export default function CreditOffer(properties) {
       if (quote.asset_id === collateralInfo.id) {
         const ratio =
           humanReadableFloat(quote.amount, collateralInfo.precision) /
-          humanReadableFloat(base.amount, assets.find((x) => x.id === base.asset_id).precision);
+          humanReadableFloat(
+            base.amount,
+            assets.find((x) => x.id === base.asset_id).precision
+          );
         calculatedAmount += finalBorrowAmount * ratio;
       }
       return calculatedAmount.toFixed(collateralInfo.precision);
@@ -368,7 +410,10 @@ export default function CreditOffer(properties) {
       if (quote.asset_id === collateralInfo.id) {
         const ratio =
           humanReadableFloat(quote.amount, collateralInfo.precision) /
-          humanReadableFloat(base.amount, assets.find((x) => x.id === base.asset_id).precision);
+          humanReadableFloat(
+            base.amount,
+            assets.find((x) => x.id === base.asset_id).precision
+          );
         return ratio;
       }
     }
@@ -417,7 +462,9 @@ export default function CreditOffer(properties) {
   const [creditOfferOwner, setCreditOfferOwner] = useState();
   useEffect(() => {
     if (assetIssuers && assetIssuers.length && relevantOffer) {
-      let foundOwner = assetIssuers.find((x) => x.id === relevantOffer.owner_account);
+      let foundOwner = assetIssuers.find(
+        (x) => x.id === relevantOffer.owner_account
+      );
       if (foundOwner) {
         setOwner(foundOwner);
       } else {
@@ -493,7 +540,9 @@ export default function CreditOffer(properties) {
                           name="borrowerAccount"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>{t("CreditOffer:cardContent.borrowingAccount")}</FormLabel>
+                              <FormLabel>
+                                {t("CreditOffer:cardContent.borrowingAccount")}
+                              </FormLabel>
                               <FormControl>
                                 <div className="grid grid-cols-8 mt-4">
                                   <div className="col-span-1 ml-5">
@@ -525,14 +574,18 @@ export default function CreditOffer(properties) {
                                       disabled
                                       placeholder="Bitshares account (1.2.x)"
                                       className="mb-1 mt-1"
-                                      value={usr ? `${usr.username} (${usr.id})` : ""}
+                                      value={
+                                        usr ? `${usr.username} (${usr.id})` : ""
+                                      }
                                       readOnly
                                     />
                                   </div>
                                 </div>
                               </FormControl>
                               <FormDescription>
-                                {t("CreditOffer:cardContent.broadcastDescription")}
+                                {t(
+                                  "CreditOffer:cardContent.broadcastDescription"
+                                )}
                               </FormDescription>
                               <FormMessage />
                             </FormItem>
@@ -547,19 +600,28 @@ export default function CreditOffer(properties) {
                               <FormLabel>
                                 <div className="grid grid-cols-2 mt-4">
                                   <div className="col-span-1">
-                                    {t("CreditOffer:cardContent.lendingAccount")}
+                                    {t(
+                                      "CreditOffer:cardContent.lendingAccount"
+                                    )}
                                   </div>
                                   <div className="col-span-1 text-right">
                                     {creditOfferOwner ? (
                                       <ExternalLink
                                         classnamecontents="text-blue-500"
                                         type="text"
-                                        text={t("CreditOffer:cardContent.viewAccount", {
-                                          owner_name: creditOfferOwner.name,
-                                        })}
+                                        text={t(
+                                          "CreditOffer:cardContent.viewAccount",
+                                          {
+                                            owner_name: creditOfferOwner.name,
+                                          }
+                                        )}
                                         hyperlink={`https://blocksights.info/#/accounts/${
                                           creditOfferOwner.name
-                                        }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
+                                        }${
+                                          usr.chain === "bitshares"
+                                            ? ""
+                                            : "?network=testnet"
+                                        }`}
                                       />
                                     ) : null}
                                   </div>
@@ -568,7 +630,8 @@ export default function CreditOffer(properties) {
                               <FormControl>
                                 <div className="grid grid-cols-8 mt-4">
                                   <div className="col-span-1 ml-5">
-                                    {creditOfferOwner && creditOfferOwner.name ? (
+                                    {creditOfferOwner &&
+                                    creditOfferOwner.name ? (
                                       <Avatar
                                         size={40}
                                         name={creditOfferOwner.name}
@@ -597,7 +660,8 @@ export default function CreditOffer(properties) {
                                       placeholder="Bitshares account (1.2.x)"
                                       className="mb-1 mt-1"
                                       value={
-                                        creditOfferOwner && creditOfferOwner.name
+                                        creditOfferOwner &&
+                                        creditOfferOwner.name
                                           ? `${creditOfferOwner.name} (${creditOfferOwner.id})`
                                           : ""
                                       }
@@ -607,9 +671,12 @@ export default function CreditOffer(properties) {
                                 </div>
                               </FormControl>
                               <FormDescription>
-                                {t("CreditOffer:cardContent.borrowingDescription", {
-                                  symbol: foundAsset?.symbol,
-                                })}
+                                {t(
+                                  "CreditOffer:cardContent.borrowingDescription",
+                                  {
+                                    symbol: foundAsset?.symbol,
+                                  }
+                                )}
                               </FormDescription>
                               <FormMessage />
                             </FormItem>
@@ -623,10 +690,13 @@ export default function CreditOffer(properties) {
                             <FormItem>
                               <FormLabel>
                                 {foundAsset && relevantOffer
-                                  ? t("CreditOffer:cardContent.availableAmount", {
-                                      symbol: foundAsset.symbol,
-                                      asset_type: relevantOffer.asset_type,
-                                    })
+                                  ? t(
+                                      "CreditOffer:cardContent.availableAmount",
+                                      {
+                                        symbol: foundAsset.symbol,
+                                        asset_type: relevantOffer.asset_type,
+                                      }
+                                    )
                                   : t("CreditOffer:cardContent.loading")}
                               </FormLabel>
                               <FormControl>
@@ -636,7 +706,9 @@ export default function CreditOffer(properties) {
                                       <Av>
                                         <AvatarFallback>
                                           <div className="text-sm">
-                                            {foundAsset.bitasset_data_id ? "MPA" : "UIA"}
+                                            {foundAsset.bitasset_data_id
+                                              ? "MPA"
+                                              : "UIA"}
                                           </div>
                                         </AvatarFallback>
                                       </Av>
@@ -682,7 +754,9 @@ export default function CreditOffer(properties) {
                               <FormLabel>
                                 <div className="grid grid-cols-2 mt-3">
                                   <div className="mt-1">
-                                    {t("CreditOffer:cardContent.backingCollateral")}
+                                    {t(
+                                      "CreditOffer:cardContent.backingCollateral"
+                                    )}
                                   </div>
                                 </div>
                               </FormLabel>
@@ -694,10 +768,12 @@ export default function CreditOffer(properties) {
                                         <AvatarFallback>
                                           <div className="text-sm">
                                             {!collateralInfo ? "?" : null}
-                                            {collateralInfo && collateralInfo.isBitasset
+                                            {collateralInfo &&
+                                            collateralInfo.isBitasset
                                               ? "MPA"
                                               : null}
-                                            {collateralInfo && !collateralInfo.isBitasset
+                                            {collateralInfo &&
+                                            !collateralInfo.isBitasset
                                               ? "UIA"
                                               : null}
                                           </div>
@@ -720,22 +796,29 @@ export default function CreditOffer(properties) {
                                           placeholder={
                                             collateralInfo
                                               ? `${collateralInfo.symbol} (${collateralInfo.id})`
-                                              : t("CreditOffer:cardContent.selectCollateral")
+                                              : t(
+                                                  "CreditOffer:cardContent.selectCollateral"
+                                                )
                                           }
                                         />
                                       </SelectTrigger>
                                       <SelectContent className="bg-white">
-                                        {acceptedCollateral && acceptedCollateral.length ? (
+                                        {acceptedCollateral &&
+                                        acceptedCollateral.length ? (
                                           <List
                                             height={100}
-                                            itemCount={acceptedCollateral.length}
+                                            itemCount={
+                                              acceptedCollateral.length
+                                            }
                                             itemSize={35}
                                             className="w-full"
                                             initialScrollOffset={
                                               chosenCollateral
                                                 ? acceptedCollateral
                                                     .map((x) => x.id)
-                                                    .indexOf(chosenCollateral.id) * 35
+                                                    .indexOf(
+                                                      chosenCollateral.id
+                                                    ) * 35
                                                 : 0
                                             }
                                           >
@@ -749,21 +832,29 @@ export default function CreditOffer(properties) {
                               </FormControl>
                               <FormDescription>
                                 {!collateralInfo
-                                  ? t("CreditOffer:cardContent.borrowDescription", {
-                                      symbol: foundAsset?.symbol,
-                                      owner_name: relevantOffer?.owner_name,
-                                    })
-                                  : t("CreditOffer:cardContent.borrowDescription2", {
-                                      price: requiredCollateralPrice, // TODO: REPLACE PRICE
-                                      base: foundAsset?.symbol,
-                                      quote: collateralInfo.symbol,
-                                    })}
+                                  ? t(
+                                      "CreditOffer:cardContent.borrowDescription",
+                                      {
+                                        symbol: foundAsset?.symbol,
+                                        owner_name: relevantOffer?.owner_name,
+                                      }
+                                    )
+                                  : t(
+                                      "CreditOffer:cardContent.borrowDescription2",
+                                      {
+                                        price: requiredCollateralPrice, // TODO: REPLACE PRICE
+                                        base: foundAsset?.symbol,
+                                        quote: collateralInfo.symbol,
+                                      }
+                                    )}
                               </FormDescription>
                               {balanceAssetIDs &&
                               chosenCollateral &&
                               !balanceAssetIDs.includes(chosenCollateral) ? (
                                 <FormMessage>
-                                  {t("CreditOffer:cardContent.noCollateralMessage")}
+                                  {t(
+                                    "CreditOffer:cardContent.noCollateralMessage"
+                                  )}
                                 </FormMessage>
                               ) : null}
                             </FormItem>
@@ -779,21 +870,31 @@ export default function CreditOffer(properties) {
                                 <div className="grid grid-cols-2 gap-1 mt-5">
                                   <div className="col-span-1">
                                     {t("CreditOffer:cardContent.borrowAmount", {
-                                      symbol: foundAsset ? foundAsset.symbol : "?",
+                                      symbol: foundAsset
+                                        ? foundAsset.symbol
+                                        : "?",
                                     })}
                                   </div>
                                   <div className="col-span-1 text-right">
-                                    {t("CreditOffer:cardContent.availableAmountRange", {
-                                      minAmount: minAmount ?? "?",
-                                      availableAmount: availableAmount ?? "?",
-                                      symbol: foundAsset?.symbol,
-                                    })}
+                                    {t(
+                                      "CreditOffer:cardContent.availableAmountRange",
+                                      {
+                                        minAmount: minAmount ?? "?",
+                                        availableAmount: availableAmount ?? "?",
+                                        symbol: foundAsset?.symbol,
+                                      }
+                                    )}
                                   </div>
                                 </div>
                               </FormLabel>
                               {!availableAmount ? (
                                 <FormControl>
-                                  <Input disabled value={0} className="mb-3" readOnly />
+                                  <Input
+                                    disabled
+                                    value={0}
+                                    className="mb-3"
+                                    readOnly
+                                  />
                                 </FormControl>
                               ) : (
                                 <FormControl onChange={handleInputChange}>
@@ -802,10 +903,13 @@ export default function CreditOffer(properties) {
                               )}
 
                               <FormDescription>
-                                {t("CreditOffer:cardContent.inputBorrowAmount", {
-                                  symbol: foundAsset?.symbol,
-                                  owner_name: relevantOffer?.owner_name,
-                                })}
+                                {t(
+                                  "CreditOffer:cardContent.inputBorrowAmount",
+                                  {
+                                    symbol: foundAsset?.symbol,
+                                    owner_name: relevantOffer?.owner_name,
+                                  }
+                                )}
                               </FormDescription>
                               <FormMessage />
                             </FormItem>
@@ -832,35 +936,53 @@ export default function CreditOffer(properties) {
                                 >
                                   <SelectTrigger className="mb-1">
                                     <SelectValue
-                                      placeholder={t("CreditOffer:cardContent.selectRepayMethod")}
+                                      placeholder={t(
+                                        "CreditOffer:cardContent.selectRepayMethod"
+                                      )}
                                     />
                                   </SelectTrigger>
                                   <SelectContent className="bg-white">
                                     <SelectItem value={"no_auto_repayment"}>
-                                      {t("CreditOffer:cardContent.noAutoRepayment")}
+                                      {t(
+                                        "CreditOffer:cardContent.noAutoRepayment"
+                                      )}
                                     </SelectItem>
                                     <SelectItem value={"only_full_repayment"}>
-                                      {t("CreditOffer:cardContent.onlyFullRepayment")}
+                                      {t(
+                                        "CreditOffer:cardContent.onlyFullRepayment"
+                                      )}
                                     </SelectItem>
-                                    <SelectItem value={"allow_partial_repayment"}>
-                                      {t("CreditOffer:cardContent.allowPartialRepayment")}
+                                    <SelectItem
+                                      value={"allow_partial_repayment"}
+                                    >
+                                      {t(
+                                        "CreditOffer:cardContent.allowPartialRepayment"
+                                      )}
                                     </SelectItem>
                                   </SelectContent>
                                 </Select>
                               </FormControl>
                               <FormDescription>
-                                {t("CreditOffer:cardContent.selectRepaymentMethod")}
+                                {t(
+                                  "CreditOffer:cardContent.selectRepaymentMethod"
+                                )}
                               </FormDescription>
                               {repayPeriod ? (
                                 <FormMessage>
                                   {repayPeriod === "no_auto_repayment"
-                                    ? t("CreditOffer:cardContent.noAutoRepaymentMessage")
+                                    ? t(
+                                        "CreditOffer:cardContent.noAutoRepaymentMessage"
+                                      )
                                     : null}
                                   {repayPeriod === "only_full_repayment"
-                                    ? t("CreditOffer:cardContent.onlyFullRepaymentMessage")
+                                    ? t(
+                                        "CreditOffer:cardContent.onlyFullRepaymentMessage"
+                                      )
                                     : null}
                                   {repayPeriod === "allow_partial_repayment"
-                                    ? t("CreditOffer:cardContent.allowPartialRepaymentMessage")
+                                    ? t(
+                                        "CreditOffer:cardContent.allowPartialRepaymentMessage"
+                                      )
                                     : null}
                                 </FormMessage>
                               ) : null}
@@ -877,15 +999,22 @@ export default function CreditOffer(properties) {
                                 <FormLabel>
                                   <div className="grid grid-cols-2 gap-1 mt-5">
                                     <div className="col-span-1">
-                                      {t("CreditOffer:cardContent.requiredCollateral")}
+                                      {t(
+                                        "CreditOffer:cardContent.requiredCollateral"
+                                      )}
                                     </div>
                                     <div className="col-span-1 text-right">
                                       {collateralInfo
-                                        ? t("CreditOffer:cardContent.currentBalance", {
-                                            amount: collateralInfo.amount,
-                                            symbol: collateralInfo.symbol,
-                                          })
-                                        : t("CreditOffer:cardContent.loadingBalance")}
+                                        ? t(
+                                            "CreditOffer:cardContent.currentBalance",
+                                            {
+                                              amount: collateralInfo.amount,
+                                              symbol: collateralInfo.symbol,
+                                            }
+                                          )
+                                        : t(
+                                            "CreditOffer:cardContent.loadingBalance"
+                                          )}
                                     </div>
                                   </div>
                                 </FormLabel>
@@ -893,8 +1022,12 @@ export default function CreditOffer(properties) {
                                 <FormControl>
                                   <Input
                                     disabled
-                                    value={`${requiredCollateralAmount ?? "0"} ${
-                                      collateralInfo ? collateralInfo.symbol : ""
+                                    value={`${
+                                      requiredCollateralAmount ?? "0"
+                                    } ${
+                                      collateralInfo
+                                        ? collateralInfo.symbol
+                                        : ""
                                     }`}
                                     className="mb-3"
                                     readOnly
@@ -902,23 +1035,35 @@ export default function CreditOffer(properties) {
                                 </FormControl>
                                 <FormDescription>
                                   {finalBorrowAmount && foundAsset
-                                    ? t("CreditOffer:cardContent.collateralNeeded", {
-                                        borrowAmount: finalBorrowAmount ?? "",
-                                        symbol: foundAsset ? foundAsset.symbol : "",
-                                      })
-                                    : t("CreditOffer:cardContent.enterValidBorrowAmount")}
+                                    ? t(
+                                        "CreditOffer:cardContent.collateralNeeded",
+                                        {
+                                          borrowAmount: finalBorrowAmount ?? "",
+                                          symbol: foundAsset
+                                            ? foundAsset.symbol
+                                            : "",
+                                        }
+                                      )
+                                    : t(
+                                        "CreditOffer:cardContent.enterValidBorrowAmount"
+                                      )}
                                 </FormDescription>
 
                                 {collateralInfo &&
                                 collateralInfo.holding &&
-                                collateralInfo.amount < requiredCollateralAmount ? (
+                                collateralInfo.amount <
+                                  requiredCollateralAmount ? (
                                   <FormMessage>
-                                    {t("CreditOffer:cardContent.insufficientBalance", {
-                                      symbol: collateralInfo.symbol,
-                                      requiredMore: (
-                                        requiredCollateralAmount - collateralInfo.amount
-                                      ).toFixed(collateralInfo.precision),
-                                    })}
+                                    {t(
+                                      "CreditOffer:cardContent.insufficientBalance",
+                                      {
+                                        symbol: collateralInfo.symbol,
+                                        requiredMore: (
+                                          requiredCollateralAmount -
+                                          collateralInfo.amount
+                                        ).toFixed(collateralInfo.precision),
+                                      }
+                                    )}
                                   </FormMessage>
                                 ) : null}
 
@@ -947,13 +1092,18 @@ export default function CreditOffer(properties) {
                               <FormControl>
                                 <Input
                                   disabled
-                                  value={offerRepayPeriod ?? t("CreditOffer:cardContent.loading")}
+                                  value={
+                                    offerRepayPeriod ??
+                                    t("CreditOffer:cardContent.loading")
+                                  }
                                   className="mb-3"
                                   readOnly
                                 />
                               </FormControl>
                               <FormDescription>
-                                {t("CreditOffer:cardContent.repayPeriodDescription")}
+                                {t(
+                                  "CreditOffer:cardContent.repayPeriodDescription"
+                                )}
                               </FormDescription>
                             </FormItem>
                           )}
@@ -974,13 +1124,18 @@ export default function CreditOffer(properties) {
                               <FormControl>
                                 <Input
                                   disabled
-                                  value={offerExpiration ?? t("CreditOffer:cardContent.loading")}
+                                  value={
+                                    offerExpiration ??
+                                    t("CreditOffer:cardContent.loading")
+                                  }
                                   className="mb-3"
                                   readOnly
                                 />
                               </FormControl>
                               <FormDescription>
-                                {t("CreditOffer:cardContent.offerExpiryDescription")}
+                                {t(
+                                  "CreditOffer:cardContent.offerExpiryDescription"
+                                )}
                               </FormDescription>
                             </FormItem>
                           )}
@@ -998,9 +1153,13 @@ export default function CreditOffer(properties) {
                                   </div>
                                   <div className="col-span-1 text-right">
                                     {relevantOffer
-                                      ? t("CreditOffer:cardContent.borrowFeeRate", {
-                                          feeRate: relevantOffer.fee_rate / 10000,
-                                        })
+                                      ? t(
+                                          "CreditOffer:cardContent.borrowFeeRate",
+                                          {
+                                            feeRate:
+                                              relevantOffer.fee_rate / 10000,
+                                          }
+                                        )
                                       : t("CreditOffer:cardContent.loadingFee")}
                                   </div>
                                 </div>
@@ -1012,10 +1171,14 @@ export default function CreditOffer(properties) {
                                     finalBorrowAmount
                                       ? t("CreditOffer:cardContent.feeAmount", {
                                           feeAmount: finalBorrowAmount * 0.01,
-                                          symbol: foundAsset ? foundAsset.symbol : "?",
+                                          symbol: foundAsset
+                                            ? foundAsset.symbol
+                                            : "?",
                                         })
                                       : t("CreditOffer:cardContent.zeroFee", {
-                                          symbol: foundAsset ? foundAsset.symbol : "?",
+                                          symbol: foundAsset
+                                            ? foundAsset.symbol
+                                            : "?",
                                         })
                                   }
                                   className="mb-3"
@@ -1025,7 +1188,9 @@ export default function CreditOffer(properties) {
                               <FormDescription>
                                 {t("CreditOffer:cardContent.feeDescription", {
                                   symbol: foundAsset ? foundAsset.symbol : "?",
-                                  owner_name: creditOfferOwner ? creditOfferOwner.name : "?",
+                                  owner_name: creditOfferOwner
+                                    ? creditOfferOwner.name
+                                    : "?",
                                 })}
                               </FormDescription>
                               <FormMessage />
@@ -1039,14 +1204,25 @@ export default function CreditOffer(properties) {
                           name="fee"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>{t("CreditOffer:cardContent.networkFee")}</FormLabel>
-                              <Input disabled value={`${fee ?? "?"} BTS`} label={`fees`} readOnly />
+                              <FormLabel>
+                                {t("CreditOffer:cardContent.networkFee")}
+                              </FormLabel>
+                              <Input
+                                disabled
+                                value={`${fee ?? "?"} BTS`}
+                                label={`fees`}
+                                readOnly
+                              />
                               <FormDescription>
-                                {t("CreditOffer:cardContent.networkFeeDescription")}
+                                {t(
+                                  "CreditOffer:cardContent.networkFeeDescription"
+                                )}
                               </FormDescription>
                               {usr && usr.id === usr.referrer ? (
                                 <FormMessage>
-                                  {t("CreditOffer:cardContent.ltmRebate", { rebate: 0.8 * fee })}
+                                  {t("CreditOffer:cardContent.ltmRebate", {
+                                    rebate: 0.8 * fee,
+                                  })}
                                 </FormMessage>
                               ) : null}
                             </FormItem>
@@ -1062,7 +1238,9 @@ export default function CreditOffer(properties) {
                 (collateralInfo &&
                   collateralInfo.holding &&
                   collateralInfo.amount < requiredCollateralAmount) ? (
-                  <Button disabled>{t("CreditOffer:cardContent.submit")}</Button>
+                  <Button disabled>
+                    {t("CreditOffer:cardContent.submit")}
+                  </Button>
                 ) : (
                   <Button onClick={() => setShowDialog(true)}>
                     {t("CreditOffer:cardContent.submit")}
@@ -1091,11 +1269,17 @@ export default function CreditOffer(properties) {
                 borrower: usr.id,
                 offer_id: relevantOffer.id,
                 borrow_amount: {
-                  amount: blockchainFloat(finalBorrowAmount, foundAsset.precision),
+                  amount: blockchainFloat(
+                    finalBorrowAmount,
+                    foundAsset.precision
+                  ),
                   asset_id: foundAsset.id,
                 },
                 collateral: {
-                  amount: blockchainFloat(requiredCollateralAmount, collateralInfo.precision),
+                  amount: blockchainFloat(
+                    requiredCollateralAmount,
+                    collateralInfo.precision
+                  ),
                   asset_id: collateralInfo.id,
                 },
                 max_fee_rate: relevantOffer.fee_rate,
@@ -1122,7 +1306,9 @@ export default function CreditOffer(properties) {
                 <li>{t("CreditOffer:risks.riskNetwork")}</li>
               </ul>
             </CardContent>
-            <CardFooter className="text-sm">{t("CreditOffer:risks.risksFooter")}</CardFooter>
+            <CardFooter className="text-sm">
+              {t("CreditOffer:risks.risksFooter")}
+            </CardFooter>
           </Card>
         </div>
       </div>

@@ -14,14 +14,23 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/Avatar.tsx";
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
-import { $currentUser, setCurrentUser, $userStorage, removeUser } from "@/stores/users.ts";
+import {
+  $currentUser,
+  setCurrentUser,
+  $userStorage,
+  removeUser,
+} from "@/stores/users.ts";
 import { $blockList } from "@/stores/blocklist.ts";
 import { $currentNode } from "@/stores/node.ts";
 
@@ -29,8 +38,16 @@ import { accountSearch } from "@/nanoeffects/UserSearch.ts";
 
 export default function AccountSelect(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
-  const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
-  const blocklist = useSyncExternalStore($blockList.subscribe, $blockList.get, () => true);
+  const usr = useSyncExternalStore(
+    $currentUser.subscribe,
+    $currentUser.get,
+    () => true
+  );
+  const blocklist = useSyncExternalStore(
+    $blockList.subscribe,
+    $blockList.get,
+    () => true
+  );
   const currentNode = useStore($currentNode);
 
   useInitCache(usr && usr.chain ? usr.chain : "bitshares", []);
@@ -90,7 +107,12 @@ export default function AccountSelect(properties) {
       className="w-1/2"
       key={searchResponse.id}
       onClick={() => {
-        setCurrentUser(searchResponse.name, searchResponse.id, searchResponse.referrer, chain);
+        setCurrentUser(
+          searchResponse.name,
+          searchResponse.id,
+          searchResponse.referrer,
+          chain
+        );
       }}
     >
       <div className="grid grid-cols-4">
@@ -143,7 +165,13 @@ export default function AccountSelect(properties) {
                     eye: "normal",
                     mouth: "open",
                   }}
-                  colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]}
+                  colors={[
+                    "#92A1C6",
+                    "#146A7C",
+                    "#F0AB3D",
+                    "#C271B4",
+                    "#C20D90",
+                  ]}
                 />
               </div>
               <div className="col-span-3">
@@ -207,7 +235,11 @@ export default function AccountSelect(properties) {
             <Button onClick={() => setMode("existing")}>
               {t("AccountSelect:noMode.existing")}
             </Button>
-            <Button variant="outline" className="mt-2 mr-2" onClick={() => setChain(null)}>
+            <Button
+              variant="outline"
+              className="mt-2 mr-2"
+              onClick={() => setChain(null)}
+            >
               {t("AccountSelect:noMode.back")}
             </Button>
           </div>
@@ -215,7 +247,9 @@ export default function AccountSelect(properties) {
       ) : null}
       {chain && mode && mode === "new" && !searchResponse ? (
         <>
-          {chain === "bitshares" ? "🔐 Bitshares (BTS)" : "🔐 Bitshares testnet (TEST)"}
+          {chain === "bitshares"
+            ? "🔐 Bitshares (BTS)"
+            : "🔐 Bitshares testnet (TEST)"}
           <br />
           <Input
             value={accountInput || ""}
@@ -237,14 +271,22 @@ export default function AccountSelect(properties) {
             className="mt-4"
           />
           {errorMessage ? (
-            <p className="text-red-500 text-xs italic">{errorMessage || "ERROR"}</p>
+            <p className="text-red-500 text-xs italic">
+              {errorMessage || "ERROR"}
+            </p>
           ) : null}
           <div className="grid grid-cols-2 gap-2 mt-5">
-            <Button className="mr-2" variant="outline" onClick={() => setMode(null)}>
+            <Button
+              className="mr-2"
+              variant="outline"
+              onClick={() => setMode(null)}
+            >
               {t("AccountSelect:new.back")}
             </Button>
             {accountInput && !inProgress ? (
-              <Button onClick={() => lookupAccount()}>{t("AccountSelect:new.continue")}</Button>
+              <Button onClick={() => lookupAccount()}>
+                {t("AccountSelect:new.continue")}
+              </Button>
             ) : (
               <Button disabled>{t("AccountSelect:new.continue")}</Button>
             )}
@@ -276,7 +318,9 @@ export default function AccountSelect(properties) {
       ) : null}
       {mode && mode === "existing" ? (
         <>
-          {chain === "bitshares" ? "Bitshares (BTS)" : "Bitshares testnet (TEST)"}
+          {chain === "bitshares"
+            ? "Bitshares (BTS)"
+            : "Bitshares testnet (TEST)"}
           <br />
           {t("AccountSelect:existing.description")}
           <div className="grid grid-cols-2 gap-3 mb-5 mt-5">
@@ -293,10 +337,16 @@ export default function AccountSelect(properties) {
                   );
                 })
             ) : (
-              <p className="text-red-500 text-xs italic">{t("AccountSelect:existing.none")}</p>
+              <p className="text-red-500 text-xs italic">
+                {t("AccountSelect:existing.none")}
+              </p>
             )}
           </div>
-          <Button className="mr-2" variant="outline" onClick={() => setMode(null)}>
+          <Button
+            className="mr-2"
+            variant="outline"
+            onClick={() => setMode(null)}
+          >
             {t("AccountSelect:noMode.back")}
           </Button>
         </>

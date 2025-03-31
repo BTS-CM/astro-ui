@@ -6,16 +6,16 @@ const [createTopMarketsStore] = nanoquery({
       console.log("No electron window found");
       return;
     }
-    
+
     let topMarkets;
     try {
-      topMarkets = await (window as any).electron.fetchTopMarkets({chain});
+      topMarkets = await (window as any).electron.fetchTopMarkets({ chain });
     } catch (error) {
       console.log({ error });
     }
 
     return topMarkets ?? null;
-  }
+  },
 });
 
 export { createTopMarketsStore };

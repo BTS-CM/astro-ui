@@ -10,7 +10,9 @@ export const hashCode = (name: string): number => {
 
 export const getContrast = (hexcolor: string): string => {
   const hex = hexcolor.slice(1);
-  const [r, g, b] = [0, 2, 4].map((offset) => parseInt(hex.slice(offset, offset + 2), 16));
+  const [r, g, b] = [0, 2, 4].map((offset) =>
+    parseInt(hex.slice(offset, offset + 2), 16)
+  );
   const yiq = (r * 299 + g * 587 + b * 114) / 1000;
   return yiq >= 128 ? "#000000" : "#FFFFFF";
 };

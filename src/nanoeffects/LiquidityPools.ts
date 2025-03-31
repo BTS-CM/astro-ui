@@ -14,14 +14,20 @@ function fetchLiquidityPools(
   existingAPI?: any
 ) {
   return new Promise(async (resolve, reject) => {
-    let node = specificNode ? specificNode : (chains as any)[chain].nodeList[0].url;
+    let node = specificNode
+      ? specificNode
+      : (chains as any)[chain].nodeList[0].url;
 
     let currentAPI;
     try {
       currentAPI = existingAPI
         ? existingAPI
-        : await Apis.instance(node, true, 4000, { enableDatabase: true }, (error: Error) =>
-            console.log({ error })
+        : await Apis.instance(
+            node,
+            true,
+            4000,
+            { enableDatabase: true },
+            (error: Error) => console.log({ error })
           );
     } catch (error) {
       console.log({ error });
@@ -29,15 +35,15 @@ function fetchLiquidityPools(
       return;
     }
 
-    const iterations = chain === "bitshares" ? MAX_BTS_ITERATIONS : MAX_TEST_ITERATIONS;
+    const iterations =
+      chain === "bitshares" ? MAX_BTS_ITERATIONS : MAX_TEST_ITERATIONS;
     const limit = chain === "bitshares" ? BTS_LIMIT : TEST_LIMIT;
 
     let pools: any[] = [];
     try {
-      pools = await currentAPI.db_api().exec(
-        "list_liquidity_pools",
-        [limit, "1.19.0", true]
-      );
+      pools = await currentAPI
+        .db_api()
+        .exec("list_liquidity_pools", [limit, "1.19.0", true]);
     } catch (error) {
       console.log({ error });
       if (!existingAPI) {
@@ -56,10 +62,13 @@ function fetchLiquidityPools(
       for (let i = 1; i < iterations; i++) {
         let nextPage;
         try {
-          nextPage = await currentAPI.db_api().exec(
-            "list_liquidity_pools",
-            [limit, pools[pools.length - 1].id, true]
-          );
+          nextPage = await currentAPI
+            .db_api()
+            .exec("list_liquidity_pools", [
+              limit,
+              pools[pools.length - 1].id,
+              true,
+            ]);
         } catch (error) {
           console.log({ error });
           if (!existingAPI) {
@@ -95,14 +104,20 @@ function fetchLPTradingVolume(
   existingAPI?: any
 ) {
   return new Promise(async (resolve, reject) => {
-    let node = specificNode ? specificNode : (chains as any)[chain].nodeList[0].url;
+    let node = specificNode
+      ? specificNode
+      : (chains as any)[chain].nodeList[0].url;
 
     let currentAPI;
     try {
       currentAPI = existingAPI
         ? existingAPI
-        : await Apis.instance(node, true, 4000, { enableDatabase: true }, (error: Error) =>
-            console.log({ error })
+        : await Apis.instance(
+            node,
+            true,
+            4000,
+            { enableDatabase: true },
+            (error: Error) => console.log({ error })
           );
     } catch (error) {
       console.log({ error });
@@ -122,7 +137,9 @@ function fetchLPTradingVolume(
 
           let _res;
           try {
-            _res = await currentAPI.db_api().exec("get_ticker", [_base, _quote]);
+            _res = await currentAPI
+              .db_api()
+              .exec("get_ticker", [_base, _quote]);
           } catch (error) {
             console.log({ error });
           }
@@ -163,11 +180,11 @@ function fetchLPTradingVolume(
 const [createEveryLiquidityPoolStore] = nanoquery({
   fetcher: async (...args: unknown[]) => {
     const chain = args[0] as string;
-    let specificNode = args[1] ? args[1] as string : null;
+    let specificNode = args[1] ? (args[1] as string) : null;
 
     let response;
     try {
-      response =  await fetchLiquidityPools(chain, specificNode);
+      response = await fetchLiquidityPools(chain, specificNode);
     } catch (error) {
       console.log({ error });
       return;
@@ -186,11 +203,11 @@ const [createLPTradingVolumeStore] = nanoquery({
   fetcher: async (...args: unknown[]) => {
     const chain = args[0] as string;
     let pools = JSON.parse(args[1] as string);
-    let specificNode = args[2] ? args[2] as string : null;
+    let specificNode = args[2] ? (args[2] as string) : null;
 
     let response;
     try {
-      response =  await fetchLPTradingVolume(chain, pools, specificNode);
+      response = await fetchLPTradingVolume(chain, pools, specificNode);
     } catch (error) {
       console.log({ error });
       return;
@@ -204,11 +221,10 @@ const [createLPTradingVolumeStore] = nanoquery({
     return response;
   },
 });
-  
-export { 
+
+export {
   createEveryLiquidityPoolStore,
   fetchLiquidityPools,
   createLPTradingVolumeStore,
-  fetchLPTradingVolume
+  fetchLPTradingVolume,
 };
-  

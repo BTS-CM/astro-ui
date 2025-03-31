@@ -10,7 +10,11 @@ import CurrentUser from "./common/CurrentUser.jsx";
 export default function PageFooter(properties) {
   const { sourceURL } = properties;
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
-  const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
+  const usr = useSyncExternalStore(
+    $currentUser.subscribe,
+    $currentUser.get,
+    () => true
+  );
 
   const gradient = {
     backgroundImage: "var(--accent-gradient)",
@@ -23,7 +27,9 @@ export default function PageFooter(properties) {
   return (
     <div className="container mx-auto mt-5 mb-5">
       <div className="grid grid-cols-1 mt-5">
-        {usr && usr.username && usr.username.length ? <CurrentUser usr={usr} /> : null}
+        {usr && usr.username && usr.username.length ? (
+          <CurrentUser usr={usr} />
+        ) : null}
       </div>
 
       <div className="grid grid-cols-1 mt-3">
@@ -32,7 +38,11 @@ export default function PageFooter(properties) {
             type="text"
             text={`MIT ${t("PageFooter:licensed")}`}
             gradient
-            hyperlink={sourceURL && sourceURL.startsWith("https://github.com/") ? sourceURL : "#"}
+            hyperlink={
+              sourceURL && sourceURL.startsWith("https://github.com/")
+                ? sourceURL
+                : "#"
+            }
           />
           {` ${t("PageFooter:built")} `}
           <ExternalLink
@@ -56,7 +66,7 @@ export default function PageFooter(properties) {
             hyperlink={`https://www.electronjs.org/`}
           />
         </h4>
-        
+
         <h3 className="text-muted-foreground text-center">
           {t("PageHeader:usage")}
           <ExternalLink
@@ -71,7 +81,8 @@ export default function PageFooter(properties) {
             text="BeetEOS"
             gradient
             hyperlink="https://github.com/beetapp/beeteos"
-          />.
+          />
+          .
         </h3>
       </div>
     </div>

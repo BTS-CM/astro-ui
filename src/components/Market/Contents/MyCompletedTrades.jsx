@@ -13,7 +13,14 @@ import {
 } from "@/components/ui/card";
 
 export default function MyCompletedTrades(properties) {
-  const { type, usrHistory, marketHistoryInProgress, reset, assetAData, assetBData } = properties;
+  const {
+    type,
+    usrHistory,
+    marketHistoryInProgress,
+    reset,
+    assetAData,
+    assetBData,
+  } = properties;
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
 
   return (

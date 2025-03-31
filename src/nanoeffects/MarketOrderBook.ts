@@ -2,7 +2,7 @@ import { nanoquery } from "@nanostores/query";
 import Apis from "@/bts/ws/ApiInstances";
 import { chains } from "@/config/chains";
 
-function getMarketOrderBook (
+function getMarketOrderBook(
   chain: string,
   base: string,
   quote: string,
@@ -10,12 +10,18 @@ function getMarketOrderBook (
   specificNode?: string | null
 ) {
   return new Promise(async (resolve, reject) => {
-    let node = specificNode ? specificNode : (chains as any)[chain].nodeList[0].url;
+    let node = specificNode
+      ? specificNode
+      : (chains as any)[chain].nodeList[0].url;
 
     let currentAPI;
     try {
-      currentAPI = await Apis.instance(node, true, 4000, { enableDatabase: true }, (error: Error) =>
-        console.log({ error })
+      currentAPI = await Apis.instance(
+        node,
+        true,
+        4000,
+        { enableDatabase: true },
+        (error: Error) => console.log({ error })
       );
     } catch (error) {
       console.log({ error });
@@ -25,7 +31,9 @@ function getMarketOrderBook (
 
     let orderBook;
     try {
-      orderBook = await currentAPI.db_api().exec("get_order_book", [base, quote, limit]);
+      orderBook = await currentAPI
+        .db_api()
+        .exec("get_order_book", [base, quote, limit]);
     } catch (error) {
       console.log({ error });
     }
@@ -51,11 +59,17 @@ const [createMarketOrderStore] = nanoquery({
     const base = args[2] as string;
     const limit = args[3] as number;
 
-    let specificNode = args[4] ? args[4] as string : null;
+    let specificNode = args[4] ? (args[4] as string) : null;
 
     let response;
     try {
-      response =  await getMarketOrderBook(chain, base, quote, limit, specificNode);
+      response = await getMarketOrderBook(
+        chain,
+        base,
+        quote,
+        limit,
+        specificNode
+      );
     } catch (error) {
       console.log({ error });
       return;

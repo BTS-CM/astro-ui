@@ -1,11 +1,8 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
-import {
-  HeartFilledIcon,
-  HeartIcon
-} from "@radix-ui/react-icons"
-import { useStore } from '@nanostores/react';
+import { HeartFilledIcon, HeartIcon } from "@radix-ui/react-icons";
+import { useStore } from "@nanostores/react";
 
 import {
   Card,
@@ -45,10 +42,10 @@ import {
   $favouriteAssets,
   addFavouriteAsset,
   removeFavouriteAsset,
-} from "@/stores/favourites.ts"
+} from "@/stores/favourites.ts";
 
 export default function MarketAssetCard(properties) {
-  const { 
+  const {
     asset,
     assetData,
     assetDetails,
@@ -58,14 +55,14 @@ export default function MarketAssetCard(properties) {
     usrBalances,
     type,
     otherAsset,
-    storeCallback
+    storeCallback,
   } = properties;
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
 
   const favouriteAssets = useStore($favouriteAssets);
 
   const isFavourite = useMemo(() => {
-    return favouriteAssets[chain].map(x => x.id).includes(assetData.id);
+    return favouriteAssets[chain].map((x) => x.id).includes(assetData.id);
   }, [favouriteAssets, chain, asset]);
 
   const [assetBalance, setAssetBalance] = useState(0);
@@ -74,12 +71,12 @@ export default function MarketAssetCard(properties) {
       const id = assetData.id;
       const foundBalance = usrBalances.find((x) => x.asset_id === id);
       if (foundBalance) {
-        const balance = humanReadableFloat(foundBalance.amount, assetData.precision).toLocaleString(
-          undefined,
-          {
-            minimumFractionDigits: assetData.precision,
-          }
-        );
+        const balance = humanReadableFloat(
+          foundBalance.amount,
+          assetData.precision
+        ).toLocaleString(undefined, {
+          minimumFractionDigits: assetData.precision,
+        });
         setAssetBalance(balance);
       }
     }
@@ -92,17 +89,29 @@ export default function MarketAssetCard(properties) {
   useEffect(() => {
     if (marketSearch && bitassetData) {
       setBaseAsset(
-        marketSearch.find((x) => x.id === bitassetData.current_feed.settlement_price.base.asset_id)
+        marketSearch.find(
+          (x) =>
+            x.id === bitassetData.current_feed.settlement_price.base.asset_id
+        )
       );
       setQuoteAsset(
-        marketSearch.find((x) => x.id === bitassetData.current_feed.settlement_price.quote.asset_id)
+        marketSearch.find(
+          (x) =>
+            x.id === bitassetData.current_feed.settlement_price.quote.asset_id
+        )
       );
-      setBackingAsset(marketSearch.find((x) => x.id === bitassetData.options.short_backing_asset));
+      setBackingAsset(
+        marketSearch.find(
+          (x) => x.id === bitassetData.options.short_backing_asset
+        )
+      );
     }
   }, [bitassetData, marketSearch]);
 
   const max_supply = useMemo(() => {
-    return assetData.options ? assetData.options.max_supply : assetData.max_supply;
+    return assetData.options
+      ? assetData.options.max_supply
+      : assetData.max_supply;
   }, [assetData]);
 
   return (
@@ -115,54 +124,48 @@ export default function MarketAssetCard(properties) {
             </div>
             <div className="flex justify-end mt-1">
               <div className="grid grid-cols-2 gap-2">
-
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      {
-                        isFavourite
-                        ? <HeartFilledIcon
-                            onClick={() => {
-                              removeFavouriteAsset(chain, {
-                                id: assetData.id,
-                                symbol: assetData.symbol,
-                                issuer: assetData.issuer
-                              })
-                            }}
-                          />
-                        : <HeartIcon
-                            onClick={() => {
-                              addFavouriteAsset(chain, {
-                                id: assetData.id,
-                                symbol: assetData.symbol,
-                                issuer: assetData.issuer
-                              })
-                            }}
-                          />
-                      }
+                      {isFavourite ? (
+                        <HeartFilledIcon
+                          onClick={() => {
+                            removeFavouriteAsset(chain, {
+                              id: assetData.id,
+                              symbol: assetData.symbol,
+                              issuer: assetData.issuer,
+                            });
+                          }}
+                        />
+                      ) : (
+                        <HeartIcon
+                          onClick={() => {
+                            addFavouriteAsset(chain, {
+                              id: assetData.id,
+                              symbol: assetData.symbol,
+                              issuer: assetData.issuer,
+                            });
+                          }}
+                        />
+                      )}
                     </TooltipTrigger>
-                    <TooltipContent>
-                      Favourite
-                    </TooltipContent>
+                    <TooltipContent>Favourite</TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
 
-                {
-                  otherAsset
-                    ? <AssetDropDown
-                        assetSymbol={assetData.symbol}
-                        assetData={assetData}
-                        storeCallback={storeCallback}
-                        otherAsset={otherAsset}
-                        marketSearch={marketSearch}
-                        type={"base"}
-                        size="cog"
-                        chain={chain}
-                      />
-                    : null
-                }             
+                {otherAsset ? (
+                  <AssetDropDown
+                    assetSymbol={assetData.symbol}
+                    assetData={assetData}
+                    storeCallback={storeCallback}
+                    otherAsset={otherAsset}
+                    marketSearch={marketSearch}
+                    type={"base"}
+                    size="cog"
+                    chain={chain}
+                  />
+                ) : null}
               </div>
-
             </div>
           </div>
         </CardTitle>
@@ -179,7 +182,9 @@ export default function MarketAssetCard(properties) {
               <span className="text-sm"> {t("MarketAssetCard:selling")}</span>
             </>
           ) : null}
-          {type === "pool" ? <span>{t("MarketAssetCard:poolStakeAsset")}</span> : null}
+          {type === "pool" ? (
+            <span>{t("MarketAssetCard:poolStakeAsset")}</span>
+          ) : null}
         </CardDescription>
       </CardHeader>
       <CardContent className="text-sm pb-2">
@@ -196,62 +201,66 @@ export default function MarketAssetCard(properties) {
                   {asset} {assetData ? `(${assetData.id})` : ""}
                 </DialogTitle>
                 <DialogDescription>
-                  {assetDetails && assetDetails.current_supply && assetData
-                    ? <>
-                      {
-                        humanReadableFloat(
-                          assetDetails.current_supply,
-                          assetData.precision
-                        ).toLocaleString(undefined, {
-                          minimumFractionDigits: assetData.precision,
-                        })
-                      }
-                      {" "}
+                  {assetDetails && assetDetails.current_supply && assetData ? (
+                    <>
+                      {humanReadableFloat(
+                        assetDetails.current_supply,
+                        assetData.precision
+                      ).toLocaleString(undefined, {
+                        minimumFractionDigits: assetData.precision,
+                      })}{" "}
                       {t("MarketAssetCard:totalCirculation", { asset: asset })}
                       <br />
                     </>
-                    : null
-                  } 
+                  ) : null}
                   {assetDetails && assetData
-                    ? humanReadableFloat(max_supply, assetData.precision).toLocaleString(
-                        undefined,
-                        {
-                          minimumFractionDigits: assetData.precision,
-                        }
-                      )
-                    : "???"}
-                  {" "}
+                    ? humanReadableFloat(
+                        max_supply,
+                        assetData.precision
+                      ).toLocaleString(undefined, {
+                        minimumFractionDigits: assetData.precision,
+                      })
+                    : "???"}{" "}
                   {t("MarketAssetCard:maximumSupply")}
                   <br />
-                  {assetDetails && assetDetails.confidential_supply && assetData
-                    ? <>
-                        {humanReadableFloat(assetDetails.confidential_supply, assetData.precision).toLocaleString(
-                          undefined,
-                          {
-                            minimumFractionDigits: assetData.precision,
-                          }
-                        )}
-                        {" "}
-                        {t("MarketAssetCard:confidentialSupply", { asset: asset })}
-                      </>
-                    : null
-                  }
-                  
+                  {assetDetails &&
+                  assetDetails.confidential_supply &&
+                  assetData ? (
+                    <>
+                      {humanReadableFloat(
+                        assetDetails.confidential_supply,
+                        assetData.precision
+                      ).toLocaleString(undefined, {
+                        minimumFractionDigits: assetData.precision,
+                      })}{" "}
+                      {t("MarketAssetCard:confidentialSupply", {
+                        asset: asset,
+                      })}
+                    </>
+                  ) : null}
                 </DialogDescription>
               </DialogHeader>
             </DialogContent>
           </Dialog>
           <Dialog>
             <DialogTrigger asChild>
-              <Button variant="outline" className="h-6" style={{ marginLeft: "3px" }}>
+              <Button
+                variant="outline"
+                className="h-6"
+                style={{ marginLeft: "3px" }}
+              >
                 {t("MarketAssetCard:links")}
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[600px] bg-white">
               <DialogHeader>
-                <DialogTitle>{t("MarketAssetCard:externalLinks", { asset: asset })}</DialogTitle>
+                <DialogTitle>
+                  {t("MarketAssetCard:externalLinks", { asset: asset })}
+                </DialogTitle>
                 <DialogDescription>
-                  {t("MarketAssetCard:externalLinksDescription", { asset: asset })}
+                  {t("MarketAssetCard:externalLinksDescription", {
+                    asset: asset,
+                  })}
                 </DialogDescription>
               </DialogHeader>
               <div className="grid grid-cols-1 gap-2">
@@ -313,27 +322,47 @@ export default function MarketAssetCard(properties) {
           </Dialog>
           <Dialog>
             <DialogTrigger asChild>
-              <Button variant="outline" className="h-6" style={{ marginLeft: "3px" }}>
+              <Button
+                variant="outline"
+                className="h-6"
+                style={{ marginLeft: "3px" }}
+              >
                 {t("MarketAssetCard:json")}
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[600px] bg-white">
               <DialogHeader>
-                <DialogTitle>{t("MarketAssetCard:jsonSummaryData", { asset: asset })}</DialogTitle>
+                <DialogTitle>
+                  {t("MarketAssetCard:jsonSummaryData", { asset: asset })}
+                </DialogTitle>
                 <DialogDescription>
-                  {t("MarketAssetCard:jsonSummaryDataDescription", { asset: asset })}
+                  {t("MarketAssetCard:jsonSummaryDataDescription", {
+                    asset: asset,
+                  })}
                 </DialogDescription>
               </DialogHeader>
               <div className="grid grid-cols-1">
                 <div className="col-span-1">
                   <ScrollArea className="h-72 rounded-md border text-sm">
-                    <pre>{JSON.stringify({ assetData, assetDetails, bitassetData }, null, 2)}</pre>
+                    <pre>
+                      {JSON.stringify(
+                        { assetData, assetDetails, bitassetData },
+                        null,
+                        2
+                      )}
+                    </pre>
                   </ScrollArea>
                   <Button
                     variant="outline"
                     className="mt-2"
                     onClick={() => {
-                      navigator.clipboard.writeText(JSON.stringify({ assetData, assetDetails, bitassetData }, null, 2));
+                      navigator.clipboard.writeText(
+                        JSON.stringify(
+                          { assetData, assetDetails, bitassetData },
+                          null,
+                          2
+                        )
+                      );
                     }}
                   >
                     {t("DeepLinkDialog:tabsContent.copyOperationJSON")}
@@ -354,9 +383,13 @@ export default function MarketAssetCard(properties) {
               })}
               dialogdescription={
                 <ul className="ml-2 list-disc [&>li]:mt-2">
-                  <li>{t("MarketAssetCard:balanceDescription1", { asset: asset })}</li>
+                  <li>
+                    {t("MarketAssetCard:balanceDescription1", { asset: asset })}
+                  </li>
                   <li>{t("MarketAssetCard:balanceDescription2")}</li>
-                  <li>{t("MarketAssetCard:balanceDescription3", { asset: asset })}</li>
+                  <li>
+                    {t("MarketAssetCard:balanceDescription3", { asset: asset })}
+                  </li>
                 </ul>
               }
               tooltip={t("MarketAssetCard:balanceTooltip")}
@@ -376,7 +409,11 @@ export default function MarketAssetCard(properties) {
                 </>
               }
               dialogtitle={`
-                ${!bitassetData ? t("MarketAssetCard:userIssuedAssetSummary") : ""}
+                ${
+                  !bitassetData
+                    ? t("MarketAssetCard:userIssuedAssetSummary")
+                    : ""
+                }
                 ${
                   bitassetData && bitassetData.is_prediction_market
                     ? t("MarketAssetCard:predictionMarketSummary")
@@ -393,12 +430,24 @@ export default function MarketAssetCard(properties) {
                   {!bitassetData ? (
                     <ScrollArea className="h-72 rounded-md border text-sm">
                       <ul className="ml-2 list-disc [&>li]:mt-2 pl-5 pr-5">
-                        <li>{t("MarketAssetCard:userIssuedAssetDescription1")}</li>
-                        <li>{t("MarketAssetCard:userIssuedAssetDescription2")}</li>
-                        <li>{t("MarketAssetCard:userIssuedAssetDescription3")}</li>
-                        <li>{t("MarketAssetCard:userIssuedAssetDescription4")}</li>
-                        <li>{t("MarketAssetCard:userIssuedAssetDescription5")}</li>
-                        <li>{t("MarketAssetCard:userIssuedAssetDescription6")}</li>
+                        <li>
+                          {t("MarketAssetCard:userIssuedAssetDescription1")}
+                        </li>
+                        <li>
+                          {t("MarketAssetCard:userIssuedAssetDescription2")}
+                        </li>
+                        <li>
+                          {t("MarketAssetCard:userIssuedAssetDescription3")}
+                        </li>
+                        <li>
+                          {t("MarketAssetCard:userIssuedAssetDescription4")}
+                        </li>
+                        <li>
+                          {t("MarketAssetCard:userIssuedAssetDescription5")}
+                        </li>
+                        <li>
+                          {t("MarketAssetCard:userIssuedAssetDescription6")}
+                        </li>
                       </ul>
                     </ScrollArea>
                   ) : null}
@@ -406,11 +455,21 @@ export default function MarketAssetCard(properties) {
                   {bitassetData && bitassetData.is_prediction_market ? (
                     <ScrollArea className="h-72 rounded-md border text-sm">
                       <ul className="ml-2 list-disc [&>li]:mt-2 pl-5 pr-5">
-                        <li>{t("MarketAssetCard:predictionMarketDescription1")}</li>
-                        <li>{t("MarketAssetCard:predictionMarketDescription2")}</li>
-                        <li>{t("MarketAssetCard:predictionMarketDescription3")}</li>
-                        <li>{t("MarketAssetCard:predictionMarketDescription4")}</li>
-                        <li>{t("MarketAssetCard:predictionMarketDescription5")}</li>
+                        <li>
+                          {t("MarketAssetCard:predictionMarketDescription1")}
+                        </li>
+                        <li>
+                          {t("MarketAssetCard:predictionMarketDescription2")}
+                        </li>
+                        <li>
+                          {t("MarketAssetCard:predictionMarketDescription3")}
+                        </li>
+                        <li>
+                          {t("MarketAssetCard:predictionMarketDescription4")}
+                        </li>
+                        <li>
+                          {t("MarketAssetCard:predictionMarketDescription5")}
+                        </li>
                       </ul>
                     </ScrollArea>
                   ) : null}
@@ -434,8 +493,14 @@ export default function MarketAssetCard(properties) {
 
             <CardRow
               title={t("MarketAssetCard:issuer")}
-              button={marketSearch ? marketSearch.find((x) => x.id === assetData.id).u : "?"}
-              dialogtitle={t("MarketAssetCard:assetIssuer", { asset: assetData.symbol })}
+              button={
+                marketSearch
+                  ? marketSearch.find((x) => x.id === assetData.id).u
+                  : "?"
+              }
+              dialogtitle={t("MarketAssetCard:assetIssuer", {
+                asset: assetData.symbol,
+              })}
               dialogdescription={
                 <ul className="ml-2 list-disc [&>li]:mt-2">
                   <li>{t("MarketAssetCard:issuerDescription1")}</li>
@@ -489,7 +554,8 @@ export default function MarketAssetCard(properties) {
                     title={t("MarketAssetCard:backingAsset")}
                     button={
                       <>
-                        {backingAsset.s} ({bitassetData.options.short_backing_asset})
+                        {backingAsset.s} (
+                        {bitassetData.options.short_backing_asset})
                       </>
                     }
                     dialogtitle={t("MarketAssetCard:backingAssetInfo")}
@@ -507,12 +573,22 @@ export default function MarketAssetCard(properties) {
                 {bitassetData.options.extensions.margin_call_fee_ratio ? (
                   <CardRow
                     title={t("MarketAssetCard:marginCallFeeRatio")}
-                    button={<>{bitassetData.options.extensions.margin_call_fee_ratio / 100} %</>}
+                    button={
+                      <>
+                        {bitassetData.options.extensions.margin_call_fee_ratio /
+                          100}{" "}
+                        %
+                      </>
+                    }
                     dialogtitle={t("MarketAssetCard:marginCallFeeRatioInfo")}
                     dialogdescription={
                       <ul className="ml-2 list-disc [&>li]:mt-2">
-                        <li>{t("MarketAssetCard:marginCallFeeRatioDescription1")}</li>
-                        <li>{t("MarketAssetCard:marginCallFeeRatioDescription2")}</li>
+                        <li>
+                          {t("MarketAssetCard:marginCallFeeRatioDescription1")}
+                        </li>
+                        <li>
+                          {t("MarketAssetCard:marginCallFeeRatioDescription2")}
+                        </li>
                       </ul>
                     }
                     tooltip={t("MarketAssetCard:moreAboutMarginCallFeeRatio")}
@@ -522,15 +598,31 @@ export default function MarketAssetCard(properties) {
                 {bitassetData.options.extensions.force_settle_fee_percent ? (
                   <CardRow
                     title={t("MarketAssetCard:forceSettleFeePercent")}
-                    button={<>{bitassetData.options.extensions.force_settle_fee_percent / 100} %</>}
+                    button={
+                      <>
+                        {bitassetData.options.extensions
+                          .force_settle_fee_percent / 100}{" "}
+                        %
+                      </>
+                    }
                     dialogtitle={t("MarketAssetCard:forceSettleFeePercentInfo")}
                     dialogdescription={
                       <ul className="ml-2 list-disc [&>li]:mt-2">
-                        <li>{t("MarketAssetCard:forceSettleFeePercentDescription1")}</li>
-                        <li>{t("MarketAssetCard:forceSettleFeePercentDescription2")}</li>
+                        <li>
+                          {t(
+                            "MarketAssetCard:forceSettleFeePercentDescription1"
+                          )}
+                        </li>
+                        <li>
+                          {t(
+                            "MarketAssetCard:forceSettleFeePercentDescription2"
+                          )}
+                        </li>
                       </ul>
                     }
-                    tooltip={t("MarketAssetCard:moreAboutForceSettleFeePercent")}
+                    tooltip={t(
+                      "MarketAssetCard:moreAboutForceSettleFeePercent"
+                    )}
                   />
                 ) : null}
 
@@ -550,9 +642,15 @@ export default function MarketAssetCard(properties) {
                     dialogtitle={t("MarketAssetCard:settlementFundInfo")}
                     dialogdescription={
                       <ul className="ml-2 list-disc [&>li]:mt-2">
-                        <li>{t("MarketAssetCard:settlementFundDescription1")}</li>
-                        <li>{t("MarketAssetCard:settlementFundDescription2")}</li>
-                        <li>{t("MarketAssetCard:settlementFundDescription3")}</li>
+                        <li>
+                          {t("MarketAssetCard:settlementFundDescription1")}
+                        </li>
+                        <li>
+                          {t("MarketAssetCard:settlementFundDescription2")}
+                        </li>
+                        <li>
+                          {t("MarketAssetCard:settlementFundDescription3")}
+                        </li>
                       </ul>
                     }
                     tooltip={t("MarketAssetCard:moreAboutSettlementFunds")}
@@ -572,11 +670,13 @@ export default function MarketAssetCard(properties) {
                       <>
                         {(
                           humanReadableFloat(
-                            bitassetData.current_feed.settlement_price.base.amount,
+                            bitassetData.current_feed.settlement_price.base
+                              .amount,
                             baseAsset.p
                           ) /
                           humanReadableFloat(
-                            bitassetData.current_feed.settlement_price.quote.amount,
+                            bitassetData.current_feed.settlement_price.quote
+                              .amount,
                             quoteAsset.p
                           )
                         ).toFixed(backingAsset.p)}
@@ -621,9 +721,15 @@ export default function MarketAssetCard(properties) {
                     dialogtitle={t("MarketAssetCard:settlementPriceInfo")}
                     dialogdescription={
                       <ul className="ml-2 list-disc [&>li]:mt-2">
-                        <li>{t("MarketAssetCard:settlementPriceDescription1")}</li>
-                        <li>{t("MarketAssetCard:settlementPriceDescription2")}</li>
-                        <li>{t("MarketAssetCard:settlementPriceDescription3")}</li>
+                        <li>
+                          {t("MarketAssetCard:settlementPriceDescription1")}
+                        </li>
+                        <li>
+                          {t("MarketAssetCard:settlementPriceDescription2")}
+                        </li>
+                        <li>
+                          {t("MarketAssetCard:settlementPriceDescription3")}
+                        </li>
                       </ul>
                     }
                     tooltip={t("MarketAssetCard:moreAboutSettlementPrice")}
@@ -644,16 +750,36 @@ export default function MarketAssetCard(properties) {
                         {asset}
                       </>
                     }
-                    dialogtitle={t("MarketAssetCard:individualSettlementDebtInfo")}
+                    dialogtitle={t(
+                      "MarketAssetCard:individualSettlementDebtInfo"
+                    )}
                     dialogdescription={
                       <ul className="ml-2 list-disc [&>li]:mt-2">
-                        <li>{t("MarketAssetCard:individualSettlementDebtDescription1")}</li>
-                        <li>{t("MarketAssetCard:individualSettlementDebtDescription2")}</li>
-                        <li>{t("MarketAssetCard:individualSettlementDebtDescription3")}</li>
-                        <li>{t("MarketAssetCard:individualSettlementDebtDescription4")}</li>
+                        <li>
+                          {t(
+                            "MarketAssetCard:individualSettlementDebtDescription1"
+                          )}
+                        </li>
+                        <li>
+                          {t(
+                            "MarketAssetCard:individualSettlementDebtDescription2"
+                          )}
+                        </li>
+                        <li>
+                          {t(
+                            "MarketAssetCard:individualSettlementDebtDescription3"
+                          )}
+                        </li>
+                        <li>
+                          {t(
+                            "MarketAssetCard:individualSettlementDebtDescription4"
+                          )}
+                        </li>
                       </ul>
                     }
-                    tooltip={t("MarketAssetCard:moreAboutIndividualSettlementDebt")}
+                    tooltip={t(
+                      "MarketAssetCard:moreAboutIndividualSettlementDebt"
+                    )}
                   />
                 ) : null}
 
@@ -671,13 +797,21 @@ export default function MarketAssetCard(properties) {
                         {asset}
                       </>
                     }
-                    dialogtitle={t("MarketAssetCard:individualSettlementFundInfo")}
+                    dialogtitle={t(
+                      "MarketAssetCard:individualSettlementFundInfo"
+                    )}
                     dialogdescription={
                       <ul className="ml-2 list-disc [&>li]:mt-2">
-                        <li>{t("MarketAssetCard:individualSettlementFundDescription")}</li>
+                        <li>
+                          {t(
+                            "MarketAssetCard:individualSettlementFundDescription"
+                          )}
+                        </li>
                       </ul>
                     }
-                    tooltip={t("MarketAssetCard:moreAboutIndividualSettlementFunds")}
+                    tooltip={t(
+                      "MarketAssetCard:moreAboutIndividualSettlementFunds"
+                    )}
                   />
                 ) : null}
               </>
@@ -693,7 +827,9 @@ export default function MarketAssetCard(properties) {
                   </DialogTrigger>
                   <DialogContent className="sm:max-w-[600px] bg-white">
                     <DialogHeader>
-                      <DialogTitle>{t("MarketAssetCard:additionalBitassetInfoTitle")}</DialogTitle>
+                      <DialogTitle>
+                        {t("MarketAssetCard:additionalBitassetInfoTitle")}
+                      </DialogTitle>
                       <DialogDescription>
                         {t("MarketAssetCard:additionalBitassetInfoDescription")}
                       </DialogDescription>
@@ -708,76 +844,142 @@ export default function MarketAssetCard(properties) {
                               dialogtitle={t("MarketAssetCard:smartcoinIDInfo")}
                               dialogdescription={
                                 <ul className="ml-2 list-disc [&>li]:mt-2">
-                                  <li>{t("MarketAssetCard:smartcoinIDDescription")}</li>
+                                  <li>
+                                    {t(
+                                      "MarketAssetCard:smartcoinIDDescription"
+                                    )}
+                                  </li>
                                 </ul>
                               }
-                              tooltip={t("MarketAssetCard:moreAboutSmartcoinID")}
+                              tooltip={t(
+                                "MarketAssetCard:moreAboutSmartcoinID"
+                              )}
                             />
 
                             <CardRow
                               title={t("MarketAssetCard:feedQuantity")}
                               button={bitassetData.feeds.length}
-                              dialogtitle={t("MarketAssetCard:feedQuantityInfo")}
+                              dialogtitle={t(
+                                "MarketAssetCard:feedQuantityInfo"
+                              )}
                               dialogdescription={
                                 <ul className="ml-2 list-disc [&>li]:mt-2">
-                                  <li>{t("MarketAssetCard:feedQuantityDescription1")}</li>
-                                  <li>{t("MarketAssetCard:feedQuantityDescription2")}</li>
-                                  <li>{t("MarketAssetCard:feedQuantityDescription3")}</li>
+                                  <li>
+                                    {t(
+                                      "MarketAssetCard:feedQuantityDescription1"
+                                    )}
+                                  </li>
+                                  <li>
+                                    {t(
+                                      "MarketAssetCard:feedQuantityDescription2"
+                                    )}
+                                  </li>
+                                  <li>
+                                    {t(
+                                      "MarketAssetCard:feedQuantityDescription3"
+                                    )}
+                                  </li>
                                 </ul>
                               }
-                              tooltip={t("MarketAssetCard:moreAboutFeedQuantities")}
+                              tooltip={t(
+                                "MarketAssetCard:moreAboutFeedQuantities"
+                              )}
                             />
 
                             {bitassetData.options.force_settlement_delay_sec ? (
                               <CardRow
-                                title={t("MarketAssetCard:forceSettlementDelay")}
+                                title={t(
+                                  "MarketAssetCard:forceSettlementDelay"
+                                )}
                                 button={
-                                  <>{bitassetData.options.force_settlement_delay_sec / 60} mins</>
+                                  <>
+                                    {bitassetData.options
+                                      .force_settlement_delay_sec / 60}{" "}
+                                    mins
+                                  </>
                                 }
-                                dialogtitle={t("MarketAssetCard:forceSettlementDelayInfo")}
+                                dialogtitle={t(
+                                  "MarketAssetCard:forceSettlementDelayInfo"
+                                )}
                                 dialogdescription={
                                   <ul className="ml-2 list-disc [&>li]:mt-2">
-                                    <li>{t("MarketAssetCard:forceSettlementDelayDescription")}</li>
+                                    <li>
+                                      {t(
+                                        "MarketAssetCard:forceSettlementDelayDescription"
+                                      )}
+                                    </li>
                                   </ul>
                                 }
-                                tooltip={t("MarketAssetCard:moreAboutForceSettlementDelays")}
+                                tooltip={t(
+                                  "MarketAssetCard:moreAboutForceSettlementDelays"
+                                )}
                               />
                             ) : null}
 
                             <CardRow
                               title={t("MarketAssetCard:forceSettlementOffset")}
                               button={
-                                <>{bitassetData.options.force_settlement_offset_percent / 100}%</>
+                                <>
+                                  {bitassetData.options
+                                    .force_settlement_offset_percent / 100}
+                                  %
+                                </>
                               }
-                              dialogtitle={t("MarketAssetCard:forceSettlementOffsetInfo")}
-                              dialogdescription={
-                                <ul className="ml-2 list-disc [&>li]:mt-2">
-                                  <li>{t("MarketAssetCard:forceSettlementOffsetDescription")}</li>
-                                </ul>
-                              }
-                              tooltip={t("MarketAssetCard:moreAboutForceSettlementOffset")}
-                            />
-
-                            <CardRow
-                              title={t("MarketAssetCard:maxForceSettlementVolume")}
-                              button={
-                                <>{bitassetData.options.maximum_force_settlement_volume / 100} %</>
-                              }
-                              dialogtitle={t("MarketAssetCard:maxForceSettlementVolumeInfo")}
+                              dialogtitle={t(
+                                "MarketAssetCard:forceSettlementOffsetInfo"
+                              )}
                               dialogdescription={
                                 <ul className="ml-2 list-disc [&>li]:mt-2">
                                   <li>
-                                    {t("MarketAssetCard:maxForceSettlementVolumeDescription")}
+                                    {t(
+                                      "MarketAssetCard:forceSettlementOffsetDescription"
+                                    )}
                                   </li>
                                 </ul>
                               }
-                              tooltip={t("MarketAssetCard:moreAboutMaxForceSettlementVolume")}
+                              tooltip={t(
+                                "MarketAssetCard:moreAboutForceSettlementOffset"
+                              )}
                             />
 
-                            {bitassetData.options.extensions.black_swan_response_method ? (
+                            <CardRow
+                              title={t(
+                                "MarketAssetCard:maxForceSettlementVolume"
+                              )}
+                              button={
+                                <>
+                                  {bitassetData.options
+                                    .maximum_force_settlement_volume / 100}{" "}
+                                  %
+                                </>
+                              }
+                              dialogtitle={t(
+                                "MarketAssetCard:maxForceSettlementVolumeInfo"
+                              )}
+                              dialogdescription={
+                                <ul className="ml-2 list-disc [&>li]:mt-2">
+                                  <li>
+                                    {t(
+                                      "MarketAssetCard:maxForceSettlementVolumeDescription"
+                                    )}
+                                  </li>
+                                </ul>
+                              }
+                              tooltip={t(
+                                "MarketAssetCard:moreAboutMaxForceSettlementVolume"
+                              )}
+                            />
+
+                            {bitassetData.options.extensions
+                              .black_swan_response_method ? (
                               <CardRow
-                                title={t("MarketAssetCard:globalSettlementResponseMethod")}
-                                button={bitassetData.options.extensions.black_swan_response_method}
+                                title={t(
+                                  "MarketAssetCard:globalSettlementResponseMethod"
+                                )}
+                                button={
+                                  bitassetData.options.extensions
+                                    .black_swan_response_method
+                                }
                                 dialogtitle={t(
                                   "MarketAssetCard:globalSettlementResponseMethodInfo"
                                 )}
@@ -801,77 +1003,111 @@ export default function MarketAssetCard(properties) {
                               />
                             ) : null}
 
-                            {bitassetData.options.extensions.maintenance_collateral_ratio ? (
+                            {bitassetData.options.extensions
+                              .maintenance_collateral_ratio ? (
                               <CardRow
-                                title={t("MarketAssetCard:maintenanceCollateralRatio")}
+                                title={t(
+                                  "MarketAssetCard:maintenanceCollateralRatio"
+                                )}
                                 button={
                                   <>
-                                    {bitassetData.options.extensions.maintenance_collateral_ratio /
-                                      10}
+                                    {bitassetData.options.extensions
+                                      .maintenance_collateral_ratio / 10}
                                     %
                                   </>
                                 }
-                                dialogtitle={t("MarketAssetCard:maintenanceCollateralRatioInfo")}
+                                dialogtitle={t(
+                                  "MarketAssetCard:maintenanceCollateralRatioInfo"
+                                )}
                                 dialogdescription={
                                   <ul className="ml-2 list-disc [&>li]:mt-2">
                                     <li>
-                                      {t("MarketAssetCard:maintenanceCollateralRatioDescription1")}
+                                      {t(
+                                        "MarketAssetCard:maintenanceCollateralRatioDescription1"
+                                      )}
                                     </li>
                                     <li>
-                                      {t("MarketAssetCard:maintenanceCollateralRatioDescription2")}
+                                      {t(
+                                        "MarketAssetCard:maintenanceCollateralRatioDescription2"
+                                      )}
                                     </li>
                                     <li>
-                                      {t("MarketAssetCard:maintenanceCollateralRatioDescription3")}
+                                      {t(
+                                        "MarketAssetCard:maintenanceCollateralRatioDescription3"
+                                      )}
                                     </li>
                                   </ul>
                                 }
-                                tooltip={t("MarketAssetCard:moreAboutMaintenanceCollateralRatio")}
+                                tooltip={t(
+                                  "MarketAssetCard:moreAboutMaintenanceCollateralRatio"
+                                )}
                               />
                             ) : null}
 
-                            {bitassetData.options.extensions.initial_collateral_ratio ? (
+                            {bitassetData.options.extensions
+                              .initial_collateral_ratio ? (
                               <CardRow
-                                title={t("MarketAssetCard:initialCollateralRatio")}
+                                title={t(
+                                  "MarketAssetCard:initialCollateralRatio"
+                                )}
                                 button={
                                   <>
-                                    {bitassetData.options.extensions.initial_collateral_ratio / 10}{" "}
+                                    {bitassetData.options.extensions
+                                      .initial_collateral_ratio / 10}{" "}
                                     %
                                   </>
                                 }
-                                dialogtitle={t("MarketAssetCard:initialCollateralRatioInfo")}
+                                dialogtitle={t(
+                                  "MarketAssetCard:initialCollateralRatioInfo"
+                                )}
                                 dialogdescription={
                                   <ul className="ml-2 list-disc [&>li]:mt-2">
                                     <li>
-                                      {t("MarketAssetCard:initialCollateralRatioDescription1")}
+                                      {t(
+                                        "MarketAssetCard:initialCollateralRatioDescription1"
+                                      )}
                                     </li>
                                     <li>
-                                      {t("MarketAssetCard:initialCollateralRatioDescription2")}
+                                      {t(
+                                        "MarketAssetCard:initialCollateralRatioDescription2"
+                                      )}
                                     </li>
                                   </ul>
                                 }
-                                tooltip={t("MarketAssetCard:moreAboutInitialCollateralRatio")}
+                                tooltip={t(
+                                  "MarketAssetCard:moreAboutInitialCollateralRatio"
+                                )}
                               />
                             ) : null}
 
-                            {bitassetData.options.extensions.maximum_short_squeeze_ratio ? (
+                            {bitassetData.options.extensions
+                              .maximum_short_squeeze_ratio ? (
                               <CardRow
-                                title={t("MarketAssetCard:maximumShortSqueezeRatio")}
+                                title={t(
+                                  "MarketAssetCard:maximumShortSqueezeRatio"
+                                )}
                                 button={
                                   <>
-                                    {bitassetData.options.extensions.maximum_short_squeeze_ratio /
-                                      10}{" "}
+                                    {bitassetData.options.extensions
+                                      .maximum_short_squeeze_ratio / 10}{" "}
                                     %
                                   </>
                                 }
-                                dialogtitle={t("MarketAssetCard:maximumShortSqueezeRatioInfo")}
+                                dialogtitle={t(
+                                  "MarketAssetCard:maximumShortSqueezeRatioInfo"
+                                )}
                                 dialogdescription={
                                   <ul className="ml-2 list-disc [&>li]:mt-2">
                                     <li>
-                                      {t("MarketAssetCard:maximumShortSqueezeRatioDescription")}
+                                      {t(
+                                        "MarketAssetCard:maximumShortSqueezeRatioDescription"
+                                      )}
                                     </li>
                                   </ul>
                                 }
-                                tooltip={t("MarketAssetCard:moreAboutMaximumShortSqueezeRatio")}
+                                tooltip={t(
+                                  "MarketAssetCard:moreAboutMaximumShortSqueezeRatio"
+                                )}
                               />
                             ) : null}
                           </>

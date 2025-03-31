@@ -13,12 +13,18 @@ const [createAssetFromSymbolStore] = nanoquery({
     const chain = args[0] as string;
     const symbol = args[1] as string;
 
-    const node = args[2] ? (args[2] as string) : (chains as any)[chain].nodeList[0].url;
+    const node = args[2]
+      ? (args[2] as string)
+      : (chains as any)[chain].nodeList[0].url;
 
     let currentAPI;
     try {
-      currentAPI = await Apis.instance(node, true, 4000, { enableDatabase: true }, (error: Error) =>
-        console.log({ error })
+      currentAPI = await Apis.instance(
+        node,
+        true,
+        4000,
+        { enableDatabase: true },
+        (error: Error) => console.log({ error })
       );
     } catch (error) {
       console.log({ error });
@@ -70,7 +76,7 @@ const [createAssetFromSymbolStore] = nanoquery({
 
     currentAPI.close();
 
-    return {assetData: assetData[0], extra: extraData, assetID};
+    return { assetData: assetData[0], extra: extraData, assetID };
   },
 });
 
@@ -81,12 +87,18 @@ const [createPoolAssetStore] = nanoquery({
     const assets = JSON.parse(args[2] as string); // string -> any[]
     const poolId = args[3] as string;
 
-    const node = args[4] ? (args[4] as string) : (chains as any)[chain].nodeList[0].url;
+    const node = args[4]
+      ? (args[4] as string)
+      : (chains as any)[chain].nodeList[0].url;
 
     let currentAPI;
     try {
-      currentAPI = await Apis.instance(node, true, 4000, { enableDatabase: true }, (error: Error) =>
-        console.log({ error })
+      currentAPI = await Apis.instance(
+        node,
+        true,
+        4000,
+        { enableDatabase: true },
+        (error: Error) => console.log({ error })
       );
     } catch (error) {
       console.log({ error });
@@ -101,9 +113,15 @@ const [createPoolAssetStore] = nanoquery({
     let _objects = [
       assetA ? assetA.id : foundPool.asset_a_id,
       assetB ? assetB.id : foundPool.asset_b_id,
-      assetA ? assetA.id.replace("1.3.", "2.3.") : foundPool.asset_a_id.replace("1.3.", "2.3."),
-      assetB ? assetB.id.replace("1.3.", "2.3.") : foundPool.asset_b_id.replace("1.3.", "2.3."),
-      poolAsset ? poolAsset.id.replace("1.3.", "2.3.") : foundPool.share_asset_id.replace("1.3.", "2.3."),
+      assetA
+        ? assetA.id.replace("1.3.", "2.3.")
+        : foundPool.asset_a_id.replace("1.3.", "2.3."),
+      assetB
+        ? assetB.id.replace("1.3.", "2.3.")
+        : foundPool.asset_b_id.replace("1.3.", "2.3."),
+      poolAsset
+        ? poolAsset.id.replace("1.3.", "2.3.")
+        : foundPool.share_asset_id.replace("1.3.", "2.3."),
     ];
 
     if (assetA.bitasset_data_id) {
@@ -137,13 +155,17 @@ const [createPoolAssetStore] = nanoquery({
     foundPool["share_asset_symbol"] = foundPool.share_asset_symbol;
 
     foundPool["readable_balance_a"] = `${humanReadableFloat(
-      foundPool.balance_a, assetA.precision
+      foundPool.balance_a,
+      assetA.precision
     )} ${assetA.symbol}`;
     foundPool["readable_balance_b"] = `${humanReadableFloat(
-      foundPool.balance_b, assetB.precision
+      foundPool.balance_b,
+      assetB.precision
     )} ${assetB.symbol}`;
 
-    foundPool["share_asset_details"] = assets.find((x) => x.id === foundPool.share_asset_id);
+    foundPool["share_asset_details"] = assets.find(
+      (x) => x.id === foundPool.share_asset_id
+    );
 
     const poolResult = {
       foundPool,

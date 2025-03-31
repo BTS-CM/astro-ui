@@ -1,4 +1,9 @@
-import React, { useSyncExternalStore, useMemo, useEffect, useState } from "react";
+import React, {
+  useSyncExternalStore,
+  useMemo,
+  useEffect,
+  useState,
+} from "react";
 import { FixedSizeList as List } from "react-window";
 import { useStore } from "@nanostores/react";
 import { format } from "date-fns";
@@ -23,7 +28,11 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
@@ -58,17 +67,28 @@ import { $blockList } from "@/stores/blocklist.ts";
 import { $currentNode } from "@/stores/node.ts";
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
-import { createEveryObjectStore, createObjectStore } from "@/nanoeffects/Objects.ts";
+import {
+  createEveryObjectStore,
+  createObjectStore,
+} from "@/nanoeffects/Objects.ts";
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 import { createAssetCallOrdersStore } from "@/nanoeffects/AssetCallOrders.ts";
 
-import { humanReadableFloat, getFlagBooleans, blockchainFloat } from "@/lib/common.js";
+import {
+  humanReadableFloat,
+  getFlagBooleans,
+  blockchainFloat,
+} from "@/lib/common.js";
 
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
 import ExternalLink from "./common/ExternalLink.jsx";
 
 import HoverInfo from "@/components/common/HoverInfo.tsx";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 import { set } from "date-fns";
 
 function hoursTillExpiration(expirationTime) {
@@ -83,23 +103,29 @@ function prettifyDate(date) {
   const d = new Date(date);
   const hours = d.getHours() < 10 ? `0${d.getHours()}` : d.getHours();
   const minutes = d.getMinutes() < 10 ? `0${d.getMinutes()}` : d.getMinutes();
-  return `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()} ${hours}:${minutes}`;
+  return `${d.getDate()}/${
+    d.getMonth() + 1
+  }/${d.getFullYear()} ${hours}:${minutes}`;
 }
 
 export default function Predictions(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
-  const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
-  const blocklist = useSyncExternalStore($blockList.subscribe, $blockList.get, () => true);
+  const usr = useSyncExternalStore(
+    $currentUser.subscribe,
+    $currentUser.get,
+    () => true
+  );
+  const blocklist = useSyncExternalStore(
+    $blockList.subscribe,
+    $blockList.get,
+    () => true
+  );
   const currentNode = useStore($currentNode);
 
   const [view, setView] = useState("active"); // active, expired, mine
 
-  const {
-    _assetsBTS,
-    _assetsTEST,
-    _marketSearchBTS,
-    _marketSearchTEST
-  } = properties;
+  const { _assetsBTS, _assetsTEST, _marketSearchBTS, _marketSearchTEST } =
+    properties;
 
   const _chain = useMemo(() => {
     if (usr && usr.chain) {
@@ -155,7 +181,8 @@ export default function Predictions(properties) {
 
     let _predictionMarketAssets = combinedAssets.filter(
       (x) =>
-        (x.hasOwnProperty("prediction_market") && x.prediction_market === true) ||
+        (x.hasOwnProperty("prediction_market") &&
+          x.prediction_market === true) ||
         (!x.hasOwnProperty("prediction_market") && x.bitasset_data_id) // non cached assets minus non-pm smartcoins
     );
 
@@ -211,7 +238,9 @@ export default function Predictions(properties) {
               return { ...x, backingAsset, expired: now > expiration };
             })
             .filter((x) => x)
-            .sort((a, b) => new Date(b.creation_time) - new Date(a.creation_time));
+            .sort(
+              (a, b) => new Date(b.creation_time) - new Date(a.creation_time)
+            );
           setPmaProcessedData(processedData);
         }
       });
@@ -234,15 +263,17 @@ export default function Predictions(properties) {
         currentNode ? currentNode.url : null,
       ]);
 
-      unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
-        if (data && !error && !loading) {
-          const filteredData = data.filter((balance) =>
-            assets.find((x) => x.id === balance.asset_id)
-          );
-          setBalanceAssetIDs(filteredData.map((x) => x.asset_id));
-          setUsrBalances(filteredData);
+      unsubscribeUserBalances = userBalancesStore.subscribe(
+        ({ data, error, loading }) => {
+          if (data && !error && !loading) {
+            const filteredData = data.filter((balance) =>
+              assets.find((x) => x.id === balance.asset_id)
+            );
+            setBalanceAssetIDs(filteredData.map((x) => x.asset_id));
+            setUsrBalances(filteredData);
+          }
         }
-      });
+      );
     }
 
     return () => {
@@ -278,27 +309,29 @@ export default function Predictions(properties) {
       _store.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
           const outcomes = data
-          .filter((x) => x.settlement_price) // Filter out items with no settlement price
-          .map((x) => {
-            const baseAmount = parseInt(x.settlement_price.base.amount);
-            if (baseAmount === 0) {
-              return { ...x, outcome: -1 };
-            }
+            .filter((x) => x.settlement_price) // Filter out items with no settlement price
+            .map((x) => {
+              const baseAmount = parseInt(x.settlement_price.base.amount);
+              if (baseAmount === 0) {
+                return { ...x, outcome: -1 };
+              }
 
-            const quoteAsset = assets.find((y) => x.options.short_backing_asset === y.id);
-            const baseAsset = assets.find((y) => x.asset_id === y.id);
+              const quoteAsset = assets.find(
+                (y) => x.options.short_backing_asset === y.id
+              );
+              const baseAsset = assets.find((y) => x.asset_id === y.id);
 
-            const _outcome = parseFloat(
-              (
-                humanReadableFloat(
-                  parseInt(x.settlement_price.quote.amount),
-                  quoteAsset.precision
-                ) / humanReadableFloat(baseAmount, baseAsset.precision)
-              ).toFixed(quoteAsset.precision)
-            );
+              const _outcome = parseFloat(
+                (
+                  humanReadableFloat(
+                    parseInt(x.settlement_price.quote.amount),
+                    quoteAsset.precision
+                  ) / humanReadableFloat(baseAmount, baseAsset.precision)
+                ).toFixed(quoteAsset.precision)
+              );
 
-            return { ...x, outcome: _outcome > 0 ? 1 : 0 };
-          });
+              return { ...x, outcome: _outcome > 0 ? 1 : 0 };
+            });
 
           setCompletedPMAs(outcomes);
         }
@@ -366,7 +399,9 @@ export default function Predictions(properties) {
       res = myPMAs[index];
     }
 
-    const relevantBitassetData = completedPMAs.find((x) => x.id === res.bitasset_data_id);
+    const relevantBitassetData = completedPMAs.find(
+      (x) => x.id === res.bitasset_data_id
+    );
 
     if (!res || !relevantBitassetData) {
       return null;
@@ -402,7 +437,9 @@ export default function Predictions(properties) {
     const cleanedPrediction = DOMPurify.sanitize(prediction_conditions ?? ""); // sanitize to avoid xss
     const cleanedDescription = DOMPurify.sanitize(main_description ?? ""); // sanitize to avoid xss
 
-    let relevantCallOrders = callOrders.hasOwnProperty(res.id) ? callOrders[res.id] : null;
+    let relevantCallOrders = callOrders.hasOwnProperty(res.id)
+      ? callOrders[res.id]
+      : null;
     const totalBets =
       relevantCallOrders && relevantCallOrders.length
         ? relevantCallOrders.reduce((acc, val) => acc + val.collateral, 0)
@@ -416,15 +453,20 @@ export default function Predictions(properties) {
 
     const _backingAssetID = res.backingAsset.id;
     const _backingPrecision = res.backingAsset.precision;
-    const backingAssetBalance = usrBalances.find((x) => x.asset_id === _backingAssetID);
+    const backingAssetBalance = usrBalances.find(
+      (x) => x.asset_id === _backingAssetID
+    );
     const humanReadableBackingAssetBalance = backingAssetBalance
       ? humanReadableFloat(backingAssetBalance.amount, _backingPrecision)
       : 0;
 
-    const predictionMarketAssetBalance = usrBalances.find((x) => x.asset_id === res.id);
-    const humanReadablePredictionMarketAssetBalance = predictionMarketAssetBalance
-      ? humanReadableFloat(predictionMarketAssetBalance.amount, res.precision)
-      : 0;
+    const predictionMarketAssetBalance = usrBalances.find(
+      (x) => x.asset_id === res.id
+    );
+    const humanReadablePredictionMarketAssetBalance =
+      predictionMarketAssetBalance
+        ? humanReadableFloat(predictionMarketAssetBalance.amount, res.precision)
+        : 0;
 
     const _flags = getFlagBooleans(res.options.flags);
     const _issuer_permissions = getFlagBooleans(res.options.issuer_permissions);
@@ -445,7 +487,9 @@ export default function Predictions(properties) {
       return new Date(now.getTime() + oneHour);
     });
 
-    const [date, setDate] = useState(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)); // Solely for the calendar component to display a date string
+    const [date, setDate] = useState(
+      new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+    ); // Solely for the calendar component to display a date string
 
     useEffect(() => {
       if (expiryType === "specific" && date) {
@@ -494,7 +538,13 @@ export default function Predictions(properties) {
                     name={res.name}
                     extra="Borrower"
                     expression={{ eye: "normal", mouth: "open" }}
-                    colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]}
+                    colors={[
+                      "#92A1C6",
+                      "#146A7C",
+                      "#F0AB3D",
+                      "#C271B4",
+                      "#C20D90",
+                    ]}
                   />
                 </span>
                 <span className="flex-grow ml-3">
@@ -506,7 +556,9 @@ export default function Predictions(properties) {
                     className="mr-2"
                     onClick={(e) => {
                       e.preventDefault();
-                      const _update = priceFeeders.filter((x) => x.id !== res.id);
+                      const _update = priceFeeders.filter(
+                        (x) => x.id !== res.id
+                      );
                       setPriceFeeders(_update);
                     }}
                   >
@@ -528,7 +580,9 @@ export default function Predictions(properties) {
               <div className="grid grid-cols-2">
                 <div>
                   <ExternalLink
-                    classnamecontents={"text-xl text-semibold hover:text-purple-600"}
+                    classnamecontents={
+                      "text-xl text-semibold hover:text-purple-600"
+                    }
                     type="text"
                     text={`${symbol}`}
                     hyperlink={`https://blocksights.info/#/assets/${symbol}${
@@ -537,7 +591,9 @@ export default function Predictions(properties) {
                   />{" "}
                   (
                   <ExternalLink
-                    classnamecontents={"text-xl text-semibold hover:text-purple-600"}
+                    classnamecontents={
+                      "text-xl text-semibold hover:text-purple-600"
+                    }
                     type="text"
                     text={`${res.id}`}
                     hyperlink={`https://blocksights.info/#/assets/${res.id}${
@@ -548,7 +604,9 @@ export default function Predictions(properties) {
                 </div>
                 <div className="text-right">
                   <ExternalLink
-                    classnamecontents={"text-xl text-semibold hover:text-purple-600"}
+                    classnamecontents={
+                      "text-xl text-semibold hover:text-purple-600"
+                    }
                     type="text"
                     text={username ?? house}
                     hyperlink={`https://blocksights.info/#/accounts/${house}${
@@ -561,7 +619,11 @@ export default function Predictions(properties) {
           </CardHeader>
           <CardContent className="text-sm pb-3 mt-1">
             <div className="grid grid-cols-1 gap-2">
-              <div className={`grid grid-cols-${usr.id === house ? 5 : 4} gap-2 mt-2`}>
+              <div
+                className={`grid grid-cols-${
+                  usr.id === house ? 5 : 4
+                } gap-2 mt-2`}
+              >
                 <Button
                   onClick={() => setRowView("about")}
                   variant={rowView === "about" ? "" : "outline"}
@@ -605,13 +667,19 @@ export default function Predictions(properties) {
                   <div className="mt-2 grid grid-cols-2 gap-2">
                     <div>
                       <b>
-                        {t(`Predictions:${expirationHours >= 0 ? "expiration" : "expired_at"}`)}
+                        {t(
+                          `Predictions:${
+                            expirationHours >= 0 ? "expiration" : "expired_at"
+                          }`
+                        )}
                       </b>
                       : {prettifyDate(expiration)}
                       <br />
                       {expirationHours >= 0 ? (
                         <>
-                          {t("Predictions:time_till_expiration", { hours: expirationHours })}
+                          {t("Predictions:time_till_expiration", {
+                            hours: expirationHours,
+                          })}
                           <br />
                         </>
                       ) : null}
@@ -646,14 +714,16 @@ export default function Predictions(properties) {
                       ) : null}
                     </div>
                     <div>
-                      <b>{t("Predictions:bettingAsset")}</b>: {market} ({res.backingAsset.id})<br />
+                      <b>{t("Predictions:bettingAsset")}</b>: {market} (
+                      {res.backingAsset.id})<br />
                       {view !== "expired" ||
                       (relevantBitassetData &&
                         relevantBitassetData.hasOwnProperty("outcome") &&
                         relevantBitassetData.outcome === -1) ? (
                         <>
                           <b>{t("Predictions:total_bets")}</b>:{" "}
-                          {humanReadableFloat(totalBets, res.precision)} {market}
+                          {humanReadableFloat(totalBets, res.precision)}{" "}
+                          {market}
                           <br />
                           <b>{t("Predictions:unique_sellers")}</b>:{" "}
                           {relevantCallOrders ? relevantCallOrders.length : 0}
@@ -677,13 +747,21 @@ export default function Predictions(properties) {
                       {Object.keys(_issuer_permissions).length > 0 ? (
                         <HoverCard>
                           <HoverCardTrigger>
-                            <span style={{ display: "inline-flex", alignItems: "center" }}>
+                            <span
+                              style={{
+                                display: "inline-flex",
+                                alignItems: "center",
+                              }}
+                            >
                               <b>{t("Predictions:permissions")}</b>:{" "}
                               {Object.keys(_issuer_permissions).length}{" "}
                               <QuestionMarkCircledIcon className="ml-1" />
                             </span>
                           </HoverCardTrigger>
-                          <HoverCardContent className={"w-80 mt-1"} align="start">
+                          <HoverCardContent
+                            className={"w-80 mt-1"}
+                            align="start"
+                          >
                             {Object.keys(_issuer_permissions).join(", ")}
                           </HoverCardContent>
                         </HoverCard>
@@ -697,12 +775,21 @@ export default function Predictions(properties) {
                       {Object.keys(_flags).length > 0 ? (
                         <HoverCard>
                           <HoverCardTrigger>
-                            <span style={{ display: "inline-flex", alignItems: "center" }}>
-                              <b>{t("Predictions:flags")}</b>: {Object.keys(_flags).length}{" "}
+                            <span
+                              style={{
+                                display: "inline-flex",
+                                alignItems: "center",
+                              }}
+                            >
+                              <b>{t("Predictions:flags")}</b>:{" "}
+                              {Object.keys(_flags).length}{" "}
                               <QuestionMarkCircledIcon className="ml-1" />
                             </span>
                           </HoverCardTrigger>
-                          <HoverCardContent className={"w-80 mt-1"} align="start">
+                          <HoverCardContent
+                            className={"w-80 mt-1"}
+                            align="start"
+                          >
                             {Object.keys(_flags).join(", ")}
                           </HoverCardContent>
                         </HoverCard>
@@ -741,7 +828,9 @@ export default function Predictions(properties) {
                       </DialogTrigger>
                       <DialogContent className="sm:max-w-[600px] bg-white">
                         <DialogHeader>
-                          <DialogTitle>{t(`Predictions:issueDialog.title`)}</DialogTitle>
+                          <DialogTitle>
+                            {t(`Predictions:issueDialog.title`)}
+                          </DialogTitle>
                           <DialogDescription>
                             {t(`Predictions:issueDialog.description`)}
                           </DialogDescription>
@@ -779,7 +868,9 @@ export default function Predictions(properties) {
                               onInput={(e) => {
                                 const input = parseInt(e.currentTarget.value);
                                 if (input >= 0) {
-                                  setIssueAmount(parseInt(e.currentTarget.value));
+                                  setIssueAmount(
+                                    parseInt(e.currentTarget.value)
+                                  );
                                 } else {
                                   setIssueAmount(0);
                                 }
@@ -794,8 +885,12 @@ export default function Predictions(properties) {
                           <div className="grid grid-cols-2 gap-2">
                             <div>
                               <HoverInfo
-                                content={t("Predictions:issueDialog.existingContent")}
-                                header={t("Predictions:issueDialog.existingHeader")}
+                                content={t(
+                                  "Predictions:issueDialog.existingContent"
+                                )}
+                                header={t(
+                                  "Predictions:issueDialog.existingHeader"
+                                )}
                                 type="header"
                               />
                               <Input
@@ -807,8 +902,12 @@ export default function Predictions(properties) {
                             </div>
                             <div>
                               <HoverInfo
-                                content={t("Predictions:issueDialog.totalContent")}
-                                header={t("Predictions:issueDialog.totalHeader")}
+                                content={t(
+                                  "Predictions:issueDialog.totalContent"
+                                )}
+                                header={t(
+                                  "Predictions:issueDialog.totalHeader"
+                                )}
                                 type="header"
                               />
                               <Input
@@ -846,7 +945,9 @@ export default function Predictions(properties) {
                             userID={usr.id}
                             dismissCallback={setIssueDialog}
                             key={`deeplink-dialog-${res.id}`}
-                            headerText={t(`Predictions:dialogContent.header_issue`)}
+                            headerText={t(
+                              `Predictions:dialogContent.header_issue`
+                            )}
                             trxJSON={[
                               {
                                 funding_account: usr.id,
@@ -888,7 +989,9 @@ export default function Predictions(properties) {
                       </DialogTrigger>
                       <DialogContent className="sm:max-w-[600px] bg-white">
                         <DialogHeader>
-                          <DialogTitle>{t(`Predictions:sellDialog.title`)}</DialogTitle>
+                          <DialogTitle>
+                            {t(`Predictions:sellDialog.title`)}
+                          </DialogTitle>
                           <DialogDescription>
                             {t(`Predictions:sellDialog.description`)}
                           </DialogDescription>
@@ -935,22 +1038,28 @@ export default function Predictions(properties) {
                           />
                           <div className="col-span-2">
                             <HoverInfo
-                              content={t("Predictions:sellDialog.receivingContent")}
-                              header={t("Predictions:sellDialog.receivingHeader")}
+                              content={t(
+                                "Predictions:sellDialog.receivingContent"
+                              )}
+                              header={t(
+                                "Predictions:sellDialog.receivingHeader"
+                              )}
                               type="header"
                             />
                             <Input
                               type="number"
-                              placeholder={`${sellAmount ?? 0} ${res.backingAsset.symbol} (${
-                                res.backingAsset.id
-                              })`}
+                              placeholder={`${sellAmount ?? 0} ${
+                                res.backingAsset.symbol
+                              } (${res.backingAsset.id})`}
                               disabled
                               className="mt-1 w-1/2"
                             />
                           </div>
                           <div className="col-span-2">
                             <HoverInfo
-                              content={t("Predictions:sellDialog.expiryContent")}
+                              content={t(
+                                "Predictions:sellDialog.expiryContent"
+                              )}
                               header={t("Predictions:sellDialog.expiryHeader")}
                               type="header"
                             />
@@ -959,23 +1068,36 @@ export default function Predictions(properties) {
                                 setExpiryType(selectedExpiry);
                                 const oneHour = 60 * 60 * 1000;
                                 const oneDay = 24 * oneHour;
-                                if (selectedExpiry !== "specific" && selectedExpiry !== "fkill") {
+                                if (
+                                  selectedExpiry !== "specific" &&
+                                  selectedExpiry !== "fkill"
+                                ) {
                                   const now = new Date();
                                   let expiryDate;
                                   if (selectedExpiry === "1hr") {
-                                    expiryDate = new Date(now.getTime() + oneHour);
+                                    expiryDate = new Date(
+                                      now.getTime() + oneHour
+                                    );
                                   } else if (selectedExpiry === "12hr") {
                                     const duration = oneHour * 12;
-                                    expiryDate = new Date(now.getTime() + duration);
+                                    expiryDate = new Date(
+                                      now.getTime() + duration
+                                    );
                                   } else if (selectedExpiry === "24hr") {
                                     const duration = oneDay;
-                                    expiryDate = new Date(now.getTime() + duration);
+                                    expiryDate = new Date(
+                                      now.getTime() + duration
+                                    );
                                   } else if (selectedExpiry === "7d") {
                                     const duration = oneDay * 7;
-                                    expiryDate = new Date(now.getTime() + duration);
+                                    expiryDate = new Date(
+                                      now.getTime() + duration
+                                    );
                                   } else if (selectedExpiry === "30d") {
                                     const duration = oneDay * 30;
-                                    expiryDate = new Date(now.getTime() + duration);
+                                    expiryDate = new Date(
+                                      now.getTime() + duration
+                                    );
                                   }
 
                                   if (expiryDate) {
@@ -1004,7 +1126,9 @@ export default function Predictions(properties) {
                                 <SelectItem value="24hr">
                                   {t("LimitOrderCard:expiry.24hr")}
                                 </SelectItem>
-                                <SelectItem value="7d">{t("LimitOrderCard:expiry.7d")}</SelectItem>
+                                <SelectItem value="7d">
+                                  {t("LimitOrderCard:expiry.7d")}
+                                </SelectItem>
                                 <SelectItem value="30d">
                                   {t("LimitOrderCard:expiry.30d")}
                                 </SelectItem>
@@ -1030,11 +1154,16 @@ export default function Predictions(properties) {
                                     {date ? (
                                       format(date, "PPP")
                                     ) : (
-                                      <span>{t("LimitOrderCard:expiry.pickDate")}</span>
+                                      <span>
+                                        {t("LimitOrderCard:expiry.pickDate")}
+                                      </span>
                                     )}
                                   </Button>
                                 </PopoverTrigger>
-                                <PopoverContent className="w-auto p-0" align="start">
+                                <PopoverContent
+                                  className="w-auto p-0"
+                                  align="start"
+                                >
                                   <Calendar
                                     mode="single"
                                     selected={date}
@@ -1043,7 +1172,11 @@ export default function Predictions(properties) {
                                       const now = new Date();
                                       if (parsedDate < now) {
                                         //console.log("Not a valid date");
-                                        setDate(new Date(Date.now() + 1 * 24 * 60 * 60 * 1000));
+                                        setDate(
+                                          new Date(
+                                            Date.now() + 1 * 24 * 60 * 60 * 1000
+                                          )
+                                        );
                                         return;
                                       }
                                       //console.log("Setting expiry date");
@@ -1058,7 +1191,9 @@ export default function Predictions(properties) {
                               ? t("LimitOrderCard:expiry.fkillDescription")
                               : null}
                             {expiryType !== "specific" && expiryType !== "fkill"
-                              ? t("LimitOrderCard:expiry.generalDescription", { expiryType })
+                              ? t("LimitOrderCard:expiry.generalDescription", {
+                                  expiryType,
+                                })
                               : null}
                           </div>
                         </div>
@@ -1071,7 +1206,8 @@ export default function Predictions(properties) {
                           >
                             {t("Predictions:submit")}
                           </Button>
-                          {sellAmount > humanReadablePredictionMarketAssetBalance ? (
+                          {sellAmount >
+                          humanReadablePredictionMarketAssetBalance ? (
                             <Badge variant="destructive">
                               <ExclamationTriangleIcon className="mr-2" />{" "}
                               {t("Predictions:insufficient_funds")}
@@ -1086,20 +1222,29 @@ export default function Predictions(properties) {
                             userID={usr.id}
                             dismissCallback={setSellDialog}
                             key={`deeplink-selldialog-${res.id}`}
-                            headerText={t(`Predictions:dialogContent.header_sell`)}
+                            headerText={t(
+                              `Predictions:dialogContent.header_sell`
+                            )}
                             trxJSON={[
                               {
                                 seller: usr.id,
                                 amount_to_sell: {
-                                  amount: blockchainFloat(sellAmount, res.precision).toFixed(0),
+                                  amount: blockchainFloat(
+                                    sellAmount,
+                                    res.precision
+                                  ).toFixed(0),
                                   asset_id: res.id,
                                 },
                                 min_to_receive: {
-                                  amount: blockchainFloat(sellAmount, _backingPrecision).toFixed(0),
+                                  amount: blockchainFloat(
+                                    sellAmount,
+                                    _backingPrecision
+                                  ).toFixed(0),
                                   asset_id: _backingAssetID,
                                 },
                                 expiration: date,
-                                fill_or_kill: expiryType === "fkill" ? true : false,
+                                fill_or_kill:
+                                  expiryType === "fkill" ? true : false,
                                 extensions: {},
                               },
                             ]}
@@ -1131,7 +1276,9 @@ export default function Predictions(properties) {
                       </DialogTrigger>
                       <DialogContent className="sm:max-w-[600px] bg-white">
                         <DialogHeader>
-                          <DialogTitle>{t(`Predictions:buyDialog.title`)}</DialogTitle>
+                          <DialogTitle>
+                            {t(`Predictions:buyDialog.title`)}
+                          </DialogTitle>
                           <DialogDescription>
                             {t(`Predictions:buyDialog.description`)}
                           </DialogDescription>
@@ -1180,8 +1327,12 @@ export default function Predictions(properties) {
                           </div>
                           <div>
                             <HoverInfo
-                              content={t("Predictions:issueDialog.receivingContent")}
-                              header={t("Predictions:issueDialog.receivingHeader")}
+                              content={t(
+                                "Predictions:issueDialog.receivingContent"
+                              )}
+                              header={t(
+                                "Predictions:issueDialog.receivingHeader"
+                              )}
                               type="header"
                             />
                             <div className="grid grid-cols-1 gap-2">
@@ -1196,7 +1347,9 @@ export default function Predictions(properties) {
 
                           <div>
                             <HoverInfo
-                              content={t("Predictions:sellDialog.expiryContent")}
+                              content={t(
+                                "Predictions:sellDialog.expiryContent"
+                              )}
                               header={t("Predictions:sellDialog.expiryHeader")}
                               type="header"
                             />
@@ -1205,23 +1358,36 @@ export default function Predictions(properties) {
                                 setExpiryType(selectedExpiry);
                                 const oneHour = 60 * 60 * 1000;
                                 const oneDay = 24 * oneHour;
-                                if (selectedExpiry !== "specific" && selectedExpiry !== "fkill") {
+                                if (
+                                  selectedExpiry !== "specific" &&
+                                  selectedExpiry !== "fkill"
+                                ) {
                                   const now = new Date();
                                   let expiryDate;
                                   if (selectedExpiry === "1hr") {
-                                    expiryDate = new Date(now.getTime() + oneHour);
+                                    expiryDate = new Date(
+                                      now.getTime() + oneHour
+                                    );
                                   } else if (selectedExpiry === "12hr") {
                                     const duration = oneHour * 12;
-                                    expiryDate = new Date(now.getTime() + duration);
+                                    expiryDate = new Date(
+                                      now.getTime() + duration
+                                    );
                                   } else if (selectedExpiry === "24hr") {
                                     const duration = oneDay;
-                                    expiryDate = new Date(now.getTime() + duration);
+                                    expiryDate = new Date(
+                                      now.getTime() + duration
+                                    );
                                   } else if (selectedExpiry === "7d") {
                                     const duration = oneDay * 7;
-                                    expiryDate = new Date(now.getTime() + duration);
+                                    expiryDate = new Date(
+                                      now.getTime() + duration
+                                    );
                                   } else if (selectedExpiry === "30d") {
                                     const duration = oneDay * 30;
-                                    expiryDate = new Date(now.getTime() + duration);
+                                    expiryDate = new Date(
+                                      now.getTime() + duration
+                                    );
                                   }
 
                                   if (expiryDate) {
@@ -1250,7 +1416,9 @@ export default function Predictions(properties) {
                                 <SelectItem value="24hr">
                                   {t("LimitOrderCard:expiry.24hr")}
                                 </SelectItem>
-                                <SelectItem value="7d">{t("LimitOrderCard:expiry.7d")}</SelectItem>
+                                <SelectItem value="7d">
+                                  {t("LimitOrderCard:expiry.7d")}
+                                </SelectItem>
                                 <SelectItem value="30d">
                                   {t("LimitOrderCard:expiry.30d")}
                                 </SelectItem>
@@ -1276,11 +1444,16 @@ export default function Predictions(properties) {
                                     {date ? (
                                       format(date, "PPP")
                                     ) : (
-                                      <span>{t("LimitOrderCard:expiry.pickDate")}</span>
+                                      <span>
+                                        {t("LimitOrderCard:expiry.pickDate")}
+                                      </span>
                                     )}
                                   </Button>
                                 </PopoverTrigger>
-                                <PopoverContent className="w-auto p-0" align="start">
+                                <PopoverContent
+                                  className="w-auto p-0"
+                                  align="start"
+                                >
                                   <Calendar
                                     mode="single"
                                     selected={date}
@@ -1289,7 +1462,11 @@ export default function Predictions(properties) {
                                       const now = new Date();
                                       if (parsedDate < now) {
                                         //console.log("Not a valid date");
-                                        setDate(new Date(Date.now() + 1 * 24 * 60 * 60 * 1000));
+                                        setDate(
+                                          new Date(
+                                            Date.now() + 1 * 24 * 60 * 60 * 1000
+                                          )
+                                        );
                                         return;
                                       }
                                       //console.log("Setting expiry date");
@@ -1304,7 +1481,9 @@ export default function Predictions(properties) {
                               ? t("LimitOrderCard:expiry.fkillDescription")
                               : null}
                             {expiryType !== "specific" && expiryType !== "fkill"
-                              ? t("LimitOrderCard:expiry.generalDescription", { expiryType })
+                              ? t("LimitOrderCard:expiry.generalDescription", {
+                                  expiryType,
+                                })
                               : null}
                           </div>
                         </div>
@@ -1335,20 +1514,29 @@ export default function Predictions(properties) {
                             userID={usr.id}
                             dismissCallback={setBuyDialog}
                             key={`deeplink-buydialog-${res.id}`}
-                            headerText={t(`Predictions:dialogContent.header_buy`)}
+                            headerText={t(
+                              `Predictions:dialogContent.header_buy`
+                            )}
                             trxJSON={[
                               {
                                 seller: usr.id,
                                 amount_to_sell: {
-                                  amount: blockchainFloat(buyAmount, _backingPrecision).toFixed(0),
+                                  amount: blockchainFloat(
+                                    buyAmount,
+                                    _backingPrecision
+                                  ).toFixed(0),
                                   asset_id: _backingAssetID,
                                 },
                                 min_to_receive: {
-                                  amount: blockchainFloat(buyAmount, res.precision).toFixed(0),
+                                  amount: blockchainFloat(
+                                    buyAmount,
+                                    res.precision
+                                  ).toFixed(0),
                                   asset_id: res.id,
                                 },
                                 expiration: date,
-                                fill_or_kill: expiryType === "fkill" ? true : false,
+                                fill_or_kill:
+                                  expiryType === "fkill" ? true : false,
                                 extensions: {},
                               },
                             ]}
@@ -1384,8 +1572,12 @@ export default function Predictions(properties) {
                       </DialogTrigger>
                       <DialogContent className="sm:max-w-[600px] bg-white">
                         <DialogHeader>
-                          <DialogTitle>{t(`Predictions:winner_claim`)}</DialogTitle>
-                          <DialogDescription>{t(`Predictions:winner_content`)}</DialogDescription>
+                          <DialogTitle>
+                            {t(`Predictions:winner_claim`)}
+                          </DialogTitle>
+                          <DialogDescription>
+                            {t(`Predictions:winner_content`)}
+                          </DialogDescription>
                         </DialogHeader>
                         <div className="grid grid-cols-1 gap-2">
                           <div className="grid grid-cols-2 gap-2">
@@ -1418,13 +1610,19 @@ export default function Predictions(properties) {
                               onInput={(e) => {
                                 const input = parseInt(e.currentTarget.value);
                                 if (input >= 0) {
-                                  setClaimAmount(parseInt(e.currentTarget.value));
+                                  setClaimAmount(
+                                    parseInt(e.currentTarget.value)
+                                  );
                                 } else {
                                   setClaimAmount(0);
                                 }
                               }}
                             />
-                            <Input type="text" value={`${res.symbol} (${res.id})`} disabled />
+                            <Input
+                              type="text"
+                              value={`${res.symbol} (${res.id})`}
+                              disabled
+                            />
                           </div>
                           <div className="grid grid-cols-2 gap-2">
                             <Button
@@ -1435,7 +1633,8 @@ export default function Predictions(properties) {
                             >
                               {t("Predictions:submit")}
                             </Button>
-                            {claimAmount > humanReadablePredictionMarketAssetBalance ? (
+                            {claimAmount >
+                            humanReadablePredictionMarketAssetBalance ? (
                               <Badge variant="destructive">
                                 <ExclamationTriangleIcon className="mr-2" />{" "}
                                 {t("Predictions:insufficient_funds")}
@@ -1451,12 +1650,17 @@ export default function Predictions(properties) {
                             userID={usr.id}
                             dismissCallback={setClaimDialog}
                             key={`deeplink-claimdialog-${res.id}`}
-                            headerText={t(`Predictions:dialogContent.header_claim`)}
+                            headerText={t(
+                              `Predictions:dialogContent.header_claim`
+                            )}
                             trxJSON={[
                               {
                                 account: usr.id,
                                 amount: {
-                                  amount: blockchainFloat(claimAmount, res.precision).toFixed(0),
+                                  amount: blockchainFloat(
+                                    claimAmount,
+                                    res.precision
+                                  ).toFixed(0),
                                   asset_id: res.id,
                                 },
                                 extensions: {},
@@ -1486,7 +1690,9 @@ export default function Predictions(properties) {
                           <p className="leading-6 text-sm [&:not(:first-child)]:mt-1">
                             {t("Predictions:not_expired")}
                             <br />
-                            {t("Predictions:time_till_expiration", { hours: expirationHours })}
+                            {t("Predictions:time_till_expiration", {
+                              hours: expirationHours,
+                            })}
                           </p>
                         </HoverCardContent>
                       </HoverCard>
@@ -1508,7 +1714,9 @@ export default function Predictions(properties) {
                         </DialogTrigger>
                         <DialogContent className="sm:max-w-[600px] bg-white">
                           <DialogHeader>
-                            <DialogTitle>{t(`Predictions:resolveDialog.title`)}</DialogTitle>
+                            <DialogTitle>
+                              {t(`Predictions:resolveDialog.title`)}
+                            </DialogTitle>
                             <DialogDescription>
                               {t(`Predictions:resolveDialog.description`)}
                             </DialogDescription>
@@ -1525,7 +1733,9 @@ export default function Predictions(properties) {
                               <b>
                                 {t(
                                   `Predictions:${
-                                    expirationHours >= 0 ? "expiration" : "expired_at"
+                                    expirationHours >= 0
+                                      ? "expiration"
+                                      : "expired_at"
                                   }`
                                 )}
                               </b>
@@ -1533,13 +1743,19 @@ export default function Predictions(properties) {
                             </div>
                             {expirationHours >= 0 ? (
                               <>
-                                {t("Predictions:time_till_expiration", { hours: expirationHours })}
+                                {t("Predictions:time_till_expiration", {
+                                  hours: expirationHours,
+                                })}
                                 <br />
                               </>
                             ) : null}
                             <HoverInfo
-                              content={t("Predictions:resolveDialog.outcomeContent")}
-                              header={t("Predictions:resolveDialog.outcomeHeader")}
+                              content={t(
+                                "Predictions:resolveDialog.outcomeContent"
+                              )}
+                              header={t(
+                                "Predictions:resolveDialog.outcomeHeader"
+                              )}
                               type="header"
                             />
                             <div className="grid grid-cols-2 gap-2">
@@ -1554,11 +1770,15 @@ export default function Predictions(properties) {
                               >
                                 <div className="flex items-center space-x-2">
                                   <RadioGroupItem value="1" id="1" />
-                                  <Label htmlFor="1">{t("Predictions:resolveDialog.about")}</Label>
+                                  <Label htmlFor="1">
+                                    {t("Predictions:resolveDialog.about")}
+                                  </Label>
                                 </div>
                                 <div className="flex items-center space-x-2">
                                   <RadioGroupItem value="2" id="2" />
-                                  <Label htmlFor="2">{t("Predictions:resolveDialog.about")}</Label>
+                                  <Label htmlFor="2">
+                                    {t("Predictions:resolveDialog.about")}
+                                  </Label>
                                 </div>
                               </RadioGroup>
                             </div>
@@ -1581,7 +1801,9 @@ export default function Predictions(properties) {
                               userID={usr.id}
                               dismissCallback={setResolveDialog}
                               key={`deeplink-resolvedialog-${res.id}`}
-                              headerText={t(`Predictions:dialogContent.header_resolve`)}
+                              headerText={t(
+                                `Predictions:dialogContent.header_resolve`
+                              )}
                               trxJSON={[
                                 {
                                   issuer: usr.id,
@@ -1624,15 +1846,21 @@ export default function Predictions(properties) {
                       </DialogTrigger>
                       <DialogContent className="sm:max-w-[600px] bg-white">
                         <DialogHeader>
-                          <DialogTitle>{t(`Predictions:priceFeederDialog.title`)}</DialogTitle>
+                          <DialogTitle>
+                            {t(`Predictions:priceFeederDialog.title`)}
+                          </DialogTitle>
                           <DialogDescription>
                             {t(`Predictions:priceFeederDialog.description`)}
                           </DialogDescription>
                         </DialogHeader>
                         <div className="grid grid-cols-1 gap-2">
                           <HoverInfo
-                            content={t("Predictions:priceFeederDialog.priceFeedersContent")}
-                            header={t("Predictions:priceFeederDialog.priceFeedersHeader")}
+                            content={t(
+                              "Predictions:priceFeederDialog.priceFeedersContent"
+                            )}
+                            header={t(
+                              "Predictions:priceFeederDialog.priceFeedersHeader"
+                            )}
                             type="header"
                           />
                           <div className="grid grid-cols-12 mt-1">
@@ -1654,7 +1882,10 @@ export default function Predictions(properties) {
                                 }}
                               >
                                 <DialogTrigger asChild>
-                                  <Button variant="outline" className="ml-3 mt-1">
+                                  <Button
+                                    variant="outline"
+                                    className="ml-3 mt-1"
+                                  >
                                     ➕ {t("CreditOfferEditor:addUser")}
                                   </Button>
                                 </DialogTrigger>
@@ -1665,20 +1896,28 @@ export default function Predictions(properties) {
                                         ? t("Transfer:bitsharesAccountSearch")
                                         : null}
                                       {usr && usr.chain === "bitshares"
-                                        ? t("Transfer:bitsharesAccountSearchBTS")
+                                        ? t(
+                                            "Transfer:bitsharesAccountSearchBTS"
+                                          )
                                         : null}
                                       {usr && usr.chain !== "bitshares"
-                                        ? t("Transfer:bitsharesAccountSearchTEST")
+                                        ? t(
+                                            "Transfer:bitsharesAccountSearchTEST"
+                                          )
                                         : null}
                                     </DialogTitle>
                                   </DialogHeader>
                                   <AccountSearch
-                                    chain={usr && usr.chain ? usr.chain : "bitshares"}
+                                    chain={
+                                      usr && usr.chain ? usr.chain : "bitshares"
+                                    }
                                     excludedUsers={[]}
                                     setChosenAccount={(_account) => {
                                       if (
                                         _account &&
-                                        !priceFeeders.find((_usr) => _usr.id === _account.id)
+                                        !priceFeeders.find(
+                                          (_usr) => _usr.id === _account.id
+                                        )
                                       ) {
                                         setPriceFeeders(
                                           priceFeeders && priceFeeders.length
@@ -1712,12 +1951,16 @@ export default function Predictions(properties) {
                             userID={usr.id}
                             dismissCallback={setPricefeederDialog}
                             key={`deeplink-pricefeeddialog-${res.id}`}
-                            headerText={t(`Predictions:dialogContent.header_pricefeeder`)}
+                            headerText={t(
+                              `Predictions:dialogContent.header_pricefeeder`
+                            )}
                             trxJSON={[
                               {
                                 issuer: usr.id,
                                 asset_to_update: res.id,
-                                new_feed_producers: priceFeeders.map((_usr) => _usr.id),
+                                new_feed_producers: priceFeeders.map(
+                                  (_usr) => _usr.id
+                                ),
                               },
                             ]}
                           />
@@ -1748,15 +1991,21 @@ export default function Predictions(properties) {
                       </DialogTrigger>
                       <DialogContent className="sm:max-w-[600px] bg-white">
                         <DialogHeader>
-                          <DialogTitle>{t(`Predictions:feederDialog.title`)}</DialogTitle>
+                          <DialogTitle>
+                            {t(`Predictions:feederDialog.title`)}
+                          </DialogTitle>
                           <DialogDescription>
                             {t(`Predictions:feederDialog.description`)}
                           </DialogDescription>
                         </DialogHeader>
                         <div className="grid grid-cols-1 gap-2">
                           <HoverInfo
-                            content={t("Predictions:resolveDialog.outcomeContent")}
-                            header={t("Predictions:resolveDialog.outcomeHeader")}
+                            content={t(
+                              "Predictions:resolveDialog.outcomeContent"
+                            )}
+                            header={t(
+                              "Predictions:resolveDialog.outcomeHeader"
+                            )}
                             type="header"
                           />
                           <div className="grid grid-cols-2 gap-2">
@@ -1771,11 +2020,15 @@ export default function Predictions(properties) {
                             >
                               <div className="flex items-center space-x-2">
                                 <RadioGroupItem value="1" id="1" />
-                                <Label htmlFor="1">{t("Predictions:resolveDialog.about")}</Label>
+                                <Label htmlFor="1">
+                                  {t("Predictions:resolveDialog.about")}
+                                </Label>
                               </div>
                               <div className="flex items-center space-x-2">
                                 <RadioGroupItem value="2" id="2" />
-                                <Label htmlFor="2">{t("Predictions:resolveDialog.about")}</Label>
+                                <Label htmlFor="2">
+                                  {t("Predictions:resolveDialog.about")}
+                                </Label>
                               </div>
                             </RadioGroup>
                           </div>
@@ -1797,7 +2050,9 @@ export default function Predictions(properties) {
                               userID={usr.id}
                               dismissCallback={setPriceFeedDialog}
                               key={`deeplink-feedpricedialog-${res.id}`}
-                              headerText={t(`Predictions:dialogContent.header_feedprice`)}
+                              headerText={t(
+                                `Predictions:dialogContent.header_feedprice`
+                              )}
                               trxJSON={[
                                 {
                                   publisher: usr.id,
@@ -1865,7 +2120,9 @@ export default function Predictions(properties) {
         <Card>
           <CardHeader className="pb-1">
             <CardTitle>{t("Predictions:card.title")}</CardTitle>
-            <CardDescription>{t("Predictions:card.description")}</CardDescription>
+            <CardDescription>
+              {t("Predictions:card.description")}
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-5 gap-2 mt-2 mb-2">
@@ -1919,16 +2176,24 @@ export default function Predictions(properties) {
                 </List>
               ) : null}
               {chosenPMAs && !chosenPMAs.length && view === "active" ? (
-                <div className="text-center mt-5">{t("Predictions:card.emptyActive")}</div>
+                <div className="text-center mt-5">
+                  {t("Predictions:card.emptyActive")}
+                </div>
               ) : null}
               {chosenPMAs && !chosenPMAs.length && view === "mine" ? (
-                <div className="text-center mt-5">{t("Predictions:card.emptyMine")}</div>
+                <div className="text-center mt-5">
+                  {t("Predictions:card.emptyMine")}
+                </div>
               ) : null}
               {chosenPMAs && !chosenPMAs.length && view === "portfolio" ? (
-                <div className="text-center mt-5">{t("Predictions:card.emptyPortfolio")}</div>
+                <div className="text-center mt-5">
+                  {t("Predictions:card.emptyPortfolio")}
+                </div>
               ) : null}
               {chosenPMAs && !chosenPMAs.length && view === "margin" ? (
-                <div className="text-center mt-5">{t("Predictions:card.emptyMargin")}</div>
+                <div className="text-center mt-5">
+                  {t("Predictions:card.emptyMargin")}
+                </div>
               ) : null}
             </>
           </CardContent>

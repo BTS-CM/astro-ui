@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useSyncExternalStore, useMemo, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  useSyncExternalStore,
+  useMemo,
+  useCallback,
+} from "react";
 import { FixedSizeList as List } from "react-window";
 import Fuse from "fuse.js";
 import { sha256 } from "@noble/hashes/sha2";
@@ -48,8 +54,16 @@ const isValid = (str) => /^[a-zA-Z0-9.-]+$/.test(str);
 
 export default function CreditBorrow(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
-  const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
-  const blocklist = useSyncExternalStore($blockList.subscribe, $blockList.get, () => true);
+  const usr = useSyncExternalStore(
+    $currentUser.subscribe,
+    $currentUser.get,
+    () => true
+  );
+  const blocklist = useSyncExternalStore(
+    $blockList.subscribe,
+    $blockList.get,
+    () => true
+  );
 
   const currentNode = useStore($currentNode);
 
@@ -75,13 +89,18 @@ export default function CreditBorrow(properties) {
     if (_chain && (_offersBTS || _offersTEST)) {
       let currentOffers =
         _chain === "bitshares"
-          ? _offersBTS.filter((x) => hoursTillExpiration(x.auto_disable_time) >= 0)
-          : _offersTEST.filter((x) => hoursTillExpiration(x.auto_disable_time) >= 0);
+          ? _offersBTS.filter(
+              (x) => hoursTillExpiration(x.auto_disable_time) >= 0
+            )
+          : _offersTEST.filter(
+              (x) => hoursTillExpiration(x.auto_disable_time) >= 0
+            );
 
       if (_chain === "bitshares" && blocklist && blocklist.users) {
         // Discard offers from banned users
         currentOffers = currentOffers.filter(
-          (offer) => !blocklist.users.includes(toHex(sha256(offer.owner_account)))
+          (offer) =>
+            !blocklist.users.includes(toHex(sha256(offer.owner_account)))
         );
       }
 
@@ -107,16 +126,18 @@ export default function CreditBorrow(properties) {
         currentNode ? currentNode.url : null,
       ]);
 
-      unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
-        if (data && !error && !loading) {
-          const filteredData = data.filter((balance) =>
-            assets.find((x) => x.id === balance.asset_id)
-          );
+      unsubscribeUserBalances = userBalancesStore.subscribe(
+        ({ data, error, loading }) => {
+          if (data && !error && !loading) {
+            const filteredData = data.filter((balance) =>
+              assets.find((x) => x.id === balance.asset_id)
+            );
 
-          setBalanceAssetIDs(filteredData.map((x) => x.asset_id));
-          setUsrBalances(filteredData);
+            setBalanceAssetIDs(filteredData.map((x) => x.asset_id));
+            setUsrBalances(filteredData);
+          }
         }
-      });
+      );
     }
 
     return () => {
@@ -153,7 +174,9 @@ export default function CreditBorrow(properties) {
           })
           .filter((x) => x);
       }
-      offer["offer_symbols"] = [assets.find((x) => x.id === offer.asset_type).symbol];
+      offer["offer_symbols"] = [
+        assets.find((x) => x.id === offer.asset_type).symbol,
+      ];
       adjustedOffers.push(offer);
     }
 
@@ -193,7 +216,12 @@ export default function CreditBorrow(properties) {
       finalURL += "tab=allOffers";
     }
 
-    if (params && params.tab && params.tab === "searchOffers" && params.searchTab) {
+    if (
+      params &&
+      params.tab &&
+      params.tab === "searchOffers" &&
+      params.searchTab
+    ) {
       if (["borrow", "collateral", "owner_name"].includes(params.searchTab)) {
         finalSearchTab = params.searchTab;
         finalURL += `&searchTab=${params.searchTab}`;
@@ -265,41 +293,44 @@ export default function CreditBorrow(properties) {
                 classnamecontents="hover:text-purple-500"
                 type="text"
                 text={res.owner_name}
-                hyperlink={`https://blocksights.info/#/accounts/${res.owner_name}${
-                  usr.chain === "bitshares" ? "" : "?network=testnet"
-                }`}
+                hyperlink={`https://blocksights.info/#/accounts/${
+                  res.owner_name
+                }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
               />{" "}
               (
               <ExternalLink
                 classnamecontents="hover:text-purple-500"
                 type="text"
                 text={res.owner_account}
-                hyperlink={`https://blocksights.info/#/accounts/${res.owner_account}${
-                  usr.chain === "bitshares" ? "" : "?network=testnet"
-                }`}
+                hyperlink={`https://blocksights.info/#/accounts/${
+                  res.owner_account
+                }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
               />
               )
             </CardTitle>
             <CardDescription>
               {t("CreditBorrow:common.offering")}
               <b>
-                {` ${humanReadableFloat(res.current_balance, foundAsset.precision)} `}
+                {` ${humanReadableFloat(
+                  res.current_balance,
+                  foundAsset.precision
+                )} `}
                 <ExternalLink
                   classnamecontents="hover:text-purple-500"
                   type="text"
                   text={foundAsset.symbol}
-                  hyperlink={`https://blocksights.info/#/asset/${foundAsset.symbol}${
-                    usr.chain === "bitshares" ? "" : "?network=testnet"
-                  }`}
+                  hyperlink={`https://blocksights.info/#/asset/${
+                    foundAsset.symbol
+                  }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
                 />
                 (
                 <ExternalLink
                   classnamecontents="hover:text-purple-500"
                   type="text"
                   text={res.asset_type}
-                  hyperlink={`https://blocksights.info/#/asset/${res.asset_type}${
-                    usr.chain === "bitshares" ? "" : "?network=testnet"
-                  }`}
+                  hyperlink={`https://blocksights.info/#/asset/${
+                    res.asset_type
+                  }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
                 />
                 )
               </b>
@@ -319,7 +350,9 @@ export default function CreditBorrow(properties) {
                             type="text"
                             text={x}
                             hyperlink={`https://blocksights.info/#/asset/${x}${
-                              usr.chain === "bitshares" ? "" : "?network=testnet"
+                              usr.chain === "bitshares"
+                                ? ""
+                                : "?network=testnet"
                             }`}
                           />
                           {index < array.length - 1 && ", "}
@@ -346,7 +379,10 @@ export default function CreditBorrow(properties) {
                 })}
                 <br />
                 {t("CreditBorrow:common.min", {
-                  amount: humanReadableFloat(res.min_deal_amount, foundAsset.precision),
+                  amount: humanReadableFloat(
+                    res.min_deal_amount,
+                    foundAsset.precision
+                  ),
                   asset: foundAsset.symbol,
                 })}
               </div>
@@ -355,14 +391,21 @@ export default function CreditBorrow(properties) {
           <CardFooter className="pb-5">
             <a href={`/offer/index.html?id=${res.id}`}>
               <Button>
-                {t("CreditBorrow:common.proceed", { offerID: res.id.replace("1.21.", "") })}
+                {t("CreditBorrow:common.proceed", {
+                  offerID: res.id.replace("1.21.", ""),
+                })}
               </Button>
             </a>
             <a href={`/lend/index.html?id=${res.id}`}>
               <Button className="ml-2">
-                {t(`CreditBorrow:common.${usr.id === res.owner_account ? "edit" : "view"}`, {
-                  offerID: res.id.replace("1.21.", ""),
-                })}
+                {t(
+                  `CreditBorrow:common.${
+                    usr.id === res.owner_account ? "edit" : "view"
+                  }`,
+                  {
+                    offerID: res.id.replace("1.21.", ""),
+                  }
+                )}
               </Button>
             </a>
           </CardFooter>
@@ -380,7 +423,14 @@ export default function CreditBorrow(properties) {
       return null;
     }
 
-    return <CommonRow index={index} style={style} res={res} foundAsset={foundAsset} />;
+    return (
+      <CommonRow
+        index={index}
+        style={style}
+        res={res}
+        foundAsset={foundAsset}
+      />
+    );
   };
 
   const OfferRow = ({ index, style }) => {
@@ -392,7 +442,14 @@ export default function CreditBorrow(properties) {
       return null;
     }
 
-    return <CommonRow index={index} style={style} res={res} foundAsset={foundAsset} />;
+    return (
+      <CommonRow
+        index={index}
+        style={style}
+        res={res}
+        foundAsset={foundAsset}
+      />
+    );
   };
 
   const SearchRow = ({ index, style }) => {
@@ -403,7 +460,14 @@ export default function CreditBorrow(properties) {
       return null;
     }
 
-    return <CommonRow index={index} style={style} res={res} foundAsset={foundAsset} />;
+    return (
+      <CommonRow
+        index={index}
+        style={style}
+        res={res}
+        foundAsset={foundAsset}
+      />
+    );
   };
 
   const [thisSearchInput, setThisSearchInput] = useState();
@@ -428,12 +492,18 @@ export default function CreditBorrow(properties) {
           <Card>
             <CardHeader className="pb-1">
               <CardTitle>{t("CreditBorrow:card.title")}</CardTitle>
-              <CardDescription>{t("CreditBorrow:card.description")}</CardDescription>
+              <CardDescription>
+                {t("CreditBorrow:card.description")}
+              </CardDescription>
             </CardHeader>
             <CardContent>
               {offers && offers.length && activeTab ? (
                 <>
-                  <Tabs key={`top_tab_${activeTab}`} defaultValue={activeTab} className="w-full">
+                  <Tabs
+                    key={`top_tab_${activeTab}`}
+                    defaultValue={activeTab}
+                    className="w-full"
+                  >
                     <TabsList className="grid w-full grid-cols-3 gap-2">
                       {activeTab === "allOffers" ? (
                         <TabsTrigger value="allOffers" style={activeTabStyle}>
@@ -444,14 +514,21 @@ export default function CreditBorrow(properties) {
                           value="allOffers"
                           onClick={(event) => {
                             setActiveTab("allOffers");
-                            window.history.replaceState({}, "", `?tab=allOffers`);
+                            window.history.replaceState(
+                              {},
+                              "",
+                              `?tab=allOffers`
+                            );
                           }}
                         >
                           {t("CreditBorrow:card.viewAll")}
                         </TabsTrigger>
                       )}
                       {activeTab === "availableOffers" ? (
-                        <TabsTrigger value="availableOffers" style={activeTabStyle}>
+                        <TabsTrigger
+                          value="availableOffers"
+                          style={activeTabStyle}
+                        >
                           {t("CreditBorrow:card.viewingAvailable")}
                         </TabsTrigger>
                       ) : (
@@ -459,14 +536,21 @@ export default function CreditBorrow(properties) {
                           value="availableOffers"
                           onClick={(event) => {
                             setActiveTab("availableOffers");
-                            window.history.replaceState({}, "", `?tab=availableOffers`);
+                            window.history.replaceState(
+                              {},
+                              "",
+                              `?tab=availableOffers`
+                            );
                           }}
                         >
                           {t("CreditBorrow:card.viewAvailable")}
                         </TabsTrigger>
                       )}
                       {activeTab === "searchOffers" ? (
-                        <TabsTrigger value="searchOffers" style={activeTabStyle}>
+                        <TabsTrigger
+                          value="searchOffers"
+                          style={activeTabStyle}
+                        >
                           {t("CreditBorrow:card.viewingSearch")}
                         </TabsTrigger>
                       ) : (
@@ -488,7 +572,9 @@ export default function CreditBorrow(properties) {
                       )}
                     </TabsList>
                     <TabsContent value="allOffers">
-                      <h5 className="mb-2 text-center">{t("CreditBorrow:card.allOffers")}</h5>
+                      <h5 className="mb-2 text-center">
+                        {t("CreditBorrow:card.allOffers")}
+                      </h5>
                       {assets && offers && offers.length ? (
                         <List
                           height={500}
@@ -501,7 +587,9 @@ export default function CreditBorrow(properties) {
                       ) : null}
                     </TabsContent>
                     <TabsContent value="availableOffers">
-                      <h5 className="mb-2 text-center">{t("CreditBorrow:card.availableOffers")}</h5>
+                      <h5 className="mb-2 text-center">
+                        {t("CreditBorrow:card.availableOffers")}
+                      </h5>
                       {assets && compatibleOffers && compatibleOffers.length ? (
                         <List
                           height={500}
@@ -514,8 +602,13 @@ export default function CreditBorrow(properties) {
                       ) : null}
                     </TabsContent>
                     <TabsContent value="searchOffers">
-                      <h5 className="mb-2 text-center">{t("CreditBorrow:card.searchPrompt")}</h5>
-                      <Tabs defaultValue={activeSearch ?? "borrow"} className="w-full">
+                      <h5 className="mb-2 text-center">
+                        {t("CreditBorrow:card.searchPrompt")}
+                      </h5>
+                      <Tabs
+                        defaultValue={activeSearch ?? "borrow"}
+                        className="w-full"
+                      >
                         <TabsList className="grid w-full grid-cols-3 gap-2">
                           {activeSearch === "borrow" ? (
                             <TabsTrigger value="borrow" style={activeTabStyle}>
@@ -539,7 +632,10 @@ export default function CreditBorrow(properties) {
                             </TabsTrigger>
                           )}
                           {activeSearch === "collateral" ? (
-                            <TabsTrigger value="collateral" style={activeTabStyle}>
+                            <TabsTrigger
+                              value="collateral"
+                              style={activeTabStyle}
+                            >
                               {t("CreditBorrow:card.collateralSearching")}
                             </TabsTrigger>
                           ) : (
@@ -560,7 +656,10 @@ export default function CreditBorrow(properties) {
                             </TabsTrigger>
                           )}
                           {activeSearch === "owner_name" ? (
-                            <TabsTrigger value="owner_name" style={activeTabStyle}>
+                            <TabsTrigger
+                              value="owner_name"
+                              style={activeTabStyle}
+                            >
                               {t("CreditBorrow:card.ownerSearching")}
                             </TabsTrigger>
                           ) : (
@@ -583,7 +682,9 @@ export default function CreditBorrow(properties) {
                         </TabsList>
                         <Input
                           name="searchInput"
-                          placeholder={thisSearchInput ?? t("Smartcoins:enterSearchText")}
+                          placeholder={
+                            thisSearchInput ?? t("Smartcoins:enterSearchText")
+                          }
                           className="mb-3 mt-3 w-full"
                           value={thisSearchInput || ""}
                           onChange={(event) => {

@@ -1,4 +1,9 @@
-import React, { useState, useEffect, useSyncExternalStore, useMemo } from "react";
+import React, {
+  useState,
+  useEffect,
+  useSyncExternalStore,
+  useMemo,
+} from "react";
 import { FixedSizeList as List } from "react-window";
 import { useStore } from "@nanostores/react";
 import { sha256 } from "@noble/hashes/sha2";
@@ -16,7 +21,11 @@ import {
 } from "@/components/ui/card";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 
 import {
   Dialog,
@@ -46,7 +55,12 @@ import ExternalLink from "./common/ExternalLink.jsx";
 import { humanReadableFloat } from "@/lib/common";
 import { opTypes } from "@/lib/opTypes";
 
-function RowHyperlink({ id, share_asset_symbol, asset_a_symbol, asset_b_symbol }) {
+function RowHyperlink({
+  id,
+  share_asset_symbol,
+  asset_a_symbol,
+  asset_b_symbol,
+}) {
   return (
     <div className="grid grid-cols-10">
       <div className="col-span-1">
@@ -67,18 +81,21 @@ function RowHyperlink({ id, share_asset_symbol, asset_a_symbol, asset_b_symbol }
 
 export default function PortfolioTabs(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
-  const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
-  const blocklist = useSyncExternalStore($blockList.subscribe, $blockList.get, () => true);
+  const usr = useSyncExternalStore(
+    $currentUser.subscribe,
+    $currentUser.get,
+    () => true
+  );
+  const blocklist = useSyncExternalStore(
+    $blockList.subscribe,
+    $blockList.get,
+    () => true
+  );
   const currentNode = useStore($currentNode);
 
   const [sortType, setSortType] = useState("default");
 
-  const {
-    _assetsBTS,
-    _assetsTEST,
-    _poolsBTS,
-    _poolsTEST
-  } = properties;
+  const { _assetsBTS, _assetsTEST, _poolsBTS, _poolsTEST } = properties;
 
   const _chain = useMemo(() => {
     if (usr && usr.chain) {
@@ -113,7 +130,9 @@ export default function PortfolioTabs(properties) {
     }
 
     const relevantPools = _poolsBTS.filter((pool) => {
-      const poolShareAsset = assets.find((asset) => asset.id === pool.share_asset_id);
+      const poolShareAsset = assets.find(
+        (asset) => asset.id === pool.share_asset_id
+      );
       if (!poolShareAsset) return false;
       return !blocklist.users.includes(toHex(sha256(poolShareAsset.issuer)));
     });
@@ -141,19 +160,23 @@ export default function PortfolioTabs(properties) {
         currentNode ? currentNode.url : null,
       ]);
 
-      unsubscribeUserBalancesStore = userBalancesStore.subscribe(({ data, error, loading }) => {
-        if (data && !error && !loading) {
-          const updatedData = data
-            .filter((balance) => assets.find((x) => x.id === balance.asset_id))
-            .map((balance) => {
-              return {
-                ...balance,
-                symbol: assets.find((x) => x.id === balance.asset_id).symbol,
-              };
-            });
-          setBalances(updatedData);
+      unsubscribeUserBalancesStore = userBalancesStore.subscribe(
+        ({ data, error, loading }) => {
+          if (data && !error && !loading) {
+            const updatedData = data
+              .filter((balance) =>
+                assets.find((x) => x.id === balance.asset_id)
+              )
+              .map((balance) => {
+                return {
+                  ...balance,
+                  symbol: assets.find((x) => x.id === balance.asset_id).symbol,
+                };
+              });
+            setBalances(updatedData);
+          }
         }
-      });
+      );
     }
 
     return () => {
@@ -172,7 +195,9 @@ export default function PortfolioTabs(properties) {
       case "alphabetical":
         return balancesCopy.sort((a, b) => a.symbol.localeCompare(b.symbol));
       case "amount":
-        return balancesCopy.sort((a, b) => parseInt(b.amount) - parseInt(a.amount));
+        return balancesCopy.sort(
+          (a, b) => parseInt(b.amount) - parseInt(a.amount)
+        );
       default:
         return balancesCopy;
     }
@@ -184,14 +209,19 @@ export default function PortfolioTabs(properties) {
     let unsubscribeLimitOrdersStore;
 
     if (usr && usr.id) {
-      const limitOrdersStore = createAccountLimitOrderStore([usr.chain, usr.id]);
+      const limitOrdersStore = createAccountLimitOrderStore([
+        usr.chain,
+        usr.id,
+      ]);
 
-      unsubscribeLimitOrdersStore = limitOrdersStore.subscribe(({ data, error, loading }) => {
-        if (data && !error && !loading) {
-          console.log("Successfully fetched open orders");
-          setOpenOrders(data);
+      unsubscribeLimitOrdersStore = limitOrdersStore.subscribe(
+        ({ data, error, loading }) => {
+          if (data && !error && !loading) {
+            console.log("Successfully fetched open orders");
+            setOpenOrders(data);
+          }
         }
-      });
+      );
     }
 
     return () => {
@@ -207,12 +237,14 @@ export default function PortfolioTabs(properties) {
     if (usr && usr.id) {
       const userHistoryStore = createAccountHistoryStore([usr.chain, usr.id]);
 
-      unsubscribeUserHistoryStore = userHistoryStore.subscribe(({ data, error, loading }) => {
-        if (data && !error && !loading) {
-          console.log("Successfully fetched history");
-          setActivity(data);
+      unsubscribeUserHistoryStore = userHistoryStore.subscribe(
+        ({ data, error, loading }) => {
+          if (data && !error && !loading) {
+            console.log("Successfully fetched history");
+            setActivity(data);
+          }
         }
-      });
+      );
     }
 
     return () => {
@@ -252,12 +284,16 @@ export default function PortfolioTabs(properties) {
   const BalanceRow = ({ index, style }) => {
     const rowBalance = sortedUserBalances[index];
 
-    const _balanceAsset = retrievedBalanceAssets.find((asset) => asset.id === rowBalance.asset_id);
+    const _balanceAsset = retrievedBalanceAssets.find(
+      (asset) => asset.id === rowBalance.asset_id
+    );
     const _balanceAssetSymbol = _balanceAsset.symbol;
 
     const currentBalance =
       retrievedBalanceAssets && Array.isArray(retrievedBalanceAssets)
-        ? retrievedBalanceAssets.find((asset) => asset.id === rowBalance.asset_id)
+        ? retrievedBalanceAssets.find(
+            (asset) => asset.id === rowBalance.asset_id
+          )
         : {
             symbol: rowBalance.asset_id,
             precision: 5,
@@ -311,14 +347,19 @@ export default function PortfolioTabs(properties) {
                     dialogTitle={t("PoolDialogs:assetAPoolsDialogTitle", {
                       assetA: currentBalance.symbol,
                     })}
-                    dialogDescription={t("PoolDialogs:assetAPoolsDialogDescription", {
-                      assetA: currentBalance.symbol,
-                      assetAId: currentBalance.id,
-                    })}
+                    dialogDescription={t(
+                      "PoolDialogs:assetAPoolsDialogDescription",
+                      {
+                        assetA: currentBalance.symbol,
+                        assetAId: currentBalance.id,
+                      }
+                    )}
                   />
                 </HoverCardTrigger>
                 <HoverCardContent className="w-60">
-                  {t("PoolDialogs:assetAHoverCardContent", { assetA: currentBalance.symbol })}
+                  {t("PoolDialogs:assetAHoverCardContent", {
+                    assetA: currentBalance.symbol,
+                  })}
                 </HoverCardContent>
               </HoverCard>
 
@@ -327,9 +368,9 @@ export default function PortfolioTabs(properties) {
                 classnamecontents="mt-2 ml-2"
                 type="button"
                 text={t("PortfolioTabs:assetInfoButton")}
-                hyperlink={`https://blocksights.info/#/assets/${currentBalance.symbol}${
-                  usr.chain === "bitshares" ? "" : "?network=testnet"
-                }`}
+                hyperlink={`https://blocksights.info/#/assets/${
+                  currentBalance.symbol
+                }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
               />
             </div>
           </div>
@@ -348,12 +389,16 @@ export default function PortfolioTabs(properties) {
 
     const sellAsset =
       retrievedBalanceAssets && retrievedBalanceAssets.length
-        ? retrievedBalanceAssets.find((asset) => asset.id === sellPriceBaseAssetId)
+        ? retrievedBalanceAssets.find(
+            (asset) => asset.id === sellPriceBaseAssetId
+          )
         : null;
 
     const buyAsset =
       retrievedBalanceAssets && retrievedBalanceAssets.length
-        ? retrievedBalanceAssets.find((asset) => asset.id === sellPriceQuoteAssetId)
+        ? retrievedBalanceAssets.find(
+            (asset) => asset.id === sellPriceQuoteAssetId
+          )
         : null;
 
     const readableBaseAmount = sellAsset
@@ -408,8 +453,12 @@ export default function PortfolioTabs(properties) {
               </CardHeader>
             </div>
             <div className="col-span-2 pt-6">
-              <a href={`/dex/index.html?market=${sellAsset.symbol}_${buyAsset.symbol}`}>
-                <Button variant="outline">{t("PortfolioTabs:tradeButton")}</Button>
+              <a
+                href={`/dex/index.html?market=${sellAsset.symbol}_${buyAsset.symbol}`}
+              >
+                <Button variant="outline">
+                  {t("PortfolioTabs:tradeButton")}
+                </Button>
               </a>
               <a href={`/order/index.html?id=${orderId}`}>
                 <Button variant="outline" className="mb-3 ml-3">
@@ -475,7 +524,9 @@ export default function PortfolioTabs(properties) {
           <div className="grid grid-cols-7">
             <div className="col-span-5">
               <CardHeader>
-                <CardTitle>{opTypes[activityItem.operation_type.toString()]}</CardTitle>
+                <CardTitle>
+                  {opTypes[activityItem.operation_type.toString()]}
+                </CardTitle>
                 <CardDescription>
                   {t("PortfolioTabs:operationId")}
                   <ExternalLink
@@ -497,18 +548,24 @@ export default function PortfolioTabs(properties) {
                     }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
                   />
                   <br />
-                  {t("PortfolioTabs:timeSinceBroadcast", { timeDiff: timeDiffString })}
+                  {t("PortfolioTabs:timeSinceBroadcast", {
+                    timeDiff: timeDiffString,
+                  })}
                 </CardDescription>
               </CardHeader>
             </div>
             <div className="col-span-2 mt-7">
               <Dialog>
                 <DialogTrigger asChild>
-                  <Button variant="outline">{t("PortfolioTabs:viewOperationButton")}</Button>
+                  <Button variant="outline">
+                    {t("PortfolioTabs:viewOperationButton")}
+                  </Button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px] bg-white">
                   <DialogHeader>
-                    <DialogTitle>{t("PortfolioTabs:operationJsonTitle")}</DialogTitle>
+                    <DialogTitle>
+                      {t("PortfolioTabs:operationJsonTitle")}
+                    </DialogTitle>
                     <DialogDescription>
                       {t("PortfolioTabs:operationJsonDescription")}
                     </DialogDescription>
@@ -517,7 +574,11 @@ export default function PortfolioTabs(properties) {
                     <div className="col-span-1">
                       <ScrollArea className="h-72 rounded-md border">
                         <pre>
-                          {JSON.stringify(activityItem.operation_history.op_object, null, 2)}
+                          {JSON.stringify(
+                            activityItem.operation_history.op_object,
+                            null,
+                            2
+                          )}
                         </pre>
                       </ScrollArea>
                     </div>
@@ -532,7 +593,9 @@ export default function PortfolioTabs(properties) {
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px] bg-white">
                   <DialogHeader>
-                    <DialogTitle>{t("PortfolioTabs:fullOperationContentsTitle")}</DialogTitle>
+                    <DialogTitle>
+                      {t("PortfolioTabs:fullOperationContentsTitle")}
+                    </DialogTitle>
                     <DialogDescription>
                       {t("PortfolioTabs:fullOperationContentsDescription")}
                     </DialogDescription>
@@ -561,7 +624,11 @@ export default function PortfolioTabs(properties) {
     const PoolRow = ({ index, style }) => {
       const pool = poolArray[index];
       return (
-        <a style={style} href={`/pool/index.html?pool=${pool.id}`} key={`a_${pool.id}`}>
+        <a
+          style={style}
+          href={`/pool/index.html?pool=${pool.id}`}
+          key={`a_${pool.id}`}
+        >
           <RowHyperlink
             id={pool.id}
             share_asset_symbol={pool.share_asset_symbol}
@@ -585,11 +652,22 @@ export default function PortfolioTabs(properties) {
           <div className="grid grid-cols-1">
             <div className="grid grid-cols-10">
               <div className="col-span-1">{t("PoolDialogs:idColumnTitle")}</div>
-              <div className="col-span-3">{t("PoolDialogs:shareAssetColumnTitle")}</div>
-              <div className="col-span-3">{t("PoolDialogs:assetAColumnTitle")}</div>
-              <div className="col-span-3">{t("PoolDialogs:assetBColumnTitle")}</div>
+              <div className="col-span-3">
+                {t("PoolDialogs:shareAssetColumnTitle")}
+              </div>
+              <div className="col-span-3">
+                {t("PoolDialogs:assetAColumnTitle")}
+              </div>
+              <div className="col-span-3">
+                {t("PoolDialogs:assetBColumnTitle")}
+              </div>
             </div>
-            <List height={300} itemCount={poolArray.length} itemSize={35} className="w-full">
+            <List
+              height={300}
+              itemCount={poolArray.length}
+              itemSize={35}
+              className="w-full"
+            >
               {PoolRow}
             </List>
           </div>
@@ -609,7 +687,10 @@ export default function PortfolioTabs(properties) {
                   {t("PortfolioTabs:balances")}
                 </TabsTrigger>
               ) : (
-                <TabsTrigger value="balances" onClick={() => setActivePortfolioTab("balances")}>
+                <TabsTrigger
+                  value="balances"
+                  onClick={() => setActivePortfolioTab("balances")}
+                >
                   {t("PortfolioTabs:balances")}
                 </TabsTrigger>
               )}
@@ -618,7 +699,10 @@ export default function PortfolioTabs(properties) {
                   {t("PortfolioTabs:openOrders")}
                 </TabsTrigger>
               ) : (
-                <TabsTrigger value="openOrders" onClick={() => setActivePortfolioTab("openOrders")}>
+                <TabsTrigger
+                  value="openOrders"
+                  onClick={() => setActivePortfolioTab("openOrders")}
+                >
                   {t("PortfolioTabs:openOrders")}
                 </TabsTrigger>
               )}
@@ -627,7 +711,10 @@ export default function PortfolioTabs(properties) {
                   {t("PortfolioTabs:activity")}
                 </TabsTrigger>
               ) : (
-                <TabsTrigger value="activity" onClick={() => setActivePortfolioTab("activity")}>
+                <TabsTrigger
+                  value="activity"
+                  onClick={() => setActivePortfolioTab("activity")}
+                >
                   {t("PortfolioTabs:activity")}
                 </TabsTrigger>
               )}
@@ -636,7 +723,9 @@ export default function PortfolioTabs(properties) {
               <Card>
                 <CardHeader className="pb-3">
                   <CardTitle>
-                    {t("PortfolioTabs:accountBalances", { username: usr.username })}
+                    {t("PortfolioTabs:accountBalances", {
+                      username: usr.username,
+                    })}
                   </CardTitle>
                   <CardDescription>
                     {t("PortfolioTabs:accountBalancesDescription")}
@@ -696,14 +785,20 @@ export default function PortfolioTabs(properties) {
               <Card>
                 <CardHeader>
                   <CardTitle>{t("PortfolioTabs:openOrdersTitle")}</CardTitle>
-                  <CardDescription>{t("PortfolioTabs:openOrdersDescription")}</CardDescription>
+                  <CardDescription>
+                    {t("PortfolioTabs:openOrdersDescription")}
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   {openOrders &&
                   openOrders.length &&
                   retrievedBalanceAssets &&
                   retrievedBalanceAssets.length ? (
-                    <List height={500} itemCount={openOrders.length} itemSize={145}>
+                    <List
+                      height={500}
+                      itemCount={openOrders.length}
+                      itemSize={145}
+                    >
                       {OpenOrdersRow}
                     </List>
                   ) : (
@@ -725,14 +820,20 @@ export default function PortfolioTabs(properties) {
             <TabsContent value="activity">
               <Card>
                 <CardHeader>
-                  <CardTitle>{t("PortfolioTabs:recentBlockchainActivityTitle")}</CardTitle>
+                  <CardTitle>
+                    {t("PortfolioTabs:recentBlockchainActivityTitle")}
+                  </CardTitle>
                   <CardDescription>
                     {t("PortfolioTabs:recentBlockchainActivityDescription")}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-2">
                   {activity && activity.length ? (
-                    <List height={500} itemCount={activity.length} itemSize={145}>
+                    <List
+                      height={500}
+                      itemCount={activity.length}
+                      itemSize={145}
+                    >
                       {RecentActivityRow}
                     </List>
                   ) : (

@@ -13,10 +13,16 @@ function getCollateralBids(
     if (existingAPI) {
       currentAPI = existingAPI;
     } else {
-      let node = specificNode ? specificNode : (chains as any)[chain].nodeList[0].url;
+      let node = specificNode
+        ? specificNode
+        : (chains as any)[chain].nodeList[0].url;
       try {
-        currentAPI = await Apis.instance(node, true, 4000, { enableDatabase: true }, (error: Error) =>
-          console.log({ error })
+        currentAPI = await Apis.instance(
+          node,
+          true,
+          4000,
+          { enableDatabase: true },
+          (error: Error) => console.log({ error })
         );
       } catch (error) {
         console.log({ error });
@@ -50,15 +56,11 @@ const [createCollateralBidStore] = nanoquery({
     const chain = args[0] as string;
     const assetID = args[1] as string;
 
-    let specificNode = args[2] ? args[2] as string : null;
+    let specificNode = args[2] ? (args[2] as string) : null;
 
     let response;
     try {
-      response =  await getCollateralBids(
-        chain,
-        assetID,
-        specificNode
-      );
+      response = await getCollateralBids(chain, assetID, specificNode);
     } catch (error) {
       console.log({ error });
       return;
@@ -74,4 +76,3 @@ const [createCollateralBidStore] = nanoquery({
 });
 
 export { createCollateralBidStore, getCollateralBids };
-  

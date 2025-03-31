@@ -10,14 +10,20 @@ const MAX_BTS_ITERATIONS = MAXIMUM_CREDIT_OFFERS / BTS_LIMIT;
 const MAX_TEST_ITERATIONS = MAXIMUM_CREDIT_OFFERS / TEST_LIMIT;
 
 // Retrieve all active credit offers from the blockchain
-function getCreditOffers (chain: string, specificNode?: string | null) {
+function getCreditOffers(chain: string, specificNode?: string | null) {
   return new Promise(async (resolve, reject) => {
-    let node = specificNode ? specificNode : (chains as any)[chain].nodeList[0].url;
+    let node = specificNode
+      ? specificNode
+      : (chains as any)[chain].nodeList[0].url;
 
     let currentAPI;
     try {
-      currentAPI = await Apis.instance(node, true, 4000, { enableDatabase: true }, (error: Error) =>
-        console.log({ error })
+      currentAPI = await Apis.instance(
+        node,
+        true,
+        4000,
+        { enableDatabase: true },
+        (error: Error) => console.log({ error })
       );
     } catch (error) {
       console.log({ error });
@@ -36,7 +42,7 @@ function getCreditOffers (chain: string, specificNode?: string | null) {
       return;
     }
 
-    const latestObjectIDNumber = parseInt(latestObjectID.split('.')[2], 10);
+    const latestObjectIDNumber = parseInt(latestObjectID.split(".")[2], 10);
 
     let limit = chain === "bitshares" ? BTS_LIMIT : TEST_LIMIT;
     let allOffers: any[] = [];
@@ -44,7 +50,9 @@ function getCreditOffers (chain: string, specificNode?: string | null) {
 
     let firstPageOffers;
     try {
-      firstPageOffers = await currentAPI.db_api().exec("list_credit_offers", [limit]);
+      firstPageOffers = await currentAPI
+        .db_api()
+        .exec("list_credit_offers", [limit]);
     } catch (error) {
       console.log({ error });
       reject(error);
@@ -52,15 +60,16 @@ function getCreditOffers (chain: string, specificNode?: string | null) {
     }
 
     if (firstPageOffers && firstPageOffers.length) {
-      let lastOfferIDNumber = parseInt(firstPageOffers[firstPageOffers.length - 1].id.split('.')[2], 10);
+      let lastOfferIDNumber = parseInt(
+        firstPageOffers[firstPageOffers.length - 1].id.split(".")[2],
+        10
+      );
 
       let totalItems = latestObjectIDNumber - lastOfferIDNumber;
 
       let totalFetches = Math.min(
         Math.ceil(totalItems / limit),
-        chain === "bitshares"
-          ? MAX_BTS_ITERATIONS
-          : MAX_TEST_ITERATIONS
+        chain === "bitshares" ? MAX_BTS_ITERATIONS : MAX_TEST_ITERATIONS
       );
 
       allOffers.push(...firstPageOffers);
@@ -72,7 +81,9 @@ function getCreditOffers (chain: string, specificNode?: string | null) {
         let options = [limit, start_id];
         let pageOffers;
         try {
-          pageOffers = await currentAPI.db_api().exec("list_credit_offers", options);
+          pageOffers = await currentAPI
+            .db_api()
+            .exec("list_credit_offers", options);
         } catch (error) {
           console.log({ error });
           reject(error);
@@ -92,26 +103,25 @@ function getCreditOffers (chain: string, specificNode?: string | null) {
 }
 
 const [createCreditOfferStore] = nanoquery({
-    fetcher: async (...args: unknown[]) => {
-      const chain = args[0] as string;
-      let specificNode = args[1] ? args[1] as string : null;
-  
-      let response;
-      try {
-        response = await getCreditOffers(chain, specificNode);
-      } catch (error) {
-        console.log({ error });
-        return;
-      }
-  
-      if (!response) {
-        console.log(`Failed to fetch max object id`);
-        return;
-      }
-  
-      return response;
-    },
-  });
-  
-  export { createCreditOfferStore, getCreditOffers };
-  
+  fetcher: async (...args: unknown[]) => {
+    const chain = args[0] as string;
+    let specificNode = args[1] ? (args[1] as string) : null;
+
+    let response;
+    try {
+      response = await getCreditOffers(chain, specificNode);
+    } catch (error) {
+      console.log({ error });
+      return;
+    }
+
+    if (!response) {
+      console.log(`Failed to fetch max object id`);
+      return;
+    }
+
+    return response;
+  },
+});
+
+export { createCreditOfferStore, getCreditOffers };

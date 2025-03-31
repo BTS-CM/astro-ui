@@ -33,9 +33,8 @@ const [createUsernameStore] = nanoquery({
     });
 
     return _finalResults;
-  }
+  },
 });
-    
 
 const [createObjectStore] = nanoquery({
   fetcher: async (...args: unknown[]) => {
@@ -73,12 +72,18 @@ const [createEveryObjectStore] = nanoquery({
 
     let specificNode = args[4] ? (args[4] as string) : null;
 
-    let node = specificNode ? specificNode : (chains as any)[chain].nodeList[0].url;
+    let node = specificNode
+      ? specificNode
+      : (chains as any)[chain].nodeList[0].url;
 
     let currentAPI;
     try {
-      currentAPI = await Apis.instance(node, true, 4000, { enableDatabase: true }, (error: Error) =>
-        console.log({ error })
+      currentAPI = await Apis.instance(
+        node,
+        true,
+        4000,
+        { enableDatabase: true },
+        (error: Error) => console.log({ error })
       );
     } catch (error) {
       console.log({ error });
@@ -91,7 +96,7 @@ const [createEveryObjectStore] = nanoquery({
         .db_api()
         .exec("get_next_object_id", [space_id, type_id, false]);
     } catch (error) {
-      console.log({error});
+      console.log({ error });
       return;
     }
 
@@ -102,9 +107,16 @@ const [createEveryObjectStore] = nanoquery({
     }
 
     // if last_known_id < maxObjectID, fetch the latest objects
-    let objectIds = last_known_id > 0 && last_known_id < maxObjectID 
-                      ? Array.from({ length: maxObjectID - last_known_id }, (_, i) => `${space_id}.${type_id}.${last_known_id + i + 1}`) 
-                      : Array.from({ length: maxObjectID }, (_, i) => `${space_id}.${type_id}.${i}`);
+    let objectIds =
+      last_known_id > 0 && last_known_id < maxObjectID
+        ? Array.from(
+            { length: maxObjectID - last_known_id },
+            (_, i) => `${space_id}.${type_id}.${last_known_id + i + 1}`
+          )
+        : Array.from(
+            { length: maxObjectID },
+            (_, i) => `${space_id}.${type_id}.${i}`
+          );
 
     let response;
     try {

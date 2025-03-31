@@ -38,14 +38,15 @@ const allowedDomains = [
   "https://infura.io/product/ipfs",
   "https://landing.storj.io/permanently-pin-with-storj-dcs",
   "https://www.eternum.io/",
-  "https://blog.ipfs.io/2021-04-05-storing-nfts-on-ipfs/"
+  "https://blog.ipfs.io/2021-04-05-storing-nfts-on-ipfs/",
 ];
 
 /**
  * Launches a dialog prompt, prompting the user to verify their intent to launch a new tab to an external web resource
  */
 export default function ExternalLink(properties) {
-  const { hyperlink, type, text, variant, classnamecontents, gradient } = properties;
+  const { hyperlink, type, text, variant, classnamecontents, gradient } =
+    properties;
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
 
   const [open, setOpen] = useState(false);
@@ -88,7 +89,9 @@ export default function ExternalLink(properties) {
       >
         <DialogContent className="sm:max-w-[500px] bg-white">
           <DialogHeader>
-            <DialogTitle>{t("ExternalLink:dialogContent.leaveApp")}</DialogTitle>
+            <DialogTitle>
+              {t("ExternalLink:dialogContent.leaveApp")}
+            </DialogTitle>
             <DialogDescription>
               {t("ExternalLink:dialogContent.navigateToExternal")}
             </DialogDescription>
@@ -104,17 +107,21 @@ export default function ExternalLink(properties) {
           </h3>
 
           <div className="grid grid-cols-1 gap-3">
-            {
-              window.electron
-              ? <Button color="gray" variant="outline" onClick={() => window.electron.openURL(hyperlink)}>
+            {window.electron ? (
+              <Button
+                color="gray"
+                variant="outline"
+                onClick={() => window.electron.openURL(hyperlink)}
+              >
+                {t("ExternalLink:dialogContent.openLink")}
+              </Button>
+            ) : (
+              <a href={hyperlink} target="_blank">
+                <Button color="gray" variant="outline">
                   {t("ExternalLink:dialogContent.openLink")}
                 </Button>
-              : <a href={hyperlink} target="_blank">
-                  <Button color="gray" variant="outline">
-                    {t("ExternalLink:dialogContent.openLink")}
-                  </Button>
-                </a>
-            }
+              </a>
+            )}
           </div>
         </DialogContent>
       </Dialog>

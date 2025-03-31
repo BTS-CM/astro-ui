@@ -25,12 +25,20 @@ import {
 } from "@/components/ui/form";
 import { Avatar as Av, AvatarFallback } from "@/components/ui/avatar";
 import { Avatar } from "@/components/Avatar.tsx";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-import { humanReadableFloat, getFlagBooleans, blockchainFloat } from "@/lib/common.js";
+import {
+  humanReadableFloat,
+  getFlagBooleans,
+  blockchainFloat,
+} from "@/lib/common.js";
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
 import { createCollateralBidStore } from "@/nanoeffects/CollateralBids.ts";
@@ -50,7 +58,11 @@ export default function Settlement(properties) {
   });
   const currentNode = useStore($currentNode);
 
-  const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
+  const usr = useSyncExternalStore(
+    $currentUser.subscribe,
+    $currentUser.get,
+    () => true
+  );
 
   const {
     _marketSearchBTS,
@@ -58,7 +70,7 @@ export default function Settlement(properties) {
     _bitAssetDataBTS,
     _bitAssetDataTEST,
     _globalParamsBTS,
-    _globalParamsTEST
+    _globalParamsTEST,
   } = properties;
 
   const _chain = useMemo(() => {
@@ -124,7 +136,10 @@ export default function Settlement(properties) {
         return;
       }
 
-      const assetIDs = marketSearch && marketSearch.length ? marketSearch.map((x) => x.id) : [];
+      const assetIDs =
+        marketSearch && marketSearch.length
+          ? marketSearch.map((x) => x.id)
+          : [];
       if (!assetIDs.includes(foundParamter)) {
         console.log("Invalid parameter");
         return;
@@ -144,7 +159,9 @@ export default function Settlement(properties) {
 
   const parsedBitasset = useMemo(() => {
     if (parsedAsset && bitAssetData) {
-      const foundBitasset = bitAssetData.find((x) => x.assetID === parsedAsset.id);
+      const foundBitasset = bitAssetData.find(
+        (x) => x.assetID === parsedAsset.id
+      );
       return foundBitasset;
     }
     return null;
@@ -152,13 +169,20 @@ export default function Settlement(properties) {
 
   const parsedCollateralAsset = useMemo(() => {
     if (parsedBitasset && bitAssetData) {
-      const foundAsset = marketSearch.find((x) => x.id === parsedBitasset.collateral);
+      const foundAsset = marketSearch.find(
+        (x) => x.id === parsedBitasset.collateral
+      );
       return foundAsset;
     }
   }, [parsedBitasset, bitAssetData]);
 
   const currentFeedSettlementPrice = useMemo(() => {
-    if (finalBitasset && finalBitasset.current_feed && parsedCollateralAsset && parsedAsset) {
+    if (
+      finalBitasset &&
+      finalBitasset.current_feed &&
+      parsedCollateralAsset &&
+      parsedAsset
+    ) {
       return parseFloat(
         (
           humanReadableFloat(
@@ -188,7 +212,10 @@ export default function Settlement(properties) {
             finalBitasset.settlement_price.quote.amount,
             parsedCollateralAsset.p
           ) /
-            humanReadableFloat(finalBitasset.settlement_price.base.amount, parsedAsset.p))
+            humanReadableFloat(
+              finalBitasset.settlement_price.base.amount,
+              parsedAsset.p
+            ))
         ).toFixed(parsedAsset.p)
       );
 
@@ -219,7 +246,11 @@ export default function Settlement(properties) {
     if (parsedBitasset && parsedBitasset && usr && usr.chain) {
       const smartcoinDataStore = createObjectStore([
         usr.chain,
-        JSON.stringify([parsedAsset.id, parsedBitasset.collateral, parsedBitasset.id]),
+        JSON.stringify([
+          parsedAsset.id,
+          parsedBitasset.collateral,
+          parsedBitasset.id,
+        ]),
         currentNode ? currentNode.url : null,
       ]);
       smartcoinDataStore.subscribe(({ data, error, loading }) => {
@@ -273,10 +304,17 @@ export default function Settlement(properties) {
 
   const BidRow = ({ index, style }) => {
     const _bid = collateralBids[index];
-    const _collateral = humanReadableFloat(_bid.bid.base.amount, parsedCollateralAsset.p);
+    const _collateral = humanReadableFloat(
+      _bid.bid.base.amount,
+      parsedCollateralAsset.p
+    );
     const _debt = humanReadableFloat(_bid.bid.quote.amount, parsedAsset.p);
-    const _price = parseFloat((_collateral / _debt).toFixed(parsedCollateralAsset.p));
-    const _ratio = parseFloat(((1 / currentFeedSettlementPrice / _price) * 100).toFixed(2));
+    const _price = parseFloat(
+      (_collateral / _debt).toFixed(parsedCollateralAsset.p)
+    );
+    const _ratio = parseFloat(
+      ((1 / currentFeedSettlementPrice / _price) * 100).toFixed(2)
+    );
     return (
       <div className="grid grid-cols-4 text-sm" style={style}>
         <div className="col-span-1">{_bid.bidder}</div>
@@ -294,7 +332,9 @@ export default function Settlement(properties) {
         <div className="grid grid-cols-1 gap-3">
           <Card>
             <CardHeader>
-              <CardTitle>{t("Settlement:smartcoinSettlementFormTitle")}</CardTitle>
+              <CardTitle>
+                {t("Settlement:smartcoinSettlementFormTitle")}
+              </CardTitle>
               <CardDescription>
                 {settlementFund && settlementFund.finalSettlementFund
                   ? t("Settlement:bidOnGlobalSettlementFundsDescription")
@@ -332,7 +372,13 @@ export default function Settlement(properties) {
                                     eye: "normal",
                                     mouth: "open",
                                   }}
-                                  colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]}
+                                  colors={[
+                                    "#92A1C6",
+                                    "#146A7C",
+                                    "#F0AB3D",
+                                    "#C271B4",
+                                    "#C20D90",
+                                  ]}
                                 />
                               ) : (
                                 <Av>
@@ -387,7 +433,9 @@ export default function Settlement(properties) {
                     name="currentFeedPrice"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>{t("Settlement:currentFeedPrice")}</FormLabel>{" "}
+                        <FormLabel>
+                          {t("Settlement:currentFeedPrice")}
+                        </FormLabel>{" "}
                         <FormControl>
                           <span className="grid grid-cols-8">
                             <span className="col-span-6">
@@ -397,15 +445,24 @@ export default function Settlement(properties) {
                                   className="mb-1"
                                   value={`${
                                     currentFeedSettlementPrice
-                                      ? (1 / currentFeedSettlementPrice).toFixed(parsedAsset.p)
+                                      ? (
+                                          1 / currentFeedSettlementPrice
+                                        ).toFixed(parsedAsset.p)
                                       : 0
                                   } ${parsedAsset ? parsedAsset.s : ""}/${
-                                    parsedCollateralAsset ? parsedCollateralAsset.s : ""
+                                    parsedCollateralAsset
+                                      ? parsedCollateralAsset.s
+                                      : ""
                                   }`}
                                   readOnly
                                 />
                               ) : (
-                                <Input disabled className="mb-1" value="" readOnly />
+                                <Input
+                                  disabled
+                                  className="mb-1"
+                                  value=""
+                                  readOnly
+                                />
                               )}
                             </span>
                           </span>
@@ -422,7 +479,9 @@ export default function Settlement(properties) {
                         name="settlementPrice"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>{t("Settlement:finalSettlementPrice")}</FormLabel>{" "}
+                            <FormLabel>
+                              {t("Settlement:finalSettlementPrice")}
+                            </FormLabel>{" "}
                             <FormControl>
                               <span className="grid grid-cols-8">
                                 <span className="col-span-6">
@@ -444,7 +503,9 @@ export default function Settlement(properties) {
                         name="fundsAvailable"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>{t("Settlement:settlementFundsAvailable")}</FormLabel>{" "}
+                            <FormLabel>
+                              {t("Settlement:settlementFundsAvailable")}
+                            </FormLabel>{" "}
                             <FormControl>
                               <span className="grid grid-cols-8">
                                 <span className="col-span-6">
@@ -466,7 +527,9 @@ export default function Settlement(properties) {
                         name="fundingRatio1"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>{t("Settlement:fundingRatio")}</FormLabel>
+                            <FormLabel>
+                              {t("Settlement:fundingRatio")}
+                            </FormLabel>
                             <FormControl>
                               <span className="grid grid-cols-8">
                                 <span className="col-span-2 mb-1">
@@ -506,7 +569,9 @@ export default function Settlement(properties) {
                         name="additionalCollateral"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>{t("Settlement:additionalCollateral")}</FormLabel>
+                            <FormLabel>
+                              {t("Settlement:additionalCollateral")}
+                            </FormLabel>
                             <FormDescription>
                               {t("Settlement:additionalCollateralDescription", {
                                 asset: parsedAsset.s,
@@ -530,20 +595,30 @@ export default function Settlement(properties) {
                                   <Popover>
                                     <PopoverTrigger>
                                       <span className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4">
-                                        <Label>{t("Settlement:changeAmount")}</Label>
+                                        <Label>
+                                          {t("Settlement:changeAmount")}
+                                        </Label>
                                       </span>
                                     </PopoverTrigger>
                                     <PopoverContent>
-                                      <Label>{t("Settlement:provideNewAmount")}</Label>
+                                      <Label>
+                                        {t("Settlement:provideNewAmount")}
+                                      </Label>
                                       <Input
                                         placeholder={additionalCollateral}
                                         className="mb-2 mt-1"
                                         onChange={(event) => {
                                           const input = event.target.value;
                                           const regex = /^[0-9]*\.?[0-9]*$/;
-                                          if (input && input.length && regex.test(input)) {
+                                          if (
+                                            input &&
+                                            input.length &&
+                                            regex.test(input)
+                                          ) {
                                             setAdditionalCollateral(
-                                              parseFloat(input).toFixed(parsedCollateralAsset.p)
+                                              parseFloat(input).toFixed(
+                                                parsedCollateralAsset.p
+                                              )
                                             );
                                           }
                                         }}
@@ -561,7 +636,9 @@ export default function Settlement(properties) {
                         name="debtCovered"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>{t("Settlement:totalDebtCoveredByBid")}</FormLabel>
+                            <FormLabel>
+                              {t("Settlement:totalDebtCoveredByBid")}
+                            </FormLabel>
                             <FormDescription>
                               {t("Settlement:totalDebtCoveredByBidDescription")}
                             </FormDescription>
@@ -583,20 +660,30 @@ export default function Settlement(properties) {
                                   <Popover>
                                     <PopoverTrigger>
                                       <span className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4">
-                                        <Label>{t("Settlement:changeTotal")}</Label>
+                                        <Label>
+                                          {t("Settlement:changeTotal")}
+                                        </Label>
                                       </span>
                                     </PopoverTrigger>
                                     <PopoverContent>
-                                      <Label>{t("Settlement:provideNewTotal")}</Label>
+                                      <Label>
+                                        {t("Settlement:provideNewTotal")}
+                                      </Label>
                                       <Input
                                         placeholder={debtCovered}
                                         className="mb-2 mt-1"
                                         onChange={(event) => {
                                           const input = event.target.value;
                                           const regex = /^[0-9]*\.?[0-9]*$/;
-                                          if (input && input.length && regex.test(input)) {
+                                          if (
+                                            input &&
+                                            input.length &&
+                                            regex.test(input)
+                                          ) {
                                             setDebtCovered(
-                                              parseFloat(input).toFixed(parsedAsset.p)
+                                              parseFloat(input).toFixed(
+                                                parsedAsset.p
+                                              )
                                             );
                                           }
                                         }}
@@ -613,14 +700,17 @@ export default function Settlement(properties) {
                   ) : null}
 
                   {individualSettlementFund &&
-                  (individualSettlementFund._debt || individualSettlementFund._fund) ? (
+                  (individualSettlementFund._debt ||
+                    individualSettlementFund._fund) ? (
                     <>
                       <FormField
                         control={form.control}
                         name="isd"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>{t("Settlement:individualSettlementDebt")}</FormLabel>{" "}
+                            <FormLabel>
+                              {t("Settlement:individualSettlementDebt")}
+                            </FormLabel>{" "}
                             <FormControl>
                               <span className="grid grid-cols-8">
                                 <span className="col-span-6">
@@ -642,7 +732,9 @@ export default function Settlement(properties) {
                         name="isf"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>{t("Settlement:individualSettlementFund")}</FormLabel>{" "}
+                            <FormLabel>
+                              {t("Settlement:individualSettlementFund")}
+                            </FormLabel>{" "}
                             <FormControl>
                               <span className="grid grid-cols-8">
                                 <span className="col-span-6">
@@ -664,7 +756,9 @@ export default function Settlement(properties) {
                         name="fundingRatio2"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>{t("Settlement:fundingRatio")}</FormLabel>
+                            <FormLabel>
+                              {t("Settlement:fundingRatio")}
+                            </FormLabel>
                             <FormControl>
                               <span className="grid grid-cols-8">
                                 <span className="col-span-2 mb-1">
@@ -703,7 +797,9 @@ export default function Settlement(properties) {
                         name="ForceSettleAmount"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>{t("Settlement:forceSettleAmount")}</FormLabel>
+                            <FormLabel>
+                              {t("Settlement:forceSettleAmount")}
+                            </FormLabel>
                             <FormDescription>
                               {t("Settlement:forceSettleAmountDescription")}
                             </FormDescription>
@@ -726,20 +822,32 @@ export default function Settlement(properties) {
                                   <Popover>
                                     <PopoverTrigger>
                                       <span className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4">
-                                        <Label>{t("Settlement:changeAmount")}</Label>
+                                        <Label>
+                                          {t("Settlement:changeAmount")}
+                                        </Label>
                                       </span>
                                     </PopoverTrigger>
                                     <PopoverContent>
-                                      <Label>{t("Settlement:provideNewForceSettleAmount")}</Label>
+                                      <Label>
+                                        {t(
+                                          "Settlement:provideNewForceSettleAmount"
+                                        )}
+                                      </Label>
                                       <Input
                                         placeholder={forceSettleAmount}
                                         className="mb-2 mt-1"
                                         onChange={(event) => {
                                           const input = event.target.value;
                                           const regex = /^[0-9]*\.?[0-9]*$/;
-                                          if (input && input.length && regex.test(input)) {
+                                          if (
+                                            input &&
+                                            input.length &&
+                                            regex.test(input)
+                                          ) {
                                             setForceSettleAmount(
-                                              parseFloat(input).toFixed(parsedAsset.p)
+                                              parseFloat(input).toFixed(
+                                                parsedAsset.p
+                                              )
                                             );
                                             const _total = parseFloat(
                                               (
@@ -759,7 +867,8 @@ export default function Settlement(properties) {
                             </FormControl>
                             {forceSettleAmount &&
                             individualSettlementFund._debt &&
-                            forceSettleAmount > individualSettlementFund._debt ? (
+                            forceSettleAmount >
+                              individualSettlementFund._debt ? (
                               <FormMessage>
                                 {t("Settlement:forceSettleAmountExceedsDebt")}
                               </FormMessage>
@@ -772,7 +881,9 @@ export default function Settlement(properties) {
                         name="totalReceiving"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>{t("Settlement:totalAmountReceive")}</FormLabel>
+                            <FormLabel>
+                              {t("Settlement:totalAmountReceive")}
+                            </FormLabel>
                             <FormDescription>
                               {t("Settlement:totalAmountReceiveDescription", {
                                 asset: parsedAsset.s,
@@ -796,25 +907,36 @@ export default function Settlement(properties) {
                                   <Popover>
                                     <PopoverTrigger>
                                       <span className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4">
-                                        <Label>{t("Settlement:changeTotal")}</Label>
+                                        <Label>
+                                          {t("Settlement:changeTotal")}
+                                        </Label>
                                       </span>
                                     </PopoverTrigger>
                                     <PopoverContent>
-                                      <Label>{t("Settlement:provideNewTotalAmount")}</Label>
+                                      <Label>
+                                        {t("Settlement:provideNewTotalAmount")}
+                                      </Label>
                                       <Input
                                         placeholder={totalReceiving}
                                         className="mb-2 mt-1"
                                         onChange={(event) => {
                                           const input = event.target.value;
                                           const regex = /^[0-9]*\.?[0-9]*$/;
-                                          if (input && input.length && regex.test(input)) {
+                                          if (
+                                            input &&
+                                            input.length &&
+                                            regex.test(input)
+                                          ) {
                                             setTotalReceiving(
-                                              parseFloat(input).toFixed(parsedCollateralAsset.p)
+                                              parseFloat(input).toFixed(
+                                                parsedCollateralAsset.p
+                                              )
                                             );
                                             setForceSettleAmount(
-                                              (input / currentFeedSettlementPrice).toFixed(
-                                                parsedAsset.p
-                                              )
+                                              (
+                                                input /
+                                                currentFeedSettlementPrice
+                                              ).toFixed(parsedAsset.p)
                                             );
                                           }
                                         }}
@@ -829,7 +951,8 @@ export default function Settlement(properties) {
                               {t("Settlement:payingPremium", {
                                 premium: (
                                   100 -
-                                  ((individualSettlementFund._debt * currentFeedSettlementPrice) /
+                                  ((individualSettlementFund._debt *
+                                    currentFeedSettlementPrice) /
                                     individualSettlementFund._fund) *
                                     100
                                 ).toFixed(2),
@@ -850,7 +973,10 @@ export default function Settlement(properties) {
                         <FormDescription>
                           {t("Settlement:operation", {
                             operation:
-                              settlementFund && settlementFund.finalSettlementFund ? 45 : 17,
+                              settlementFund &&
+                              settlementFund.finalSettlementFund
+                                ? 45
+                                : 17,
                           })}
                         </FormDescription>
                         <FormControl>
@@ -860,10 +986,13 @@ export default function Settlement(properties) {
                                 disabled
                                 className="mb-1"
                                 value={`${
-                                  settlementFund && settlementFund.finalSettlementFund
+                                  settlementFund &&
+                                  settlementFund.finalSettlementFund
                                     ? bidFee
                                     : settleFee
-                                } ${usr.chain === "Bitshares" ? "BTS" : "TEST"}`}
+                                } ${
+                                  usr.chain === "Bitshares" ? "BTS" : "TEST"
+                                }`}
                                 readOnly
                               />
                             </span>
@@ -874,10 +1003,13 @@ export default function Settlement(properties) {
                     )}
                   />
 
-                  {finalBitasset && finalBitasset.options.extensions.force_settle_fee_percent ? (
+                  {finalBitasset &&
+                  finalBitasset.options.extensions.force_settle_fee_percent ? (
                     <FormMessage>
                       {t("Settlement:additionalForceSettlementFee", {
-                        fee: finalBitasset.options.extensions.force_settle_fee_percent / 100,
+                        fee:
+                          finalBitasset.options.extensions
+                            .force_settle_fee_percent / 100,
                       })}
                     </FormMessage>
                   ) : null}
@@ -887,15 +1019,19 @@ export default function Settlement(properties) {
                   </Button>
 
                   {collateralBiddingDisabled ? (
-                    <FormMessage>{t("Settlement:collateralBiddingDisabled")}</FormMessage>
+                    <FormMessage>
+                      {t("Settlement:collateralBiddingDisabled")}
+                    </FormMessage>
                   ) : null}
                 </form>
               </Form>
 
-              {(!settlementFund || (settlementFund && !settlementFund.finalSettlementFund)) &&
+              {(!settlementFund ||
+                (settlementFund && !settlementFund.finalSettlementFund)) &&
               (!individualSettlementFund ||
                 (individualSettlementFund &&
-                  (!individualSettlementFund._debt || !individualSettlementFund._fund)))
+                  (!individualSettlementFund._debt ||
+                    !individualSettlementFund._fund)))
                 ? "No settlement funds available"
                 : null}
             </CardContent>
@@ -963,7 +1099,10 @@ export default function Settlement(properties) {
                   ? {
                       bidder: usr.id,
                       additional_collateral: {
-                        amount: blockchainFloat(additionalCollateral, parsedCollateralAsset.p),
+                        amount: blockchainFloat(
+                          additionalCollateral,
+                          parsedCollateralAsset.p
+                        ),
                         asset_id: parsedCollateralAsset.id,
                       },
                       debt_covered: {
@@ -975,7 +1114,10 @@ export default function Settlement(properties) {
                   : {
                       account: usr.id,
                       amount: {
-                        amount: blockchainFloat(forceSettleAmount, parsedAsset.p),
+                        amount: blockchainFloat(
+                          forceSettleAmount,
+                          parsedAsset.p
+                        ),
                         asset_id: parsedAsset.id,
                       },
                       extensions: [],

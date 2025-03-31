@@ -139,7 +139,9 @@ function getFlags(flagBooleans) {
  * Given form values return the asset permissions value
  */
 function getPermissions(flagBooleans, isBitAsset = false) {
-  const permissions = isBitAsset ? Object.keys(permission_flags) : uia_permission_mask;
+  const permissions = isBitAsset
+    ? Object.keys(permission_flags)
+    : uia_permission_mask;
   let flags = 0;
   permissions.forEach((permission) => {
     if (flagBooleans[permission] && permission !== "global_settle") {

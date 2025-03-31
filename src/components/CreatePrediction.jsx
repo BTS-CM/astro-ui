@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useSyncExternalStore, useMemo, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  useSyncExternalStore,
+  useMemo,
+  useCallback,
+} from "react";
 import { useStore } from "@nanostores/react";
 import { FixedSizeList as List } from "react-window";
 import { useTranslation } from "react-i18next";
@@ -42,17 +48,27 @@ import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 
 import { $currentUser } from "@/stores/users.ts";
 import { $currentNode } from "@/stores/node.ts";
-import { getPermissions, getFlags, debounce, humanReadableFloat } from "@/lib/common.js";
+import {
+  getPermissions,
+  getFlags,
+  debounce,
+  humanReadableFloat,
+} from "@/lib/common.js";
 
 import { blockchainFloat } from "@/bts/common";
 
 export default function Prediction(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
-  const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
+  const usr = useSyncExternalStore(
+    $currentUser.subscribe,
+    $currentUser.get,
+    () => true
+  );
   const currentNode = useStore($currentNode);
-  
-  const { _assetsBTS, _assetsTEST, _marketSearchBTS, _marketSearchTEST } = properties;
-  
+
+  const { _assetsBTS, _assetsTEST, _marketSearchBTS, _marketSearchTEST } =
+    properties;
+
   const _chain = useMemo(() => {
     if (usr && usr.chain) {
       return usr.chain;
@@ -88,14 +104,16 @@ export default function Prediction(properties) {
         currentNode ? currentNode.url : null,
       ]);
 
-      unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
-        if (data && !error && !loading) {
-          const filteredData = data.filter((balance) =>
-            assets.find((x) => x.id === balance.asset_id)
-          );
-          setBalances(filteredData);
+      unsubscribeUserBalances = userBalancesStore.subscribe(
+        ({ data, error, loading }) => {
+          if (data && !error && !loading) {
+            const filteredData = data.filter((balance) =>
+              assets.find((x) => x.id === balance.asset_id)
+            );
+            setBalances(filteredData);
+          }
         }
-      });
+      );
     }
 
     return () => {
@@ -113,7 +131,9 @@ export default function Prediction(properties) {
   // Prediction market info
   const [condition, setCondition] = useState("");
   const [date, setDate] = useState();
-  const [backingAsset, setBackingAsset] = useState(usr.chain === "bitshares" ? "BTS" : "TEST");
+  const [backingAsset, setBackingAsset] = useState(
+    usr.chain === "bitshares" ? "BTS" : "TEST"
+  );
   const [commission, setCommission] = useState(0);
 
   const backingAssetData = useMemo(() => {
@@ -142,7 +162,8 @@ export default function Prediction(properties) {
 
   // Extensions
   const [enabledReferrerReward, setEnabledReferrerReward] = useState(false); // reward_percent
-  const [enabledFeeSharingWhitelist, setEnabledFeeSharingWhitelist] = useState(false); // whitelist_market_fee_sharing
+  const [enabledFeeSharingWhitelist, setEnabledFeeSharingWhitelist] =
+    useState(false); // whitelist_market_fee_sharing
   const [enabledTakerFee, setEnabledTakerFee] = useState(false); // taker_fee_percent
 
   const [referrerReward, setReferrerReward] = useState(0); // reward_percent
@@ -258,7 +279,9 @@ export default function Prediction(properties) {
       _extensions.reward_percent = referrerReward ? referrerReward * 100 : 0;
     }
     if (enabledFeeSharingWhitelist) {
-      _extensions.whitelist_market_fee_sharing = feeSharingWhitelist.map((x) => x.id);
+      _extensions.whitelist_market_fee_sharing = feeSharingWhitelist.map(
+        (x) => x.id
+      );
     }
     if (enabledTakerFee) {
       _extensions.taker_fee_percent = takerFee ? takerFee * 100 : 0;
@@ -279,7 +302,10 @@ export default function Prediction(properties) {
         // static
         core_exchange_rate: {
           base: {
-            amount: blockchainFloat(1, backingAssetData ? backingAssetData.precision : 5),
+            amount: blockchainFloat(
+              1,
+              backingAssetData ? backingAssetData.precision : 5
+            ),
             asset_id: backingAssetData ? backingAssetData.id : "1.3.0",
           },
           quote: {
@@ -352,10 +378,14 @@ export default function Prediction(properties) {
     []
   );
 
-  const [whitelistMarketFeeSharingDialogOpen, setWhitelistMarketFeeSharingDialogOpen] =
+  const [
+    whitelistMarketFeeSharingDialogOpen,
+    setWhitelistMarketFeeSharingDialogOpen,
+  ] = useState(false);
+  const [whitelistAuthorityDialogOpen, setWhitelistAuthorityDialogOpen] =
     useState(false);
-  const [whitelistAuthorityDialogOpen, setWhitelistAuthorityDialogOpen] = useState(false);
-  const [blacklistAuthorityDialogOpen, setBlacklistAuthorityDialogOpen] = useState(false);
+  const [blacklistAuthorityDialogOpen, setBlacklistAuthorityDialogOpen] =
+    useState(false);
 
   const feeSharingWhitelistRow = ({ index, style }) => {
     let res = feeSharingWhitelist[index];
@@ -374,7 +404,13 @@ export default function Prediction(properties) {
                   name={res.name}
                   extra="Borrower"
                   expression={{ eye: "normal", mouth: "open" }}
-                  colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]}
+                  colors={[
+                    "#92A1C6",
+                    "#146A7C",
+                    "#F0AB3D",
+                    "#C271B4",
+                    "#C20D90",
+                  ]}
                 />
               </span>
               <span className="col-span-10 ml-3">
@@ -386,7 +422,9 @@ export default function Prediction(properties) {
                   className="mr-2"
                   onClick={(e) => {
                     e.preventDefault();
-                    const _update = feeSharingWhitelist.filter((x) => x.id !== res.id);
+                    const _update = feeSharingWhitelist.filter(
+                      (x) => x.id !== res.id
+                    );
                     setFeeSharingWhitelist(_update);
                   }}
                 >
@@ -417,7 +455,13 @@ export default function Prediction(properties) {
                   name={res.name}
                   extra="Borrower"
                   expression={{ eye: "normal", mouth: "open" }}
-                  colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]}
+                  colors={[
+                    "#92A1C6",
+                    "#146A7C",
+                    "#F0AB3D",
+                    "#C271B4",
+                    "#C20D90",
+                  ]}
                 />
               </span>
               <span className="col-span-10 ml-3">
@@ -429,7 +473,9 @@ export default function Prediction(properties) {
                   className="mr-2"
                   onClick={(e) => {
                     e.preventDefault();
-                    const _update = whitelistAuthorities.filter((x) => x.id !== res.id);
+                    const _update = whitelistAuthorities.filter(
+                      (x) => x.id !== res.id
+                    );
                     setWhitelistAuthorities(_update);
                   }}
                 >
@@ -460,7 +506,13 @@ export default function Prediction(properties) {
                   name={res.name}
                   extra="Borrower"
                   expression={{ eye: "normal", mouth: "open" }}
-                  colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]}
+                  colors={[
+                    "#92A1C6",
+                    "#146A7C",
+                    "#F0AB3D",
+                    "#C271B4",
+                    "#C20D90",
+                  ]}
                 />
               </span>
               <span className="col-span-9 ml-3">
@@ -472,7 +524,9 @@ export default function Prediction(properties) {
                   className="mr-2"
                   onClick={(e) => {
                     e.preventDefault();
-                    const _update = blacklistAuthorities.filter((x) => x.id !== res.id);
+                    const _update = blacklistAuthorities.filter(
+                      (x) => x.id !== res.id
+                    );
                     setBlacklistAuthorities(_update);
                   }}
                 >
@@ -493,7 +547,9 @@ export default function Prediction(properties) {
           <Card>
             <CardHeader className="pb-1">
               <CardTitle>🔮 {t("CreatePrediction:card.title")}</CardTitle>
-              <CardDescription>{t("CreatePrediction:card.description")}</CardDescription>
+              <CardDescription>
+                {t("CreatePrediction:card.description")}
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2">
@@ -507,11 +563,15 @@ export default function Prediction(properties) {
                   <div className="grid grid-cols-2 gap-5">
                     <div>
                       <HoverInfo
-                        content={t("AssetCommon:asset_details.symbol.header_content")}
+                        content={t(
+                          "AssetCommon:asset_details.symbol.header_content"
+                        )}
                         header={t("AssetCommon:asset_details.symbol.header")}
                       />
                       <Input
-                        placeholder={t("AssetCommon:asset_details.symbol.placeholder")}
+                        placeholder={t(
+                          "AssetCommon:asset_details.symbol.placeholder"
+                        )}
                         value={symbol}
                         type="text"
                         onInput={(e) => {
@@ -526,11 +586,15 @@ export default function Prediction(properties) {
                     </div>
                     <div>
                       <HoverInfo
-                        content={t("AssetCommon:asset_details.shortName.header_content")}
+                        content={t(
+                          "AssetCommon:asset_details.shortName.header_content"
+                        )}
                         header={t("AssetCommon:asset_details.shortName.header")}
                       />
                       <Input
-                        placeholder={t("AssetCommon:asset_details.shortName.placeholder")}
+                        placeholder={t(
+                          "AssetCommon:asset_details.shortName.placeholder"
+                        )}
                         value={shortName}
                         type="text"
                         onInput={(e) => setShortName(e.currentTarget.value)}
@@ -539,11 +603,15 @@ export default function Prediction(properties) {
                   </div>
 
                   <HoverInfo
-                    content={t("AssetCommon:asset_details.description.header_content")}
+                    content={t(
+                      "AssetCommon:asset_details.description.header_content"
+                    )}
                     header={t("AssetCommon:asset_details.description.header")}
                   />
                   <Textarea
-                    placeholder={t("AssetCommon:asset_details.description.placeholder")}
+                    placeholder={t(
+                      "AssetCommon:asset_details.description.placeholder"
+                    )}
                     value={desc}
                     onInput={(e) => setDesc(e.currentTarget.value)}
                   />
@@ -551,11 +619,17 @@ export default function Prediction(properties) {
                   <div className="grid grid-cols-2 gap-5">
                     <div>
                       <HoverInfo
-                        content={t("AssetCommon:asset_details.max_supply.header_content")}
-                        header={t("AssetCommon:asset_details.max_supply.header")}
+                        content={t(
+                          "AssetCommon:asset_details.max_supply.header_content"
+                        )}
+                        header={t(
+                          "AssetCommon:asset_details.max_supply.header"
+                        )}
                       />
                       <Input
-                        placeholder={t("AssetCommon:asset_details.max_supply.placeholder")}
+                        placeholder={t(
+                          "AssetCommon:asset_details.max_supply.placeholder"
+                        )}
                         value={maxSupply}
                         type="number"
                         onInput={(e) => {
@@ -570,11 +644,15 @@ export default function Prediction(properties) {
                     </div>
                     <div>
                       <HoverInfo
-                        content={t("AssetCommon:asset_details.precision.header_content")}
+                        content={t(
+                          "AssetCommon:asset_details.precision.header_content"
+                        )}
                         header={t("AssetCommon:asset_details.precision.header")}
                       />
                       <Input
-                        placeholder={t("AssetCommon:asset_details.precision.placeholder")}
+                        placeholder={t(
+                          "AssetCommon:asset_details.precision.placeholder"
+                        )}
                         value={precision}
                         type="number"
                         onInput={(e) => {
@@ -603,16 +681,22 @@ export default function Prediction(properties) {
                     header={t("CreatePrediction:pma.condition.header")}
                   />
                   <Textarea
-                    placeholder={t("CreatePrediction:pma.condition.placeholder")}
+                    placeholder={t(
+                      "CreatePrediction:pma.condition.placeholder"
+                    )}
                     value={condition}
                     onInput={(e) => setCondition(e.currentTarget.value)}
                   />
                   <HoverInfo
-                    content={t("CreatePrediction:pma.commission.header_content")}
+                    content={t(
+                      "CreatePrediction:pma.commission.header_content"
+                    )}
                     header={t("CreatePrediction:pma.commission.header")}
                   />
                   <Input
-                    placeholder={t("CreatePrediction:pma.commission.placeholder")}
+                    placeholder={t(
+                      "CreatePrediction:pma.commission.placeholder"
+                    )}
                     value={commission}
                     type="number"
                     min="0"
@@ -625,7 +709,9 @@ export default function Prediction(properties) {
                     }}
                   />
                   <HoverInfo
-                    content={t("CreatePrediction:pma.backing_asset.header_content")}
+                    content={t(
+                      "CreatePrediction:pma.backing_asset.header_content"
+                    )}
                     header={t("CreatePrediction:pma.backing_asset.header")}
                   />
                   <div className="grid grid-cols-2 gap-2">
@@ -650,7 +736,9 @@ export default function Prediction(properties) {
                     />
                   </div>
                   <HoverInfo
-                    content={t("CreatePrediction:pma.resolution.header_content")}
+                    content={t(
+                      "CreatePrediction:pma.resolution.header_content"
+                    )}
                     header={t("CreatePrediction:pma.resolution.header")}
                   />
                   <div className="grid grid-cols-2 gap-3 mt-2">
@@ -681,10 +769,18 @@ export default function Prediction(properties) {
                   <AssetFlag
                     alreadyDisabled={false}
                     id={"reward_percent_flag"}
-                    allowedText={t("AssetCommon:extensions.reward_percent.enabled")}
-                    enabledInfo={t("AssetCommon:extensions.reward_percent.enabledInfo")}
-                    disabledText={t("AssetCommon:extensions.reward_percent.disabled")}
-                    disabledInfo={t("AssetCommon:extensions.reward_percent.disabledInfo")}
+                    allowedText={t(
+                      "AssetCommon:extensions.reward_percent.enabled"
+                    )}
+                    enabledInfo={t(
+                      "AssetCommon:extensions.reward_percent.enabledInfo"
+                    )}
+                    disabledText={t(
+                      "AssetCommon:extensions.reward_percent.disabled"
+                    )}
+                    disabledInfo={t(
+                      "AssetCommon:extensions.reward_percent.disabledInfo"
+                    )}
                     permission={true}
                     flag={enabledReferrerReward}
                     setFlag={setEnabledReferrerReward}
@@ -693,8 +789,12 @@ export default function Prediction(properties) {
                   {enabledReferrerReward ? (
                     <>
                       <HoverInfo
-                        content={t("AssetCommon:extensions.reward_percent.header_content")}
-                        header={t("AssetCommon:extensions.reward_percent.header")}
+                        content={t(
+                          "AssetCommon:extensions.reward_percent.header_content"
+                        )}
+                        header={t(
+                          "AssetCommon:extensions.reward_percent.header"
+                        )}
                       />
                       <Input
                         placeholder={0}
@@ -706,7 +806,10 @@ export default function Prediction(properties) {
                         pattern="^\d*(\.\d{0,2})?$"
                         onInput={(e) => {
                           setReferrerReward(e.currentTarget.value);
-                          debouncedPercent(e.currentTarget.value, setReferrerReward);
+                          debouncedPercent(
+                            e.currentTarget.value,
+                            setReferrerReward
+                          );
                         }}
                       />
                     </>
@@ -715,11 +818,15 @@ export default function Prediction(properties) {
                   <AssetFlag
                     alreadyDisabled={false}
                     id={"whitelist_market_fee_sharing_flag"}
-                    allowedText={t("AssetCommon:extensions.whitelist_market_fee_sharing.enabled")}
+                    allowedText={t(
+                      "AssetCommon:extensions.whitelist_market_fee_sharing.enabled"
+                    )}
                     enabledInfo={t(
                       "AssetCommon:extensions.whitelist_market_fee_sharing.enabledInfo"
                     )}
-                    disabledText={t("AssetCommon:extensions.whitelist_market_fee_sharing.disabled")}
+                    disabledText={t(
+                      "AssetCommon:extensions.whitelist_market_fee_sharing.disabled"
+                    )}
                     disabledInfo={t(
                       "AssetCommon:extensions.whitelist_market_fee_sharing.disabledInfo"
                     )}
@@ -734,7 +841,9 @@ export default function Prediction(properties) {
                         content={t(
                           "AssetCommon:extensions.whitelist_market_fee_sharing.header_content"
                         )}
-                        header={t("AssetCommon:extensions.whitelist_market_fee_sharing.header")}
+                        header={t(
+                          "AssetCommon:extensions.whitelist_market_fee_sharing.header"
+                        )}
                       />
                       <div className="grid grid-cols-12 mt-1">
                         <span className="col-span-9 border border-gray-300 rounded">
@@ -762,7 +871,9 @@ export default function Prediction(properties) {
                             <DialogContent className="sm:max-w-[375px] bg-white">
                               <DialogHeader>
                                 <DialogTitle>
-                                  {!usr || !usr.chain ? t("Transfer:bitsharesAccountSearch") : null}
+                                  {!usr || !usr.chain
+                                    ? t("Transfer:bitsharesAccountSearch")
+                                    : null}
                                   {usr && usr.chain === "bitshares"
                                     ? t("Transfer:bitsharesAccountSearchBTS")
                                     : null}
@@ -772,15 +883,20 @@ export default function Prediction(properties) {
                                 </DialogTitle>
                               </DialogHeader>
                               <AccountSearch
-                                chain={usr && usr.chain ? usr.chain : "bitshares"}
+                                chain={
+                                  usr && usr.chain ? usr.chain : "bitshares"
+                                }
                                 excludedUsers={[]}
                                 setChosenAccount={(_account) => {
                                   if (
                                     _account &&
-                                    !feeSharingWhitelist.find((_usr) => _usr.id === _account.id)
+                                    !feeSharingWhitelist.find(
+                                      (_usr) => _usr.id === _account.id
+                                    )
                                   ) {
                                     setFeeSharingWhitelist(
-                                      feeSharingWhitelist && feeSharingWhitelist.length
+                                      feeSharingWhitelist &&
+                                        feeSharingWhitelist.length
                                         ? [...feeSharingWhitelist, _account]
                                         : [_account]
                                     );
@@ -798,10 +914,18 @@ export default function Prediction(properties) {
                   <AssetFlag
                     alreadyDisabled={false}
                     id={"taker_fee_percent_flag"}
-                    allowedText={t("AssetCommon:extensions.taker_fee_percent.enabled")}
-                    enabledInfo={t("AssetCommon:extensions.taker_fee_percent.enabledInfo")}
-                    disabledText={t("AssetCommon:extensions.taker_fee_percent.disabled")}
-                    disabledInfo={t("AssetCommon:extensions.taker_fee_percent.disabledInfo")}
+                    allowedText={t(
+                      "AssetCommon:extensions.taker_fee_percent.enabled"
+                    )}
+                    enabledInfo={t(
+                      "AssetCommon:extensions.taker_fee_percent.enabledInfo"
+                    )}
+                    disabledText={t(
+                      "AssetCommon:extensions.taker_fee_percent.disabled"
+                    )}
+                    disabledInfo={t(
+                      "AssetCommon:extensions.taker_fee_percent.disabledInfo"
+                    )}
                     permission={true}
                     flag={enabledTakerFee}
                     setFlag={setEnabledTakerFee}
@@ -810,11 +934,17 @@ export default function Prediction(properties) {
                   {enabledTakerFee ? (
                     <>
                       <HoverInfo
-                        content={t("AssetCommon:extensions.taker_fee_percent.header_content")}
-                        header={t("AssetCommon:extensions.taker_fee_percent.header")}
+                        content={t(
+                          "AssetCommon:extensions.taker_fee_percent.header_content"
+                        )}
+                        header={t(
+                          "AssetCommon:extensions.taker_fee_percent.header"
+                        )}
                       />
                       <Input
-                        placeholder={t("AssetCommon:extensions.taker_fee_percent.placeholder")}
+                        placeholder={t(
+                          "AssetCommon:extensions.taker_fee_percent.placeholder"
+                        )}
                         value={takerFee}
                         type="number"
                         min="0"
@@ -842,10 +972,18 @@ export default function Prediction(properties) {
                       <AssetPermission
                         alreadyDisabled={false}
                         id={"white_list"}
-                        allowedText={t("AssetCommon:permissions.white_list.about")}
-                        enabledInfo={t("AssetCommon:permissions.white_list.enabledInfo")}
-                        disabledText={t("AssetCommon:permissions.white_list.about")}
-                        disabledInfo={t("AssetCommon:permissions.white_list.disabledInfo")}
+                        allowedText={t(
+                          "AssetCommon:permissions.white_list.about"
+                        )}
+                        enabledInfo={t(
+                          "AssetCommon:permissions.white_list.enabledInfo"
+                        )}
+                        disabledText={t(
+                          "AssetCommon:permissions.white_list.about"
+                        )}
+                        disabledInfo={t(
+                          "AssetCommon:permissions.white_list.disabledInfo"
+                        )}
                         permission={permWhiteList}
                         setPermission={setPermWhiteList}
                         flag={flagWhiteList}
@@ -854,10 +992,18 @@ export default function Prediction(properties) {
                       <AssetPermission
                         alreadyDisabled={false}
                         id={"transfer_restricted"}
-                        allowedText={t("AssetCommon:permissions.transfer_restricted.about")}
-                        enabledInfo={t("AssetCommon:permissions.transfer_restricted.enabledInfo")}
-                        disabledText={t("AssetCommon:permissions.transfer_restricted.about")}
-                        disabledInfo={t("AssetCommon:permissions.transfer_restricted.disabledInfo")}
+                        allowedText={t(
+                          "AssetCommon:permissions.transfer_restricted.about"
+                        )}
+                        enabledInfo={t(
+                          "AssetCommon:permissions.transfer_restricted.enabledInfo"
+                        )}
+                        disabledText={t(
+                          "AssetCommon:permissions.transfer_restricted.about"
+                        )}
+                        disabledInfo={t(
+                          "AssetCommon:permissions.transfer_restricted.disabledInfo"
+                        )}
                         permission={permTransferRestricted}
                         setPermission={setPermTransferRestricted}
                         flag={flagTransferRestricted}
@@ -866,9 +1012,15 @@ export default function Prediction(properties) {
                       <AssetPermission
                         alreadyDisabled={false}
                         id={"disable_confidential"}
-                        allowedText={t("AssetCommon:permissions.disable_confidential.about")}
-                        enabledInfo={t("AssetCommon:permissions.disable_confidential.enabledInfo")}
-                        disabledText={t("AssetCommon:permissions.disable_confidential.about")}
+                        allowedText={t(
+                          "AssetCommon:permissions.disable_confidential.about"
+                        )}
+                        enabledInfo={t(
+                          "AssetCommon:permissions.disable_confidential.enabledInfo"
+                        )}
+                        disabledText={t(
+                          "AssetCommon:permissions.disable_confidential.about"
+                        )}
                         disabledInfo={t(
                           "AssetCommon:permissions.disable_confidential.disabledInfo"
                         )}
@@ -881,10 +1033,18 @@ export default function Prediction(properties) {
                       <AssetPermission
                         alreadyDisabled={false}
                         id={"witness_fed_asset"}
-                        allowedText={t("AssetCommon:permissions.witness_fed_asset.about")}
-                        enabledInfo={t("AssetCommon:permissions.witness_fed_asset.enabledInfo")}
-                        disabledText={t("AssetCommon:permissions.witness_fed_asset.about")}
-                        disabledInfo={t("AssetCommon:permissions.witness_fed_asset.disabledInfo")}
+                        allowedText={t(
+                          "AssetCommon:permissions.witness_fed_asset.about"
+                        )}
+                        enabledInfo={t(
+                          "AssetCommon:permissions.witness_fed_asset.enabledInfo"
+                        )}
+                        disabledText={t(
+                          "AssetCommon:permissions.witness_fed_asset.about"
+                        )}
+                        disabledInfo={t(
+                          "AssetCommon:permissions.witness_fed_asset.disabledInfo"
+                        )}
                         permission={permWitnessFedAsset}
                         setPermission={setPermWitnessFedAsset}
                         flag={flagWitnessFedAsset}
@@ -894,10 +1054,18 @@ export default function Prediction(properties) {
                       <AssetPermission
                         alreadyDisabled={false}
                         id={"committee_fed_asset"}
-                        allowedText={t("AssetCommon:permissions.committee_fed_asset.about")}
-                        enabledInfo={t("AssetCommon:permissions.committee_fed_asset.enabledInfo")}
-                        disabledText={t("AssetCommon:permissions.committee_fed_asset.about")}
-                        disabledInfo={t("AssetCommon:permissions.committee_fed_asset.disabledInfo")}
+                        allowedText={t(
+                          "AssetCommon:permissions.committee_fed_asset.about"
+                        )}
+                        enabledInfo={t(
+                          "AssetCommon:permissions.committee_fed_asset.enabledInfo"
+                        )}
+                        disabledText={t(
+                          "AssetCommon:permissions.committee_fed_asset.about"
+                        )}
+                        disabledInfo={t(
+                          "AssetCommon:permissions.committee_fed_asset.disabledInfo"
+                        )}
                         permission={permCommitteeFedAsset}
                         setPermission={setPermCommitteeFedAsset}
                         flag={flagCommitteeFedAsset}
@@ -915,9 +1083,13 @@ export default function Prediction(properties) {
                         alreadyDisabled={false}
                         id={"white_list_flag"}
                         allowedText={t("AssetCommon:flags.white_list.about")}
-                        enabledInfo={t("AssetCommon:flags.white_list.enabledInfo")}
+                        enabledInfo={t(
+                          "AssetCommon:flags.white_list.enabledInfo"
+                        )}
                         disabledText={t("AssetCommon:flags.white_list.about")}
-                        disabledInfo={t("AssetCommon:flags.white_list.disabledInfo")}
+                        disabledInfo={t(
+                          "AssetCommon:flags.white_list.disabledInfo"
+                        )}
                         permission={permWhiteList}
                         flag={flagWhiteList}
                         setFlag={setFlagWhiteList}
@@ -925,10 +1097,18 @@ export default function Prediction(properties) {
                       <AssetFlag
                         alreadyDisabled={false}
                         id={"transfer_restricted_flag"}
-                        allowedText={t("AssetCommon:flags.transfer_restricted.about")}
-                        enabledInfo={t("AssetCommon:flags.transfer_restricted.enabledInfo")}
-                        disabledText={t("AssetCommon:flags.transfer_restricted.about")}
-                        disabledInfo={t("AssetCommon:flags.transfer_restricted.disabledInfo")}
+                        allowedText={t(
+                          "AssetCommon:flags.transfer_restricted.about"
+                        )}
+                        enabledInfo={t(
+                          "AssetCommon:flags.transfer_restricted.enabledInfo"
+                        )}
+                        disabledText={t(
+                          "AssetCommon:flags.transfer_restricted.about"
+                        )}
+                        disabledInfo={t(
+                          "AssetCommon:flags.transfer_restricted.disabledInfo"
+                        )}
                         permission={permTransferRestricted}
                         flag={flagTransferRestricted}
                         setFlag={setFlagTransferRestricted}
@@ -936,10 +1116,18 @@ export default function Prediction(properties) {
                       <AssetFlag
                         alreadyDisabled={false}
                         id={"disable_confidential_flag"}
-                        allowedText={t("AssetCommon:flags.disable_confidential.about")}
-                        enabledInfo={t("AssetCommon:flags.disable_confidential.enabledInfo")}
-                        disabledText={t("AssetCommon:flags.disable_confidential.about")}
-                        disabledInfo={t("AssetCommon:flags.disable_confidential.disabledInfo")}
+                        allowedText={t(
+                          "AssetCommon:flags.disable_confidential.about"
+                        )}
+                        enabledInfo={t(
+                          "AssetCommon:flags.disable_confidential.enabledInfo"
+                        )}
+                        disabledText={t(
+                          "AssetCommon:flags.disable_confidential.about"
+                        )}
+                        disabledInfo={t(
+                          "AssetCommon:flags.disable_confidential.disabledInfo"
+                        )}
                         permission={permDisableConfidential}
                         flag={flagDisableConfidential}
                         setFlag={setFlagDisableConfidential}
@@ -948,10 +1136,18 @@ export default function Prediction(properties) {
                       <AssetFlag
                         alreadyDisabled={false}
                         id={"witness_fed_asset_flag"}
-                        allowedText={t("AssetCommon:flags.witness_fed_asset.about")}
-                        enabledInfo={t("AssetCommon:flags.witness_fed_asset.enabledInfo")}
-                        disabledText={t("AssetCommon:flags.witness_fed_asset.about")}
-                        disabledInfo={t("AssetCommon:flags.witness_fed_asset.disabledInfo")}
+                        allowedText={t(
+                          "AssetCommon:flags.witness_fed_asset.about"
+                        )}
+                        enabledInfo={t(
+                          "AssetCommon:flags.witness_fed_asset.enabledInfo"
+                        )}
+                        disabledText={t(
+                          "AssetCommon:flags.witness_fed_asset.about"
+                        )}
+                        disabledInfo={t(
+                          "AssetCommon:flags.witness_fed_asset.disabledInfo"
+                        )}
                         permission={permWitnessFedAsset}
                         flag={flagWitnessFedAsset}
                         setFlag={setFlagWitnessFedAsset}
@@ -960,10 +1156,18 @@ export default function Prediction(properties) {
                       <AssetFlag
                         alreadyDisabled={false}
                         id={"committee_fed_asset_flag"}
-                        allowedText={t("AssetCommon:flags.committee_fed_asset.about")}
-                        enabledInfo={t("AssetCommon:flags.committee_fed_asset.enabledInfo")}
-                        disabledText={t("AssetCommon:flags.committee_fed_asset.about")}
-                        disabledInfo={t("AssetCommon:flags.committee_fed_asset.disabledInfo")}
+                        allowedText={t(
+                          "AssetCommon:flags.committee_fed_asset.about"
+                        )}
+                        enabledInfo={t(
+                          "AssetCommon:flags.committee_fed_asset.enabledInfo"
+                        )}
+                        disabledText={t(
+                          "AssetCommon:flags.committee_fed_asset.about"
+                        )}
+                        disabledInfo={t(
+                          "AssetCommon:flags.committee_fed_asset.disabledInfo"
+                        )}
                         permission={permCommitteeFedAsset}
                         flag={flagCommitteeFedAsset}
                         setFlag={setFlagCommitteeFedAsset}
@@ -1004,7 +1208,9 @@ export default function Prediction(properties) {
                           <DialogContent className="sm:max-w-[375px] bg-white">
                             <DialogHeader>
                               <DialogTitle>
-                                {!usr || !usr.chain ? t("Transfer:bitsharesAccountSearch") : null}
+                                {!usr || !usr.chain
+                                  ? t("Transfer:bitsharesAccountSearch")
+                                  : null}
                                 {usr && usr.chain === "bitshares"
                                   ? t("Transfer:bitsharesAccountSearchBTS")
                                   : null}
@@ -1019,10 +1225,13 @@ export default function Prediction(properties) {
                               setChosenAccount={(_account) => {
                                 if (
                                   _account &&
-                                  !whitelistAuthorities.find((_usr) => _usr.id === _account.id)
+                                  !whitelistAuthorities.find(
+                                    (_usr) => _usr.id === _account.id
+                                  )
                                 ) {
                                   setWhitelistAuthorities(
-                                    whitelistAuthorities && whitelistAuthorities.length
+                                    whitelistAuthorities &&
+                                      whitelistAuthorities.length
                                       ? [...whitelistAuthorities, _account]
                                       : [_account]
                                   );
@@ -1069,7 +1278,9 @@ export default function Prediction(properties) {
                           <DialogContent className="sm:max-w-[375px] bg-white">
                             <DialogHeader>
                               <DialogTitle>
-                                {!usr || !usr.chain ? t("Transfer:bitsharesAccountSearch") : null}
+                                {!usr || !usr.chain
+                                  ? t("Transfer:bitsharesAccountSearch")
+                                  : null}
                                 {usr && usr.chain === "bitshares"
                                   ? t("Transfer:bitsharesAccountSearchBTS")
                                   : null}
@@ -1084,10 +1295,13 @@ export default function Prediction(properties) {
                               setChosenAccount={(_account) => {
                                 if (
                                   _account &&
-                                  !blacklistAuthorities.find((_usr) => _usr.id === _account.id)
+                                  !blacklistAuthorities.find(
+                                    (_usr) => _usr.id === _account.id
+                                  )
                                 ) {
                                   setBlacklistAuthorities(
-                                    blacklistAuthorities && blacklistAuthorities.length
+                                    blacklistAuthorities &&
+                                      blacklistAuthorities.length
                                       ? [...blacklistAuthorities, _account]
                                       : [_account]
                                   );
@@ -1119,7 +1333,9 @@ export default function Prediction(properties) {
             <Card>
               <CardHeader className="pb-3">
                 <CardTitle>{t("CreatePrediction:risks.title")}</CardTitle>
-                <CardDescription>{t("CreatePrediction:risks.description")}</CardDescription>
+                <CardDescription>
+                  {t("CreatePrediction:risks.description")}
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <span className="text-sm">
@@ -1142,7 +1358,9 @@ export default function Prediction(properties) {
           userID={usr.id}
           dismissCallback={setShowDialog}
           key={`CreatingPMA-${usr.id}-${symbol}`}
-          headerText={t("CreatePrediction:dialogContent.headerText", { symbol })}
+          headerText={t("CreatePrediction:dialogContent.headerText", {
+            symbol,
+          })}
           trxJSON={[trx]}
         />
       ) : null}

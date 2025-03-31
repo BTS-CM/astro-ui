@@ -3,14 +3,24 @@ import Apis from "@/bts/ws/ApiInstances";
 import { chains } from "@/config/chains";
 
 // Returns an id if the asset exists
-async function checkAssetExists(chain: string, symbol_or_id: string, specificNode?: string | null) {
+async function checkAssetExists(
+  chain: string,
+  symbol_or_id: string,
+  specificNode?: string | null
+) {
   return new Promise(async (resolve, reject) => {
-    let node = specificNode ? specificNode : (chains as any)[chain].nodeList[0].url;
+    let node = specificNode
+      ? specificNode
+      : (chains as any)[chain].nodeList[0].url;
 
     let currentAPI;
     try {
-      currentAPI = await Apis.instance(node, true, 4000, { enableDatabase: true }, (error: Error) =>
-        console.log({ error })
+      currentAPI = await Apis.instance(
+        node,
+        true,
+        4000,
+        { enableDatabase: true },
+        (error: Error) => console.log({ error })
       );
     } catch (error) {
       console.log({ error, node });

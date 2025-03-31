@@ -5,12 +5,18 @@ import { chains } from "@/config/chains";
 // Get the latest ID for an object in the blockchain
 async function getCurrentBlock(chain: string, specificNode?: string | null) {
   return new Promise(async (resolve, reject) => {
-    let node = specificNode ? specificNode : (chains as any)[chain].nodeList[0].url;
+    let node = specificNode
+      ? specificNode
+      : (chains as any)[chain].nodeList[0].url;
 
     let currentAPI;
     try {
-      currentAPI = await Apis.instance(node, true, 4000, { enableDatabase: true }, (error: Error) =>
-        console.log({ error })
+      currentAPI = await Apis.instance(
+        node,
+        true,
+        4000,
+        { enableDatabase: true },
+        (error: Error) => console.log({ error })
       );
     } catch (error) {
       console.log({ error, node });
@@ -18,7 +24,9 @@ async function getCurrentBlock(chain: string, specificNode?: string | null) {
       return resolve(
         getCurrentBlock(
           chain,
-          (chains as any)[chain].nodeList.map((x: any) => x.url).filter((x: string) => x !== node)[0]
+          (chains as any)[chain].nodeList
+            .map((x: any) => x.url)
+            .filter((x: string) => x !== node)[0]
         )
       );
     }
@@ -37,10 +45,12 @@ async function getCurrentBlock(chain: string, specificNode?: string | null) {
       reject();
       return;
     }
-    
+
     let currentBlock;
     try {
-      currentBlock = await currentAPI.db_api().exec("get_block", [dynamicGlobalProperties.head_block_number]);
+      currentBlock = await currentAPI
+        .db_api()
+        .exec("get_block", [dynamicGlobalProperties.head_block_number]);
     } catch (error) {
       console.log({ error });
     }

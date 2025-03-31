@@ -4,7 +4,10 @@ import { blockchainFloat } from "@/lib/common.js";
 function limitByPrecision(value, p = 8) {
   let valueString = value.toString();
   let splitString = valueString.split(".");
-  if (splitString.length === 1 || (splitString.length === 2 && splitString[1].length <= p)) {
+  if (
+    splitString.length === 1 ||
+    (splitString.length === 2 && splitString[1].length <= p)
+  ) {
     return parseFloat(valueString);
   } else {
     return parseFloat(splitString[0] + "." + splitString[1].substr(0, p));

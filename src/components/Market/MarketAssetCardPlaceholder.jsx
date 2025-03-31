@@ -36,7 +36,9 @@ export default function MarketAssetCard(properties) {
               <span className="text-sm"> {t("MarketAssetCard:selling")}</span>
             </>
           ) : null}
-          {type === "pool" ? <span>{t("MarketAssetCard:poolStakeAsset")}</span> : null}
+          {type === "pool" ? (
+            <span>{t("MarketAssetCard:poolStakeAsset")}</span>
+          ) : null}
         </CardDescription>
       </CardHeader>
       <CardContent className="text-sm pb-2">
@@ -45,22 +47,42 @@ export default function MarketAssetCard(properties) {
             {t("MarketAssetCard:supply")}
           </Button>
 
-          <Button variant="outline" className="h-6" style={{ marginLeft: "3px" }}>
+          <Button
+            variant="outline"
+            className="h-6"
+            style={{ marginLeft: "3px" }}
+          >
             {t("MarketAssetCard:links")}
           </Button>
 
-          <Button variant="outline" className="h-6" style={{ marginLeft: "3px" }}>
+          <Button
+            variant="outline"
+            className="h-6"
+            style={{ marginLeft: "3px" }}
+          >
             {t("MarketAssetCard:json")}
           </Button>
         </div>
         <div className="grid grid-cols-1 gap-1 w-full">
-          <CardRowPlaceholder title={t("MarketAssetCard:yourBalance")} dialogtitle={"balance"} />
+          <CardRowPlaceholder
+            title={t("MarketAssetCard:yourBalance")}
+            dialogtitle={"balance"}
+          />
 
-          <CardRowPlaceholder title={t("MarketAssetCard:assetType")} dialogtitle={"assetType"} />
+          <CardRowPlaceholder
+            title={t("MarketAssetCard:assetType")}
+            dialogtitle={"assetType"}
+          />
 
-          <CardRowPlaceholder title={t("MarketAssetCard:issuer")} dialogtitle={"issuer"} />
+          <CardRowPlaceholder
+            title={t("MarketAssetCard:issuer")}
+            dialogtitle={"issuer"}
+          />
 
-          <CardRowPlaceholder title={t("MarketAssetCard:precision")} dialogtitle={"precision"} />
+          <CardRowPlaceholder
+            title={t("MarketAssetCard:precision")}
+            dialogtitle={"precision"}
+          />
         </div>
       </CardContent>
     </Card>

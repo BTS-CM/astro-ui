@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useSyncExternalStore, useMemo, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  useSyncExternalStore,
+  useMemo,
+  useCallback,
+} from "react";
 import { useStore } from "@nanostores/react";
 import { FixedSizeList as List } from "react-window";
 import { useTranslation } from "react-i18next";
@@ -66,7 +72,9 @@ import {
 function getImages(nft_object) {
   if (!nft_object) return [];
   const object_keys = Object.keys(nft_object);
-  if (object_keys.find((x) => x.includes("media_") && x.includes("_multihashes"))) {
+  if (
+    object_keys.find((x) => x.includes("media_") && x.includes("_multihashes"))
+  ) {
     return (
       object_keys
         .filter((key) => key.includes("media_") && key.includes("_multihashes"))
@@ -93,10 +101,15 @@ function getImages(nft_object) {
 
 export default function UIA(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
-  const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
+  const usr = useSyncExternalStore(
+    $currentUser.subscribe,
+    $currentUser.get,
+    () => true
+  );
   const currentNode = useStore($currentNode);
 
-  const { _assetsBTS, _assetsTEST, _marketSearchBTS, _marketSearchTEST } = properties;
+  const { _assetsBTS, _assetsTEST, _marketSearchBTS, _marketSearchTEST } =
+    properties;
 
   const marketSearch = useMemo(() => {
     if (usr && usr.chain && (_marketSearchBTS || _marketSearchTEST)) {
@@ -133,14 +146,16 @@ export default function UIA(properties) {
         currentNode ? currentNode.url : null,
       ]);
 
-      unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
-        if (data && !error && !loading) {
-          const filteredData = data.filter((balance) =>
-            assets.find((x) => x.id === balance.asset_id)
-          );
-          setBalances(filteredData);
+      unsubscribeUserBalances = userBalancesStore.subscribe(
+        ({ data, error, loading }) => {
+          if (data && !error && !loading) {
+            const filteredData = data.filter((balance) =>
+              assets.find((x) => x.id === balance.asset_id)
+            );
+            setBalances(filteredData);
+          }
         }
-      });
+      );
     }
 
     return () => {
@@ -179,7 +194,8 @@ export default function UIA(properties) {
 
   // Extensions
   const [enabledReferrerReward, setEnabledReferrerReward] = useState(false); // reward_percent
-  const [enabledFeeSharingWhitelist, setEnabledFeeSharingWhitelist] = useState(false); // whitelist_market_fee_sharing
+  const [enabledFeeSharingWhitelist, setEnabledFeeSharingWhitelist] =
+    useState(false); // whitelist_market_fee_sharing
   const [enabledTakerFee, setEnabledTakerFee] = useState(false); // taker_fee_percent
 
   const [referrerReward, setReferrerReward] = useState(0); // reward_percent
@@ -352,7 +368,9 @@ export default function UIA(properties) {
       _extensions.reward_percent = referrerReward ? referrerReward * 100 : 0;
     }
     if (enabledFeeSharingWhitelist) {
-      _extensions.whitelist_market_fee_sharing = feeSharingWhitelist.map((x) => x.id);
+      _extensions.whitelist_market_fee_sharing = feeSharingWhitelist.map(
+        (x) => x.id
+      );
     }
     if (enabledTakerFee) {
       _extensions.taker_fee_percent = takerFee ? takerFee * 100 : 0;
@@ -490,7 +508,11 @@ export default function UIA(properties) {
     let res = nftMedia[index];
 
     return (
-      <div style={{ ...style }} key={`dialogrow-${index}`} className="grid grid-cols-4">
+      <div
+        style={{ ...style }}
+        key={`dialogrow-${index}`}
+        className="grid grid-cols-4"
+      >
         <div className="col-span-1">{res.type}</div>
         <div className="col-span-1">
           <Dialog>
@@ -523,10 +545,14 @@ export default function UIA(properties) {
     );
   };
 
-  const [whitelistMarketFeeSharingDialogOpen, setWhitelistMarketFeeSharingDialogOpen] =
+  const [
+    whitelistMarketFeeSharingDialogOpen,
+    setWhitelistMarketFeeSharingDialogOpen,
+  ] = useState(false);
+  const [whitelistAuthorityDialogOpen, setWhitelistAuthorityDialogOpen] =
     useState(false);
-  const [whitelistAuthorityDialogOpen, setWhitelistAuthorityDialogOpen] = useState(false);
-  const [blacklistAuthorityDialogOpen, setBlacklistAuthorityDialogOpen] = useState(false);
+  const [blacklistAuthorityDialogOpen, setBlacklistAuthorityDialogOpen] =
+    useState(false);
 
   const allowedMarketsRow = ({ index, style }) => {
     let res = allowedMarkets[index];
@@ -544,10 +570,13 @@ export default function UIA(properties) {
             <span className="grid grid-cols-12">
               <span className="col-span-11">
                 <div className="">
-                  {currentAsset ? `${currentAsset.symbol} (${currentAsset.id})` : res}
+                  {currentAsset
+                    ? `${currentAsset.symbol} (${currentAsset.id})`
+                    : res}
                 </div>
                 <div className="text-sm">
-                  {t("Smartcoins:createdBy")} {issuer && issuer.u ? issuer.u : currentAsset.issuer}
+                  {t("Smartcoins:createdBy")}{" "}
+                  {issuer && issuer.u ? issuer.u : currentAsset.issuer}
                 </div>
               </span>
               <span className="col-span-1">
@@ -586,10 +615,13 @@ export default function UIA(properties) {
             <span className="grid grid-cols-12">
               <span className="col-span-11">
                 <div className="">
-                  {currentAsset ? `${currentAsset.symbol} (${currentAsset.id})` : res}
+                  {currentAsset
+                    ? `${currentAsset.symbol} (${currentAsset.id})`
+                    : res}
                 </div>
                 <div className="text-sm">
-                  {t("Smartcoins:createdBy")} {issuer && issuer.u ? issuer.u : currentAsset.issuer}
+                  {t("Smartcoins:createdBy")}{" "}
+                  {issuer && issuer.u ? issuer.u : currentAsset.issuer}
                 </div>
               </span>
               <span className="col-span-1">
@@ -629,7 +661,13 @@ export default function UIA(properties) {
                   name={res.name}
                   extra="Borrower"
                   expression={{ eye: "normal", mouth: "open" }}
-                  colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]}
+                  colors={[
+                    "#92A1C6",
+                    "#146A7C",
+                    "#F0AB3D",
+                    "#C271B4",
+                    "#C20D90",
+                  ]}
                 />
               </span>
               <span className="col-span-10 ml-3">
@@ -641,7 +679,9 @@ export default function UIA(properties) {
                   className="mr-2"
                   onClick={(e) => {
                     e.preventDefault();
-                    const _update = feeSharingWhitelist.filter((x) => x.id !== res.id);
+                    const _update = feeSharingWhitelist.filter(
+                      (x) => x.id !== res.id
+                    );
                     setFeeSharingWhitelist(_update);
                   }}
                 >
@@ -672,7 +712,13 @@ export default function UIA(properties) {
                   name={res.name}
                   extra="Borrower"
                   expression={{ eye: "normal", mouth: "open" }}
-                  colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]}
+                  colors={[
+                    "#92A1C6",
+                    "#146A7C",
+                    "#F0AB3D",
+                    "#C271B4",
+                    "#C20D90",
+                  ]}
                 />
               </span>
               <span className="col-span-10 ml-3">
@@ -684,7 +730,9 @@ export default function UIA(properties) {
                   className="mr-2"
                   onClick={(e) => {
                     e.preventDefault();
-                    const _update = whitelistAuthorities.filter((x) => x.id !== res.id);
+                    const _update = whitelistAuthorities.filter(
+                      (x) => x.id !== res.id
+                    );
                     setWhitelistAuthorities(_update);
                   }}
                 >
@@ -715,11 +763,19 @@ export default function UIA(properties) {
                   name={res.name ? res.name : ""}
                   extra="Borrower"
                   expression={{ eye: "normal", mouth: "open" }}
-                  colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]}
+                  colors={[
+                    "#92A1C6",
+                    "#146A7C",
+                    "#F0AB3D",
+                    "#C271B4",
+                    "#C20D90",
+                  ]}
                 />
               </span>
               <span className="col-span-9 ml-3">
-                {res.name ? `#${index + 1}: ${res.name} (${res.id})` : `#${index + 1}: ${res.id}`}
+                {res.name
+                  ? `#${index + 1}: ${res.name} (${res.id})`
+                  : `#${index + 1}: ${res.id}`}
               </span>
               <span className="col-span-1">
                 <Button
@@ -727,7 +783,9 @@ export default function UIA(properties) {
                   className="mr-2"
                   onClick={(e) => {
                     e.preventDefault();
-                    const _update = blacklistAuthorities.filter((x) => x.id !== res.id);
+                    const _update = blacklistAuthorities.filter(
+                      (x) => x.id !== res.id
+                    );
                     setBlacklistAuthorities(_update);
                   }}
                 >
@@ -768,7 +826,12 @@ export default function UIA(properties) {
 
           setSymbol(propsAsset.symbol);
           setPrecision(propsAsset.precision);
-          setMaxSupply(humanReadableFloat(propsAsset.options.max_supply, propsAsset.precision));
+          setMaxSupply(
+            humanReadableFloat(
+              propsAsset.options.max_supply,
+              propsAsset.precision
+            )
+          );
 
           const desc = propsAsset.options.description;
           let parsedJSON;
@@ -777,7 +840,7 @@ export default function UIA(properties) {
             try {
               _desc = JSON.parse(desc);
             } catch (e) {
-              console.log({e, id: propsAsset.id, desc});
+              console.log({ e, id: propsAsset.id, desc });
             }
             if (_desc && _desc.hasOwnProperty("main")) {
               parsedJSON = _desc;
@@ -806,16 +869,25 @@ export default function UIA(properties) {
           }
           // End of NFT logic
 
-          setShortName(parsedJSON && parsedJSON.short_name ? parsedJSON.short_name : "");
+          setShortName(
+            parsedJSON && parsedJSON.short_name ? parsedJSON.short_name : ""
+          );
           setDesc(parsedJSON && parsedJSON.main ? parsedJSON.main : "");
           setMarket(parsedJSON && parsedJSON.market ? parsedJSON.market : "");
           setCommission(propsAsset.options.market_fee_percent / 100);
           setMaxCommission(
-            humanReadableFloat(propsAsset.options.max_market_fee, propsAsset.precision)
+            humanReadableFloat(
+              propsAsset.options.max_market_fee,
+              propsAsset.precision
+            )
           );
 
-          setAllowedMarketsEnabled(propsAsset.options.whitelist_markets.length > 0);
-          setBannedMarketsEnabled(propsAsset.options.blacklist_markets.length > 0);
+          setAllowedMarketsEnabled(
+            propsAsset.options.whitelist_markets.length > 0
+          );
+          setBannedMarketsEnabled(
+            propsAsset.options.blacklist_markets.length > 0
+          );
           setAllowedMarkets(propsAsset.options.whitelist_markets);
           setBannedMarkets(propsAsset.options.blacklist_markets);
           setWhitelistAuthorities(
@@ -836,7 +908,9 @@ export default function UIA(properties) {
           );
 
           const _flags = getFlagBooleans(propsAsset.options.flags);
-          const _issuer_permissions = getFlagBooleans(propsAsset.options.issuer_permissions);
+          const _issuer_permissions = getFlagBooleans(
+            propsAsset.options.issuer_permissions
+          );
 
           if (_issuer_permissions.charge_market_fee) {
             setPermChargeMarketFee(true);
@@ -897,12 +971,16 @@ export default function UIA(properties) {
 
           if (propsAsset.options.extensions.reward_percent) {
             setEnabledReferrerReward(true);
-            setReferrerReward(propsAsset.options.extensions.reward_percent / 100);
+            setReferrerReward(
+              propsAsset.options.extensions.reward_percent / 100
+            );
           }
 
           if (propsAsset.options.extensions.whitelist_market_fee_sharing) {
             setEnabledFeeSharingWhitelist(true);
-            setFeeSharingWhitelist(propsAsset.options.extensions.whitelist_market_fee_sharing);
+            setFeeSharingWhitelist(
+              propsAsset.options.extensions.whitelist_market_fee_sharing
+            );
           }
 
           if (propsAsset.options.extensions.taker_fee_percent) {
@@ -911,7 +989,10 @@ export default function UIA(properties) {
           }
 
           setCerBaseAmount(
-            humanReadableFloat(propsAsset.options.core_exchange_rate.base.amount, 5)
+            humanReadableFloat(
+              propsAsset.options.core_exchange_rate.base.amount,
+              5
+            )
           );
           setCerQuoteAmount(
             humanReadableFloat(
@@ -935,9 +1016,16 @@ export default function UIA(properties) {
           <Card>
             <CardHeader className="pb-1">
               <CardTitle>
-                🍬 {t(!editing ? "CreateUIA:card.title_create" : "CreateUIA:card.title_edit")}
+                🍬{" "}
+                {t(
+                  !editing
+                    ? "CreateUIA:card.title_create"
+                    : "CreateUIA:card.title_edit"
+                )}
               </CardTitle>
-              <CardDescription>{t("CreateUIA:card.description")}</CardDescription>
+              <CardDescription>
+                {t("CreateUIA:card.description")}
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2">
@@ -951,12 +1039,16 @@ export default function UIA(properties) {
                   <div className="grid grid-cols-3 gap-5">
                     <div>
                       <HoverInfo
-                        content={t("AssetCommon:asset_details.symbol.header_content")}
+                        content={t(
+                          "AssetCommon:asset_details.symbol.header_content"
+                        )}
                         header={t("AssetCommon:asset_details.symbol.header")}
                       />
                       {!editing ? (
                         <Input
-                          placeholder={t("AssetCommon:asset_details.symbol.placeholder")}
+                          placeholder={t(
+                            "AssetCommon:asset_details.symbol.placeholder"
+                          )}
                           value={symbol}
                           type="text"
                           onInput={(e) => {
@@ -970,17 +1062,28 @@ export default function UIA(properties) {
                           className="mt-1"
                         />
                       ) : (
-                        <Input placeholder={symbol} type="text" disabled className="mt-1" />
+                        <Input
+                          placeholder={symbol}
+                          type="text"
+                          disabled
+                          className="mt-1"
+                        />
                       )}
                     </div>
 
                     <div>
                       <HoverInfo
-                        content={t("AssetCommon:asset_details.max_supply.header_content")}
-                        header={t("AssetCommon:asset_details.max_supply.header")}
+                        content={t(
+                          "AssetCommon:asset_details.max_supply.header_content"
+                        )}
+                        header={t(
+                          "AssetCommon:asset_details.max_supply.header"
+                        )}
                       />
                       <Input
-                        placeholder={t("AssetCommon:asset_details.max_supply.placeholder")}
+                        placeholder={t(
+                          "AssetCommon:asset_details.max_supply.placeholder"
+                        )}
                         value={maxSupply}
                         type="number"
                         onInput={(e) => {
@@ -996,12 +1099,16 @@ export default function UIA(properties) {
                     </div>
                     <div>
                       <HoverInfo
-                        content={t("AssetCommon:asset_details.precision.header_content")}
+                        content={t(
+                          "AssetCommon:asset_details.precision.header_content"
+                        )}
                         header={t("AssetCommon:asset_details.precision.header")}
                       />
                       {!editing ? (
                         <Input
-                          placeholder={t("AssetCommon:asset_details.precision.placeholder")}
+                          placeholder={t(
+                            "AssetCommon:asset_details.precision.placeholder"
+                          )}
                           value={precision}
                           type="number"
                           onInput={(e) => {
@@ -1017,17 +1124,26 @@ export default function UIA(properties) {
                           className="mt-1"
                         />
                       ) : (
-                        <Input placeholder={precision} type="number" disabled className="mt-1" />
+                        <Input
+                          placeholder={precision}
+                          type="number"
+                          disabled
+                          className="mt-1"
+                        />
                       )}
                     </div>
                   </div>
 
                   <HoverInfo
-                    content={t("AssetCommon:asset_details.description.header_content")}
+                    content={t(
+                      "AssetCommon:asset_details.description.header_content"
+                    )}
                     header={t("AssetCommon:asset_details.description.header")}
                   />
                   <Textarea
-                    placeholder={t("AssetCommon:asset_details.description.placeholder")}
+                    placeholder={t(
+                      "AssetCommon:asset_details.description.placeholder"
+                    )}
                     value={desc}
                     onInput={(e) => setDesc(e.currentTarget.value)}
                     className="mt-1"
@@ -1036,11 +1152,15 @@ export default function UIA(properties) {
                   <div className="grid grid-cols-2 gap-5 mb-3">
                     <div>
                       <HoverInfo
-                        content={t("AssetCommon:asset_details.shortName.header_content")}
+                        content={t(
+                          "AssetCommon:asset_details.shortName.header_content"
+                        )}
                         header={t("AssetCommon:asset_details.shortName.header")}
                       />
                       <Input
-                        placeholder={t("AssetCommon:asset_details.shortName.placeholder")}
+                        placeholder={t(
+                          "AssetCommon:asset_details.shortName.placeholder"
+                        )}
                         value={shortName}
                         type="text"
                         onInput={(e) => setShortName(e.currentTarget.value)}
@@ -1049,8 +1169,12 @@ export default function UIA(properties) {
                     </div>
                     <div>
                       <HoverInfo
-                        content={t("AssetCommon:asset_details.preferredMarket.header_content")}
-                        header={t("AssetCommon:asset_details.preferredMarket.header")}
+                        content={t(
+                          "AssetCommon:asset_details.preferredMarket.header_content"
+                        )}
+                        header={t(
+                          "AssetCommon:asset_details.preferredMarket.header"
+                        )}
                       />
                       <div className="grid grid-cols-2 gap-3 mt-1">
                         <Input placeholder={market} disabled type="text" />
@@ -1071,7 +1195,9 @@ export default function UIA(properties) {
                   <div className="grid grid-cols-3 gap-5 mb-3">
                     <div>
                       <HoverInfo
-                        content={t("AssetCommon:cer.quote_asset_amount.header_content")}
+                        content={t(
+                          "AssetCommon:cer.quote_asset_amount.header_content"
+                        )}
                         header={t("AssetCommon:cer.quote_asset_amount.header")}
                       />
                       <Input
@@ -1087,9 +1213,12 @@ export default function UIA(properties) {
                     </div>
                     <div>
                       <HoverInfo
-                        content={t("AssetCommon:cer.base_asset_amount.header_content", {
-                          symbol: "BTS",
-                        })}
+                        content={t(
+                          "AssetCommon:cer.base_asset_amount.header_content",
+                          {
+                            symbol: "BTS",
+                          }
+                        )}
                         header={t("AssetCommon:cer.base_asset_amount.header")}
                       />
                       <Input
@@ -1105,11 +1234,17 @@ export default function UIA(properties) {
                     </div>
                     <div>
                       <HoverInfo
-                        content={t("AssetCommon:cer.calculated_cer_price.header_content")}
-                        header={t("AssetCommon:cer.calculated_cer_price.header")}
+                        content={t(
+                          "AssetCommon:cer.calculated_cer_price.header_content"
+                        )}
+                        header={t(
+                          "AssetCommon:cer.calculated_cer_price.header"
+                        )}
                       />
                       <Input
-                        placeholder={`${(cerQuoteAmount / cerBaseAmount).toFixed(precision)} ${
+                        placeholder={`${(
+                          cerQuoteAmount / cerBaseAmount
+                        ).toFixed(precision)} ${
                           usr.chain === "bitshares" ? "BTS" : "TEST"
                         }`}
                         type="text"
@@ -1123,10 +1258,18 @@ export default function UIA(properties) {
                     <AssetFlag
                       alreadyDisabled={false}
                       id={"allowed_markets"}
-                      allowedText={t("AssetCommon:extensions.allowed_markets.enabled")}
-                      enabledInfo={t("AssetCommon:extensions.allowed_markets.enabledInfo")}
-                      disabledText={t("AssetCommon:extensions.allowed_markets.disabled")}
-                      disabledInfo={t("AssetCommon:extensions.allowed_markets.disabledInfo")}
+                      allowedText={t(
+                        "AssetCommon:extensions.allowed_markets.enabled"
+                      )}
+                      enabledInfo={t(
+                        "AssetCommon:extensions.allowed_markets.enabledInfo"
+                      )}
+                      disabledText={t(
+                        "AssetCommon:extensions.allowed_markets.disabled"
+                      )}
+                      disabledInfo={t(
+                        "AssetCommon:extensions.allowed_markets.disabledInfo"
+                      )}
                       permission={true}
                       flag={allowedMarketsEnabled}
                       setFlag={setAllowedMarketsEnabled}
@@ -1136,9 +1279,17 @@ export default function UIA(properties) {
                         assetSymbol={""}
                         assetData={null}
                         storeCallback={(input) => {
-                          if (!allowedMarkets.includes(input) && !bannedMarkets.includes(input)) {
-                            const _foundAsset = assets.find((x) => x.symbol === input);
-                            setAllowedMarkets([...allowedMarkets, _foundAsset.id]);
+                          if (
+                            !allowedMarkets.includes(input) &&
+                            !bannedMarkets.includes(input)
+                          ) {
+                            const _foundAsset = assets.find(
+                              (x) => x.symbol === input
+                            );
+                            setAllowedMarkets([
+                              ...allowedMarkets,
+                              _foundAsset.id,
+                            ]);
                           }
                         }}
                         otherAsset={null}
@@ -1165,10 +1316,18 @@ export default function UIA(properties) {
                     <AssetFlag
                       alreadyDisabled={false}
                       id={"banned_markets"}
-                      allowedText={t("AssetCommon:extensions.banned_markets.enabled")}
-                      enabledInfo={t("AssetCommon:extensions.banned_markets.enabledInfo")}
-                      disabledText={t("AssetCommon:extensions.banned_markets.disabled")}
-                      disabledInfo={t("AssetCommon:extensions.banned_markets.disabledInfo")}
+                      allowedText={t(
+                        "AssetCommon:extensions.banned_markets.enabled"
+                      )}
+                      enabledInfo={t(
+                        "AssetCommon:extensions.banned_markets.enabledInfo"
+                      )}
+                      disabledText={t(
+                        "AssetCommon:extensions.banned_markets.disabled"
+                      )}
+                      disabledInfo={t(
+                        "AssetCommon:extensions.banned_markets.disabledInfo"
+                      )}
                       permission={true}
                       flag={bannedMarketsEnabled}
                       setFlag={setBannedMarketsEnabled}
@@ -1178,9 +1337,17 @@ export default function UIA(properties) {
                         assetSymbol={""}
                         assetData={null}
                         storeCallback={(input) => {
-                          if (!bannedMarkets.includes(input) && !allowedMarkets.includes(input)) {
-                            const _foundAsset = assets.find((x) => x.symbol === input);
-                            setBannedMarkets([...bannedMarkets, _foundAsset.id]);
+                          if (
+                            !bannedMarkets.includes(input) &&
+                            !allowedMarkets.includes(input)
+                          ) {
+                            const _foundAsset = assets.find(
+                              (x) => x.symbol === input
+                            );
+                            setBannedMarkets([
+                              ...bannedMarkets,
+                              _foundAsset.id,
+                            ]);
                           }
                         }}
                         otherAsset={null}
@@ -1216,10 +1383,18 @@ export default function UIA(properties) {
                       <AssetPermission
                         alreadyDisabled={permanentlyDisabledCMF}
                         id={"charge_market_fee"}
-                        allowedText={t("AssetCommon:permissions.charge_market_fee.about")}
-                        enabledInfo={t("AssetCommon:permissions.charge_market_fee.enabledInfo")}
-                        disabledText={t("AssetCommon:permissions.charge_market_fee.about")}
-                        disabledInfo={t("AssetCommon:permissions.charge_market_fee.disabledInfo")}
+                        allowedText={t(
+                          "AssetCommon:permissions.charge_market_fee.about"
+                        )}
+                        enabledInfo={t(
+                          "AssetCommon:permissions.charge_market_fee.enabledInfo"
+                        )}
+                        disabledText={t(
+                          "AssetCommon:permissions.charge_market_fee.about"
+                        )}
+                        disabledInfo={t(
+                          "AssetCommon:permissions.charge_market_fee.disabledInfo"
+                        )}
                         permission={permChargeMarketFee}
                         setPermission={setPermChargeMarketFee}
                         flag={flagChargeMarketFee}
@@ -1228,10 +1403,18 @@ export default function UIA(properties) {
                       <AssetPermission
                         alreadyDisabled={permanentlyDisabledWL}
                         id={"white_list"}
-                        allowedText={t("AssetCommon:permissions.white_list.about")}
-                        enabledInfo={t("AssetCommon:permissions.white_list.enabledInfo")}
-                        disabledText={t("AssetCommon:permissions.white_list.about")}
-                        disabledInfo={t("AssetCommon:permissions.white_list.disabledInfo")}
+                        allowedText={t(
+                          "AssetCommon:permissions.white_list.about"
+                        )}
+                        enabledInfo={t(
+                          "AssetCommon:permissions.white_list.enabledInfo"
+                        )}
+                        disabledText={t(
+                          "AssetCommon:permissions.white_list.about"
+                        )}
+                        disabledInfo={t(
+                          "AssetCommon:permissions.white_list.disabledInfo"
+                        )}
                         permission={permWhiteList}
                         setPermission={setPermWhiteList}
                         flag={flagWhiteList}
@@ -1240,10 +1423,18 @@ export default function UIA(properties) {
                       <AssetPermission
                         alreadyDisabled={permanentlyDisabledTR}
                         id={"transfer_restricted"}
-                        allowedText={t("AssetCommon:permissions.transfer_restricted.about")}
-                        enabledInfo={t("AssetCommon:permissions.transfer_restricted.enabledInfo")}
-                        disabledText={t("AssetCommon:permissions.transfer_restricted.about")}
-                        disabledInfo={t("AssetCommon:permissions.transfer_restricted.disabledInfo")}
+                        allowedText={t(
+                          "AssetCommon:permissions.transfer_restricted.about"
+                        )}
+                        enabledInfo={t(
+                          "AssetCommon:permissions.transfer_restricted.enabledInfo"
+                        )}
+                        disabledText={t(
+                          "AssetCommon:permissions.transfer_restricted.about"
+                        )}
+                        disabledInfo={t(
+                          "AssetCommon:permissions.transfer_restricted.disabledInfo"
+                        )}
                         permission={permTransferRestricted}
                         setPermission={setPermTransferRestricted}
                         flag={flagTransferRestricted}
@@ -1252,9 +1443,15 @@ export default function UIA(properties) {
                       <AssetPermission
                         alreadyDisabled={permanentlyDisabledDC}
                         id={"disable_confidential"}
-                        allowedText={t("AssetCommon:permissions.disable_confidential.about")}
-                        enabledInfo={t("AssetCommon:permissions.disable_confidential.enabledInfo")}
-                        disabledText={t("AssetCommon:permissions.disable_confidential.about")}
+                        allowedText={t(
+                          "AssetCommon:permissions.disable_confidential.about"
+                        )}
+                        enabledInfo={t(
+                          "AssetCommon:permissions.disable_confidential.enabledInfo"
+                        )}
+                        disabledText={t(
+                          "AssetCommon:permissions.disable_confidential.about"
+                        )}
                         disabledInfo={t(
                           "AssetCommon:permissions.disable_confidential.disabledInfo"
                         )}
@@ -1266,10 +1463,18 @@ export default function UIA(properties) {
                       <AssetPermission
                         alreadyDisabled={permanentlyDisabledOA}
                         id={"override_authority"}
-                        allowedText={t("AssetCommon:permissions.override_authority.about")}
-                        enabledInfo={t("AssetCommon:permissions.override_authority.enabledInfo")}
-                        disabledText={t("AssetCommon:permissions.override_authority.about")}
-                        disabledInfo={t("AssetCommon:permissions.override_authority.disabledInfo")}
+                        allowedText={t(
+                          "AssetCommon:permissions.override_authority.about"
+                        )}
+                        enabledInfo={t(
+                          "AssetCommon:permissions.override_authority.enabledInfo"
+                        )}
+                        disabledText={t(
+                          "AssetCommon:permissions.override_authority.about"
+                        )}
+                        disabledInfo={t(
+                          "AssetCommon:permissions.override_authority.disabledInfo"
+                        )}
                         permission={permOverrideAuthority}
                         setPermission={setPermOverrideAuthority}
                         flag={flagOverrideAuthority}
@@ -1286,10 +1491,18 @@ export default function UIA(properties) {
                       <AssetFlag
                         alreadyDisabled={permanentlyDisabledCMF}
                         id={"charge_market_fee_flag"}
-                        allowedText={t("AssetCommon:flags.charge_market_fee.about")}
-                        enabledInfo={t("AssetCommon:flags.charge_market_fee.enabledInfo")}
-                        disabledText={t("AssetCommon:flags.charge_market_fee.about")}
-                        disabledInfo={t("AssetCommon:flags.charge_market_fee.disabledInfo")}
+                        allowedText={t(
+                          "AssetCommon:flags.charge_market_fee.about"
+                        )}
+                        enabledInfo={t(
+                          "AssetCommon:flags.charge_market_fee.enabledInfo"
+                        )}
+                        disabledText={t(
+                          "AssetCommon:flags.charge_market_fee.about"
+                        )}
+                        disabledInfo={t(
+                          "AssetCommon:flags.charge_market_fee.disabledInfo"
+                        )}
                         permission={permChargeMarketFee}
                         flag={flagChargeMarketFee}
                         setFlag={setFlagChargeMarketFee}
@@ -1298,9 +1511,13 @@ export default function UIA(properties) {
                         alreadyDisabled={permanentlyDisabledWL}
                         id={"white_list_flag"}
                         allowedText={t("AssetCommon:flags.white_list.about")}
-                        enabledInfo={t("AssetCommon:flags.white_list.enabledInfo")}
+                        enabledInfo={t(
+                          "AssetCommon:flags.white_list.enabledInfo"
+                        )}
                         disabledText={t("AssetCommon:flags.white_list.about")}
-                        disabledInfo={t("AssetCommon:flags.white_list.disabledInfo")}
+                        disabledInfo={t(
+                          "AssetCommon:flags.white_list.disabledInfo"
+                        )}
                         permission={permWhiteList}
                         flag={flagWhiteList}
                         setFlag={setFlagWhiteList}
@@ -1308,10 +1525,18 @@ export default function UIA(properties) {
                       <AssetFlag
                         alreadyDisabled={permanentlyDisabledTR}
                         id={"transfer_restricted_flag"}
-                        allowedText={t("AssetCommon:flags.transfer_restricted.about")}
-                        enabledInfo={t("AssetCommon:flags.transfer_restricted.enabledInfo")}
-                        disabledText={t("AssetCommon:flags.transfer_restricted.about")}
-                        disabledInfo={t("AssetCommon:flags.transfer_restricted.disabledInfo")}
+                        allowedText={t(
+                          "AssetCommon:flags.transfer_restricted.about"
+                        )}
+                        enabledInfo={t(
+                          "AssetCommon:flags.transfer_restricted.enabledInfo"
+                        )}
+                        disabledText={t(
+                          "AssetCommon:flags.transfer_restricted.about"
+                        )}
+                        disabledInfo={t(
+                          "AssetCommon:flags.transfer_restricted.disabledInfo"
+                        )}
                         permission={permTransferRestricted}
                         flag={flagTransferRestricted}
                         setFlag={setFlagTransferRestricted}
@@ -1319,10 +1544,18 @@ export default function UIA(properties) {
                       <AssetFlag
                         alreadyDisabled={permanentlyDisabledDC}
                         id={"disable_confidential_flag"}
-                        allowedText={t("AssetCommon:flags.disable_confidential.about")}
-                        enabledInfo={t("AssetCommon:flags.disable_confidential.enabledInfo")}
-                        disabledText={t("AssetCommon:flags.disable_confidential.about")}
-                        disabledInfo={t("AssetCommon:flags.disable_confidential.disabledInfo")}
+                        allowedText={t(
+                          "AssetCommon:flags.disable_confidential.about"
+                        )}
+                        enabledInfo={t(
+                          "AssetCommon:flags.disable_confidential.enabledInfo"
+                        )}
+                        disabledText={t(
+                          "AssetCommon:flags.disable_confidential.about"
+                        )}
+                        disabledInfo={t(
+                          "AssetCommon:flags.disable_confidential.disabledInfo"
+                        )}
                         permission={permDisableConfidential}
                         flag={flagDisableConfidential}
                         setFlag={setFlagDisableConfidential}
@@ -1330,10 +1563,18 @@ export default function UIA(properties) {
                       <AssetFlag
                         alreadyDisabled={permanentlyDisabledOA}
                         id={"override_authority_flag"}
-                        allowedText={t("AssetCommon:flags.override_authority.about")}
-                        enabledInfo={t("AssetCommon:flags.override_authority.enabledInfo")}
-                        disabledText={t("AssetCommon:flags.override_authority.about")}
-                        disabledInfo={t("AssetCommon:flags.override_authority.disabledInfo")}
+                        allowedText={t(
+                          "AssetCommon:flags.override_authority.about"
+                        )}
+                        enabledInfo={t(
+                          "AssetCommon:flags.override_authority.enabledInfo"
+                        )}
+                        disabledText={t(
+                          "AssetCommon:flags.override_authority.about"
+                        )}
+                        disabledInfo={t(
+                          "AssetCommon:flags.override_authority.disabledInfo"
+                        )}
                         permission={permOverrideAuthority}
                         flag={flagOverrideAuthority}
                         setFlag={setFlagOverrideAuthority}
@@ -1363,13 +1604,18 @@ export default function UIA(properties) {
                           step="0.01"
                           onInput={(e) => {
                             setCommission(e.currentTarget.value);
-                            debouncedPercent(e.currentTarget.value, setCommission);
+                            debouncedPercent(
+                              e.currentTarget.value,
+                              setCommission
+                            );
                           }}
                         />
                       </div>
                       <div>
                         <HoverInfo
-                          content={t("AssetCommon:max_market_fee.header_content")}
+                          content={t(
+                            "AssetCommon:max_market_fee.header_content"
+                          )}
                           header={t("AssetCommon:max_market_fee.header")}
                         />
                         <Input
@@ -1380,7 +1626,10 @@ export default function UIA(properties) {
                           pattern="^\d*(\.\d{0,2})?$"
                           onInput={(e) => {
                             setMaxCommission(e.currentTarget.value);
-                            debouncedMax(e.currentTarget.value, setMaxCommission);
+                            debouncedMax(
+                              e.currentTarget.value,
+                              setMaxCommission
+                            );
                           }}
                         />
                       </div>
@@ -1388,10 +1637,18 @@ export default function UIA(properties) {
                     <AssetFlag
                       alreadyDisabled={false}
                       id={"reward_percent"}
-                      allowedText={t("AssetCommon:extensions.reward_percent.enabled")}
-                      enabledInfo={t("AssetCommon:extensions.reward_percent.enabledInfo")}
-                      disabledText={t("AssetCommon:extensions.reward_percent.disabled")}
-                      disabledInfo={t("AssetCommon:extensions.reward_percent.disabledInfo")}
+                      allowedText={t(
+                        "AssetCommon:extensions.reward_percent.enabled"
+                      )}
+                      enabledInfo={t(
+                        "AssetCommon:extensions.reward_percent.enabledInfo"
+                      )}
+                      disabledText={t(
+                        "AssetCommon:extensions.reward_percent.disabled"
+                      )}
+                      disabledInfo={t(
+                        "AssetCommon:extensions.reward_percent.disabledInfo"
+                      )}
                       permission={true}
                       flag={enabledReferrerReward}
                       setFlag={setEnabledReferrerReward}
@@ -1400,8 +1657,12 @@ export default function UIA(properties) {
                     {enabledReferrerReward ? (
                       <>
                         <HoverInfo
-                          content={t("AssetCommon:extensions.reward_percent.header_content")}
-                          header={t("AssetCommon:extensions.reward_percent.header")}
+                          content={t(
+                            "AssetCommon:extensions.reward_percent.header_content"
+                          )}
+                          header={t(
+                            "AssetCommon:extensions.reward_percent.header"
+                          )}
                         />
                         <Input
                           placeholder={0}
@@ -1413,7 +1674,10 @@ export default function UIA(properties) {
                           pattern="^\d*(\.\d{0,2})?$"
                           onInput={(e) => {
                             setReferrerReward(e.currentTarget.value);
-                            debouncedPercent(e.currentTarget.value, setReferrerReward);
+                            debouncedPercent(
+                              e.currentTarget.value,
+                              setReferrerReward
+                            );
                           }}
                         />
                       </>
@@ -1422,7 +1686,9 @@ export default function UIA(properties) {
                     <AssetFlag
                       alreadyDisabled={false}
                       id={"whitelist_market_fee_sharing"}
-                      allowedText={t("AssetCommon:extensions.whitelist_market_fee_sharing.enabled")}
+                      allowedText={t(
+                        "AssetCommon:extensions.whitelist_market_fee_sharing.enabled"
+                      )}
                       enabledInfo={t(
                         "AssetCommon:extensions.whitelist_market_fee_sharing.enabledInfo"
                       )}
@@ -1443,7 +1709,9 @@ export default function UIA(properties) {
                           content={t(
                             "AssetCommon:extensions.whitelist_market_fee_sharing.header_content"
                           )}
-                          header={t("AssetCommon:extensions.whitelist_market_fee_sharing.header")}
+                          header={t(
+                            "AssetCommon:extensions.whitelist_market_fee_sharing.header"
+                          )}
                         />
                         <div className="grid grid-cols-12 mt-1">
                           <span className="col-span-9 border border-gray-300 rounded">
@@ -1483,20 +1751,27 @@ export default function UIA(properties) {
                                   </DialogTitle>
                                 </DialogHeader>
                                 <AccountSearch
-                                  chain={usr && usr.chain ? usr.chain : "bitshares"}
+                                  chain={
+                                    usr && usr.chain ? usr.chain : "bitshares"
+                                  }
                                   excludedUsers={[]}
                                   setChosenAccount={(_account) => {
                                     if (
                                       _account &&
-                                      !feeSharingWhitelist.find((_usr) => _usr.id === _account.id)
+                                      !feeSharingWhitelist.find(
+                                        (_usr) => _usr.id === _account.id
+                                      )
                                     ) {
                                       setFeeSharingWhitelist(
-                                        feeSharingWhitelist && feeSharingWhitelist.length
+                                        feeSharingWhitelist &&
+                                          feeSharingWhitelist.length
                                           ? [...feeSharingWhitelist, _account]
                                           : [_account]
                                       );
                                     }
-                                    setWhitelistMarketFeeSharingDialogOpen(false);
+                                    setWhitelistMarketFeeSharingDialogOpen(
+                                      false
+                                    );
                                   }}
                                 />
                               </DialogContent>
@@ -1509,10 +1784,18 @@ export default function UIA(properties) {
                     <AssetFlag
                       alreadyDisabled={false}
                       id={"taker_fee_percent"}
-                      allowedText={t("AssetCommon:extensions.taker_fee_percent.enabled")}
-                      enabledInfo={t("AssetCommon:extensions.taker_fee_percent.enabledInfo")}
-                      disabledText={t("AssetCommon:extensions.taker_fee_percent.disabled")}
-                      disabledInfo={t("AssetCommon:extensions.taker_fee_percent.disabledInfo")}
+                      allowedText={t(
+                        "AssetCommon:extensions.taker_fee_percent.enabled"
+                      )}
+                      enabledInfo={t(
+                        "AssetCommon:extensions.taker_fee_percent.enabledInfo"
+                      )}
+                      disabledText={t(
+                        "AssetCommon:extensions.taker_fee_percent.disabled"
+                      )}
+                      disabledInfo={t(
+                        "AssetCommon:extensions.taker_fee_percent.disabledInfo"
+                      )}
                       permission={true}
                       flag={enabledTakerFee}
                       setFlag={setEnabledTakerFee}
@@ -1521,11 +1804,17 @@ export default function UIA(properties) {
                     {enabledTakerFee ? (
                       <>
                         <HoverInfo
-                          content={t("AssetCommon:extensions.taker_fee_percent.header_content")}
-                          header={t("AssetCommon:extensions.taker_fee_percent.header")}
+                          content={t(
+                            "AssetCommon:extensions.taker_fee_percent.header_content"
+                          )}
+                          header={t(
+                            "AssetCommon:extensions.taker_fee_percent.header"
+                          )}
                         />
                         <Input
-                          placeholder={t("AssetCommon:extensions.taker_fee_percent.placeholder")}
+                          placeholder={t(
+                            "AssetCommon:extensions.taker_fee_percent.placeholder"
+                          )}
                           value={takerFee}
                           type="number"
                           min="0"
@@ -1534,7 +1823,10 @@ export default function UIA(properties) {
                           pattern="^\d*(\.\d{0,2})?$"
                           onInput={(e) => {
                             setTakerFee(e.currentTarget.value);
-                            debouncedPercent(e.currentTarget.value, setTakerFee);
+                            debouncedPercent(
+                              e.currentTarget.value,
+                              setTakerFee
+                            );
                           }}
                         />
                       </>
@@ -1575,7 +1867,9 @@ export default function UIA(properties) {
                           <DialogContent className="sm:max-w-[375px] bg-white">
                             <DialogHeader>
                               <DialogTitle>
-                                {!usr || !usr.chain ? t("Transfer:bitsharesAccountSearch") : null}
+                                {!usr || !usr.chain
+                                  ? t("Transfer:bitsharesAccountSearch")
+                                  : null}
                                 {usr && usr.chain === "bitshares"
                                   ? t("Transfer:bitsharesAccountSearchBTS")
                                   : null}
@@ -1587,15 +1881,20 @@ export default function UIA(properties) {
                             <AccountSearch
                               chain={usr && usr.chain ? usr.chain : "bitshares"}
                               excludedUsers={
-                                usr && usr.username && usr.username.length ? [usr] : []
+                                usr && usr.username && usr.username.length
+                                  ? [usr]
+                                  : []
                               }
                               setChosenAccount={(_account) => {
                                 if (
                                   _account &&
-                                  !whitelistAuthorities.find((_usr) => _usr.id === _account.id)
+                                  !whitelistAuthorities.find(
+                                    (_usr) => _usr.id === _account.id
+                                  )
                                 ) {
                                   setWhitelistAuthorities(
-                                    whitelistAuthorities && whitelistAuthorities.length
+                                    whitelistAuthorities &&
+                                      whitelistAuthorities.length
                                       ? [...whitelistAuthorities, _account]
                                       : [_account]
                                   );
@@ -1642,7 +1941,9 @@ export default function UIA(properties) {
                           <DialogContent className="sm:max-w-[375px] bg-white">
                             <DialogHeader>
                               <DialogTitle>
-                                {!usr || !usr.chain ? t("Transfer:bitsharesAccountSearch") : null}
+                                {!usr || !usr.chain
+                                  ? t("Transfer:bitsharesAccountSearch")
+                                  : null}
                                 {usr && usr.chain === "bitshares"
                                   ? t("Transfer:bitsharesAccountSearchBTS")
                                   : null}
@@ -1654,15 +1955,20 @@ export default function UIA(properties) {
                             <AccountSearch
                               chain={usr && usr.chain ? usr.chain : "bitshares"}
                               excludedUsers={
-                                usr && usr.username && usr.username.length ? [usr] : []
+                                usr && usr.username && usr.username.length
+                                  ? [usr]
+                                  : []
                               }
                               setChosenAccount={(_account) => {
                                 if (
                                   _account &&
-                                  !blacklistAuthorities.find((_usr) => _usr.id === _account.id)
+                                  !blacklistAuthorities.find(
+                                    (_usr) => _usr.id === _account.id
+                                  )
                                 ) {
                                   setBlacklistAuthorities(
-                                    blacklistAuthorities && blacklistAuthorities.length
+                                    blacklistAuthorities &&
+                                      blacklistAuthorities.length
                                       ? [...blacklistAuthorities, _account]
                                       : [_account]
                                   );
@@ -1693,7 +1999,10 @@ export default function UIA(properties) {
                         {t("AssetCommon:nft.disabled")}
                       </Button>
                     ) : (
-                      <Button variant="outline" onClick={() => setEnabledNFT(false)}>
+                      <Button
+                        variant="outline"
+                        onClick={() => setEnabledNFT(false)}
+                      >
                         {t("AssetCommon:nft.enabled")}
                       </Button>
                     )}
@@ -1703,7 +2012,9 @@ export default function UIA(properties) {
                   <>
                     <div className="col-span-2 mb-3">
                       <Label>
-                        {t("AssetCommon:nft.currentIPFSFiles", { count: nftMedia.length })}
+                        {t("AssetCommon:nft.currentIPFSFiles", {
+                          count: nftMedia.length,
+                        })}
                       </Label>
                       <br />
                       <Label>{t("AssetCommon:nft.supportedFiletypes")}</Label>
@@ -1728,7 +2039,9 @@ export default function UIA(properties) {
                           </DialogHeader>
                           <Card>
                             <CardHeader>
-                              <CardTitle>{t("AssetCommon:nft.currentIPFSMedia")}</CardTitle>
+                              <CardTitle>
+                                {t("AssetCommon:nft.currentIPFSMedia")}
+                              </CardTitle>
                               <CardDescription>
                                 {t("AssetCommon:nft.referencesIPFSObjects", {
                                   count: nftMedia.length,
@@ -1741,14 +2054,18 @@ export default function UIA(properties) {
                               ) : (
                                 <>
                                   <div className="grid grid-cols-4">
-                                    <div className="col-span-1">{t("AssetCommon:nft.type")}</div>
+                                    <div className="col-span-1">
+                                      {t("AssetCommon:nft.type")}
+                                    </div>
                                     <div className="col-span-1">
                                       {t("AssetCommon:nft.contentIdentifier")}
                                     </div>
                                     <div className="col-span-1">
                                       {t("AssetCommon:nft.filename")}
                                     </div>
-                                    <div className="col-span-1">{t("AssetCommon:nft.delete")}</div>
+                                    <div className="col-span-1">
+                                      {t("AssetCommon:nft.delete")}
+                                    </div>
                                   </div>
                                   <List
                                     width={"100%"}
@@ -1757,7 +2074,9 @@ export default function UIA(properties) {
                                     itemSize={25}
                                     className="w-full"
                                   >
-                                    {({ index, style }) => <MediaRow index={index} style={style} />}
+                                    {({ index, style }) => (
+                                      <MediaRow index={index} style={style} />
+                                    )}
                                   </List>
                                 </>
                               )}
@@ -1766,7 +2085,9 @@ export default function UIA(properties) {
 
                           <Card>
                             <CardHeader>
-                              <CardTitle>{t("AssetCommon:nft.addNewIPFSMedia")}</CardTitle>
+                              <CardTitle>
+                                {t("AssetCommon:nft.addNewIPFSMedia")}
+                              </CardTitle>
                               <CardDescription>
                                 {t("AssetCommon:nft.noIPFSGateway")}
                               </CardDescription>
@@ -1775,12 +2096,22 @@ export default function UIA(properties) {
                               <div className="grid grid-cols-4">
                                 <div className="col-span-3 mr-3">
                                   <Input
-                                    placeholder={t("AssetCommon:nft.mediaURLPlaceholder")}
+                                    placeholder={t(
+                                      "AssetCommon:nft.mediaURLPlaceholder"
+                                    )}
                                     type="text"
-                                    onInput={(e) => setNewMediaUrl(e.currentTarget.value)}
+                                    onInput={(e) =>
+                                      setNewMediaUrl(e.currentTarget.value)
+                                    }
                                     onKeyDown={(e) => {
-                                      if (e.key === "Enter" && newMediaUrl && newMediaType) {
-                                        const temp_urls = nftMedia.map((x) => x.url);
+                                      if (
+                                        e.key === "Enter" &&
+                                        newMediaUrl &&
+                                        newMediaType
+                                      ) {
+                                        const temp_urls = nftMedia.map(
+                                          (x) => x.url
+                                        );
                                         if (temp_urls.includes(newMediaUrl)) {
                                           console.log("Already exists");
                                           setNewMediaUrl("");
@@ -1791,9 +2122,17 @@ export default function UIA(properties) {
                                           nftMedia && nftMedia.length
                                             ? [
                                                 ...nftMedia,
-                                                { url: newMediaUrl, type: newMediaType },
+                                                {
+                                                  url: newMediaUrl,
+                                                  type: newMediaType,
+                                                },
                                               ]
-                                            : [{ url: newMediaUrl, type: newMediaType }]
+                                            : [
+                                                {
+                                                  url: newMediaUrl,
+                                                  type: newMediaType,
+                                                },
+                                              ]
                                         );
                                         setNewMediaUrl("");
                                       }
@@ -1805,7 +2144,9 @@ export default function UIA(properties) {
                                   <Select onValueChange={setNewMediaType}>
                                     <SelectTrigger className="w-[105px]">
                                       <SelectValue
-                                        placeholder={t("AssetCommon:nft.fileTypePlaceholder")}
+                                        placeholder={t(
+                                          "AssetCommon:nft.fileTypePlaceholder"
+                                        )}
                                       />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -1814,10 +2155,16 @@ export default function UIA(properties) {
                                           {t("AssetCommon:nft.imageFormats")}
                                         </SelectLabel>
                                         <SelectItem value="PNG">PNG</SelectItem>
-                                        <SelectItem value="WEBP">WEBP</SelectItem>
-                                        <SelectItem value="JPEG">JPEG</SelectItem>
+                                        <SelectItem value="WEBP">
+                                          WEBP
+                                        </SelectItem>
+                                        <SelectItem value="JPEG">
+                                          JPEG
+                                        </SelectItem>
                                         <SelectItem value="GIF">GIF</SelectItem>
-                                        <SelectItem value="TIFF">TIFF</SelectItem>
+                                        <SelectItem value="TIFF">
+                                          TIFF
+                                        </SelectItem>
                                         <SelectItem value="BMP">BMP</SelectItem>
                                         <SelectLabel>
                                           {t("AssetCommon:nft.audioFormats")}
@@ -1826,40 +2173,58 @@ export default function UIA(properties) {
                                         <SelectItem value="MP4">MP4</SelectItem>
                                         <SelectItem value="M4A">M4A</SelectItem>
                                         <SelectItem value="OGG">OGG</SelectItem>
-                                        <SelectItem value="FLAC">FLAC</SelectItem>
+                                        <SelectItem value="FLAC">
+                                          FLAC
+                                        </SelectItem>
                                         <SelectItem value="WAV">WAV</SelectItem>
                                         <SelectItem value="WMA">WMA</SelectItem>
                                         <SelectItem value="AAC">AAC</SelectItem>
                                         <SelectLabel>
                                           {t("AssetCommon:nft.videoFormats")}
                                         </SelectLabel>
-                                        <SelectItem value="WEBM">WEBM</SelectItem>
+                                        <SelectItem value="WEBM">
+                                          WEBM
+                                        </SelectItem>
                                         <SelectItem value="MOV">MOV</SelectItem>
                                         <SelectItem value="QT">QT</SelectItem>
                                         <SelectItem value="AVI">AVI</SelectItem>
                                         <SelectItem value="WMV">WMV</SelectItem>
-                                        <SelectItem value="MPEG">MPEG</SelectItem>
+                                        <SelectItem value="MPEG">
+                                          MPEG
+                                        </SelectItem>
                                         <SelectLabel>
                                           {t("AssetCommon:nft.documentFormats")}
                                         </SelectLabel>
                                         <SelectItem value="PDF">PDF</SelectItem>
-                                        <SelectItem value="DOCX">DOCX</SelectItem>
+                                        <SelectItem value="DOCX">
+                                          DOCX
+                                        </SelectItem>
                                         <SelectItem value="ODT">ODT</SelectItem>
-                                        <SelectItem value="XLSX">XLSX</SelectItem>
+                                        <SelectItem value="XLSX">
+                                          XLSX
+                                        </SelectItem>
                                         <SelectItem value="ODS">ODS</SelectItem>
-                                        <SelectItem value="PPTX">PPTX</SelectItem>
+                                        <SelectItem value="PPTX">
+                                          PPTX
+                                        </SelectItem>
                                         <SelectItem value="TXT">TXT</SelectItem>
                                         <SelectLabel>
                                           {t("AssetCommon:nft.threeDFormats")}
                                         </SelectLabel>
                                         <SelectItem value="OBJ">OBJ</SelectItem>
                                         <SelectItem value="FBX">FBX</SelectItem>
-                                        <SelectItem value="GLTF">GLTF</SelectItem>
+                                        <SelectItem value="GLTF">
+                                          GLTF
+                                        </SelectItem>
                                         <SelectItem value="3DS">3DS</SelectItem>
                                         <SelectItem value="STL">STL</SelectItem>
-                                        <SelectItem value="COLLADA">COLLADA</SelectItem>
+                                        <SelectItem value="COLLADA">
+                                          COLLADA
+                                        </SelectItem>
                                         <SelectItem value="3MF">3MF</SelectItem>
-                                        <SelectItem value="BLEND">BLEND</SelectItem>
+                                        <SelectItem value="BLEND">
+                                          BLEND
+                                        </SelectItem>
                                         <SelectItem value="SKP">SKP</SelectItem>
                                         <SelectItem value="VOX">VOX</SelectItem>
                                       </SelectGroup>
@@ -1874,7 +2239,9 @@ export default function UIA(properties) {
                                     <Button
                                       className="mt-3"
                                       onClick={() => {
-                                        const temp_urls = nftMedia.map((x) => x.url);
+                                        const temp_urls = nftMedia.map(
+                                          (x) => x.url
+                                        );
                                         if (temp_urls.includes(newMediaUrl)) {
                                           console.log("Already exists");
                                           setNewMediaUrl("");
@@ -1883,7 +2250,10 @@ export default function UIA(properties) {
 
                                         setNFTMedia([
                                           ...nftMedia,
-                                          { url: newMediaUrl, type: newMediaType },
+                                          {
+                                            url: newMediaUrl,
+                                            type: newMediaType,
+                                          },
                                         ]);
                                         setNewMediaUrl("");
                                       }}
@@ -1898,16 +2268,22 @@ export default function UIA(properties) {
                                   <Dialog>
                                     <DialogTrigger>
                                       <Button className="mt-3 ml-3">
-                                        {t("AssetCommon:nft.ipfsHostingSolutions")}
+                                        {t(
+                                          "AssetCommon:nft.ipfsHostingSolutions"
+                                        )}
                                       </Button>
                                     </DialogTrigger>
                                     <DialogContent className="bg-white">
                                       <DialogHeader>
                                         <DialogTitle>
-                                          {t("AssetCommon:nft.ipfsHostingSolutions")}
+                                          {t(
+                                            "AssetCommon:nft.ipfsHostingSolutions"
+                                          )}
                                         </DialogTitle>
                                         <DialogDescription>
-                                          {t("AssetCommon:nft.ipfsHostingDescription")}
+                                          {t(
+                                            "AssetCommon:nft.ipfsHostingDescription"
+                                          )}
                                         </DialogDescription>
                                       </DialogHeader>
                                       <div className="grid grid-cols-3 gap-3">
@@ -1915,7 +2291,9 @@ export default function UIA(properties) {
                                           classnamecontents="hover:text-purple-500"
                                           type="button"
                                           text={"Pinata.cloud"}
-                                          hyperlink={"https://www.pinata.cloud/"}
+                                          hyperlink={
+                                            "https://www.pinata.cloud/"
+                                          }
                                         />
                                         <ExternalLink
                                           classnamecontents="hover:text-purple-500"
@@ -1933,13 +2311,17 @@ export default function UIA(properties) {
                                           classnamecontents="hover:text-purple-500"
                                           type="button"
                                           text={"Fleek.co"}
-                                          hyperlink={"https://fleek.co/ipfs-gateway/"}
+                                          hyperlink={
+                                            "https://fleek.co/ipfs-gateway/"
+                                          }
                                         />
                                         <ExternalLink
                                           classnamecontents="hover:text-purple-500"
                                           type="button"
                                           text={"Infura.io"}
-                                          hyperlink={"https://infura.io/product/ipfs"}
+                                          hyperlink={
+                                            "https://infura.io/product/ipfs"
+                                          }
                                         />
                                         <ExternalLink
                                           classnamecontents="hover:text-purple-500"
@@ -2006,7 +2388,9 @@ export default function UIA(properties) {
                             header={t("AssetCommon:nft.NFTNarrativeHeader")}
                           />
                           <Input
-                            placeholder={t("AssetCommon:nft.NarrativePlaceholder")}
+                            placeholder={t(
+                              "AssetCommon:nft.NarrativePlaceholder"
+                            )}
                             value={narrative}
                             type="text"
                             onInput={(e) => setNarrative(e.currentTarget.value)}
@@ -2038,37 +2422,57 @@ export default function UIA(properties) {
                             header={t("AssetCommon:nft.NFTAttestationHeader")}
                           />
                           <Input
-                            placeholder={t("AssetCommon:nft.AttestationPlaceholder")}
+                            placeholder={t(
+                              "AssetCommon:nft.AttestationPlaceholder"
+                            )}
                             value={attestation}
                             type="text"
-                            onInput={(e) => setAttestation(e.currentTarget.value)}
+                            onInput={(e) =>
+                              setAttestation(e.currentTarget.value)
+                            }
                           />
                           <HoverInfo
-                            content={t("AssetCommon:nft.NFTAcknowledgementsContent")}
-                            header={t("AssetCommon:nft.NFTAcknowledgementsHeader")}
+                            content={t(
+                              "AssetCommon:nft.NFTAcknowledgementsContent"
+                            )}
+                            header={t(
+                              "AssetCommon:nft.NFTAcknowledgementsHeader"
+                            )}
                           />
                           <Input
-                            placeholder={t("AssetCommon:nft.AcknowledgementsPlaceholder")}
+                            placeholder={t(
+                              "AssetCommon:nft.AcknowledgementsPlaceholder"
+                            )}
                             value={acknowledgements}
                             type="text"
-                            onInput={(e) => setAcknowledgements(e.currentTarget.value)}
+                            onInput={(e) =>
+                              setAcknowledgements(e.currentTarget.value)
+                            }
                           />
                           <HoverInfo
-                            content={t("AssetCommon:nft.NFTHolderLicenseContent")}
+                            content={t(
+                              "AssetCommon:nft.NFTHolderLicenseContent"
+                            )}
                             header={t("AssetCommon:nft.NFTHolderLicenseHeader")}
                           />
                           <Input
-                            placeholder={t("AssetCommon:nft.HolderLicensePlaceholder")}
+                            placeholder={t(
+                              "AssetCommon:nft.HolderLicensePlaceholder"
+                            )}
                             value={holderLicense}
                             type="text"
-                            onInput={(e) => setHolderLicense(e.currentTarget.value)}
+                            onInput={(e) =>
+                              setHolderLicense(e.currentTarget.value)
+                            }
                           />
                           <HoverInfo
                             content={t("AssetCommon:nft.NFTLicenseContent")}
                             header={t("AssetCommon:nft.NFTLicenseHeader")}
                           />
                           <Input
-                            placeholder={t("AssetCommon:nft.LicensePlaceholder")}
+                            placeholder={t(
+                              "AssetCommon:nft.LicensePlaceholder"
+                            )}
                             value={license}
                             type="text"
                             onInput={(e) => setLicense(e.currentTarget.value)}

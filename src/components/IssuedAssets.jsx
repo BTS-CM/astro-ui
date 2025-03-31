@@ -1,4 +1,9 @@
-import React, { useState, useEffect, useSyncExternalStore, useMemo } from "react";
+import React, {
+  useState,
+  useEffect,
+  useSyncExternalStore,
+  useMemo,
+} from "react";
 import { FixedSizeList as List } from "react-window";
 import { useStore } from "@nanostores/react";
 import { sha256 } from "@noble/hashes/sha2";
@@ -9,7 +14,13 @@ import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 import {
   MagnifyingGlassIcon,
@@ -50,13 +61,21 @@ import ExternalLink from "./common/ExternalLink.jsx";
 import AccountSearch from "./AccountSearch.jsx";
 import HoverInfo from "@/components/common/HoverInfo.tsx";
 import DeepLinkDialog from "@/components/common/DeepLinkDialog.jsx";
-import { blockchainFloat, humanReadableFloat, getFlagBooleans } from "@/lib/common.js";
+import {
+  blockchainFloat,
+  humanReadableFloat,
+  getFlagBooleans,
+} from "@/lib/common.js";
 
 const activeTabStyle = { backgroundColor: "#252526", color: "white" };
 
 export default function IssuedAssets(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
-  const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
+  const usr = useSyncExternalStore(
+    $currentUser.subscribe,
+    $currentUser.get,
+    () => true
+  );
   const currentNode = useStore($currentNode);
 
   const _chain = useMemo(() => {
@@ -123,7 +142,9 @@ export default function IssuedAssets(properties) {
     switch (activeTab) {
       case "uia":
         return issuedAssets.filter(
-          (asset) => !asset.bitasset_data_id && !asset.options.description.includes("nft_object")
+          (asset) =>
+            !asset.bitasset_data_id &&
+            !asset.options.description.includes("nft_object")
         );
       case "smartcoins":
         return issuedAssets.filter(
@@ -141,7 +162,9 @@ export default function IssuedAssets(properties) {
         );
       case "nft":
         return issuedAssets.filter(
-          (asset) => !asset.bitasset_data_id && asset.options.description.includes("nft_object")
+          (asset) =>
+            !asset.bitasset_data_id &&
+            asset.options.description.includes("nft_object")
         );
       default:
         return [];
@@ -154,7 +177,9 @@ export default function IssuedAssets(properties) {
     async function fetching() {
       const requiredStore = createObjectStore([
         usr.chain,
-        JSON.stringify(issuedAssets.map((asset) => asset.dynamic_asset_data_id)),
+        JSON.stringify(
+          issuedAssets.map((asset) => asset.dynamic_asset_data_id)
+        ),
         currentNode ? currentNode.url : null,
       ]);
 
@@ -250,7 +275,7 @@ export default function IssuedAssets(properties) {
       try {
         _desc = JSON.parse(description);
       } catch (e) {
-        console.log({e, id: issuedAsset.id, description});
+        console.log({ e, id: issuedAsset.id, description });
       }
       if (_desc && _desc.hasOwnProperty("main")) {
         parsedDescription = _desc;
@@ -261,7 +286,8 @@ export default function IssuedAssets(properties) {
     const [json, setJSON] = useState();
 
     const [issueAssetOpen, setIssueAssetOpen] = useState(false);
-    const [issueAssetDeeplinkDialog, setIssueAssetDeeplinkDialog] = useState(false);
+    const [issueAssetDeeplinkDialog, setIssueAssetDeeplinkDialog] =
+      useState(false);
 
     const [targetUser, setTargetUser] = useState();
     const [issueAmount, setIssueAmount] = useState(0);
@@ -270,34 +296,48 @@ export default function IssuedAssets(properties) {
     const [selectUserDialogOpen, setSelectUserDialogOpen] = useState(false);
 
     const [reserveAssetOpen, setReserveAssetOpen] = useState(false);
-    const [reserveAssetDeeplinkDialog, setReserveAssetDeeplinkDialog] = useState(false);
+    const [reserveAssetDeeplinkDialog, setReserveAssetDeeplinkDialog] =
+      useState(false);
     const [reserveAmount, setReserveAmount] = useState(0);
 
     const [fundFeePoolDialogOpen, setFundFeePoolDialogOpen] = useState(false);
     const [fundFeePoolAmount, setFundFeePoolAmount] = useState(0);
-    const [fundFeePoolDeeplinkDialog, setFundFeePoolDeeplinkDialog] = useState(false);
+    const [fundFeePoolDeeplinkDialog, setFundFeePoolDeeplinkDialog] =
+      useState(false);
 
     const [claimAssetFeesOpen, setClaimAssetFeesOpen] = useState(false);
-    const [accumulatedFeeClaimAmount, setAccumulatedFeeClaimAmount] = useState(0);
+    const [accumulatedFeeClaimAmount, setAccumulatedFeeClaimAmount] =
+      useState(0);
     const [claimAssetFeesDialog, setClaimAssetFeesDialog] = useState(false);
 
     const [claimFeePoolOpen, setClaimFeePoolOpen] = useState(false);
-    const [claimFeePoolDeeplinkDialog, setClaimFeePoolDeeplinkDialog] = useState(false);
+    const [claimFeePoolDeeplinkDialog, setClaimFeePoolDeeplinkDialog] =
+      useState(false);
     const [claimFeePoolAmount, setClaimFeePoolAmount] = useState(0);
 
     const [assetUpdateIssuerOpen, setAssetUpdateIssuerOpen] = useState(false);
-    const [assetUpdateIssuerDeeplinkDialog, setAssetUpdateIssuerDeeplinkDialog] = useState(false);
+    const [
+      assetUpdateIssuerDeeplinkDialog,
+      setAssetUpdateIssuerDeeplinkDialog,
+    ] = useState(false);
     const [newIssuerSearchOpen, setNewIssuerSearchOpen] = useState(false);
     const [newIssuerUserOpen, setNewIssuerUserOpen] = useState(false);
 
-    const [priceFeedPublishersOpen, setPriceFeedPublishersOpen] = useState(false);
-    const [priceFeedPublishersDeeplinkDialog, setPriceFeedPublishersDeeplinkDialog] =
+    const [priceFeedPublishersOpen, setPriceFeedPublishersOpen] =
       useState(false);
+    const [
+      priceFeedPublishersDeeplinkDialog,
+      setPriceFeedPublishersDeeplinkDialog,
+    ] = useState(false);
     const [priceSearchDialog, setPriceSearchDialog] = useState(false);
 
     const [priceFeedPublishers, setPriceFeedPublishers] = useState([]);
     useEffect(() => {
-      if (relevantBitassetData && priceFeederAccounts && priceFeederAccounts.length) {
+      if (
+        relevantBitassetData &&
+        priceFeederAccounts &&
+        priceFeederAccounts.length
+      ) {
         const publishers = relevantBitassetData.feeds
           .map((x) => x[0])
           .map((x) => priceFeederAccounts.find((y) => y.id === x));
@@ -306,7 +346,8 @@ export default function IssuedAssets(properties) {
     }, [relevantBitassetData, priceFeederAccounts]);
 
     const [globalSettleOpen, setGlobalSettleOpen] = useState(false);
-    const [globalSettleDeeplinkDialog, setGlobalSettleDeeplinkDialog] = useState(false);
+    const [globalSettleDeeplinkDialog, setGlobalSettleDeeplinkDialog] =
+      useState(false);
 
     const [priceFeederIndex, setPriceFeederIndex] = useState(0);
     const [globalSettlementMode, setGlobalSettlementMode] = useState("median");
@@ -322,16 +363,21 @@ export default function IssuedAssets(properties) {
         case "current":
           return relevantBitassetData.current_feed.settlement_price;
         case "price_feed":
-          return relevantBitassetData.feeds[priceFeederIndex][1][1].settlement_price;
+          return relevantBitassetData.feeds[priceFeederIndex][1][1]
+            .settlement_price;
       }
     }, [globalSettlementMode, relevantBitassetData, priceFeederIndex]);
 
     const _flags = getFlagBooleans(issuedAsset.options.flags);
-    const _issuer_permissions = getFlagBooleans(issuedAsset.options.issuer_permissions);
+    const _issuer_permissions = getFlagBooleans(
+      issuedAsset.options.issuer_permissions
+    );
 
     const collateralAsset = useMemo(() => {
       if (relevantBitassetData) {
-        return assets.find((x) => x.id === relevantBitassetData.options.short_backing_asset);
+        return assets.find(
+          (x) => x.id === relevantBitassetData.options.short_backing_asset
+        );
       }
     }, [relevantBitassetData]);
 
@@ -346,7 +392,11 @@ export default function IssuedAssets(properties) {
             humanReadableFloat(
               parseInt(globalSettleObject.quote.amount),
               collateralAsset.precision
-            ) / humanReadableFloat(parseInt(globalSettleObject.base.amount), issuedAsset.precision)
+            ) /
+            humanReadableFloat(
+              parseInt(globalSettleObject.base.amount),
+              issuedAsset.precision
+            )
           ).toFixed(collateralAsset.precision)
         );
       }
@@ -384,7 +434,13 @@ export default function IssuedAssets(properties) {
                       eye: "normal",
                       mouth: "open",
                     }}
-                    colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]}
+                    colors={[
+                      "#92A1C6",
+                      "#146A7C",
+                      "#F0AB3D",
+                      "#C271B4",
+                      "#C20D90",
+                    ]}
                   />
                   <span style={{ marginLeft: "10px" }}>
                     {user.username} ({user.id})
@@ -399,7 +455,12 @@ export default function IssuedAssets(properties) {
 
     const PriceFeedRow = ({ index: x, style: rowStyle }) => {
       const priceFeed = relevantBitassetData.feeds[x];
-      if (!priceFeed || !priceFeed[1] || !priceFeed[1][1] || !priceFeed[1][1].settlement_price) {
+      if (
+        !priceFeed ||
+        !priceFeed[1] ||
+        !priceFeed[1][1] ||
+        !priceFeed[1][1].settlement_price
+      ) {
         console.error("Error: Invalid priceFeed structure", { priceFeed, x });
         return null;
       }
@@ -423,7 +484,9 @@ export default function IssuedAssets(properties) {
         (new Date().getTime() - feedPublishTime.getTime()) / (1000 * 60 * 60)
       );
 
-      const foundFeeder = priceFeederAccounts.find((account) => account.id === priceFeed[0]);
+      const foundFeeder = priceFeederAccounts.find(
+        (account) => account.id === priceFeed[0]
+      );
 
       return (
         <div
@@ -443,12 +506,16 @@ export default function IssuedAssets(properties) {
               <CardHeader className="pb-1 pt-1">
                 <CardTitle>
                   <div className="flex items-center">
-                    {foundFeeder ? foundFeeder.name : null} ({priceFeed[0]}){" - "}
-                    {settlementPrice} {collateralAsset.symbol}/{issuedAsset.symbol}
+                    {foundFeeder ? foundFeeder.name : null} ({priceFeed[0]})
+                    {" - "}
+                    {settlementPrice} {collateralAsset.symbol}/
+                    {issuedAsset.symbol}
                   </div>
                 </CardTitle>
                 <CardDescription>
-                  {t("IssuedAssets:publishTime", { hours: hoursSincePublished })}
+                  {t("IssuedAssets:publishTime", {
+                    hours: hoursSincePublished,
+                  })}
                 </CardDescription>
               </CardHeader>
             </div>
@@ -474,7 +541,13 @@ export default function IssuedAssets(properties) {
                     name={res.name}
                     extra="Borrower"
                     expression={{ eye: "normal", mouth: "open" }}
-                    colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]}
+                    colors={[
+                      "#92A1C6",
+                      "#146A7C",
+                      "#F0AB3D",
+                      "#C271B4",
+                      "#C20D90",
+                    ]}
                   />
                 </span>
                 <span className="flex-grow ml-3">
@@ -486,7 +559,9 @@ export default function IssuedAssets(properties) {
                     className="mr-2"
                     onClick={(e) => {
                       e.preventDefault();
-                      const _update = priceFeedPublishers.filter((x) => x.id !== res.id);
+                      const _update = priceFeedPublishers.filter(
+                        (x) => x.id !== res.id
+                      );
                       setPriceFeedPublishers(_update);
                     }}
                   >
@@ -508,15 +583,22 @@ export default function IssuedAssets(properties) {
               <span className="pb-5 grid grid-cols-2">
                 {activeTab === "smartcoins" &&
                 relevantBitassetData &&
-                ((relevantBitassetData.current_feed.settlement_price.base.amount === 0 &&
-                  relevantBitassetData.current_feed.settlement_price.quote.amount === 0) ||
+                ((relevantBitassetData.current_feed.settlement_price.base
+                  .amount === 0 &&
+                  relevantBitassetData.current_feed.settlement_price.quote
+                    .amount === 0) ||
                   !relevantBitassetData.feeds.length ||
-                  (parseInt(relevantBitassetData.settlement_price.base.amount) > 0 &&
-                    parseInt(relevantBitassetData.settlement_price.quote.amount)) ||
+                  (parseInt(relevantBitassetData.settlement_price.base.amount) >
+                    0 &&
+                    parseInt(
+                      relevantBitassetData.settlement_price.quote.amount
+                    )) ||
                   parseInt(relevantBitassetData.settlement_fund) > 0) ? (
                   <HoverInfo
                     content={t("IssuedAssets:inactiveSmartcoin")}
-                    header={<ExclamationTriangleIcon className="ml-3 mt-1 w-6 h-6" />}
+                    header={
+                      <ExclamationTriangleIcon className="ml-3 mt-1 w-6 h-6" />
+                    }
                     type="header"
                   />
                 ) : null}
@@ -525,19 +607,19 @@ export default function IssuedAssets(properties) {
                     classnamecontents="hover:text-purple-500"
                     type="text"
                     text={issuedAsset.symbol}
-                    hyperlink={`https://blocksights.info/#/assets/${issuedAsset.symbol}${
-                      usr.chain === "bitshares" ? "" : "?network=testnet"
-                    }`}
+                    hyperlink={`https://blocksights.info/#/assets/${
+                      issuedAsset.symbol
+                    }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
                   />
-                  <br/>
+                  <br />
                   {" ("}
                   <ExternalLink
                     classnamecontents="hover:text-purple-500"
                     type="text"
                     text={issuedAsset.id}
-                    hyperlink={`https://blocksights.info/#/assets/${issuedAsset.id}${
-                      usr.chain === "bitshares" ? "" : "?network=testnet"
-                    }`}
+                    hyperlink={`https://blocksights.info/#/assets/${
+                      issuedAsset.id
+                    }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
                   />
                   {")"}
                 </div>
@@ -545,7 +627,10 @@ export default function IssuedAssets(properties) {
               <span className="mb-3 text-right grid grid-cols-3 gap-3">
                 <DropdownMenu>
                   <DropdownMenuTrigger>
-                    <Button className="h-8 hover:shadow-inner" variant="outline">
+                    <Button
+                      className="h-8 hover:shadow-inner"
+                      variant="outline"
+                    >
                       JSON
                     </Button>
                   </DropdownMenuTrigger>
@@ -568,7 +653,8 @@ export default function IssuedAssets(properties) {
                     >
                       {t("IssuedAssets:issuedDynamicData")}
                     </DropdownMenuItem>
-                    {parsedDescription && parsedDescription.hasOwnProperty("nft_object") ? (
+                    {parsedDescription &&
+                    parsedDescription.hasOwnProperty("nft_object") ? (
                       <DropdownMenuItem
                         className="hover:shadow-inner"
                         onClick={() => {
@@ -602,16 +688,24 @@ export default function IssuedAssets(properties) {
                   >
                     <DialogContent className="sm:max-w-[750px] bg-white">
                       <DialogHeader>
-                        <DialogTitle>{t("LiveBlocks:dialogContent.json")}</DialogTitle>
+                        <DialogTitle>
+                          {t("LiveBlocks:dialogContent.json")}
+                        </DialogTitle>
                         <DialogDescription>
                           {t("LiveBlocks:dialogContent.jsonDescription")}
                         </DialogDescription>
                       </DialogHeader>
-                      <Textarea value={JSON.stringify(json, null, 2)} readOnly={true} rows={15} />
+                      <Textarea
+                        value={JSON.stringify(json, null, 2)}
+                        readOnly={true}
+                        rows={15}
+                      />
                       <Button
                         className="w-1/4 mt-2"
                         onClick={() => {
-                          navigator.clipboard.writeText(json.stringify(json, null, 2));
+                          navigator.clipboard.writeText(
+                            json.stringify(json, null, 2)
+                          );
                         }}
                       >
                         {t("LiveBlocks:dialogContent.copy")}
@@ -622,7 +716,10 @@ export default function IssuedAssets(properties) {
 
                 <DropdownMenu>
                   <DropdownMenuTrigger>
-                    <Button className="h-8 hover:shadow-inner" variant="outline">
+                    <Button
+                      className="h-8 hover:shadow-inner"
+                      variant="outline"
+                    >
                       {t("IssuedAssets:userActions")}
                     </Button>
                   </DropdownMenuTrigger>
@@ -665,11 +762,17 @@ export default function IssuedAssets(properties) {
 
                     {activeTab === "smartcoins" &&
                     relevantBitassetData &&
-                    ((relevantBitassetData.current_feed.settlement_price.base.amount === 0 &&
-                      relevantBitassetData.current_feed.settlement_price.quote.amount === 0) ||
+                    ((relevantBitassetData.current_feed.settlement_price.base
+                      .amount === 0 &&
+                      relevantBitassetData.current_feed.settlement_price.quote
+                        .amount === 0) ||
                       !relevantBitassetData.feeds.length ||
-                      (parseInt(relevantBitassetData.settlement_price.base.amount) > 0 &&
-                        parseInt(relevantBitassetData.settlement_price.quote.amount)) ||
+                      (parseInt(
+                        relevantBitassetData.settlement_price.base.amount
+                      ) > 0 &&
+                        parseInt(
+                          relevantBitassetData.settlement_price.quote.amount
+                        )) ||
                       parseInt(relevantBitassetData.settlement_fund) > 0) ? (
                       <a href={`/settlement/index.html?id=${issuedAsset.id}`}>
                         <DropdownMenuItem className="hover:shadow-inner">
@@ -692,15 +795,21 @@ export default function IssuedAssets(properties) {
                   <>
                     <DropdownMenu>
                       <DropdownMenuTrigger>
-                        <Button className="h-8 hover:shadow-inner" variant="outline">
+                        <Button
+                          className="h-8 hover:shadow-inner"
+                          variant="outline"
+                        >
                           {t("IssuedAssets:issuerActions")}
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent>
                         {activeTab === "smartcoins" ||
-                        (activeTab === "nft" && issuedAsset.bitasset_data_id) ? (
+                        (activeTab === "nft" &&
+                          issuedAsset.bitasset_data_id) ? (
                           <>
-                            <a href={`/create_smartcoin/index.html?id=${issuedAsset.id}`}>
+                            <a
+                              href={`/create_smartcoin/index.html?id=${issuedAsset.id}`}
+                            >
                               <DropdownMenuItem className="hover:shadow-inner">
                                 {t("IssuedAssets:manageUIA")}
                               </DropdownMenuItem>
@@ -744,10 +853,14 @@ export default function IssuedAssets(properties) {
                         {["smartcoins", "nft"].includes(activeTab) &&
                         relevantBitassetData &&
                         _issuer_permissions.global_settle &&
-                        parseInt(relevantBitassetData.current_feed.settlement_price.quote.amount) >
-                          0 &&
-                        parseInt(relevantBitassetData.current_feed.settlement_price.base.amount) >
-                          0 ? (
+                        parseInt(
+                          relevantBitassetData.current_feed.settlement_price
+                            .quote.amount
+                        ) > 0 &&
+                        parseInt(
+                          relevantBitassetData.current_feed.settlement_price
+                            .base.amount
+                        ) > 0 ? (
                           <DropdownMenuItem
                             onClick={() => {
                               setGlobalSettleOpen(true);
@@ -760,11 +873,19 @@ export default function IssuedAssets(properties) {
 
                         {["smartcoins", "nft"].includes(activeTab) &&
                         relevantBitassetData &&
-                        (!_issuer_permissions.hasOwnProperty("witness_fed_asset") ||
-                          (_issuer_permissions.hasOwnProperty("witness_fed_asset") &&
+                        (!_issuer_permissions.hasOwnProperty(
+                          "witness_fed_asset"
+                        ) ||
+                          (_issuer_permissions.hasOwnProperty(
+                            "witness_fed_asset"
+                          ) &&
                             !_flags.hasOwnProperty("witness_fed_asset"))) &&
-                        (!_issuer_permissions.hasOwnProperty("committee_fed_asset") ||
-                          (_issuer_permissions.hasOwnProperty("committee_fed_asset") &&
+                        (!_issuer_permissions.hasOwnProperty(
+                          "committee_fed_asset"
+                        ) ||
+                          (_issuer_permissions.hasOwnProperty(
+                            "committee_fed_asset"
+                          ) &&
                             !_flags.hasOwnProperty("committee_fed_asset"))) ? (
                           <DropdownMenuItem
                             onClick={() => {
@@ -777,9 +898,12 @@ export default function IssuedAssets(properties) {
                         ) : null}
 
                         {activeTab === "uia" ||
-                        (activeTab === "nft" && !issuedAsset.bitasset_data_id) ? (
+                        (activeTab === "nft" &&
+                          !issuedAsset.bitasset_data_id) ? (
                           <>
-                            <a href={`/create_uia/index.html?id=${issuedAsset.id}`}>
+                            <a
+                              href={`/create_uia/index.html?id=${issuedAsset.id}`}
+                            >
                               <DropdownMenuItem className="hover:shadow-inner">
                                 {t("IssuedAssets:manageUIA")}
                               </DropdownMenuItem>
@@ -814,7 +938,9 @@ export default function IssuedAssets(properties) {
                       >
                         <DialogContent className="sm:max-w-[600px] bg-white">
                           <DialogHeader>
-                            <DialogTitle>{t(`Predictions:priceFeederDialog.title`)}</DialogTitle>
+                            <DialogTitle>
+                              {t(`Predictions:priceFeederDialog.title`)}
+                            </DialogTitle>
                             <DialogDescription>
                               {t(`Predictions:priceFeederDialog.description`)}
                             </DialogDescription>
@@ -846,7 +972,10 @@ export default function IssuedAssets(properties) {
                                   }}
                                 >
                                   <DialogTrigger asChild>
-                                    <Button variant="outline" className="ml-3 mt-1">
+                                    <Button
+                                      variant="outline"
+                                      className="ml-3 mt-1"
+                                    >
                                       ➕ {t("CreditOfferEditor:addUser")}
                                     </Button>
                                   </DialogTrigger>
@@ -857,15 +986,23 @@ export default function IssuedAssets(properties) {
                                           ? t("Transfer:bitsharesAccountSearch")
                                           : null}
                                         {usr && usr.chain === "bitshares"
-                                          ? t("Transfer:bitsharesAccountSearchBTS")
+                                          ? t(
+                                              "Transfer:bitsharesAccountSearchBTS"
+                                            )
                                           : null}
                                         {usr && usr.chain !== "bitshares"
-                                          ? t("Transfer:bitsharesAccountSearchTEST")
+                                          ? t(
+                                              "Transfer:bitsharesAccountSearchTEST"
+                                            )
                                           : null}
                                       </DialogTitle>
                                     </DialogHeader>
                                     <AccountSearch
-                                      chain={usr && usr.chain ? usr.chain : "bitshares"}
+                                      chain={
+                                        usr && usr.chain
+                                          ? usr.chain
+                                          : "bitshares"
+                                      }
                                       excludedUsers={[]}
                                       setChosenAccount={(_account) => {
                                         if (
@@ -875,8 +1012,12 @@ export default function IssuedAssets(properties) {
                                           )
                                         ) {
                                           setPriceFeedPublishers(
-                                            priceFeedPublishers && priceFeedPublishers.length
-                                              ? [...priceFeedPublishers, _account]
+                                            priceFeedPublishers &&
+                                              priceFeedPublishers.length
+                                              ? [
+                                                  ...priceFeedPublishers,
+                                                  _account,
+                                                ]
                                               : [_account]
                                           );
                                         }
@@ -904,14 +1045,20 @@ export default function IssuedAssets(properties) {
                               username={usr.username}
                               usrChain={usr.chain}
                               userID={usr.id}
-                              dismissCallback={setPriceFeedPublishersDeeplinkDialog}
+                              dismissCallback={
+                                setPriceFeedPublishersDeeplinkDialog
+                              }
                               key={`deeplink-pricefeeddialog-${issuedAsset.id}`}
-                              headerText={t(`Predictions:dialogContent.header_pricefeeder`)}
+                              headerText={t(
+                                `Predictions:dialogContent.header_pricefeeder`
+                              )}
                               trxJSON={[
                                 {
                                   issuer: usr.id,
                                   asset_to_update: issuedAsset.id,
-                                  new_feed_producers: priceFeedPublishers.map((_usr) => _usr.id),
+                                  new_feed_producers: priceFeedPublishers.map(
+                                    (_usr) => _usr.id
+                                  ),
                                 },
                               ]}
                             />
@@ -955,7 +1102,13 @@ export default function IssuedAssets(properties) {
                                     eye: "normal",
                                     mouth: "open",
                                   }}
-                                  colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]}
+                                  colors={[
+                                    "#92A1C6",
+                                    "#146A7C",
+                                    "#F0AB3D",
+                                    "#C271B4",
+                                    "#C20D90",
+                                  ]}
                                 />
                               ) : (
                                 <Av>
@@ -982,7 +1135,10 @@ export default function IssuedAssets(properties) {
                                 }}
                               >
                                 <DialogTrigger asChild>
-                                  <Button variant="outline" className="ml-3 mt-1">
+                                  <Button
+                                    variant="outline"
+                                    className="ml-3 mt-1"
+                                  >
                                     <MagnifyingGlassIcon />
                                   </Button>
                                 </DialogTrigger>
@@ -990,13 +1146,19 @@ export default function IssuedAssets(properties) {
                                   <DialogHeader>
                                     <DialogTitle>
                                       {!usr || !usr.chain
-                                        ? t("AccountLists:bitsharesAccountSearch")
+                                        ? t(
+                                            "AccountLists:bitsharesAccountSearch"
+                                          )
                                         : null}
                                       {usr && usr.chain === "bitshares"
-                                        ? t("AccountLists:bitsharesAccountSearchBTS")
+                                        ? t(
+                                            "AccountLists:bitsharesAccountSearchBTS"
+                                          )
                                         : null}
                                       {usr && usr.chain !== "bitshares"
-                                        ? t("AccountLists:bitsharesAccountSearchTEST")
+                                        ? t(
+                                            "AccountLists:bitsharesAccountSearchTEST"
+                                          )
                                         : null}
                                     </DialogTitle>
                                     <DialogDescription>
@@ -1004,7 +1166,9 @@ export default function IssuedAssets(properties) {
                                     </DialogDescription>
                                   </DialogHeader>
                                   <AccountSearch
-                                    chain={usr && usr.chain ? usr.chain : "bitshares"}
+                                    chain={
+                                      usr && usr.chain ? usr.chain : "bitshares"
+                                    }
                                     excludedUsers={[]}
                                     setChosenAccount={(x) => {
                                       setTargetUser(x);
@@ -1021,13 +1185,18 @@ export default function IssuedAssets(properties) {
                                 }}
                               >
                                 <DialogTrigger asChild>
-                                  <Button variant="outline" className="ml-3 mt-1">
+                                  <Button
+                                    variant="outline"
+                                    className="ml-3 mt-1"
+                                  >
                                     <AvatarIcon />
                                   </Button>
                                 </DialogTrigger>
                                 <DialogContent className="sm:max-w-[375px] bg-white">
                                   <DialogHeader>
-                                    <DialogTitle>{t("IssuedAssets:contactList")}</DialogTitle>
+                                    <DialogTitle>
+                                      {t("IssuedAssets:contactList")}
+                                    </DialogTitle>
                                     <DialogDescription>
                                       {t("IssuedAssets:contactListInfo")}
                                     </DialogDescription>
@@ -1058,7 +1227,9 @@ export default function IssuedAssets(properties) {
                               />
                               <Input
                                 value={
-                                  relevantDynamicData ? relevantDynamicData.current_supply : "0"
+                                  relevantDynamicData
+                                    ? relevantDynamicData.current_supply
+                                    : "0"
                                 }
                                 readOnly={true}
                                 className="mt-2"
@@ -1091,7 +1262,8 @@ export default function IssuedAssets(properties) {
                           />
                           {issueAmount >
                           humanReadableFloat(
-                            issuedAsset.options.max_supply - relevantDynamicData.current_supply,
+                            issuedAsset.options.max_supply -
+                              relevantDynamicData.current_supply,
                             //issuedAsset.options.max_supply,
                             issuedAsset.precision
                           ) ? (
@@ -1124,7 +1296,10 @@ export default function IssuedAssets(properties) {
                                 {
                                   issuer: usr.id,
                                   asset_to_issue: {
-                                    amount: blockchainFloat(issueAmount, issuedAsset.precision),
+                                    amount: blockchainFloat(
+                                      issueAmount,
+                                      issuedAsset.precision
+                                    ),
                                     asset_id: issuedAsset.id,
                                   },
                                   issue_to_account: targetUser.id,
@@ -1149,8 +1324,8 @@ export default function IssuedAssets(properties) {
                         <DialogContent className="sm:max-w-[550px] bg-white">
                           <DialogHeader>
                             <DialogTitle>
-                              {t("IssuedAssets:reserveAsset")}: {issuedAsset.symbol} (
-                              {issuedAsset.id})
+                              {t("IssuedAssets:reserveAsset")}:{" "}
+                              {issuedAsset.symbol} ({issuedAsset.id})
                             </DialogTitle>
                             <DialogDescription>
                               {t("IssuedAssets:reserveAssetInfo")}
@@ -1166,7 +1341,9 @@ export default function IssuedAssets(properties) {
                               />
                               <Input
                                 value={
-                                  relevantDynamicData ? relevantDynamicData.current_supply : "0"
+                                  relevantDynamicData
+                                    ? relevantDynamicData.current_supply
+                                    : "0"
                                 }
                                 readOnly={true}
                                 className="mt-2"
@@ -1203,7 +1380,9 @@ export default function IssuedAssets(properties) {
                             issuedAsset.precision
                           ) ? (
                             <div className="text-red-500">
-                              {t("IssuedAssets:reserveAmountExceedsCurrentSupply")}
+                              {t(
+                                "IssuedAssets:reserveAmountExceedsCurrentSupply"
+                              )}
                             </div>
                           ) : null}
                           <Button
@@ -1230,7 +1409,10 @@ export default function IssuedAssets(properties) {
                                 {
                                   payer: usr.id,
                                   amount_to_reserve: {
-                                    amount: blockchainFloat(reserveAmount, issuedAsset.precision),
+                                    amount: blockchainFloat(
+                                      reserveAmount,
+                                      issuedAsset.precision
+                                    ),
                                     asset_id: issuedAsset.id,
                                   },
                                   extensions: {},
@@ -1252,7 +1434,8 @@ export default function IssuedAssets(properties) {
                         <DialogContent className="sm:max-w-[550px] bg-white">
                           <DialogHeader>
                             <DialogTitle>
-                              {t("IssuedAssets:fundFeePool")}: {issuedAsset.symbol} (
+                              {t("IssuedAssets:fundFeePool")}:{" "}
+                              {issuedAsset.symbol} (
                               {usr.chain === "bitshares" ? "BTS" : "TEST"})
                             </DialogTitle>
                             <DialogDescription>
@@ -1268,10 +1451,15 @@ export default function IssuedAssets(properties) {
                           <Input
                             value={
                               relevantDynamicData
-                                ? `${humanReadableFloat(relevantDynamicData.fee_pool, 5)} ${
+                                ? `${humanReadableFloat(
+                                    relevantDynamicData.fee_pool,
+                                    5
+                                  )} ${
                                     usr.chain === "bitshares" ? "BTS" : "TEST"
                                   }`
-                                : `0 ${usr.chain === "bitshares" ? "BTS" : "TEST"}`
+                                : `0 ${
+                                    usr.chain === "bitshares" ? "BTS" : "TEST"
+                                  }`
                             }
                             readOnly={true}
                             className="mt-2"
@@ -1307,13 +1495,17 @@ export default function IssuedAssets(properties) {
                               key={`FundingAssetFeePool_${issuedAsset.id}`}
                               headerText={t("IssuedAssets:feeFundHeader", {
                                 amount: fundFeePoolAmount,
-                                asset: usr.chain === "bitshares" ? "BTS" : "TEST",
+                                asset:
+                                  usr.chain === "bitshares" ? "BTS" : "TEST",
                               })}
                               trxJSON={[
                                 {
                                   from_account: usr.id,
                                   asset_id: issuedAsset.id,
-                                  amount: blockchainFloat(fundFeePoolAmount, issuedAsset.precision),
+                                  amount: blockchainFloat(
+                                    fundFeePoolAmount,
+                                    issuedAsset.precision
+                                  ),
                                   extensions: {},
                                 },
                               ]}
@@ -1333,7 +1525,8 @@ export default function IssuedAssets(properties) {
                         <DialogContent className="sm:max-w-[550px] bg-white">
                           <DialogHeader>
                             <DialogTitle>
-                              {t("IssuedAssets:claimAssetFees")}: {issuedAsset.symbol} (
+                              {t("IssuedAssets:claimAssetFees")}:{" "}
+                              {issuedAsset.symbol} (
                               {usr.chain === "bitshares" ? "BTS" : "TEST"})
                             </DialogTitle>
                             <DialogDescription>
@@ -1349,10 +1542,15 @@ export default function IssuedAssets(properties) {
                           <Input
                             value={
                               relevantDynamicData
-                                ? `${humanReadableFloat(relevantDynamicData.accumulated_fees, 5)} ${
+                                ? `${humanReadableFloat(
+                                    relevantDynamicData.accumulated_fees,
+                                    5
+                                  )} ${
                                     usr.chain === "bitshares" ? "BTS" : "TEST"
                                   }`
-                                : `0 ${usr.chain === "bitshares" ? "BTS" : "TEST"}`
+                                : `0 ${
+                                    usr.chain === "bitshares" ? "BTS" : "TEST"
+                                  }`
                             }
                             readOnly={true}
                             className="mt-2"
@@ -1377,7 +1575,10 @@ export default function IssuedAssets(properties) {
                               variant="outline"
                               onClick={() => {
                                 setAccumulatedFeeClaimAmount(
-                                  humanReadableFloat(relevantDynamicData.accumulated_fees, 5)
+                                  humanReadableFloat(
+                                    relevantDynamicData.accumulated_fees,
+                                    5
+                                  )
                                 );
                               }}
                             >
@@ -1400,16 +1601,23 @@ export default function IssuedAssets(properties) {
                               userID={usr.id}
                               dismissCallback={setClaimAssetFeesDialog}
                               key={`ClaimingAccumulatedAssetFees_${issuedAsset.id}`}
-                              headerText={t("IssuedAssets:assetFeeClaimHeader", {
-                                amount: accumulatedFeeClaimAmount,
-                                symbol: issuedAsset.symbol,
-                                asset: usr.chain === "bitshares" ? "BTS" : "TEST",
-                              })}
+                              headerText={t(
+                                "IssuedAssets:assetFeeClaimHeader",
+                                {
+                                  amount: accumulatedFeeClaimAmount,
+                                  symbol: issuedAsset.symbol,
+                                  asset:
+                                    usr.chain === "bitshares" ? "BTS" : "TEST",
+                                }
+                              )}
                               trxJSON={[
                                 {
                                   issuer: usr.id,
                                   amount_to_claim: {
-                                    amount: blockchainFloat(accumulatedFeeClaimAmount, 5),
+                                    amount: blockchainFloat(
+                                      accumulatedFeeClaimAmount,
+                                      5
+                                    ),
                                     asset_id: issuedAsset.id,
                                   },
                                   extensions: {},
@@ -1431,7 +1639,8 @@ export default function IssuedAssets(properties) {
                         <DialogContent className="sm:max-w-[550px] bg-white">
                           <DialogHeader>
                             <DialogTitle>
-                              {t("IssuedAssets:claimFeePool")}: {issuedAsset.symbol} (
+                              {t("IssuedAssets:claimFeePool")}:{" "}
+                              {issuedAsset.symbol} (
                               {usr.chain === "bitshares" ? "BTS" : "TEST"})
                             </DialogTitle>
                             <DialogDescription>
@@ -1447,10 +1656,15 @@ export default function IssuedAssets(properties) {
                           <Input
                             value={
                               relevantDynamicData
-                                ? `${humanReadableFloat(relevantDynamicData.fee_pool, 5)} ${
+                                ? `${humanReadableFloat(
+                                    relevantDynamicData.fee_pool,
+                                    5
+                                  )} ${
                                     usr.chain === "bitshares" ? "BTS" : "TEST"
                                   }`
-                                : `0 ${usr.chain === "bitshares" ? "BTS" : "TEST"}`
+                                : `0 ${
+                                    usr.chain === "bitshares" ? "BTS" : "TEST"
+                                  }`
                             }
                             readOnly={true}
                             className="mt-2"
@@ -1475,7 +1689,10 @@ export default function IssuedAssets(properties) {
                               variant="outline"
                               onClick={() => {
                                 setClaimFeePoolAmount(
-                                  humanReadableFloat(relevantDynamicData.fee_pool, 5)
+                                  humanReadableFloat(
+                                    relevantDynamicData.fee_pool,
+                                    5
+                                  )
                                 );
                               }}
                             >
@@ -1500,7 +1717,8 @@ export default function IssuedAssets(properties) {
                               key={`ClaimingAssetFeePool_${issuedAsset.id}`}
                               headerText={t("IssuedAssets:feePoolClaimHeader", {
                                 amount: claimFeePoolAmount,
-                                symbol: usr.chain === "bitshares" ? "BTS" : "TEST",
+                                symbol:
+                                  usr.chain === "bitshares" ? "BTS" : "TEST",
                                 asset: issuedAsset.symbol,
                               })}
                               trxJSON={[
@@ -1508,7 +1726,10 @@ export default function IssuedAssets(properties) {
                                   issuer: usr.id,
                                   asset_id: issuedAsset.id,
                                   amount_to_claim: {
-                                    amount: blockchainFloat(claimFeePoolAmount, 5),
+                                    amount: blockchainFloat(
+                                      claimFeePoolAmount,
+                                      5
+                                    ),
                                     asset_id: "1.3.0", // TODO: Support other fee assets
                                   },
                                   extensions: {},
@@ -1531,8 +1752,8 @@ export default function IssuedAssets(properties) {
                           <DialogContent className="sm:max-w-[550px] bg-white">
                             <DialogHeader>
                               <DialogTitle>
-                                {t("IssuedAssets:updateIssuer")}: {issuedAsset.symbol} (
-                                {issuedAsset.id})
+                                {t("IssuedAssets:updateIssuer")}:{" "}
+                                {issuedAsset.symbol} ({issuedAsset.id})
                               </DialogTitle>
                               <DialogDescription>
                                 {t("IssuedAssets:updateIssuerInfo")}
@@ -1603,7 +1824,10 @@ export default function IssuedAssets(properties) {
                                     }}
                                   >
                                     <DialogTrigger asChild>
-                                      <Button variant="outline" className="ml-3 mt-1">
+                                      <Button
+                                        variant="outline"
+                                        className="ml-3 mt-1"
+                                      >
                                         <MagnifyingGlassIcon />
                                       </Button>
                                     </DialogTrigger>
@@ -1611,21 +1835,33 @@ export default function IssuedAssets(properties) {
                                       <DialogHeader>
                                         <DialogTitle>
                                           {!usr || !usr.chain
-                                            ? t("AccountLists:bitsharesAccountSearch")
+                                            ? t(
+                                                "AccountLists:bitsharesAccountSearch"
+                                              )
                                             : null}
                                           {usr && usr.chain === "bitshares"
-                                            ? t("AccountLists:bitsharesAccountSearchBTS")
+                                            ? t(
+                                                "AccountLists:bitsharesAccountSearchBTS"
+                                              )
                                             : null}
                                           {usr && usr.chain !== "bitshares"
-                                            ? t("AccountLists:bitsharesAccountSearchTEST")
+                                            ? t(
+                                                "AccountLists:bitsharesAccountSearchTEST"
+                                              )
                                             : null}
                                         </DialogTitle>
                                         <DialogDescription>
-                                          {t("AccountLists:searchingForAccount")}
+                                          {t(
+                                            "AccountLists:searchingForAccount"
+                                          )}
                                         </DialogDescription>
                                       </DialogHeader>
                                       <AccountSearch
-                                        chain={usr && usr.chain ? usr.chain : "bitshares"}
+                                        chain={
+                                          usr && usr.chain
+                                            ? usr.chain
+                                            : "bitshares"
+                                        }
                                         excludedUsers={[]}
                                         setChosenAccount={(x) => {
                                           setTargetUser(x);
@@ -1642,13 +1878,18 @@ export default function IssuedAssets(properties) {
                                     }}
                                   >
                                     <DialogTrigger asChild>
-                                      <Button variant="outline" className="ml-3 mt-1">
+                                      <Button
+                                        variant="outline"
+                                        className="ml-3 mt-1"
+                                      >
                                         <AvatarIcon />
                                       </Button>
                                     </DialogTrigger>
                                     <DialogContent className="sm:max-w-[375px] bg-white">
                                       <DialogHeader>
-                                        <DialogTitle>{t("IssuedAssets:contactList")}</DialogTitle>
+                                        <DialogTitle>
+                                          {t("IssuedAssets:contactList")}
+                                        </DialogTitle>
                                         <DialogDescription>
                                           {t("IssuedAssets:contactListInfo")}
                                         </DialogDescription>
@@ -1684,13 +1925,18 @@ export default function IssuedAssets(properties) {
                                 username={usr.username}
                                 usrChain={usr.chain}
                                 userID={usr.id}
-                                dismissCallback={setAssetUpdateIssuerDeeplinkDialog}
+                                dismissCallback={
+                                  setAssetUpdateIssuerDeeplinkDialog
+                                }
                                 key={`UpdatingAssetIssuer_${issuedAsset.id}`}
-                                headerText={t("IssuedAssets:updateIssuerHeader", {
-                                  asset: issuedAsset.symbol,
-                                  currentIssuer: usr.id,
-                                  newIssuer: targetUser.id,
-                                })}
+                                headerText={t(
+                                  "IssuedAssets:updateIssuerHeader",
+                                  {
+                                    asset: issuedAsset.symbol,
+                                    currentIssuer: usr.id,
+                                    newIssuer: targetUser.id,
+                                  }
+                                )}
                                 trxJSON={[
                                   {
                                     issuer: usr.id,
@@ -1718,8 +1964,8 @@ export default function IssuedAssets(properties) {
                         <DialogContent className="sm:max-w-[550px] bg-white">
                           <DialogHeader>
                             <DialogTitle>
-                              {t("IssuedAssets:updateIssuer")}: {issuedAsset.symbol} (
-                              {issuedAsset.id})
+                              {t("IssuedAssets:updateIssuer")}:{" "}
+                              {issuedAsset.symbol} ({issuedAsset.id})
                             </DialogTitle>
                             <DialogDescription>
                               {t("IssuedAssets:updateIssuerInfo")}
@@ -1732,7 +1978,11 @@ export default function IssuedAssets(properties) {
                                 onClick={() => {
                                   setGlobalSettlementMode("median");
                                 }}
-                                variant={globalSettlementMode === "median" ? "" : "outline"}
+                                variant={
+                                  globalSettlementMode === "median"
+                                    ? ""
+                                    : "outline"
+                                }
                               >
                                 {t("IssuedAssets:medianFeedPrice")}
                               </Button>
@@ -1740,7 +1990,11 @@ export default function IssuedAssets(properties) {
                                 onClick={() => {
                                   setGlobalSettlementMode("current");
                                 }}
-                                variant={globalSettlementMode === "current" ? "" : "outline"}
+                                variant={
+                                  globalSettlementMode === "current"
+                                    ? ""
+                                    : "outline"
+                                }
                               >
                                 {t("IssuedAssets:currentFeedPrice")}
                               </Button>
@@ -1751,7 +2005,11 @@ export default function IssuedAssets(properties) {
                                   onClick={() => {
                                     setGlobalSettlementMode("price_feed");
                                   }}
-                                  variant={globalSettlementMode === "price_feed" ? "" : "outline"}
+                                  variant={
+                                    globalSettlementMode === "price_feed"
+                                      ? ""
+                                      : "outline"
+                                  }
                                 >
                                   {t("IssuedAssets:specificPriceFeed")}
                                 </Button>
@@ -1765,13 +2023,19 @@ export default function IssuedAssets(properties) {
                               globalSettlementMode === "price_feed" ? (
                                 <>
                                   <HoverInfo
-                                    content={t("IssuedAssets:chooseSpecificFeedInfo")}
-                                    header={t("IssuedAssets:chooseSpecificFeed")}
+                                    content={t(
+                                      "IssuedAssets:chooseSpecificFeedInfo"
+                                    )}
+                                    header={t(
+                                      "IssuedAssets:chooseSpecificFeed"
+                                    )}
                                     type="header"
                                   />
                                   <List
                                     height={150}
-                                    itemCount={relevantBitassetData.feeds.length}
+                                    itemCount={
+                                      relevantBitassetData.feeds.length
+                                    }
                                     itemSize={60}
                                     className="w-full rounded border border-black pt-1"
                                   >
@@ -1781,8 +2045,12 @@ export default function IssuedAssets(properties) {
                               ) : null}
                               <div>
                                 <HoverInfo
-                                  content={t("IssuedAssets:currentSettlementPriceInfo")}
-                                  header={t("IssuedAssets:currentSettlementPrice")}
+                                  content={t(
+                                    "IssuedAssets:currentSettlementPriceInfo"
+                                  )}
+                                  header={t(
+                                    "IssuedAssets:currentSettlementPrice"
+                                  )}
                                   type="header"
                                 />
                                 <Input
@@ -1790,7 +2058,9 @@ export default function IssuedAssets(properties) {
                                     parseFloat(currentFeedSettlementPrice) > 0
                                       ? currentFeedSettlementPrice
                                       : "??? ⚠️"
-                                  } ${collateralAsset.symbol}/${issuedAsset.symbol}`}
+                                  } ${collateralAsset.symbol}/${
+                                    issuedAsset.symbol
+                                  }`}
                                   readOnly={true}
                                   className="mt-2"
                                 />
@@ -1806,7 +2076,9 @@ export default function IssuedAssets(properties) {
                                     value={`${humanReadableFloat(
                                       parseInt(globalSettleObject.quote.amount),
                                       collateralAsset.precision
-                                    )} ${collateralAsset.symbol} (${collateralAsset.id})`}
+                                    )} ${collateralAsset.symbol} (${
+                                      collateralAsset.id
+                                    })`}
                                     readOnly={true}
                                     className="mt-2"
                                   />
@@ -1819,9 +2091,13 @@ export default function IssuedAssets(properties) {
                                   />
                                   <Input
                                     value={`${humanReadableFloat(
-                                      parseInt(parseInt(globalSettleObject.base.amount)),
+                                      parseInt(
+                                        parseInt(globalSettleObject.base.amount)
+                                      ),
                                       issuedAsset.precision
-                                    )} ${issuedAsset.symbol} (${issuedAsset.id})`}
+                                    )} ${issuedAsset.symbol} (${
+                                      issuedAsset.id
+                                    })`}
                                     readOnly={true}
                                     className="mt-2"
                                   />
@@ -1845,10 +2121,13 @@ export default function IssuedAssets(properties) {
                               userID={usr.id}
                               dismissCallback={setGlobalSettleDeeplinkDialog}
                               key={`globallySettlingAsset_${issuedAsset.id}`}
-                              headerText={t("IssuedAssets:globalSettlementHeader", {
-                                asset: issuedAsset.symbol,
-                                mode: globalSettlementMode,
-                              })}
+                              headerText={t(
+                                "IssuedAssets:globalSettlementHeader",
+                                {
+                                  asset: issuedAsset.symbol,
+                                  mode: globalSettlementMode,
+                                }
+                              )}
                               trxJSON={[
                                 {
                                   issuer: usr.id,
@@ -1951,13 +2230,19 @@ export default function IssuedAssets(properties) {
                 </TabsList>
                 <TabsContent value="uia">
                   <h5 className="mb-2 text-center">
-                    {t("IssuedAssets:listingUIA", { count: relevantAssets.length })}
+                    {t("IssuedAssets:listingUIA", {
+                      count: relevantAssets.length,
+                    })}
                   </h5>
                   {loading ? (
-                    <div className="text-center mt-5">{t("CreditBorrow:common.loading")}</div>
+                    <div className="text-center mt-5">
+                      {t("CreditBorrow:common.loading")}
+                    </div>
                   ) : null}
                   {(!loading && !relevantAssets) || !relevantAssets.length ? (
-                    <div className="text-center mt-5">{t("IssuedAssets:noUIA")}</div>
+                    <div className="text-center mt-5">
+                      {t("IssuedAssets:noUIA")}
+                    </div>
                   ) : (
                     <List
                       height={500}
@@ -1971,13 +2256,19 @@ export default function IssuedAssets(properties) {
                 </TabsContent>
                 <TabsContent value="smartcoins">
                   <h5 className="mb-2 text-center">
-                    {t("IssuedAssets:listingSmartcoins", { count: relevantAssets.length })}
+                    {t("IssuedAssets:listingSmartcoins", {
+                      count: relevantAssets.length,
+                    })}
                   </h5>
                   {loading ? (
-                    <div className="text-center mt-5">{t("CreditBorrow:common.loading")}</div>
+                    <div className="text-center mt-5">
+                      {t("CreditBorrow:common.loading")}
+                    </div>
                   ) : null}
                   {(!loading && !relevantAssets) || !relevantAssets.length ? (
-                    <div className="text-center mt-5">{t("IssuedAssets:noSmartcoins")}</div>
+                    <div className="text-center mt-5">
+                      {t("IssuedAssets:noSmartcoins")}
+                    </div>
                   ) : (
                     <List
                       height={500}
@@ -1991,13 +2282,19 @@ export default function IssuedAssets(properties) {
                 </TabsContent>
                 <TabsContent value="prediction">
                   <h5 className="mb-2 text-center">
-                    {t("IssuedAssets:listingPredictionMarkets", { count: relevantAssets.length })}
+                    {t("IssuedAssets:listingPredictionMarkets", {
+                      count: relevantAssets.length,
+                    })}
                   </h5>
                   {loading ? (
-                    <div className="text-center mt-5">{t("CreditBorrow:common.loading")}</div>
+                    <div className="text-center mt-5">
+                      {t("CreditBorrow:common.loading")}
+                    </div>
                   ) : null}
                   {(!loading && !relevantAssets) || !relevantAssets.length ? (
-                    <div className="text-center mt-5">{t("IssuedAssets:noPredictionMarkets")}</div>
+                    <div className="text-center mt-5">
+                      {t("IssuedAssets:noPredictionMarkets")}
+                    </div>
                   ) : (
                     <List
                       height={500}
@@ -2011,13 +2308,19 @@ export default function IssuedAssets(properties) {
                 </TabsContent>
                 <TabsContent value="nft">
                   <h5 className="mb-2 text-center">
-                    {t("IssuedAssets:listingNFTs", { count: relevantAssets.length })}
+                    {t("IssuedAssets:listingNFTs", {
+                      count: relevantAssets.length,
+                    })}
                   </h5>
                   {loading ? (
-                    <div className="text-center mt-5">{t("CreditBorrow:common.loading")}</div>
+                    <div className="text-center mt-5">
+                      {t("CreditBorrow:common.loading")}
+                    </div>
                   ) : null}
                   {(!loading && !relevantAssets) || !relevantAssets.length ? (
-                    <div className="text-center mt-5">{t("IssuedAssets:noNFTs")}</div>
+                    <div className="text-center mt-5">
+                      {t("IssuedAssets:noNFTs")}
+                    </div>
                   ) : (
                     <List
                       height={500}

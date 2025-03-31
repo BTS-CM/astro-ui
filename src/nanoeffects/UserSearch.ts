@@ -3,7 +3,11 @@ import Apis from "@/bts/ws/ApiInstances";
 import { chains } from "@/config/chains";
 import { $nodes } from "@/stores/node";
 
-async function accountSearch(chain: string, search_string: string, specificNode?: string | null) {
+async function accountSearch(
+  chain: string,
+  search_string: string,
+  specificNode?: string | null
+) {
   return new Promise(async (resolve, reject) => {
     // access latest $nodes
 
@@ -19,8 +23,12 @@ async function accountSearch(chain: string, search_string: string, specificNode?
 
     let currentAPI;
     try {
-      currentAPI = await Apis.instance(node, true, 4000, { enableDatabase: true }, (error: Error) =>
-        console.log({ error })
+      currentAPI = await Apis.instance(
+        node,
+        true,
+        4000,
+        { enableDatabase: true },
+        (error: Error) => console.log({ error })
       );
     } catch (error) {
       console.log({ error });
@@ -30,7 +38,9 @@ async function accountSearch(chain: string, search_string: string, specificNode?
 
     let object;
     try {
-      object = await currentAPI.db_api().exec("get_accounts", [[search_string]]);
+      object = await currentAPI
+        .db_api()
+        .exec("get_accounts", [[search_string]]);
     } catch (error) {
       console.log({ error });
       currentAPI.close();

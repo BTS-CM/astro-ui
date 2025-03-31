@@ -1,4 +1,9 @@
-import React, { useState, useEffect, useSyncExternalStore, useMemo } from "react";
+import React, {
+  useState,
+  useEffect,
+  useSyncExternalStore,
+  useMemo,
+} from "react";
 import { FixedSizeList as List } from "react-window";
 import { useStore } from "@nanostores/react";
 import { sha256 } from "@noble/hashes/sha2";
@@ -130,8 +135,16 @@ export default function Proposals(properties) {
   const currentNode = useStore($currentNode);
   const [showDialog, setShowDialog] = useState(false);
 
-  const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
-  const blocklist = useSyncExternalStore($blockList.subscribe, $blockList.get, () => true);
+  const usr = useSyncExternalStore(
+    $currentUser.subscribe,
+    $currentUser.get,
+    () => true
+  );
+  const blocklist = useSyncExternalStore(
+    $blockList.subscribe,
+    $blockList.get,
+    () => true
+  );
 
   const { _globalParamsBTS, _globalParamsTEST } = properties;
 
@@ -177,7 +190,13 @@ export default function Proposals(properties) {
   }, [usr, currentNode]);
 
   const filteredProposals = useMemo(() => {
-    if (usr && usr.chain === "bitshares" && blocklist && proposals && proposals.length) {
+    if (
+      usr &&
+      usr.chain === "bitshares" &&
+      blocklist &&
+      proposals &&
+      proposals.length
+    ) {
       const filteredProposals = proposals.filter((proposal) => {
         const hashedID = toHex(sha256(proposal.proposer));
         return !blocklist.users.includes(hashedID);
@@ -191,7 +210,9 @@ export default function Proposals(properties) {
   const [proposerAccounts, setProposerAccounts] = useState([]);
   useEffect(() => {
     async function fetching() {
-      const proposers = [...new Set(filteredProposals.map((proposal) => proposal.proposer))];
+      const proposers = [
+        ...new Set(filteredProposals.map((proposal) => proposal.proposer)),
+      ];
       const proposerStore = createObjectStore([
         usr.chain,
         JSON.stringify(proposers),
@@ -245,9 +266,9 @@ export default function Proposals(properties) {
                     classnamecontents="hover:text-purple-500"
                     type="text"
                     text={proposal.id}
-                    hyperlink={`https://blocksights.info/#/objects/${proposal.id}${
-                      usr.chain === "bitshares" ? "" : "?network=testnet"
-                    }`}
+                    hyperlink={`https://blocksights.info/#/objects/${
+                      proposal.id
+                    }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
                   />
                   <Badge
                     className="ml-3"
@@ -268,7 +289,9 @@ export default function Proposals(properties) {
                         classnamecontents="hover:text-purple-500"
                         type="text"
                         text={proposerAccount.name}
-                        hyperlink={`https://blocksights.info/#/accounts/${proposerAccount.name}${
+                        hyperlink={`https://blocksights.info/#/accounts/${
+                          proposerAccount.name
+                        }${
                           usr.chain === "bitshares" ? "" : "?network=testnet"
                         }`}
                       />
@@ -297,7 +320,8 @@ export default function Proposals(properties) {
                   </Badge>
                 </div>
                 <div className="col-span-2">
-                  {t("Proposals:expirationTime")}: <b>{expirationTime.toUTCString()}</b>
+                  {t("Proposals:expirationTime")}:{" "}
+                  <b>{expirationTime.toUTCString()}</b>
                 </div>
                 {reviewPeriodTime ? (
                   <div className="col-span-2">
@@ -386,54 +410,63 @@ export default function Proposals(properties) {
             <DialogContent className="sm:max-w-[750px] bg-white">
               <DialogHeader>
                 <DialogTitle>{t("Proposals:approveProposal")}</DialogTitle>
-                <DialogDescription>{t("Proposals:approveProposalDescription")}</DialogDescription>
+                <DialogDescription>
+                  {t("Proposals:approveProposalDescription")}
+                </DialogDescription>
               </DialogHeader>
               <div className="grid grid-cols-1 gap-3">
                 {proposal &&
                 proposal.proposed_transaction &&
                 proposal.proposed_transaction.operations &&
                 !finalApprovalOpen
-                  ? proposal.proposed_transaction.operations.map((operation, index) => (
-                      <div key={`operation_${index}`}>
-                        <div>
-                          {t("Proposals:operationType")}: <b>{operationStrings[operation[0]]}</b> (
-                          {operation[0]})
+                  ? proposal.proposed_transaction.operations.map(
+                      (operation, index) => (
+                        <div key={`operation_${index}`}>
+                          <div>
+                            {t("Proposals:operationType")}:{" "}
+                            <b>{operationStrings[operation[0]]}</b> (
+                            {operation[0]})
+                          </div>
+                          <div className="mt-1">
+                            {t("Proposals:operationDescription")}:<br />
+                            {t(`Operations:${operationStrings[operation[0]]}`)}
+                          </div>
+                          <Textarea
+                            className="w-full h-32 mt-2 p-2 border rounded-md mb-5 mt-3"
+                            value={JSON.stringify(operation, null, 2)}
+                            readOnly={true}
+                            rows={15}
+                          />
+                          <div className="flex space-x-3 mt-2">
+                            <Button
+                              onClick={() => {
+                                const newCount = approvedCount + 1;
+                                setApprovedCount(newCount);
+                                if (
+                                  newCount ===
+                                  proposal.proposed_transaction.operations
+                                    .length
+                                ) {
+                                  setFinalApprovalOpen(true);
+                                  setChosenProposal(proposal);
+                                }
+                              }}
+                            >
+                              {t("Proposals:approveProposedOperation")}
+                            </Button>
+                            <Button
+                              onClick={() => {
+                                setApproveOpen(false);
+                                setApprovedCount(0);
+                                setChosenProposal();
+                              }}
+                            >
+                              {t("Proposals:rejectProposedOperation")}
+                            </Button>
+                          </div>
                         </div>
-                        <div className="mt-1">
-                          {t("Proposals:operationDescription")}:<br />
-                          {t(`Operations:${operationStrings[operation[0]]}`)}
-                        </div>
-                        <Textarea
-                          className="w-full h-32 mt-2 p-2 border rounded-md mb-5 mt-3"
-                          value={JSON.stringify(operation, null, 2)}
-                          readOnly={true}
-                          rows={15}
-                        />
-                        <div className="flex space-x-3 mt-2">
-                          <Button
-                            onClick={() => {
-                              const newCount = approvedCount + 1;
-                              setApprovedCount(newCount);
-                              if (newCount === proposal.proposed_transaction.operations.length) {
-                                setFinalApprovalOpen(true);
-                                setChosenProposal(proposal);
-                              }
-                            }}
-                          >
-                            {t("Proposals:approveProposedOperation")}
-                          </Button>
-                          <Button
-                            onClick={() => {
-                              setApproveOpen(false);
-                              setApprovedCount(0);
-                              setChosenProposal();
-                            }}
-                          >
-                            {t("Proposals:rejectProposedOperation")}
-                          </Button>
-                        </div>
-                      </div>
-                    ))
+                      )
+                    )
                   : null}
               </div>
             </DialogContent>
@@ -475,7 +508,9 @@ export default function Proposals(properties) {
           <Card>
             <CardHeader className="pb-3">
               <CardTitle>{t("Proposals:risksTitle")}</CardTitle>
-              <CardDescription>{t("Proposals:risksDescription")}</CardDescription>
+              <CardDescription>
+                {t("Proposals:risksDescription")}
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <span className="text-sm">
@@ -496,16 +531,24 @@ export default function Proposals(properties) {
             >
               <DialogContent className="sm:max-w-[750px] bg-white">
                 <DialogHeader>
-                  <DialogTitle>{t("LiveBlocks:dialogContent.json")}</DialogTitle>
+                  <DialogTitle>
+                    {t("LiveBlocks:dialogContent.json")}
+                  </DialogTitle>
                   <DialogDescription>
                     {t("LiveBlocks:dialogContent.jsonDescription")}
                   </DialogDescription>
                 </DialogHeader>
-                <Textarea value={JSON.stringify(json, null, 2)} readOnly={true} rows={15} />
+                <Textarea
+                  value={JSON.stringify(json, null, 2)}
+                  readOnly={true}
+                  rows={15}
+                />
                 <Button
                   className="w-1/4 mt-2"
                   onClick={() => {
-                    navigator.clipboard.writeText(JSON.stringify(json, null, 2));
+                    navigator.clipboard.writeText(
+                      JSON.stringify(json, null, 2)
+                    );
                   }}
                 >
                   {t("LiveBlocks:dialogContent.copy")}
@@ -547,12 +590,14 @@ export default function Proposals(properties) {
                 {
                   fee_paying_account: usr.id,
                   proposal: chosenProposal.id,
-                  active_approvals_to_add: chosenProposal.required_active_approvals.includes(usr.id)
-                    ? [usr.id]
-                    : [],
-                  owner_approvals_to_add: chosenProposal.required_owner_approvals.includes(usr.id)
-                    ? [usr.id]
-                    : [],
+                  active_approvals_to_add:
+                    chosenProposal.required_active_approvals.includes(usr.id)
+                      ? [usr.id]
+                      : [],
+                  owner_approvals_to_add:
+                    chosenProposal.required_owner_approvals.includes(usr.id)
+                      ? [usr.id]
+                      : [],
                   key_approvals_to_add: [],
                   active_approvals_to_remove: [],
                   owner_approvals_to_remove: [],

@@ -12,12 +12,18 @@ function getFullSmartcoin(
   specificNode?: string | null
 ) {
   return new Promise(async (resolve, reject) => {
-    let node = specificNode ? specificNode : (chains as any)[chain].nodeList[0].url;
+    let node = specificNode
+      ? specificNode
+      : (chains as any)[chain].nodeList[0].url;
 
     let currentAPI;
     try {
-      currentAPI = await Apis.instance(node, true, 4000, { enableDatabase: true }, (error: Error) =>
-        console.log({ error })
+      currentAPI = await Apis.instance(
+        node,
+        true,
+        4000,
+        { enableDatabase: true },
+        (error: Error) => console.log({ error })
       );
     } catch (error) {
       console.log({ error });
@@ -46,7 +52,9 @@ function getFullSmartcoin(
         currentAPI.db_api().exec("get_margin_positions", [userID]),
         currentAPI.db_api().exec("get_call_orders", [assetID, 100]),
         currentAPI.db_api().exec("get_settle_orders", [assetID, 100]),
-        currentAPI.db_api().exec("get_order_book", [assetID, collateralAssetID, 10]),
+        currentAPI
+          .db_api()
+          .exec("get_order_book", [assetID, collateralAssetID, 10]),
       ]);
 
       currentAPI.close();
@@ -55,14 +63,18 @@ function getFullSmartcoin(
         const assetData = smartcoinData.slice(0, 2);
 
         const collateralData =
-          smartcoinData.length > 3 ? smartcoinData.slice(2, 4) : [...smartcoinData.slice(2, 3), {}];
+          smartcoinData.length > 3
+            ? smartcoinData.slice(2, 4)
+            : [...smartcoinData.slice(2, 3), {}];
 
         return resolve([
           userBalances,
           ...assetData,
           ...collateralData,
           marginPositions && marginPositions.length
-            ? marginPositions.filter((x: any) => x.call_price.quote.asset_id === assetID)
+            ? marginPositions.filter(
+                (x: any) => x.call_price.quote.asset_id === assetID
+              )
             : [],
           assetCallOrders,
           assetSettleOrders,

@@ -16,31 +16,66 @@ function get_htlc(
   specificNode?: string | null,
   existingAPI?: any
 ) {
-    return new Promise(async (resolve, reject) => {
-        let node = specificNode ? specificNode : (chains as any)[chain].nodeList[0].url;
+  return new Promise(async (resolve, reject) => {
+    let node = specificNode
+      ? specificNode
+      : (chains as any)[chain].nodeList[0].url;
 
-        let currentAPI;
-        try {
-          currentAPI = existingAPI
-            ? existingAPI
-            : await Apis.instance(node, true, 4000, { enableDatabase: true }, (error: Error) =>
-                console.log({ error })
-              );
-        } catch (error) {
-          console.log({ error });
-          reject(error);
-          return;
-        }
-
-        const iterations = chain === "bitshares" ? MAX_BTS_ITERATIONS : MAX_TEST_ITERATIONS;
-        const limit = chain === "bitshares" ? BTS_LIMIT : TEST_LIMIT;
-
-        let objects: any[] = [];
-        try {
-          objects = await currentAPI.db_api().exec(
-            type === "sender" ? "get_htlc_by_from" : "get_htlc_by_to",
-            [account_name_or_id, "1.16.0", limit]
+    let currentAPI;
+    try {
+      currentAPI = existingAPI
+        ? existingAPI
+        : await Apis.instance(
+            node,
+            true,
+            4000,
+            { enableDatabase: true },
+            (error: Error) => console.log({ error })
           );
+    } catch (error) {
+      console.log({ error });
+      reject(error);
+      return;
+    }
+
+    const iterations =
+      chain === "bitshares" ? MAX_BTS_ITERATIONS : MAX_TEST_ITERATIONS;
+    const limit = chain === "bitshares" ? BTS_LIMIT : TEST_LIMIT;
+
+    let objects: any[] = [];
+    try {
+      objects = await currentAPI
+        .db_api()
+        .exec(type === "sender" ? "get_htlc_by_from" : "get_htlc_by_to", [
+          account_name_or_id,
+          "1.16.0",
+          limit,
+        ]);
+    } catch (error) {
+      console.log({ error });
+      if (!existingAPI) {
+        currentAPI.close();
+      }
+      reject(error);
+      return;
+    }
+
+    if (!objects || !objects.length) {
+      resolve([]);
+      return;
+    }
+
+    if (objects.length === limit) {
+      for (let i = 1; i < iterations; i++) {
+        let nextPage;
+        try {
+          nextPage = await currentAPI
+            .db_api()
+            .exec(type === "sender" ? "get_htlc_by_from" : "get_htlc_by_to", [
+              account_name_or_id,
+              objects[objects.length - 1].id,
+              limit,
+            ]);
         } catch (error) {
           console.log({ error });
           if (!existingAPI) {
@@ -50,42 +85,20 @@ function get_htlc(
           return;
         }
 
-        if (!objects || !objects.length) {
-          resolve([]);
-          return;
+        if (nextPage && nextPage.length) {
+          objects = [...objects, ...nextPage];
+        } else {
+          break;
         }
+      }
+    }
 
-        if (objects.length === limit) {
-          for (let i = 1; i < iterations; i++) {
-            let nextPage;
-            try {
-              nextPage = await currentAPI.db_api().exec(
-                type === "sender" ? "get_htlc_by_from" : "get_htlc_by_to",
-                [account_name_or_id, objects[objects.length - 1].id, limit]
-              );
-            } catch (error) {
-              console.log({ error });
-              if (!existingAPI) {
-                currentAPI.close();
-              }
-              reject(error);
-              return;
-            }
+    if (!existingAPI) {
+      currentAPI.close();
+    }
 
-            if (nextPage && nextPage.length) {
-              objects = [...objects, ...nextPage];
-            } else {
-              break;
-            }
-          }
-        }
-
-        if (!existingAPI) {
-          currentAPI.close();
-        }
-
-        return resolve(objects);
-      });
+    return resolve(objects);
+  });
 }
 
 /**
@@ -95,16 +108,11 @@ const [createHTLCSenderStore] = nanoquery({
   fetcher: async (...args: unknown[]) => {
     const chain = args[0] as string;
     const account_id = args[1] as string;
-    let specificNode = args[2] ? args[2] as string : null;
+    let specificNode = args[2] ? (args[2] as string) : null;
 
     let response;
     try {
-      response =  await get_htlc(
-        chain,
-        account_id,
-        "sender",
-        specificNode
-      );
+      response = await get_htlc(chain, account_id, "sender", specificNode);
     } catch (error) {
       console.log({ error });
       return;
@@ -126,16 +134,11 @@ const [createHTLCReceiverStore] = nanoquery({
   fetcher: async (...args: unknown[]) => {
     const chain = args[0] as string;
     const account_id = args[1] as string;
-    let specificNode = args[2] ? args[2] as string : null;
+    let specificNode = args[2] ? (args[2] as string) : null;
 
     let response;
     try {
-      response =  await get_htlc(
-        chain,
-        account_id,
-        "receiver",
-        specificNode
-      );
+      response = await get_htlc(chain, account_id, "receiver", specificNode);
     } catch (error) {
       console.log({ error });
       return;
@@ -157,14 +160,20 @@ const [createHTLCStore] = nanoquery({
   fetcher: async (...args: unknown[]) => {
     const chain = args[0] as string;
     const account_id = args[1] as string;
-    let specificNode = args[2] ? args[2] as string : null;
+    let specificNode = args[2] ? (args[2] as string) : null;
 
-    let node = specificNode ? specificNode : (chains as any)[chain].nodeList[0].url;
+    let node = specificNode
+      ? specificNode
+      : (chains as any)[chain].nodeList[0].url;
 
     let currentAPI;
     try {
-      currentAPI = await Apis.instance(node, true, 4000, { enableDatabase: true }, (error: Error) =>
-        console.log({ error })
+      currentAPI = await Apis.instance(
+        node,
+        true,
+        4000,
+        { enableDatabase: true },
+        (error: Error) => console.log({ error })
       );
     } catch (error) {
       console.log({ error });
@@ -173,7 +182,7 @@ const [createHTLCStore] = nanoquery({
 
     let senderResponse;
     try {
-      senderResponse =  await get_htlc(
+      senderResponse = await get_htlc(
         chain,
         account_id,
         "sender",
@@ -187,7 +196,7 @@ const [createHTLCStore] = nanoquery({
 
     let receiverResponse;
     try {
-      receiverResponse =  await get_htlc(
+      receiverResponse = await get_htlc(
         chain,
         account_id,
         "receiver",
@@ -210,5 +219,5 @@ export {
   createHTLCSenderStore,
   createHTLCReceiverStore,
   createHTLCStore,
-  get_htlc
+  get_htlc,
 };

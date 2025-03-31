@@ -10,12 +10,18 @@ async function getMaxObjectIDs(
   specificNode?: string | null
 ) {
   return new Promise(async (resolve, reject) => {
-    let node = specificNode ? specificNode : (chains as any)[chain].nodeList[0].url;
+    let node = specificNode
+      ? specificNode
+      : (chains as any)[chain].nodeList[0].url;
 
     let currentAPI;
     try {
-      currentAPI = await Apis.instance(node, true, 4000, { enableDatabase: true }, (error: Error) =>
-        console.log({ error })
+      currentAPI = await Apis.instance(
+        node,
+        true,
+        4000,
+        { enableDatabase: true },
+        (error: Error) => console.log({ error })
       );
     } catch (error) {
       console.log({ error, node });
@@ -25,7 +31,9 @@ async function getMaxObjectIDs(
           chain,
           space_id,
           type_id,
-          (chains as any)[chain].nodeList.map((x: any) => x.url).filter((x: string) => x !== node)[0]
+          (chains as any)[chain].nodeList
+            .map((x: any) => x.url)
+            .filter((x: string) => x !== node)[0]
         )
       );
     }
@@ -45,7 +53,9 @@ async function getMaxObjectIDs(
           chain,
           space_id,
           type_id,
-          (chains as any)[chain].nodeList.map((x: any) => x.url).filter((x: string) => x !== node)[0]
+          (chains as any)[chain].nodeList
+            .map((x: any) => x.url)
+            .filter((x: string) => x !== node)[0]
         )
       );
     }

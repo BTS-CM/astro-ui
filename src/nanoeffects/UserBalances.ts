@@ -10,14 +10,20 @@ async function getAccountBalances(
   existingAPI?: any
 ) {
   return new Promise(async (resolve, reject) => {
-    let node = specificNode ? specificNode : (chains as any)[chain].nodeList[0].url;
+    let node = specificNode
+      ? specificNode
+      : (chains as any)[chain].nodeList[0].url;
 
     let currentAPI;
     try {
       currentAPI = existingAPI
         ? existingAPI
-        : await Apis.instance(node, true, 4000, { enableDatabase: true }, (error: Error) =>
-            console.log({ error })
+        : await Apis.instance(
+            node,
+            true,
+            4000,
+            { enableDatabase: true },
+            (error: Error) => console.log({ error })
           );
     } catch (error) {
       console.log({ error });
@@ -60,7 +66,7 @@ const [createUserBalancesStore] = nanoquery({
   fetcher: async (...args: unknown[]) => {
     const chain = args[0] as string;
     const accountID = args[1] as string;
-    const specificNode = args[2] ? args[2] as string : null;
+    const specificNode = args[2] ? (args[2] as string) : null;
 
     let response;
     try {
@@ -76,7 +82,7 @@ const [createUserBalancesStore] = nanoquery({
     }
 
     return response;
-  }
+  },
 });
 
 export { createUserBalancesStore, getAccountBalances };

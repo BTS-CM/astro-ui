@@ -2,19 +2,25 @@ import { nanoquery } from "@nanostores/query";
 import Apis from "@/bts/ws/ApiInstances";
 import { chains } from "@/config/chains";
 
-function getTicker (
+function getTicker(
   chain: string,
   base: string,
   quote: string,
   specificNode?: string | null
 ) {
   return new Promise(async (resolve, reject) => {
-    let node = specificNode ? specificNode : (chains as any)[chain].nodeList[0].url;
+    let node = specificNode
+      ? specificNode
+      : (chains as any)[chain].nodeList[0].url;
 
     let currentAPI;
     try {
-      currentAPI = await Apis.instance(node, true, 4000, { enableDatabase: true, enableHistory: true }, (error: Error) =>
-        console.log({ error })
+      currentAPI = await Apis.instance(
+        node,
+        true,
+        4000,
+        { enableDatabase: true, enableHistory: true },
+        (error: Error) => console.log({ error })
       );
     } catch (error) {
       console.log({ error });
@@ -23,7 +29,9 @@ function getTicker (
     }
 
     try {
-      const _ticker = await currentAPI.db_api().exec("get_ticker", [base, quote]);
+      const _ticker = await currentAPI
+        .db_api()
+        .exec("get_ticker", [base, quote]);
       resolve(_ticker);
     } catch (error) {
       console.log({ error });
@@ -36,22 +44,27 @@ function getTicker (
         console.log({ error });
       }
     }
-    
   });
 }
 
-function getMultipleTickers (
+function getMultipleTickers(
   chain: string,
   tradingPairs: string[],
   specificNode?: string | null
 ) {
   return new Promise(async (resolve, reject) => {
-    let node = specificNode ? specificNode : (chains as any)[chain].nodeList[0].url;
+    let node = specificNode
+      ? specificNode
+      : (chains as any)[chain].nodeList[0].url;
 
     let currentAPI;
     try {
-      currentAPI = await Apis.instance(node, true, 4000, { enableDatabase: true, enableHistory: true }, (error: Error) =>
-        console.log({ error })
+      currentAPI = await Apis.instance(
+        node,
+        true,
+        4000,
+        { enableDatabase: true, enableHistory: true },
+        (error: Error) => console.log({ error })
       );
     } catch (error) {
       console.log({ error });
@@ -64,7 +77,9 @@ function getMultipleTickers (
       const pair = tradingPairs[i];
       let _result;
       try {
-        _result = await currentAPI.db_api().exec("get_ticker", [pair.split("_")[0], pair.split("_")[1]]);
+        _result = await currentAPI
+          .db_api()
+          .exec("get_ticker", [pair.split("_")[0], pair.split("_")[1]]);
       } catch (error) {
         console.log({ error });
         currentAPI.close();
@@ -80,7 +95,7 @@ function getMultipleTickers (
   });
 }
 
-function getMarketTradeHistory (
+function getMarketTradeHistory(
   chain: string,
   base: string,
   quote: string,
@@ -88,12 +103,18 @@ function getMarketTradeHistory (
   specificNode?: string | null
 ) {
   return new Promise(async (resolve, reject) => {
-    let node = specificNode ? specificNode : (chains as any)[chain].nodeList[0].url;
+    let node = specificNode
+      ? specificNode
+      : (chains as any)[chain].nodeList[0].url;
 
     let currentAPI;
     try {
-      currentAPI = await Apis.instance(node, true, 4000, { enableDatabase: true, enableHistory: true }, (error: Error) =>
-        console.log({ error })
+      currentAPI = await Apis.instance(
+        node,
+        true,
+        4000,
+        { enableDatabase: true, enableHistory: true },
+        (error: Error) => console.log({ error })
       );
     } catch (error) {
       console.log({ error });
@@ -102,18 +123,31 @@ function getMarketTradeHistory (
     }
 
     const now = new Date().toISOString().slice(0, 19);
-    const oneMonthAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().slice(0, 19);
+    const oneMonthAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
+      .toISOString()
+      .slice(0, 19);
 
     try {
-      const [balances, marketHistory, fullAccount, usrTrades, ticker] = await Promise.all([
-        currentAPI.db_api().exec("get_account_balances", [accountID, [base, quote]]),
-        currentAPI.db_api().exec("get_trade_history", [base, quote, now, oneMonthAgo, 50]),
-        currentAPI.db_api().exec("get_full_accounts", [[accountID], false]),
-        currentAPI
-          .history_api()
-          .exec("get_account_history_operations", [accountID, 4, "1.11.0", "1.11.0", 50]),
-        currentAPI.db_api().exec("get_ticker", [base, quote]),
-      ]);
+      const [balances, marketHistory, fullAccount, usrTrades, ticker] =
+        await Promise.all([
+          currentAPI
+            .db_api()
+            .exec("get_account_balances", [accountID, [base, quote]]),
+          currentAPI
+            .db_api()
+            .exec("get_trade_history", [base, quote, now, oneMonthAgo, 50]),
+          currentAPI.db_api().exec("get_full_accounts", [[accountID], false]),
+          currentAPI
+            .history_api()
+            .exec("get_account_history_operations", [
+              accountID,
+              4,
+              "1.11.0",
+              "1.11.0",
+              50,
+            ]),
+          currentAPI.db_api().exec("get_ticker", [base, quote]),
+        ]);
 
       const accountLimitOrders = fullAccount[0][1].limit_orders;
 
@@ -179,7 +213,6 @@ function getMarketTradeHistory (
         console.log({ error });
       }
     }
-    
   });
 }
 
@@ -189,11 +222,11 @@ const [createTickerStore] = nanoquery({
     const quote = args[1] as string;
     const base = args[2] as string;
 
-    let specificNode = args[3] ? args[3] as string : null;
+    let specificNode = args[3] ? (args[3] as string) : null;
 
     let response;
     try {
-      response =  await getTicker(chain, base, quote, specificNode);
+      response = await getTicker(chain, base, quote, specificNode);
     } catch (error) {
       console.log({ error });
       return;
@@ -213,11 +246,11 @@ const [createMultipleTickerStore] = nanoquery({
     const chain = args[0] as string;
     const pairs = JSON.parse(args[1] as string);
 
-    let specificNode = args[2] ? args[2] as string : null;
+    let specificNode = args[2] ? (args[2] as string) : null;
 
     let response;
     try {
-      response =  await getMultipleTickers(chain, pairs, specificNode);
+      response = await getMultipleTickers(chain, pairs, specificNode);
     } catch (error) {
       console.log({ error });
       return;
@@ -239,11 +272,17 @@ const [createMarketTradeHistoryStore] = nanoquery({
     const base = args[2] as string;
     const id = args[3] as string;
 
-    let specificNode = args[4] ? args[4] as string : null;
+    let specificNode = args[4] ? (args[4] as string) : null;
 
     let response;
     try {
-      response =  await getMarketTradeHistory(chain, base, quote, id, specificNode);
+      response = await getMarketTradeHistory(
+        chain,
+        base,
+        quote,
+        id,
+        specificNode
+      );
     } catch (error) {
       console.log({ error });
       return;

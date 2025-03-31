@@ -1,4 +1,10 @@
-import React, { useSyncExternalStore, useMemo, useState, useEffect, useCallback } from "react";
+import React, {
+  useSyncExternalStore,
+  useMemo,
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
 import { FixedSizeList as List } from "react-window";
 import { useStore } from "@nanostores/react";
 import Fuse from "fuse.js";
@@ -49,11 +55,20 @@ import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
 
 export default function SameTFunds(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
-  const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
-  const blocklist = useSyncExternalStore($blockList.subscribe, $blockList.get, () => true);
+  const usr = useSyncExternalStore(
+    $currentUser.subscribe,
+    $currentUser.get,
+    () => true
+  );
+  const blocklist = useSyncExternalStore(
+    $blockList.subscribe,
+    $blockList.get,
+    () => true
+  );
   const currentNode = useStore($currentNode);
 
-  const { _assetsBTS, _assetsTEST, _marketSearchBTS, _marketSearchTEST } = properties;
+  const { _assetsBTS, _assetsTEST, _marketSearchBTS, _marketSearchTEST } =
+    properties;
 
   const _chain = useMemo(() => {
     if (usr && usr.chain) {
@@ -165,14 +180,16 @@ export default function SameTFunds(properties) {
         currentNode ? currentNode.url : null,
       ]);
 
-      unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
-        if (data && !error && !loading) {
-          const filteredData = data.filter((balance) =>
-            assets.find((x) => x.id === balance.asset_id)
-          );
-          setUsrBalances(filteredData);
+      unsubscribeUserBalances = userBalancesStore.subscribe(
+        ({ data, error, loading }) => {
+          if (data && !error && !loading) {
+            const filteredData = data.filter((balance) =>
+              assets.find((x) => x.id === balance.asset_id)
+            );
+            setUsrBalances(filteredData);
+          }
         }
-      });
+      );
     }
 
     return () => {
@@ -180,7 +197,9 @@ export default function SameTFunds(properties) {
     };
   }, [usr]);
 
-  const [lendingAsset, setLendingAsset] = useState(usr.chain === "bitshares" ? "BTS" : "TEST");
+  const [lendingAsset, setLendingAsset] = useState(
+    usr.chain === "bitshares" ? "BTS" : "TEST"
+  );
 
   const lendingAssetData = useMemo(() => {
     // for the asset dropdown
@@ -247,7 +266,10 @@ export default function SameTFunds(properties) {
     const assetName = asset ? asset.symbol : fund.asset_type;
     const balance = humanReadableFloat(fund.balance, asset.precision);
     const feeRate = fund.fee_rate / 10000;
-    const unpaidAmount = humanReadableFloat(fund.unpaid_amount, asset.precision);
+    const unpaidAmount = humanReadableFloat(
+      fund.unpaid_amount,
+      asset.precision
+    );
     const lender = lenderAccounts.find((x) => x.id === fund.owner_account);
 
     const [updatePrompt, setUpdatePrompt] = useState(false);
@@ -263,7 +285,9 @@ export default function SameTFunds(properties) {
         : null;
 
     const humanReadableAssetBalance =
-      foundBalance && asset ? humanReadableFloat(foundBalance.amount, asset.precision) : 0;
+      foundBalance && asset
+        ? humanReadableFloat(foundBalance.amount, asset.precision)
+        : 0;
 
     const deltaAmount = useMemo(() => {
       const difference = Math.abs(newAmount - balance);
@@ -295,9 +319,9 @@ export default function SameTFunds(properties) {
                   classnamecontents="hover:text-purple-500"
                   type="text"
                   text={lender.name}
-                  hyperlink={`https://blocksights.info/#/accounts/${lender.name}${
-                    usr.chain === "bitshares" ? "" : "?network=testnet"
-                  }`}
+                  hyperlink={`https://blocksights.info/#/accounts/${
+                    lender.name
+                  }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
                 />
               ) : (
                 "???"
@@ -307,9 +331,9 @@ export default function SameTFunds(properties) {
                 classnamecontents="hover:text-purple-500"
                 type="text"
                 text={fund.owner_account}
-                hyperlink={`https://blocksights.info/#/accounts/${fund.owner_account}${
-                  usr.chain === "bitshares" ? "" : "?network=testnet"
-                }`}
+                hyperlink={`https://blocksights.info/#/accounts/${
+                  fund.owner_account
+                }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
               />
               {") "}
               {lender && lender.id === lender.lifetime_referrer ? " - LTM" : ""}
@@ -321,14 +345,16 @@ export default function SameTFunds(properties) {
               <div className="col-span-2">
                 <div className="grid grid-cols-2">
                   <div>
-                    {t("SameTFunds:offering")}:<b>{` ${balance} ${assetName}`}</b>
+                    {t("SameTFunds:offering")}:
+                    <b>{` ${balance} ${assetName}`}</b>
                   </div>
                   <div>
                     {t("SameTFunds:fee")}:<b>{` ${feeRate} %`}</b>
                     {feeRate > 20 ? "⚠️" : null}
                   </div>
                   <div>
-                    {t("SameTFunds:unpaidAmount")}:<b>{` ${unpaidAmount} ${assetName}`}</b>
+                    {t("SameTFunds:unpaidAmount")}:
+                    <b>{` ${unpaidAmount} ${assetName}`}</b>
                   </div>
                   <div>
                     {t("SameTFunds:id")}:{" "}
@@ -337,7 +363,9 @@ export default function SameTFunds(properties) {
                         classnamecontents="hover:text-purple-500"
                         type="text"
                         text={fund.id}
-                        hyperlink={`https://blocksights.info/#/objects/${fund.id}${
+                        hyperlink={`https://blocksights.info/#/objects/${
+                          fund.id
+                        }${
                           usr.chain === "bitshares" ? "" : "?network=testnet"
                         }`}
                       />
@@ -359,7 +387,9 @@ export default function SameTFunds(properties) {
                     </DialogTrigger>
                     <DialogContent className="w-full bg-white">
                       <DialogHeader>
-                        <DialogTitle>{t("SameTFunds:updateDialog.title")}</DialogTitle>
+                        <DialogTitle>
+                          {t("SameTFunds:updateDialog.title")}
+                        </DialogTitle>
                         <DialogDescription>
                           {t("SameTFunds:updateDialog.description")}
                         </DialogDescription>
@@ -367,15 +397,21 @@ export default function SameTFunds(properties) {
                       <div className="grid grid-cols-1 gap-2">
                         <div className="grid grid-cols-2 gap-2">
                           <HoverInfo
-                            content={t("SameTFunds:updateDialog.newAmountContent")}
-                            header={t("SameTFunds:updateDialog.newAmountHeader")}
+                            content={t(
+                              "SameTFunds:updateDialog.newAmountContent"
+                            )}
+                            header={t(
+                              "SameTFunds:updateDialog.newAmountHeader"
+                            )}
                             type="header"
                           />
                           <Button
                             className="h-6 mt-1 ml-3 hover:shadow-md"
                             onClick={() => {
                               setNewAmount(
-                                humanReadableAssetBalance ? humanReadableAssetBalance : 0
+                                humanReadableAssetBalance
+                                  ? humanReadableAssetBalance
+                                  : 0
                               );
                             }}
                             variant="outline"
@@ -400,7 +436,9 @@ export default function SameTFunds(properties) {
                           />
                           <Input
                             type="text"
-                            value={`${asset ? asset.symbol : "???"} (${asset ? asset.id : "???"})`}
+                            value={`${asset ? asset.symbol : "???"} (${
+                              asset ? asset.id : "???"
+                            })`}
                             disabled
                           />
                         </div>
@@ -420,7 +458,10 @@ export default function SameTFunds(properties) {
                             pattern="^\d*(\.\d{0,2})?$"
                             onInput={(e) => {
                               setNewFeeRate(e.currentTarget.value);
-                              debouncedPercent(e.currentTarget.value, setNewFeeRate);
+                              debouncedPercent(
+                                e.currentTarget.value,
+                                setNewFeeRate
+                              );
                             }}
                           />
                         </div>
@@ -470,7 +511,10 @@ export default function SameTFunds(properties) {
                   owner_account: usr.id,
                   fund_id: fund.id,
                   delta_amount: {
-                    amount: blockchainFloat(deltaAmount, asset.precision).toFixed(0),
+                    amount: blockchainFloat(
+                      deltaAmount,
+                      asset.precision
+                    ).toFixed(0),
                     asset_id: asset.id,
                   },
                   new_fee_rate: newFeeRate * 100,
@@ -592,7 +636,9 @@ export default function SameTFunds(properties) {
                   </DialogTrigger>
                   <DialogContent className="w-full bg-white">
                     <DialogHeader>
-                      <DialogTitle>{t("SameTFunds:createDialog.title")}</DialogTitle>
+                      <DialogTitle>
+                        {t("SameTFunds:createDialog.title")}
+                      </DialogTitle>
                       <DialogDescription>
                         {t("SameTFunds:createDialog.description")}
                       </DialogDescription>
@@ -626,7 +672,9 @@ export default function SameTFunds(properties) {
                       </div>
                       <div className="grid grid-cols-2 gap-2">
                         <HoverInfo
-                          content={t("SameTFunds:updateDialog.newAmountContent")}
+                          content={t(
+                            "SameTFunds:updateDialog.newAmountContent"
+                          )}
                           header={t("SameTFunds:updateDialog.newAmountHeader")}
                           type="header"
                         />
@@ -672,7 +720,10 @@ export default function SameTFunds(properties) {
                           pattern="^\d*(\.\d{0,2})?$"
                           onInput={(e) => {
                             setCreateFeeRate(e.currentTarget.value);
-                            debouncedPercent(e.currentTarget.value, setCreateFeeRate);
+                            debouncedPercent(
+                              e.currentTarget.value,
+                              setCreateFeeRate
+                            );
                           }}
                           className="w-1/2"
                         />

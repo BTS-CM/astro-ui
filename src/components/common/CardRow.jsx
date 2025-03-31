@@ -10,7 +10,12 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -70,7 +75,9 @@ export default function CardRow(properties) {
                     </Button>
                   </DialogTrigger>
                 </TooltipTrigger>
-                {tooltipOpen && <TooltipContent>{properties.tooltip}</TooltipContent>}
+                {tooltipOpen && (
+                  <TooltipContent>{properties.tooltip}</TooltipContent>
+                )}
               </Tooltip>
             </Dialog>
           </TooltipProvider>

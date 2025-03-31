@@ -1,6 +1,16 @@
-import React, { useState, useEffect, useSyncExternalStore, useMemo, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  useSyncExternalStore,
+  useMemo,
+  useCallback,
+} from "react";
 import { useForm } from "react-hook-form";
-import { CalendarIcon, LockOpen2Icon, LockClosedIcon } from "@radix-ui/react-icons";
+import {
+  CalendarIcon,
+  LockOpen2Icon,
+  LockClosedIcon,
+} from "@radix-ui/react-icons";
 import { format } from "date-fns";
 import { useStore } from "@nanostores/react";
 import { useTranslation } from "react-i18next";
@@ -45,8 +55,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
@@ -115,7 +133,9 @@ export default function MarketOrder(properties) {
     const oneHour = 60 * 60 * 1000;
     return new Date(now.getTime() + oneHour);
   });
-  const [date, setDate] = useState(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)); // Solely for the calendar component to display a date string
+  const [date, setDate] = useState(
+    new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+  ); // Solely for the calendar component to display a date string
 
   useEffect(() => {
     if (expiryType === "specific" && date) {
@@ -131,7 +151,11 @@ export default function MarketOrder(properties) {
   const [expirationSeconds, setExpirationSeconds] = useState(1000000);
   const [repeat, setRepeat] = useState(false);
 
-  const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
+  const usr = useSyncExternalStore(
+    $currentUser.subscribe,
+    $currentUser.get,
+    () => true
+  );
 
   const {
     _assetsBTS,
@@ -139,7 +163,7 @@ export default function MarketOrder(properties) {
     _poolsBTS,
     _poolsTEST,
     _globalParamsBTS,
-    _globalParamsTEST
+    _globalParamsTEST,
   } = properties;
 
   const _chain = useMemo(() => {
@@ -200,48 +224,70 @@ export default function MarketOrder(properties) {
     let unsubscribeLimitOrder;
 
     if (limitOrderID && usr && usr.chain) {
-      const limitOrderStore = createObjectStore([usr.chain, JSON.stringify([limitOrderID])]);
-      unsubscribeLimitOrder = limitOrderStore.subscribe(({ data, error, loading }) => {
-        if (data && !error && !loading) {
-          const _data = data[0];
-          setCurrentLimitOrder(_data);
+      const limitOrderStore = createObjectStore([
+        usr.chain,
+        JSON.stringify([limitOrderID]),
+      ]);
+      unsubscribeLimitOrder = limitOrderStore.subscribe(
+        ({ data, error, loading }) => {
+          if (data && !error && !loading) {
+            const _data = data[0];
+            setCurrentLimitOrder(_data);
 
-          const foundQuoteAsset = assets.find((x) => x.id === _data.sell_price.quote.asset_id);
-          const foundBaseAsset = assets.find((x) => x.id === _data.sell_price.base.asset_id);
-          setQuoteAsset(foundQuoteAsset);
-          setBaseAsset(foundBaseAsset);
+            const foundQuoteAsset = assets.find(
+              (x) => x.id === _data.sell_price.quote.asset_id
+            );
+            const foundBaseAsset = assets.find(
+              (x) => x.id === _data.sell_price.base.asset_id
+            );
+            setQuoteAsset(foundQuoteAsset);
+            setBaseAsset(foundBaseAsset);
 
-          const _quoteAmount = humanReadableFloat(
-            _data.sell_price.quote.amount,
-            foundQuoteAsset.precision
-          );
-          const _baseAmount = humanReadableFloat(
-            _data.sell_price.base.amount,
-            foundBaseAsset.precision
-          );
-          const isInverted = isInvertedMarket(foundBaseAsset.id, foundQuoteAsset.id);
-          setMarketInverted(isInverted);
+            const _quoteAmount = humanReadableFloat(
+              _data.sell_price.quote.amount,
+              foundQuoteAsset.precision
+            );
+            const _baseAmount = humanReadableFloat(
+              _data.sell_price.base.amount,
+              foundBaseAsset.precision
+            );
+            const isInverted = isInvertedMarket(
+              foundBaseAsset.id,
+              foundQuoteAsset.id
+            );
+            setMarketInverted(isInverted);
 
-          setExistingQuoteAmount(_quoteAmount);
-          setExistingBaseAmount(_baseAmount);
-          setExistingPrice(!isInverted ? _baseAmount * _quoteAmount : _baseAmount / _quoteAmount);
-          setExistingExpiry(_data.expiration);
+            setExistingQuoteAmount(_quoteAmount);
+            setExistingBaseAmount(_baseAmount);
+            setExistingPrice(
+              !isInverted
+                ? _baseAmount * _quoteAmount
+                : _baseAmount / _quoteAmount
+            );
+            setExistingExpiry(_data.expiration);
 
-          setAmount(_baseAmount);
-          setTotal(_quoteAmount);
+            setAmount(_baseAmount);
+            setTotal(_quoteAmount);
 
-          setPrice(!isInverted ? _baseAmount * _quoteAmount : _baseAmount / _quoteAmount);
+            setPrice(
+              !isInverted
+                ? _baseAmount * _quoteAmount
+                : _baseAmount / _quoteAmount
+            );
 
-          const onFillContents = _data.on_fill.length ? _data.on_fill[0][1] : null;
-          if (onFillContents) {
-            setOSOEnabled(true);
-            setSpreadPercent(onFillContents.spread_percent / 100);
-            setSizePercent(onFillContents.size_percent / 100);
-            setExpirationSeconds(onFillContents.expiration_seconds);
-            setRepeat(onFillContents.repeat);
+            const onFillContents = _data.on_fill.length
+              ? _data.on_fill[0][1]
+              : null;
+            if (onFillContents) {
+              setOSOEnabled(true);
+              setSpreadPercent(onFillContents.spread_percent / 100);
+              setSizePercent(onFillContents.size_percent / 100);
+              setExpirationSeconds(onFillContents.expiration_seconds);
+              setRepeat(onFillContents.repeat);
+            }
           }
         }
-      });
+      );
     }
 
     return () => {
@@ -262,21 +308,33 @@ export default function MarketOrder(properties) {
         currentNode ? currentNode.url : null,
       ]);
 
-      unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
-        if (data && !error && !loading) {
-          const filteredData = data.filter((balance) =>
-            assets.find((x) => x.id === balance.asset_id)
-          );
+      unsubscribeUserBalances = userBalancesStore.subscribe(
+        ({ data, error, loading }) => {
+          if (data && !error && !loading) {
+            const filteredData = data.filter((balance) =>
+              assets.find((x) => x.id === balance.asset_id)
+            );
 
-          setBalances(filteredData);
-          const foundBase = filteredData.find((x) => x.asset_id === baseAsset.id);
-          const foundQuote = filteredData.find((x) => x.asset_id === quoteAsset.id);
-          setBaseBalance(foundBase ? humanReadableFloat(foundBase.amount, baseAsset.precision) : 0);
-          setQuoteBalance(
-            foundQuote ? humanReadableFloat(foundQuote.amount, quoteAsset.precision) : 0
-          );
+            setBalances(filteredData);
+            const foundBase = filteredData.find(
+              (x) => x.asset_id === baseAsset.id
+            );
+            const foundQuote = filteredData.find(
+              (x) => x.asset_id === quoteAsset.id
+            );
+            setBaseBalance(
+              foundBase
+                ? humanReadableFloat(foundBase.amount, baseAsset.precision)
+                : 0
+            );
+            setQuoteBalance(
+              foundQuote
+                ? humanReadableFloat(foundQuote.amount, quoteAsset.precision)
+                : 0
+            );
+          }
         }
-      });
+      );
     }
 
     return () => {
@@ -352,7 +410,10 @@ export default function MarketOrder(properties) {
 
       if (amountLock === "editable") {
         const deltaAmount = parseFloat(amount - existingBaseAmount);
-        if ((deltaAmount && deltaAmount < 0) || (deltaAmount && deltaAmount > 0)) {
+        if (
+          (deltaAmount && deltaAmount < 0) ||
+          (deltaAmount && deltaAmount > 0)
+        ) {
           baseOperation.delta_amount_to_sell = {
             amount: blockchainFloat(deltaAmount, baseAsset.precision),
             asset_id: baseAsset.id,
@@ -397,7 +458,9 @@ export default function MarketOrder(properties) {
                       </DialogTrigger>
                       <DialogContent className="sm:max-w-[600px] bg-white">
                         <DialogHeader>
-                          <DialogTitle>{t("MarketOrder:existingLimitOrderDataTitle")}</DialogTitle>
+                          <DialogTitle>
+                            {t("MarketOrder:existingLimitOrderDataTitle")}
+                          </DialogTitle>
                           <DialogDescription>
                             {t("MarketOrder:existingLimitOrderDataDescription")}
                           </DialogDescription>
@@ -405,7 +468,9 @@ export default function MarketOrder(properties) {
                         <div className="grid grid-cols-1">
                           <div className="col-span-1">
                             <ScrollArea className="h-72 rounded-md border text-sm">
-                              <pre>{JSON.stringify(currentLimitOrder, null, 2)}</pre>
+                              <pre>
+                                {JSON.stringify(currentLimitOrder, null, 2)}
+                              </pre>
                             </ScrollArea>
                           </div>
                           <div className="col-span-1 text-left mt-5">
@@ -413,9 +478,13 @@ export default function MarketOrder(properties) {
                               variant="outline"
                               classnamecontents=""
                               type="button"
-                              text={t("MarketOrder:viewObjectOnBlocksightsInfo")}
+                              text={t(
+                                "MarketOrder:viewObjectOnBlocksightsInfo"
+                              )}
                               hyperlink={`https://blocksights.info/#/objects/${limitOrderID}${
-                                usr.chain === "bitshares" ? "" : "?network=testnet"
+                                usr.chain === "bitshares"
+                                  ? ""
+                                  : "?network=testnet"
                               }`}
                             />
                           </div>
@@ -425,7 +494,9 @@ export default function MarketOrder(properties) {
                   </span>
                 </span>
               </CardTitle>
-              <CardDescription>{t("MarketOrder:bitsharesDexSupportDescription")}</CardDescription>
+              <CardDescription>
+                {t("MarketOrder:bitsharesDexSupportDescription")}
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <Form {...form}>
@@ -435,7 +506,9 @@ export default function MarketOrder(properties) {
                     name="account"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>{t("MarketOrder:limitOrderOwnerLabel")}</FormLabel>
+                        <FormLabel>
+                          {t("MarketOrder:limitOrderOwnerLabel")}
+                        </FormLabel>
                         <FormControl>
                           <div className="grid grid-cols-8 gap-2">
                             <div className="col-span-1 ml-5">
@@ -443,19 +516,36 @@ export default function MarketOrder(properties) {
                                 <Avatar
                                   size={40}
                                   key={`Avatar_${
-                                    usr.id === currentLimitOrder.seller ? "loggedIn" : "loggedOut"
+                                    usr.id === currentLimitOrder.seller
+                                      ? "loggedIn"
+                                      : "loggedOut"
                                   }`}
                                   name={
                                     usr.id === currentLimitOrder.seller
                                       ? usr.username
-                                      : currentLimitOrder.seller.replace(".", "_")
+                                      : currentLimitOrder.seller.replace(
+                                          ".",
+                                          "_"
+                                        )
                                   }
                                   extra="Sender"
                                   expression={{
-                                    eye: usr.id === currentLimitOrder.seller ? "normal" : "sleepy",
-                                    mouth: usr.id === currentLimitOrder.seller ? "open" : "unhappy",
+                                    eye:
+                                      usr.id === currentLimitOrder.seller
+                                        ? "normal"
+                                        : "sleepy",
+                                    mouth:
+                                      usr.id === currentLimitOrder.seller
+                                        ? "open"
+                                        : "unhappy",
                                   }}
-                                  colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]}
+                                  colors={[
+                                    "#92A1C6",
+                                    "#146A7C",
+                                    "#F0AB3D",
+                                    "#C271B4",
+                                    "#C20D90",
+                                  ]}
                                 />
                               ) : null}
                             </div>
@@ -463,7 +553,9 @@ export default function MarketOrder(properties) {
                               {usr && currentLimitOrder ? (
                                 <Input
                                   disabled
-                                  placeholder={t("MarketOrder:bitsharesAccountPlaceholder")}
+                                  placeholder={t(
+                                    "MarketOrder:bitsharesAccountPlaceholder"
+                                  )}
                                   className="mb-1 mt-1"
                                   value={
                                     usr && usr.id === currentLimitOrder.seller
@@ -478,8 +570,12 @@ export default function MarketOrder(properties) {
                         <FormDescription>
                           {t("MarketOrder:limitOrderOwnerDescription")}
                         </FormDescription>
-                        {currentLimitOrder && usr && usr.id !== currentLimitOrder.seller ? (
-                          <FormMessage>{t("MarketOrder:limitOrderOwnerWarning")}</FormMessage>
+                        {currentLimitOrder &&
+                        usr &&
+                        usr.id !== currentLimitOrder.seller ? (
+                          <FormMessage>
+                            {t("MarketOrder:limitOrderOwnerWarning")}
+                          </FormMessage>
                         ) : null}
                       </FormItem>
                     )}
@@ -519,7 +615,9 @@ export default function MarketOrder(properties) {
                               </HoverCardTrigger>
                               <HoverCardContent
                                 className="w-40 text-sm text-center pt-1 pb-1"
-                                derp={t("MarketOrder:priceLockHoverCardDescription")}
+                                derp={t(
+                                  "MarketOrder:priceLockHoverCardDescription"
+                                )}
                               >
                                 {priceLock === "editable"
                                   ? t("MarketOrder:editingThePrice")
@@ -537,8 +635,12 @@ export default function MarketOrder(properties) {
                               {priceLock === "editable"
                                 ? t("MarketOrder:existingPriceDescription", {
                                     existingPrice: existingPrice,
-                                    quoteAssetSymbol: quoteAsset ? quoteAsset.symbol : "?",
-                                    baseAssetSymbol: baseAsset ? baseAsset.symbol : "?",
+                                    quoteAssetSymbol: quoteAsset
+                                      ? quoteAsset.symbol
+                                      : "?",
+                                    baseAssetSymbol: baseAsset
+                                      ? baseAsset.symbol
+                                      : "?",
                                   })
                                 : t("MarketOrder:clickToUnlockDescription")}
                             </FormDescription>
@@ -572,15 +674,23 @@ export default function MarketOrder(properties) {
                               </Button>
                             </PopoverTrigger>
                             <PopoverContent>
-                              <Label>{t("MarketOrder:provideNewPriceLabel")}</Label>
+                              <Label>
+                                {t("MarketOrder:provideNewPriceLabel")}
+                              </Label>
                               <Input
                                 placeholder={price}
                                 className="mb-2 mt-1"
                                 onChange={(event) => {
                                   const input = event.target.value;
                                   const regex = /^[0-9,]*\.?[0-9]*$/;
-                                  if (input && input.length && regex.test(input)) {
-                                    const parsedInput = parseFloat(input.replaceAll(",", ""));
+                                  if (
+                                    input &&
+                                    input.length &&
+                                    regex.test(input)
+                                  ) {
+                                    const parsedInput = parseFloat(
+                                      input.replaceAll(",", "")
+                                    );
                                     if (parsedInput) {
                                       setPrice(parsedInput);
                                       if (amount && totalLock === "editable") {
@@ -588,7 +698,9 @@ export default function MarketOrder(properties) {
                                           parseFloat(
                                             (
                                               amount *
-                                              (marketInverted ? 1 / parsedInput : parsedInput)
+                                              (marketInverted
+                                                ? 1 / parsedInput
+                                                : parsedInput)
                                             ).toFixed(quoteAsset.precision)
                                           )
                                         );
@@ -646,17 +758,23 @@ export default function MarketOrder(properties) {
                             <FormLabel>
                               {amountLock === "editable"
                                 ? t("MarketOrder:updatingAmountBeingSold", {
-                                    baseAssetSymbol: baseAsset ? baseAsset.symbol : "?",
+                                    baseAssetSymbol: baseAsset
+                                      ? baseAsset.symbol
+                                      : "?",
                                   })
                                 : t("MarketOrder:wantToUpdateAmountBeingSold", {
-                                    baseAssetSymbol: baseAsset ? baseAsset.symbol : "?",
+                                    baseAssetSymbol: baseAsset
+                                      ? baseAsset.symbol
+                                      : "?",
                                   })}
                             </FormLabel>
                             <FormDescription>
                               {amountLock === "editable"
                                 ? t("MarketOrder:existingAmountBeingSold", {
                                     existingBaseAmount: existingBaseAmount,
-                                    baseAssetSymbol: baseAsset ? baseAsset.symbol : "?",
+                                    baseAssetSymbol: baseAsset
+                                      ? baseAsset.symbol
+                                      : "?",
                                   })
                                 : t("MarketOrder:clickToUnlockAmount")}
                             </FormDescription>
@@ -669,7 +787,9 @@ export default function MarketOrder(properties) {
                               <span className="col-span-7">
                                 <Input
                                   label={t("MarketOrder:amountLabel")}
-                                  placeholder={`${amount} ${baseAsset ? baseAsset.symbol : "?"}`}
+                                  placeholder={`${amount} ${
+                                    baseAsset ? baseAsset.symbol : "?"
+                                  }`}
                                   disabled
                                   readOnly
                                 />
@@ -686,24 +806,40 @@ export default function MarketOrder(properties) {
                                     </Button>
                                   </PopoverTrigger>
                                   <PopoverContent>
-                                    <Label>{t("MarketOrder:provideNewAmountLabel")}</Label>
+                                    <Label>
+                                      {t("MarketOrder:provideNewAmountLabel")}
+                                    </Label>
                                     <Input
                                       placeholder={amount}
                                       className="mb-2"
                                       onChange={(event) => {
                                         const input = event.target.value;
                                         const regex = /^[0-9,]*\.?[0-9]*$/;
-                                        if (input && input.length && regex.test(input)) {
-                                          const parsedInput = parseFloat(input.replaceAll(",", ""));
+                                        if (
+                                          input &&
+                                          input.length &&
+                                          regex.test(input)
+                                        ) {
+                                          const parsedInput = parseFloat(
+                                            input.replaceAll(",", "")
+                                          );
                                           if (parsedInput) {
-                                            setAmount(parsedInput.toFixed(baseAsset.precision));
+                                            setAmount(
+                                              parsedInput.toFixed(
+                                                baseAsset.precision
+                                              )
+                                            );
                                             if (price) {
                                               setTotal(
                                                 parseFloat(
                                                   (
                                                     parsedInput *
-                                                    (marketInverted ? 1 / price : price)
-                                                  ).toFixed(quoteAsset.precision)
+                                                    (marketInverted
+                                                      ? 1 / price
+                                                      : price)
+                                                  ).toFixed(
+                                                    quoteAsset.precision
+                                                  )
                                                 )
                                               );
                                             }
@@ -763,20 +899,35 @@ export default function MarketOrder(properties) {
                           </span>
                           <span className="col-span-11">
                             <FormLabel>
-                              {amountLock === "editable" || totalLock === "editable"
-                                ? t("MarketOrder:updatingTotalAmountBeingBought")
-                                : t("MarketOrder:wantToUpdateTotalAmountBeingBought", {
-                                    quoteAssetSymbol: quoteAsset ? quoteAsset.symbol : "?",
-                                  })}
+                              {amountLock === "editable" ||
+                              totalLock === "editable"
+                                ? t(
+                                    "MarketOrder:updatingTotalAmountBeingBought"
+                                  )
+                                : t(
+                                    "MarketOrder:wantToUpdateTotalAmountBeingBought",
+                                    {
+                                      quoteAssetSymbol: quoteAsset
+                                        ? quoteAsset.symbol
+                                        : "?",
+                                    }
+                                  )}
                             </FormLabel>
                             <FormDescription>
                               {totalLock === "editable"
-                                ? t("MarketOrder:existingTotalAmountBeingBought", {
-                                    existingQuoteAmount: existingQuoteAmount,
-                                    quoteAssetSymbol: quoteAsset ? quoteAsset.symbol : "?",
-                                  })
+                                ? t(
+                                    "MarketOrder:existingTotalAmountBeingBought",
+                                    {
+                                      existingQuoteAmount: existingQuoteAmount,
+                                      quoteAssetSymbol: quoteAsset
+                                        ? quoteAsset.symbol
+                                        : "?",
+                                    }
+                                  )
                                 : t("MarketOrder:clickToUnlockTotalAmount", {
-                                    quoteAssetSymbol: quoteAsset ? quoteAsset.symbol : "?",
+                                    quoteAssetSymbol: quoteAsset
+                                      ? quoteAsset.symbol
+                                      : "?",
                                   })}
                             </FormDescription>
                           </span>
@@ -788,7 +939,9 @@ export default function MarketOrder(properties) {
                               <span className="col-span-7">
                                 <Input
                                   label={t("MarketOrder:totalLabel")}
-                                  placeholder={`${total} ${quoteAsset ? quoteAsset.symbol : "?"}`}
+                                  placeholder={`${total} ${
+                                    quoteAsset ? quoteAsset.symbol : "?"
+                                  }`}
                                   disabled
                                   readOnly
                                 />
@@ -805,20 +958,34 @@ export default function MarketOrder(properties) {
                                     </Button>
                                   </PopoverTrigger>
                                   <PopoverContent>
-                                    <Label>{t("MarketOrder:provideNewTotalLabel")}</Label>
+                                    <Label>
+                                      {t("MarketOrder:provideNewTotalLabel")}
+                                    </Label>
                                     <Input
                                       placeholder={total}
                                       className="mb-2 mt-1"
                                       onChange={(event) => {
                                         const input = event.target.value;
                                         const regex = /^[0-9,]*\.?[0-9]*$/;
-                                        if (input && input.length && regex.test(input)) {
-                                          const parsedFloat = parseFloat(input.replaceAll(",", ""));
+                                        if (
+                                          input &&
+                                          input.length &&
+                                          regex.test(input)
+                                        ) {
+                                          const parsedFloat = parseFloat(
+                                            input.replaceAll(",", "")
+                                          );
                                           if (parsedFloat) {
-                                            setTotal(parsedFloat.toFixed(quoteAsset.precision));
+                                            setTotal(
+                                              parsedFloat.toFixed(
+                                                quoteAsset.precision
+                                              )
+                                            );
                                             if (price) {
                                               setAmount(
-                                                (parsedFloat / price).toFixed(baseAsset.precision)
+                                                (parsedFloat / price).toFixed(
+                                                  baseAsset.precision
+                                                )
                                               );
                                             }
                                             setInputChars(inputChars + 1);
@@ -879,10 +1046,11 @@ export default function MarketOrder(properties) {
                             <FormDescription>
                               {expirationLock === "editable"
                                 ? t("MarketOrder:existingExpiration", {
-                                    existingExpiration: currentLimitOrder.expiration.replace(
-                                      "T",
-                                      " "
-                                    ),
+                                    existingExpiration:
+                                      currentLimitOrder.expiration.replace(
+                                        "T",
+                                        " "
+                                      ),
                                   })
                                 : t("MarketOrder:clickToUnlockExpiration")}
                             </FormDescription>
@@ -902,19 +1070,29 @@ export default function MarketOrder(properties) {
                                       const now = new Date();
                                       let expiryDate;
                                       if (selectedExpiry === "1hr") {
-                                        expiryDate = new Date(now.getTime() + oneHour);
+                                        expiryDate = new Date(
+                                          now.getTime() + oneHour
+                                        );
                                       } else if (selectedExpiry === "12hr") {
                                         const duration = oneHour * 12;
-                                        expiryDate = new Date(now.getTime() + duration);
+                                        expiryDate = new Date(
+                                          now.getTime() + duration
+                                        );
                                       } else if (selectedExpiry === "24hr") {
                                         const duration = oneDay;
-                                        expiryDate = new Date(now.getTime() + duration);
+                                        expiryDate = new Date(
+                                          now.getTime() + duration
+                                        );
                                       } else if (selectedExpiry === "7d") {
                                         const duration = oneDay * 7;
-                                        expiryDate = new Date(now.getTime() + duration);
+                                        expiryDate = new Date(
+                                          now.getTime() + duration
+                                        );
                                       } else if (selectedExpiry === "30d") {
                                         const duration = oneDay * 30;
-                                        expiryDate = new Date(now.getTime() + duration);
+                                        expiryDate = new Date(
+                                          now.getTime() + duration
+                                        );
                                       }
 
                                       if (expiryDate) {
@@ -970,11 +1148,16 @@ export default function MarketOrder(properties) {
                                         {date ? (
                                           format(date, "PPP")
                                         ) : (
-                                          <span>{t("MarketOrder:pickADate")}</span>
+                                          <span>
+                                            {t("MarketOrder:pickADate")}
+                                          </span>
                                         )}
                                       </Button>
                                     </PopoverTrigger>
-                                    <PopoverContent className="w-auto p-0" align="start">
+                                    <PopoverContent
+                                      className="w-auto p-0"
+                                      align="start"
+                                    >
                                       <Calendar
                                         mode="single"
                                         selected={date}
@@ -983,7 +1166,12 @@ export default function MarketOrder(properties) {
                                           const now = new Date();
                                           if (parsedDate < now) {
                                             //console.log("Not a valid date");
-                                            setDate(new Date(Date.now() + 1 * 24 * 60 * 60 * 1000));
+                                            setDate(
+                                              new Date(
+                                                Date.now() +
+                                                  1 * 24 * 60 * 60 * 1000
+                                              )
+                                            );
                                             return;
                                           }
                                           //console.log("Setting expiry date");
@@ -999,7 +1187,9 @@ export default function MarketOrder(properties) {
                               <span className="col-span-11">
                                 <FormDescription>
                                   {expiryType !== "specific"
-                                    ? t("MarketOrder:limitOrderExpiry", { expiryType: expiryType })
+                                    ? t("MarketOrder:limitOrderExpiry", {
+                                        expiryType: expiryType,
+                                      })
                                     : null}
                                 </FormDescription>
                               </span>
@@ -1038,7 +1228,9 @@ export default function MarketOrder(properties) {
                           </div>
                         </FormControl>
                         {osoEnabled ? (
-                          <FormDescription>{t("MarketOrder:autoOsoActive")}</FormDescription>
+                          <FormDescription>
+                            {t("MarketOrder:autoOsoActive")}
+                          </FormDescription>
                         ) : null}
                       </FormItem>
                     )}
@@ -1087,18 +1279,28 @@ export default function MarketOrder(properties) {
                                         }}
                                         className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4 text-lg"
                                       >
-                                        <Label>{t("MarketOrder:editSpreadLabel")}</Label>
+                                        <Label>
+                                          {t("MarketOrder:editSpreadLabel")}
+                                        </Label>
                                       </span>
                                     </PopoverTrigger>
                                     <PopoverContent>
-                                      <Label>{t("MarketOrder:provideNewSpreadPercentLabel")}</Label>
+                                      <Label>
+                                        {t(
+                                          "MarketOrder:provideNewSpreadPercentLabel"
+                                        )}
+                                      </Label>
                                       <Input
                                         placeholder={spreadPercent}
                                         className="mb-2 mt-1"
                                         onChange={(event) => {
                                           const input = event.target.value;
                                           const regex = /^[0-9]*\.?[0-9]*$/;
-                                          if (input && input.length && regex.test(input)) {
+                                          if (
+                                            input &&
+                                            input.length &&
+                                            regex.test(input)
+                                          ) {
                                             if (input >= 1 && input <= 100) {
                                               setSpreadPercent(input);
                                               setInputChars(inputChars + 1);
@@ -1156,18 +1358,28 @@ export default function MarketOrder(properties) {
                                         }}
                                         className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4 text-lg"
                                       >
-                                        <Label>{t("MarketOrder:editSizeLabel")}</Label>
+                                        <Label>
+                                          {t("MarketOrder:editSizeLabel")}
+                                        </Label>
                                       </span>
                                     </PopoverTrigger>
                                     <PopoverContent>
-                                      <Label>{t("MarketOrder:provideNewSizePercentLabel")}</Label>
+                                      <Label>
+                                        {t(
+                                          "MarketOrder:provideNewSizePercentLabel"
+                                        )}
+                                      </Label>
                                       <Input
                                         placeholder={sizePercent}
                                         className="mb-2 mt-1"
                                         onChange={(event) => {
                                           const input = event.target.value;
                                           const regex = /^[0-9]*\.?[0-9]*$/;
-                                          if (input && input.length && regex.test(input)) {
+                                          if (
+                                            input &&
+                                            input.length &&
+                                            regex.test(input)
+                                          ) {
                                             if (input >= 0 && input <= 100) {
                                               setSizePercent(input);
                                               setInputChars(inputChars + 1);
@@ -1230,13 +1442,21 @@ export default function MarketOrder(properties) {
                     name="networkFee"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>{t("MarketOrder:networkFeeLabel")}</FormLabel>
+                        <FormLabel>
+                          {t("MarketOrder:networkFeeLabel")}
+                        </FormLabel>
                         <FormControl>
-                          <Input disabled placeholder={`${fee} BTS`} className="mb-3 mt-3" />
+                          <Input
+                            disabled
+                            placeholder={`${fee} BTS`}
+                            className="mb-3 mt-3"
+                          />
                         </FormControl>
                         {usr.id === usr.referrer ? (
                           <FormMessage>
-                            {t("MarketOrder:rebateMessage", { rebate: trimPrice(fee * 0.8, 5) })}
+                            {t("MarketOrder:rebateMessage", {
+                              rebate: trimPrice(fee * 0.8, 5),
+                            })}
                           </FormMessage>
                         ) : null}
                         <FormMessage />
@@ -1277,10 +1497,13 @@ export default function MarketOrder(properties) {
             <Card>
               <CardHeader className="pb-0">
                 <CardTitle>
-                  {quoteAsset ? quoteAsset.symbol : "?"} ({quoteAsset ? quoteAsset.id : "1.3.x"})
+                  {quoteAsset ? quoteAsset.symbol : "?"} (
+                  {quoteAsset ? quoteAsset.id : "1.3.x"})
                   {t("MarketOrder:balance")}
                 </CardTitle>
-                <CardDescription>{t("MarketOrder:limitOrderQuoteAsset")}</CardDescription>
+                <CardDescription>
+                  {t("MarketOrder:limitOrderQuoteAsset")}
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 {quoteBalance} {quoteAsset ? quoteAsset.symbol : "?"}
@@ -1289,10 +1512,13 @@ export default function MarketOrder(properties) {
             <Card>
               <CardHeader className="pb-0">
                 <CardTitle>
-                  {baseAsset ? baseAsset.symbol : "?"} ({baseAsset ? baseAsset.id : "1.3.x"})
+                  {baseAsset ? baseAsset.symbol : "?"} (
+                  {baseAsset ? baseAsset.id : "1.3.x"})
                   {t("MarketOrder:balance")}
                 </CardTitle>
-                <CardDescription>{t("MarketOrder:limitOrderBaseAsset")}</CardDescription>
+                <CardDescription>
+                  {t("MarketOrder:limitOrderBaseAsset")}
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 {baseBalance} {baseAsset ? baseAsset.symbol : "?"}
@@ -1309,9 +1535,13 @@ export default function MarketOrder(properties) {
                 }}
               >
                 <CardHeader>
-                  <CardTitle>{t("MarketOrder:cancelLimitOrderTitle")}</CardTitle>
+                  <CardTitle>
+                    {t("MarketOrder:cancelLimitOrderTitle")}
+                  </CardTitle>
                   <CardDescription>
-                    {t("MarketOrder:cancelLimitOrderDescription", { limitOrderID: limitOrderID })}
+                    {t("MarketOrder:cancelLimitOrderDescription", {
+                      limitOrderID: limitOrderID,
+                    })}
                   </CardDescription>
                 </CardHeader>
               </Card>
@@ -1338,15 +1568,16 @@ export default function MarketOrder(properties) {
               ) : null}
 
               <a
-                href={`/dex/index.html?market=${quoteAsset ? quoteAsset.symbol : "?"}_${
-                  baseAsset ? baseAsset.symbol : "?"
-                }`}
+                href={`/dex/index.html?market=${
+                  quoteAsset ? quoteAsset.symbol : "?"
+                }_${baseAsset ? baseAsset.symbol : "?"}`}
               >
                 <Card>
                   <CardHeader>
                     <CardTitle>{t("MarketOrder:tradeOnDexTitle")}</CardTitle>
                     <CardDescription>
-                      {t("MarketOrder:market")} {quoteAsset ? quoteAsset.symbol : "?"}/
+                      {t("MarketOrder:market")}{" "}
+                      {quoteAsset ? quoteAsset.symbol : "?"}/
                       {baseAsset ? baseAsset.symbol : "?"}
                       <br />
                       {t("MarketOrder:createNewLimitOrder")}
@@ -1382,7 +1613,9 @@ export default function MarketOrder(properties) {
                     baseAsset ? baseAsset.symbol : ""
                   }`}
                 >
-                  <Badge className="ml-2 mt-1 mb-1">{baseAsset ? baseAsset.symbol : ""}</Badge>
+                  <Badge className="ml-2 mt-1 mb-1">
+                    {baseAsset ? baseAsset.symbol : ""}
+                  </Badge>
                 </a>
                 <br />
                 <Label>{t("MarketOrder:searchAcceptedCollateralLabel")}</Label>
@@ -1399,7 +1632,9 @@ export default function MarketOrder(properties) {
                     baseAsset ? baseAsset.symbol : ""
                   }`}
                 >
-                  <Badge className="ml-2 mt-1">{baseAsset ? baseAsset.symbol : ""}</Badge>
+                  <Badge className="ml-2 mt-1">
+                    {baseAsset ? baseAsset.symbol : ""}
+                  </Badge>
                 </a>
               </CardContent>
             </Card>

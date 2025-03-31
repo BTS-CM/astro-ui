@@ -15,7 +15,11 @@ import {
 } from "@/components/ui/dialog";
 
 import { Button } from "@/components/ui/button";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 
 import ExternalLink from "@/components/common/ExternalLink.jsx";
 import { $currentUser } from "@/stores/users.ts";
@@ -23,7 +27,11 @@ import { $currentUser } from "@/stores/users.ts";
 export default function MyOrderSummary(properties) {
   const { type, assetAData, assetBData, usrLimitOrders } = properties;
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
-  const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
+  const usr = useSyncExternalStore(
+    $currentUser.subscribe,
+    $currentUser.get,
+    () => true
+  );
 
   const filteredUsrLimitOrders = useMemo(
     () =>
@@ -50,8 +58,14 @@ export default function MyOrderSummary(properties) {
           //const minBaseAmount = humanReadableFloat(1, basePrecision);
           //const minQuoteAmount = humanReadableFloat(1, quotePrecision);
 
-          let parsedBaseAmount = humanReadableFloat(res.sell_price.base.amount, basePrecision);
-          let parsedQuoteAmount = humanReadableFloat(res.sell_price.quote.amount, quotePrecision);
+          let parsedBaseAmount = humanReadableFloat(
+            res.sell_price.base.amount,
+            basePrecision
+          );
+          let parsedQuoteAmount = humanReadableFloat(
+            res.sell_price.quote.amount,
+            quotePrecision
+          );
 
           let price = parseFloat(
             !isInverted
@@ -105,17 +119,31 @@ export default function MyOrderSummary(properties) {
                 <div className="grid grid-cols-4 border-b-2 text-sm">
                   <div className="col-span-1 border-r-2 pl-3 text-right">
                     {type === "buy" && res.price < minQuoteAmount ? (
-                      <HoverCard key={`hover_less_than_min_${res.id.replace("1.7.", "")}`}>
+                      <HoverCard
+                        key={`hover_less_than_min_${res.id.replace(
+                          "1.7.",
+                          ""
+                        )}`}
+                      >
                         <HoverCardTrigger>{`< ${minQuoteAmount}`}</HoverCardTrigger>
-                        <HoverCardContent className={`w-${res.quotePrecision * 5}`}>
+                        <HoverCardContent
+                          className={`w-${res.quotePrecision * 5}`}
+                        >
                           {res.price}
                         </HoverCardContent>
                       </HoverCard>
                     ) : null}
                     {type === "sell" && res.price < minBaseAmount ? (
-                      <HoverCard key={`hover_less_than_min_${res.id.replace("1.7.", "")}`}>
+                      <HoverCard
+                        key={`hover_less_than_min_${res.id.replace(
+                          "1.7.",
+                          ""
+                        )}`}
+                      >
                         <HoverCardTrigger>{`< ${minBaseAmount}`}</HoverCardTrigger>
-                        <HoverCardContent className={`w-${res.basePrecision * 5}`}>
+                        <HoverCardContent
+                          className={`w-${res.basePrecision * 5}`}
+                        >
                           {res.price}
                         </HoverCardContent>
                       </HoverCard>
@@ -128,8 +156,12 @@ export default function MyOrderSummary(properties) {
                       : null}
                   </div>
 
-                  <div className="col-span-1 border-r-2 pl-3 text-right">{res.receiving}</div>
-                  <div className="col-span-1 border-r-2 pl-3 text-right">{res.paying}</div>
+                  <div className="col-span-1 border-r-2 pl-3 text-right">
+                    {res.receiving}
+                  </div>
+                  <div className="col-span-1 border-r-2 pl-3 text-right">
+                    {res.paying}
+                  </div>
                   <div className="col-span-1 border-r-2 pl-3 text-right">
                     {res.expiration.replace("T", " ")}
                   </div>
@@ -138,7 +170,9 @@ export default function MyOrderSummary(properties) {
             </DialogTrigger>
             <DialogContent className="sm:max-w-[600px] bg-white">
               <DialogHeader>
-                <DialogTitle>{t("MyOrderSummary:editLimitOrderTitle")}</DialogTitle>
+                <DialogTitle>
+                  {t("MyOrderSummary:editLimitOrderTitle")}
+                </DialogTitle>
                 <DialogDescription>
                   {t("MyOrderSummary:editLimitOrderDescription")}
                 </DialogDescription>
@@ -161,9 +195,13 @@ export default function MyOrderSummary(properties) {
                     classnamecontents=""
                     type="button"
                     text={t("MyOrderSummary:viewObjectOnBlocksights")}
-                    hyperlink={usr && usr.chain ? `https://blocksights.info/#/objects/${res.id}${
-                      usr.chain === "bitshares" ? "" : "?network=testnet"
-                    }` : ''}
+                    hyperlink={
+                      usr && usr.chain
+                        ? `https://blocksights.info/#/objects/${res.id}${
+                            usr.chain === "bitshares" ? "" : "?network=testnet"
+                          }`
+                        : ""
+                    }
                   />
                 </div>
               </div>
@@ -177,10 +215,18 @@ export default function MyOrderSummary(properties) {
   return (
     <>
       <div className="grid grid-cols-4">
-        <div className="col-span-1 pl-3 text-right">{t("MyOrderSummary:priceColumnTitle")}</div>
-        <div className="col-span-1 pl-3 text-md text-right">{assetAData.symbol}</div>
-        <div className="col-span-1 pl-3 text-md text-right">{assetBData.symbol}</div>
-        <div className="col-span-1 pl-3 text-right">{t("MyOrderSummary:expirationDateColumnTitle")}</div>
+        <div className="col-span-1 pl-3 text-right">
+          {t("MyOrderSummary:priceColumnTitle")}
+        </div>
+        <div className="col-span-1 pl-3 text-md text-right">
+          {assetAData.symbol}
+        </div>
+        <div className="col-span-1 pl-3 text-md text-right">
+          {assetBData.symbol}
+        </div>
+        <div className="col-span-1 pl-3 text-right">
+          {t("MyOrderSummary:expirationDateColumnTitle")}
+        </div>
       </div>
       <ScrollArea className="h-72 w-full rounded-md border">
         <div className="grid grid-cols-3">{orderElements}</div>

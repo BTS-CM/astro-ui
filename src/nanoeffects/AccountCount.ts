@@ -5,12 +5,18 @@ import { chains } from "@/config/chains";
 // Retrieve the quantity of registered blockchain accounts
 async function getAccountCount(chain: string, specificNode?: string | null) {
   return new Promise(async (resolve, reject) => {
-    let node = specificNode ? specificNode : (chains as any)[chain].nodeList[0].url;
+    let node = specificNode
+      ? specificNode
+      : (chains as any)[chain].nodeList[0].url;
 
     let currentAPI;
     try {
-      currentAPI = await Apis.instance(node, true, 4000, { enableDatabase: true }, (error: Error) =>
-        console.log({ error })
+      currentAPI = await Apis.instance(
+        node,
+        true,
+        4000,
+        { enableDatabase: true },
+        (error: Error) => console.log({ error })
       );
     } catch (error) {
       console.log({ error, node });
@@ -26,7 +32,9 @@ async function getAccountCount(chain: string, specificNode?: string | null) {
     }
 
     if (!accountCount) {
-      console.log(`Failed to fetch the quantity of registered blockchain accounts`);
+      console.log(
+        `Failed to fetch the quantity of registered blockchain accounts`
+      );
       reject();
       return;
     }

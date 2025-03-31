@@ -10,14 +10,24 @@ const MAX_BTS_ITERATIONS = MAXIMUM_CREDIT_OFFERS / BTS_LIMIT;
 const MAX_TEST_ITERATIONS = MAXIMUM_CREDIT_OFFERS / TEST_LIMIT;
 
 // Retrieve all credit deals associated with the one credit offer
-function getCreditDealsByOfferId (chain: string, offerId: string, specificNode?: string | null) {
+function getCreditDealsByOfferId(
+  chain: string,
+  offerId: string,
+  specificNode?: string | null
+) {
   return new Promise(async (resolve, reject) => {
-    let node = specificNode ? specificNode : (chains as any)[chain].nodeList[0].url;
+    let node = specificNode
+      ? specificNode
+      : (chains as any)[chain].nodeList[0].url;
 
     let currentAPI;
     try {
-      currentAPI = await Apis.instance(node, true, 4000, { enableDatabase: true }, (error: Error) =>
-        console.log({ error })
+      currentAPI = await Apis.instance(
+        node,
+        true,
+        4000,
+        { enableDatabase: true },
+        (error: Error) => console.log({ error })
       );
     } catch (error) {
       console.log({ error });
@@ -36,7 +46,7 @@ function getCreditDealsByOfferId (chain: string, offerId: string, specificNode?:
       return;
     }
 
-    const latestObjectIDNumber = parseInt(latestObjectID.split('.')[2], 10);
+    const latestObjectIDNumber = parseInt(latestObjectID.split(".")[2], 10);
 
     let limit = chain === "bitshares" ? BTS_LIMIT : TEST_LIMIT;
     let allOffers: any[] = [];
@@ -44,7 +54,9 @@ function getCreditDealsByOfferId (chain: string, offerId: string, specificNode?:
 
     let firstPage;
     try {
-      firstPage = await currentAPI.db_api().exec("get_credit_deals_by_offer_id", [offerId, limit]);
+      firstPage = await currentAPI
+        .db_api()
+        .exec("get_credit_deals_by_offer_id", [offerId, limit]);
     } catch (error) {
       console.log({ error });
       reject(error);
@@ -52,15 +64,16 @@ function getCreditDealsByOfferId (chain: string, offerId: string, specificNode?:
     }
 
     if (firstPage && firstPage.length) {
-      let lastIDNumber = parseInt(firstPage[firstPage.length - 1].id.split('.')[2], 10);
+      let lastIDNumber = parseInt(
+        firstPage[firstPage.length - 1].id.split(".")[2],
+        10
+      );
 
       let totalItems = latestObjectIDNumber - lastIDNumber;
 
       let totalFetches = Math.min(
         Math.ceil(totalItems / limit),
-        chain === "bitshares"
-          ? MAX_BTS_ITERATIONS
-          : MAX_TEST_ITERATIONS
+        chain === "bitshares" ? MAX_BTS_ITERATIONS : MAX_TEST_ITERATIONS
       );
 
       allOffers.push(...firstPage);
@@ -73,7 +86,9 @@ function getCreditDealsByOfferId (chain: string, offerId: string, specificNode?:
 
         let pageOffers;
         try {
-          pageOffers = await currentAPI.db_api().exec("get_credit_deals_by_offer_id", options);
+          pageOffers = await currentAPI
+            .db_api()
+            .exec("get_credit_deals_by_offer_id", options);
         } catch (error) {
           console.log({ error });
           reject(error);
@@ -93,27 +108,26 @@ function getCreditDealsByOfferId (chain: string, offerId: string, specificNode?:
 }
 
 const [createCreditOfferDealsStore] = nanoquery({
-    fetcher: async (...args: unknown[]) => {
-      const chain = args[0] as string;
-      const offerId = args[1] as string;
-      let specificNode = args[2] ? args[2] as string : null;
-  
-      let response;
-      try {
-        response = await getCreditDealsByOfferId(chain, offerId, specificNode);
-      } catch (error) {
-        console.log({ error });
-        return;
-      }
-  
-      if (!response) {
-        console.log(`Failed to fetch max object id`);
-        return;
-      }
-  
-      return response;
-    },
-  });
-  
-  export { createCreditOfferDealsStore, getCreditDealsByOfferId };
-  
+  fetcher: async (...args: unknown[]) => {
+    const chain = args[0] as string;
+    const offerId = args[1] as string;
+    let specificNode = args[2] ? (args[2] as string) : null;
+
+    let response;
+    try {
+      response = await getCreditDealsByOfferId(chain, offerId, specificNode);
+    } catch (error) {
+      console.log({ error });
+      return;
+    }
+
+    if (!response) {
+      console.log(`Failed to fetch max object id`);
+      return;
+    }
+
+    return response;
+  },
+});
+
+export { createCreditOfferDealsStore, getCreditDealsByOfferId };

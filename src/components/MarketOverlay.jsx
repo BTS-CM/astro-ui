@@ -1,4 +1,9 @@
-import React, { useState, useEffect, useSyncExternalStore, useMemo } from "react";
+import React, {
+  useState,
+  useEffect,
+  useSyncExternalStore,
+  useMemo,
+} from "react";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 import { useStore } from "@nanostores/react";
@@ -17,7 +22,11 @@ import { createAssetFromSymbolStore } from "@/nanoeffects/Assets.ts";
 
 export default function MarketOverlay(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
-  const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
+  const usr = useSyncExternalStore(
+    $currentUser.subscribe,
+    $currentUser.get,
+    () => true
+  );
   const currentNode = useStore($currentNode);
 
   const _chain = useMemo(() => {
@@ -35,7 +44,7 @@ export default function MarketOverlay(properties) {
     _poolsBTS,
     _poolsTEST,
     _globalParamsBTS,
-    _globalParamsTEST
+    _globalParamsTEST,
   } = properties;
 
   useInitCache(_chain ?? "bitshares", []);
@@ -59,14 +68,16 @@ export default function MarketOverlay(properties) {
         currentNode ? currentNode.url : null,
       ]);
 
-      unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
-        if (data && !error && !loading) {
-          const filteredData = data.filter((balance) =>
-            assets.find((x) => x.id === balance.asset_id)
-          );
-          setBalances(filteredData);
+      unsubscribeUserBalances = userBalancesStore.subscribe(
+        ({ data, error, loading }) => {
+          if (data && !error && !loading) {
+            const filteredData = data.filter((balance) =>
+              assets.find((x) => x.id === balance.asset_id)
+            );
+            setBalances(filteredData);
+          }
         }
-      });
+      );
     }
 
     return () => {
@@ -96,14 +107,24 @@ export default function MarketOverlay(properties) {
       setLimitOrderFee(finalFee);
     }
   }, [globalParams]);
- 
+
   // End of init
 
-  const searchSymbols = useMemo(() => marketSearch.map((asset) => asset.s), [marketSearch]);
-  const searchIds = useMemo(() => marketSearch.map((asset) => asset.id), [marketSearch]);
+  const searchSymbols = useMemo(
+    () => marketSearch.map((asset) => asset.s),
+    [marketSearch]
+  );
+  const searchIds = useMemo(
+    () => marketSearch.map((asset) => asset.id),
+    [marketSearch]
+  );
 
-  const handleAssetAChange = (newAssetA) => { setAssetA(newAssetA); };
-  const handleAssetBChange = (newAssetA) => { setAssetB(newAssetA); };
+  const handleAssetAChange = (newAssetA) => {
+    setAssetA(newAssetA);
+  };
+  const handleAssetBChange = (newAssetA) => {
+    setAssetB(newAssetA);
+  };
 
   const [assetA, setAssetA] = useState(!window.location.search ? "BTS" : null);
   const [assetB, setAssetB] = useState(!window.location.search ? "USD" : null);
@@ -170,7 +191,8 @@ export default function MarketOverlay(properties) {
             finalAssetB = foundAssetB.s;
           } else {
             console.log("Setting default asset B");
-            finalAssetB = asset_a !== "BTS" && asset_a !== "1.3.0" ? "1.3.0" : "USD";
+            finalAssetB =
+              asset_a !== "BTS" && asset_a !== "1.3.0" ? "1.3.0" : "USD";
           }
         }
       }
@@ -205,7 +227,7 @@ export default function MarketOverlay(properties) {
     setAssetBDetails(null);
     setBBitassetData(null);
   }
- 
+
   useEffect(() => {
     if (usr && usr.chain && assets && assets.length && assetA) {
       _resetA();
@@ -267,12 +289,8 @@ export default function MarketOverlay(properties) {
       });
     }
   }, [assets, assetB, usr]);
-  
-  if (
-    !usr ||
-    !usr.chain ||
-    !assetA || !assetB
-  ) {
+
+  if (!usr || !usr.chain || !assetA || !assetB) {
     return (
       <div className="container mx-auto mt-5 mb-5">
         <div className="grid grid-cols-1 gap-3 text-center">
@@ -282,14 +300,20 @@ export default function MarketOverlay(properties) {
     );
   }
 
-  if (assetA && assetB && (!assetAData || !assetADetails || !assetBData || !assetBDetails)) {
-    return <MarketPlaceholder
-            usr={usr}
-            assetA={assetA}
-            assetB={assetB}
-            assets={assets}
-            marketSearch={marketSearch}
-          />
+  if (
+    assetA &&
+    assetB &&
+    (!assetAData || !assetADetails || !assetBData || !assetBDetails)
+  ) {
+    return (
+      <MarketPlaceholder
+        usr={usr}
+        assetA={assetA}
+        assetB={assetB}
+        assets={assets}
+        marketSearch={marketSearch}
+      />
+    );
   }
 
   return (

@@ -3,7 +3,11 @@ import { InfoCircledIcon } from "@radix-ui/react-icons";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 import { Label } from "@/components/ui/label";
 
 interface HoverInfoProps {
@@ -41,7 +45,9 @@ export default function HoverInfo({ header, content, type }: HoverInfoProps) {
             <span className="ml-2">{header}</span>
           </div>
         </h4>
-        <p className="leading-6 text-sm [&:not(:first-child)]:mt-1">{content}</p>
+        <p className="leading-6 text-sm [&:not(:first-child)]:mt-1">
+          {content}
+        </p>
       </HoverCardContent>
     </HoverCard>
   );
