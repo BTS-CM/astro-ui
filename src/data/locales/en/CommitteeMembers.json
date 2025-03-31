@@ -1,0 +1,14 @@
+{
+  "title": "Bitshares Committee Members",
+  "description": "View the current active and inactive committee members.",
+  "filterPlaceholder": "Filter by committee member name...",
+  "active": "Active ({count})",
+  "inactive": "Inactive ({count})",
+  "rank": "Rank",
+  "name": "Name",
+  "ids": "IDs",
+  "votes": "Votes Received",
+  "noActive": "No active committee members found.",
+  "noInactive": "No inactive committee members found.",
+  "loading": "Loading committee data..."
+}
