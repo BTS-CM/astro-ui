@@ -1,4 +1,9 @@
-import React, { useState, useEffect, useSyncExternalStore, useMemo } from "react";
+import React, {
+  useState,
+  useEffect,
+  useSyncExternalStore,
+  useMemo,
+} from "react";
 import { useForm } from "react-hook-form";
 import { useStore } from "@nanostores/react";
 import { useTranslation } from "react-i18next";
@@ -32,7 +37,11 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-import { Avatar as Av, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Avatar as Av,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/ui/avatar";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -71,7 +80,11 @@ export default function Transfer(properties) {
   const [transferAmount, setTransferAmount] = useState(0);
   const [memoContents, setMemoContents] = useState();
 
-  const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
+  const usr = useSyncExternalStore(
+    $currentUser.subscribe,
+    $currentUser.get,
+    () => true
+  );
 
   const {
     _marketSearchBTS,
@@ -79,7 +92,7 @@ export default function Transfer(properties) {
     _assetsBTS,
     _assetsTEST,
     _globalParamsBTS,
-    _globalParamsTEST
+    _globalParamsTEST,
   } = properties;
 
   const _chain = useMemo(() => {
@@ -133,14 +146,16 @@ export default function Transfer(properties) {
         currentNode ? currentNode.url : null,
       ]);
 
-      unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
-        if (data && !error && !loading) {
-          const filteredData = data.filter((balance) =>
-            assets.find((x) => x.id === balance.asset_id)
-          );
-          setBalances(filteredData);
+      unsubscribeUserBalances = userBalancesStore.subscribe(
+        ({ data, error, loading }) => {
+          if (data && !error && !loading) {
+            const filteredData = data.filter((balance) =>
+              assets.find((x) => x.id === balance.asset_id)
+            );
+            setBalances(filteredData);
+          }
         }
-      });
+      );
     }
 
     return () => {
@@ -153,10 +168,7 @@ export default function Transfer(properties) {
     if (usr && usr.chain && currentNode && targetUser) {
       const userStore = createObjectStore([
         usr.chain,
-        JSON.stringify([
-          usr.id,
-          targetUser.id,
-        ]),
+        JSON.stringify([usr.id, targetUser.id]),
         currentNode ? currentNode.url : null,
       ]);
       userStore.subscribe(({ data, error, loading }) => {
@@ -233,21 +245,29 @@ export default function Transfer(properties) {
                                   eye: "normal",
                                   mouth: "open",
                                 }}
-                                colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]}
+                                colors={[
+                                  "#92A1C6",
+                                  "#146A7C",
+                                  "#F0AB3D",
+                                  "#C271B4",
+                                  "#C20D90",
+                                ]}
                               />
                             </div>
                             <div className="col-span-7">
                               <Input
                                 disabled
                                 className="mb-1 mt-1"
-                                value={`${usr && usr.username ? usr.username : "?"} (${
-                                  usr && usr.id ? usr.id : "?"
-                                })`}
+                                value={`${
+                                  usr && usr.username ? usr.username : "?"
+                                } (${usr && usr.id ? usr.id : "?"})`}
                               />
                             </div>
                           </div>
                         </FormControl>
-                        <FormDescription>{t("Transfer:sendingAccountDescription")}</FormDescription>
+                        <FormDescription>
+                          {t("Transfer:sendingAccountDescription")}
+                        </FormDescription>
                       </FormItem>
                     )}
                   />
@@ -270,7 +290,13 @@ export default function Transfer(properties) {
                                     eye: "normal",
                                     mouth: "open",
                                   }}
-                                  colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]}
+                                  colors={[
+                                    "#92A1C6",
+                                    "#146A7C",
+                                    "#F0AB3D",
+                                    "#C271B4",
+                                    "#C20D90",
+                                  ]}
                                 />
                               ) : (
                                 <Av>
@@ -297,7 +323,10 @@ export default function Transfer(properties) {
                                 }}
                               >
                                 <DialogTrigger asChild>
-                                  <Button variant="outline" className="ml-3 mt-1">
+                                  <Button
+                                    variant="outline"
+                                    className="ml-3 mt-1"
+                                  >
                                     {targetUser
                                       ? t("Transfer:changeTarget")
                                       : t("Transfer:provideTarget")}
@@ -310,10 +339,14 @@ export default function Transfer(properties) {
                                         ? t("Transfer:bitsharesAccountSearch")
                                         : null}
                                       {usr && usr.chain === "bitshares"
-                                        ? t("Transfer:bitsharesAccountSearchBTS")
+                                        ? t(
+                                            "Transfer:bitsharesAccountSearchBTS"
+                                          )
                                         : null}
                                       {usr && usr.chain !== "bitshares"
-                                        ? t("Transfer:bitsharesAccountSearchTEST")
+                                        ? t(
+                                            "Transfer:bitsharesAccountSearchTEST"
+                                          )
                                         : null}
                                     </DialogTitle>
                                     <DialogDescription>
@@ -321,9 +354,13 @@ export default function Transfer(properties) {
                                     </DialogDescription>
                                   </DialogHeader>
                                   <AccountSearch
-                                    chain={usr && usr.chain ? usr.chain : "bitshares"}
+                                    chain={
+                                      usr && usr.chain ? usr.chain : "bitshares"
+                                    }
                                     excludedUsers={
-                                      usr && usr.username && usr.username.length ? [usr] : []
+                                      usr && usr.username && usr.username.length
+                                        ? [usr]
+                                        : []
                                     }
                                     setChosenAccount={setTargetUser}
                                   />
@@ -361,7 +398,9 @@ export default function Transfer(properties) {
                                 <Av>
                                   <AvatarFallback>
                                     <div className="text-sm">
-                                      {foundAsset.bitasset_data_id ? "MPA" : "UIA"}
+                                      {foundAsset.bitasset_data_id
+                                        ? "MPA"
+                                        : "UIA"}
                                     </div>
                                   </AvatarFallback>
                                 </Av>
@@ -391,7 +430,9 @@ export default function Transfer(properties) {
                                 otherAsset={null}
                                 marketSearch={marketSearch}
                                 type={null}
-                                chain={usr && usr.chain ? usr.chain : "bitshares"}
+                                chain={
+                                  usr && usr.chain ? usr.chain : "bitshares"
+                                }
                                 balances={balances}
                               />
                             </div>
@@ -403,8 +444,12 @@ export default function Transfer(properties) {
                         <FormMessage>
                           {foundAsset &&
                           balances &&
-                          !balances.map((x) => x.asset_id).includes(foundAsset.id)
-                            ? t("Transfer:noAssetInAccount", { username: usr.username })
+                          !balances
+                            .map((x) => x.asset_id)
+                            .includes(foundAsset.id)
+                            ? t("Transfer:noAssetInAccount", {
+                                username: usr.username,
+                              })
                             : null}
                         </FormMessage>
                       </FormItem>
@@ -425,13 +470,19 @@ export default function Transfer(properties) {
                           <FormControl>
                             <Input
                               disabled
-                              label={t("Transfer:amountAvailableToTransferLabel")}
+                              label={t(
+                                "Transfer:amountAvailableToTransferLabel"
+                              )}
                               value={
                                 foundAsset &&
                                 balances &&
-                                balances.find((x) => x.asset_id === foundAsset.id)
+                                balances.find(
+                                  (x) => x.asset_id === foundAsset.id
+                                )
                                   ? `${humanReadableFloat(
-                                      balances.find((x) => x.asset_id === foundAsset.id).amount,
+                                      balances.find(
+                                        (x) => x.asset_id === foundAsset.id
+                                      ).amount,
                                       foundAsset.precision
                                     )} ${foundAsset.symbol}`
                                   : "0"
@@ -440,7 +491,9 @@ export default function Transfer(properties) {
                             />
                           </FormControl>
                           <FormDescription>
-                            {t("Transfer:maximumAmountDescription", { asset: selectedAsset })}
+                            {t("Transfer:maximumAmountDescription", {
+                              asset: selectedAsset,
+                            })}
                           </FormDescription>
                         </FormItem>
                       )}
@@ -454,7 +507,9 @@ export default function Transfer(properties) {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>
-                            {t("Transfer:amountToTransfer", { asset: selectedAsset ?? "???" })}
+                            {t("Transfer:amountToTransfer", {
+                              asset: selectedAsset ?? "???",
+                            })}
                           </FormLabel>
                           <FormControl
                             onChange={(event) => {
@@ -501,7 +556,9 @@ export default function Transfer(properties) {
                             />
                           </FormControl>
                           <FormDescription>
-                            {t("Transfer:memoFieldDescription", { targetUser: targetUser.name })}
+                            {t("Transfer:memoFieldDescription", {
+                              targetUser: targetUser.name,
+                            })}
                           </FormDescription>
                         </FormItem>
                       )}
@@ -518,13 +575,18 @@ export default function Transfer(properties) {
                           <FormControl>
                             <Input
                               disabled
-                              placeholder={`${t("Transfer:networkFeePlaceholder", { fee: fee })}`}
+                              placeholder={`${t(
+                                "Transfer:networkFeePlaceholder",
+                                { fee: fee }
+                              )}`}
                               className="mb-3 mt-3"
                             />
                           </FormControl>
                           {usr.id === usr.referrer ? (
                             <FormMessage>
-                              {t("Transfer:rebate", { rebate: trimPrice(fee * 0.8, 5) })}
+                              {t("Transfer:rebate", {
+                                rebate: trimPrice(fee * 0.8, 5),
+                              })}
                             </FormMessage>
                           ) : null}
                         </FormItem>
@@ -533,11 +595,20 @@ export default function Transfer(properties) {
                   ) : null}
 
                   {!transferAmount ? (
-                    <Button className="mt-5 mb-3" variant="outline" disabled type="submit">
+                    <Button
+                      className="mt-5 mb-3"
+                      variant="outline"
+                      disabled
+                      type="submit"
+                    >
                       {t("Transfer:submit")}
                     </Button>
                   ) : (
-                    <Button className="mt-5 mb-3" variant="outline" type="submit">
+                    <Button
+                      className="mt-5 mb-3"
+                      variant="outline"
+                      type="submit"
+                    >
                       {t("Transfer:submit")}
                     </Button>
                   )}
@@ -567,16 +638,20 @@ export default function Transfer(properties) {
                       from: usr.id,
                       to: targetUser.id,
                       amount: {
-                        amount: blockchainFloat(transferAmount, foundAsset.precision).toFixed(0),
+                        amount: blockchainFloat(
+                          transferAmount,
+                          foundAsset.precision
+                        ).toFixed(0),
                         asset_id: foundAsset.id,
                       },
                       memo: memoContents
-                        ? { // clear-text until processed by beeteos!
+                        ? {
+                            // clear-text until processed by beeteos!
                             from: bothUsers[0].options.memo_key,
                             to: bothUsers[1].options.memo_key,
                             nonce: String(Date.now()),
                             message: memoContents,
-                        }
+                          }
                         : null,
                       extensions: [],
                     },
@@ -592,7 +667,9 @@ export default function Transfer(properties) {
               <Card>
                 <CardHeader className="pb-0 mb-0">
                   <CardTitle>{t("Transfer:doubleCheckTitle")}</CardTitle>
-                  <CardDescription>{t("Transfer:doubleCheckDescription")}</CardDescription>
+                  <CardDescription>
+                    {t("Transfer:doubleCheckDescription")}
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="text-sm">
                   <ul className="ml-2 list-disc [&>li]:mt-2">
@@ -602,10 +679,14 @@ export default function Transfer(properties) {
                       <ExternalLink
                         type="text"
                         classnamecontents=""
-                        hyperlink={`https://blocksights.info/#/accounts/${targetUser.name}${
+                        hyperlink={`https://blocksights.info/#/accounts/${
+                          targetUser.name
+                        }${
                           usr.chain === "bitshares" ? "" : "?network=testnet"
                         }`}
-                        text={t("Transfer:blocksightsLink", { name: targetUser.name })}
+                        text={t("Transfer:blocksightsLink", {
+                          name: targetUser.name,
+                        })}
                       />
                     </li>
                   </ul>
@@ -618,7 +699,9 @@ export default function Transfer(properties) {
               <Card>
                 <CardHeader className="pb-0 mb-0">
                   <CardTitle>{t("Transfer:scamAlertTitle")}</CardTitle>
-                  <CardDescription>{t("Transfer:scamAlertDescription")}</CardDescription>
+                  <CardDescription>
+                    {t("Transfer:scamAlertDescription")}
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="text-sm">
                   <ul className="ml-2 list-disc [&>li]:mt-2">

@@ -26,8 +26,16 @@ import { $currentNode } from "@/stores/node.ts";
 export default function AccountSearch(properties) {
   const { chain, excludedUsers, setChosenAccount, skipCheck } = properties;
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
-  const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
-  const blocklist = useSyncExternalStore($blockList.subscribe, $blockList.get, () => true);
+  const usr = useSyncExternalStore(
+    $currentUser.subscribe,
+    $currentUser.get,
+    () => true
+  );
+  const blocklist = useSyncExternalStore(
+    $blockList.subscribe,
+    $blockList.get,
+    () => true
+  );
   const currentNode = useStore($currentNode);
 
   const [accountInput, setAccountInput] = useState();
@@ -40,7 +48,10 @@ export default function AccountSearch(properties) {
     const excludedUsernames = excludedUsers.map((user) => user.username);
     const excludedIds = excludedUsers.map((user) => user.id);
 
-    if (excludedUsernames.includes(accountInput) || excludedIds.includes(accountInput)) {
+    if (
+      excludedUsernames.includes(accountInput) ||
+      excludedIds.includes(accountInput)
+    ) {
       setInProgress(false);
       setErrorMessage(t("AccountSearch:noSearch.selfError"));
       return;
@@ -48,7 +59,11 @@ export default function AccountSearch(properties) {
 
     let response;
     try {
-      response = await accountSearch(chain, accountInput, currentNode ? currentNode.url : null);
+      response = await accountSearch(
+        chain,
+        accountInput,
+        currentNode ? currentNode.url : null
+      );
     } catch (error) {
       console.log({ error, msg: t("AccountSearch:noSearch.error") });
       setErrorMessage(t("AccountSearch:noSearch.error"));
@@ -84,7 +99,9 @@ export default function AccountSearch(properties) {
       <div className="grid grid-cols-1 gap-3">
         {!searchResponse ? (
           <>
-            <div className="col-span-1">{t("AccountSearch:noSearch.prompt")}</div>
+            <div className="col-span-1">
+              {t("AccountSearch:noSearch.prompt")}
+            </div>
             <div className="col-span-1">
               <Input
                 value={accountInput || ""}
@@ -105,7 +122,9 @@ export default function AccountSearch(properties) {
                 }}
               />
               {errorMessage ? (
-                <p className="text-red-500 text-xs italic">{errorMessage || "ERROR"}</p>
+                <p className="text-red-500 text-xs italic">
+                  {errorMessage || "ERROR"}
+                </p>
               ) : null}
             </div>
             <div className="col-span-1">
@@ -131,7 +150,10 @@ export default function AccountSearch(properties) {
                 key={searchResponse.id}
                 className="mb-2 mt-1 text-center"
                 onClick={() => {
-                  setChosenAccount({ name: searchResponse.name, id: searchResponse.id });
+                  setChosenAccount({
+                    name: searchResponse.name,
+                    id: searchResponse.id,
+                  });
                 }}
               >
                 <div className="grid grid-cols-4">
@@ -144,7 +166,13 @@ export default function AccountSearch(properties) {
                         eye: "normal",
                         mouth: "open",
                       }}
-                      colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]}
+                      colors={[
+                        "#92A1C6",
+                        "#146A7C",
+                        "#F0AB3D",
+                        "#C271B4",
+                        "#C20D90",
+                      ]}
                     />
                   </div>
                   <div className="col-span-3">
@@ -182,7 +210,10 @@ export default function AccountSearch(properties) {
                   <Button
                     variant="outline"
                     onClick={() => {
-                      setChosenAccount({ name: searchResponse.name, id: searchResponse.id });
+                      setChosenAccount({
+                        name: searchResponse.name,
+                        id: searchResponse.id,
+                      });
                     }}
                   >
                     {t("AccountSearch:searchResponse.proceed")}

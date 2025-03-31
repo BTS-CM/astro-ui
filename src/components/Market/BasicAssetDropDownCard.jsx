@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { FixedSizeList as List } from "react-window";
-import { useStore } from '@nanostores/react';
+import { useStore } from "@nanostores/react";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 import { GearIcon } from "@radix-ui/react-icons";
@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/dialog";
 
 import { Button } from "@/components/ui/button";
-import { $favouriteAssets } from "@/stores/favourites.ts"
+import { $favouriteAssets } from "@/stores/favourites.ts";
 
 /**
  * Creating a basic asset dropdown component
@@ -34,7 +34,7 @@ import { $favouriteAssets } from "@/stores/favourites.ts"
  * @returns {JSX.Element}
  */
 export default function BasicAssetDropDown(properties) {
-  const { 
+  const {
     assetSymbol,
     assetData,
     storeCallback,
@@ -44,14 +44,12 @@ export default function BasicAssetDropDown(properties) {
     size,
     chain,
     borrowPositions,
-    usrBalances
+    usrBalances,
   } = properties;
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
 
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [mode, setMode] = useState(
-    type === "quote" ? "balance" : "borrowed"
-  );
+  const [mode, setMode] = useState(type === "quote" ? "balance" : "borrowed");
   const favouriteAssets = useStore($favouriteAssets);
 
   const [featuredMode, setFeaturedMode] = useState("bitAssets");
@@ -81,19 +79,17 @@ export default function BasicAssetDropDown(properties) {
       _featuredIssuers = ["nftprofessional1"];
     }
 
-    let _featuredAssets = marketSearch.filter(
-      (asset) => {
-        if (chain === "bitshares") {
-          if (_featuredIssuers.includes(asset.u.split(" ")[0])) {
-            return true;
-          }
-          if (_featuredSymbols.some(str => asset.s.includes(str))) {
-            return true;
-          }
+    let _featuredAssets = marketSearch.filter((asset) => {
+      if (chain === "bitshares") {
+        if (_featuredIssuers.includes(asset.u.split(" ")[0])) {
+          return true;
         }
-        return false
+        if (_featuredSymbols.some((str) => asset.s.includes(str))) {
+          return true;
+        }
       }
-    );
+      return false;
+    });
 
     return _featuredAssets;
   }, [assetSymbol, otherAsset, marketSearch, chain, featuredMode]);
@@ -102,15 +98,15 @@ export default function BasicAssetDropDown(properties) {
     if (!chain || !favouriteAssets) {
       return [];
     }
-    
+
     const _chainAssets = favouriteAssets[chain];
 
     if (!assetSymbol && !otherAsset) {
       return _chainAssets;
     }
 
-    return _chainAssets.filter(
-      (asset) => assetSymbol && otherAsset
+    return _chainAssets.filter((asset) =>
+      assetSymbol && otherAsset
         ? asset.symbol !== assetSymbol && asset.symbol !== otherAsset
         : asset.symbol !== assetSymbol
     );
@@ -125,7 +121,7 @@ export default function BasicAssetDropDown(properties) {
     } else if (mode === "borrowed") {
       const uniqueBorrowPositions = [];
       const seenAssetTypes = new Set();
-      borrowPositions.forEach(position => {
+      borrowPositions.forEach((position) => {
         if (!seenAssetTypes.has(position.asset_id)) {
           uniqueBorrowPositions.push(position);
           seenAssetTypes.add(position.asset_id);
@@ -140,7 +136,7 @@ export default function BasicAssetDropDown(properties) {
     if (!res || !marketSearch) {
       return;
     }
-    
+
     return (
       <div style={{ ...style, marginBottom: "10px", paddingRight: "10px" }}>
         <Card
@@ -153,7 +149,9 @@ export default function BasicAssetDropDown(properties) {
               } else if (mode === "favourites") {
                 storeCallback(res.symbol);
               } else if (mode === "borrowed" || mode === "balance") {
-                const _asset = marketSearch.find((asset) => asset.id === res.asset_id);
+                const _asset = marketSearch.find(
+                  (asset) => asset.id === res.asset_id
+                );
                 storeCallback(_asset ? _asset.s : "");
               }
             }, 0);
@@ -162,50 +160,29 @@ export default function BasicAssetDropDown(properties) {
         >
           <CardHeader className="p-3">
             <CardTitle className="h-3">
-              {
-                mode === "featured"
-                  ? `${res.s} (${res.id})`
-                  : null
-              }
-              {
-                mode === "favourites"
-                  ? `${res.symbol} (${res.id})`
-                  : null
-              }
-              {
-                mode === "borrowed" ||
-                mode === "balance" &&
-                marketSearch && marketSearch.length &&
-                res
-                  ? `${marketSearch.find((asset) => asset.id === res.asset_id).s} (${res.asset_id})`
-                  : null
-              }
+              {mode === "featured" ? `${res.s} (${res.id})` : null}
+              {mode === "favourites" ? `${res.symbol} (${res.id})` : null}
+              {mode === "borrowed" ||
+              (mode === "balance" && marketSearch && marketSearch.length && res)
+                ? `${
+                    marketSearch.find((asset) => asset.id === res.asset_id).s
+                  } (${res.asset_id})`
+                : null}
             </CardTitle>
             <CardDescription>
-              {
-                mode === "featured"
-                  ? t(
-                      "AssetDropDownCard:issued",
-                      { user: res.u }
-                    )
-                  : null
-              }
-              {
-                mode === "favourites"
-                  ? t(
-                      "AssetDropDownCard:issued",
-                      { user: res.issuer }
-                    )
-                  : null
-              }
-              {
-                mode === "borrowed" || mode === "balance"
-                  ? t(
-                      "AssetDropDownCard:issued",
-                      { user: marketSearch.find((asset) => asset.id === res.asset_id).u }
-                    )
-                  : null
-              }
+              {mode === "featured"
+                ? t("AssetDropDownCard:issued", { user: res.u })
+                : null}
+              {mode === "favourites"
+                ? t("AssetDropDownCard:issued", { user: res.issuer })
+                : null}
+              {mode === "borrowed" || mode === "balance"
+                ? t("AssetDropDownCard:issued", {
+                    user: marketSearch.find(
+                      (asset) => asset.id === res.asset_id
+                    ).u,
+                  })
+                : null}
             </CardDescription>
           </CardHeader>
         </Card>
@@ -221,20 +198,28 @@ export default function BasicAssetDropDown(properties) {
       }}
     >
       <DialogTrigger asChild>
-        {
-          size && size === "cog"
-            ? <GearIcon onClick={() => setDialogOpen(true)} />
-            : <Button
-                variant={type === "base" || type === "backing" ? "outline" : "primary"}
-                className={`${size && size === "small" ? "h-7 " : ""}p-3 ${type === "quote" ? "bg-black hover:bg-gray-700 text-white" : ""} hover:shadow-lg`}
-                onClick={() => setDialogOpen(true)}
-              >
-                {!assetSymbol ? t("AssetDropDownCard:select") : null}
-                {!size && assetSymbol ? t("AssetDropDownCard:change") : null}
-                {size && assetSymbol && assetSymbol.length < 12 ? assetSymbol : null}
-                {size && assetSymbol && assetSymbol.length >= 12 ? assetData.id : null}
-              </Button>
-        }
+        {size && size === "cog" ? (
+          <GearIcon onClick={() => setDialogOpen(true)} />
+        ) : (
+          <Button
+            variant={
+              type === "base" || type === "backing" ? "outline" : "primary"
+            }
+            className={`${size && size === "small" ? "h-7 " : ""}p-3 ${
+              type === "quote" ? "bg-black hover:bg-gray-700 text-white" : ""
+            } hover:shadow-lg`}
+            onClick={() => setDialogOpen(true)}
+          >
+            {!assetSymbol ? t("AssetDropDownCard:select") : null}
+            {!size && assetSymbol ? t("AssetDropDownCard:change") : null}
+            {size && assetSymbol && assetSymbol.length < 12
+              ? assetSymbol
+              : null}
+            {size && assetSymbol && assetSymbol.length >= 12
+              ? assetData.id
+              : null}
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[550px] bg-white">
         <DialogHeader>
@@ -278,145 +263,155 @@ export default function BasicAssetDropDown(properties) {
             </Button>
           </div>
 
-          {
-            mode === "borrowed"
-            ? <>
-                <h4 className="text-md font-bold tracking-tight">
-                  {t("AssetDropDownCard:borrowed")}
-                </h4>
-                {borrowPositions && borrowPositions.length ? (
-                  <>
-                    <List
-                      height={350}
-                      itemCount={borrowPositions.length}
-                      itemSize={70}
-                      className="w-full"
-                    >
-                      {Row}
-                    </List>
-                  </>
-                ) : "No borrowed assets..."}
-              </>
-            : null
-          }
-
-          {
-            mode === "balance"
-            ? <>
-                <h4 className="text-md font-bold tracking-tight">
-                  {t("AssetDropDownCard:balance")}
-                </h4>
-                {usrBalances && usrBalances.length ? (
-                  <>
-                    <List
-                      height={350}
-                      itemCount={usrBalances.length}
-                      itemSize={70}
-                      className="w-full"
-                    >
-                      {Row}
-                    </List>
-                  </>
-                ) : "No balance assets..."}
-              </>
-            : null
-          }
-
-          {
-            mode === "featured"
-            ? <>
-                <h4 className="text-md font-bold tracking-tight">
-                  {!type ? t("AssetDropDownCard:noType") : null}
-                  {type && type === "base" ? t("AssetDropDownCard:baseType") : null}
-                  {type && type === "quote" ? t("AssetDropDownCard:quoteType") : null}
-                  {type && type === "backing" ? t("AssetDropDownCard:backingType") : null}
-                </h4>
-                <div className="grid grid-cols-6 gap-1">
-                  <Button
-                    variant={featuredMode === "bitAssets" ? "" : "outline"}
-                    size="sm"
-                    onClick={() => setFeaturedMode("bitAssets")}
+          {mode === "borrowed" ? (
+            <>
+              <h4 className="text-md font-bold tracking-tight">
+                {t("AssetDropDownCard:borrowed")}
+              </h4>
+              {borrowPositions && borrowPositions.length ? (
+                <>
+                  <List
+                    height={350}
+                    itemCount={borrowPositions.length}
+                    itemSize={70}
+                    className="w-full"
                   >
-                    bitAssets
-                  </Button>
-                  <Button
-                    variant={featuredMode === "HONEST" ? "" : "outline"}
-                    size="sm"
-                    onClick={() => setFeaturedMode("HONEST")}
-                  >
-                    HONEST
-                  </Button>
-                  <Button
-                    variant={featuredMode === "XBTS" ? "" : "outline"}
-                    size="sm"
-                    onClick={() => setFeaturedMode("XBTS")}
-                  >
-                    XBTS
-                  </Button>
-                  <Button
-                    variant={featuredMode === "BTWTY" ? "" : "outline"}
-                    size="sm"
-                    onClick={() => setFeaturedMode("BTWTY")}
-                  >
-                    BTWTY
-                  </Button>
-                  <Button
-                    variant={featuredMode === "ARTCASA" ? "" : "outline"}
-                    size="sm"
-                    onClick={() => setFeaturedMode("ARTCASA")}
-                  >
-                    ARTCASA
-                  </Button>
-                  <Button
-                    variant={featuredMode === "NFTEA" ? "" : "outline"}
-                    size="sm"
-                    onClick={() => setFeaturedMode("NFTEA")}
-                  >
-                    NFTEA
-                  </Button>
-                </div>
-                {featuredAssets && featuredAssets.length ? (
-                  <>
-                    <List
-                      height={350}
-                      itemCount={featuredAssets.length}
-                      itemSize={70}
-                      className="w-full"
-                    >
-                      {Row}
-                    </List>
-                  </>
-                ) : "No featured assets..."}
-
+                    {Row}
+                  </List>
+                </>
+              ) : (
+                "No borrowed assets..."
+              )}
             </>
-            : null
-          }
+          ) : null}
 
-          {
-            mode === "favourites"
-            ? <>
-                <h4 className="text-md font-bold tracking-tight">
-                  {!type ? t("AssetDropDownCard:noType") : null}
-                  {type && type === "base" ? t("AssetDropDownCard:baseType") : null}
-                  {type && type === "quote" ? t("AssetDropDownCard:quoteType") : null}
-                  {type && type === "backing" ? t("AssetDropDownCard:backingType") : null}
-                </h4>
-                {_favouriteAssets && _favouriteAssets.length ? (
-                  <>
-                    <List
-                      height={350}
-                      itemCount={_favouriteAssets.length}
-                      itemSize={70}
-                      className="w-full"
-                    >
-                      {Row}
-                    </List>
-                  </>
-                ) : "No favourite assets..."}
-                
-              </>
-            : null
-          }
+          {mode === "balance" ? (
+            <>
+              <h4 className="text-md font-bold tracking-tight">
+                {t("AssetDropDownCard:balance")}
+              </h4>
+              {usrBalances && usrBalances.length ? (
+                <>
+                  <List
+                    height={350}
+                    itemCount={usrBalances.length}
+                    itemSize={70}
+                    className="w-full"
+                  >
+                    {Row}
+                  </List>
+                </>
+              ) : (
+                "No balance assets..."
+              )}
+            </>
+          ) : null}
+
+          {mode === "featured" ? (
+            <>
+              <h4 className="text-md font-bold tracking-tight">
+                {!type ? t("AssetDropDownCard:noType") : null}
+                {type && type === "base"
+                  ? t("AssetDropDownCard:baseType")
+                  : null}
+                {type && type === "quote"
+                  ? t("AssetDropDownCard:quoteType")
+                  : null}
+                {type && type === "backing"
+                  ? t("AssetDropDownCard:backingType")
+                  : null}
+              </h4>
+              <div className="grid grid-cols-6 gap-1">
+                <Button
+                  variant={featuredMode === "bitAssets" ? "" : "outline"}
+                  size="sm"
+                  onClick={() => setFeaturedMode("bitAssets")}
+                >
+                  bitAssets
+                </Button>
+                <Button
+                  variant={featuredMode === "HONEST" ? "" : "outline"}
+                  size="sm"
+                  onClick={() => setFeaturedMode("HONEST")}
+                >
+                  HONEST
+                </Button>
+                <Button
+                  variant={featuredMode === "XBTS" ? "" : "outline"}
+                  size="sm"
+                  onClick={() => setFeaturedMode("XBTS")}
+                >
+                  XBTS
+                </Button>
+                <Button
+                  variant={featuredMode === "BTWTY" ? "" : "outline"}
+                  size="sm"
+                  onClick={() => setFeaturedMode("BTWTY")}
+                >
+                  BTWTY
+                </Button>
+                <Button
+                  variant={featuredMode === "ARTCASA" ? "" : "outline"}
+                  size="sm"
+                  onClick={() => setFeaturedMode("ARTCASA")}
+                >
+                  ARTCASA
+                </Button>
+                <Button
+                  variant={featuredMode === "NFTEA" ? "" : "outline"}
+                  size="sm"
+                  onClick={() => setFeaturedMode("NFTEA")}
+                >
+                  NFTEA
+                </Button>
+              </div>
+              {featuredAssets && featuredAssets.length ? (
+                <>
+                  <List
+                    height={350}
+                    itemCount={featuredAssets.length}
+                    itemSize={70}
+                    className="w-full"
+                  >
+                    {Row}
+                  </List>
+                </>
+              ) : (
+                "No featured assets..."
+              )}
+            </>
+          ) : null}
+
+          {mode === "favourites" ? (
+            <>
+              <h4 className="text-md font-bold tracking-tight">
+                {!type ? t("AssetDropDownCard:noType") : null}
+                {type && type === "base"
+                  ? t("AssetDropDownCard:baseType")
+                  : null}
+                {type && type === "quote"
+                  ? t("AssetDropDownCard:quoteType")
+                  : null}
+                {type && type === "backing"
+                  ? t("AssetDropDownCard:backingType")
+                  : null}
+              </h4>
+              {_favouriteAssets && _favouriteAssets.length ? (
+                <>
+                  <List
+                    height={350}
+                    itemCount={_favouriteAssets.length}
+                    itemSize={70}
+                    className="w-full"
+                  >
+                    {Row}
+                  </List>
+                </>
+              ) : (
+                "No favourite assets..."
+              )}
+            </>
+          ) : null}
         </>
       </DialogContent>
     </Dialog>

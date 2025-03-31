@@ -21,7 +21,11 @@ import { Button } from "@/components/ui/button";
 
 export default function LTM(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
-  const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
+  const usr = useSyncExternalStore(
+    $currentUser.subscribe,
+    $currentUser.get,
+    () => true
+  );
 
   useInitCache(usr && usr.chain ? usr.chain : "bitshares", []);
 

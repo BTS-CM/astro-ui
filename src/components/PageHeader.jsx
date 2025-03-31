@@ -59,7 +59,11 @@ function MenuRow(properties) {
           <span className="col-span-1">{icon}</span>
           <span className="col-span-6">{text}</span>
           <span className="col-span-1 text-right">
-            {clicked && !isCurrentPage ? <ReloadIcon className="ml-2 mt-1 animate-spin" /> : ""}
+            {clicked && !isCurrentPage ? (
+              <ReloadIcon className="ml-2 mt-1 animate-spin" />
+            ) : (
+              ""
+            )}
           </span>
         </span>
       </CommandItem>
@@ -96,7 +100,9 @@ function LanguageRow(properties) {
     >
       <span className="grid grid-cols-8 w-full">
         <span className="col-span-6">{text}</span>
-        <span className="col-span-1 text-right">{isCurrentLanguage ? "✓" : ""}</span>
+        <span className="col-span-1 text-right">
+          {isCurrentLanguage ? "✓" : ""}
+        </span>
       </span>
     </CommandItem>
   );
@@ -119,10 +125,16 @@ export default function PageHeader(properties) {
               </DropdownMenuTrigger>
               <DropdownMenuContent className="mt-10 p-0" side="end">
                 <Command className="rounded-lg border shadow-md">
-                  <CommandInput placeholder={t("PageHeader:commandSearchPlaceholder")} />
+                  <CommandInput
+                    placeholder={t("PageHeader:commandSearchPlaceholder")}
+                  />
                   <CommandList>
-                    <CommandEmpty>{t("PageHeader:noResultsFound")}</CommandEmpty>
-                    <CommandGroup heading={t("PageHeader:exchangingFundsHeading")}>
+                    <CommandEmpty>
+                      {t("PageHeader:noResultsFound")}
+                    </CommandEmpty>
+                    <CommandGroup
+                      heading={t("PageHeader:exchangingFundsHeading")}
+                    >
                       <MenuRow
                         url="/dex/index.html"
                         text={t("PageHeader:dexLimitOrders")}
@@ -133,8 +145,16 @@ export default function PageHeader(properties) {
                         text={t("PageHeader:poolExchange")}
                         icon="💱"
                       />
-                      <MenuRow url="/swap/index.html" text={t("PageHeader:simpleSwap")} icon="🔄" />
-                      <MenuRow url="/stake/index.html" text={t("PageHeader:poolStake")} icon="🔒" />
+                      <MenuRow
+                        url="/swap/index.html"
+                        text={t("PageHeader:simpleSwap")}
+                        icon="🔄"
+                      />
+                      <MenuRow
+                        url="/stake/index.html"
+                        text={t("PageHeader:poolStake")}
+                        icon="🔒"
+                      />
                       <MenuRow
                         url="/transfer/index.html"
                         text={t("PageHeader:transferAssets")}
@@ -271,9 +291,17 @@ export default function PageHeader(properties) {
                         url="/create_account/index.html"
                         text={t("PageHeader:createAccount")}
                         icon="🆕"
-                      />                      
-                      <MenuRow url="/ltm/index.html" text={t("PageHeader:buyLTM")} icon="🏅" />
-                      <MenuRow url="/nodes/index.html" text={t("PageHeader:nodes")} icon="🌐" />
+                      />
+                      <MenuRow
+                        url="/ltm/index.html"
+                        text={t("PageHeader:buyLTM")}
+                        icon="🏅"
+                      />
+                      <MenuRow
+                        url="/nodes/index.html"
+                        text={t("PageHeader:nodes")}
+                        icon="🌐"
+                      />
                     </CommandGroup>
                   </CommandList>
                 </Command>
@@ -304,13 +332,20 @@ export default function PageHeader(properties) {
                 </span>
               </a>
             </h2>
-            <h4 className="text-muted-foreground">{t(`PageHeader:descText.${page}`)}</h4>
+            <h4 className="text-muted-foreground">
+              {t(`PageHeader:descText.${page}`)}
+            </h4>
           </div>
           <div className="col-span-2 text-right">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button>
-                  <svg viewBox="0 0 512 512" fill="currentColor" height="1em" width="1em">
+                  <svg
+                    viewBox="0 0 512 512"
+                    fill="currentColor"
+                    height="1em"
+                    width="1em"
+                  >
                     <path
                       fill="none"
                       stroke="currentColor"
@@ -332,20 +367,66 @@ export default function PageHeader(properties) {
               </DropdownMenuTrigger>
               <DropdownMenuContent className="mt-10 p-0" side="end">
                 <Command className="rounded-lg border shadow-md">
-                  <CommandInput placeholder={t("PageHeader:commandSearchPlaceholder")} />
+                  <CommandInput
+                    placeholder={t("PageHeader:commandSearchPlaceholder")}
+                  />
                   <CommandList>
-                    <CommandEmpty>{t("PageHeader:noResultsFound")}</CommandEmpty>
-                    <CommandGroup heading={t("PageHeader:exchangingFundsHeading")}>
-                      <LanguageRow language="en" i18n={i18n} text={t("PageHeader:english")} />
-                      <LanguageRow language="da" i18n={i18n} text={t("PageHeader:danish")} />
-                      <LanguageRow language="de" i18n={i18n} text={t("PageHeader:german")} />
-                      <LanguageRow language="es" i18n={i18n} text={t("PageHeader:spanish")} />
-                      <LanguageRow language="fr" i18n={i18n} text={t("PageHeader:french")} />
-                      <LanguageRow language="it" i18n={i18n} text={t("PageHeader:italian")} />
-                      <LanguageRow language="ja" i18n={i18n} text={t("PageHeader:japanese")} />
-                      <LanguageRow language="ko" i18n={i18n} text={t("PageHeader:korean")} />
-                      <LanguageRow language="pt" i18n={i18n} text={t("PageHeader:portuguese")} />
-                      <LanguageRow language="th" i18n={i18n} text={t("PageHeader:thai")} />
+                    <CommandEmpty>
+                      {t("PageHeader:noResultsFound")}
+                    </CommandEmpty>
+                    <CommandGroup
+                      heading={t("PageHeader:exchangingFundsHeading")}
+                    >
+                      <LanguageRow
+                        language="en"
+                        i18n={i18n}
+                        text={t("PageHeader:english")}
+                      />
+                      <LanguageRow
+                        language="da"
+                        i18n={i18n}
+                        text={t("PageHeader:danish")}
+                      />
+                      <LanguageRow
+                        language="de"
+                        i18n={i18n}
+                        text={t("PageHeader:german")}
+                      />
+                      <LanguageRow
+                        language="es"
+                        i18n={i18n}
+                        text={t("PageHeader:spanish")}
+                      />
+                      <LanguageRow
+                        language="fr"
+                        i18n={i18n}
+                        text={t("PageHeader:french")}
+                      />
+                      <LanguageRow
+                        language="it"
+                        i18n={i18n}
+                        text={t("PageHeader:italian")}
+                      />
+                      <LanguageRow
+                        language="ja"
+                        i18n={i18n}
+                        text={t("PageHeader:japanese")}
+                      />
+                      <LanguageRow
+                        language="ko"
+                        i18n={i18n}
+                        text={t("PageHeader:korean")}
+                      />
+                      <LanguageRow
+                        language="pt"
+                        i18n={i18n}
+                        text={t("PageHeader:portuguese")}
+                      />
+                      <LanguageRow
+                        language="th"
+                        i18n={i18n}
+                        text={t("PageHeader:thai")}
+                      />
                     </CommandGroup>
                   </CommandList>
                 </Command>

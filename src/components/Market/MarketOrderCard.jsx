@@ -24,7 +24,11 @@ import {
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 
 export default function MarketOrderCard(properties) {
   const {
@@ -96,14 +100,22 @@ export default function MarketOrderCard(properties) {
           <DialogTrigger asChild>
             <div className="col-span-4" key={`moc_${cardType}_${index}`}>
               <div className="grid grid-cols-4 text-sm">
-                <div className="col-span-1 border-l-2 border-r-2 pl-3 font-mono text-right tabular-nums">{price}</div>
-                <div className="col-span-1 border-r-2 pl-3 font-mono text-right tabular-nums">
-                  {cardType === "buy" ? base.toFixed(assetBData.precision) : quote.toFixed(assetAData.precision)}
+                <div className="col-span-1 border-l-2 border-r-2 pl-3 font-mono text-right tabular-nums">
+                  {price}
                 </div>
                 <div className="col-span-1 border-r-2 pl-3 font-mono text-right tabular-nums">
-                  {cardType === "buy" ? quote.toFixed(assetAData.precision) : base.toFixed(assetBData.precision)}
+                  {cardType === "buy"
+                    ? base.toFixed(assetBData.precision)
+                    : quote.toFixed(assetAData.precision)}
                 </div>
-                <div className="col-span-1 pl-3 font-mono text-right tabular-nums">{totalBase}</div>
+                <div className="col-span-1 border-r-2 pl-3 font-mono text-right tabular-nums">
+                  {cardType === "buy"
+                    ? quote.toFixed(assetAData.precision)
+                    : base.toFixed(assetBData.precision)}
+                </div>
+                <div className="col-span-1 pl-3 font-mono text-right tabular-nums">
+                  {totalBase}
+                </div>
                 <div className="col-span-4">
                   <Separator />
                 </div>
@@ -112,7 +124,9 @@ export default function MarketOrderCard(properties) {
           </DialogTrigger>
           <DialogContent className="sm:max-w-[800px] bg-white">
             <DialogHeader>
-              <DialogTitle>{t("MarketOrderCard:proceedLimitOrderDataTitle")}</DialogTitle>
+              <DialogTitle>
+                {t("MarketOrderCard:proceedLimitOrderDataTitle")}
+              </DialogTitle>
               <DialogDescription>
                 {t("MarketOrderCard:proceedLimitOrderDataDescription", {
                   cardType: cardType === "buy" ? "sell" : "buy",
@@ -135,10 +149,16 @@ export default function MarketOrderCard(properties) {
                   })}
             </span>
             <span>
-              {t("MarketOrderCard:pricePerAsset", { price: price, assetB: assetB, assetA: assetA })}
+              {t("MarketOrderCard:pricePerAsset", {
+                price: price,
+                assetB: assetB,
+                assetA: assetA,
+              })}
             </span>
             <a href={href}>
-              <Button className="mt-2 h-6">{t("MarketOrderCard:proceedButton")}</Button>
+              <Button className="mt-2 h-6">
+                {t("MarketOrderCard:proceedButton")}
+              </Button>
             </a>
           </DialogContent>
         </Dialog>
@@ -147,10 +167,13 @@ export default function MarketOrderCard(properties) {
   };
 
   const LoadingRow = ({ index, style }) => {
-    const refOrders = cardType === "buy" ? previousBuyOrders : previousSellOrders;
+    const refOrders =
+      cardType === "buy" ? previousBuyOrders : previousSellOrders;
     const order = refOrders && refOrders.length ? refOrders[index] : null;
 
-    const price = order ? parseFloat(order.price).toFixed(assetAData.precision) : null;
+    const price = order
+      ? parseFloat(order.price).toFixed(assetAData.precision)
+      : null;
     const base = order ? parseFloat(order.base) : null;
     const quote = order ? parseFloat(order.quote) : null;
 
@@ -167,11 +190,16 @@ export default function MarketOrderCard(properties) {
       <div style={style}>
         <HoverCard key={`loadingOrderHoverCard${index}`}>
           <HoverCardTrigger asChild>
-            <div className="col-span-4" key={`moc_loading_${cardType}_${index}`}>
+            <div
+              className="col-span-4"
+              key={`moc_loading_${cardType}_${index}`}
+            >
               <div className="grid grid-cols-4 text-sm">
                 {order ? (
                   <>
-                    <div className="col-span-1 border-l-2 border-r-2 pl-3">{price}</div>
+                    <div className="col-span-1 border-l-2 border-r-2 pl-3">
+                      {price}
+                    </div>
                     <div className="col-span-1 border-r-2 pl-3">{base}</div>
                     <div className="col-span-1 border-r-2 pl-3">{quote}</div>
                     <div className="col-span-1 pl-3">{totalBase}</div>
@@ -223,14 +251,22 @@ export default function MarketOrderCard(properties) {
         : t("MarketOrderCard:openSellLimitOrdersTitle");
     cardDescription =
       cardType === "buy"
-        ? t("MarketOrderCard:buyLimitOrdersDescription", { assetA: assetA, assetB: assetB })
-        : t("MarketOrderCard:sellLimitOrdersDescription", { assetA: assetA, assetB: assetB });
+        ? t("MarketOrderCard:buyLimitOrdersDescription", {
+            assetA: assetA,
+            assetB: assetB,
+          })
+        : t("MarketOrderCard:sellLimitOrdersDescription", {
+            assetA: assetA,
+            assetB: assetB,
+          });
 
     cardListContents = Row;
     if (cardType === "buy") {
       cardListCount = buyOrders ? buyOrders.length : previousBuyOrders.length;
     } else {
-      cardListCount = sellOrders ? sellOrders.length : previousSellOrders.length;
+      cardListCount = sellOrders
+        ? sellOrders.length
+        : previousSellOrders.length;
     }
   }
 
@@ -241,40 +277,69 @@ export default function MarketOrderCard(properties) {
         <CardDescription>{cardDescription}</CardDescription>
       </CardHeader>
       <CardContent>
-        {
-          quantityOrders
-          ? <>
-              <div className="grid grid-cols-4">
-                <div className="col-span-1 pl-3 text-right pr-2">Price</div>
-                <div className="col-span-1 pl-3 text-md text-right pr-2">
-                  {cardType === "sell" && assetA && assetA.length < 12 ? assetA : null}
-                  {cardType === "sell" && assetA && assetA.length >= 12 && assetAData ? assetAData.id : null}
-                  {cardType === "buy" && assetB && assetB.length < 12 ? assetB : null}
-                  {cardType === "buy" && assetB && assetB.length >= 12 && assetBData ? assetBData.id : null}
-                </div>
-                <div className="col-span-1 pl-3 text-right pr-2">
-                  {cardType === "sell" && assetB && assetB.length < 12 ? assetB : null}
-                  {cardType === "sell" && assetB && assetB.length >= 12 && assetBData ? assetBData.id : null}
-                  {cardType === "buy" && assetA && assetA.length < 12 ? assetA : null}
-                  {cardType === "buy" && assetA && assetA.length >= 12 && assetAData ? assetAData.id : null}
-                </div>
-                <div className="col-span-1 pl-3 text-right pr-2">
-                  {assetB && assetB.length < 7 ? `Total (${assetB})` : null}
-                  {assetB && assetB.length >= 7 && assetBData ? `Total (${assetBData.id})` : null}
-                </div>
+        {quantityOrders ? (
+          <>
+            <div className="grid grid-cols-4">
+              <div className="col-span-1 pl-3 text-right pr-2">Price</div>
+              <div className="col-span-1 pl-3 text-md text-right pr-2">
+                {cardType === "sell" && assetA && assetA.length < 12
+                  ? assetA
+                  : null}
+                {cardType === "sell" &&
+                assetA &&
+                assetA.length >= 12 &&
+                assetAData
+                  ? assetAData.id
+                  : null}
+                {cardType === "buy" && assetB && assetB.length < 12
+                  ? assetB
+                  : null}
+                {cardType === "buy" &&
+                assetB &&
+                assetB.length >= 12 &&
+                assetBData
+                  ? assetBData.id
+                  : null}
               </div>
+              <div className="col-span-1 pl-3 text-right pr-2">
+                {cardType === "sell" && assetB && assetB.length < 12
+                  ? assetB
+                  : null}
+                {cardType === "sell" &&
+                assetB &&
+                assetB.length >= 12 &&
+                assetBData
+                  ? assetBData.id
+                  : null}
+                {cardType === "buy" && assetA && assetA.length < 12
+                  ? assetA
+                  : null}
+                {cardType === "buy" &&
+                assetA &&
+                assetA.length >= 12 &&
+                assetAData
+                  ? assetAData.id
+                  : null}
+              </div>
+              <div className="col-span-1 pl-3 text-right pr-2">
+                {assetB && assetB.length < 7 ? `Total (${assetB})` : null}
+                {assetB && assetB.length >= 7 && assetBData
+                  ? `Total (${assetBData.id})`
+                  : null}
+              </div>
+            </div>
 
-              <List
-                height={300} // Set the height of the list
-                itemCount={cardListCount} // Set the number of items
-                itemSize={20} // Set the height of each item
-              >
-                {cardListContents}
-              </List>
-            </>
-          : t("MarketOrderCard:noOpenOrders")
-        }
-        
+            <List
+              height={300} // Set the height of the list
+              itemCount={cardListCount} // Set the number of items
+              itemSize={20} // Set the height of each item
+            >
+              {cardListContents}
+            </List>
+          </>
+        ) : (
+          t("MarketOrderCard:noOpenOrders")
+        )}
       </CardContent>
     </Card>
   );

@@ -1,4 +1,9 @@
-import React, { useState, useEffect, useSyncExternalStore, useMemo } from "react";
+import React, {
+  useState,
+  useEffect,
+  useSyncExternalStore,
+  useMemo,
+} from "react";
 import { useStore } from "@nanostores/react";
 import { FixedSizeList as List } from "react-window";
 
@@ -40,7 +45,11 @@ export default function WithdrawPermissions(properties) {
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [showEditDialog, setShowEditDialog] = useState(false);
 
-  const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
+  const usr = useSyncExternalStore(
+    $currentUser.subscribe,
+    $currentUser.get,
+    () => true
+  );
 
   const {
     _marketSearchBTS,
@@ -48,7 +57,7 @@ export default function WithdrawPermissions(properties) {
     _assetsBTS,
     _assetsTEST,
     _globalParamsBTS,
-    _globalParamsTEST
+    _globalParamsTEST,
   } = properties;
 
   const _chain = useMemo(() => {
@@ -102,14 +111,16 @@ export default function WithdrawPermissions(properties) {
         currentNode ? currentNode.url : null,
       ]);
 
-      unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
-        if (data && !error && !loading) {
-          const filteredData = data.filter((balance) =>
-            assets.find((x) => x.id === balance.asset_id)
-          );
-          setBalances(filteredData);
+      unsubscribeUserBalances = userBalancesStore.subscribe(
+        ({ data, error, loading }) => {
+          if (data && !error && !loading) {
+            const filteredData = data.filter((balance) =>
+              assets.find((x) => x.id === balance.asset_id)
+            );
+            setBalances(filteredData);
+          }
         }
-      });
+      );
     }
 
     return () => {
@@ -117,8 +128,10 @@ export default function WithdrawPermissions(properties) {
     };
   }, [usr, assets, currentNode, balanceCounter]);
 
-  const [payerWithdrawalPermissions, setPayerWithdrawalPermissions] = useState();
-  const [receivingWithdrawalPermissions, setReceivingWithdrawalPermissions] = useState();
+  const [payerWithdrawalPermissions, setPayerWithdrawalPermissions] =
+    useState();
+  const [receivingWithdrawalPermissions, setReceivingWithdrawalPermissions] =
+    useState();
   useEffect(() => {
     if (usr && usr.chain && currentNode) {
       const withdrawPermissionsStore = createWithdrawPermissionsStore([
@@ -137,16 +150,18 @@ export default function WithdrawPermissions(properties) {
         }
 
         if (error) {
-          console.log({error})
+          console.log({ error });
         }
-      })
+      });
     }
   }, [usr, currentNode]);
 
   const [accounts, setAccounts] = useState([]);
   useEffect(() => {
     if (
-      usr && usr.chain && currentNode &&
+      usr &&
+      usr.chain &&
+      currentNode &&
       payerWithdrawalPermissions &&
       receivingWithdrawalPermissions
     ) {
@@ -155,9 +170,15 @@ export default function WithdrawPermissions(properties) {
         ...(receivingWithdrawalPermissions || []),
       ];
 
-      const authorized_account = allPermissions.map((x) => x.authorized_account);
-      const withdraw_from_account = allPermissions.map((x) => x.withdraw_from_account);
-      const allAccounts = [...new Set([...authorized_account, ...withdraw_from_account])];
+      const authorized_account = allPermissions.map(
+        (x) => x.authorized_account
+      );
+      const withdraw_from_account = allPermissions.map(
+        (x) => x.withdraw_from_account
+      );
+      const allAccounts = [
+        ...new Set([...authorized_account, ...withdraw_from_account]),
+      ];
 
       const userStore = createObjectStore([
         usr.chain,
@@ -175,13 +196,18 @@ export default function WithdrawPermissions(properties) {
     usr,
     currentNode,
     payerWithdrawalPermissions,
-    receivingWithdrawalPermissions
+    receivingWithdrawalPermissions,
   ]);
 
   const PayingWithdrawPermissionRow = ({ index, style }) => {
     const currentWithdrawPermission = payerWithdrawalPermissions[index];
-    const withdrawAsset = assets.find((x) => x.id === currentWithdrawPermission.withdrawal_limit.asset_id);
-    const withdrawAmount = humanReadableFloat(currentWithdrawPermission.withdrawal_limit.amount, withdrawAsset.precision);
+    const withdrawAsset = assets.find(
+      (x) => x.id === currentWithdrawPermission.withdrawal_limit.asset_id
+    );
+    const withdrawAmount = humanReadableFloat(
+      currentWithdrawPermission.withdrawal_limit.amount,
+      withdrawAsset.precision
+    );
 
     const withdrawAccount = currentWithdrawPermission.authorized_account;
     const withdrawAccountData = accounts.find((x) => x.id === withdrawAccount);
@@ -191,29 +217,51 @@ export default function WithdrawPermissions(properties) {
 
     const id = currentWithdrawPermission.id;
 
-    const claimed_this_period = humanReadableFloat(currentWithdrawPermission.claimed_this_period, withdrawAsset.precision);
+    const claimed_this_period = humanReadableFloat(
+      currentWithdrawPermission.claimed_this_period,
+      withdrawAsset.precision
+    );
 
     const periodStartTime = currentWithdrawPermission.period_start_time;
-    const withdrawal_period_sec = currentWithdrawPermission.withdrawal_period_sec / 1000;
-    const withdrawalStartTime = (Date.now() - new Date(periodStartTime).getTime()) / 1000;
+    const withdrawal_period_sec =
+      currentWithdrawPermission.withdrawal_period_sec / 1000;
+    const withdrawalStartTime =
+      (Date.now() - new Date(periodStartTime).getTime()) / 1000;
     const timeTillNextPeriod = parseInt(
       (
-        (withdrawal_period_sec - (withdrawalStartTime % withdrawal_period_sec)) % withdrawal_period_sec
+        (withdrawal_period_sec -
+          (withdrawalStartTime % withdrawal_period_sec)) %
+        withdrawal_period_sec
       ).toFixed(0)
     );
 
-    const formattedPeriodStartTime = format(new Date(currentWithdrawPermission.period_start_time), 'dd-MM-yyyy HH:mm:ss');
-    const formattedExpiration = format(new Date(currentWithdrawPermission.expiration), 'dd-MM-yyyy HH:mm:ss');
+    const formattedPeriodStartTime = format(
+      new Date(currentWithdrawPermission.period_start_time),
+      "dd-MM-yyyy HH:mm:ss"
+    );
+    const formattedExpiration = format(
+      new Date(currentWithdrawPermission.expiration),
+      "dd-MM-yyyy HH:mm:ss"
+    );
 
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
-    const remainingTime = (new Date(currentWithdrawPermission.expiration).getTime() - Date.now()) / 1000;
-    const remainingPeriods = claimed_this_period >= withdrawAmount
-      ? parseInt((remainingTime / (withdrawal_period_sec * 1000)).toString().split(".")[0])
-      : (remainingTime / (withdrawal_period_sec * 1000)).toFixed(3);
+    const remainingTime =
+      (new Date(currentWithdrawPermission.expiration).getTime() - Date.now()) /
+      1000;
+    const remainingPeriods =
+      claimed_this_period >= withdrawAmount
+        ? parseInt(
+            (remainingTime / (withdrawal_period_sec * 1000))
+              .toString()
+              .split(".")[0]
+          )
+        : (remainingTime / (withdrawal_period_sec * 1000)).toFixed(3);
 
     const maximumClaimable = (
-      withdrawAmount - claimed_this_period + ((remainingPeriods) * withdrawAmount)
+      withdrawAmount -
+      claimed_this_period +
+      remainingPeriods * withdrawAmount
     ).toFixed(withdrawAsset.precision);
 
     return (
@@ -222,24 +270,56 @@ export default function WithdrawPermissions(properties) {
           <CardContent className="mb-0 pb-0">
             <div className="grid grid-cols-1 text-sm">
               <div className="grid grid-cols-2 gap-2">
-                <div><b>{t("WithdrawPermissions:id")}</b>: {id}</div>
-                <div><b>{t("WithdrawPermissions:payer")}</b>: {withdrawAccount}</div>
+                <div>
+                  <b>{t("WithdrawPermissions:id")}</b>: {id}
+                </div>
+                <div>
+                  <b>{t("WithdrawPermissions:payer")}</b>: {withdrawAccount}
+                </div>
               </div>
               <div className="grid grid-cols-2 gap-2">
-                <div><b>{t("WithdrawPermissions:withdraw_period_amount")}</b>: {withdrawAmount} {withdrawAsset.symbol}</div>
-                <div><b>{t("WithdrawPermissions:claimed")}</b>: {claimed_this_period} {withdrawAsset.symbol} ({claimed_this_period > 0 ? ((claimed_this_period / withdrawAmount) * 100).toFixed(3) : 0}%)</div>
+                <div>
+                  <b>{t("WithdrawPermissions:withdraw_period_amount")}</b>:{" "}
+                  {withdrawAmount} {withdrawAsset.symbol}
+                </div>
+                <div>
+                  <b>{t("WithdrawPermissions:claimed")}</b>:{" "}
+                  {claimed_this_period} {withdrawAsset.symbol} (
+                  {claimed_this_period > 0
+                    ? ((claimed_this_period / withdrawAmount) * 100).toFixed(3)
+                    : 0}
+                  %)
+                </div>
               </div>
               <div className="grid grid-cols-2 gap-2">
-                <div><b>{t("WithdrawPermissions:period_start_time")}</b>: {formattedPeriodStartTime}</div>
-                <div><b>{t("WithdrawPermissions:expiration")}</b>: {formattedExpiration}</div>
+                <div>
+                  <b>{t("WithdrawPermissions:period_start_time")}</b>:{" "}
+                  {formattedPeriodStartTime}
+                </div>
+                <div>
+                  <b>{t("WithdrawPermissions:expiration")}</b>:{" "}
+                  {formattedExpiration}
+                </div>
               </div>
               <div className="grid grid-cols-2 gap-2">
-                <div><b>{t("WithdrawPermissions:withdrawal_period_sec")}</b>: {formatDuration(withdrawal_period_sec)}</div>
-                <div><b>{t("WithdrawPermissions:time_remaining")}</b>: {formatDuration(timeTillNextPeriod)}</div>
+                <div>
+                  <b>{t("WithdrawPermissions:withdrawal_period_sec")}</b>:{" "}
+                  {formatDuration(withdrawal_period_sec)}
+                </div>
+                <div>
+                  <b>{t("WithdrawPermissions:time_remaining")}</b>:{" "}
+                  {formatDuration(timeTillNextPeriod)}
+                </div>
               </div>
               <div className="grid grid-cols-2 gap-2">
-                <div><b>{t("WithdrawPermissions:remaining_periods")}</b>: {remainingPeriods}</div>
-                <div><b>{t("WithdrawPermissions:maximum_claimable")}</b>:<br/>{maximumClaimable} {withdrawAsset.symbol}</div>
+                <div>
+                  <b>{t("WithdrawPermissions:remaining_periods")}</b>:{" "}
+                  {remainingPeriods}
+                </div>
+                <div>
+                  <b>{t("WithdrawPermissions:maximum_claimable")}</b>:<br />
+                  {maximumClaimable} {withdrawAsset.symbol}
+                </div>
               </div>
               <div className="grid grid-cols-2 gap-5 mt-2 mb-3">
                 <WithdrawDialog
@@ -252,7 +332,10 @@ export default function WithdrawPermissions(properties) {
                   mode="edit"
                   //
                   _existingWithdrawPermissionID={currentWithdrawPermission.id}
-                  _targetUser={{id: withdrawAccount, name: withdrawAccountData.name}}
+                  _targetUser={{
+                    id: withdrawAccount,
+                    name: withdrawAccountData.name,
+                  }}
                   _selectedAsset={withdrawAsset.symbol}
                   _transferAmount={withdrawAmount}
                   _withdrawalPeriodSec={withdrawal_period_sec}
@@ -268,62 +351,89 @@ export default function WithdrawPermissions(properties) {
                   {t("WithdrawPermissions:delete")}
                 </Button>
               </div>
-              {
-                deleteDialogOpen
-                  ? <DeepLinkDialog
-                      operationNames={["withdraw_permission_delete"]}
-                      username={usr && usr.username ? usr.username : ""}
-                      usrChain={usr && usr.chain ? usr.chain : "bitshares"}
-                      userID={usr.id}
-                      dismissCallback={setDeleteDialogOpen}
-                      key={`DeletingWithdrawPermission`}
-                      headerText={t("WithdrawPermissions:deleteWithdrawPermissionHeader")}
-                      trxJSON={[
-                        {
-                          withdraw_from_account: usr.id,
-                          authorized_account: withdrawAccount,
-                          withdrawal_permission: currentWithdrawPermission.id
-                        },
-                      ]}
-                    />
-                  : null
-              }
+              {deleteDialogOpen ? (
+                <DeepLinkDialog
+                  operationNames={["withdraw_permission_delete"]}
+                  username={usr && usr.username ? usr.username : ""}
+                  usrChain={usr && usr.chain ? usr.chain : "bitshares"}
+                  userID={usr.id}
+                  dismissCallback={setDeleteDialogOpen}
+                  key={`DeletingWithdrawPermission`}
+                  headerText={t(
+                    "WithdrawPermissions:deleteWithdrawPermissionHeader"
+                  )}
+                  trxJSON={[
+                    {
+                      withdraw_from_account: usr.id,
+                      authorized_account: withdrawAccount,
+                      withdrawal_permission: currentWithdrawPermission.id,
+                    },
+                  ]}
+                />
+              ) : null}
             </div>
           </CardContent>
         </Card>
       </div>
     );
   };
-  
+
   const ReceivingWithdrawPermissionRow = ({ index, style }) => {
     const currentWithdrawPermission = receivingWithdrawalPermissions[index];
-    const withdrawAsset = assets.find((x) => x.id === currentWithdrawPermission.withdrawal_limit.asset_id);
-    const withdrawAmount = humanReadableFloat(currentWithdrawPermission.withdrawal_limit.amount, withdrawAsset.precision);
+    const withdrawAsset = assets.find(
+      (x) => x.id === currentWithdrawPermission.withdrawal_limit.asset_id
+    );
+    const withdrawAmount = humanReadableFloat(
+      currentWithdrawPermission.withdrawal_limit.amount,
+      withdrawAsset.precision
+    );
 
     const payer = currentWithdrawPermission.withdraw_from_account;
     const id = currentWithdrawPermission.id;
 
-    const claimed_this_period = humanReadableFloat(currentWithdrawPermission.claimed_this_period, withdrawAsset.precision);
+    const claimed_this_period = humanReadableFloat(
+      currentWithdrawPermission.claimed_this_period,
+      withdrawAsset.precision
+    );
 
     const periodStartTime = currentWithdrawPermission.period_start_time;
-    const withdrawal_period_sec = currentWithdrawPermission.withdrawal_period_sec / 1000;
-    const withdrawalStartTime = (Date.now() - new Date(periodStartTime).getTime()) / 1000;
+    const withdrawal_period_sec =
+      currentWithdrawPermission.withdrawal_period_sec / 1000;
+    const withdrawalStartTime =
+      (Date.now() - new Date(periodStartTime).getTime()) / 1000;
     const timeTillNextPeriod = parseInt(
       (
-        (withdrawal_period_sec - (withdrawalStartTime % withdrawal_period_sec)) % withdrawal_period_sec
+        (withdrawal_period_sec -
+          (withdrawalStartTime % withdrawal_period_sec)) %
+        withdrawal_period_sec
       ).toFixed(0)
     );
 
-    const formattedPeriodStartTime = format(new Date(currentWithdrawPermission.period_start_time), 'dd-MM-yyyy HH:mm:ss');
-    const formattedExpiration = format(new Date(currentWithdrawPermission.expiration), 'dd-MM-yyyy HH:mm:ss');
+    const formattedPeriodStartTime = format(
+      new Date(currentWithdrawPermission.period_start_time),
+      "dd-MM-yyyy HH:mm:ss"
+    );
+    const formattedExpiration = format(
+      new Date(currentWithdrawPermission.expiration),
+      "dd-MM-yyyy HH:mm:ss"
+    );
 
-    const remainingTime = (new Date(currentWithdrawPermission.expiration).getTime() - Date.now()) / 1000;
-    const remainingPeriods = claimed_this_period >= withdrawAmount
-      ? parseInt((remainingTime / (withdrawal_period_sec * 1000)).toString().split(".")[0])
-      : (remainingTime / (withdrawal_period_sec * 1000)).toFixed(3);
-    
+    const remainingTime =
+      (new Date(currentWithdrawPermission.expiration).getTime() - Date.now()) /
+      1000;
+    const remainingPeriods =
+      claimed_this_period >= withdrawAmount
+        ? parseInt(
+            (remainingTime / (withdrawal_period_sec * 1000))
+              .toString()
+              .split(".")[0]
+          )
+        : (remainingTime / (withdrawal_period_sec * 1000)).toFixed(3);
+
     const maximumClaimable = (
-      withdrawAmount - claimed_this_period + ((remainingPeriods) * withdrawAmount)
+      withdrawAmount -
+      claimed_this_period +
+      remainingPeriods * withdrawAmount
     ).toFixed(withdrawAsset.precision);
 
     const [openClaimDialog, setOpenClaimDialog] = useState(false);
@@ -334,72 +444,103 @@ export default function WithdrawPermissions(properties) {
           <CardContent>
             <div className="grid grid-cols-1 text-sm">
               <div className="grid grid-cols-2 gap-2">
-                <div><b>{t("WithdrawPermissions:id")}</b>: {id}</div>
-                <div><b>{t("WithdrawPermissions:payer")}</b>: {payer}</div>
+                <div>
+                  <b>{t("WithdrawPermissions:id")}</b>: {id}
+                </div>
+                <div>
+                  <b>{t("WithdrawPermissions:payer")}</b>: {payer}
+                </div>
               </div>
               <div className="grid grid-cols-2 gap-2">
-                <div><b>{t("WithdrawPermissions:withdraw_period_amount")}</b>: {withdrawAmount} {withdrawAsset.symbol}</div>
-                <div><b>{t("WithdrawPermissions:claimed")}</b>: {claimed_this_period} {withdrawAsset.symbol} ({claimed_this_period > 0 ? ((claimed_this_period / withdrawAmount) * 100).toFixed(3) : 0}%)</div>
+                <div>
+                  <b>{t("WithdrawPermissions:withdraw_period_amount")}</b>:{" "}
+                  {withdrawAmount} {withdrawAsset.symbol}
+                </div>
+                <div>
+                  <b>{t("WithdrawPermissions:claimed")}</b>:{" "}
+                  {claimed_this_period} {withdrawAsset.symbol} (
+                  {claimed_this_period > 0
+                    ? ((claimed_this_period / withdrawAmount) * 100).toFixed(3)
+                    : 0}
+                  %)
+                </div>
               </div>
               <div className="grid grid-cols-2 gap-2">
-                <div><b>{t("WithdrawPermissions:period_start_time")}</b>:<br/>{formattedPeriodStartTime}</div>
-                <div><b>{t("WithdrawPermissions:expiration")}</b>:<br/>{formattedExpiration}</div>
+                <div>
+                  <b>{t("WithdrawPermissions:period_start_time")}</b>:<br />
+                  {formattedPeriodStartTime}
+                </div>
+                <div>
+                  <b>{t("WithdrawPermissions:expiration")}</b>:<br />
+                  {formattedExpiration}
+                </div>
               </div>
               <div className="grid grid-cols-2 gap-2">
-                <div><b>{t("WithdrawPermissions:withdrawal_period_sec")}</b>: {formatDuration(withdrawal_period_sec)}</div>
-                <div><b>{t("WithdrawPermissions:time_remaining")}</b>: {formatDuration(timeTillNextPeriod)}</div>
+                <div>
+                  <b>{t("WithdrawPermissions:withdrawal_period_sec")}</b>:{" "}
+                  {formatDuration(withdrawal_period_sec)}
+                </div>
+                <div>
+                  <b>{t("WithdrawPermissions:time_remaining")}</b>:{" "}
+                  {formatDuration(timeTillNextPeriod)}
+                </div>
               </div>
               <div className="grid grid-cols-2 gap-2">
-                <div><b>{t("WithdrawPermissions:remaining_periods")}</b>: {remainingPeriods}</div>
-                <div><b>{t("WithdrawPermissions:maximum_claimable")}</b>:<br/>{maximumClaimable} {withdrawAsset.symbol}</div>
+                <div>
+                  <b>{t("WithdrawPermissions:remaining_periods")}</b>:{" "}
+                  {remainingPeriods}
+                </div>
+                <div>
+                  <b>{t("WithdrawPermissions:maximum_claimable")}</b>:<br />
+                  {maximumClaimable} {withdrawAsset.symbol}
+                </div>
               </div>
-              {
-                claimed_this_period < withdrawAmount
-                  ? <Button
-                      variant="outline"
-                      onClick={() => {
-                        setOpenClaimDialog(true);
-                      }}
-                      className="w-1/4 mt-2"
-                    >
-                      {t("WithdrawPermissions:claim")}
-                    </Button>
-                  : <Button
-                      variant="outline"
-                      disabled
-                      className="w-1/4 mt-2"
-                    >
-                      {t("WithdrawPermissions:claim")}
-                    </Button>
-              }
-              {
-                openClaimDialog
-                  ? <DeepLinkDialog
-                      operationNames={["withdraw_permission_claim"]}
-                      username={usr && usr.username ? usr.username : ""}
-                      usrChain={usr && usr.chain ? usr.chain : "bitshares"}
-                      userID={usr.id}
-                      dismissCallback={setOpenClaimDialog}
-                      key={`ClaimingWithdrawPermission`}
-                      headerText={t("WithdrawPermissions:claimWithdrawPermissionHeader")}
-                      trxJSON={[
-                        {
-                          fee: {
-                            amount: 0,
-                            asset_id: "1.3.0",
-                          },
-                          withdraw_permission: id,
-                          withdraw_from_account: payer,
-                          withdraw_to_account: usr.id,
-                          amount_to_withdraw: {
-                            amount: blockchainFloat(withdrawAmount, withdrawAsset.precision),
-                            asset_id: withdrawAsset.id,
-                          },
-                        },
-                      ]}
-                    />
-                  : null
-              }
+              {claimed_this_period < withdrawAmount ? (
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setOpenClaimDialog(true);
+                  }}
+                  className="w-1/4 mt-2"
+                >
+                  {t("WithdrawPermissions:claim")}
+                </Button>
+              ) : (
+                <Button variant="outline" disabled className="w-1/4 mt-2">
+                  {t("WithdrawPermissions:claim")}
+                </Button>
+              )}
+              {openClaimDialog ? (
+                <DeepLinkDialog
+                  operationNames={["withdraw_permission_claim"]}
+                  username={usr && usr.username ? usr.username : ""}
+                  usrChain={usr && usr.chain ? usr.chain : "bitshares"}
+                  userID={usr.id}
+                  dismissCallback={setOpenClaimDialog}
+                  key={`ClaimingWithdrawPermission`}
+                  headerText={t(
+                    "WithdrawPermissions:claimWithdrawPermissionHeader"
+                  )}
+                  trxJSON={[
+                    {
+                      fee: {
+                        amount: 0,
+                        asset_id: "1.3.0",
+                      },
+                      withdraw_permission: id,
+                      withdraw_from_account: payer,
+                      withdraw_to_account: usr.id,
+                      amount_to_withdraw: {
+                        amount: blockchainFloat(
+                          withdrawAmount,
+                          withdrawAsset.precision
+                        ),
+                        asset_id: withdrawAsset.id,
+                      },
+                    },
+                  ]}
+                />
+              ) : null}
             </div>
           </CardContent>
         </Card>
@@ -428,18 +569,23 @@ export default function WithdrawPermissions(properties) {
                   />
                 </div>
                 <div className="col-span-9 border border-gray-300 rounded">
-                  {
-                    payerWithdrawalPermissions && payerWithdrawalPermissions.length
-                      ? <List
-                        itemSize={35}
-                        itemCount={payerWithdrawalPermissions ? payerWithdrawalPermissions.length : 0}
-                        className="w-full"
-                        height={400}
-                      >
-                        {PayingWithdrawPermissionRow}
-                      </List>
-                      : <p>{t("WithdrawPermissions:not_sending_anything")}</p>
-                  }
+                  {payerWithdrawalPermissions &&
+                  payerWithdrawalPermissions.length ? (
+                    <List
+                      itemSize={35}
+                      itemCount={
+                        payerWithdrawalPermissions
+                          ? payerWithdrawalPermissions.length
+                          : 0
+                      }
+                      className="w-full"
+                      height={400}
+                    >
+                      {PayingWithdrawPermissionRow}
+                    </List>
+                  ) : (
+                    <p>{t("WithdrawPermissions:not_sending_anything")}</p>
+                  )}
                 </div>
                 <div className="col-span-3">
                   <WithdrawDialog
@@ -459,19 +605,24 @@ export default function WithdrawPermissions(properties) {
                     type="header"
                   />
                 </div>
-                <div className="col-span-12 border border-gray-300 rounded">                 
-                  {
-                    receivingWithdrawalPermissions && receivingWithdrawalPermissions.length
-                      ? <List
-                        itemSize={35}
-                        itemCount={receivingWithdrawalPermissions ? receivingWithdrawalPermissions.length : 0}
-                        className="w-full"
-                        height={400}
-                      >
-                        {ReceivingWithdrawPermissionRow}
-                      </List>
-                      : <p>{t("WithdrawPermissions:not_receiving_anything")}</p>
-                  }
+                <div className="col-span-12 border border-gray-300 rounded">
+                  {receivingWithdrawalPermissions &&
+                  receivingWithdrawalPermissions.length ? (
+                    <List
+                      itemSize={35}
+                      itemCount={
+                        receivingWithdrawalPermissions
+                          ? receivingWithdrawalPermissions.length
+                          : 0
+                      }
+                      className="w-full"
+                      height={400}
+                    >
+                      {ReceivingWithdrawPermissionRow}
+                    </List>
+                  ) : (
+                    <p>{t("WithdrawPermissions:not_receiving_anything")}</p>
+                  )}
                 </div>
               </div>
             </CardContent>
@@ -495,5 +646,5 @@ function formatDuration(seconds) {
   if (minutes > 0) parts.push(`${minutes}m`);
   //if (secs > 0) parts.push(`${secs}s`);
 
-  return parts.join(' ');
+  return parts.join(" ");
 }

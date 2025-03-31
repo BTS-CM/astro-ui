@@ -35,91 +35,89 @@ export default function MarketSummaryTabs(properties) {
   return (
     <>
       <div className="grid grid-cols-1 mt-5 gap-5">
+        <div className="grid grid-cols-2 gap-5">
+          <MarketTradeContents
+            type="buy"
+            publicMarketHistory={publicMarketHistory}
+            marketHistoryInProgress={marketHistoryInProgress}
+            reset={() => {
+              _resetMarketData();
+              setMarketHistoryInProgress(true);
+              setMarketItr(marketItr + 1);
+            }}
+            assetAData={assetAData}
+            assetBData={assetBData}
+          />
+          <MarketTradeContents
+            type="sell"
+            publicMarketHistory={publicMarketHistory}
+            marketHistoryInProgress={marketHistoryInProgress}
+            reset={() => {
+              _resetMarketData();
+              setMarketHistoryInProgress(true);
+              setMarketItr(marketItr + 1);
+            }}
+            assetAData={assetAData}
+            assetBData={assetBData}
+          />
+        </div>
 
-          <div className="grid grid-cols-2 gap-5">
-            <MarketTradeContents
-              type="buy"
-              publicMarketHistory={publicMarketHistory}
-              marketHistoryInProgress={marketHistoryInProgress}
-              reset={() => {
-                _resetMarketData();
-                setMarketHistoryInProgress(true);
-                setMarketItr(marketItr + 1);
-              }}
-              assetAData={assetAData}
-              assetBData={assetBData}
-            />
-            <MarketTradeContents
-              type="sell"
-              publicMarketHistory={publicMarketHistory}
-              marketHistoryInProgress={marketHistoryInProgress}
-              reset={() => {
-                _resetMarketData();
-                setMarketHistoryInProgress(true);
-                setMarketItr(marketItr + 1);
-              }}
-              assetAData={assetAData}
-              assetBData={assetBData}
-            />
-          </div>
+        <div className="grid grid-cols-2 gap-5">
+          <MyOpenOrders
+            type="buy"
+            assetAData={assetAData}
+            assetBData={assetBData}
+            usrLimitOrders={usrLimitOrders}
+            usrHistory={usrHistory}
+            marketHistoryInProgress={marketHistoryInProgress}
+            reset={() => {
+              _resetMarketData();
+              setMarketHistoryInProgress(true);
+              setMarketItr(marketItr + 1);
+            }}
+          />
 
-          <div className="grid grid-cols-2 gap-5">
-            <MyOpenOrders
-              type="buy"
-              assetAData={assetAData}
-              assetBData={assetBData}
-              usrLimitOrders={usrLimitOrders}
-              usrHistory={usrHistory}
-              marketHistoryInProgress={marketHistoryInProgress}
-              reset={() => {
-                _resetMarketData();
-                setMarketHistoryInProgress(true);
-                setMarketItr(marketItr + 1);
-              }}
-            />
+          <MyOpenOrders
+            type="sell"
+            assetAData={assetAData}
+            assetBData={assetBData}
+            usrLimitOrders={usrLimitOrders}
+            usrHistory={usrHistory}
+            marketHistoryInProgress={marketHistoryInProgress}
+            reset={() => {
+              _resetMarketData();
+              setMarketHistoryInProgress(true);
+              setMarketItr(marketItr + 1);
+            }}
+          />
+        </div>
 
-            <MyOpenOrders
-              type="sell"
-              assetAData={assetAData}
-              assetBData={assetBData}
-              usrLimitOrders={usrLimitOrders}
-              usrHistory={usrHistory}
-              marketHistoryInProgress={marketHistoryInProgress}
-              reset={() => {
-                _resetMarketData();
-                setMarketHistoryInProgress(true);
-                setMarketItr(marketItr + 1);
-              }}
-            />
-          </div>
-
-          <div className="grid grid-cols-2 gap-5">
-            <MyCompletedTrades
-              type="buy"
-              assetAData={assetAData}
-              assetBData={assetBData}
-              usrHistory={usrHistory}
-              marketHistoryInProgress={marketHistoryInProgress}
-              reset={() => {
-                _resetMarketData();
-                setMarketHistoryInProgress(true);
-                setMarketItr(marketItr + 1);
-              }}
-            />
-            <MyCompletedTrades
-              type="sell"
-              assetAData={assetAData}
-              assetBData={assetBData}
-              usrHistory={usrHistory}
-              marketHistoryInProgress={marketHistoryInProgress}
-              reset={() => {
-                _resetMarketData();
-                setMarketHistoryInProgress(true);
-                setMarketItr(marketItr + 1);
-              }}
-            />
-          </div>
-
+        <div className="grid grid-cols-2 gap-5">
+          <MyCompletedTrades
+            type="buy"
+            assetAData={assetAData}
+            assetBData={assetBData}
+            usrHistory={usrHistory}
+            marketHistoryInProgress={marketHistoryInProgress}
+            reset={() => {
+              _resetMarketData();
+              setMarketHistoryInProgress(true);
+              setMarketItr(marketItr + 1);
+            }}
+          />
+          <MyCompletedTrades
+            type="sell"
+            assetAData={assetAData}
+            assetBData={assetBData}
+            usrHistory={usrHistory}
+            marketHistoryInProgress={marketHistoryInProgress}
+            reset={() => {
+              _resetMarketData();
+              setMarketHistoryInProgress(true);
+              setMarketItr(marketItr + 1);
+            }}
+          />
+        </div>
       </div>
     </>
   );

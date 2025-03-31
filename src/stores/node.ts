@@ -14,17 +14,20 @@ function setCurrentNode(chain: string, url?: string) {
     return;
   }
 
-  $currentNode.set({ chain, url: url ?? (chains as any)[chain].nodeList[0].url });
+  $currentNode.set({
+    chain,
+    url: url ?? (chains as any)[chain].nodeList[0].url,
+  });
 }
 
 type InitNodes = {
   url: string;
-}
+};
 
 type StoredNodes = {
   bitshares: InitNodes[];
   bitshares_testnet: InitNodes[];
-}
+};
 
 const $nodes = persistentMap<StoredNodes>(
   "nodes",

@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useSyncExternalStore, useMemo, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  useSyncExternalStore,
+  useMemo,
+  useCallback,
+} from "react";
 import { FixedSizeList as List } from "react-window";
 import { useForm } from "react-hook-form";
 import { LockOpen2Icon, LockClosedIcon } from "@radix-ui/react-icons";
@@ -23,7 +29,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import {
   Form,
   FormControl,
@@ -33,9 +43,17 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Avatar as Av, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Avatar as Av,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/ui/avatar";
 import { Avatar } from "@/components/Avatar.tsx";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -47,7 +65,12 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Toggle } from "@/components/ui/toggle";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-import { humanReadableFloat, getFlagBooleans, debounce, blockchainFloat } from "@/lib/common.js";
+import {
+  humanReadableFloat,
+  getFlagBooleans,
+  debounce,
+  blockchainFloat,
+} from "@/lib/common.js";
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
@@ -104,7 +127,11 @@ export default function Smartcoin(properties) {
     disable_collateral_bidding: t("Smartcoin:disableCollateralBidding"),
   };
 
-  const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
+  const usr = useSyncExternalStore(
+    $currentUser.subscribe,
+    $currentUser.get,
+    () => true
+  );
 
   const {
     _assetsBTS,
@@ -114,7 +141,7 @@ export default function Smartcoin(properties) {
     _marketSearchBTS,
     _marketSearchTEST,
     _globalParamsBTS,
-    _globalParamsTEST
+    _globalParamsTEST,
   } = properties;
 
   const _chain = useMemo(() => {
@@ -179,7 +206,10 @@ export default function Smartcoin(properties) {
         return;
       }
 
-      const poolIds = marketSearch && marketSearch.length ? marketSearch.map((x) => x.id) : [];
+      const poolIds =
+        marketSearch && marketSearch.length
+          ? marketSearch.map((x) => x.id)
+          : [];
       if (!poolIds.includes(foundParamter)) {
         console.log("Invalid parameter");
         return;
@@ -204,7 +234,10 @@ export default function Smartcoin(properties) {
         return true;
       }
 
-      const poolIds = marketSearch && marketSearch.length ? marketSearch.map((x) => x.id) : [];
+      const poolIds =
+        marketSearch && marketSearch.length
+          ? marketSearch.map((x) => x.id)
+          : [];
       if (!poolIds.includes(foundParamter)) {
         console.log("Invalid parameter");
         return true;
@@ -224,7 +257,9 @@ export default function Smartcoin(properties) {
 
   const parsedBitasset = useMemo(() => {
     if (parsedAsset && bitAssetData) {
-      const foundBitasset = bitAssetData.find((x) => x.assetID === parsedAsset.id);
+      const foundBitasset = bitAssetData.find(
+        (x) => x.assetID === parsedAsset.id
+      );
       return foundBitasset;
     }
     return null;
@@ -232,14 +267,18 @@ export default function Smartcoin(properties) {
 
   const parsedCollateralAsset = useMemo(() => {
     if (parsedBitasset && bitAssetData) {
-      const foundAsset = marketSearch.find((x) => x.id === parsedBitasset.collateral);
+      const foundAsset = marketSearch.find(
+        (x) => x.id === parsedBitasset.collateral
+      );
       return foundAsset;
     }
   }, [parsedBitasset, bitAssetData]);
 
   const parsedCollateralBitasset = useMemo(() => {
     if (parsedCollateralAsset && bitAssetData) {
-      const foundBitasset = bitAssetData.find((x) => x.assetID === parsedCollateralAsset.id);
+      const foundBitasset = bitAssetData.find(
+        (x) => x.assetID === parsedCollateralAsset.id
+      );
       return foundBitasset;
     }
   }, [parsedCollateralAsset, bitAssetData]);
@@ -291,7 +330,9 @@ export default function Smartcoin(properties) {
         parsedAsset.id,
         parsedBitasset.collateral,
         parsedBitasset.id,
-        parsedCollateralBitasset && parsedCollateralBitasset.id ? parsedCollateralBitasset.id : "",
+        parsedCollateralBitasset && parsedCollateralBitasset.id
+          ? parsedCollateralBitasset.id
+          : "",
         usr.id,
         currentNode ? currentNode.url : null,
       ]);
@@ -335,7 +376,10 @@ export default function Smartcoin(properties) {
             finalBitasset.settlement_price.quote.amount,
             parsedCollateralAsset.p
           ) /
-            humanReadableFloat(finalBitasset.settlement_price.base.amount, parsedAsset.p))
+            humanReadableFloat(
+              finalBitasset.settlement_price.base.amount,
+              parsedAsset.p
+            ))
         ).toFixed(parsedAsset.p)
       );
 
@@ -361,7 +405,12 @@ export default function Smartcoin(properties) {
   }, [finalBitasset, parsedAsset, parsedCollateralAsset]);
 
   const currentFeedSettlementPrice = useMemo(() => {
-    if (finalBitasset && finalBitasset.current_feed && parsedCollateralAsset && parsedAsset) {
+    if (
+      finalBitasset &&
+      finalBitasset.current_feed &&
+      parsedCollateralAsset &&
+      parsedAsset
+    ) {
       return parseFloat(
         (
           humanReadableFloat(
@@ -383,10 +432,20 @@ export default function Smartcoin(properties) {
         ).toFixed(parsedCollateralAsset.p)
       );
     }
-  }, [finalBitasset, parsedAsset, parsedCollateralAsset, individualSettlementFund]);
+  }, [
+    finalBitasset,
+    parsedAsset,
+    parsedCollateralAsset,
+    individualSettlementFund,
+  ]);
 
   const individualSettlementPrice = useMemo(() => {
-    if (finalBitasset && finalBitasset.current_feed && parsedCollateralAsset && parsedAsset) {
+    if (
+      finalBitasset &&
+      finalBitasset.current_feed &&
+      parsedCollateralAsset &&
+      parsedAsset
+    ) {
       return parseFloat(
         (
           humanReadableFloat(
@@ -452,7 +511,9 @@ export default function Smartcoin(properties) {
 
   const collateralPermissions = useMemo(() => {
     if (finalCollateralAsset) {
-      const obj = getFlagBooleans(finalCollateralAsset.options.issuer_permissions);
+      const obj = getFlagBooleans(
+        finalCollateralAsset.options.issuer_permissions
+      );
       return Object.keys(obj).map((key) => (
         <HoverCard key={`${key}_collateralPermissions`}>
           <HoverCardTrigger>
@@ -490,12 +551,18 @@ export default function Smartcoin(properties) {
     if (parsedBitasset) {
       if (usrMarginPositions && usrMarginPositions.length) {
         const res = usrMarginPositions[0];
-        const collateralAmount = humanReadableFloat(res.collateral, parsedCollateralAsset.p);
+        const collateralAmount = humanReadableFloat(
+          res.collateral,
+          parsedCollateralAsset.p
+        );
         const debtAmount = humanReadableFloat(res.debt, parsedAsset.p);
         const _mcr = parsedBitasset.mcr / 1000;
 
-        const tcr = res.target_collateral_ratio ? res.target_collateral_ratio / 1000 : null;
-        const _ratio = 1 / ((currentFeedSettlementPrice * debtAmount) / collateralAmount);
+        const tcr = res.target_collateral_ratio
+          ? res.target_collateral_ratio / 1000
+          : null;
+        const _ratio =
+          1 / ((currentFeedSettlementPrice * debtAmount) / collateralAmount);
         const ratio = parseFloat(_ratio.toFixed(3));
         const callPrice = res.target_collateral_ratio
           ? parseFloat(
@@ -503,13 +570,15 @@ export default function Smartcoin(properties) {
                 currentFeedSettlementPrice *
                 (collateralAmount /
                   (debtAmount *
-                    (currentFeedSettlementPrice * (res.target_collateral_ratio / 1000))))
+                    (currentFeedSettlementPrice *
+                      (res.target_collateral_ratio / 1000))))
               ).toFixed(parsedCollateralAsset.p)
             )
           : parseFloat(
               (
                 currentFeedSettlementPrice *
-                (collateralAmount / (debtAmount * (currentFeedSettlementPrice * _mcr)))
+                (collateralAmount /
+                  (debtAmount * (currentFeedSettlementPrice * _mcr)))
               ).toFixed(parsedCollateralAsset.p)
             );
 
@@ -538,7 +607,8 @@ export default function Smartcoin(properties) {
           parseFloat(
             (
               currentFeedSettlementPrice *
-              (_collateralAmount / (debtAmount * (currentFeedSettlementPrice * _mcr)))
+              (_collateralAmount /
+                (debtAmount * (currentFeedSettlementPrice * _mcr)))
             ).toFixed(parsedCollateralAsset.p)
           )
         );
@@ -560,18 +630,26 @@ export default function Smartcoin(properties) {
         ? parseFloat(
             (
               currentFeedSettlementPrice *
-              (collateralAmount / (debtAmount * (currentFeedSettlementPrice * tcrValue)))
+              (collateralAmount /
+                (debtAmount * (currentFeedSettlementPrice * tcrValue)))
             ).toFixed(parsedCollateralAsset.p)
           )
         : parseFloat(
             (
               currentFeedSettlementPrice *
-              (collateralAmount / (debtAmount * (currentFeedSettlementPrice * 1.4)))
+              (collateralAmount /
+                (debtAmount * (currentFeedSettlementPrice * 1.4)))
             ).toFixed(parsedCollateralAsset.p)
           );
       setFormCallPrice(callPrice);
     }
-  }, [currentFeedSettlementPrice, parsedCollateralAsset, debtAmount, collateralAmount, ratioValue]);
+  }, [
+    currentFeedSettlementPrice,
+    parsedCollateralAsset,
+    debtAmount,
+    collateralAmount,
+    ratioValue,
+  ]);
 
   /*
   const originalDebtAssetHoldings = useMemo(() => {
@@ -586,10 +664,13 @@ export default function Smartcoin(properties) {
 
   const debtAssetHoldings = useMemo(() => {
     if (parsedAsset && usrBalances && usrBalances.length) {
-      const currentDebtAssetBalance = usrBalances.find((x) => x.asset_id === parsedAsset.id);
-      const _balance = currentDebtAssetBalance && currentDebtAssetBalance.amount 
-        ? humanReadableFloat(currentDebtAssetBalance.amount, parsedAsset.p)
-        : 0;
+      const currentDebtAssetBalance = usrBalances.find(
+        (x) => x.asset_id === parsedAsset.id
+      );
+      const _balance =
+        currentDebtAssetBalance && currentDebtAssetBalance.amount
+          ? humanReadableFloat(currentDebtAssetBalance.amount, parsedAsset.p)
+          : 0;
 
       let _output = 0;
       if (debtAmount === originalDebtAmount) {
@@ -615,19 +696,26 @@ export default function Smartcoin(properties) {
 
   const collateralAssetHoldings = useMemo(() => {
     if (parsedCollateralAsset && usrBalances && usrBalances.length) {
-      const foundAsset = usrBalances.find((x) => x.asset_id === parsedCollateralAsset.id);
-      
-      const _collateralBalance = humanReadableFloat(foundAsset.amount, parsedCollateralAsset.p);
+      const foundAsset = usrBalances.find(
+        (x) => x.asset_id === parsedCollateralAsset.id
+      );
+
+      const _collateralBalance = humanReadableFloat(
+        foundAsset.amount,
+        parsedCollateralAsset.p
+      );
       let _output = 0;
       if (collateralAmount === originalCollateralAmount) {
         _output = _collateralBalance;
       }
 
       if (collateralAmount < originalCollateralAmount) {
-        _output = _collateralBalance + (originalCollateralAmount - collateralAmount)
+        _output =
+          _collateralBalance + (originalCollateralAmount - collateralAmount);
       }
       if (collateralAmount > originalCollateralAmount) {
-        _output =  _collateralBalance - (collateralAmount - originalCollateralAmount)
+        _output =
+          _collateralBalance - (collateralAmount - originalCollateralAmount);
       }
 
       return parseFloat(_output.toFixed(parsedCollateralAsset.p));
@@ -664,7 +752,9 @@ export default function Smartcoin(properties) {
         let parsedCollateralAmount = parseFloat(current_collateral_amount);
 
         const _requiredCollateral = parseFloat(
-          (parsedDebtAmount * current_feed_price * current_ratio_value).toFixed(collateralPrecision)
+          (parsedDebtAmount * current_feed_price * current_ratio_value).toFixed(
+            collateralPrecision
+          )
         );
 
         const _minDebtFeedPrice = _minDebt * current_feed_price;
@@ -697,7 +787,9 @@ export default function Smartcoin(properties) {
           parsedCollateralAmount = _requiredCollateral;
         }
 
-        const _ratio = 1 / ((current_feed_price * parsedDebtAmount) / parsedCollateralAmount);
+        const _ratio =
+          1 /
+          ((current_feed_price * parsedDebtAmount) / parsedCollateralAmount);
 
         if (_debtLock === "locked" || _collateralLock === "locked") {
           setRatioValue(_ratio);
@@ -740,11 +832,14 @@ export default function Smartcoin(properties) {
         );
 
         let parsedDebtAmount = parseFloat(
-          (parsedCollateralAmount / current_feed_price / existingRatio).toFixed(debtPrecision)
+          (parsedCollateralAmount / current_feed_price / existingRatio).toFixed(
+            debtPrecision
+          )
         );
 
         if (parsedDebtAmount < _minDebt) {
-          parsedCollateralAmount = _minDebt * current_feed_price * existingRatio;
+          parsedCollateralAmount =
+            _minDebt * current_feed_price * existingRatio;
           parsedDebtAmount = _minDebt;
         }
 
@@ -756,7 +851,11 @@ export default function Smartcoin(properties) {
         if (_debtLock === "locked" || _collateralLock === "locked") {
           // change the ratio
           const updatedRatio = parseFloat(
-            (1 / ((current_feed_price * existingDebtAmount) / parsedCollateralAmount)).toFixed(3)
+            (
+              1 /
+              ((current_feed_price * existingDebtAmount) /
+                parsedCollateralAmount)
+            ).toFixed(3)
           );
 
           setRatioValue(updatedRatio);
@@ -793,7 +892,10 @@ export default function Smartcoin(properties) {
         if (_ratioLock === "locked" || _collateralLock === "locked") {
           // change the debt
           const finalDebt = parseFloat(
-            (_collateralAmount / (current_feed_price * parsedRatioAmount)).toFixed(debtPrecision)
+            (
+              _collateralAmount /
+              (current_feed_price * parsedRatioAmount)
+            ).toFixed(debtPrecision)
           );
           setDebtAmount(finalDebt);
         }
@@ -802,7 +904,9 @@ export default function Smartcoin(properties) {
           // maintain the debt, change the collateral
           const _debtAmount = parseFloat(current_debt_amount);
           const newCollateralAmount = parseFloat(
-            (_debtAmount * current_feed_price * parsedRatioAmount).toFixed(collateralPrecision)
+            (_debtAmount * current_feed_price * parsedRatioAmount).toFixed(
+              collateralPrecision
+            )
           );
           setCollateralAmount(newCollateralAmount);
         }
@@ -858,7 +962,9 @@ export default function Smartcoin(properties) {
       const _debtPosition = usrMarginPositions[0].debt;
       const _collateralPosition = usrMarginPositions[0].collateral;
 
-      const newDebtPosition = parseInt(blockchainFloat(debtAmount, parsedAsset.p));
+      const newDebtPosition = parseInt(
+        blockchainFloat(debtAmount, parsedAsset.p)
+      );
       const newCollateralPosition = parseInt(
         blockchainFloat(collateralAmount, parsedCollateralAsset.p)
       );
@@ -902,7 +1008,9 @@ export default function Smartcoin(properties) {
       return {
         funding_account: usr.id,
         delta_collateral: {
-          amount: parseInt(blockchainFloat(collateralAmount, parsedCollateralAsset.p)),
+          amount: parseInt(
+            blockchainFloat(collateralAmount, parsedCollateralAsset.p)
+          ),
           asset_id: parsedBitasset.collateral,
         },
         delta_debt: {
@@ -931,12 +1039,18 @@ export default function Smartcoin(properties) {
 
   const UsrMarginPositionCard = () => {
     const res = usrMarginPositions[0];
-    const collateralAmount = humanReadableFloat(res.collateral, parsedCollateralAsset.p);
+    const collateralAmount = humanReadableFloat(
+      res.collateral,
+      parsedCollateralAsset.p
+    );
     const debtAmount = humanReadableFloat(res.debt, parsedAsset.p);
 
-    const tcr = res.target_collateral_ratio ? `${res.target_collateral_ratio / 10}%` : null;
+    const tcr = res.target_collateral_ratio
+      ? `${res.target_collateral_ratio / 10}%`
+      : null;
 
-    const _ratio = 1 / ((currentFeedSettlementPrice * debtAmount) / collateralAmount);
+    const _ratio =
+      1 / ((currentFeedSettlementPrice * debtAmount) / collateralAmount);
     const ratio = parseFloat(_ratio.toFixed(3));
 
     const callPrice = res.target_collateral_ratio
@@ -944,13 +1058,16 @@ export default function Smartcoin(properties) {
           (
             currentFeedSettlementPrice *
             (collateralAmount /
-              (debtAmount * (currentFeedSettlementPrice * (res.target_collateral_ratio / 1000))))
+              (debtAmount *
+                (currentFeedSettlementPrice *
+                  (res.target_collateral_ratio / 1000))))
           ).toFixed(parsedCollateralAsset.p)
         )
       : parseFloat(
           (
             currentFeedSettlementPrice *
-            (collateralAmount / (debtAmount * (currentFeedSettlementPrice * 1.4)))
+            (collateralAmount /
+              (debtAmount * (currentFeedSettlementPrice * 1.4)))
           ).toFixed(parsedCollateralAsset.p)
         );
 
@@ -963,34 +1080,34 @@ export default function Smartcoin(properties) {
               id: parsedAsset.id,
             })}
           </CardTitle>
-          <CardDescription>{t("Smartcoin:ongoingMarginPosition")}</CardDescription>
+          <CardDescription>
+            {t("Smartcoin:ongoingMarginPosition")}
+          </CardDescription>
         </CardHeader>
         <CardContent className="text-sm">
-          {t("Smartcoin:balance")}
-          {" "}
-          <b>{debtAssetHoldings ?? 0}</b>
+          {t("Smartcoin:balance")} <b>{debtAssetHoldings ?? 0}</b>
           {parsedAsset ? ` ${parsedAsset.s}` : " ?"}
           <br />
-          {t("Smartcoin:debt")}
-          {" "}
-          <b>{humanReadableFloat(usrMarginPositions[0].debt, parsedAsset.p)}</b> {parsedAsset.s}
+          {t("Smartcoin:debt")}{" "}
+          <b>{humanReadableFloat(usrMarginPositions[0].debt, parsedAsset.p)}</b>{" "}
+          {parsedAsset.s}
           <br />
-          {t("Smartcoin:collateralAtRisk")}
-          {" "}
+          {t("Smartcoin:collateralAtRisk")}{" "}
           <b>
-            {humanReadableFloat(usrMarginPositions[0].collateral, parsedCollateralAsset.p)}
+            {humanReadableFloat(
+              usrMarginPositions[0].collateral,
+              parsedCollateralAsset.p
+            )}
           </b>{" "}
           {parsedCollateralAsset.s}
           <br />
-          {t("Smartcoin:currentRatio")}
-          {" "}
-          <b>{ratio}</b>
+          {t("Smartcoin:currentRatio")} <b>{ratio}</b>
           <br />
-          {t("Smartcoin:marginCallPrice")}
-          {" "}
-          <b>{callPrice}</b> {parsedCollateralAsset.s}
+          {t("Smartcoin:marginCallPrice")} <b>{callPrice}</b>{" "}
+          {parsedCollateralAsset.s}
           {" ("}
-          {(1 / callPrice).toFixed(parsedAsset.p)} {parsedAsset.s}/{parsedCollateralAsset.s}
+          {(1 / callPrice).toFixed(parsedAsset.p)} {parsedAsset.s}/
+          {parsedCollateralAsset.s}
           {")"}
           {tcr ? (
             <>
@@ -1001,22 +1118,30 @@ export default function Smartcoin(properties) {
           ) : null}
           <br />
           <br />
-          {
-            debtAssetHoldings >= humanReadableFloat(usrMarginPositions[0].debt, parsedAsset.p)
-              ? <Button className="mt-3 mr-2" onClick={() => setShowClosePositionDialog(true)}>
-                  {t("Smartcoin:closePosition")}
-                </Button>
-              : null
-          }
-          
+          {debtAssetHoldings >=
+          humanReadableFloat(usrMarginPositions[0].debt, parsedAsset.p) ? (
+            <Button
+              className="mt-3 mr-2"
+              onClick={() => setShowClosePositionDialog(true)}
+            >
+              {t("Smartcoin:closePosition")}
+            </Button>
+          ) : null}
           <a
             href={`/borrow/index.html?tab=searchOffers&searchTab=borrow&searchText=${parsedAsset.s}`}
           >
-            <Button className="mr-2">{t("Smartcoin:borrow", { asset: parsedAsset.s })}</Button>
-          </a>
-          <a href={`/dex/index.html?market=${parsedAsset.s}_${parsedCollateralAsset.s}`}>
             <Button className="mr-2">
-              {t("Smartcoin:buyWith", { asset1: parsedAsset.s, asset2: parsedCollateralAsset.s })}
+              {t("Smartcoin:borrow", { asset: parsedAsset.s })}
+            </Button>
+          </a>
+          <a
+            href={`/dex/index.html?market=${parsedAsset.s}_${parsedCollateralAsset.s}`}
+          >
+            <Button className="mr-2">
+              {t("Smartcoin:buyWith", {
+                asset1: parsedAsset.s,
+                asset2: parsedCollateralAsset.s,
+              })}
             </Button>
           </a>
           {showClosePositionDialog ? (
@@ -1027,7 +1152,9 @@ export default function Smartcoin(properties) {
               userID={usr.id}
               dismissCallback={setShowClosePositionDialog}
               key={`Closing${parsedAsset.s}debtposition`}
-              headerText={t("Smartcoin:closingDebtPosition", { asset: parsedAsset.s })}
+              headerText={t("Smartcoin:closingDebtPosition", {
+                asset: parsedAsset.s,
+              })}
               trxJSON={[exitJSON]}
             />
           ) : null}
@@ -1053,11 +1180,17 @@ export default function Smartcoin(properties) {
               <div className="col-span-6">
                 {type === "debt"
                   ? t("Smartcoin:aboutAsset", {
-                      assetType: bitassetInfo.issuer.id === "1.2.0" ? "Bitasset" : "Smartcoin",
+                      assetType:
+                        bitassetInfo.issuer.id === "1.2.0"
+                          ? "Bitasset"
+                          : "Smartcoin",
                       asset: assetInfo.s,
                       id: assetInfo.id,
                     })
-                  : t("Smartcoin:aboutBackingCollateral", { asset: assetInfo.s, id: assetInfo.id })}
+                  : t("Smartcoin:aboutBackingCollateral", {
+                      asset: assetInfo.s,
+                      id: assetInfo.id,
+                    })}
               </div>
               <div className="col-span-2 text-right">
                 <Dialog>
@@ -1071,12 +1204,20 @@ export default function Smartcoin(properties) {
                       <DialogTitle>
                         {t("Smartcoin:jsonSummaryData", { asset: assetInfo.s })}
                       </DialogTitle>
-                      <DialogDescription>{t("Smartcoin:dataUsedToRender")}</DialogDescription>
+                      <DialogDescription>
+                        {t("Smartcoin:dataUsedToRender")}
+                      </DialogDescription>
                     </DialogHeader>
                     <div className="grid grid-cols-1">
                       <div className="col-span-1">
                         <ScrollArea className="h-72 rounded-md border text-sm">
-                          <pre>{JSON.stringify({ fullAssetInfo, fullBitassetInfo }, null, 2)}</pre>
+                          <pre>
+                            {JSON.stringify(
+                              { fullAssetInfo, fullBitassetInfo },
+                              null,
+                              2
+                            )}
+                          </pre>
                         </ScrollArea>
                       </div>
                     </div>
@@ -1114,7 +1255,9 @@ export default function Smartcoin(properties) {
                 <CardRow
                   title={t("Smartcoin:issuer")}
                   button={assetInfo.u.split(" ")[0]}
-                  dialogtitle={t("Smartcoin:issuerOfAsset", { asset: assetInfo.s })}
+                  dialogtitle={t("Smartcoin:issuerOfAsset", {
+                    asset: assetInfo.s,
+                  })}
                   dialogdescription={
                     <ul className="ml-2 list-disc [&>li]:mt-2">
                       <li>{t("Smartcoin:issuerDetail1")}</li>
@@ -1127,7 +1270,9 @@ export default function Smartcoin(properties) {
                         text={t("Smartcoin:viewIssuerOnBlocksights")}
                         hyperlink={`https://blocksights.info/#/accounts/${
                           assetInfo.u.split(" ")[0]
-                        }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
+                        }${
+                          usr.chain === "bitshares" ? "" : "?network=testnet"
+                        }`}
                       />
                     </ul>
                   }
@@ -1139,7 +1284,9 @@ export default function Smartcoin(properties) {
                     fullAssetInfo.options.max_supply,
                     fullAssetInfo.precision
                   )}
-                  dialogtitle={t("Smartcoin:maximumSupplyOfAsset", { asset: assetInfo.s })}
+                  dialogtitle={t("Smartcoin:maximumSupplyOfAsset", {
+                    asset: assetInfo.s,
+                  })}
                   dialogdescription={
                     <ul className="ml-2 list-disc [&>li]:mt-2">
                       <li>{t("Smartcoin:maximumSupplyDetail")}</li>
@@ -1151,7 +1298,9 @@ export default function Smartcoin(properties) {
                 <CardRow
                   title={t("Smartcoin:minQuantity")}
                   button={humanReadableFloat(1, fullAssetInfo.precision)}
-                  dialogtitle={t("Smartcoin:minQuantityOfAsset", { asset: assetInfo.s })}
+                  dialogtitle={t("Smartcoin:minQuantityOfAsset", {
+                    asset: assetInfo.s,
+                  })}
                   dialogdescription={
                     <ul className="ml-2 list-disc [&>li]:mt-2">
                       <li>{t("Smartcoin:minQuantityDetail1")}</li>
@@ -1164,7 +1313,9 @@ export default function Smartcoin(properties) {
                 <CardRow
                   title={t("Smartcoin:precision")}
                   button={fullAssetInfo.precision}
-                  dialogtitle={t("Smartcoin:precisionOfAsset", { asset: assetInfo.s })}
+                  dialogtitle={t("Smartcoin:precisionOfAsset", {
+                    asset: assetInfo.s,
+                  })}
                   dialogdescription={
                     <ul className="ml-2 list-disc [&>li]:mt-2">
                       <li>{t("Smartcoin:precisionDetail")}</li>
@@ -1186,7 +1337,9 @@ export default function Smartcoin(properties) {
                       ? fullAssetInfo.options.market_fee_percent / 100
                       : 0
                   }%`}
-                  dialogtitle={t("Smartcoin:marketFeeOfAsset", { asset: assetInfo.s })}
+                  dialogtitle={t("Smartcoin:marketFeeOfAsset", {
+                    asset: assetInfo.s,
+                  })}
                   dialogdescription={
                     <ul className="ml-2 list-disc [&>li]:mt-2">
                       <li>{t("Smartcoin:marketFeeDetail1")}</li>
@@ -1204,7 +1357,9 @@ export default function Smartcoin(properties) {
                       ? fullAssetInfo.options.extensions.taker_fee_percent / 100
                       : 0
                   }%`}
-                  dialogtitle={t("Smartcoin:takerFeePercentOfAsset", { asset: assetInfo.s })}
+                  dialogtitle={t("Smartcoin:takerFeePercentOfAsset", {
+                    asset: assetInfo.s,
+                  })}
                   dialogdescription={
                     <ul className="ml-2 list-disc [&>li]:mt-2">
                       <li>{t("Smartcoin:takerFeePercentDetail")}</li>
@@ -1220,7 +1375,9 @@ export default function Smartcoin(properties) {
                       ? fullAssetInfo.options.extensions.reward_percent / 100
                       : 0
                   }
-                  dialogtitle={t("Smartcoin:rewardPercentOfAsset", { asset: assetInfo.s })}
+                  dialogtitle={t("Smartcoin:rewardPercentOfAsset", {
+                    asset: assetInfo.s,
+                  })}
                   dialogdescription={
                     <ul className="ml-2 list-disc [&>li]:mt-2">
                       <li>{t("Smartcoin:rewardPercentDetail")}</li>
@@ -1248,9 +1405,9 @@ export default function Smartcoin(properties) {
                     variant="outline"
                     type="button"
                     text={t("Smartcoin:viewBitassetOnBlocksights")}
-                    hyperlink={`https://blocksights.info/#/objects/${bitassetInfo.id}${
-                      usr.chain === "bitshares" ? "" : "?network=testnet"
-                    }`}
+                    hyperlink={`https://blocksights.info/#/objects/${
+                      bitassetInfo.id
+                    }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
                   />
                 </div>
               </div>
@@ -1260,7 +1417,9 @@ export default function Smartcoin(properties) {
                   <div className="grid grid-cols-1 gap-1 w-full text-sm">
                     <CardRow
                       title={t("Smartcoin:collateralAsset")}
-                      button={parsedCollateralAsset ? parsedCollateralAsset.s : ""}
+                      button={
+                        parsedCollateralAsset ? parsedCollateralAsset.s : ""
+                      }
                       dialogtitle={t("Smartcoin:collateralAssetOfSmartcoin", {
                         asset: assetInfo.s,
                       })}
@@ -1275,7 +1434,9 @@ export default function Smartcoin(properties) {
                     <CardRow
                       title={t("Smartcoin:MCR")}
                       button={`${bitassetInfo ? bitassetInfo.mcr / 10 : 0} %`}
-                      dialogtitle={t("Smartcoin:MCRofAsset", { asset: assetInfo.s })}
+                      dialogtitle={t("Smartcoin:MCRofAsset", {
+                        asset: assetInfo.s,
+                      })}
                       dialogdescription={
                         <ul className="ml-2 list-disc [&>li]:mt-2">
                           <li>{t("Smartcoin:MCRDetail")}</li>
@@ -1287,7 +1448,9 @@ export default function Smartcoin(properties) {
                     <CardRow
                       title={t("Smartcoin:MSSR")}
                       button={`${bitassetInfo ? bitassetInfo.mssr / 10 : 0} %`}
-                      dialogtitle={t("Smartcoin:MSSROfAsset", { asset: assetInfo.s })}
+                      dialogtitle={t("Smartcoin:MSSROfAsset", {
+                        asset: assetInfo.s,
+                      })}
                       dialogdescription={
                         <ul className="ml-2 list-disc [&>li]:mt-2">
                           <li>{t("Smartcoin:MSSRDetail")}</li>
@@ -1299,7 +1462,9 @@ export default function Smartcoin(properties) {
                     <CardRow
                       title={t("Smartcoin:ICR")}
                       button={`${bitassetInfo ? bitassetInfo.icr / 10 : 0} %`}
-                      dialogtitle={t("Smartcoin:ICROfAsset", { asset: assetInfo.s })}
+                      dialogtitle={t("Smartcoin:ICROfAsset", {
+                        asset: assetInfo.s,
+                      })}
                       dialogdescription={
                         <ul className="ml-2 list-disc [&>li]:mt-2">
                           <li>{t("Smartcoin:ICRDetail")}</li>
@@ -1311,7 +1476,9 @@ export default function Smartcoin(properties) {
                     <CardRow
                       title={t("Smartcoin:feedQty")}
                       button={bitassetInfo ? bitassetInfo.feeds.length : 0}
-                      dialogtitle={t("Smartcoin:feedQtyOfAsset", { asset: assetInfo.s })}
+                      dialogtitle={t("Smartcoin:feedQtyOfAsset", {
+                        asset: assetInfo.s,
+                      })}
                       dialogdescription={
                         <ul className="ml-2 list-disc [&>li]:mt-2">
                           <li>{t("Smartcoin:feedQtyDetail1")}</li>
@@ -1329,9 +1496,12 @@ export default function Smartcoin(properties) {
                       <CardRow
                         title={t("Smartcoin:settlementOffset")}
                         button={`${
-                          fullBitassetInfo.options.force_settlement_offset_percent / 100
+                          fullBitassetInfo.options
+                            .force_settlement_offset_percent / 100
                         }%`}
-                        dialogtitle={t("Smartcoin:settlementOffsetOfAsset", { asset: assetInfo.s })}
+                        dialogtitle={t("Smartcoin:settlementOffsetOfAsset", {
+                          asset: assetInfo.s,
+                        })}
                         dialogdescription={
                           <ul className="ml-2 list-disc [&>li]:mt-2">
                             <li>{t("Smartcoin:settlementOffsetDetail")}</li>
@@ -1349,13 +1519,17 @@ export default function Smartcoin(properties) {
                   <div className="grid grid-cols-1 gap-1 w-full text-sm">
                     {fullBitassetInfo &&
                     fullBitassetInfo.options.extensions &&
-                    fullBitassetInfo.options.extensions.force_settle_fee_percent ? (
+                    fullBitassetInfo.options.extensions
+                      .force_settle_fee_percent ? (
                       <CardRow
                         title={t("Smartcoin:settlementFee")}
                         button={`${
-                          fullBitassetInfo.options.extensions.force_settle_fee_percent / 100
+                          fullBitassetInfo.options.extensions
+                            .force_settle_fee_percent / 100
                         }%`}
-                        dialogtitle={t("Smartcoin:settlementFeeOfAsset", { asset: assetInfo.s })}
+                        dialogtitle={t("Smartcoin:settlementFeeOfAsset", {
+                          asset: assetInfo.s,
+                        })}
                         dialogdescription={
                           <ul className="ml-2 list-disc [&>li]:mt-2">
                             <li>{t("Smartcoin:settlementFeeDetail")}</li>
@@ -1367,13 +1541,17 @@ export default function Smartcoin(properties) {
 
                     {fullBitassetInfo &&
                     fullBitassetInfo.options.extensions &&
-                    fullBitassetInfo.options.extensions.margin_call_fee_ratio ? (
+                    fullBitassetInfo.options.extensions
+                      .margin_call_fee_ratio ? (
                       <CardRow
                         title={t("Smartcoin:marginCallFee")}
                         button={`${
-                          fullBitassetInfo.options.extensions.margin_call_fee_ratio / 100
+                          fullBitassetInfo.options.extensions
+                            .margin_call_fee_ratio / 100
                         }%`}
-                        dialogtitle={t("Smartcoin:marginCallFeeOfAsset", { asset: assetInfo.s })}
+                        dialogtitle={t("Smartcoin:marginCallFeeOfAsset", {
+                          asset: assetInfo.s,
+                        })}
                         dialogdescription={
                           <ul className="ml-2 list-disc [&>li]:mt-2">
                             <li>{t("Smartcoin:marginCallFeeDetail1")}</li>
@@ -1386,11 +1564,17 @@ export default function Smartcoin(properties) {
 
                     {fullBitassetInfo &&
                     fullBitassetInfo.options.extensions &&
-                    fullBitassetInfo.options.extensions.black_swan_response_method ? (
+                    fullBitassetInfo.options.extensions
+                      .black_swan_response_method ? (
                       <CardRow
                         title={t("Smartcoin:BSRM")}
-                        button={fullBitassetInfo.options.extensions.black_swan_response_method}
-                        dialogtitle={t("Smartcoin:BSRMOfAsset", { asset: assetInfo.s })}
+                        button={
+                          fullBitassetInfo.options.extensions
+                            .black_swan_response_method
+                        }
+                        dialogtitle={t("Smartcoin:BSRMOfAsset", {
+                          asset: assetInfo.s,
+                        })}
                         dialogdescription={
                           <ScrollArea className="h-72">
                             <ul className="ml-2 list-disc [&>li]:mt-2 text-sm">
@@ -1406,14 +1590,22 @@ export default function Smartcoin(properties) {
                                 {t("Smartcoin:noSettlementDetail")}
                               </li>
                               <li>
-                                <b>{t("Smartcoin:individualSettlementToFund")}</b>
+                                <b>
+                                  {t("Smartcoin:individualSettlementToFund")}
+                                </b>
                                 <br />
-                                {t("Smartcoin:individualSettlementToFundDetail")}
+                                {t(
+                                  "Smartcoin:individualSettlementToFundDetail"
+                                )}
                               </li>
                               <li>
-                                <b>{t("Smartcoin:individualSettlementToOrder")}</b>
+                                <b>
+                                  {t("Smartcoin:individualSettlementToOrder")}
+                                </b>
                                 <br />
-                                {t("Smartcoin:individualSettlementToOrderDetail")}
+                                {t(
+                                  "Smartcoin:individualSettlementToOrderDetail"
+                                )}
                               </li>
                             </ul>
                           </ScrollArea>
@@ -1424,11 +1616,17 @@ export default function Smartcoin(properties) {
 
                     {fullBitassetInfo &&
                     fullBitassetInfo.options.extensions &&
-                    fullBitassetInfo.options.extensions.initial_collateral_ratio ? (
+                    fullBitassetInfo.options.extensions
+                      .initial_collateral_ratio ? (
                       <CardRow
                         title={t("Smartcoin:manualICR")}
-                        button={fullBitassetInfo.options.extensions.initial_collateral_ratio}
-                        dialogtitle={t("Smartcoin:manualICROfAsset", { asset: assetInfo.s })}
+                        button={
+                          fullBitassetInfo.options.extensions
+                            .initial_collateral_ratio
+                        }
+                        dialogtitle={t("Smartcoin:manualICROfAsset", {
+                          asset: assetInfo.s,
+                        })}
                         dialogdescription={
                           <ul className="ml-2 list-disc [&>li]:mt-2">
                             <li>{t("Smartcoin:manualICRDetail")}</li>
@@ -1440,11 +1638,17 @@ export default function Smartcoin(properties) {
 
                     {fullBitassetInfo &&
                     fullBitassetInfo.options.extensions &&
-                    fullBitassetInfo.options.extensions.maintenance_collateral_ratio ? (
+                    fullBitassetInfo.options.extensions
+                      .maintenance_collateral_ratio ? (
                       <CardRow
                         title={t("Smartcoin:manualMCR")}
-                        button={fullBitassetInfo.options.extensions.maintenance_collateral_ratio}
-                        dialogtitle={t("Smartcoin:manualMCROfAsset", { asset: assetInfo.s })}
+                        button={
+                          fullBitassetInfo.options.extensions
+                            .maintenance_collateral_ratio
+                        }
+                        dialogtitle={t("Smartcoin:manualMCROfAsset", {
+                          asset: assetInfo.s,
+                        })}
                         dialogdescription={
                           <ul className="ml-2 list-disc [&>li]:mt-2">
                             <li>{t("Smartcoin:manualMCRDetail")}</li>
@@ -1456,11 +1660,17 @@ export default function Smartcoin(properties) {
 
                     {fullBitassetInfo &&
                     fullBitassetInfo.options.extensions &&
-                    fullBitassetInfo.options.extensions.maximum_short_squeeze_ratio ? (
+                    fullBitassetInfo.options.extensions
+                      .maximum_short_squeeze_ratio ? (
                       <CardRow
                         title={t("Smartcoin:manualMSSR")}
-                        button={fullBitassetInfo.options.extensions.maximum_short_squeeze_ratio}
-                        dialogtitle={t("Smartcoin:manualMSSROfAsset", { asset: assetInfo.s })}
+                        button={
+                          fullBitassetInfo.options.extensions
+                            .maximum_short_squeeze_ratio
+                        }
+                        dialogtitle={t("Smartcoin:manualMSSROfAsset", {
+                          asset: assetInfo.s,
+                        })}
                         dialogdescription={
                           <ul className="ml-2 list-disc [&>li]:mt-2">
                             <li>{t("Smartcoin:manualMSSRDetail")}</li>
@@ -1488,7 +1698,9 @@ export default function Smartcoin(properties) {
           {assetPermissions && assetPermissions.length ? (
             assetPermissions
           ) : (
-            <span className="text-sm">{t("Smartcoin:noPermissionsEnabled")}</span>
+            <span className="text-sm">
+              {t("Smartcoin:noPermissionsEnabled")}
+            </span>
           )}
         </CardContent>
       </Card>
@@ -1497,12 +1709,18 @@ export default function Smartcoin(properties) {
 
   const MarginPositionRow = ({ index, style }) => {
     const res = assetCallOrders[index];
-    const collateralAmount = humanReadableFloat(res.collateral, parsedCollateralAsset.p);
+    const collateralAmount = humanReadableFloat(
+      res.collateral,
+      parsedCollateralAsset.p
+    );
     const debtAmount = humanReadableFloat(res.debt, parsedAsset.p);
 
-    const tcr = res.target_collateral_ratio ? `${res.target_collateral_ratio / 10}%` : `0%`;
+    const tcr = res.target_collateral_ratio
+      ? `${res.target_collateral_ratio / 10}%`
+      : `0%`;
 
-    const _ratio = 1 / ((currentFeedSettlementPrice * debtAmount) / collateralAmount);
+    const _ratio =
+      1 / ((currentFeedSettlementPrice * debtAmount) / collateralAmount);
     const ratio = parseFloat(_ratio.toFixed(3));
 
     const callPrice = res.target_collateral_ratio
@@ -1510,13 +1728,16 @@ export default function Smartcoin(properties) {
           (
             currentFeedSettlementPrice *
             (collateralAmount /
-              (debtAmount * (currentFeedSettlementPrice * (res.target_collateral_ratio / 1000))))
+              (debtAmount *
+                (currentFeedSettlementPrice *
+                  (res.target_collateral_ratio / 1000))))
           ).toFixed(parsedCollateralAsset.p)
         )
       : parseFloat(
           (
             currentFeedSettlementPrice *
-            (collateralAmount / (debtAmount * (currentFeedSettlementPrice * 1.4)))
+            (collateralAmount /
+              (debtAmount * (currentFeedSettlementPrice * 1.4)))
           ).toFixed(parsedCollateralAsset.p)
         );
 
@@ -1561,7 +1782,9 @@ export default function Smartcoin(properties) {
 
     return (
       <div className="grid grid-cols-4 text-sm" style={style}>
-        <div className="col-span-1">{parseFloat(res.price).toFixed(precision)}</div>
+        <div className="col-span-1">
+          {parseFloat(res.price).toFixed(precision)}
+        </div>
         <div className="col-span-1">{res.base}</div>
         <div className="col-span-1">{res.quote}</div>
         <div className="col-span-1">
@@ -1594,14 +1817,23 @@ export default function Smartcoin(properties) {
 
     const coreExchangeRate = (
       1 /
-      (humanReadableFloat(feedObj.core_exchange_rate.base.amount, parsedAsset.p) /
-        humanReadableFloat(feedObj.core_exchange_rate.quote.amount, parsedCollateralAsset.p))
+      (humanReadableFloat(
+        feedObj.core_exchange_rate.base.amount,
+        parsedAsset.p
+      ) /
+        humanReadableFloat(
+          feedObj.core_exchange_rate.quote.amount,
+          parsedCollateralAsset.p
+        ))
     ).toFixed(parsedCollateralAsset.p);
 
     const feedPrice = (
       1 /
       (humanReadableFloat(feedObj.settlement_price.base.amount, parsedAsset.p) /
-        humanReadableFloat(feedObj.settlement_price.quote.amount, parsedCollateralAsset.p))
+        humanReadableFloat(
+          feedObj.settlement_price.quote.amount,
+          parsedCollateralAsset.p
+        ))
     ).toFixed(parsedCollateralAsset.p);
 
     return (
@@ -1633,7 +1865,9 @@ export default function Smartcoin(properties) {
           <Card>
             <CardHeader>
               <CardTitle>{t("Smartcoin:invalidSmartcoinIdTitle")}</CardTitle>
-              <CardDescription>{t("Smartcoin:invalidSmartcoinIdDescription")}</CardDescription>
+              <CardDescription>
+                {t("Smartcoin:invalidSmartcoinIdDescription")}
+              </CardDescription>
             </CardHeader>
             <CardContent>
               {t("Smartcoin:invalidSmartcoinIdContent1")}{" "}
@@ -1681,7 +1915,13 @@ export default function Smartcoin(properties) {
                                     eye: "normal",
                                     mouth: "open",
                                   }}
-                                  colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]}
+                                  colors={[
+                                    "#92A1C6",
+                                    "#146A7C",
+                                    "#F0AB3D",
+                                    "#C271B4",
+                                    "#C20D90",
+                                  ]}
                                 />
                               ) : (
                                 <Av>
@@ -1739,7 +1979,9 @@ export default function Smartcoin(properties) {
                   <div className="grid grid-cols-2 gap-3 mt-3">
                     <Card>
                       <CardHeader className="pb-3">
-                        <CardTitle>{t("Smartcoin:currentFeedPriceTitle")}</CardTitle>
+                        <CardTitle>
+                          {t("Smartcoin:currentFeedPriceTitle")}
+                        </CardTitle>
                         <CardDescription>
                           {t("Smartcoin:currentFeedPriceDescription")}
                         </CardDescription>
@@ -1769,7 +2011,9 @@ export default function Smartcoin(properties) {
                                   className="ml-1"
                                   value={
                                     currentFeedSettlementPrice
-                                      ? (1 / currentFeedSettlementPrice).toFixed(parsedAsset.p)
+                                      ? (
+                                          1 / currentFeedSettlementPrice
+                                        ).toFixed(parsedAsset.p)
                                       : ""
                                   }
                                   readOnly
@@ -1785,7 +2029,9 @@ export default function Smartcoin(properties) {
                     </Card>
                     <Card>
                       <CardHeader className="pb-3">
-                        <CardTitle>{t("Smartcoin:marginCallPriceTitle")}</CardTitle>
+                        <CardTitle>
+                          {t("Smartcoin:marginCallPriceTitle")}
+                        </CardTitle>
                         <CardDescription>
                           {t("Smartcoin:marginCallPriceDescription")}
                         </CardDescription>
@@ -1800,7 +2046,9 @@ export default function Smartcoin(properties) {
                                   className="mr-1"
                                   value={
                                     formCallPrice && parsedCollateralAsset
-                                      ? formCallPrice.toFixed(parsedCollateralAsset.p)
+                                      ? formCallPrice.toFixed(
+                                          parsedCollateralAsset.p
+                                        )
                                       : ""
                                   }
                                   readOnly
@@ -1819,7 +2067,9 @@ export default function Smartcoin(properties) {
                                   className="ml-1"
                                   value={
                                     formCallPrice && parsedAsset
-                                      ? (1 / formCallPrice).toFixed(parsedAsset.p)
+                                      ? (1 / formCallPrice).toFixed(
+                                          parsedAsset.p
+                                        )
                                       : ""
                                   }
                                   readOnly
@@ -1841,7 +2091,9 @@ export default function Smartcoin(properties) {
                     render={({ field }) => (
                       <FormItem className="mt-2">
                         <FormLabel>{t("Smartcoin:debtAmount")}</FormLabel>
-                        <FormDescription style={{ marginTop: 0, paddingTop: 0 }}>
+                        <FormDescription
+                          style={{ marginTop: 0, paddingTop: 0 }}
+                        >
                           <span className="grid grid-cols-3 mt-0 pt-0">
                             <span className="col-span-2 mt-0 pt-0">
                               {t("Smartcoin:debtAmountDescription", {
@@ -1849,7 +2101,12 @@ export default function Smartcoin(properties) {
                               })}
                             </span>
                             <span
-                              className={`col-span-1 text-right ${debtAssetHoldings && debtAssetHoldings.toString().includes("-") ? "text-red-500" : ""}`}
+                              className={`col-span-1 text-right ${
+                                debtAssetHoldings &&
+                                debtAssetHoldings.toString().includes("-")
+                                  ? "text-red-500"
+                                  : ""
+                              }`}
                             >
                               {t("Smartcoin:debtAmountBalance", {
                                 balance: debtAssetHoldings ?? "",
@@ -1901,105 +2158,108 @@ export default function Smartcoin(properties) {
                               />
                             </span>
                             <span className="col-span-4 ml-3">
-                              {
-                                debtLock === "editable"
-                                ? <Popover>
-                                    <PopoverTrigger>
-                                      <span
+                              {debtLock === "editable" ? (
+                                <Popover>
+                                  <PopoverTrigger>
+                                    <span
+                                      onClick={() => {
+                                        event.preventDefault();
+                                      }}
+                                      className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4"
+                                    >
+                                      <Label>
+                                        {t("Smartcoin:changeDebtAmount")}
+                                      </Label>
+                                    </span>
+                                  </PopoverTrigger>
+                                  <PopoverContent>
+                                    <Label>
+                                      {t("Smartcoin:provideNewDebtAmount")}
+                                    </Label>{" "}
+                                    <Input
+                                      placeholder={debtAmount}
+                                      className="mb-2 mt-1"
+                                      onChange={(event) => {
+                                        const input = event.target.value;
+                                        const regex = /^[0-9]*\.?[0-9]*$/;
+                                        if (
+                                          input &&
+                                          input.length &&
+                                          regex.test(input)
+                                        ) {
+                                          debouncedDebtAmount(
+                                            input,
+                                            currentFeedSettlementPrice,
+                                            collateralAmount,
+                                            ratioValue,
+                                            parsedAsset.p,
+                                            parsedCollateralAsset.p,
+                                            debtLock,
+                                            collateralLock,
+                                            ratioLock
+                                          );
+                                        }
+                                      }}
+                                    />
+                                    <div className="grid grid-cols-3 gap-2">
+                                      <Button
+                                        variant="outline"
                                         onClick={() => {
-                                          event.preventDefault();
+                                          debouncedDebtAmount(
+                                            debtAmount * 0.9,
+                                            currentFeedSettlementPrice,
+                                            collateralAmount,
+                                            ratioValue,
+                                            parsedAsset.p,
+                                            parsedCollateralAsset.p,
+                                            debtLock,
+                                            collateralLock,
+                                            ratioLock
+                                          );
                                         }}
-                                        className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4"
                                       >
-                                        <Label>{t("Smartcoin:changeDebtAmount")}</Label>
-                                      </span>
-                                    </PopoverTrigger>
-                                    <PopoverContent>
-                                      <Label>{t("Smartcoin:provideNewDebtAmount")}</Label>{" "}
-                                      <Input
-                                        placeholder={debtAmount}
-                                        className="mb-2 mt-1"
-                                        onChange={(event) => {
-                                          const input = event.target.value;
-                                          const regex = /^[0-9]*\.?[0-9]*$/;
-                                          if (input && input.length && regex.test(input)) {
-                                            debouncedDebtAmount(
-                                              input,
-                                              currentFeedSettlementPrice,
-                                              collateralAmount,
-                                              ratioValue,
-                                              parsedAsset.p,
-                                              parsedCollateralAsset.p,
-                                              debtLock,
-                                              collateralLock,
-                                              ratioLock
-                                            );
-                                          }
+                                        - 10%
+                                      </Button>
+                                      <Button
+                                        variant="outline"
+                                        onClick={() => {
+                                          debouncedDebtAmount(
+                                            originalDebtAmount,
+                                            currentFeedSettlementPrice,
+                                            collateralAmount,
+                                            ratioValue,
+                                            parsedAsset.p,
+                                            parsedCollateralAsset.p,
+                                            debtLock,
+                                            collateralLock,
+                                            ratioLock
+                                          );
                                         }}
-                                      />
-                                      <div className="grid grid-cols-3 gap-2">
-                                      
-                                        <Button
-                                          variant="outline"
-                                          onClick={() => {
-                                            debouncedDebtAmount(
-                                              debtAmount * 0.9,
-                                              currentFeedSettlementPrice,
-                                              collateralAmount,
-                                              ratioValue,
-                                              parsedAsset.p,
-                                              parsedCollateralAsset.p,
-                                              debtLock,
-                                              collateralLock,
-                                              ratioLock
-                                            );
-                                          }}
-                                        >
-                                          - 10%
-                                        </Button>
-                                        <Button
-                                          variant="outline"
-                                          onClick={() => {
-                                            debouncedDebtAmount(
-                                              originalDebtAmount,
-                                              currentFeedSettlementPrice,
-                                              collateralAmount,
-                                              ratioValue,
-                                              parsedAsset.p,
-                                              parsedCollateralAsset.p,
-                                              debtLock,
-                                              collateralLock,
-                                              ratioLock
-                                            );
-                                          }}
-                                        >
-                                          🔃
-                                        </Button>
-                                        <Button
-                                          variant="outline"
-                                          onClick={() => {
-                                            debouncedDebtAmount(
-                                              debtAmount * 1.1,
-                                              currentFeedSettlementPrice,
-                                              collateralAmount,
-                                              ratioValue,
-                                              parsedAsset.p,
-                                              parsedCollateralAsset.p,
-                                              debtLock,
-                                              collateralLock,
-                                              ratioLock
-                                            );
-                                          }}
-                                        >
-                                          + 10%
-                                        </Button>
-                                      
-                                      </div>
-                                    </PopoverContent>
-                                  </Popover>
-                                : null
-                              }
-                              
+                                      >
+                                        🔃
+                                      </Button>
+                                      <Button
+                                        variant="outline"
+                                        onClick={() => {
+                                          debouncedDebtAmount(
+                                            debtAmount * 1.1,
+                                            currentFeedSettlementPrice,
+                                            collateralAmount,
+                                            ratioValue,
+                                            parsedAsset.p,
+                                            parsedCollateralAsset.p,
+                                            debtLock,
+                                            collateralLock,
+                                            ratioLock
+                                          );
+                                        }}
+                                      >
+                                        + 10%
+                                      </Button>
+                                    </div>
+                                  </PopoverContent>
+                                </Popover>
+                              ) : null}
                             </span>
                           </span>
                         </FormControl>
@@ -2013,19 +2273,30 @@ export default function Smartcoin(properties) {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>{t("Smartcoin:collateralAmount")}</FormLabel>
-                        <FormDescription style={{ marginTop: 0, paddingTop: 0 }}>
+                        <FormDescription
+                          style={{ marginTop: 0, paddingTop: 0 }}
+                        >
                           <span className="grid grid-cols-3 mt-0 pt-0">
                             <span className="col-span-2 mt-0 pt-0">
                               {t("Smartcoin:collateralAmountDescription", {
-                                asset: parsedCollateralAsset ? parsedCollateralAsset.s : "?",
+                                asset: parsedCollateralAsset
+                                  ? parsedCollateralAsset.s
+                                  : "?",
                               })}
                             </span>
                             <span
-                              className={`col-span-1 text-right ${collateralAssetHoldings && collateralAssetHoldings.toString().includes("-") ? "text-red-500" : ""}`}
+                              className={`col-span-1 text-right ${
+                                collateralAssetHoldings &&
+                                collateralAssetHoldings.toString().includes("-")
+                                  ? "text-red-500"
+                                  : ""
+                              }`}
                             >
                               {t("Smartcoin:collateralAmountBalance", {
                                 balance: collateralAssetHoldings ?? 0,
-                                asset: parsedCollateralAsset ? parsedCollateralAsset.s : "",
+                                asset: parsedCollateralAsset
+                                  ? parsedCollateralAsset.s
+                                  : "",
                               })}
                             </span>
                           </span>
@@ -2061,7 +2332,9 @@ export default function Smartcoin(properties) {
                             </span>
                             <span className="col-span-7">
                               <Input
-                                label={t("Smartcoin:amountOfCollateralToCommit")}
+                                label={t(
+                                  "Smartcoin:amountOfCollateralToCommit"
+                                )}
                                 placeholder={
                                   collateralAmount && collateralAmount > 0
                                     ? `${collateralAmount} ${parsedCollateralAsset.s}`
@@ -2073,106 +2346,114 @@ export default function Smartcoin(properties) {
                               />
                             </span>
                             <span className="col-span-4 ml-3">
-                              {
-                                collateralLock === "editable"
-                                ? <Popover>
-                                    <PopoverTrigger>
-                                      <span
+                              {collateralLock === "editable" ? (
+                                <Popover>
+                                  <PopoverTrigger>
+                                    <span
+                                      onClick={() => {
+                                        event.preventDefault();
+                                      }}
+                                      className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4"
+                                    >
+                                      <Label>
+                                        {t("Smartcoin:changeCollateralAmount")}
+                                      </Label>
+                                    </span>
+                                  </PopoverTrigger>
+                                  <PopoverContent>
+                                    <Label>
+                                      {t(
+                                        "Smartcoin:provideNewCollateralAmount"
+                                      )}
+                                    </Label>{" "}
+                                    <Input
+                                      placeholder={collateralAmount}
+                                      className="mb-2 mt-1"
+                                      onChange={(event) => {
+                                        const input = event.target.value;
+                                        const regex = /^[0-9]*\.?[0-9]*$/;
+                                        if (
+                                          input &&
+                                          input.length &&
+                                          regex.test(input)
+                                        ) {
+                                          debouncedCollateralAmount(
+                                            input,
+                                            currentFeedSettlementPrice,
+                                            debtAmount,
+                                            collateralAmount,
+                                            parsedAsset.p,
+                                            parsedCollateralAsset.p,
+                                            ratioValue,
+                                            debtLock,
+                                            collateralLock,
+                                            ratioLock
+                                          );
+                                        }
+                                      }}
+                                    />
+                                    <div className="grid grid-cols-3 gap-2">
+                                      <Button
+                                        variant="outline"
                                         onClick={() => {
-                                          event.preventDefault();
+                                          debouncedCollateralAmount(
+                                            collateralAmount * 0.9,
+                                            currentFeedSettlementPrice,
+                                            debtAmount,
+                                            collateralAmount,
+                                            parsedAsset.p,
+                                            parsedCollateralAsset.p,
+                                            ratioValue,
+                                            debtLock,
+                                            collateralLock,
+                                            ratioLock
+                                          );
                                         }}
-                                        className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4"
                                       >
-                                        <Label>{t("Smartcoin:changeCollateralAmount")}</Label>
-                                      </span>
-                                    </PopoverTrigger>
-                                    <PopoverContent>
-                                      <Label>{t("Smartcoin:provideNewCollateralAmount")}</Label>{" "}
-                                      <Input
-                                        placeholder={collateralAmount}
-                                        className="mb-2 mt-1"
-                                        onChange={(event) => {
-                                          const input = event.target.value;
-                                          const regex = /^[0-9]*\.?[0-9]*$/;
-                                          if (input && input.length && regex.test(input)) {
-                                            debouncedCollateralAmount(
-                                              input,
-                                              currentFeedSettlementPrice,
-                                              debtAmount,
-                                              collateralAmount,
-                                              parsedAsset.p,
-                                              parsedCollateralAsset.p,
-                                              ratioValue,
-                                              debtLock,
-                                              collateralLock,
-                                              ratioLock
-                                            );
-                                          }
+                                        - 10%
+                                      </Button>
+                                      <Button
+                                        variant="outline"
+                                        onClick={() => {
+                                          debouncedCollateralAmount(
+                                            originalCollateralAmount,
+                                            currentFeedSettlementPrice,
+                                            debtAmount,
+                                            collateralAmount,
+                                            parsedAsset.p,
+                                            parsedCollateralAsset.p,
+                                            ratioValue,
+                                            debtLock,
+                                            collateralLock,
+                                            ratioLock
+                                          );
                                         }}
-                                      />
-                                      <div className="grid grid-cols-3 gap-2">
-                                        <Button
-                                          variant="outline"
-                                          onClick={() => {
-                                            debouncedCollateralAmount(
-                                              collateralAmount * 0.9,
-                                              currentFeedSettlementPrice,
-                                              debtAmount,
-                                              collateralAmount,
-                                              parsedAsset.p,
-                                              parsedCollateralAsset.p,
-                                              ratioValue,
-                                              debtLock,
-                                              collateralLock,
-                                              ratioLock
-                                            );
-                                          }}
-                                        >
-                                          - 10%
-                                        </Button>
-                                        <Button
-                                          variant="outline"
-                                          onClick={() => {
-                                            debouncedCollateralAmount(
-                                              originalCollateralAmount,
-                                              currentFeedSettlementPrice,
-                                              debtAmount,
-                                              collateralAmount,
-                                              parsedAsset.p,
-                                              parsedCollateralAsset.p,
-                                              ratioValue,
-                                              debtLock,
-                                              collateralLock,
-                                              ratioLock
-                                            );
-                                          }}
-                                        >
-                                          🔃
-                                        </Button>
-                                        <Button
-                                          variant="outline"
-                                          onClick={() => {
-                                            debouncedCollateralAmount(
-                                              collateralAmount * 1.1,
-                                              currentFeedSettlementPrice,
-                                              debtAmount,
-                                              collateralAmount,
-                                              parsedAsset.p,
-                                              parsedCollateralAsset.p,
-                                              ratioValue,
-                                              debtLock,
-                                              collateralLock,
-                                              ratioLock
-                                            );
-                                          }}
-                                        >
-                                          + 10%
-                                        </Button>
-                                      </div>
-                                    </PopoverContent>
-                                  </Popover>
-                                : null
-                              }
+                                      >
+                                        🔃
+                                      </Button>
+                                      <Button
+                                        variant="outline"
+                                        onClick={() => {
+                                          debouncedCollateralAmount(
+                                            collateralAmount * 1.1,
+                                            currentFeedSettlementPrice,
+                                            debtAmount,
+                                            collateralAmount,
+                                            parsedAsset.p,
+                                            parsedCollateralAsset.p,
+                                            ratioValue,
+                                            debtLock,
+                                            collateralLock,
+                                            ratioLock
+                                          );
+                                        }}
+                                      >
+                                        + 10%
+                                      </Button>
+                                    </div>
+                                  </PopoverContent>
+                                </Popover>
+                              ) : null}
                             </span>
                           </span>
                         </FormControl>
@@ -2185,7 +2466,9 @@ export default function Smartcoin(properties) {
                     name="ratioValue"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>{t("Smartcoin:collateralDebtRatio")}</FormLabel>
+                        <FormLabel>
+                          {t("Smartcoin:collateralDebtRatio")}
+                        </FormLabel>
                         <FormDescription>
                           <span className="grid grid-cols-3 mt-0 pt-0">
                             <span className="col-span-2 mt-0 pt-0">
@@ -2248,58 +2531,82 @@ export default function Smartcoin(properties) {
                                   readOnly
                                 />
                               )}
-                              {
-                                ratioLock === "editable"
-                                ? <Slider
-                                    defaultValue={[ratioValue]}
-                                    value={[ratioValue]}
-                                    max={20}
-                                    min={parsedBitasset.mcr / 1000}
-                                    step={0.01}
-                                    onValueChange={(value) => {
-                                      debouncedSetRatioValue(
-                                        value[0],
-                                        currentFeedSettlementPrice,
-                                        debtAmount,
-                                        collateralAmount,
-                                        parsedBitasset.mcr,
-                                        parsedAsset.p,
-                                        parsedCollateralAsset.p,
-                                        debtLock,
-                                        collateralLock,
-                                        ratioLock
-                                      );
-                                    }}
-                                  />
-                                : null
-                              }
-                              
+                              {ratioLock === "editable" ? (
+                                <Slider
+                                  defaultValue={[ratioValue]}
+                                  value={[ratioValue]}
+                                  max={20}
+                                  min={parsedBitasset.mcr / 1000}
+                                  step={0.01}
+                                  onValueChange={(value) => {
+                                    debouncedSetRatioValue(
+                                      value[0],
+                                      currentFeedSettlementPrice,
+                                      debtAmount,
+                                      collateralAmount,
+                                      parsedBitasset.mcr,
+                                      parsedAsset.p,
+                                      parsedCollateralAsset.p,
+                                      debtLock,
+                                      collateralLock,
+                                      ratioLock
+                                    );
+                                  }}
+                                />
+                              ) : null}
                             </span>
                             <span className="col-span-4 ml-3">
-                              {
-                                ratioLock === "editable"
-                                ? <Popover>
-                                    <PopoverTrigger>
-                                      <span
-                                        onClick={() => {
-                                          event.preventDefault();
-                                        }}
-                                        className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4"
-                                      >
-                                        <Label>{t("Smartcoin:changeRatioValue")}</Label>
-                                      </span>
-                                    </PopoverTrigger>
-                                    <PopoverContent>
-                                      <Label>{t("Smartcoin:provideNewRatio")}</Label>{" "}
-                                      <Input
-                                        placeholder={ratioValue}
-                                        className="mb-2 mt-1"
-                                        onChange={(event) => {
-                                          const input = event.target.value;
-                                          const regex = /^[0-9]*\.?[0-9]*$/;
-                                          if (input && input.length && regex.test(input)) {
+                              {ratioLock === "editable" ? (
+                                <Popover>
+                                  <PopoverTrigger>
+                                    <span
+                                      onClick={() => {
+                                        event.preventDefault();
+                                      }}
+                                      className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4"
+                                    >
+                                      <Label>
+                                        {t("Smartcoin:changeRatioValue")}
+                                      </Label>
+                                    </span>
+                                  </PopoverTrigger>
+                                  <PopoverContent>
+                                    <Label>
+                                      {t("Smartcoin:provideNewRatio")}
+                                    </Label>{" "}
+                                    <Input
+                                      placeholder={ratioValue}
+                                      className="mb-2 mt-1"
+                                      onChange={(event) => {
+                                        const input = event.target.value;
+                                        const regex = /^[0-9]*\.?[0-9]*$/;
+                                        if (
+                                          input &&
+                                          input.length &&
+                                          regex.test(input)
+                                        ) {
+                                          debouncedSetRatioValue(
+                                            input,
+                                            currentFeedSettlementPrice,
+                                            debtAmount,
+                                            collateralAmount,
+                                            parsedBitasset.mcr,
+                                            parsedAsset.p,
+                                            parsedCollateralAsset.p,
+                                            debtLock,
+                                            collateralLock,
+                                            ratioLock
+                                          );
+                                        }
+                                      }}
+                                    />
+                                    <div className="grid grid-cols-1 gap-2">
+                                      <div className="grid grid-cols-3 gap-2">
+                                        <Button
+                                          variant="outline"
+                                          onClick={() => {
                                             debouncedSetRatioValue(
-                                              input,
+                                              ratioValue * 0.9,
                                               currentFeedSettlementPrice,
                                               debtAmount,
                                               collateralAmount,
@@ -2310,126 +2617,115 @@ export default function Smartcoin(properties) {
                                               collateralLock,
                                               ratioLock
                                             );
-                                          }
-                                        }}
-                                      />
-                                      <div className="grid grid-cols-1 gap-2">
-                                        <div className="grid grid-cols-3 gap-2">
-                                          <Button
-                                            variant="outline"
-                                            onClick={() => {
-                                              debouncedSetRatioValue(
-                                                ratioValue * 0.9,
-                                                currentFeedSettlementPrice,
-                                                debtAmount,
-                                                collateralAmount,
-                                                parsedBitasset.mcr,
-                                                parsedAsset.p,
-                                                parsedCollateralAsset.p,
-                                                debtLock,
-                                                collateralLock,
-                                                ratioLock
-                                              );
-                                            }}
-                                          >
-                                            - 10%
-                                          </Button>
-                                          <Button
-                                            variant="outline"
-                                            onClick={() => {
-                                              debouncedSetRatioValue(
-                                                originalRatioValue,
-                                                currentFeedSettlementPrice,
-                                                debtAmount,
-                                                collateralAmount,
-                                                parsedBitasset.mcr,
-                                                parsedAsset.p,
-                                                parsedCollateralAsset.p,
-                                                debtLock,
-                                                collateralLock,
-                                                ratioLock
-                                              );
-                                            }}
-                                          >
-                                            🔃
-                                          </Button>
-                                          <Button
-                                            variant="outline"
-                                            onClick={() => {
-                                              debouncedSetRatioValue(
-                                                ratioValue * 1.1,
-                                                currentFeedSettlementPrice,
-                                                debtAmount,
-                                                collateralAmount,
-                                                parsedBitasset.mcr,
-                                                parsedAsset.p,
-                                                parsedCollateralAsset.p,
-                                                debtLock,
-                                                collateralLock,
-                                                ratioLock
-                                              );
-                                            }}
-                                          >
-                                            + 10%
-                                          </Button>
-                                        </div>
-                                        <div className="grid grid-cols-2 gap-2">
-                                            <Button
-                                              variant="outline"
-                                              onClick={() => {
-                                                debouncedSetRatioValue(
-                                                  parsedBitasset.mcr / 1000,
-                                                  currentFeedSettlementPrice,
-                                                  debtAmount,
-                                                  collateralAmount,
-                                                  parsedBitasset.mcr,
-                                                  parsedAsset.p,
-                                                  parsedCollateralAsset.p,
-                                                  debtLock,
-                                                  collateralLock,
-                                                  ratioLock
-                                                );
-                                              }}
-                                            >
-                                              {t("Smartcoin:minimum")}
-                                            </Button>
-                                            {
-                                              debtAmount && collateralAmount && collateralLock === "editable"
-                                                ? <Button
-                                                    variant="outline"
-                                                    onClick={() => {
-                                                      const _1xBacking = currentFeedSettlementPrice * debtAmount;
-                                                      const _maxRatio = (collateralAmount + collateralAssetHoldings) / _1xBacking;
-                                                      const _calculatedMaxRatio = parseFloat(_maxRatio.toFixed(3));
-
-                                                      debouncedSetRatioValue(
-                                                        _calculatedMaxRatio,
-                                                        currentFeedSettlementPrice,
-                                                        debtAmount,
-                                                        collateralAmount,
-                                                        parsedBitasset.mcr,
-                                                        parsedAsset.p,
-                                                        parsedCollateralAsset.p,
-                                                        debtLock,
-                                                        collateralLock,
-                                                        ratioLock
-                                                      );
-                                                    }}
-                                                  >
-                                                    {t("Smartcoin:maximum")}
-                                                  </Button>
-                                                : null
-                                            }
-                                        </div>
+                                          }}
+                                        >
+                                          - 10%
+                                        </Button>
+                                        <Button
+                                          variant="outline"
+                                          onClick={() => {
+                                            debouncedSetRatioValue(
+                                              originalRatioValue,
+                                              currentFeedSettlementPrice,
+                                              debtAmount,
+                                              collateralAmount,
+                                              parsedBitasset.mcr,
+                                              parsedAsset.p,
+                                              parsedCollateralAsset.p,
+                                              debtLock,
+                                              collateralLock,
+                                              ratioLock
+                                            );
+                                          }}
+                                        >
+                                          🔃
+                                        </Button>
+                                        <Button
+                                          variant="outline"
+                                          onClick={() => {
+                                            debouncedSetRatioValue(
+                                              ratioValue * 1.1,
+                                              currentFeedSettlementPrice,
+                                              debtAmount,
+                                              collateralAmount,
+                                              parsedBitasset.mcr,
+                                              parsedAsset.p,
+                                              parsedCollateralAsset.p,
+                                              debtLock,
+                                              collateralLock,
+                                              ratioLock
+                                            );
+                                          }}
+                                        >
+                                          + 10%
+                                        </Button>
                                       </div>
-                                    </PopoverContent>
-                                  </Popover>
-                                : null
-                              }
+                                      <div className="grid grid-cols-2 gap-2">
+                                        <Button
+                                          variant="outline"
+                                          onClick={() => {
+                                            debouncedSetRatioValue(
+                                              parsedBitasset.mcr / 1000,
+                                              currentFeedSettlementPrice,
+                                              debtAmount,
+                                              collateralAmount,
+                                              parsedBitasset.mcr,
+                                              parsedAsset.p,
+                                              parsedCollateralAsset.p,
+                                              debtLock,
+                                              collateralLock,
+                                              ratioLock
+                                            );
+                                          }}
+                                        >
+                                          {t("Smartcoin:minimum")}
+                                        </Button>
+                                        {debtAmount &&
+                                        collateralAmount &&
+                                        collateralLock === "editable" ? (
+                                          <Button
+                                            variant="outline"
+                                            onClick={() => {
+                                              const _1xBacking =
+                                                currentFeedSettlementPrice *
+                                                debtAmount;
+                                              const _maxRatio =
+                                                (collateralAmount +
+                                                  collateralAssetHoldings) /
+                                                _1xBacking;
+                                              const _calculatedMaxRatio =
+                                                parseFloat(
+                                                  _maxRatio.toFixed(3)
+                                                );
+
+                                              debouncedSetRatioValue(
+                                                _calculatedMaxRatio,
+                                                currentFeedSettlementPrice,
+                                                debtAmount,
+                                                collateralAmount,
+                                                parsedBitasset.mcr,
+                                                parsedAsset.p,
+                                                parsedCollateralAsset.p,
+                                                debtLock,
+                                                collateralLock,
+                                                ratioLock
+                                              );
+                                            }}
+                                          >
+                                            {t("Smartcoin:maximum")}
+                                          </Button>
+                                        ) : null}
+                                      </div>
+                                    </div>
+                                  </PopoverContent>
+                                </Popover>
+                              ) : null}
                             </span>
                           </span>
                         </FormControl>
-                        {ratioValue && parsedBitasset && ratioValue < parsedBitasset.mcr / 1000 ? (
+                        {ratioValue &&
+                        parsedBitasset &&
+                        ratioValue < parsedBitasset.mcr / 1000 ? (
                           <FormMessage>
                             {t("Smartcoin:debtCollateralRatioWarning", {
                               min: parsedBitasset.mcr / 1000,
@@ -2468,11 +2764,15 @@ export default function Smartcoin(properties) {
                       name="tcrValue"
                       render={({ field }) => (
                         <FormItem className="mt-0">
-                          <FormLabel>{t("Smartcoin:targetCollateralRatioValue")}</FormLabel>
+                          <FormLabel>
+                            {t("Smartcoin:targetCollateralRatioValue")}
+                          </FormLabel>
                           <FormDescription>
                             <span className="grid grid-cols-4 mt-0 pt-0">
                               <span className="col-span-3 mt-0 pt-0">
-                                {t("Smartcoin:targetCollateralRatioDescription")}
+                                {t(
+                                  "Smartcoin:targetCollateralRatioDescription"
+                                )}
                               </span>
                               <span className="col-span-1 text-right">
                                 {t("Smartcoin:targetCollateralRatioMin", {
@@ -2492,12 +2792,17 @@ export default function Smartcoin(properties) {
                                 />
                                 <Slider
                                   className="mt-3"
-                                  defaultValue={[tcrValue ?? parsedBitasset.mcr / 1000]}
+                                  defaultValue={[
+                                    tcrValue ?? parsedBitasset.mcr / 1000,
+                                  ]}
                                   max={20}
                                   min={parsedBitasset.mcr / 1000}
                                   step={0.1}
                                   onValueChange={(value) => {
-                                    debouncedSetTCRValue(value[0], parsedBitasset.mcr);
+                                    debouncedSetTCRValue(
+                                      value[0],
+                                      parsedBitasset.mcr
+                                    );
                                   }}
                                 />
                               </span>
@@ -2511,19 +2816,30 @@ export default function Smartcoin(properties) {
                                       }}
                                       className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4"
                                     >
-                                      <Label>{t("Smartcoin:changeTCRValue")}</Label>
+                                      <Label>
+                                        {t("Smartcoin:changeTCRValue")}
+                                      </Label>
                                     </span>
                                   </PopoverTrigger>
                                   <PopoverContent>
-                                    <Label>{t("Smartcoin:provideNewTCR")}</Label>
+                                    <Label>
+                                      {t("Smartcoin:provideNewTCR")}
+                                    </Label>
                                     <Input
                                       placeholder={tcrValue}
                                       className="mb-2 mt-1"
                                       onChange={(event) => {
                                         const input = event.target.value;
                                         const regex = /^[0-9]*\.?[0-9]*$/;
-                                        if (input && input.length && regex.test(input)) {
-                                          debouncedSetTCRValue(input, parsedBitasset.mcr);
+                                        if (
+                                          input &&
+                                          input.length &&
+                                          regex.test(input)
+                                        ) {
+                                          debouncedSetTCRValue(
+                                            input,
+                                            parsedBitasset.mcr
+                                          );
                                         }
                                       }}
                                     />
@@ -2542,29 +2858,37 @@ export default function Smartcoin(properties) {
                     name="networkFee"
                     render={({ field }) => (
                       <FormItem className="mb-1 mt-3">
-                        <FormLabel>{t("Smartcoin:networkBroadcastFee")}</FormLabel>
+                        <FormLabel>
+                          {t("Smartcoin:networkBroadcastFee")}
+                        </FormLabel>
                         <FormDescription>
                           {t("Smartcoin:networkBroadcastFeeDescription")}
                         </FormDescription>
                         <FormControl>
-                          <Input disabled placeholder={fee ? `${fee} BTS` : ""} readOnly />
+                          <Input
+                            disabled
+                            placeholder={fee ? `${fee} BTS` : ""}
+                            readOnly
+                          />
                         </FormControl>
                       </FormItem>
                     )}
                   />
 
-                  {
-                    debtAssetHoldings && debtAssetHoldings.toString().includes("-")
-                    || collateralAssetHoldings && collateralAssetHoldings.toString().includes("-")
-                    ? <>
-                        <Button className="mt-5 mb-3" disabled>
-                          {t("Smartcoin:submit")}
-                        </Button>
-                    </>
-                    : <Button className="mt-5 mb-3" type="submit">
+                  {(debtAssetHoldings &&
+                    debtAssetHoldings.toString().includes("-")) ||
+                  (collateralAssetHoldings &&
+                    collateralAssetHoldings.toString().includes("-")) ? (
+                    <>
+                      <Button className="mt-5 mb-3" disabled>
                         {t("Smartcoin:submit")}
                       </Button>
-                  }
+                    </>
+                  ) : (
+                    <Button className="mt-5 mb-3" type="submit">
+                      {t("Smartcoin:submit")}
+                    </Button>
+                  )}
                 </form>
               </Form>
             </CardContent>
@@ -2574,7 +2898,9 @@ export default function Smartcoin(properties) {
         {!invalidUrlParams && !parsedBitasset ? (
           <Card>
             <CardHeader>
-              <CardTitle>{t("Smartcoin:collateralDebtPositionFormTitle")}</CardTitle>
+              <CardTitle>
+                {t("Smartcoin:collateralDebtPositionFormTitle")}
+              </CardTitle>
               <CardDescription>
                 {t("Smartcoin:collateralDebtPositionFormDescription")}
               </CardDescription>
@@ -2607,7 +2933,9 @@ export default function Smartcoin(properties) {
                       <FormItem>
                         <FormLabel>
                           <span className="grid grid-cols-2 mt-2">
-                            <span className="col-span-1 mt-1">{t("Smartcoin:assetToBorrow")}</span>
+                            <span className="col-span-1 mt-1">
+                              {t("Smartcoin:assetToBorrow")}
+                            </span>
                             <span className="col-span-1 text-right">
                               <Badge>{t("Smartcoin:changeAsset")}</Badge>
                             </span>
@@ -2632,7 +2960,12 @@ export default function Smartcoin(properties) {
                       <FormItem>
                         <FormLabel>current feed price</FormLabel>
                         <FormControl>
-                          <Input disabled className="mb-3 mt-3" placeholder="" readOnly />
+                          <Input
+                            disabled
+                            className="mb-3 mt-3"
+                            placeholder=""
+                            readOnly
+                          />
                         </FormControl>
                       </FormItem>
                     )}
@@ -2645,7 +2978,12 @@ export default function Smartcoin(properties) {
                       <FormItem>
                         <FormLabel>{t("Smartcoin:yourCallPrice")}</FormLabel>{" "}
                         <FormControl>
-                          <Input disabled className="mb-3 mt-3" value="" readOnly />
+                          <Input
+                            disabled
+                            className="mb-3 mt-3"
+                            value=""
+                            readOnly
+                          />
                         </FormControl>
                       </FormItem>
                     )}
@@ -2657,13 +2995,17 @@ export default function Smartcoin(properties) {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Debt amount</FormLabel>
-                        <FormDescription style={{ marginTop: 0, paddingTop: 0 }}>
+                        <FormDescription
+                          style={{ marginTop: 0, paddingTop: 0 }}
+                        >
                           <span className="grid grid-cols-3 mt-0 pt-0">
                             <span className="col-span-2 mt-0 pt-0 text-sm">
                               {t("Smartcoin:amountToBorrowDescription")}
                             </span>
                             <span className="col-span-1 text-right text-sm">
-                              {t("Smartcoin:availableToBorrow", { available: 0 })}
+                              {t("Smartcoin:availableToBorrow", {
+                                available: 0,
+                              })}
                             </span>
                           </span>
                         </FormDescription>
@@ -2675,10 +3017,17 @@ export default function Smartcoin(properties) {
                               </Toggle>
                             </span>
                             <span className="col-span-9">
-                              <Input placeholder="0" className="mb-3" disabled readOnly />
+                              <Input
+                                placeholder="0"
+                                className="mb-3"
+                                disabled
+                                readOnly
+                              />
                             </span>
                             <span className="col-span-2 ml-3">
-                              <Button variant="outline">{t("Smartcoin:change")}</Button>{" "}
+                              <Button variant="outline">
+                                {t("Smartcoin:change")}
+                              </Button>{" "}
                             </span>
                           </span>
                         </FormControl>
@@ -2691,14 +3040,20 @@ export default function Smartcoin(properties) {
                     name="collateralAmount"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>{t("Smartcoin:collateralAmountPlaceholder")}</FormLabel>
+                        <FormLabel>
+                          {t("Smartcoin:collateralAmountPlaceholder")}
+                        </FormLabel>
                         <FormDescription className="mt-0 pt-0">
                           <span className="grid grid-cols-3 mt-0 pt-0">
                             <span className="col-span-2 mt-0 pt-0 text-sm">
-                              {t("Smartcoin:collateralAmountDescriptionPlaceholder")}
+                              {t(
+                                "Smartcoin:collateralAmountDescriptionPlaceholder"
+                              )}
                             </span>
                             <span className="col-span-1 text-right text-sm">
-                              {t("Smartcoin:availableCollateral", { available: 0 })}
+                              {t("Smartcoin:availableCollateral", {
+                                available: 0,
+                              })}
                             </span>
                           </span>
                         </FormDescription>
@@ -2710,10 +3065,17 @@ export default function Smartcoin(properties) {
                               </Toggle>
                             </span>
                             <span className="col-span-9">
-                              <Input placeholder="0" className="mb-3" disabled readOnly />
+                              <Input
+                                placeholder="0"
+                                className="mb-3"
+                                disabled
+                                readOnly
+                              />
                             </span>
                             <span className="col-span-2 ml-3">
-                              <Button variant="outline">{t("Smartcoin:change")}</Button>
+                              <Button variant="outline">
+                                {t("Smartcoin:change")}
+                              </Button>
                             </span>
                           </span>
                         </FormControl>
@@ -2726,7 +3088,9 @@ export default function Smartcoin(properties) {
                     name="ratioValue"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>{t("Smartcoin:ratioOfCollateralToDebt")}</FormLabel>{" "}
+                        <FormLabel>
+                          {t("Smartcoin:ratioOfCollateralToDebt")}
+                        </FormLabel>{" "}
                         <FormControl>
                           <span className="grid grid-cols-12">
                             <span className="col-span-1">
@@ -2767,7 +3131,9 @@ export default function Smartcoin(properties) {
                     name="networkFee"
                     render={({ field }) => (
                       <FormItem className="mb-1 mt-3">
-                        <FormLabel>{t("Smartcoin:networkBroadcastFee")}</FormLabel>
+                        <FormLabel>
+                          {t("Smartcoin:networkBroadcastFee")}
+                        </FormLabel>
                         <FormDescription>
                           {t("Smartcoin:networkBroadcastFeeDescription")}
                         </FormDescription>
@@ -2778,7 +3144,12 @@ export default function Smartcoin(properties) {
                     )}
                   />
 
-                  <Button className="mt-5 mb-3" variant="outline" disabled type="submit">
+                  <Button
+                    className="mt-5 mb-3"
+                    variant="outline"
+                    disabled
+                    type="submit"
+                  >
                     Submit
                   </Button>
                 </form>
@@ -2798,7 +3169,9 @@ export default function Smartcoin(properties) {
               <Card>
                 <CardHeader className="pb-3">
                   <CardTitle>
-                    {t("Smartcoin:settlementFundTitle", { symbol: finalAsset.symbol })}
+                    {t("Smartcoin:settlementFundTitle", {
+                      symbol: finalAsset.symbol,
+                    })}
                   </CardTitle>
                   <CardDescription>
                     {t("Smartcoin:settlementFundDescription")}
@@ -2829,7 +3202,9 @@ export default function Smartcoin(properties) {
                       {t("Smartcoin:currentPrice")}
                       <br />
                       <span className="text-sm">
-                        {(1 / currentFeedSettlementPrice).toFixed(parsedAsset.p)}
+                        {(1 / currentFeedSettlementPrice).toFixed(
+                          parsedAsset.p
+                        )}
                       </span>
                     </div>
                     <div className="col-span-1">
@@ -2837,7 +3212,9 @@ export default function Smartcoin(properties) {
                       <br />
                       <span className="text-sm">
                         {(
-                          (1 / currentFeedSettlementPrice / settlementFund.finalSettlementPrice) *
+                          (1 /
+                            currentFeedSettlementPrice /
+                            settlementFund.finalSettlementPrice) *
                           100
                         ).toFixed(2)}
                         {" % ("}
@@ -2845,7 +3222,9 @@ export default function Smartcoin(properties) {
                           {"-"}
                           {(
                             100 -
-                            (1 / currentFeedSettlementPrice / settlementFund.finalSettlementPrice) *
+                            (1 /
+                              currentFeedSettlementPrice /
+                              settlementFund.finalSettlementPrice) *
                               100
                           ).toFixed(2)}
                           {" %"}
@@ -2856,7 +3235,9 @@ export default function Smartcoin(properties) {
                   </div>
                   <a href={`/settlement/index.html?id=${finalAsset.id}`}>
                     <Button className="mt-3 pb-2">
-                      {t("Smartcoin:bidOnSettlementFund", { symbol: finalAsset.symbol })}
+                      {t("Smartcoin:bidOnSettlementFund", {
+                        symbol: finalAsset.symbol,
+                      })}
                     </Button>
                   </a>
                 </CardContent>
@@ -2871,7 +3252,9 @@ export default function Smartcoin(properties) {
               <Card>
                 <CardHeader className="pb-3">
                   <CardTitle>
-                    {t("Smartcoin:individualSettlementFund", { symbol: finalAsset.symbol })}
+                    {t("Smartcoin:individualSettlementFund", {
+                      symbol: finalAsset.symbol,
+                    })}
                   </CardTitle>{" "}
                   <CardDescription>
                     {t("Smartcoin:individualSettlementFundDescription")}
@@ -2911,7 +3294,8 @@ export default function Smartcoin(properties) {
                       <br />
                       <span className="text-sm">
                         {(
-                          ((individualSettlementFund._debt * individualSettlementPrice) /
+                          ((individualSettlementFund._debt *
+                            individualSettlementPrice) /
                             individualSettlementFund._fund) *
                           100
                         ).toFixed(2)}
@@ -2920,7 +3304,8 @@ export default function Smartcoin(properties) {
                           {"-"}
                           {(
                             100 -
-                            ((individualSettlementFund._debt * individualSettlementPrice) /
+                            ((individualSettlementFund._debt *
+                              individualSettlementPrice) /
                               individualSettlementFund._fund) *
                               100
                           ).toFixed(2)}
@@ -2932,7 +3317,9 @@ export default function Smartcoin(properties) {
                   </div>
                   <a href={`/settlement/index.html?id=${finalAsset.id}`}>
                     <Button className="mt-3 pb-2">
-                      {t("Smartcoin:bidOnSettlementFund", { symbol: finalAsset.symbol })}
+                      {t("Smartcoin:bidOnSettlementFund", {
+                        symbol: finalAsset.symbol,
+                      })}
                     </Button>
                   </a>
                 </CardContent>
@@ -2941,7 +3328,9 @@ export default function Smartcoin(properties) {
           </>
         ) : null}
 
-        {usrMarginPositions && usrMarginPositions.length ? <UsrMarginPositionCard /> : null}
+        {usrMarginPositions && usrMarginPositions.length ? (
+          <UsrMarginPositionCard />
+        ) : null}
 
         {!invalidUrlParams && finalAsset && parsedAsset && parsedBitasset ? (
           <AboutAssetCard
@@ -2955,12 +3344,15 @@ export default function Smartcoin(properties) {
           />
         ) : null}
 
-        {!invalidUrlParams && (!finalAsset || !parsedAsset || !parsedBitasset) ? (
+        {!invalidUrlParams &&
+        (!finalAsset || !parsedAsset || !parsedBitasset) ? (
           <Card className="mt-2">
             <CardHeader className="pb-2">
               <CardTitle>
                 <div className="grid grid-cols-8">
-                  <div className="col-span-6">{t("Smartcoin:aboutSmartcoinAsset")}</div>
+                  <div className="col-span-6">
+                    {t("Smartcoin:aboutSmartcoinAsset")}
+                  </div>
                   <div className="col-span-2 text-right">
                     <Button variant="outline" className="h-5">
                       {t("Smartcoin:viewJson")}
@@ -3000,7 +3392,10 @@ export default function Smartcoin(properties) {
                 <div className="col-span-5">
                   <div className="grid grid-cols-1 gap-1 w-full text-sm">
                     <EmptyRow title={t("Smartcoin:marketFee")} button="" />
-                    <EmptyRow title={t("Smartcoin:takerFeePercent")} button="" />
+                    <EmptyRow
+                      title={t("Smartcoin:takerFeePercent")}
+                      button=""
+                    />
                     <EmptyRow title={t("Smartcoin:rewardPercent")} button="" />
                   </div>
                 </div>
@@ -3020,12 +3415,18 @@ export default function Smartcoin(properties) {
               <div className="grid grid-cols-11 gap-1 w-full text-sm">
                 <div className="col-span-5">
                   <div className="grid grid-cols-1 gap-1 w-full text-sm">
-                    <EmptyRow title={t("Smartcoin:collateralAsset")} button="" />
+                    <EmptyRow
+                      title={t("Smartcoin:collateralAsset")}
+                      button=""
+                    />
                     <EmptyRow title={t("Smartcoin:mcr")} button="" />
                     <EmptyRow title={t("Smartcoin:mssr")} button="" />
                     <EmptyRow title={t("Smartcoin:icr")} button="" />
                     <EmptyRow title={t("Smartcoin:feedQty")} button="" />
-                    <EmptyRow title={t("Smartcoin:settlementOffset")} button="" />
+                    <EmptyRow
+                      title={t("Smartcoin:settlementOffset")}
+                      button=""
+                    />
                   </div>
                 </div>
                 <div className="col-span-1 flex justify-center items-center">
@@ -3061,7 +3462,8 @@ export default function Smartcoin(properties) {
           />
         ) : null}
 
-        {!invalidUrlParams && (!finalCollateralAsset || !parsedCollateralAsset) ? (
+        {!invalidUrlParams &&
+        (!finalCollateralAsset || !parsedCollateralAsset) ? (
           <Card className="mt-2">
             <CardHeader className="pb-2">
               <CardTitle>
@@ -3106,7 +3508,10 @@ export default function Smartcoin(properties) {
                 <div className="col-span-5">
                   <div className="grid grid-cols-1 gap-1 w-full text-sm">
                     <EmptyRow title={t("Smartcoin:marketFee")} button="" />
-                    <EmptyRow title={t("Smartcoin:takerFeePercent")} button="" />
+                    <EmptyRow
+                      title={t("Smartcoin:takerFeePercent")}
+                      button=""
+                    />
                     <EmptyRow title={t("Smartcoin:rewardPercent")} button="" />
                   </div>
                 </div>
@@ -3156,7 +3561,9 @@ export default function Smartcoin(properties) {
                         })
                       : t("Smartcoin:orderBookLoading")}
                   </CardTitle>
-                  <CardDescription>{t("Smartcoin:orderBookNote")}</CardDescription>
+                  <CardDescription>
+                    {t("Smartcoin:orderBookNote")}
+                  </CardDescription>
                 </div>
                 <div className="col-span-1 text-right">
                   <a
@@ -3179,7 +3586,10 @@ export default function Smartcoin(properties) {
                       {t("Smartcoin:viewingBuyOrders")}
                     </TabsTrigger>
                   ) : (
-                    <TabsTrigger value="buy" onClick={() => setActiveOrderTab("buy")}>
+                    <TabsTrigger
+                      value="buy"
+                      onClick={() => setActiveOrderTab("buy")}
+                    >
                       {t("Smartcoin:viewBuyOrders")}
                     </TabsTrigger>
                   )}
@@ -3188,7 +3598,10 @@ export default function Smartcoin(properties) {
                       {t("Smartcoin:viewingSellOrders")}
                     </TabsTrigger>
                   ) : (
-                    <TabsTrigger value="sell" onClick={() => setActiveOrderTab("sell")}>
+                    <TabsTrigger
+                      value="sell"
+                      onClick={() => setActiveOrderTab("sell")}
+                    >
                       {t("Smartcoin:viewSellOrders")}
                     </TabsTrigger>
                   )}
@@ -3198,7 +3611,9 @@ export default function Smartcoin(properties) {
                     <>
                       <div className="grid grid-cols-4">
                         <div className="col-span-1">{t("Smartcoin:price")}</div>
-                        <div className="col-span-1">{parsedCollateralAsset.s}</div>
+                        <div className="col-span-1">
+                          {parsedCollateralAsset.s}
+                        </div>
                         <div className="col-span-1">{parsedAsset.s}</div>
                         <div className="col-span-1">{t("Smartcoin:total")}</div>
                       </div>
@@ -3212,7 +3627,9 @@ export default function Smartcoin(properties) {
                       </List>
                     </>
                   ) : null}
-                  {buyOrders && !buyOrders.length ? t("Smartcoin:noBuyOrdersFound") : null}
+                  {buyOrders && !buyOrders.length
+                    ? t("Smartcoin:noBuyOrdersFound")
+                    : null}
                   {!buyOrders ? t("Smartcoin:loading") : null}
                 </TabsContent>
                 <TabsContent value="sell">
@@ -3221,7 +3638,9 @@ export default function Smartcoin(properties) {
                       <div className="grid grid-cols-4">
                         <div className="col-span-1">{t("Smartcoin:price")}</div>
                         <div className="col-span-1">{parsedAsset.s}</div>
-                        <div className="col-span-1">{parsedCollateralAsset.s}</div>
+                        <div className="col-span-1">
+                          {parsedCollateralAsset.s}
+                        </div>
                         <div className="col-span-1">{t("Smartcoin:total")}</div>
                       </div>
                       <List
@@ -3234,7 +3653,9 @@ export default function Smartcoin(properties) {
                       </List>
                     </>
                   ) : null}
-                  {sellOrders && !sellOrders.length ? "No sell orders found" : null}
+                  {sellOrders && !sellOrders.length
+                    ? "No sell orders found"
+                    : null}
                   {!sellOrders ? "Loading..." : null}
                 </TabsContent>
               </Tabs>
@@ -3255,14 +3676,18 @@ export default function Smartcoin(properties) {
                     })
                   : t("Smartcoin:callOrdersLoading")}
               </CardTitle>
-              <CardDescription>{t("Smartcoin:checkMarginPositions")}</CardDescription>
+              <CardDescription>
+                {t("Smartcoin:checkMarginPositions")}
+              </CardDescription>
             </CardHeader>
             <CardContent>
               {assetCallOrders && assetCallOrders.length ? (
                 <>
                   <div className="grid grid-cols-6">
                     <div className="col-span-1">{t("Smartcoin:borrower")}</div>
-                    <div className="col-span-1">{t("Smartcoin:collateral")}</div>
+                    <div className="col-span-1">
+                      {t("Smartcoin:collateral")}
+                    </div>
                     <div className="col-span-1">{t("Smartcoin:debt")}</div>
                     <div className="col-span-1">{t("Smartcoin:callPrice")}</div>
                     <div className="col-span-1">{t("Smartcoin:tcr")}</div>
@@ -3278,7 +3703,9 @@ export default function Smartcoin(properties) {
                   </List>
                 </>
               ) : null}
-              {assetCallOrders && !assetCallOrders.length ? t("Smartcoin:noCallOrdersFound") : null}
+              {assetCallOrders && !assetCallOrders.length
+                ? t("Smartcoin:noCallOrdersFound")
+                : null}
               {!assetCallOrders ? t("Smartcoin:loading") : null}
             </CardContent>
           </Card>
@@ -3297,7 +3724,9 @@ export default function Smartcoin(properties) {
                     })
                   : t("Smartcoin:settleOrdersLoading")}
               </CardTitle>
-              <CardDescription>{t("Smartcoin:checkSettleOrders")}</CardDescription>
+              <CardDescription>
+                {t("Smartcoin:checkSettleOrders")}
+              </CardDescription>
             </CardHeader>
             <CardContent>
               {assetSettleOrders && assetSettleOrders.length ? (
@@ -3305,7 +3734,9 @@ export default function Smartcoin(properties) {
                   <div className="grid grid-cols-6">
                     <div className="col-span-1">{t("Smartcoin:owner")}</div>
                     <div className="col-span-1">{t("Smartcoin:balance2")}</div>
-                    <div className="col-span-1">{t("Smartcoin:settlementDate")}</div>
+                    <div className="col-span-1">
+                      {t("Smartcoin:settlementDate")}
+                    </div>
                   </div>
                   <List
                     height={260}
@@ -3335,7 +3766,9 @@ export default function Smartcoin(properties) {
                   ? t("Smartcoin:priceFeedsForAsset", { asset: parsedAsset.s })
                   : t("Smartcoin:priceFeedsLoading")}
               </CardTitle>
-              <CardDescription>{t("Smartcoin:checkLatestPriceFeeds")}</CardDescription>
+              <CardDescription>
+                {t("Smartcoin:checkLatestPriceFeeds")}
+              </CardDescription>
             </CardHeader>
             <CardContent>
               {finalBitasset && finalBitasset.feeds ? (
@@ -3344,7 +3777,9 @@ export default function Smartcoin(properties) {
                     <div className="col-span-2">{t("Smartcoin:user")}</div>
                     <div className="col-span-2">{t("Smartcoin:date")}</div>
                     <div className="col-span-2">{t("Smartcoin:cer")}</div>
-                    <div className="col-span-2">{t("Smartcoin:settlement")}</div>
+                    <div className="col-span-2">
+                      {t("Smartcoin:settlement")}
+                    </div>
                     <div className="col-span-1">{t("Smartcoin:icr")}</div>
                     <div className="col-span-1">{t("Smartcoin:mcr")}</div>
                     <div className="col-span-1">{t("Smartcoin:mssr")}</div>
@@ -3372,7 +3807,9 @@ export default function Smartcoin(properties) {
         <Card>
           <CardHeader className="pb-3">
             <CardTitle>{t("Smartcoin:risksAssociated")}</CardTitle>
-            <CardDescription>{t("Smartcoin:doYourOwnResearch2")}</CardDescription>
+            <CardDescription>
+              {t("Smartcoin:doYourOwnResearch2")}
+            </CardDescription>
           </CardHeader>
           <CardContent>
             {t("Smartcoin:internalRiskFactors")}
@@ -3394,7 +3831,9 @@ export default function Smartcoin(properties) {
             {t("Smartcoin:externalRiskFactors")}
             <br />
             <span className="text-sm">
-              <Label className="mb-0 pb-0 text-lg">{t("Smartcoin:priceFeedExposure")}</Label>
+              <Label className="mb-0 pb-0 text-lg">
+                {t("Smartcoin:priceFeedExposure")}
+              </Label>
               <ul className="ml-2 list-disc [&>li]:mt-2 pl-2">
                 <li>{t("Smartcoin:riskPriceFluctuation")}</li>
                 <li>{t("Smartcoin:riskReferenceAssetCease")}</li>

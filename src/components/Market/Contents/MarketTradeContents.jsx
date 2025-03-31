@@ -15,8 +15,14 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function MarketTradeContents(properties) {
-  const { type, publicMarketHistory, marketHistoryInProgress, reset, assetAData, assetBData } =
-    properties;
+  const {
+    type,
+    publicMarketHistory,
+    marketHistoryInProgress,
+    reset,
+    assetAData,
+    assetBData,
+  } = properties;
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
 
   return (

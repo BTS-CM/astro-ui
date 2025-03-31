@@ -28,8 +28,12 @@ export default function MyOpenOrders(properties) {
   const relevantOpenOrders = useMemo(() => {
     if (usrLimitOrders && usrLimitOrders.length) {
       return type === "buy"
-        ? usrLimitOrders.filter((order) => order.sell_price.quote.asset_id === assetBData.id)
-        : usrLimitOrders.filter((order) => order.sell_price.quote.asset_id === assetAData.id);
+        ? usrLimitOrders.filter(
+            (order) => order.sell_price.quote.asset_id === assetBData.id
+          )
+        : usrLimitOrders.filter(
+            (order) => order.sell_price.quote.asset_id === assetAData.id
+          );
     }
     return !!usrLimitOrders ? [] : null;
   }, [usrLimitOrders, type, assetAData, assetBData]);
@@ -56,7 +60,8 @@ export default function MyOpenOrders(properties) {
       </CardHeader>
       <CardContent className="space-y-2">
         {marketHistoryInProgress ? <Skeleton count={5} /> : null}
-        {(!relevantOpenOrders || !relevantOpenOrders.length) && !marketHistoryInProgress ? (
+        {(!relevantOpenOrders || !relevantOpenOrders.length) &&
+        !marketHistoryInProgress ? (
           type === "buy" ? (
             <>{t("MyOpenOrders:noOpenBuyOrders")}</>
           ) : (

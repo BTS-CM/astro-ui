@@ -1,4 +1,9 @@
-import React, { useState, useEffect, useSyncExternalStore, useMemo } from "react";
+import React, {
+  useState,
+  useEffect,
+  useSyncExternalStore,
+  useMemo,
+} from "react";
 import { useForm } from "react-hook-form";
 import { useStore } from "@nanostores/react";
 import { CalendarIcon } from "@radix-ui/react-icons";
@@ -44,8 +49,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { Avatar as Av, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Avatar as Av,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/ui/avatar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -85,7 +98,11 @@ export default function TimedTransfer(properties) {
   const [transferAmount, setTransferAmount] = useState(0);
   const [reviewPeriodSeconds, setReviewPeriodSeconds] = useState(60000);
 
-  const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
+  const usr = useSyncExternalStore(
+    $currentUser.subscribe,
+    $currentUser.get,
+    () => true
+  );
 
   const {
     _marketSearchBTS,
@@ -93,7 +110,7 @@ export default function TimedTransfer(properties) {
     _assetsBTS,
     _assetsTEST,
     _globalParamsBTS,
-    _globalParamsTEST
+    _globalParamsTEST,
   } = properties;
 
   const _chain = useMemo(() => {
@@ -147,14 +164,16 @@ export default function TimedTransfer(properties) {
         currentNode ? currentNode.url : null,
       ]);
 
-      unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
-        if (data && !error && !loading) {
-          const filteredData = data.filter((balance) =>
-            assets.find((x) => x.id === balance.asset_id)
-          );
-          setBalances(filteredData);
+      unsubscribeUserBalances = userBalancesStore.subscribe(
+        ({ data, error, loading }) => {
+          if (data && !error && !loading) {
+            const filteredData = data.filter((balance) =>
+              assets.find((x) => x.id === balance.asset_id)
+            );
+            setBalances(filteredData);
+          }
         }
-      });
+      );
     }
 
     return () => {
@@ -167,10 +186,7 @@ export default function TimedTransfer(properties) {
     if (usr && usr.chain && currentNode && targetUser) {
       const userStore = createObjectStore([
         usr.chain,
-        JSON.stringify([
-          usr.id,
-          targetUser.id,
-        ]),
+        JSON.stringify([usr.id, targetUser.id]),
         currentNode ? currentNode.url : null,
       ]);
       userStore.subscribe(({ data, error, loading }) => {
@@ -219,14 +235,16 @@ export default function TimedTransfer(properties) {
     return new Date(now.getTime() + oneHour);
   });
 
-  const [date, setDate] = useState(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)); // Solely for the calendar component to display a date string
+  const [date, setDate] = useState(
+    new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+  ); // Solely for the calendar component to display a date string
 
   useEffect(() => {
     if (expiryType === "specific" && date) {
       setExpiry(date);
     }
   }, [expiryType, date]);
-  
+
   return (
     <>
       <div className="container mx-auto mt-5 mb-5">
@@ -263,21 +281,29 @@ export default function TimedTransfer(properties) {
                                   eye: "normal",
                                   mouth: "open",
                                 }}
-                                colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]}
+                                colors={[
+                                  "#92A1C6",
+                                  "#146A7C",
+                                  "#F0AB3D",
+                                  "#C271B4",
+                                  "#C20D90",
+                                ]}
                               />
                             </div>
                             <div className="col-span-7">
                               <Input
                                 disabled
                                 className="mb-1 mt-1"
-                                value={`${usr && usr.username ? usr.username : "?"} (${
-                                  usr && usr.id ? usr.id : "?"
-                                })`}
+                                value={`${
+                                  usr && usr.username ? usr.username : "?"
+                                } (${usr && usr.id ? usr.id : "?"})`}
                               />
                             </div>
                           </div>
                         </FormControl>
-                        <FormDescription>{t("Transfer:sendingAccountDescription")}</FormDescription>
+                        <FormDescription>
+                          {t("Transfer:sendingAccountDescription")}
+                        </FormDescription>
                       </FormItem>
                     )}
                   />
@@ -300,7 +326,13 @@ export default function TimedTransfer(properties) {
                                     eye: "normal",
                                     mouth: "open",
                                   }}
-                                  colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]}
+                                  colors={[
+                                    "#92A1C6",
+                                    "#146A7C",
+                                    "#F0AB3D",
+                                    "#C271B4",
+                                    "#C20D90",
+                                  ]}
                                 />
                               ) : (
                                 <Av>
@@ -327,7 +359,10 @@ export default function TimedTransfer(properties) {
                                 }}
                               >
                                 <DialogTrigger asChild>
-                                  <Button variant="outline" className="ml-3 mt-1">
+                                  <Button
+                                    variant="outline"
+                                    className="ml-3 mt-1"
+                                  >
                                     {targetUser
                                       ? t("Transfer:changeTarget")
                                       : t("Transfer:provideTarget")}
@@ -340,10 +375,14 @@ export default function TimedTransfer(properties) {
                                         ? t("Transfer:bitsharesAccountSearch")
                                         : null}
                                       {usr && usr.chain === "bitshares"
-                                        ? t("Transfer:bitsharesAccountSearchBTS")
+                                        ? t(
+                                            "Transfer:bitsharesAccountSearchBTS"
+                                          )
                                         : null}
                                       {usr && usr.chain !== "bitshares"
-                                        ? t("Transfer:bitsharesAccountSearchTEST")
+                                        ? t(
+                                            "Transfer:bitsharesAccountSearchTEST"
+                                          )
                                         : null}
                                     </DialogTitle>
                                     <DialogDescription>
@@ -351,9 +390,13 @@ export default function TimedTransfer(properties) {
                                     </DialogDescription>
                                   </DialogHeader>
                                   <AccountSearch
-                                    chain={usr && usr.chain ? usr.chain : "bitshares"}
+                                    chain={
+                                      usr && usr.chain ? usr.chain : "bitshares"
+                                    }
                                     excludedUsers={
-                                      usr && usr.username && usr.username.length ? [usr] : []
+                                      usr && usr.username && usr.username.length
+                                        ? [usr]
+                                        : []
                                     }
                                     setChosenAccount={setTargetUser}
                                   />
@@ -391,7 +434,9 @@ export default function TimedTransfer(properties) {
                                 <Av>
                                   <AvatarFallback>
                                     <div className="text-sm">
-                                      {foundAsset.bitasset_data_id ? "MPA" : "UIA"}
+                                      {foundAsset.bitasset_data_id
+                                        ? "MPA"
+                                        : "UIA"}
                                     </div>
                                   </AvatarFallback>
                                 </Av>
@@ -421,7 +466,9 @@ export default function TimedTransfer(properties) {
                                 otherAsset={null}
                                 marketSearch={marketSearch}
                                 type={null}
-                                chain={usr && usr.chain ? usr.chain : "bitshares"}
+                                chain={
+                                  usr && usr.chain ? usr.chain : "bitshares"
+                                }
                                 balances={balances}
                               />
                             </div>
@@ -431,13 +478,15 @@ export default function TimedTransfer(properties) {
                           {t("Transfer:assetToTransferDescription")}
                         </FormDescription>
                         <FormMessage>
-                          {
-                            foundAsset &&
-                            balances &&
-                            !balances.map((x) => x.asset_id).includes(foundAsset.id)
-                              ? t("Transfer:noAssetInAccount", { username: usr.username })
-                              : null
-                          }
+                          {foundAsset &&
+                          balances &&
+                          !balances
+                            .map((x) => x.asset_id)
+                            .includes(foundAsset.id)
+                            ? t("Transfer:noAssetInAccount", {
+                                username: usr.username,
+                              })
+                            : null}
                         </FormMessage>
                       </FormItem>
                     )}
@@ -457,13 +506,19 @@ export default function TimedTransfer(properties) {
                           <FormControl>
                             <Input
                               disabled
-                              label={t("Transfer:amountAvailableToTransferLabel")}
+                              label={t(
+                                "Transfer:amountAvailableToTransferLabel"
+                              )}
                               value={
                                 foundAsset &&
                                 balances &&
-                                balances.find((x) => x.asset_id === foundAsset.id)
+                                balances.find(
+                                  (x) => x.asset_id === foundAsset.id
+                                )
                                   ? `${humanReadableFloat(
-                                      balances.find((x) => x.asset_id === foundAsset.id).amount,
+                                      balances.find(
+                                        (x) => x.asset_id === foundAsset.id
+                                      ).amount,
                                       foundAsset.precision
                                     )} ${foundAsset.symbol}`
                                   : "0"
@@ -472,7 +527,9 @@ export default function TimedTransfer(properties) {
                             />
                           </FormControl>
                           <FormDescription>
-                            {t("Transfer:maximumAmountDescription", { asset: selectedAsset })}
+                            {t("Transfer:maximumAmountDescription", {
+                              asset: selectedAsset,
+                            })}
                           </FormDescription>
                         </FormItem>
                       )}
@@ -486,7 +543,9 @@ export default function TimedTransfer(properties) {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>
-                            {t("Transfer:amountToTransfer", { asset: selectedAsset ?? "???" })}
+                            {t("Transfer:amountToTransfer", {
+                              asset: selectedAsset ?? "???",
+                            })}
                           </FormLabel>
                           <FormControl
                             onChange={(event) => {
@@ -556,11 +615,21 @@ export default function TimedTransfer(properties) {
                           <SelectValue placeholder="1hr" />
                         </SelectTrigger>
                         <SelectContent className="bg-white">
-                          <SelectItem value="1hr">{t("LimitOrderCard:expiry.1hr")}</SelectItem>
-                          <SelectItem value="12hr">{t("LimitOrderCard:expiry.12hr")}</SelectItem>
-                          <SelectItem value="24hr">{t("LimitOrderCard:expiry.24hr")}</SelectItem>
-                          <SelectItem value="7d">{t("LimitOrderCard:expiry.7d")}</SelectItem>
-                          <SelectItem value="30d">{t("LimitOrderCard:expiry.30d")}</SelectItem>
+                          <SelectItem value="1hr">
+                            {t("LimitOrderCard:expiry.1hr")}
+                          </SelectItem>
+                          <SelectItem value="12hr">
+                            {t("LimitOrderCard:expiry.12hr")}
+                          </SelectItem>
+                          <SelectItem value="24hr">
+                            {t("LimitOrderCard:expiry.24hr")}
+                          </SelectItem>
+                          <SelectItem value="7d">
+                            {t("LimitOrderCard:expiry.7d")}
+                          </SelectItem>
+                          <SelectItem value="30d">
+                            {t("LimitOrderCard:expiry.30d")}
+                          </SelectItem>
                           <SelectItem value="specific">
                             {t("LimitOrderCard:expiry.specific")}
                           </SelectItem>
@@ -580,7 +649,9 @@ export default function TimedTransfer(properties) {
                               {date ? (
                                 format(date, "PPP")
                               ) : (
-                                <span>{t("LimitOrderCard:expiry.pickDate")}</span>
+                                <span>
+                                  {t("LimitOrderCard:expiry.pickDate")}
+                                </span>
                               )}
                             </Button>
                           </PopoverTrigger>
@@ -593,7 +664,11 @@ export default function TimedTransfer(properties) {
                                 const now = new Date();
                                 if (parsedDate < now) {
                                   //console.log("Not a valid date");
-                                  setDate(new Date(Date.now() + 1 * 24 * 60 * 60 * 1000));
+                                  setDate(
+                                    new Date(
+                                      Date.now() + 1 * 24 * 60 * 60 * 1000
+                                    )
+                                  );
                                   return;
                                 }
                                 //console.log("Setting expiry date");
@@ -608,8 +683,12 @@ export default function TimedTransfer(properties) {
 
                     <div className="grid grid-cols-1 gap-3">
                       <HoverInfo
-                        content={t("DeepLinkDialog:proposal.revisionPeriodSecondsContent")}
-                        header={t("DeepLinkDialog:proposal.revisionPeriodSecondsHeader")}
+                        content={t(
+                          "DeepLinkDialog:proposal.revisionPeriodSecondsContent"
+                        )}
+                        header={t(
+                          "DeepLinkDialog:proposal.revisionPeriodSecondsHeader"
+                        )}
                       />
                       <Select
                         onValueChange={(selectedReviewPeriod) => {
@@ -645,13 +724,18 @@ export default function TimedTransfer(properties) {
                           <FormControl>
                             <Input
                               disabled
-                              placeholder={`${t("Transfer:networkFeePlaceholder", { fee: fee })}`}
+                              placeholder={`${t(
+                                "Transfer:networkFeePlaceholder",
+                                { fee: fee }
+                              )}`}
                               className="mb-3 mt-3"
                             />
                           </FormControl>
                           {usr.id === usr.referrer ? (
                             <FormMessage>
-                              {t("Transfer:rebate", { rebate: trimPrice(fee * 0.8, 5) })}
+                              {t("Transfer:rebate", {
+                                rebate: trimPrice(fee * 0.8, 5),
+                              })}
                             </FormMessage>
                           ) : null}
                         </FormItem>
@@ -660,11 +744,20 @@ export default function TimedTransfer(properties) {
                   ) : null}
 
                   {!transferAmount ? (
-                    <Button className="mt-5 mb-3" variant="outline" disabled type="submit">
+                    <Button
+                      className="mt-5 mb-3"
+                      variant="outline"
+                      disabled
+                      type="submit"
+                    >
                       {t("Transfer:submit")}
                     </Button>
                   ) : (
-                    <Button className="mt-5 mb-3" variant="outline" type="submit">
+                    <Button
+                      className="mt-5 mb-3"
+                      variant="outline"
+                      type="submit"
+                    >
                       {t("Transfer:submit")}
                     </Button>
                   )}
@@ -689,27 +782,29 @@ export default function TimedTransfer(properties) {
                     {
                       fee_paying_account: targetUser.id,
                       expiration_time: date,
-                      proposed_ops: [{
-                        op: [
-                          0,
-                          {
-                            fee: {
-                              amount: 0,
-                              asset_id: "1.3.0",
+                      proposed_ops: [
+                        {
+                          op: [
+                            0,
+                            {
+                              fee: {
+                                amount: 0,
+                                asset_id: "1.3.0",
+                              },
+                              from: usr.id,
+                              to: targetUser.id,
+                              amount: {
+                                amount: blockchainFloat(
+                                  transferAmount,
+                                  foundAsset.precision
+                                ).toFixed(0),
+                                asset_id: foundAsset.id,
+                              },
+                              extensions: {},
                             },
-                            from: usr.id,
-                            to: targetUser.id,
-                            amount: {
-                              amount: blockchainFloat(
-                                transferAmount,
-                                foundAsset.precision
-                              ).toFixed(0),
-                              asset_id: foundAsset.id,
-                            },
-                            extensions: {},
-                          },
-                        ],
-                      }],
+                          ],
+                        },
+                      ],
                       review_period_seconds: reviewPeriodSeconds,
                       extensions: {},
                     },
@@ -725,7 +820,9 @@ export default function TimedTransfer(properties) {
               <Card>
                 <CardHeader className="pb-0 mb-0">
                   <CardTitle>{t("Transfer:doubleCheckTitle")}</CardTitle>
-                  <CardDescription>{t("Transfer:doubleCheckDescription")}</CardDescription>
+                  <CardDescription>
+                    {t("Transfer:doubleCheckDescription")}
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="text-sm">
                   <ul className="ml-2 list-disc [&>li]:mt-2">
@@ -735,10 +832,14 @@ export default function TimedTransfer(properties) {
                       <ExternalLink
                         type="text"
                         classnamecontents=""
-                        hyperlink={`https://blocksights.info/#/accounts/${targetUser.name}${
+                        hyperlink={`https://blocksights.info/#/accounts/${
+                          targetUser.name
+                        }${
                           usr.chain === "bitshares" ? "" : "?network=testnet"
                         }`}
-                        text={t("Transfer:blocksightsLink", { name: targetUser.name })}
+                        text={t("Transfer:blocksightsLink", {
+                          name: targetUser.name,
+                        })}
                       />
                     </li>
                   </ul>
@@ -751,7 +852,9 @@ export default function TimedTransfer(properties) {
               <Card>
                 <CardHeader className="pb-0 mb-0">
                   <CardTitle>{t("Transfer:scamAlertTitle")}</CardTitle>
-                  <CardDescription>{t("Transfer:scamAlertDescription")}</CardDescription>
+                  <CardDescription>
+                    {t("Transfer:scamAlertDescription")}
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="text-sm">
                   <ul className="ml-2 list-disc [&>li]:mt-2">

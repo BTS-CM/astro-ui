@@ -65,6 +65,11 @@ const pages = [
   "WithdrawDialog",
   "HTLC",
   "HTLCCreate",
+  "ArgumentInputs",
+  "AuthorityAuthEditor",
+  "AuthorityRestrictionsEditor",
+  "ExistingAuthoritiesList",
+  "CustomAuthority"
 ];
 
 const locale = persistentAtom("locale", "en");

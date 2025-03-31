@@ -32,7 +32,11 @@ function hoursTillExpiration(expirationTime) {
 
 export default function CreditOffers(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
-  const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
+  const usr = useSyncExternalStore(
+    $currentUser.subscribe,
+    $currentUser.get,
+    () => true
+  );
 
   const { _assetsBTS, _assetsTEST, _offersBTS, _offersTEST } = properties;
 
@@ -56,10 +60,14 @@ export default function CreditOffers(properties) {
     if (_chain && (_offersBTS || _offersTEST)) {
       return _chain === "bitshares"
         ? _offersBTS.filter(
-            (x) => hoursTillExpiration(x.auto_disable_time) >= 0 && x.owner_account === usr.id
+            (x) =>
+              hoursTillExpiration(x.auto_disable_time) >= 0 &&
+              x.owner_account === usr.id
           )
         : _offersTEST.filter(
-            (x) => hoursTillExpiration(x.auto_disable_time) >= 0 && x.owner_account === usr.id
+            (x) =>
+              hoursTillExpiration(x.auto_disable_time) >= 0 &&
+              x.owner_account === usr.id
           );
     }
     return [];
@@ -87,27 +95,28 @@ export default function CreditOffers(properties) {
                 classnamecontents="hover:text-purple-500"
                 type="text"
                 text={res.owner_name}
-                hyperlink={`https://blocksights.info/#/accounts/${res.owner_name}${
-                  usr.chain === "bitshares" ? "" : "?network=testnet"
-                }`}
+                hyperlink={`https://blocksights.info/#/accounts/${
+                  res.owner_name
+                }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
               />{" "}
               (
               <ExternalLink
                 classnamecontents="hover:text-purple-500"
                 type="text"
                 text={res.owner_account}
-                hyperlink={`https://blocksights.info/#/accounts/${res.owner_account}${
-                  usr.chain === "bitshares" ? "" : "?network=testnet"
-                }`}
+                hyperlink={`https://blocksights.info/#/accounts/${
+                  res.owner_account
+                }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
               />
               )
             </CardTitle>
             <CardDescription>
               {t("CreditBorrow:common.offering")}
               <b>
-                {` ${humanReadableFloat(res.current_balance, foundAsset.precision)} ${
-                  foundAsset.symbol
-                } (${res.asset_type})`}
+                {` ${humanReadableFloat(
+                  res.current_balance,
+                  foundAsset.precision
+                )} ${foundAsset.symbol} (${res.asset_type})`}
               </b>
               <br />
               {t("CreditBorrow:common.accepting")}
@@ -141,7 +150,10 @@ export default function CreditOffers(properties) {
                 })}
                 <br />
                 {t("CreditBorrow:common.min", {
-                  amount: humanReadableFloat(res.min_deal_amount, foundAsset.precision),
+                  amount: humanReadableFloat(
+                    res.min_deal_amount,
+                    foundAsset.precision
+                  ),
                   asset: foundAsset.symbol,
                 })}
               </div>
@@ -150,9 +162,14 @@ export default function CreditOffers(properties) {
           <CardFooter className="pb-5">
             <a href={`/lend/index.html?id=${res.id}`}>
               <Button>
-                {t(`CreditBorrow:common.${usr.id === res.owner_account ? "edit" : "view"}`, {
-                  offerID: res.id.replace("1.21.", ""),
-                })}
+                {t(
+                  `CreditBorrow:common.${
+                    usr.id === res.owner_account ? "edit" : "view"
+                  }`,
+                  {
+                    offerID: res.id.replace("1.21.", ""),
+                  }
+                )}
               </Button>
             </a>
           </CardFooter>
@@ -170,7 +187,14 @@ export default function CreditOffers(properties) {
       return null;
     }
 
-    return <CommonRow index={index} style={style} res={res} foundAsset={foundAsset} />;
+    return (
+      <CommonRow
+        index={index}
+        style={style}
+        res={res}
+        foundAsset={foundAsset}
+      />
+    );
   };
 
   return (
@@ -180,7 +204,9 @@ export default function CreditOffers(properties) {
           <Card>
             <CardHeader className="pb-1">
               <CardTitle>{t("CreditOffers:card.title")}</CardTitle>
-              <CardDescription>{t("CreditOffers:card.description")}</CardDescription>
+              <CardDescription>
+                {t("CreditOffers:card.description")}
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <>
@@ -194,7 +220,9 @@ export default function CreditOffers(properties) {
                     {Row}
                   </List>
                 ) : null}
-                {offers && !offers.length ? t("CreditOffers:card.noResults") : null}
+                {offers && !offers.length
+                  ? t("CreditOffers:card.noResults")
+                  : null}
               </>
             </CardContent>
           </Card>

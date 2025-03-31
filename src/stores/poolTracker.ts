@@ -6,12 +6,12 @@ type Configuration = {
   name: string;
   chain: string;
   id: string; // hash of name
-}
+};
 
 type storedTrackers = {
-    bitshares: Configuration[],
-    bitshares_testnet: Configuration[],
-}
+  bitshares: Configuration[];
+  bitshares_testnet: Configuration[];
+};
 
 const $poolTrackers = persistentMap<storedTrackers>(
   "trackers",

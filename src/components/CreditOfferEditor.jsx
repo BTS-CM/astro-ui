@@ -5,11 +5,16 @@ import { format, set } from "date-fns";
 import { useSyncExternalStore } from "react";
 import { useTranslation } from "react-i18next";
 import { FixedSizeList as List } from "react-window";
-import { useStore } from '@nanostores/react';
+import { useStore } from "@nanostores/react";
 
 import { cn } from "@/lib/utils";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
-import { humanReadableFloat, blockchainFloat, debounce, copyToClipboard } from "@/lib/common.js";
+import {
+  humanReadableFloat,
+  blockchainFloat,
+  debounce,
+  copyToClipboard,
+} from "@/lib/common.js";
 import { evaluateTradingPair } from "@/lib/market.js";
 
 import { createUsernameStore } from "@/nanoeffects/Objects.ts";
@@ -63,8 +68,16 @@ import AssetDropDown from "./Market/AssetDropDownCard.jsx";
 import CollateralDropDownCard from "./Market/CollateralDropDownCard.jsx";
 import AccountSearch from "./AccountSearch.jsx";
 
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Avatar as Av, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Avatar as Av,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -126,7 +139,11 @@ export default function CreditOfferEditor(properties) {
     []
   );
 
-  const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
+  const usr = useSyncExternalStore(
+    $currentUser.subscribe,
+    $currentUser.get,
+    () => true
+  );
   useInitCache(usr && usr.chain ? usr.chain : "bitshares", []);
 
   const {
@@ -135,7 +152,7 @@ export default function CreditOfferEditor(properties) {
     _marketSearchBTS,
     _marketSearchTEST,
     _globalParamsBTS,
-    _globalParamsTEST
+    _globalParamsTEST,
   } = properties;
 
   const _chain = useMemo(() => {
@@ -181,14 +198,22 @@ export default function CreditOfferEditor(properties) {
     let unsubscribeUserBalances;
 
     if (usr && usr.id) {
-      const userBalancesStore = createUserBalancesStore([usr.chain, usr.id, currentNode ? currentNode.url : null]);
+      const userBalancesStore = createUserBalancesStore([
+        usr.chain,
+        usr.id,
+        currentNode ? currentNode.url : null,
+      ]);
 
-      unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
-        if (data && !error && !loading) {
-          const filteredData = data.filter((balance) => assets.find((x) => x.id === balance.asset_id));
-          setBalances(filteredData);
+      unsubscribeUserBalances = userBalancesStore.subscribe(
+        ({ data, error, loading }) => {
+          if (data && !error && !loading) {
+            const filteredData = data.filter((balance) =>
+              assets.find((x) => x.id === balance.asset_id)
+            );
+            setBalances(filteredData);
+          }
         }
-      });
+      );
     }
 
     return () => {
@@ -218,7 +243,10 @@ export default function CreditOfferEditor(properties) {
         setFoundAssetBalance(0);
         return;
       }
-      const readableBalance = humanReadableFloat(_balance.amount, foundAsset.precision);
+      const readableBalance = humanReadableFloat(
+        _balance.amount,
+        foundAsset.precision
+      );
       setFoundAssetBalance(readableBalance);
     } else {
       setFoundAssetBalance(0);
@@ -258,7 +286,11 @@ export default function CreditOfferEditor(properties) {
     let unsub;
 
     if (offerID && usr && usr.chain) {
-      const offerDataStore = createObjectStore([usr.chain, JSON.stringify([offerID]), currentNode ? currentNode.url : null]);
+      const offerDataStore = createObjectStore([
+        usr.chain,
+        JSON.stringify([offerID]),
+        currentNode ? currentNode.url : null,
+      ]);
       unsub = offerDataStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
           const _data = data[0];
@@ -267,7 +299,9 @@ export default function CreditOfferEditor(properties) {
           setOfferJSON(_data);
           setOfferOwner(_data.owner_account);
           setSelectedAsset(_lendingAsset.symbol);
-          setLendingAmount(humanReadableFloat(_data.total_balance, _lendingAsset.precision));
+          setLendingAmount(
+            humanReadableFloat(_data.total_balance, _lendingAsset.precision)
+          );
           setRate(_data.fee_rate ? _data.fee_rate / 10000 : 0);
           setRepayPeriod(
             Object.keys(repaymentPeriods).reduce((a, b) =>
@@ -277,16 +311,23 @@ export default function CreditOfferEditor(properties) {
                 : b
             )
           );
-          setMinimumBorowAmount(humanReadableFloat(_data.min_deal_amount, _lendingAsset.precision));
+          setMinimumBorowAmount(
+            humanReadableFloat(_data.min_deal_amount, _lendingAsset.precision)
+          );
           setExpiration(_data.auto_disable_time);
 
           setAcceptableCollateral(
             _data.acceptable_collateral.map((x) => {
-              const _collateralAsset = assets.find((y) => y.id === x[1].quote.asset_id);
+              const _collateralAsset = assets.find(
+                (y) => y.id === x[1].quote.asset_id
+              );
               const _price =
                 1 /
                 (humanReadableFloat(x[1].base.amount, _lendingAsset.precision) /
-                  humanReadableFloat(x[1].quote.amount, _collateralAsset.precision));
+                  humanReadableFloat(
+                    x[1].quote.amount,
+                    _collateralAsset.precision
+                  ));
 
               const evaluatedTradingPair = evaluateTradingPair(
                 1 / _price,
@@ -323,11 +364,20 @@ export default function CreditOfferEditor(properties) {
   useEffect(() => {
     let unsub;
 
-    if (identityChunks && usr && usr.chain && chunkIndex < identityChunks.length) {
+    if (
+      identityChunks &&
+      usr &&
+      usr.chain &&
+      chunkIndex < identityChunks.length
+    ) {
       const _identityBatch = identityChunks[chunkIndex];
       const _batchIDs = _identityBatch.flatMap(Object.keys);
 
-      const usernameDataStore = createUsernameStore([usr.chain, _batchIDs, currentNode ? currentNode.url : null]);
+      const usernameDataStore = createUsernameStore([
+        usr.chain,
+        _batchIDs,
+        currentNode ? currentNode.url : null,
+      ]);
       unsub = usernameDataStore.subscribe(({ data }) => {
         if (data && !data.error && !data.loading) {
           setAllowedAccounts(
@@ -336,7 +386,10 @@ export default function CreditOfferEditor(properties) {
                 return {
                   name: x.name,
                   id: x.id,
-                  amount: humanReadableFloat(_identityBatch[i].amount, foundAsset.precision),
+                  amount: humanReadableFloat(
+                    _identityBatch[i].amount,
+                    foundAsset.precision
+                  ),
                 };
               })
             )
@@ -361,7 +414,10 @@ export default function CreditOfferEditor(properties) {
       owner_account: usr.id,
       fee_rate: parseInt(rate * 100),
       max_duration_seconds: repaymentPeriods[repayPeriod],
-      min_deal_amount: blockchainFloat(minimumBorowAmount, foundAsset.precision),
+      min_deal_amount: blockchainFloat(
+        minimumBorowAmount,
+        foundAsset.precision
+      ),
       enabled: true,
       auto_disable_time: expiration,
       acceptable_collateral: acceptableCollateral.map((x) => {
@@ -381,11 +437,15 @@ export default function CreditOfferEditor(properties) {
           {
             base: {
               asset_id: foundAsset.id,
-              amount: evaluatedTradingPair ? evaluatedTradingPair.base : x.baseAmount,
+              amount: evaluatedTradingPair
+                ? evaluatedTradingPair.base
+                : x.baseAmount,
             },
             quote: {
               asset_id: x.id,
-              amount: evaluatedTradingPair ? evaluatedTradingPair.quote : x.quoteAmount,
+              amount: evaluatedTradingPair
+                ? evaluatedTradingPair.quote
+                : x.quoteAmount,
             },
           },
         ];
@@ -453,8 +513,8 @@ export default function CreditOfferEditor(properties) {
                   #{index + 1}: {_targetAsset.symbol} ({_targetAsset.id})
                 </CardTitle>
                 <CardDescription>
-                  {t("CreditOfferEditor:price")} {res.price} {_targetAsset.symbol}/
-                  {selectedAsset ?? ""}
+                  {t("CreditOfferEditor:price")} {res.price}{" "}
+                  {_targetAsset.symbol}/{selectedAsset ?? ""}
                 </CardDescription>
               </span>
               <span className="col-span-3 text-center">
@@ -469,7 +529,10 @@ export default function CreditOfferEditor(properties) {
                       className="mt-4"
                       placeholder={res.price}
                       onKeyPress={(event) => {
-                        if (event.key === '.' && event.target.value.includes('.')) {
+                        if (
+                          event.key === "." &&
+                          event.target.value.includes(".")
+                        ) {
                           event.preventDefault();
                         }
                         const regex = /^[0-9]*\.?[0-9]*$/;
@@ -493,7 +556,10 @@ export default function CreditOfferEditor(properties) {
                       variant="outline"
                       className="mt-4"
                       onClick={() => {
-                        if (_updatedCollateral && _updatedCollateral.price !== res.price) {
+                        if (
+                          _updatedCollateral &&
+                          _updatedCollateral.price !== res.price
+                        ) {
                           setAcceptableCollateral(_updatedCollateral);
                         } else {
                           console.log("No change in price");
@@ -548,7 +614,13 @@ export default function CreditOfferEditor(properties) {
                     eye: "normal",
                     mouth: "open",
                   }}
-                  colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]}
+                  colors={[
+                    "#92A1C6",
+                    "#146A7C",
+                    "#F0AB3D",
+                    "#C271B4",
+                    "#C20D90",
+                  ]}
                 />
               </span>
               <span className="col-span-8 ml-3">
@@ -572,7 +644,10 @@ export default function CreditOfferEditor(properties) {
                       className="mt-4"
                       placeholder={res.price}
                       onKeyPress={(event) => {
-                        if (event.key === '.' && event.target.value.includes('.')) {
+                        if (
+                          event.key === "." &&
+                          event.target.value.includes(".")
+                        ) {
                           event.preventDefault();
                         }
                         const regex = /^[0-9]*\.?[0-9]*$/;
@@ -611,7 +686,9 @@ export default function CreditOfferEditor(properties) {
                   className="ml-2"
                   onClick={(e) => {
                     e.preventDefault();
-                    const _update = allowedAccounts.filter((x) => x.id !== res.id);
+                    const _update = allowedAccounts.filter(
+                      (x) => x.id !== res.id
+                    );
                     setAllowedAccounts(_update);
                   }}
                 >
@@ -657,11 +734,16 @@ export default function CreditOfferEditor(properties) {
                         name="offerOwner"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>{t("CreditOfferEditor:offerOwner")}</FormLabel>
+                            <FormLabel>
+                              {t("CreditOfferEditor:offerOwner")}
+                            </FormLabel>
                             <FormControl>
                               <div className="grid grid-cols-12 mt-4 mr-2">
                                 <div className="col-span-8 mr-2 mb-1 mt-1">
-                                  <Input disabled placeholder={offerOwner ?? "1.2.x"} />
+                                  <Input
+                                    disabled
+                                    placeholder={offerOwner ?? "1.2.x"}
+                                  />
                                 </div>
                                 <div className="col-span-4 mt-1 text-center">
                                   <ExternalLink
@@ -671,7 +753,9 @@ export default function CreditOfferEditor(properties) {
                                     text={t("CreditOfferEditor:viewAccount")}
                                     hyperlink={
                                       usr.chain === "bitshares"
-                                        ? `https://blocksights.info/#/accounts/${offerOwner ?? ""}`
+                                        ? `https://blocksights.info/#/accounts/${
+                                            offerOwner ?? ""
+                                          }`
                                         : `https://blocksights.info/#/accounts/${
                                             offerOwner ?? ""
                                           }?network=testnet`
@@ -697,44 +781,71 @@ export default function CreditOfferEditor(properties) {
                             <FormControl>
                               <div className="grid grid-cols-12 mt-4">
                                 <div className="col-span-10">
-                                  <Input disabled placeholder={offerID} className="mb-1 mt-1" />
+                                  <Input
+                                    disabled
+                                    placeholder={offerID}
+                                    className="mb-1 mt-1"
+                                  />
                                 </div>
                                 <div className="col-span-2 mt-1 text-center">
                                   <Dialog>
                                     <DialogTrigger asChild>
-                                      <Button className="ml-2" variant="outline">
+                                      <Button
+                                        className="ml-2"
+                                        variant="outline"
+                                      >
                                         JSON
                                       </Button>
                                     </DialogTrigger>
                                     <DialogContent className="sm:max-w-[550px] bg-white">
                                       <DialogHeader>
                                         <DialogTitle>
-                                          {t("CreditOfferEditor:existingCreditOfferJSON")}
+                                          {t(
+                                            "CreditOfferEditor:existingCreditOfferJSON"
+                                          )}
                                         </DialogTitle>
                                         <DialogDescription>
-                                          {t("CreditOfferEditor:currentBlockchainData")}
+                                          {t(
+                                            "CreditOfferEditor:currentBlockchainData"
+                                          )}
                                         </DialogDescription>
                                       </DialogHeader>
                                       <div className="grid grid-cols-1">
                                         <div className="col-span-1">
                                           <ScrollArea className="h-72 rounded-md border">
-                                            <pre>{JSON.stringify(offerJSON, null, 2)}</pre>
+                                            <pre>
+                                              {JSON.stringify(
+                                                offerJSON,
+                                                null,
+                                                2
+                                              )}
+                                            </pre>
                                           </ScrollArea>
                                         </div>
                                         <div className="col-span-1 mt-3">
                                           <Button
                                             variant="outline"
                                             onClick={() => {
-                                              copyToClipboard(JSON.stringify(offerJSON, null, 4));
+                                              copyToClipboard(
+                                                JSON.stringify(
+                                                  offerJSON,
+                                                  null,
+                                                  4
+                                                )
+                                              );
                                             }}
                                           >
-                                            {t("DeepLinkDialog:tabsContent.copyOperationJSON")}
+                                            {t(
+                                              "DeepLinkDialog:tabsContent.copyOperationJSON"
+                                            )}
                                           </Button>
                                           <ExternalLink
                                             variant="outline"
                                             classnamecontents="ml-3"
                                             type="button"
-                                            text={t("CreditOfferEditor:viewOnBlockSights")}
+                                            text={t(
+                                              "CreditOfferEditor:viewOnBlockSights"
+                                            )}
                                             hyperlink={
                                               usr.chain === "bitshares"
                                                 ? `https://blocksights.info/#/objects/${offerID}`
@@ -762,7 +873,9 @@ export default function CreditOfferEditor(properties) {
                   name="targetAsset"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{t("CreditOfferEditor:assetToLend")}</FormLabel>
+                      <FormLabel>
+                        {t("CreditOfferEditor:assetToLend")}
+                      </FormLabel>
                       <FormControl>
                         <div className="grid grid-cols-8 mt-4">
                           <div className="col-span-1 ml-5">
@@ -775,7 +888,9 @@ export default function CreditOfferEditor(properties) {
                               <Av>
                                 <AvatarFallback>
                                   <div className="text-sm">
-                                    {foundAsset.bitasset_data_id ? "MPA" : "UIA"}
+                                    {foundAsset.bitasset_data_id
+                                      ? "MPA"
+                                      : "UIA"}
                                   </div>
                                 </AvatarFallback>
                               </Av>
@@ -817,77 +932,89 @@ export default function CreditOfferEditor(properties) {
                         {t("CreditOfferEditor:lendingAssetDescription")}
                       </FormDescription>
                       <FormMessage>
-                        {
-                          foundAsset &&
-                          balances &&
-                          !balances.map((x) => x.asset_id).includes(foundAsset.id)
-                            ? t("Transfer:noAssetInAccount", { username: usr.username })
-                            : null
-                        }
+                        {foundAsset &&
+                        balances &&
+                        !balances.map((x) => x.asset_id).includes(foundAsset.id)
+                          ? t("Transfer:noAssetInAccount", {
+                              username: usr.username,
+                            })
+                          : null}
                       </FormMessage>
                     </FormItem>
                   )}
                 />
-                
-                    <FormField
-                      control={form.control}
-                      name="lendingAmount"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{t("CreditOfferEditor:amountToLend")}</FormLabel>{" "}
-                          <FormControl
-                            onChange={(event) => {
-                              const input = event.target.value;
-                              const inputDecimals = !foundAsset ? 2 : foundAsset.precision;
-                              let regex = new RegExp(`^[0-9]*\\.?[0-9]{0,${inputDecimals}}$`);
-                              if (regex.test(input)) {
-                                setLendingAmount(input);
-                              }
-                            }}
-                          >
-                            <div className="grid grid-cols-12 gap-3">
-                              <div className="col-span-9">
-                                <Input
-                                  value={lendingAmount}
-                                  placeholder={lendingAmount}
-                                  className="mb-1"
-                                />
-                              </div>
-                              <div className="col-span-3 text-center">
-                                {
-                                  foundAsset
-                                    ? <Button
-                                        variant="outline"
-                                        onClick={() => {
-                                          event.preventDefault(); // Prevent default form submission
-                                          setLendingAmount(foundAssetBalance);
-                                        }}
-                                      >
-                                        {t("LimitOrderCard:useBalance")}
-                                      </Button>
-                                    : <Button disabled>{t("LimitOrderCard:useBalance")}</Button>
-                                }
-                              </div>
-                            </div>
-                          </FormControl>
-                          <FormDescription>
-                            {t("CreditOfferEditor:lendingAmountDescription")}
-                          </FormDescription>
-                          {
-                            !foundAssetBalance && lendingAmount > 0 || foundAssetBalance && foundAssetBalance < lendingAmount
-                              ? <FormMessage>{t("Predictions:insufficient_funds")}</FormMessage>
-                              : null
+
+                <FormField
+                  control={form.control}
+                  name="lendingAmount"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {t("CreditOfferEditor:amountToLend")}
+                      </FormLabel>{" "}
+                      <FormControl
+                        onChange={(event) => {
+                          const input = event.target.value;
+                          const inputDecimals = !foundAsset
+                            ? 2
+                            : foundAsset.precision;
+                          let regex = new RegExp(
+                            `^[0-9]*\\.?[0-9]{0,${inputDecimals}}$`
+                          );
+                          if (regex.test(input)) {
+                            setLendingAmount(input);
                           }
-                        </FormItem>
-                      )}
-                    />
+                        }}
+                      >
+                        <div className="grid grid-cols-12 gap-3">
+                          <div className="col-span-9">
+                            <Input
+                              value={lendingAmount}
+                              placeholder={lendingAmount}
+                              className="mb-1"
+                            />
+                          </div>
+                          <div className="col-span-3 text-center">
+                            {foundAsset ? (
+                              <Button
+                                variant="outline"
+                                onClick={() => {
+                                  event.preventDefault(); // Prevent default form submission
+                                  setLendingAmount(foundAssetBalance);
+                                }}
+                              >
+                                {t("LimitOrderCard:useBalance")}
+                              </Button>
+                            ) : (
+                              <Button disabled>
+                                {t("LimitOrderCard:useBalance")}
+                              </Button>
+                            )}
+                          </div>
+                        </div>
+                      </FormControl>
+                      <FormDescription>
+                        {t("CreditOfferEditor:lendingAmountDescription")}
+                      </FormDescription>
+                      {(!foundAssetBalance && lendingAmount > 0) ||
+                      (foundAssetBalance &&
+                        foundAssetBalance < lendingAmount) ? (
+                        <FormMessage>
+                          {t("Predictions:insufficient_funds")}
+                        </FormMessage>
+                      ) : null}
+                    </FormItem>
+                  )}
+                />
 
                 <FormField
                   control={form.control}
                   name="rate"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{t("CreditOfferEditor:lendingRate")}</FormLabel>
+                      <FormLabel>
+                        {t("CreditOfferEditor:lendingRate")}
+                      </FormLabel>
                       <FormControl>
                         <span className="grid grid-cols-12">
                           <span className="col-span-9">
@@ -919,18 +1046,26 @@ export default function CreditOfferEditor(properties) {
                                   }}
                                   className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4 text-lg"
                                 >
-                                  <Label>{t("CreditOfferEditor:editLendingRate")}</Label>{" "}
+                                  <Label>
+                                    {t("CreditOfferEditor:editLendingRate")}
+                                  </Label>{" "}
                                 </span>
                               </PopoverTrigger>
                               <PopoverContent>
-                                <Label>{t("CreditOfferEditor:newLendingRate")}</Label>{" "}
+                                <Label>
+                                  {t("CreditOfferEditor:newLendingRate")}
+                                </Label>{" "}
                                 <Input
                                   placeholder={rate}
                                   className="mb-2 mt-1"
                                   onChange={(event) => {
                                     const input = event.target.value;
                                     const regex = /^[0-9]*\.?[0-9]{0,2}$/;
-                                    if (input && input.length && regex.test(input)) {
+                                    if (
+                                      input &&
+                                      input.length &&
+                                      regex.test(input)
+                                    ) {
                                       if (input >= 0.01 && input <= 100) {
                                         setRate(input);
                                       } else if (input > 100) {
@@ -960,7 +1095,9 @@ export default function CreditOfferEditor(properties) {
                       name="repaymentPeriod"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>{t("CreditOfferEditor:repaymentPeriod")}</FormLabel>
+                          <FormLabel>
+                            {t("CreditOfferEditor:repaymentPeriod")}
+                          </FormLabel>
                           <FormControl
                             onValueChange={(selection) => {
                               setRepayPeriod(selection);
@@ -968,7 +1105,11 @@ export default function CreditOfferEditor(properties) {
                           >
                             <Select>
                               <SelectTrigger className="mb-3 w-3/4">
-                                <SelectValue placeholder={t("CreditOfferEditor:placeholder1hr")} />
+                                <SelectValue
+                                  placeholder={t(
+                                    "CreditOfferEditor:placeholder1hr"
+                                  )}
+                                />
                               </SelectTrigger>
                               <SelectContent className="bg-white">
                                 <SelectItem value="12hr">
@@ -977,10 +1118,18 @@ export default function CreditOfferEditor(properties) {
                                 <SelectItem value="24hr">
                                   {t("CreditOfferEditor:24hours")}
                                 </SelectItem>
-                                <SelectItem value="3d">{t("CreditOfferEditor:3days")}</SelectItem>
-                                <SelectItem value="7d">{t("CreditOfferEditor:7days")}</SelectItem>
-                                <SelectItem value="30d">{t("CreditOfferEditor:30days")}</SelectItem>
-                                <SelectItem value="90d">{t("CreditOfferEditor:90days")}</SelectItem>
+                                <SelectItem value="3d">
+                                  {t("CreditOfferEditor:3days")}
+                                </SelectItem>
+                                <SelectItem value="7d">
+                                  {t("CreditOfferEditor:7days")}
+                                </SelectItem>
+                                <SelectItem value="30d">
+                                  {t("CreditOfferEditor:30days")}
+                                </SelectItem>
+                                <SelectItem value="90d">
+                                  {t("CreditOfferEditor:90days")}
+                                </SelectItem>
                                 <SelectItem value="365d">
                                   {t("CreditOfferEditor:365days")}
                                 </SelectItem>
@@ -1007,10 +1156,15 @@ export default function CreditOfferEditor(properties) {
                       name="minimumAmount"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>{t("CreditOfferEditor:minimumAmount")}</FormLabel>
+                          <FormLabel>
+                            {t("CreditOfferEditor:minimumAmount")}
+                          </FormLabel>
                           <FormControl
                             onKeyPress={(event) => {
-                              if (event.key === '.' && event.target.value.includes('.')) {
+                              if (
+                                event.key === "." &&
+                                event.target.value.includes(".")
+                              ) {
                                 event.preventDefault();
                               }
                               const regex = /^[0-9]*\.?[0-9]*$/;
@@ -1045,7 +1199,9 @@ export default function CreditOfferEditor(properties) {
                       name="minimumAmount"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>{t("CreditOfferEditor:expirationDate")}</FormLabel>
+                          <FormLabel>
+                            {t("CreditOfferEditor:expirationDate")}
+                          </FormLabel>
                           <FormControl>
                             <Popover>
                               <PopoverTrigger asChild>
@@ -1060,11 +1216,16 @@ export default function CreditOfferEditor(properties) {
                                   {expiration ? (
                                     format(expiration, "PPP")
                                   ) : (
-                                    <span>{t("LimitOrderCard:expiry.pickDate")}</span>
+                                    <span>
+                                      {t("LimitOrderCard:expiry.pickDate")}
+                                    </span>
                                   )}
                                 </Button>
                               </PopoverTrigger>
-                              <PopoverContent className="w-auto p-0" align="start">
+                              <PopoverContent
+                                className="w-auto p-0"
+                                align="start"
+                              >
                                 <Calendar
                                   mode="single"
                                   selected={expiration}
@@ -1073,7 +1234,11 @@ export default function CreditOfferEditor(properties) {
                                     const now = new Date();
                                     if (parsedDate < now) {
                                       //console.log("Not a valid date");
-                                      setExpiration(new Date(Date.now() + 1 * 24 * 60 * 60 * 1000));
+                                      setExpiration(
+                                        new Date(
+                                          Date.now() + 1 * 24 * 60 * 60 * 1000
+                                        )
+                                      );
                                       return;
                                     }
                                     //console.log("Setting expiry date");
@@ -1098,7 +1263,9 @@ export default function CreditOfferEditor(properties) {
                   name="acceptedCollateral"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{t("CreditOfferEditor:acceptedCollateral")}</FormLabel>
+                      <FormLabel>
+                        {t("CreditOfferEditor:acceptedCollateral")}
+                      </FormLabel>
                       <FormControl>
                         <span className="grid grid-cols-12">
                           <span className="col-span-9 border border-gray-300 rounded">
@@ -1115,7 +1282,9 @@ export default function CreditOfferEditor(properties) {
                             <CollateralDropDownCard
                               chosenAssets={acceptableCollateral}
                               lendingAsset={
-                                foundAsset && foundAsset.symbol ? foundAsset.symbol : ""
+                                foundAsset && foundAsset.symbol
+                                  ? foundAsset.symbol
+                                  : ""
                               }
                               marketSearch={marketSearch}
                               storeCallback={setAcceptableCollateral}
@@ -1136,7 +1305,9 @@ export default function CreditOfferEditor(properties) {
                   name="acceptedCollateral"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{t("CreditOfferEditor:preApprovedUsers")}</FormLabel>
+                      <FormLabel>
+                        {t("CreditOfferEditor:preApprovedUsers")}
+                      </FormLabel>
                       <FormControl>
                         <span className="grid grid-cols-12">
                           <span className="col-span-9 border border-gray-300 rounded">
@@ -1179,18 +1350,25 @@ export default function CreditOfferEditor(properties) {
                                   </DialogDescription>
                                 </DialogHeader>
                                 <AccountSearch
-                                  chain={usr && usr.chain ? usr.chain : "bitshares"}
+                                  chain={
+                                    usr && usr.chain ? usr.chain : "bitshares"
+                                  }
                                   excludedUsers={
-                                    usr && usr.username && usr.username.length ? [usr] : []
+                                    usr && usr.username && usr.username.length
+                                      ? [usr]
+                                      : []
                                   }
                                   setChosenAccount={(_account) => {
                                     if (
                                       _account &&
-                                      !allowedAccounts.find((_usr) => _usr.id === _account.id)
+                                      !allowedAccounts.find(
+                                        (_usr) => _usr.id === _account.id
+                                      )
                                     ) {
                                       _account.amount = minimumBorowAmount ?? 1;
                                       setAllowedAccounts(
-                                        allowedAccounts && allowedAccounts.length
+                                        allowedAccounts &&
+                                          allowedAccounts.length
                                           ? [...allowedAccounts, _account]
                                           : [_account]
                                       );
@@ -1203,7 +1381,9 @@ export default function CreditOfferEditor(properties) {
                           </span>
                         </span>
                       </FormControl>
-                      <FormDescription>{t("CreditOfferEditor:limitBorrowers")}</FormDescription>
+                      <FormDescription>
+                        {t("CreditOfferEditor:limitBorrowers")}
+                      </FormDescription>
                     </FormItem>
                   )}
                 />
@@ -1215,13 +1395,22 @@ export default function CreditOfferEditor(properties) {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>{t("CreditOfferEditor:networkFee")}</FormLabel>
-                      <FormDescription>{t("CreditOfferEditor:broadcastCost")}</FormDescription>
+                      <FormDescription>
+                        {t("CreditOfferEditor:broadcastCost")}
+                      </FormDescription>
                       <FormControl>
-                        <Input className="w-3/4" disabled value={`${fee} BTS`} placeholder={1} />
+                        <Input
+                          className="w-3/4"
+                          disabled
+                          value={`${fee} BTS`}
+                          placeholder={1}
+                        />
                       </FormControl>
                       {usr.id === usr.referrer ? (
                         <FormMessage>
-                          {t("LimitOrderCard:fee.ltmRebate", { rebate: 0.8 * fee })}
+                          {t("LimitOrderCard:fee.ltmRebate", {
+                            rebate: 0.8 * fee,
+                          })}
                         </FormMessage>
                       ) : null}
                     </FormItem>
@@ -1238,7 +1427,9 @@ export default function CreditOfferEditor(properties) {
         {transactionJSON && showDialog ? (
           <DeepLinkDialog
             trxJSON={transactionJSON ?? []}
-            operationNames={[!offerID ? "credit_offer_create" : "credit_offer_update"]}
+            operationNames={[
+              !offerID ? "credit_offer_create" : "credit_offer_update",
+            ]}
             username={usr.username}
             usrChain={usr.chain}
             userID={usr.id}
@@ -1258,7 +1449,9 @@ export default function CreditOfferEditor(properties) {
         <Card>
           <CardHeader className="pb-0">
             <CardTitle>{t("CreditOfferEditor:risksTitle")}</CardTitle>
-            <CardDescription>{t("CreditOfferEditor:risksDescription")}</CardDescription>
+            <CardDescription>
+              {t("CreditOfferEditor:risksDescription")}
+            </CardDescription>
           </CardHeader>
           <CardContent className="text-sm">
             <ul className="ml-2 list-disc [&>li]:mt-2 pl-2">

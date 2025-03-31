@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo } from "react";
 
 import { ReloadIcon } from "@radix-ui/react-icons";
 import { useTranslation } from "react-i18next";
@@ -30,13 +30,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { asset } from "@/bts/serializer/operations";
 
 export default function MarketPlaceholder(properties) {
-  const {
-    usr,
-    assetA,
-    assetB,
-    assets,
-    marketSearch
-  } = properties;
+  const { usr, assetA, assetB, assets, marketSearch } = properties;
 
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
   const activeTabStyle = {
@@ -44,22 +38,35 @@ export default function MarketPlaceholder(properties) {
     color: "white",
   };
 
-  const assetAData = useMemo(() => assets.find((a) => a.symbol === assetA), [assets, assetA]);
-  const assetBData = useMemo(() => assets.find((a) => a.symbol === assetB), [assets, assetB]);
+  const assetAData = useMemo(
+    () => assets.find((a) => a.symbol === assetA),
+    [assets, assetA]
+  );
+  const assetBData = useMemo(
+    () => assets.find((a) => a.symbol === assetB),
+    [assets, assetB]
+  );
 
-  const assetAMarketSearch = useMemo(() => marketSearch.find((a) => a.s === assetA), [marketSearch, assetA]);
-  const assetBMarketSearch = useMemo(() => marketSearch.find((a) => a.s === assetB), [marketSearch, assetB]);
+  const assetAMarketSearch = useMemo(
+    () => marketSearch.find((a) => a.s === assetA),
+    [marketSearch, assetA]
+  );
+  const assetBMarketSearch = useMemo(
+    () => marketSearch.find((a) => a.s === assetB),
+    [marketSearch, assetB]
+  );
 
   return (
     <div className="container mx-auto mt-5 mb-5">
       <div className="grid grid-cols-2 gap-5">
-        
         <div className="col-span-1">
           <div className="flex-grow mb-2">
             <Card>
               <CardHeader className="pt-2 pb-2">
                 <CardTitle className="text-lg">
-                  {usr.chain === "bitshares" ? "Bitshares " : "Bitshares (Testnet) "}
+                  {usr.chain === "bitshares"
+                    ? "Bitshares "
+                    : "Bitshares (Testnet) "}
                   {t("Market:controls")}
                 </CardTitle>
               </CardHeader>
@@ -91,7 +98,9 @@ export default function MarketPlaceholder(properties) {
             <TabsContent value="buy">
               <Card>
                 <CardHeader className="pb-2">
-                  <CardTitle>{t("MarketPlaceholder:marketLimitOrderFormTitle")}</CardTitle>
+                  <CardTitle>
+                    {t("MarketPlaceholder:marketLimitOrderFormTitle")}
+                  </CardTitle>
                   <CardDescription>
                     {t("MarketPlaceholder:marketLimitOrderFormDescription")}
                   </CardDescription>
@@ -99,7 +108,9 @@ export default function MarketPlaceholder(properties) {
                 <CardContent>
                   <div className="grid grid-cols-1">
                     <div className="grid grid-cols-2 mt-2">
-                      <div className="text-sm mt-1">{t("MarketPlaceholder:priceLabel")}</div>
+                      <div className="text-sm mt-1">
+                        {t("MarketPlaceholder:priceLabel")}
+                      </div>
                       <div className="text-gray-500 text-right">
                         <span variant="link">?</span>
                       </div>
@@ -107,9 +118,13 @@ export default function MarketPlaceholder(properties) {
                     <div className="col-span-1">
                       <Input disabled className="mb-2" />
                     </div>
-                    <div className="col-span-1 text-sm">{t("MarketPlaceholder:pricePerAsset")}</div>
+                    <div className="col-span-1 text-sm">
+                      {t("MarketPlaceholder:pricePerAsset")}
+                    </div>
                     <div className="grid grid-cols-2 mt-2">
-                      <div className="text-sm mt-1">{t("MarketPlaceholder:amountLabel")}</div>
+                      <div className="text-sm mt-1">
+                        {t("MarketPlaceholder:amountLabel")}
+                      </div>
                       <div className="text-gray-500 text-right">?</div>
                     </div>
                     <div className="col-span-1">
@@ -120,7 +135,9 @@ export default function MarketPlaceholder(properties) {
                     </div>
 
                     <div className="grid grid-cols-2 mt-2">
-                      <div className="text-sm mt-1">{t("MarketPlaceholder:totalLabel")}</div>
+                      <div className="text-sm mt-1">
+                        {t("MarketPlaceholder:totalLabel")}
+                      </div>
                       <div className="text-gray-500 text-right">?</div>
                     </div>
                     <div className="col-span-1">
@@ -136,7 +153,11 @@ export default function MarketPlaceholder(properties) {
                     <div className="col-span-1">
                       <Select disabled>
                         <SelectTrigger className="mb-3">
-                          <SelectValue placeholder={t("MarketPlaceholder:expirationPlaceholder")} />
+                          <SelectValue
+                            placeholder={t(
+                              "MarketPlaceholder:expirationPlaceholder"
+                            )}
+                          />
                         </SelectTrigger>
                       </Select>
                     </div>
@@ -144,16 +165,26 @@ export default function MarketPlaceholder(properties) {
                       {t("MarketPlaceholder:expirationDescription")}
                     </div>
 
-                    <div className="text-sm col-span-1">{t("MarketPlaceholder:feeLabel")}</div>
+                    <div className="text-sm col-span-1">
+                      {t("MarketPlaceholder:feeLabel")}
+                    </div>
                     <div className="col-span-1">
-                      <Input disabled label={t("MarketPlaceholder:feeInputLabel")} />
+                      <Input
+                        disabled
+                        label={t("MarketPlaceholder:feeInputLabel")}
+                      />
                     </div>
                     <div className="col-span-1 text-sm">
                       {t("MarketPlaceholder:feeDescription")}
                     </div>
 
                     <div className="col-span-1">
-                      <Button disabled className="mt-4 mb-1" variant="outline" type="submit">
+                      <Button
+                        disabled
+                        className="mt-4 mb-1"
+                        variant="outline"
+                        type="submit"
+                      >
                         {t("MarketPlaceholder:submitButton")}
                       </Button>
                     </div>
@@ -166,14 +197,15 @@ export default function MarketPlaceholder(properties) {
 
         <div className="col-span-1">
           <div className="grid grid-cols-1 gap-y-2">
-
             <div className="flex-grow" style={{ paddingBottom: "0px" }}>
               <Card>
                 <CardHeader className="pb-2 pt-4">
-                  <CardTitle>{assetA} ({assetAData.id})</CardTitle>
+                  <CardTitle>
+                    {assetA} ({assetAData.id})
+                  </CardTitle>
                   <CardDescription className="text-lg">
                     {t("Market:quoteAsset")}
-                    <br/>
+                    <br />
                     {t("MarketPlaceholder:loadingAssetDescription")}
                   </CardDescription>
                 </CardHeader>
@@ -191,10 +223,12 @@ export default function MarketPlaceholder(properties) {
             <div className="flex-grow">
               <Card>
                 <CardHeader className="pb-2 pt-4">
-                  <CardTitle>{assetB} ({assetBData.id})</CardTitle>
+                  <CardTitle>
+                    {assetB} ({assetBData.id})
+                  </CardTitle>
                   <CardDescription className="text-lg">
                     {t("Market:baseAsset")}
-                    <br/>
+                    <br />
                     {t("MarketPlaceholder:loadingAssetDescription")}
                   </CardDescription>
                 </CardHeader>
@@ -212,10 +246,12 @@ export default function MarketPlaceholder(properties) {
             <div className="flex-grow">
               <Card>
                 <CardHeader className="pt-4 pt-4">
-                  <CardTitle>{t("MarketPlaceholder:marketSummaryTitle")}</CardTitle>
+                  <CardTitle>
+                    {t("MarketPlaceholder:marketSummaryTitle")}
+                  </CardTitle>
                   <CardDescription className="text-lg">
                     {assetA} / {assetB}
-                    <br/>
+                    <br />
                     {t("MarketPlaceholder:loadingAssetDescription")}
                   </CardDescription>
                 </CardHeader>
@@ -229,11 +265,9 @@ export default function MarketPlaceholder(properties) {
                 </CardContent>
               </Card>
             </div>
-
           </div>
         </div>
       </div>
-
     </div>
   );
 }

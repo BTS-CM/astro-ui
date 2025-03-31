@@ -1,4 +1,9 @@
-import React, { useState, useEffect, useSyncExternalStore, useMemo } from "react";
+import React, {
+  useState,
+  useEffect,
+  useSyncExternalStore,
+  useMemo,
+} from "react";
 import { FixedSizeList as List } from "react-window";
 import { useStore } from "@nanostores/react";
 import { sha256 } from "@noble/hashes/sha2";
@@ -47,15 +52,16 @@ export default function AccountLists(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
   const currentNode = useStore($currentNode);
 
-  const {
-    _globalParamsBTS,
-    _globalParamsTEST
-  } = properties;
+  const { _globalParamsBTS, _globalParamsTEST } = properties;
 
   const [showDialog, setShowDialog] = useState(false);
   const [targetUser, setTargetUser] = useState();
 
-  const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
+  const usr = useSyncExternalStore(
+    $currentUser.subscribe,
+    $currentUser.get,
+    () => true
+  );
 
   const _chain = useMemo(() => {
     if (usr && usr.chain) {
@@ -127,7 +133,10 @@ export default function AccountLists(properties) {
   const [mode, setMode] = useState("whitelist");
 
   const accountRow = ({ index, style }) => {
-    const account = mode === "whitelist" ? whitelistedAccounts[index] : blacklistedAccounts[index];
+    const account =
+      mode === "whitelist"
+        ? whitelistedAccounts[index]
+        : blacklistedAccounts[index];
 
     const [showRowDialog, setShowRowDialog] = useState(false);
 
@@ -241,10 +250,14 @@ export default function AccountLists(properties) {
                     </List>
                   ) : null}
                   {mode === "whitelist" && !whitelistedAccounts.length ? (
-                    <p className="text-center">{t("AccountLists:noWhitelistedAccounts")}</p>
+                    <p className="text-center">
+                      {t("AccountLists:noWhitelistedAccounts")}
+                    </p>
                   ) : null}
                   {mode === "blacklist" && !blacklistedAccounts.length ? (
-                    <p className="text-center">{t("AccountLists:noBlacklistedAccounts")}</p>
+                    <p className="text-center">
+                      {t("AccountLists:noBlacklistedAccounts")}
+                    </p>
                   ) : null}
                 </div>
 
@@ -259,7 +272,13 @@ export default function AccountLists(properties) {
                           eye: "normal",
                           mouth: "open",
                         }}
-                        colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]}
+                        colors={[
+                          "#92A1C6",
+                          "#146A7C",
+                          "#F0AB3D",
+                          "#C271B4",
+                          "#C20D90",
+                        ]}
                       />
                     ) : (
                       <Av>
@@ -295,7 +314,9 @@ export default function AccountLists(properties) {
                       <DialogContent className="sm:max-w-[375px] bg-white">
                         <DialogHeader>
                           <DialogTitle>
-                            {!usr || !usr.chain ? t("AccountLists:bitsharesAccountSearch") : null}
+                            {!usr || !usr.chain
+                              ? t("AccountLists:bitsharesAccountSearch")
+                              : null}
                             {usr && usr.chain === "bitshares"
                               ? t("AccountLists:bitsharesAccountSearchBTS")
                               : null}

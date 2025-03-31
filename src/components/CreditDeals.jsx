@@ -1,4 +1,9 @@
-import React, { useState, useEffect, useSyncExternalStore, useMemo } from "react";
+import React, {
+  useState,
+  useEffect,
+  useSyncExternalStore,
+  useMemo,
+} from "react";
 import { FixedSizeList as List } from "react-window";
 import { useForm } from "react-hook-form";
 import { useStore } from "@nanostores/react";
@@ -60,9 +65,14 @@ export default function CreditDeals(properties) {
   });
   const currentNode = useStore($currentNode);
 
-  const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
+  const usr = useSyncExternalStore(
+    $currentUser.subscribe,
+    $currentUser.get,
+    () => true
+  );
 
-  const { _assetsBTS, _assetsTEST, _globalParamsBTS, _globalParamsTEST } = properties;
+  const { _assetsBTS, _assetsTEST, _globalParamsBTS, _globalParamsTEST } =
+    properties;
 
   const _chain = useMemo(() => {
     if (usr && usr.chain) {
@@ -107,11 +117,13 @@ export default function CreditDeals(properties) {
         currentNode ? currentNode.url : null,
       ]);
 
-      unsubscribeBorrowerDeals = borrowerDealsStore.subscribe(({ data, error, loading }) => {
-        if (data && !error && !loading) {
-          setBorrowerDeals(data);
+      unsubscribeBorrowerDeals = borrowerDealsStore.subscribe(
+        ({ data, error, loading }) => {
+          if (data && !error && !loading) {
+            setBorrowerDeals(data);
+          }
         }
-      });
+      );
     }
 
     return () => {
@@ -130,11 +142,13 @@ export default function CreditDeals(properties) {
         currentNode ? currentNode.url : null,
       ]);
 
-      unsubscribeLenderDeals = lenderDealsStore.subscribe(({ data, error, loading }) => {
-        if (data && !error && !loading) {
-          setLenderDeals(data);
+      unsubscribeLenderDeals = lenderDealsStore.subscribe(
+        ({ data, error, loading }) => {
+          if (data && !error && !loading) {
+            setLenderDeals(data);
+          }
         }
-      });
+      );
     }
 
     return () => {
@@ -153,14 +167,16 @@ export default function CreditDeals(properties) {
         currentNode ? currentNode.url : null,
       ]);
 
-      unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
-        if (data && !error && !loading) {
-          const filteredData = data.filter((balance) =>
-            assets.find((x) => x.id === balance.asset_id)
-          );
-          setUsrBalances(filteredData);
+      unsubscribeUserBalances = userBalancesStore.subscribe(
+        ({ data, error, loading }) => {
+          if (data && !error && !loading) {
+            const filteredData = data.filter((balance) =>
+              assets.find((x) => x.id === balance.asset_id)
+            );
+            setUsrBalances(filteredData);
+          }
         }
-      });
+      );
     }
 
     return () => {
@@ -172,9 +188,15 @@ export default function CreditDeals(properties) {
     const debtAsset = assets.find((x) => x.id === res.debt_asset);
     const collateralAsset = assets.find((x) => x.id === res.collateral_asset);
 
-    const borrowedAmount = humanReadableFloat(res.debt_amount, debtAsset.precision);
+    const borrowedAmount = humanReadableFloat(
+      res.debt_amount,
+      debtAsset.precision
+    );
 
-    const collateralAmount = humanReadableFloat(res.collateral_amount, collateralAsset.precision);
+    const collateralAmount = humanReadableFloat(
+      res.collateral_amount,
+      collateralAsset.precision
+    );
 
     // Assuming latest_repay_time is in ISO format
     const latestRepayTime = new Date(res?.latest_repay_time);
@@ -188,9 +210,12 @@ export default function CreditDeals(properties) {
     } else {
       const fracturedTime = (diffInHours / 24).toString().split(".");
       const days = fracturedTime[0];
-      const hours = parseFloat(`0.${(diffInHours / 24).toString().split(".")[1]}`) * 24;
+      const hours =
+        parseFloat(`0.${(diffInHours / 24).toString().split(".")[1]}`) * 24;
       const minutes = parseFloat(`0.${hours.toString().split(".")[1]}`) * 60;
-      remainingTime = ` ${days} days ${hours.toFixed(0)} hours ${minutes.toFixed(0)} mins`;
+      remainingTime = ` ${days} days ${hours.toFixed(
+        0
+      )} hours ${minutes.toFixed(0)} mins`;
     }
 
     const [openRepay, setOpenRepay] = useState(false);
@@ -207,21 +232,27 @@ export default function CreditDeals(properties) {
 
     const loanFee = useMemo(() => {
       if (finalRepayAmount && res && debtAsset) {
-        return ((finalRepayAmount / 100) * (res.fee_rate / 10000)).toFixed(debtAsset.precision);
+        return ((finalRepayAmount / 100) * (res.fee_rate / 10000)).toFixed(
+          debtAsset.precision
+        );
       }
       return 0;
     }, [finalRepayAmount, res, debtAsset]);
 
     const finalRepayment = useMemo(() => {
       if (finalRepayAmount && loanFee && debtAsset) {
-        return (parseFloat(finalRepayAmount) + parseFloat(loanFee)).toFixed(debtAsset.precision);
+        return (parseFloat(finalRepayAmount) + parseFloat(loanFee)).toFixed(
+          debtAsset.precision
+        );
       }
       return 0;
     }, [finalRepayAmount, loanFee, debtAsset]);
 
     const debtAssetBalance = useMemo(() => {
       if (usrBalances && usrBalances.length && debtAsset) {
-        const foundBalance = usrBalances.find((x) => x.asset_id === debtAsset.id);
+        const foundBalance = usrBalances.find(
+          (x) => x.asset_id === debtAsset.id
+        );
         if (foundBalance) {
           return humanReadableFloat(foundBalance.amount, debtAsset.precision);
         }
@@ -256,9 +287,12 @@ export default function CreditDeals(properties) {
         setInputValue(minAmount); // Set value to minimum accepted amount
       } else if (
         debouncedInputValue.toString().split(".").length > 1 &&
-        debouncedInputValue.toString().split(".")[1].length > debtAsset.precision
+        debouncedInputValue.toString().split(".")[1].length >
+          debtAsset.precision
       ) {
-        const fixedValue = parseFloat(debouncedInputValue).toFixed(debtAsset.precision);
+        const fixedValue = parseFloat(debouncedInputValue).toFixed(
+          debtAsset.precision
+        );
         setFinalRepayAmount(fixedValue);
         setInputValue(fixedValue); // Set value to minimum accepted amount
       } else {
@@ -278,8 +312,10 @@ export default function CreditDeals(properties) {
                 text={res.id.replace("1.22.", "")}
                 hyperlink={
                   usr && usr.chain
-                    ? `https://blocksights.info/#/objects/${res.id}${usr.chain === "bitshares" ? "" : "?network=testnet"}`
-                    : ''
+                    ? `https://blocksights.info/#/objects/${res.id}${
+                        usr.chain === "bitshares" ? "" : "?network=testnet"
+                      }`
+                    : ""
                 }
               />
               {t("CreditDeals:with")}
@@ -293,16 +329,19 @@ export default function CreditDeals(properties) {
               />
             </CardTitle>
             <CardDescription>
-              {type === "borrower" ? t("CreditDeals:borrowed") : t("CreditDeals:lent")}:
+              {type === "borrower"
+                ? t("CreditDeals:borrowed")
+                : t("CreditDeals:lent")}
+              :
               <b>
                 {` ${borrowedAmount} ${debtAsset.symbol}`} (
                 <ExternalLink
                   classnamecontents="text-blue-500"
                   type="text"
                   text={res.debt_asset}
-                  hyperlink={`https://blocksights.info/#/assets/${res.debt_asset}${
-                    usr.chain === "bitshares" ? "" : "?network=testnet"
-                  }`}
+                  hyperlink={`https://blocksights.info/#/assets/${
+                    res.debt_asset
+                  }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
                 />
                 )
               </b>
@@ -314,18 +353,21 @@ export default function CreditDeals(properties) {
                   classnamecontents="text-blue-500"
                   type="text"
                   text={res.collateral_asset}
-                  hyperlink={`https://blocksights.info/#/assets/${res.collateral_asset}${
-                    usr.chain === "bitshares" ? "" : "?network=testnet"
-                  }`}
+                  hyperlink={`https://blocksights.info/#/assets/${
+                    res.collateral_asset
+                  }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
                 />
                 )
               </b>
               <br />
-              {type === "borrower" ? t("CreditDeals:borrower") : t("CreditDeals:lender")}:
+              {type === "borrower"
+                ? t("CreditDeals:borrower")
+                : t("CreditDeals:lender")}
+              :
               <b>
-                {` ${borrowedAmount * (res.fee_rate / 10000)} ${debtAsset.symbol} (${
-                  res.fee_rate / 10000
-                }%)`}
+                {` ${borrowedAmount * (res.fee_rate / 10000)} ${
+                  debtAsset.symbol
+                } (${res.fee_rate / 10000}%)`}
               </b>
               <br />
               {t("CreditDeals:remainingTime")}
@@ -336,8 +378,12 @@ export default function CreditDeals(properties) {
           </CardHeader>
           {type === "borrower" ? (
             <CardFooter className="pb-0 mt-2">
-              <Button onClick={() => setOpenRepay(true)}>{t("CreditDeals:repayLoan")}</Button>
-              <a href={`/dex/index.html?market=${debtAsset.symbol}_${collateralAsset.symbol}`}>
+              <Button onClick={() => setOpenRepay(true)}>
+                {t("CreditDeals:repayLoan")}
+              </Button>
+              <a
+                href={`/dex/index.html?market=${debtAsset.symbol}_${collateralAsset.symbol}`}
+              >
                 <Button className="ml-2">
                   {t("CreditDeals:trade", { symbol: debtAsset.symbol })}
                 </Button>
@@ -351,8 +397,12 @@ export default function CreditDeals(properties) {
                 >
                   <DialogContent className="sm:max-w-[900px] bg-white">
                     <DialogHeader>
-                      <DialogTitle>{t("CreditDeals:dialogTitle", { id: res.id })}</DialogTitle>
-                      <DialogDescription>{t("CreditDeals:description")}</DialogDescription>
+                      <DialogTitle>
+                        {t("CreditDeals:dialogTitle", { id: res.id })}
+                      </DialogTitle>
+                      <DialogDescription>
+                        {t("CreditDeals:description")}
+                      </DialogDescription>
                       <Form {...form}>
                         <form
                           onSubmit={() => {
@@ -366,7 +416,9 @@ export default function CreditDeals(properties) {
                             name="account"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>{t("CreditDeals:account")}</FormLabel>
+                                <FormLabel>
+                                  {t("CreditDeals:account")}
+                                </FormLabel>
                                 <FormControl>
                                   <Input
                                     disabled
@@ -387,7 +439,9 @@ export default function CreditDeals(properties) {
                             render={({ field }) => (
                               <FormItem>
                                 <FormLabel>
-                                  {t("CreditDeals:balance", { symbol: debtAsset.symbol })}
+                                  {t("CreditDeals:balance", {
+                                    symbol: debtAsset.symbol,
+                                  })}
                                 </FormLabel>
                                 <FormControl>
                                   <Input
@@ -410,7 +464,9 @@ export default function CreditDeals(properties) {
                                 <FormLabel>
                                   <div className="grid grid-cols-2 gap-2 mt-2">
                                     <div className="col-span-1">
-                                      {t("CreditDeals:repayAmount", { symbol: debtAsset.symbol })}
+                                      {t("CreditDeals:repayAmount", {
+                                        symbol: debtAsset.symbol,
+                                      })}
                                     </div>
                                     <div className="col-span-1 text-right">
                                       {t("CreditDeals:remainingDebt", {
@@ -420,7 +476,9 @@ export default function CreditDeals(properties) {
                                     </div>
                                   </div>
                                 </FormLabel>
-                                <FormDescription>{t("CreditDeals:repayDesc")}</FormDescription>
+                                <FormDescription>
+                                  {t("CreditDeals:repayDesc")}
+                                </FormDescription>
                                 <FormControl
                                   onChange={(event) => {
                                     const input = event.target.value;
@@ -474,8 +532,11 @@ export default function CreditDeals(properties) {
                                     })}
                                     value={
                                       redeemCollateral && collateralAmount
-                                        ? `${redeemCollateral ?? "?"} ${collateralAsset.symbol} (${(
-                                            (redeemCollateral / collateralAmount) *
+                                        ? `${redeemCollateral ?? "?"} ${
+                                            collateralAsset.symbol
+                                          } (${(
+                                            (redeemCollateral /
+                                              collateralAmount) *
                                             100
                                           ).toFixed(2)}%)`
                                         : "0"
@@ -497,17 +558,21 @@ export default function CreditDeals(properties) {
                               render={({ field }) => (
                                 <FormItem>
                                   <FormLabel>
-                                    <div className="mt-2">{t("CreditDeals:loanLabel")}</div>
+                                    <div className="mt-2">
+                                      {t("CreditDeals:loanLabel")}
+                                    </div>
                                   </FormLabel>
-                                  <FormDescription>{t("CreditDeals:loanDesc")}</FormDescription>
+                                  <FormDescription>
+                                    {t("CreditDeals:loanDesc")}
+                                  </FormDescription>
                                   <FormControl>
                                     <Input
                                       disabled
                                       placeholder="0"
                                       className="mb-3 mt-3"
-                                      value={`${loanFee} (${debtAsset.symbol}) (${
-                                        res.fee_rate / 10000
-                                      }% fee)`}
+                                      value={`${loanFee} (${
+                                        debtAsset.symbol
+                                      }) (${res.fee_rate / 10000}% fee)`}
                                     />
                                   </FormControl>
                                   <FormMessage />
@@ -523,7 +588,9 @@ export default function CreditDeals(properties) {
                               render={({ field }) => (
                                 <FormItem>
                                   <FormLabel>
-                                    <div className="mt-2">{t("CreditDeals:finalPaymentLabel")}</div>
+                                    <div className="mt-2">
+                                      {t("CreditDeals:finalPaymentLabel")}
+                                    </div>
                                   </FormLabel>
                                   <FormDescription>
                                     {t("CreditDeals:finalPaymentDesc", {
@@ -535,9 +602,9 @@ export default function CreditDeals(properties) {
                                       disabled
                                       placeholder="0"
                                       className="mb-3 mt-3"
-                                      value={`${finalRepayment} (${debtAsset.symbol}) (debt + ${
-                                        res.fee_rate / 10000
-                                      }% fee)`}
+                                      value={`${finalRepayment} (${
+                                        debtAsset.symbol
+                                      }) (debt + ${res.fee_rate / 10000}% fee)`}
                                     />
                                   </FormControl>
                                   {debtAssetBalance < finalRepayment ? (
@@ -558,9 +625,13 @@ export default function CreditDeals(properties) {
                             render={({ field }) => (
                               <FormItem>
                                 <FormLabel>
-                                  <div className="mt-2">{t("CreditDeals:networkFee")}</div>
+                                  <div className="mt-2">
+                                    {t("CreditDeals:networkFee")}
+                                  </div>
                                 </FormLabel>
-                                <FormDescription>{t("CreditDeals:networkFeeDesc")}</FormDescription>
+                                <FormDescription>
+                                  {t("CreditDeals:networkFeeDesc")}
+                                </FormDescription>
                                 <FormControl>
                                   <Input
                                     disabled
@@ -572,7 +643,10 @@ export default function CreditDeals(properties) {
                                   <FormMessage>
                                     {t("CreditDeals:rebate", {
                                       fee: fee * 0.8,
-                                      chain: usr.chain === "bitshares" ? "BTS" : "TEST",
+                                      chain:
+                                        usr.chain === "bitshares"
+                                          ? "BTS"
+                                          : "TEST",
                                     })}
                                   </FormMessage>
                                 ) : null}
@@ -584,11 +658,20 @@ export default function CreditDeals(properties) {
                           {!redeemCollateral ||
                           !finalRepayAmount ||
                           debtAssetBalance < finalRepayment ? (
-                            <Button className="mt-5 mb-3" variant="outline" disabled type="submit">
+                            <Button
+                              className="mt-5 mb-3"
+                              variant="outline"
+                              disabled
+                              type="submit"
+                            >
                               {t("CreditDeals:submit")}
                             </Button>
                           ) : (
-                            <Button className="mt-5 mb-3" variant="outline" type="submit">
+                            <Button
+                              className="mt-5 mb-3"
+                              variant="outline"
+                              type="submit"
+                            >
                               {t("CreditDeals:submit")}
                             </Button>
                           )}
@@ -612,11 +695,17 @@ export default function CreditDeals(properties) {
                               account: usr.id,
                               deal_id: res.id,
                               repay_amount: {
-                                amount: blockchainFloat(finalRepayAmount, debtAsset.precision),
+                                amount: blockchainFloat(
+                                  finalRepayAmount,
+                                  debtAsset.precision
+                                ),
                                 asset_id: debtAsset.id,
                               },
                               credit_fee: {
-                                amount: blockchainFloat(loanFee, debtAsset.precision),
+                                amount: blockchainFloat(
+                                  loanFee,
+                                  debtAsset.precision
+                                ),
                                 asset_id: debtAsset.id,
                               },
                               extensions: [],
@@ -669,7 +758,9 @@ export default function CreditDeals(properties) {
           <Card>
             <CardHeader>
               <CardTitle>{t("CreditDeals:card.title")}</CardTitle>
-              <CardDescription>{t("CreditDeals:card.description")}</CardDescription>
+              <CardDescription>
+                {t("CreditDeals:card.description")}
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <Tabs defaultValue="borrowings" className="w-full">
@@ -679,7 +770,10 @@ export default function CreditDeals(properties) {
                       {t("CreditDeals:card.viewingBorrowings")}
                     </TabsTrigger>
                   ) : (
-                    <TabsTrigger value="borrowings" onClick={() => setActiveTab("borrowings")}>
+                    <TabsTrigger
+                      value="borrowings"
+                      onClick={() => setActiveTab("borrowings")}
+                    >
                       {t("CreditDeals:card.viewBorrowings")}
                     </TabsTrigger>
                   )}
@@ -688,7 +782,10 @@ export default function CreditDeals(properties) {
                       {t("CreditDeals:card.viewingLendings")}
                     </TabsTrigger>
                   ) : (
-                    <TabsTrigger value="lendings" onClick={() => setActiveTab("lendings")}>
+                    <TabsTrigger
+                      value="lendings"
+                      onClick={() => setActiveTab("lendings")}
+                    >
                       {t("CreditDeals:card.viewLendings")}
                     </TabsTrigger>
                   )}
@@ -720,7 +817,9 @@ export default function CreditDeals(properties) {
                       {OwnerRow}
                     </List>
                   ) : null}
-                  {lenderDeals && !lenderDeals.length ? t("CreditDeals:card.noLendings") : null}
+                  {lenderDeals && !lenderDeals.length
+                    ? t("CreditDeals:card.noLendings")
+                    : null}
                   {!lenderDeals ? t("CreditDeals:card.loading") : null}
                 </TabsContent>
               </Tabs>
@@ -735,14 +834,24 @@ export default function CreditDeals(properties) {
                   ? t("CreditDeals:risks.borrowerTitle")
                   : t("CreditDeals:risks.lenderTitle")}
               </CardTitle>
-              <CardDescription>{t("CreditDeals:risks.description")}</CardDescription>
+              <CardDescription>
+                {t("CreditDeals:risks.description")}
+              </CardDescription>
             </CardHeader>
             <CardContent className="text-sm">
               <ul className="ml-2 list-disc [&>li]:mt-2 pl-2">
                 {activeTab === "borrowings" ? (
-                  <li>{t("CreditDeals:risks.borrower.risk1", { username: usr?.username })}</li>
+                  <li>
+                    {t("CreditDeals:risks.borrower.risk1", {
+                      username: usr?.username,
+                    })}
+                  </li>
                 ) : (
-                  <li>{t("CreditDeals:risks.lender.risk1", { username: usr?.username })}</li>
+                  <li>
+                    {t("CreditDeals:risks.lender.risk1", {
+                      username: usr?.username,
+                    })}
+                  </li>
                 )}
                 {activeTab === "borrowings" ? (
                   <li>{t("CreditDeals:risks.borrower.risk2")}</li>
@@ -750,7 +859,11 @@ export default function CreditDeals(properties) {
                   <li>{t("CreditDeals:risks.lender.risk2")}</li>
                 )}
                 {activeTab === "lendings" ? (
-                  <li>{t("CreditDeals:risks.lender.risk3", { username: usr?.username })}</li>
+                  <li>
+                    {t("CreditDeals:risks.lender.risk3", {
+                      username: usr?.username,
+                    })}
+                  </li>
                 ) : null}
                 {activeTab === "borrowings" ? (
                   <li>{t("CreditDeals:risks.borrower.risk3")}</li>

@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useSyncExternalStore, useMemo, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  useSyncExternalStore,
+  useMemo,
+  useCallback,
+} from "react";
 import { useStore } from "@nanostores/react";
 import { FixedSizeList as List } from "react-window";
 import { useTranslation } from "react-i18next";
@@ -66,7 +72,9 @@ import ExternalLink from "./common/ExternalLink.jsx";
 function getImages(nft_object) {
   if (!nft_object) return [];
   const object_keys = Object.keys(nft_object);
-  if (object_keys.find((x) => x.includes("media_") && x.includes("_multihashes"))) {
+  if (
+    object_keys.find((x) => x.includes("media_") && x.includes("_multihashes"))
+  ) {
     return (
       object_keys
         .filter((key) => key.includes("media_") && key.includes("_multihashes"))
@@ -93,10 +101,15 @@ function getImages(nft_object) {
 
 export default function CreateSmartcoin(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
-  const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
+  const usr = useSyncExternalStore(
+    $currentUser.subscribe,
+    $currentUser.get,
+    () => true
+  );
   const currentNode = useStore($currentNode);
 
-  const { _assetsBTS, _assetsTEST, _marketSearchBTS, _marketSearchTEST } = properties;
+  const { _assetsBTS, _assetsTEST, _marketSearchBTS, _marketSearchTEST } =
+    properties;
 
   const marketSearch = useMemo(() => {
     if (usr && usr.chain && (_marketSearchBTS || _marketSearchTEST)) {
@@ -133,14 +146,16 @@ export default function CreateSmartcoin(properties) {
         currentNode ? currentNode.url : null,
       ]);
 
-      unsubscribeUserBalances = userBalancesStore.subscribe(({ data, error, loading }) => {
-        if (data && !error && !loading) {
-          const filteredData = data.filter((balance) =>
-            assets.find((x) => x.id === balance.asset_id)
-          );
-          setBalances(filteredData);
+      unsubscribeUserBalances = userBalancesStore.subscribe(
+        ({ data, error, loading }) => {
+          if (data && !error && !loading) {
+            const filteredData = data.filter((balance) =>
+              assets.find((x) => x.id === balance.asset_id)
+            );
+            setBalances(filteredData);
+          }
         }
-      });
+      );
     }
 
     return () => {
@@ -178,7 +193,8 @@ export default function CreateSmartcoin(properties) {
   const [permDisableICRUpdate, setPermDisableICRUpdate] = useState(false); // disable_icr_update
   const [permDisableMSSRUpdate, setPermDisableMSSRUpdate] = useState(false); // disable_mssr_update
   const [permDisableBSRMUpdate, setPermDisableBSRMUpdate] = useState(false); // disable_bsrm_update
-  const [permDisableCollateralBidding, setPermDisableCollateralBidding] = useState(false); // disable_collateral_bidding
+  const [permDisableCollateralBidding, setPermDisableCollateralBidding] =
+    useState(false); // disable_collateral_bidding
 
   // Initializing flags
   const [flagWhiteList, setFlagWhiteList] = useState(false); // white_list
@@ -198,7 +214,8 @@ export default function CreateSmartcoin(properties) {
   // static flags
   const [flagLockMaxSupply, setFlagLockMaxSupply] = useState(false); // lock_max_supply
   const [flagDisableNewSupply, setFlagDisableNewSupply] = useState(false); // disable_new_supply
-  const [flagDisableCollateralBidding, setFlagDisableCollateralBidding] = useState(false); // disable_collateral_bidding
+  const [flagDisableCollateralBidding, setFlagDisableCollateralBidding] =
+    useState(false); // disable_collateral_bidding
 
   // Disable-bit stablecoin option extension values
   const [mcr, setMcr] = useState(0); // maintenance_collateral_ratio
@@ -208,7 +225,8 @@ export default function CreateSmartcoin(properties) {
 
   // Extensions
   const [enabledReferrerReward, setEnabledReferrerReward] = useState(false); // reward_percent
-  const [enabledFeeSharingWhitelist, setEnabledFeeSharingWhitelist] = useState(false); // whitelist_market_fee_sharing
+  const [enabledFeeSharingWhitelist, setEnabledFeeSharingWhitelist] =
+    useState(false); // whitelist_market_fee_sharing
   const [enabledTakerFee, setEnabledTakerFee] = useState(false); // taker_fee_percent
 
   const [referrerReward, setReferrerReward] = useState(0); // reward_percent
@@ -377,9 +395,12 @@ export default function CreateSmartcoin(properties) {
   // Bitasset options
   const [feedLifetimeSeconds, setFeedLifetimeSeconds] = useState(100000);
   const [minimumFeeds, setMinimumFeeds] = useState(1);
-  const [forceSettlementDelaySeconds, setForceSettlementDelaySeconds] = useState(60);
-  const [forceSettlementOffsetPercent, setForceSettlementOffsetPercent] = useState(0);
-  const [maximumForceSettlementVolume, setMaximumForceSettlementVolume] = useState(5);
+  const [forceSettlementDelaySeconds, setForceSettlementDelaySeconds] =
+    useState(60);
+  const [forceSettlementOffsetPercent, setForceSettlementOffsetPercent] =
+    useState(0);
+  const [maximumForceSettlementVolume, setMaximumForceSettlementVolume] =
+    useState(5);
 
   const [backingAsset, setBackingAsset] = useState("1.3.0");
   const backingAssetData = useMemo(() => {
@@ -463,7 +484,8 @@ export default function CreateSmartcoin(properties) {
 
   const [editing, setEditing] = useState(false); // editing mode
   const [hasEditedAssetOptions, setHasEditedAssetOptions] = useState(false); // asset options edited
-  const [hasEditedBitassetOptions, setHasEditedBitassetOptions] = useState(false); // bitasset options edited
+  const [hasEditedBitassetOptions, setHasEditedBitassetOptions] =
+    useState(false); // bitasset options edited
 
   const [existingAssetData, setExistingAssetData] = useState(); // existing asset data
   const [dynamicData, setDynamicData] = useState(); // existing dynamic data
@@ -507,41 +529,80 @@ export default function CreateSmartcoin(properties) {
           //console.log({ _bitassetData, _dynamicData, existingAssetData });
           setDynamicData(_dynamicData);
 
-          if (_bitassetData.options.extensions.hasOwnProperty("force_settle_fee_percent")) {
+          if (
+            _bitassetData.options.extensions.hasOwnProperty(
+              "force_settle_fee_percent"
+            )
+          ) {
             setFsfExtensionEnabled(true);
             setForceSettleFeePercent(
               _bitassetData.options.extensions.force_settle_fee_percent / 100
             );
           }
 
-          if (_bitassetData.options.extensions.hasOwnProperty("margin_call_fee_ratio")) {
+          if (
+            _bitassetData.options.extensions.hasOwnProperty(
+              "margin_call_fee_ratio"
+            )
+          ) {
             setMcfrExtensionEnabled(true);
-            setMarginCallFeeRatio(_bitassetData.options.extensions.margin_call_fee_ratio / 100);
+            setMarginCallFeeRatio(
+              _bitassetData.options.extensions.margin_call_fee_ratio / 100
+            );
           }
 
-          if (_bitassetData.options.extensions.hasOwnProperty("initial_collateral_ratio")) {
-            setIcr(_bitassetData.options.extensions.initial_collateral_ratio / 100);
+          if (
+            _bitassetData.options.extensions.hasOwnProperty(
+              "initial_collateral_ratio"
+            )
+          ) {
+            setIcr(
+              _bitassetData.options.extensions.initial_collateral_ratio / 100
+            );
           }
 
-          if (_bitassetData.options.extensions.hasOwnProperty("maintenance_collateral_ratio")) {
-            setMcr(_bitassetData.options.extensions.maintenance_collateral_ratio / 100);
+          if (
+            _bitassetData.options.extensions.hasOwnProperty(
+              "maintenance_collateral_ratio"
+            )
+          ) {
+            setMcr(
+              _bitassetData.options.extensions.maintenance_collateral_ratio /
+                100
+            );
           }
 
-          if (_bitassetData.options.extensions.hasOwnProperty("maximum_short_squeeze_ratio")) {
-            setMssr(_bitassetData.options.extensions.maximum_short_squeeze_ratio / 100);
+          if (
+            _bitassetData.options.extensions.hasOwnProperty(
+              "maximum_short_squeeze_ratio"
+            )
+          ) {
+            setMssr(
+              _bitassetData.options.extensions.maximum_short_squeeze_ratio / 100
+            );
           }
 
-          if (_bitassetData.options.extensions.hasOwnProperty("black_swan_response_method")) {
-            setBsrmStrategy(_bitassetData.options.extensions.black_swan_response_method.toString());
+          if (
+            _bitassetData.options.extensions.hasOwnProperty(
+              "black_swan_response_method"
+            )
+          ) {
+            setBsrmStrategy(
+              _bitassetData.options.extensions.black_swan_response_method.toString()
+            );
           }
 
           setFeedLifetimeSeconds(_bitassetData.options.feed_lifetime_sec);
           setMinimumFeeds(_bitassetData.options.minimum_feeds);
-          setForceSettlementDelaySeconds(_bitassetData.options.force_settlement_delay_sec);
+          setForceSettlementDelaySeconds(
+            _bitassetData.options.force_settlement_delay_sec
+          );
           setForceSettlementOffsetPercent(
             _bitassetData.options.force_settlement_offset_percent / 100
           );
-          setMaximumForceSettlementVolume(_bitassetData.options.maximum_force_settlement_volume);
+          setMaximumForceSettlementVolume(
+            _bitassetData.options.maximum_force_settlement_volume
+          );
           setBackingAsset(_bitassetData.options.short_backing_asset);
         }
       });
@@ -559,7 +620,8 @@ export default function CreateSmartcoin(properties) {
       bitassetExtensions["margin_call_fee_ratio"] = marginCallFeeRatio * 100;
     }
     if (fsfExtensionEnabled && forceSettleFeePercent > 0) {
-      bitassetExtensions["force_settle_fee_percent"] = forceSettleFeePercent * 100;
+      bitassetExtensions["force_settle_fee_percent"] =
+        forceSettleFeePercent * 100;
     }
 
     // disable-bits
@@ -580,8 +642,14 @@ export default function CreateSmartcoin(properties) {
     if (enabledReferrerReward && referrerReward > 0) {
       assetExtensions.reward_percent = referrerReward * 100;
     }
-    if (enabledFeeSharingWhitelist && feeSharingWhitelist && feeSharingWhitelist.length) {
-      assetExtensions.whitelist_market_fee_sharing = feeSharingWhitelist.map((x) => x.id);
+    if (
+      enabledFeeSharingWhitelist &&
+      feeSharingWhitelist &&
+      feeSharingWhitelist.length
+    ) {
+      assetExtensions.whitelist_market_fee_sharing = feeSharingWhitelist.map(
+        (x) => x.id
+      );
     }
     if (enabledTakerFee && takerFee > 0) {
       assetExtensions.taker_fee_percent = takerFee * 100;
@@ -803,10 +871,14 @@ export default function CreateSmartcoin(properties) {
     []
   );
 
-  const [whitelistMarketFeeSharingDialogOpen, setWhitelistMarketFeeSharingDialogOpen] =
+  const [
+    whitelistMarketFeeSharingDialogOpen,
+    setWhitelistMarketFeeSharingDialogOpen,
+  ] = useState(false);
+  const [whitelistAuthorityDialogOpen, setWhitelistAuthorityDialogOpen] =
     useState(false);
-  const [whitelistAuthorityDialogOpen, setWhitelistAuthorityDialogOpen] = useState(false);
-  const [blacklistAuthorityDialogOpen, setBlacklistAuthorityDialogOpen] = useState(false);
+  const [blacklistAuthorityDialogOpen, setBlacklistAuthorityDialogOpen] =
+    useState(false);
 
   const allowedMarketsRow = ({ index, style }) => {
     let res = allowedMarkets[index];
@@ -824,10 +896,13 @@ export default function CreateSmartcoin(properties) {
             <span className="grid grid-cols-12">
               <span className="col-span-11">
                 <div className="">
-                  {currentAsset ? `${currentAsset.symbol} (${currentAsset.id})` : res}
+                  {currentAsset
+                    ? `${currentAsset.symbol} (${currentAsset.id})`
+                    : res}
                 </div>
                 <div className="text-sm">
-                  {t("Smartcoins:createdBy")} {issuer && issuer.u ? issuer.u : currentAsset.issuer}
+                  {t("Smartcoins:createdBy")}{" "}
+                  {issuer && issuer.u ? issuer.u : currentAsset.issuer}
                 </div>
               </span>
               <span className="col-span-1">
@@ -866,10 +941,13 @@ export default function CreateSmartcoin(properties) {
             <span className="grid grid-cols-12">
               <span className="col-span-11">
                 <div className="">
-                  {currentAsset ? `${currentAsset.symbol} (${currentAsset.id})` : res}
+                  {currentAsset
+                    ? `${currentAsset.symbol} (${currentAsset.id})`
+                    : res}
                 </div>
                 <div className="text-sm">
-                  {t("Smartcoins:createdBy")} {issuer && issuer.u ? issuer.u : currentAsset.issuer}
+                  {t("Smartcoins:createdBy")}{" "}
+                  {issuer && issuer.u ? issuer.u : currentAsset.issuer}
                 </div>
               </span>
               <span className="col-span-1">
@@ -909,7 +987,13 @@ export default function CreateSmartcoin(properties) {
                   name={res.name}
                   extra="Borrower"
                   expression={{ eye: "normal", mouth: "open" }}
-                  colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]}
+                  colors={[
+                    "#92A1C6",
+                    "#146A7C",
+                    "#F0AB3D",
+                    "#C271B4",
+                    "#C20D90",
+                  ]}
                 />
               </span>
               <span className="col-span-10 ml-3">
@@ -921,7 +1005,9 @@ export default function CreateSmartcoin(properties) {
                   className="mr-2"
                   onClick={(e) => {
                     e.preventDefault();
-                    const _update = feeSharingWhitelist.filter((x) => x.id !== res.id);
+                    const _update = feeSharingWhitelist.filter(
+                      (x) => x.id !== res.id
+                    );
                     setFeeSharingWhitelist(_update);
                   }}
                 >
@@ -952,7 +1038,13 @@ export default function CreateSmartcoin(properties) {
                   name={res.name}
                   extra="Borrower"
                   expression={{ eye: "normal", mouth: "open" }}
-                  colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]}
+                  colors={[
+                    "#92A1C6",
+                    "#146A7C",
+                    "#F0AB3D",
+                    "#C271B4",
+                    "#C20D90",
+                  ]}
                 />
               </span>
               <span className="col-span-10 ml-3">
@@ -964,7 +1056,9 @@ export default function CreateSmartcoin(properties) {
                   className="mr-2"
                   onClick={(e) => {
                     e.preventDefault();
-                    const _update = whitelistAuthorities.filter((x) => x.id !== res.id);
+                    const _update = whitelistAuthorities.filter(
+                      (x) => x.id !== res.id
+                    );
                     setWhitelistAuthorities(_update);
                   }}
                 >
@@ -995,11 +1089,19 @@ export default function CreateSmartcoin(properties) {
                   name={res.name ? res.name : ""}
                   extra="Borrower"
                   expression={{ eye: "normal", mouth: "open" }}
-                  colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]}
+                  colors={[
+                    "#92A1C6",
+                    "#146A7C",
+                    "#F0AB3D",
+                    "#C271B4",
+                    "#C20D90",
+                  ]}
                 />
               </span>
               <span className="col-span-9 ml-3">
-                {res.name ? `#${index + 1}: ${res.name} (${res.id})` : `#${index + 1}: ${res.id}`}
+                {res.name
+                  ? `#${index + 1}: ${res.name} (${res.id})`
+                  : `#${index + 1}: ${res.id}`}
               </span>
               <span className="col-span-1">
                 <Button
@@ -1007,7 +1109,9 @@ export default function CreateSmartcoin(properties) {
                   className="mr-2"
                   onClick={(e) => {
                     e.preventDefault();
-                    const _update = blacklistAuthorities.filter((x) => x.id !== res.id);
+                    const _update = blacklistAuthorities.filter(
+                      (x) => x.id !== res.id
+                    );
                     setBlacklistAuthorities(_update);
                   }}
                 >
@@ -1037,8 +1141,10 @@ export default function CreateSmartcoin(properties) {
   const [permanentlyDisabledDNS, setPermanentlyDisabledDNS] = useState(false); // disable_new_supply
   const [permanentlyDisabledDMCR, setPermanentlyDisabledDMCR] = useState(false); // disable_mcr_update
   const [permanentlyDisabledDICR, setPermanentlyDisabledDICR] = useState(false); // disable_icr_update
-  const [permanentlyDisabledDMSSR, setPermanentlyDisabledDMSSR] = useState(false); // disable_mssr_update
-  const [permanentlyDisabledDBSRM, setPermanentlyDisabledDBSRM] = useState(false); // disable_bsrm_update
+  const [permanentlyDisabledDMSSR, setPermanentlyDisabledDMSSR] =
+    useState(false); // disable_mssr_update
+  const [permanentlyDisabledDBSRM, setPermanentlyDisabledDBSRM] =
+    useState(false); // disable_bsrm_update
   const [permanentlyDisabledDCB, setPermanentlyDisabledDCB] = useState(false); // disable_collateral_bidding
 
   // Fetching asset data
@@ -1065,16 +1171,21 @@ export default function CreateSmartcoin(properties) {
 
           setSymbol(propsAsset.symbol);
           setPrecision(propsAsset.precision);
-          setMaxSupply(humanReadableFloat(propsAsset.options.max_supply, propsAsset.precision));
+          setMaxSupply(
+            humanReadableFloat(
+              propsAsset.options.max_supply,
+              propsAsset.precision
+            )
+          );
 
-          const desc = propsAsset.options.description;         
+          const desc = propsAsset.options.description;
           let parsedJSON;
           if (desc && desc.length) {
             let _desc;
             try {
               _desc = JSON.parse(desc);
             } catch (e) {
-              console.log({e, id: propsAsset.id, desc});
+              console.log({ e, id: propsAsset.id, desc });
             }
             if (_desc && _desc.hasOwnProperty("main")) {
               parsedJSON = _desc;
@@ -1101,16 +1212,25 @@ export default function CreateSmartcoin(properties) {
             }
           }
 
-          setShortName(parsedJSON && parsedJSON.short_name ? parsedJSON.short_name : "");
+          setShortName(
+            parsedJSON && parsedJSON.short_name ? parsedJSON.short_name : ""
+          );
           setDesc(parsedJSON && parsedJSON.main ? parsedJSON.main : "");
           setMarket(parsedJSON && parsedJSON.market ? parsedJSON.market : "");
           setCommission(propsAsset.options.market_fee_percent / 100);
           setMaxCommission(
-            humanReadableFloat(propsAsset.options.max_market_fee, propsAsset.precision)
+            humanReadableFloat(
+              propsAsset.options.max_market_fee,
+              propsAsset.precision
+            )
           );
 
-          setAllowedMarketsEnabled(propsAsset.options.whitelist_markets.length > 0);
-          setBannedMarketsEnabled(propsAsset.options.blacklist_markets.length > 0);
+          setAllowedMarketsEnabled(
+            propsAsset.options.whitelist_markets.length > 0
+          );
+          setBannedMarketsEnabled(
+            propsAsset.options.blacklist_markets.length > 0
+          );
           setAllowedMarkets(propsAsset.options.whitelist_markets);
           setBannedMarkets(propsAsset.options.blacklist_markets);
           setWhitelistAuthorities(
@@ -1131,7 +1251,9 @@ export default function CreateSmartcoin(properties) {
           );
 
           const _flags = getFlagBooleans(propsAsset.options.flags);
-          const _issuer_permissions = getFlagBooleans(propsAsset.options.issuer_permissions);
+          const _issuer_permissions = getFlagBooleans(
+            propsAsset.options.issuer_permissions
+          );
 
           // Enable-bit permissions
           if (_issuer_permissions.hasOwnProperty("charge_market_fee")) {
@@ -1227,7 +1349,9 @@ export default function CreateSmartcoin(properties) {
           } else {
             setPermDisableBSRMUpdate(false);
           }
-          if (_issuer_permissions.hasOwnProperty("disable_collateral_bidding")) {
+          if (
+            _issuer_permissions.hasOwnProperty("disable_collateral_bidding")
+          ) {
             setPermDisableCollateralBidding(true);
             setPermanentlyDisabledDCB(true);
           } else {
@@ -1280,9 +1404,15 @@ export default function CreateSmartcoin(properties) {
             setReferrerReward(_existingAssetExtensions.reward_percent / 100);
           }
 
-          if (_existingAssetExtensions.hasOwnProperty("whitelist_market_fee_sharing")) {
+          if (
+            _existingAssetExtensions.hasOwnProperty(
+              "whitelist_market_fee_sharing"
+            )
+          ) {
             setEnabledFeeSharingWhitelist(true);
-            setFeeSharingWhitelist(_existingAssetExtensions.whitelist_market_fee_sharing);
+            setFeeSharingWhitelist(
+              _existingAssetExtensions.whitelist_market_fee_sharing
+            );
           }
 
           if (_existingAssetExtensions.hasOwnProperty("taker_fee_percent")) {
@@ -1290,12 +1420,17 @@ export default function CreateSmartcoin(properties) {
             setTakerFee(_existingAssetExtensions.taker_fee_percent / 100);
           }
 
-          if (_existingAssetExtensions.hasOwnProperty("skip_core_exchange_rate")) {
+          if (
+            _existingAssetExtensions.hasOwnProperty("skip_core_exchange_rate")
+          ) {
             setOptedSkipCER(true);
           }
 
           setCerBaseAmount(
-            humanReadableFloat(propsAsset.options.core_exchange_rate.base.amount, 5)
+            humanReadableFloat(
+              propsAsset.options.core_exchange_rate.base.amount,
+              5
+            )
           );
           setCerQuoteAmount(
             humanReadableFloat(
@@ -1320,7 +1455,11 @@ export default function CreateSmartcoin(properties) {
     let res = nftMedia[index];
 
     return (
-      <div style={{ ...style }} key={`dialogrow-${index}`} className="grid grid-cols-4">
+      <div
+        style={{ ...style }}
+        key={`dialogrow-${index}`}
+        className="grid grid-cols-4"
+      >
         <div className="col-span-1">{res.type}</div>
         <div className="col-span-1">
           <Dialog>
@@ -1362,10 +1501,14 @@ export default function CreateSmartcoin(properties) {
               <CardTitle>
                 💷{" "}
                 {t(
-                  !editing ? "CreateSmartcoin:card.title_create" : "CreateSmartcoin:card.title_edit"
+                  !editing
+                    ? "CreateSmartcoin:card.title_create"
+                    : "CreateSmartcoin:card.title_edit"
                 )}
               </CardTitle>
-              <CardDescription>{t("CreateSmartcoin:card.description")}</CardDescription>
+              <CardDescription>
+                {t("CreateSmartcoin:card.description")}
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2">
@@ -1393,7 +1536,10 @@ export default function CreateSmartcoin(properties) {
                             {t("CreateSmartcoin:editAsset.disabled")}
                           </Button>
                         ) : (
-                          <Button variant="outline" onClick={() => setHasEditedAssetOptions(false)}>
+                          <Button
+                            variant="outline"
+                            onClick={() => setHasEditedAssetOptions(false)}
+                          >
                             {t("CreateSmartcoin:editAsset.enabled")}
                           </Button>
                         )}
@@ -1406,12 +1552,18 @@ export default function CreateSmartcoin(properties) {
                       <div className={`grid grid-cols-3 gap-5`}>
                         <div>
                           <HoverInfo
-                            content={t("AssetCommon:asset_details.symbol.header_content")}
-                            header={t("AssetCommon:asset_details.symbol.header")}
+                            content={t(
+                              "AssetCommon:asset_details.symbol.header_content"
+                            )}
+                            header={t(
+                              "AssetCommon:asset_details.symbol.header"
+                            )}
                           />
                           {!editing ? (
                             <Input
-                              placeholder={t("AssetCommon:asset_details.symbol.placeholder")}
+                              placeholder={t(
+                                "AssetCommon:asset_details.symbol.placeholder"
+                              )}
                               value={symbol}
                               type="text"
                               onInput={(e) => {
@@ -1425,18 +1577,29 @@ export default function CreateSmartcoin(properties) {
                               className="mt-1"
                             />
                           ) : (
-                            <Input placeholder={symbol} type="text" disabled className="mt-1" />
+                            <Input
+                              placeholder={symbol}
+                              type="text"
+                              disabled
+                              className="mt-1"
+                            />
                           )}
                         </div>
 
                         <div>
                           <HoverInfo
-                            content={t("AssetCommon:asset_details.max_supply.header_content")}
-                            header={t("AssetCommon:asset_details.max_supply.header")}
+                            content={t(
+                              "AssetCommon:asset_details.max_supply.header_content"
+                            )}
+                            header={t(
+                              "AssetCommon:asset_details.max_supply.header"
+                            )}
                           />
                           {!permLockMaxSupply && !flagLockMaxSupply ? (
                             <Input
-                              placeholder={t("AssetCommon:asset_details.max_supply.placeholder")}
+                              placeholder={t(
+                                "AssetCommon:asset_details.max_supply.placeholder"
+                              )}
                               value={maxSupply}
                               type="number"
                               onInput={(e) => {
@@ -1460,12 +1623,18 @@ export default function CreateSmartcoin(properties) {
                         </div>
                         <div>
                           <HoverInfo
-                            content={t("AssetCommon:asset_details.precision.header_content")}
-                            header={t("AssetCommon:asset_details.precision.header")}
+                            content={t(
+                              "AssetCommon:asset_details.precision.header_content"
+                            )}
+                            header={t(
+                              "AssetCommon:asset_details.precision.header"
+                            )}
                           />
                           {!editing ? (
                             <Input
-                              placeholder={t("AssetCommon:asset_details.precision.placeholder")}
+                              placeholder={t(
+                                "AssetCommon:asset_details.precision.placeholder"
+                              )}
                               value={precision}
                               type="number"
                               onInput={(e) => {
@@ -1491,13 +1660,17 @@ export default function CreateSmartcoin(properties) {
                           ) : null}
                           {editing && existingSupply === 0 ? (
                             <Input
-                              placeholder={t("AssetCommon:asset_details.precision.placeholder")}
+                              placeholder={t(
+                                "AssetCommon:asset_details.precision.placeholder"
+                              )}
                               value={precision}
                               type="number"
                               onInput={(e) => {
                                 const input = parseInt(e.currentTarget.value);
                                 if (input >= 0 && input <= 8) {
-                                  setUpdatedPrecision(parseInt(e.currentTarget.value));
+                                  setUpdatedPrecision(
+                                    parseInt(e.currentTarget.value)
+                                  );
                                 } else if (input < 0) {
                                   setUpdatedPrecision(0);
                                 } else {
@@ -1512,11 +1685,17 @@ export default function CreateSmartcoin(properties) {
                       </div>
 
                       <HoverInfo
-                        content={t("AssetCommon:asset_details.description.header_content")}
-                        header={t("AssetCommon:asset_details.description.header")}
+                        content={t(
+                          "AssetCommon:asset_details.description.header_content"
+                        )}
+                        header={t(
+                          "AssetCommon:asset_details.description.header"
+                        )}
                       />
                       <Textarea
-                        placeholder={t("AssetCommon:asset_details.description.placeholder")}
+                        placeholder={t(
+                          "AssetCommon:asset_details.description.placeholder"
+                        )}
                         value={desc}
                         onInput={(e) => {
                           setDesc(e.currentTarget.value);
@@ -1527,25 +1706,42 @@ export default function CreateSmartcoin(properties) {
                       <div className="grid grid-cols-2 gap-5 mb-3">
                         <div>
                           <HoverInfo
-                            content={t("AssetCommon:asset_details.shortName.header_content")}
-                            header={t("AssetCommon:asset_details.shortName.header")}
+                            content={t(
+                              "AssetCommon:asset_details.shortName.header_content"
+                            )}
+                            header={t(
+                              "AssetCommon:asset_details.shortName.header"
+                            )}
                           />
                           {!editing ? (
                             <Input
-                              placeholder={t("AssetCommon:asset_details.shortName.placeholder")}
+                              placeholder={t(
+                                "AssetCommon:asset_details.shortName.placeholder"
+                              )}
                               value={shortName}
                               type="text"
-                              onInput={(e) => setShortName(e.currentTarget.value)}
+                              onInput={(e) =>
+                                setShortName(e.currentTarget.value)
+                              }
                               className="mt-1"
                             />
                           ) : (
-                            <Input placeholder={shortName} type="text" disabled className="mt-1" />
+                            <Input
+                              placeholder={shortName}
+                              type="text"
+                              disabled
+                              className="mt-1"
+                            />
                           )}
                         </div>
                         <div>
                           <HoverInfo
-                            content={t("AssetCommon:asset_details.preferredMarket.header_content")}
-                            header={t("AssetCommon:asset_details.preferredMarket.header")}
+                            content={t(
+                              "AssetCommon:asset_details.preferredMarket.header_content"
+                            )}
+                            header={t(
+                              "AssetCommon:asset_details.preferredMarket.header"
+                            )}
                           />
                           <div className="grid grid-cols-2 gap-3 mt-1">
                             <Input placeholder={market} disabled type="text" />
@@ -1566,8 +1762,12 @@ export default function CreateSmartcoin(properties) {
                       <div className="grid grid-cols-3 gap-5 mb-3">
                         <div>
                           <HoverInfo
-                            content={t("AssetCommon:cer.quote_asset_amount.header_content")}
-                            header={t("AssetCommon:cer.quote_asset_amount.header")}
+                            content={t(
+                              "AssetCommon:cer.quote_asset_amount.header_content"
+                            )}
+                            header={t(
+                              "AssetCommon:cer.quote_asset_amount.header"
+                            )}
                           />
                           {!optedSkipCER ? (
                             <Input
@@ -1591,10 +1791,15 @@ export default function CreateSmartcoin(properties) {
                         </div>
                         <div>
                           <HoverInfo
-                            content={t("AssetCommon:cer.base_asset_amount.header_content", {
-                              symbol: "BTS",
-                            })}
-                            header={t("AssetCommon:cer.base_asset_amount.header")}
+                            content={t(
+                              "AssetCommon:cer.base_asset_amount.header_content",
+                              {
+                                symbol: "BTS",
+                              }
+                            )}
+                            header={t(
+                              "AssetCommon:cer.base_asset_amount.header"
+                            )}
                           />
                           {!optedSkipCER ? (
                             <Input
@@ -1618,11 +1823,17 @@ export default function CreateSmartcoin(properties) {
                         </div>
                         <div>
                           <HoverInfo
-                            content={t("AssetCommon:cer.calculated_cer_price.header_content")}
-                            header={t("AssetCommon:cer.calculated_cer_price.header")}
+                            content={t(
+                              "AssetCommon:cer.calculated_cer_price.header_content"
+                            )}
+                            header={t(
+                              "AssetCommon:cer.calculated_cer_price.header"
+                            )}
                           />
                           <Input
-                            placeholder={`${(cerQuoteAmount / cerBaseAmount).toFixed(precision)} ${
+                            placeholder={`${(
+                              cerQuoteAmount / cerBaseAmount
+                            ).toFixed(precision)} ${
                               usr.chain === "bitshares" ? "BTS" : "TEST"
                             }`}
                             type="text"
@@ -1637,10 +1848,18 @@ export default function CreateSmartcoin(properties) {
                           <AssetFlag
                             alreadyDisabled={false}
                             id={"skipCER"}
-                            allowedText={t("AssetCommon:extensions.skipCER.enabled")}
-                            enabledInfo={t("AssetCommon:extensions.skipCER.enabledInfo")}
-                            disabledText={t("AssetCommon:extensions.skipCER.disabled")}
-                            disabledInfo={t("AssetCommon:extensions.skipCER.disabledInfo")}
+                            allowedText={t(
+                              "AssetCommon:extensions.skipCER.enabled"
+                            )}
+                            enabledInfo={t(
+                              "AssetCommon:extensions.skipCER.enabledInfo"
+                            )}
+                            disabledText={t(
+                              "AssetCommon:extensions.skipCER.disabled"
+                            )}
+                            disabledInfo={t(
+                              "AssetCommon:extensions.skipCER.disabledInfo"
+                            )}
                             permission={true}
                             flag={optedSkipCER}
                             setFlag={setOptedSkipCER}
@@ -1652,10 +1871,18 @@ export default function CreateSmartcoin(properties) {
                         <AssetFlag
                           alreadyDisabled={false}
                           id={"allowed_markets"}
-                          allowedText={t("AssetCommon:extensions.allowed_markets.enabled")}
-                          enabledInfo={t("AssetCommon:extensions.allowed_markets.enabledInfo")}
-                          disabledText={t("AssetCommon:extensions.allowed_markets.disabled")}
-                          disabledInfo={t("AssetCommon:extensions.allowed_markets.disabledInfo")}
+                          allowedText={t(
+                            "AssetCommon:extensions.allowed_markets.enabled"
+                          )}
+                          enabledInfo={t(
+                            "AssetCommon:extensions.allowed_markets.enabledInfo"
+                          )}
+                          disabledText={t(
+                            "AssetCommon:extensions.allowed_markets.disabled"
+                          )}
+                          disabledInfo={t(
+                            "AssetCommon:extensions.allowed_markets.disabledInfo"
+                          )}
                           permission={true}
                           flag={allowedMarketsEnabled}
                           setFlag={setAllowedMarketsEnabled}
@@ -1669,8 +1896,13 @@ export default function CreateSmartcoin(properties) {
                                 !allowedMarkets.includes(input) &&
                                 !bannedMarkets.includes(input)
                               ) {
-                                const _foundAsset = assets.find((x) => x.symbol === input);
-                                setAllowedMarkets([...allowedMarkets, _foundAsset.id]);
+                                const _foundAsset = assets.find(
+                                  (x) => x.symbol === input
+                                );
+                                setAllowedMarkets([
+                                  ...allowedMarkets,
+                                  _foundAsset.id,
+                                ]);
                               }
                             }}
                             otherAsset={null}
@@ -1697,10 +1929,18 @@ export default function CreateSmartcoin(properties) {
                         <AssetFlag
                           alreadyDisabled={false}
                           id={"banned_markets"}
-                          allowedText={t("AssetCommon:extensions.banned_markets.enabled")}
-                          enabledInfo={t("AssetCommon:extensions.banned_markets.enabledInfo")}
-                          disabledText={t("AssetCommon:extensions.banned_markets.disabled")}
-                          disabledInfo={t("AssetCommon:extensions.banned_markets.disabledInfo")}
+                          allowedText={t(
+                            "AssetCommon:extensions.banned_markets.enabled"
+                          )}
+                          enabledInfo={t(
+                            "AssetCommon:extensions.banned_markets.enabledInfo"
+                          )}
+                          disabledText={t(
+                            "AssetCommon:extensions.banned_markets.disabled"
+                          )}
+                          disabledInfo={t(
+                            "AssetCommon:extensions.banned_markets.disabledInfo"
+                          )}
                           permission={true}
                           flag={bannedMarketsEnabled}
                           setFlag={setBannedMarketsEnabled}
@@ -1714,8 +1954,13 @@ export default function CreateSmartcoin(properties) {
                                 !bannedMarkets.includes(input) &&
                                 !allowedMarkets.includes(input)
                               ) {
-                                const _foundAsset = assets.find((x) => x.symbol === input);
-                                setBannedMarkets([...bannedMarkets, _foundAsset.id]);
+                                const _foundAsset = assets.find(
+                                  (x) => x.symbol === input
+                                );
+                                setBannedMarkets([
+                                  ...bannedMarkets,
+                                  _foundAsset.id,
+                                ]);
                               }
                             }}
                             otherAsset={null}
@@ -1743,16 +1988,26 @@ export default function CreateSmartcoin(properties) {
                       <div className="grid grid-cols-2 gap-5">
                         <div>
                           <HoverInfo
-                            content={t("AssetCommon:permissions.header_content")}
+                            content={t(
+                              "AssetCommon:permissions.header_content"
+                            )}
                             header={t("AssetCommon:permissions.header")}
                             type="header"
                           />
                           <AssetPermission
-                            alreadyDisabled={existingSupply > 0 && permanentlyDisabledCMF}
+                            alreadyDisabled={
+                              existingSupply > 0 && permanentlyDisabledCMF
+                            }
                             id={"charge_market_fee"}
-                            allowedText={t("AssetCommon:permissions.charge_market_fee.about")}
-                            enabledInfo={t("AssetCommon:permissions.charge_market_fee.enabledInfo")}
-                            disabledText={t("AssetCommon:permissions.charge_market_fee.about")}
+                            allowedText={t(
+                              "AssetCommon:permissions.charge_market_fee.about"
+                            )}
+                            enabledInfo={t(
+                              "AssetCommon:permissions.charge_market_fee.enabledInfo"
+                            )}
+                            disabledText={t(
+                              "AssetCommon:permissions.charge_market_fee.about"
+                            )}
                             disabledInfo={t(
                               "AssetCommon:permissions.charge_market_fee.disabledInfo"
                             )}
@@ -1762,25 +2017,41 @@ export default function CreateSmartcoin(properties) {
                             setFlag={setFlagChargeMarketFee}
                           />
                           <AssetPermission
-                            alreadyDisabled={existingSupply > 0 && permanentlyDisabledWL}
+                            alreadyDisabled={
+                              existingSupply > 0 && permanentlyDisabledWL
+                            }
                             id={"white_list"}
-                            allowedText={t("AssetCommon:permissions.white_list.about")}
-                            enabledInfo={t("AssetCommon:permissions.white_list.enabledInfo")}
-                            disabledText={t("AssetCommon:permissions.white_list.about")}
-                            disabledInfo={t("AssetCommon:permissions.white_list.disabledInfo")}
+                            allowedText={t(
+                              "AssetCommon:permissions.white_list.about"
+                            )}
+                            enabledInfo={t(
+                              "AssetCommon:permissions.white_list.enabledInfo"
+                            )}
+                            disabledText={t(
+                              "AssetCommon:permissions.white_list.about"
+                            )}
+                            disabledInfo={t(
+                              "AssetCommon:permissions.white_list.disabledInfo"
+                            )}
                             permission={permWhiteList}
                             setPermission={setPermWhiteList}
                             flag={flagWhiteList}
                             setFlag={setFlagWhiteList}
                           />
                           <AssetPermission
-                            alreadyDisabled={existingSupply > 0 && permanentlyDisabledTR}
+                            alreadyDisabled={
+                              existingSupply > 0 && permanentlyDisabledTR
+                            }
                             id={"transfer_restricted"}
-                            allowedText={t("AssetCommon:permissions.transfer_restricted.about")}
+                            allowedText={t(
+                              "AssetCommon:permissions.transfer_restricted.about"
+                            )}
                             enabledInfo={t(
                               "AssetCommon:permissions.transfer_restricted.enabledInfo"
                             )}
-                            disabledText={t("AssetCommon:permissions.transfer_restricted.about")}
+                            disabledText={t(
+                              "AssetCommon:permissions.transfer_restricted.about"
+                            )}
                             disabledInfo={t(
                               "AssetCommon:permissions.transfer_restricted.disabledInfo"
                             )}
@@ -1790,13 +2061,19 @@ export default function CreateSmartcoin(properties) {
                             setFlag={setFlagTransferRestricted}
                           />
                           <AssetPermission
-                            alreadyDisabled={existingSupply > 0 && permanentlyDisabledDC}
+                            alreadyDisabled={
+                              existingSupply > 0 && permanentlyDisabledDC
+                            }
                             id={"disable_confidential"}
-                            allowedText={t("AssetCommon:permissions.disable_confidential.about")}
+                            allowedText={t(
+                              "AssetCommon:permissions.disable_confidential.about"
+                            )}
                             enabledInfo={t(
                               "AssetCommon:permissions.disable_confidential.enabledInfo"
                             )}
-                            disabledText={t("AssetCommon:permissions.disable_confidential.about")}
+                            disabledText={t(
+                              "AssetCommon:permissions.disable_confidential.about"
+                            )}
                             disabledInfo={t(
                               "AssetCommon:permissions.disable_confidential.disabledInfo"
                             )}
@@ -1806,13 +2083,19 @@ export default function CreateSmartcoin(properties) {
                             setFlag={setFlagDisableConfidential}
                           />
                           <AssetPermission
-                            alreadyDisabled={existingSupply > 0 && permanentlyDisabledOA}
+                            alreadyDisabled={
+                              existingSupply > 0 && permanentlyDisabledOA
+                            }
                             id={"override_authority"}
-                            allowedText={t("AssetCommon:permissions.override_authority.about")}
+                            allowedText={t(
+                              "AssetCommon:permissions.override_authority.about"
+                            )}
                             enabledInfo={t(
                               "AssetCommon:permissions.override_authority.enabledInfo"
                             )}
-                            disabledText={t("AssetCommon:permissions.override_authority.about")}
+                            disabledText={t(
+                              "AssetCommon:permissions.override_authority.about"
+                            )}
                             disabledInfo={t(
                               "AssetCommon:permissions.override_authority.disabledInfo"
                             )}
@@ -1822,13 +2105,19 @@ export default function CreateSmartcoin(properties) {
                             setFlag={setFlagOverrideAuthority}
                           />
                           <AssetPermission
-                            alreadyDisabled={existingSupply > 0 && permanentlyDisabledDFS}
+                            alreadyDisabled={
+                              existingSupply > 0 && permanentlyDisabledDFS
+                            }
                             id={"disable_force_settle"}
-                            allowedText={t("AssetCommon:permissions.disable_force_settle.about")}
+                            allowedText={t(
+                              "AssetCommon:permissions.disable_force_settle.about"
+                            )}
                             enabledInfo={t(
                               "AssetCommon:permissions.disable_force_settle.enabledInfo"
                             )}
-                            disabledText={t("AssetCommon:permissions.disable_force_settle.about")}
+                            disabledText={t(
+                              "AssetCommon:permissions.disable_force_settle.about"
+                            )}
                             disabledInfo={t(
                               "AssetCommon:permissions.disable_force_settle.disabledInfo"
                             )}
@@ -1838,23 +2127,41 @@ export default function CreateSmartcoin(properties) {
                             setFlag={setFlagDisableForceSettle}
                           />
                           <AssetPermission
-                            alreadyDisabled={existingSupply > 0 && permanentlyDisabledGS}
+                            alreadyDisabled={
+                              existingSupply > 0 && permanentlyDisabledGS
+                            }
                             id={"global_settle"}
-                            allowedText={t("AssetCommon:permissions.global_settle.about")}
-                            enabledInfo={t("AssetCommon:permissions.global_settle.enabledInfo")}
-                            disabledText={t("AssetCommon:permissions.global_settle.about")}
-                            disabledInfo={t("AssetCommon:permissions.global_settle.disabledInfo")}
+                            allowedText={t(
+                              "AssetCommon:permissions.global_settle.about"
+                            )}
+                            enabledInfo={t(
+                              "AssetCommon:permissions.global_settle.enabledInfo"
+                            )}
+                            disabledText={t(
+                              "AssetCommon:permissions.global_settle.about"
+                            )}
+                            disabledInfo={t(
+                              "AssetCommon:permissions.global_settle.disabledInfo"
+                            )}
                             permission={permGlobalSettle}
                             setPermission={setPermGlobalSettle}
                             flag={null}
                             setFlag={null}
                           />
                           <AssetPermission
-                            alreadyDisabled={existingSupply > 0 && permanentlyDisabledWFA}
+                            alreadyDisabled={
+                              existingSupply > 0 && permanentlyDisabledWFA
+                            }
                             id={"witness_fed_asset"}
-                            allowedText={t("AssetCommon:permissions.witness_fed_asset.about")}
-                            enabledInfo={t("AssetCommon:permissions.witness_fed_asset.enabledInfo")}
-                            disabledText={t("AssetCommon:permissions.witness_fed_asset.about")}
+                            allowedText={t(
+                              "AssetCommon:permissions.witness_fed_asset.about"
+                            )}
+                            enabledInfo={t(
+                              "AssetCommon:permissions.witness_fed_asset.enabledInfo"
+                            )}
+                            disabledText={t(
+                              "AssetCommon:permissions.witness_fed_asset.about"
+                            )}
                             disabledInfo={t(
                               "AssetCommon:permissions.witness_fed_asset.disabledInfo"
                             )}
@@ -1864,13 +2171,19 @@ export default function CreateSmartcoin(properties) {
                             setFlag={setFlagWitnessFedAsset}
                           />
                           <AssetPermission
-                            alreadyDisabled={existingSupply > 0 && permanentlyDisabledCFA}
+                            alreadyDisabled={
+                              existingSupply > 0 && permanentlyDisabledCFA
+                            }
                             id={"committee_fed_asset"}
-                            allowedText={t("AssetCommon:permissions.committee_fed_asset.about")}
+                            allowedText={t(
+                              "AssetCommon:permissions.committee_fed_asset.about"
+                            )}
                             enabledInfo={t(
                               "AssetCommon:permissions.committee_fed_asset.enabledInfo"
                             )}
-                            disabledText={t("AssetCommon:permissions.committee_fed_asset.about")}
+                            disabledText={t(
+                              "AssetCommon:permissions.committee_fed_asset.about"
+                            )}
                             disabledInfo={t(
                               "AssetCommon:permissions.committee_fed_asset.disabledInfo"
                             )}
@@ -1885,25 +2198,41 @@ export default function CreateSmartcoin(properties) {
                             <Separator className="mt-3 w-1/2 mx-auto text-center" />
                           </div>
                           <AssetPermission
-                            alreadyDisabled={existingSupply > 0 && permanentlyDisabledLMS}
+                            alreadyDisabled={
+                              existingSupply > 0 && permanentlyDisabledLMS
+                            }
                             id={"lock_max_supply"}
-                            allowedText={t("AssetCommon:permissions.lock_max_supply.about")}
-                            enabledInfo={t("AssetCommon:permissions.lock_max_supply.enabledInfo")}
-                            disabledText={t("AssetCommon:permissions.lock_max_supply.about")}
-                            disabledInfo={t("AssetCommon:permissions.lock_max_supply.disabledInfo")}
+                            allowedText={t(
+                              "AssetCommon:permissions.lock_max_supply.about"
+                            )}
+                            enabledInfo={t(
+                              "AssetCommon:permissions.lock_max_supply.enabledInfo"
+                            )}
+                            disabledText={t(
+                              "AssetCommon:permissions.lock_max_supply.about"
+                            )}
+                            disabledInfo={t(
+                              "AssetCommon:permissions.lock_max_supply.disabledInfo"
+                            )}
                             permission={permLockMaxSupply}
                             setPermission={setPermLockMaxSupply}
                             flag={flagLockMaxSupply}
                             setFlag={setFlagLockMaxSupply}
                           />
                           <AssetPermission
-                            alreadyDisabled={existingSupply > 0 && permanentlyDisabledDNS}
+                            alreadyDisabled={
+                              existingSupply > 0 && permanentlyDisabledDNS
+                            }
                             id={"disable_new_supply"}
-                            allowedText={t("AssetCommon:permissions.disable_new_supply.about")}
+                            allowedText={t(
+                              "AssetCommon:permissions.disable_new_supply.about"
+                            )}
                             enabledInfo={t(
                               "AssetCommon:permissions.disable_new_supply.enabledInfo"
                             )}
-                            disabledText={t("AssetCommon:permissions.disable_new_supply.about")}
+                            disabledText={t(
+                              "AssetCommon:permissions.disable_new_supply.about"
+                            )}
                             disabledInfo={t(
                               "AssetCommon:permissions.disable_new_supply.disabledInfo"
                             )}
@@ -1913,7 +2242,9 @@ export default function CreateSmartcoin(properties) {
                             setFlag={setFlagDisableNewSupply}
                           />
                           <AssetPermission
-                            alreadyDisabled={existingSupply > 0 && permanentlyDisabledDCB}
+                            alreadyDisabled={
+                              existingSupply > 0 && permanentlyDisabledDCB
+                            }
                             id={"disable_collateral_bidding"}
                             allowedText={t(
                               "AssetCommon:permissions.disable_collateral_bidding.about"
@@ -1933,13 +2264,19 @@ export default function CreateSmartcoin(properties) {
                             setFlag={setFlagDisableCollateralBidding}
                           />
                           <AssetPermission
-                            alreadyDisabled={existingSupply > 0 && permanentlyDisabledDMCR}
+                            alreadyDisabled={
+                              existingSupply > 0 && permanentlyDisabledDMCR
+                            }
                             id={"disable_mcr_update"}
-                            allowedText={t("AssetCommon:permissions.disable_mcr_update.about")}
+                            allowedText={t(
+                              "AssetCommon:permissions.disable_mcr_update.about"
+                            )}
                             enabledInfo={t(
                               "AssetCommon:permissions.disable_mcr_update.enabledInfo"
                             )}
-                            disabledText={t("AssetCommon:permissions.disable_mcr_update.about")}
+                            disabledText={t(
+                              "AssetCommon:permissions.disable_mcr_update.about"
+                            )}
                             disabledInfo={t(
                               "AssetCommon:permissions.disable_mcr_update.disabledInfo"
                             )}
@@ -1949,13 +2286,19 @@ export default function CreateSmartcoin(properties) {
                             setFlag={null}
                           />
                           <AssetPermission
-                            alreadyDisabled={existingSupply > 0 && permanentlyDisabledDICR}
+                            alreadyDisabled={
+                              existingSupply > 0 && permanentlyDisabledDICR
+                            }
                             id={"disable_icr_update"}
-                            allowedText={t("AssetCommon:permissions.disable_icr_update.about")}
+                            allowedText={t(
+                              "AssetCommon:permissions.disable_icr_update.about"
+                            )}
                             enabledInfo={t(
                               "AssetCommon:permissions.disable_icr_update.enabledInfo"
                             )}
-                            disabledText={t("AssetCommon:permissions.disable_icr_update.about")}
+                            disabledText={t(
+                              "AssetCommon:permissions.disable_icr_update.about"
+                            )}
                             disabledInfo={t(
                               "AssetCommon:permissions.disable_icr_update.disabledInfo"
                             )}
@@ -1965,13 +2308,19 @@ export default function CreateSmartcoin(properties) {
                             setFlag={null}
                           />
                           <AssetPermission
-                            alreadyDisabled={existingSupply > 0 && permanentlyDisabledDMSSR}
+                            alreadyDisabled={
+                              existingSupply > 0 && permanentlyDisabledDMSSR
+                            }
                             id={"disable_mssr_update"}
-                            allowedText={t("AssetCommon:permissions.disable_mssr_update.about")}
+                            allowedText={t(
+                              "AssetCommon:permissions.disable_mssr_update.about"
+                            )}
                             enabledInfo={t(
                               "AssetCommon:permissions.disable_mssr_update.enabledInfo"
                             )}
-                            disabledText={t("AssetCommon:permissions.disable_mssr_update.about")}
+                            disabledText={t(
+                              "AssetCommon:permissions.disable_mssr_update.about"
+                            )}
                             disabledInfo={t(
                               "AssetCommon:permissions.disable_mssr_update.disabledInfo"
                             )}
@@ -1981,13 +2330,19 @@ export default function CreateSmartcoin(properties) {
                             setFlag={null}
                           />
                           <AssetPermission
-                            alreadyDisabled={existingSupply > 0 && permanentlyDisabledDBSRM}
+                            alreadyDisabled={
+                              existingSupply > 0 && permanentlyDisabledDBSRM
+                            }
                             id={"disable_bsrm_update"}
-                            allowedText={t("AssetCommon:permissions.disable_bsrm_update.about")}
+                            allowedText={t(
+                              "AssetCommon:permissions.disable_bsrm_update.about"
+                            )}
                             enabledInfo={t(
                               "AssetCommon:permissions.disable_bsrm_update.enabledInfo"
                             )}
-                            disabledText={t("AssetCommon:permissions.disable_bsrm_update.about")}
+                            disabledText={t(
+                              "AssetCommon:permissions.disable_bsrm_update.about"
+                            )}
                             disabledInfo={t(
                               "AssetCommon:permissions.disable_bsrm_update.disabledInfo"
                             )}
@@ -2005,90 +2360,170 @@ export default function CreateSmartcoin(properties) {
                             type="header"
                           />
                           <AssetFlag
-                            alreadyDisabled={existingSupply > 0 && permanentlyDisabledCMF}
+                            alreadyDisabled={
+                              existingSupply > 0 && permanentlyDisabledCMF
+                            }
                             id={"charge_market_fee_flag"}
-                            allowedText={t("AssetCommon:flags.charge_market_fee.about")}
-                            enabledInfo={t("AssetCommon:flags.charge_market_fee.enabledInfo")}
-                            disabledText={t("AssetCommon:flags.charge_market_fee.about")}
-                            disabledInfo={t("AssetCommon:flags.charge_market_fee.disabledInfo")}
+                            allowedText={t(
+                              "AssetCommon:flags.charge_market_fee.about"
+                            )}
+                            enabledInfo={t(
+                              "AssetCommon:flags.charge_market_fee.enabledInfo"
+                            )}
+                            disabledText={t(
+                              "AssetCommon:flags.charge_market_fee.about"
+                            )}
+                            disabledInfo={t(
+                              "AssetCommon:flags.charge_market_fee.disabledInfo"
+                            )}
                             permission={permChargeMarketFee}
                             flag={flagChargeMarketFee}
                             setFlag={setFlagChargeMarketFee}
                           />
                           <AssetFlag
-                            alreadyDisabled={existingSupply > 0 && permanentlyDisabledWL}
+                            alreadyDisabled={
+                              existingSupply > 0 && permanentlyDisabledWL
+                            }
                             id={"white_list_flag"}
-                            allowedText={t("AssetCommon:flags.white_list.about")}
-                            enabledInfo={t("AssetCommon:flags.white_list.enabledInfo")}
-                            disabledText={t("AssetCommon:flags.white_list.about")}
-                            disabledInfo={t("AssetCommon:flags.white_list.disabledInfo")}
+                            allowedText={t(
+                              "AssetCommon:flags.white_list.about"
+                            )}
+                            enabledInfo={t(
+                              "AssetCommon:flags.white_list.enabledInfo"
+                            )}
+                            disabledText={t(
+                              "AssetCommon:flags.white_list.about"
+                            )}
+                            disabledInfo={t(
+                              "AssetCommon:flags.white_list.disabledInfo"
+                            )}
                             permission={permWhiteList}
                             flag={flagWhiteList}
                             setFlag={setFlagWhiteList}
                           />
                           <AssetFlag
-                            alreadyDisabled={existingSupply > 0 && permanentlyDisabledTR}
+                            alreadyDisabled={
+                              existingSupply > 0 && permanentlyDisabledTR
+                            }
                             id={"transfer_restricted_flag"}
-                            allowedText={t("AssetCommon:flags.transfer_restricted.about")}
-                            enabledInfo={t("AssetCommon:flags.transfer_restricted.enabledInfo")}
-                            disabledText={t("AssetCommon:flags.transfer_restricted.about")}
-                            disabledInfo={t("AssetCommon:flags.transfer_restricted.disabledInfo")}
+                            allowedText={t(
+                              "AssetCommon:flags.transfer_restricted.about"
+                            )}
+                            enabledInfo={t(
+                              "AssetCommon:flags.transfer_restricted.enabledInfo"
+                            )}
+                            disabledText={t(
+                              "AssetCommon:flags.transfer_restricted.about"
+                            )}
+                            disabledInfo={t(
+                              "AssetCommon:flags.transfer_restricted.disabledInfo"
+                            )}
                             permission={permTransferRestricted}
                             flag={flagTransferRestricted}
                             setFlag={setFlagTransferRestricted}
                           />
                           <AssetFlag
-                            alreadyDisabled={existingSupply > 0 && permanentlyDisabledDC}
+                            alreadyDisabled={
+                              existingSupply > 0 && permanentlyDisabledDC
+                            }
                             id={"disable_confidential_flag"}
-                            allowedText={t("AssetCommon:flags.disable_confidential.about")}
-                            enabledInfo={t("AssetCommon:flags.disable_confidential.enabledInfo")}
-                            disabledText={t("AssetCommon:flags.disable_confidential.about")}
-                            disabledInfo={t("AssetCommon:flags.disable_confidential.disabledInfo")}
+                            allowedText={t(
+                              "AssetCommon:flags.disable_confidential.about"
+                            )}
+                            enabledInfo={t(
+                              "AssetCommon:flags.disable_confidential.enabledInfo"
+                            )}
+                            disabledText={t(
+                              "AssetCommon:flags.disable_confidential.about"
+                            )}
+                            disabledInfo={t(
+                              "AssetCommon:flags.disable_confidential.disabledInfo"
+                            )}
                             permission={permDisableConfidential}
                             flag={flagDisableConfidential}
                             setFlag={setFlagDisableConfidential}
                           />
                           <AssetFlag
-                            alreadyDisabled={existingSupply > 0 && permanentlyDisabledOA}
+                            alreadyDisabled={
+                              existingSupply > 0 && permanentlyDisabledOA
+                            }
                             id={"override_authority_flag"}
-                            allowedText={t("AssetCommon:flags.override_authority.about")}
-                            enabledInfo={t("AssetCommon:flags.override_authority.enabledInfo")}
-                            disabledText={t("AssetCommon:flags.override_authority.about")}
-                            disabledInfo={t("AssetCommon:flags.override_authority.disabledInfo")}
+                            allowedText={t(
+                              "AssetCommon:flags.override_authority.about"
+                            )}
+                            enabledInfo={t(
+                              "AssetCommon:flags.override_authority.enabledInfo"
+                            )}
+                            disabledText={t(
+                              "AssetCommon:flags.override_authority.about"
+                            )}
+                            disabledInfo={t(
+                              "AssetCommon:flags.override_authority.disabledInfo"
+                            )}
                             permission={permOverrideAuthority}
                             flag={flagOverrideAuthority}
                             setFlag={setFlagOverrideAuthority}
                           />
                           <AssetFlag
-                            alreadyDisabled={existingSupply > 0 && permanentlyDisabledDFS}
+                            alreadyDisabled={
+                              existingSupply > 0 && permanentlyDisabledDFS
+                            }
                             id={"disable_force_settle_flag"}
-                            allowedText={t("AssetCommon:flags.disable_force_settle.about")}
-                            enabledInfo={t("AssetCommon:flags.disable_force_settle.enabledInfo")}
-                            disabledText={t("AssetCommon:flags.disable_force_settle.about")}
-                            disabledInfo={t("AssetCommon:flags.disable_force_settle.disabledInfo")}
+                            allowedText={t(
+                              "AssetCommon:flags.disable_force_settle.about"
+                            )}
+                            enabledInfo={t(
+                              "AssetCommon:flags.disable_force_settle.enabledInfo"
+                            )}
+                            disabledText={t(
+                              "AssetCommon:flags.disable_force_settle.about"
+                            )}
+                            disabledInfo={t(
+                              "AssetCommon:flags.disable_force_settle.disabledInfo"
+                            )}
                             permission={permDisableForceSettle}
                             flag={flagDisableForceSettle}
                             setFlag={setFlagDisableForceSettle}
                           />
                           <br />
                           <AssetFlag
-                            alreadyDisabled={existingSupply > 0 && permanentlyDisabledWFA}
+                            alreadyDisabled={
+                              existingSupply > 0 && permanentlyDisabledWFA
+                            }
                             id={"witness_fed_asset_flag"}
-                            allowedText={t("AssetCommon:flags.witness_fed_asset.about")}
-                            enabledInfo={t("AssetCommon:flags.witness_fed_asset.enabledInfo")}
-                            disabledText={t("AssetCommon:flags.witness_fed_asset.about")}
-                            disabledInfo={t("AssetCommon:flags.witness_fed_asset.disabledInfo")}
+                            allowedText={t(
+                              "AssetCommon:flags.witness_fed_asset.about"
+                            )}
+                            enabledInfo={t(
+                              "AssetCommon:flags.witness_fed_asset.enabledInfo"
+                            )}
+                            disabledText={t(
+                              "AssetCommon:flags.witness_fed_asset.about"
+                            )}
+                            disabledInfo={t(
+                              "AssetCommon:flags.witness_fed_asset.disabledInfo"
+                            )}
                             permission={permWitnessFedAsset}
                             flag={flagWitnessFedAsset}
                             setFlag={setFlagWitnessFedAsset}
                           />
                           <AssetFlag
-                            alreadyDisabled={existingSupply > 0 && permanentlyDisabledCFA}
+                            alreadyDisabled={
+                              existingSupply > 0 && permanentlyDisabledCFA
+                            }
                             id={"committee_fed_asset_flag"}
-                            allowedText={t("AssetCommon:flags.committee_fed_asset.about")}
-                            enabledInfo={t("AssetCommon:flags.committee_fed_asset.enabledInfo")}
-                            disabledText={t("AssetCommon:flags.committee_fed_asset.about")}
-                            disabledInfo={t("AssetCommon:flags.committee_fed_asset.disabledInfo")}
+                            allowedText={t(
+                              "AssetCommon:flags.committee_fed_asset.about"
+                            )}
+                            enabledInfo={t(
+                              "AssetCommon:flags.committee_fed_asset.enabledInfo"
+                            )}
+                            disabledText={t(
+                              "AssetCommon:flags.committee_fed_asset.about"
+                            )}
+                            disabledInfo={t(
+                              "AssetCommon:flags.committee_fed_asset.disabledInfo"
+                            )}
                             permission={permCommitteeFedAsset}
                             flag={flagCommitteeFedAsset}
                             setFlag={setFlagCommitteeFedAsset}
@@ -2099,35 +2534,61 @@ export default function CreateSmartcoin(properties) {
                             <Separator className="mt-3 w-1/2 mx-auto text-center" />
                           </div>
                           <AssetFlag
-                            alreadyDisabled={existingSupply > 0 && !permanentlyDisabledLMS}
+                            alreadyDisabled={
+                              existingSupply > 0 && !permanentlyDisabledLMS
+                            }
                             id={"lock_max_supply_flag"}
-                            allowedText={t("AssetCommon:flags.lock_max_supply.about")}
-                            enabledInfo={t("AssetCommon:flags.lock_max_supply.enabledInfo")}
-                            disabledText={t("AssetCommon:flags.lock_max_supply.about")}
-                            disabledInfo={t("AssetCommon:flags.lock_max_supply.disabledInfo")}
+                            allowedText={t(
+                              "AssetCommon:flags.lock_max_supply.about"
+                            )}
+                            enabledInfo={t(
+                              "AssetCommon:flags.lock_max_supply.enabledInfo"
+                            )}
+                            disabledText={t(
+                              "AssetCommon:flags.lock_max_supply.about"
+                            )}
+                            disabledInfo={t(
+                              "AssetCommon:flags.lock_max_supply.disabledInfo"
+                            )}
                             permission={!permLockMaxSupply}
                             flag={flagLockMaxSupply}
                             setFlag={setFlagLockMaxSupply}
                           />
                           <AssetFlag
-                            alreadyDisabled={existingSupply > 0 && !permanentlyDisabledDNS}
+                            alreadyDisabled={
+                              existingSupply > 0 && !permanentlyDisabledDNS
+                            }
                             id={"disable_new_supply_flag"}
-                            allowedText={t("AssetCommon:flags.disable_new_supply.about")}
-                            enabledInfo={t("AssetCommon:flags.disable_new_supply.enabledInfo")}
-                            disabledText={t("AssetCommon:flags.disable_new_supply.about")}
-                            disabledInfo={t("AssetCommon:flags.disable_new_supply.disabledInfo")}
+                            allowedText={t(
+                              "AssetCommon:flags.disable_new_supply.about"
+                            )}
+                            enabledInfo={t(
+                              "AssetCommon:flags.disable_new_supply.enabledInfo"
+                            )}
+                            disabledText={t(
+                              "AssetCommon:flags.disable_new_supply.about"
+                            )}
+                            disabledInfo={t(
+                              "AssetCommon:flags.disable_new_supply.disabledInfo"
+                            )}
                             permission={!permDisableNewSupply}
                             flag={flagDisableNewSupply}
                             setFlag={setFlagDisableNewSupply}
                           />
                           <AssetFlag
-                            alreadyDisabled={existingSupply > 0 && !permanentlyDisabledDCB}
+                            alreadyDisabled={
+                              existingSupply > 0 && !permanentlyDisabledDCB
+                            }
                             id={"disable_collateral_bidding_flag"}
-                            allowedText={t("AssetCommon:flags.disable_collateral_bidding.about")}
+                            allowedText={t(
+                              "AssetCommon:flags.disable_collateral_bidding.about"
+                            )}
                             enabledInfo={t(
                               "AssetCommon:flags.disable_collateral_bidding.enabledInfo"
                             )}
-                            disabledText={t("AssetCommon:flags.disable_collateral_bidding.about")}
+                            disabledText={t(
+                              "AssetCommon:flags.disable_collateral_bidding.about"
+                            )}
                             disabledInfo={t(
                               "AssetCommon:flags.disable_collateral_bidding.disabledInfo"
                             )}
@@ -2146,13 +2607,16 @@ export default function CreateSmartcoin(properties) {
                         </div>
                         <div className="text-md text-gray-300">
                           Asset Flags: {flags}{" "}
-                          {existingAssetData ? `(${existingAssetData.options.flags})` : null}
+                          {existingAssetData
+                            ? `(${existingAssetData.options.flags})`
+                            : null}
                         </div>
                       </div>
                     </span>
                   ) : null}
 
-                  {flagChargeMarketFee && (!editing || (editing && hasEditedAssetOptions)) ? (
+                  {flagChargeMarketFee &&
+                  (!editing || (editing && hasEditedAssetOptions)) ? (
                     <div className="col-span-2 mb-4">
                       <Separator className="my-4 mt-5" />
                       <HoverInfo
@@ -2174,13 +2638,19 @@ export default function CreateSmartcoin(properties) {
                             step="0.01"
                             onInput={(e) => {
                               setCommission(e.currentTarget.value);
-                              debouncedPercent(e.currentTarget.value, setCommission, 100);
+                              debouncedPercent(
+                                e.currentTarget.value,
+                                setCommission,
+                                100
+                              );
                             }}
                           />
                         </div>
                         <div>
                           <HoverInfo
-                            content={t("AssetCommon:max_market_fee.header_content")}
+                            content={t(
+                              "AssetCommon:max_market_fee.header_content"
+                            )}
                             header={t("AssetCommon:max_market_fee.header")}
                           />
                           <Input
@@ -2191,7 +2661,10 @@ export default function CreateSmartcoin(properties) {
                             pattern="^\d*(\.\d{0,2})?$"
                             onInput={(e) => {
                               setMaxCommission(e.currentTarget.value);
-                              debouncedMax(e.currentTarget.value, setMaxCommission);
+                              debouncedMax(
+                                e.currentTarget.value,
+                                setMaxCommission
+                              );
                             }}
                           />
                         </div>
@@ -2199,10 +2672,18 @@ export default function CreateSmartcoin(properties) {
                       <AssetFlag
                         alreadyDisabled={false}
                         id={"reward_percent"}
-                        allowedText={t("AssetCommon:extensions.reward_percent.enabled")}
-                        enabledInfo={t("AssetCommon:extensions.reward_percent.enabledInfo")}
-                        disabledText={t("AssetCommon:extensions.reward_percent.disabled")}
-                        disabledInfo={t("AssetCommon:extensions.reward_percent.disabledInfo")}
+                        allowedText={t(
+                          "AssetCommon:extensions.reward_percent.enabled"
+                        )}
+                        enabledInfo={t(
+                          "AssetCommon:extensions.reward_percent.enabledInfo"
+                        )}
+                        disabledText={t(
+                          "AssetCommon:extensions.reward_percent.disabled"
+                        )}
+                        disabledInfo={t(
+                          "AssetCommon:extensions.reward_percent.disabledInfo"
+                        )}
                         permission={true}
                         flag={enabledReferrerReward}
                         setFlag={setEnabledReferrerReward}
@@ -2211,8 +2692,12 @@ export default function CreateSmartcoin(properties) {
                       {enabledReferrerReward ? (
                         <>
                           <HoverInfo
-                            content={t("AssetCommon:extensions.reward_percent.header_content")}
-                            header={t("AssetCommon:extensions.reward_percent.header")}
+                            content={t(
+                              "AssetCommon:extensions.reward_percent.header_content"
+                            )}
+                            header={t(
+                              "AssetCommon:extensions.reward_percent.header"
+                            )}
                           />
                           <Input
                             placeholder={0}
@@ -2224,7 +2709,11 @@ export default function CreateSmartcoin(properties) {
                             pattern="^\d*(\.\d{0,2})?$"
                             onInput={(e) => {
                               setReferrerReward(e.currentTarget.value);
-                              debouncedPercent(e.currentTarget.value, setReferrerReward, 100);
+                              debouncedPercent(
+                                e.currentTarget.value,
+                                setReferrerReward,
+                                100
+                              );
                             }}
                           />
                         </>
@@ -2256,7 +2745,9 @@ export default function CreateSmartcoin(properties) {
                             content={t(
                               "AssetCommon:extensions.whitelist_market_fee_sharing.header_content"
                             )}
-                            header={t("AssetCommon:extensions.whitelist_market_fee_sharing.header")}
+                            header={t(
+                              "AssetCommon:extensions.whitelist_market_fee_sharing.header"
+                            )}
                           />
                           <div className="grid grid-cols-12 mt-1">
                             <span className="col-span-9 border border-gray-300 rounded">
@@ -2277,7 +2768,10 @@ export default function CreateSmartcoin(properties) {
                                 }}
                               >
                                 <DialogTrigger asChild>
-                                  <Button variant="outline" className="ml-3 mt-1">
+                                  <Button
+                                    variant="outline"
+                                    className="ml-3 mt-1"
+                                  >
                                     ➕ {t("CreditOfferEditor:addUser")}
                                   </Button>
                                 </DialogTrigger>
@@ -2288,28 +2782,39 @@ export default function CreateSmartcoin(properties) {
                                         ? t("Transfer:bitsharesAccountSearch")
                                         : null}
                                       {usr && usr.chain === "bitshares"
-                                        ? t("Transfer:bitsharesAccountSearchBTS")
+                                        ? t(
+                                            "Transfer:bitsharesAccountSearchBTS"
+                                          )
                                         : null}
                                       {usr && usr.chain !== "bitshares"
-                                        ? t("Transfer:bitsharesAccountSearchTEST")
+                                        ? t(
+                                            "Transfer:bitsharesAccountSearchTEST"
+                                          )
                                         : null}
                                     </DialogTitle>
                                   </DialogHeader>
                                   <AccountSearch
-                                    chain={usr && usr.chain ? usr.chain : "bitshares"}
+                                    chain={
+                                      usr && usr.chain ? usr.chain : "bitshares"
+                                    }
                                     excludedUsers={[]}
                                     setChosenAccount={(_account) => {
                                       if (
                                         _account &&
-                                        !feeSharingWhitelist.find((_usr) => _usr.id === _account.id)
+                                        !feeSharingWhitelist.find(
+                                          (_usr) => _usr.id === _account.id
+                                        )
                                       ) {
                                         setFeeSharingWhitelist(
-                                          feeSharingWhitelist && feeSharingWhitelist.length
+                                          feeSharingWhitelist &&
+                                            feeSharingWhitelist.length
                                             ? [...feeSharingWhitelist, _account]
                                             : [_account]
                                         );
                                       }
-                                      setWhitelistMarketFeeSharingDialogOpen(false);
+                                      setWhitelistMarketFeeSharingDialogOpen(
+                                        false
+                                      );
                                     }}
                                   />
                                 </DialogContent>
@@ -2322,10 +2827,18 @@ export default function CreateSmartcoin(properties) {
                       <AssetFlag
                         alreadyDisabled={false}
                         id={"taker_fee_percent"}
-                        allowedText={t("AssetCommon:extensions.taker_fee_percent.enabled")}
-                        enabledInfo={t("AssetCommon:extensions.taker_fee_percent.enabledInfo")}
-                        disabledText={t("AssetCommon:extensions.taker_fee_percent.disabled")}
-                        disabledInfo={t("AssetCommon:extensions.taker_fee_percent.disabledInfo")}
+                        allowedText={t(
+                          "AssetCommon:extensions.taker_fee_percent.enabled"
+                        )}
+                        enabledInfo={t(
+                          "AssetCommon:extensions.taker_fee_percent.enabledInfo"
+                        )}
+                        disabledText={t(
+                          "AssetCommon:extensions.taker_fee_percent.disabled"
+                        )}
+                        disabledInfo={t(
+                          "AssetCommon:extensions.taker_fee_percent.disabledInfo"
+                        )}
                         permission={true}
                         flag={enabledTakerFee}
                         setFlag={setEnabledTakerFee}
@@ -2334,11 +2847,17 @@ export default function CreateSmartcoin(properties) {
                       {enabledTakerFee ? (
                         <>
                           <HoverInfo
-                            content={t("AssetCommon:extensions.taker_fee_percent.header_content")}
-                            header={t("AssetCommon:extensions.taker_fee_percent.header")}
+                            content={t(
+                              "AssetCommon:extensions.taker_fee_percent.header_content"
+                            )}
+                            header={t(
+                              "AssetCommon:extensions.taker_fee_percent.header"
+                            )}
                           />
                           <Input
-                            placeholder={t("AssetCommon:extensions.taker_fee_percent.placeholder")}
+                            placeholder={t(
+                              "AssetCommon:extensions.taker_fee_percent.placeholder"
+                            )}
                             value={takerFee}
                             type="number"
                             min="0"
@@ -2347,7 +2866,11 @@ export default function CreateSmartcoin(properties) {
                             pattern="^\d*(\.\d{0,2})?$"
                             onInput={(e) => {
                               setTakerFee(e.currentTarget.value);
-                              debouncedPercent(e.currentTarget.value, setTakerFee, 100);
+                              debouncedPercent(
+                                e.currentTarget.value,
+                                setTakerFee,
+                                100
+                              );
                             }}
                           />
                         </>
@@ -2355,7 +2878,8 @@ export default function CreateSmartcoin(properties) {
                     </div>
                   ) : null}
 
-                  {flagWhiteList && (!editing || (editing && hasEditedAssetOptions)) ? (
+                  {flagWhiteList &&
+                  (!editing || (editing && hasEditedAssetOptions)) ? (
                     <div className="col-span-2 mb-3">
                       <HoverInfo
                         content={t("AssetCommon:whitelist.header_content")}
@@ -2388,7 +2912,9 @@ export default function CreateSmartcoin(properties) {
                             <DialogContent className="sm:max-w-[375px] bg-white">
                               <DialogHeader>
                                 <DialogTitle>
-                                  {!usr || !usr.chain ? t("Transfer:bitsharesAccountSearch") : null}
+                                  {!usr || !usr.chain
+                                    ? t("Transfer:bitsharesAccountSearch")
+                                    : null}
                                   {usr && usr.chain === "bitshares"
                                     ? t("Transfer:bitsharesAccountSearchBTS")
                                     : null}
@@ -2398,17 +2924,24 @@ export default function CreateSmartcoin(properties) {
                                 </DialogTitle>
                               </DialogHeader>
                               <AccountSearch
-                                chain={usr && usr.chain ? usr.chain : "bitshares"}
+                                chain={
+                                  usr && usr.chain ? usr.chain : "bitshares"
+                                }
                                 excludedUsers={
-                                  usr && usr.username && usr.username.length ? [usr] : []
+                                  usr && usr.username && usr.username.length
+                                    ? [usr]
+                                    : []
                                 }
                                 setChosenAccount={(_account) => {
                                   if (
                                     _account &&
-                                    !whitelistAuthorities.find((_usr) => _usr.id === _account.id)
+                                    !whitelistAuthorities.find(
+                                      (_usr) => _usr.id === _account.id
+                                    )
                                   ) {
                                     setWhitelistAuthorities(
-                                      whitelistAuthorities && whitelistAuthorities.length
+                                      whitelistAuthorities &&
+                                        whitelistAuthorities.length
                                         ? [...whitelistAuthorities, _account]
                                         : [_account]
                                     );
@@ -2422,7 +2955,8 @@ export default function CreateSmartcoin(properties) {
                       </div>
                     </div>
                   ) : null}
-                  {flagWhiteList && (!editing || (editing && hasEditedAssetOptions)) ? (
+                  {flagWhiteList &&
+                  (!editing || (editing && hasEditedAssetOptions)) ? (
                     <div className="col-span-2 mb-3">
                       <HoverInfo
                         content={t("AssetCommon:blacklist.header_content")}
@@ -2455,7 +2989,9 @@ export default function CreateSmartcoin(properties) {
                             <DialogContent className="sm:max-w-[375px] bg-white">
                               <DialogHeader>
                                 <DialogTitle>
-                                  {!usr || !usr.chain ? t("Transfer:bitsharesAccountSearch") : null}
+                                  {!usr || !usr.chain
+                                    ? t("Transfer:bitsharesAccountSearch")
+                                    : null}
                                   {usr && usr.chain === "bitshares"
                                     ? t("Transfer:bitsharesAccountSearchBTS")
                                     : null}
@@ -2465,17 +3001,24 @@ export default function CreateSmartcoin(properties) {
                                 </DialogTitle>
                               </DialogHeader>
                               <AccountSearch
-                                chain={usr && usr.chain ? usr.chain : "bitshares"}
+                                chain={
+                                  usr && usr.chain ? usr.chain : "bitshares"
+                                }
                                 excludedUsers={
-                                  usr && usr.username && usr.username.length ? [usr] : []
+                                  usr && usr.username && usr.username.length
+                                    ? [usr]
+                                    : []
                                 }
                                 setChosenAccount={(_account) => {
                                   if (
                                     _account &&
-                                    !blacklistAuthorities.find((_usr) => _usr.id === _account.id)
+                                    !blacklistAuthorities.find(
+                                      (_usr) => _usr.id === _account.id
+                                    )
                                   ) {
                                     setBlacklistAuthorities(
-                                      blacklistAuthorities && blacklistAuthorities.length
+                                      blacklistAuthorities &&
+                                        blacklistAuthorities.length
                                         ? [...blacklistAuthorities, _account]
                                         : [_account]
                                     );
@@ -2507,7 +3050,11 @@ export default function CreateSmartcoin(properties) {
                         header={t("CreateSmartcoin:title.header")}
                         type="header"
                       />
-                      <div className={`text-right mb-${!hasEditedBitassetOptions ? 5 : 1}`}>
+                      <div
+                        className={`text-right mb-${
+                          !hasEditedBitassetOptions ? 5 : 1
+                        }`}
+                      >
                         {!hasEditedBitassetOptions ? (
                           <Button
                             variant="outline"
@@ -2532,7 +3079,9 @@ export default function CreateSmartcoin(properties) {
                 {!editing || (editing && hasEditedBitassetOptions) ? (
                   <div className="col-span-2">
                     <HoverInfo
-                      content={t("CreatePrediction:pma.backing_asset.header_content")}
+                      content={t(
+                        "CreatePrediction:pma.backing_asset.header_content"
+                      )}
                       header={t("CreatePrediction:pma.backing_asset.header")}
                     />
                     <div className="grid grid-cols-2 gap-2">
@@ -2561,7 +3110,9 @@ export default function CreateSmartcoin(properties) {
                     <div className="grid grid-cols-2 gap-2">
                       <div>
                         <HoverInfo
-                          content={t("CreateSmartcoin:feed_lifetime.header_content")}
+                          content={t(
+                            "CreateSmartcoin:feed_lifetime.header_content"
+                          )}
                           header={t("CreateSmartcoin:feed_lifetime.header")}
                         />
                         <Input
@@ -2577,7 +3128,9 @@ export default function CreateSmartcoin(properties) {
                       </div>
                       <div>
                         <HoverInfo
-                          content={t("CreateSmartcoin:minimum_feeds.header_content")}
+                          content={t(
+                            "CreateSmartcoin:minimum_feeds.header_content"
+                          )}
                           header={t("CreateSmartcoin:minimum_feeds.header")}
                         />
                         <Input
@@ -2594,8 +3147,12 @@ export default function CreateSmartcoin(properties) {
                       </div>
                       <div>
                         <HoverInfo
-                          content={t("CreateSmartcoin:force_settlement_delay.header_content")}
-                          header={t("CreateSmartcoin:force_settlement_delay.header")}
+                          content={t(
+                            "CreateSmartcoin:force_settlement_delay.header_content"
+                          )}
+                          header={t(
+                            "CreateSmartcoin:force_settlement_delay.header"
+                          )}
                         />
                         <Input
                           value={forceSettlementDelaySeconds}
@@ -2603,15 +3160,21 @@ export default function CreateSmartcoin(properties) {
                           min="0"
                           className="mt-1"
                           onInput={(e) => {
-                            setForceSettlementDelaySeconds(e.currentTarget.value);
+                            setForceSettlementDelaySeconds(
+                              e.currentTarget.value
+                            );
                             if (editing) setHasEditedBitassetOptions(true);
                           }}
                         />
                       </div>
                       <div>
                         <HoverInfo
-                          content={t("CreateSmartcoin:force_settlement_offset.header_content")}
-                          header={t("CreateSmartcoin:force_settlement_offset.header")}
+                          content={t(
+                            "CreateSmartcoin:force_settlement_offset.header_content"
+                          )}
+                          header={t(
+                            "CreateSmartcoin:force_settlement_offset.header"
+                          )}
                         />
                         <Input
                           value={forceSettlementOffsetPercent}
@@ -2620,7 +3183,9 @@ export default function CreateSmartcoin(properties) {
                           max="100"
                           className="mt-1"
                           onInput={(e) => {
-                            setForceSettlementOffsetPercent(e.currentTarget.value);
+                            setForceSettlementOffsetPercent(
+                              e.currentTarget.value
+                            );
                             debouncedPercent(
                               e.currentTarget.value,
                               setForceSettlementOffsetPercent,
@@ -2635,7 +3200,9 @@ export default function CreateSmartcoin(properties) {
                           content={t(
                             "CreateSmartcoin:maximum_force_settlement_volume.header_content"
                           )}
-                          header={t("CreateSmartcoin:maximum_force_settlement_volume.header")}
+                          header={t(
+                            "CreateSmartcoin:maximum_force_settlement_volume.header"
+                          )}
                         />
                         <Input
                           value={maximumForceSettlementVolume}
@@ -2643,7 +3210,9 @@ export default function CreateSmartcoin(properties) {
                           min="0"
                           className="mt-1"
                           onInput={(e) => {
-                            setMaximumForceSettlementVolume(e.currentTarget.value);
+                            setMaximumForceSettlementVolume(
+                              e.currentTarget.value
+                            );
                             if (editing) setHasEditedBitassetOptions(true);
                           }}
                         />
@@ -2662,7 +3231,11 @@ export default function CreateSmartcoin(properties) {
                             className="mt-1"
                             onInput={(e) => {
                               setMcr(e.currentTarget.value);
-                              debouncedPercent(e.currentTarget.value, setMcr, 4200);
+                              debouncedPercent(
+                                e.currentTarget.value,
+                                setMcr,
+                                4200
+                              );
                               if (editing) setHasEditedBitassetOptions(true);
                             }}
                           />
@@ -2682,7 +3255,11 @@ export default function CreateSmartcoin(properties) {
                             className="mt-1"
                             onInput={(e) => {
                               setIcr(e.currentTarget.value);
-                              debouncedPercent(e.currentTarget.value, setIcr, 4200);
+                              debouncedPercent(
+                                e.currentTarget.value,
+                                setIcr,
+                                4200
+                              );
                               if (editing) setHasEditedBitassetOptions(true);
                             }}
                           />
@@ -2702,7 +3279,11 @@ export default function CreateSmartcoin(properties) {
                             className="mt-1"
                             onInput={(e) => {
                               setMssr(e.currentTarget.value);
-                              debouncedPercent(e.currentTarget.value, setMssr, 4200);
+                              debouncedPercent(
+                                e.currentTarget.value,
+                                setMssr,
+                                4200
+                              );
                               if (editing) setHasEditedBitassetOptions(true);
                             }}
                           />
@@ -2770,7 +3351,9 @@ export default function CreateSmartcoin(properties) {
                               content={t(
                                 "CreateSmartcoin:extensions.margin_call_fee_ratio.header_content"
                               )}
-                              header={t("CreateSmartcoin:extensions.margin_call_fee_ratio.header")}
+                              header={t(
+                                "CreateSmartcoin:extensions.margin_call_fee_ratio.header"
+                              )}
                             />
                             <Input
                               value={marginCallFeeRatio}
@@ -2780,7 +3363,11 @@ export default function CreateSmartcoin(properties) {
                               className="mt-1"
                               onInput={(e) => {
                                 setMarginCallFeeRatio(e.currentTarget.value);
-                                debouncedPercent(e.currentTarget.value, setMarginCallFeeRatio, 100);
+                                debouncedPercent(
+                                  e.currentTarget.value,
+                                  setMarginCallFeeRatio,
+                                  100
+                                );
                                 if (editing) setHasEditedBitassetOptions(true);
                               }}
                             />
@@ -2792,11 +3379,15 @@ export default function CreateSmartcoin(properties) {
                         <AssetFlag
                           alreadyDisabled={false}
                           id={"force_settle_fee"}
-                          allowedText={t("CreateSmartcoin:extensions.force_settle_fee.enabled")}
+                          allowedText={t(
+                            "CreateSmartcoin:extensions.force_settle_fee.enabled"
+                          )}
                           enabledInfo={t(
                             "CreateSmartcoin:extensions.force_settle_fee.extensionInfo"
                           )}
-                          disabledText={t("CreateSmartcoin:extensions.force_settle_fee.disabled")}
+                          disabledText={t(
+                            "CreateSmartcoin:extensions.force_settle_fee.disabled"
+                          )}
                           disabledInfo={t(
                             "CreateSmartcoin:extensions.force_settle_fee.extensionInfo"
                           )}
@@ -2810,7 +3401,9 @@ export default function CreateSmartcoin(properties) {
                               content={t(
                                 "CreateSmartcoin:extensions.force_settle_fee.header_content"
                               )}
-                              header={t("CreateSmartcoin:extensions.force_settle_fee.header")}
+                              header={t(
+                                "CreateSmartcoin:extensions.force_settle_fee.header"
+                              )}
                             />
                             <Input
                               value={forceSettleFeePercent}
@@ -2872,7 +3465,9 @@ export default function CreateSmartcoin(properties) {
                   <>
                     <div className="col-span-2 mb-3">
                       <Label>
-                        {t("AssetCommon:nft.currentIPFSFiles", { count: nftMedia.length })}
+                        {t("AssetCommon:nft.currentIPFSFiles", {
+                          count: nftMedia.length,
+                        })}
                       </Label>
                       <br />
                       <Label>{t("AssetCommon:nft.supportedFiletypes")}</Label>
@@ -2897,7 +3492,9 @@ export default function CreateSmartcoin(properties) {
                           </DialogHeader>
                           <Card>
                             <CardHeader>
-                              <CardTitle>{t("AssetCommon:nft.currentIPFSMedia")}</CardTitle>
+                              <CardTitle>
+                                {t("AssetCommon:nft.currentIPFSMedia")}
+                              </CardTitle>
                               <CardDescription>
                                 {t("AssetCommon:nft.referencesIPFSObjects", {
                                   count: nftMedia.length,
@@ -2910,14 +3507,18 @@ export default function CreateSmartcoin(properties) {
                               ) : (
                                 <>
                                   <div className="grid grid-cols-4">
-                                    <div className="col-span-1">{t("AssetCommon:nft.type")}</div>
+                                    <div className="col-span-1">
+                                      {t("AssetCommon:nft.type")}
+                                    </div>
                                     <div className="col-span-1">
                                       {t("AssetCommon:nft.contentIdentifier")}
                                     </div>
                                     <div className="col-span-1">
                                       {t("AssetCommon:nft.filename")}
                                     </div>
-                                    <div className="col-span-1">{t("AssetCommon:nft.delete")}</div>
+                                    <div className="col-span-1">
+                                      {t("AssetCommon:nft.delete")}
+                                    </div>
                                   </div>
                                   <List
                                     width={"100%"}
@@ -2926,7 +3527,9 @@ export default function CreateSmartcoin(properties) {
                                     itemSize={25}
                                     className="w-full"
                                   >
-                                    {({ index, style }) => <MediaRow index={index} style={style} />}
+                                    {({ index, style }) => (
+                                      <MediaRow index={index} style={style} />
+                                    )}
                                   </List>
                                 </>
                               )}
@@ -2935,7 +3538,9 @@ export default function CreateSmartcoin(properties) {
 
                           <Card>
                             <CardHeader>
-                              <CardTitle>{t("AssetCommon:nft.addNewIPFSMedia")}</CardTitle>
+                              <CardTitle>
+                                {t("AssetCommon:nft.addNewIPFSMedia")}
+                              </CardTitle>
                               <CardDescription>
                                 {t("AssetCommon:nft.noIPFSGateway")}
                               </CardDescription>
@@ -2944,12 +3549,22 @@ export default function CreateSmartcoin(properties) {
                               <div className="grid grid-cols-4">
                                 <div className="col-span-3 mr-3">
                                   <Input
-                                    placeholder={t("AssetCommon:nft.mediaURLPlaceholder")}
+                                    placeholder={t(
+                                      "AssetCommon:nft.mediaURLPlaceholder"
+                                    )}
                                     type="text"
-                                    onInput={(e) => setNewMediaUrl(e.currentTarget.value)}
+                                    onInput={(e) =>
+                                      setNewMediaUrl(e.currentTarget.value)
+                                    }
                                     onKeyDown={(e) => {
-                                      if (e.key === "Enter" && newMediaUrl && newMediaType) {
-                                        const temp_urls = nftMedia.map((x) => x.url);
+                                      if (
+                                        e.key === "Enter" &&
+                                        newMediaUrl &&
+                                        newMediaType
+                                      ) {
+                                        const temp_urls = nftMedia.map(
+                                          (x) => x.url
+                                        );
                                         if (temp_urls.includes(newMediaUrl)) {
                                           console.log("Already exists");
                                           setNewMediaUrl("");
@@ -2960,9 +3575,17 @@ export default function CreateSmartcoin(properties) {
                                           nftMedia && nftMedia.length
                                             ? [
                                                 ...nftMedia,
-                                                { url: newMediaUrl, type: newMediaType },
+                                                {
+                                                  url: newMediaUrl,
+                                                  type: newMediaType,
+                                                },
                                               ]
-                                            : [{ url: newMediaUrl, type: newMediaType }]
+                                            : [
+                                                {
+                                                  url: newMediaUrl,
+                                                  type: newMediaType,
+                                                },
+                                              ]
                                         );
                                         setNewMediaUrl("");
                                       }
@@ -2974,7 +3597,9 @@ export default function CreateSmartcoin(properties) {
                                   <Select onValueChange={setNewMediaType}>
                                     <SelectTrigger className="w-[105px]">
                                       <SelectValue
-                                        placeholder={t("AssetCommon:nft.fileTypePlaceholder")}
+                                        placeholder={t(
+                                          "AssetCommon:nft.fileTypePlaceholder"
+                                        )}
                                       />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -2983,10 +3608,16 @@ export default function CreateSmartcoin(properties) {
                                           {t("AssetCommon:nft.imageFormats")}
                                         </SelectLabel>
                                         <SelectItem value="PNG">PNG</SelectItem>
-                                        <SelectItem value="WEBP">WEBP</SelectItem>
-                                        <SelectItem value="JPEG">JPEG</SelectItem>
+                                        <SelectItem value="WEBP">
+                                          WEBP
+                                        </SelectItem>
+                                        <SelectItem value="JPEG">
+                                          JPEG
+                                        </SelectItem>
                                         <SelectItem value="GIF">GIF</SelectItem>
-                                        <SelectItem value="TIFF">TIFF</SelectItem>
+                                        <SelectItem value="TIFF">
+                                          TIFF
+                                        </SelectItem>
                                         <SelectItem value="BMP">BMP</SelectItem>
                                         <SelectLabel>
                                           {t("AssetCommon:nft.audioFormats")}
@@ -2995,40 +3626,58 @@ export default function CreateSmartcoin(properties) {
                                         <SelectItem value="MP4">MP4</SelectItem>
                                         <SelectItem value="M4A">M4A</SelectItem>
                                         <SelectItem value="OGG">OGG</SelectItem>
-                                        <SelectItem value="FLAC">FLAC</SelectItem>
+                                        <SelectItem value="FLAC">
+                                          FLAC
+                                        </SelectItem>
                                         <SelectItem value="WAV">WAV</SelectItem>
                                         <SelectItem value="WMA">WMA</SelectItem>
                                         <SelectItem value="AAC">AAC</SelectItem>
                                         <SelectLabel>
                                           {t("AssetCommon:nft.videoFormats")}
                                         </SelectLabel>
-                                        <SelectItem value="WEBM">WEBM</SelectItem>
+                                        <SelectItem value="WEBM">
+                                          WEBM
+                                        </SelectItem>
                                         <SelectItem value="MOV">MOV</SelectItem>
                                         <SelectItem value="QT">QT</SelectItem>
                                         <SelectItem value="AVI">AVI</SelectItem>
                                         <SelectItem value="WMV">WMV</SelectItem>
-                                        <SelectItem value="MPEG">MPEG</SelectItem>
+                                        <SelectItem value="MPEG">
+                                          MPEG
+                                        </SelectItem>
                                         <SelectLabel>
                                           {t("AssetCommon:nft.documentFormats")}
                                         </SelectLabel>
                                         <SelectItem value="PDF">PDF</SelectItem>
-                                        <SelectItem value="DOCX">DOCX</SelectItem>
+                                        <SelectItem value="DOCX">
+                                          DOCX
+                                        </SelectItem>
                                         <SelectItem value="ODT">ODT</SelectItem>
-                                        <SelectItem value="XLSX">XLSX</SelectItem>
+                                        <SelectItem value="XLSX">
+                                          XLSX
+                                        </SelectItem>
                                         <SelectItem value="ODS">ODS</SelectItem>
-                                        <SelectItem value="PPTX">PPTX</SelectItem>
+                                        <SelectItem value="PPTX">
+                                          PPTX
+                                        </SelectItem>
                                         <SelectItem value="TXT">TXT</SelectItem>
                                         <SelectLabel>
                                           {t("AssetCommon:nft.threeDFormats")}
                                         </SelectLabel>
                                         <SelectItem value="OBJ">OBJ</SelectItem>
                                         <SelectItem value="FBX">FBX</SelectItem>
-                                        <SelectItem value="GLTF">GLTF</SelectItem>
+                                        <SelectItem value="GLTF">
+                                          GLTF
+                                        </SelectItem>
                                         <SelectItem value="3DS">3DS</SelectItem>
                                         <SelectItem value="STL">STL</SelectItem>
-                                        <SelectItem value="COLLADA">COLLADA</SelectItem>
+                                        <SelectItem value="COLLADA">
+                                          COLLADA
+                                        </SelectItem>
                                         <SelectItem value="3MF">3MF</SelectItem>
-                                        <SelectItem value="BLEND">BLEND</SelectItem>
+                                        <SelectItem value="BLEND">
+                                          BLEND
+                                        </SelectItem>
                                         <SelectItem value="SKP">SKP</SelectItem>
                                         <SelectItem value="VOX">VOX</SelectItem>
                                       </SelectGroup>
@@ -3043,7 +3692,9 @@ export default function CreateSmartcoin(properties) {
                                     <Button
                                       className="mt-3"
                                       onClick={() => {
-                                        const temp_urls = nftMedia.map((x) => x.url);
+                                        const temp_urls = nftMedia.map(
+                                          (x) => x.url
+                                        );
                                         if (temp_urls.includes(newMediaUrl)) {
                                           console.log("Already exists");
                                           setNewMediaUrl("");
@@ -3052,7 +3703,10 @@ export default function CreateSmartcoin(properties) {
 
                                         setNFTMedia([
                                           ...nftMedia,
-                                          { url: newMediaUrl, type: newMediaType },
+                                          {
+                                            url: newMediaUrl,
+                                            type: newMediaType,
+                                          },
                                         ]);
                                         setNewMediaUrl("");
                                       }}
@@ -3067,16 +3721,22 @@ export default function CreateSmartcoin(properties) {
                                   <Dialog>
                                     <DialogTrigger>
                                       <Button className="mt-3 ml-3">
-                                        {t("AssetCommon:nft.ipfsHostingSolutions")}
+                                        {t(
+                                          "AssetCommon:nft.ipfsHostingSolutions"
+                                        )}
                                       </Button>
                                     </DialogTrigger>
                                     <DialogContent className="bg-white">
                                       <DialogHeader>
                                         <DialogTitle>
-                                          {t("AssetCommon:nft.ipfsHostingSolutions")}
+                                          {t(
+                                            "AssetCommon:nft.ipfsHostingSolutions"
+                                          )}
                                         </DialogTitle>
                                         <DialogDescription>
-                                          {t("AssetCommon:nft.ipfsHostingDescription")}
+                                          {t(
+                                            "AssetCommon:nft.ipfsHostingDescription"
+                                          )}
                                         </DialogDescription>
                                       </DialogHeader>
                                       <div className="grid grid-cols-3 gap-3">
@@ -3084,7 +3744,9 @@ export default function CreateSmartcoin(properties) {
                                           classnamecontents="hover:text-purple-500"
                                           type="button"
                                           text={"Pinata.cloud"}
-                                          hyperlink={"https://www.pinata.cloud/"}
+                                          hyperlink={
+                                            "https://www.pinata.cloud/"
+                                          }
                                         />
                                         <ExternalLink
                                           classnamecontents="hover:text-purple-500"
@@ -3102,13 +3764,17 @@ export default function CreateSmartcoin(properties) {
                                           classnamecontents="hover:text-purple-500"
                                           type="button"
                                           text={"Fleek.co"}
-                                          hyperlink={"https://fleek.co/ipfs-gateway/"}
+                                          hyperlink={
+                                            "https://fleek.co/ipfs-gateway/"
+                                          }
                                         />
                                         <ExternalLink
                                           classnamecontents="hover:text-purple-500"
                                           type="button"
                                           text={"Infura.io"}
-                                          hyperlink={"https://infura.io/product/ipfs"}
+                                          hyperlink={
+                                            "https://infura.io/product/ipfs"
+                                          }
                                         />
                                         <ExternalLink
                                           classnamecontents="hover:text-purple-500"
@@ -3175,7 +3841,9 @@ export default function CreateSmartcoin(properties) {
                             header={t("AssetCommon:nft.NFTNarrativeHeader")}
                           />
                           <Input
-                            placeholder={t("AssetCommon:nft.NarrativePlaceholder")}
+                            placeholder={t(
+                              "AssetCommon:nft.NarrativePlaceholder"
+                            )}
                             value={narrative}
                             type="text"
                             onInput={(e) => setNarrative(e.currentTarget.value)}
@@ -3207,37 +3875,57 @@ export default function CreateSmartcoin(properties) {
                             header={t("AssetCommon:nft.NFTAttestationHeader")}
                           />
                           <Input
-                            placeholder={t("AssetCommon:nft.AttestationPlaceholder")}
+                            placeholder={t(
+                              "AssetCommon:nft.AttestationPlaceholder"
+                            )}
                             value={attestation}
                             type="text"
-                            onInput={(e) => setAttestation(e.currentTarget.value)}
+                            onInput={(e) =>
+                              setAttestation(e.currentTarget.value)
+                            }
                           />
                           <HoverInfo
-                            content={t("AssetCommon:nft.NFTAcknowledgementsContent")}
-                            header={t("AssetCommon:nft.NFTAcknowledgementsHeader")}
+                            content={t(
+                              "AssetCommon:nft.NFTAcknowledgementsContent"
+                            )}
+                            header={t(
+                              "AssetCommon:nft.NFTAcknowledgementsHeader"
+                            )}
                           />
                           <Input
-                            placeholder={t("AssetCommon:nft.AcknowledgementsPlaceholder")}
+                            placeholder={t(
+                              "AssetCommon:nft.AcknowledgementsPlaceholder"
+                            )}
                             value={acknowledgements}
                             type="text"
-                            onInput={(e) => setAcknowledgements(e.currentTarget.value)}
+                            onInput={(e) =>
+                              setAcknowledgements(e.currentTarget.value)
+                            }
                           />
                           <HoverInfo
-                            content={t("AssetCommon:nft.NFTHolderLicenseContent")}
+                            content={t(
+                              "AssetCommon:nft.NFTHolderLicenseContent"
+                            )}
                             header={t("AssetCommon:nft.NFTHolderLicenseHeader")}
                           />
                           <Input
-                            placeholder={t("AssetCommon:nft.HolderLicensePlaceholder")}
+                            placeholder={t(
+                              "AssetCommon:nft.HolderLicensePlaceholder"
+                            )}
                             value={holderLicense}
                             type="text"
-                            onInput={(e) => setHolderLicense(e.currentTarget.value)}
+                            onInput={(e) =>
+                              setHolderLicense(e.currentTarget.value)
+                            }
                           />
                           <HoverInfo
                             content={t("AssetCommon:nft.NFTLicenseContent")}
                             header={t("AssetCommon:nft.NFTLicenseHeader")}
                           />
                           <Input
-                            placeholder={t("AssetCommon:nft.LicensePlaceholder")}
+                            placeholder={t(
+                              "AssetCommon:nft.LicensePlaceholder"
+                            )}
                             value={license}
                             type="text"
                             onInput={(e) => setLicense(e.currentTarget.value)}
@@ -3250,7 +3938,9 @@ export default function CreateSmartcoin(properties) {
                 ) : null}
 
                 <div className="col-span-2">
-                  {editing && !hasEditedAssetOptions && !hasEditedBitassetOptions ? (
+                  {editing &&
+                  !hasEditedAssetOptions &&
+                  !hasEditedBitassetOptions ? (
                     <Button className="h-8" disabled>
                       {t("CreateUIA:buttons.submit")}
                     </Button>
@@ -3277,9 +3967,13 @@ export default function CreateSmartcoin(properties) {
           usrChain={usr.chain}
           userID={usr.id}
           dismissCallback={setShowDialog}
-          key={`${editing ? "Editing" : "Creating"}_Smartcoin-${usr.id}-${symbol}`}
+          key={`${editing ? "Editing" : "Creating"}_Smartcoin-${
+            usr.id
+          }-${symbol}`}
           headerText={t(
-            `CreateSmartcoin:dialogContent.${editing ? "editHeader" : "createHeader"}`,
+            `CreateSmartcoin:dialogContent.${
+              editing ? "editHeader" : "createHeader"
+            }`,
             { symbol }
           )}
           trxJSON={trx}

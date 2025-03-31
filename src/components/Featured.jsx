@@ -1,6 +1,11 @@
-import React, { useState, useEffect, useSyncExternalStore, useMemo } from "react";
+import React, {
+  useState,
+  useEffect,
+  useSyncExternalStore,
+  useMemo,
+} from "react";
 import { useTranslation } from "react-i18next";
-import { useStore } from '@nanostores/react';
+import { useStore } from "@nanostores/react";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
 import {
@@ -18,7 +23,11 @@ import { $currentUser } from "@/stores/users.ts";
 
 export default function Featured(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
-  const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
+  const usr = useSyncExternalStore(
+    $currentUser.subscribe,
+    $currentUser.get,
+    () => true
+  );
 
   useInitCache(usr && usr.chain ? usr.chain : "bitshares", []);
 
@@ -29,11 +38,13 @@ export default function Featured(properties) {
     if (usr && usr.chain) {
       let marketsStore = createTopMarketsStore(usr.chain);
 
-      unsubscribeMarkets = marketsStore.subscribe(({ data, loading, error }) => {
-        if (data && !error && !loading) {
-          setRetrievedMarkets(data);
+      unsubscribeMarkets = marketsStore.subscribe(
+        ({ data, loading, error }) => {
+          if (data && !error && !loading) {
+            setRetrievedMarkets(data);
+          }
         }
-      });
+      );
     }
 
     return () => {
@@ -87,7 +98,9 @@ export default function Featured(properties) {
                       </div>
                     </div>
                   </div>
-                  <div className="grid grid-cols-1 gap-2 text-center">{marketRows}</div>
+                  <div className="grid grid-cols-1 gap-2 text-center">
+                    {marketRows}
+                  </div>
                 </>
               ) : null}
             </CardContent>

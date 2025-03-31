@@ -14,7 +14,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
 import { $currentUser } from "@/stores/users.ts";
@@ -25,8 +29,16 @@ import { createBlockedAccountStore } from "@/nanoeffects/BlockedAccounts.ts";
 
 export default function Home(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
-  const usr = useSyncExternalStore($currentUser.subscribe, $currentUser.get, () => true);
-  const blocklist = useSyncExternalStore($blockList.subscribe, $blockList.get, () => true);
+  const usr = useSyncExternalStore(
+    $currentUser.subscribe,
+    $currentUser.get,
+    () => true
+  );
+  const blocklist = useSyncExternalStore(
+    $blockList.subscribe,
+    $blockList.get,
+    () => true
+  );
   const currentNode = useStore($currentNode);
 
   useInitCache(usr && usr.chain ? usr.chain : "bitshares", []);
@@ -42,9 +54,13 @@ export default function Home(properties) {
       currentNode.url
     ) {
       const currentTime = Date.now();
-      const isOlderThan24Hours = currentTime - blocklist.timestamp > 24 * 60 * 60 * 1000;
+      const isOlderThan24Hours =
+        currentTime - blocklist.timestamp > 24 * 60 * 60 * 1000;
       if (isOlderThan24Hours || !blocklist.users.length) {
-        const blockListStore = createBlockedAccountStore([usr.chain, currentNode.url]);
+        const blockListStore = createBlockedAccountStore([
+          usr.chain,
+          currentNode.url,
+        ]);
         const unsub = blockListStore.subscribe((result) => {
           if (result.error) {
             console.error(result.error);
@@ -151,7 +167,9 @@ export default function Home(properties) {
               <Card className="h-full hover:shadow-md hover:shadow-black">
                 <CardHeader>
                   <CardTitle>{t("Home:transfer.title")}</CardTitle>
-                  <CardDescription>{t("Home:transfer.subtitle")}</CardDescription>
+                  <CardDescription>
+                    {t("Home:transfer.subtitle")}
+                  </CardDescription>
                 </CardHeader>
               </Card>
             </a>
@@ -165,11 +183,16 @@ export default function Home(properties) {
 
         <HoverCard key="timed_transfer">
           <HoverCardTrigger asChild>
-            <a href="/timed_transfer/index.html" style={{ textDecoration: "none" }}>
+            <a
+              href="/timed_transfer/index.html"
+              style={{ textDecoration: "none" }}
+            >
               <Card className="h-full hover:shadow-md hover:shadow-black">
                 <CardHeader>
                   <CardTitle>{t("Home:timed_transfer.title")}</CardTitle>
-                  <CardDescription>{t("Home:timed_transfer.subtitle")}</CardDescription>
+                  <CardDescription>
+                    {t("Home:timed_transfer.subtitle")}
+                  </CardDescription>
                 </CardHeader>
               </Card>
             </a>
@@ -183,11 +206,16 @@ export default function Home(properties) {
 
         <HoverCard key="withdraw_permissions">
           <HoverCardTrigger asChild>
-            <a href="/withdraw_permissions/index.html" style={{ textDecoration: "none" }}>
+            <a
+              href="/withdraw_permissions/index.html"
+              style={{ textDecoration: "none" }}
+            >
               <Card className="h-full hover:shadow-md hover:shadow-black">
                 <CardHeader>
                   <CardTitle>{t("Home:withdraw_permission.title")}</CardTitle>
-                  <CardDescription>{t("Home:withdraw_permission.subtitle")}</CardDescription>
+                  <CardDescription>
+                    {t("Home:withdraw_permission.subtitle")}
+                  </CardDescription>
                 </CardHeader>
               </Card>
             </a>
@@ -222,11 +250,16 @@ export default function Home(properties) {
 
         <HoverCard key="create_vesting">
           <HoverCardTrigger asChild>
-            <a href="/create_vesting/index.html" style={{ textDecoration: "none" }}>
+            <a
+              href="/create_vesting/index.html"
+              style={{ textDecoration: "none" }}
+            >
               <Card className="h-full hover:shadow-md hover:shadow-black">
                 <CardHeader>
                   <CardTitle>{t("Home:create_vesting.title")}</CardTitle>
-                  <CardDescription>{t("Home:create_vesting.subtitle")}</CardDescription>
+                  <CardDescription>
+                    {t("Home:create_vesting.subtitle")}
+                  </CardDescription>
                 </CardHeader>
               </Card>
             </a>
@@ -290,7 +323,9 @@ export default function Home(properties) {
               <Card className="h-full hover:shadow-md hover:shadow-black">
                 <CardHeader>
                   <CardTitle>{t("Home:smartcoins.title")}</CardTitle>
-                  <CardDescription>{t("Home:smartcoins.subtitle")}</CardDescription>
+                  <CardDescription>
+                    {t("Home:smartcoins.subtitle")}
+                  </CardDescription>
                 </CardHeader>
               </Card>
             </a>
@@ -332,7 +367,9 @@ export default function Home(properties) {
               <Card className="h-full hover:shadow-md hover:shadow-black">
                 <CardHeader>
                   <CardTitle>{t("Home:tfund_user.title")}</CardTitle>
-                  <CardDescription>{t("Home:tfund_user.subtitle")}</CardDescription>
+                  <CardDescription>
+                    {t("Home:tfund_user.subtitle")}
+                  </CardDescription>
                 </CardHeader>
               </Card>
             </a>
@@ -355,7 +392,9 @@ export default function Home(properties) {
               <Card className="h-full hover:shadow-md hover:shadow-black">
                 <CardHeader>
                   <CardTitle>{t("Home:portfolio.title")}</CardTitle>
-                  <CardDescription>{t("Home:portfolio.subtitle")}</CardDescription>
+                  <CardDescription>
+                    {t("Home:portfolio.subtitle")}
+                  </CardDescription>
                 </CardHeader>
               </Card>
             </a>
@@ -375,7 +414,9 @@ export default function Home(properties) {
               <Card className="h-full hover:shadow-md hover:shadow-black">
                 <CardHeader>
                   <CardTitle>{t("Home:featured.title")}</CardTitle>
-                  <CardDescription>{t("Home:featured.subtitle")}</CardDescription>
+                  <CardDescription>
+                    {t("Home:featured.subtitle")}
+                  </CardDescription>
                 </CardHeader>
               </Card>
             </a>
@@ -388,14 +429,19 @@ export default function Home(properties) {
             </ul>
           </HoverCardContent>
         </HoverCard>
-        
+
         <HoverCard key="custom_pool_tracker">
           <HoverCardTrigger asChild>
-            <a href="/custom_pool_overview/index.html" style={{ textDecoration: "none" }}>
+            <a
+              href="/custom_pool_overview/index.html"
+              style={{ textDecoration: "none" }}
+            >
               <Card className="h-full hover:shadow-md hover:shadow-black">
                 <CardHeader>
                   <CardTitle>{t("Home:custom_pool_tracker.title")}</CardTitle>
-                  <CardDescription>{t("Home:custom_pool_tracker.subtitle")}</CardDescription>
+                  <CardDescription>
+                    {t("Home:custom_pool_tracker.subtitle")}
+                  </CardDescription>
                 </CardHeader>
               </Card>
             </a>
@@ -407,7 +453,7 @@ export default function Home(properties) {
             </ul>
           </HoverCardContent>
         </HoverCard>
-        
+
         <HoverCard key="pools">
           <HoverCardTrigger asChild>
             <a href="/pools/index.html" style={{ textDecoration: "none" }}>
@@ -471,7 +517,9 @@ export default function Home(properties) {
               <Card className="h-full hover:shadow-md hover:shadow-black">
                 <CardHeader>
                   <CardTitle>{t("Home:vesting.title")}</CardTitle>
-                  <CardDescription>{t("Home:vesting.subtitle")}</CardDescription>
+                  <CardDescription>
+                    {t("Home:vesting.subtitle")}
+                  </CardDescription>
                 </CardHeader>
               </Card>
             </a>
@@ -486,11 +534,16 @@ export default function Home(properties) {
 
         <HoverCard key="predictions">
           <HoverCardTrigger asChild>
-            <a href="/predictions/index.html" style={{ textDecoration: "none" }}>
+            <a
+              href="/predictions/index.html"
+              style={{ textDecoration: "none" }}
+            >
               <Card className="h-full hover:shadow-md hover:shadow-black">
                 <CardHeader>
                   <CardTitle>{t("Home:prediction_markets.title")}</CardTitle>
-                  <CardDescription>{t("Home:prediction_markets.subtitle")}</CardDescription>
+                  <CardDescription>
+                    {t("Home:prediction_markets.subtitle")}
+                  </CardDescription>
                 </CardHeader>
               </Card>
             </a>
@@ -510,7 +563,9 @@ export default function Home(properties) {
               <Card className="h-full hover:shadow-md hover:shadow-black">
                 <CardHeader>
                   <CardTitle>{t("Home:proposals.title")}</CardTitle>
-                  <CardDescription>{t("Home:proposals.subtitle")}</CardDescription>
+                  <CardDescription>
+                    {t("Home:proposals.subtitle")}
+                  </CardDescription>
                 </CardHeader>
               </Card>
             </a>
@@ -525,11 +580,16 @@ export default function Home(properties) {
 
         <HoverCard key="issued_assets">
           <HoverCardTrigger asChild>
-            <a href="/issued_assets/index.html" style={{ textDecoration: "none" }}>
+            <a
+              href="/issued_assets/index.html"
+              style={{ textDecoration: "none" }}
+            >
               <Card className="h-full hover:shadow-md hover:shadow-black">
                 <CardHeader>
                   <CardTitle>{t("Home:issued_assets.title")}</CardTitle>
-                  <CardDescription>{t("Home:issued_assets.subtitle")}</CardDescription>
+                  <CardDescription>
+                    {t("Home:issued_assets.subtitle")}
+                  </CardDescription>
                 </CardHeader>
               </Card>
             </a>
@@ -568,11 +628,16 @@ export default function Home(properties) {
       <div className="grid grid-cols-3 gap-3">
         <HoverCard key="create_prediction">
           <HoverCardTrigger asChild>
-            <a href="/create_prediction/index.html" style={{ textDecoration: "none" }}>
+            <a
+              href="/create_prediction/index.html"
+              style={{ textDecoration: "none" }}
+            >
               <Card className="h-full hover:shadow-md hover:shadow-black">
                 <CardHeader>
                   <CardTitle>{t("Home:create_prediction.title")}</CardTitle>
-                  <CardDescription>{t("Home:create_prediction.subtitle")}</CardDescription>
+                  <CardDescription>
+                    {t("Home:create_prediction.subtitle")}
+                  </CardDescription>
                 </CardHeader>
               </Card>
             </a>
@@ -592,7 +657,9 @@ export default function Home(properties) {
               <Card className="h-full hover:shadow-md hover:shadow-black">
                 <CardHeader>
                   <CardTitle>{t("Home:create_uia.title")}</CardTitle>
-                  <CardDescription>{t("Home:create_uia.subtitle")}</CardDescription>
+                  <CardDescription>
+                    {t("Home:create_uia.subtitle")}
+                  </CardDescription>
                 </CardHeader>
               </Card>
             </a>
@@ -608,11 +675,16 @@ export default function Home(properties) {
 
         <HoverCard key="create_smartcoin">
           <HoverCardTrigger asChild>
-            <a href="/create_smartcoin/index.html" style={{ textDecoration: "none" }}>
+            <a
+              href="/create_smartcoin/index.html"
+              style={{ textDecoration: "none" }}
+            >
               <Card className="h-full hover:shadow-md hover:shadow-black">
                 <CardHeader>
                   <CardTitle>{t("Home:create_smartcoin.title")}</CardTitle>
-                  <CardDescription>{t("Home:create_smartcoin.subtitle")}</CardDescription>
+                  <CardDescription>
+                    {t("Home:create_smartcoin.subtitle")}
+                  </CardDescription>
                 </CardHeader>
               </Card>
             </a>
@@ -631,11 +703,16 @@ export default function Home(properties) {
       <div className="grid grid-cols-3 gap-3">
         <HoverCard key="accountLists">
           <HoverCardTrigger asChild>
-            <a href="/account_lists/index.html" style={{ textDecoration: "none" }}>
+            <a
+              href="/account_lists/index.html"
+              style={{ textDecoration: "none" }}
+            >
               <Card className="h-full hover:shadow-md hover:shadow-black">
                 <CardHeader>
                   <CardTitle>{t("Home:accountLists.title")}</CardTitle>
-                  <CardDescription>{t("Home:accountLists.subtitle")}</CardDescription>
+                  <CardDescription>
+                    {t("Home:accountLists.subtitle")}
+                  </CardDescription>
                 </CardHeader>
               </Card>
             </a>
@@ -691,11 +768,16 @@ export default function Home(properties) {
 
         <HoverCard key="create_account">
           <HoverCardTrigger asChild>
-            <a href="/create_account/index.html" style={{ textDecoration: "none" }}>
+            <a
+              href="/create_account/index.html"
+              style={{ textDecoration: "none" }}
+            >
               <Card className="h-full hover:shadow-md hover:shadow-black">
                 <CardHeader>
                   <CardTitle>{t("Home:create_account.title")}</CardTitle>
-                  <CardDescription>{t("Home:create_account.subtitle")}</CardDescription>
+                  <CardDescription>
+                    {t("Home:create_account.subtitle")}
+                  </CardDescription>
                 </CardHeader>
               </Card>
             </a>
@@ -708,6 +790,29 @@ export default function Home(properties) {
           </HoverCardContent>
         </HoverCard>
 
+        <HoverCard key="custom_authorities">
+          <HoverCardTrigger asChild>
+            <a
+              href="/custom_authorities/index.html"
+              style={{ textDecoration: "none" }}
+            >
+              <Card className="h-full hover:shadow-md hover:shadow-black">
+                <CardHeader>
+                  <CardTitle>{t("Home:custom_authorities.title")}</CardTitle>
+                  <CardDescription>
+                    {t("Home:custom_authorities.subtitle")}
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            </a>
+          </HoverCardTrigger>
+          <HoverCardContent className="w-80 text-sm pt-1">
+            <ul className="ml-2 list-disc [&>li]:mt-2">
+              <li>{t("Home:custom_authorities.hover1")}</li>
+              <li>{t("Home:custom_authorities.hover2")}</li>
+            </ul>
+          </HoverCardContent>
+        </HoverCard>
       </div>
     </div>
   );

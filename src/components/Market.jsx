@@ -1,6 +1,11 @@
-import React, { useState, useEffect, useSyncExternalStore, useMemo } from "react";
+import React, {
+  useState,
+  useEffect,
+  useSyncExternalStore,
+  useMemo,
+} from "react";
 import { ReloadIcon } from "@radix-ui/react-icons";
-import { useStore } from '@nanostores/react';
+import { useStore } from "@nanostores/react";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
@@ -16,7 +21,11 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 
 import { trimPrice, isInvertedMarket } from "@/lib/common";
 import { createMarketTradeHistoryStore } from "@/nanoeffects/MarketTradeHistory.ts";
@@ -53,7 +62,7 @@ export default function Market(properties) {
     _poolsBTS,
     _poolsTEST,
     //
-    balances
+    balances,
   } = properties;
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
 
@@ -149,7 +158,12 @@ export default function Market(properties) {
 
   // Use the store
   const marketHistoryStore = useMemo(() => {
-    return createMarketTradeHistoryStore([usr.chain, assetAData.id, assetBData.id, usr.id]);
+    return createMarketTradeHistoryStore([
+      usr.chain,
+      assetAData.id,
+      assetBData.id,
+      usr.id,
+    ]);
   }, [usr, assetAData, assetBData, marketItr]);
 
   const {
@@ -217,8 +231,12 @@ export default function Market(properties) {
                 <div className="col-span-3">
                   <Badge variant="outline" className="ml-2 mb-1">
                     {!tickerData ? "?" : null}
-                    {activeLimitCard === "buy" && tickerData ? tickerData.base_volume : null}
-                    {activeLimitCard === "sell" && tickerData ? tickerData.quote_volume : null}
+                    {activeLimitCard === "buy" && tickerData
+                      ? tickerData.base_volume
+                      : null}
+                    {activeLimitCard === "sell" && tickerData
+                      ? tickerData.quote_volume
+                      : null}
                   </Badge>
                 </div>
               </div>
@@ -227,8 +245,12 @@ export default function Market(properties) {
                 <div className="col-span-3">
                   <Badge variant="outline" className="ml-2 mb-1">
                     {!tickerData ? "?" : null}
-                    {activeLimitCard === "buy" && tickerData ? tickerData.quote_volume : null}
-                    {activeLimitCard === "sell" && tickerData ? tickerData.base_volume : null}
+                    {activeLimitCard === "buy" && tickerData
+                      ? tickerData.quote_volume
+                      : null}
+                    {activeLimitCard === "sell" && tickerData
+                      ? tickerData.base_volume
+                      : null}
                   </Badge>
                 </div>
               </div>
@@ -273,7 +295,9 @@ export default function Market(properties) {
                 }/${activeLimitCard === "buy" ? assetB : assetA}`
               : `https://blocksights.info/#/markets/${
                   activeLimitCard === "buy" ? assetA : assetB
-                }/${activeLimitCard === "buy" ? assetB : assetA}?network=testnet`
+                }/${
+                  activeLimitCard === "buy" ? assetB : assetA
+                }?network=testnet`
           }
         />
         {usr.chain === "bitshares" ? (
@@ -311,12 +335,13 @@ export default function Market(properties) {
       <div className="container mx-auto mt-5 mb-5">
         <div className="grid grid-cols-2 gap-5">
           <div className="col-span-1">
-
             <div className="flex-grow mb-2">
               <Card>
                 <CardHeader className="pt-2 pb-2">
                   <CardTitle className="text-lg">
-                    {usr.chain === "bitshares" ? "Bitshares " : "Bitshares (Testnet) "}
+                    {usr.chain === "bitshares"
+                      ? "Bitshares "
+                      : "Bitshares (Testnet) "}
                     {t("Market:controls")}
                   </CardTitle>
                 </CardHeader>
@@ -340,7 +365,11 @@ export default function Market(properties) {
                       onClick={() => setClicked(true)}
                     >
                       <Button variant="outline" className="w-full h-7">
-                        {clicked ? <ReloadIcon className="animate-spin" /> : <ReloadIcon />}
+                        {clicked ? (
+                          <ReloadIcon className="animate-spin" />
+                        ) : (
+                          <ReloadIcon />
+                        )}
                       </Button>
                     </a>
 
@@ -360,7 +389,11 @@ export default function Market(properties) {
               </Card>
             </div>
 
-            <Tabs defaultValue={activeLimitCard} value={activeLimitCard} className="w-full">
+            <Tabs
+              defaultValue={activeLimitCard}
+              value={activeLimitCard}
+              className="w-full"
+            >
               <TabsList className="grid w-full grid-cols-2 gap-2">
                 {!assetAData || !assetBData ? (
                   <>
@@ -458,7 +491,6 @@ export default function Market(properties) {
           </div>
           <div className="col-span-1">
             <div className="grid grid-cols-1 gap-y-2">
-
               <div className="flex-grow" style={{ paddingBottom: "0px" }}>
                 {assetADetails ? (
                   <MarketAssetCard
@@ -477,9 +509,13 @@ export default function Market(properties) {
                   <Card>
                     <CardHeader className="pb-2 pt-4">
                       <CardTitle>
-                        {activeLimitCard === "buy" ? t("Market:quoteAsset") : t("Market:baseAsset")}
+                        {activeLimitCard === "buy"
+                          ? t("Market:quoteAsset")
+                          : t("Market:baseAsset")}
                       </CardTitle>
-                      <CardDescription className="text-lg">{t("Market:loading")}</CardDescription>
+                      <CardDescription className="text-lg">
+                        {t("Market:loading")}
+                      </CardDescription>
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-2">
@@ -511,13 +547,13 @@ export default function Market(properties) {
                   <Card>
                     <CardHeader className="pb-2 pt-4">
                       <CardTitle>
-                        {
-                          activeLimitCard === "sell"
-                            ? t("Market:baseAsset")
-                            : t("Market:quoteAsset")
-                        }
+                        {activeLimitCard === "sell"
+                          ? t("Market:baseAsset")
+                          : t("Market:quoteAsset")}
                       </CardTitle>
-                      <CardDescription className="text-lg">{t("Market:loading")}</CardDescription>
+                      <CardDescription className="text-lg">
+                        {t("Market:loading")}
+                      </CardDescription>
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-2">
@@ -540,7 +576,9 @@ export default function Market(properties) {
                   <CardContent className="text-sm pb-4">
                     <div className="grid grid-cols-1 gap-2">
                       <div className="grid grid-cols-5">
-                        <div className="col-span-2">{t("Market:latestPrice")}</div>
+                        <div className="col-span-2">
+                          {t("Market:latestPrice")}
+                        </div>
                         <div className="col-span-3">
                           <Badge variant="outline" className="ml-2 mb-1">
                             ❔
@@ -548,11 +586,15 @@ export default function Market(properties) {
                         </div>
                       </div>
                       <div className="grid grid-cols-5">
-                        <div className="col-span-2">{t("Market:24HrChange")}</div>
+                        <div className="col-span-2">
+                          {t("Market:24HrChange")}
+                        </div>
                         <div className="col-span-3">❔</div>
                       </div>
                       <div className="grid grid-cols-5">
-                        <div className="col-span-2">{t("Market:24HrBaseVolume")}</div>
+                        <div className="col-span-2">
+                          {t("Market:24HrBaseVolume")}
+                        </div>
                         <div className="col-span-3">
                           <Badge variant="outline" className="ml-2 mb-1">
                             ❔
@@ -560,7 +602,9 @@ export default function Market(properties) {
                         </div>
                       </div>
                       <div className="grid grid-cols-5">
-                        <div className="col-span-2">{t("Market:24HrQuoteVolume")}</div>
+                        <div className="col-span-2">
+                          {t("Market:24HrQuoteVolume")}
+                        </div>
                         <div className="col-span-3">
                           <Badge variant="outline" className="ml-2 mb-1">
                             ❔
@@ -568,7 +612,9 @@ export default function Market(properties) {
                         </div>
                       </div>
                       <div className="grid grid-cols-5">
-                        <div className="col-span-2">{t("Market:lowestAsk")}</div>
+                        <div className="col-span-2">
+                          {t("Market:lowestAsk")}
+                        </div>
                         <div className="col-span-3">
                           <Badge variant="outline" className="ml-2 mb-1">
                             ❔
@@ -576,7 +622,9 @@ export default function Market(properties) {
                         </div>
                       </div>
                       <div className="grid grid-cols-5">
-                        <div className="col-span-2">{t("Market:highestBid")}</div>
+                        <div className="col-span-2">
+                          {t("Market:highestBid")}
+                        </div>
                         <div className="col-span-3">
                           <Badge variant="outline" className="ml-2">
                             ❔
@@ -589,7 +637,6 @@ export default function Market(properties) {
               ) : null}
 
               {tickerData && assetAData && assetBData ? marketHoverCard : null}
-
             </div>
           </div>
         </div>

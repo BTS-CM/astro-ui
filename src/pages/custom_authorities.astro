@@ -1,0 +1,39 @@
+---
+import { getCollection } from 'astro:content';
+
+import Layout from '../layouts/Layout.astro';
+import CustomAuthorityManager from '../components/CustomAuthorityManager';
+import PageHeader from '../components/PageHeader';
+import PageFooter from '../components/PageFooter';
+
+const btsAllAssets = await getCollection('btsAllAssets');
+const testAllAssets = await getCollection('testAllAssets');
+
+const btsAssets = btsAllAssets.map((collection) => collection.data);
+const testAssets = testAllAssets.map((collection) => collection.data);
+---
+
+<Layout title="Bitshares Custom Authorities">
+	<main>
+		<PageHeader client:only="react" page="custom_authorities" backURL="../index.html" />
+		<CustomAuthorityManager
+			client:only="react"
+			_assetsBTS={btsAssets}
+			_assetsTEST={testAssets}
+		/>
+		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/custom_authorities.astro" />
+	</main>
+</Layout>
+
+<style>
+	main {
+		margin: auto;
+		padding: 1rem;
+		width: 800px;
+		max-width: calc(100% - 2rem);
+		color: white;
+		font-size: 20px;
+		line-height: 1.6;
+		min-height: 100vh;
+	}
+</style>

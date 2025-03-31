@@ -1,8 +1,13 @@
-import React, { useState, useEffect, useMemo, useSyncExternalStore } from "react";
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  useSyncExternalStore,
+} from "react";
 import Fuse from "fuse.js";
 import { FixedSizeList as List } from "react-window";
-import { sha256 } from '@noble/hashes/sha2';
-import { bytesToHex as toHex } from '@noble/hashes/utils';
+import { sha256 } from "@noble/hashes/sha2";
+import { bytesToHex as toHex } from "@noble/hashes/utils";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
@@ -13,16 +18,16 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import {
-  Dialog,
-  DialogContent,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 import { $blockList } from "@/stores/blocklist.ts";
 
@@ -34,9 +39,14 @@ import { $blockList } from "@/stores/blocklist.ts";
  * @returns {JSX.Element}
  */
 export default function CollateralDropDownCard(properties) {
-  const { chosenAssets, lendingAsset, marketSearch, storeCallback, chain } = properties;
+  const { chosenAssets, lendingAsset, marketSearch, storeCallback, chain } =
+    properties;
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
-  const blocklist = useSyncExternalStore($blockList.subscribe, $blockList.get, () => true);
+  const blocklist = useSyncExternalStore(
+    $blockList.subscribe,
+    $blockList.get,
+    () => true
+  );
 
   const fuse = useMemo(() => {
     let marketSearchContents;
@@ -46,29 +56,30 @@ export default function CollateralDropDownCard(properties) {
     } else {
       marketSearchContents = marketSearch.filter(
         (asset) =>
-          !chosenAssets.find((chosen) => chosen.symbol === asset.s) && asset.s !== lendingAsset
-      );
-    }
-  
-    if (chain === "bitshares" && blocklist && blocklist.users) {
-      marketSearchContents = marketSearchContents.filter(
-        (asset) => !blocklist.users.includes(
-          toHex(sha256(asset.u.split(" ")[1].replace("(", "").replace(")", "")))
-        ),
+          !chosenAssets.find((chosen) => chosen.symbol === asset.s) &&
+          asset.s !== lendingAsset
       );
     }
 
-    return new Fuse(
-      marketSearchContents,
-      {
-        includeScore: true,
-        keys: [
-          "id",
-          "s", // symbol
-          "u", // `name (id) (ltm?)`
-        ],
-      }
-    );
+    if (chain === "bitshares" && blocklist && blocklist.users) {
+      marketSearchContents = marketSearchContents.filter(
+        (asset) =>
+          !blocklist.users.includes(
+            toHex(
+              sha256(asset.u.split(" ")[1].replace("(", "").replace(")", ""))
+            )
+          )
+      );
+    }
+
+    return new Fuse(marketSearchContents, {
+      includeScore: true,
+      keys: [
+        "id",
+        "s", // symbol
+        "u", // `name (id) (ltm?)`
+      ],
+    });
   }, [chosenAssets, lendingAsset]);
 
   const [thisInput, setThisInput] = useState();
@@ -108,7 +119,7 @@ export default function CollateralDropDownCard(properties) {
               className="mt-5"
               placeholder={_value}
               onKeyPress={(event) => {
-                if (event.key === '.' && event.target.value.includes('.')) {
+                if (event.key === "." && event.target.value.includes(".")) {
                   event.preventDefault();
                 }
                 const regex = /^[0-9]*\.?[0-9]*$/;
@@ -128,7 +139,12 @@ export default function CollateralDropDownCard(properties) {
                 setTimeout(() => {
                   storeCallback(
                     chosenAssets.concat([
-                      { symbol: res.item.s, price: _value, precision: res.item.p, id: res.item.id },
+                      {
+                        symbol: res.item.s,
+                        price: _value,
+                        precision: res.item.p,
+                        id: res.item.id,
+                      },
                     ])
                   );
                 }, 0);
@@ -163,15 +179,11 @@ export default function CollateralDropDownCard(properties) {
             }}
             className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4 text-lg"
           >
-            <Label>
-              {t("AssetDropDownCard:addCollateral")}
-            </Label>
+            <Label>{t("AssetDropDownCard:addCollateral")}</Label>
           </span>
         </DialogTrigger>
       ) : (
-        <Label>
-          {t("AssetDropDownCard:missingLendingAsset")}
-        </Label>
+        <Label>{t("AssetDropDownCard:missingLendingAsset")}</Label>
       )}
       <DialogContent className="sm:max-w-[425px] bg-white">
         <>
@@ -190,7 +202,12 @@ export default function CollateralDropDownCard(properties) {
           />
           {thisResult && thisResult.length ? (
             <>
-              <List height={200} itemCount={thisResult.length} itemSize={70} className="w-full">
+              <List
+                height={200}
+                itemCount={thisResult.length}
+                itemSize={70}
+                className="w-full"
+              >
                 {Row}
               </List>
             </>
