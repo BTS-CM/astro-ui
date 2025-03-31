@@ -24,7 +24,7 @@ import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert.jsx";
 
 // Helper for BigNumber validation
-const isValidIntegerString = (value) => /^-?\d+$/.test(value);
+export const isValidIntegerString = (value) => /^-?\d+$/.test(value);
 
 // --- Basic Inputs ---
 

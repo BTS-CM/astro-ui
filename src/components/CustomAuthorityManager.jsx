@@ -1,4 +1,4 @@
-// src/components/CustomAuthorityManager.jsx - Reverted i18n
+// src/components/CustomAuthorityManager.jsx - Final Full Code
 
 import React, { useState, useEffect, useMemo } from "react";
 import { useSyncExternalStore } from "react";
@@ -6,6 +6,7 @@ import { useStore } from "@nanostores/react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import BigNumber from "bignumber.js"; // Needed for validation/formatting helpers
 import { useTranslation } from "react-i18next";
 // Use standard import
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
@@ -49,38 +50,42 @@ import {
   FormDescription,
 } from "@/components/ui/form";
 
-import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
-import AuthorityAuthEditor from "./CustomAuthority/AuthorityAuthEditor.jsx";
-import AuthorityRestrictionsEditor from "./CustomAuthority/AuthorityRestrictionsEditor.jsx";
-import ExistingAuthoritiesList from "./CustomAuthority/ExistingAuthoritiesList.jsx";
+import DeepLinkDialog from "./common/DeepLinkDialog.jsx"; // Adjusted path
+import AuthorityAuthEditor from "./CustomAuthority/AuthorityAuthEditor.jsx"; // Adjusted path
+import AuthorityRestrictionsEditor from "./CustomAuthority/AuthorityRestrictionsEditor.jsx"; // Adjusted path
+import ExistingAuthoritiesList from "./CustomAuthority/ExistingAuthoritiesList.jsx"; // Adjusted path
 
 // Import helpers from ArgumentInputs for validation/formatting if needed at this level
+import { isValidIntegerString } from "./CustomAuthority/ArgumentInputs.jsx"; // Adjusted path
+// Assume opTypes definitions are correct
+import { opTypes, opData, getArgumentTypeIdentifier } from "@/lib/opTypes";
 
-import { opTypes } from "@/lib/opTypes";
-
-// --- Zod Schemas --- (Remain the same as previous step)
-/* ... Zod Schemas ... */
+// --- Zod Schemas ---
 const idRegex = /^(0|1|2)\.(\d+)\.(\d+)$/;
 const btsAddressRegex = /^BTS[a-zA-Z0-9]{50}$/;
 const btsPublicKeyRegex = /^(BTS|TEST)[a-zA-Z0-9]{50}$/;
+
 const accountAuthSchema = z.object({
   id: z
     .string()
     .regex(idRegex, { message: "Invalid Account ID (e.g., 1.2.x)" }),
   weight: z.number().int().min(1, { message: "Weight must be >= 1" }),
 });
+
 const keyAuthSchema = z.object({
   key: z
     .string()
     .regex(btsPublicKeyRegex, { message: "Invalid Public Key format" }),
   weight: z.number().int().min(1, { message: "Weight must be >= 1" }),
 });
+
 const addressAuthSchema = z.object({
   address: z
     .string()
     .regex(btsAddressRegex, { message: "Invalid Address format" }),
   weight: z.number().int().min(1, { message: "Weight must be >= 1" }),
 });
+
 const authSchema = z
   .object({
     weight_threshold: z
@@ -103,6 +108,7 @@ const authSchema = z
       path: ["weight_threshold"],
     }
   );
+
 const restrictionSchema = z.object({
   member_index: z.number().int().min(0, { message: "Member index >= 0" }),
   restriction_type: z
@@ -111,6 +117,7 @@ const restrictionSchema = z.object({
     .min(0, { message: "Restriction type >= 0" }),
   argument: z.any(),
 });
+
 const createAuthoritySchema = z
   .object({
     enabled: z.boolean().default(true),
@@ -124,6 +131,7 @@ const createAuthoritySchema = z
     message: "Valid To must be after Valid From.",
     path: ["valid_to"],
   });
+
 const updateAuthoritySchema = z
   .object({
     authority_to_update: z.string().regex(/^2\.14\.\d+$/, {
@@ -133,7 +141,7 @@ const updateAuthoritySchema = z
     new_valid_from: z.date().optional(),
     new_valid_to: z.date().optional(),
     new_auth: authSchema.optional(),
-    restrictions_to_remove: z.string().optional(),
+    restrictions_to_remove: z.string().optional(), // Stored as comma-separated string
     restrictions_to_add: z.array(restrictionSchema).optional(),
   })
   .refine(
@@ -160,11 +168,13 @@ const updateAuthoritySchema = z
       path: ["authority_to_update"],
     }
   );
+
 const deleteAuthoritySchema = z.object({
   authority_to_delete: z
     .string()
     .regex(/^2\.14\.\d+$/, { message: "Invalid Authority ID (e.g., 2.14.x)" }),
 });
+// --- End Zod Schemas ---
 
 export default function CustomAuthorityManager(properties) {
   // Use standard hook instance
@@ -194,8 +204,7 @@ export default function CustomAuthorityManager(properties) {
   const [deeplinkData, setDeeplinkData] = useState(null);
   const [submissionError, setSubmissionError] = useState("");
 
-  // --- Fetching Logic --- (Remains the same)
-  /* ... Fetching useEffect ... */
+  // --- Fetching Logic ---
   useEffect(() => {
     let unsubAccount;
     let unsubAuthorities;
@@ -265,9 +274,9 @@ export default function CustomAuthorityManager(properties) {
       if (unsubAuthorities) unsubAuthorities();
     };
   }, [usr, currentNode, _chain, t]);
+  // --- End Fetching Logic ---
 
-  // --- Form Setup --- (Remains the same)
-  /* ... Form setup useForm, useEffect ... */
+  // --- Form Setup --- *** FIXED defaultValues LOGIC ***
   const currentSchema =
     mode === "create"
       ? createAuthoritySchema
@@ -275,42 +284,33 @@ export default function CustomAuthorityManager(properties) {
       ? updateAuthoritySchema
       : deleteAuthoritySchema;
 
-  // Recalculate default values when mode or selection changes
+  // Recalculate default values when mode or selection changes using explicit logic
   const defaultValues = useMemo(() => {
     console.log(
       `Recalculating defaults for mode: ${mode}, selectedId: ${selectedAuthorityId}`
-    ); // Debug log
+    );
     if (mode === "update") {
       const selectedAuth = existingAuthorityDetails.find(
         (auth) => auth?.id === selectedAuthorityId
       );
       if (selectedAuth) {
         console.log("Found selected auth for update:", selectedAuth);
-        // Return the specific defaults object for update mode when an authority is selected
         return {
           authority_to_update: selectedAuth.id,
           new_enabled: selectedAuth.enabled,
-          new_valid_from: new Date(selectedAuth.valid_from + "Z"), // Use ISO string with Z for UTC
+          new_valid_from: new Date(selectedAuth.valid_from + "Z"),
           new_valid_to: new Date(selectedAuth.valid_to + "Z"),
-          // Resetting these on selection change is intended by previous logic
-          new_auth: undefined,
+          new_auth: undefined, // Intentionally reset changes on selection
           restrictions_to_remove: "",
           restrictions_to_add: [],
         };
       } else {
-        console.log("Update mode, but no authority selected or found yet.");
-        // Return minimal object if in update mode but no selection yet
-        // Or just the ID if it's available, matching the Zod schema requirement
         return { authority_to_update: selectedAuthorityId || "" };
       }
     } else if (mode === "delete") {
-      console.log("Delete mode defaults.");
-      // Return the specific defaults object for delete mode
       return { authority_to_delete: selectedAuthorityId || "" };
     } else {
-      // Default to 'create' mode
-      console.log("Create mode defaults.");
-      // Return the specific defaults object for create mode
+      // 'create' mode
       return {
         enabled: true,
         valid_from: new Date(),
@@ -327,14 +327,16 @@ export default function CustomAuthorityManager(properties) {
         restrictions: [],
       };
     }
-  }, [mode, selectedAuthorityId, existingAuthorityDetails]); // Dependencies remain the same
+  }, [mode, selectedAuthorityId, existingAuthorityDetails]);
 
   const form = useForm({
     resolver: zodResolver(currentSchema),
     defaultValues: defaultValues, // Use the calculated defaultValues
   });
+  // Destructure needed methods
+  const { control, handleSubmit, reset, setValue, getValues, watch } = form;
 
-  // Reset form when mode or selected authority changes, using the same logic
+  // Reset form effect using explicit logic
   useEffect(() => {
     console.log(
       `Resetting form for mode: ${mode}, selectedId: ${selectedAuthorityId}`
@@ -350,7 +352,7 @@ export default function CustomAuthorityManager(properties) {
             new_enabled: selectedAuth.enabled,
             new_valid_from: new Date(selectedAuth.valid_from + "Z"),
             new_valid_to: new Date(selectedAuth.valid_to + "Z"),
-            new_auth: undefined, // Intentionally reset these on re-selection/mode change
+            new_auth: undefined,
             restrictions_to_remove: "",
             restrictions_to_add: [],
           }
@@ -375,209 +377,187 @@ export default function CustomAuthorityManager(properties) {
         restrictions: [],
       };
     }
-    form.reset(newDefaults);
+    reset(newDefaults); // Use reset from destructuring
     setSubmissionError("");
-  }, [mode, selectedAuthorityId, existingAuthorityDetails, form.reset]); // form.reset added as dependency
+  }, [mode, selectedAuthorityId, existingAuthorityDetails, reset]); // Add reset dependency
   // --- End Form Setup ---
 
+  // --- Submission Logic ---
+  // Helper to format auth arrays back to blockchain structure
+  const formatAuth = (authData) => {
+    if (!authData) return undefined;
+    // Filter out entries with missing ID/key/address or invalid weight before mapping
+    const account_auths =
+      authData.account_auths
+        ?.filter((a) => a.id && typeof a.weight === "number" && a.weight >= 1)
+        .map((a) => ({ [a.id]: a.weight })) || [];
+    const key_auths =
+      authData.key_auths
+        ?.filter((k) => k.key && typeof k.weight === "number" && k.weight >= 1)
+        .map((k) => ({ [k.key]: k.weight })) || [];
+    const address_auths =
+      authData.address_auths
+        ?.filter(
+          (addr) =>
+            addr.address && typeof addr.weight === "number" && addr.weight >= 1
+        )
+        .map((addr) => ({ [addr.address]: addr.weight })) || [];
+
+    // Only return the auth object if it contains a valid threshold and at least one auth type
+    if (
+      account_auths.length + key_auths.length + address_auths.length > 0 &&
+      authData.weight_threshold >= 1
+    ) {
+      const formatted = { weight_threshold: authData.weight_threshold };
+      if (account_auths.length > 0) formatted.account_auths = account_auths;
+      if (key_auths.length > 0) formatted.key_auths = key_auths;
+      if (address_auths.length > 0) formatted.address_auths = address_auths;
+      return formatted;
+    }
+    return undefined; // Return undefined if auth is invalid/empty
+  };
+
+  // Helper to format restrictions (ensure argument types are correct for serialization)
+  const formatRestrictions = (restrictionsData) => {
+    if (!restrictionsData) return [];
+    console.log("Formatting restrictions:", restrictionsData);
+    return restrictionsData.map((r, index) => {
+      // Validate basic structure
+      if (
+        r.member_index === undefined ||
+        r.member_index < 0 ||
+        r.restriction_type === undefined ||
+        r.restriction_type < 0
+      ) {
+        throw new Error(
+          `Invalid member_index or restriction_type at restriction index ${index}.`
+        );
+      }
+
+      const restrictionType = r.restriction_type; // Use the numeric type code
+      const argumentTypeIdentifier = getArgumentTypeIdentifier(restrictionType);
+      let formattedArgument = r.argument; // Start with the raw form value
+
+      console.log(
+        `Row ${index}: TypeCode=${restrictionType}, TypeID='${argumentTypeIdentifier}', RawArg=`,
+        formattedArgument
+      );
+
+      // --- Argument Type Formatting for Blockchain ---
+      // Perform type validation and conversion based on expected type
+      switch (argumentTypeIdentifier) {
+        case "account_id_type":
+        case "asset_id_type":
+          if (
+            typeof formattedArgument !== "string" ||
+            !idRegex.test(formattedArgument)
+          ) {
+            // Use idRegex from Zod section
+            throw new Error(
+              `Invalid ID format for restriction at index ${index}. Expected format like '1.X.Y'.`
+            );
+          }
+          break;
+        case "string_type":
+          if (typeof formattedArgument !== "string") {
+            console.warn(
+              `Formatting: Expected string for ${argumentTypeIdentifier}, got ${typeof formattedArgument}. Converting.`
+            );
+            formattedArgument = String(formattedArgument ?? ""); // Ensure string
+          }
+          break;
+        case "bool_type":
+          formattedArgument =
+            restrictionType === 9 ? true : Boolean(formattedArgument); // Enforce true for LTM, ensure boolean otherwise
+          break;
+        case "share_type": // Expects string 'int64'
+          if (
+            typeof formattedArgument !== "string" ||
+            !isValidIntegerString(formattedArgument)
+          ) {
+            throw new Error(
+              `Invalid amount format for restriction at index ${index}. Expected integer string, got: '${formattedArgument}'`
+            );
+          }
+          const bnValue = new BigNumber(formattedArgument); // Use BigNumber for range check
+          const minInt64 = new BigNumber("-9223372036854775808");
+          const maxInt64 = new BigNumber("9223372036854775807");
+          if (bnValue.isLessThan(minInt64) || bnValue.isGreaterThan(maxInt64)) {
+            throw new Error(
+              `Amount out of int64 range for restriction at index ${index}.`
+            );
+          }
+          break;
+        case "flat_set_account_id_type":
+        case "flat_set_asset_id_type":
+          if (!Array.isArray(formattedArgument)) {
+            throw new Error(
+              `Invalid list format for restriction at index ${index}. Expected an array.`
+            );
+          }
+          formattedArgument = formattedArgument
+            .filter((id) => typeof id === "string" && idRegex.test(id)) // Validate each ID in the set
+            .sort();
+          break;
+        case "time_point_sec_type":
+          if (formattedArgument instanceof Date && !isNaN(formattedArgument)) {
+            formattedArgument = Math.floor(formattedArgument.getTime() / 1000);
+            if (formattedArgument < 0) {
+              throw new Error(
+                `Invalid date (resulted in negative epoch) for restriction at index ${index}.`
+              );
+            }
+          } else {
+            throw new Error(
+              `Invalid date type/value for restriction at index ${index}. Expected Date object.`
+            );
+          }
+          break;
+        case "void_t":
+          formattedArgument = null; // Use null for void_t serialization
+          break;
+        default:
+          console.error(
+            `Formatting Error: Unhandled argument type identifier: '${argumentTypeIdentifier}' for restriction type ${restrictionType} at index ${index}.`
+          );
+          throw new Error(
+            `Unsupported restriction argument type at index ${index}.`
+          );
+      }
+      // --- End Argument Formatting ---
+
+      const finalRestriction = {
+        member_index: r.member_index,
+        restriction_type: restrictionType,
+        argument: formattedArgument,
+      };
+      console.log(`Row ${index}: Formatted=`, finalRestriction);
+      return finalRestriction;
+    });
+  }; // End formatRestrictions
+
+  // Helper to parse comma-separated indices string to array of numbers
+  const parseIndicesString = (indicesString) => {
+    if (!indicesString || typeof indicesString !== "string") return [];
+    return indicesString
+      .split(",") // Split by comma
+      .map((index) => index.trim()) // Trim whitespace
+      .filter((indexStr) => indexStr.length > 0) // Remove empty strings
+      .map((indexStr) => parseInt(indexStr, 10)) // Parse as integer
+      .filter((num) => !isNaN(num) && num >= 0); // Ensure valid non-negative integers
+  };
+
   const onSubmit = (data) => {
+    // Use namespaced keys for errors
     let operationName = "";
     let finalTrxJSON = {};
-    setSubmissionError(""); // Clear previous errors
-
-    // Helper to format auth arrays back to blockchain structure
-    const formatAuth = (authData) => {
-      if (!authData) return undefined;
-      // Filter out entries with missing ID/key/address or invalid weight before mapping
-      const account_auths =
-        authData.account_auths
-          ?.filter((a) => a.id && typeof a.weight === "number" && a.weight >= 1)
-          .map((a) => ({ [a.id]: a.weight })) || [];
-      const key_auths =
-        authData.key_auths
-          ?.filter(
-            (k) => k.key && typeof k.weight === "number" && k.weight >= 1
-          )
-          .map((k) => ({ [k.key]: k.weight })) || [];
-      const address_auths =
-        authData.address_auths
-          ?.filter(
-            (addr) =>
-              addr.address &&
-              typeof addr.weight === "number" &&
-              addr.weight >= 1
-          )
-          .map((addr) => ({ [addr.address]: addr.weight })) || [];
-
-      // Only return the auth object if it contains a valid threshold and at least one auth type
-      if (
-        account_auths.length + key_auths.length + address_auths.length > 0 &&
-        authData.weight_threshold >= 1
-      ) {
-        const formatted = { weight_threshold: authData.weight_threshold };
-        if (account_auths.length > 0) formatted.account_auths = account_auths;
-        if (key_auths.length > 0) formatted.key_auths = key_auths;
-        if (address_auths.length > 0) formatted.address_auths = address_auths;
-        return formatted;
-      }
-      return undefined; // Return undefined if auth is invalid/empty
-    };
-
-    // Helper to format restrictions (ensure argument types are correct for serialization)
-    const formatRestrictions = (restrictionsData) => {
-      if (!restrictionsData) return [];
-      console.log("Formatting restrictions:", restrictionsData);
-      return restrictionsData.map((r, index) => {
-        // Validate basic structure
-        if (
-          r.member_index === undefined ||
-          r.member_index < 0 ||
-          r.restriction_type === undefined ||
-          r.restriction_type < 0
-        ) {
-          throw new Error(
-            `Invalid member_index or restriction_type at restriction index ${index}.`
-          );
-        }
-
-        const restrictionType = r.restriction_type; // Use the numeric type code
-        const argumentTypeIdentifier =
-          getArgumentTypeIdentifier(restrictionType);
-        let formattedArgument = r.argument; // Start with the raw form value
-
-        console.log(
-          `Row ${index}: TypeCode=${restrictionType}, TypeID='${argumentTypeIdentifier}', RawArg=`,
-          formattedArgument
-        );
-
-        // --- Argument Type Formatting for Blockchain ---
-        // Perform type validation and conversion based on expected type
-        switch (argumentTypeIdentifier) {
-          case "account_id_type":
-          case "asset_id_type":
-            // TODO: Add stricter ID validation regex if needed
-            if (
-              typeof formattedArgument !== "string" ||
-              !idRegex.test(formattedArgument)
-            ) {
-              // Use idRegex from Zod section
-              throw new Error(
-                `Invalid ID format for restriction at index ${index}. Expected format like '1.X.Y'.`
-              );
-            }
-            // Already a string, no conversion needed if format is okay
-            break;
-          case "string_type":
-            if (typeof formattedArgument !== "string") {
-              console.warn(
-                `Formatting: Expected string for ${argumentTypeIdentifier}, got ${typeof formattedArgument}. Converting.`
-              );
-              formattedArgument = String(formattedArgument ?? ""); // Ensure string
-            }
-            break;
-          case "bool_type":
-            formattedArgument =
-              restrictionType === 9 ? true : Boolean(formattedArgument); // Enforce true for LTM, ensure boolean otherwise
-            break;
-          case "share_type": // Expects string 'int64'
-            if (
-              typeof formattedArgument !== "string" ||
-              !isValidIntegerString(formattedArgument)
-            ) {
-              throw new Error(
-                `Invalid amount format for restriction at index ${index}. Expected integer string, got: '${formattedArgument}'`
-              );
-            }
-            // Validate range (approximate check, BigNumber handled input)
-            const bnValue = new BigNumber(formattedArgument);
-            const minInt64 = new BigNumber("-9223372036854775808");
-            const maxInt64 = new BigNumber("9223372036854775807");
-            if (
-              bnValue.isLessThan(minInt64) ||
-              bnValue.isGreaterThan(maxInt64)
-            ) {
-              throw new Error(
-                `Amount out of int64 range for restriction at index ${index}.`
-              );
-            }
-            // Argument is already the correct integer string
-            break;
-          case "flat_set_account_id_type":
-          case "flat_set_asset_id_type":
-            if (!Array.isArray(formattedArgument)) {
-              throw new Error(
-                `Invalid list format for restriction at index ${index}. Expected an array.`
-              );
-            }
-            // Filter invalid IDs and ensure sorted string array
-            formattedArgument = formattedArgument
-              .filter((id) => typeof id === "string" && idRegex.test(id)) // Use idRegex for validation
-              .sort();
-            // Optional: Check for duplicates? Core likely handles it.
-            break;
-          case "time_point_sec_type":
-            if (
-              formattedArgument instanceof Date &&
-              !isNaN(formattedArgument)
-            ) {
-              formattedArgument = Math.floor(
-                formattedArgument.getTime() / 1000
-              ); // Convert valid Date to epoch seconds
-              if (formattedArgument < 0) {
-                // Sanity check epoch
-                throw new Error(
-                  `Invalid date (resulted in negative epoch) for restriction at index ${index}.`
-                );
-              }
-            } else {
-              throw new Error(
-                `Invalid date type/value for restriction at index ${index}. Expected Date object.`
-              );
-            }
-            break;
-          case "void_t":
-            formattedArgument = null; // Use null for void_t serialization
-            break;
-          default: // 'unknown' or any unhandled types
-            console.error(
-              `Formatting Error: Unhandled argument type identifier: '${argumentTypeIdentifier}' for restriction type ${restrictionType} at index ${index}.`
-            );
-            throw new Error(
-              `Unsupported restriction argument type at index ${index}.`
-            );
-        }
-        // --- End Argument Formatting ---
-
-        const finalRestriction = {
-          member_index: r.member_index,
-          restriction_type: restrictionType,
-          argument: formattedArgument,
-        };
-        console.log(`Row ${index}: Formatted=`, finalRestriction);
-        return finalRestriction;
-      });
-    }; // End formatRestrictions
-
-    // Helper to parse comma-separated indices string to array of numbers
-    const parseIndicesString = (indicesString) => {
-      if (!indicesString || typeof indicesString !== "string") return [];
-      return indicesString
-        .split(",") // Split by comma
-        .map((index) => index.trim()) // Trim whitespace
-        .filter((indexStr) => indexStr.length > 0) // Remove empty strings from double commas etc.
-        .map((indexStr) => parseInt(indexStr, 10)) // Parse as integer
-        .filter((num) => !isNaN(num) && num >= 0); // Ensure valid non-negative integers
-    };
-
+    setSubmissionError("");
     try {
-      // Wrap main submission logic in try/catch to catch formatting errors
       if (mode === "create") {
         operationName = "custom_authority_create";
         const formattedAuth = formatAuth(data.auth);
-        // Ensure auth is valid before proceeding
-        if (!formattedAuth) {
+        if (!formattedAuth)
           throw new Error(t("CustomAuthority:errorAuthMissing"));
-        }
         finalTrxJSON = {
           fee: { amount: 0, asset_id: "1.3.0" },
           account: usr.id,
@@ -585,8 +565,8 @@ export default function CustomAuthorityManager(properties) {
           valid_from: Math.floor(data.valid_from.getTime() / 1000),
           valid_to: Math.floor(data.valid_to.getTime() / 1000),
           operation_type: data.operation_type,
-          auth: formattedAuth, // Use validated and formatted auth
-          restrictions: formatRestrictions(data.restrictions || []), // Format restrictions
+          auth: formattedAuth,
+          restrictions: formatRestrictions(data.restrictions || []),
           extensions: {},
         };
       } else if (mode === "update") {
@@ -600,72 +580,54 @@ export default function CustomAuthorityManager(properties) {
         const originalAuth = existingAuthorityDetails.find(
           (a) => a?.id === data.authority_to_update
         );
-        if (!originalAuth) {
+        if (!originalAuth)
           throw new Error(t("CustomAuthority:errorOriginalAuthMissing"));
-        }
 
-        // Only include fields if they have changed
+        // Only include changed fields
         if (
           data.new_enabled !== undefined &&
           data.new_enabled !== originalAuth.enabled
-        ) {
+        )
           updateData.new_enabled = data.new_enabled;
-        }
         if (
           data.new_valid_from instanceof Date &&
           !isNaN(data.new_valid_from) &&
           Math.floor(data.new_valid_from.getTime() / 1000) !==
             originalAuth.valid_from
-        ) {
+        )
           updateData.new_valid_from = Math.floor(
             data.new_valid_from.getTime() / 1000
           );
-        }
         if (
           data.new_valid_to instanceof Date &&
           !isNaN(data.new_valid_to) &&
           Math.floor(data.new_valid_to.getTime() / 1000) !==
             originalAuth.valid_to
-        ) {
+        )
           updateData.new_valid_to = Math.floor(
             data.new_valid_to.getTime() / 1000
           );
-        }
-        // Format new_auth only if it was provided in the form data
         if (data.new_auth) {
           const formattedNewAuth = formatAuth(data.new_auth);
-          // Include only if validly formatted (formatAuth returns undefined otherwise)
-          if (formattedNewAuth) {
-            // TODO: Optionally compare formattedNewAuth with originalAuth.auth (requires mapping original too)
-            // For simplicity, include if validly formatted and *provided* by user input
-            updateData.new_auth = formattedNewAuth;
-          } else {
-            // Throw error if user provided auth data but it was invalid after formatting
-            throw new Error(t("CustomAuthority:errorAuthMissing")); // Re-use error message
-          }
+          if (formattedNewAuth) updateData.new_auth = formattedNewAuth;
+          else throw new Error(t("CustomAuthority:errorAuthMissing"));
         }
-
         const restrictionsToRemove = parseIndicesString(
           data.restrictions_to_remove
         );
-        if (restrictionsToRemove.length > 0) {
+        if (restrictionsToRemove.length > 0)
           updateData.restrictions_to_remove = restrictionsToRemove;
-        }
-        // Format restrictions_to_add only if it exists and has items
-        if (data.restrictions_to_add && data.restrictions_to_add.length > 0) {
+        if (data.restrictions_to_add && data.restrictions_to_add.length > 0)
           updateData.restrictions_to_add = formatRestrictions(
             data.restrictions_to_add
           );
-        }
 
-        // Check if anything was actually added to updateData
         const updateKeys = Object.keys(updateData).filter(
           (k) =>
             !["fee", "account", "authority_to_update", "extensions"].includes(k)
         );
-        if (updateKeys.length === 0) {
+        if (updateKeys.length === 0)
           throw new Error(t("CustomAuthority:errorNothingToUpdate"));
-        }
         finalTrxJSON = updateData;
       } else if (mode === "delete") {
         operationName = "custom_authority_delete";
@@ -676,10 +638,9 @@ export default function CustomAuthorityManager(properties) {
           extensions: {},
         };
       } else {
-        throw new Error("Invalid mode selected.");
+        throw new Error("Invalid mode.");
       }
 
-      // If formatting/validation passed, proceed to show deeplink
       console.log("Prepared Deeplink Data:", { operationName, finalTrxJSON });
       setDeeplinkData({
         operationNames: [operationName],
@@ -691,11 +652,10 @@ export default function CustomAuthorityManager(properties) {
       });
       setShowDeeplink(true);
     } catch (error) {
-      // Catch errors from formatting helpers or logic above
-      console.error("Error preparing transaction:", error);
+      console.error("Submit error:", error);
       setSubmissionError(error.message || t("CustomAuthority:errorFormatting"));
     }
-  }; // End onSubmit wrapper
+  };
   // --- End Submission Logic ---
 
   return (
@@ -764,8 +724,9 @@ export default function CustomAuthorityManager(properties) {
           )}
 
           <Form {...form}>
+            {/* Pass handleSubmit directly */}
             <form
-              onSubmit={form.handleSubmit(onSubmit)}
+              onSubmit={handleSubmit(onSubmit)}
               className={`space-y-6 ${loadingAuthorities ? "mt-4" : ""}`}
             >
               {/* Delete Mode */}
@@ -787,8 +748,9 @@ export default function CustomAuthorityManager(properties) {
                 (mode === "update" && selectedAuthorityId)) && (
                 <>
                   <Card className="p-4 space-y-4">
+                    {/* Fields use control from destructuring */}
                     <FormField
-                      control={form.control}
+                      control={control}
                       name={mode === "update" ? "new_enabled" : "enabled"}
                       render={({ field }) => (
                         <FormItem className="flex flex-row items-center space-x-3 space-y-0 rounded-md border p-3 shadow-sm">
@@ -813,7 +775,7 @@ export default function CustomAuthorityManager(properties) {
                     />
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <FormField
-                        control={form.control}
+                        control={control}
                         name={
                           mode === "update" ? "new_valid_from" : "valid_from"
                         }
@@ -834,7 +796,7 @@ export default function CustomAuthorityManager(properties) {
                         )}
                       />
                       <FormField
-                        control={form.control}
+                        control={control}
                         name={mode === "update" ? "new_valid_to" : "valid_to"}
                         render={({ field }) => (
                           <FormItem>
@@ -855,7 +817,7 @@ export default function CustomAuthorityManager(properties) {
                     </div>
                     {mode === "create" && (
                       <FormField
-                        control={form.control}
+                        control={control}
                         name="operation_type"
                         render={({ field }) => (
                           <FormItem>
@@ -901,16 +863,21 @@ export default function CustomAuthorityManager(properties) {
                   </Card>
 
                   <Card className="p-4">
+                    {/* *** Pass control, setValue, getValues to refactored editor *** */}
                     <AuthorityAuthEditor
-                      control={form.control}
+                      control={control}
                       authFieldName={mode === "update" ? "new_auth" : "auth"}
-                      usrChain={usr.chain} /* t prop removed */
+                      usrChain={usr.chain}
+                      setValue={setValue}
+                      getValues={getValues}
+                      // t prop removed
                     />
                   </Card>
 
                   <Card className="p-4">
+                    {/* Pass control and watch to restrictions editor */}
                     <AuthorityRestrictionsEditor
-                      control={form.control}
+                      control={control}
                       restrictionsFieldName={
                         mode === "update"
                           ? "restrictions_to_add"
@@ -918,18 +885,19 @@ export default function CustomAuthorityManager(properties) {
                       }
                       operationTypeValue={
                         mode === "create"
-                          ? form.watch("operation_type")
+                          ? watch("operation_type")
                           : existingAuthorityDetails.find(
                               (auth) => auth?.id === selectedAuthorityId
                             )?.operation_type
                       }
                       assets={assets}
-                      chain={_chain} /* t prop removed */
+                      chain={_chain}
+                      // t prop removed
                     />
                     {mode === "update" && (
                       <div className="pt-4">
                         <FormField
-                          control={form.control}
+                          control={control}
                           name="restrictions_to_remove"
                           render={({ field }) => (
                             <FormItem>
