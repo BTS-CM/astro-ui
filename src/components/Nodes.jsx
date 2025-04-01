@@ -143,7 +143,8 @@ export default function Nodes(properties) {
                       nodes[usr.chain].findIndex(
                         (node) => node.url === inputURL
                       ) !== -1 ||
-                      !/^wss?:\/\/[a-zA-Z0-9.-]+\/ws$/.test(inputURL)
+                      !/^wss?:\/\/[a-zA-Z0-9.:\/\-]+$/.test(inputURL) ||
+                      inputURL.includes("..")
                     ) {
                       return;
                     }
