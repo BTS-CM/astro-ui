@@ -33,6 +33,9 @@ import {
   createObjectStore,
   createEveryObjectStore,
 } from "@/nanoeffects/Objects.ts";
+
+import { createUsersCoreBalanceStore } from "@/nanoeffects/UserBalances.js";
+
 import { $blockList } from "@/stores/blocklist.ts";
 import { humanReadableFloat, debounce } from "@/lib/common";
 import ExternalLink from "./common/ExternalLink.jsx";
@@ -268,31 +271,8 @@ export default function Witnesses(properties) {
     dynamicGlobalParameters,
   ]);
 
-  const sortedActiveWitnesses = useMemo(() => {
-    let active = processedWitnesses.filter((w) => w.active);
-    active.sort((a, b) => {
-      if (sortKey === "rank") return b.total_votes - a.total_votes; // Rank is derived from votes
-      if (sortKey === "name") return a.name.localeCompare(b.name);
-      if (sortKey === "votes") return b.total_votes - a.total_votes;
-      if (sortKey === "missed") return a.total_missed - b.total_missed;
-      return 0;
-    });
-
-    // Assign ranks based on sorted votes
-    active = active.map((witness, index) => ({ ...witness, rank: index + 1 }));
-
-    if (sortKey !== "rank" && sortDirection === "desc") {
-      active.reverse();
-    } else if (sortKey === "rank" && sortDirection === "desc") {
-      // Rank is inherently descending by votes, so reverse for 'asc' rank sort
-      active.reverse();
-    }
-
-    return active;
-  }, [processedWitnesses, sortKey, sortDirection]);
-
-  const sortedStandbyWitnesses = useMemo(() => {
-    let standby = processedWitnesses.filter((w) => !w.active);
+  const sortedWitnesses = useMemo(() => {
+    let standby = processedWitnesses;
     standby.sort((a, b) => {
       if (sortKey === "name") return a.name.localeCompare(b.name);
       if (sortKey === "votes" || sortKey === "rank")
@@ -322,8 +302,8 @@ export default function Witnesses(properties) {
     []
   );
 
-  const WitnessRow = ({ data, index, style }) => {
-    const witness = data[index];
+  const WitnessRow = ({ index, style }) => {
+    const witness = sortedWitnesses[index];
     if (!witness) return null;
 
     let missedClass = "text-green-600"; // Default (low missed)
@@ -338,12 +318,6 @@ export default function Witnesses(properties) {
         <Card className="mb-1 hover:bg-secondary/10">
           <CardContent className="pt-3 pb-3 text-sm">
             <div className="grid grid-cols-12 gap-2 items-center">
-              {witness.active && (
-                <div className="col-span-1 text-center">{witness.rank}</div>
-              )}
-              {!witness.active && (
-                <div className="col-span-1 text-center">-</div>
-              )}
               <div className="col-span-3 flex items-center">
                 <Avatar
                   size={30}
@@ -421,13 +395,6 @@ export default function Witnesses(properties) {
     <div className="w-full">
       <div className="grid grid-cols-12 gap-2 p-2 bg-gray-100 rounded-t-md font-semibold text-sm sticky top-0 z-10">
         <div
-          className="col-span-1 text-center cursor-pointer"
-          onClick={() => handleSort("rank")}
-        >
-          {t("Witnesses:rank")}{" "}
-          {sortKey === "rank" ? (sortDirection === "asc" ? "▲" : "▼") : ""}
-        </div>
-        <div
           className="col-span-3 cursor-pointer"
           onClick={() => handleSort("name")}
         >
@@ -443,6 +410,7 @@ export default function Witnesses(properties) {
           {t("Witnesses:missed")}{" "}
           {sortKey === "missed" ? (sortDirection === "asc" ? "▲" : "▼") : ""}
         </div>
+        <div className="col-span-1">{t("Witnesses:balance")} (BTS)</div>
         <div
           className="col-span-3 text-right pr-3 cursor-pointer"
           onClick={() => handleSort("votes")}
@@ -454,10 +422,9 @@ export default function Witnesses(properties) {
       <ScrollArea className="h-[500px]">
         <List
           height={500}
-          itemCount={witnesses.length}
+          itemCount={sortedWitnesses.length}
           itemSize={65} // Adjust as needed
           width="100%"
-          itemData={witnesses}
         >
           {WitnessRow}
         </List>
@@ -484,34 +451,7 @@ export default function Witnesses(properties) {
               <Skeleton className="h-64 w-full" />
             </div>
           ) : (
-            <Tabs defaultValue="active" className="w-full">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="active">
-                  {t("Witnesses:active", {
-                    count: sortedActiveWitnesses.length,
-                  })}
-                </TabsTrigger>
-                <TabsTrigger value="standby">
-                  {t("Witnesses:standby", {
-                    count: sortedStandbyWitnesses.length,
-                  })}
-                </TabsTrigger>
-              </TabsList>
-              <TabsContent value="active">
-                {sortedActiveWitnesses.length > 0 ? (
-                  renderList(sortedActiveWitnesses)
-                ) : (
-                  <p className="text-center p-4">{t("Witnesses:noActive")}</p>
-                )}
-              </TabsContent>
-              <TabsContent value="standby">
-                {sortedStandbyWitnesses.length > 0 ? (
-                  renderList(sortedStandbyWitnesses)
-                ) : (
-                  <p className="text-center p-4">{t("Witnesses:noStandby")}</p>
-                )}
-              </TabsContent>
-            </Tabs>
+            renderList(sortedStandbyWitnesses)
           )}
         </CardContent>
       </Card>

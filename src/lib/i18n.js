@@ -66,7 +66,6 @@ const pages = [
   "HTLC",
   "HTLCCreate",
   "Barter",
-  "ChainParameters",
   "GovernanceActions",
   "WorkerCreate",
   "CommitteeMembers",

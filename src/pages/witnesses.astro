@@ -1,0 +1,27 @@
+---
+import { getCollection } from 'astro:content';
+
+import Layout from '../layouts/Layout.astro';
+import PageHeader from '../components/PageHeader.jsx';
+import PageFooter from '../components/PageFooter.jsx';
+import Witnesses from '../components/Witnesses.jsx';
+
+const btsAllAssets = await getCollection('btsAllAssets');
+const testAllAssets = await getCollection('testAllAssets');
+
+const btsAssets = btsAllAssets.map(collection => collection.data);
+const testAssets = testAllAssets.map(collection => collection.data);
+
+const page = "witnesses";
+---
+<Layout title="Bitshares Witnesses">
+    <main>
+        <PageHeader page={page} client:only="react" />
+        <Witnesses
+            client:only="react"
+            _assetsBTS={btsAssets}
+            _assetsTEST={testAssets}
+        />
+         <PageFooter sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/witnesses.astro" client:only="react" />
+    </main>
+</Layout>

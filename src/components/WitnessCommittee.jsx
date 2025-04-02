@@ -205,9 +205,6 @@ export default function GovernanceActions(properties) {
                           {t("GovernanceActions:registerWitness")}
                         </h3>
                         <div className="space-y-2">
-                          <Label htmlFor="witnessUrl">
-                            {t("GovernanceActions:urlLabel")}
-                          </Label>
                           <HoverInfo
                             content={t("GovernanceActions:urlInfo")}
                             header={t("GovernanceActions:urlInfoHeader")}
@@ -220,9 +217,6 @@ export default function GovernanceActions(properties) {
                           />
                         </div>
                         <div className="space-y-2">
-                          <Label htmlFor="witnessSigningKey">
-                            {t("GovernanceActions:signingKeyLabel")}
-                          </Label>
                           <HoverInfo
                             content={t("GovernanceActions:signingKeyInfo")}
                             header={t("GovernanceActions:signingKeyInfoHeader")}
@@ -263,9 +257,6 @@ export default function GovernanceActions(properties) {
                         : t("GovernanceActions:notCurrentlyWitness")}
                     </p>
                     <div className="space-y-2">
-                      <Label htmlFor="newWitnessUrl">
-                        {t("GovernanceActions:newUrlLabel")}
-                      </Label>
                       <HoverInfo
                         content={t("GovernanceActions:newUrlInfo")}
                         header={t("GovernanceActions:newUrlInfoHeader")}
@@ -279,9 +270,6 @@ export default function GovernanceActions(properties) {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="newWitnessSigningKey">
-                        {t("GovernanceActions:newSigningKeyLabel")}
-                      </Label>
                       <HoverInfo
                         content={t("GovernanceActions:newSigningKeyInfo")}
                         header={t("GovernanceActions:newSigningKeyInfoHeader")}
@@ -328,9 +316,6 @@ export default function GovernanceActions(properties) {
                           {t("GovernanceActions:registerCommittee")}
                         </h3>
                         <div className="space-y-2">
-                          <Label htmlFor="committeeUrl">
-                            {t("GovernanceActions:urlLabel")}
-                          </Label>
                           <HoverInfo
                             content={t("GovernanceActions:urlInfo")}
                             header={t("GovernanceActions:urlInfoHeader")}
@@ -369,9 +354,6 @@ export default function GovernanceActions(properties) {
                         : t("GovernanceActions:notCurrentlyCommittee")}
                     </p>
                     <div className="space-y-2">
-                      <Label htmlFor="newCommitteeUrl">
-                        {t("GovernanceActions:newUrlLabel")}
-                      </Label>
                       <HoverInfo
                         content={t("GovernanceActions:newUrlInfo")}
                         header={t("GovernanceActions:newUrlInfoHeader")}

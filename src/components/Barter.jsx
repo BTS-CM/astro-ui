@@ -795,10 +795,10 @@ export default function Barter(properties) {
                     checked={showEscrow}
                     onCheckedChange={setShowEscrow}
                   />
-                  <Label htmlFor="escrow-checkbox" className="text-base">
-                    {t("Barter:useEscrow")}
-                  </Label>
-                  <HoverInfo content={t("Barter:escrowInfo")} />
+                  <HoverInfo
+                    content={t("Barter:escrowInfo")}
+                    header={t("Barter:useEscrow")}
+                  />
                 </div>
               </div>
 
@@ -890,19 +890,19 @@ export default function Barter(properties) {
                         checked={sendToEscrowFirst}
                         onCheckedChange={setSendToEscrowFirst}
                       />
-                      <Label htmlFor="send-to-escrow-first">
-                        {t("Barter:sendToEscrowFirst")}
-                      </Label>
-                      <HoverInfo content={t("Barter:sendToEscrowFirstInfo")} />
+                      <HoverInfo
+                        content={t("Barter:sendToEscrowFirstInfo")}
+                        header={t("Barter:sendToEscrowFirst")}
+                      />
                     </div>
                   </div>
 
                   {/* Escrow Payment */}
                   <div className="space-y-2">
-                    <Label htmlFor="escrow-payment">
-                      {t("Barter:escrowPayment")}
-                    </Label>
-                    <HoverInfo content={t("Barter:escrowPaymentInfo")} />
+                    <HoverInfo
+                      content={t("Barter:escrowPaymentInfo")}
+                      header={t("Barter:escrowPayment")}
+                    />
                     <Input
                       id="escrow-payment"
                       type="number"

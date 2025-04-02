@@ -20,12 +20,9 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar } from "@/components/Avatar.tsx"; // Re-using existing component
-import { Avatar as Av, AvatarFallback } from "@/components/ui/avatar"; // Shadcn Avatar
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
 import { $currentUser } from "@/stores/users.ts";
@@ -37,11 +34,6 @@ import {
 import { $blockList } from "@/stores/blocklist.ts";
 import { humanReadableFloat, debounce } from "@/lib/common";
 import ExternalLink from "./common/ExternalLink.jsx";
-
-const activeTabStyle = {
-  backgroundColor: "#252526",
-  color: "white",
-};
 
 export default function CommitteeMembers(properties) {
   const { t } = useTranslation(locale.get(), { i18n: i18nInstance });
@@ -66,21 +58,14 @@ export default function CommitteeMembers(properties) {
 
   useInitCache(_chain ?? "bitshares", []);
 
-  const { _assetsBTS, _assetsTEST } = properties; // Assuming core asset might be needed for fee display later if added
-  const assets = useMemo(() => {
-    if (_chain && (_assetsBTS || _assetsTEST)) {
-      return _chain === "bitshares" ? _assetsBTS : _assetsTEST;
-    }
-    return [];
-  }, [_assetsBTS, _assetsTEST, _chain]);
-
-  const [globalParameters, setGlobalParameters] = useState(null);
   const [allCommitteeMembers, setAllCommitteeMembers] = useState([]);
   const [committeeAccounts, setCommitteeAccounts] = useState({}); // Store account details keyed by account ID
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("");
-  const [sortKey, setSortKey] = useState("rank"); // rank, name, votes
-  const [sortDirection, setSortDirection] = useState("asc"); // asc, desc
+  const [sortKey, setSortKey] = useState("votes"); // name, votes
+  const [sortDirection, setSortDirection] = useState("desc"); // asc, desc
+
+  const [activeCommitteeMembers, setActiveCommitteeMembers] = useState(null);
 
   // 1. Fetch Global Parameters (for active committee list)
   useEffect(() => {
@@ -94,7 +79,7 @@ export default function CommitteeMembers(properties) {
       unsubscribe = globalParamsStore.subscribe(
         ({ data, error, loading: gpLoading }) => {
           if (data && !error && !gpLoading && data[0]) {
-            setGlobalParameters(data[0].parameters);
+            setActiveCommitteeMembers(data[0].active_committee_members);
           } else if (error) {
             console.error("Error fetching global parameters:", error);
           }
@@ -185,15 +170,6 @@ export default function CommitteeMembers(properties) {
     };
   }, [usr, currentNode, allCommitteeMembers]); // depends on allCommitteeMembers
 
-  // Processing and Filtering Logic
-  const activeCommitteeIds = useMemo(
-    () =>
-      globalParameters
-        ? new Set(globalParameters.active_committee_members)
-        : new Set(),
-    [globalParameters]
-  );
-
   const processedMembers = useMemo(() => {
     return allCommitteeMembers
       .map((cm) => {
@@ -204,49 +180,29 @@ export default function CommitteeMembers(properties) {
           account_id: cm.committee_member_account,
           name: account.name,
           total_votes: parseInt(cm.total_votes, 10), // Ensure votes are numbers for sorting
-          active: activeCommitteeIds.has(cm.id),
+          active: activeCommitteeMembers.includes(cm.id),
         };
       })
       .filter(Boolean) // Remove null entries
       .filter((member) =>
         member.name.toLowerCase().includes(filter.toLowerCase())
       ); // Apply filter
-  }, [allCommitteeMembers, committeeAccounts, activeCommitteeIds, filter]);
+  }, [allCommitteeMembers, committeeAccounts, activeCommitteeMembers, filter]);
 
-  const sortedActiveMembers = useMemo(() => {
-    let active = processedMembers.filter((m) => m.active);
-    active.sort((a, b) => {
-      if (sortKey === "rank") return b.total_votes - a.total_votes; // Rank is derived from votes
-      if (sortKey === "name") return a.name.localeCompare(b.name);
-      if (sortKey === "votes") return b.total_votes - a.total_votes;
-      return 0;
+  const sortedMembers = useMemo(() => {
+    const sorted = [...processedMembers].sort((a, b) => {
+      if (sortKey === "name") {
+        return sortDirection === "asc"
+          ? a.name.localeCompare(b.name)
+          : b.name.localeCompare(a.name);
+      } else if (sortKey === "votes") {
+        return sortDirection === "asc"
+          ? a.total_votes - b.total_votes
+          : b.total_votes - a.total_votes;
+      }
+      return 0; // Default case (shouldn't happen)
     });
-
-    // Assign ranks based on sorted votes
-    active = active.map((member, index) => ({ ...member, rank: index + 1 }));
-
-    if (sortKey !== "rank" && sortDirection === "desc") {
-      active.reverse(); // Apply desc sort for name/votes if needed
-    } else if (sortKey === "rank" && sortDirection === "desc") {
-      // Rank is inherently descending by votes, so reverse for 'asc' rank sort
-      active.reverse();
-    }
-
-    return active;
-  }, [processedMembers, sortKey, sortDirection]);
-
-  const sortedInactiveMembers = useMemo(() => {
-    let inactive = processedMembers.filter((m) => !m.active);
-    inactive.sort((a, b) => {
-      if (sortKey === "name") return a.name.localeCompare(b.name);
-      if (sortKey === "votes" || sortKey === "rank")
-        return b.total_votes - a.total_votes; // Sort inactive by votes too
-      return 0;
-    });
-    if (sortDirection === "desc") {
-      inactive.reverse();
-    }
-    return inactive;
+    return sorted;
   }, [processedMembers, sortKey, sortDirection]);
 
   const handleSort = (key) => {
@@ -271,16 +227,10 @@ export default function CommitteeMembers(properties) {
 
     return (
       <div style={style} key={member.id}>
-        <Card className="mb-1 hover:bg-secondary/10">
+        <Card className={`mb-1 ${member.active ? "bg-green-100" : ""}`}>
           <CardContent className="pt-3 pb-3 text-sm">
-            <div className="grid grid-cols-12 gap-2 items-center">
-              {member.active && (
-                <div className="col-span-1 text-center">{member.rank}</div>
-              )}
-              {!member.active && (
-                <div className="col-span-1 text-center">-</div>
-              )}
-              <div className="col-span-4 flex items-center">
+            <div className="grid grid-cols-3 gap-2 items-center">
+              <div className="flex items-center">
                 <Avatar
                   size={30}
                   name={member.name}
@@ -296,7 +246,7 @@ export default function CommitteeMembers(properties) {
                 />
                 <span className="ml-2">{member.name}</span>
               </div>
-              <div className="col-span-3">
+              <div>
                 <ExternalLink
                   classnamecontents="text-blue-500 hover:text-purple-500"
                   type="text"
@@ -316,7 +266,7 @@ export default function CommitteeMembers(properties) {
                 />
                 )
               </div>
-              <div className="col-span-4 text-right pr-3">
+              <div className="text-right pr-3">
                 {humanReadableFloat(member.total_votes, 5).toLocaleString(
                   undefined,
                   { minimumFractionDigits: 0 }
@@ -332,24 +282,14 @@ export default function CommitteeMembers(properties) {
 
   const renderList = (members) => (
     <div className="w-full">
-      <div className="grid grid-cols-12 gap-2 p-2 bg-gray-100 rounded-t-md font-semibold text-sm sticky top-0 z-10">
-        <div
-          className="col-span-1 text-center cursor-pointer"
-          onClick={() => handleSort("rank")}
-        >
-          {t("CommitteeMembers:rank")}{" "}
-          {sortKey === "rank" ? (sortDirection === "asc" ? "▲" : "▼") : ""}
-        </div>
-        <div
-          className="col-span-4 cursor-pointer"
-          onClick={() => handleSort("name")}
-        >
+      <div className="grid grid-cols-3 gap-2 p-2 bg-gray-100 rounded-t-md font-semibold text-sm sticky top-0 z-10">
+        <div className="cursor-pointer" onClick={() => handleSort("name")}>
           {t("CommitteeMembers:name")}{" "}
           {sortKey === "name" ? (sortDirection === "asc" ? "▲" : "▼") : ""}
         </div>
-        <div className="col-span-3">{t("CommitteeMembers:ids")}</div>
+        <div>{t("CommitteeMembers:ids")}</div>
         <div
-          className="col-span-4 text-right pr-3 cursor-pointer"
+          className="text-right pr-3 cursor-pointer"
           onClick={() => handleSort("votes")}
         >
           {t("CommitteeMembers:votes")}{" "}
@@ -389,38 +329,7 @@ export default function CommitteeMembers(properties) {
               <Skeleton className="h-64 w-full" />
             </div>
           ) : (
-            <Tabs defaultValue="active" className="w-full">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="active">
-                  {t("CommitteeMembers:active", {
-                    count: sortedActiveMembers.length,
-                  })}
-                </TabsTrigger>
-                <TabsTrigger value="inactive">
-                  {t("CommitteeMembers:inactive", {
-                    count: sortedInactiveMembers.length,
-                  })}
-                </TabsTrigger>
-              </TabsList>
-              <TabsContent value="active">
-                {sortedActiveMembers.length > 0 ? (
-                  renderList(sortedActiveMembers)
-                ) : (
-                  <p className="text-center p-4">
-                    {t("CommitteeMembers:noActive")}
-                  </p>
-                )}
-              </TabsContent>
-              <TabsContent value="inactive">
-                {sortedInactiveMembers.length > 0 ? (
-                  renderList(sortedInactiveMembers)
-                ) : (
-                  <p className="text-center p-4">
-                    {t("CommitteeMembers:noInactive")}
-                  </p>
-                )}
-              </TabsContent>
-            </Tabs>
+            renderList(sortedMembers)
           )}
         </CardContent>
       </Card>

@@ -43,6 +43,8 @@ import { blockchainFloat } from "@/lib/common"; // Assuming blockchainFloat is a
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
 import HoverInfo from "@/components/common/HoverInfo.tsx";
 
+import { humanReadableFloat } from "@/lib/common";
+
 // Constants from config.hpp.txt & worker.cpp.txt
 const MAX_WORKER_NAME_LENGTH = 63; // [cite: 87, 110]
 const MAX_URL_LENGTH = 127; // [cite: 87, 110]
@@ -291,9 +293,6 @@ export default function WorkerCreate(properties) {
             >
               {/* Worker Name */}
               <div className="space-y-2">
-                <Label htmlFor="workerName">
-                  {t("WorkerCreate:nameLabel")}
-                </Label>
                 <HoverInfo
                   content={t("WorkerCreate:nameInfo")}
                   header={t("WorkerCreate:nameInfoHeader")}
@@ -318,7 +317,6 @@ export default function WorkerCreate(properties) {
 
               {/* URL */}
               <div className="space-y-2">
-                <Label htmlFor="workerUrl">{t("WorkerCreate:urlLabel")}</Label>
                 <HoverInfo
                   content={t("WorkerCreate:urlInfo")}
                   header={t("WorkerCreate:urlInfoHeader")}
@@ -342,7 +340,6 @@ export default function WorkerCreate(properties) {
               {/* Dates */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>{t("WorkerCreate:startDateLabel")}</Label>
                   <HoverInfo
                     content={t("WorkerCreate:startDateInfo")}
                     header={t("WorkerCreate:startDateInfoHeader")}
@@ -374,7 +371,6 @@ export default function WorkerCreate(properties) {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>{t("WorkerCreate:endDateLabel")}</Label>
                   <HoverInfo
                     content={t("WorkerCreate:endDateInfo")}
                     header={t("WorkerCreate:endDateInfoHeader")}
@@ -405,11 +401,6 @@ export default function WorkerCreate(properties) {
 
               {/* Daily Pay */}
               <div className="space-y-2">
-                <Label htmlFor="dailyPay">
-                  {t("WorkerCreate:dailyPayLabel", {
-                    coreSymbol: coreAsset?.symbol || "BTS",
-                  })}
-                </Label>
                 <HoverInfo
                   content={t("WorkerCreate:dailyPayInfo")}
                   header={t("WorkerCreate:dailyPayInfoHeader")}
@@ -448,9 +439,6 @@ export default function WorkerCreate(properties) {
               {/* Worker Type & Vesting Period */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="workerType">
-                    {t("WorkerCreate:workerTypeLabel")}
-                  </Label>
                   <HoverInfo
                     content={t("WorkerCreate:workerTypeInfo")}
                     header={t("WorkerCreate:workerTypeInfoHeader")}
@@ -485,9 +473,6 @@ export default function WorkerCreate(properties) {
                 </div>
                 {workerType === "vesting" && (
                   <div className="space-y-2">
-                    <Label htmlFor="vestingDays">
-                      {t("WorkerCreate:vestingDaysLabel")}
-                    </Label>
                     <HoverInfo
                       content={t("WorkerCreate:vestingDaysInfo")}
                       header={t("WorkerCreate:vestingDaysInfoHeader")}
