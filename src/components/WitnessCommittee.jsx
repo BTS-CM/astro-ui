@@ -15,10 +15,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
@@ -176,206 +175,179 @@ export default function GovernanceActions(properties) {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Tabs defaultValue="witness" className="w-full">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="witness">
-                  {t("GovernanceActions:witnessTab")}
-                </TabsTrigger>
-                <TabsTrigger value="committee">
-                  {t("GovernanceActions:committeeTab")}
-                </TabsTrigger>
-              </TabsList>
-
-              {/* Witness Tab */}
-              <TabsContent value="witness">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>
-                      {t("GovernanceActions:witnessActions")}
-                    </CardTitle>
-                    <CardDescription>
-                      {t("GovernanceActions:witnessDescription")}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    {!witnessData ? (
-                      <>
-                        <Separator />
-                        <h3 className="text-lg font-semibold">
-                          {t("GovernanceActions:registerWitness")}
-                        </h3>
-                        <div className="space-y-2">
-                          <HoverInfo
-                            content={t("GovernanceActions:urlInfo")}
-                            header={t("GovernanceActions:urlInfoHeader")}
-                          />
-                          <Input
-                            id="witnessUrl"
-                            placeholder="https://your-witness-info.com"
-                            value={witnessUrl}
-                            onChange={(e) => setWitnessUrl(e.target.value)}
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <HoverInfo
-                            content={t("GovernanceActions:signingKeyInfo")}
-                            header={t("GovernanceActions:signingKeyInfoHeader")}
-                          />
-                          <Input
-                            id="witnessSigningKey"
-                            placeholder="BTS..." // Placeholder for a Bitshares public key
-                            value={witnessSigningKey}
-                            onChange={(e) =>
-                              setWitnessSigningKey(e.target.value)
-                            }
-                          />
-                        </div>
-                        <Button
-                          onClick={() => setShowWitnessCreateDialog(true)}
-                          disabled={!witnessUrl || !witnessSigningKey}
-                        >
-                          {t("GovernanceActions:registerWitnessButton")}
-                        </Button>
-                      </>
-                    ) : (
-                      <p>
-                        {t("GovernanceActions:alreadyRegisteredWitness", {
-                          witnessId: witnessData.id,
-                        })}
+            <div className="grid grid-cols-2 gap-3">
+              <Card>
+                <CardHeader>
+                  <CardTitle>{t("GovernanceActions:witnessActions")}</CardTitle>
+                  <CardDescription>
+                    {t("GovernanceActions:witnessDescription")}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {!witnessData ? (
+                    <>
+                      <Separator />
+                      <h3 className="text-lg font-semibold">
+                        {t("GovernanceActions:registerWitness")}
+                      </h3>
+                      <div className="space-y-2">
+                        <HoverInfo
+                          content={t("GovernanceActions:urlInfo")}
+                          header={t("GovernanceActions:urlInfoHeader")}
+                        />
+                        <Input
+                          id="witnessUrl"
+                          placeholder="https://your-witness-info.com"
+                          value={witnessUrl}
+                          onChange={(e) => setWitnessUrl(e.target.value)}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <HoverInfo
+                          content={t("GovernanceActions:signingKeyInfo")}
+                          header={t("GovernanceActions:signingKeyInfoHeader")}
+                        />
+                        <Input
+                          id="witnessSigningKey"
+                          placeholder="BTS..." // Placeholder for a Bitshares public key
+                          value={witnessSigningKey}
+                          onChange={(e) => setWitnessSigningKey(e.target.value)}
+                        />
+                      </div>
+                      <Button
+                        onClick={() => setShowWitnessCreateDialog(true)}
+                        disabled={!witnessUrl || !witnessSigningKey}
+                      >
+                        {t("GovernanceActions:registerWitnessButton")}
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <h3 className="text-lg font-semibold">
+                        {t("GovernanceActions:updateWitness")}
+                      </h3>
+                      <p className="text-sm text-muted-foreground">
+                        {witnessData
+                          ? t("GovernanceActions:currentWitnessInfo", {
+                              witnessId: witnessData.id,
+                            })
+                          : t("GovernanceActions:notCurrentlyWitness")}
                       </p>
-                    )}
-
-                    <Separator />
-                    <h3 className="text-lg font-semibold">
-                      {t("GovernanceActions:updateWitness")}
-                    </h3>
-                    <p className="text-sm text-muted-foreground">
-                      {witnessData
-                        ? t("GovernanceActions:currentWitnessInfo", {
-                            witnessId: witnessData.id,
-                          })
-                        : t("GovernanceActions:notCurrentlyWitness")}
-                    </p>
-                    <div className="space-y-2">
-                      <HoverInfo
-                        content={t("GovernanceActions:newUrlInfo")}
-                        header={t("GovernanceActions:newUrlInfoHeader")}
-                      />
-                      <Input
-                        id="newWitnessUrl"
-                        placeholder="https://your-new-witness-info.com"
-                        value={newWitnessUrl}
-                        onChange={(e) => setNewWitnessUrl(e.target.value)}
-                        disabled={!witnessData}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <HoverInfo
-                        content={t("GovernanceActions:newSigningKeyInfo")}
-                        header={t("GovernanceActions:newSigningKeyInfoHeader")}
-                      />
-                      <Input
-                        id="newWitnessSigningKey"
-                        placeholder="BTS..." // Placeholder for a Bitshares public key
-                        value={newWitnessSigningKey}
-                        onChange={(e) =>
-                          setNewWitnessSigningKey(e.target.value)
+                      <div className="space-y-2">
+                        <HoverInfo
+                          content={t("GovernanceActions:newUrlInfo")}
+                          header={t("GovernanceActions:newUrlInfoHeader")}
+                        />
+                        <Input
+                          id="newWitnessUrl"
+                          placeholder="https://your-new-witness-info.com"
+                          value={newWitnessUrl}
+                          onChange={(e) => setNewWitnessUrl(e.target.value)}
+                          disabled={!witnessData}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <HoverInfo
+                          content={t("GovernanceActions:newSigningKeyInfo")}
+                          header={t(
+                            "GovernanceActions:newSigningKeyInfoHeader"
+                          )}
+                        />
+                        <Input
+                          id="newWitnessSigningKey"
+                          placeholder="BTS..." // Placeholder for a Bitshares public key
+                          value={newWitnessSigningKey}
+                          onChange={(e) =>
+                            setNewWitnessSigningKey(e.target.value)
+                          }
+                          disabled={!witnessData}
+                        />
+                      </div>
+                      <Button
+                        onClick={() => setShowWitnessUpdateDialog(true)}
+                        disabled={
+                          !witnessData ||
+                          (!newWitnessUrl && !newWitnessSigningKey)
                         }
-                        disabled={!witnessData}
-                      />
-                    </div>
-                    <Button
-                      onClick={() => setShowWitnessUpdateDialog(true)}
-                      disabled={
-                        !witnessData ||
-                        (!newWitnessUrl && !newWitnessSigningKey)
-                      }
-                    >
-                      {t("GovernanceActions:updateWitnessButton")}
-                    </Button>
-                  </CardContent>
-                </Card>
-              </TabsContent>
+                      >
+                        {t("GovernanceActions:updateWitnessButton")}
+                      </Button>
+                    </>
+                  )}
+                </CardContent>
+              </Card>
 
-              {/* Committee Tab */}
-              <TabsContent value="committee">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>
-                      {t("GovernanceActions:committeeActions")}
-                    </CardTitle>
-                    <CardDescription>
-                      {t("GovernanceActions:committeeDescription")}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    {!committeeData ? (
-                      <>
-                        <Separator />
-                        <h3 className="text-lg font-semibold">
-                          {t("GovernanceActions:registerCommittee")}
-                        </h3>
-                        <div className="space-y-2">
-                          <HoverInfo
-                            content={t("GovernanceActions:urlInfo")}
-                            header={t("GovernanceActions:urlInfoHeader")}
-                          />
-                          <Input
-                            id="committeeUrl"
-                            placeholder="https://your-committee-info.com"
-                            value={committeeUrl}
-                            onChange={(e) => setCommitteeUrl(e.target.value)}
-                          />
-                        </div>
-                        <Button
-                          onClick={() => setShowCommitteeCreateDialog(true)}
-                          disabled={!committeeUrl}
-                        >
-                          {t("GovernanceActions:registerCommitteeButton")}
-                        </Button>
-                      </>
-                    ) : (
-                      <p>
-                        {t("GovernanceActions:alreadyRegisteredCommittee", {
-                          committeeId: committeeData.id,
-                        })}
+              <Card>
+                <CardHeader>
+                  <CardTitle>
+                    {t("GovernanceActions:committeeActions")}
+                  </CardTitle>
+                  <CardDescription>
+                    {t("GovernanceActions:committeeDescription")}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {!committeeData ? (
+                    <>
+                      <Separator />
+                      <h3 className="text-lg font-semibold">
+                        {t("GovernanceActions:registerCommittee")}
+                      </h3>
+                      <div className="space-y-2">
+                        <HoverInfo
+                          content={t("GovernanceActions:urlInfo")}
+                          header={t("GovernanceActions:urlInfoHeader")}
+                        />
+                        <Input
+                          id="committeeUrl"
+                          placeholder="https://your-committee-info.com"
+                          value={committeeUrl}
+                          onChange={(e) => setCommitteeUrl(e.target.value)}
+                        />
+                      </div>
+                      <Button
+                        onClick={() => setShowCommitteeCreateDialog(true)}
+                        disabled={!committeeUrl}
+                      >
+                        {t("GovernanceActions:registerCommitteeButton")}
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <h3 className="text-lg font-semibold">
+                        {t("GovernanceActions:updateCommittee")}
+                      </h3>
+                      <p className="text-sm text-muted-foreground">
+                        {committeeData
+                          ? t("GovernanceActions:currentCommitteeInfo", {
+                              committeeId: committeeData.id,
+                            })
+                          : t("GovernanceActions:notCurrentlyCommittee")}
                       </p>
-                    )}
-
-                    <Separator />
-                    <h3 className="text-lg font-semibold">
-                      {t("GovernanceActions:updateCommittee")}
-                    </h3>
-                    <p className="text-sm text-muted-foreground">
-                      {committeeData
-                        ? t("GovernanceActions:currentCommitteeInfo", {
-                            committeeId: committeeData.id,
-                          })
-                        : t("GovernanceActions:notCurrentlyCommittee")}
-                    </p>
-                    <div className="space-y-2">
-                      <HoverInfo
-                        content={t("GovernanceActions:newUrlInfo")}
-                        header={t("GovernanceActions:newUrlInfoHeader")}
-                      />
-                      <Input
-                        id="newCommitteeUrl"
-                        placeholder="https://your-new-committee-info.com"
-                        value={newCommitteeUrl}
-                        onChange={(e) => setNewCommitteeUrl(e.target.value)}
-                        disabled={!committeeData}
-                      />
-                    </div>
-                    <Button
-                      onClick={() => setShowCommitteeUpdateDialog(true)}
-                      disabled={!committeeData || !newCommitteeUrl}
-                    >
-                      {t("GovernanceActions:updateCommitteeButton")}
-                    </Button>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-            </Tabs>
+                      <div className="space-y-2">
+                        <HoverInfo
+                          content={t("GovernanceActions:newUrlInfo")}
+                          header={t("GovernanceActions:newUrlInfoHeader")}
+                        />
+                        <Input
+                          id="newCommitteeUrl"
+                          placeholder="https://your-new-committee-info.com"
+                          value={newCommitteeUrl}
+                          onChange={(e) => setNewCommitteeUrl(e.target.value)}
+                          disabled={!committeeData}
+                        />
+                      </div>
+                      <Button
+                        onClick={() => setShowCommitteeUpdateDialog(true)}
+                        disabled={!committeeData || !newCommitteeUrl}
+                      >
+                        {t("GovernanceActions:updateCommitteeButton")}
+                      </Button>
+                    </>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
           </CardContent>
         </Card>
       </div>

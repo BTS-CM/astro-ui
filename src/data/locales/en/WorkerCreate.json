@@ -1,9 +1,6 @@
 {
   "title": "Create Worker Proposal",
   "description": "Submit a proposal to the Bitshares network to fund work via the reserve pool.",
-  "ltmRequiredTitle": "Lifetime Membership Required",
-  "ltmRequiredDescription": "Only Lifetime Members (LTM) can create worker proposals.",
-  "ltmLinkText": "Click here to upgrade",
   "nameLabel": "Worker Name",
   "nameInfo": "A short, descriptive name for your worker proposal (max 63 chars). Example: 'UI Development - YourAccount'.",
   "nameInfoHeader": "Worker Name",
@@ -38,7 +35,7 @@
   "vestingError": "Vesting period must be 0 or greater.",
   "publishButton": "Publish Worker Proposal",
   "proposeChanges": "Propose Worker",
-  "deeplinkHeader": "Proposing worker: {name}",
+  "deeplinkHeader": "Proposing worker: {{name}}",
   "errorTitle": "Error",
   "errorDescription": "Could not load required data. Please check connection and LTM status."
 }

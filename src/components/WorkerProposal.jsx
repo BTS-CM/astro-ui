@@ -18,8 +18,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea"; // Re-using for Name for potentially longer descriptions
+
 import { DateTimePicker } from "@/components/ui/datetime-picker";
 import {
   Select,
@@ -46,8 +45,8 @@ import HoverInfo from "@/components/common/HoverInfo.tsx";
 import { humanReadableFloat } from "@/lib/common";
 
 // Constants from config.hpp.txt & worker.cpp.txt
-const MAX_WORKER_NAME_LENGTH = 63; // [cite: 87, 110]
-const MAX_URL_LENGTH = 127; // [cite: 87, 110]
+const MAX_WORKER_NAME_LENGTH = 63;
+const MAX_URL_LENGTH = 127;
 
 // Helper to safely parse number inputs
 const safeParseInt = (value, defaultValue = 0) => {
@@ -86,7 +85,7 @@ export default function WorkerCreate(properties) {
   const [dailyPay, setDailyPay] = useState(0);
   const [startDate, setStartDate] = useState(() => {
     const date = new Date();
-    date.setDate(date.getDate() + 7); // Default start date 1 week from now [cite: 159]
+    date.setDate(date.getDate() + 7); // Default start date 1 week from now
     return date;
   });
   const [endDate, setEndDate] = useState(() => {
@@ -94,11 +93,9 @@ export default function WorkerCreate(properties) {
     date.setFullYear(date.getFullYear() + 1); // Default end date 1 year after start
     return date;
   });
-  const [workerType, setWorkerType] = useState("vesting"); // Default to vesting [cite: 128, 163]
-  const [vestingDays, setVestingDays] = useState(7); // Default vesting period [cite: 163]
+  const [workerType, setWorkerType] = useState("vesting"); // Default to vesting
+  const [vestingDays, setVestingDays] = useState(7); // Default vesting period
 
-  const [isLifetimeMember, setIsLifetimeMember] = useState(false);
-  const [loadingLtm, setLoadingLtm] = useState(true);
   const [showDialog, setShowDialog] = useState(false);
 
   const [coreAsset, setCoreAsset] = useState(null);
@@ -130,32 +127,6 @@ export default function WorkerCreate(properties) {
     };
   }, [usr, currentNode]);
 
-  // Fetch user account details to check LTM status [cite: 144, 156]
-  useEffect(() => {
-    let unsubscribe;
-    if (usr && usr.chain && usr.id && currentNode) {
-      setLoadingLtm(true);
-      const userStore = createObjectStore([
-        usr.chain,
-        JSON.stringify([usr.id]),
-        currentNode.url,
-      ]);
-      unsubscribe = userStore.subscribe(({ data, error, loading }) => {
-        if (data && !error && !loading && data[0]) {
-          setIsLifetimeMember(data[0].lifetime_referrer === data[0].id);
-          setLoadingLtm(false);
-        } else if (error) {
-          console.error("Error fetching user account:", error);
-          setIsLifetimeMember(false);
-          setLoadingLtm(false);
-        }
-      });
-    }
-    return () => {
-      if (unsubscribe) unsubscribe();
-    };
-  }, [usr, currentNode]);
-
   // Form Validation Checks
   const isNameValid = useMemo(
     () => workerName.length > 0 && workerName.length <= MAX_WORKER_NAME_LENGTH,
@@ -179,7 +150,6 @@ export default function WorkerCreate(properties) {
 
   const canSubmit = useMemo(
     () =>
-      isLifetimeMember &&
       isNameValid &&
       isUrlValid &&
       isPayValid &&
@@ -187,7 +157,6 @@ export default function WorkerCreate(properties) {
       isVestingValid &&
       coreAsset,
     [
-      isLifetimeMember,
       isNameValid,
       isUrlValid,
       isPayValid,
@@ -197,11 +166,11 @@ export default function WorkerCreate(properties) {
     ]
   );
 
-  // Construct Initializer based on worker type [cite: 128, 136]
+  // Construct Initializer based on worker type
   const initializer = useMemo(() => {
     switch (workerType) {
       case "vesting":
-        return [1, { pay_vesting_period_days: safeParseInt(vestingDays, 0) }]; // [cite: 127]
+        return [1, { pay_vesting_period_days: safeParseInt(vestingDays, 0) }];
       case "burn":
         return [2, {}];
       case "refund":
@@ -221,14 +190,14 @@ export default function WorkerCreate(properties) {
     return [
       {
         fee: { amount: 0, asset_id: "1.3.0" }, // Fee handled by wallet
-        owner: usr.id, // [cite: 131]
-        work_begin_date: beginDateISO, // [cite: 131]
-        work_end_date: endDateISO, // [cite: 132]
-        daily_pay: blockchainFloat(dailyPay, coreAsset.precision), // Use blockchainFloat [cite: 132]
-        name: workerName, // [cite: 133]
-        url: workerUrl, // [cite: 134]
-        initializer: initializer, // [cite: 135]
-        extensions: [],
+        owner: usr.id,
+        work_begin_date: beginDateISO,
+        work_end_date: endDateISO,
+        daily_pay: blockchainFloat(dailyPay, coreAsset.precision),
+        name: workerName,
+        url: workerUrl,
+        initializer: initializer,
+        extensions: {},
       },
     ];
   }, [
@@ -243,7 +212,7 @@ export default function WorkerCreate(properties) {
     canSubmit,
   ]);
 
-  if (loadingLtm || coreAssetLoading) {
+  if (coreAssetLoading) {
     return (
       <div className="container mx-auto mt-5 mb-5">
         <Card>
@@ -266,22 +235,6 @@ export default function WorkerCreate(properties) {
           <CardHeader>
             <CardTitle>{t("WorkerCreate:title")}</CardTitle>
             <CardDescription>{t("WorkerCreate:description")}</CardDescription>
-            {!isLifetimeMember && !loadingLtm ? (
-              <Alert variant="destructive">
-                <ExclamationTriangleIcon className="h-4 w-4" />
-                <AlertTitle>{t("WorkerCreate:ltmRequiredTitle")}</AlertTitle>
-                <AlertDescription>
-                  {t("WorkerCreate:ltmRequiredDescription")} {/* [cite: 156] */}
-                  <a href="/ltm/index.html">
-                    {" "}
-                    <Button variant="link" className="p-0 h-4">
-                      {t("WorkerCreate:ltmLinkText")}
-                    </Button>
-                  </a>
-                  .
-                </AlertDescription>
-              </Alert>
-            ) : null}
           </CardHeader>
           <CardContent>
             <form
@@ -297,14 +250,12 @@ export default function WorkerCreate(properties) {
                   content={t("WorkerCreate:nameInfo")}
                   header={t("WorkerCreate:nameInfoHeader")}
                 />{" "}
-                {/* [cite: 158] */}
                 <Input
                   id="workerName"
                   placeholder={t("WorkerCreate:namePlaceholder")}
                   value={workerName}
                   onChange={(e) => setWorkerName(e.target.value)}
                   maxLength={MAX_WORKER_NAME_LENGTH}
-                  disabled={!isLifetimeMember}
                 />
                 {!isNameValid && workerName.length > 0 ? (
                   <p className="text-sm text-red-500">
@@ -321,14 +272,12 @@ export default function WorkerCreate(properties) {
                   content={t("WorkerCreate:urlInfo")}
                   header={t("WorkerCreate:urlInfoHeader")}
                 />{" "}
-                {/* [cite: 162] */}
                 <Input
                   id="workerUrl"
                   placeholder={t("WorkerCreate:urlPlaceholder")}
                   value={workerUrl}
                   onChange={(e) => setWorkerUrl(e.target.value)}
                   maxLength={MAX_URL_LENGTH}
-                  disabled={!isLifetimeMember}
                 />
                 {!isUrlValid && workerUrl.length > 0 ? (
                   <p className="text-sm text-red-500">
@@ -344,7 +293,6 @@ export default function WorkerCreate(properties) {
                     content={t("WorkerCreate:startDateInfo")}
                     header={t("WorkerCreate:startDateInfoHeader")}
                   />{" "}
-                  {/* [cite: 159] */}
                   <DateTimePicker
                     value={startDate}
                     onChange={(newDate) => {
@@ -367,7 +315,6 @@ export default function WorkerCreate(properties) {
                         setStartDate(defaultStartDate);
                       }
                     }}
-                    disabled={!isLifetimeMember}
                   />
                 </div>
                 <div className="space-y-2">
@@ -389,7 +336,7 @@ export default function WorkerCreate(properties) {
                         setEndDate(defaultEndDate);
                       }
                     }}
-                    disabled={!isLifetimeMember || !startDate}
+                    disabled={!startDate}
                   />
                   {!areDatesValid && startDate && endDate ? (
                     <p className="text-sm text-red-500">
@@ -405,29 +352,25 @@ export default function WorkerCreate(properties) {
                   content={t("WorkerCreate:dailyPayInfo")}
                   header={t("WorkerCreate:dailyPayInfoHeader")}
                 />{" "}
-                {/* [cite: 159, 160, 161] */}
                 <Input
                   id="dailyPay"
                   type="number"
-                  min="0.00001" // Min depends on core asset precision
-                  step={
-                    coreAsset
-                      ? humanReadableFloat(1, coreAsset.precision)
-                      : "0.00001"
-                  }
-                  value={dailyPay}
+                  step={"1"}
                   onChange={(e) => {
                     const value = safeParseFloat(e.target.value, 0);
-                    const minVal = coreAsset
-                      ? humanReadableFloat(1, coreAsset.precision)
-                      : 0.00001;
-                    if (value >= minVal) {
+                    const minVal = 0.00001;
+                    const maxVal = 500000;
+                    if (value >= minVal && value <= maxVal) {
                       setDailyPay(value);
-                    } else {
+                    } else if (value < minVal) {
                       setDailyPay(minVal);
+                    } else if (value > maxVal) {
+                      setDailyPay(maxVal);
                     }
                   }}
-                  disabled={!isLifetimeMember || !coreAsset}
+                  className="w-1/4"
+                  value={dailyPay}
+                  disabled={!coreAsset}
                 />
                 {!isPayValid && dailyPay !== 0 ? (
                   <p className="text-sm text-red-500">
@@ -443,11 +386,7 @@ export default function WorkerCreate(properties) {
                     content={t("WorkerCreate:workerTypeInfo")}
                     header={t("WorkerCreate:workerTypeInfoHeader")}
                   />
-                  <Select
-                    value={workerType}
-                    onValueChange={setWorkerType}
-                    disabled={!isLifetimeMember}
-                  >
+                  <Select value={workerType} onValueChange={setWorkerType}>
                     <SelectTrigger>
                       <SelectValue
                         placeholder={t("WorkerCreate:workerTypePlaceholder")}
@@ -458,15 +397,12 @@ export default function WorkerCreate(properties) {
                         <SelectItem value="vesting">
                           {t("WorkerCreate:vestingWorker")}
                         </SelectItem>{" "}
-                        {/* [cite: 128, 146] */}
                         <SelectItem value="refund">
                           {t("WorkerCreate:refundWorker")}
                         </SelectItem>{" "}
-                        {/* [cite: 128] */}
                         <SelectItem value="burn">
                           {t("WorkerCreate:burnWorker")}
                         </SelectItem>{" "}
-                        {/* [cite: 128] */}
                       </SelectGroup>
                     </SelectContent>
                   </Select>
@@ -477,7 +413,6 @@ export default function WorkerCreate(properties) {
                       content={t("WorkerCreate:vestingDaysInfo")}
                       header={t("WorkerCreate:vestingDaysInfoHeader")}
                     />{" "}
-                    {/* [cite: 163] */}
                     <Input
                       id="vestingDays"
                       type="number"
@@ -487,7 +422,6 @@ export default function WorkerCreate(properties) {
                       onChange={(e) =>
                         setVestingDays(safeParseInt(e.target.value, 0))
                       }
-                      disabled={!isLifetimeMember}
                     />
                     {!isVestingValid ? (
                       <p className="text-sm text-red-500">
