@@ -20,5 +20,7 @@
   "hoursAgo_one": "{{count}} hour ago",
   "hoursAgo_other": "{{count}} hours ago",
   "daysAgo_one": "{{count}} day ago",
-  "daysAgo_other": "{{count}} days ago"
+  "daysAgo_other": "{{count}} days ago",
+  "votesFor": "{{name}} voting schedule",
+  "descriptionVotes": "These are the votes by the selected witness!"
 }

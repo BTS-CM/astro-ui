@@ -19,31 +19,35 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
+
 import { Avatar } from "@/components/Avatar.tsx"; // Re-using existing component
 
-import { useInitCache } from "@/nanoeffects/Init.ts";
 import { $currentUser } from "@/stores/users.ts";
 import { $currentNode } from "@/stores/node.ts";
+import { $blockList } from "@/stores/blocklist.ts";
+
+import { useInitCache } from "@/nanoeffects/Init.ts";
 import {
   createObjectStore,
   createEveryObjectStore,
 } from "@/nanoeffects/Objects.ts";
-
 import { createUsersCoreBalanceStore } from "@/nanoeffects/UserBalances.js";
 
-import { $blockList } from "@/stores/blocklist.ts";
 import { humanReadableFloat, debounce } from "@/lib/common";
 import ExternalLink from "./common/ExternalLink.jsx";
-
-const activeTabStyle = {
-  backgroundColor: "#252526",
-  color: "white",
-};
 
 // Helper function to format time difference (replace TimeAgo if not available/desired)
 function formatTimeAgo(dateString, t) {
@@ -89,6 +93,9 @@ export default function Witnesses(properties) {
   const [dynamicGlobalParameters, setDynamicGlobalParameters] = useState(null);
   const [allWitnesses, setAllWitnesses] = useState([]);
   const [witnessAccounts, setWitnessAccounts] = useState({});
+  const [witnessCoreBalances, setWitnessCoreBalances] = useState([]);
+  const [activeWitnessIds, setActiveWitnessIds] = useState([]);
+
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("");
   const [sortKey, setSortKey] = useState("rank"); // rank, name, votes, missed
@@ -97,7 +104,6 @@ export default function Witnesses(properties) {
   // 1. Fetch Global and Dynamic Global Parameters
   useEffect(() => {
     let unsubscribeGlobal;
-    let unsubscribeDynamic;
     if (usr && usr.chain && currentNode) {
       setLoading(true); // Start loading when fetching begins
       const globalParamsStore = createObjectStore([
@@ -108,6 +114,7 @@ export default function Witnesses(properties) {
       unsubscribeGlobal = globalParamsStore.subscribe(
         ({ data, error, loading: gpLoading }) => {
           if (data && !error && !gpLoading && data.length === 2) {
+            setActiveWitnessIds(data[0].active_witnesses);
             setGlobalParameters(data[0].parameters);
             setDynamicGlobalParameters(data[1]);
           } else if (error) {
@@ -147,6 +154,7 @@ export default function Witnesses(properties) {
                   )
               );
             }
+            console.log({ filteredData });
             setAllWitnesses(filteredData);
           } else if (error) {
             console.error("Error fetching all witnesses:", error);
@@ -181,6 +189,7 @@ export default function Witnesses(properties) {
               }
               return acc;
             }, {});
+            console.log({ accountsMap });
             setWitnessAccounts(accountsMap);
             // Only set loading to false when all data is fetched
             if (globalParameters && dynamicGlobalParameters) {
@@ -212,12 +221,32 @@ export default function Witnesses(properties) {
     dynamicGlobalParameters,
   ]); // Depends on allWitnesses & globals
 
-  // Processing and Filtering Logic
-  const activeWitnessIds = useMemo(
-    () =>
-      globalParameters ? new Set(globalParameters.active_witnesses) : new Set(),
-    [globalParameters]
-  );
+  useEffect(() => {
+    // fetch witness core balances
+    let unsubscribe;
+    if (usr && usr.chain && currentNode && allWitnesses.length > 0) {
+      const accountIds = allWitnesses.map((w) => w.witness_account);
+      const uniqueAccountIds = [...new Set(accountIds)];
+
+      const witnessCoreBalancesStore = createUsersCoreBalanceStore([
+        usr.chain,
+        JSON.stringify(uniqueAccountIds),
+        currentNode.url,
+      ]);
+
+      unsubscribe = witnessCoreBalancesStore.subscribe(({ data, error }) => {
+        if (data && !error) {
+          setWitnessCoreBalances(data);
+        } else if (error) {
+          console.error("Error fetching witness core balances:", error);
+        }
+      });
+
+      return () => {
+        if (unsubscribe) unsubscribe();
+      };
+    }
+  }, [witnessAccounts]);
 
   const processedWitnesses = useMemo(() => {
     const blockInterval = globalParameters?.block_interval ?? 3; // Default to 3s if not loaded
@@ -255,7 +284,8 @@ export default function Witnesses(properties) {
           last_block_num: w.last_confirmed_block_num,
           last_aslot_time: lastAslotTime, // Store as Date object or null
           total_missed: w.total_missed,
-          active: activeWitnessIds.has(w.id),
+          active: activeWitnessIds.includes(w.id),
+          signingKey: w.signing_key,
         };
       })
       .filter(Boolean) // Remove null entries
@@ -313,16 +343,43 @@ export default function Witnesses(properties) {
       missedClass = "text-orange-600";
     else if (witness.total_missed > 2000) missedClass = "text-red-600";
 
-    return (
-      <div style={style} key={witness.id}>
-        <Card className="mb-1 hover:bg-secondary/10">
-          <CardContent className="pt-3 pb-3 text-sm">
-            <div className="grid grid-cols-12 gap-2 items-center">
+    const foundBalance = witnessCoreBalances.find(
+      (balance) => balance.id === witness.account_id
+    );
+
+    const coreTokenBalance = foundBalance ? foundBalance.balance[0].amount : 0;
+
+    const humanReadableBalance =
+      coreTokenBalance && coreTokenBalance > 0
+        ? humanReadableFloat(coreTokenBalance, 5)
+        : 0;
+
+    const votes = witnessAccounts[witness.account_id]?.options.votes || [];
+    const filteredVotes = votes.filter((x) => parseInt(x.split(":")[0]) === 1);
+
+    const LightWitnessRow = ({ index, style }) => {
+      const currentVote = filteredVotes[index];
+      if (!currentVote) return null;
+
+      const foundWitness = Object.values(allWitnesses).find(
+        (w) => w.vote_id === currentVote
+      ); // Ensure the witness is in the list
+
+      const account = witnessAccounts
+        ? witnessAccounts[foundWitness.witness_account]
+        : null; // Find the account for the current vote
+
+      const accountName = account ? account.name : "unknown";
+
+      return (
+        <div style={style} key={`vote${currentVote}`}>
+          <Card className={`mb-1 ${witness.active ? "bg-green-100" : ""}`}>
+            <CardContent className="pt-3 pb-3 text-sm">
               <div className="col-span-3 flex items-center">
                 <Avatar
                   size={30}
-                  name={witness.name}
-                  extra={`W${index}`}
+                  name={accountName}
+                  extra={`WL${index}`}
                   expression={{ eye: "normal", mouth: "open" }}
                   colors={[
                     "#F0AB3D",
@@ -332,105 +389,137 @@ export default function Witnesses(properties) {
                     "#146A7C",
                   ]}
                 />
-                <span className="ml-2">{witness.name}</span>
+                <span className="ml-2">{accountName}</span>
               </div>
-              <div className="col-span-2">
-                <ExternalLink
-                  classnamecontents="text-blue-500 hover:text-purple-500"
-                  type="text"
-                  text={witness.id}
-                  hyperlink={`https://blocksights.info/#/objects/${witness.id}${
-                    _chain === "bitshares" ? "" : "?network=testnet"
-                  }`}
-                />{" "}
-                (
-                <ExternalLink
-                  classnamecontents="text-blue-500 hover:text-purple-500"
-                  type="text"
-                  text={witness.account_id}
-                  hyperlink={`https://blocksights.info/#/accounts/${
-                    witness.account_id
-                  }${_chain === "bitshares" ? "" : "?network=testnet"}`}
-                />
-                )
-              </div>
-              <div className="col-span-2">
-                {witness.last_aslot_time
-                  ? formatTimeAgo(witness.last_aslot_time, t)
-                  : "N/A"}
-                <br />
-                <span className="text-xs">
-                  (
-                  <ExternalLink
-                    classnamecontents="text-blue-500 hover:text-purple-500"
-                    type="text"
-                    text={`#${witness.last_block_num}`}
-                    hyperlink={`https://blocksights.info/#/blocks/${
-                      witness.last_block_num
-                    }${_chain === "bitshares" ? "" : "?network=testnet"}`}
-                  />
-                  )
-                </span>
-              </div>
-              <div
-                className={`col-span-1 text-center font-medium ${missedClass}`}
-              >
-                {witness.total_missed}
-              </div>
-              <div className="col-span-3 text-right pr-3">
-                {humanReadableFloat(witness.total_votes, 5).toLocaleString(
-                  undefined,
-                  { minimumFractionDigits: 0 }
-                )}{" "}
-                BTS
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </div>
+      );
+    };
+
+    return (
+      <div style={style} key={witness.id}>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Card className={`mb-1 ${witness.active ? "bg-green-100" : ""}`}>
+              <CardContent className="pt-3 pb-3 text-sm">
+                <div className="grid grid-cols-12 gap-2 items-center">
+                  <div className="col-span-3 flex items-center">
+                    <Avatar
+                      size={30}
+                      name={witness.name}
+                      extra={`W${index}`}
+                      expression={
+                        witness.signingKey ===
+                          "BTS1111111111111111111111111111111114T1Anm" ||
+                        !witness.active
+                          ? { eye: "sleepy", mouth: "unhappy" }
+                          : { eye: "normal", mouth: "open" }
+                      }
+                      colors={[
+                        "#F0AB3D",
+                        "#C271B4",
+                        "#C20D90",
+                        "#92A1C6",
+                        "#146A7C",
+                      ]}
+                    />
+                    <span className="ml-2">{witness.name}</span>
+                  </div>
+                  <div className="col-span-2">
+                    <ExternalLink
+                      classnamecontents="text-blue-500 hover:text-purple-500"
+                      type="text"
+                      text={witness.id}
+                      hyperlink={`https://blocksights.info/#/objects/${
+                        witness.id
+                      }${_chain === "bitshares" ? "" : "?network=testnet"}`}
+                    />{" "}
+                    (
+                    <ExternalLink
+                      classnamecontents="text-blue-500 hover:text-purple-500"
+                      type="text"
+                      text={witness.account_id}
+                      hyperlink={`https://blocksights.info/#/accounts/${
+                        witness.account_id
+                      }${_chain === "bitshares" ? "" : "?network=testnet"}`}
+                    />
+                    )
+                  </div>
+                  <div className="col-span-2">
+                    {witness.last_aslot_time
+                      ? formatTimeAgo(witness.last_aslot_time, t)
+                      : "N/A"}
+                    {witness.last_block_num ? (
+                      <>
+                        <br />
+                        <span className="text-xs">
+                          (
+                          <ExternalLink
+                            classnamecontents="text-blue-500 hover:text-purple-500"
+                            type="text"
+                            text={`#${witness.last_block_num}`}
+                            hyperlink={`https://blocksights.info/#/blocks/${
+                              witness.last_block_num
+                            }${
+                              _chain === "bitshares" ? "" : "?network=testnet"
+                            }`}
+                          />
+                          )
+                        </span>
+                      </>
+                    ) : null}
+                  </div>
+                  <div
+                    className={`col-span-1 text-center font-medium ${missedClass}`}
+                  >
+                    {witness.total_missed}
+                  </div>
+                  <div className={`col-span-1 text-center font-medium`}>
+                    {humanReadableBalance}
+                  </div>
+                  <div className="col-span-3 text-right pr-3">
+                    {humanReadableFloat(witness.total_votes, 5).toLocaleString(
+                      undefined,
+                      { minimumFractionDigits: 0 }
+                    )}{" "}
+                    BTS
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[500px] bg-white">
+            <DialogHeader>
+              <DialogTitle>
+                {t("Witnesses:votesFor", { name: witness.name })}:
+              </DialogTitle>
+              <DialogDescription>
+                {t("Witnesses:descriptionVotes")}
+              </DialogDescription>
+            </DialogHeader>
+            {filteredVotes &&
+            filteredVotes.length > 0 &&
+            allWitnesses &&
+            witnessAccounts ? (
+              <ScrollArea className="h-[500px] pt-1">
+                <List
+                  height={500}
+                  itemCount={filteredVotes.length}
+                  itemSize={75} // Adjust as needed
+                  width="100%"
+                >
+                  {LightWitnessRow}
+                </List>
+              </ScrollArea>
+            ) : (
+              <div className="text-red text-center">N/A</div>
+            )}
+          </DialogContent>
+        </Dialog>
       </div>
     );
   };
-
-  const renderList = (witnesses) => (
-    <div className="w-full">
-      <div className="grid grid-cols-12 gap-2 p-2 bg-gray-100 rounded-t-md font-semibold text-sm sticky top-0 z-10">
-        <div
-          className="col-span-3 cursor-pointer"
-          onClick={() => handleSort("name")}
-        >
-          {t("Witnesses:name")}{" "}
-          {sortKey === "name" ? (sortDirection === "asc" ? "▲" : "▼") : ""}
-        </div>
-        <div className="col-span-2">{t("Witnesses:ids")}</div>
-        <div className="col-span-2">{t("Witnesses:lastBlock")}</div>
-        <div
-          className="col-span-1 text-center cursor-pointer"
-          onClick={() => handleSort("missed")}
-        >
-          {t("Witnesses:missed")}{" "}
-          {sortKey === "missed" ? (sortDirection === "asc" ? "▲" : "▼") : ""}
-        </div>
-        <div className="col-span-1">{t("Witnesses:balance")} (BTS)</div>
-        <div
-          className="col-span-3 text-right pr-3 cursor-pointer"
-          onClick={() => handleSort("votes")}
-        >
-          {t("Witnesses:votes")}{" "}
-          {sortKey === "votes" ? (sortDirection === "asc" ? "▲" : "▼") : ""}
-        </div>
-      </div>
-      <ScrollArea className="h-[500px]">
-        <List
-          height={500}
-          itemCount={sortedWitnesses.length}
-          itemSize={65} // Adjust as needed
-          width="100%"
-        >
-          {WitnessRow}
-        </List>
-      </ScrollArea>
-    </div>
-  );
 
   return (
     <div className="container mx-auto mt-5 mb-5">
@@ -445,13 +534,64 @@ export default function Witnesses(properties) {
             onChange={(e) => debouncedFilterChange(e.target.value)}
             className="mb-4 w-full md:w-1/3"
           />
-          {loading ? (
+          {!sortedWitnesses ||
+          !sortedWitnesses.length ||
+          !witnessCoreBalances ? (
             <div className="space-y-2">
               <Skeleton className="h-12 w-full" />
               <Skeleton className="h-64 w-full" />
             </div>
           ) : (
-            renderList(sortedStandbyWitnesses)
+            <div className="w-full">
+              <div className="grid grid-cols-12 gap-2 p-2 bg-gray-100 rounded-t-md font-semibold text-sm sticky top-0 z-10">
+                <div
+                  className="col-span-3 cursor-pointer"
+                  onClick={() => handleSort("name")}
+                >
+                  {t("Witnesses:name")}{" "}
+                  {sortKey === "name"
+                    ? sortDirection === "asc"
+                      ? "▲"
+                      : "▼"
+                    : ""}
+                </div>
+                <div className="col-span-2">{t("Witnesses:ids")}</div>
+                <div className="col-span-2">{t("Witnesses:lastBlock")}</div>
+                <div
+                  className="col-span-1 text-center cursor-pointer"
+                  onClick={() => handleSort("missed")}
+                >
+                  {t("Witnesses:missed")}{" "}
+                  {sortKey === "missed"
+                    ? sortDirection === "asc"
+                      ? "▲"
+                      : "▼"
+                    : ""}
+                </div>
+                <div className="col-span-1">{t("Witnesses:balance")} (BTS)</div>
+                <div
+                  className="col-span-3 text-right pr-3 cursor-pointer"
+                  onClick={() => handleSort("votes")}
+                >
+                  {t("Witnesses:votes")}{" "}
+                  {sortKey === "votes"
+                    ? sortDirection === "asc"
+                      ? "▲"
+                      : "▼"
+                    : ""}
+                </div>
+              </div>
+              <ScrollArea className="h-[500px] pt-1">
+                <List
+                  height={500}
+                  itemCount={sortedWitnesses.length}
+                  itemSize={75} // Adjust as needed
+                  width="100%"
+                >
+                  {WitnessRow}
+                </List>
+              </ScrollArea>
+            </div>
           )}
         </CardContent>
       </Card>
