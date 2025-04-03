@@ -13,6 +13,7 @@ import {
   MinusCircledIcon,
   ArrowRightIcon,
   ArrowLeftIcon,
+  ExclamationTriangleIcon,
 } from "@radix-ui/react-icons";
 
 import {

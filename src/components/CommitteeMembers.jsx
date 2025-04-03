@@ -19,19 +19,33 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ScrollArea } from "@/components/ui/scroll-area";
+
 import { Avatar } from "@/components/Avatar.tsx"; // Re-using existing component
 
-import { useInitCache } from "@/nanoeffects/Init.ts";
 import { $currentUser } from "@/stores/users.ts";
 import { $currentNode } from "@/stores/node.ts";
+import { $blockList } from "@/stores/blocklist.ts";
+
 import {
   createObjectStore,
   createEveryObjectStore,
 } from "@/nanoeffects/Objects.ts";
-import { $blockList } from "@/stores/blocklist.ts";
+import { createUsersCoreBalanceStore } from "@/nanoeffects/UserBalances.js";
+import { useInitCache } from "@/nanoeffects/Init.ts";
+
 import { humanReadableFloat, debounce } from "@/lib/common";
 import ExternalLink from "./common/ExternalLink.jsx";
 
@@ -189,6 +203,34 @@ export default function CommitteeMembers(properties) {
       ); // Apply filter
   }, [allCommitteeMembers, committeeAccounts, activeCommitteeMembers, filter]);
 
+  const [coreBalances, setCoreBalances] = useState();
+  useEffect(() => {
+    // fetch committee member core balances
+    let unsubscribe;
+    if (usr && usr.chain && currentNode && committeeAccounts) {
+      const accountIds = Object.keys(committeeAccounts);
+      const uniqueAccountIds = [...new Set(accountIds)];
+
+      const coreBalancesStore = createUsersCoreBalanceStore([
+        usr.chain,
+        JSON.stringify(uniqueAccountIds),
+        currentNode.url,
+      ]);
+
+      unsubscribe = coreBalancesStore.subscribe(({ data, error }) => {
+        if (data && !error) {
+          setCoreBalances(data);
+        } else if (error) {
+          console.error("Error fetching core balances:", error);
+        }
+      });
+
+      return () => {
+        if (unsubscribe) unsubscribe();
+      };
+    }
+  }, [currentNode, committeeAccounts]);
+
   const sortedMembers = useMemo(() => {
     const sorted = [...processedMembers].sort((a, b) => {
       if (sortKey === "name") {
@@ -221,94 +263,156 @@ export default function CommitteeMembers(properties) {
     []
   );
 
-  const CommitteeRow = ({ data, index, style }) => {
-    const member = data[index];
+  const CommitteeRow = ({ index, style }) => {
+    const member = sortedMembers[index];
     if (!member) return null;
 
-    return (
-      <div style={style} key={member.id}>
-        <Card className={`mb-1 ${member.active ? "bg-green-100" : ""}`}>
-          <CardContent className="pt-3 pb-3 text-sm">
-            <div className="grid grid-cols-3 gap-2 items-center">
-              <div className="flex items-center">
+    const foundBalance = coreBalances
+      ? coreBalances.find((balance) => balance.id === member.account_id)
+      : null;
+
+    const coreTokenBalance = foundBalance ? foundBalance.balance[0].amount : 0;
+
+    const humanReadableBalance = humanReadableFloat(
+      coreTokenBalance,
+      5
+    ).toLocaleString(undefined, { minimumFractionDigits: 5 });
+
+    const votes = committeeAccounts[member.account_id]?.options.votes || [];
+    const filteredVotes = votes.filter((x) => parseInt(x.split(":")[0]) === 0);
+
+    const LightMemberRow = ({ index, style }) => {
+      const currentVote = filteredVotes[index];
+      if (!currentVote) return null;
+
+      const foundMember = Object.values(allCommitteeMembers).find(
+        (w) => w.vote_id === currentVote
+      );
+
+      const account =
+        committeeAccounts && foundMember
+          ? committeeAccounts[foundMember.committee_member_account]
+          : null; // Find the account for the current vote
+
+      const accountName = account ? account.name : "unknown";
+
+      return (
+        <div style={style} key={`vote${currentVote}`}>
+          <Card className={`mb-1 ${member.active ? "bg-green-100" : ""}`}>
+            <CardContent className="pt-3 pb-3 text-sm">
+              <div className="col-span-3 flex items-center">
                 <Avatar
                   size={30}
-                  name={member.name}
-                  extra={`CM${index}`}
+                  name={accountName}
+                  extra={`WL${index}`}
                   expression={{ eye: "normal", mouth: "open" }}
                   colors={[
-                    "#146A7C",
                     "#F0AB3D",
                     "#C271B4",
                     "#C20D90",
                     "#92A1C6",
+                    "#146A7C",
                   ]}
                 />
-                <span className="ml-2">{member.name}</span>
+                <span className="ml-2">{accountName}</span>
               </div>
-              <div>
-                <ExternalLink
-                  classnamecontents="text-blue-500 hover:text-purple-500"
-                  type="text"
-                  text={member.id}
-                  hyperlink={`https://blocksights.info/#/objects/${member.id}${
-                    _chain === "bitshares" ? "" : "?network=testnet"
-                  }`}
-                />{" "}
-                (
-                <ExternalLink
-                  classnamecontents="text-blue-500 hover:text-purple-500"
-                  type="text"
-                  text={member.account_id}
-                  hyperlink={`https://blocksights.info/#/accounts/${
-                    member.account_id
-                  }${_chain === "bitshares" ? "" : "?network=testnet"}`}
-                />
-                )
-              </div>
-              <div className="text-right pr-3">
-                {humanReadableFloat(member.total_votes, 5).toLocaleString(
-                  undefined,
-                  { minimumFractionDigits: 0 }
-                )}{" "}
-                BTS
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </div>
+      );
+    };
+
+    return (
+      <div style={style} key={member.id}>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Card className={`mb-1 ${member.active ? "bg-green-100" : ""}`}>
+              <CardContent className="pt-3 pb-3 text-sm">
+                <div className="grid grid-cols-4 gap-2 items-center">
+                  <div className="flex items-center">
+                    <Avatar
+                      size={30}
+                      name={member.name}
+                      extra={`CM${index}`}
+                      expression={
+                        !member.active
+                          ? { eye: "sleepy", mouth: "unhappy" }
+                          : { eye: "normal", mouth: "open" }
+                      }
+                      colors={[
+                        "#146A7C",
+                        "#F0AB3D",
+                        "#C271B4",
+                        "#C20D90",
+                        "#92A1C6",
+                      ]}
+                    />
+                    <span className="ml-2">{member.name}</span>
+                  </div>
+                  <div>
+                    <ExternalLink
+                      classnamecontents="text-blue-500 hover:text-purple-500"
+                      type="text"
+                      text={member.id}
+                      hyperlink={`https://blocksights.info/#/objects/${
+                        member.id
+                      }${_chain === "bitshares" ? "" : "?network=testnet"}`}
+                    />{" "}
+                    (
+                    <ExternalLink
+                      classnamecontents="text-blue-500 hover:text-purple-500"
+                      type="text"
+                      text={member.account_id}
+                      hyperlink={`https://blocksights.info/#/accounts/${
+                        member.account_id
+                      }${_chain === "bitshares" ? "" : "?network=testnet"}`}
+                    />
+                    )
+                  </div>
+                  <div className="text-right pr-3">
+                    {humanReadableBalance} BTS
+                  </div>
+                  <div className="text-right pr-3">
+                    {humanReadableFloat(member.total_votes, 5).toLocaleString(
+                      undefined,
+                      { minimumFractionDigits: 5 }
+                    )}{" "}
+                    BTS
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[500px] bg-white">
+            <DialogHeader>
+              <DialogTitle>
+                {t("CommitteeMembers:votesFor", { name: member.name })}:
+              </DialogTitle>
+              <DialogDescription>
+                {t("CommitteeMembers:descriptionVotes")}
+              </DialogDescription>
+            </DialogHeader>
+            {filteredVotes &&
+            filteredVotes.length > 0 &&
+            allCommitteeMembers ? (
+              <ScrollArea className="h-[500px] pt-1">
+                <List
+                  height={500}
+                  itemCount={filteredVotes.length}
+                  itemSize={75} // Adjust as needed
+                  width="100%"
+                >
+                  {LightMemberRow}
+                </List>
+              </ScrollArea>
+            ) : (
+              <div className="text-red-500 text-center">N/A</div>
+            )}
+          </DialogContent>
+        </Dialog>
       </div>
     );
   };
-
-  const renderList = (members) => (
-    <div className="w-full">
-      <div className="grid grid-cols-3 gap-2 p-2 bg-gray-100 rounded-t-md font-semibold text-sm sticky top-0 z-10">
-        <div className="cursor-pointer" onClick={() => handleSort("name")}>
-          {t("CommitteeMembers:name")}{" "}
-          {sortKey === "name" ? (sortDirection === "asc" ? "▲" : "▼") : ""}
-        </div>
-        <div>{t("CommitteeMembers:ids")}</div>
-        <div
-          className="text-right pr-3 cursor-pointer"
-          onClick={() => handleSort("votes")}
-        >
-          {t("CommitteeMembers:votes")}{" "}
-          {sortKey === "votes" ? (sortDirection === "asc" ? "▲" : "▼") : ""}
-        </div>
-      </div>
-      <ScrollArea className="h-[500px]">
-        <List
-          height={500}
-          itemCount={members.length}
-          itemSize={65} // Adjust based on content height
-          width="100%"
-          itemData={members}
-        >
-          {CommitteeRow}
-        </List>
-      </ScrollArea>
-    </div>
-  );
 
   return (
     <div className="container mx-auto mt-5 mb-5">
@@ -323,13 +427,55 @@ export default function CommitteeMembers(properties) {
             onChange={(e) => debouncedFilterChange(e.target.value)}
             className="mb-4 w-full md:w-1/3"
           />
-          {loading ? (
+          {loading ||
+          !sortedMembers ||
+          !sortedMembers.length ||
+          !coreBalances ? (
             <div className="space-y-2">
               <Skeleton className="h-12 w-full" />
               <Skeleton className="h-64 w-full" />
             </div>
           ) : (
-            renderList(sortedMembers)
+            <div className="w-full">
+              <div className="grid grid-cols-4 gap-2 p-2 bg-gray-100 rounded-t-md font-semibold text-sm sticky top-0 z-10">
+                <div
+                  className="cursor-pointer"
+                  onClick={() => handleSort("name")}
+                >
+                  {t("CommitteeMembers:name")}{" "}
+                  {sortKey === "name"
+                    ? sortDirection === "asc"
+                      ? "▲"
+                      : "▼"
+                    : ""}
+                </div>
+                <div>{t("CommitteeMembers:ids")}</div>
+                <div className="text-right">
+                  {t("CommitteeMembers:coreTokenBalance")}
+                </div>
+                <div
+                  className="text-right pr-3 cursor-pointer"
+                  onClick={() => handleSort("votes")}
+                >
+                  {t("CommitteeMembers:votes")}{" "}
+                  {sortKey === "votes"
+                    ? sortDirection === "asc"
+                      ? "▲"
+                      : "▼"
+                    : ""}
+                </div>
+              </div>
+              <ScrollArea className="h-[500px]">
+                <List
+                  height={500}
+                  itemCount={sortedMembers.length}
+                  itemSize={65} // Adjust based on content height
+                  width="100%"
+                >
+                  {CommitteeRow}
+                </List>
+              </ScrollArea>
+            </div>
           )}
         </CardContent>
       </Card>

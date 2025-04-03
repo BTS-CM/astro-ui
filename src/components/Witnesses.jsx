@@ -351,7 +351,9 @@ export default function Witnesses(properties) {
 
     const humanReadableBalance =
       coreTokenBalance && coreTokenBalance > 0
-        ? humanReadableFloat(coreTokenBalance, 5)
+        ? humanReadableFloat(coreTokenBalance, 5).toLocaleString(undefined, {
+            minimumFractionDigits: 5,
+          })
         : 0;
 
     const votes = witnessAccounts[witness.account_id]?.options.votes || [];
@@ -481,7 +483,7 @@ export default function Witnesses(properties) {
                   <div className="col-span-3 text-right pr-3">
                     {humanReadableFloat(witness.total_votes, 5).toLocaleString(
                       undefined,
-                      { minimumFractionDigits: 0 }
+                      { minimumFractionDigits: 5 }
                     )}{" "}
                     BTS
                   </div>
@@ -513,7 +515,7 @@ export default function Witnesses(properties) {
                 </List>
               </ScrollArea>
             ) : (
-              <div className="text-red text-center">N/A</div>
+              <div className="text-red-500 text-center">N/A</div>
             )}
           </DialogContent>
         </Dialog>

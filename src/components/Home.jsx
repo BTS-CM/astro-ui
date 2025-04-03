@@ -660,6 +660,7 @@ export default function Home(properties) {
             <ul className="ml-2 list-disc [&>li]:mt-2">
               <li>{t("Home:witnesses.hover1")}</li>
               <li>{t("Home:witnesses.hover2")}</li>
+              <li>{t("Home:witnesses.hover3")}</li>
             </ul>
           </HoverCardContent>
         </HoverCard>
@@ -681,6 +682,7 @@ export default function Home(properties) {
             <ul className="ml-2 list-disc [&>li]:mt-2">
               <li>{t("Home:committee.hover1")}</li>
               <li>{t("Home:committee.hover2")}</li>
+              <li>{t("Home:committee.hover3")}</li>
             </ul>
           </HoverCardContent>
         </HoverCard>
@@ -893,6 +895,7 @@ export default function Home(properties) {
             <ul className="ml-2 list-disc [&>li]:mt-2">
               <li>{t("Home:create_worker.hover1")}</li>
               <li>{t("Home:create_worker.hover2")}</li>
+              <li>{t("Home:create_worker.hover3")}</li>
             </ul>
           </HoverCardContent>
         </HoverCard>

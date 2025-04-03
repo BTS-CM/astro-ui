@@ -10,5 +10,8 @@
   "votes": "Votes Received",
   "noActive": "No active committee members found.",
   "noInactive": "No inactive committee members found.",
-  "loading": "Loading committee data..."
+  "loading": "Loading committee data...",
+  "votesFor": "{{name}}'s committee votes",
+  "descriptionVotes": "View the committee votes cast by this committee member.",
+  "coreTokenBalance": "Core Asset Balance"
 }
