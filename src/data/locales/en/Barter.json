@@ -6,17 +6,17 @@
   "changeRecipient": "Change Recipient",
   "selectRecipient": "Select Recipient",
   "yourOffer": "Your Offer",
-  "theirOffer": "Their Offer ({name})",
+  "theirOffer": "Their Offer ({{name}})",
   "addAsset": "Add Asset",
   "asset": "Asset",
   "amount": "Amount",
   "memoOptional": "Memo (Optional)",
   "memoPlaceholder": "Public memo for this asset transfer",
-  "balance": "Balance: {balance} {symbol}",
+  "balance": "Balance: {{balance}} {{symbol}}",
   "insufficientBalance": "Insufficient balance!",
   "balanceWarningTitle": "Balance Warning",
   "yourBalanceWarning": "You don't have enough funds for your side of the offer:",
-  "theirBalanceWarning": "{name} may not have enough funds for their side of the offer:",
+  "theirBalanceWarning": "{{name}} may not have enough funds for their side of the offer:",
   "useEscrow": "Use Escrow Agent",
   "escrowInfo": "Enable this to use a trusted third party (escrow agent) to hold assets during the trade.",
   "escrowAgent": "Escrow Agent",
@@ -41,5 +41,6 @@
   "errorEscrowIsYou": "You cannot be the escrow agent for your own trade.",
   "errorEscrowIsCounterparty": "The counterparty cannot also be the escrow agent.",
   "errorInsufficientBalance": "One or both parties may have insufficient funds for the proposed trade.",
-  "deeplinkHeader": "Proposing barter trade between {from} and {to}"
+  "deeplinkHeader": "Proposing barter trade between {from} and {to}",
+  "submit": "Submit"
 }
