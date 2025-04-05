@@ -65,6 +65,11 @@ const pages = [
   "WithdrawDialog",
   "HTLC",
   "HTLCCreate",
+  "Barter",
+  "GovernanceActions",
+  "WorkerCreate",
+  "CommitteeMembers",
+  "Witnesses",
 ];
 
 const locale = persistentAtom("locale", "en");

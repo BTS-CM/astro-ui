@@ -1,0 +1,27 @@
+---
+import { getCollection } from 'astro:content';
+
+import Layout from '../layouts/Layout.astro';
+import PageHeader from '../components/PageHeader.jsx';
+import PageFooter from '../components/PageFooter.jsx';
+import WitnessCommittee from '../components/WitnessCommittee.jsx';
+
+const btsFeeSchedule = await getCollection('btsFeeSchedule');
+const testFeeSchedule = await getCollection('testFeeSchedule');
+
+const globalParamsBTS = btsFeeSchedule.map(collection => collection.data);
+const globalParamsTEST = testFeeSchedule.map(collection => collection.data);
+
+const page = "governance";
+---
+<Layout title="Bitshares Governance Actions">
+    <main>
+        <PageHeader page={page} client:only="react" />
+        <WitnessCommittee
+            client:only="react"
+            _globalParamsBTS={globalParamsBTS}
+            _globalParamsTEST={globalParamsTEST}
+        />
+         <PageFooter sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/governance.astro" client:only="react" />
+    </main>
+</Layout>

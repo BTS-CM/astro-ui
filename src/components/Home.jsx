@@ -273,6 +273,26 @@ export default function Home(properties) {
             </ul>
           </HoverCardContent>
         </HoverCard>
+
+        <HoverCard key="barter">
+          <HoverCardTrigger asChild>
+            <a href="/barter/index.html" style={{ textDecoration: "none" }}>
+              <Card className="h-full hover:shadow-md hover:shadow-black">
+                <CardHeader>
+                  <CardTitle>{t("Home:barter.title")}</CardTitle>
+                  <CardDescription>{t("Home:barter.subtitle")}</CardDescription>
+                </CardHeader>
+              </Card>
+            </a>
+          </HoverCardTrigger>
+          <HoverCardContent className="w-80 text-sm pt-1">
+            <ul className="ml-2 list-disc [&>li]:mt-2">
+              <li>{t("Home:barter.hover1")}</li>
+              <li>{t("Home:barter.hover2")}</li>
+              <li>{t("Home:barter.hover3")}</li>
+            </ul>
+          </HoverCardContent>
+        </HoverCard>
       </div>
 
       <h4 className="mt-3 mb-2">{t("PageHeader:formsOfDebtHeading")}</h4>
@@ -622,6 +642,50 @@ export default function Home(properties) {
             </ul>
           </HoverCardContent>
         </HoverCard>
+
+        <HoverCard key="witnesses">
+          <HoverCardTrigger asChild>
+            <a href="/witnesses/index.html" style={{ textDecoration: "none" }}>
+              <Card className="h-full hover:shadow-md hover:shadow-black">
+                <CardHeader>
+                  <CardTitle>{t("Home:witnesses.title")}</CardTitle>
+                  <CardDescription>
+                    {t("Home:witnesses.subtitle")}
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            </a>
+          </HoverCardTrigger>
+          <HoverCardContent className="w-80 text-sm pt-1">
+            <ul className="ml-2 list-disc [&>li]:mt-2">
+              <li>{t("Home:witnesses.hover1")}</li>
+              <li>{t("Home:witnesses.hover2")}</li>
+              <li>{t("Home:witnesses.hover3")}</li>
+            </ul>
+          </HoverCardContent>
+        </HoverCard>
+
+        <HoverCard key="committee">
+          <HoverCardTrigger asChild>
+            <a href="/committee/index.html" style={{ textDecoration: "none" }}>
+              <Card className="h-full hover:shadow-md hover:shadow-black">
+                <CardHeader>
+                  <CardTitle>{t("Home:committee.title")}</CardTitle>
+                  <CardDescription>
+                    {t("Home:committee.subtitle")}
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            </a>
+          </HoverCardTrigger>
+          <HoverCardContent className="w-80 text-sm pt-1">
+            <ul className="ml-2 list-disc [&>li]:mt-2">
+              <li>{t("Home:committee.hover1")}</li>
+              <li>{t("Home:committee.hover2")}</li>
+              <li>{t("Home:committee.hover3")}</li>
+            </ul>
+          </HoverCardContent>
+        </HoverCard>
       </div>
 
       <h4 className="mt-3 mb-2">{t("PageHeader:assetCreation")}</h4>
@@ -786,6 +850,52 @@ export default function Home(properties) {
             <ul className="ml-2 list-disc [&>li]:mt-2">
               <li>{t("Home:create_account.hover1")}</li>
               <li>{t("Home:create_account.hover2")}</li>
+            </ul>
+          </HoverCardContent>
+        </HoverCard>
+
+        <HoverCard key="governance">
+          <HoverCardTrigger asChild>
+            <a href="/governance/index.html" style={{ textDecoration: "none" }}>
+              <Card className="h-full hover:shadow-md hover:shadow-black">
+                <CardHeader>
+                  <CardTitle>{t("Home:governance.title")}</CardTitle>
+                  <CardDescription>
+                    {t("Home:governance.subtitle")}
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            </a>
+          </HoverCardTrigger>
+          <HoverCardContent className="w-80 text-sm pt-1">
+            <ul className="ml-2 list-disc [&>li]:mt-2">
+              <li>{t("Home:governance.hover1")}</li>
+              <li>{t("Home:governance.hover2")}</li>
+            </ul>
+          </HoverCardContent>
+        </HoverCard>
+
+        <HoverCard key="create_worker">
+          <HoverCardTrigger asChild>
+            <a
+              href="/create_worker/index.html"
+              style={{ textDecoration: "none" }}
+            >
+              <Card className="h-full hover:shadow-md hover:shadow-black">
+                <CardHeader>
+                  <CardTitle>{t("Home:create_worker.title")}</CardTitle>
+                  <CardDescription>
+                    {t("Home:create_worker.subtitle")}
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            </a>
+          </HoverCardTrigger>
+          <HoverCardContent className="w-80 text-sm pt-1">
+            <ul className="ml-2 list-disc [&>li]:mt-2">
+              <li>{t("Home:create_worker.hover1")}</li>
+              <li>{t("Home:create_worker.hover2")}</li>
+              <li>{t("Home:create_worker.hover3")}</li>
             </ul>
           </HoverCardContent>
         </HoverCard>

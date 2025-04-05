@@ -1,4 +1,38 @@
 {
+  "barter": {
+    "title": "🛒 Barter",
+    "subtitle": "Trade assets with other users",
+    "hover1": "Trade assets with other users.",
+    "hover2": "Bartering is a peer-to-peer trading process.",
+    "hover3": "Bartering can involve 3rd party escrow services."
+  },
+  "witnesses": {
+    "title": "👁️ Witnesses",
+    "subtitle": "View the current active and inactive witnesses.",
+    "hover1": "View who has received the most votes.",
+    "hover2": "View who witnesses have voted for.",
+    "hover3": "View witness core token balances."
+  },
+  "committee": {
+    "title": "🗳️ Committee Members",
+    "subtitle": "View the current active and inactive committee members.",
+    "hover1": "View who has received the most votes.",
+    "hover2": "View who committee members have voted for.",
+    "hover3": "View committee core token balances."
+  },
+  "governance": {
+    "title": "🗳️ Governance",
+    "subtitle": "Create/Update both witness and committee roles.",
+    "hover1": "Create, update or invalidate your witness registration.",
+    "hover2": "Create or update your committee member registration."
+  },
+  "create_worker": {
+    "title": "🛠️ Create Worker Proposal",
+    "subtitle": "Create a worker proposal for funding ideas!",
+    "hover1": "Secure funds via a worker proposal to fund your project.",
+    "hover2": "Worker proposals are funded by the Bitshares reserve fund.",
+    "hover3": "Worker proposals are voted on by the community."
+  },
   "dex": {
     "title": "📈 DEX Limit Orders",
     "subtitle": "Trade assets on the Bitshares DEX",
