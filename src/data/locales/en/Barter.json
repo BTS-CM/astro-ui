@@ -41,6 +41,6 @@
   "errorEscrowIsYou": "You cannot be the escrow agent for your own trade.",
   "errorEscrowIsCounterparty": "The counterparty cannot also be the escrow agent.",
   "errorInsufficientBalance": "One or both parties may have insufficient funds for the proposed trade.",
-  "deeplinkHeader": "Proposing barter trade between {from} and {to}",
+  "deeplinkHeader": "Proposing barter trade between {{from}} and {{to}}",
   "submit": "Submit"
 }

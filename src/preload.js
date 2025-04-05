@@ -3,13 +3,15 @@ import { ipcRenderer, contextBridge } from "electron";
 contextBridge.exposeInMainWorld("electron", {
   // MISC
   openURL: async (target) => ipcRenderer.send("openURL", target), // Links to explorers
-  notify: async (msg) => ipcRenderer.send('notify', msg), // Triggering an electron notification prompt
-  registerFaucetAccount: async (args) => ipcRenderer.invoke("faucetRegistration", args),
+  notify: async (msg) => ipcRenderer.send("notify", msg), // Triggering an electron notification prompt
+  registerFaucetAccount: async (args) =>
+    ipcRenderer.invoke("faucetRegistration", args),
   genKey: async () => ipcRenderer.invoke("genKey"),
   genAccount: async (args) => ipcRenderer.invoke("genAccount", args),
   // REST queries
   fetchTopMarkets: async (args) => ipcRenderer.invoke("fetchTopMarkets", args),
-  fetchAccountHistory: async (args) => ipcRenderer.invoke("fetchAccountHistory", args),
+  fetchAccountHistory: async (args) =>
+    ipcRenderer.invoke("fetchAccountHistory", args),
   // WS queries
   requestBlocks: async (args) => ipcRenderer.send("requestBlocks", args),
   onBlockResponse: (func) => {
@@ -19,5 +21,8 @@ contextBridge.exposeInMainWorld("electron", {
   },
   stopBlocks: async () => ipcRenderer.send("stopBlocks", args),
   // API queries
-  generateDeepLink: async (args) => ipcRenderer.invoke("generateDeepLink", args),
+  generateDeepLink: async (args) =>
+    ipcRenderer.invoke("generateDeepLink", args),
+  calculateOperationFees: async (args) =>
+    ipcRenderer.invoke("calculateOperationFees", args),
 });

@@ -24,6 +24,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { humanReadableFloat } from "@/bts/common";
 
 /**
  * Creating a basic asset dropdown component
@@ -46,27 +47,35 @@ export default function BalanceAssetDropDownCard(properties) {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const filteredUserBalances = useMemo(() => {
+    let _balances;
     if (assetsToHide) {
       const filteredBalances = usrBalances.filter((balance) => {
         return !assetsToHide.includes(balance.asset_id);
       });
-      return filteredBalances;
+      _balances = filteredBalances;
     } else {
-      return usrBalances;
+      _balances = usrBalances;
     }
+    return _balances.filter((balance) => balance.amount > 0);
   }, [assetsToHide, usrBalances]);
 
   const Row = ({ index, style }) => {
     let res = filteredUserBalances[index];
-    console.log({ res });
+
     if (!res || !assets) {
       return;
     }
 
     const specifiedAsset = assets.find((asset) => asset.id === res.asset_id);
     if (!specifiedAsset) {
+      console.log("Asset not found in assets list");
       return;
     }
+
+    const balanceAvailable = humanReadableFloat(
+      res.amount,
+      specifiedAsset.precision
+    );
 
     const [transferAmount, setTransferAmount] = useState(0);
 
@@ -74,42 +83,52 @@ export default function BalanceAssetDropDownCard(properties) {
       <div style={{ ...style, marginBottom: "10px", paddingRight: "10px" }}>
         <Dialog>
           <DialogTrigger asChild>
-            <Card key={`acard-${res.id}`}>
+            <Card key={`acard-${res.asset_id}`}>
               <CardHeader className="p-3">
                 <CardTitle className="h-3">
-                  {assets && assets.length && res
-                    ? `${
-                        assets.find((asset) => asset.id === res.asset_id).symbol
-                      } (${res.asset_id})`
-                    : null}
+                  <div className="grid grid-cols-3 gap-2">
+                    <div className="col-span-2">
+                      {specifiedAsset.symbol} ({res.asset_id})
+                    </div>
+                    <div>{balanceAvailable}</div>
+                  </div>
                 </CardTitle>
               </CardHeader>
             </Card>
           </DialogTrigger>
-          <DialogHeader>
-            <DialogTitle>{t("")}</DialogTitle>
-          </DialogHeader>
           <DialogContent className="sm:max-w-[550px] bg-white">
-            <h3>
-              {t("Transfer:amountToTransfer", {
-                asset: specifiedAsset.symbol,
-              })}
-            </h3>
-            <Input
-              label={t("Transfer:amountToTransferLabel")}
-              value={transferAmount}
-              placeholder={transferAmount}
-              onChange={(e) => {
-                let regex = new RegExp(
-                  `^[0-9]*\\.?[0-9]{0,${specifiedAsset.precision}}$`
-                );
+            <DialogHeader>
+              <DialogTitle>
+                {t("Transfer:amountToTransfer", {
+                  asset: specifiedAsset.symbol,
+                })}
+              </DialogTitle>
+            </DialogHeader>
+            <div className="grid grid-cols-2 gap-2">
+              <Input
+                label={t("Transfer:amountToTransferLabel")}
+                value={transferAmount}
+                placeholder={transferAmount}
+                onChange={(e) => {
+                  let regex = new RegExp(
+                    `^[0-9]*\\.?[0-9]{0,${specifiedAsset.precision}}$`
+                  );
 
-                if (regex.test(input)) {
-                  setTransferAmount(e.target.value);
-                }
-              }}
-              className="mb-1"
-            />
+                  if (regex.test(e.target.value)) {
+                    setTransferAmount(e.target.value);
+                  }
+                }}
+                className="mb-1"
+              />
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setTransferAmount(balanceAvailable);
+                }}
+              >
+                {t("LimitOrderCard:useBalance")}
+              </Button>
+            </div>
             {transferAmount > 0 ? (
               <Button
                 variant="outline"
@@ -160,15 +179,12 @@ export default function BalanceAssetDropDownCard(properties) {
             </h3>
           </DialogTitle>
         </DialogHeader>
-        <h4 className="text-md font-bold tracking-tight">
-          {t("AssetDropDownCard:balance")}
-        </h4>
         {filteredUserBalances && filteredUserBalances.length ? (
           <>
             <List
               height={350}
               itemCount={filteredUserBalances.length}
-              itemSize={70}
+              itemSize={45}
               className="w-full"
             >
               {Row}

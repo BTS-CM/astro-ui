@@ -1,6 +1,12 @@
-import React, { useState, useEffect, useSyncExternalStore } from "react";
+import React, {
+  useState,
+  useEffect,
+  useSyncExternalStore,
+  useMemo,
+} from "react";
 import { useStore } from "@nanostores/react";
 import { format } from "date-fns";
+import { Apis } from "bitsharesjs-ws";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
@@ -224,6 +230,86 @@ export default function DeepLinkDialog(properties) {
   }, [expiryType, date]);
 
   const [reviewPeriodSeconds, setReviewPeriodSeconds] = useState(60000);
+
+  const [deeplinkJSON, setDeeplinkJSON] = useState(null);
+
+  useEffect(() => {
+    async function calculateDeeplinkJSON() {
+      if (!targetUser || !date || !trxJSON) {
+        setDeeplinkJSON(null);
+        return;
+      }
+
+      let feeProcessedOperations = [...trxJSON];
+
+      for (let i = 0; i < trxJSON.length; i++) {
+        try {
+          let currentFee = await window.electron.calculateOperationFees({
+            nodeURL: currentNode,
+            trxJSON: trxJSON[i],
+          });
+
+          if (currentFee) {
+            feeProcessedOperations[i].fee = {
+              amount: parseInt(currentFee),
+              asset_id: "1.3.0",
+            };
+          } else {
+            console.log("Failed to fetch fee for operation", trxJSON[i]);
+          }
+        } catch (error) {
+          console.error("Error calculating fees:", error);
+        }
+      }
+
+      let _adjusted_proposed_ops = feeProcessedOperations.map(
+        (operation, index) => ({
+          op: [operationNumbers[operationNames[index]], operation],
+        })
+      );
+
+      let _trx = [
+        {
+          //fee: {
+          //  amount: 0,
+          //  asset_id: "1.3.0",
+          //},
+          fee_paying_account: targetUser.id,
+          expiration_time: date,
+          proposed_ops: _adjusted_proposed_ops,
+          review_period_seconds: reviewPeriodSeconds,
+          extensions: {},
+        },
+      ];
+
+      /*
+      let finalFee = await window.electron.calculateOperationFees({
+        nodeURL: currentNode,
+        trxJSON: _trx,
+      });
+
+      console.log({ finalFee });
+      if (finalFee) {
+        _trx[0].fee = {
+          amount: finalFee,
+          asset_id: "1.3.0",
+        };
+      }
+      */
+
+      setDeeplinkJSON(_trx);
+    }
+
+    calculateDeeplinkJSON();
+  }, [
+    targetUser,
+    date,
+    trxJSON,
+    operationNumbers,
+    operationNames,
+    reviewPeriodSeconds,
+    currentNode,
+  ]);
 
   return (
     <Dialog
@@ -653,28 +739,10 @@ export default function DeepLinkDialog(properties) {
                   {proposalDialogOpen &&
                     !proposal &&
                     targetUser &&
-                    targetUser.id && (
+                    targetUser.id &&
+                    deeplinkJSON && (
                       <DeepLinkDialog
-                        trxJSON={[
-                          {
-                            fee_paying_account: targetUser.id,
-                            expiration_time: date,
-                            proposed_ops: trxJSON.map((operation, index) => ({
-                              op: [
-                                operationNumbers[operationNames[index]],
-                                {
-                                  ...operation,
-                                  fee: {
-                                    amount: 0,
-                                    asset_id: "1.3.0",
-                                  },
-                                },
-                              ],
-                            })),
-                            review_period_seconds: reviewPeriodSeconds,
-                            extensions: {},
-                          },
-                        ]}
+                        trxJSON={deeplinkJSON}
                         operationNames={["proposal_create"]}
                         username={username}
                         usrChain={usrChain}

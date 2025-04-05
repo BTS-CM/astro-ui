@@ -7,15 +7,7 @@ import React, {
 } from "react";
 import { useStore } from "@nanostores/react";
 import { FixedSizeList as List } from "react-window";
-import {
-  PlusCircledIcon,
-  MinusCircledIcon,
-  ArrowRightIcon,
-  ArrowLeftIcon,
-  ExclamationTriangleIcon,
-  GearIcon,
-  CrossCircledIcon,
-} from "@radix-ui/react-icons";
+import { MinusCircledIcon, CrossCircledIcon } from "@radix-ui/react-icons";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
@@ -106,17 +98,18 @@ export default function Barter(properties) {
     return [];
   }, [_assetsBTS, _assetsTEST, _chain]);
 
+  /*
   const marketSearch = useMemo(() => {
     if (_chain && (_marketSearchBTS || _marketSearchTEST)) {
       return _chain === "bitshares" ? _marketSearchBTS : _marketSearchTEST;
     }
     return [];
   }, [_marketSearchBTS, _marketSearchTEST, _chain]);
-
+  */
   // --- State ---
   const [toAccount, setToAccount] = useState(null); // Counterparty {id, name}
-  const [fromAssets, setFromAssets] = useState(); // Current user's offer [{id, amount, asset, memo}]
-  const [toAssets, setToAssets] = useState(); // Counterparty's offer [{id, amount, asset, memo}]
+  const [fromAssets, setFromAssets] = useState({}); // Current user's offer [{id, amount, asset, memo}]
+  const [toAssets, setToAssets] = useState({}); // Counterparty's offer [{id, amount, asset, memo}]
 
   const [showEscrow, setShowEscrow] = useState(false);
   const [escrowAccount, setEscrowAccount] = useState(null); // Escrow agent {id, name}
@@ -160,7 +153,7 @@ export default function Barter(properties) {
   // Fetch current user's balances and account data
   useEffect(() => {
     let balancesUnsubscribe;
-    let accountUnsubscribe;
+    //let accountUnsubscribe;
     if (usr && usr.id && currentNode && assets && assets.length) {
       const userBalancesStore = createUserBalancesStore([
         usr.chain,
@@ -181,6 +174,7 @@ export default function Barter(properties) {
         }
       );
 
+      /*
       const userAccountStore = createObjectStore([
         usr.chain,
         JSON.stringify([usr.id]),
@@ -195,10 +189,11 @@ export default function Barter(properties) {
           }
         }
       );
+      */
     }
     return () => {
       if (balancesUnsubscribe) balancesUnsubscribe();
-      if (accountUnsubscribe) accountUnsubscribe();
+      //if (accountUnsubscribe) accountUnsubscribe();
     };
   }, [usr, assets, currentNode]);
 
@@ -225,6 +220,7 @@ export default function Barter(properties) {
         }
       );
 
+      /*
       const userAccountStore = createObjectStore([
         usr.chain,
         JSON.stringify([toAccount.id]),
@@ -239,10 +235,11 @@ export default function Barter(properties) {
           }
         }
       );
+      */
     } else {
       // Reset if toAccount changes or is removed
       setToBalances(null);
-      setToAccountData(null);
+      //setToAccountData(null);
     }
     return () => {
       if (balancesUnsubscribe) balancesUnsubscribe();
@@ -251,20 +248,6 @@ export default function Barter(properties) {
   }, [toAccount, assets, currentNode]);
 
   // --- Validation ---
-  const isFromOfferValid = useMemo(() => {
-    if (!fromAssets || !Object.keys(fromAssets).length) return false;
-    return Object.values(fromAssets).every(
-      (item) => item.amount > 0 && item.asset
-    );
-  }, [fromAssets]);
-
-  const isToOfferValid = useMemo(() => {
-    if (!toAssets || !Object.keys(toAssets).length) return false;
-    return Object.values(toAssets).every(
-      (item) => item.amount > 0 && item.asset
-    );
-  }, [toAssets]);
-
   const isEscrowValid = useMemo(() => {
     if (!showEscrow) return true; // Escrow not used, valid by default
     return !showEscrow || (escrowAccount && escrowAccount.id);
@@ -273,28 +256,27 @@ export default function Barter(properties) {
   const canSubmit = useMemo(
     () =>
       usr &&
-      usr.id &&
       toAccount &&
-      toAccount.id &&
-      usr.id !== toAccount.id &&
-      isFromOfferValid &&
-      isToOfferValid &&
+      fromAssets &&
+      Object.keys(fromAssets).length &&
+      toAssets &&
+      Object.keys(toAssets).length &&
       isEscrowValid &&
-      (!showEscrow || escrowAccount.id !== usr.id) && // Escrow can't be sender
-      (!showEscrow || escrowAccount.id !== toAccount.id) && [
-        // Escrow can't be receiver
-        usr,
-        toAccount,
-        isFromOfferValid,
-        isToOfferValid,
-        isEscrowValid,
-        escrowAccount,
-      ]
+      (!showEscrow || escrowAccount.id !== toAccount.id),
+    [
+      usr,
+      toAccount,
+      fromAssets,
+      toAssets,
+      isEscrowValid,
+      showEscrow,
+      escrowAccount,
+    ]
   );
 
   // --- Transaction Construction ---
   const proposalOperations = useMemo(() => {
-    if (!canSubmit || !fromAccountData || !toAccountData) return null;
+    if (!canSubmit) return null;
 
     let ops = [];
 
@@ -307,17 +289,27 @@ export default function Barter(properties) {
           from: usr.id,
           to: escrowAccount.id,
           amount: {
-            amount: blockchainFloat(escrowPayment, 5),
+            amount: Math.floor(blockchainFloat(escrowPayment, 5)), // Ensure integer
             asset_id: "1.3.0",
           },
-          memo: null,
           extensions: {},
         },
       ]);
     }
 
+    console.log({
+      from: {
+        fromAssets,
+        keys: Object.keys(fromAssets),
+      },
+      to: {
+        toAssets,
+        keys: Object.keys(toAssets),
+      },
+    });
+
     // 2. Handle "From" user's asset transfers
-    Object.keys(fromAssets).forEach((item) => {
+    Object.values(fromAssets).forEach((item) => {
       const assetData = item.asset;
       if (!assetData) return;
 
@@ -331,17 +323,18 @@ export default function Barter(properties) {
           from: usr.id,
           to: to,
           amount: {
-            amount: blockchainFloat(item.amount, assetData.precision),
+            amount: Math.floor(
+              blockchainFloat(item.amount, assetData.precision)
+            ), // Ensure integer
             asset_id: assetData.id,
           },
-          memo: null,
           extensions: {},
         },
       ]);
     });
 
     // 3. Handle "To" user's asset transfers
-    Object.keys(toAssets).forEach((item) => {
+    Object.values(toAssets).forEach((item) => {
       const assetData = item.asset;
       if (!assetData) return;
 
@@ -356,10 +349,11 @@ export default function Barter(properties) {
           from: from,
           to: receiver,
           amount: {
-            amount: blockchainFloat(item.amount, assetData.precision),
+            amount: Math.floor(
+              blockchainFloat(item.amount, assetData.precision)
+            ), // Ensure integer
             asset_id: assetData.id,
           },
-          memo: null,
           extensions: {},
         },
       ]);
@@ -379,7 +373,6 @@ export default function Barter(properties) {
           from: escrowAccount.id,
           to: usr.id, // Or the appropriate final recipient based on the full logic
           amount: { amount: 1, asset_id: "1.3.0" }, // Minimal transfer as indicator?
-          memo: null,
           extensions: {},
         },
       ]);
@@ -389,16 +382,21 @@ export default function Barter(properties) {
     const proposalExpiration = new Date();
     proposalExpiration.setDate(proposalExpiration.getDate() + 7); // Default 7 day expiry for proposal
 
-    return [
+    const _finalJSON = [
       {
         fee: { amount: 0, asset_id: "1.3.0" },
-        fee_paying_account: usr.id, // Current user pays proposal fee
+        fee_paying_account:
+          showEscrow && sendToEscrowFirst ? escrowAccount.id : toAccount.id, // Current user pays proposal fee
         expiration_time: proposalExpiration.toISOString().slice(0, 19),
         proposed_ops: ops.map((op) => ({ op: op })),
         review_period_seconds: 3600, // Optional: 1 hour review period
         extensions: {},
       },
     ];
+
+    console.log({ _finalJSON });
+
+    return _finalJSON;
   }, [
     canSubmit,
     usr,
@@ -410,69 +408,63 @@ export default function Barter(properties) {
     escrowAccount,
     escrowPayment,
     assets,
-    fromAccountData,
-    toAccountData,
   ]);
 
   // Refactored function to render asset items
   const renderAssetRow = ({ index, style, party, assetList }) => {
-    const item = assetList[index];
+    const item = Object.values(assetList)[index];
     if (!item) return null; // Handle empty state
 
     const assetData = item.asset;
 
     return (
       <div
-        key={item.id}
+        key={assetData.id}
         className="space-y-2 border rounded-md relative p-1"
         style={style}
       >
-        {(party === "from" && assetList.length > 1) ||
-        (party === "to" && assetList.length > 1) ? (
-          <Button
-            variant="ghost"
-            size="icon"
-            className="absolute top-1 right-1 h-6 w-6"
-            onClick={() => removeAsset(party, item.id)}
-          >
-            <MinusCircledIcon className="h-4 w-4" />
-          </Button>
-        ) : null}
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-5 gap-3">
           {/* Amount Input */}
-          <div className="space-y-1">
+          <div className="space-y-1 col-span-2">
             <Input
-              id={`amount-${party}-${item.id}`}
+              id={`amount-${party}-${assetData.id}`}
               type="number"
               value={item.amount}
               disabled
             />
           </div>
           {/* Display chosen asset */}
-          <div className="space-y-1">
+          <div className="space-y-1 col-span-2">
             <Input
-              id={`asset-${party}-${item.id}`}
+              id={`asset-${party}-${assetData.id}`}
               type="text"
               value={assetData?.symbol || ""}
               disabled
             />
           </div>
-          <Button
-            onClick={() => {
-              removeAsset(party, item.id);
-              if (party === "from") {
-                _ref = fromAssets.delete(item.id);
-                setFromAssets(_ref);
-              } else {
-                _ref = toAssets.delete(item.id);
-                setToAssets(_ref);
-              }
-            }}
-            variant="ghost"
-            size="icon"
-          >
-            <CrossCircledIcon />
-          </Button>
+          <div className="text-center">
+            <Button
+              onClick={() => {
+                if (party === "from") {
+                  setFromAssets((prevAssets) => {
+                    const updatedAssets = { ...prevAssets }; // Create a shallow copy
+                    delete updatedAssets[assetData.id]; // Remove the field
+                    return updatedAssets; // Return the updated object
+                  });
+                } else {
+                  setToAssets((prevAssets) => {
+                    const updatedAssets = { ...prevAssets }; // Create a shallow copy
+                    delete updatedAssets[assetData.id]; // Remove the field
+                    return updatedAssets; // Return the updated object
+                  });
+                }
+              }}
+              variant="ghost"
+              size="icon"
+            >
+              <CrossCircledIcon />
+            </Button>
+          </div>
         </div>
       </div>
     );
@@ -484,7 +476,6 @@ export default function Barter(properties) {
       index,
       style,
       party: "to",
-      balances: toBalances,
       assetList: toAssets,
     });
   };
@@ -494,7 +485,6 @@ export default function Barter(properties) {
       index,
       style,
       party: "from",
-      balances: fromBalances,
       assetList: fromAssets,
     });
   };
@@ -597,14 +587,15 @@ export default function Barter(properties) {
                                   fromAssets ? Object.keys(fromAssets) : []
                                 }
                                 storeCallback={(res) => {
-                                  let _refFromAssets = fromAssets;
-
-                                  _refFromAssets[res.asset.id] = {
-                                    amount: res.amount,
-                                    asset: res.asset,
+                                  const updatedFromAssets = {
+                                    ...fromAssets,
+                                    [res.asset.id]: {
+                                      amount: res.amount,
+                                      asset: res.asset,
+                                    },
                                   };
 
-                                  setFromAssets(_refFromAssets);
+                                  setFromAssets(updatedFromAssets);
                                 }}
                                 assets={assets}
                                 size="small"
@@ -615,15 +606,19 @@ export default function Barter(properties) {
                         </div>
                       </CardHeader>
                       <CardContent>
-                        {fromAssets && fromAssets.length ? (
+                        {fromAssets && Object.keys(fromAssets).length ? (
                           <>
-                            <div className="grid grid-cols-2 gap-2 p-2 bg-gray-100 mb-1 rounded-t-md font-semibold text-sm sticky top-0 z-10">
-                              <div>{t("Barter:amount")}</div>
-                              <div>{t("Barter:asset")}</div>
+                            <div className="grid grid-cols-5 gap-2 p-2 bg-gray-100 mb-1 rounded-t-md font-semibold text-sm sticky top-0 z-10">
+                              <div className="col-span-2">
+                                {t("Barter:amount")}
+                              </div>
+                              <div className="col-span-2">
+                                {t("Barter:asset")}
+                              </div>
                             </div>
                             <List
                               height={500}
-                              itemCount={fromAssets.length}
+                              itemCount={Object.keys(fromAssets).length}
                               itemSize={45} // Adjust as needed
                               width="100%"
                             >
@@ -633,13 +628,6 @@ export default function Barter(properties) {
                         ) : null}
                       </CardContent>
                     </Card>
-                  </div>
-
-                  {/* Swap Icon */}
-                  <div className="flex items-center justify-center md:col-span-1 md:mt-16">
-                    <ArrowRightIcon className="h-6 w-6 text-muted-foreground hidden md:block" />
-                    <ArrowLeftIcon className="h-6 w-6 text-muted-foreground hidden md:block" />
-                    {/* Add arrows for mobile view if needed */}
                   </div>
 
                   {/* User B Offer */}
@@ -660,13 +648,15 @@ export default function Barter(properties) {
                                     toAssets ? Object.keys(toAssets) : []
                                   }
                                   storeCallback={(res) => {
-                                    let _refToAssets = toAssets;
-                                    _refToAssets[res.asset.id] = {
-                                      amount: res.amount,
-                                      asset: res.asset,
+                                    const updatedToAssets = {
+                                      ...toAssets,
+                                      [res.asset.id]: {
+                                        amount: res.amount,
+                                        asset: res.asset,
+                                      },
                                     };
 
-                                    setToAssets(_refToAssets);
+                                    setToAssets(updatedToAssets);
                                   }}
                                   assets={assets}
                                   size="small"
@@ -678,15 +668,19 @@ export default function Barter(properties) {
                         </CardTitle>
                       </CardHeader>
                       <CardContent>
-                        {toAssets && toAssets.length ? (
+                        {toAssets && Object.keys(toAssets).length ? (
                           <>
-                            <div className="grid grid-cols-2 gap-2 p-2 mb-1 bg-gray-100 rounded-t-md font-semibold text-sm sticky top-0 z-10">
-                              <div>{t("Barter:amount")}</div>
-                              <div>{t("Barter:asset")}</div>
+                            <div className="grid grid-cols-5 gap-2 p-2 mb-1 bg-gray-100 rounded-t-md font-semibold text-sm sticky top-0 z-10">
+                              <div className="col-span-2">
+                                {t("Barter:amount")}
+                              </div>
+                              <div className="col-span-2">
+                                {t("Barter:asset")}
+                              </div>
                             </div>
                             <List
                               height={500}
-                              itemCount={toAssets.length}
+                              itemCount={Object.keys(toAssets).length}
                               itemSize={45} // Adjust as needed
                               width="100%"
                             >
@@ -841,10 +835,12 @@ export default function Barter(properties) {
           </CardContent>
           <CardFooter className="flex flex-col items-start space-y-3">
             <Separator />
-            <p className="text-sm text-muted-foreground">
-              {t("Barter:finalSummary")}
-            </p>
-            <Button type="submit" disabled={!canSubmit}>
+            <Button
+              onClick={() => {
+                setShowDialog(true);
+              }}
+              disabled={!canSubmit}
+            >
               {t("Barter:proposeTrade")}
             </Button>
           </CardFooter>

@@ -209,6 +209,50 @@ export default function Transfer(properties) {
     }
   }, [targetUser]);
 
+  const operationJSON = useMemo(() => {
+    if (!usr || !targetUser || !foundAsset) {
+      return null;
+    }
+
+    let _data = [
+      {
+        fee: {
+          amount: 0,
+          asset_id: "1.3.0",
+        },
+        from: usr.id,
+        to: targetUser.id,
+        amount: {
+          amount: blockchainFloat(transferAmount, foundAsset.precision).toFixed(
+            0
+          ),
+          asset_id: foundAsset.id,
+        },
+        extensions: {},
+      },
+    ];
+
+    if (memoContents && memoContents.length) {
+      _data["memo"] = {
+        // clear-text until processed by beeteos!
+        from: bothUsers[0].options.memo_key,
+        to: bothUsers[1].options.memo_key,
+        nonce: String(Date.now()),
+        message: memoContents,
+      };
+    }
+
+    return _data;
+  }, [
+    usr,
+    targetUser,
+    transferAmount,
+    foundAsset,
+    memoContents,
+    bothUsers,
+    memoContents,
+  ]);
+
   return (
     <>
       <div className="container mx-auto mt-5 mb-5">
@@ -629,33 +673,7 @@ export default function Transfer(properties) {
                     target: targetUser.name,
                     user: usr.username,
                   })}
-                  trxJSON={[
-                    {
-                      fee: {
-                        amount: 0,
-                        asset_id: "1.3.0",
-                      },
-                      from: usr.id,
-                      to: targetUser.id,
-                      amount: {
-                        amount: blockchainFloat(
-                          transferAmount,
-                          foundAsset.precision
-                        ).toFixed(0),
-                        asset_id: foundAsset.id,
-                      },
-                      memo: memoContents
-                        ? {
-                            // clear-text until processed by beeteos!
-                            from: bothUsers[0].options.memo_key,
-                            to: bothUsers[1].options.memo_key,
-                            nonce: String(Date.now()),
-                            message: memoContents,
-                          }
-                        : null,
-                      extensions: [],
-                    },
-                  ]}
+                  trxJSON={operationJSON}
                 />
               ) : null}
             </CardContent>

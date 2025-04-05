@@ -1,13 +1,21 @@
 import path from "node:path";
 import os from "os";
 import url from "node:url";
-import { readFile } from 'fs/promises';
-import mime from 'mime-types';
+import { readFile } from "fs/promises";
+import mime from "mime-types";
 
 import { key, PrivateKey } from "bitsharesjs";
 import { Apis } from "bitsharesjs-ws";
 
-import { app, BrowserWindow, Menu, Tray, ipcMain, protocol, shell } from "electron";
+import {
+  app,
+  BrowserWindow,
+  Menu,
+  Tray,
+  ipcMain,
+  protocol,
+  shell,
+} from "electron";
 
 import { initApplicationMenu } from "./lib/applicationMenu.js";
 import { generateDeepLink } from "./lib/deeplink.js";
@@ -17,13 +25,13 @@ let tray = null;
 
 protocol.registerSchemesAsPrivileged([
   {
-    scheme: 'file',
+    scheme: "file",
     privileges: {
       standard: true,
       secure: true,
-      supportFetchAPI: true
-    }
-  }
+      supportFetchAPI: true,
+    },
+  },
 ]);
 
 const createWindow = async () => {
@@ -45,7 +53,7 @@ const createWindow = async () => {
   initApplicationMenu(mainWindow);
 
   // Load the local HTML file using the custom protocol
-  mainWindow.loadURL('file://index.html');
+  mainWindow.loadURL("file://index.html");
 
   mainWindow.webContents.setWindowOpenHandler(() => {
     return { action: "deny" };
@@ -85,7 +93,9 @@ const createWindow = async () => {
     while (continueFetching) {
       let currentBlock;
       try {
-        currentBlock = await apisInstance.db_api().exec("get_block", [latestBlockNumber]);
+        currentBlock = await apisInstance
+          .db_api()
+          .exec("get_block", [latestBlockNumber]);
       } catch (error) {
         console.log({ error });
         continueFetching = false;
@@ -150,7 +160,9 @@ const createWindow = async () => {
 
     let globalProperties;
     try {
-      globalProperties = await apisInstance.db_api().exec("get_dynamic_global_properties", []);
+      globalProperties = await apisInstance
+        .db_api()
+        .exec("get_dynamic_global_properties", []);
     } catch (error) {
       console.log({ error, location: "globalProperties", url });
       continueFetching = false;
@@ -199,13 +211,7 @@ const createWindow = async () => {
   });
 
   ipcMain.handle("genAccount", async (event, arg) => {
-    const {
-      userID,
-      username,
-      password,
-      method,
-      nodeURL
-    } = arg;
+    const { userID, username, password, method, nodeURL } = arg;
 
     let apiInstance;
     try {
@@ -232,39 +238,33 @@ const createWindow = async () => {
       let pubKey = privKey.toPublicKey().toPublicKeyString();
       return { privKey, pubKey };
     }
- 
+
     if (!userID || !username || !password || !method) {
       console.log(`Missing required parameters for account generation`);
       return { success: false };
     }
-  
-    let {
-      privKey: owner_private,
-      pubKey: owner_public
-    } = _generateKeyFromPassword(username, "owner", password);
-  
-    let { privKey: active_private, pubKey: active_public } = _generateKeyFromPassword(
-                                                              username, "active", password
-                                                            );
-  
-    let { privKey: memo_private, pubKey: memo_public } = _generateKeyFromPassword(
-      username,
-      "memo",
-      password
-    );
-    
+
+    let { privKey: owner_private, pubKey: owner_public } =
+      _generateKeyFromPassword(username, "owner", password);
+
+    let { privKey: active_private, pubKey: active_public } =
+      _generateKeyFromPassword(username, "active", password);
+
+    let { privKey: memo_private, pubKey: memo_public } =
+      _generateKeyFromPassword(username, "memo", password);
+
     if (method === "ltm") {
       // BeetEOS broadcast by LTM account creating premium account names
-  
+
       if (!userID) {
         console.log(`User ID is required for this method`);
         return { success: false };
       }
-  
+
       return {
         fee: {
           amount: 0,
-          asset_id: "1.3.0"
+          asset_id: "1.3.0",
         },
         registrar: userID,
         referrer: userID,
@@ -274,13 +274,13 @@ const createWindow = async () => {
           weight_threshold: 1,
           account_auths: [],
           key_auths: [[owner_public, 1]],
-          address_auths: []
+          address_auths: [],
         },
         active: {
           weight_threshold: 1,
           account_auths: [],
           key_auths: [[active_public, 1]],
-          address_auths: []
+          address_auths: [],
         },
         options: {
           memo_key: memo_public,
@@ -288,7 +288,7 @@ const createWindow = async () => {
           votes: [],
           num_witness: 0,
           num_committee: 0,
-        }
+        },
       };
     } else {
       // Creating user with the public account faucet
@@ -299,12 +299,11 @@ const createWindow = async () => {
           active_key: active_public,
           memo_key: memo_public,
           refcode: "1.2.1803677",
-          referrer: "1.2.1803677"
-        }
+          referrer: "1.2.1803677",
+        },
       };
     }
   });
-
 
   ipcMain.handle("fetchTopMarkets", async (event, arg) => {
     const { chain } = arg;
@@ -375,16 +374,16 @@ const createWindow = async () => {
     const NOTIFICATION_BODY = arg;
 
     if (os.platform === "win32") {
-        app.setAppUserModelId(app.name);
+      app.setAppUserModelId(app.name);
     }
 
     function showNotification() {
-        new Notification({
-            title: NOTIFICATION_TITLE,
-            subtitle: "subtitle",
-            body: NOTIFICATION_BODY,
-            icon: __dirname + "/img/tray.png",
-        }).show();
+      new Notification({
+        title: NOTIFICATION_TITLE,
+        subtitle: "subtitle",
+        body: NOTIFICATION_BODY,
+        icon: __dirname + "/img/tray.png",
+      }).show();
     }
 
     showNotification();
@@ -394,47 +393,95 @@ const createWindow = async () => {
     const { chain, bodyParameters } = arg;
 
     function createAccountWithPassword(chain, bodyParameters) {
-        return new Promise((resolve, reject) => {
-            const faucetAddress = chain === "bitshares"
-                ? "https://faucet.bitshares.eu/onboarding"
-                : "https://faucet.testnet.bitshares.eu";
+      return new Promise((resolve, reject) => {
+        const faucetAddress =
+          chain === "bitshares"
+            ? "https://faucet.bitshares.eu/onboarding"
+            : "https://faucet.testnet.bitshares.eu";
 
-            fetch(faucetAddress + "/api/v1/accounts", {
-                method: "post",
-                mode: "cors",
-                headers: {
-                    Accept: "application/json",
-                    "Content-type": "application/json"
-                },
-                body: bodyParameters
-            })
-            .then(response => response.json())
-            .then(res => {
-                if (!res || (res && res.error)) {
-                    reject(res.error);
-                } else {
-                    resolve(res);
-                }
-            })
-            .catch(reject);
-        });
+        fetch(faucetAddress + "/api/v1/accounts", {
+          method: "post",
+          mode: "cors",
+          headers: {
+            Accept: "application/json",
+            "Content-type": "application/json",
+          },
+          body: bodyParameters,
+        })
+          .then((response) => response.json())
+          .then((res) => {
+            if (!res || (res && res.error)) {
+              reject(res.error);
+            } else {
+              resolve(res);
+            }
+          })
+          .catch(reject);
+      });
     }
 
     try {
-        const result = await createAccountWithPassword(chain, bodyParameters);
-        return result;
+      const result = await createAccountWithPassword(chain, bodyParameters);
+      return result;
     } catch (error) {
-        console.error("Error during faucet registration:", error);
-        return { error };
+      console.error("Error during faucet registration:", error);
+      return { error };
     }
-});
+  });
+
+  ipcMain.handle("calculateOperationFees", async (event, arg) => {
+    const { nodeURL, trxJSON } = arg;
+
+    let currentAPI;
+    try {
+      currentAPI = await Apis.instance(
+        nodeURL.url,
+        true,
+        4000,
+        { enableDatabase: true },
+        (error) => console.log({ error })
+      );
+    } catch (error) {
+      console.log({ error });
+      return;
+    }
+
+    currentAPI.init_promise;
+
+    let _op = {
+      ...trxJSON,
+    };
+
+    delete _op.fee;
+
+    let fee;
+    try {
+      fee = await currentAPI
+        .db_api()
+        .exec("get_required_fees", [[[_op]], "1.3.0"]);
+    } catch (error) {
+      console.log({ error });
+    }
+
+    console.log({ fee, nodeURL, _op });
+
+    currentAPI.close();
+    currentAPI = null;
+
+    return fee && fee.length ? fee[0].amount : null;
+  });
 
   ipcMain.handle("generateDeepLink", async (event, arg) => {
     const { usrChain, nodeURL, operationNames, trxJSON } = arg;
 
     let deeplink;
     try {
-      deeplink = await generateDeepLink(usrChain, nodeURL, operationNames, trxJSON);
+      deeplink = await generateDeepLink(
+        usrChain,
+        nodeURL,
+        operationNames,
+        trxJSON
+      );
     } catch (error) {
       console.log({ error });
     }
@@ -496,20 +543,22 @@ if (currentOS === "win32" || currentOS === "linux") {
     app.quit();
   }
 
-  app.whenReady()
+  app
+    .whenReady()
     .then(() => {
-      protocol.handle('file', async (req) => {
+      protocol.handle("file", async (req) => {
         const { pathname } = new URL(req.url);
         if (!pathname) {
           return;
         }
-        
-        let fullPath = process.env.NODE_ENV === "development"
-          ? path.join('astroDist', pathname)
-          : path.join(process.resourcesPath, 'astroDist', pathname);
-      
-        if (pathname === '/') {
-          fullPath = path.join(fullPath, 'index.html');
+
+        let fullPath =
+          process.env.NODE_ENV === "development"
+            ? path.join("astroDist", pathname)
+            : path.join(process.resourcesPath, "astroDist", pathname);
+
+        if (pathname === "/") {
+          fullPath = path.join(fullPath, "index.html");
         }
 
         if (fullPath.includes("..") || fullPath.includes("~")) {
@@ -523,48 +572,52 @@ if (currentOS === "win32" || currentOS === "linux") {
           console.log({ error });
         }
 
-        const mimeType = mime.lookup(fullPath) || 'application/octet-stream';
+        const mimeType = mime.lookup(fullPath) || "application/octet-stream";
 
         return new Response(_res, {
-          headers: { 'content-type': mimeType }
+          headers: { "content-type": mimeType },
         });
       });
     })
     .then(createWindow);
 } else {
-  app.whenReady().then(() => {
-    protocol.handle('file', async (req) => {
-      const { pathname } = new URL(req.url);
-      if (!pathname) {
-        return;
-      }
-      
-      let fullPath = process.env.NODE_ENV === "development"
-        ? path.join('astroDist', pathname)
-        : path.join(process.resourcesPath, 'astroDist', pathname);
-    
-      if (pathname === '/') {
-        fullPath = path.join(fullPath, 'index.html');
-      }
+  app
+    .whenReady()
+    .then(() => {
+      protocol.handle("file", async (req) => {
+        const { pathname } = new URL(req.url);
+        if (!pathname) {
+          return;
+        }
 
-      if (fullPath.includes("..") || fullPath.includes("~")) {
-        return; // Prevent directory traversal attacks
-      }
+        let fullPath =
+          process.env.NODE_ENV === "development"
+            ? path.join("astroDist", pathname)
+            : path.join(process.resourcesPath, "astroDist", pathname);
 
-      let _res;
-      try {
-        _res = await readFile(fullPath);
-      } catch (error) {
-        console.log({ error });
-      }
+        if (pathname === "/") {
+          fullPath = path.join(fullPath, "index.html");
+        }
 
-      const mimeType = mime.lookup(fullPath) || 'application/octet-stream';
+        if (fullPath.includes("..") || fullPath.includes("~")) {
+          return; // Prevent directory traversal attacks
+        }
 
-      return new Response(_res, {
-        headers: { 'content-type': mimeType }
+        let _res;
+        try {
+          _res = await readFile(fullPath);
+        } catch (error) {
+          console.log({ error });
+        }
+
+        const mimeType = mime.lookup(fullPath) || "application/octet-stream";
+
+        return new Response(_res, {
+          headers: { "content-type": mimeType },
+        });
       });
-    });
-  }).then(createWindow);
+    })
+    .then(createWindow);
 
   app.on("window-all-closed", () => {
     if (process.platform !== "darwin") {
