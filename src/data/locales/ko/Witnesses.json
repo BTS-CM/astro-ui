@@ -1,0 +1,22 @@
+{
+  "title": "비트 샤인 증인",
+  "description": "현재 활성 및 대기 증인을보십시오.",
+  "filterPlaceholder": "증인 이름으로 필터 ...",
+  "active": "active ({{count}})",
+  "standby": "대기 ({{count}})",
+  "rank": "계급",
+  "name": "이름",
+  "ids": "이드",
+  "lastBlock": "마지막 블록",
+  "missed": "놓쳤다",
+  "votes": "투표권",
+  "noActive": "적극적인 증인은 발견되지 않았습니다.",
+  "noStandby": "대기 증인이 발견되지 않았습니다.",
+  "loading": "증인 데이터로드 ...",
+  "votesFor": "{{name}} 투표 일정",
+  "descriptionVotes": "이것들은 선정 된 증인의 투표입니다!",
+  "secondsAgo_other": "{{count}} 몇 초 전에",
+  "minutesAgo_other": "{{count}} 몇 분 전",
+  "hoursAgo_other": "{{count}} 몇 시간 전",
+  "daysAgo_other": "{{count}} 며칠 전"
+}

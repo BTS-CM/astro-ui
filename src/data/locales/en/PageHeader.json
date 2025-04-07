@@ -48,7 +48,12 @@
   "portuguese": "Portuguese (pt)",
   "thai": "Thai (th)",
   "descText": {
-    "htlc":  "Use the form below to create, extend and redeem hashed time-locked contracts.",
+    "committee": "Use this page to monitor the current committee members, their stats and their votes.",
+    "witnesses": "Use this page to montior the current witnesses, their stats and their votes.",
+    "create_worker": "Use the form below to create a worker proposal, secure your project's funding!",
+    "barter": "Use the form below to barter with another blockchain account, creating a custom peer-to-peer trade.",
+    "governance": "Use the form below to create/update either a witness or committee member role.",
+    "htlc": "Use the form below to create, extend and redeem hashed time-locked contracts.",
     "timed_transfer": "Use the form below to create a timed transfer of assets to another account.",
     "withdraw_permissions": "Use this page to craft create, update, delete and claim withdraw permission operations.",
     "borrow": "Use this page to locate prospective credit offers",

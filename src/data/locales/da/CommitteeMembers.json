@@ -1,0 +1,17 @@
+{
+  "title": "Medlemmer af Bitshares -udvalget",
+  "description": "Se de nuværende aktive og inaktive udvalgsmedlemmer.",
+  "filterPlaceholder": "Filtrer efter udvalgsmedlemmer ...",
+  "active": "Aktiv ({{count}})",
+  "inactive": "Inaktiv ({{count}})",
+  "rank": "Rang",
+  "name": "Navn",
+  "ids": "Ids",
+  "votes": "Modtagne stemmer",
+  "noActive": "Ingen aktive udvalgsmedlemmer fandt.",
+  "noInactive": "Ingen inaktive udvalgsmedlemmer fandt.",
+  "loading": "Indlæsningsudvalgsdata ...",
+  "votesFor": "{{name}}Udvalget stemmer",
+  "descriptionVotes": "Se udvalgets stemmer afgivet af dette udvalgsmedlem.",
+  "coreTokenBalance": "Kerneaktivbalance"
+}

@@ -1,0 +1,22 @@
+{
+  "title": "ビットシェアの証人",
+  "description": "現在のアクティブでスタンバイの証人を見てください。",
+  "filterPlaceholder": "証人名でフィルター...",
+  "active": "アクティブ（{count}）",
+  "standby": "スタンバイ（{count}）",
+  "rank": "ランク",
+  "name": "名前",
+  "ids": "IDS",
+  "lastBlock": "最後のブロック",
+  "missed": "逃した",
+  "votes": "受け取った票",
+  "noActive": "積極的な証人は見つかりませんでした。",
+  "noStandby": "スタンバイ証人は見つかりませんでした。",
+  "loading": "証人データを読み込む...",
+  "votesFor": "{{name}} 投票スケジュール",
+  "descriptionVotes": "これらは、選ばれた証人による投票です！",
+  "secondsAgo_other": "{{count}} 数秒前",
+  "minutesAgo_other": "{{count}} 数分前",
+  "hoursAgo_other": "{{count}} 数時間前",
+  "daysAgo_other": "{{count}} 数日前"
+}

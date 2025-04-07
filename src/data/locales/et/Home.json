@@ -1,4 +1,38 @@
 {
+  "barter": {
+    "title": "🛒 barter",
+    "subtitle": "Kaubavahetus teiste kasutajatega",
+    "hover1": "Kauplege vara teiste kasutajatega.",
+    "hover2": "Bartering on peer-peer kauplemisprotsess.",
+    "hover3": "Vahetus võib hõlmata 3. osapoole tingdeponeerimisteenuseid."
+  },
+  "witnesses": {
+    "title": "👁️ tunnistajad",
+    "subtitle": "Vaadake praeguseid aktiivseid ja passiivseid tunnistajaid.",
+    "hover1": "Vaade, kes on kõige rohkem hääli saanud.",
+    "hover2": "Vaade, kelle tunnistajad on hääletanud.",
+    "hover3": "Vaata tunnistajate tuum märkide saldosid."
+  },
+  "committee": {
+    "title": "🗳️ komisjoni liikmed",
+    "subtitle": "Vaadake praeguseid aktiivseid ja passiivseid komitee liikmeid.",
+    "hover1": "Vaade, kes on kõige rohkem hääli saanud.",
+    "hover2": "Vaadake, kelle poolt komitee liikmed on hääletanud.",
+    "hover3": "Vaatekomitee põhisilmajäägid."
+  },
+  "governance": {
+    "title": "🗳️ juhtimine",
+    "subtitle": "Looge/värskendage nii tunnistajate kui ka komisjoni rolle.",
+    "hover1": "Looge, värskendage või kehtestage tunnistajate registreerimine.",
+    "hover2": "Looge või värskendage oma komitee liikme registreerimist."
+  },
+  "create_worker": {
+    "title": "🛠️ Loo töötaja ettepanek",
+    "subtitle": "Looge ideede rahastamise ettepanek!",
+    "hover1": "Tagastage raha oma projekti rahastamiseks töötajate ettepaneku kaudu.",
+    "hover2": "Töötajate ettepanekuid rahastab Bitshares Reserve Fond.",
+    "hover3": "Töötajate ettepanekud hääletab kogukond."
+  },
   "dex": {
     "title": "📈 DEX-i limiittellimused",
     "subtitle": "Kauple varadega Bitshares DEXis",

@@ -1,0 +1,17 @@
+{
+  "title": "Membres du comité bitshares",
+  "description": "Consultez les membres actuels et inactifs du comité.",
+  "filterPlaceholder": "Filtre par nom de membre du comité ...",
+  "active": "Actif ({{count}})",
+  "inactive": "Inactif ({{count}})",
+  "rank": "Rang",
+  "name": "Nom",
+  "ids": "Identifiant",
+  "votes": "Votes reçus",
+  "noActive": "Aucun membre du comité actif trouvé.",
+  "noInactive": "Aucun membre du comité inactif n'a trouvé.",
+  "loading": "Données du comité de chargement ...",
+  "votesFor": "{{name}}Les votes du comité",
+  "descriptionVotes": "Voir les votes du comité exprimés par ce membre du comité.",
+  "coreTokenBalance": "Équilibre des actifs de base"
+}

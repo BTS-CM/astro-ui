@@ -1,4 +1,38 @@
 {
+  "barter": {
+    "title": "🛒 troc",
+    "subtitle": "Échanger des actifs avec d'autres utilisateurs",
+    "hover1": "Échanger des actifs avec d'autres utilisateurs.",
+    "hover2": "Le troc est un processus de trading entre pairs.",
+    "hover3": "Le troc peut impliquer des services d'entiercement tiers."
+  },
+  "witnesses": {
+    "title": "👁️ Témoins",
+    "subtitle": "Voir les témoins actifs et inactifs actuels.",
+    "hover1": "Voir qui a reçu le plus de votes.",
+    "hover2": "Voir pour qui les témoins ont voté.",
+    "hover3": "Voir les soldes de jeton de base des témoins."
+  },
+  "committee": {
+    "title": "🗳️ Membres du comité",
+    "subtitle": "Consultez les membres actuels et inactifs du comité.",
+    "hover1": "Voir qui a reçu le plus de votes.",
+    "hover2": "Voir pour qui les membres du comité ont voté pour.",
+    "hover3": "Voir les soldes de jeton de base du comité."
+  },
+  "governance": {
+    "title": "🗳️ Gouvernance",
+    "subtitle": "Créer / mettre à jour les rôles de témoignage et de comité.",
+    "hover1": "Créer, mettre à jour ou invalider l'enregistrement de votre témoin.",
+    "hover2": "Créez ou mettez à jour l'enregistrement des membres de votre comité."
+  },
+  "create_worker": {
+    "title": "🛠️ Créer une proposition de travailleur",
+    "subtitle": "Créez une proposition de travailleur pour financer des idées!",
+    "hover1": "Sécuriser les fonds via une proposition de travailleurs pour financer votre projet.",
+    "hover2": "Les propositions de travailleurs sont financées par le Bitshares Reserve Fund.",
+    "hover3": "Les propositions de travailleurs sont votées par la communauté."
+  },
   "dex": {
     "title": "📈 Ordres limités DEX",
     "subtitle": "Négociez des actifs sur le Bitshares DEX",

@@ -1,4 +1,38 @@
 {
+  "barter": {
+    "title": "🛒 Tauschhandel",
+    "subtitle": "Handeln Sie Vermögenswerte mit anderen Benutzern",
+    "hover1": "Handeln Sie Vermögenswerte mit anderen Benutzern.",
+    "hover2": "Tauschhandel ist ein Peer-to-Peer-Handelsprozess.",
+    "hover3": "Tauschhandel kann die Treuhanddienste von Drittanbietern umfassen."
+  },
+  "witnesses": {
+    "title": "👁️ Zeugen",
+    "subtitle": "Sehen Sie sich die aktuellen aktiven und inaktiven Zeugen an.",
+    "hover1": "Zeigen Sie, wer die meisten Stimmen erhalten hat.",
+    "hover2": "View, für wen Zeugen gestimmt haben.",
+    "hover3": "Zeugenkerntoken -Balancen anzeigen."
+  },
+  "committee": {
+    "title": "🗳️ Ausschussmitglieder",
+    "subtitle": "Sehen Sie sich die aktuellen aktiven und inaktiven Komiteemitglieder an.",
+    "hover1": "Zeigen Sie, wer die meisten Stimmen erhalten hat.",
+    "hover2": "Stellen Sie sich an, für wen die Mitglieder des Ausschusses gestimmt haben.",
+    "hover3": "View Committee Core Token Balances."
+  },
+  "governance": {
+    "title": "🗳️ Governance",
+    "subtitle": "Erstellen/Aktualisieren sowohl Zeugen- als auch Ausschussrollen.",
+    "hover1": "Erstellen, aktualisieren Sie oder ungültig für Ihre Zeugenregistrierung.",
+    "hover2": "Erstellen oder aktualisieren Sie Ihre Registrierung Ihrer Ausschussmitglieder."
+  },
+  "create_worker": {
+    "title": "🛠️ Erstellen Sie Arbeitnehmervorschlag",
+    "subtitle": "Erstellen Sie einen Arbeitnehmervorschlag für die Finanzierungsideen!",
+    "hover1": "Sichern Sie Mittel über einen Arbeitnehmervorschlag, um Ihr Projekt zu finanzieren.",
+    "hover2": "Arbeitnehmervorschläge werden vom Bitshares Reserve Fund finanziert.",
+    "hover3": "Arbeitervorschläge werden von der Gemeinde abgestimmt."
+  },
   "dex": {
     "title": "📈 DEX-Limit-Orders",
     "subtitle": "Handeln Sie Vermögenswerte auf dem Bitshares DEX",

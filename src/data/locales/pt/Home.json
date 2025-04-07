@@ -1,4 +1,38 @@
 {
+  "barter": {
+    "title": "🛒 Troca",
+    "subtitle": "Trocar ativos com outros usuários",
+    "hover1": "Troca ativos com outros usuários.",
+    "hover2": "A troca é um processo de negociação ponto a ponto.",
+    "hover3": "A troca pode envolver serviços de garantia de terceiros."
+  },
+  "witnesses": {
+    "title": "👁️ Testemunhas",
+    "subtitle": "Veja as testemunhas ativas e inativas atuais.",
+    "hover1": "Ver quem recebeu mais votos.",
+    "hover2": "Veja quem testemunhas votou.",
+    "hover3": "Veja os saldos do token principal da testemunha."
+  },
+  "committee": {
+    "title": "Members Membros do comitê",
+    "subtitle": "Veja os membros atuais do comitê ativo e inativo.",
+    "hover1": "Ver quem recebeu mais votos.",
+    "hover2": "Ver quem os membros do comitê votaram.",
+    "hover3": "Veja os saldos do token do comitê."
+  },
+  "governance": {
+    "title": "🗳️ Governança",
+    "subtitle": "Crie/atualize as funções de testemunha e comitê.",
+    "hover1": "Crie, atualize ou invalide seu registro de testemunha.",
+    "hover2": "Crie ou atualize o registro do seu membro do comitê."
+  },
+  "create_worker": {
+    "title": "🛠️ Criar proposta do trabalhador",
+    "subtitle": "Crie uma proposta de trabalhador para idéias de financiamento!",
+    "hover1": "Garanta fundos por meio de uma proposta de trabalhador para financiar seu projeto.",
+    "hover2": "As propostas de trabalhadores são financiadas pelo Bitshares Reserve Fund.",
+    "hover3": "As propostas de trabalhadores são votadas pela comunidade."
+  },
   "dex": {
     "title": "📈 Pedidos com limite DEX",
     "subtitle": "Negocie ativos no Bitshares DEX",

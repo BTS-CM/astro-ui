@@ -1,0 +1,17 @@
+{
+  "title": "비트 샤레스위원회 위원",
+  "description": "현재 활성 및 비활성위원회 구성원을보십시오.",
+  "filterPlaceholder": "위원회 회원 이름 별 필터 ...",
+  "active": "active ({{count}})",
+  "inactive": "비활성 ({{count}})",
+  "rank": "계급",
+  "name": "이름",
+  "ids": "이드",
+  "votes": "투표권",
+  "noActive": "활발한위원회 위원이 발견되지 않았습니다.",
+  "noInactive": "비활성위원회 위원은 발견되지 않았습니다.",
+  "loading": "로딩위원회 데이터 ...",
+  "votesFor": "{{name}}의위원회 투표",
+  "descriptionVotes": "이위원회 위원이 주최 한위원회 투표를보십시오.",
+  "coreTokenBalance": "핵심 자산 균형"
+}

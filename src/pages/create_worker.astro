@@ -1,0 +1,27 @@
+---
+import { getCollection } from 'astro:content';
+
+import Layout from '../layouts/Layout.astro';
+import PageHeader from '../components/PageHeader.jsx';
+import PageFooter from '../components/PageFooter.jsx';
+import WorkerProposal from '../components/WorkerProposal.jsx';
+
+const btsFeeSchedule = await getCollection('btsFeeSchedule');
+const testFeeSchedule = await getCollection('testFeeSchedule');
+
+const globalParamsBTS = btsFeeSchedule.map(collection => collection.data);
+const globalParamsTEST = testFeeSchedule.map(collection => collection.data);
+
+const page = "create_worker";
+---
+<Layout title="Create Bitshares Worker Proposal">
+    <main>
+        <PageHeader page={page} client:only="react" />
+        <WorkerProposal
+            client:only="react"
+            _globalParamsBTS={globalParamsBTS}
+            _globalParamsTEST={globalParamsTEST}
+        />
+         <PageFooter sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/create_worker.astro" client:only="react" />
+    </main>
+</Layout>
