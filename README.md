@@ -50,7 +50,7 @@ Integrates with both the [Beet](https://github.com/bitshares/beet) and [BeetEOS]
 
 ## Screenshot
 
-![image](https://github.com/user-attachments/assets/828b8491-a25e-4b4f-b89c-39b1e2455a27)
+![image](https://github.com/user-attachments/assets/cf85175a-677b-4d78-9ed9-5c8d9b2f2854)
 
 ## Dev Commands
 
