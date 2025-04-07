@@ -1,0 +1,17 @@
+{
+  "title": "Bitshares委員会のメンバー",
+  "description": "現在のアクティブおよび非アクティブな委員会メンバーを表示します。",
+  "filterPlaceholder": "委員会のメンバー名でフィルター...",
+  "active": "アクティブ（{count}）",
+  "inactive": "非アクティブ（{count}）",
+  "rank": "ランク",
+  "name": "名前",
+  "ids": "IDS",
+  "votes": "受け取った票",
+  "noActive": "アクティブな委員会のメンバーは見つかりませんでした。",
+  "noInactive": "非アクティブな委員会のメンバーは見つかりませんでした。",
+  "loading": "読み込み委員会のデータ...",
+  "votesFor": "{{name}}委員会の投票",
+  "descriptionVotes": "この委員会のメンバーによる委員会の投票を見る。",
+  "coreTokenBalance": "コアアセットバランス"
+}

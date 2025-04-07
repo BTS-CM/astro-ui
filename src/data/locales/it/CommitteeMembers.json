@@ -1,0 +1,17 @@
+{
+  "title": "Membri del comitato di Bitshares",
+  "description": "Visualizza gli attuali membri del comitato attivi e inattivi.",
+  "filterPlaceholder": "Filtro per nome membro del comitato ...",
+  "active": "Attivo ({{count}})",
+  "inactive": "Inattivo ({{count}})",
+  "rank": "Rango",
+  "name": "Nome",
+  "ids": "IDS",
+  "votes": "Voti ricevuti",
+  "noActive": "Nessun membro del comitato attivo trovato.",
+  "noInactive": "Nessun membro del comitato inattivo trovato.",
+  "loading": "Dati del comitato di caricamento ...",
+  "votesFor": "{{name}}voti del comitato",
+  "descriptionVotes": "Visualizza i voti del comitato espressi da questo membro del comitato.",
+  "coreTokenBalance": "Bilancia delle attività fondamentali"
+}

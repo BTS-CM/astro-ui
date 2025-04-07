@@ -1,0 +1,17 @@
+{
+  "title": "Mitglieder des Bitshares Committee",
+  "description": "Sehen Sie sich die aktuellen aktiven und inaktiven Komiteemitglieder an.",
+  "filterPlaceholder": "Filter mit dem Namen des Komitees ...",
+  "active": "Active ({{count}})",
+  "inactive": "Inaktiv ({{count}})",
+  "rank": "Rang",
+  "name": "Name",
+  "ids": "IDS",
+  "votes": "Stimmen erhalten",
+  "noActive": "Keine aktiven Mitglieder des aktiven Ausschusses gefunden.",
+  "noInactive": "Keine inaktiven Mitglieder des Ausschusses gefunden.",
+  "loading": "Daten des Ladeausschusses ... Daten ...",
+  "votesFor": "{{name}}'S Committee stimmt",
+  "descriptionVotes": "Sehen Sie sich die von diesem Ausschussmitglied abgegebenen Ausschussstimmen an.",
+  "coreTokenBalance": "Kernvermögen"
+}

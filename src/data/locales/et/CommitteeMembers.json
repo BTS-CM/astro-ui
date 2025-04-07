@@ -1,0 +1,17 @@
+{
+  "title": "Bitshares komitee liikmed",
+  "description": "Vaadake praeguseid aktiivseid ja passiivseid komitee liikmeid.",
+  "filterPlaceholder": "Filter komisjoni liikme nimi ...",
+  "active": "Aktiivne ({krahv})",
+  "inactive": "Passiivne ({krahv})",
+  "rank": "Auaste",
+  "name": "Nimetus",
+  "ids": "IDS",
+  "votes": "Hääled saadud",
+  "noActive": "Ühtegi aktiivset komisjoni liiget ei leitud.",
+  "noInactive": "Ühtegi passiivset komisjoni liikmeid ei leitud.",
+  "loading": "Laadimiskomisjoni andmed ...",
+  "votesFor": "{{name}}Komitee hääletab",
+  "descriptionVotes": "Vaadake selle komisjoni liikme poolt antud komisjoni hääli.",
+  "coreTokenBalance": "Põhivarade saldo"
+}

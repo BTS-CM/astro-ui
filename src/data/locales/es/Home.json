@@ -1,4 +1,38 @@
 {
+  "barter": {
+    "title": "🛒 Cortador",
+    "subtitle": "Activos comerciales con otros usuarios",
+    "hover1": "Activos comerciales con otros usuarios.",
+    "hover2": "El trueque es un proceso de comercio de igual a igual.",
+    "hover3": "El trueque puede involucrar servicios de custodia de terceros."
+  },
+  "witnesses": {
+    "title": "Testigos",
+    "subtitle": "Ver a los testigos activos e inactivos actuales.",
+    "hover1": "Ver quién ha recibido la mayoría de los votos.",
+    "hover2": "Ver por quién han votado los testigos.",
+    "hover3": "Ver los saldos de los tokens núcleo del testigo."
+  },
+  "committee": {
+    "title": "🗳️ Miembros del comité",
+    "subtitle": "Ver a los miembros actuales del comité activo e inactivo.",
+    "hover1": "Ver quién ha recibido la mayoría de los votos.",
+    "hover2": "Ver a quién han votado los miembros del comité.",
+    "hover3": "Ver saldos de fichas principales del comité."
+  },
+  "governance": {
+    "title": "🗳️ Gobierno",
+    "subtitle": "Crear/actualizar los roles de testigo y comité.",
+    "hover1": "Crear, actualizar o invalidar su registro de testigos.",
+    "hover2": "Crear o actualizar el registro de su miembro del comité."
+  },
+  "create_worker": {
+    "title": "🛠️ Cree una propuesta de trabajador",
+    "subtitle": "¡Crea una propuesta de trabajador para ideas de financiación!",
+    "hover1": "Asegure los fondos a través de una propuesta de trabajadores para financiar su proyecto.",
+    "hover2": "Las propuestas de trabajadores son financiadas por el Fondo de Reserva Bitshares.",
+    "hover3": "Las propuestas de trabajadores son votadas por la comunidad."
+  },
   "dex": {
     "title": "📈 Órdenes limitadas DEX",
     "subtitle": "Negocie activos en Bitshares DEX",

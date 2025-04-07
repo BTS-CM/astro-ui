@@ -270,10 +270,6 @@ export default function DeepLinkDialog(properties) {
 
       let _trx = [
         {
-          //fee: {
-          //  amount: 0,
-          //  asset_id: "1.3.0",
-          //},
           fee_paying_account: targetUser.id,
           expiration_time: date,
           proposed_ops: _adjusted_proposed_ops,
@@ -282,20 +278,20 @@ export default function DeepLinkDialog(properties) {
         },
       ];
 
-      /*
-      let finalFee = await window.electron.calculateOperationFees({
-        nodeURL: currentNode,
-        trxJSON: _trx,
-      });
-
-      console.log({ finalFee });
-      if (finalFee) {
-        _trx[0].fee = {
-          amount: finalFee,
-          asset_id: "1.3.0",
-        };
+      let finalFee;
+      try {
+        finalFee = await window.electron.calculateOperationFees({
+          nodeURL: currentNode,
+          trxJSON: _trx,
+        });
+      } catch (error) {
+        console.log({ error });
       }
-      */
+
+      _trx[0].fee = {
+        amount: finalFee ?? 0,
+        asset_id: "1.3.0",
+      };
 
       setDeeplinkJSON(_trx);
     }

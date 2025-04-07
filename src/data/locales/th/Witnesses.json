@@ -1,0 +1,22 @@
+{
+  "title": "พยาน Bitshares",
+  "description": "ดูพยานที่ใช้งานอยู่และสแตนด์บายในปัจจุบัน",
+  "filterPlaceholder": "ตัวกรองตามชื่อพยาน ...",
+  "active": "ใช้งานอยู่ ({{count}})",
+  "standby": "สแตนด์บาย ({{count}})",
+  "rank": "จัดอันดับ",
+  "name": "ชื่อ",
+  "ids": "ids",
+  "lastBlock": "บล็อกสุดท้าย",
+  "missed": "ไม่ได้ผล",
+  "votes": "ได้รับคะแนนเสียง",
+  "noActive": "ไม่พบพยานที่กระตือรือร้น",
+  "noStandby": "ไม่พบพยานสแตนด์บาย",
+  "loading": "กำลังโหลดข้อมูลพยาน ...",
+  "votesFor": "{{name}} ตารางการลงคะแนนเสียง",
+  "descriptionVotes": "นี่คือคะแนนโหวตโดยพยานที่เลือก!",
+  "secondsAgo_other": "{{count}} วินาทีที่ผ่านมา",
+  "minutesAgo_other": "{{count}} นาทีที่ผ่านมา",
+  "hoursAgo_other": "{{count}} ชั่วโมงที่ผ่านมา",
+  "daysAgo_other": "{{count}} เมื่อวันก่อน"
+}

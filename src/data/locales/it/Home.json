@@ -1,4 +1,38 @@
 {
+  "barter": {
+    "title": "🛒 baratto",
+    "subtitle": "Attività commerciali con altri utenti",
+    "hover1": "Asset commerciali con altri utenti.",
+    "hover2": "Il baratto è un processo di trading peer-to-peer.",
+    "hover3": "Il baratto può coinvolgere i servizi di deposito a garanzia di terze parti."
+  },
+  "witnesses": {
+    "title": "👁️ Testimoni",
+    "subtitle": "Visualizza gli attuali testimoni attivi e inattivi.",
+    "hover1": "Visualizza chi ha ricevuto il maggior numero di voti.",
+    "hover2": "Visualizza per chi i testimoni hanno votato.",
+    "hover3": "Visualizza i saldi dei token core testimoni."
+  },
+  "committee": {
+    "title": "🗳️ Membri del comitato",
+    "subtitle": "Visualizza gli attuali membri del comitato attivi e inattivi.",
+    "hover1": "Visualizza chi ha ricevuto il maggior numero di voti.",
+    "hover2": "Visualizza i membri del comitato per cui hanno votato.",
+    "hover3": "Visualizza i saldi dei token core del comitato."
+  },
+  "governance": {
+    "title": "🗳️ Governance",
+    "subtitle": "Crea/aggiorna i ruoli di testimoni e del comitato.",
+    "hover1": "Crea, aggiorna o invalida la registrazione del tuo testimone.",
+    "hover2": "Crea o aggiorna la registrazione dei membri del comitato."
+  },
+  "create_worker": {
+    "title": "🛠️ Crea proposta di lavoro",
+    "subtitle": "Crea una proposta di lavoratore per il finanziamento di idee!",
+    "hover1": "Garantire fondi tramite una proposta di lavoratore per finanziare il tuo progetto.",
+    "hover2": "Le proposte dei lavoratori sono finanziate dal BitShares Reserve Fund.",
+    "hover3": "Le proposte dei lavoratori sono votate dalla comunità."
+  },
   "dex": {
     "title": "📈 Ordini con limite DEX",
     "subtitle": "Scambia asset su Bitshares DEX",

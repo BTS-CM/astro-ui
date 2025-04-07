@@ -1,4 +1,38 @@
 {
+  "barter": {
+    "title": "🛒 Barter",
+    "subtitle": "Handelsaktiver med andre brugere",
+    "hover1": "Handelsaktiver med andre brugere.",
+    "hover2": "Bartering er en peer-to-peer handelsproces.",
+    "hover3": "Bartering kan involvere 3rd -parts escrow -tjenester."
+  },
+  "witnesses": {
+    "title": "👁 Vidner",
+    "subtitle": "Se de nuværende aktive og inaktive vidner.",
+    "hover1": "Se hvem der har modtaget flest stemmer.",
+    "hover2": "Se, hvem vidner har stemt for.",
+    "hover3": "Se vidnecerne -tokenbalancer."
+  },
+  "committee": {
+    "title": "🗳 Udvalgsmedlemmer",
+    "subtitle": "Se de nuværende aktive og inaktive udvalgsmedlemmer.",
+    "hover1": "Se hvem der har modtaget flest stemmer.",
+    "hover2": "Se, hvem udvalgsmedlemmer har stemt for.",
+    "hover3": "Se udvalgs kernetokenbalancer."
+  },
+  "governance": {
+    "title": "🗳 Styring",
+    "subtitle": "Opret/opdater både vidne- og udvalgsroller.",
+    "hover1": "Opret, opdatering eller ugyldige din vidnesdregistrering.",
+    "hover2": "Opret eller opdater dit udvalgsmedlemregistrering."
+  },
+  "create_worker": {
+    "title": "🛠 Opret arbejdstagerforslag",
+    "subtitle": "Opret et arbejdstagerforslag til finansiering af ideer!",
+    "hover1": "Sikre midler via et arbejdstagerforslag til finansiering af dit projekt.",
+    "hover2": "Arbejdstagerforslag finansieres af Bitshares Reserve Fund.",
+    "hover3": "Arbejdstagerforslag vælges af samfundet."
+  },
   "dex": {
     "title": "📈 DEX-begrænsningsordrer",
     "subtitle": "Handl aktiver på Bitshares DEX",
