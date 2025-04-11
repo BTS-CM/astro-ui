@@ -5,6 +5,7 @@ Created using [Astro](https://docs.astro.build), [React](https://react.dev/) & [
 Integrates with both the [Beet](https://github.com/bitshares/beet) and [BeetEOS](https://github.com/beetapp/beeteos) multiwallets, for the Bitshares and Bitshares Testnet blockchains.
 
 ## Recent dev blogs
+- [Barter, View Witnesses, View Committee members, create/update witness/committee roles & create worker proposals!](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-dev-blog-5-new-pages-barter-view-witnesses-view-committee-members-create-update-witness-committee-roles-and)
 - [Hash Time-Locked Contracts - Create / Extend / Redeem!](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-dev-blog-hash-time-locked-contracts-create-extend-redeem)
 - [User Feedback Request - What feature do you want to see introduced next?](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-user-feedback-request-what-feature-do-you-want-to-see-introduced-next)
 - [Direct Debit & Timed Transfers!](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-dev-blog-direct-debit-and-timed-transfers)
@@ -19,6 +20,10 @@ Integrates with both the [Beet](https://github.com/bitshares/beet) and [BeetEOS]
 - Create/Claim direct debits (withdraw permissions)
 - Create a new account (cloud wallets)
 - Craft complex Same-T Fund limit order transactions
+- Barter
+- View witnesses & committee member lists
+- Create/Update your witness/committee member status.
+- Create worker proposals
 - Create your own featured liquidity pool analytics tracker
 - Switch between Bitshares (mainnet) and the Bitshares Testnet blockchains
 - Fully translated to 10 languages!
