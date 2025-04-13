@@ -245,10 +245,10 @@
     "hover2": "Space bis zu 5 austauschbare Vermögenswerte."
   },
   "pools": {
-    "title": "📊 Liquiditätspools",
-    "subtitle": "Sehen Sie sich Ihre Liquiditätspools an und verwalten Sie",
-    "hover1": "Sehen Sie sich Ihre Liquiditätspools an.",
-    "hover2": "Fügen Sie Liquidität aus Ihren Pools hinzu oder entfernen Sie sie.",
-    "hover3": "Handelspool -Aktien -Vermögen an der Börse."
+    "title": "💧 Liquiditätspools",
+    "subtitle": "Sehen Sie sich eine Liste aller Liquiditätspools an",
+    "hover1": "Filtern Sie alle Liquiditätspools durch austauschbare Vermögenswerte",
+    "hover2": "Suchen Sie Liquiditätspools zum Austausch von Vermögenswerten.",
+    "hover3": "Identifizieren Sie Liquiditätspools, um Vermögenswerte einzugeben."
   }
 }

@@ -245,10 +245,10 @@
     "hover2": "Seguimiento de hasta 5 activos intercambiables."
   },
   "pools": {
-    "title": "📊 Piscinas de liquidez",
-    "subtitle": "Ver y administrar sus grupos de liquidez",
-    "hover1": "Vea sus piscinas de liquidez.",
-    "hover2": "Agregue o elimine la liquidez de sus piscinas.",
-    "hover3": "Activos de participación en el grupo comercial en el intercambio."
+    "title": "💧 Piscinas de liquidez",
+    "subtitle": "Ver una lista de todos los grupos de liquidez",
+    "hover1": "Filtrar todos los grupos de liquidez por activos intercambiables",
+    "hover2": "Localice piscinas de liquidez para intercambiar activos.",
+    "hover3": "Identifique los grupos de liquidez para participar activos en."
   }
 }

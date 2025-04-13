@@ -1,4 +1,6 @@
 {
+  "accountOverviewsHeading": "Konto ülevaated",
+  "blockchainOverviewsHeading": "Blockchaini ülevaated",
   "poolTracker": "Esitatud basseini ülevaade",
   "customPoolTracker": "Kohandatud basseini jälgijad",
   "pools": "Likviidsusbasseinid",
@@ -48,7 +50,7 @@
   "portuguese": "portugali (pt)",
   "thai": "Tai (th)",
   "descText": {
-    "htlc":  "Kasutage allolevat vormi ajaliselt lukustatud räsilepingute loomiseks, pikendamiseks ja lunastamiseks.",
+    "htlc": "Kasutage allolevat vormi ajaliselt lukustatud räsilepingute loomiseks, pikendamiseks ja lunastamiseks.",
     "timed_transfer": "Varade ajastatud ülekandmiseks teisele kontole kasutage allolevat vormi.",
     "withdraw_permissions": "Kasutage seda lehte, et luua, värskendada, kustutada ja taotleda loa tühistamise toiminguid.",
     "borrow": "Kasutage seda lehte potentsiaalsete krediidipakkumiste leidmiseks",

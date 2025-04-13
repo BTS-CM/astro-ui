@@ -245,10 +245,10 @@
     "hover2": "Rastreie até 5 ativos trocáveis."
   },
   "pools": {
-    "title": "📊 Pools de liquidez",
-    "subtitle": "Veja e gerencie seus pools de liquidez",
-    "hover1": "Veja seus pools de liquidez.",
-    "hover2": "Adicione ou remova a liquidez de suas piscinas.",
-    "hover3": "Comércio de participação em ativos de participação na troca."
+    "title": "💧 Pools de liquidez",
+    "subtitle": "Veja uma lista de todos os pools de liquidez",
+    "hover1": "Filtre todos os pools de liquidez por ativos trocáveis",
+    "hover2": "Localize os pools de liquidez para trocar ativos.",
+    "hover3": "Identifique os pools de liquidez para participar de ativos."
   }
 }

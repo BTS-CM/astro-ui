@@ -245,10 +245,10 @@
     "hover2": "Track up to 5 swappable assets."
   },
   "pools": {
-    "title": "📊 Liquidity Pools",
-    "subtitle": "View and manage your liquidity pools",
-    "hover1": "View your liquidity pools.",
-    "hover2": "Add or remove liquidity from your pools.",
-    "hover3": "Trade pool share assets on the exchange."
+    "title": "💧 Liquidity Pools",
+    "subtitle": "View a list of all liquidity pools",
+    "hover1": "Filter all liquidity pools by swappable assets",
+    "hover2": "Locate liquidity pools for swapping assets.",
+    "hover3": "Identify liquidity pools to stake assets in."
   }
 }

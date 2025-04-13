@@ -245,10 +245,10 @@
     "hover2": "Spor op til 5 byttelige aktiver."
   },
   "pools": {
-    "title": "📊 Likviditetsbassiner",
-    "subtitle": "Se og administrer dine likviditetspooler",
-    "hover1": "Se dine likviditetspooler.",
-    "hover2": "Tilføj eller fjern likviditeten fra dine puljer.",
-    "hover3": "Handelspoolsandele på børsen."
+    "title": "💧 Likviditetsbassiner",
+    "subtitle": "Se en liste over alle likviditetspooler",
+    "hover1": "Filtrer alle likviditetsbassiner efter byttede aktiver",
+    "hover2": "Find likviditetsbassiner til bytte af aktiver.",
+    "hover3": "Identificer likviditetsbassiner til stav aktiver i."
   }
 }

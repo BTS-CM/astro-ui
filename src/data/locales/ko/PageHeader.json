@@ -1,4 +1,6 @@
 {
+  "accountOverviewsHeading": "계정 개요",
+  "blockchainOverviewsHeading": "블록 체인 개요",
   "poolTracker": "추천 풀 개요",
   "customPoolTracker": "맞춤형 풀 추적기",
   "pools": "유동성 풀",
@@ -48,7 +50,7 @@
   "portuguese": "포르투갈어(pt)",
   "thai": "태국어(일)",
   "descText": {
-    "htlc":  "아래 양식을 사용하여 해시된 시간 잠금 계약을 만들고, 연장하고, 상환하세요.",
+    "htlc": "아래 양식을 사용하여 해시된 시간 잠금 계약을 만들고, 연장하고, 상환하세요.",
     "timed_transfer": "아래 양식을 사용하여 다른 계정으로 자산을 정해진 시간 내에 이체합니다.",
     "withdraw_permissions": "이 페이지를 사용하여 생성, 업데이트, 삭제 및 인출 권한 작업을 작성합니다.",
     "borrow": "이 페이지를 사용하여 장래의 신용 제안을 찾으십시오.",

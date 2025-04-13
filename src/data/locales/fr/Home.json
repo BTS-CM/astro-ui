@@ -245,10 +245,10 @@
     "hover2": "Suivre jusqu'à 5 actifs swappables."
   },
   "pools": {
-    "title": "📊 Pools de liquidité",
-    "subtitle": "Afficher et gérer vos pools de liquidité",
-    "hover1": "Consultez vos pools de liquidité.",
-    "hover2": "Ajouter ou retirer la liquidité de vos piscines.",
-    "hover3": "Trade Pool actions des actifs sur la bourse."
+    "title": "💧 Pools de liquidité",
+    "subtitle": "Afficher une liste de tous les pools de liquidité",
+    "hover1": "Filtrez toutes les pools de liquidité par des actifs swappables",
+    "hover2": "Localisez les piscines de liquidité pour échanger des actifs.",
+    "hover3": "Identifiez les pools de liquidité pour accélérer les actifs."
   }
 }

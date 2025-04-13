@@ -1,4 +1,6 @@
 {
+  "accountOverviewsHeading": "Présentation du compte",
+  "blockchainOverviewsHeading": "Blockchain Aperçu",
   "poolTracker": "Présentation de la piscine en vedette",
   "customPoolTracker": "Suivis de piscine personnalisés",
   "pools": "Pools de liquidités",
@@ -48,7 +50,7 @@
   "portuguese": "Portugais (pt)",
   "thai": "Thaï (th)",
   "descText": {
-    "htlc":  "Utilisez le formulaire ci-dessous pour créer, prolonger et échanger des contrats verrouillés dans le temps hachés.",
+    "htlc": "Utilisez le formulaire ci-dessous pour créer, prolonger et échanger des contrats verrouillés dans le temps hachés.",
     "timed_transfer": "Utilisez le formulaire ci-dessous pour créer un transfert programmé d'actifs vers un autre compte.",
     "withdraw_permissions": "Utilisez cette page pour créer, mettre à jour, supprimer et demander des autorisations de retrait.",
     "borrow": "Utilisez cette page pour localiser des offres de crédit potentielles",

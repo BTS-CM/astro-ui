@@ -245,10 +245,10 @@
     "hover2": "Jälgige kuni 5 vahetatavat vara."
   },
   "pools": {
-    "title": "📊 likviidsusbasseinid",
-    "subtitle": "Vaadake ja hallake oma likviidsusbasseine",
-    "hover1": "Vaadake oma likviidsusbasseine.",
-    "hover2": "Lisage või eemaldage oma basseinidest likviidsus.",
-    "hover3": "Kaubanduskogumik aktsiate aktsiad börsil."
+    "title": "💧 likviidsusbasseinid",
+    "subtitle": "Vaadake kõigi likviidsusbasseinide loendit",
+    "hover1": "Filtreerige kõik likviidsusbasseinid vahetatavate varade kaupa",
+    "hover2": "Leidke likviidsusbasseinid varade vahetamiseks.",
+    "hover3": "Tuvastage likviidsusbasseinid, kus on vara."
   }
 }

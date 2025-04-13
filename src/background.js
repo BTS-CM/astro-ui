@@ -15,6 +15,7 @@ import {
   ipcMain,
   protocol,
   shell,
+  globalShortcut,
 } from "electron";
 
 import { initApplicationMenu } from "./lib/applicationMenu.js";
@@ -57,6 +58,21 @@ const createWindow = async () => {
 
   mainWindow.webContents.setWindowOpenHandler(() => {
     return { action: "deny" };
+  });
+
+  // Register global shortcut for "Alt + Left Arrow"
+  app.whenReady().then(() => {
+    globalShortcut.register("Alt+Left", () => {
+      if (mainWindow && mainWindow.webContents.canGoBack()) {
+        mainWindow.webContents.goBack();
+      }
+    });
+  });
+
+  // Unregister shortcut when app is closed
+  app.on("will-quit", () => {
+    globalShortcut.unregister("Alt+Left");
+    globalShortcut.unregisterAll();
   });
 
   tray = new Tray(path.join(__dirname, "img", "tray.png"));

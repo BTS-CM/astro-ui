@@ -404,7 +404,7 @@ export default function Home(properties) {
         </HoverCard>
       </div>
 
-      <h4 className="mt-3 mb-2">{t("PageHeader:overviewsHeading")}</h4>
+      <h4 className="mt-3 mb-2">{t("PageHeader:accountOverviewsHeading")}</h4>
       <div className="grid grid-cols-3 gap-3">
         <HoverCard key="portfolio">
           <HoverCardTrigger asChild>
@@ -424,71 +424,6 @@ export default function Home(properties) {
               <li>{t("Home:portfolio.hover1")}</li>
               <li>{t("Home:portfolio.hover2")}</li>
               <li>{t("Home:portfolio.hover3")}</li>
-            </ul>
-          </HoverCardContent>
-        </HoverCard>
-
-        <HoverCard key="featured">
-          <HoverCardTrigger asChild>
-            <a href="/featured/index.html" style={{ textDecoration: "none" }}>
-              <Card className="h-full hover:shadow-md hover:shadow-black">
-                <CardHeader>
-                  <CardTitle>{t("Home:featured.title")}</CardTitle>
-                  <CardDescription>
-                    {t("Home:featured.subtitle")}
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-            </a>
-          </HoverCardTrigger>
-          <HoverCardContent className="w-80 text-sm pt-1">
-            <ul className="ml-2 list-disc [&>li]:mt-2">
-              <li>{t("Home:featured.hover1")}</li>
-              <li>{t("Home:featured.hover2")}</li>
-              <li>{t("Home:featured.hover3")}</li>
-            </ul>
-          </HoverCardContent>
-        </HoverCard>
-
-        <HoverCard key="custom_pool_tracker">
-          <HoverCardTrigger asChild>
-            <a
-              href="/custom_pool_overview/index.html"
-              style={{ textDecoration: "none" }}
-            >
-              <Card className="h-full hover:shadow-md hover:shadow-black">
-                <CardHeader>
-                  <CardTitle>{t("Home:custom_pool_tracker.title")}</CardTitle>
-                  <CardDescription>
-                    {t("Home:custom_pool_tracker.subtitle")}
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-            </a>
-          </HoverCardTrigger>
-          <HoverCardContent className="w-80 text-sm pt-1">
-            <ul className="ml-2 list-disc [&>li]:mt-2">
-              <li>{t("Home:custom_pool_tracker.hover1")}</li>
-              <li>{t("Home:custom_pool_tracker.hover2")}</li>
-            </ul>
-          </HoverCardContent>
-        </HoverCard>
-
-        <HoverCard key="pools">
-          <HoverCardTrigger asChild>
-            <a href="/pools/index.html" style={{ textDecoration: "none" }}>
-              <Card className="h-full hover:shadow-md hover:shadow-black">
-                <CardHeader>
-                  <CardTitle>{t("Home:pools.title")}</CardTitle>
-                  <CardDescription>{t("Home:pools.subtitle")}</CardDescription>
-                </CardHeader>
-              </Card>
-            </a>
-          </HoverCardTrigger>
-          <HoverCardContent className="w-80 text-sm pt-1">
-            <ul className="ml-2 list-disc [&>li]:mt-2">
-              <li>{t("Home:pools.hover1")}</li>
-              <li>{t("Home:pools.hover2")}</li>
             </ul>
           </HoverCardContent>
         </HoverCard>
@@ -552,31 +487,6 @@ export default function Home(properties) {
           </HoverCardContent>
         </HoverCard>
 
-        <HoverCard key="predictions">
-          <HoverCardTrigger asChild>
-            <a
-              href="/predictions/index.html"
-              style={{ textDecoration: "none" }}
-            >
-              <Card className="h-full hover:shadow-md hover:shadow-black">
-                <CardHeader>
-                  <CardTitle>{t("Home:prediction_markets.title")}</CardTitle>
-                  <CardDescription>
-                    {t("Home:prediction_markets.subtitle")}
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-            </a>
-          </HoverCardTrigger>
-          <HoverCardContent className="w-80 text-sm pt-1">
-            <ul className="ml-2 list-disc [&>li]:mt-2">
-              <li>{t("Home:prediction_markets.hover1")}</li>
-              <li>{t("Home:prediction_markets.hover2")}</li>
-              <li>{t("Home:prediction_markets.hover3")}</li>
-            </ul>
-          </HoverCardContent>
-        </HoverCard>
-
         <HoverCard key="proposals">
           <HoverCardTrigger asChild>
             <a href="/proposals/index.html" style={{ textDecoration: "none" }}>
@@ -619,6 +529,102 @@ export default function Home(properties) {
               <li>{t("Home:issued_assets.hover1")}</li>
               <li>{t("Home:issued_assets.hover2")}</li>
               <li>{t("Home:issued_assets.hover3")}</li>
+            </ul>
+          </HoverCardContent>
+        </HoverCard>
+      </div>
+
+      <h4 className="mt-3 mb-2">
+        {t("PageHeader:blockchainOverviewsHeading")}
+      </h4>
+      <div className="grid grid-cols-3 gap-3">
+        <HoverCard key="featured">
+          <HoverCardTrigger asChild>
+            <a href="/featured/index.html" style={{ textDecoration: "none" }}>
+              <Card className="h-full hover:shadow-md hover:shadow-black">
+                <CardHeader>
+                  <CardTitle>{t("Home:featured.title")}</CardTitle>
+                  <CardDescription>
+                    {t("Home:featured.subtitle")}
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            </a>
+          </HoverCardTrigger>
+          <HoverCardContent className="w-80 text-sm pt-1">
+            <ul className="ml-2 list-disc [&>li]:mt-2">
+              <li>{t("Home:featured.hover1")}</li>
+              <li>{t("Home:featured.hover2")}</li>
+              <li>{t("Home:featured.hover3")}</li>
+            </ul>
+          </HoverCardContent>
+        </HoverCard>
+
+        <HoverCard key="custom_pool_tracker">
+          <HoverCardTrigger asChild>
+            <a
+              href="/custom_pool_overview/index.html"
+              style={{ textDecoration: "none" }}
+            >
+              <Card className="h-full hover:shadow-md hover:shadow-black">
+                <CardHeader>
+                  <CardTitle>{t("Home:custom_pool_tracker.title")}</CardTitle>
+                  <CardDescription>
+                    {t("Home:custom_pool_tracker.subtitle")}
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            </a>
+          </HoverCardTrigger>
+          <HoverCardContent className="w-80 text-sm pt-1">
+            <ul className="ml-2 list-disc [&>li]:mt-2">
+              <li>{t("Home:custom_pool_tracker.hover1")}</li>
+              <li>{t("Home:custom_pool_tracker.hover2")}</li>
+            </ul>
+          </HoverCardContent>
+        </HoverCard>
+
+        <HoverCard key="pools">
+          <HoverCardTrigger asChild>
+            <a href="/pools/index.html" style={{ textDecoration: "none" }}>
+              <Card className="h-full hover:shadow-md hover:shadow-black">
+                <CardHeader>
+                  <CardTitle>{t("Home:pools.title")}</CardTitle>
+                  <CardDescription>{t("Home:pools.subtitle")}</CardDescription>
+                </CardHeader>
+              </Card>
+            </a>
+          </HoverCardTrigger>
+          <HoverCardContent className="w-80 text-sm pt-1">
+            <ul className="ml-2 list-disc [&>li]:mt-2">
+              <li>{t("Home:pools.hover1")}</li>
+              <li>{t("Home:pools.hover2")}</li>
+              <li>{t("Home:pools.hover3")}</li>
+            </ul>
+          </HoverCardContent>
+        </HoverCard>
+
+        <HoverCard key="predictions">
+          <HoverCardTrigger asChild>
+            <a
+              href="/predictions/index.html"
+              style={{ textDecoration: "none" }}
+            >
+              <Card className="h-full hover:shadow-md hover:shadow-black">
+                <CardHeader>
+                  <CardTitle>{t("Home:prediction_markets.title")}</CardTitle>
+                  <CardDescription>
+                    {t("Home:prediction_markets.subtitle")}
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            </a>
+          </HoverCardTrigger>
+          <HoverCardContent className="w-80 text-sm pt-1">
+            <ul className="ml-2 list-disc [&>li]:mt-2">
+              <li>{t("Home:prediction_markets.hover1")}</li>
+              <li>{t("Home:prediction_markets.hover2")}</li>
+              <li>{t("Home:prediction_markets.hover3")}</li>
             </ul>
           </HoverCardContent>
         </HoverCard>
