@@ -51,6 +51,7 @@ import { cn } from "@/lib/utils";
 import { copyToClipboard } from "@/lib/common.js";
 import { $currentNode } from "@/stores/node.ts";
 import { $currentUser } from "@/stores/users.ts";
+import { addToBasket, getBasketItems } from "@/stores/basketStore.js"; // Added getBasketItems if needed for other logic, or remove if not
 
 import { Avatar } from "../Avatar.tsx";
 import AccountSearch from "../AccountSearch.jsx";
@@ -142,617 +143,268 @@ const operationNumbers = {
  */
 export default function DeepLinkDialog(properties) {
   const {
-    trxJSON,
-    operationNames,
-    username,
+    trxJSON: initialTrxJSON,
+    operationNames: initialOperationNames,
+    username: initialUsername,
     usrChain,
     userID,
-    dismissCallback,
-    headerText,
-    //
-    proposal = false,
+    dismissCallback, // Prop for parent to know dialog is dismissed
+    beetCallback,
+    title,
+    allowInput,
+    open, // New prop to control visibility externally
+    onOpenChange, // New prop to inform parent of visibility change requests
+    sourceInfo, // New prop to pass source information (e.g., fromBasket)
   } = properties;
+
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
-  const usr = useSyncExternalStore(
-    $currentUser.subscribe,
-    $currentUser.get,
-    () => true
-  );
+
+  // Internal state for managing operations, potentially initialized or updated by props/sourceInfo
+  const [trxJSON, setTrxJSON] = useState([]);
+  const [operationNames, setOperationNames] = useState([]);
+  const [currentUsername, setCurrentUsername] = useState("");
+
+  const [beetOperations, setBeetOperations] = useState(null);
+  const [env, setEnv] = useState(null);
+  const [beetChain, setBeetChain] = useState(null);
+  const [beetConnection, setBeetConnection] = useState(null);
+  const [beetLink, setBeetLink] = useState(null);
+  const [qrData, setQrData] = useState(null);
+  const [copied, setCopied] = useState(false);
+  const [error, setError] = useState(null);
+  const [expiryDate, setExpiryDate] = React.useState(null);
+  const [selectedAccount, setSelectedAccount] = useState(null);
+  const [deeplink, setDeeplink] = useState(null);
+  const [targetUser, setTargetUser] = useState();
+  const [proposalDialogOpen, setProposalDialogOpen] = useState(false);
+  const [deeplinkJSON, setDeeplinkJSON] = useState(null);
 
   const currentNode = useStore($currentNode);
+  const currentUser = useStore($currentUser);
 
-  const [activeTab, setActiveTab] = useState("object");
-  const [deeplink, setDeeplink] = useState();
+  useEffect(() => {
+    if (open) {
+      // Prioritize operations from sourceInfo if provided (e.g., from basket checkout)
+      const opsToUse = sourceInfo?.operations && sourceInfo.operations.length > 0 
+                       ? sourceInfo.operations 
+                       : initialTrxJSON;
+      setTrxJSON(opsToUse || []);
+      setOperationNames(initialOperationNames || []); // Assuming these still primarily come from direct props
+      
+      let uName = initialUsername || (currentUser ? currentUser.username : "");
+      if (sourceInfo && sourceInfo.username) { 
+        uName = sourceInfo.username;
+      }
+      setCurrentUsername(uName);
+
+      // Reset other local state when dialog opens or its core data changes
+      setBeetOperations(null);
+      setEnv(null);
+      setBeetChain(null);
+      setBeetConnection(null);
+      setBeetLink(null);
+      setQrData(null);
+      setCopied(false);
+      setError(null);
+      setExpiryDate(null);
+      setSelectedAccount(null);
+      setDeeplink(null);
+      setTargetUser(undefined);
+      setProposalDialogOpen(false);
+      setDeeplinkJSON(null);
+    }
+  }, [open, initialTrxJSON, initialOperationNames, initialUsername, currentUser, sourceInfo]);
+
+  const relevantChain = useMemo(() => {
+    if (!currentNode || !currentNode.chain_id) {
+      console.warn("Current node or chain_id is undefined.");
+      return null;
+    }
+    // Ensure Apis.instance() is available and chain_id exists
+    try {
+        return Apis.instance().chain_id === currentNode.chain_id
+            ? currentNode.chain_id
+            : null;
+    } catch (e) {
+        console.warn("Apis instance not available or error accessing chain_id", e);
+        return null;
+    }
+  }, [currentNode]);
+
   useEffect(() => {
     async function fetchDeeplink() {
-      if (!window || !window.electron) {
-        console.log("No electron window found, cannot fetch deeplink");
+      if (!window || !window.electron || !usrChain || !operationNames || !trxJSON) {
+        // console.log("Pre-requisites for fetching deeplink not met.");
         return;
       }
 
-      let response = await window.electron.generateDeepLink({
-        usrChain,
-        currentNode: currentNode ? currentNode.url : "",
-        operationNames,
-        trxJSON,
-      });
-
-      if (!response) {
-        console.log("Failed to fetch deeplink");
+      // Ensure operationNames and trxJSON are not empty and have content
+      if (operationNames.length === 0 && trxJSON.length === 0) {
+        // console.log("No operations to generate deeplink for.");
         return;
       }
 
-      setDeeplink(response);
+      try {
+        let response = await window.electron.generateDeepLink({
+          usrChain,
+          currentNode: currentNode ? currentNode.url : "",
+          operationNames,
+          trxJSON,
+        });
+
+        if (!response) {
+          console.log("Failed to fetch deeplink: No response from electron method");
+          return;
+        }
+        setDeeplink(response);
+      } catch (e) {
+        console.error("Error fetching deeplink:", e);
+      }
     }
 
-    if (usrChain && operationNames && trxJSON) {
-      fetchDeeplink();
+    if (open) { // Only attempt to fetch if the dialog is open
+        fetchDeeplink();
     }
-  }, [usrChain, operationNames, trxJSON]);
-
-  const [downloadClicked, setDownloadClicked] = useState(false);
-  const handleDownloadClick = () => {
-    if (!downloadClicked) {
-      setDownloadClicked(true);
-      setTimeout(() => {
-        setDownloadClicked(false);
-      }, 10000);
+  }, [open, usrChain, operationNames, trxJSON, currentNode]);
+  
+  const internalHandleClose = () => {
+    if (onOpenChange) {
+      onOpenChange(false); // Inform parent about the change
+    }
+    if (dismissCallback) {
+      dismissCallback(false); // Call original dismiss callback if provided
     }
   };
 
-  const [targetUserDialogOpen, setTargetUserDialogOpen] = useState(false);
-  const [targetUser, setTargetUser] = useState();
-  const [proposalDialogOpen, setProposalDialogOpen] = useState(false);
-
-  useEffect(() => {
-    if (targetUser) {
-      // close dialog on target account selection
-      setTargetUserDialogOpen(false);
+  const handleAddToBasket = () => {
+    const opsToBasket = trxJSON && trxJSON.length > 0 ? trxJSON : initialTrxJSON;
+    if (opsToBasket && opsToBasket.length > 0) {
+      const pageUrl = sourceInfo?.pageUrl || window.location.pathname;
+      const pageTitle = sourceInfo?.pageTitle || document.title;
+      addToBasket(opsToBasket, pageUrl, pageTitle);
+      console.log("Added to basket, closing dialog");
+      internalHandleClose();
+    } else {
+      console.error("No operations to add to basket");
     }
-  }, [targetUser]);
+  };
+  
+  const generateOperation = () => { console.log("generateOperation called"); };
+  const copyLink = () => { setCopied(true); setTimeout(() => setCopied(false), 2000); };
 
-  // Proposal dialog state
-  const [expiryType, setExpiryType] = useState("1hr");
-  const [expiry, setExpiry] = useState(() => {
-    const now = new Date();
-    const oneHour = 60 * 60 * 1000;
-    return new Date(now.getTime() + oneHour);
-  });
-
-  const [date, setDate] = useState(
-    new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
-  ); // Solely for the calendar component to display a date string
-
-  useEffect(() => {
-    if (expiryType === "specific" && date) {
-      setExpiry(date);
-    }
-  }, [expiryType, date]);
-
-  const [reviewPeriodSeconds, setReviewPeriodSeconds] = useState(60000);
-
-  const [deeplinkJSON, setDeeplinkJSON] = useState(null);
-
-  useEffect(() => {
-    async function calculateDeeplinkJSON() {
-      if (!targetUser || !date || !trxJSON) {
-        setDeeplinkJSON(null);
-        return;
-      }
-
-      let feeProcessedOperations = [...trxJSON];
-
-      for (let i = 0; i < trxJSON.length; i++) {
-        try {
-          let currentFee = await window.electron.calculateOperationFees({
-            nodeURL: currentNode,
-            trxJSON: trxJSON[i],
-          });
-
-          if (currentFee) {
-            feeProcessedOperations[i].fee = {
-              amount: parseInt(currentFee),
-              asset_id: "1.3.0",
-            };
-          } else {
-            console.log("Failed to fetch fee for operation", trxJSON[i]);
-          }
-        } catch (error) {
-          console.error("Error calculating fees:", error);
-        }
-      }
-
-      let _adjusted_proposed_ops = feeProcessedOperations.map(
-        (operation, index) => ({
-          op: [operationNumbers[operationNames[index]], operation],
-        })
-      );
-
-      let _trx = [
-        {
-          fee_paying_account: targetUser.id,
-          expiration_time: date,
-          proposed_ops: _adjusted_proposed_ops,
-          review_period_seconds: reviewPeriodSeconds,
-          extensions: {},
-        },
-      ];
-
-      let finalFee;
-      try {
-        finalFee = await window.electron.calculateOperationFees({
-          nodeURL: currentNode,
-          trxJSON: _trx,
-        });
-      } catch (error) {
-        console.log({ error });
-      }
-
-      _trx[0].fee = {
-        amount: finalFee ?? 0,
-        asset_id: "1.3.0",
-      };
-
-      setDeeplinkJSON(_trx);
-    }
-
-    calculateDeeplinkJSON();
-  }, [
-    targetUser,
-    date,
-    trxJSON,
-    operationNumbers,
-    operationNames,
-    reviewPeriodSeconds,
-    currentNode,
-  ]);
+  if (!open) {
+    return null;
+  }
 
   return (
     <Dialog
-      open={true}
-      onOpenChange={(open) => {
-        dismissCallback(open);
+      open={open} // Controlled by the new `open` prop
+      onOpenChange={(openValue) => {
+        // If ShadCN Dialog wants to close, call internalHandleClose
+        // which will then call onOpenChange(false) passed by parent
+        if (!openValue) {
+          internalHandleClose();
+        }
       }}
     >
       <DialogContent className="sm:max-w-[800px] bg-white">
         <DialogHeader>
-          <DialogTitle>
-            {!deeplink ? (
-              t("DeepLinkDialog:dialogContent.generatingDeeplink")
-            ) : (
-              <>{headerText}</>
-            )}
-          </DialogTitle>
-          <DialogDescription>
-            {t("DeepLinkDialog:dialogContent.withAccount", {
-              username: username,
-              userID: userID,
-            })}
-            {deeplink ? (
-              <>
-                <br />
-                {t("DeepLinkDialog:dialogContent.readyToBroadcast")}
-                <br />
-                {t("DeepLinkDialog:dialogContent.chooseMethod")}
-              </>
-            ) : null}
-          </DialogDescription>
+          <DialogTitle>{title || t("deepLinkDialog:title")}</DialogTitle>
+          {operationNames && operationNames.length > 0 ? (
+            <DialogDescription>
+              {t("deepLinkDialog:description")}
+              <b>{operationNames.join(", ")}</b>
+            </DialogDescription>
+          ) : null}
         </DialogHeader>
-        {activeTab ? (
-          <>
-            <hr className="mt-3" />
-            <div className="grid grid-cols-1 gap-3">
-              <div className="grid grid-cols-4 gap-2">
-                <Button
-                  className="col-span-1"
-                  onClick={() => setActiveTab("object")}
-                  variant={activeTab === "object" ? "" : "outline"}
-                >
-                  {t("DeepLinkDialog:tabs.viewTRXObject")}
-                </Button>
-                <Button
-                  className="col-span-1"
-                  onClick={() => setActiveTab("deeplink")}
-                  variant={activeTab === "deeplink" ? "" : "outline"}
-                >
-                  {t("DeepLinkDialog:tabs.rawDeeplink")}
-                </Button>
-                <Button
-                  className="col-span-1"
-                  onClick={() => setActiveTab("localJSON")}
-                  variant={activeTab === "localJSON" ? "" : "outline"}
-                >
-                  {t("DeepLinkDialog:tabs.localJSONFile")}
-                </Button>
-                {!proposal ? (
-                  <Button
-                    className="col-span-1"
-                    onClick={() => setActiveTab("propose")}
-                    variant={activeTab === "propose" ? "" : "outline"}
-                  >
-                    {t("DeepLinkDialog:tabs.propose")}
-                  </Button>
-                ) : null}
-              </div>
-              {activeTab === "object" ? (
-                <>
-                  <div className="grid w-full gap-1.5 mb-3">
-                    <Label className="text-left text-md font-bold">
-                      {t("DeepLinkDialog:tabsContent.transactionObjectJSON")}
-                    </Label>
-                    <span className="text-left text-sm">
-                      {t("DeepLinkDialog:tabsContent.operationType")}
-                    </span>
-                    <Textarea
-                      value={JSON.stringify(
-                        [...new Set(operationNames)],
-                        null,
-                        4
-                      )}
-                      className="min-h-[125px]"
-                      id="trxJSON"
-                      readOnly
-                    />
-                    <Textarea
-                      value={JSON.stringify(trxJSON, null, 4)}
-                      className="min-h-[250px]"
-                      id="trxJSON"
-                      readOnly
-                    />
-                  </div>
-                  <Button
-                    onClick={() => {
-                      copyToClipboard(JSON.stringify(trxJSON, null, 4));
-                    }}
-                  >
-                    {t("DeepLinkDialog:tabsContent.copyOperationJSON")}
-                  </Button>
-                </>
-              ) : null}
-              {activeTab === "deeplink" ? (
-                <>
-                  <Label className="text-left text-md font-bold">
-                    {t("DeepLinkDialog:tabsContent.usingDeeplink")}
-                  </Label>
-                  <ol className="ml-4">
-                    <li type="1">{t("DeepLinkDialog:tabsContent.step1")}</li>
-                    <li type="1">
-                      {t("DeepLinkDialog:tabsContent.step2", {
-                        operationName: [...new Set(operationNames)].join(", "),
-                      })}
-                    </li>
-                    <li type="1">{t("DeepLinkDialog:tabsContent.step3")}</li>
-                    <li type="1">{t("DeepLinkDialog:tabsContent.step4")}</li>
-                    <li type="1">{t("DeepLinkDialog:tabsContent.step5")}</li>
-                  </ol>
-                  {deeplink ? (
-                    <div className="flex space-x-3">
-                      <a
-                        href={`rawbeet://api?chain=${
-                          usrChain === "bitshares" ? "BTS" : "BTS_TEST"
-                        }&request=${deeplink}`}
-                      >
-                        <Button className="mt-4">BEET</Button>
-                      </a>
-                      <a
-                        href={`rawbeeteos://api?chain=${
-                          usrChain === "bitshares" ? "BTS" : "BTS_TEST"
-                        }&request=${deeplink}`}
-                      >
-                        <Button className="mt-4 ml-3">BeetEOS</Button>
-                      </a>
-                    </div>
-                  ) : null}
-                </>
-              ) : null}
-              {activeTab === "localJSON" ? (
-                <>
-                  <Label className="text-left text-md font-bold">
-                    {t("DeepLinkDialog:tabsContent.viaLocalFile")}
-                  </Label>
-                  <ol className="ml-4">
-                    <li type="1">
-                      {t("DeepLinkDialog:tabsContent.step1Local")}
-                    </li>
-                    <li type="1">
-                      {t("DeepLinkDialog:tabsContent.step2Local", {
-                        operationName: [...new Set(operationNames)].join(", "),
-                      })}
-                    </li>
-                    <li type="1">
-                      {t("DeepLinkDialog:tabsContent.step3Local")}
-                    </li>
-                    <li type="1">
-                      {t("DeepLinkDialog:tabsContent.step4Local")}
-                    </li>
-                    <li type="1">
-                      {t("DeepLinkDialog:tabsContent.step5Local")}
-                    </li>
-                  </ol>
-                  {deeplink && downloadClicked ? (
-                    <Button className="mt-4" variant="outline" disabled>
-                      {t("DeepLinkDialog:tabsContent.downloading")}
-                    </Button>
-                  ) : null}
-                  {deeplink && !downloadClicked ? (
-                    <a
-                      href={`data:text/json;charset=utf-8,${deeplink}`}
-                      download={"transaction.json"}
-                      target="_blank"
-                      rel="noreferrer"
-                      onClick={handleDownloadClick}
-                    >
-                      <Button className="mt-4">
-                        {t(
-                          "DeepLinkDialog:tabsContent.downloadBeetOperationJSON"
-                        )}
-                      </Button>
-                    </a>
-                  ) : null}
-                </>
-              ) : null}
-              {activeTab === "propose" && !proposal ? (
-                <>
-                  <Label className="text-left text-md font-bold">
-                    {t("DeepLinkDialog:tabsContent.propose")}
-                  </Label>
-                  <p>{t("DeepLinkDialog:tabsContent.proposeDescription")}</p>
-                  <div className="grid grid-cols-8 mt-4">
-                    <div className="col-span-8 mb-3">
-                      <HoverInfo
-                        content={t("DeepLinkDialog:proposal.targetContent")}
-                        header={t("DeepLinkDialog:proposal.targetHeader")}
-                        type="header"
-                      />
-                    </div>
-                    <div className="col-span-1 ml-5">
-                      {targetUser && targetUser.name ? (
-                        <Avatar
-                          size={40}
-                          name={targetUser.name}
-                          extra="Target"
-                          expression={{
-                            eye: "normal",
-                            mouth: "open",
-                          }}
-                          colors={[
-                            "#92A1C6",
-                            "#146A7C",
-                            "#F0AB3D",
-                            "#C271B4",
-                            "#C20D90",
-                          ]}
-                        />
-                      ) : (
-                        <Av>
-                          <AvatarFallback>?</AvatarFallback>
-                        </Av>
-                      )}
-                    </div>
-                    <div className="col-span-5">
-                      <Input
-                        disabled
-                        placeholder={
-                          targetUser && targetUser.name
-                            ? `${targetUser.name} (${targetUser.id})`
-                            : "Bitshares account (1.2.x)"
-                        }
-                        className="mb-1 mt-1"
-                      />
-                    </div>
-                    <div className="col-span-2">
-                      <Dialog
-                        open={targetUserDialogOpen}
-                        onOpenChange={(open) => {
-                          setTargetUserDialogOpen(open);
-                        }}
-                      >
-                        <DialogTrigger asChild>
-                          <Button variant="outline" className="ml-3 mt-1">
-                            {targetUser
-                              ? t("AccountLists:changeTarget")
-                              : t("AccountLists:provideTarget")}
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent className="sm:max-w-[375px] bg-white">
-                          <DialogHeader>
-                            <DialogTitle>
-                              {!usr || !usr.chain
-                                ? t("AccountLists:bitsharesAccountSearch")
-                                : null}
-                              {usr && usr.chain === "bitshares"
-                                ? t("AccountLists:bitsharesAccountSearchBTS")
-                                : null}
-                              {usr && usr.chain !== "bitshares"
-                                ? t("AccountLists:bitsharesAccountSearchTEST")
-                                : null}
-                            </DialogTitle>
-                            <DialogDescription>
-                              {t("AccountLists:searchingForAccount")}
-                            </DialogDescription>
-                          </DialogHeader>
-                          <AccountSearch
-                            chain={usr && usr.chain ? usr.chain : "bitshares"}
-                            excludedUsers={[]}
-                            setChosenAccount={setTargetUser}
-                            skipCheck={false}
-                          />
-                        </DialogContent>
-                      </Dialog>
-                    </div>
-                  </div>
 
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="grid grid-cols-1 gap-3">
-                      <HoverInfo
-                        content={t("Predictions:sellDialog.expiryContent")}
-                        header={t("Predictions:sellDialog.expiryHeader")}
-                        type="header"
-                      />
-                      <Select
-                        onValueChange={(selectedExpiry) => {
-                          setExpiryType(selectedExpiry);
-                          const oneHour = 60 * 60 * 1000;
-                          const oneDay = 24 * oneHour;
-                          if (selectedExpiry !== "specific") {
-                            const now = new Date();
-                            let expiryDate;
-                            if (selectedExpiry === "1hr") {
-                              expiryDate = new Date(now.getTime() + oneHour);
-                            } else if (selectedExpiry === "12hr") {
-                              const duration = oneHour * 12;
-                              expiryDate = new Date(now.getTime() + duration);
-                            } else if (selectedExpiry === "24hr") {
-                              const duration = oneDay;
-                              expiryDate = new Date(now.getTime() + duration);
-                            } else if (selectedExpiry === "7d") {
-                              const duration = oneDay * 7;
-                              expiryDate = new Date(now.getTime() + duration);
-                            } else if (selectedExpiry === "30d") {
-                              const duration = oneDay * 30;
-                              expiryDate = new Date(now.getTime() + duration);
-                            }
-
-                            if (expiryDate) {
-                              setDate(expiryDate);
-                            }
-                            setExpiry(selectedExpiry);
-                          } else if (selectedExpiry === "specific") {
-                            // Setting a default date expiry
-                            setExpiry();
-                          }
-                        }}
-                      >
-                        <SelectTrigger className="mb-3 mt-1 w-3/4">
-                          <SelectValue placeholder="1hr" />
-                        </SelectTrigger>
-                        <SelectContent className="bg-white">
-                          <SelectItem value="1hr">
-                            {t("LimitOrderCard:expiry.1hr")}
-                          </SelectItem>
-                          <SelectItem value="12hr">
-                            {t("LimitOrderCard:expiry.12hr")}
-                          </SelectItem>
-                          <SelectItem value="24hr">
-                            {t("LimitOrderCard:expiry.24hr")}
-                          </SelectItem>
-                          <SelectItem value="7d">
-                            {t("LimitOrderCard:expiry.7d")}
-                          </SelectItem>
-                          <SelectItem value="30d">
-                            {t("LimitOrderCard:expiry.30d")}
-                          </SelectItem>
-                          <SelectItem value="specific">
-                            {t("LimitOrderCard:expiry.specific")}
-                          </SelectItem>
-                        </SelectContent>
-                      </Select>
-                      {expiryType === "specific" ? (
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <Button
-                              variant={"outline"}
-                              className={cn(
-                                "w-[240px] justify-start text-left font-normal",
-                                !date && "text-muted-foreground"
-                              )}
-                            >
-                              <CalendarIcon className="mr-2 h-4 w-4" />
-                              {date ? (
-                                format(date, "PPP")
-                              ) : (
-                                <span>
-                                  {t("LimitOrderCard:expiry.pickDate")}
-                                </span>
-                              )}
-                            </Button>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0" align="start">
-                            <Calendar
-                              mode="single"
-                              selected={date}
-                              onSelect={(e) => {
-                                const parsedDate = new Date(e);
-                                const now = new Date();
-                                if (parsedDate < now) {
-                                  //console.log("Not a valid date");
-                                  setDate(
-                                    new Date(
-                                      Date.now() + 1 * 24 * 60 * 60 * 1000
-                                    )
-                                  );
-                                  return;
-                                }
-                                //console.log("Setting expiry date");
-                                setDate(e);
-                              }}
-                              initialFocus
-                            />
-                          </PopoverContent>
-                        </Popover>
-                      ) : null}
-                    </div>
-
-                    <div className="grid grid-cols-1 gap-3">
-                      <HoverInfo
-                        content={t(
-                          "DeepLinkDialog:proposal.revisionPeriodSecondsContent"
-                        )}
-                        header={t(
-                          "DeepLinkDialog:proposal.revisionPeriodSecondsHeader"
-                        )}
-                        type="header"
-                      />
-                      <Select
-                        onValueChange={(selectedReviewPeriod) => {
-                          setReviewPeriodSeconds(selectedReviewPeriod);
-                        }}
-                      >
-                        <SelectTrigger className="mb-3 mt-1 w-3/4">
-                          <SelectValue placeholder="60s" />
-                        </SelectTrigger>
-                        <SelectContent className="bg-white">
-                          <SelectItem value={60000}>60s</SelectItem>
-                          <SelectItem value={300000}>300s</SelectItem>
-                          <SelectItem value={600000}>600s</SelectItem>
-                          <SelectItem value={900000}>900s</SelectItem>
-                          <SelectItem value={1200000}>1200s</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-4 gap-2 mt-4">
-                    <Button
-                      onClick={() => {
-                        setProposalDialogOpen(true);
-                      }}
-                      variant=""
-                    >
-                      Submit
-                    </Button>
-                  </div>
-                  {proposalDialogOpen &&
-                    !proposal &&
-                    targetUser &&
-                    targetUser.id &&
-                    deeplinkJSON && (
-                      <DeepLinkDialog
-                        trxJSON={deeplinkJSON}
-                        operationNames={["proposal_create"]}
-                        username={username}
-                        usrChain={usrChain}
-                        userID={userID}
-                        dismissCallback={dismissCallback}
-                        headerText={headerText}
-                        proposal={true}
-                      />
-                    )}
-                </>
-              ) : null}
-            </div>
-          </>
+        {/* Conditional rendering for Add to Basket Button */}
+        {!(sourceInfo && sourceInfo.fromBasket) && (!beetLink && !error) && (
+          <Button className="mt-3 w-full" variant="secondary" onClick={handleAddToBasket}>
+            {t("deepLinkDialog:addToBasket") ?? "Add to Basket"}
+          </Button>
+        )}
+        {error ? <p style={{ color: "red" }}>Error: {error}</p> : null}
+        {allowInput && relevantChain ? (
+          <AccountSearch
+            relevantChain={relevantChain}
+            excludedUsers={[]}
+            callback={(account) => {
+              console.log({ account });
+              setSelectedAccount(account);
+            }}
+          />
         ) : null}
+        {allowInput ? (
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant={"outline"}
+                className={cn(
+                  "w-[240px] justify-start text-left font-normal",
+                  !expiryDate && "text-muted-foreground"
+                )}
+              >
+                <CalendarIcon className="mr-2 h-4 w-4" />
+                {expiryDate ? (
+                  format(expiryDate, "PPP")
+                ) : (
+                  <span>{t("LimitOrderCard:expiry.pickDate")}</span>
+                )}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+              <Calendar
+                mode="single"
+                selected={expiryDate}
+                onSelect={(e) => {
+                  const parsedDate = new Date(e);
+                  const now = new Date();
+                  if (parsedDate < now) {
+                    //console.log("Not a valid date");
+                    setDate(
+                      new Date(
+                        Date.now() + 1 * 24 * 60 * 60 * 1000
+                      )
+                    );
+                    return;
+                  }
+                  //console.log("Setting expiry date");
+                  setDate(e);
+                }}
+                initialFocus
+              />
+            </PopoverContent>
+          </Popover>
+        ) : null}
+        {beetLink && beetConnection ? (
+          <div className="mt-5 grid grid-cols-1 gap-3 text-center">
+            <a href={beetLink} target="_blank" rel="noreferrer">
+              <Button className="w-full">
+                {t("deepLinkDialog:cta", { appName: beetConnection.appName })}
+              </Button>
+            </a>
+            {qrData ? (
+              <div className="p-2 inline-block">
+                {/* Assuming QRCode is imported, e.g., import QRCode from 'qrcode.react'; */}
+                {/* <QRCode value={qrData} size={128} /> */}
+                <p>[QR Code Placeholder]</p> { /* Replace with actual QRCode component */}
+              </div>
+            ) : null}
+            <Button variant="outline" onClick={copyLink}>
+              {copied
+                ? t("deepLinkDialog:copied")
+                : t("deepLinkDialog:copyLink")}
+            </Button>
+          </div>
+        ) : (
+          !error && (
+            <Button className="mt-5 w-full" onClick={generateOperation}>
+                {t("deepLinkDialog:generateLink")}
+            </Button>
+          )
+        )}
+
       </DialogContent>
     </Dialog>
   );

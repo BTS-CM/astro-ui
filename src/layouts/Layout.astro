@@ -7,6 +7,10 @@ interface Props {
 
 const { title } = Astro.props;
 import '@/styles/globals.css'
+
+import PageHeader from '@/components/PageHeader.jsx';
+import BasketButton from '@/components/common/BasketButton.jsx';
+// DeepLinkDialog is no longer globally placed here, it will be invoked where needed or composed if necessary.
 ---
 
 <!DOCTYPE html>
@@ -21,7 +25,16 @@ import '@/styles/globals.css'
 		<ClientRouter />
 	</head>
 	<body>
-		<slot />
+		<div id="app-container">
+			<PageHeader client:load>
+				<div style="position: absolute; top: 1rem; right: 1rem; display: flex; gap: 0.5rem; z-index: 50;">
+					{/* Placeholder for Translation Button */}
+					<BasketButton client:load />
+				</div>
+			</PageHeader>
+			<slot />
+		</div>
+		{/* CheckoutDialog is now part of BasketButton and DeepLinkDialog is invoked/composed, not globally placed */}
 	</body>
 </html>
 <style is:global>
