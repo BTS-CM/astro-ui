@@ -261,11 +261,6 @@ export default function CustomPoolOverview(properties) {
                   {t("PoolList:simpleSwap")}
                 </Button>
               </a>
-              <a href={`/pool/index.html?pool=${pool.id}`}>
-                <Button variant="outline" className="w-full">
-                  {t("PoolList:poolSwap")}
-                </Button>
-              </a>
               <a href={`/stake/index.html?pool=${pool.id}`}>
                 <Button variant="outline" className="w-full">
                   {t("PoolList:stakeAssets")}

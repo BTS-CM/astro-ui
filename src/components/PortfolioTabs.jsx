@@ -626,7 +626,7 @@ export default function PortfolioTabs(properties) {
       return (
         <a
           style={style}
-          href={`/pool/index.html?pool=${pool.id}`}
+          href={`/swap/index.html?pool=${pool.id}`}
           key={`a_${pool.id}`}
         >
           <RowHyperlink

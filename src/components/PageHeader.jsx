@@ -141,11 +141,6 @@ export default function PageHeader(properties) {
                         icon="📈"
                       />
                       <MenuRow
-                        url="/pool/index.html"
-                        text={t("PageHeader:poolExchange")}
-                        icon="💱"
-                      />
-                      <MenuRow
                         url="/swap/index.html"
                         text={t("PageHeader:simpleSwap")}
                         icon="🔄"

@@ -1022,11 +1022,6 @@ export default function CustomPoolTracker(properties) {
                     {t("PoolTracker:simpleSwap")}
                   </Button>
                 </a>
-                <a href={`/pool/index.html?pool=${res.id}`}>
-                  <Button variant="outline" className="w-full">
-                    {t("PoolTracker:normalSwap")}
-                  </Button>
-                </a>
                 <a href={`/stake/index.html?pool=${res.id}`}>
                   <Button variant="outline" className="w-full">
                     {t("PoolTracker:stakeAssets")}
