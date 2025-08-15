@@ -45,7 +45,7 @@
     }
   },
   "dependencies": {
-    "@astrojs/node": "^9.2.2",
+    "@astrojs/node": "^9.4.1",
     "@astrojs/react": "^4.3.0",
     "@astrojs/tailwind": "^6.0.2",
     "@babel/runtime": "^7.27.1",
