@@ -283,6 +283,7 @@ export default function PoolDialogs(properties) {
               rowComponent={PoolRow}
               rowCount={poolArray.length}
               rowHeight={35}
+              rowProps={{}}
               className="w-full"
             />
           </div>

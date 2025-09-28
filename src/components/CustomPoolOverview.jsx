@@ -473,6 +473,7 @@ export default function CustomPoolOverview(properties) {
                   trackers && trackers[_chain] ? trackers[_chain].length : 0
                 }
                 rowHeight={100}
+                rowProps={{}}
                 className="w-full"
               />
             </div>
@@ -582,6 +583,7 @@ export default function CustomPoolOverview(properties) {
                 rowComponent={PoolRow}
                 rowCount={remainingPools.length}
                 rowHeight={30}
+                rowProps={{}}
                 className="w-full"
               />
             </div>
@@ -601,6 +603,7 @@ export default function CustomPoolOverview(properties) {
                 rowComponent={ChosenPoolRow}
                 rowCount={selectedPools.length}
                 rowHeight={30}
+                rowProps={{}}
                 className="w-full"
               />
             </div>

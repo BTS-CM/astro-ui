@@ -186,6 +186,7 @@ export default function BalanceAssetDropDownCard(properties) {
               rowComponent={Row}
               rowCount={filteredUserBalances.length}
               rowHeight={45}
+              rowProps={{}}
               className="w-full"
             />
           </>

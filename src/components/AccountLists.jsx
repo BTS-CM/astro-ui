@@ -235,6 +235,7 @@ export default function AccountLists(properties) {
                       rowComponent={accountRow}
                       rowCount={whitelistedAccounts.length}
                       rowHeight={50}
+                      rowProps={{}}
                       className="w-full"
                     />
                   ) : null}
@@ -244,6 +245,7 @@ export default function AccountLists(properties) {
                       rowComponent={accountRow}
                       rowCount={blacklistedAccounts.length}
                       rowHeight={50}
+                      rowProps={{}}
                       className="w-full border"
                     />
                   ) : null}

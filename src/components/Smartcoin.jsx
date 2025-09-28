@@ -3622,6 +3622,7 @@ export default function Smartcoin(properties) {
                         rowComponent={OrderRow}
                         rowCount={buyOrders.length}
                         rowHeight={25}
+                        rowProps={{}}
                         className="w-full"
                       />
                     </>
@@ -3647,6 +3648,7 @@ export default function Smartcoin(properties) {
                         rowComponent={OrderRow}
                         rowCount={sellOrders.length}
                         rowHeight={25}
+                        rowProps={{}}
                         className="w-full"
                       />
                     </>
@@ -3696,6 +3698,7 @@ export default function Smartcoin(properties) {
                     rowComponent={MarginPositionRow}
                     rowCount={assetCallOrders.length}
                     rowHeight={25}
+                    rowProps={{}}
                     className="w-full"
                   />
                 </>
@@ -3740,6 +3743,7 @@ export default function Smartcoin(properties) {
                     rowComponent={SettlementRow}
                     rowCount={assetSettleOrders.length}
                     rowHeight={25}
+                    rowProps={{}}
                     className="w-full"
                   />
                 </>
@@ -3785,6 +3789,7 @@ export default function Smartcoin(properties) {
                     rowComponent={PriceFeedRow}
                     rowCount={finalBitasset.feeds.length}
                     rowHeight={25}
+                    rowProps={{}}
                     className="w-full"
                   />
                 </>

@@ -396,6 +396,7 @@ export default function CustomPoolOverview(properties) {
                 rowComponent={PoolRow}
                 rowCount={remainingPools.length}
                 rowHeight={30}
+                rowProps={{}}
                 className="w-full"
               />
             </div>

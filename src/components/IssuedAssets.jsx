@@ -960,6 +960,7 @@ export default function IssuedAssets(properties) {
                                   rowComponent={PriceFeedRow}
                                   rowCount={priceFeedPublishers.length}
                                   rowHeight={80}
+                                  rowProps={{}}
                                   className="w-full"
                                 />
                               </span>
@@ -1206,6 +1207,7 @@ export default function IssuedAssets(properties) {
                                       rowComponent={UserRow}
                                       rowCount={users.length}
                                       rowHeight={90}
+                                      rowProps={{}}
                                       className="w-full"
                                     />
                                   ) : (
@@ -1898,6 +1900,7 @@ export default function IssuedAssets(properties) {
                                           rowComponent={UserRow}
                                           rowCount={users.length}
                                           rowHeight={90}
+                                          rowProps={{}}
                                           className="w-full"
                                         />
                                       ) : (
@@ -2033,6 +2036,7 @@ export default function IssuedAssets(properties) {
                                     rowComponent={PriceFeedRow}
                                     rowCount={relevantBitassetData.feeds.length}
                                     rowHeight={60}
+                                    rowProps={{}}
                                     className="w-full rounded border border-black pt-1"
                                   />
                                 </>
@@ -2243,6 +2247,7 @@ export default function IssuedAssets(properties) {
                       rowComponent={AssetRow}
                       rowCount={relevantAssets.length}
                       rowHeight={90}
+                      rowProps={{}}
                       className="w-full"
                     />
                   )}
@@ -2268,6 +2273,7 @@ export default function IssuedAssets(properties) {
                       rowComponent={AssetRow}
                       rowCount={relevantAssets.length}
                       rowHeight={90}
+                      rowProps={{}}
                       className="w-full"
                     />
                   )}
@@ -2293,6 +2299,7 @@ export default function IssuedAssets(properties) {
                       rowComponent={AssetRow}
                       rowCount={relevantAssets.length}
                       rowHeight={90}
+                      rowProps={{}}
                       className="w-full"
                     />
                   )}
@@ -2318,6 +2325,7 @@ export default function IssuedAssets(properties) {
                       rowComponent={AssetRow}
                       rowCount={relevantAssets.length}
                       rowHeight={90}
+                      rowProps={{}}
                       className="w-full"
                     />
                   )}

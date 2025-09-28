@@ -1870,6 +1870,7 @@ export default function Predictions(properties) {
                                 rowComponent={pricefeederRow}
                                 rowCount={priceFeeders.length}
                                 rowHeight={100}
+                                rowProps={{}}
                                 className="w-full"
                               />
                             </span>
@@ -2171,6 +2172,7 @@ export default function Predictions(properties) {
                   rowHeight={275}
                   key={`list-${view}`}
                   className={`w-full mt-3`}
+                  rowProps={{}}
                 />
               ) : null}
               {chosenPMAs && !chosenPMAs.length && view === "active" ? (

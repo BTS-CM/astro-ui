@@ -275,6 +275,7 @@ export default function BasicAssetDropDown(properties) {
                     rowComponent={Row}
                     rowCount={borrowPositions.length}
                     rowHeight={70}
+                    rowProps={{}}
                     className="w-full"
                   />
                 </>
@@ -296,6 +297,7 @@ export default function BasicAssetDropDown(properties) {
                     rowComponent={Row}
                     rowCount={usrBalances.length}
                     rowHeight={70}
+                    rowProps={{}}
                     className="w-full"
                   />
                 </>
@@ -370,6 +372,7 @@ export default function BasicAssetDropDown(properties) {
                     rowComponent={Row}
                     rowCount={featuredAssets.length}
                     rowHeight={70}
+                    rowProps={{}}
                     className="w-full"
                   />
                 </>
@@ -400,6 +403,7 @@ export default function BasicAssetDropDown(properties) {
                     rowComponent={Row}
                     rowCount={_favouriteAssets.length}
                     rowHeight={70}
+                    rowProps={{}}
                     className="w-full"
                   />
                 </>

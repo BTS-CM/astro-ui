@@ -1274,6 +1274,7 @@ export default function CreditOfferEditor(properties) {
                               rowComponent={CollateralRow}
                               rowCount={acceptableCollateral.length}
                               rowHeight={80}
+                              rowProps={{}}
                               className="w-full"
                             />
                           </span>
@@ -1315,6 +1316,7 @@ export default function CreditOfferEditor(properties) {
                               rowComponent={ApprovedBorrowerRow}
                               rowCount={allowedAccounts.length}
                               rowHeight={100}
+                              rowProps={{}}
                               className="w-full"
                             />
                           </span>

@@ -216,6 +216,7 @@ export default function CreditOffers(properties) {
                     rowComponent={Row}
                     rowCount={offers.length}
                     rowHeight={225}
+                    rowProps={{}}
                     className="w-full mt-3"
                   />
                 ) : null}

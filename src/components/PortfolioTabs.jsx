@@ -671,6 +671,7 @@ export default function PortfolioTabs(properties) {
               rowComponent={PoolRow}
               rowCount={poolArray.length}
               rowHeight={35}
+              rowProps={{}}
               className="w-full"
             />
           </div>
@@ -765,6 +766,7 @@ export default function PortfolioTabs(properties) {
                       rowComponent={BalanceRow}
                       rowCount={sortedUserBalances.length}
                       rowHeight={80}
+                      rowProps={{}}
                       className="gaps-2"
                     />
                   ) : (
@@ -801,6 +803,7 @@ export default function PortfolioTabs(properties) {
                       rowComponent={OpenOrdersRow}
                       rowCount={openOrders.length}
                       rowHeight={145}
+                      rowProps={{}}
                     />
                   ) : (
                     <p>{t("PortfolioTabs:noOpenOrdersFound")}</p>
@@ -835,6 +838,7 @@ export default function PortfolioTabs(properties) {
                       rowComponent={RecentActivityRow}
                       rowCount={activity.length}
                       rowHeight={145}
+                      rowProps={{}}
                     />
                   ) : (
                     <p>{t("PortfolioTabs:noRecentActivityFound")}</p>

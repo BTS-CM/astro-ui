@@ -1371,6 +1371,7 @@ export default function CustomPoolTracker(properties) {
                   rowComponent={featuredPoolRow}
                   rowCount={liquidityPools.length}
                   rowHeight={110}
+                  rowProps={{}}
                   className="w-full"
                 />
                 <div className="grid grid-cols-12 text-xs">

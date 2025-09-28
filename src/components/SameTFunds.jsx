@@ -781,6 +781,7 @@ export default function SameTFunds(properties) {
                     rowComponent={Row}
                     rowCount={relevantFunds.length}
                     rowHeight={110}
+                    rowProps={{}}
                     key={`list-${view}`}
                     className="w-full mt-3"
                   />
@@ -795,6 +796,7 @@ export default function SameTFunds(properties) {
                     rowComponent={Row}
                     rowCount={myTFunds.length}
                     rowHeight={110}
+                    rowProps={{}}
                     key={`list-${view}`}
                     className="w-full mt-3"
                   />
@@ -826,6 +828,7 @@ export default function SameTFunds(properties) {
                     rowComponent={Row}
                     rowCount={searchResults.length}
                     rowHeight={110}
+                    rowProps={{}}
                     key={`list-${view}`}
                     className="w-full mt-3"
                   />

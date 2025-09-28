@@ -401,6 +401,7 @@ export default function CommitteeMembers(properties) {
                   rowComponent={LightMemberRow}
                   rowCount={filteredVotes.length}
                   rowHeight={75} // Adjust as needed
+                  rowProps={{}}
                   width="100%"
                 />
               </ScrollArea>
@@ -470,6 +471,7 @@ export default function CommitteeMembers(properties) {
                   rowComponent={CommitteeRow}
                   rowCount={sortedMembers.length}
                   rowHeight={65} // Adjust based on content height
+                  rowProps={{}}
                   width="100%"
                 />
               </ScrollArea>

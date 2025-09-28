@@ -621,6 +621,7 @@ export default function Barter(properties) {
                               rowComponent={FromRow}
                               rowCount={Object.keys(fromAssets).length}
                               rowHeight={45} // Adjust as needed
+                              rowProps={{}}
                               width="100%"
                             />
                           </>
@@ -682,6 +683,7 @@ export default function Barter(properties) {
                               rowComponent={ToRow}
                               rowCount={Object.keys(toAssets).length}
                               rowHeight={45} // Adjust as needed
+                              rowProps={{}}
                               width="100%"
                             />
                           </>

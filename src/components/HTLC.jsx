@@ -568,6 +568,7 @@ export default function Htlc(properties) {
                         rowComponent={SenderHtlcRow}
                         rowCount={senderHtlcs.length}
                         className="w-full"
+                        rowProps={{}}
                         height={500} // Dynamic height
                       />
                     </>
@@ -606,6 +607,7 @@ export default function Htlc(properties) {
                         rowComponent={ReceiverHtlcRow}
                         rowCount={receiverHtlcs.length}
                         className="w-full"
+                        rowProps={{}}
                         height={500}
                       />
                     </>

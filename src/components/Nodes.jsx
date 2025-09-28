@@ -101,6 +101,7 @@ export default function Nodes(properties) {
                   rowComponent={NodeRow}
                   rowCount={nodes[usr.chain].length}
                   rowHeight={50}
+                  rowProps={{}}
                   className="w-full"
                 />
               ) : (

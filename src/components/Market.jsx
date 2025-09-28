@@ -659,42 +659,24 @@ export default function Market(properties) {
           {assetAData && assetBData ? (
             <>
               <div className="w-full grid grid-cols-2 gap-5">
-                {buyOrders ? (
+                {buyOrders && !marketOrdersLoading ? (
                   <MarketOrderCard
                     cardType="buy"
-                    activeLimitCard={activeLimitCard}
                     assetA={assetA}
                     assetAData={assetAData}
                     assetB={assetB}
                     assetBData={assetBData}
-                    buyOrders={buyOrders}
-                    previousBuyOrders={previousBuyOrders}
-                    sellOrders={sellOrders}
-                    previousSellOrders={previousSellOrders}
-                    marketOrdersLoading={marketOrdersLoading}
-                    orderBookItr={orderBookItr}
-                    setOrderBookItr={setOrderBookItr}
-                    _resetOrders={_resetOrders}
-                    invertedMarket={invertedMarket}
+                    marketOrders={buyOrders}
                   />
                 ) : null}
-                {sellOrders ? (
+                {sellOrders && !marketOrdersLoading ? (
                   <MarketOrderCard
                     cardType="sell"
-                    activeLimitCard={activeLimitCard}
                     assetA={assetA}
                     assetAData={assetAData}
                     assetB={assetB}
                     assetBData={assetBData}
-                    buyOrders={buyOrders}
-                    previousBuyOrders={previousBuyOrders}
-                    sellOrders={sellOrders}
-                    previousSellOrders={previousSellOrders}
-                    marketOrdersLoading={marketOrdersLoading}
-                    orderBookItr={orderBookItr}
-                    setOrderBookItr={setOrderBookItr}
-                    _resetOrders={_resetOrders}
-                    invertedMarket={invertedMarket}
+                    marketOrders={sellOrders}
                   />
                 ) : null}
               </div>

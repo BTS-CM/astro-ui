@@ -513,6 +513,7 @@ export default function PoolStake(properties) {
                                           rowComponent={Row}
                                           rowCount={pools.length}
                                           rowHeight={35}
+                                          rowProps={{}}
                                           className="w-full"
                                           initialScrollOffset={
                                             pools
@@ -646,6 +647,7 @@ export default function PoolStake(properties) {
                                                     rowComponent={PoolRow}
                                                     rowCount={thisResult.length}
                                                     rowHeight={45}
+                                                    rowProps={{}}
                                                     className="w-full"
                                                   />
                                                 </>
@@ -684,6 +686,7 @@ export default function PoolStake(properties) {
                                                     rowComponent={PoolRow}
                                                     rowCount={thisResult.length}
                                                     rowHeight={45}
+                                                    rowProps={{}}
                                                     className="w-full"
                                                   />
                                                 </>

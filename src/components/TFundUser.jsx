@@ -879,6 +879,7 @@ export default function SameTFunds(properties) {
                         rowComponent={FundRow}
                         rowCount={sameTFunds.length}
                         rowHeight={55}
+                        rowProps={{}}
                         key={`list-sametfunds`}
                         className="w-full"
                       />
@@ -916,6 +917,7 @@ export default function SameTFunds(properties) {
                           rowComponent={BorrowPositionRow}
                           rowCount={borrowPositions.length}
                           rowHeight={35}
+                          rowProps={{}}
                           key={`list-borrowpositions`}
                           className="w-full mt-1"
                         />
@@ -950,6 +952,7 @@ export default function SameTFunds(properties) {
                           rowComponent={OpRow}
                           rowCount={operations.length}
                           rowHeight={55}
+                          rowProps={{}}
                           key={`list-operations`}
                           className="w-full mt-3"
                         />
@@ -1012,6 +1015,7 @@ export default function SameTFunds(properties) {
                           updatedBalances.filter((x) => x.display).length
                         }
                         rowHeight={35}
+                        rowProps={{}}
                         key={`list-updatedbalances`}
                         className="w-full mt-3"
                       />

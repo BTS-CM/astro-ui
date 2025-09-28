@@ -211,6 +211,7 @@ export default function CollateralDropDownCard(properties) {
                 rowComponent={Row}
                 rowCount={thisResult.length}
                 rowHeight={70}
+                rowProps={{}}
                 className="w-full"
               />
             </>

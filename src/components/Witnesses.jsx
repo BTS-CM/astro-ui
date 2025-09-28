@@ -510,6 +510,7 @@ export default function Witnesses(properties) {
                   rowComponent={LightWitnessRow}
                   rowCount={filteredVotes.length}
                   rowHeight={75} // Adjust as needed
+                  rowProps={{}}
                   width="100%"
                 />
               </ScrollArea>
@@ -588,6 +589,7 @@ export default function Witnesses(properties) {
                   rowComponent={WitnessRow}
                   rowCount={sortedWitnesses.length}
                   rowHeight={75} // Adjust as needed
+                  rowProps={{}}
                   width="100%"
                 />
               </ScrollArea>

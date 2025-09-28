@@ -1008,6 +1008,7 @@ export default function SimpleSwap(properties) {
                             rowComponent={poolRow}
                             rowCount={finalPools.length}
                             rowHeight={40} // Approx height of each poolRow including padding
+                            rowProps={{}}
                             width="100%" // Ensure it takes full width
                           />
                         </div>

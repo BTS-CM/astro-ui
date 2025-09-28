@@ -495,6 +495,7 @@ export default function Proposals(properties) {
                     rowComponent={proposalRow}
                     rowCount={filteredProposals.length}
                     rowHeight={265}
+                    rowProps={{}}
                     className="w-full border-2"
                   />
                 ) : (

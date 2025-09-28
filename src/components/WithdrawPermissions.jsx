@@ -581,6 +581,7 @@ export default function WithdrawPermissions(properties) {
                       }
                       className="w-full"
                       height={400}
+                      rowProps={{}}
                     />
                   ) : (
                     <p>{t("WithdrawPermissions:not_sending_anything")}</p>
@@ -617,6 +618,7 @@ export default function WithdrawPermissions(properties) {
                       }
                       className="w-full"
                       height={400}
+                      rowProps={{}}
                     />
                   ) : (
                     <p>{t("WithdrawPermissions:not_receiving_anything")}</p>

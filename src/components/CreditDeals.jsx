@@ -797,6 +797,7 @@ export default function CreditDeals(properties) {
                       rowComponent={BorrowerRow}
                       rowCount={borrowerDeals.length}
                       rowHeight={225}
+                      rowProps={{}}
                       className="w-full"
                     />
                   ) : null}
@@ -812,6 +813,7 @@ export default function CreditDeals(properties) {
                       rowComponent={OwnerRow}
                       rowCount={lenderDeals.length}
                       rowHeight={165}
+                      rowProps={{}}
                       className="w-full"
                     />
                   ) : null}

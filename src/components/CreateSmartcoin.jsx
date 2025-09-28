@@ -1920,6 +1920,7 @@ export default function CreateSmartcoin(properties) {
                             rowComponent={allowedMarketsRow}
                             rowCount={allowedMarkets.length}
                             rowHeight={90}
+                            rowProps={{}}
                             className="w-full"
                           />
                         </div>
@@ -1977,6 +1978,7 @@ export default function CreateSmartcoin(properties) {
                             rowComponent={bannedMarketsRow}
                             rowCount={bannedMarkets.length}
                             rowHeight={90}
+                            rowProps={{}}
                             className="w-full"
                           />
                         </div>
@@ -2754,6 +2756,7 @@ export default function CreateSmartcoin(properties) {
                                 rowComponent={feeSharingWhitelistRow}
                                 rowCount={feeSharingWhitelist.length}
                                 rowHeight={100}
+                                rowProps={{}}
                                 className="w-full"
                               />
                             </span>
@@ -2890,6 +2893,7 @@ export default function CreateSmartcoin(properties) {
                             rowComponent={whitelistAuthorityRow}
                             rowCount={whitelistAuthorities.length}
                             rowHeight={100}
+                            rowProps={{}}
                             className="w-full"
                           />
                         </span>
@@ -2966,6 +2970,7 @@ export default function CreateSmartcoin(properties) {
                             rowComponent={blacklistAuthorityRow}
                             rowCount={blacklistAuthorities.length}
                             rowHeight={75}
+                            rowProps={{}}
                             className="w-full"
                           />
                         </span>
@@ -3521,6 +3526,7 @@ export default function CreateSmartcoin(properties) {
                                     rowComponent={MediaRow}
                                     rowCount={nftMedia.length}
                                     rowHeight={25}
+                                    rowProps={{}}
                                     className="w-full"
                                   />
                                 </>

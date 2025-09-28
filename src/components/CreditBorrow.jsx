@@ -583,6 +583,7 @@ export default function CreditBorrow(properties) {
                           rowComponent={OfferRow}
                           rowCount={offers.length}
                           rowHeight={225}
+                          rowProps={{}}
                           className="w-full"
                         />
                       ) : null}
@@ -597,6 +598,7 @@ export default function CreditBorrow(properties) {
                           rowComponent={BalanceRow}
                           rowCount={compatibleOffers.length}
                           rowHeight={225}
+                          rowProps={{}}
                           className="w-full"
                         />
                       ) : null}
@@ -699,6 +701,7 @@ export default function CreditBorrow(properties) {
                               rowComponent={SearchRow}
                               rowCount={thisResult.length}
                               rowHeight={225}
+                              rowProps={{}}
                               className="w-full"
                             />
                           ) : null}
@@ -713,6 +716,7 @@ export default function CreditBorrow(properties) {
                               rowComponent={SearchRow}
                               rowCount={thisResult.length}
                               rowHeight={225}
+                              rowProps={{}}
                               className="w-full"
                             />
                           ) : null}
@@ -727,6 +731,7 @@ export default function CreditBorrow(properties) {
                               rowComponent={SearchRow}
                               rowCount={thisResult.length}
                               rowHeight={225}
+                              rowProps={{}}
                               className="w-full"
                             />
                           ) : null}

@@ -852,6 +852,7 @@ export default function Prediction(properties) {
                             rowComponent={feeSharingWhitelistRow}
                             rowCount={feeSharingWhitelist.length}
                             rowHeight={100}
+                            rowProps={{}}
                             className="w-full"
                           />
                         </span>
@@ -1188,6 +1189,7 @@ export default function Prediction(properties) {
                           rowComponent={whitelistAuthorityRow}
                           rowCount={whitelistAuthorities.length}
                           rowHeight={100}
+                          rowProps={{}}
                           className="w-full"
                         />
                       </span>
@@ -1257,6 +1259,7 @@ export default function Prediction(properties) {
                           rowComponent={blacklistAuthorityRow}
                           rowCount={blacklistAuthorities.length}
                           rowHeight={100}
+                          rowProps={{}}
                           className="w-full"
                         />
                       </span>

@@ -202,6 +202,7 @@ export default function Vesting(properties) {
                   rowCount={chosenVestingData.length}
                   rowHeight={vestingType === "cashback" ? 175 : 135}
                   className={`w-full mt-3`}
+                  rowProps={{}}
                 />
               ) : null}
               {chosenVestingData && !chosenVestingData.length

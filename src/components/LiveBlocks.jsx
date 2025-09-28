@@ -427,6 +427,7 @@ export default function LiveBlocks(properties) {
                       rowComponent={ActivityRow}
                       rowCount={activities.length}
                       rowHeight={42}
+                      rowProps={{}}
                       className="w-full"
                     />
                   </CardContent>
@@ -449,6 +450,7 @@ export default function LiveBlocks(properties) {
                       rowComponent={BlockRow}
                       rowCount={recentBlocks.length}
                       rowHeight={42}
+                      rowProps={{}}
                       className="w-full"
                     />
                   </CardContent>

@@ -1058,6 +1058,7 @@ export default function Settlement(properties) {
                   rowComponent={BidRow}
                   rowCount={collateralBids.length}
                   rowHeight={225}
+                  rowProps={{}}
                   className="w-full"
                 />
               </CardContent>

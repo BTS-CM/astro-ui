@@ -689,6 +689,7 @@ export default function Smartcoins(properties) {
                       rowComponent={BitassetRow}
                       rowCount={relevantBitassetData.length}
                       rowHeight={235}
+                      rowProps={{}}
                       className="w-full"
                     />
                   )}
@@ -740,6 +741,7 @@ export default function Smartcoins(properties) {
                       rowComponent={BitassetRow}
                       rowCount={relevantBitassetData.length}
                       rowHeight={235}
+                      rowProps={{}}
                       className="w-full"
                     />
                   )}
@@ -795,6 +797,7 @@ export default function Smartcoins(properties) {
                         relevantBitassetData ? relevantBitassetData.length : 0
                       }
                       rowHeight={235}
+                      rowProps={{}}
                       className="w-full"
                     />
                   )}
@@ -887,6 +890,7 @@ export default function Smartcoins(properties) {
                           rowComponent={SearchRow}
                           rowCount={thisResult.length}
                           rowHeight={235}
+                          rowProps={{}}
                           className="w-full"
                         />
                       ) : null}
@@ -901,6 +905,7 @@ export default function Smartcoins(properties) {
                           rowComponent={SearchRow}
                           rowCount={thisResult.length}
                           rowHeight={235}
+                          rowProps={{}}
                           className="w-full"
                         />
                       ) : null}
@@ -915,6 +920,7 @@ export default function Smartcoins(properties) {
                           rowComponent={SearchRow}
                           rowCount={thisResult.length}
                           rowHeight={235}
+                          rowProps={{}}
                           className="w-full"
                         />
                       ) : null}

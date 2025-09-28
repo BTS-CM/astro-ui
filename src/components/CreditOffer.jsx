@@ -812,6 +812,7 @@ export default function CreditOffer(properties) {
                                             rowCount={acceptedCollateral.length}
                                             rowComponent={Row}
                                             rowHeight={35}
+                                            rowProps={{}}
                                             className="w-full"
                                             initialScrollOffset={
                                               chosenCollateral

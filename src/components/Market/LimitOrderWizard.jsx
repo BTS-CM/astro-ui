@@ -844,6 +844,7 @@ export default function LimitOrderWizard(properties) {
                     rowComponent={limitOrderRow}
                     rowCount={marketLimitOrders.length}
                     rowHeight={50}
+                    rowProps={{}}
                     key={`list-limitorders`}
                     className="w-full mt-3"
                   />
