@@ -6,7 +6,7 @@ import React, {
   act,
 } from "react";
 import { useStore } from "@nanostores/react";
-import { FixedSizeList as List } from "react-window";
+import { List } from "react-window";
 import { Bar, BarChart, XAxis, CartesianGrid } from "recharts";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
@@ -424,12 +424,11 @@ export default function LiveBlocks(properties) {
                     </div>
                     <List
                       height={350}
-                      itemCount={activities.length}
-                      itemSize={42}
+                      rowComponent={ActivityRow}
+                      rowCount={activities.length}
+                      rowHeight={42}
                       className="w-full"
-                    >
-                      {ActivityRow}
-                    </List>
+                    />
                   </CardContent>
                 </Card>
                 <Card>
@@ -447,12 +446,11 @@ export default function LiveBlocks(properties) {
                     </div>
                     <List
                       height={350}
-                      itemCount={recentBlocks.length}
-                      itemSize={42}
+                      rowComponent={BlockRow}
+                      rowCount={recentBlocks.length}
+                      rowHeight={42}
                       className="w-full"
-                    >
-                      {BlockRow}
-                    </List>
+                    />
                   </CardContent>
                 </Card>
               </div>

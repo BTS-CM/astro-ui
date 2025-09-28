@@ -4,7 +4,7 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import { FixedSizeList as List } from "react-window";
+import { List } from "react-window";
 import { useStore } from "@nanostores/react";
 
 import { useTranslation } from "react-i18next";
@@ -198,12 +198,11 @@ export default function Vesting(properties) {
               {chosenVestingData && chosenVestingData.length ? (
                 <List
                   height={500}
-                  itemCount={chosenVestingData.length}
-                  itemSize={vestingType === "cashback" ? 175 : 135}
+                  rowComponent={VestingRow}
+                  rowCount={chosenVestingData.length}
+                  rowHeight={vestingType === "cashback" ? 175 : 135}
                   className={`w-full mt-3`}
-                >
-                  {VestingRow}
-                </List>
+                />
               ) : null}
               {chosenVestingData && !chosenVestingData.length
                 ? t("Vesting:card.empty")

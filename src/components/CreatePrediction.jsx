@@ -6,7 +6,7 @@ import React, {
   useCallback,
 } from "react";
 import { useStore } from "@nanostores/react";
-import { FixedSizeList as List } from "react-window";
+import { List } from "react-window";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
@@ -849,12 +849,11 @@ export default function Prediction(properties) {
                         <span className="col-span-9 border border-gray-300 rounded">
                           <List
                             height={210}
-                            itemCount={feeSharingWhitelist.length}
-                            itemSize={100}
+                            rowComponent={feeSharingWhitelistRow}
+                            rowCount={feeSharingWhitelist.length}
+                            rowHeight={100}
                             className="w-full"
-                          >
-                            {feeSharingWhitelistRow}
-                          </List>
+                          />
                         </span>
                         <span className="col-span-3 ml-3 text-center">
                           <Dialog
@@ -1186,12 +1185,11 @@ export default function Prediction(properties) {
                       <span className="col-span-9 border border-gray-300 rounded">
                         <List
                           height={210}
-                          itemCount={whitelistAuthorities.length}
-                          itemSize={100}
+                          rowComponent={whitelistAuthorityRow}
+                          rowCount={whitelistAuthorities.length}
+                          rowHeight={100}
                           className="w-full"
-                        >
-                          {whitelistAuthorityRow}
-                        </List>
+                        />
                       </span>
                       <span className="col-span-3 ml-3 text-center">
                         <Dialog
@@ -1256,12 +1254,11 @@ export default function Prediction(properties) {
                       <span className="col-span-9 border border-gray-300 rounded">
                         <List
                           height={210}
-                          itemCount={blacklistAuthorities.length}
-                          itemSize={100}
+                          rowComponent={blacklistAuthorityRow}
+                          rowCount={blacklistAuthorities.length}
+                          rowHeight={100}
                           className="w-full"
-                        >
-                          {blacklistAuthorityRow}
-                        </List>
+                        />
                       </span>
                       <span className="col-span-3 ml-3 text-center">
                         <Dialog

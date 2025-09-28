@@ -659,40 +659,44 @@ export default function Market(properties) {
           {assetAData && assetBData ? (
             <>
               <div className="w-full grid grid-cols-2 gap-5">
-                <MarketOrderCard
-                  cardType="buy"
-                  activeLimitCard={activeLimitCard}
-                  assetA={assetA}
-                  assetAData={assetAData}
-                  assetB={assetB}
-                  assetBData={assetBData}
-                  buyOrders={buyOrders}
-                  previousBuyOrders={previousBuyOrders}
-                  sellOrders={sellOrders}
-                  previousSellOrders={previousSellOrders}
-                  marketOrdersLoading={marketOrdersLoading}
-                  orderBookItr={orderBookItr}
-                  setOrderBookItr={setOrderBookItr}
-                  _resetOrders={_resetOrders}
-                  invertedMarket={invertedMarket}
-                />
-                <MarketOrderCard
-                  cardType="sell"
-                  activeLimitCard={activeLimitCard}
-                  assetA={assetA}
-                  assetAData={assetAData}
-                  assetB={assetB}
-                  assetBData={assetBData}
-                  buyOrders={buyOrders}
-                  previousBuyOrders={previousBuyOrders}
-                  sellOrders={sellOrders}
-                  previousSellOrders={previousSellOrders}
-                  marketOrdersLoading={marketOrdersLoading}
-                  orderBookItr={orderBookItr}
-                  setOrderBookItr={setOrderBookItr}
-                  _resetOrders={_resetOrders}
-                  invertedMarket={invertedMarket}
-                />
+                {buyOrders ? (
+                  <MarketOrderCard
+                    cardType="buy"
+                    activeLimitCard={activeLimitCard}
+                    assetA={assetA}
+                    assetAData={assetAData}
+                    assetB={assetB}
+                    assetBData={assetBData}
+                    buyOrders={buyOrders}
+                    previousBuyOrders={previousBuyOrders}
+                    sellOrders={sellOrders}
+                    previousSellOrders={previousSellOrders}
+                    marketOrdersLoading={marketOrdersLoading}
+                    orderBookItr={orderBookItr}
+                    setOrderBookItr={setOrderBookItr}
+                    _resetOrders={_resetOrders}
+                    invertedMarket={invertedMarket}
+                  />
+                ) : null}
+                {sellOrders ? (
+                  <MarketOrderCard
+                    cardType="sell"
+                    activeLimitCard={activeLimitCard}
+                    assetA={assetA}
+                    assetAData={assetAData}
+                    assetB={assetB}
+                    assetBData={assetBData}
+                    buyOrders={buyOrders}
+                    previousBuyOrders={previousBuyOrders}
+                    sellOrders={sellOrders}
+                    previousSellOrders={previousSellOrders}
+                    marketOrdersLoading={marketOrdersLoading}
+                    orderBookItr={orderBookItr}
+                    setOrderBookItr={setOrderBookItr}
+                    _resetOrders={_resetOrders}
+                    invertedMarket={invertedMarket}
+                  />
+                ) : null}
               </div>
             </>
           ) : null}

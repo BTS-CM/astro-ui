@@ -5,10 +5,10 @@ import React, {
   useMemo,
 } from "react";
 import { useStore } from "@nanostores/react";
-import { FixedSizeList as List } from "react-window";
-import { sha256 } from "@noble/hashes/sha256";
-import { ripemd160 } from "@noble/hashes/ripemd160";
-import { bytesToHex as toHex, utf8ToBytes } from "@noble/hashes/utils";
+import { List } from "react-window";
+import { sha256 } from "@noble/hashes/sha2.js";
+import { ripemd160 } from "@noble/hashes/legacy.js";
+import { bytesToHex as toHex, utf8ToBytes } from "@noble/hashes/utils.js";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
@@ -564,13 +564,12 @@ export default function Htlc(properties) {
                         </div>
                       </div>
                       <List
-                        itemSize={75}
-                        itemCount={senderHtlcs.length}
+                        rowHeight={75}
+                        rowComponent={SenderHtlcRow}
+                        rowCount={senderHtlcs.length}
                         className="w-full"
                         height={500} // Dynamic height
-                      >
-                        {SenderHtlcRow}
-                      </List>
+                      />
                     </>
                   ) : (
                     <p className="p-4 text-center text-gray-500">
@@ -603,13 +602,12 @@ export default function Htlc(properties) {
                         </div>
                       </div>
                       <List
-                        itemSize={75}
-                        itemCount={receiverHtlcs.length}
+                        rowHeight={75}
+                        rowComponent={ReceiverHtlcRow}
+                        rowCount={receiverHtlcs.length}
                         className="w-full"
                         height={500}
-                      >
-                        {ReceiverHtlcRow}
-                      </List>
+                      />
                     </>
                   ) : (
                     <p className="p-4 text-center text-gray-500">

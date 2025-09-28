@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { FixedSizeList as List } from "react-window";
+import { List } from "react-window";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
@@ -329,13 +329,14 @@ export default function MarketOrderCard(properties) {
               </div>
             </div>
 
-            <List
-              height={300} // Set the height of the list
-              itemCount={cardListCount} // Set the number of items
-              itemSize={20} // Set the height of each item
-            >
-              {cardListContents}
-            </List>
+            {cardListCount && cardListCount > 0 && cardListContents ? (
+              <List
+                height={300} // Set the height of the list
+                rowComponent={cardListContents} // Set the component to render each item
+                rowCount={cardListCount} // Set the number of items
+                rowHeight={20} // Set the height of each item
+              />
+            ) : null}
           </>
         ) : (
           t("MarketOrderCard:noOpenOrders")

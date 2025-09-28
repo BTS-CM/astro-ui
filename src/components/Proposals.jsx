@@ -4,10 +4,10 @@ import React, {
   useSyncExternalStore,
   useMemo,
 } from "react";
-import { FixedSizeList as List } from "react-window";
+import { List } from "react-window";
 import { useStore } from "@nanostores/react";
-import { sha256 } from "@noble/hashes/sha2";
-import { bytesToHex as toHex } from "@noble/hashes/utils";
+import { sha256 } from "@noble/hashes/sha2.js";
+import { bytesToHex as toHex, utf8ToBytes } from "@noble/hashes/utils.js";
 
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
@@ -198,7 +198,7 @@ export default function Proposals(properties) {
       proposals.length
     ) {
       const filteredProposals = proposals.filter((proposal) => {
-        const hashedID = toHex(sha256(proposal.proposer));
+        const hashedID = toHex(sha256(utf8ToBytes(proposal.proposer)));
         return !blocklist.users.includes(hashedID);
       });
       return filteredProposals;
@@ -492,12 +492,11 @@ export default function Proposals(properties) {
                 {filteredProposals && filteredProposals.length ? (
                   <List
                     height={500}
-                    itemCount={filteredProposals.length}
-                    itemSize={265}
+                    rowComponent={proposalRow}
+                    rowCount={filteredProposals.length}
+                    rowHeight={265}
                     className="w-full border-2"
-                  >
-                    {proposalRow}
-                  </List>
+                  />
                 ) : (
                   <p>{t("Proposals:noProposals")}</p>
                 )}

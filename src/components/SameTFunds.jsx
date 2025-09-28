@@ -5,11 +5,11 @@ import React, {
   useEffect,
   useCallback,
 } from "react";
-import { FixedSizeList as List } from "react-window";
+import { List } from "react-window";
 import { useStore } from "@nanostores/react";
 import Fuse from "fuse.js";
-import { sha256 } from "@noble/hashes/sha2";
-import { bytesToHex as toHex } from "@noble/hashes/utils";
+import { sha256 } from "@noble/hashes/sha2.js";
+import { bytesToHex as toHex, utf8ToBytes } from "@noble/hashes/utils.js";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
@@ -107,7 +107,10 @@ export default function SameTFunds(properties) {
           if (_chain === "bitshares") {
             // filter out any tfunds owned by banned users
             filteredData = filteredData.filter(
-              (x) => !blocklist.users.includes(toHex(sha256(x.owner_account)))
+              (x) =>
+                !blocklist.users.includes(
+                  toHex(sha256(utf8ToBytes(x.owner_account)))
+                )
             );
           }
           setSameTFunds(filteredData);
@@ -775,13 +778,12 @@ export default function SameTFunds(properties) {
                 relevantFunds && relevantFunds.length > 0 ? (
                   <List
                     height={500}
-                    itemCount={relevantFunds.length}
-                    itemSize={110}
+                    rowComponent={Row}
+                    rowCount={relevantFunds.length}
+                    rowHeight={110}
                     key={`list-${view}`}
                     className="w-full mt-3"
-                  >
-                    {Row}
-                  </List>
+                  />
                 ) : (
                   <div className="mt-5">{t("SameTFunds:noFunds")}</div>
                 )
@@ -790,13 +792,12 @@ export default function SameTFunds(properties) {
                 myTFunds && myTFunds.length > 0 ? (
                   <List
                     height={500}
-                    itemCount={myTFunds.length}
-                    itemSize={110}
+                    rowComponent={Row}
+                    rowCount={myTFunds.length}
+                    rowHeight={110}
                     key={`list-${view}`}
                     className="w-full mt-3"
-                  >
-                    {Row}
-                  </List>
+                  />
                 ) : (
                   <div className="mt-5">{t("SameTFunds:noOwnedFunds")}</div>
                 )
@@ -822,13 +823,12 @@ export default function SameTFunds(properties) {
                 searchResults && searchResults.length > 0 ? (
                   <List
                     height={500}
-                    itemCount={searchResults.length}
-                    itemSize={110}
+                    rowComponent={Row}
+                    rowCount={searchResults.length}
+                    rowHeight={110}
                     key={`list-${view}`}
                     className="w-full mt-3"
-                  >
-                    {Row}
-                  </List>
+                  />
                 ) : (
                   <div className="mt-5">{t("SameTFunds:noSearchResults")}</div>
                 )

@@ -5,10 +5,10 @@ import React, {
   useEffect,
   useCallback,
 } from "react";
-import { FixedSizeList as List } from "react-window";
+import { List } from "react-window";
 import { useStore } from "@nanostores/react";
-import { sha256 } from "@noble/hashes/sha2";
-import { bytesToHex as toHex } from "@noble/hashes/utils";
+import { sha256 } from "@noble/hashes/sha2.js";
+import { bytesToHex as toHex, utf8ToBytes } from "@noble/hashes/utils.js";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
@@ -138,7 +138,9 @@ export default function SameTFunds(properties) {
               !blocklist.users.includes(
                 toHex(
                   sha256(
-                    asset.u.split(" ")[1].replace("(", "").replace(")", "")
+                    utf8ToBytes(
+                      asset.u.split(" ")[1].replace("(", "").replace(")", "")
+                    )
                   )
                 )
               )
@@ -162,7 +164,10 @@ export default function SameTFunds(properties) {
             // filter out any tfunds owned by banned users
             filteredData = filteredData
               .filter(
-                (x) => !blocklist.users.includes(toHex(sha256(x.owner_account)))
+                (x) =>
+                  !blocklist.users.includes(
+                    toHex(sha256(utf8ToBytes(x.owner_account)))
+                  )
               )
               .filter(
                 (x) => x.fee_rate < 500000 // 50% max fee...
@@ -871,13 +876,12 @@ export default function SameTFunds(properties) {
                     sameTFunds.length > 0 ? (
                       <List
                         height={250}
-                        itemCount={sameTFunds.length}
-                        itemSize={55}
+                        rowComponent={FundRow}
+                        rowCount={sameTFunds.length}
+                        rowHeight={55}
                         key={`list-sametfunds`}
                         className="w-full"
-                      >
-                        {FundRow}
-                      </List>
+                      />
                     ) : (
                       <div className="space-y-2 mt-5">
                         <Skeleton className="h-4 w-[250px]" />
@@ -909,13 +913,12 @@ export default function SameTFunds(properties) {
                       <div className="col-span-3">
                         <List
                           height={200}
-                          itemCount={borrowPositions.length}
-                          itemSize={35}
+                          rowComponent={BorrowPositionRow}
+                          rowCount={borrowPositions.length}
+                          rowHeight={35}
                           key={`list-borrowpositions`}
                           className="w-full mt-1"
-                        >
-                          {BorrowPositionRow}
-                        </List>
+                        />
                       </div>
                     </div>
                   </div>
@@ -944,13 +947,12 @@ export default function SameTFunds(properties) {
                         </div>
                         <List
                           height={200}
-                          itemCount={operations.length}
-                          itemSize={55}
+                          rowComponent={OpRow}
+                          rowCount={operations.length}
+                          rowHeight={55}
                           key={`list-operations`}
                           className="w-full mt-3"
-                        >
-                          {OpRow}
-                        </List>
+                        />
                       </div>
                       <div>
                         <LimitOrderWizard
@@ -1005,15 +1007,14 @@ export default function SameTFunds(properties) {
                       </div>
                       <List
                         height={200}
-                        itemCount={
+                        rowComponent={BalanceRow}
+                        rowCount={
                           updatedBalances.filter((x) => x.display).length
                         }
-                        itemSize={35}
+                        rowHeight={35}
                         key={`list-updatedbalances`}
                         className="w-full mt-3"
-                      >
-                        {BalanceRow}
-                      </List>
+                      />
                     </div>
                   </div>
                 ) : null}

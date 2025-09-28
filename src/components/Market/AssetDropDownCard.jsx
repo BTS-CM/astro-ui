@@ -5,10 +5,10 @@ import React, {
   useSyncExternalStore,
 } from "react";
 import Fuse from "fuse.js";
-import { FixedSizeList as List } from "react-window";
+import { List } from "react-window";
 import { useStore } from "@nanostores/react";
-import { sha256 } from "@noble/hashes/sha2";
-import { bytesToHex as toHex } from "@noble/hashes/utils";
+import { sha256 } from "@noble/hashes/sha2.js";
+import { bytesToHex as toHex, utf8ToBytes } from "@noble/hashes/utils.js";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 import { GearIcon } from "@radix-ui/react-icons";
@@ -78,7 +78,11 @@ export default function AssetDropDown(properties) {
           (asset) =>
             !blocklist.users.includes(
               toHex(
-                sha256(asset.u.split(" ")[1].replace("(", "").replace(")", ""))
+                sha256(
+                  utf8ToBytes(
+                    asset.u.split(" ")[1].replace("(", "").replace(")", "")
+                  )
+                )
               )
             )
         );
@@ -335,12 +339,11 @@ export default function AssetDropDown(properties) {
                 <>
                   <List
                     height={350}
-                    itemCount={thisResult.length}
-                    itemSize={70}
+                    rowComponent={Row}
+                    rowCount={thisResult.length}
+                    rowHeight={70}
                     className="w-full"
-                  >
-                    {Row}
-                  </List>
+                  />
                 </>
               ) : null}
             </>
@@ -363,12 +366,11 @@ export default function AssetDropDown(properties) {
                 <>
                   <List
                     height={350}
-                    itemCount={balances.length}
-                    itemSize={70}
+                    rowComponent={Row}
+                    rowCount={balances.length}
+                    rowHeight={70}
                     className="w-full"
-                  >
-                    {Row}
-                  </List>
+                  />
                 </>
               ) : (
                 "No balances..."
@@ -394,12 +396,11 @@ export default function AssetDropDown(properties) {
                 <>
                   <List
                     height={350}
-                    itemCount={featuredAssets.length}
-                    itemSize={70}
+                    rowComponent={Row}
+                    rowCount={featuredAssets.length}
+                    rowHeight={70}
                     className="w-full"
-                  >
-                    {Row}
-                  </List>
+                  />
                 </>
               ) : (
                 "No featured assets..."
@@ -425,12 +426,11 @@ export default function AssetDropDown(properties) {
                 <>
                   <List
                     height={350}
-                    itemCount={relevantAssets.length}
-                    itemSize={70}
+                    rowComponent={Row}
+                    rowCount={relevantAssets.length}
+                    rowHeight={70}
                     className="w-full"
-                  >
-                    {Row}
-                  </List>
+                  />
                 </>
               ) : (
                 "No favourite assets..."

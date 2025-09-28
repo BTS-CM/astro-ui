@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useSyncExternalStore } from "react";
-import { FixedSizeList as List } from "react-window";
+import { List } from "react-window";
 import { useStore } from "@nanostores/react";
 
 import { useTranslation } from "react-i18next";
@@ -98,12 +98,11 @@ export default function Nodes(properties) {
               nodes[usr.chain].length ? (
                 <List
                   height={250}
-                  itemCount={nodes[usr.chain].length}
-                  itemSize={50}
+                  rowComponent={NodeRow}
+                  rowCount={nodes[usr.chain].length}
+                  rowHeight={50}
                   className="w-full"
-                >
-                  {NodeRow}
-                </List>
+                />
               ) : (
                 <p>{t("Nodes:none")}</p>
               )}

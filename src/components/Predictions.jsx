@@ -4,11 +4,11 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import { FixedSizeList as List } from "react-window";
+import { List } from "react-window";
 import { useStore } from "@nanostores/react";
 import { format } from "date-fns";
-import { sha256 } from "@noble/hashes/sha2";
-import { bytesToHex as toHex } from "@noble/hashes/utils";
+import { sha256 } from "@noble/hashes/sha2.js";
+import { bytesToHex as toHex, utf8ToBytes } from "@noble/hashes/utils.js";
 import DOMPurify from "dompurify";
 import {
   QuestionMarkCircledIcon,
@@ -189,7 +189,7 @@ export default function Predictions(properties) {
     if (_chain === "bitshares" && _predictionMarketAssets.length) {
       // filter out prediction market assets created by banned users
       _predictionMarketAssets = _predictionMarketAssets.filter(
-        (x) => !blocklist.users.includes(toHex(sha256(x.issuer)))
+        (x) => !blocklist.users.includes(toHex(sha256(utf8ToBytes(x.issuer))))
       );
     }
 
@@ -1867,12 +1867,11 @@ export default function Predictions(properties) {
                             <span className="col-span-9 border border-gray-300 rounded">
                               <List
                                 height={210}
-                                itemCount={priceFeeders.length}
-                                itemSize={100}
+                                rowComponent={pricefeederRow}
+                                rowCount={priceFeeders.length}
+                                rowHeight={100}
                                 className="w-full"
-                              >
-                                {pricefeederRow}
-                              </List>
+                              />
                             </span>
                             <span className="col-span-3 ml-3 text-center">
                               <Dialog
@@ -2167,13 +2166,12 @@ export default function Predictions(properties) {
               {chosenPMAs && chosenPMAs.length ? (
                 <List
                   height={500}
-                  itemCount={chosenPMAs.length}
-                  itemSize={275}
+                  rowComponent={PredictionRow}
+                  rowCount={chosenPMAs.length}
+                  rowHeight={275}
                   key={`list-${view}`}
                   className={`w-full mt-3`}
-                >
-                  {PredictionRow}
-                </List>
+                />
               ) : null}
               {chosenPMAs && !chosenPMAs.length && view === "active" ? (
                 <div className="text-center mt-5">

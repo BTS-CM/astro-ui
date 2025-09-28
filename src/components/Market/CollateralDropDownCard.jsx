@@ -5,9 +5,9 @@ import React, {
   useSyncExternalStore,
 } from "react";
 import Fuse from "fuse.js";
-import { FixedSizeList as List } from "react-window";
-import { sha256 } from "@noble/hashes/sha2";
-import { bytesToHex as toHex } from "@noble/hashes/utils";
+import { List } from "react-window";
+import { sha256 } from "@noble/hashes/sha2.js";
+import { bytesToHex as toHex, utf8ToBytes } from "@noble/hashes/utils.js";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
@@ -66,7 +66,11 @@ export default function CollateralDropDownCard(properties) {
         (asset) =>
           !blocklist.users.includes(
             toHex(
-              sha256(asset.u.split(" ")[1].replace("(", "").replace(")", ""))
+              sha256(
+                utf8ToBytes(
+                  asset.u.split(" ")[1].replace("(", "").replace(")", "")
+                )
+              )
             )
           )
       );
@@ -204,12 +208,11 @@ export default function CollateralDropDownCard(properties) {
             <>
               <List
                 height={200}
-                itemCount={thisResult.length}
-                itemSize={70}
+                rowComponent={Row}
+                rowCount={thisResult.length}
+                rowHeight={70}
                 className="w-full"
-              >
-                {Row}
-              </List>
+              />
             </>
           ) : null}
         </>

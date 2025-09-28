@@ -5,7 +5,7 @@ import React, {
   useMemo,
 } from "react";
 import { useStore } from "@nanostores/react";
-import { FixedSizeList as List } from "react-window";
+import { List } from "react-window";
 
 import { format, set } from "date-fns";
 import { useTranslation } from "react-i18next";
@@ -572,17 +572,16 @@ export default function WithdrawPermissions(properties) {
                   {payerWithdrawalPermissions &&
                   payerWithdrawalPermissions.length ? (
                     <List
-                      itemSize={35}
-                      itemCount={
+                      rowHeight={35}
+                      rowComponent={PayingWithdrawPermissionRow}
+                      rowCount={
                         payerWithdrawalPermissions
                           ? payerWithdrawalPermissions.length
                           : 0
                       }
                       className="w-full"
                       height={400}
-                    >
-                      {PayingWithdrawPermissionRow}
-                    </List>
+                    />
                   ) : (
                     <p>{t("WithdrawPermissions:not_sending_anything")}</p>
                   )}
@@ -609,17 +608,16 @@ export default function WithdrawPermissions(properties) {
                   {receivingWithdrawalPermissions &&
                   receivingWithdrawalPermissions.length ? (
                     <List
-                      itemSize={35}
-                      itemCount={
+                      rowHeight={35}
+                      rowComponent={ReceivingWithdrawPermissionRow}
+                      rowCount={
                         receivingWithdrawalPermissions
                           ? receivingWithdrawalPermissions.length
                           : 0
                       }
                       className="w-full"
                       height={400}
-                    >
-                      {ReceivingWithdrawPermissionRow}
-                    </List>
+                    />
                   ) : (
                     <p>{t("WithdrawPermissions:not_receiving_anything")}</p>
                   )}
