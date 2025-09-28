@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { FixedSizeList as List } from "react-window";
+import { List } from "react-window";
 import { useStore } from "@nanostores/react";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
@@ -272,12 +272,12 @@ export default function BasicAssetDropDown(properties) {
                 <>
                   <List
                     height={350}
-                    itemCount={borrowPositions.length}
-                    itemSize={70}
+                    rowComponent={Row}
+                    rowCount={borrowPositions.length}
+                    rowHeight={70}
+                    rowProps={{}}
                     className="w-full"
-                  >
-                    {Row}
-                  </List>
+                  />
                 </>
               ) : (
                 "No borrowed assets..."
@@ -294,12 +294,12 @@ export default function BasicAssetDropDown(properties) {
                 <>
                   <List
                     height={350}
-                    itemCount={usrBalances.length}
-                    itemSize={70}
+                    rowComponent={Row}
+                    rowCount={usrBalances.length}
+                    rowHeight={70}
+                    rowProps={{}}
                     className="w-full"
-                  >
-                    {Row}
-                  </List>
+                  />
                 </>
               ) : (
                 "No balance assets..."
@@ -369,12 +369,12 @@ export default function BasicAssetDropDown(properties) {
                 <>
                   <List
                     height={350}
-                    itemCount={featuredAssets.length}
-                    itemSize={70}
+                    rowComponent={Row}
+                    rowCount={featuredAssets.length}
+                    rowHeight={70}
+                    rowProps={{}}
                     className="w-full"
-                  >
-                    {Row}
-                  </List>
+                  />
                 </>
               ) : (
                 "No featured assets..."
@@ -400,12 +400,12 @@ export default function BasicAssetDropDown(properties) {
                 <>
                   <List
                     height={350}
-                    itemCount={_favouriteAssets.length}
-                    itemSize={70}
+                    rowComponent={Row}
+                    rowCount={_favouriteAssets.length}
+                    rowHeight={70}
+                    rowProps={{}}
                     className="w-full"
-                  >
-                    {Row}
-                  </List>
+                  />
                 </>
               ) : (
                 "No favourite assets..."

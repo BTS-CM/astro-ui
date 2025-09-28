@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { FixedSizeList as List } from "react-window";
+import { List } from "react-window";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
@@ -183,12 +183,12 @@ export default function BalanceAssetDropDownCard(properties) {
           <>
             <List
               height={350}
-              itemCount={filteredUserBalances.length}
-              itemSize={45}
+              rowComponent={Row}
+              rowCount={filteredUserBalances.length}
+              rowHeight={45}
+              rowProps={{}}
               className="w-full"
-            >
-              {Row}
-            </List>
+            />
           </>
         ) : (
           "N/A"

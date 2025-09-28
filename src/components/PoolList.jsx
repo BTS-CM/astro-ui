@@ -4,11 +4,11 @@ import React, {
   useSyncExternalStore,
   useMemo,
 } from "react";
-import { FixedSizeList as List } from "react-window";
+import { List } from "react-window";
 
 import { useStore } from "@nanostores/react";
-import { sha256 } from "@noble/hashes/sha2";
-import { bytesToHex as toHex } from "@noble/hashes/utils";
+import { sha256 } from "@noble/hashes/sha2.js";
+import { bytesToHex as toHex, utf8ToBytes } from "@noble/hashes/utils.js";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
@@ -132,7 +132,9 @@ export default function CustomPoolOverview(properties) {
         (asset) => asset.id === pool.share_asset_id
       );
       if (!poolShareAsset) return false;
-      return !blocklist.users.includes(toHex(sha256(poolShareAsset.issuer)));
+      return !blocklist.users.includes(
+        toHex(sha256(utf8ToBytes(poolShareAsset.issuer)))
+      );
     });
 
     return relevantPools;
@@ -391,12 +393,12 @@ export default function CustomPoolOverview(properties) {
             <div className="border rounded border-gray-300 p-2">
               <List
                 height={200}
-                itemCount={remainingPools.length}
-                itemSize={30}
+                rowComponent={PoolRow}
+                rowCount={remainingPools.length}
+                rowHeight={30}
+                rowProps={{}}
                 className="w-full"
-              >
-                {PoolRow}
-              </List>
+              />
             </div>
           </div>
         </CardContent>

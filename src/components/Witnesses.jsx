@@ -5,12 +5,12 @@ import React, {
   useMemo,
   useCallback,
 } from "react";
-import { FixedSizeList as List } from "react-window";
+import { List } from "react-window";
 import { useStore } from "@nanostores/react";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
-import { sha256 } from "@noble/hashes/sha2";
-import { bytesToHex as toHex } from "@noble/hashes/utils";
+import { sha256 } from "@noble/hashes/sha2.js";
+import { bytesToHex as toHex, utf8ToBytes } from "@noble/hashes/utils.js";
 
 import {
   Card,
@@ -150,7 +150,7 @@ export default function Witnesses(properties) {
               filteredData = filteredData.filter(
                 (witness) =>
                   !blocklist.users.includes(
-                    toHex(sha256(witness.witness_account))
+                    toHex(sha256(utf8ToBytes(witness.witness_account)))
                   )
               );
             }
@@ -507,12 +507,12 @@ export default function Witnesses(properties) {
               <ScrollArea className="h-[500px] pt-1">
                 <List
                   height={500}
-                  itemCount={filteredVotes.length}
-                  itemSize={75} // Adjust as needed
+                  rowComponent={LightWitnessRow}
+                  rowCount={filteredVotes.length}
+                  rowHeight={75} // Adjust as needed
+                  rowProps={{}}
                   width="100%"
-                >
-                  {LightWitnessRow}
-                </List>
+                />
               </ScrollArea>
             ) : (
               <div className="text-red-500 text-center">N/A</div>
@@ -586,12 +586,12 @@ export default function Witnesses(properties) {
               <ScrollArea className="h-[500px] pt-1">
                 <List
                   height={500}
-                  itemCount={sortedWitnesses.length}
-                  itemSize={75} // Adjust as needed
+                  rowComponent={WitnessRow}
+                  rowCount={sortedWitnesses.length}
+                  rowHeight={75} // Adjust as needed
+                  rowProps={{}}
                   width="100%"
-                >
-                  {WitnessRow}
-                </List>
+                />
               </ScrollArea>
             </div>
           )}

@@ -4,9 +4,9 @@ import React, {
   useSyncExternalStore,
   useMemo,
 } from "react";
-import { FixedSizeList as List } from "react-window";
-import { sha256 } from "@noble/hashes/sha2";
-import { bytesToHex as toHex } from "@noble/hashes/utils";
+import { List } from "react-window";
+import { sha256 } from "@noble/hashes/sha2.js";
+import { bytesToHex as toHex, utf8ToBytes } from "@noble/hashes/utils.js";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
@@ -71,7 +71,9 @@ export default function PoolDialogs(properties) {
         (asset) => asset.id === pool.share_asset_id
       );
       if (!poolShareAsset) return false;
-      return !blocklist.users.includes(toHex(sha256(poolShareAsset.issuer)));
+      return !blocklist.users.includes(
+        toHex(sha256(utf8ToBytes(poolShareAsset.issuer)))
+      );
     });
 
     return relevantPools;
@@ -278,12 +280,12 @@ export default function PoolDialogs(properties) {
             </div>
             <List
               height={300}
-              itemCount={poolArray.length}
-              itemSize={35}
+              rowComponent={PoolRow}
+              rowCount={poolArray.length}
+              rowHeight={35}
+              rowProps={{}}
               className="w-full"
-            >
-              {PoolRow}
-            </List>
+            />
           </div>
         </DialogContent>
       </Dialog>

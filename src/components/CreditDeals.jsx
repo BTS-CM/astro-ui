@@ -4,7 +4,7 @@ import React, {
   useSyncExternalStore,
   useMemo,
 } from "react";
-import { FixedSizeList as List } from "react-window";
+import { List } from "react-window";
 import { useForm } from "react-hook-form";
 import { useStore } from "@nanostores/react";
 import { useTranslation } from "react-i18next";
@@ -794,12 +794,12 @@ export default function CreditDeals(properties) {
                   {borrowerDeals && borrowerDeals.length ? (
                     <List
                       height={500}
-                      itemCount={borrowerDeals.length}
-                      itemSize={225}
+                      rowComponent={BorrowerRow}
+                      rowCount={borrowerDeals.length}
+                      rowHeight={225}
+                      rowProps={{}}
                       className="w-full"
-                    >
-                      {BorrowerRow}
-                    </List>
+                    />
                   ) : null}
                   {borrowerDeals && !borrowerDeals.length
                     ? t("CreditDeals:card.noBorrowers")
@@ -810,12 +810,12 @@ export default function CreditDeals(properties) {
                   {lenderDeals && lenderDeals.length ? (
                     <List
                       height={500}
-                      itemCount={lenderDeals.length}
-                      itemSize={165}
+                      rowComponent={OwnerRow}
+                      rowCount={lenderDeals.length}
+                      rowHeight={165}
+                      rowProps={{}}
                       className="w-full"
-                    >
-                      {OwnerRow}
-                    </List>
+                    />
                   ) : null}
                   {lenderDeals && !lenderDeals.length
                     ? t("CreditDeals:card.noLendings")

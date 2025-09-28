@@ -2,8 +2,8 @@ import { nanoquery } from "@nanostores/query";
 import Apis from "@/bts/ws/ApiInstances";
 import { chains } from "@/config/chains";
 
-import { sha256 } from "@noble/hashes/sha2";
-import { bytesToHex as toHex } from "@noble/hashes/utils";
+import { sha256 } from "@noble/hashes/sha2.js";
+import { bytesToHex as toHex, utf8ToBytes } from "@noble/hashes/utils.js";
 
 import { $blockList } from "@/stores/blocklist";
 
@@ -54,7 +54,7 @@ async function getBlockedaccounts(chain: string, node: string) {
 
     // [1.2.x, ...] -> hex string
     let hashedBlockList = blockedList.map((account: string) =>
-      toHex(sha256(account))
+      toHex(sha256(utf8ToBytes(account)))
     );
 
     resolve(hashedBlockList);

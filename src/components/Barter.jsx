@@ -6,7 +6,7 @@ import React, {
   useCallback,
 } from "react";
 import { useStore } from "@nanostores/react";
-import { FixedSizeList as List } from "react-window";
+import { List } from "react-window";
 import { MinusCircledIcon, CrossCircledIcon } from "@radix-ui/react-icons";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
@@ -618,12 +618,12 @@ export default function Barter(properties) {
                             </div>
                             <List
                               height={500}
-                              itemCount={Object.keys(fromAssets).length}
-                              itemSize={45} // Adjust as needed
+                              rowComponent={FromRow}
+                              rowCount={Object.keys(fromAssets).length}
+                              rowHeight={45} // Adjust as needed
+                              rowProps={{}}
                               width="100%"
-                            >
-                              {FromRow}
-                            </List>
+                            />
                           </>
                         ) : null}
                       </CardContent>
@@ -680,12 +680,12 @@ export default function Barter(properties) {
                             </div>
                             <List
                               height={500}
-                              itemCount={Object.keys(toAssets).length}
-                              itemSize={45} // Adjust as needed
+                              rowComponent={ToRow}
+                              rowCount={Object.keys(toAssets).length}
+                              rowHeight={45} // Adjust as needed
+                              rowProps={{}}
                               width="100%"
-                            >
-                              {ToRow}
-                            </List>
+                            />
                           </>
                         ) : null}
                       </CardContent>

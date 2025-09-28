@@ -5,7 +5,7 @@ import React, {
   useMemo,
   useCallback,
 } from "react";
-import { FixedSizeList as List } from "react-window";
+import { List } from "react-window";
 import { useForm } from "react-hook-form";
 import { LockOpen2Icon, LockClosedIcon } from "@radix-ui/react-icons";
 import { useStore } from "@nanostores/react";
@@ -3619,12 +3619,12 @@ export default function Smartcoin(properties) {
                       </div>
                       <List
                         height={260}
-                        itemCount={buyOrders.length}
-                        itemSize={25}
+                        rowComponent={OrderRow}
+                        rowCount={buyOrders.length}
+                        rowHeight={25}
+                        rowProps={{}}
                         className="w-full"
-                      >
-                        {OrderRow}
-                      </List>
+                      />
                     </>
                   ) : null}
                   {buyOrders && !buyOrders.length
@@ -3645,12 +3645,12 @@ export default function Smartcoin(properties) {
                       </div>
                       <List
                         height={260}
-                        itemCount={sellOrders.length}
-                        itemSize={25}
+                        rowComponent={OrderRow}
+                        rowCount={sellOrders.length}
+                        rowHeight={25}
+                        rowProps={{}}
                         className="w-full"
-                      >
-                        {OrderRow}
-                      </List>
+                      />
                     </>
                   ) : null}
                   {sellOrders && !sellOrders.length
@@ -3695,12 +3695,12 @@ export default function Smartcoin(properties) {
                   </div>
                   <List
                     height={260}
-                    itemCount={assetCallOrders.length}
-                    itemSize={25}
+                    rowComponent={MarginPositionRow}
+                    rowCount={assetCallOrders.length}
+                    rowHeight={25}
+                    rowProps={{}}
                     className="w-full"
-                  >
-                    {MarginPositionRow}
-                  </List>
+                  />
                 </>
               ) : null}
               {assetCallOrders && !assetCallOrders.length
@@ -3740,12 +3740,12 @@ export default function Smartcoin(properties) {
                   </div>
                   <List
                     height={260}
-                    itemCount={assetSettleOrders.length}
-                    itemSize={25}
+                    rowComponent={SettlementRow}
+                    rowCount={assetSettleOrders.length}
+                    rowHeight={25}
+                    rowProps={{}}
                     className="w-full"
-                  >
-                    {SettlementRow}
-                  </List>
+                  />
                 </>
               ) : null}
               {assetSettleOrders && !assetSettleOrders.length
@@ -3786,12 +3786,12 @@ export default function Smartcoin(properties) {
                   </div>
                   <List
                     height={260}
-                    itemCount={finalBitasset.feeds.length}
-                    itemSize={25}
+                    rowComponent={PriceFeedRow}
+                    rowCount={finalBitasset.feeds.length}
+                    rowHeight={25}
+                    rowProps={{}}
                     className="w-full"
-                  >
-                    {PriceFeedRow}
-                  </List>
+                  />
                 </>
               ) : null}
               {finalBitasset && !finalBitasset.feeds.length

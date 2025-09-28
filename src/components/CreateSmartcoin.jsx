@@ -6,7 +6,7 @@ import React, {
   useCallback,
 } from "react";
 import { useStore } from "@nanostores/react";
-import { FixedSizeList as List } from "react-window";
+import { List } from "react-window";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
@@ -1917,12 +1917,12 @@ export default function CreateSmartcoin(properties) {
                         <div className="mt-3 border border-gray-300 rounded">
                           <List
                             height={210}
-                            itemCount={allowedMarkets.length}
-                            itemSize={90}
+                            rowComponent={allowedMarketsRow}
+                            rowCount={allowedMarkets.length}
+                            rowHeight={90}
+                            rowProps={{}}
                             className="w-full"
-                          >
-                            {allowedMarketsRow}
-                          </List>
+                          />
                         </div>
                       ) : null}
                       <div className="grid grid-cols-2 gap-5 mt-2">
@@ -1975,12 +1975,12 @@ export default function CreateSmartcoin(properties) {
                         <div className="mt-2 border border-gray-300 rounded">
                           <List
                             height={210}
-                            itemCount={bannedMarkets.length}
-                            itemSize={90}
+                            rowComponent={bannedMarketsRow}
+                            rowCount={bannedMarkets.length}
+                            rowHeight={90}
+                            rowProps={{}}
                             className="w-full"
-                          >
-                            {bannedMarketsRow}
-                          </List>
+                          />
                         </div>
                       ) : null}
                       <Separator className="my-4 mt-5" />
@@ -2753,12 +2753,12 @@ export default function CreateSmartcoin(properties) {
                             <span className="col-span-9 border border-gray-300 rounded">
                               <List
                                 height={210}
-                                itemCount={feeSharingWhitelist.length}
-                                itemSize={100}
+                                rowComponent={feeSharingWhitelistRow}
+                                rowCount={feeSharingWhitelist.length}
+                                rowHeight={100}
+                                rowProps={{}}
                                 className="w-full"
-                              >
-                                {feeSharingWhitelistRow}
-                              </List>
+                              />
                             </span>
                             <span className="col-span-3 ml-3 text-center">
                               <Dialog
@@ -2890,12 +2890,12 @@ export default function CreateSmartcoin(properties) {
                         <span className="col-span-9 border border-gray-300 rounded">
                           <List
                             height={210}
-                            itemCount={whitelistAuthorities.length}
-                            itemSize={100}
+                            rowComponent={whitelistAuthorityRow}
+                            rowCount={whitelistAuthorities.length}
+                            rowHeight={100}
+                            rowProps={{}}
                             className="w-full"
-                          >
-                            {whitelistAuthorityRow}
-                          </List>
+                          />
                         </span>
                         <span className="col-span-3 ml-3 text-center">
                           <Dialog
@@ -2967,12 +2967,12 @@ export default function CreateSmartcoin(properties) {
                         <span className="col-span-9 border border-gray-300 rounded">
                           <List
                             height={210}
-                            itemCount={blacklistAuthorities.length}
-                            itemSize={75}
+                            rowComponent={blacklistAuthorityRow}
+                            rowCount={blacklistAuthorities.length}
+                            rowHeight={75}
+                            rowProps={{}}
                             className="w-full"
-                          >
-                            {blacklistAuthorityRow}
-                          </List>
+                          />
                         </span>
                         <span className="col-span-3 ml-3 text-center">
                           <Dialog
@@ -3523,14 +3523,12 @@ export default function CreateSmartcoin(properties) {
                                   <List
                                     width={"100%"}
                                     height={125}
-                                    itemCount={nftMedia.length}
-                                    itemSize={25}
+                                    rowComponent={MediaRow}
+                                    rowCount={nftMedia.length}
+                                    rowHeight={25}
+                                    rowProps={{}}
                                     className="w-full"
-                                  >
-                                    {({ index, style }) => (
-                                      <MediaRow index={index} style={style} />
-                                    )}
-                                  </List>
+                                  />
                                 </>
                               )}
                             </CardContent>

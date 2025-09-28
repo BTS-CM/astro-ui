@@ -4,10 +4,10 @@ import React, {
   useSyncExternalStore,
   useMemo,
 } from "react";
-import { FixedSizeList as List } from "react-window";
+import { List } from "react-window";
 import { useStore } from "@nanostores/react";
-import { sha256 } from "@noble/hashes/sha2";
-import { bytesToHex as toHex } from "@noble/hashes/utils";
+import { sha256 } from "@noble/hashes/sha2.js";
+import { bytesToHex as toHex, utf8ToBytes } from "@noble/hashes/utils.js";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
@@ -114,7 +114,9 @@ export default function PortfolioTabs(properties) {
     }
 
     const relevantAssets = _assetsBTS.filter((asset) => {
-      return !blocklist.users.includes(toHex(sha256(asset.issuer)));
+      return !blocklist.users.includes(
+        toHex(sha256(utf8ToBytes(asset.issuer)))
+      );
     });
 
     return relevantAssets;
@@ -134,7 +136,9 @@ export default function PortfolioTabs(properties) {
         (asset) => asset.id === pool.share_asset_id
       );
       if (!poolShareAsset) return false;
-      return !blocklist.users.includes(toHex(sha256(poolShareAsset.issuer)));
+      return !blocklist.users.includes(
+        toHex(sha256(utf8ToBytes(poolShareAsset.issuer)))
+      );
     });
 
     return relevantPools;
@@ -664,12 +668,12 @@ export default function PortfolioTabs(properties) {
             </div>
             <List
               height={300}
-              itemCount={poolArray.length}
-              itemSize={35}
+              rowComponent={PoolRow}
+              rowCount={poolArray.length}
+              rowHeight={35}
+              rowProps={{}}
               className="w-full"
-            >
-              {PoolRow}
-            </List>
+            />
           </div>
         </DialogContent>
       </Dialog>
@@ -759,12 +763,12 @@ export default function PortfolioTabs(properties) {
                   retrievedBalanceAssets.length ? (
                     <List
                       height={500}
-                      itemCount={sortedUserBalances.length}
-                      itemSize={80}
+                      rowComponent={BalanceRow}
+                      rowCount={sortedUserBalances.length}
+                      rowHeight={80}
+                      rowProps={{}}
                       className="gaps-2"
-                    >
-                      {BalanceRow}
-                    </List>
+                    />
                   ) : (
                     <p>{t("PortfolioTabs:noBalancesFound")}</p>
                   )}
@@ -796,11 +800,11 @@ export default function PortfolioTabs(properties) {
                   retrievedBalanceAssets.length ? (
                     <List
                       height={500}
-                      itemCount={openOrders.length}
-                      itemSize={145}
-                    >
-                      {OpenOrdersRow}
-                    </List>
+                      rowComponent={OpenOrdersRow}
+                      rowCount={openOrders.length}
+                      rowHeight={145}
+                      rowProps={{}}
+                    />
                   ) : (
                     <p>{t("PortfolioTabs:noOpenOrdersFound")}</p>
                   )}
@@ -831,11 +835,11 @@ export default function PortfolioTabs(properties) {
                   {activity && activity.length ? (
                     <List
                       height={500}
-                      itemCount={activity.length}
-                      itemSize={145}
-                    >
-                      {RecentActivityRow}
-                    </List>
+                      rowComponent={RecentActivityRow}
+                      rowCount={activity.length}
+                      rowHeight={145}
+                      rowProps={{}}
+                    />
                   ) : (
                     <p>{t("PortfolioTabs:noRecentActivityFound")}</p>
                   )}

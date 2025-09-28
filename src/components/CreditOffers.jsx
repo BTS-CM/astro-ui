@@ -1,5 +1,5 @@
 import React, { useSyncExternalStore, useMemo } from "react";
-import { FixedSizeList as List } from "react-window";
+import { List } from "react-window";
 import { useTranslation } from "react-i18next";
 
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
@@ -213,12 +213,12 @@ export default function CreditOffers(properties) {
                 {offers && offers.length ? (
                   <List
                     height={500}
-                    itemCount={offers.length}
-                    itemSize={225}
+                    rowComponent={Row}
+                    rowCount={offers.length}
+                    rowHeight={225}
+                    rowProps={{}}
                     className="w-full mt-3"
-                  >
-                    {Row}
-                  </List>
+                  />
                 ) : null}
                 {offers && !offers.length
                   ? t("CreditOffers:card.noResults")

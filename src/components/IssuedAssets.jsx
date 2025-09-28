@@ -4,10 +4,10 @@ import React, {
   useSyncExternalStore,
   useMemo,
 } from "react";
-import { FixedSizeList as List } from "react-window";
+import { List } from "react-window";
 import { useStore } from "@nanostores/react";
-import { sha256 } from "@noble/hashes/sha2";
-import { bytesToHex as toHex } from "@noble/hashes/utils";
+import { sha256 } from "@noble/hashes/sha2.js";
+import { bytesToHex as toHex, utf8ToBytes } from "@noble/hashes/utils.js";
 
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
@@ -465,7 +465,7 @@ export default function IssuedAssets(properties) {
         return null;
       }
 
-      const hexID = toHex(sha256(priceFeed[0]));
+      const hexID = toHex(sha256(utf8ToBytes(priceFeed[0])));
       const settlementPrice = parseFloat(
         (
           humanReadableFloat(
@@ -957,12 +957,12 @@ export default function IssuedAssets(properties) {
                               <span className="col-span-9 border border-gray-300 rounded">
                                 <List
                                   height={210}
-                                  itemCount={priceFeedPublishers.length}
-                                  itemSize={80}
+                                  rowComponent={PriceFeedRow}
+                                  rowCount={priceFeedPublishers.length}
+                                  rowHeight={80}
+                                  rowProps={{}}
                                   className="w-full"
-                                >
-                                  {pricefeederRow}
-                                </List>
+                                />
                               </span>
                               <span className="col-span-3 ml-3 text-center">
                                 <Dialog
@@ -1204,12 +1204,12 @@ export default function IssuedAssets(properties) {
                                   {users && users.length ? (
                                     <List
                                       height={500}
-                                      itemCount={users.length}
-                                      itemSize={90}
+                                      rowComponent={UserRow}
+                                      rowCount={users.length}
+                                      rowHeight={90}
+                                      rowProps={{}}
                                       className="w-full"
-                                    >
-                                      {UserRow}
-                                    </List>
+                                    />
                                   ) : (
                                     <p>{t("IssuedAssets:noUsers")}</p>
                                   )}
@@ -1897,12 +1897,12 @@ export default function IssuedAssets(properties) {
                                       {users && users.length ? (
                                         <List
                                           height={500}
-                                          itemCount={users.length}
-                                          itemSize={90}
+                                          rowComponent={UserRow}
+                                          rowCount={users.length}
+                                          rowHeight={90}
+                                          rowProps={{}}
                                           className="w-full"
-                                        >
-                                          {UserRow}
-                                        </List>
+                                        />
                                       ) : (
                                         <p>{t("IssuedAssets:noUsers")}</p>
                                       )}
@@ -2033,14 +2033,12 @@ export default function IssuedAssets(properties) {
                                   />
                                   <List
                                     height={150}
-                                    itemCount={
-                                      relevantBitassetData.feeds.length
-                                    }
-                                    itemSize={60}
+                                    rowComponent={PriceFeedRow}
+                                    rowCount={relevantBitassetData.feeds.length}
+                                    rowHeight={60}
+                                    rowProps={{}}
                                     className="w-full rounded border border-black pt-1"
-                                  >
-                                    {PriceFeedRow}
-                                  </List>
+                                  />
                                 </>
                               ) : null}
                               <div>
@@ -2246,12 +2244,12 @@ export default function IssuedAssets(properties) {
                   ) : (
                     <List
                       height={500}
-                      itemCount={relevantAssets.length}
-                      itemSize={90}
+                      rowComponent={AssetRow}
+                      rowCount={relevantAssets.length}
+                      rowHeight={90}
+                      rowProps={{}}
                       className="w-full"
-                    >
-                      {AssetRow}
-                    </List>
+                    />
                   )}
                 </TabsContent>
                 <TabsContent value="smartcoins">
@@ -2272,12 +2270,12 @@ export default function IssuedAssets(properties) {
                   ) : (
                     <List
                       height={500}
-                      itemCount={relevantAssets.length}
-                      itemSize={90}
+                      rowComponent={AssetRow}
+                      rowCount={relevantAssets.length}
+                      rowHeight={90}
+                      rowProps={{}}
                       className="w-full"
-                    >
-                      {AssetRow}
-                    </List>
+                    />
                   )}
                 </TabsContent>
                 <TabsContent value="prediction">
@@ -2298,12 +2296,12 @@ export default function IssuedAssets(properties) {
                   ) : (
                     <List
                       height={500}
-                      itemCount={relevantAssets.length}
-                      itemSize={90}
+                      rowComponent={AssetRow}
+                      rowCount={relevantAssets.length}
+                      rowHeight={90}
+                      rowProps={{}}
                       className="w-full"
-                    >
-                      {AssetRow}
-                    </List>
+                    />
                   )}
                 </TabsContent>
                 <TabsContent value="nft">
@@ -2324,12 +2322,12 @@ export default function IssuedAssets(properties) {
                   ) : (
                     <List
                       height={500}
-                      itemCount={relevantAssets.length}
-                      itemSize={90}
+                      rowComponent={AssetRow}
+                      rowCount={relevantAssets.length}
+                      rowHeight={90}
+                      rowProps={{}}
                       className="w-full"
-                    >
-                      {AssetRow}
-                    </List>
+                    />
                   )}
                 </TabsContent>
               </Tabs>

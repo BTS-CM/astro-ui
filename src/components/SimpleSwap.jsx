@@ -6,15 +6,15 @@ import React, {
 } from "react";
 import { useForm } from "react-hook-form";
 import { useStore } from "@nanostores/react";
-import { sha256 } from "@noble/hashes/sha2";
-import { bytesToHex as toHex } from "@noble/hashes/utils";
+import { sha256 } from "@noble/hashes/sha2.js";
+import { bytesToHex as toHex, utf8ToBytes } from "@noble/hashes/utils.js";
 import {
   QuestionMarkCircledIcon,
   CircleIcon,
   CheckCircledIcon,
 } from "@radix-ui/react-icons";
 import { useTranslation } from "react-i18next";
-import { FixedSizeList as List } from "react-window";
+import { List } from "react-window";
 
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 import { blockchainFloat, humanReadableFloat } from "@/lib/common";
@@ -139,7 +139,8 @@ export default function SimpleSwap(properties) {
     const relevantAssets = currentAssets.filter((asset) => {
       // Ensure asset.issuer exists before hashing
       return (
-        asset.issuer && !blocklist.users.includes(toHex(sha256(asset.issuer)))
+        asset.issuer &&
+        !blocklist.users.includes(toHex(sha256(utf8ToBytes(asset.issuer))))
       );
     });
 
@@ -159,7 +160,9 @@ export default function SimpleSwap(properties) {
         (asset) => asset.id === pool.share_asset_id
       );
       if (!poolShareAsset || !poolShareAsset.issuer) return false; // Check issuer exists
-      return !blocklist.users.includes(toHex(sha256(poolShareAsset.issuer)));
+      return !blocklist.users.includes(
+        toHex(sha256(utf8ToBytes(poolShareAsset.issuer)))
+      );
     });
 
     return relevantPools;
@@ -1002,12 +1005,12 @@ export default function SimpleSwap(properties) {
                           {/* Virtualized List */}
                           <List
                             height={Math.min(210, finalPools.length * 40)} // Adjust height dynamically, 40px per row approx
-                            itemCount={finalPools.length}
-                            itemSize={40} // Approx height of each poolRow including padding
+                            rowComponent={poolRow}
+                            rowCount={finalPools.length}
+                            rowHeight={40} // Approx height of each poolRow including padding
+                            rowProps={{}}
                             width="100%" // Ensure it takes full width
-                          >
-                            {poolRow}
-                          </List>
+                          />
                         </div>
                       ) : null}
                       {/* Show message if assets selected but no pools found */}

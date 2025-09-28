@@ -5,9 +5,9 @@ import React, {
   useSyncExternalStore,
 } from "react";
 import { useForm } from "react-hook-form";
-import { sha256 } from "@noble/hashes/sha2";
-import { bytesToHex as toHex } from "@noble/hashes/utils";
-import { FixedSizeList as List } from "react-window";
+import { sha256 } from "@noble/hashes/sha2.js";
+import { bytesToHex as toHex, utf8ToBytes } from "@noble/hashes/utils.js";
+import { List } from "react-window";
 import { useStore } from "@nanostores/react";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
@@ -213,7 +213,9 @@ export default function CreditOffer(properties) {
             const foundOffer = data[0];
             if (foundOffer) {
               if (_chain === "bitshares") {
-                const hashedID = toHex(sha256(foundOffer.owner_account));
+                const hashedID = toHex(
+                  sha256(utf8ToBytes(foundOffer.owner_account))
+                );
                 if (blocklist.users.includes(hashedID)) {
                   // Credit offer is owned by a banned user
                   setError(true);
@@ -807,10 +809,10 @@ export default function CreditOffer(properties) {
                                         acceptedCollateral.length ? (
                                           <List
                                             height={100}
-                                            itemCount={
-                                              acceptedCollateral.length
-                                            }
-                                            itemSize={35}
+                                            rowCount={acceptedCollateral.length}
+                                            rowComponent={Row}
+                                            rowHeight={35}
+                                            rowProps={{}}
                                             className="w-full"
                                             initialScrollOffset={
                                               chosenCollateral
@@ -821,9 +823,7 @@ export default function CreditOffer(properties) {
                                                     ) * 35
                                                 : 0
                                             }
-                                          >
-                                            {Row}
-                                          </List>
+                                          />
                                         ) : null}
                                       </SelectContent>
                                     </Select>

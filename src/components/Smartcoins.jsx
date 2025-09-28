@@ -5,7 +5,7 @@ import React, {
   useMemo,
   useCallback,
 } from "react";
-import { FixedSizeList as List } from "react-window";
+import { List } from "react-window";
 import Fuse from "fuse.js";
 import { useStore } from "@nanostores/react";
 import { QuestionMarkCircledIcon } from "@radix-ui/react-icons";
@@ -686,12 +686,12 @@ export default function Smartcoins(properties) {
                   ) : (
                     <List
                       height={600}
-                      itemCount={relevantBitassetData.length}
-                      itemSize={235}
+                      rowComponent={BitassetRow}
+                      rowCount={relevantBitassetData.length}
+                      rowHeight={235}
+                      rowProps={{}}
                       className="w-full"
-                    >
-                      {BitassetRow}
-                    </List>
+                    />
                   )}
                 </TabsContent>
                 <TabsContent value="compatible">
@@ -738,12 +738,12 @@ export default function Smartcoins(properties) {
                   ) : (
                     <List
                       height={600}
-                      itemCount={relevantBitassetData.length}
-                      itemSize={235}
+                      rowComponent={BitassetRow}
+                      rowCount={relevantBitassetData.length}
+                      rowHeight={235}
+                      rowProps={{}}
                       className="w-full"
-                    >
-                      {BitassetRow}
-                    </List>
+                    />
                   )}
                 </TabsContent>
                 <TabsContent value="holdings">
@@ -792,14 +792,14 @@ export default function Smartcoins(properties) {
                   ) : (
                     <List
                       height={600}
-                      itemCount={
+                      rowComponent={BitassetRow}
+                      rowCount={
                         relevantBitassetData ? relevantBitassetData.length : 0
                       }
-                      itemSize={235}
+                      rowHeight={235}
+                      rowProps={{}}
                       className="w-full"
-                    >
-                      {BitassetRow}
-                    </List>
+                    />
                   )}
                 </TabsContent>
                 <TabsContent value="search">
@@ -887,12 +887,12 @@ export default function Smartcoins(properties) {
                       {thisResult && thisResult.length ? (
                         <List
                           height={600}
-                          itemCount={thisResult.length}
-                          itemSize={235}
+                          rowComponent={SearchRow}
+                          rowCount={thisResult.length}
+                          rowHeight={235}
+                          rowProps={{}}
                           className="w-full"
-                        >
-                          {SearchRow}
-                        </List>
+                        />
                       ) : null}
                       {thisInput && thisResult && !thisResult.length ? (
                         <>{t("Smartcoins:noResultsFound")}</>
@@ -902,12 +902,12 @@ export default function Smartcoins(properties) {
                       {thisResult && thisResult.length ? (
                         <List
                           height={600}
-                          itemCount={thisResult.length}
-                          itemSize={235}
+                          rowComponent={SearchRow}
+                          rowCount={thisResult.length}
+                          rowHeight={235}
+                          rowProps={{}}
                           className="w-full"
-                        >
-                          {SearchRow}
-                        </List>
+                        />
                       ) : null}
                       {thisInput && thisResult && !thisResult.length ? (
                         <>{t("Smartcoins:noResultsFound")}</>
@@ -917,12 +917,12 @@ export default function Smartcoins(properties) {
                       {thisResult && thisResult.length ? (
                         <List
                           height={600}
-                          itemCount={thisResult.length}
-                          itemSize={235}
+                          rowComponent={SearchRow}
+                          rowCount={thisResult.length}
+                          rowHeight={235}
+                          rowProps={{}}
                           className="w-full"
-                        >
-                          {SearchRow}
-                        </List>
+                        />
                       ) : null}
                       {thisInput && thisResult && !thisResult.length ? (
                         <>{t("Smartcoins:noResultsFound")}</>

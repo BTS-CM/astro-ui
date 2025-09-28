@@ -4,7 +4,7 @@ import { CalendarIcon } from "@radix-ui/react-icons";
 import { format, set } from "date-fns";
 import { useSyncExternalStore } from "react";
 import { useTranslation } from "react-i18next";
-import { FixedSizeList as List } from "react-window";
+import { List } from "react-window";
 import { useStore } from "@nanostores/react";
 
 import { cn } from "@/lib/utils";
@@ -1271,12 +1271,12 @@ export default function CreditOfferEditor(properties) {
                           <span className="col-span-9 border border-gray-300 rounded">
                             <List
                               height={210}
-                              itemCount={acceptableCollateral.length}
-                              itemSize={80}
+                              rowComponent={CollateralRow}
+                              rowCount={acceptableCollateral.length}
+                              rowHeight={80}
+                              rowProps={{}}
                               className="w-full"
-                            >
-                              {CollateralRow}
-                            </List>
+                            />
                           </span>
                           <span className="col-span-3 ml-3 text-center">
                             <CollateralDropDownCard
@@ -1313,12 +1313,12 @@ export default function CreditOfferEditor(properties) {
                           <span className="col-span-9 border border-gray-300 rounded">
                             <List
                               height={210}
-                              itemCount={allowedAccounts.length}
-                              itemSize={100}
+                              rowComponent={ApprovedBorrowerRow}
+                              rowCount={allowedAccounts.length}
+                              rowHeight={100}
+                              rowProps={{}}
                               className="w-full"
-                            >
-                              {ApprovedBorrowerRow}
-                            </List>
+                            />
                           </span>
                           <span className="col-span-3 ml-3 text-center">
                             <Dialog

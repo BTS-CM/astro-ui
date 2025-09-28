@@ -5,10 +5,10 @@ import React, {
   useMemo,
   useCallback,
 } from "react";
-import { FixedSizeList as List } from "react-window";
+import { List } from "react-window";
 import Fuse from "fuse.js";
-import { sha256 } from "@noble/hashes/sha2";
-import { bytesToHex as toHex } from "@noble/hashes/utils";
+import { sha256 } from "@noble/hashes/sha2.js";
+import { bytesToHex as toHex, utf8ToBytes } from "@noble/hashes/utils.js";
 import { useStore } from "@nanostores/react";
 import { useTranslation } from "react-i18next";
 
@@ -100,7 +100,9 @@ export default function CreditBorrow(properties) {
         // Discard offers from banned users
         currentOffers = currentOffers.filter(
           (offer) =>
-            !blocklist.users.includes(toHex(sha256(offer.owner_account)))
+            !blocklist.users.includes(
+              toHex(sha256(utf8ToBytes(offer.owner_account)))
+            )
         );
       }
 
@@ -578,12 +580,12 @@ export default function CreditBorrow(properties) {
                       {assets && offers && offers.length ? (
                         <List
                           height={500}
-                          itemCount={offers.length}
-                          itemSize={225}
+                          rowComponent={OfferRow}
+                          rowCount={offers.length}
+                          rowHeight={225}
+                          rowProps={{}}
                           className="w-full"
-                        >
-                          {OfferRow}
-                        </List>
+                        />
                       ) : null}
                     </TabsContent>
                     <TabsContent value="availableOffers">
@@ -593,12 +595,12 @@ export default function CreditBorrow(properties) {
                       {assets && compatibleOffers && compatibleOffers.length ? (
                         <List
                           height={500}
-                          itemCount={compatibleOffers.length}
-                          itemSize={225}
+                          rowComponent={BalanceRow}
+                          rowCount={compatibleOffers.length}
+                          rowHeight={225}
+                          rowProps={{}}
                           className="w-full"
-                        >
-                          {BalanceRow}
-                        </List>
+                        />
                       ) : null}
                     </TabsContent>
                     <TabsContent value="searchOffers">
@@ -696,12 +698,12 @@ export default function CreditBorrow(properties) {
                           {thisResult && thisResult.length ? (
                             <List
                               height={500}
-                              itemCount={thisResult.length}
-                              itemSize={225}
+                              rowComponent={SearchRow}
+                              rowCount={thisResult.length}
+                              rowHeight={225}
+                              rowProps={{}}
                               className="w-full"
-                            >
-                              {SearchRow}
-                            </List>
+                            />
                           ) : null}
                           {thisInput && thisResult && !thisResult.length
                             ? t("CreditBorrow:card.noResults")
@@ -711,12 +713,12 @@ export default function CreditBorrow(properties) {
                           {thisResult && thisResult.length ? (
                             <List
                               height={500}
-                              itemCount={thisResult.length}
-                              itemSize={225}
+                              rowComponent={SearchRow}
+                              rowCount={thisResult.length}
+                              rowHeight={225}
+                              rowProps={{}}
                               className="w-full"
-                            >
-                              {SearchRow}
-                            </List>
+                            />
                           ) : null}
                           {thisInput && thisResult && !thisResult.length
                             ? t("CreditBorrow:card.noResults")
@@ -726,12 +728,12 @@ export default function CreditBorrow(properties) {
                           {thisResult && thisResult.length ? (
                             <List
                               height={500}
-                              itemCount={thisResult.length}
-                              itemSize={225}
+                              rowComponent={SearchRow}
+                              rowCount={thisResult.length}
+                              rowHeight={225}
+                              rowProps={{}}
                               className="w-full"
-                            >
-                              {SearchRow}
-                            </List>
+                            />
                           ) : null}
                           {thisInput && thisResult && !thisResult.length
                             ? t("CreditBorrow:card.noResults")

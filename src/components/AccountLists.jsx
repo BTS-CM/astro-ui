@@ -4,10 +4,10 @@ import React, {
   useSyncExternalStore,
   useMemo,
 } from "react";
-import { FixedSizeList as List } from "react-window";
+import { List } from "react-window";
 import { useStore } from "@nanostores/react";
-import { sha256 } from "@noble/hashes/sha2";
-import { bytesToHex as toHex } from "@noble/hashes/utils";
+import { sha256 } from "@noble/hashes/sha2.js";
+import { bytesToHex as toHex, utf8ToBytes } from "@noble/hashes/utils.js";
 
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
@@ -146,7 +146,7 @@ export default function AccountLists(properties) {
           {account ? (
             <Avatar
               size={40}
-              name={toHex(sha256(account))}
+              name={toHex(sha256(utf8ToBytes(account)))}
               extra=""
               expression={{
                 eye: "normal",
@@ -232,22 +232,22 @@ export default function AccountLists(properties) {
                   {mode === "whitelist" && whitelistedAccounts.length ? (
                     <List
                       height={210}
-                      itemCount={whitelistedAccounts.length}
-                      itemSize={50}
+                      rowComponent={accountRow}
+                      rowCount={whitelistedAccounts.length}
+                      rowHeight={50}
+                      rowProps={{}}
                       className="w-full"
-                    >
-                      {accountRow}
-                    </List>
+                    />
                   ) : null}
                   {mode === "blacklist" && blacklistedAccounts.length ? (
                     <List
                       height={210}
-                      itemCount={blacklistedAccounts.length}
-                      itemSize={50}
+                      rowComponent={accountRow}
+                      rowCount={blacklistedAccounts.length}
+                      rowHeight={50}
+                      rowProps={{}}
                       className="w-full border"
-                    >
-                      {accountRow}
-                    </List>
+                    />
                   ) : null}
                   {mode === "whitelist" && !whitelistedAccounts.length ? (
                     <p className="text-center">
