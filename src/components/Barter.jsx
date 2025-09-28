@@ -616,14 +616,15 @@ export default function Barter(properties) {
                                 {t("Barter:asset")}
                               </div>
                             </div>
-                            <List
-                              height={500}
-                              rowComponent={FromRow}
-                              rowCount={Object.keys(fromAssets).length}
-                              rowHeight={45} // Adjust as needed
-                              rowProps={{}}
-                              width="100%"
-                            />
+                            <div className="w-full max-h-[500px] overflow-auto">
+                              <List
+                                height={500}
+                                rowComponent={FromRow}
+                                rowCount={Object.keys(fromAssets).length}
+                                rowHeight={45} // Adjust as needed
+                                rowProps={{}}
+                              />
+                            </div>
                           </>
                         ) : null}
                       </CardContent>

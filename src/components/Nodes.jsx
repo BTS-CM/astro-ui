@@ -96,14 +96,14 @@ export default function Nodes(properties) {
               usr.chain &&
               nodes[usr.chain] &&
               nodes[usr.chain].length ? (
-                <List
-                  height={250}
-                  rowComponent={NodeRow}
-                  rowCount={nodes[usr.chain].length}
-                  rowHeight={50}
-                  rowProps={{}}
-                  className="w-full"
-                />
+                <div className="w-full max-h-[250px] overflow-auto">
+                  <List
+                    rowComponent={NodeRow}
+                    rowCount={nodes[usr.chain].length}
+                    rowHeight={50}
+                    rowProps={{}}
+                  />
+                </div>
               ) : (
                 <p>{t("Nodes:none")}</p>
               )}

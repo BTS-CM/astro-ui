@@ -1865,14 +1865,14 @@ export default function Predictions(properties) {
                           />
                           <div className="grid grid-cols-12 mt-1">
                             <span className="col-span-9 border border-gray-300 rounded">
-                              <List
-                                height={210}
-                                rowComponent={pricefeederRow}
-                                rowCount={priceFeeders.length}
-                                rowHeight={100}
-                                rowProps={{}}
-                                className="w-full"
-                              />
+                              <div className="w-full max-h-[210px] overflow-auto">
+                                <List
+                                  rowComponent={pricefeederRow}
+                                  rowCount={priceFeeders.length}
+                                  rowHeight={100}
+                                  rowProps={{}}
+                                />
+                              </div>
                             </span>
                             <span className="col-span-3 ml-3 text-center">
                               <Dialog
@@ -2165,15 +2165,15 @@ export default function Predictions(properties) {
 
             <>
               {chosenPMAs && chosenPMAs.length ? (
-                <List
-                  height={500}
-                  rowComponent={PredictionRow}
-                  rowCount={chosenPMAs.length}
-                  rowHeight={275}
-                  key={`list-${view}`}
-                  className={`w-full mt-3`}
-                  rowProps={{}}
-                />
+                <div className="w-full mt-3 max-h-[500px] overflow-auto">
+                  <List
+                    rowComponent={PredictionRow}
+                    rowCount={chosenPMAs.length}
+                    rowHeight={275}
+                    key={`list-${view}`}
+                    rowProps={{}}
+                  />
+                </div>
               ) : null}
               {chosenPMAs && !chosenPMAs.length && view === "active" ? (
                 <div className="text-center mt-5">

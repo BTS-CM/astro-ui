@@ -1366,14 +1366,14 @@ export default function CustomPoolTracker(properties) {
                   <div>{t("PoolTracker:24hVolume")}</div>
                   <div>{t("PoolTracker:fees")}</div>
                 </div>
-                <List
-                  height={500}
-                  rowComponent={featuredPoolRow}
-                  rowCount={liquidityPools.length}
-                  rowHeight={110}
-                  rowProps={{}}
-                  className="w-full"
-                />
+                <div className="w-full max-h-[500px] overflow-auto">
+                  <List
+                    rowComponent={featuredPoolRow}
+                    rowCount={liquidityPools.length}
+                    rowHeight={110}
+                    rowProps={{}}
+                  />
+                </div>
                 <div className="grid grid-cols-12 text-xs">
                   <div className="col-span-4"></div>
                   <div className="col-span-6 text-center border border-gray-300">

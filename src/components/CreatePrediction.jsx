@@ -847,14 +847,14 @@ export default function Prediction(properties) {
                       />
                       <div className="grid grid-cols-12 mt-1">
                         <span className="col-span-9 border border-gray-300 rounded">
-                          <List
-                            height={210}
-                            rowComponent={feeSharingWhitelistRow}
-                            rowCount={feeSharingWhitelist.length}
-                            rowHeight={100}
-                            rowProps={{}}
-                            className="w-full"
-                          />
+                          <div className="w-full max-h-[210px] overflow-auto">
+                            <List
+                              rowComponent={feeSharingWhitelistRow}
+                              rowCount={feeSharingWhitelist.length}
+                              rowHeight={100}
+                              rowProps={{}}
+                            />
+                          </div>
                         </span>
                         <span className="col-span-3 ml-3 text-center">
                           <Dialog
@@ -1184,14 +1184,14 @@ export default function Prediction(properties) {
                     />
                     <div className="grid grid-cols-12 mt-1">
                       <span className="col-span-9 border border-gray-300 rounded">
-                        <List
-                          height={210}
-                          rowComponent={whitelistAuthorityRow}
-                          rowCount={whitelistAuthorities.length}
-                          rowHeight={100}
-                          rowProps={{}}
-                          className="w-full"
-                        />
+                        <div className="w-full max-h-[210px] overflow-auto">
+                          <List
+                            rowComponent={whitelistAuthorityRow}
+                            rowCount={whitelistAuthorities.length}
+                            rowHeight={100}
+                            rowProps={{}}
+                          />
+                        </div>
                       </span>
                       <span className="col-span-3 ml-3 text-center">
                         <Dialog
@@ -1254,14 +1254,14 @@ export default function Prediction(properties) {
                     />
                     <div className="grid grid-cols-12 mt-1">
                       <span className="col-span-9 border border-gray-300 rounded">
-                        <List
-                          height={210}
-                          rowComponent={blacklistAuthorityRow}
-                          rowCount={blacklistAuthorities.length}
-                          rowHeight={100}
-                          rowProps={{}}
-                          className="w-full"
-                        />
+                        <div className="w-full max-h-[210px] overflow-auto">
+                          <List
+                            rowComponent={blacklistAuthorityRow}
+                            rowCount={blacklistAuthorities.length}
+                            rowHeight={100}
+                            rowProps={{}}
+                          />
+                        </div>
                       </span>
                       <span className="col-span-3 ml-3 text-center">
                         <Dialog

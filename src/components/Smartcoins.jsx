@@ -684,14 +684,14 @@ export default function Smartcoins(properties) {
                       {t("CreditBorrow:common.loading")}
                     </div>
                   ) : (
-                    <List
-                      height={600}
-                      rowComponent={BitassetRow}
-                      rowCount={relevantBitassetData.length}
-                      rowHeight={235}
-                      rowProps={{}}
-                      className="w-full"
-                    />
+                    <div className="w-full max-h-[600px] overflow-auto">
+                      <List
+                        rowComponent={BitassetRow}
+                        rowCount={relevantBitassetData.length}
+                        rowHeight={235}
+                        rowProps={{}}
+                      />
+                    </div>
                   )}
                 </TabsContent>
                 <TabsContent value="compatible">
@@ -736,14 +736,14 @@ export default function Smartcoins(properties) {
                       {t("CreditBorrow:common.loading")}
                     </div>
                   ) : (
-                    <List
-                      height={600}
-                      rowComponent={BitassetRow}
-                      rowCount={relevantBitassetData.length}
-                      rowHeight={235}
-                      rowProps={{}}
-                      className="w-full"
-                    />
+                    <div className="w-full max-h-[600px] overflow-auto">
+                      <List
+                        rowComponent={BitassetRow}
+                        rowCount={relevantBitassetData.length}
+                        rowHeight={235}
+                        rowProps={{}}
+                      />
+                    </div>
                   )}
                 </TabsContent>
                 <TabsContent value="holdings">
@@ -790,16 +790,16 @@ export default function Smartcoins(properties) {
                       {t("CreditBorrow:common.loading")}
                     </div>
                   ) : (
-                    <List
-                      height={600}
-                      rowComponent={BitassetRow}
-                      rowCount={
-                        relevantBitassetData ? relevantBitassetData.length : 0
-                      }
-                      rowHeight={235}
-                      rowProps={{}}
-                      className="w-full"
-                    />
+                    <div className="w-full max-h-[600px] overflow-auto">
+                      <List
+                        rowComponent={BitassetRow}
+                        rowCount={
+                          relevantBitassetData ? relevantBitassetData.length : 0
+                        }
+                        rowHeight={235}
+                        rowProps={{}}
+                      />
+                    </div>
                   )}
                 </TabsContent>
                 <TabsContent value="search">
@@ -885,14 +885,14 @@ export default function Smartcoins(properties) {
 
                     <TabsContent value="borrow">
                       {thisResult && thisResult.length ? (
-                        <List
-                          height={600}
-                          rowComponent={SearchRow}
-                          rowCount={thisResult.length}
-                          rowHeight={235}
-                          rowProps={{}}
-                          className="w-full"
-                        />
+                        <div className="w-full max-h-[600px] overflow-auto">
+                          <List
+                            rowComponent={SearchRow}
+                            rowCount={thisResult.length}
+                            rowHeight={235}
+                            rowProps={{}}
+                          />
+                        </div>
                       ) : null}
                       {thisInput && thisResult && !thisResult.length ? (
                         <>{t("Smartcoins:noResultsFound")}</>
@@ -900,14 +900,14 @@ export default function Smartcoins(properties) {
                     </TabsContent>
                     <TabsContent value="collateral">
                       {thisResult && thisResult.length ? (
-                        <List
-                          height={600}
-                          rowComponent={SearchRow}
-                          rowCount={thisResult.length}
-                          rowHeight={235}
-                          rowProps={{}}
-                          className="w-full"
-                        />
+                        <div className="w-full max-h-[600px] overflow-auto">
+                          <List
+                            rowComponent={SearchRow}
+                            rowCount={thisResult.length}
+                            rowHeight={235}
+                            rowProps={{}}
+                          />
+                        </div>
                       ) : null}
                       {thisInput && thisResult && !thisResult.length ? (
                         <>{t("Smartcoins:noResultsFound")}</>
@@ -915,14 +915,14 @@ export default function Smartcoins(properties) {
                     </TabsContent>
                     <TabsContent value="issuer">
                       {thisResult && thisResult.length ? (
-                        <List
-                          height={600}
-                          rowComponent={SearchRow}
-                          rowCount={thisResult.length}
-                          rowHeight={235}
-                          rowProps={{}}
-                          className="w-full"
-                        />
+                        <div className="w-full max-h-[600px] overflow-auto">
+                          <List
+                            rowComponent={SearchRow}
+                            rowCount={thisResult.length}
+                            rowHeight={235}
+                            rowProps={{}}
+                          />
+                        </div>
                       ) : null}
                       {thisInput && thisResult && !thisResult.length ? (
                         <>{t("Smartcoins:noResultsFound")}</>

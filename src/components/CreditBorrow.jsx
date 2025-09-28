@@ -578,14 +578,14 @@ export default function CreditBorrow(properties) {
                         {t("CreditBorrow:card.allOffers")}
                       </h5>
                       {assets && offers && offers.length ? (
-                        <List
-                          height={500}
-                          rowComponent={OfferRow}
-                          rowCount={offers.length}
-                          rowHeight={225}
-                          rowProps={{}}
-                          className="w-full"
-                        />
+                        <div className="w-full max-h-[500px] overflow-auto">
+                          <List
+                            rowComponent={OfferRow}
+                            rowCount={offers.length}
+                            rowHeight={225}
+                            rowProps={{}}
+                          />
+                        </div>
                       ) : null}
                     </TabsContent>
                     <TabsContent value="availableOffers">
@@ -593,14 +593,14 @@ export default function CreditBorrow(properties) {
                         {t("CreditBorrow:card.availableOffers")}
                       </h5>
                       {assets && compatibleOffers && compatibleOffers.length ? (
-                        <List
-                          height={500}
-                          rowComponent={BalanceRow}
-                          rowCount={compatibleOffers.length}
-                          rowHeight={225}
-                          rowProps={{}}
-                          className="w-full"
-                        />
+                        <div className="w-full max-h-[500px] overflow-auto">
+                          <List
+                            rowComponent={BalanceRow}
+                            rowCount={compatibleOffers.length}
+                            rowHeight={225}
+                            rowProps={{}}
+                          />
+                        </div>
                       ) : null}
                     </TabsContent>
                     <TabsContent value="searchOffers">
@@ -696,14 +696,14 @@ export default function CreditBorrow(properties) {
                         />
                         <TabsContent value="borrow">
                           {thisResult && thisResult.length ? (
-                            <List
-                              height={500}
-                              rowComponent={SearchRow}
-                              rowCount={thisResult.length}
-                              rowHeight={225}
-                              rowProps={{}}
-                              className="w-full"
-                            />
+                            <div className="w-full max-h-[210px] overflow-auto">
+                              <List
+                                rowComponent={SearchRow}
+                                rowCount={thisResult.length}
+                                rowHeight={225}
+                                rowProps={{}}
+                              />
+                            </div>
                           ) : null}
                           {thisInput && thisResult && !thisResult.length
                             ? t("CreditBorrow:card.noResults")
@@ -711,14 +711,14 @@ export default function CreditBorrow(properties) {
                         </TabsContent>
                         <TabsContent value="collateral">
                           {thisResult && thisResult.length ? (
-                            <List
-                              height={500}
-                              rowComponent={SearchRow}
-                              rowCount={thisResult.length}
-                              rowHeight={225}
-                              rowProps={{}}
-                              className="w-full"
-                            />
+                            <div className="w-full max-h-[500px] overflow-auto">
+                              <List
+                                rowComponent={SearchRow}
+                                rowCount={thisResult.length}
+                                rowHeight={225}
+                                rowProps={{}}
+                              />
+                            </div>
                           ) : null}
                           {thisInput && thisResult && !thisResult.length
                             ? t("CreditBorrow:card.noResults")
@@ -726,14 +726,14 @@ export default function CreditBorrow(properties) {
                         </TabsContent>
                         <TabsContent value="owner_name">
                           {thisResult && thisResult.length ? (
-                            <List
-                              height={500}
-                              rowComponent={SearchRow}
-                              rowCount={thisResult.length}
-                              rowHeight={225}
-                              rowProps={{}}
-                              className="w-full"
-                            />
+                            <div className="w-full max-h-[500px] overflow-auto">
+                              <List
+                                rowComponent={SearchRow}
+                                rowCount={thisResult.length}
+                                rowHeight={225}
+                                rowProps={{}}
+                              />
+                            </div>
                           ) : null}
                           {thisInput && thisResult && !thisResult.length
                             ? t("CreditBorrow:card.noResults")

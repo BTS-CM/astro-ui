@@ -391,14 +391,14 @@ export default function CustomPoolOverview(properties) {
               <div>{t("CustomPoolOverview:withdrawalFee")}</div>
             </div>
             <div className="border rounded border-gray-300 p-2">
-              <List
-                height={200}
-                rowComponent={PoolRow}
-                rowCount={remainingPools.length}
-                rowHeight={30}
-                rowProps={{}}
-                className="w-full"
-              />
+              <div className="w-full max-h-[200px] overflow-auto">
+                <List
+                  rowComponent={PoolRow}
+                  rowCount={remainingPools.length}
+                  rowHeight={30}
+                  rowProps={{}}
+                />
+              </div>
             </div>
           </div>
         </CardContent>

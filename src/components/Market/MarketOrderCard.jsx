@@ -201,14 +201,15 @@ export default function MarketOrderCard(properties) {
                   : null}
               </div>
             </div>
-
-            <List
-              height={300}
-              rowComponent={Row}
-              rowCount={marketOrders.length}
-              rowHeight={20}
-              rowProps={{}}
-            />
+            <div className="max-h-[300px] overflow-auto">
+              <List
+                height={300}
+                rowComponent={Row}
+                rowCount={marketOrders.length}
+                rowHeight={20}
+                rowProps={{}}
+              />
+            </div>
           </>
         ) : (
           t("MarketOrderCard:noOpenOrders")

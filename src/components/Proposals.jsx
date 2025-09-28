@@ -490,14 +490,14 @@ export default function Proposals(properties) {
             <CardContent>
               <div className="grid grid-cols-1 gap-3">
                 {filteredProposals && filteredProposals.length ? (
-                  <List
-                    height={500}
-                    rowComponent={proposalRow}
-                    rowCount={filteredProposals.length}
-                    rowHeight={265}
-                    rowProps={{}}
-                    className="w-full border-2"
-                  />
+                  <div className="w-full border-2 max-h-[500px] overflow-auto">
+                    <List
+                      rowComponent={proposalRow}
+                      rowCount={filteredProposals.length}
+                      rowHeight={265}
+                      rowProps={{}}
+                    />
+                  </div>
                 ) : (
                   <p>{t("Proposals:noProposals")}</p>
                 )}

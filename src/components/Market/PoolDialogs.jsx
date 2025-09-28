@@ -278,14 +278,14 @@ export default function PoolDialogs(properties) {
                 {t("PoolDialogs:assetBColumnTitle")}
               </div>
             </div>
-            <List
-              height={300}
-              rowComponent={PoolRow}
-              rowCount={poolArray.length}
-              rowHeight={35}
-              rowProps={{}}
-              className="w-full"
-            />
+            <div className="w-full max-h-[300px] overflow-auto">
+              <List
+                rowComponent={PoolRow}
+                rowCount={poolArray.length}
+                rowHeight={35}
+                rowProps={{}}
+              />
+            </div>
           </div>
         </DialogContent>
       </Dialog>

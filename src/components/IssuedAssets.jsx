@@ -955,14 +955,14 @@ export default function IssuedAssets(properties) {
                             />
                             <div className="grid grid-cols-12 mt-1">
                               <span className="col-span-9 border border-gray-300 rounded">
-                                <List
-                                  height={210}
-                                  rowComponent={PriceFeedRow}
-                                  rowCount={priceFeedPublishers.length}
-                                  rowHeight={80}
-                                  rowProps={{}}
-                                  className="w-full"
-                                />
+                                <div className="w-full max-h-[210px] overflow-auto">
+                                  <List
+                                    rowComponent={PriceFeedRow}
+                                    rowCount={priceFeedPublishers.length}
+                                    rowHeight={80}
+                                    rowProps={{}}
+                                  />
+                                </div>
                               </span>
                               <span className="col-span-3 ml-3 text-center">
                                 <Dialog
@@ -1202,14 +1202,14 @@ export default function IssuedAssets(properties) {
                                     </DialogDescription>
                                   </DialogHeader>
                                   {users && users.length ? (
-                                    <List
-                                      height={500}
-                                      rowComponent={UserRow}
-                                      rowCount={users.length}
-                                      rowHeight={90}
-                                      rowProps={{}}
-                                      className="w-full"
-                                    />
+                                    <div className="w-full max-h-[500px] overflow-auto">
+                                      <List
+                                        rowComponent={UserRow}
+                                        rowCount={users.length}
+                                        rowHeight={90}
+                                        rowProps={{}}
+                                      />
+                                    </div>
                                   ) : (
                                     <p>{t("IssuedAssets:noUsers")}</p>
                                   )}
@@ -1895,14 +1895,14 @@ export default function IssuedAssets(properties) {
                                         </DialogDescription>
                                       </DialogHeader>
                                       {users && users.length ? (
-                                        <List
-                                          height={500}
-                                          rowComponent={UserRow}
-                                          rowCount={users.length}
-                                          rowHeight={90}
-                                          rowProps={{}}
-                                          className="w-full"
-                                        />
+                                        <div className="w-full max-h-[500px] overflow-auto">
+                                          <List
+                                            rowComponent={UserRow}
+                                            rowCount={users.length}
+                                            rowHeight={90}
+                                            rowProps={{}}
+                                          />
+                                        </div>
                                       ) : (
                                         <p>{t("IssuedAssets:noUsers")}</p>
                                       )}
@@ -2031,14 +2031,16 @@ export default function IssuedAssets(properties) {
                                     )}
                                     type="header"
                                   />
-                                  <List
-                                    height={150}
-                                    rowComponent={PriceFeedRow}
-                                    rowCount={relevantBitassetData.feeds.length}
-                                    rowHeight={60}
-                                    rowProps={{}}
-                                    className="w-full rounded border border-black pt-1"
-                                  />
+                                  <div className="w-full rounded border border-black pt-1 max-h-[150px] overflow-auto">
+                                    <List
+                                      rowComponent={PriceFeedRow}
+                                      rowCount={
+                                        relevantBitassetData.feeds.length
+                                      }
+                                      rowHeight={60}
+                                      rowProps={{}}
+                                    />
+                                  </div>
                                 </>
                               ) : null}
                               <div>
@@ -2242,14 +2244,14 @@ export default function IssuedAssets(properties) {
                       {t("IssuedAssets:noUIA")}
                     </div>
                   ) : (
-                    <List
-                      height={500}
-                      rowComponent={AssetRow}
-                      rowCount={relevantAssets.length}
-                      rowHeight={90}
-                      rowProps={{}}
-                      className="w-full"
-                    />
+                    <div className="w-full max-h-[500px] overflow-auto">
+                      <List
+                        rowComponent={AssetRow}
+                        rowCount={relevantAssets.length}
+                        rowHeight={90}
+                        rowProps={{}}
+                      />
+                    </div>
                   )}
                 </TabsContent>
                 <TabsContent value="smartcoins">
@@ -2268,14 +2270,14 @@ export default function IssuedAssets(properties) {
                       {t("IssuedAssets:noSmartcoins")}
                     </div>
                   ) : (
-                    <List
-                      height={500}
-                      rowComponent={AssetRow}
-                      rowCount={relevantAssets.length}
-                      rowHeight={90}
-                      rowProps={{}}
-                      className="w-full"
-                    />
+                    <div className="w-full max-h-[500px] overflow-auto">
+                      <List
+                        rowComponent={AssetRow}
+                        rowCount={relevantAssets.length}
+                        rowHeight={90}
+                        rowProps={{}}
+                      />
+                    </div>
                   )}
                 </TabsContent>
                 <TabsContent value="prediction">
@@ -2294,14 +2296,14 @@ export default function IssuedAssets(properties) {
                       {t("IssuedAssets:noPredictionMarkets")}
                     </div>
                   ) : (
-                    <List
-                      height={500}
-                      rowComponent={AssetRow}
-                      rowCount={relevantAssets.length}
-                      rowHeight={90}
-                      rowProps={{}}
-                      className="w-full"
-                    />
+                    <div className="w-full max-h-[500px] overflow-auto">
+                      <List
+                        rowComponent={AssetRow}
+                        rowCount={relevantAssets.length}
+                        rowHeight={90}
+                        rowProps={{}}
+                      />
+                    </div>
                   )}
                 </TabsContent>
                 <TabsContent value="nft">
@@ -2320,14 +2322,14 @@ export default function IssuedAssets(properties) {
                       {t("IssuedAssets:noNFTs")}
                     </div>
                   ) : (
-                    <List
-                      height={500}
-                      rowComponent={AssetRow}
-                      rowCount={relevantAssets.length}
-                      rowHeight={90}
-                      rowProps={{}}
-                      className="w-full"
-                    />
+                    <div className="w-full max-h-[500px] overflow-auto">
+                      <List
+                        rowComponent={AssetRow}
+                        rowCount={relevantAssets.length}
+                        rowHeight={90}
+                        rowProps={{}}
+                      />
+                    </div>
                   )}
                 </TabsContent>
               </Tabs>

@@ -508,19 +508,19 @@ export default function PoolStake(properties) {
                                     </SelectTrigger>
                                     <SelectContent className="bg-white">
                                       {pools && pools.length ? (
-                                        <List
-                                          height={150}
-                                          rowComponent={Row}
-                                          rowCount={pools.length}
-                                          rowHeight={35}
-                                          rowProps={{}}
-                                          className="w-full"
-                                          initialScrollOffset={
-                                            pools
-                                              .map((x) => x.id)
-                                              .indexOf(pool) * 35
-                                          }
-                                        />
+                                        <div className="w-full max-h-[150px] overflow-auto">
+                                          <List
+                                            rowComponent={Row}
+                                            rowCount={pools.length}
+                                            rowHeight={35}
+                                            rowProps={{}}
+                                            initialScrollOffset={
+                                              pools
+                                                .map((x) => x.id)
+                                                .indexOf(pool) * 35
+                                            }
+                                          />
+                                        </div>
                                       ) : null}
                                     </SelectContent>
                                   </Select>
@@ -642,14 +642,16 @@ export default function PoolStake(properties) {
                                                       {t("PoolStake:takerFee")}
                                                     </div>
                                                   </div>
-                                                  <List
-                                                    height={400}
-                                                    rowComponent={PoolRow}
-                                                    rowCount={thisResult.length}
-                                                    rowHeight={45}
-                                                    rowProps={{}}
-                                                    className="w-full"
-                                                  />
+                                                  <div className="w-full max-h-[400px] overflow-auto">
+                                                    <List
+                                                      rowComponent={PoolRow}
+                                                      rowCount={
+                                                        thisResult.length
+                                                      }
+                                                      rowHeight={45}
+                                                      rowProps={{}}
+                                                    />
+                                                  </div>
                                                 </>
                                               ) : null}
                                             </TabsContent>
@@ -681,14 +683,16 @@ export default function PoolStake(properties) {
                                                       {t("PoolStake:takerFee")}
                                                     </div>
                                                   </div>
-                                                  <List
-                                                    height={400}
-                                                    rowComponent={PoolRow}
-                                                    rowCount={thisResult.length}
-                                                    rowHeight={45}
-                                                    rowProps={{}}
-                                                    className="w-full"
-                                                  />
+                                                  <div className="w-full max-h-[400px] overflow-auto">
+                                                    <List
+                                                      rowComponent={PoolRow}
+                                                      rowCount={
+                                                        thisResult.length
+                                                      }
+                                                      rowHeight={45}
+                                                      rowProps={{}}
+                                                    />
+                                                  </div>
                                                 </>
                                               ) : null}
                                             </TabsContent>

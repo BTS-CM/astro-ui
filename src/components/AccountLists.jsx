@@ -230,24 +230,24 @@ export default function AccountLists(properties) {
 
                 <div className="grid grid-cols-1 mt-4">
                   {mode === "whitelist" && whitelistedAccounts.length ? (
-                    <List
-                      height={210}
-                      rowComponent={accountRow}
-                      rowCount={whitelistedAccounts.length}
-                      rowHeight={50}
-                      rowProps={{}}
-                      className="w-full"
-                    />
+                    <div className="w-full border max-h-[210px] overflow-auto">
+                      <List
+                        rowComponent={accountRow}
+                        rowCount={whitelistedAccounts.length}
+                        rowHeight={50}
+                        rowProps={{}}
+                      />
+                    </div>
                   ) : null}
                   {mode === "blacklist" && blacklistedAccounts.length ? (
-                    <List
-                      height={210}
-                      rowComponent={accountRow}
-                      rowCount={blacklistedAccounts.length}
-                      rowHeight={50}
-                      rowProps={{}}
-                      className="w-full border"
-                    />
+                    <div className="w-full border max-h-[210px] overflow-auto">
+                      <List
+                        rowComponent={accountRow}
+                        rowCount={blacklistedAccounts.length}
+                        rowHeight={50}
+                        rowProps={{}}
+                      />
+                    </div>
                   ) : null}
                   {mode === "whitelist" && !whitelistedAccounts.length ? (
                     <p className="text-center">

@@ -269,16 +269,14 @@ export default function BasicAssetDropDown(properties) {
                 {t("AssetDropDownCard:borrowed")}
               </h4>
               {borrowPositions && borrowPositions.length ? (
-                <>
+                <div className="w-full max-h-[350px] overflow-auto">
                   <List
-                    height={350}
                     rowComponent={Row}
                     rowCount={borrowPositions.length}
                     rowHeight={70}
                     rowProps={{}}
-                    className="w-full"
                   />
-                </>
+                </div>
               ) : (
                 "No borrowed assets..."
               )}
@@ -291,16 +289,14 @@ export default function BasicAssetDropDown(properties) {
                 {t("AssetDropDownCard:balance")}
               </h4>
               {usrBalances && usrBalances.length ? (
-                <>
+                <div className="w-full max-h-[350px] overflow-auto">
                   <List
-                    height={350}
                     rowComponent={Row}
                     rowCount={usrBalances.length}
                     rowHeight={70}
                     rowProps={{}}
-                    className="w-full"
                   />
-                </>
+                </div>
               ) : (
                 "No balance assets..."
               )}
@@ -366,16 +362,14 @@ export default function BasicAssetDropDown(properties) {
                 </Button>
               </div>
               {featuredAssets && featuredAssets.length ? (
-                <>
+                <div className="w-full max-h-[350px] overflow-auto">
                   <List
-                    height={350}
                     rowComponent={Row}
                     rowCount={featuredAssets.length}
                     rowHeight={70}
                     rowProps={{}}
-                    className="w-full"
                   />
-                </>
+                </div>
               ) : (
                 "No featured assets..."
               )}
@@ -397,16 +391,14 @@ export default function BasicAssetDropDown(properties) {
                   : null}
               </h4>
               {_favouriteAssets && _favouriteAssets.length ? (
-                <>
+                <div className="w-full max-h-[350px] overflow-auto">
                   <List
-                    height={350}
                     rowComponent={Row}
                     rowCount={_favouriteAssets.length}
                     rowHeight={70}
                     rowProps={{}}
-                    className="w-full"
                   />
-                </>
+                </div>
               ) : (
                 "No favourite assets..."
               )}

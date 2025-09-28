@@ -571,18 +571,18 @@ export default function WithdrawPermissions(properties) {
                 <div className="col-span-9 border border-gray-300 rounded">
                   {payerWithdrawalPermissions &&
                   payerWithdrawalPermissions.length ? (
-                    <List
-                      rowHeight={35}
-                      rowComponent={PayingWithdrawPermissionRow}
-                      rowCount={
-                        payerWithdrawalPermissions
-                          ? payerWithdrawalPermissions.length
-                          : 0
-                      }
-                      className="w-full"
-                      height={400}
-                      rowProps={{}}
-                    />
+                    <div className="w-full max-h-[400px] overflow-auto">
+                      <List
+                        rowHeight={35}
+                        rowComponent={PayingWithdrawPermissionRow}
+                        rowCount={
+                          payerWithdrawalPermissions
+                            ? payerWithdrawalPermissions.length
+                            : 0
+                        }
+                        rowProps={{}}
+                      />
+                    </div>
                   ) : (
                     <p>{t("WithdrawPermissions:not_sending_anything")}</p>
                   )}
@@ -608,18 +608,18 @@ export default function WithdrawPermissions(properties) {
                 <div className="col-span-12 border border-gray-300 rounded">
                   {receivingWithdrawalPermissions &&
                   receivingWithdrawalPermissions.length ? (
-                    <List
-                      rowHeight={35}
-                      rowComponent={ReceivingWithdrawPermissionRow}
-                      rowCount={
-                        receivingWithdrawalPermissions
-                          ? receivingWithdrawalPermissions.length
-                          : 0
-                      }
-                      className="w-full"
-                      height={400}
-                      rowProps={{}}
-                    />
+                    <div className="w-full max-h-[400px] overflow-auto">
+                      <List
+                        rowHeight={35}
+                        rowComponent={ReceivingWithdrawPermissionRow}
+                        rowCount={
+                          receivingWithdrawalPermissions
+                            ? receivingWithdrawalPermissions.length
+                            : 0
+                        }
+                        rowProps={{}}
+                      />
+                    </div>
                   ) : (
                     <p>{t("WithdrawPermissions:not_receiving_anything")}</p>
                   )}

@@ -504,14 +504,12 @@ export default function Witnesses(properties) {
             filteredVotes.length > 0 &&
             allWitnesses &&
             witnessAccounts ? (
-              <ScrollArea className="h-[500px] pt-1">
+              <ScrollArea className="h-[500px] pt-1 w-full">
                 <List
-                  height={500}
                   rowComponent={LightWitnessRow}
                   rowCount={filteredVotes.length}
                   rowHeight={75} // Adjust as needed
                   rowProps={{}}
-                  width="100%"
                 />
               </ScrollArea>
             ) : (
@@ -583,14 +581,12 @@ export default function Witnesses(properties) {
                     : ""}
                 </div>
               </div>
-              <ScrollArea className="h-[500px] pt-1">
+              <ScrollArea className="h-[500px] pt-1 w-full">
                 <List
-                  height={500}
                   rowComponent={WitnessRow}
                   rowCount={sortedWitnesses.length}
                   rowHeight={75} // Adjust as needed
                   rowProps={{}}
-                  width="100%"
                 />
               </ScrollArea>
             </div>

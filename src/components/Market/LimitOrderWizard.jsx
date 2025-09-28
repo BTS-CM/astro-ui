@@ -839,15 +839,15 @@ export default function LimitOrderWizard(properties) {
                 marketLimitOrders &&
                 marketLimitOrders.length &&
                 sellingAsset !== buyingAsset ? (
-                  <List
-                    height={200}
-                    rowComponent={limitOrderRow}
-                    rowCount={marketLimitOrders.length}
-                    rowHeight={50}
-                    rowProps={{}}
-                    key={`list-limitorders`}
-                    className="w-full mt-3"
-                  />
+                  <div className="w-full mt-3 max-h-[200px] overflow-auto">
+                    <List
+                      rowComponent={limitOrderRow}
+                      rowCount={marketLimitOrders.length}
+                      rowHeight={50}
+                      rowProps={{}}
+                      key={`list-limitorders`}
+                    />
+                  </div>
                 ) : null}
               </CardContent>
             </Card>

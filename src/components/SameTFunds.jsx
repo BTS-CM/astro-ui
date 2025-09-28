@@ -776,30 +776,30 @@ export default function SameTFunds(properties) {
               </div>
               {view === "all" ? (
                 relevantFunds && relevantFunds.length > 0 ? (
-                  <List
-                    height={500}
-                    rowComponent={Row}
-                    rowCount={relevantFunds.length}
-                    rowHeight={110}
-                    rowProps={{}}
-                    key={`list-${view}`}
-                    className="w-full mt-3"
-                  />
+                  <div className="w-full mt-3 max-h-[500px] overflow-auto">
+                    <List
+                      rowComponent={Row}
+                      rowCount={relevantFunds.length}
+                      rowHeight={110}
+                      rowProps={{}}
+                      key={`list-${view}`}
+                    />
+                  </div>
                 ) : (
                   <div className="mt-5">{t("SameTFunds:noFunds")}</div>
                 )
               ) : null}
               {view === "mine" ? (
                 myTFunds && myTFunds.length > 0 ? (
-                  <List
-                    height={500}
-                    rowComponent={Row}
-                    rowCount={myTFunds.length}
-                    rowHeight={110}
-                    rowProps={{}}
-                    key={`list-${view}`}
-                    className="w-full mt-3"
-                  />
+                  <div className="w-full mt-3 max-h-[500px] overflow-auto">
+                    <List
+                      rowComponent={Row}
+                      rowCount={myTFunds.length}
+                      rowHeight={110}
+                      rowProps={{}}
+                      key={`list-${view}`}
+                    />
+                  </div>
                 ) : (
                   <div className="mt-5">{t("SameTFunds:noOwnedFunds")}</div>
                 )
@@ -823,15 +823,15 @@ export default function SameTFunds(properties) {
               ) : null}
               {view === "search" ? (
                 searchResults && searchResults.length > 0 ? (
-                  <List
-                    height={500}
-                    rowComponent={Row}
-                    rowCount={searchResults.length}
-                    rowHeight={110}
-                    rowProps={{}}
-                    key={`list-${view}`}
-                    className="w-full mt-3"
-                  />
+                  <div className="w-full mt-3 max-h-[500px] overflow-auto">
+                    <List
+                      rowComponent={Row}
+                      rowCount={searchResults.length}
+                      rowHeight={110}
+                      rowProps={{}}
+                      key={`list-${view}`}
+                    />
+                  </div>
                 ) : (
                   <div className="mt-5">{t("SameTFunds:noSearchResults")}</div>
                 )

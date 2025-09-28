@@ -196,14 +196,14 @@ export default function Vesting(properties) {
 
             <>
               {chosenVestingData && chosenVestingData.length ? (
-                <List
-                  height={500}
-                  rowComponent={VestingRow}
-                  rowCount={chosenVestingData.length}
-                  rowHeight={vestingType === "cashback" ? 175 : 135}
-                  className={`w-full mt-3`}
-                  rowProps={{}}
-                />
+                <div className="w-full mt-3 max-h-[500px] overflow-auto">
+                  <List
+                    rowComponent={VestingRow}
+                    rowCount={chosenVestingData.length}
+                    rowHeight={vestingType === "cashback" ? 175 : 135}
+                    rowProps={{}}
+                  />
+                </div>
               ) : null}
               {chosenVestingData && !chosenVestingData.length
                 ? t("Vesting:card.empty")

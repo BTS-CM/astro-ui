@@ -205,16 +205,14 @@ export default function CollateralDropDownCard(properties) {
             }}
           />
           {thisResult && thisResult.length ? (
-            <>
+            <div className="w-full max-h-[200px] overflow-auto">
               <List
-                height={200}
                 rowComponent={Row}
                 rowCount={thisResult.length}
                 rowHeight={70}
                 rowProps={{}}
-                className="w-full"
               />
-            </>
+            </div>
           ) : null}
         </>
       </DialogContent>

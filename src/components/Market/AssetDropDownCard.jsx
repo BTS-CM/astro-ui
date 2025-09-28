@@ -336,16 +336,14 @@ export default function AssetDropDown(properties) {
                 }}
               />
               {thisResult && thisResult.length ? (
-                <>
+                <div className="w-full max-h-[350px] overflow-auto">
                   <List
-                    height={350}
                     rowComponent={Row}
                     rowCount={thisResult.length}
                     rowHeight={70}
                     rowProps={{}}
-                    className="w-full"
                   />
-                </>
+                </div>
               ) : null}
             </>
           ) : null}
@@ -364,16 +362,14 @@ export default function AssetDropDown(properties) {
                   : null}
               </h4>
               {balances && balances.length ? (
-                <>
+                <div className="w-full max-h-[350px] overflow-auto">
                   <List
-                    height={350}
                     rowComponent={Row}
                     rowCount={balances.length}
                     rowHeight={70}
                     rowProps={{}}
-                    className="w-full"
                   />
-                </>
+                </div>
               ) : (
                 "No balances..."
               )}
@@ -395,16 +391,14 @@ export default function AssetDropDown(properties) {
                   : null}
               </h4>
               {featuredAssets && featuredAssets.length ? (
-                <>
+                <div className="w-full max-h-[350px] overflow-auto">
                   <List
-                    height={350}
                     rowComponent={Row}
                     rowCount={featuredAssets.length}
                     rowHeight={70}
                     rowProps={{}}
-                    className="w-full"
                   />
-                </>
+                </div>
               ) : (
                 "No featured assets..."
               )}
@@ -426,16 +420,14 @@ export default function AssetDropDown(properties) {
                   : null}
               </h4>
               {relevantAssets && relevantAssets.length ? (
-                <>
+                <div className="w-full max-h-[350px] overflow-auto">
                   <List
-                    height={350}
                     rowComponent={Row}
                     rowCount={relevantAssets.length}
                     rowHeight={70}
                     rowProps={{}}
-                    className="w-full"
                   />
-                </>
+                </div>
               ) : (
                 "No favourite assets..."
               )}

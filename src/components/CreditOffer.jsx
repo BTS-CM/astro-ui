@@ -807,23 +807,25 @@ export default function CreditOffer(properties) {
                                       <SelectContent className="bg-white">
                                         {acceptedCollateral &&
                                         acceptedCollateral.length ? (
-                                          <List
-                                            height={100}
-                                            rowCount={acceptedCollateral.length}
-                                            rowComponent={Row}
-                                            rowHeight={35}
-                                            rowProps={{}}
-                                            className="w-full"
-                                            initialScrollOffset={
-                                              chosenCollateral
-                                                ? acceptedCollateral
-                                                    .map((x) => x.id)
-                                                    .indexOf(
-                                                      chosenCollateral.id
-                                                    ) * 35
-                                                : 0
-                                            }
-                                          />
+                                          <div className="w-full max-h-[100px] overflow-auto">
+                                            <List
+                                              rowCount={
+                                                acceptedCollateral.length
+                                              }
+                                              rowComponent={Row}
+                                              rowHeight={35}
+                                              rowProps={{}}
+                                              initialScrollOffset={
+                                                chosenCollateral
+                                                  ? acceptedCollateral
+                                                      .map((x) => x.id)
+                                                      .indexOf(
+                                                        chosenCollateral.id
+                                                      ) * 35
+                                                  : 0
+                                              }
+                                            />
+                                          </div>
                                         ) : null}
                                       </SelectContent>
                                     </Select>

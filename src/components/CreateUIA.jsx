@@ -1302,14 +1302,14 @@ export default function UIA(properties) {
                   </div>
                   {allowedMarketsEnabled ? (
                     <div className="mt-3 border border-gray-300 rounded">
-                      <List
-                        height={210}
-                        rowComponent={allowedMarketsRow}
-                        rowCount={allowedMarkets.length}
-                        rowHeight={90}
-                        rowProps={{}}
-                        className="w-full"
-                      />
+                      <div className="w-full max-h-[210px] overflow-auto">
+                        <List
+                          rowComponent={allowedMarketsRow}
+                          rowCount={allowedMarkets.length}
+                          rowHeight={90}
+                          rowProps={{}}
+                        />
+                      </div>
                     </div>
                   ) : null}
                   <div className="grid grid-cols-2 gap-5 mt-4">
@@ -1360,14 +1360,14 @@ export default function UIA(properties) {
                   </div>
                   {bannedMarketsEnabled ? (
                     <div className="mt-2 border border-gray-300 rounded">
-                      <List
-                        height={210}
-                        rowComponent={bannedMarketsRow}
-                        rowCount={bannedMarkets.length}
-                        rowHeight={90}
-                        rowProps={{}}
-                        className="w-full"
-                      />
+                      <div className="w-full max-h-[210px] overflow-auto">
+                        <List
+                          rowComponent={bannedMarketsRow}
+                          rowCount={bannedMarkets.length}
+                          rowHeight={90}
+                          rowProps={{}}
+                        />
+                      </div>
                     </div>
                   ) : null}
                   <Separator className="my-4 mt-5" />
@@ -1715,14 +1715,14 @@ export default function UIA(properties) {
                         />
                         <div className="grid grid-cols-12 mt-1">
                           <span className="col-span-9 border border-gray-300 rounded">
-                            <List
-                              height={210}
-                              rowComponent={feeSharingWhitelistRow}
-                              rowCount={feeSharingWhitelist.length}
-                              rowHeight={100}
-                              rowProps={{}}
-                              className="w-full"
-                            />
+                            <div className="w-full max-h-[210px] overflow-auto">
+                              <List
+                                rowComponent={feeSharingWhitelistRow}
+                                rowCount={feeSharingWhitelist.length}
+                                rowHeight={100}
+                                rowProps={{}}
+                              />
+                            </div>
                           </span>
                           <span className="col-span-3 ml-3 text-center">
                             <Dialog
@@ -1843,14 +1843,14 @@ export default function UIA(properties) {
                     />
                     <div className="grid grid-cols-12 mt-1">
                       <span className="col-span-9 border border-gray-300 rounded">
-                        <List
-                          height={210}
-                          rowComponent={whitelistAuthorityRow}
-                          rowCount={whitelistAuthorities.length}
-                          rowHeight={100}
-                          rowProps={{}}
-                          className="w-full"
-                        />
+                        <div className="w-full max-h-[210px] overflow-auto">
+                          <List
+                            rowComponent={whitelistAuthorityRow}
+                            rowCount={whitelistAuthorities.length}
+                            rowHeight={100}
+                            rowProps={{}}
+                          />
+                        </div>
                       </span>
                       <span className="col-span-3 ml-3 text-center">
                         <Dialog
@@ -1917,14 +1917,14 @@ export default function UIA(properties) {
                     />
                     <div className="grid grid-cols-12 mt-1">
                       <span className="col-span-9 border border-gray-300 rounded">
-                        <List
-                          height={210}
-                          rowComponent={blacklistAuthorityRow}
-                          rowCount={blacklistAuthorities.length}
-                          rowHeight={75}
-                          rowProps={{}}
-                          className="w-full"
-                        />
+                        <div className="w-full max-h-[210px] overflow-auto">
+                          <List
+                            rowComponent={blacklistAuthorityRow}
+                            rowCount={blacklistAuthorities.length}
+                            rowHeight={75}
+                            rowProps={{}}
+                          />
+                        </div>
                       </span>
                       <span className="col-span-3 ml-3 text-center">
                         <Dialog
@@ -2067,15 +2067,14 @@ export default function UIA(properties) {
                                       {t("AssetCommon:nft.delete")}
                                     </div>
                                   </div>
-                                  <List
-                                    width={"100%"}
-                                    height={125}
-                                    rowComponent={MediaRow}
-                                    rowCount={nftMedia.length}
-                                    rowHeight={25}
-                                    rowProps={{}}
-                                    className="w-full"
-                                  />
+                                  <div className="w-full max-h-[125px] overflow-auto">
+                                    <List
+                                      rowComponent={MediaRow}
+                                      rowCount={nftMedia.length}
+                                      rowHeight={25}
+                                      rowProps={{}}
+                                    />
+                                  </div>
                                 </>
                               )}
                             </CardContent>

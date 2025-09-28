@@ -1053,14 +1053,14 @@ export default function Settlement(properties) {
                   <div className="col-span-1">{t("Settlement:bidPrice")}</div>
                   <div className="col-span-1">{t("Settlement:ratio")}</div>
                 </div>
-                <List
-                  height={500}
-                  rowComponent={BidRow}
-                  rowCount={collateralBids.length}
-                  rowHeight={225}
-                  rowProps={{}}
-                  className="w-full"
-                />
+                <div className="w-full max-h-[500px] overflow-auto">
+                  <List
+                    rowComponent={BidRow}
+                    rowCount={collateralBids.length}
+                    rowHeight={225}
+                    rowProps={{}}
+                  />
+                </div>
               </CardContent>
             </Card>
           ) : null}

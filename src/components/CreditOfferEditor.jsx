@@ -1269,14 +1269,14 @@ export default function CreditOfferEditor(properties) {
                       <FormControl>
                         <span className="grid grid-cols-12">
                           <span className="col-span-9 border border-gray-300 rounded">
-                            <List
-                              height={210}
-                              rowComponent={CollateralRow}
-                              rowCount={acceptableCollateral.length}
-                              rowHeight={80}
-                              rowProps={{}}
-                              className="w-full"
-                            />
+                            <div className="w-full max-h-[210px] overflow-auto">
+                              <List
+                                rowComponent={CollateralRow}
+                                rowCount={acceptableCollateral.length}
+                                rowHeight={80}
+                                rowProps={{}}
+                              />
+                            </div>
                           </span>
                           <span className="col-span-3 ml-3 text-center">
                             <CollateralDropDownCard
@@ -1311,14 +1311,14 @@ export default function CreditOfferEditor(properties) {
                       <FormControl>
                         <span className="grid grid-cols-12">
                           <span className="col-span-9 border border-gray-300 rounded">
-                            <List
-                              height={210}
-                              rowComponent={ApprovedBorrowerRow}
-                              rowCount={allowedAccounts.length}
-                              rowHeight={100}
-                              rowProps={{}}
-                              className="w-full"
-                            />
+                            <div className="w-full max-h-[210px] overflow-auto">
+                              <List
+                                rowComponent={ApprovedBorrowerRow}
+                                rowCount={allowedAccounts.length}
+                                rowHeight={100}
+                                rowProps={{}}
+                              />
+                            </div>
                           </span>
                           <span className="col-span-3 ml-3 text-center">
                             <Dialog

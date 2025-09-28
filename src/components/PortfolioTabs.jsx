@@ -666,14 +666,14 @@ export default function PortfolioTabs(properties) {
                 {t("PoolDialogs:assetBColumnTitle")}
               </div>
             </div>
-            <List
-              height={300}
-              rowComponent={PoolRow}
-              rowCount={poolArray.length}
-              rowHeight={35}
-              rowProps={{}}
-              className="w-full"
-            />
+            <div className="w-full max-h-[300px] overflow-auto">
+              <List
+                rowComponent={PoolRow}
+                rowCount={poolArray.length}
+                rowHeight={35}
+                rowProps={{}}
+              />
+            </div>
           </div>
         </DialogContent>
       </Dialog>
@@ -761,14 +761,14 @@ export default function PortfolioTabs(properties) {
                   sortedUserBalances.length &&
                   retrievedBalanceAssets &&
                   retrievedBalanceAssets.length ? (
-                    <List
-                      height={500}
-                      rowComponent={BalanceRow}
-                      rowCount={sortedUserBalances.length}
-                      rowHeight={80}
-                      rowProps={{}}
-                      className="gaps-2"
-                    />
+                    <div className="gaps-2 max-h-[500px] overflow-auto">
+                      <List
+                        rowComponent={BalanceRow}
+                        rowCount={sortedUserBalances.length}
+                        rowHeight={80}
+                        rowProps={{}}
+                      />
+                    </div>
                   ) : (
                     <p>{t("PortfolioTabs:noBalancesFound")}</p>
                   )}
@@ -798,13 +798,14 @@ export default function PortfolioTabs(properties) {
                   openOrders.length &&
                   retrievedBalanceAssets &&
                   retrievedBalanceAssets.length ? (
-                    <List
-                      height={500}
-                      rowComponent={OpenOrdersRow}
-                      rowCount={openOrders.length}
-                      rowHeight={145}
-                      rowProps={{}}
-                    />
+                    <div className="max-h-[500px] overflow-auto">
+                      <List
+                        rowComponent={OpenOrdersRow}
+                        rowCount={openOrders.length}
+                        rowHeight={145}
+                        rowProps={{}}
+                      />
+                    </div>
                   ) : (
                     <p>{t("PortfolioTabs:noOpenOrdersFound")}</p>
                   )}
@@ -833,13 +834,14 @@ export default function PortfolioTabs(properties) {
                 </CardHeader>
                 <CardContent className="space-y-2">
                   {activity && activity.length ? (
-                    <List
-                      height={500}
-                      rowComponent={RecentActivityRow}
-                      rowCount={activity.length}
-                      rowHeight={145}
-                      rowProps={{}}
-                    />
+                    <div className="max-h-[500px] overflow-auto">
+                      <List
+                        rowComponent={RecentActivityRow}
+                        rowCount={activity.length}
+                        rowHeight={145}
+                        rowProps={{}}
+                      />
+                    </div>
                   ) : (
                     <p>{t("PortfolioTabs:noRecentActivityFound")}</p>
                   )}

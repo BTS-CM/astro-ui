@@ -422,14 +422,14 @@ export default function LiveBlocks(properties) {
                       <span className="col-span-1">Block</span>
                       <span className="col-span-4">Operations</span>
                     </div>
-                    <List
-                      height={350}
-                      rowComponent={ActivityRow}
-                      rowCount={activities.length}
-                      rowHeight={42}
-                      rowProps={{}}
-                      className="w-full"
-                    />
+                    <div className="w-full max-h-[350px] overflow-auto">
+                      <List
+                        rowComponent={ActivityRow}
+                        rowCount={activities.length}
+                        rowHeight={42}
+                        rowProps={{}}
+                      />
+                    </div>
                   </CardContent>
                 </Card>
                 <Card>
@@ -445,14 +445,14 @@ export default function LiveBlocks(properties) {
                       <span>Witness ID</span>
                       <span>Transaction</span>
                     </div>
-                    <List
-                      height={350}
-                      rowComponent={BlockRow}
-                      rowCount={recentBlocks.length}
-                      rowHeight={42}
-                      rowProps={{}}
-                      className="w-full"
-                    />
+                    <div className="w-full max-h-[350px] overflow-auto">
+                      <List
+                        rowComponent={BlockRow}
+                        rowCount={recentBlocks.length}
+                        rowHeight={42}
+                        rowProps={{}}
+                      />
+                    </div>
                   </CardContent>
                 </Card>
               </div>

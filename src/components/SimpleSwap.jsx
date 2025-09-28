@@ -1003,14 +1003,19 @@ export default function SimpleSwap(properties) {
                             </div>
                           </div>
                           {/* Virtualized List */}
-                          <List
-                            height={Math.min(210, finalPools.length * 40)} // Adjust height dynamically, 40px per row approx
-                            rowComponent={poolRow}
-                            rowCount={finalPools.length}
-                            rowHeight={40} // Approx height of each poolRow including padding
-                            rowProps={{}}
-                            width="100%" // Ensure it takes full width
-                          />
+                          <div
+                            className={`w-full max-h-[${Math.min(
+                              210,
+                              finalPools.length * 40
+                            )}px] overflow-auto`}
+                          >
+                            <List
+                              rowComponent={poolRow}
+                              rowCount={finalPools.length}
+                              rowHeight={40}
+                              rowProps={{}}
+                            />
+                          </div>
                         </div>
                       ) : null}
                       {/* Show message if assets selected but no pools found */}

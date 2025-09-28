@@ -211,14 +211,14 @@ export default function CreditOffers(properties) {
             <CardContent>
               <>
                 {offers && offers.length ? (
-                  <List
-                    height={500}
-                    rowComponent={Row}
-                    rowCount={offers.length}
-                    rowHeight={225}
-                    rowProps={{}}
-                    className="w-full mt-3"
-                  />
+                  <div className="w-full mt-3 max-h-[500px] overflow-auto">
+                    <List
+                      rowComponent={Row}
+                      rowCount={offers.length}
+                      rowHeight={225}
+                      rowProps={{}}
+                    />
+                  </div>
                 ) : null}
                 {offers && !offers.length
                   ? t("CreditOffers:card.noResults")

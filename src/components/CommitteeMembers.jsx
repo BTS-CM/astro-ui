@@ -395,16 +395,14 @@ export default function CommitteeMembers(properties) {
             {filteredVotes &&
             filteredVotes.length > 0 &&
             allCommitteeMembers ? (
-              <ScrollArea className="h-[500px] pt-1">
+              <div className="w-full max-h-[500px] overflow-auto">
                 <List
-                  height={500}
                   rowComponent={LightMemberRow}
                   rowCount={filteredVotes.length}
                   rowHeight={75} // Adjust as needed
                   rowProps={{}}
-                  width="100%"
                 />
-              </ScrollArea>
+              </div>
             ) : (
               <div className="text-red-500 text-center">N/A</div>
             )}
@@ -465,16 +463,14 @@ export default function CommitteeMembers(properties) {
                     : ""}
                 </div>
               </div>
-              <ScrollArea className="h-[500px]">
+              <div className="w-full max-h-[500px] overflow-auto">
                 <List
-                  height={500}
                   rowComponent={CommitteeRow}
                   rowCount={sortedMembers.length}
-                  rowHeight={65} // Adjust based on content height
+                  rowHeight={65}
                   rowProps={{}}
-                  width="100%"
                 />
-              </ScrollArea>
+              </div>
             </div>
           )}
         </CardContent>

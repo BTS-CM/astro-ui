@@ -874,15 +874,15 @@ export default function SameTFunds(properties) {
                     lenderAccounts.length &&
                     sameTFunds &&
                     sameTFunds.length > 0 ? (
-                      <List
-                        height={250}
-                        rowComponent={FundRow}
-                        rowCount={sameTFunds.length}
-                        rowHeight={55}
-                        rowProps={{}}
-                        key={`list-sametfunds`}
-                        className="w-full"
-                      />
+                      <div className="w-full max-h-[250px] overflow-auto">
+                        <List
+                          rowComponent={FundRow}
+                          rowCount={sameTFunds.length}
+                          rowHeight={55}
+                          rowProps={{}}
+                          key={`list-sametfunds`}
+                        />
+                      </div>
                     ) : (
                       <div className="space-y-2 mt-5">
                         <Skeleton className="h-4 w-[250px]" />
@@ -912,15 +912,15 @@ export default function SameTFunds(properties) {
                         {t("TFundUser:borrowFees")}
                       </label>
                       <div className="col-span-3">
-                        <List
-                          height={200}
-                          rowComponent={BorrowPositionRow}
-                          rowCount={borrowPositions.length}
-                          rowHeight={35}
-                          rowProps={{}}
-                          key={`list-borrowpositions`}
-                          className="w-full mt-1"
-                        />
+                        <div className="w-full mt-1 max-h-[200px] overflow-auto">
+                          <List
+                            rowComponent={BorrowPositionRow}
+                            rowCount={borrowPositions.length}
+                            rowHeight={35}
+                            rowProps={{}}
+                            key={`list-borrowpositions`}
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -947,15 +947,15 @@ export default function SameTFunds(properties) {
                           </label>
                           <div></div>
                         </div>
-                        <List
-                          height={200}
-                          rowComponent={OpRow}
-                          rowCount={operations.length}
-                          rowHeight={55}
-                          rowProps={{}}
-                          key={`list-operations`}
-                          className="w-full mt-3"
-                        />
+                        <div className="w-full mt-3 max-h-[200px] overflow-auto">
+                          <List
+                            rowComponent={OpRow}
+                            rowCount={operations.length}
+                            rowHeight={55}
+                            rowProps={{}}
+                            key={`list-operations`}
+                          />
+                        </div>
                       </div>
                       <div>
                         <LimitOrderWizard
@@ -1008,17 +1008,17 @@ export default function SameTFunds(properties) {
                           {t("TFundUser:finalAmount")}
                         </label>
                       </div>
-                      <List
-                        height={200}
-                        rowComponent={BalanceRow}
-                        rowCount={
-                          updatedBalances.filter((x) => x.display).length
-                        }
-                        rowHeight={35}
-                        rowProps={{}}
-                        key={`list-updatedbalances`}
-                        className="w-full mt-3"
-                      />
+                      <div className="w-full mt-3 max-h-[200px] overflow-auto">
+                        <List
+                          rowComponent={BalanceRow}
+                          rowCount={
+                            updatedBalances.filter((x) => x.display).length
+                          }
+                          rowHeight={35}
+                          rowProps={{}}
+                          key={`list-updatedbalances`}
+                        />
+                      </div>
                     </div>
                   </div>
                 ) : null}

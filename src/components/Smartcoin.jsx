@@ -3617,14 +3617,14 @@ export default function Smartcoin(properties) {
                         <div className="col-span-1">{parsedAsset.s}</div>
                         <div className="col-span-1">{t("Smartcoin:total")}</div>
                       </div>
-                      <List
-                        height={260}
-                        rowComponent={OrderRow}
-                        rowCount={buyOrders.length}
-                        rowHeight={25}
-                        rowProps={{}}
-                        className="w-full"
-                      />
+                      <div className="w-full max-h-[260px] overflow-auto">
+                        <List
+                          rowComponent={OrderRow}
+                          rowCount={buyOrders.length}
+                          rowHeight={25}
+                          rowProps={{}}
+                        />
+                      </div>
                     </>
                   ) : null}
                   {buyOrders && !buyOrders.length
@@ -3643,14 +3643,14 @@ export default function Smartcoin(properties) {
                         </div>
                         <div className="col-span-1">{t("Smartcoin:total")}</div>
                       </div>
-                      <List
-                        height={260}
-                        rowComponent={OrderRow}
-                        rowCount={sellOrders.length}
-                        rowHeight={25}
-                        rowProps={{}}
-                        className="w-full"
-                      />
+                      <div className="w-full max-h-[260px] overflow-auto">
+                        <List
+                          rowComponent={OrderRow}
+                          rowCount={sellOrders.length}
+                          rowHeight={25}
+                          rowProps={{}}
+                        />
+                      </div>
                     </>
                   ) : null}
                   {sellOrders && !sellOrders.length
@@ -3693,14 +3693,14 @@ export default function Smartcoin(properties) {
                     <div className="col-span-1">{t("Smartcoin:tcr")}</div>
                     <div className="col-span-1">{t("Smartcoin:ratio")}</div>
                   </div>
-                  <List
-                    height={260}
-                    rowComponent={MarginPositionRow}
-                    rowCount={assetCallOrders.length}
-                    rowHeight={25}
-                    rowProps={{}}
-                    className="w-full"
-                  />
+                  <div className="w-full max-h-[260px] overflow-auto">
+                    <List
+                      rowComponent={MarginPositionRow}
+                      rowCount={assetCallOrders.length}
+                      rowHeight={25}
+                      rowProps={{}}
+                    />
+                  </div>
                 </>
               ) : null}
               {assetCallOrders && !assetCallOrders.length
@@ -3738,14 +3738,14 @@ export default function Smartcoin(properties) {
                       {t("Smartcoin:settlementDate")}
                     </div>
                   </div>
-                  <List
-                    height={260}
-                    rowComponent={SettlementRow}
-                    rowCount={assetSettleOrders.length}
-                    rowHeight={25}
-                    rowProps={{}}
-                    className="w-full"
-                  />
+                  <div className="w-full max-h-[260px] overflow-auto">
+                    <List
+                      rowComponent={SettlementRow}
+                      rowCount={assetSettleOrders.length}
+                      rowHeight={25}
+                      rowProps={{}}
+                    />
+                  </div>
                 </>
               ) : null}
               {assetSettleOrders && !assetSettleOrders.length
@@ -3784,14 +3784,14 @@ export default function Smartcoin(properties) {
                     <div className="col-span-1">{t("Smartcoin:mcr")}</div>
                     <div className="col-span-1">{t("Smartcoin:mssr")}</div>
                   </div>
-                  <List
-                    height={260}
-                    rowComponent={PriceFeedRow}
-                    rowCount={finalBitasset.feeds.length}
-                    rowHeight={25}
-                    rowProps={{}}
-                    className="w-full"
-                  />
+                  <div className="w-full max-h-[260px] overflow-auto">
+                    <List
+                      rowComponent={PriceFeedRow}
+                      rowCount={finalBitasset.feeds.length}
+                      rowHeight={25}
+                      rowProps={{}}
+                    />
+                  </div>
                 </>
               ) : null}
               {finalBitasset && !finalBitasset.feeds.length

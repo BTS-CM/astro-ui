@@ -563,14 +563,14 @@ export default function Htlc(properties) {
                           {t("HTLC:actionsColumn")}
                         </div>
                       </div>
-                      <List
-                        rowHeight={75}
-                        rowComponent={SenderHtlcRow}
-                        rowCount={senderHtlcs.length}
-                        className="w-full"
-                        rowProps={{}}
-                        height={500} // Dynamic height
-                      />
+                      <div className="w-full max-h-[500px] overflow-auto">
+                        <List
+                          rowHeight={75}
+                          rowComponent={SenderHtlcRow}
+                          rowCount={senderHtlcs.length}
+                          rowProps={{}}
+                        />
+                      </div>
                     </>
                   ) : (
                     <p className="p-4 text-center text-gray-500">
@@ -602,14 +602,14 @@ export default function Htlc(properties) {
                           {t("HTLC:actionsColumn")}
                         </div>
                       </div>
-                      <List
-                        rowHeight={75}
-                        rowComponent={ReceiverHtlcRow}
-                        rowCount={receiverHtlcs.length}
-                        className="w-full"
-                        rowProps={{}}
-                        height={500}
-                      />
+                      <div className="w-full max-h-[500px] overflow-auto">
+                        <List
+                          rowHeight={75}
+                          rowComponent={ReceiverHtlcRow}
+                          rowCount={receiverHtlcs.length}
+                          rowProps={{}}
+                        />
+                      </div>
                     </>
                   ) : (
                     <p className="p-4 text-center text-gray-500">

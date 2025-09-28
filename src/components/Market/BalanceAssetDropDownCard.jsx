@@ -180,16 +180,14 @@ export default function BalanceAssetDropDownCard(properties) {
           </DialogTitle>
         </DialogHeader>
         {filteredUserBalances && filteredUserBalances.length ? (
-          <>
+          <div className="w-full max-h-[350px] overflow-auto">
             <List
-              height={350}
               rowComponent={Row}
               rowCount={filteredUserBalances.length}
               rowHeight={45}
               rowProps={{}}
-              className="w-full"
             />
-          </>
+          </div>
         ) : (
           "N/A"
         )}

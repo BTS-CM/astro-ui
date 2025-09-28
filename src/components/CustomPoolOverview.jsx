@@ -466,16 +466,16 @@ export default function CustomPoolOverview(properties) {
         <CardContent>
           <div className="grid grid-cols-6 gap-3">
             <div className="col-span-5 border rounded border-gray-300 p-3">
-              <List
-                height={200}
-                rowComponent={TrackerRow}
-                rowCount={
-                  trackers && trackers[_chain] ? trackers[_chain].length : 0
-                }
-                rowHeight={100}
-                rowProps={{}}
-                className="w-full"
-              />
+              <div className="w-full max-h-[200px] overflow-auto">
+                <List
+                  rowComponent={TrackerRow}
+                  rowCount={
+                    trackers && trackers[_chain] ? trackers[_chain].length : 0
+                  }
+                  rowHeight={100}
+                  rowProps={{}}
+                />
+              </div>
             </div>
             <Button onClick={() => setModalOpen(true)}>
               {t("CustomPoolOverview:createTracker")}
@@ -578,14 +578,14 @@ export default function CustomPoolOverview(properties) {
               <div>{t("CustomPoolOverview:assetB")}</div>
             </div>
             <div className="border rounded border-gray-300 p-2">
-              <List
-                height={200}
-                rowComponent={PoolRow}
-                rowCount={remainingPools.length}
-                rowHeight={30}
-                rowProps={{}}
-                className="w-full"
-              />
+              <div className="w-full max-h-[200px] overflow-auto">
+                <List
+                  rowComponent={PoolRow}
+                  rowCount={remainingPools.length}
+                  rowHeight={30}
+                  rowProps={{}}
+                />
+              </div>
             </div>
             <HoverInfo
               content={t("CustomPoolOverview:hoverSelectedPoolDetailsContent")}

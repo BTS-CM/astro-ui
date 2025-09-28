@@ -792,14 +792,14 @@ export default function CreditDeals(properties) {
                 </TabsList>
                 <TabsContent value="borrowings">
                   {borrowerDeals && borrowerDeals.length ? (
-                    <List
-                      height={500}
-                      rowComponent={BorrowerRow}
-                      rowCount={borrowerDeals.length}
-                      rowHeight={225}
-                      rowProps={{}}
-                      className="w-full"
-                    />
+                    <div className="w-full max-h-[500px] overflow-auto">
+                      <List
+                        rowComponent={BorrowerRow}
+                        rowCount={borrowerDeals.length}
+                        rowHeight={225}
+                        rowProps={{}}
+                      />
+                    </div>
                   ) : null}
                   {borrowerDeals && !borrowerDeals.length
                     ? t("CreditDeals:card.noBorrowers")
@@ -808,14 +808,14 @@ export default function CreditDeals(properties) {
                 </TabsContent>
                 <TabsContent value="lendings">
                   {lenderDeals && lenderDeals.length ? (
-                    <List
-                      height={500}
-                      rowComponent={OwnerRow}
-                      rowCount={lenderDeals.length}
-                      rowHeight={165}
-                      rowProps={{}}
-                      className="w-full"
-                    />
+                    <div className="w-full max-h-[500px] overflow-auto">
+                      <List
+                        rowComponent={OwnerRow}
+                        rowCount={lenderDeals.length}
+                        rowHeight={165}
+                        rowProps={{}}
+                      />
+                    </div>
                   ) : null}
                   {lenderDeals && !lenderDeals.length
                     ? t("CreditDeals:card.noLendings")
