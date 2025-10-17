@@ -409,7 +409,7 @@ export default function PoolStake(properties) {
 
   return (
     <>
-      <div className="container mx-auto mt-5 mb-5">
+      <div className="container mx-auto mt-5 mb-5 w-1/2">
         <div className="grid grid-cols-1 gap-3">
           <Card className="p-2">
             <CardHeader>
@@ -1643,30 +1643,30 @@ export default function PoolStake(properties) {
             ) : null}
           </div>
         </div>
-      </div>
 
-      <div className="grid grid-cols-1 mt-5 ml-8 mr-8">
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle>{t("PoolStake:risksAssociated")}</CardTitle>
-            <CardDescription>
-              {t("PoolStake:doYourOwnResearch")}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <span className="text-sm">
-              <ul className="ml-2 list-disc [&>li]:mt-1 pl-2">
-                <li>{t("PoolStake:risk1")}</li>
-                <li>{t("PoolStake:risk2")}</li>
-                <li>{t("PoolStake:risk3")}</li>
-                <li>{t("PoolStake:risk4")}</li>
-                <li>{t("PoolStake:risk5")}</li>
-                <li>{t("PoolStake:risk6")}</li>
-                <li>{t("PoolStake:risk7")}</li>
-              </ul>
-            </span>
-          </CardContent>
-        </Card>
+        <div className="grid grid-cols-1 mt-5">
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle>{t("PoolStake:risksAssociated")}</CardTitle>
+              <CardDescription>
+                {t("PoolStake:doYourOwnResearch")}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <span className="text-sm">
+                <ul className="ml-2 list-disc [&>li]:mt-1 pl-2">
+                  <li>{t("PoolStake:risk1")}</li>
+                  <li>{t("PoolStake:risk2")}</li>
+                  <li>{t("PoolStake:risk3")}</li>
+                  <li>{t("PoolStake:risk4")}</li>
+                  <li>{t("PoolStake:risk5")}</li>
+                  <li>{t("PoolStake:risk6")}</li>
+                  <li>{t("PoolStake:risk7")}</li>
+                </ul>
+              </span>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </>
   );

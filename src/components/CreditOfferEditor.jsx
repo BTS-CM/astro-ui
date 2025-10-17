@@ -1145,7 +1145,6 @@ export default function CreditOfferEditor(properties) {
                           <FormDescription>
                             {t("CreditOfferEditor:maximumDuration")}
                           </FormDescription>
-                          <FormMessage />
                         </FormItem>
                       )}
                     />

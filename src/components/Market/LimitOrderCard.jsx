@@ -571,7 +571,6 @@ export default function LimitOrderCard(properties) {
                         </span>
                       </span>
                     </FormControl>
-                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -949,7 +948,6 @@ export default function LimitOrderCard(properties) {
                           })
                         : null}
                     </FormDescription>
-                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -1071,7 +1069,6 @@ export default function LimitOrderCard(properties) {
                             </span>
                           </span>
                         </FormControl>
-                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -1152,7 +1149,6 @@ export default function LimitOrderCard(properties) {
                             </span>
                           </span>
                         </FormControl>
-                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -1188,7 +1184,6 @@ export default function LimitOrderCard(properties) {
                             </label>
                           </div>
                         </FormControl>
-                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -1278,7 +1273,7 @@ export default function LimitOrderCard(properties) {
                           placeholder={`${marketFees} ${assetBData.symbol}`}
                         />
                       </FormControl>
-                      <FormMessage />
+
                       <FormDescription>
                         {t("LimitOrderCard:marketFees.description")}
                       </FormDescription>
@@ -1329,7 +1324,6 @@ export default function LimitOrderCard(properties) {
                     <FormDescription>
                       {t("LimitOrderCard:sellPrice.description")}
                     </FormDescription>
-                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -1357,7 +1351,6 @@ export default function LimitOrderCard(properties) {
                         : t("LimitOrderCard:sellAmount2.sellDescription")}
                     </FormDescription>
                     <Input disabled className="mb-3" />
-                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -1403,7 +1396,6 @@ export default function LimitOrderCard(properties) {
                         <SelectValue placeholder="1hr" />
                       </SelectTrigger>
                     </Select>
-                    <FormMessage />
                   </FormItem>
                 )}
               />

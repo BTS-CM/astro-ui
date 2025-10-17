@@ -589,7 +589,6 @@ export default function CreditOffer(properties) {
                                   "CreditOffer:cardContent.broadcastDescription"
                                 )}
                               </FormDescription>
-                              <FormMessage />
                             </FormItem>
                           )}
                         />
@@ -680,7 +679,6 @@ export default function CreditOffer(properties) {
                                   }
                                 )}
                               </FormDescription>
-                              <FormMessage />
                             </FormItem>
                           )}
                         />
@@ -913,7 +911,6 @@ export default function CreditOffer(properties) {
                                   }
                                 )}
                               </FormDescription>
-                              <FormMessage />
                             </FormItem>
                           )}
                         />
@@ -1195,7 +1192,6 @@ export default function CreditOffer(properties) {
                                     : "?",
                                 })}
                               </FormDescription>
-                              <FormMessage />
                             </FormItem>
                           )}
                         />

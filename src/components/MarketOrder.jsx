@@ -1313,7 +1313,6 @@ export default function MarketOrder(properties) {
                                 </span>
                               </span>
                             </FormControl>
-                            <FormMessage />
                           </FormItem>
                         )}
                       />
@@ -1392,7 +1391,6 @@ export default function MarketOrder(properties) {
                                 </span>
                               </span>
                             </FormControl>
-                            <FormMessage />
                           </FormItem>
                         )}
                       />
@@ -1428,7 +1426,6 @@ export default function MarketOrder(properties) {
                                 </label>
                               </div>
                             </FormControl>
-                            <FormMessage />
                           </FormItem>
                         )}
                       />
@@ -1459,7 +1456,6 @@ export default function MarketOrder(properties) {
                             })}
                           </FormMessage>
                         ) : null}
-                        <FormMessage />
                       </FormItem>
                     )}
                   />

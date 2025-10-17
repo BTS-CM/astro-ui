@@ -397,7 +397,6 @@ export default function Settlement(properties) {
                             </div>
                           </div>
                         </FormControl>
-                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -423,7 +422,6 @@ export default function Settlement(properties) {
                             </span>
                           </span>
                         </FormControl>
-                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -467,7 +465,6 @@ export default function Settlement(properties) {
                             </span>
                           </span>
                         </FormControl>
-                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -494,7 +491,6 @@ export default function Settlement(properties) {
                                 </span>
                               </span>
                             </FormControl>
-                            <FormMessage />
                           </FormItem>
                         )}
                       />
@@ -518,7 +514,6 @@ export default function Settlement(properties) {
                                 </span>
                               </span>
                             </FormControl>
-                            <FormMessage />
                           </FormItem>
                         )}
                       />
@@ -559,7 +554,6 @@ export default function Settlement(properties) {
                                 </span>
                               </span>
                             </FormControl>
-                            <FormMessage />
                           </FormItem>
                         )}
                       />
@@ -723,7 +717,6 @@ export default function Settlement(properties) {
                                 </span>
                               </span>
                             </FormControl>
-                            <FormMessage />
                           </FormItem>
                         )}
                       />
@@ -747,7 +740,6 @@ export default function Settlement(properties) {
                                 </span>
                               </span>
                             </FormControl>
-                            <FormMessage />
                           </FormItem>
                         )}
                       />
@@ -788,7 +780,6 @@ export default function Settlement(properties) {
                                 </span>
                               </span>
                             </FormControl>
-                            <FormMessage />
                           </FormItem>
                         )}
                       />
@@ -998,7 +989,6 @@ export default function Settlement(properties) {
                             </span>
                           </span>
                         </FormControl>
-                        <FormMessage />
                       </FormItem>
                     )}
                   />

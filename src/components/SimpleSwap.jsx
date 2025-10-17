@@ -757,8 +757,7 @@ export default function SimpleSwap(properties) {
                                   }
                                 }}
                               />
-                            </FormControl>
-                            <FormMessage />{" "}
+                            </FormControl>{" "}
                             {/* For potential validation errors */}
                           </FormItem>
                         </div>

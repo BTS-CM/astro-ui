@@ -4,7 +4,6 @@ import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
 import { Avatar } from "@/components/Avatar";
-import { Button } from "@/components/ui/button";
 
 import {
   Card,
@@ -15,6 +14,13 @@ import {
 } from "@/components/ui/card";
 
 import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+
+import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -22,6 +28,15 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+
+import {
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemMedia,
+  ItemTitle,
+} from "@/components/ui/item";
 
 import AccountSelect from "../AccountSelect.jsx";
 
@@ -42,79 +57,65 @@ export default function CurrentUser(properties) {
   }, [usr]);
 
   return (
-    <div className="flex justify-center">
-      <div className="grid grid-cols-1 mt-3">
-        <Card
-          key={usr.id}
-          className="w-full"
-          style={{ transform: "scale(0.75)" }}
-        >
-          <CardHeader>
-            <CardTitle
-              style={{
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-              }}
-            >
-              <div className="grid grid-cols-3">
-                <div className="col-span-1 pr-3 pt-3">
-                  <InView onChange={setInView}>
-                    {inView ? (
-                      <Avatar
-                        size={50}
-                        name={usr.username}
-                        extra=""
-                        expression={{
-                          eye: "normal",
-                          mouth: "open",
-                        }}
-                        colors={[
-                          "#92A1C6",
-                          "#146A7C",
-                          "#F0AB3D",
-                          "#C271B4",
-                          "#C20D90",
-                        ]}
-                      />
-                    ) : null}
-                  </InView>
-                </div>
-                <div className="col-span-2 pl-3">
-                  <span className="text-xl">{usr.username}</span>
-                  <br />
-                  <span className="text-sm">
-                    {usr.chain}
-                    <br />
-                    {usr.id}
-                  </span>
-                </div>
-              </div>
-            </CardTitle>
-          </CardHeader>
-        </Card>
-
-        <Dialog
-          open={open}
-          onOpenChange={(o) => {
-            setOpen(o);
-          }}
-        >
-          <DialogTrigger asChild>
-            <Button className="h-5 p-3">
-              {t("CurrentUser:dialogContent.switchAccountChain")}
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[600px] bg-white">
-            <DialogHeader>
-              <DialogTitle>
-                {t("CurrentUser:dialogContent.replacingUser")}
-              </DialogTitle>
-            </DialogHeader>
-            <AccountSelect />
-          </DialogContent>
-        </Dialog>
-      </div>
-    </div>
+    <Dialog
+      open={open}
+      onOpenChange={(o) => {
+        setOpen(o);
+      }}
+    >
+      <DialogTrigger asChild>
+        <span>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Item variant="outline" className="bg-white">
+                  <ItemMedia>
+                    <InView onChange={setInView}>
+                      {inView ? (
+                        <Avatar
+                          size={50}
+                          name={usr.username}
+                          extra=""
+                          expression={{
+                            eye: "normal",
+                            mouth: "open",
+                          }}
+                          colors={[
+                            "#92A1C6",
+                            "#146A7C",
+                            "#F0AB3D",
+                            "#C271B4",
+                            "#C20D90",
+                          ]}
+                        />
+                      ) : null}
+                    </InView>
+                  </ItemMedia>
+                  <ItemContent>
+                    <ItemTitle className="text-black">{usr.username}</ItemTitle>
+                    <ItemDescription className="text-left">
+                      {usr.id}
+                      <br />
+                      {usr.chain}
+                    </ItemDescription>
+                  </ItemContent>
+                </Item>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>{t("CurrentUser:dialogContent.switchAccountChain")}</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </span>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[600px] bg-white">
+        <DialogHeader>
+          <DialogTitle>
+            {t("CurrentUser:dialogContent.replacingUser")}
+          </DialogTitle>
+        </DialogHeader>
+        <AccountSelect />
+      </DialogContent>
+    </Dialog>
   );
 }

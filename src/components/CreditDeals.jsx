@@ -428,7 +428,6 @@ export default function CreditDeals(properties) {
                                     value={`${usr.username} (${usr.id})`}
                                   />
                                 </FormControl>
-                                <FormMessage />
                               </FormItem>
                             )}
                           />
@@ -451,7 +450,6 @@ export default function CreditDeals(properties) {
                                     value={`${debtAssetBalance} ${debtAsset.symbol}`}
                                   />
                                 </FormControl>
-                                <FormMessage />
                               </FormItem>
                             )}
                           />
@@ -497,7 +495,6 @@ export default function CreditDeals(properties) {
                                     placeholder={borrowedAmount}
                                   />
                                 </FormControl>
-                                <FormMessage />
                               </FormItem>
                             )}
                           />
@@ -546,7 +543,6 @@ export default function CreditDeals(properties) {
                                     className="mb-3"
                                   />
                                 </FormControl>
-                                <FormMessage />
                               </FormItem>
                             )}
                           />
@@ -575,7 +571,6 @@ export default function CreditDeals(properties) {
                                       }) (${res.fee_rate / 10000}% fee)`}
                                     />
                                   </FormControl>
-                                  <FormMessage />
                                 </FormItem>
                               )}
                             />
@@ -650,7 +645,6 @@ export default function CreditDeals(properties) {
                                     })}
                                   </FormMessage>
                                 ) : null}
-                                <FormMessage />
                               </FormItem>
                             )}
                           />

@@ -79,7 +79,7 @@ export default function Home(properties) {
   return (
     <div className="container mx-auto mt-3 mb-5">
       <h4 className="mb-2">{t("PageHeader:exchangingFundsHeading")}</h4>
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-5 gap-3">
         <HoverCard key="dex">
           <HoverCardTrigger asChild>
             <a href="/dex/index.html" style={{ textDecoration: "none" }}>
@@ -276,7 +276,7 @@ export default function Home(properties) {
       </div>
 
       <h4 className="mt-3 mb-2">{t("PageHeader:formsOfDebtHeading")}</h4>
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-5 gap-3">
         <HoverCard key="borrow">
           <HoverCardTrigger asChild>
             <a href="/borrow/index.html" style={{ textDecoration: "none" }}>
@@ -385,7 +385,7 @@ export default function Home(properties) {
       </div>
 
       <h4 className="mt-3 mb-2">{t("PageHeader:accountOverviewsHeading")}</h4>
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-5 gap-3">
         <HoverCard key="portfolio">
           <HoverCardTrigger asChild>
             <a href="/portfolio/index.html" style={{ textDecoration: "none" }}>
@@ -517,7 +517,7 @@ export default function Home(properties) {
       <h4 className="mt-3 mb-2">
         {t("PageHeader:blockchainOverviewsHeading")}
       </h4>
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-5 gap-3">
         <HoverCard key="featured">
           <HoverCardTrigger asChild>
             <a href="/featured/index.html" style={{ textDecoration: "none" }}>
@@ -675,7 +675,7 @@ export default function Home(properties) {
       </div>
 
       <h4 className="mt-3 mb-2">{t("PageHeader:assetCreation")}</h4>
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-5 gap-3">
         <HoverCard key="create_prediction">
           <HoverCardTrigger asChild>
             <a
@@ -750,7 +750,7 @@ export default function Home(properties) {
       </div>
 
       <h4 className="mt-3 mb-2">{t("PageHeader:settingsHeading")}</h4>
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-5 gap-3">
         <HoverCard key="accountLists">
           <HoverCardTrigger asChild>
             <a
