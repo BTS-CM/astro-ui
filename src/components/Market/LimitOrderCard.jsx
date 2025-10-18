@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
 import { useTranslation } from "react-i18next";
@@ -15,14 +15,12 @@ import {
 } from "@/components/ui/card";
 
 import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+  Field,
+  FieldGroup,
+  FieldLabel,
+  FieldDescription,
+  FieldError,
+} from "@/components/ui/field";
 
 import {
   Select,
@@ -129,7 +127,16 @@ export default function LimitOrderCard(properties) {
 
   const form = useForm({
     defaultValues: {
-      account: "",
+      priceAmount: 0.0,
+      sellAmount: 0.0,
+      sellTotal: 0,
+      expiry: "1hr",
+      osoValue: false,
+      osoSpread: 1,
+      osoSize: 100,
+      repeatValue: false,
+      fee: 0,
+      marketFees: 0,
     },
   });
 
@@ -417,91 +424,136 @@ export default function LimitOrderCard(properties) {
         marketSearch &&
         assetAData &&
         assetBData ? (
-          <Form {...form}>
-            <form
-              onSubmit={(event) => {
-                setShowDialog(true);
-                event.preventDefault();
-              }}
-            >
-              <FormField
-                control={form.control}
+          <form onSubmit={form.handleSubmit(() => setShowDialog(true))}>
+            <FieldGroup>
+              <Controller
                 name="priceAmount"
-                render={({ field }) => (
-                  <FormItem className="mt-4 text-xs">
-                    <FormLabel>
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field invalid={fieldState.invalid} className="mt-4 text-xs">
+                    <FieldLabel>
                       {t("LimitOrderCard:priceAmount.label")}
-                    </FormLabel>
-                    <FormDescription>
+                    </FieldLabel>
+                    <FieldDescription>
                       {t("LimitOrderCard:priceAmount.description", {
                         assetA: thisAssetA,
                         assetB: thisAssetB,
                       })}
-                    </FormDescription>
-                    <FormControl>
-                      <span className="grid grid-cols-12">
-                        <span className="col-span-9">
-                          <Input
-                            label={`Price`}
-                            placeholder={price}
-                            disabled
-                            readOnly
-                          />
-                        </span>
-                        <span className="col-span-3 ml-3 text-center">
-                          <Popover>
-                            <PopoverTrigger>
-                              <span className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4 text-lg">
-                                <Label>{t("LimitOrderCard:editLabel")}</Label>
-                              </span>
-                            </PopoverTrigger>
-                            <PopoverContent>
-                              <Label>
-                                {t(
-                                  "LimitOrderCard:priceAmount.provideNewLabel"
-                                )}
-                              </Label>{" "}
-                              <Input
-                                placeholder={price}
-                                className="mb-2 mt-1"
-                                onChange={(event) => {
-                                  const input = event.target.value;
-                                  const regex = /^[0-9,]*\.?[0-9]*$/;
-                                  if (
-                                    input &&
-                                    input.length &&
-                                    regex.test(input)
-                                  ) {
-                                    const parsedInput = parseFloat(
-                                      input.replaceAll(",", "")
+                    </FieldDescription>
+                    <span className="grid grid-cols-12">
+                      <span className="col-span-9">
+                        <Input
+                          {...field}
+                          label={`Price`}
+                          placeholder={price}
+                          disabled
+                          readOnly
+                        />
+                      </span>
+                      <span className="col-span-3 ml-3 text-center">
+                        <Popover>
+                          <PopoverTrigger>
+                            <span className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4 text-lg">
+                              <Label>{t("LimitOrderCard:editLabel")}</Label>
+                            </span>
+                          </PopoverTrigger>
+                          <PopoverContent>
+                            <Label>
+                              {t("LimitOrderCard:priceAmount.provideNewLabel")}
+                            </Label>{" "}
+                            <Input
+                              placeholder={price}
+                              className="mb-2 mt-1"
+                              onChange={(event) => {
+                                const input = event.target.value;
+                                const regex = /^[0-9,]*\.?[0-9]*$/;
+                                if (
+                                  input &&
+                                  input.length &&
+                                  regex.test(input)
+                                ) {
+                                  const parsedInput = parseFloat(
+                                    input.replaceAll(",", "")
+                                  );
+                                  if (parsedInput) {
+                                    setPrice(
+                                      parsedInput.toFixed(
+                                        orderType === "buy"
+                                          ? assetBData.precision
+                                          : assetAData.precision
+                                      )
                                     );
-                                    if (parsedInput) {
-                                      setPrice(
-                                        parsedInput.toFixed(
+                                    if (amount) {
+                                      setTotal(
+                                        (parsedInput * amount).toFixed(
                                           orderType === "buy"
                                             ? assetBData.precision
                                             : assetAData.precision
                                         )
                                       );
-                                      if (amount) {
-                                        setTotal(
-                                          (parsedInput * amount).toFixed(
-                                            orderType === "buy"
-                                              ? assetBData.precision
-                                              : assetAData.precision
-                                          )
-                                        );
-                                      }
-                                      setInputChars(inputChars + 1);
                                     }
+                                    setInputChars(inputChars + 1);
+                                  }
+                                }
+                              }}
+                            />
+                            {(orderType === "buy" && !sellOrders) ||
+                            (sellOrders && !sellOrders.length) ||
+                            (orderType === "sell" && !buyOrders) ||
+                            (buyOrders && !buyOrders.length) ? (
+                              <Badge disabled>
+                                {orderType === "buy"
+                                  ? t("LimitOrderCard:priceAmount.useLowestAsk")
+                                  : t(
+                                      "LimitOrderCard:priceAmount.useHighestBid"
+                                    )}
+                              </Badge>
+                            ) : (
+                              <span
+                                variant="link"
+                                onClick={(event) => {
+                                  event.preventDefault();
+                                  let finalPrice;
+                                  if (
+                                    orderType === "buy" &&
+                                    sellOrders &&
+                                    sellOrders.length > 0
+                                  ) {
+                                    finalPrice = trimPrice(
+                                      parseFloat(sellOrders[0].price),
+                                      assetBData.precision
+                                    );
+                                  } else if (
+                                    orderType === "sell" &&
+                                    buyOrders &&
+                                    buyOrders.length > 0
+                                  ) {
+                                    finalPrice = trimPrice(
+                                      parseFloat(buyOrders[0].price),
+                                      assetBData.precision
+                                    );
+                                  }
+
+                                  if (finalPrice) {
+                                    setPrice(
+                                      parseFloat(finalPrice).toFixed(
+                                        assetBData.precision
+                                      )
+                                    );
+
+                                    if (amount) {
+                                      setTotal(
+                                        (
+                                          parseFloat(finalPrice) *
+                                          parseFloat(amount)
+                                        ).toFixed(assetBData.precision)
+                                      );
+                                    }
+                                    setInputChars(inputChars + 1);
                                   }
                                 }}
-                              />
-                              {(orderType === "buy" && !sellOrders) ||
-                              (sellOrders && !sellOrders.length) ||
-                              (orderType === "sell" && !buyOrders) ||
-                              (buyOrders && !buyOrders.length) ? (
-                                <Badge disabled>
+                              >
+                                <Badge>
                                   {orderType === "buy"
                                     ? t(
                                         "LimitOrderCard:priceAmount.useLowestAsk"
@@ -510,80 +562,25 @@ export default function LimitOrderCard(properties) {
                                         "LimitOrderCard:priceAmount.useHighestBid"
                                       )}
                                 </Badge>
-                              ) : (
-                                <span
-                                  variant="link"
-                                  onClick={(event) => {
-                                    event.preventDefault();
-                                    let finalPrice;
-                                    if (
-                                      orderType === "buy" &&
-                                      sellOrders &&
-                                      sellOrders.length > 0
-                                    ) {
-                                      finalPrice = trimPrice(
-                                        parseFloat(sellOrders[0].price),
-                                        assetBData.precision
-                                      );
-                                    } else if (
-                                      orderType === "sell" &&
-                                      buyOrders &&
-                                      buyOrders.length > 0
-                                    ) {
-                                      finalPrice = trimPrice(
-                                        parseFloat(buyOrders[0].price),
-                                        assetBData.precision
-                                      );
-                                    }
-
-                                    if (finalPrice) {
-                                      setPrice(
-                                        parseFloat(finalPrice).toFixed(
-                                          assetBData.precision
-                                        )
-                                      );
-
-                                      if (amount) {
-                                        setTotal(
-                                          (
-                                            parseFloat(finalPrice) *
-                                            parseFloat(amount)
-                                          ).toFixed(assetBData.precision)
-                                        );
-                                      }
-                                      setInputChars(inputChars + 1);
-                                    }
-                                  }}
-                                >
-                                  <Badge>
-                                    {orderType === "buy"
-                                      ? t(
-                                          "LimitOrderCard:priceAmount.useLowestAsk"
-                                        )
-                                      : t(
-                                          "LimitOrderCard:priceAmount.useHighestBid"
-                                        )}
-                                  </Badge>
-                                </span>
-                              )}
-                            </PopoverContent>
-                          </Popover>
-                        </span>
+                              </span>
+                            )}
+                          </PopoverContent>
+                        </Popover>
                       </span>
-                    </FormControl>
-                  </FormItem>
+                    </span>
+                  </Field>
                 )}
               />
 
-              <FormField
-                control={form.control}
+              <Controller
                 name="sellAmount"
-                render={({ field }) => (
-                  <FormItem className="mt-4 text-xs">
-                    <FormLabel>
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field invalid={fieldState.invalid} className="mt-4 text-xs">
+                    <FieldLabel>
                       {t("LimitOrderCard:sellAmount.label")}
-                    </FormLabel>
-                    <FormDescription>
+                    </FieldLabel>
+                    <FieldDescription>
                       {orderType === "buy"
                         ? t("LimitOrderCard:sellAmount.buyDescription", {
                             asset: thisAssetA,
@@ -591,91 +588,86 @@ export default function LimitOrderCard(properties) {
                         : t("LimitOrderCard:sellAmount.sellDescription", {
                             asset: thisAssetA,
                           })}
-                    </FormDescription>
-                    <FormControl>
-                      <span className="grid grid-cols-12">
-                        <span className="col-span-9">
-                          <Input
-                            label={`Amount`}
-                            placeholder={amount}
-                            disabled
-                            readOnly
-                          />
-                        </span>
-                        <span className="col-span-3 ml-3 text-center">
-                          <Popover>
-                            <PopoverTrigger>
-                              <span className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4 text-lg">
-                                <Label>{t("LimitOrderCard:editLabel")}</Label>
-                              </span>
-                            </PopoverTrigger>
-                            <PopoverContent>
-                              <Label>
-                                {t("LimitOrderCard:sellAmount.provideNewLabel")}
-                              </Label>{" "}
-                              <Input
-                                placeholder={amount}
-                                className="mb-2 mt-1"
-                                onChange={(event) => {
-                                  const input = event.target.value;
-                                  const regex = /^[0-9,]*\.?[0-9]*$/;
-                                  if (
-                                    input &&
-                                    input.length &&
-                                    regex.test(input)
-                                  ) {
-                                    const parsedInput = parseFloat(
-                                      input.replaceAll(",", "")
+                    </FieldDescription>
+                    <span className="grid grid-cols-12">
+                      <span className="col-span-9">
+                        <Input
+                          {...field}
+                          label={`Amount`}
+                          placeholder={amount}
+                          disabled
+                          readOnly
+                        />
+                      </span>
+                      <span className="col-span-3 ml-3 text-center">
+                        <Popover>
+                          <PopoverTrigger>
+                            <span className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4 text-lg">
+                              <Label>{t("LimitOrderCard:editLabel")}</Label>
+                            </span>
+                          </PopoverTrigger>
+                          <PopoverContent>
+                            <Label>
+                              {t("LimitOrderCard:sellAmount.provideNewLabel")}
+                            </Label>{" "}
+                            <Input
+                              placeholder={amount}
+                              className="mb-2 mt-1"
+                              onChange={(event) => {
+                                const input = event.target.value;
+                                const regex = /^[0-9,]*\.?[0-9]*$/;
+                                if (
+                                  input &&
+                                  input.length &&
+                                  regex.test(input)
+                                ) {
+                                  const parsedInput = parseFloat(
+                                    input.replaceAll(",", "")
+                                  );
+                                  if (parsedInput) {
+                                    setAmount(
+                                      parsedInput.toFixed(assetAData.precision)
                                     );
-                                    if (parsedInput) {
-                                      setAmount(
-                                        parsedInput.toFixed(
-                                          assetAData.precision
+                                    if (price) {
+                                      setTotal(
+                                        (parsedInput * price).toFixed(
+                                          assetBData.precision
                                         )
                                       );
-                                      if (price) {
-                                        setTotal(
-                                          (parsedInput * price).toFixed(
-                                            assetBData.precision
-                                          )
-                                        );
-                                      }
-                                      setInputChars(inputChars + 1);
                                     }
+                                    setInputChars(inputChars + 1);
+                                  }
+                                }
+                              }}
+                            />
+                            {orderType === "sell" && assetABalance ? (
+                              <Badge
+                                onClick={() => {
+                                  let parsedAmount = parseFloat(
+                                    assetABalance.replaceAll(",", "")
+                                  );
+                                  if (parsedAmount) {
+                                    setAmount(
+                                      parsedAmount.toFixed(assetAData.precision)
+                                    );
+                                    if (price) {
+                                      setTotal(
+                                        (parsedAmount * price).toFixed(
+                                          assetBData.precision
+                                        )
+                                      );
+                                    }
+                                    setInputChars(inputChars + 1);
                                   }
                                 }}
-                              />
-                              {orderType === "sell" && assetABalance ? (
-                                <Badge
-                                  onClick={() => {
-                                    let parsedAmount = parseFloat(
-                                      assetABalance.replaceAll(",", "")
-                                    );
-                                    if (parsedAmount) {
-                                      setAmount(
-                                        parsedAmount.toFixed(
-                                          assetAData.precision
-                                        )
-                                      );
-                                      if (price) {
-                                        setTotal(
-                                          (parsedAmount * price).toFixed(
-                                            assetBData.precision
-                                          )
-                                        );
-                                      }
-                                      setInputChars(inputChars + 1);
-                                    }
-                                  }}
-                                >
-                                  {t("LimitOrderCard:useBalance")}
-                                </Badge>
-                              ) : null}
-                            </PopoverContent>
-                          </Popover>
-                        </span>
+                              >
+                                {t("LimitOrderCard:useBalance")}
+                              </Badge>
+                            ) : null}
+                          </PopoverContent>
+                        </Popover>
                       </span>
-                    </FormControl>
+                    </span>
 
                     {orderType === "sell" &&
                     amount &&
@@ -683,7 +675,7 @@ export default function LimitOrderCard(properties) {
                     assetABalance &&
                     parseFloat(assetABalance.replaceAll(",", "")) <
                       parseFloat(amount) ? (
-                      <FormMessage>
+                      <FieldError>
                         {t("LimitOrderCard:sellTotal.requireMore", {
                           requiredAmount:
                             amount -
@@ -692,19 +684,21 @@ export default function LimitOrderCard(properties) {
                             ).toFixed(assetAData.precision),
                           asset: thisAssetA,
                         })}
-                      </FormMessage>
+                      </FieldError>
                     ) : null}
-                  </FormItem>
+                  </Field>
                 )}
               />
 
-              <FormField
-                control={form.control}
+              <Controller
                 name="sellTotal"
-                render={({ field }) => (
-                  <FormItem className="mt-4 text-xs">
-                    <FormLabel>{t("LimitOrderCard:sellTotal.label")}</FormLabel>
-                    <FormDescription>
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field invalid={fieldState.invalid} className="mt-4 text-xs">
+                    <FieldLabel>
+                      {t("LimitOrderCard:sellTotal.label")}
+                    </FieldLabel>
+                    <FieldDescription>
                       {orderType === "buy"
                         ? t("LimitOrderCard:sellTotal.buyDescription", {
                             asset: thisAssetB,
@@ -712,98 +706,93 @@ export default function LimitOrderCard(properties) {
                         : t("LimitOrderCard:sellTotal.sellDescription", {
                             asset: thisAssetB,
                           })}
-                    </FormDescription>
-                    <FormControl>
-                      <span className="grid grid-cols-12">
-                        <span className="col-span-9">
-                          <Input
-                            label={`Total`}
-                            placeholder={total}
-                            disabled
-                            readOnly
-                          />
-                        </span>
-                        <span className="col-span-3 ml-3 text-center">
-                          <Popover>
-                            <PopoverTrigger>
-                              <span className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4 text-lg">
-                                <Label>{t("LimitOrderCard:editLabel")}</Label>
-                              </span>
-                            </PopoverTrigger>
-                            <PopoverContent>
-                              <Label>
-                                {t("LimitOrderCard:sellTotal.provideNewLabel")}
-                              </Label>
-                              <Input
-                                placeholder={total}
-                                className="mb-2 mt-1"
-                                onChange={(event) => {
-                                  const input = event.target.value;
-                                  const regex = /^[0-9,]*\.?[0-9]*$/;
-                                  if (
-                                    input &&
-                                    input.length &&
-                                    regex.test(input)
-                                  ) {
-                                    const parsedFloat = parseFloat(
-                                      input.replaceAll(",", "")
+                    </FieldDescription>
+                    <span className="grid grid-cols-12">
+                      <span className="col-span-9">
+                        <Input
+                          {...field}
+                          label={`Total`}
+                          placeholder={total}
+                          disabled
+                          readOnly
+                        />
+                      </span>
+                      <span className="col-span-3 ml-3 text-center">
+                        <Popover>
+                          <PopoverTrigger>
+                            <span className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4 text-lg">
+                              <Label>{t("LimitOrderCard:editLabel")}</Label>
+                            </span>
+                          </PopoverTrigger>
+                          <PopoverContent>
+                            <Label>
+                              {t("LimitOrderCard:sellTotal.provideNewLabel")}
+                            </Label>
+                            <Input
+                              placeholder={total}
+                              className="mb-2 mt-1"
+                              onChange={(event) => {
+                                const input = event.target.value;
+                                const regex = /^[0-9,]*\.?[0-9]*$/;
+                                if (
+                                  input &&
+                                  input.length &&
+                                  regex.test(input)
+                                ) {
+                                  const parsedFloat = parseFloat(
+                                    input.replaceAll(",", "")
+                                  );
+                                  if (parsedFloat) {
+                                    setTotal(
+                                      parsedFloat.toFixed(assetBData.precision)
                                     );
-                                    if (parsedFloat) {
-                                      setTotal(
-                                        parsedFloat.toFixed(
-                                          assetBData.precision
+                                    if (price) {
+                                      setAmount(
+                                        (parsedFloat / price).toFixed(
+                                          assetAData.precision
                                         )
                                       );
-                                      if (price) {
-                                        setAmount(
-                                          (parsedFloat / price).toFixed(
-                                            assetAData.precision
-                                          )
-                                        );
-                                      }
-                                      setInputChars(inputChars + 1);
                                     }
+                                    setInputChars(inputChars + 1);
+                                  }
+                                }
+                              }}
+                            />
+                            {orderType === "buy" && assetBBalance ? (
+                              <Badge
+                                onClick={() => {
+                                  let parsedAmount = parseFloat(
+                                    assetBBalance.replaceAll(",", "")
+                                  );
+                                  if (parsedAmount) {
+                                    setTotal(
+                                      parsedAmount.toFixed(assetBData.precision)
+                                    );
+                                    if (price) {
+                                      setAmount(
+                                        (parsedAmount / price).toFixed(
+                                          assetAData.precision
+                                        )
+                                      );
+                                    }
+                                    setInputChars(inputChars + 1);
                                   }
                                 }}
-                              />
-                              {orderType === "buy" && assetBBalance ? (
-                                <Badge
-                                  onClick={() => {
-                                    let parsedAmount = parseFloat(
-                                      assetBBalance.replaceAll(",", "")
-                                    );
-                                    if (parsedAmount) {
-                                      setTotal(
-                                        parsedAmount.toFixed(
-                                          assetBData.precision
-                                        )
-                                      );
-                                      if (price) {
-                                        setAmount(
-                                          (parsedAmount / price).toFixed(
-                                            assetAData.precision
-                                          )
-                                        );
-                                      }
-                                      setInputChars(inputChars + 1);
-                                    }
-                                  }}
-                                >
-                                  {t("LimitOrderCard:useBalance")}
-                                </Badge>
-                              ) : null}
-                            </PopoverContent>
-                          </Popover>
-                        </span>
+                              >
+                                {t("LimitOrderCard:useBalance")}
+                              </Badge>
+                            ) : null}
+                          </PopoverContent>
+                        </Popover>
                       </span>
-                    </FormControl>
+                    </span>
                     {orderType === "buy" &&
                     amount &&
                     price &&
                     assetBBalance &&
                     parseFloat(assetBBalance.replaceAll(",", "")) <
                       parseFloat(total) ? (
-                      <FormMessage>
+                      <FieldError>
                         {t("LimitOrderCard:sellTotal.requireMore", {
                           requiredAmount:
                             total -
@@ -812,19 +801,19 @@ export default function LimitOrderCard(properties) {
                             ).toFixed(assetBData.precision),
                           asset: thisAssetB,
                         })}
-                      </FormMessage>
+                      </FieldError>
                     ) : null}
-                  </FormItem>
+                  </Field>
                 )}
               />
 
-              <FormField
-                control={form.control}
+              <Controller
                 name="expiry"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("LimitOrderCard:expiry.label")}</FormLabel>
-                    <FormControl
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field invalid={fieldState.invalid}>
+                    <FieldLabel>{t("LimitOrderCard:expiry.label")}</FieldLabel>
+                    <Select
                       onValueChange={(selectedExpiry) => {
                         setExpiryType(selectedExpiry);
                         const oneHour = 60 * 60 * 1000;
@@ -863,38 +852,38 @@ export default function LimitOrderCard(properties) {
                           setExpiry();
                         }
                         setInputChars(inputChars + 1);
+                        field.onChange(selectedExpiry);
                       }}
+                      value={field.value}
                     >
-                      <Select>
-                        <SelectTrigger className="mb-3">
-                          <SelectValue placeholder="1hr" />
-                        </SelectTrigger>
-                        <SelectContent className="bg-white">
-                          <SelectItem value="1hr">
-                            {t("LimitOrderCard:expiry.1hr")}
-                          </SelectItem>
-                          <SelectItem value="12hr">
-                            {t("LimitOrderCard:expiry.12hr")}
-                          </SelectItem>
-                          <SelectItem value="24hr">
-                            {t("LimitOrderCard:expiry.24hr")}
-                          </SelectItem>
-                          <SelectItem value="7d">
-                            {t("LimitOrderCard:expiry.7d")}
-                          </SelectItem>
-                          <SelectItem value="30d">
-                            {t("LimitOrderCard:expiry.30d")}
-                          </SelectItem>
-                          <SelectItem value="specific">
-                            {t("LimitOrderCard:expiry.specific")}
-                          </SelectItem>
-                          <SelectItem value="fkill">
-                            {t("LimitOrderCard:expiry.fkill")}
-                          </SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
-                    <FormDescription>
+                      <SelectTrigger className="mb-3">
+                        <SelectValue placeholder="1hr" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-white">
+                        <SelectItem value="1hr">
+                          {t("LimitOrderCard:expiry.1hr")}
+                        </SelectItem>
+                        <SelectItem value="12hr">
+                          {t("LimitOrderCard:expiry.12hr")}
+                        </SelectItem>
+                        <SelectItem value="24hr">
+                          {t("LimitOrderCard:expiry.24hr")}
+                        </SelectItem>
+                        <SelectItem value="7d">
+                          {t("LimitOrderCard:expiry.7d")}
+                        </SelectItem>
+                        <SelectItem value="30d">
+                          {t("LimitOrderCard:expiry.30d")}
+                        </SelectItem>
+                        <SelectItem value="specific">
+                          {t("LimitOrderCard:expiry.specific")}
+                        </SelectItem>
+                        <SelectItem value="fkill">
+                          {t("LimitOrderCard:expiry.fkill")}
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FieldDescription>
                       {expiryType === "specific" ? (
                         <Popover>
                           <PopoverTrigger asChild>
@@ -947,244 +936,245 @@ export default function LimitOrderCard(properties) {
                             expiryType,
                           })
                         : null}
-                    </FormDescription>
-                  </FormItem>
+                    </FieldDescription>
+                  </Field>
                 )}
               />
 
               <Separator className="mb-2 mt-2" />
 
-              <FormField
-                control={form.control}
+              <Controller
                 name="osoValue"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <div className="flex items-center space-x-2">
-                        <Checkbox
-                          id="terms1"
-                          checked={osoEnabled}
-                          onClick={() => {
-                            setOSOEnabled(!osoEnabled);
-                            setInputChars(inputChars + 1);
-                          }}
-                        />
-                        <label
-                          htmlFor="terms1"
-                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                        >
-                          {osoEnabled
-                            ? t("LimitOrderCard:osoValue.enabled")
-                            : t("LimitOrderCard:osoValue.enable")}
-                        </label>
-                      </div>
-                    </FormControl>
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field invalid={fieldState.invalid}>
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        id="terms1"
+                        checked={osoEnabled}
+                        onCheckedChange={(checked) => {
+                          setOSOEnabled(checked);
+                          setInputChars(inputChars + 1);
+                          field.onChange(checked);
+                        }}
+                      />
+                      <label
+                        htmlFor="terms1"
+                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      >
+                        {osoEnabled
+                          ? t("LimitOrderCard:osoValue.enabled")
+                          : t("LimitOrderCard:osoValue.enable")}
+                      </label>
+                    </div>
                     {osoEnabled ? (
-                      <FormDescription>
+                      <FieldDescription>
                         {t("LimitOrderCard:osoValue.description")}
-                      </FormDescription>
+                      </FieldDescription>
                     ) : null}
-                  </FormItem>
+                  </Field>
                 )}
               />
 
               {osoEnabled ? (
                 <>
-                  <FormField
-                    control={form.control}
+                  <Controller
                     name="osoSpread"
-                    render={({ field }) => (
-                      <FormItem className="mt-2 text-xs">
-                        <FormLabel className="text-sm">
+                    control={form.control}
+                    render={({ field, fieldState }) => (
+                      <Field
+                        invalid={fieldState.invalid}
+                        className="mt-2 text-xs"
+                      >
+                        <FieldLabel className="text-sm">
                           {t("LimitOrderCard:osoEnabled.spreadPercentLabel")}
-                        </FormLabel>
-                        <FormDescription>
+                        </FieldLabel>
+                        <FieldDescription>
                           {t(
                             "LimitOrderCard:osoEnabled.spreadPercentDescription"
                           )}
-                        </FormDescription>
-                        <FormControl>
-                          <span className="grid grid-cols-12">
-                            <span className="col-span-9">
-                              <Input
-                                label={t(
-                                  "LimitOrderCard:osoEnabled.spreadPercentLabel"
-                                )}
-                                placeholder={spreadPercent}
-                                disabled
-                                readOnly
-                              />
-                              <Slider
-                                className="mt-3"
-                                defaultValue={[spreadPercent]}
-                                max={100}
-                                min={1}
-                                step={0.01}
-                                onValueChange={(value) => {
-                                  debouncedSetSpreadPercent(value[0]);
-                                }}
-                              />
-                            </span>
-
-                            <span className="col-span-3 ml-3 text-center">
-                              <Popover>
-                                <PopoverTrigger>
-                                  <span
-                                    onClick={() => {
-                                      event.preventDefault();
-                                    }}
-                                    className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4 text-lg"
-                                  >
-                                    <Label>
-                                      {t("LimitOrderCard:editLabel")}
-                                    </Label>
-                                  </span>
-                                </PopoverTrigger>
-                                <PopoverContent>
-                                  <Label>
-                                    {t(
-                                      "LimitOrderCard:osoEnabled.provideNewSpreadPercent"
-                                    )}
-                                  </Label>
-                                  <Input
-                                    placeholder={spreadPercent}
-                                    className="mb-2 mt-1"
-                                    onChange={(event) => {
-                                      const input = event.target.value;
-                                      const regex = /^[0-9]*\.?[0-9]*$/;
-                                      if (
-                                        input &&
-                                        input.length &&
-                                        regex.test(input)
-                                      ) {
-                                        if (input >= 1 && input <= 100) {
-                                          setSpreadPercent(input);
-                                          setInputChars(inputChars + 1);
-                                        }
-                                      }
-                                    }}
-                                  />
-                                </PopoverContent>
-                              </Popover>
-                            </span>
-                          </span>
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="osoSize"
-                    render={({ field }) => (
-                      <FormItem className="mt-4 text-xs">
-                        <FormLabel className="text-sm">
-                          {t("LimitOrderCard:osoSize.sizePercentLabel")}
-                        </FormLabel>
-                        <FormDescription>
-                          {t("LimitOrderCard:osoSize.sizePercentDescription")}
-                        </FormDescription>
-                        <FormControl>
-                          <span className="grid grid-cols-12">
-                            <span className="col-span-9">
-                              <Input
-                                label={t(
-                                  "LimitOrderCard:osoSize.sizePercentLabel"
-                                )}
-                                placeholder={sizePercent}
-                                disabled
-                                readOnly
-                              />
-                              <Slider
-                                className="mt-3"
-                                defaultValue={[sizePercent]}
-                                max={100}
-                                min={0}
-                                step={0.01}
-                                onValueChange={(value) => {
-                                  debouncedSetSizePercent(value[0]);
-                                }}
-                              />
-                            </span>
-
-                            <span className="col-span-3 ml-3 text-center">
-                              <Popover>
-                                <PopoverTrigger>
-                                  <span
-                                    onClick={() => {
-                                      event.preventDefault();
-                                    }}
-                                    className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4 text-lg"
-                                  >
-                                    <Label>
-                                      {t("LimitOrderCard:editLabel")}
-                                    </Label>
-                                  </span>
-                                </PopoverTrigger>
-                                <PopoverContent>
-                                  <Label>
-                                    {t(
-                                      "LimitOrderCard:osoSize.provideNewSizePercent"
-                                    )}
-                                  </Label>
-                                  <Input
-                                    placeholder={sizePercent}
-                                    className="mb-2 mt-1"
-                                    onChange={(event) => {
-                                      const input = event.target.value;
-                                      const regex = /^[0-9]*\.?[0-9]*$/;
-                                      if (
-                                        input &&
-                                        input.length &&
-                                        regex.test(input)
-                                      ) {
-                                        if (input >= 0 && input <= 100) {
-                                          setSizePercent(input);
-                                          setInputChars(inputChars + 1);
-                                        }
-                                      }
-                                    }}
-                                  />
-                                </PopoverContent>
-                              </Popover>
-                            </span>
-                          </span>
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="repeatValue"
-                    render={({ field }) => (
-                      <FormItem className="mt-4 text-xs">
-                        <FormLabel className="text-sm">
-                          {t("LimitOrderCard:repeatValue.label")}
-                        </FormLabel>
-                        <FormDescription>
-                          {t("LimitOrderCard:repeatValue.description")}
-                        </FormDescription>
-                        <FormControl>
-                          <div className="flex items-center space-x-2">
-                            <Checkbox
-                              id="terms2"
-                              checked={repeat}
-                              onClick={() => {
-                                setRepeat(!repeat);
-                                setInputChars(inputChars + 1);
+                        </FieldDescription>
+                        <span className="grid grid-cols-12">
+                          <span className="col-span-9">
+                            <Input
+                              {...field}
+                              label={t(
+                                "LimitOrderCard:osoEnabled.spreadPercentLabel"
+                              )}
+                              placeholder={spreadPercent}
+                              disabled
+                              readOnly
+                            />
+                            <Slider
+                              className="mt-3"
+                              defaultValue={[spreadPercent]}
+                              max={100}
+                              min={1}
+                              step={0.01}
+                              onValueChange={(value) => {
+                                debouncedSetSpreadPercent(value[0]);
                               }}
                             />
-                            <label
-                              htmlFor="terms2"
-                              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                            >
-                              {repeat
-                                ? t("LimitOrderCard:repeatValue.enabled")
-                                : t("LimitOrderCard:repeatValue.disabled")}
-                            </label>
-                          </div>
-                        </FormControl>
-                      </FormItem>
+                          </span>
+
+                          <span className="col-span-3 ml-3 text-center">
+                            <Popover>
+                              <PopoverTrigger>
+                                <span
+                                  onClick={() => {
+                                    event.preventDefault();
+                                  }}
+                                  className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4 text-lg"
+                                >
+                                  <Label>{t("LimitOrderCard:editLabel")}</Label>
+                                </span>
+                              </PopoverTrigger>
+                              <PopoverContent>
+                                <Label>
+                                  {t(
+                                    "LimitOrderCard:osoEnabled.provideNewSpreadPercent"
+                                  )}
+                                </Label>
+                                <Input
+                                  placeholder={spreadPercent}
+                                  className="mb-2 mt-1"
+                                  onChange={(event) => {
+                                    const input = event.target.value;
+                                    const regex = /^[0-9]*\.?[0-9]*$/;
+                                    if (
+                                      input &&
+                                      input.length &&
+                                      regex.test(input)
+                                    ) {
+                                      if (input >= 1 && input <= 100) {
+                                        setSpreadPercent(input);
+                                        setInputChars(inputChars + 1);
+                                      }
+                                    }
+                                  }}
+                                />
+                              </PopoverContent>
+                            </Popover>
+                          </span>
+                        </span>
+                      </Field>
+                    )}
+                  />
+                  <Controller
+                    name="osoSize"
+                    control={form.control}
+                    render={({ field, fieldState }) => (
+                      <Field
+                        invalid={fieldState.invalid}
+                        className="mt-4 text-xs"
+                      >
+                        <FieldLabel className="text-sm">
+                          {t("LimitOrderCard:osoSize.sizePercentLabel")}
+                        </FieldLabel>
+                        <FieldDescription>
+                          {t("LimitOrderCard:osoSize.sizePercentDescription")}
+                        </FieldDescription>
+                        <span className="grid grid-cols-12">
+                          <span className="col-span-9">
+                            <Input
+                              {...field}
+                              label={t(
+                                "LimitOrderCard:osoSize.sizePercentLabel"
+                              )}
+                              placeholder={sizePercent}
+                              disabled
+                              readOnly
+                            />
+                            <Slider
+                              className="mt-3"
+                              defaultValue={[sizePercent]}
+                              max={100}
+                              min={0}
+                              step={0.01}
+                              onValueChange={(value) => {
+                                debouncedSetSizePercent(value[0]);
+                              }}
+                            />
+                          </span>
+
+                          <span className="col-span-3 ml-3 text-center">
+                            <Popover>
+                              <PopoverTrigger>
+                                <span
+                                  onClick={() => {
+                                    event.preventDefault();
+                                  }}
+                                  className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4 text-lg"
+                                >
+                                  <Label>{t("LimitOrderCard:editLabel")}</Label>
+                                </span>
+                              </PopoverTrigger>
+                              <PopoverContent>
+                                <Label>
+                                  {t(
+                                    "LimitOrderCard:osoSize.provideNewSizePercent"
+                                  )}
+                                </Label>
+                                <Input
+                                  placeholder={sizePercent}
+                                  className="mb-2 mt-1"
+                                  onChange={(event) => {
+                                    const input = event.target.value;
+                                    const regex = /^[0-9]*\.?[0-9]*$/;
+                                    if (
+                                      input &&
+                                      input.length &&
+                                      regex.test(input)
+                                    ) {
+                                      if (input >= 0 && input <= 100) {
+                                        setSizePercent(input);
+                                        setInputChars(inputChars + 1);
+                                      }
+                                    }
+                                  }}
+                                />
+                              </PopoverContent>
+                            </Popover>
+                          </span>
+                        </span>
+                      </Field>
+                    )}
+                  />
+
+                  <Controller
+                    name="repeatValue"
+                    control={form.control}
+                    render={({ field, fieldState }) => (
+                      <Field
+                        invalid={fieldState.invalid}
+                        className="mt-4 text-xs"
+                      >
+                        <FieldLabel className="text-sm">
+                          {t("LimitOrderCard:repeatValue.label")}
+                        </FieldLabel>
+                        <FieldDescription>
+                          {t("LimitOrderCard:repeatValue.description")}
+                        </FieldDescription>
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="terms2"
+                            checked={repeat}
+                            onCheckedChange={(checked) => {
+                              setRepeat(checked);
+                              setInputChars(inputChars + 1);
+                              field.onChange(checked);
+                            }}
+                          />
+                          <label
+                            htmlFor="terms2"
+                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                          >
+                            {repeat
+                              ? t("LimitOrderCard:repeatValue.enabled")
+                              : t("LimitOrderCard:repeatValue.disabled")}
+                          </label>
+                        </div>
+                      </Field>
                     )}
                   />
                 </>
@@ -1192,26 +1182,24 @@ export default function LimitOrderCard(properties) {
 
               <Separator className="mt-3" />
 
-              <FormField
-                control={form.control}
-                disabled
+              <Controller
                 name="fee"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("LimitOrderCard:fee.label")}</FormLabel>
-                    <FormDescription>
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field invalid={fieldState.invalid} disabled>
+                    <FieldLabel>{t("LimitOrderCard:fee.label")}</FieldLabel>
+                    <FieldDescription>
                       {t("LimitOrderCard:fee.description")}
-                    </FormDescription>
-                    <FormControl>
-                      <Input
-                        disabled
-                        label={t("LimitOrderCard:fee.label")}
-                        value={`${fee} BTS`}
-                        placeholder={1}
-                      />
-                    </FormControl>
+                    </FieldDescription>
+                    <Input
+                      {...field}
+                      disabled
+                      label={t("LimitOrderCard:fee.label")}
+                      value={`${fee} BTS`}
+                      placeholder={1}
+                    />
                     {expiryType === "fkill" || usr.id === usr.referrer ? (
-                      <FormMessage>
+                      <FieldError>
                         {expiryType === "fkill"
                           ? t("LimitOrderCard:fee.unfilledRebate", { fee })
                           : null}
@@ -1221,35 +1209,33 @@ export default function LimitOrderCard(properties) {
                               rebate: 0.8 * fee,
                             })
                           : null}
-                      </FormMessage>
+                      </FieldError>
                     ) : null}
-                  </FormItem>
+                  </Field>
                 )}
               />
               {orderType === "buy" &&
               assetAData &&
               assetAData.market_fee_percent &&
               assetAData.market_fee_percent > 0 ? (
-                <FormField
-                  control={form.control}
-                  disabled
+                <Controller
                   name="marketFees"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field invalid={fieldState.invalid} disabled>
+                      <FieldLabel>
                         {t("LimitOrderCard:marketFees.label")}
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          disabled
-                          value={`${marketFees} ${assetAData.symbol}`}
-                          placeholder={`${marketFees} ${assetAData.symbol}`}
-                        />
-                      </FormControl>
-                      <FormDescription>
+                      </FieldLabel>
+                      <Input
+                        {...field}
+                        disabled
+                        value={`${marketFees} ${assetAData.symbol}`}
+                        placeholder={`${marketFees} ${assetAData.symbol}`}
+                      />
+                      <FieldDescription>
                         {t("LimitOrderCard:marketFees.description")}
-                      </FormDescription>
-                    </FormItem>
+                      </FieldDescription>
+                    </Field>
                   )}
                 />
               ) : null}
@@ -1257,27 +1243,25 @@ export default function LimitOrderCard(properties) {
               assetBData &&
               assetBData.market_fee_percent &&
               assetBData.market_fee_percent > 0 ? (
-                <FormField
-                  control={form.control}
-                  disabled
+                <Controller
                   name="marketFees"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field invalid={fieldState.invalid} disabled>
+                      <FieldLabel>
                         {t("LimitOrderCard:marketFees.label")}
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          disabled
-                          value={`${marketFees} ${assetBData.symbol}`}
-                          placeholder={`${marketFees} ${assetBData.symbol}`}
-                        />
-                      </FormControl>
+                      </FieldLabel>
+                      <Input
+                        {...field}
+                        disabled
+                        value={`${marketFees} ${assetBData.symbol}`}
+                        placeholder={`${marketFees} ${assetBData.symbol}`}
+                      />
 
-                      <FormDescription>
+                      <FieldDescription>
                         {t("LimitOrderCard:marketFees.description")}
-                      </FormDescription>
-                    </FormItem>
+                      </FieldDescription>
+                    </Field>
                   )}
                 />
               ) : null}
@@ -1295,139 +1279,108 @@ export default function LimitOrderCard(properties) {
                   {t("LimitOrderCard:submit")}
                 </Button>
               )}
-            </form>
-          </Form>
+            </FieldGroup>
+          </form>
         ) : (
-          <Form {...form}>
-            <form>
-              <FormField
-                control={form.control}
-                name="sellPrice"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      <div className="grid grid-cols-2 mt-3">
-                        <div className="mt-1">
-                          {t("LimitOrderCard:sellPrice.label")}
-                        </div>
-                        <div className="text-gray-500 text-right">
-                          <span variant="link">
-                            <Badge>
-                              {t("LimitOrderCard:sellPrice.useLowestAsk")}
-                            </Badge>
-                          </span>
-                        </div>
-                      </div>
-                    </FormLabel>
+          <form>
+            <FieldGroup>
+              <Field>
+                <FieldLabel>
+                  <div className="grid grid-cols-2 mt-3">
+                    <div className="mt-1">
+                      {t("LimitOrderCard:sellPrice.label")}
+                    </div>
+                    <div className="text-gray-500 text-right">
+                      <span variant="link">
+                        <Badge>
+                          {t("LimitOrderCard:sellPrice.useLowestAsk")}
+                        </Badge>
+                      </span>
+                    </div>
+                  </div>
+                </FieldLabel>
 
-                    <Input disabled className="mb-3" />
-                    <FormDescription>
-                      {t("LimitOrderCard:sellPrice.description")}
-                    </FormDescription>
-                  </FormItem>
-                )}
-              />
+                <Input disabled className="mb-3" />
+                <FieldDescription>
+                  {t("LimitOrderCard:sellPrice.description")}
+                </FieldDescription>
+              </Field>
 
-              <FormField
-                control={form.control}
-                name="sellAmount"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      <div className="grid grid-cols-2 mt-3">
-                        <div className="mt-1">
-                          {t("LimitOrderCard:sellAmount2.label")}
-                        </div>
-                        <div className="text-gray-500 text-right">
-                          {orderType === "sell" && assetABalance ? (
-                            <Badge>{t("LimitOrderCard:useBalance")}</Badge>
-                          ) : null}
-                        </div>
-                      </div>
-                    </FormLabel>
-                    <FormDescription>
-                      {orderType === "buy"
-                        ? t("LimitOrderCard:sellAmount2.buyDescription")
-                        : t("LimitOrderCard:sellAmount2.sellDescription")}
-                    </FormDescription>
-                    <Input disabled className="mb-3" />
-                  </FormItem>
-                )}
-              />
+              <Field>
+                <FieldLabel>
+                  <div className="grid grid-cols-2 mt-3">
+                    <div className="mt-1">
+                      {t("LimitOrderCard:sellAmount2.label")}
+                    </div>
+                    <div className="text-gray-500 text-right">
+                      {orderType === "sell" && assetABalance ? (
+                        <Badge>{t("LimitOrderCard:useBalance")}</Badge>
+                      ) : null}
+                    </div>
+                  </div>
+                </FieldLabel>
+                <FieldDescription>
+                  {orderType === "buy"
+                    ? t("LimitOrderCard:sellAmount2.buyDescription")
+                    : t("LimitOrderCard:sellAmount2.sellDescription")}
+                </FieldDescription>
+                <Input disabled className="mb-3" />
+              </Field>
 
-              <FormField
-                control={form.control}
-                name="sellTotal"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      <div className="grid grid-cols-2 mt-3">
-                        <div className="mt-1">
-                          {t("LimitOrderCard:sellTotal2.label")}
-                        </div>
-                        <div className="text-gray-500 text-right">
-                          {orderType === "buy" && assetBBalance ? (
-                            <Badge>{t("LimitOrderCard:useBalance")}</Badge>
-                          ) : null}
-                        </div>
-                      </div>
-                    </FormLabel>
-                    <FormDescription>
-                      {orderType === "buy"
-                        ? t("LimitOrderCard:sellTotal2.buyDescription")
-                        : t("LimitOrderCard:sellTotal2.sellDescription")}
-                    </FormDescription>
-                    <Input disabled className="mb-3" />
-                  </FormItem>
-                )}
-              />
+              <Field>
+                <FieldLabel>
+                  <div className="grid grid-cols-2 mt-3">
+                    <div className="mt-1">
+                      {t("LimitOrderCard:sellTotal2.label")}
+                    </div>
+                    <div className="text-gray-500 text-right">
+                      {orderType === "buy" && assetBBalance ? (
+                        <Badge>{t("LimitOrderCard:useBalance")}</Badge>
+                      ) : null}
+                    </div>
+                  </div>
+                </FieldLabel>
+                <FieldDescription>
+                  {orderType === "buy"
+                    ? t("LimitOrderCard:sellTotal2.buyDescription")
+                    : t("LimitOrderCard:sellTotal2.sellDescription")}
+                </FieldDescription>
+                <Input disabled className="mb-3" />
+              </Field>
 
-              <FormField
-                control={form.control}
-                name="expiry"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("LimitOrderCard:expiry2.label")}</FormLabel>
-                    <FormDescription>
-                      {t("LimitOrderCard:expiry2.description")}
-                    </FormDescription>
-                    <Select disabled>
-                      <SelectTrigger className="mb-3">
-                        <SelectValue placeholder="1hr" />
-                      </SelectTrigger>
-                    </Select>
-                  </FormItem>
-                )}
-              />
+              <Field>
+                <FieldLabel>{t("LimitOrderCard:expiry2.label")}</FieldLabel>
+                <FieldDescription>
+                  {t("LimitOrderCard:expiry2.description")}
+                </FieldDescription>
+                <Select disabled>
+                  <SelectTrigger className="mb-3">
+                    <SelectValue placeholder="1hr" />
+                  </SelectTrigger>
+                </Select>
+              </Field>
 
-              <FormField
-                control={form.control}
-                disabled
-                name="fee"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("LimitOrderCard:fee.label")}</FormLabel>
-                    <Input disabled label={t("LimitOrderCard:fee.label")} />
-                    <FormDescription>
-                      {t("LimitOrderCard:fee.description")}
-                    </FormDescription>
-                    {expiryType === "fkill" || usr.id === usr.referrer ? (
-                      <FormMessage>
-                        {expiryType === "fkill"
-                          ? t("LimitOrderCard:fee.unfilledRebate", {
-                              rebate: 1 * 0.4826,
-                            })
-                          : null}
-                        {usr.id === usr.referrer
-                          ? t("LimitOrderCard:fee.ltmRebate", {
-                              rebate: 0.8 * 0.4826,
-                            })
-                          : null}
-                      </FormMessage>
-                    ) : null}
-                  </FormItem>
-                )}
-              />
+              <Field disabled>
+                <FieldLabel>{t("LimitOrderCard:fee.label")}</FieldLabel>
+                <Input disabled label={t("LimitOrderCard:fee.label")} />
+                <FieldDescription>
+                  {t("LimitOrderCard:fee.description")}
+                </FieldDescription>
+                {expiryType === "fkill" || usr.id === usr.referrer ? (
+                  <FieldError>
+                    {expiryType === "fkill"
+                      ? t("LimitOrderCard:fee.unfilledRebate", {
+                          rebate: 1 * 0.4826,
+                        })
+                      : null}
+                    {usr.id === usr.referrer
+                      ? t("LimitOrderCard:fee.ltmRebate", {
+                          rebate: 0.8 * 0.4826,
+                        })
+                      : null}
+                  </FieldError>
+                ) : null}
+              </Field>
 
               <Button
                 disabled
@@ -1437,8 +1390,8 @@ export default function LimitOrderCard(properties) {
               >
                 {t("LimitOrderCard:submit")}
               </Button>
-            </form>
-          </Form>
+            </FieldGroup>
+          </form>
         )}
         {showDialog ? (
           <DeepLinkDialog

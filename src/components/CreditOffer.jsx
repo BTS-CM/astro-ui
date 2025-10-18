@@ -4,7 +4,7 @@ import React, {
   useMemo,
   useSyncExternalStore,
 } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { sha256 } from "@noble/hashes/sha2.js";
 import { bytesToHex as toHex, utf8ToBytes } from "@noble/hashes/utils.js";
 import { List } from "react-window";
@@ -22,14 +22,13 @@ import {
 } from "@/components/ui/card";
 
 import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+  Field,
+  FieldGroup,
+  FieldLabel,
+  FieldContent,
+  FieldDescription,
+  FieldError,
+} from "@/components/ui/field";
 
 import {
   Select,
@@ -486,6 +485,11 @@ export default function CreditOffer(properties) {
     }
   }, [assetIssuers, relevantOffer]);
 
+  const idSuffix = useMemo(
+    () => (relevantOffer?.id || "offer").toString().replace(/\./g, "-"),
+    [relevantOffer?.id]
+  );
+
   return (
     <>
       <div className="container mx-auto mt-5 mb-5">
@@ -530,704 +534,611 @@ export default function CreditOffer(properties) {
               <CardContent>
                 <div className="grid grid-cols-1 gap-2 mt-3">
                   <div className="col-span-1">
-                    <Form {...form}>
-                      <form
-                        onSubmit={() => {
-                          setShowDialog(true);
-                          event.preventDefault();
-                        }}
-                      >
-                        <FormField
-                          control={form.control}
-                          name="borrowerAccount"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>
-                                {t("CreditOffer:cardContent.borrowingAccount")}
-                              </FormLabel>
-                              <FormControl>
-                                <div className="grid grid-cols-8 mt-4">
-                                  <div className="col-span-1 ml-5">
-                                    {usr && usr.username ? (
-                                      <Avatar
-                                        size={40}
-                                        name={usr.username}
-                                        extra="Target"
-                                        expression={{
-                                          eye: "normal",
-                                          mouth: "open",
-                                        }}
-                                        colors={[
-                                          "#92A1C6",
-                                          "#146A7C",
-                                          "#F0AB3D",
-                                          "#C271B4",
-                                          "#C20D90",
-                                        ]}
-                                      />
-                                    ) : (
-                                      <Av>
-                                        <AvatarFallback>?</AvatarFallback>
-                                      </Av>
-                                    )}
-                                  </div>
-                                  <div className="col-span-7">
-                                    <Input
-                                      disabled
-                                      placeholder="Bitshares account (1.2.x)"
-                                      className="mb-1 mt-1"
-                                      value={
-                                        usr ? `${usr.username} (${usr.id})` : ""
-                                      }
-                                      readOnly
-                                    />
-                                  </div>
-                                </div>
-                              </FormControl>
-                              <FormDescription>
-                                {t(
-                                  "CreditOffer:cardContent.broadcastDescription"
-                                )}
-                              </FormDescription>
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={form.control}
-                          name="lenderAccount"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>
-                                <div className="grid grid-cols-2 mt-4">
-                                  <div className="col-span-1">
-                                    {t(
-                                      "CreditOffer:cardContent.lendingAccount"
-                                    )}
-                                  </div>
-                                  <div className="col-span-1 text-right">
-                                    {creditOfferOwner ? (
-                                      <ExternalLink
-                                        classnamecontents="text-blue-500"
-                                        type="text"
-                                        text={t(
-                                          "CreditOffer:cardContent.viewAccount",
-                                          {
-                                            owner_name: creditOfferOwner.name,
-                                          }
-                                        )}
-                                        hyperlink={`https://explorer.bitshares.ws/#/accounts/${
-                                          creditOfferOwner.name
-                                        }${
-                                          usr.chain === "bitshares"
-                                            ? ""
-                                            : "?network=testnet"
-                                        }`}
-                                      />
-                                    ) : null}
-                                  </div>
-                                </div>
-                              </FormLabel>
-                              <FormControl>
-                                <div className="grid grid-cols-8 mt-4">
-                                  <div className="col-span-1 ml-5">
-                                    {creditOfferOwner &&
-                                    creditOfferOwner.name ? (
-                                      <Avatar
-                                        size={40}
-                                        name={creditOfferOwner.name}
-                                        extra="Target"
-                                        expression={{
-                                          eye: "normal",
-                                          mouth: "open",
-                                        }}
-                                        colors={[
-                                          "#92A1C6",
-                                          "#146A7C",
-                                          "#F0AB3D",
-                                          "#C271B4",
-                                          "#C20D90",
-                                        ]}
-                                      />
-                                    ) : (
-                                      <Av>
-                                        <AvatarFallback>?</AvatarFallback>
-                                      </Av>
-                                    )}
-                                  </div>
-                                  <div className="col-span-7">
-                                    <Input
-                                      disabled
-                                      placeholder="Bitshares account (1.2.x)"
-                                      className="mb-1 mt-1"
-                                      value={
-                                        creditOfferOwner &&
-                                        creditOfferOwner.name
-                                          ? `${creditOfferOwner.name} (${creditOfferOwner.id})`
-                                          : ""
-                                      }
-                                      readOnly
-                                    />
-                                  </div>
-                                </div>
-                              </FormControl>
-                              <FormDescription>
-                                {t(
-                                  "CreditOffer:cardContent.borrowingDescription",
-                                  {
-                                    symbol: foundAsset?.symbol,
-                                  }
-                                )}
-                              </FormDescription>
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={form.control}
-                          name="amountAvailable"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>
-                                {foundAsset && relevantOffer
-                                  ? t(
-                                      "CreditOffer:cardContent.availableAmount",
-                                      {
-                                        symbol: foundAsset.symbol,
-                                        asset_type: relevantOffer.asset_type,
-                                      }
-                                    )
-                                  : t("CreditOffer:cardContent.loading")}
-                              </FormLabel>
-                              <FormControl>
-                                <div className="grid grid-cols-8 mt-4">
-                                  <div className="col-span-1 ml-5">
-                                    {foundAsset ? (
-                                      <Av>
-                                        <AvatarFallback>
-                                          <div className="text-sm">
-                                            {foundAsset.bitasset_data_id
-                                              ? "MPA"
-                                              : "UIA"}
-                                          </div>
-                                        </AvatarFallback>
-                                      </Av>
-                                    ) : (
-                                      <Av>
-                                        <AvatarFallback>?</AvatarFallback>
-                                      </Av>
-                                    )}
-                                  </div>
-                                  <div className="col-span-7">
-                                    <Input
-                                      disabled
-                                      placeholder="Bitshares account (1.2.x)"
-                                      className="mb-1 mt-1"
-                                      value={
-                                        relevantOffer && foundAsset
-                                          ? `${humanReadableFloat(
-                                              relevantOffer.current_balance,
-                                              foundAsset.precision
-                                            )} ${foundAsset.symbol}`
-                                          : t("CreditOffer:cardContent.loading")
-                                      }
-                                      readOnly
-                                    />
-                                  </div>
-                                </div>
-                              </FormControl>
-                              <FormDescription>
-                                {t("CreditOffer:cardContent.offerDescription", {
-                                  owner_name: relevantOffer?.owner_name,
-                                  symbol: foundAsset?.symbol,
-                                })}
-                              </FormDescription>
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={form.control}
-                          name="backingCollateral"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>
-                                <div className="grid grid-cols-2 mt-3">
-                                  <div className="mt-1">
-                                    {t(
-                                      "CreditOffer:cardContent.backingCollateral"
-                                    )}
-                                  </div>
-                                </div>
-                              </FormLabel>
-                              <FormControl>
-                                <div className="grid grid-cols-8">
-                                  <div className="col-span-1 ml-5 mt-1">
-                                    {foundAsset ? (
-                                      <Av>
-                                        <AvatarFallback>
-                                          <div className="text-sm">
-                                            {!collateralInfo ? "?" : null}
-                                            {collateralInfo &&
-                                            collateralInfo.isBitasset
-                                              ? "MPA"
-                                              : null}
-                                            {collateralInfo &&
-                                            !collateralInfo.isBitasset
-                                              ? "UIA"
-                                              : null}
-                                          </div>
-                                        </AvatarFallback>
-                                      </Av>
-                                    ) : (
-                                      <Av>
-                                        <AvatarFallback>?</AvatarFallback>
-                                      </Av>
-                                    )}
-                                  </div>
-                                  <div className="col-span-7 mt-2">
-                                    <Select
-                                      onValueChange={(collateral) => {
-                                        setChosenCollateral(collateral);
-                                      }}
-                                    >
-                                      <SelectTrigger className="mb-1">
-                                        <SelectValue
-                                          placeholder={
-                                            collateralInfo
-                                              ? `${collateralInfo.symbol} (${collateralInfo.id})`
-                                              : t(
-                                                  "CreditOffer:cardContent.selectCollateral"
-                                                )
-                                          }
-                                        />
-                                      </SelectTrigger>
-                                      <SelectContent className="bg-white">
-                                        {acceptedCollateral &&
-                                        acceptedCollateral.length ? (
-                                          <div className="w-full max-h-[100px] overflow-auto">
-                                            <List
-                                              rowCount={
-                                                acceptedCollateral.length
-                                              }
-                                              rowComponent={Row}
-                                              rowHeight={35}
-                                              rowProps={{}}
-                                              initialScrollOffset={
-                                                chosenCollateral
-                                                  ? acceptedCollateral
-                                                      .map((x) => x.id)
-                                                      .indexOf(
-                                                        chosenCollateral.id
-                                                      ) * 35
-                                                  : 0
-                                              }
-                                            />
-                                          </div>
-                                        ) : null}
-                                      </SelectContent>
-                                    </Select>
-                                  </div>
-                                </div>
-                              </FormControl>
-                              <FormDescription>
-                                {!collateralInfo
-                                  ? t(
-                                      "CreditOffer:cardContent.borrowDescription",
-                                      {
-                                        symbol: foundAsset?.symbol,
-                                        owner_name: relevantOffer?.owner_name,
-                                      }
-                                    )
-                                  : t(
-                                      "CreditOffer:cardContent.borrowDescription2",
-                                      {
-                                        price: requiredCollateralPrice, // TODO: REPLACE PRICE
-                                        base: foundAsset?.symbol,
-                                        quote: collateralInfo.symbol,
-                                      }
-                                    )}
-                              </FormDescription>
-                              {balanceAssetIDs &&
-                              chosenCollateral &&
-                              !balanceAssetIDs.includes(chosenCollateral) ? (
-                                <FormMessage>
-                                  {t(
-                                    "CreditOffer:cardContent.noCollateralMessage"
-                                  )}
-                                </FormMessage>
-                              ) : null}
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={form.control}
-                          name="borrowAmount"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>
-                                <div className="grid grid-cols-2 gap-1 mt-5">
-                                  <div className="col-span-1">
-                                    {t("CreditOffer:cardContent.borrowAmount", {
-                                      symbol: foundAsset
-                                        ? foundAsset.symbol
-                                        : "?",
-                                    })}
-                                  </div>
-                                  <div className="col-span-1 text-right">
-                                    {t(
-                                      "CreditOffer:cardContent.availableAmountRange",
-                                      {
-                                        minAmount: minAmount ?? "?",
-                                        availableAmount: availableAmount ?? "?",
-                                        symbol: foundAsset?.symbol,
-                                      }
-                                    )}
-                                  </div>
-                                </div>
-                              </FormLabel>
-                              {!availableAmount ? (
-                                <FormControl>
-                                  <Input
-                                    disabled
-                                    value={0}
-                                    className="mb-3"
-                                    readOnly
+                    <form
+                      onSubmit={form.handleSubmit(() => {
+                        setShowDialog(true);
+                      })}
+                    >
+                      <FieldGroup>
+                        <Field>
+                          <FieldLabel htmlFor={`borrower-${idSuffix}`}>
+                            {t("CreditOffer:cardContent.borrowingAccount")}
+                          </FieldLabel>
+                          <FieldContent>
+                            <div className="grid grid-cols-8 mt-4">
+                              <div className="col-span-1 ml-5">
+                                {usr && usr.username ? (
+                                  <Avatar
+                                    size={40}
+                                    name={usr.username}
+                                    extra="Target"
+                                    expression={{
+                                      eye: "normal",
+                                      mouth: "open",
+                                    }}
+                                    colors={[
+                                      "#92A1C6",
+                                      "#146A7C",
+                                      "#F0AB3D",
+                                      "#C271B4",
+                                      "#C20D90",
+                                    ]}
                                   />
-                                </FormControl>
-                              ) : (
-                                <FormControl onChange={handleInputChange}>
-                                  <Input value={inputValue} className="mb-3" />
-                                </FormControl>
-                              )}
-
-                              <FormDescription>
-                                {t(
-                                  "CreditOffer:cardContent.inputBorrowAmount",
-                                  {
-                                    symbol: foundAsset?.symbol,
-                                    owner_name: relevantOffer?.owner_name,
-                                  }
+                                ) : (
+                                  <Av>
+                                    <AvatarFallback>?</AvatarFallback>
+                                  </Av>
                                 )}
-                              </FormDescription>
-                            </FormItem>
-                          )}
-                        />
+                              </div>
+                              <div className="col-span-7">
+                                <Input
+                                  id={`borrower-${idSuffix}`}
+                                  disabled
+                                  placeholder="Bitshares account (1.2.x)"
+                                  className="mb-1 mt-1"
+                                  value={
+                                    usr ? `${usr.username} (${usr.id})` : ""
+                                  }
+                                  readOnly
+                                />
+                              </div>
+                            </div>
+                          </FieldContent>
+                          <FieldDescription>
+                            {t("CreditOffer:cardContent.broadcastDescription")}
+                          </FieldDescription>
+                        </Field>
 
-                        <FormField
-                          control={form.control}
-                          name="repayMethod"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>
-                                <div className="grid grid-cols-2 mt-3">
-                                  <div className="mt-1">
-                                    {t("CreditOffer:cardContent.repayMethod")}
-                                  </div>
-                                </div>
-                              </FormLabel>
-                              <FormControl>
+                        <Field>
+                          <FieldLabel htmlFor={`lender-${idSuffix}`}>
+                            <div className="grid grid-cols-2 mt-4">
+                              <div className="col-span-1">
+                                {t("CreditOffer:cardContent.lendingAccount")}
+                              </div>
+                              <div className="col-span-1 text-right">
+                                {creditOfferOwner ? (
+                                  <ExternalLink
+                                    classnamecontents="text-blue-500"
+                                    type="text"
+                                    text={t(
+                                      "CreditOffer:cardContent.viewAccount",
+                                      { owner_name: creditOfferOwner.name }
+                                    )}
+                                    hyperlink={`https://explorer.bitshares.ws/#/accounts/${
+                                      creditOfferOwner.name
+                                    }${
+                                      usr.chain === "bitshares"
+                                        ? ""
+                                        : "?network=testnet"
+                                    }`}
+                                  />
+                                ) : null}
+                              </div>
+                            </div>
+                          </FieldLabel>
+                          <FieldContent>
+                            <div className="grid grid-cols-8 mt-4">
+                              <div className="col-span-1 ml-5">
+                                {creditOfferOwner && creditOfferOwner.name ? (
+                                  <Avatar
+                                    size={40}
+                                    name={creditOfferOwner.name}
+                                    extra="Target"
+                                    expression={{
+                                      eye: "normal",
+                                      mouth: "open",
+                                    }}
+                                    colors={[
+                                      "#92A1C6",
+                                      "#146A7C",
+                                      "#F0AB3D",
+                                      "#C271B4",
+                                      "#C20D90",
+                                    ]}
+                                  />
+                                ) : (
+                                  <Av>
+                                    <AvatarFallback>?</AvatarFallback>
+                                  </Av>
+                                )}
+                              </div>
+                              <div className="col-span-7">
+                                <Input
+                                  id={`lender-${idSuffix}`}
+                                  disabled
+                                  placeholder="Bitshares account (1.2.x)"
+                                  className="mb-1 mt-1"
+                                  value={
+                                    creditOfferOwner && creditOfferOwner.name
+                                      ? `${creditOfferOwner.name} (${creditOfferOwner.id})`
+                                      : ""
+                                  }
+                                  readOnly
+                                />
+                              </div>
+                            </div>
+                          </FieldContent>
+                          <FieldDescription>
+                            {t("CreditOffer:cardContent.borrowingDescription", {
+                              symbol: foundAsset?.symbol,
+                            })}
+                          </FieldDescription>
+                        </Field>
+
+                        <Field>
+                          <FieldLabel htmlFor={`available-${idSuffix}`}>
+                            {foundAsset && relevantOffer
+                              ? t("CreditOffer:cardContent.availableAmount", {
+                                  symbol: foundAsset.symbol,
+                                  asset_type: relevantOffer.asset_type,
+                                })
+                              : t("CreditOffer:cardContent.loading")}
+                          </FieldLabel>
+                          <FieldContent>
+                            <div className="grid grid-cols-8 mt-4">
+                              <div className="col-span-1 ml-5">
+                                {foundAsset ? (
+                                  <Av>
+                                    <AvatarFallback>
+                                      <div className="text-sm">
+                                        {foundAsset.bitasset_data_id
+                                          ? "MPA"
+                                          : "UIA"}
+                                      </div>
+                                    </AvatarFallback>
+                                  </Av>
+                                ) : (
+                                  <Av>
+                                    <AvatarFallback>?</AvatarFallback>
+                                  </Av>
+                                )}
+                              </div>
+                              <div className="col-span-7">
+                                <Input
+                                  id={`available-${idSuffix}`}
+                                  disabled
+                                  placeholder="Bitshares account (1.2.x)"
+                                  className="mb-1 mt-1"
+                                  value={
+                                    relevantOffer && foundAsset
+                                      ? `${humanReadableFloat(
+                                          relevantOffer.current_balance,
+                                          foundAsset.precision
+                                        )} ${foundAsset.symbol}`
+                                      : t("CreditOffer:cardContent.loading")
+                                  }
+                                  readOnly
+                                />
+                              </div>
+                            </div>
+                          </FieldContent>
+                          <FieldDescription>
+                            {t("CreditOffer:cardContent.offerDescription", {
+                              owner_name: relevantOffer?.owner_name,
+                              symbol: foundAsset?.symbol,
+                            })}
+                          </FieldDescription>
+                        </Field>
+
+                        <Field>
+                          <FieldLabel htmlFor={`collateral-${idSuffix}`}>
+                            <div className="grid grid-cols-2 mt-3">
+                              <div className="mt-1">
+                                {t("CreditOffer:cardContent.backingCollateral")}
+                              </div>
+                            </div>
+                          </FieldLabel>
+                          <FieldContent>
+                            <div className="grid grid-cols-8">
+                              <div className="col-span-1 ml-5 mt-1">
+                                {foundAsset ? (
+                                  <Av>
+                                    <AvatarFallback>
+                                      <div className="text-sm">
+                                        {!collateralInfo ? "?" : null}
+                                        {collateralInfo &&
+                                        collateralInfo.isBitasset
+                                          ? "MPA"
+                                          : null}
+                                        {collateralInfo &&
+                                        !collateralInfo.isBitasset
+                                          ? "UIA"
+                                          : null}
+                                      </div>
+                                    </AvatarFallback>
+                                  </Av>
+                                ) : (
+                                  <Av>
+                                    <AvatarFallback>?</AvatarFallback>
+                                  </Av>
+                                )}
+                              </div>
+                              <div className="col-span-7 mt-2">
                                 <Select
-                                  onValueChange={(period) => {
-                                    setRepayPeriod(period);
+                                  onValueChange={(collateral) => {
+                                    setChosenCollateral(collateral);
                                   }}
                                 >
                                   <SelectTrigger className="mb-1">
                                     <SelectValue
-                                      placeholder={t(
-                                        "CreditOffer:cardContent.selectRepayMethod"
-                                      )}
+                                      placeholder={
+                                        collateralInfo
+                                          ? `${collateralInfo.symbol} (${collateralInfo.id})`
+                                          : t(
+                                              "CreditOffer:cardContent.selectCollateral"
+                                            )
+                                      }
                                     />
                                   </SelectTrigger>
                                   <SelectContent className="bg-white">
-                                    <SelectItem value={"no_auto_repayment"}>
-                                      {t(
-                                        "CreditOffer:cardContent.noAutoRepayment"
-                                      )}
-                                    </SelectItem>
-                                    <SelectItem value={"only_full_repayment"}>
-                                      {t(
-                                        "CreditOffer:cardContent.onlyFullRepayment"
-                                      )}
-                                    </SelectItem>
-                                    <SelectItem
-                                      value={"allow_partial_repayment"}
-                                    >
-                                      {t(
-                                        "CreditOffer:cardContent.allowPartialRepayment"
-                                      )}
-                                    </SelectItem>
+                                    {acceptedCollateral &&
+                                    acceptedCollateral.length ? (
+                                      <div className="w-full max-h-[100px] overflow-auto">
+                                        <List
+                                          rowCount={acceptedCollateral.length}
+                                          rowComponent={Row}
+                                          rowHeight={35}
+                                          rowProps={{}}
+                                          initialScrollOffset={
+                                            chosenCollateral
+                                              ? acceptedCollateral
+                                                  .map((x) => x.id)
+                                                  .indexOf(
+                                                    chosenCollateral.id
+                                                  ) * 35
+                                              : 0
+                                          }
+                                        />
+                                      </div>
+                                    ) : null}
                                   </SelectContent>
                                 </Select>
-                              </FormControl>
-                              <FormDescription>
-                                {t(
-                                  "CreditOffer:cardContent.selectRepaymentMethod"
+                              </div>
+                            </div>
+                          </FieldContent>
+                          <FieldDescription>
+                            {!collateralInfo
+                              ? t("CreditOffer:cardContent.borrowDescription", {
+                                  symbol: foundAsset?.symbol,
+                                  owner_name: relevantOffer?.owner_name,
+                                })
+                              : t(
+                                  "CreditOffer:cardContent.borrowDescription2",
+                                  {
+                                    price: requiredCollateralPrice,
+                                    base: foundAsset?.symbol,
+                                    quote: collateralInfo.symbol,
+                                  }
                                 )}
-                              </FormDescription>
-                              {repayPeriod ? (
-                                <FormMessage>
-                                  {repayPeriod === "no_auto_repayment"
-                                    ? t(
-                                        "CreditOffer:cardContent.noAutoRepaymentMessage"
-                                      )
-                                    : null}
-                                  {repayPeriod === "only_full_repayment"
-                                    ? t(
-                                        "CreditOffer:cardContent.onlyFullRepaymentMessage"
-                                      )
-                                    : null}
-                                  {repayPeriod === "allow_partial_repayment"
-                                    ? t(
-                                        "CreditOffer:cardContent.allowPartialRepaymentMessage"
-                                      )
-                                    : null}
-                                </FormMessage>
-                              ) : null}
-                            </FormItem>
-                          )}
-                        />
+                          </FieldDescription>
+                          {balanceAssetIDs &&
+                          chosenCollateral &&
+                          !balanceAssetIDs.includes(chosenCollateral) ? (
+                            <FieldError>
+                              {t("CreditOffer:cardContent.noCollateralMessage")}
+                            </FieldError>
+                          ) : null}
+                        </Field>
+
+                        <Field>
+                          <FieldLabel htmlFor={`borrow-${idSuffix}`}>
+                            <div className="grid grid-cols-2 gap-1 mt-5">
+                              <div className="col-span-1">
+                                {t("CreditOffer:cardContent.borrowAmount", {
+                                  symbol: foundAsset ? foundAsset.symbol : "?",
+                                })}
+                              </div>
+                              <div className="col-span-1 text-right">
+                                {t(
+                                  "CreditOffer:cardContent.availableAmountRange",
+                                  {
+                                    minAmount: minAmount ?? "?",
+                                    availableAmount: availableAmount ?? "?",
+                                    symbol: foundAsset?.symbol,
+                                  }
+                                )}
+                              </div>
+                            </div>
+                          </FieldLabel>
+                          <FieldContent>
+                            {!availableAmount ? (
+                              <Input
+                                disabled
+                                value={0}
+                                className="mb-3"
+                                readOnly
+                              />
+                            ) : (
+                              <Controller
+                                control={form.control}
+                                name="borrowAmount"
+                                defaultValue={inputValue}
+                                render={({ field }) => (
+                                  <Input
+                                    id={`borrow-${idSuffix}`}
+                                    className="mb-3"
+                                    value={inputValue}
+                                    onChange={(e) => {
+                                      handleInputChange(e);
+                                      field.onChange(e.target.value);
+                                    }}
+                                  />
+                                )}
+                              />
+                            )}
+                          </FieldContent>
+                          <FieldDescription>
+                            {t("CreditOffer:cardContent.inputBorrowAmount", {
+                              symbol: foundAsset?.symbol,
+                              owner_name: relevantOffer?.owner_name,
+                            })}
+                          </FieldDescription>
+                        </Field>
+
+                        <Field>
+                          <FieldLabel htmlFor={`repaymethod-${idSuffix}`}>
+                            <div className="grid grid-cols-2 mt-3">
+                              <div className="mt-1">
+                                {t("CreditOffer:cardContent.repayMethod")}
+                              </div>
+                            </div>
+                          </FieldLabel>
+                          <FieldContent>
+                            <Select
+                              onValueChange={(period) => {
+                                setRepayPeriod(period);
+                              }}
+                            >
+                              <SelectTrigger className="mb-1">
+                                <SelectValue
+                                  placeholder={t(
+                                    "CreditOffer:cardContent.selectRepayMethod"
+                                  )}
+                                />
+                              </SelectTrigger>
+                              <SelectContent className="bg-white">
+                                <SelectItem value={"no_auto_repayment"}>
+                                  {t("CreditOffer:cardContent.noAutoRepayment")}
+                                </SelectItem>
+                                <SelectItem value={"only_full_repayment"}>
+                                  {t(
+                                    "CreditOffer:cardContent.onlyFullRepayment"
+                                  )}
+                                </SelectItem>
+                                <SelectItem value={"allow_partial_repayment"}>
+                                  {t(
+                                    "CreditOffer:cardContent.allowPartialRepayment"
+                                  )}
+                                </SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </FieldContent>
+                          <FieldDescription>
+                            {t("CreditOffer:cardContent.selectRepaymentMethod")}
+                          </FieldDescription>
+                          {repayPeriod ? (
+                            <FieldError>
+                              {repayPeriod === "no_auto_repayment"
+                                ? t(
+                                    "CreditOffer:cardContent.noAutoRepaymentMessage"
+                                  )
+                                : null}
+                              {repayPeriod === "only_full_repayment"
+                                ? t(
+                                    "CreditOffer:cardContent.onlyFullRepaymentMessage"
+                                  )
+                                : null}
+                              {repayPeriod === "allow_partial_repayment"
+                                ? t(
+                                    "CreditOffer:cardContent.allowPartialRepaymentMessage"
+                                  )
+                                : null}
+                            </FieldError>
+                          ) : null}
+                        </Field>
 
                         {chosenCollateral ? (
-                          <FormField
-                            control={form.control}
-                            name="requiredCollateralAmount"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>
-                                  <div className="grid grid-cols-2 gap-1 mt-5">
-                                    <div className="col-span-1">
-                                      {t(
-                                        "CreditOffer:cardContent.requiredCollateral"
-                                      )}
-                                    </div>
-                                    <div className="col-span-1 text-right">
-                                      {collateralInfo
-                                        ? t(
-                                            "CreditOffer:cardContent.currentBalance",
-                                            {
-                                              amount: collateralInfo.amount,
-                                              symbol: collateralInfo.symbol,
-                                            }
-                                          )
-                                        : t(
-                                            "CreditOffer:cardContent.loadingBalance"
-                                          )}
-                                    </div>
-                                  </div>
-                                </FormLabel>
-
-                                <FormControl>
-                                  <Input
-                                    disabled
-                                    value={`${
-                                      requiredCollateralAmount ?? "0"
-                                    } ${
-                                      collateralInfo
-                                        ? collateralInfo.symbol
-                                        : ""
-                                    }`}
-                                    className="mb-3"
-                                    readOnly
-                                  />
-                                </FormControl>
-                                <FormDescription>
-                                  {finalBorrowAmount && foundAsset
+                          <Field>
+                            <FieldLabel htmlFor={`required-${idSuffix}`}>
+                              <div className="grid grid-cols-2 gap-1 mt-5">
+                                <div className="col-span-1">
+                                  {t(
+                                    "CreditOffer:cardContent.requiredCollateral"
+                                  )}
+                                </div>
+                                <div className="col-span-1 text-right">
+                                  {collateralInfo
                                     ? t(
-                                        "CreditOffer:cardContent.collateralNeeded",
+                                        "CreditOffer:cardContent.currentBalance",
                                         {
-                                          borrowAmount: finalBorrowAmount ?? "",
-                                          symbol: foundAsset
-                                            ? foundAsset.symbol
-                                            : "",
+                                          amount: collateralInfo.amount,
+                                          symbol: collateralInfo.symbol,
                                         }
                                       )
                                     : t(
-                                        "CreditOffer:cardContent.enterValidBorrowAmount"
+                                        "CreditOffer:cardContent.loadingBalance"
                                       )}
-                                </FormDescription>
-
-                                {collateralInfo &&
-                                collateralInfo.holding &&
-                                collateralInfo.amount <
-                                  requiredCollateralAmount ? (
-                                  <FormMessage>
-                                    {t(
-                                      "CreditOffer:cardContent.insufficientBalance",
-                                      {
-                                        symbol: collateralInfo.symbol,
-                                        requiredMore: (
-                                          requiredCollateralAmount -
-                                          collateralInfo.amount
-                                        ).toFixed(collateralInfo.precision),
-                                      }
-                                    )}
-                                  </FormMessage>
-                                ) : null}
-
-                                {collateralInfo && !collateralInfo.holding ? (
-                                  <FormMessage>
-                                    {t("CreditOffer:cardContent.noAssetHeld")}
-                                  </FormMessage>
-                                ) : null}
-                              </FormItem>
-                            )}
-                          />
-                        ) : null}
-
-                        <FormField
-                          control={form.control}
-                          name="repayPeriod"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>
-                                <div className="grid grid-cols-2 gap-1 mt-5">
-                                  <div className="col-span-1">
-                                    {t("CreditOffer:cardContent.repayPeriod")}
-                                  </div>
                                 </div>
-                              </FormLabel>
-                              <FormControl>
-                                <Input
-                                  disabled
-                                  value={
-                                    offerRepayPeriod ??
-                                    t("CreditOffer:cardContent.loading")
-                                  }
-                                  className="mb-3"
-                                  readOnly
-                                />
-                              </FormControl>
-                              <FormDescription>
-                                {t(
-                                  "CreditOffer:cardContent.repayPeriodDescription"
-                                )}
-                              </FormDescription>
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={form.control}
-                          name="offerValidity"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>
-                                <div className="grid grid-cols-2 gap-1 mt-5">
-                                  <div className="col-span-1">
-                                    {t("CreditOffer:cardContent.offerExpiry")}
-                                  </div>
-                                </div>
-                              </FormLabel>
-                              <FormControl>
-                                <Input
-                                  disabled
-                                  value={
-                                    offerExpiration ??
-                                    t("CreditOffer:cardContent.loading")
-                                  }
-                                  className="mb-3"
-                                  readOnly
-                                />
-                              </FormControl>
-                              <FormDescription>
-                                {t(
-                                  "CreditOffer:cardContent.offerExpiryDescription"
-                                )}
-                              </FormDescription>
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={form.control}
-                          name="estimatedFee"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>
-                                <div className="grid grid-cols-2 gap-1 mt-5">
-                                  <div className="col-span-1">
-                                    {t("CreditOffer:cardContent.estimatedFee")}
-                                  </div>
-                                  <div className="col-span-1 text-right">
-                                    {relevantOffer
-                                      ? t(
-                                          "CreditOffer:cardContent.borrowFeeRate",
-                                          {
-                                            feeRate:
-                                              relevantOffer.fee_rate / 10000,
-                                          }
-                                        )
-                                      : t("CreditOffer:cardContent.loadingFee")}
-                                  </div>
-                                </div>
-                              </FormLabel>
-                              <FormControl>
-                                <Input
-                                  disabled
-                                  value={
-                                    finalBorrowAmount
-                                      ? t("CreditOffer:cardContent.feeAmount", {
-                                          feeAmount: finalBorrowAmount * 0.01,
-                                          symbol: foundAsset
-                                            ? foundAsset.symbol
-                                            : "?",
-                                        })
-                                      : t("CreditOffer:cardContent.zeroFee", {
-                                          symbol: foundAsset
-                                            ? foundAsset.symbol
-                                            : "?",
-                                        })
-                                  }
-                                  className="mb-3"
-                                  readOnly
-                                />
-                              </FormControl>
-                              <FormDescription>
-                                {t("CreditOffer:cardContent.feeDescription", {
-                                  symbol: foundAsset ? foundAsset.symbol : "?",
-                                  owner_name: creditOfferOwner
-                                    ? creditOfferOwner.name
-                                    : "?",
-                                })}
-                              </FormDescription>
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={form.control}
-                          disabled
-                          name="fee"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>
-                                {t("CreditOffer:cardContent.networkFee")}
-                              </FormLabel>
+                              </div>
+                            </FieldLabel>
+                            <FieldContent>
                               <Input
+                                id={`required-${idSuffix}`}
                                 disabled
-                                value={`${fee ?? "?"} BTS`}
-                                label={`fees`}
+                                value={`${requiredCollateralAmount ?? "0"} ${
+                                  collateralInfo ? collateralInfo.symbol : ""
+                                }`}
+                                className="mb-3"
                                 readOnly
                               />
-                              <FormDescription>
+                            </FieldContent>
+                            <FieldDescription>
+                              {finalBorrowAmount && foundAsset
+                                ? t(
+                                    "CreditOffer:cardContent.collateralNeeded",
+                                    {
+                                      borrowAmount: finalBorrowAmount ?? "",
+                                      symbol: foundAsset
+                                        ? foundAsset.symbol
+                                        : "",
+                                    }
+                                  )
+                                : t(
+                                    "CreditOffer:cardContent.enterValidBorrowAmount"
+                                  )}
+                            </FieldDescription>
+                            {collateralInfo &&
+                            collateralInfo.holding &&
+                            collateralInfo.amount < requiredCollateralAmount ? (
+                              <FieldError>
                                 {t(
-                                  "CreditOffer:cardContent.networkFeeDescription"
+                                  "CreditOffer:cardContent.insufficientBalance",
+                                  {
+                                    symbol: collateralInfo.symbol,
+                                    requiredMore: (
+                                      requiredCollateralAmount -
+                                      collateralInfo.amount
+                                    ).toFixed(collateralInfo.precision),
+                                  }
                                 )}
-                              </FormDescription>
-                              {usr && usr.id === usr.referrer ? (
-                                <FormMessage>
-                                  {t("CreditOffer:cardContent.ltmRebate", {
-                                    rebate: 0.8 * fee,
-                                  })}
-                                </FormMessage>
-                              ) : null}
-                            </FormItem>
-                          )}
-                        />
-                      </form>
-                    </Form>
+                              </FieldError>
+                            ) : null}
+                            {collateralInfo && !collateralInfo.holding ? (
+                              <FieldError>
+                                {t("CreditOffer:cardContent.noAssetHeld")}
+                              </FieldError>
+                            ) : null}
+                          </Field>
+                        ) : null}
+
+                        <Field>
+                          <FieldLabel htmlFor={`repayperiod-${idSuffix}`}>
+                            <div className="grid grid-cols-2 gap-1 mt-5">
+                              <div className="col-span-1">
+                                {t("CreditOffer:cardContent.repayPeriod")}
+                              </div>
+                            </div>
+                          </FieldLabel>
+                          <FieldContent>
+                            <Input
+                              id={`repayperiod-${idSuffix}`}
+                              disabled
+                              value={
+                                offerRepayPeriod ??
+                                t("CreditOffer:cardContent.loading")
+                              }
+                              className="mb-3"
+                              readOnly
+                            />
+                          </FieldContent>
+                          <FieldDescription>
+                            {t(
+                              "CreditOffer:cardContent.repayPeriodDescription"
+                            )}
+                          </FieldDescription>
+                        </Field>
+
+                        <Field>
+                          <FieldLabel htmlFor={`validity-${idSuffix}`}>
+                            <div className="grid grid-cols-2 gap-1 mt-5">
+                              <div className="col-span-1">
+                                {t("CreditOffer:cardContent.offerExpiry")}
+                              </div>
+                            </div>
+                          </FieldLabel>
+                          <FieldContent>
+                            <Input
+                              id={`validity-${idSuffix}`}
+                              disabled
+                              value={
+                                offerExpiration ??
+                                t("CreditOffer:cardContent.loading")
+                              }
+                              className="mb-3"
+                              readOnly
+                            />
+                          </FieldContent>
+                          <FieldDescription>
+                            {t(
+                              "CreditOffer:cardContent.offerExpiryDescription"
+                            )}
+                          </FieldDescription>
+                        </Field>
+
+                        <Field>
+                          <FieldLabel htmlFor={`estfee-${idSuffix}`}>
+                            <div className="grid grid-cols-2 gap-1 mt-5">
+                              <div className="col-span-1">
+                                {t("CreditOffer:cardContent.estimatedFee")}
+                              </div>
+                              <div className="col-span-1 text-right">
+                                {relevantOffer
+                                  ? t("CreditOffer:cardContent.borrowFeeRate", {
+                                      feeRate: relevantOffer.fee_rate / 10000,
+                                    })
+                                  : t("CreditOffer:cardContent.loadingFee")}
+                              </div>
+                            </div>
+                          </FieldLabel>
+                          <FieldContent>
+                            <Input
+                              id={`estfee-${idSuffix}`}
+                              disabled
+                              value={
+                                finalBorrowAmount
+                                  ? t("CreditOffer:cardContent.feeAmount", {
+                                      feeAmount: finalBorrowAmount * 0.01,
+                                      symbol: foundAsset
+                                        ? foundAsset.symbol
+                                        : "?",
+                                    })
+                                  : t("CreditOffer:cardContent.zeroFee", {
+                                      symbol: foundAsset
+                                        ? foundAsset.symbol
+                                        : "?",
+                                    })
+                              }
+                              className="mb-3"
+                              readOnly
+                            />
+                          </FieldContent>
+                          <FieldDescription>
+                            {t("CreditOffer:cardContent.feeDescription", {
+                              symbol: foundAsset ? foundAsset.symbol : "?",
+                              owner_name: creditOfferOwner
+                                ? creditOfferOwner.name
+                                : "?",
+                            })}
+                          </FieldDescription>
+                        </Field>
+
+                        <Field>
+                          <FieldLabel htmlFor={`netfee-${idSuffix}`}>
+                            {t("CreditOffer:cardContent.networkFee")}
+                          </FieldLabel>
+                          <FieldContent>
+                            <Input
+                              id={`netfee-${idSuffix}`}
+                              disabled
+                              value={`${fee ?? "?"} BTS`}
+                              readOnly
+                            />
+                            <FieldDescription>
+                              {t(
+                                "CreditOffer:cardContent.networkFeeDescription"
+                              )}
+                            </FieldDescription>
+                            {usr && usr.id === usr.referrer ? (
+                              <FieldError>
+                                {t("CreditOffer:cardContent.ltmRebate", {
+                                  rebate: 0.8 * fee,
+                                })}
+                              </FieldError>
+                            ) : null}
+                          </FieldContent>
+                        </Field>
+                      </FieldGroup>
+                    </form>
                   </div>
                 </div>
               </CardContent>

@@ -4,7 +4,7 @@ import React, {
   useSyncExternalStore,
   useMemo,
 } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { useStore } from "@nanostores/react";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
@@ -19,14 +19,12 @@ import {
 } from "@/components/ui/card";
 
 import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+  Field,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+  FieldError,
+} from "@/components/ui/field";
 
 import {
   Dialog,
@@ -68,6 +66,12 @@ export default function Transfer(properties) {
   const form = useForm({
     defaultValues: {
       account: "",
+      targetAccount: "",
+      targetAsset: "",
+      availableAmount: "",
+      transferAmount: 0,
+      memoField: "",
+      networkFee: "",
     },
   });
   const currentNode = useStore($currentNode);
@@ -265,26 +269,71 @@ export default function Transfer(properties) {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Form {...form}>
-                <form
-                  onSubmit={() => {
-                    setShowDialog(true);
-                    event.preventDefault();
-                  }}
-                >
-                  <FormField
-                    control={form.control}
+              <form
+                onSubmit={form.handleSubmit(() => {
+                  setShowDialog(true);
+                })}
+              >
+                <FieldGroup>
+                  <Controller
                     name="account"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{t("Transfer:sendingAccount")}</FormLabel>
-                        <FormControl>
-                          <div className="grid grid-cols-8 gap-2">
-                            <div className="col-span-1 ml-5">
+                    control={form.control}
+                    render={({ field, fieldState }) => (
+                      <Field data-invalid={fieldState.invalid}>
+                        <FieldLabel>{t("Transfer:sendingAccount")}</FieldLabel>
+                        <div className="grid grid-cols-8 gap-2">
+                          <div className="col-span-1 ml-5">
+                            <Avatar
+                              size={40}
+                              name={usr && usr.username ? usr.username : "x"}
+                              extra="Sender"
+                              expression={{
+                                eye: "normal",
+                                mouth: "open",
+                              }}
+                              colors={[
+                                "#92A1C6",
+                                "#146A7C",
+                                "#F0AB3D",
+                                "#C271B4",
+                                "#C20D90",
+                              ]}
+                            />
+                          </div>
+                          <div className="col-span-7">
+                            <Input
+                              {...field}
+                              disabled
+                              className="mb-1 mt-1"
+                              value={`${
+                                usr && usr.username ? usr.username : "?"
+                              } (${usr && usr.id ? usr.id : "?"})`}
+                            />
+                          </div>
+                        </div>
+                        <FieldDescription>
+                          {t("Transfer:sendingAccountDescription")}
+                        </FieldDescription>
+                        {fieldState.invalid && (
+                          <FieldError errors={[fieldState.error]} />
+                        )}
+                      </Field>
+                    )}
+                  />
+
+                  <Controller
+                    name="targetAccount"
+                    control={form.control}
+                    render={({ field, fieldState }) => (
+                      <Field data-invalid={fieldState.invalid}>
+                        <FieldLabel>{t("Transfer:targetAccount")}</FieldLabel>
+                        <div className="grid grid-cols-8 mt-4">
+                          <div className="col-span-1 ml-5">
+                            {targetUser && targetUser.name ? (
                               <Avatar
                                 size={40}
-                                name={usr && usr.username ? usr.username : "x"}
-                                extra="Sender"
+                                name={targetUser.name}
+                                extra="Target"
                                 expression={{
                                   eye: "normal",
                                   mouth: "open",
@@ -297,195 +346,144 @@ export default function Transfer(properties) {
                                   "#C20D90",
                                 ]}
                               />
-                            </div>
-                            <div className="col-span-7">
-                              <Input
-                                disabled
-                                className="mb-1 mt-1"
-                                value={`${
-                                  usr && usr.username ? usr.username : "?"
-                                } (${usr && usr.id ? usr.id : "?"})`}
-                              />
-                            </div>
+                            ) : (
+                              <Av>
+                                <AvatarFallback>?</AvatarFallback>
+                              </Av>
+                            )}
                           </div>
-                        </FormControl>
-                        <FormDescription>
-                          {t("Transfer:sendingAccountDescription")}
-                        </FormDescription>
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="targetAccount"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{t("Transfer:targetAccount")}</FormLabel>
-                        <FormControl>
-                          <div className="grid grid-cols-8 mt-4">
-                            <div className="col-span-1 ml-5">
-                              {targetUser && targetUser.name ? (
-                                <Avatar
-                                  size={40}
-                                  name={targetUser.name}
-                                  extra="Target"
-                                  expression={{
-                                    eye: "normal",
-                                    mouth: "open",
-                                  }}
-                                  colors={[
-                                    "#92A1C6",
-                                    "#146A7C",
-                                    "#F0AB3D",
-                                    "#C271B4",
-                                    "#C20D90",
-                                  ]}
+                          <div className="col-span-5">
+                            <Input
+                              {...field}
+                              disabled
+                              placeholder={
+                                targetUser && targetUser.name
+                                  ? `${targetUser.name} (${targetUser.id})`
+                                  : "Bitshares account (1.2.x)"
+                              }
+                              className="mb-1 mt-1"
+                            />
+                          </div>
+                          <div className="col-span-2">
+                            <Dialog
+                              open={targetUserDialogOpen}
+                              onOpenChange={(open) => {
+                                setTargetUserDialogOpen(open);
+                              }}
+                            >
+                              <DialogTrigger asChild>
+                                <Button variant="outline" className="ml-3 mt-1">
+                                  {targetUser
+                                    ? t("Transfer:changeTarget")
+                                    : t("Transfer:provideTarget")}
+                                </Button>
+                              </DialogTrigger>
+                              <DialogContent className="sm:max-w-[375px] bg-white">
+                                <DialogHeader>
+                                  <DialogTitle>
+                                    {!usr || !usr.chain
+                                      ? t("Transfer:bitsharesAccountSearch")
+                                      : null}
+                                    {usr && usr.chain === "bitshares"
+                                      ? t("Transfer:bitsharesAccountSearchBTS")
+                                      : null}
+                                    {usr && usr.chain !== "bitshares"
+                                      ? t("Transfer:bitsharesAccountSearchTEST")
+                                      : null}
+                                  </DialogTitle>
+                                  <DialogDescription>
+                                    {t("Transfer:searchingForAccount")}
+                                  </DialogDescription>
+                                </DialogHeader>
+                                <AccountSearch
+                                  chain={
+                                    usr && usr.chain ? usr.chain : "bitshares"
+                                  }
+                                  excludedUsers={
+                                    usr && usr.username && usr.username.length
+                                      ? [usr]
+                                      : []
+                                  }
+                                  setChosenAccount={setTargetUser}
                                 />
-                              ) : (
-                                <Av>
-                                  <AvatarFallback>?</AvatarFallback>
-                                </Av>
-                              )}
-                            </div>
-                            <div className="col-span-5">
-                              <Input
-                                disabled
-                                placeholder={
-                                  targetUser && targetUser.name
-                                    ? `${targetUser.name} (${targetUser.id})`
-                                    : "Bitshares account (1.2.x)"
-                                }
-                                className="mb-1 mt-1"
-                              />
-                            </div>
-                            <div className="col-span-2">
-                              <Dialog
-                                open={targetUserDialogOpen}
-                                onOpenChange={(open) => {
-                                  setTargetUserDialogOpen(open);
-                                }}
-                              >
-                                <DialogTrigger asChild>
-                                  <Button
-                                    variant="outline"
-                                    className="ml-3 mt-1"
-                                  >
-                                    {targetUser
-                                      ? t("Transfer:changeTarget")
-                                      : t("Transfer:provideTarget")}
-                                  </Button>
-                                </DialogTrigger>
-                                <DialogContent className="sm:max-w-[375px] bg-white">
-                                  <DialogHeader>
-                                    <DialogTitle>
-                                      {!usr || !usr.chain
-                                        ? t("Transfer:bitsharesAccountSearch")
-                                        : null}
-                                      {usr && usr.chain === "bitshares"
-                                        ? t(
-                                            "Transfer:bitsharesAccountSearchBTS"
-                                          )
-                                        : null}
-                                      {usr && usr.chain !== "bitshares"
-                                        ? t(
-                                            "Transfer:bitsharesAccountSearchTEST"
-                                          )
-                                        : null}
-                                    </DialogTitle>
-                                    <DialogDescription>
-                                      {t("Transfer:searchingForAccount")}
-                                    </DialogDescription>
-                                  </DialogHeader>
-                                  <AccountSearch
-                                    chain={
-                                      usr && usr.chain ? usr.chain : "bitshares"
-                                    }
-                                    excludedUsers={
-                                      usr && usr.username && usr.username.length
-                                        ? [usr]
-                                        : []
-                                    }
-                                    setChosenAccount={setTargetUser}
-                                  />
-                                </DialogContent>
-                              </Dialog>
-                            </div>
+                              </DialogContent>
+                            </Dialog>
                           </div>
-                        </FormControl>
-                        <FormDescription>
+                        </div>
+                        <FieldDescription>
                           {!targetUser || !targetUser.name
                             ? t("Transfer:targetAccountDescription")
                             : t("Transfer:targetAccountDescriptionWithName", {
                                 name: targetUser.name,
                               })}
-                        </FormDescription>
-                      </FormItem>
+                        </FieldDescription>
+                        {fieldState.invalid && (
+                          <FieldError errors={[fieldState.error]} />
+                        )}
+                      </Field>
                     )}
                   />
 
-                  <FormField
-                    control={form.control}
+                  <Controller
                     name="targetAsset"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{t("Transfer:assetToTransfer")}</FormLabel>
-                        <FormControl>
-                          <div className="grid grid-cols-8 mt-4">
-                            <div className="col-span-1 ml-5">
-                              {!selectedAsset || !foundAsset ? (
-                                <Av>
-                                  <AvatarFallback>?</AvatarFallback>
-                                </Av>
-                              ) : null}
-                              {foundAsset ? (
-                                <Av>
-                                  <AvatarFallback>
-                                    <div className="text-sm">
-                                      {foundAsset.bitasset_data_id
-                                        ? "MPA"
-                                        : "UIA"}
-                                    </div>
-                                  </AvatarFallback>
-                                </Av>
-                              ) : null}
-                            </div>
-                            <div className="col-span-5">
-                              {!selectedAsset || !foundAsset ? (
-                                <Input
-                                  disabled
-                                  placeholder="Bitshares asset (1.3.x)"
-                                  className="mb-1 mt-1"
-                                />
-                              ) : null}
-                              {foundAsset ? (
-                                <Input
-                                  disabled
-                                  placeholder={`${foundAsset.symbol} (${foundAsset.id})`}
-                                  className="mb-1 mt-1"
-                                />
-                              ) : null}
-                            </div>
-                            <div className="col-span-2 mt-1 ml-3">
-                              <AssetDropDown
-                                assetSymbol={selectedAsset ?? ""}
-                                assetData={null}
-                                storeCallback={setSelectedAsset}
-                                otherAsset={null}
-                                marketSearch={marketSearch}
-                                type={null}
-                                chain={
-                                  usr && usr.chain ? usr.chain : "bitshares"
-                                }
-                                balances={balances}
-                              />
-                            </div>
+                    control={form.control}
+                    render={({ field, fieldState }) => (
+                      <Field data-invalid={fieldState.invalid}>
+                        <FieldLabel>{t("Transfer:assetToTransfer")}</FieldLabel>
+                        <div className="grid grid-cols-8 mt-4">
+                          <div className="col-span-1 ml-5">
+                            {!selectedAsset || !foundAsset ? (
+                              <Av>
+                                <AvatarFallback>?</AvatarFallback>
+                              </Av>
+                            ) : null}
+                            {foundAsset ? (
+                              <Av>
+                                <AvatarFallback>
+                                  <div className="text-sm">
+                                    {foundAsset.bitasset_data_id
+                                      ? "MPA"
+                                      : "UIA"}
+                                  </div>
+                                </AvatarFallback>
+                              </Av>
+                            ) : null}
                           </div>
-                        </FormControl>
-                        <FormDescription>
+                          <div className="col-span-5">
+                            {!selectedAsset || !foundAsset ? (
+                              <Input
+                                {...field}
+                                disabled
+                                placeholder="Bitshares asset (1.3.x)"
+                                className="mb-1 mt-1"
+                              />
+                            ) : null}
+                            {foundAsset ? (
+                              <Input
+                                {...field}
+                                disabled
+                                placeholder={`${foundAsset.symbol} (${foundAsset.id})`}
+                                className="mb-1 mt-1"
+                              />
+                            ) : null}
+                          </div>
+                          <div className="col-span-2 mt-1 ml-3">
+                            <AssetDropDown
+                              assetSymbol={selectedAsset ?? ""}
+                              assetData={null}
+                              storeCallback={setSelectedAsset}
+                              otherAsset={null}
+                              marketSearch={marketSearch}
+                              type={null}
+                              chain={usr && usr.chain ? usr.chain : "bitshares"}
+                              balances={balances}
+                            />
+                          </div>
+                        </div>
+                        <FieldDescription>
                           {t("Transfer:assetToTransferDescription")}
-                        </FormDescription>
-                        <FormMessage>
+                        </FieldDescription>
+                        <FieldError>
                           {foundAsset &&
                           balances &&
                           !balances
@@ -495,145 +493,152 @@ export default function Transfer(properties) {
                                 username: usr.username,
                               })
                             : null}
-                        </FormMessage>
-                      </FormItem>
+                        </FieldError>
+                        {fieldState.invalid && (
+                          <FieldError errors={[fieldState.error]} />
+                        )}
+                      </Field>
                     )}
                   />
 
                   {selectedAsset && targetUser ? (
-                    <FormField
+                    <Controller
+                      name="availableAmount"
                       control={form.control}
-                      name="transferAmount"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>
+                      render={({ field, fieldState }) => (
+                        <Field data-invalid={fieldState.invalid}>
+                          <FieldLabel>
                             {t("Transfer:amountAvailableToTransfer", {
                               asset: selectedAsset ?? "???",
                             })}
-                          </FormLabel>
-                          <FormControl>
-                            <Input
-                              disabled
-                              label={t(
-                                "Transfer:amountAvailableToTransferLabel"
-                              )}
-                              value={
-                                foundAsset &&
-                                balances &&
-                                balances.find(
-                                  (x) => x.asset_id === foundAsset.id
-                                )
-                                  ? `${humanReadableFloat(
-                                      balances.find(
-                                        (x) => x.asset_id === foundAsset.id
-                                      ).amount,
-                                      foundAsset.precision
-                                    )} ${foundAsset.symbol}`
-                                  : "0"
-                              }
-                              className="mb-1"
-                            />
-                          </FormControl>
-                          <FormDescription>
+                          </FieldLabel>
+                          <Input
+                            {...field}
+                            disabled
+                            label={t("Transfer:amountAvailableToTransferLabel")}
+                            value={
+                              foundAsset &&
+                              balances &&
+                              balances.find((x) => x.asset_id === foundAsset.id)
+                                ? `${humanReadableFloat(
+                                    balances.find(
+                                      (x) => x.asset_id === foundAsset.id
+                                    ).amount,
+                                    foundAsset.precision
+                                  )} ${foundAsset.symbol}`
+                                : "0"
+                            }
+                            className="mb-1"
+                          />
+                          <FieldDescription>
                             {t("Transfer:maximumAmountDescription", {
                               asset: selectedAsset,
                             })}
-                          </FormDescription>
-                        </FormItem>
+                          </FieldDescription>
+                          {fieldState.invalid && (
+                            <FieldError errors={[fieldState.error]} />
+                          )}
+                        </Field>
                       )}
                     />
                   ) : null}
 
                   {selectedAsset && targetUser ? (
-                    <FormField
-                      control={form.control}
+                    <Controller
                       name="transferAmount"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>
+                      control={form.control}
+                      render={({ field, fieldState }) => (
+                        <Field data-invalid={fieldState.invalid}>
+                          <FieldLabel>
                             {t("Transfer:amountToTransfer", {
                               asset: selectedAsset ?? "???",
                             })}
-                          </FormLabel>
-                          <FormControl
+                          </FieldLabel>
+                          <Input
+                            {...field}
+                            label={t("Transfer:amountToTransferLabel")}
+                            value={transferAmount}
+                            placeholder={transferAmount}
+                            className="mb-1"
                             onChange={(event) => {
                               const input = event.target.value;
                               const regex = /^[0-9]*\.?[0-9]*$/;
                               if (regex.test(input)) {
                                 setTransferAmount(input);
+                                field.onChange(input);
                               }
                             }}
-                          >
-                            <Input
-                              label={t("Transfer:amountToTransferLabel")}
-                              value={transferAmount}
-                              placeholder={transferAmount}
-                              className="mb-1"
-                            />
-                          </FormControl>
-                          <FormDescription>
+                          />
+                          <FieldDescription>
                             {t("Transfer:amountToTransferDescription")}
-                          </FormDescription>
-                        </FormItem>
+                          </FieldDescription>
+                          {fieldState.invalid && (
+                            <FieldError errors={[fieldState.error]} />
+                          )}
+                        </Field>
                       )}
                     />
                   ) : null}
 
                   {selectedAsset && targetUser ? (
-                    <FormField
-                      control={form.control}
+                    <Controller
                       name="memoField"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{t("Transfer:optionalMemo")}</FormLabel>
-                          <FormControl
+                      control={form.control}
+                      render={({ field, fieldState }) => (
+                        <Field data-invalid={fieldState.invalid}>
+                          <FieldLabel>{t("Transfer:optionalMemo")}</FieldLabel>
+                          <Input
+                            {...field}
+                            label={t("Transfer:memoFieldLabel")}
+                            value={memoContents}
+                            placeholder={memoContents}
+                            className="mb-1"
                             onChange={(event) => {
                               const input = event.target.value;
                               setMemoContents(input);
+                              field.onChange(input);
                             }}
-                          >
-                            <Input
-                              label={t("Transfer:memoFieldLabel")}
-                              value={memoContents}
-                              placeholder={memoContents}
-                              className="mb-1"
-                            />
-                          </FormControl>
-                          <FormDescription>
+                          />
+                          <FieldDescription>
                             {t("Transfer:memoFieldDescription", {
                               targetUser: targetUser.name,
                             })}
-                          </FormDescription>
-                        </FormItem>
+                          </FieldDescription>
+                          {fieldState.invalid && (
+                            <FieldError errors={[fieldState.error]} />
+                          )}
+                        </Field>
                       )}
                     />
                   ) : null}
 
                   {selectedAsset && targetUser ? (
-                    <FormField
-                      control={form.control}
+                    <Controller
                       name="networkFee"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{t("Transfer:networkFee")}</FormLabel>
-                          <FormControl>
-                            <Input
-                              disabled
-                              placeholder={`${t(
-                                "Transfer:networkFeePlaceholder",
-                                { fee: fee }
-                              )}`}
-                              className="mb-3 mt-3"
-                            />
-                          </FormControl>
+                      control={form.control}
+                      render={({ field, fieldState }) => (
+                        <Field data-invalid={fieldState.invalid}>
+                          <FieldLabel>{t("Transfer:networkFee")}</FieldLabel>
+                          <Input
+                            {...field}
+                            disabled
+                            placeholder={`${t(
+                              "Transfer:networkFeePlaceholder",
+                              { fee: fee }
+                            )}`}
+                            className="mb-3 mt-3"
+                          />
                           {usr.id === usr.referrer ? (
-                            <FormMessage>
+                            <FieldError>
                               {t("Transfer:rebate", {
                                 rebate: trimPrice(fee * 0.8, 5),
                               })}
-                            </FormMessage>
+                            </FieldError>
                           ) : null}
-                        </FormItem>
+                          {fieldState.invalid && (
+                            <FieldError errors={[fieldState.error]} />
+                          )}
+                        </Field>
                       )}
                     />
                   ) : null}
@@ -656,8 +661,8 @@ export default function Transfer(properties) {
                       {t("Transfer:submit")}
                     </Button>
                   )}
-                </form>
-              </Form>
+                </FieldGroup>
+              </form>
               {showDialog && bothUsers ? (
                 <DeepLinkDialog
                   operationNames={["transfer"]}

@@ -5,9 +5,12 @@ import React, {
   useMemo,
   useCallback,
 } from "react";
+import { useForm, Controller } from "react-hook-form";
 import { useStore } from "@nanostores/react";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
+
+import { Field, FieldGroup, FieldError } from "@/components/ui/field";
 
 import {
   Card,
@@ -78,23 +81,34 @@ export default function WorkerCreate(properties) {
     return "bitshares";
   }, [usr]);
 
-  useInitCache(_chain ?? "bitshares", []);
+  const form = useForm({
+    defaultValues: {
+      workerName: "",
+      workerUrl: "",
+      dailyPay: 0,
+      startDate: (() => {
+        const date = new Date();
+        date.setDate(date.getDate() + 7); // Default start date 1 week from now
+        return date;
+      })(),
+      endDate: (() => {
+        const date = new Date();
+        date.setDate(date.getDate() + 14); // Default end date 1 week after start
+        return date;
+      })(),
+      workerType: "vesting",
+      vestingDays: 7,
+    },
+  });
 
-  const [workerName, setWorkerName] = useState("");
-  const [workerUrl, setWorkerUrl] = useState("");
-  const [dailyPay, setDailyPay] = useState(0);
-  const [startDate, setStartDate] = useState(() => {
-    const date = new Date();
-    date.setDate(date.getDate() + 7); // Default start date 1 week from now
-    return date;
-  });
-  const [endDate, setEndDate] = useState(() => {
-    const date = new Date(startDate);
-    date.setFullYear(date.getFullYear() + 1); // Default end date 1 year after start
-    return date;
-  });
-  const [workerType, setWorkerType] = useState("vesting"); // Default to vesting
-  const [vestingDays, setVestingDays] = useState(7); // Default vesting period
+  const { watch, control, setValue } = form;
+  const workerName = watch("workerName");
+  const workerUrl = watch("workerUrl");
+  const dailyPay = watch("dailyPay");
+  const startDate = watch("startDate");
+  const endDate = watch("endDate");
+  const workerType = watch("workerType");
+  const vestingDays = watch("vestingDays");
 
   const [showDialog, setShowDialog] = useState(false);
 
@@ -127,44 +141,7 @@ export default function WorkerCreate(properties) {
     };
   }, [usr, currentNode]);
 
-  // Form Validation Checks
-  const isNameValid = useMemo(
-    () => workerName.length > 0 && workerName.length <= MAX_WORKER_NAME_LENGTH,
-    [workerName]
-  );
-  const isUrlValid = useMemo(
-    () => workerUrl.length > 0 && workerUrl.length <= MAX_URL_LENGTH,
-    [workerUrl]
-  );
-  const isPayValid = useMemo(() => dailyPay > 0, [dailyPay]);
-  const areDatesValid = useMemo(
-    () => startDate && endDate && endDate > startDate,
-    [startDate, endDate]
-  );
-  const isVestingValid = useMemo(
-    () =>
-      workerType !== "vesting" ||
-      (workerType === "vesting" && vestingDays >= 0),
-    [workerType, vestingDays]
-  );
-
-  const canSubmit = useMemo(
-    () =>
-      isNameValid &&
-      isUrlValid &&
-      isPayValid &&
-      areDatesValid &&
-      isVestingValid &&
-      coreAsset,
-    [
-      isNameValid,
-      isUrlValid,
-      isPayValid,
-      areDatesValid,
-      isVestingValid,
-      coreAsset,
-    ]
-  );
+  const canSubmit = useMemo(() => coreAsset, [coreAsset]);
 
   // Construct Initializer based on worker type
   const initializer = useMemo(() => {
@@ -238,203 +215,279 @@ export default function WorkerCreate(properties) {
           </CardHeader>
           <CardContent>
             <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                setShowDialog(true);
-              }}
+              onSubmit={form.handleSubmit(() => setShowDialog(true))}
               className="space-y-4"
             >
-              {/* Worker Name */}
-              <div className="space-y-2">
-                <HoverInfo
-                  content={t("WorkerCreate:nameInfo")}
-                  header={t("WorkerCreate:nameInfoHeader")}
-                />{" "}
-                <Input
-                  id="workerName"
-                  placeholder={t("WorkerCreate:namePlaceholder")}
-                  value={workerName}
-                  onChange={(e) => setWorkerName(e.target.value)}
-                  maxLength={MAX_WORKER_NAME_LENGTH}
-                />
-                {!isNameValid && workerName.length > 0 ? (
-                  <p className="text-sm text-red-500">
-                    {t("WorkerCreate:nameError", {
+              <FieldGroup>
+                {/* Worker Name */}
+                <Controller
+                  name="workerName"
+                  control={control}
+                  rules={{
+                    required: t("WorkerCreate:nameError", {
                       maxLength: MAX_WORKER_NAME_LENGTH,
-                    })}
-                  </p>
-                ) : null}
-              </div>
-
-              {/* URL */}
-              <div className="space-y-2">
-                <HoverInfo
-                  content={t("WorkerCreate:urlInfo")}
-                  header={t("WorkerCreate:urlInfoHeader")}
-                />{" "}
-                <Input
-                  id="workerUrl"
-                  placeholder={t("WorkerCreate:urlPlaceholder")}
-                  value={workerUrl}
-                  onChange={(e) => setWorkerUrl(e.target.value)}
-                  maxLength={MAX_URL_LENGTH}
-                />
-                {!isUrlValid && workerUrl.length > 0 ? (
-                  <p className="text-sm text-red-500">
-                    {t("WorkerCreate:urlError", { maxLength: MAX_URL_LENGTH })}
-                  </p>
-                ) : null}
-              </div>
-
-              {/* Dates */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <HoverInfo
-                    content={t("WorkerCreate:startDateInfo")}
-                    header={t("WorkerCreate:startDateInfoHeader")}
-                  />{" "}
-                  <DateTimePicker
-                    value={startDate}
-                    onChange={(newDate) => {
-                      const nowPlusGrace = new Date();
-                      nowPlusGrace.setSeconds(nowPlusGrace.getSeconds() + 60); // Add 1 minute grace period
-                      if (newDate >= nowPlusGrace) {
-                        setStartDate(newDate);
-                        // Ensure end date is always after start date
-                        if (endDate <= newDate) {
-                          const nextDay = new Date(newDate);
-                          nextDay.setDate(nextDay.getDate() + 1);
-                          setEndDate(nextDay);
-                        }
-                      } else {
-                        // Optionally provide feedback or reset to default
-                        const defaultStartDate = new Date();
-                        defaultStartDate.setDate(
-                          defaultStartDate.getDate() + 7
-                        );
-                        setStartDate(defaultStartDate);
-                      }
-                    }}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <HoverInfo
-                    content={t("WorkerCreate:endDateInfo")}
-                    header={t("WorkerCreate:endDateInfoHeader")}
-                  />
-                  <DateTimePicker
-                    value={endDate}
-                    onChange={(newDate) => {
-                      if (newDate > startDate) {
-                        setEndDate(newDate);
-                      } else {
-                        // Optionally provide feedback or reset to default
-                        const defaultEndDate = new Date(startDate);
-                        defaultEndDate.setFullYear(
-                          defaultEndDate.getFullYear() + 1
-                        );
-                        setEndDate(defaultEndDate);
-                      }
-                    }}
-                    disabled={!startDate}
-                  />
-                  {!areDatesValid && startDate && endDate ? (
-                    <p className="text-sm text-red-500">
-                      {t("WorkerCreate:dateError")}
-                    </p>
-                  ) : null}
-                </div>
-              </div>
-
-              {/* Daily Pay */}
-              <div className="space-y-2">
-                <HoverInfo
-                  content={t("WorkerCreate:dailyPayInfo")}
-                  header={t("WorkerCreate:dailyPayInfoHeader")}
-                />{" "}
-                <Input
-                  id="dailyPay"
-                  type="number"
-                  step={"1"}
-                  onChange={(e) => {
-                    const value = safeParseFloat(e.target.value, 0);
-                    const minVal = 0.00001;
-                    const maxVal = 500000;
-                    if (value >= minVal && value <= maxVal) {
-                      setDailyPay(value);
-                    } else if (value < minVal) {
-                      setDailyPay(minVal);
-                    } else if (value > maxVal) {
-                      setDailyPay(maxVal);
-                    }
+                    }),
+                    maxLength: {
+                      value: MAX_WORKER_NAME_LENGTH,
+                      message: t("WorkerCreate:nameError", {
+                        maxLength: MAX_WORKER_NAME_LENGTH,
+                      }),
+                    },
                   }}
-                  className="w-1/4"
-                  value={dailyPay}
-                  disabled={!coreAsset}
-                />
-                {!isPayValid && dailyPay !== 0 ? (
-                  <p className="text-sm text-red-500">
-                    {t("WorkerCreate:payError")}
-                  </p>
-                ) : null}
-              </div>
-
-              {/* Worker Type & Vesting Period */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <HoverInfo
-                    content={t("WorkerCreate:workerTypeInfo")}
-                    header={t("WorkerCreate:workerTypeInfoHeader")}
-                  />
-                  <Select value={workerType} onValueChange={setWorkerType}>
-                    <SelectTrigger>
-                      <SelectValue
-                        placeholder={t("WorkerCreate:workerTypePlaceholder")}
+                  render={({ field, fieldState }) => (
+                    <Field invalid={fieldState.invalid}>
+                      <HoverInfo
+                        content={t("WorkerCreate:nameInfo")}
+                        header={t("WorkerCreate:nameInfoHeader")}
                       />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectItem value="vesting">
-                          {t("WorkerCreate:vestingWorker")}
-                        </SelectItem>{" "}
-                        <SelectItem value="refund">
-                          {t("WorkerCreate:refundWorker")}
-                        </SelectItem>{" "}
-                        <SelectItem value="burn">
-                          {t("WorkerCreate:burnWorker")}
-                        </SelectItem>{" "}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                </div>
-                {workerType === "vesting" && (
-                  <div className="space-y-2">
-                    <HoverInfo
-                      content={t("WorkerCreate:vestingDaysInfo")}
-                      header={t("WorkerCreate:vestingDaysInfoHeader")}
-                    />{" "}
-                    <Input
-                      id="vestingDays"
-                      type="number"
-                      min="0"
-                      step="1"
-                      value={vestingDays}
-                      onChange={(e) =>
-                        setVestingDays(safeParseInt(e.target.value, 0))
-                      }
-                    />
-                    {!isVestingValid ? (
-                      <p className="text-sm text-red-500">
-                        {t("WorkerCreate:vestingError")}
-                      </p>
-                    ) : null}
-                  </div>
-                )}
-              </div>
+                      <Input
+                        {...field}
+                        id="workerName"
+                        placeholder={t("WorkerCreate:namePlaceholder")}
+                        maxLength={MAX_WORKER_NAME_LENGTH}
+                      />
+                      {fieldState.error && (
+                        <FieldError>{fieldState.error.message}</FieldError>
+                      )}
+                    </Field>
+                  )}
+                />
 
-              <Button type="submit" className="mt-4" disabled={!canSubmit}>
-                {t("WorkerCreate:publishButton")}
-              </Button>
+                {/* URL */}
+                <Controller
+                  name="workerUrl"
+                  control={control}
+                  rules={{
+                    required: t("WorkerCreate:urlError", {
+                      maxLength: MAX_URL_LENGTH,
+                    }),
+                    maxLength: {
+                      value: MAX_URL_LENGTH,
+                      message: t("WorkerCreate:urlError", {
+                        maxLength: MAX_URL_LENGTH,
+                      }),
+                    },
+                  }}
+                  render={({ field, fieldState }) => (
+                    <Field invalid={fieldState.invalid}>
+                      <HoverInfo
+                        content={t("WorkerCreate:urlInfo")}
+                        header={t("WorkerCreate:urlInfoHeader")}
+                      />
+                      <Input
+                        {...field}
+                        id="workerUrl"
+                        placeholder={t("WorkerCreate:urlPlaceholder")}
+                        maxLength={MAX_URL_LENGTH}
+                      />
+                      {fieldState.error && (
+                        <FieldError>{fieldState.error.message}</FieldError>
+                      )}
+                    </Field>
+                  )}
+                />
+
+                {/* Dates */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Controller
+                    name="startDate"
+                    control={control}
+                    rules={{
+                      validate: (value) =>
+                        value < new Date() ? t("WorkerCreate:dateError") : true,
+                    }}
+                    render={({ field, fieldState }) => (
+                      <Field invalid={fieldState.invalid}>
+                        <HoverInfo
+                          content={t("WorkerCreate:startDateInfo")}
+                          header={t("WorkerCreate:startDateInfoHeader")}
+                        />
+                        <DateTimePicker
+                          value={field.value}
+                          onChange={(newDate) => {
+                            const nowPlusGrace = new Date();
+                            nowPlusGrace.setSeconds(
+                              nowPlusGrace.getSeconds() + 60
+                            );
+                            if (newDate >= nowPlusGrace) {
+                              field.onChange(newDate);
+                              if (endDate <= newDate) {
+                                const nextDay = new Date(newDate);
+                                nextDay.setDate(nextDay.getDate() + 1);
+                                setValue("endDate", nextDay);
+                              }
+                            } else {
+                              const defaultStartDate = new Date();
+                              defaultStartDate.setDate(
+                                defaultStartDate.getDate() + 7
+                              );
+                              field.onChange(defaultStartDate);
+                            }
+                          }}
+                        />
+                        {fieldState.error && (
+                          <FieldError>{fieldState.error.message}</FieldError>
+                        )}
+                      </Field>
+                    )}
+                  />
+                  <Controller
+                    name="endDate"
+                    control={control}
+                    rules={{
+                      validate: (value) =>
+                        value <= startDate ? t("WorkerCreate:dateError") : true,
+                    }}
+                    render={({ field, fieldState }) => (
+                      <Field invalid={fieldState.invalid}>
+                        <HoverInfo
+                          content={t("WorkerCreate:endDateInfo")}
+                          header={t("WorkerCreate:endDateInfoHeader")}
+                        />
+                        <DateTimePicker
+                          value={field.value}
+                          onChange={(newDate) => {
+                            if (newDate > startDate) {
+                              field.onChange(newDate);
+                            } else {
+                              const defaultEndDate = new Date(startDate);
+                              defaultEndDate.setFullYear(
+                                defaultEndDate.getFullYear() + 1
+                              );
+                              field.onChange(defaultEndDate);
+                            }
+                          }}
+                          disabled={!startDate}
+                        />
+                        {fieldState.error && (
+                          <FieldError>{fieldState.error.message}</FieldError>
+                        )}
+                      </Field>
+                    )}
+                  />
+                </div>
+
+                {/* Daily Pay */}
+                <Controller
+                  name="dailyPay"
+                  control={control}
+                  rules={{
+                    min: {
+                      value: 0.00001,
+                      message: t("WorkerCreate:payError"),
+                    },
+                    max: {
+                      value: 500000,
+                      message: t("WorkerCreate:payError"),
+                    },
+                  }}
+                  render={({ field, fieldState }) => (
+                    <Field invalid={fieldState.invalid}>
+                      <HoverInfo
+                        content={t("WorkerCreate:dailyPayInfo")}
+                        header={t("WorkerCreate:dailyPayInfoHeader")}
+                      />
+                      <Input
+                        {...field}
+                        id="dailyPay"
+                        type="number"
+                        step={"1"}
+                        onChange={(e) => {
+                          const value = safeParseFloat(e.target.value, 0);
+                          field.onChange(value);
+                        }}
+                        className="w-1/4"
+                        disabled={!coreAsset}
+                      />
+                      {fieldState.error && (
+                        <FieldError>{fieldState.error.message}</FieldError>
+                      )}
+                    </Field>
+                  )}
+                />
+
+                {/* Worker Type & Vesting Period */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Controller
+                    name="workerType"
+                    control={control}
+                    render={({ field }) => (
+                      <Field>
+                        <HoverInfo
+                          content={t("WorkerCreate:workerTypeInfo")}
+                          header={t("WorkerCreate:workerTypeInfoHeader")}
+                        />
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
+                        >
+                          <SelectTrigger>
+                            <SelectValue
+                              placeholder={t(
+                                "WorkerCreate:workerTypePlaceholder"
+                              )}
+                            />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectGroup>
+                              <SelectItem value="vesting">
+                                {t("WorkerCreate:vestingWorker")}
+                              </SelectItem>
+                              <SelectItem value="refund">
+                                {t("WorkerCreate:refundWorker")}
+                              </SelectItem>
+                              <SelectItem value="burn">
+                                {t("WorkerCreate:burnWorker")}
+                              </SelectItem>
+                            </SelectGroup>
+                          </SelectContent>
+                        </Select>
+                      </Field>
+                    )}
+                  />
+                  {workerType === "vesting" && (
+                    <Controller
+                      name="vestingDays"
+                      control={control}
+                      rules={{
+                        min: {
+                          value: 0,
+                          message: t("WorkerCreate:vestingError"),
+                        },
+                      }}
+                      render={({ field, fieldState }) => (
+                        <Field invalid={fieldState.invalid}>
+                          <HoverInfo
+                            content={t("WorkerCreate:vestingDaysInfo")}
+                            header={t("WorkerCreate:vestingDaysInfoHeader")}
+                          />
+                          <Input
+                            {...field}
+                            id="vestingDays"
+                            type="number"
+                            min="0"
+                            step="1"
+                            onChange={(e) =>
+                              field.onChange(safeParseInt(e.target.value, 0))
+                            }
+                          />
+                          {fieldState.error && (
+                            <FieldError>{fieldState.error.message}</FieldError>
+                          )}
+                        </Field>
+                      )}
+                    />
+                  )}
+                </div>
+
+                <Button
+                  type="submit"
+                  className="mt-4"
+                  disabled={!form.formState.isValid || !canSubmit}
+                >
+                  {t("WorkerCreate:publishButton")}
+                </Button>
+              </FieldGroup>
             </form>
           </CardContent>
         </Card>

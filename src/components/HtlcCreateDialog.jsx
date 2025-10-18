@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { useStore } from "@nanostores/react";
 import { sha256 } from "@noble/hashes/sha2.js";
 import { ripemd160 } from "@noble/hashes/legacy.js";
@@ -8,14 +8,13 @@ import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
 import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+  Field,
+  FieldGroup,
+  FieldLabel,
+  FieldContent,
+  FieldDescription,
+  FieldError,
+} from "@/components/ui/field";
 
 import {
   Dialog,
@@ -245,242 +244,238 @@ export default function HtlcCreateDialog(properties) {
             <DialogTitle>{t("HTLCCreate:dialogTitle")}</DialogTitle>
             <DialogDescription>{t("HTLCCreate:dialogDesc")}</DialogDescription>
           </DialogHeader>
-          <Form {...form}>
-            <form
-              onSubmit={(e) => {
-                onSubmit();
-                e.preventDefault();
-              }}
-              className="space-y-4"
-            >
-              <FormField
-                control={form.control}
-                name="toAccount"
-                render={() => (
-                  <FormItem>
-                    <FormLabel>{t("HTLCCreate:toAccountLabel")}</FormLabel>
-                    <div className="flex items-center space-x-3">
-                      <div className="flex-shrink-0">
-                        {toAccount ? (
-                          <Avatar
-                            size={40}
-                            name={toAccount.name}
-                            extra="RecipientCreate"
-                            expression={{ eye: "normal", mouth: "open" }}
-                            colors={[
-                              "#146A7C",
-                              "#F0AB3D",
-                              "#C271B4",
-                              "#C20D90",
-                              "#92A1C6",
-                            ]}
-                          />
-                        ) : (
-                          <Av>
-                            <AvatarFallback>?</AvatarFallback>
-                          </Av>
-                        )}
-                      </div>
-                      <Input
-                        disabled
-                        placeholder={t("HTLCCreate:recipientPlaceholder")}
-                        value={
-                          toAccount ? `${toAccount.name} (${toAccount.id})` : ""
-                        }
-                        className="flex-grow"
-                        readOnly
-                      />
-                      <Dialog
-                        open={targetUserDialogOpen}
-                        onOpenChange={setTargetUserDialogOpen}
-                      >
-                        <DialogTrigger asChild>
-                          <Button variant="outline">
-                            {toAccount
-                              ? t("HTLCCreate:changeRecipient")
-                              : t("HTLCCreate:selectRecipient")}
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent className="sm:max-w-[375px] bg-white">
-                          <DialogHeader>
-                            <DialogTitle>
-                              {t("Transfer:bitsharesAccountSearch")}
-                            </DialogTitle>
-                            <DialogDescription>
-                              {t("Transfer:searchingForAccount")}
-                            </DialogDescription>
-                          </DialogHeader>
-                          <AccountSearch
-                            chain={_chain}
-                            excludedUsers={usr ? [usr] : []}
-                            setChosenAccount={(acc) => {
-                              setToAccount(acc);
-                              setTargetUserDialogOpen(false);
-                            }}
-                          />
-                        </DialogContent>
-                      </Dialog>
+          <form
+            onSubmit={form.handleSubmit(() => {
+              onSubmit();
+            })}
+            className="space-y-4"
+          >
+            <FieldGroup>
+              <Field>
+                <FieldLabel htmlFor="toAccount-display">
+                  {t("HTLCCreate:toAccountLabel")}
+                </FieldLabel>
+                <FieldContent>
+                  <div className="flex items-center space-x-3">
+                    <div className="flex-shrink-0">
+                      {toAccount ? (
+                        <Avatar
+                          size={40}
+                          name={toAccount.name}
+                          extra="RecipientCreate"
+                          expression={{ eye: "normal", mouth: "open" }}
+                          colors={[
+                            "#146A7C",
+                            "#F0AB3D",
+                            "#C271B4",
+                            "#C20D90",
+                            "#92A1C6",
+                          ]}
+                        />
+                      ) : (
+                        <Av>
+                          <AvatarFallback>?</AvatarFallback>
+                        </Av>
+                      )}
                     </div>
-                    <FormDescription>
-                      {t("HTLCCreate:toAccountDesc")}
-                    </FormDescription>
-                  </FormItem>
-                )}
-              />
+                    <Input
+                      id="toAccount-display"
+                      disabled
+                      placeholder={t("HTLCCreate:recipientPlaceholder")}
+                      value={
+                        toAccount ? `${toAccount.name} (${toAccount.id})` : ""
+                      }
+                      className="flex-grow"
+                      readOnly
+                    />
+                    <Dialog
+                      open={targetUserDialogOpen}
+                      onOpenChange={setTargetUserDialogOpen}
+                    >
+                      <DialogTrigger asChild>
+                        <Button variant="outline">
+                          {toAccount
+                            ? t("HTLCCreate:changeRecipient")
+                            : t("HTLCCreate:selectRecipient")}
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-[375px] bg-white">
+                        <DialogHeader>
+                          <DialogTitle>
+                            {t("Transfer:bitsharesAccountSearch")}
+                          </DialogTitle>
+                          <DialogDescription>
+                            {t("Transfer:searchingForAccount")}
+                          </DialogDescription>
+                        </DialogHeader>
+                        <AccountSearch
+                          chain={_chain}
+                          excludedUsers={usr ? [usr] : []}
+                          setChosenAccount={(acc) => {
+                            setToAccount(acc);
+                            setTargetUserDialogOpen(false);
+                          }}
+                        />
+                      </DialogContent>
+                    </Dialog>
+                  </div>
+                </FieldContent>
+                <FieldDescription>
+                  {t("HTLCCreate:toAccountDesc")}
+                </FieldDescription>
+              </Field>
 
-              <FormField
-                control={form.control}
-                name="asset"
-                render={() => (
-                  <FormItem>
-                    <FormLabel>{t("HTLCCreate:assetLabel")}</FormLabel>
-                    <div className="flex items-center space-x-3">
-                      <div className="flex-shrink-0">
-                        {foundAsset ? (
-                          <Av>
-                            <AvatarFallback>
-                              <div className="text-sm">
-                                {foundAsset.bitasset_data_id ? "MPA" : "UIA"}
-                              </div>
-                            </AvatarFallback>
-                          </Av>
-                        ) : (
-                          <Av>
-                            <AvatarFallback>?</AvatarFallback>
-                          </Av>
-                        )}
-                      </div>
-                      <Input
-                        disabled
-                        placeholder={t("HTLCCreate:assetPlaceholder")}
-                        value={
-                          foundAsset
-                            ? `${foundAsset.symbol} (${foundAsset.id})`
-                            : ""
-                        }
-                        className="flex-grow"
-                        readOnly
-                      />
-                      <AssetDropDownCard
-                        assetSymbol={selectedAssetSymbol ?? ""}
-                        assetData={foundAsset}
-                        storeCallback={setSelectedAssetSymbol}
-                        otherAsset={null}
-                        marketSearch={marketSearch}
-                        type={"sell"}
-                        chain={_chain}
-                        balances={balances}
-                      />
+              <Field>
+                <FieldLabel htmlFor="asset-display">
+                  {t("HTLCCreate:assetLabel")}
+                </FieldLabel>
+                <FieldContent>
+                  <div className="flex items-center space-x-3">
+                    <div className="flex-shrink-0">
+                      {foundAsset ? (
+                        <Av>
+                          <AvatarFallback>
+                            <div className="text-sm">
+                              {foundAsset.bitasset_data_id ? "MPA" : "UIA"}
+                            </div>
+                          </AvatarFallback>
+                        </Av>
+                      ) : (
+                        <Av>
+                          <AvatarFallback>?</AvatarFallback>
+                        </Av>
+                      )}
                     </div>
-                    <FormDescription>
-                      {t("HTLCCreate:assetDesc")}
-                    </FormDescription>
-                  </FormItem>
-                )}
-              />
+                    <Input
+                      id="asset-display"
+                      disabled
+                      placeholder={t("HTLCCreate:assetPlaceholder")}
+                      value={
+                        foundAsset
+                          ? `${foundAsset.symbol} (${foundAsset.id})`
+                          : ""
+                      }
+                      className="flex-grow"
+                      readOnly
+                    />
+                    <AssetDropDownCard
+                      assetSymbol={selectedAssetSymbol ?? ""}
+                      assetData={foundAsset}
+                      storeCallback={setSelectedAssetSymbol}
+                      otherAsset={null}
+                      marketSearch={marketSearch}
+                      type={"sell"}
+                      chain={_chain}
+                      balances={balances}
+                    />
+                  </div>
+                </FieldContent>
+                <FieldDescription>{t("HTLCCreate:assetDesc")}</FieldDescription>
+              </Field>
 
               {foundAsset ? (
-                <FormField
-                  control={form.control}
-                  name="amount"
-                  render={() => (
-                    <FormItem>
-                      <FormLabel>
-                        {t("HTLCCreate:amountLabel", {
-                          symbol: foundAsset.symbol,
-                        })}
-                      </FormLabel>
-                      <div className="flex items-center space-x-3">
-                        <Input
-                          type="number"
-                          placeholder="0.0"
-                          value={amount}
-                          min={humanReadableFloat(1, foundAsset.precision)}
-                          step={humanReadableFloat(1, foundAsset.precision)}
-                          onChange={(e) => {
-                            const val = e.target.value;
-                            if (/^\d*\.?\d*$/.test(val)) {
-                              const parts = val.split(".");
-                              if (
-                                parts[1] &&
-                                parts[1].length > foundAsset.precision
-                              ) {
-                                setAmount(
-                                  parseFloat(val).toFixed(foundAsset.precision)
-                                );
-                              } else {
-                                setAmount(val);
+                <Field>
+                  <FieldLabel htmlFor="amount-input">
+                    {t("HTLCCreate:amountLabel", { symbol: foundAsset.symbol })}
+                  </FieldLabel>
+                  <FieldContent>
+                    <div className="flex items-center space-x-3">
+                      <Controller
+                        name="amount"
+                        control={form.control}
+                        render={({ field }) => (
+                          <Input
+                            id="amount-input"
+                            type="number"
+                            placeholder="0.0"
+                            value={amount}
+                            min={humanReadableFloat(1, foundAsset.precision)}
+                            step={humanReadableFloat(1, foundAsset.precision)}
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              if (/^\d*\.?\d*$/.test(val)) {
+                                const parts = val.split(".");
+                                if (
+                                  parts[1] &&
+                                  parts[1].length > foundAsset.precision
+                                ) {
+                                  const fixed = parseFloat(val).toFixed(
+                                    foundAsset.precision
+                                  );
+                                  setAmount(fixed);
+                                  field.onChange(fixed);
+                                } else {
+                                  setAmount(val);
+                                  field.onChange(val);
+                                }
                               }
-                            }
-                          }}
-                          className="flex-grow"
-                        />
-                        <Button
-                          variant="outline"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            setAmount(foundAssetBalance);
-                          }}
-                        >
-                          {t("HTLCCreate:useBalance", {
-                            balance: foundAssetBalance,
-                          })}
-                        </Button>
-                      </div>
-                      {amount > foundAssetBalance ? (
-                        <FormMessage>
-                          {t("HTLCCreate:insufficientBalance")}
-                        </FormMessage>
-                      ) : null}
-                      <FormDescription>
-                        {t("HTLCCreate:amountDesc")}
-                      </FormDescription>
-                    </FormItem>
-                  )}
-                />
+                            }}
+                            className="flex-grow"
+                          />
+                        )}
+                      />
+                      <Button
+                        variant="outline"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setAmount(foundAssetBalance);
+                          form.setValue("amount", foundAssetBalance);
+                        }}
+                      >
+                        {t("HTLCCreate:useBalance", {
+                          balance: foundAssetBalance,
+                        })}
+                      </Button>
+                    </div>
+                  </FieldContent>
+                  {amount > foundAssetBalance ? (
+                    <FieldError>
+                      {t("HTLCCreate:insufficientBalance")}
+                    </FieldError>
+                  ) : null}
+                  <FieldDescription>
+                    {t("HTLCCreate:amountDesc")}
+                  </FieldDescription>
+                </Field>
               ) : null}
 
-              {/* Preimage Input */}
-              <FormField
-                control={form.control}
-                name="preimage"
-                render={() => (
-                  <FormItem>
-                    <FormLabel>{t("HTLCCreate:preimageLabel")}</FormLabel>
-                    <Textarea
-                      placeholder={t("HTLCCreate:preimagePlaceholder")}
-                      value={preimage}
-                      onChange={(e) => setPreimage(e.target.value)}
-                    />
-                    <FormDescription>
-                      {t("HTLCCreate:preimageDesc")}
-                    </FormDescription>
-                  </FormItem>
-                )}
-              />
+              <Field>
+                <FieldLabel htmlFor="preimage-textarea">
+                  {t("HTLCCreate:preimageLabel")}
+                </FieldLabel>
+                <FieldContent>
+                  <Textarea
+                    id="preimage-textarea"
+                    placeholder={t("HTLCCreate:preimagePlaceholder")}
+                    value={preimage}
+                    onChange={(e) => setPreimage(e.target.value)}
+                  />
+                </FieldContent>
+                <FieldDescription>
+                  {t("HTLCCreate:preimageDesc")}
+                </FieldDescription>
+              </Field>
 
-              <FormField
-                control={form.control}
-                name="hashingAlgorithm"
-                render={() => (
-                  <FormItem>
-                    <FormLabel>{t("HTLCCreate:algorithm")}</FormLabel>
-                    <select
-                      value={hashingAlgorithm}
-                      onChange={(e) => setHashingAlgorithm(e.target.value)}
-                      className="form-select mt-1 block w-full border border-gray-300 rounded"
-                    >
-                      <option value="sha256">SHA-256</option>
-                      <option value="ripemd160">RIPEMD-160</option>
-                    </select>
-                    <FormDescription>
-                      {t("HTLCCreate:algorithmDesc")}
-                    </FormDescription>
-                  </FormItem>
-                )}
-              />
+              <Field>
+                <FieldLabel htmlFor="hashing-select">
+                  {t("HTLCCreate:algorithm")}
+                </FieldLabel>
+                <FieldContent>
+                  <select
+                    id="hashing-select"
+                    value={hashingAlgorithm}
+                    onChange={(e) => setHashingAlgorithm(e.target.value)}
+                    className="form-select mt-1 block w-full border border-gray-300 rounded"
+                  >
+                    <option value="sha256">SHA-256</option>
+                    <option value="ripemd160">RIPEMD-160</option>
+                  </select>
+                </FieldContent>
+                <FieldDescription>
+                  {t("HTLCCreate:algorithmDesc")}
+                </FieldDescription>
+              </Field>
 
-              {/* Display Preimage Hash & Size */}
               {preimage && (
                 <div className="space-y-2 text-sm p-3 border rounded-md">
                   <div className="flex justify-between items-center">
@@ -502,51 +497,49 @@ export default function HtlcCreateDialog(properties) {
                 </div>
               )}
 
-              <FormField
-                control={form.control}
-                name="claimPeriod"
-                render={() => (
-                  <FormItem>
-                    <FormLabel>{t("HTLCCreate:claimPeriodLabel")}</FormLabel>
-                    <Input
-                      type="number"
-                      placeholder="e.g., 86400 for 1 day"
-                      value={claimPeriodSeconds}
-                      min="60" // Minimum 1 minute
-                      step="1"
-                      onChange={(e) => {
-                        const val = parseInt(e.target.value, 10);
-                        if (!isNaN(val) && val >= 60) {
-                          setClaimPeriodSeconds(val);
-                        } else if (!isNaN(val) && val < 60) {
-                          setClaimPeriodSeconds(60); // Enforce minimum
-                        }
-                      }}
-                    />
-                    <FormDescription>
-                      {t("HTLCCreate:claimPeriodDesc")}
-                    </FormDescription>
-                  </FormItem>
-                )}
-              />
+              <Field>
+                <FieldLabel htmlFor="claimPeriod-input">
+                  {t("HTLCCreate:claimPeriodLabel")}
+                </FieldLabel>
+                <FieldContent>
+                  <Input
+                    id="claimPeriod-input"
+                    type="number"
+                    placeholder="e.g., 86400 for 1 day"
+                    value={claimPeriodSeconds}
+                    min="60"
+                    step="1"
+                    onChange={(e) => {
+                      const val = parseInt(e.target.value, 10);
+                      if (!isNaN(val) && val >= 60) {
+                        setClaimPeriodSeconds(val);
+                      } else if (!isNaN(val) && val < 60) {
+                        setClaimPeriodSeconds(60);
+                      }
+                    }}
+                  />
+                </FieldContent>
+                <FieldDescription>
+                  {t("HTLCCreate:claimPeriodDesc")}
+                </FieldDescription>
+              </Field>
 
-              <FormField
-                control={form.control}
-                name="networkFee"
-                render={() => (
-                  <FormItem>
-                    <FormLabel>{t("HTLCCreate:feeLabel")}</FormLabel>
-                    <Input
-                      disabled
-                      value={`${fee} ${
-                        usr.chain === "bitshares" ? "BTS" : "TEST"
-                      }`}
-                      readOnly
-                    />
-                    <FormDescription>{t("HTLCCreate:feeDesc")}</FormDescription>
-                  </FormItem>
-                )}
-              />
+              <Field>
+                <FieldLabel htmlFor="fee-display">
+                  {t("HTLCCreate:feeLabel")}
+                </FieldLabel>
+                <FieldContent>
+                  <Input
+                    id="fee-display"
+                    disabled
+                    value={`${fee} ${
+                      usr.chain === "bitshares" ? "BTS" : "TEST"
+                    }`}
+                    readOnly
+                  />
+                </FieldContent>
+                <FieldDescription>{t("HTLCCreate:feeDesc")}</FieldDescription>
+              </Field>
 
               <Button
                 type="submit"
@@ -554,8 +547,8 @@ export default function HtlcCreateDialog(properties) {
               >
                 {t("HTLCCreate:submitButton")}
               </Button>
-            </form>
-          </Form>
+            </FieldGroup>
+          </form>
         </DialogContent>
       </Dialog>
 

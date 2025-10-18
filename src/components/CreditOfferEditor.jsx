@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { format, set } from "date-fns";
 import { useSyncExternalStore } from "react";
@@ -35,14 +35,13 @@ import {
 } from "@/components/ui/card";
 
 import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+  Field,
+  FieldGroup,
+  FieldLabel,
+  FieldContent,
+  FieldDescription,
+  FieldError,
+} from "@/components/ui/field";
 
 import {
   Dialog,
@@ -719,708 +718,629 @@ export default function CreditOfferEditor(properties) {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Form {...form}>
-              <form
-                onSubmit={() => {
-                  setShowDialog(true);
-                  event.preventDefault();
-                }}
-              >
+            <form
+              onSubmit={form.handleSubmit(() => {
+                setShowDialog(true);
+              })}
+            >
+              <FieldGroup>
                 {offerID ? (
                   <span className="grid grid-cols-12">
                     <span className="col-span-6">
-                      <FormField
-                        control={form.control}
-                        name="offerOwner"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>
-                              {t("CreditOfferEditor:offerOwner")}
-                            </FormLabel>
-                            <FormControl>
-                              <div className="grid grid-cols-12 mt-4 mr-2">
-                                <div className="col-span-8 mr-2 mb-1 mt-1">
-                                  <Input
-                                    disabled
-                                    placeholder={offerOwner ?? "1.2.x"}
-                                  />
-                                </div>
-                                <div className="col-span-4 mt-1 text-center">
-                                  <ExternalLink
-                                    variant="outline"
-                                    classnamecontents=""
-                                    type="button"
-                                    text={t("CreditOfferEditor:viewAccount")}
-                                    hyperlink={
-                                      usr.chain === "bitshares"
-                                        ? `https://explorer.bitshares.ws/#/accounts/${
-                                            offerOwner ?? ""
-                                          }`
-                                        : `https://explorer.bitshares.ws/#/accounts/${
-                                            offerOwner ?? ""
-                                          }?network=testnet`
-                                    }
-                                  />
-                                </div>
-                              </div>
-                            </FormControl>
-                            <FormDescription>
-                              {t("CreditOfferEditor:offerOwnerDescription")}
-                            </FormDescription>
-                          </FormItem>
-                        )}
-                      />
+                      <Field>
+                        <FieldLabel htmlFor={`offerOwner-${offerID ?? "new"}`}>
+                          {t("CreditOfferEditor:offerOwner")}
+                        </FieldLabel>
+                        <FieldContent>
+                          <div className="grid grid-cols-12 mt-4 mr-2">
+                            <div className="col-span-8 mr-2 mb-1 mt-1">
+                              <Input
+                                id={`offerOwner-${offerID ?? "new"}`}
+                                disabled
+                                placeholder={offerOwner ?? "1.2.x"}
+                              />
+                            </div>
+                            <div className="col-span-4 mt-1 text-center">
+                              <ExternalLink
+                                variant="outline"
+                                classnamecontents=""
+                                type="button"
+                                text={t("CreditOfferEditor:viewAccount")}
+                                hyperlink={
+                                  usr.chain === "bitshares"
+                                    ? `https://explorer.bitshares.ws/#/accounts/${
+                                        offerOwner ?? ""
+                                      }`
+                                    : `https://explorer.bitshares.ws/#/accounts/${
+                                        offerOwner ?? ""
+                                      }?network=testnet`
+                                }
+                              />
+                            </div>
+                          </div>
+                        </FieldContent>
+                        <FieldDescription>
+                          {t("CreditOfferEditor:offerOwnerDescription")}
+                        </FieldDescription>
+                      </Field>
                     </span>
                     <span className="col-span-6">
-                      <FormField
-                        control={form.control}
-                        name="offerID"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Existing Offer ID</FormLabel>
-                            <FormControl>
-                              <div className="grid grid-cols-12 mt-4">
-                                <div className="col-span-10">
-                                  <Input
-                                    disabled
-                                    placeholder={offerID}
-                                    className="mb-1 mt-1"
-                                  />
-                                </div>
-                                <div className="col-span-2 mt-1 text-center">
-                                  <Dialog>
-                                    <DialogTrigger asChild>
+                      <Field>
+                        <FieldLabel htmlFor={`offerId-${offerID ?? "new"}`}>
+                          Existing Offer ID
+                        </FieldLabel>
+                        <FieldContent>
+                          <div className="grid grid-cols-12 mt-4">
+                            <div className="col-span-10">
+                              <Input
+                                id={`offerId-${offerID ?? "new"}`}
+                                disabled
+                                placeholder={offerID}
+                                className="mb-1 mt-1"
+                              />
+                            </div>
+                            <div className="col-span-2 mt-1 text-center">
+                              <Dialog>
+                                <DialogTrigger asChild>
+                                  <Button className="ml-2" variant="outline">
+                                    JSON
+                                  </Button>
+                                </DialogTrigger>
+                                <DialogContent className="sm:max-w-[550px] bg-white">
+                                  <DialogHeader>
+                                    <DialogTitle>
+                                      {t(
+                                        "CreditOfferEditor:existingCreditOfferJSON"
+                                      )}
+                                    </DialogTitle>
+                                    <DialogDescription>
+                                      {t(
+                                        "CreditOfferEditor:currentBlockchainData"
+                                      )}
+                                    </DialogDescription>
+                                  </DialogHeader>
+                                  <div className="grid grid-cols-1">
+                                    <div className="col-span-1">
+                                      <ScrollArea className="h-72 rounded-md border">
+                                        <pre>
+                                          {JSON.stringify(offerJSON, null, 2)}
+                                        </pre>
+                                      </ScrollArea>
+                                    </div>
+                                    <div className="col-span-1 mt-3">
                                       <Button
-                                        className="ml-2"
                                         variant="outline"
+                                        onClick={() => {
+                                          copyToClipboard(
+                                            JSON.stringify(offerJSON, null, 4)
+                                          );
+                                        }}
                                       >
-                                        JSON
+                                        {t(
+                                          "DeepLinkDialog:tabsContent.copyOperationJSON"
+                                        )}
                                       </Button>
-                                    </DialogTrigger>
-                                    <DialogContent className="sm:max-w-[550px] bg-white">
-                                      <DialogHeader>
-                                        <DialogTitle>
-                                          {t(
-                                            "CreditOfferEditor:existingCreditOfferJSON"
-                                          )}
-                                        </DialogTitle>
-                                        <DialogDescription>
-                                          {t(
-                                            "CreditOfferEditor:currentBlockchainData"
-                                          )}
-                                        </DialogDescription>
-                                      </DialogHeader>
-                                      <div className="grid grid-cols-1">
-                                        <div className="col-span-1">
-                                          <ScrollArea className="h-72 rounded-md border">
-                                            <pre>
-                                              {JSON.stringify(
-                                                offerJSON,
-                                                null,
-                                                2
-                                              )}
-                                            </pre>
-                                          </ScrollArea>
-                                        </div>
-                                        <div className="col-span-1 mt-3">
-                                          <Button
-                                            variant="outline"
-                                            onClick={() => {
-                                              copyToClipboard(
-                                                JSON.stringify(
-                                                  offerJSON,
-                                                  null,
-                                                  4
-                                                )
-                                              );
-                                            }}
-                                          >
-                                            {t(
-                                              "DeepLinkDialog:tabsContent.copyOperationJSON"
-                                            )}
-                                          </Button>
-                                          <ExternalLink
-                                            variant="outline"
-                                            classnamecontents="ml-3"
-                                            type="button"
-                                            text={t(
-                                              "CreditOfferEditor:viewOnbitshares"
-                                            )}
-                                            hyperlink={
-                                              usr.chain === "bitshares"
-                                                ? `https://explorer.bitshares.ws/#/objects/${offerID}`
-                                                : `https://explorer.bitshares.ws/#/objects/${offerID}?network=testnet`
-                                            }
-                                          />
-                                        </div>
-                                      </div>
-                                    </DialogContent>
-                                  </Dialog>
-                                </div>
-                              </div>
-                            </FormControl>
-                            <FormDescription>
-                              {t("CreditOfferEditor:viewingExistingOffer")}
-                            </FormDescription>
-                          </FormItem>
-                        )}
-                      />
+                                      <ExternalLink
+                                        variant="outline"
+                                        classnamecontents="ml-3"
+                                        type="button"
+                                        text={t(
+                                          "CreditOfferEditor:viewOnbitshares"
+                                        )}
+                                        hyperlink={
+                                          usr.chain === "bitshares"
+                                            ? `https://explorer.bitshares.ws/#/objects/${offerID}`
+                                            : `https://explorer.bitshares.ws/#/objects/${offerID}?network=testnet`
+                                        }
+                                      />
+                                    </div>
+                                  </div>
+                                </DialogContent>
+                              </Dialog>
+                            </div>
+                          </div>
+                        </FieldContent>
+                        <FieldDescription>
+                          {t("CreditOfferEditor:viewingExistingOffer")}
+                        </FieldDescription>
+                      </Field>
                     </span>
                   </span>
                 ) : null}
-                <FormField
-                  control={form.control}
-                  name="targetAsset"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>
-                        {t("CreditOfferEditor:assetToLend")}
-                      </FormLabel>
-                      <FormControl>
-                        <div className="grid grid-cols-8 mt-4">
-                          <div className="col-span-1 ml-5">
-                            {!selectedAsset || !foundAsset ? (
-                              <Av>
-                                <AvatarFallback>?</AvatarFallback>
-                              </Av>
-                            ) : null}
-                            {foundAsset ? (
-                              <Av>
-                                <AvatarFallback>
-                                  <div className="text-sm">
-                                    {foundAsset.bitasset_data_id
-                                      ? "MPA"
-                                      : "UIA"}
-                                  </div>
-                                </AvatarFallback>
-                              </Av>
-                            ) : null}
-                          </div>
-                          <div className="col-span-5">
-                            {!selectedAsset || !foundAsset ? (
-                              <Input
-                                disabled
-                                placeholder="Bitshares asset (1.3.x)"
-                                className="mb-1 mt-1"
-                              />
-                            ) : null}
-                            {foundAsset ? (
-                              <Input
-                                disabled
-                                placeholder={`${foundAsset.symbol} (${foundAsset.id})`}
-                                className="mb-1 mt-1"
-                              />
-                            ) : null}
-                          </div>
-                          <div className="col-span-2 mt-1 ml-3 text-center">
-                            {!offerID ? (
-                              <AssetDropDown
-                                assetSymbol={selectedAsset ?? ""}
-                                assetData={null}
-                                storeCallback={setSelectedAsset}
-                                otherAsset={null}
-                                marketSearch={marketSearch}
-                                type={null}
-                                chain={usr.chain}
-                                balances={balances}
-                              />
-                            ) : null}
-                          </div>
-                        </div>
-                      </FormControl>
-                      <FormDescription>
-                        {t("CreditOfferEditor:lendingAssetDescription")}
-                      </FormDescription>
-                      <FormMessage>
-                        {foundAsset &&
-                        balances &&
-                        !balances.map((x) => x.asset_id).includes(foundAsset.id)
-                          ? t("Transfer:noAssetInAccount", {
-                              username: usr.username,
-                            })
-                          : null}
-                      </FormMessage>
-                    </FormItem>
-                  )}
-                />
+                <Field>
+                  <FieldLabel htmlFor={`targetAsset-${offerID ?? "new"}`}>
+                    {t("CreditOfferEditor:assetToLend")}
+                  </FieldLabel>
+                  <FieldContent>
+                    <div className="grid grid-cols-8 mt-4">
+                      <div className="col-span-1 ml-5">
+                        {!selectedAsset || !foundAsset ? (
+                          <Av>
+                            <AvatarFallback>?</AvatarFallback>
+                          </Av>
+                        ) : null}
+                        {foundAsset ? (
+                          <Av>
+                            <AvatarFallback>
+                              <div className="text-sm">
+                                {foundAsset.bitasset_data_id ? "MPA" : "UIA"}
+                              </div>
+                            </AvatarFallback>
+                          </Av>
+                        ) : null}
+                      </div>
+                      <div className="col-span-5">
+                        {!selectedAsset || !foundAsset ? (
+                          <Input
+                            id={`targetAsset-${offerID ?? "new"}`}
+                            disabled
+                            placeholder="Bitshares asset (1.3.x)"
+                            className="mb-1 mt-1"
+                          />
+                        ) : null}
+                        {foundAsset ? (
+                          <Input
+                            id={`targetAsset-${offerID ?? "new"}`}
+                            disabled
+                            placeholder={`${foundAsset.symbol} (${foundAsset.id})`}
+                            className="mb-1 mt-1"
+                          />
+                        ) : null}
+                      </div>
+                      <div className="col-span-2 mt-1 ml-3 text-center">
+                        {!offerID ? (
+                          <AssetDropDown
+                            assetSymbol={selectedAsset ?? ""}
+                            assetData={null}
+                            storeCallback={setSelectedAsset}
+                            otherAsset={null}
+                            marketSearch={marketSearch}
+                            type={null}
+                            chain={usr.chain}
+                            balances={balances}
+                          />
+                        ) : null}
+                      </div>
+                    </div>
+                  </FieldContent>
+                  <FieldDescription>
+                    {t("CreditOfferEditor:lendingAssetDescription")}
+                  </FieldDescription>
+                  <FieldError>
+                    {foundAsset &&
+                    balances &&
+                    !balances.map((x) => x.asset_id).includes(foundAsset.id)
+                      ? t("Transfer:noAssetInAccount", {
+                          username: usr.username,
+                        })
+                      : null}
+                  </FieldError>
+                </Field>
 
-                <FormField
-                  control={form.control}
-                  name="lendingAmount"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>
-                        {t("CreditOfferEditor:amountToLend")}
-                      </FormLabel>{" "}
-                      <FormControl
-                        onChange={(event) => {
-                          const input = event.target.value;
-                          const inputDecimals = !foundAsset
-                            ? 2
-                            : foundAsset.precision;
-                          let regex = new RegExp(
-                            `^[0-9]*\\.?[0-9]{0,${inputDecimals}}$`
-                          );
-                          if (regex.test(input)) {
-                            setLendingAmount(input);
-                          }
-                        }}
-                      >
-                        <div className="grid grid-cols-12 gap-3">
-                          <div className="col-span-9">
+                <Field>
+                  <FieldLabel htmlFor={`lendingAmount-${offerID ?? "new"}`}>
+                    {t("CreditOfferEditor:amountToLend")}
+                  </FieldLabel>
+                  <FieldContent>
+                    <div className="grid grid-cols-12 gap-3">
+                      <div className="col-span-9">
+                        <Controller
+                          name="lendingAmount"
+                          control={form.control}
+                          render={({ field }) => (
                             <Input
+                              id={`lendingAmount-${offerID ?? "new"}`}
                               value={lendingAmount}
-                              placeholder={lendingAmount}
+                              placeholder={String(lendingAmount)}
                               className="mb-1"
-                            />
-                          </div>
-                          <div className="col-span-3 text-center">
-                            {foundAsset ? (
-                              <Button
-                                variant="outline"
-                                onClick={() => {
-                                  event.preventDefault(); // Prevent default form submission
-                                  setLendingAmount(foundAssetBalance);
-                                }}
-                              >
-                                {t("LimitOrderCard:useBalance")}
-                              </Button>
-                            ) : (
-                              <Button disabled>
-                                {t("LimitOrderCard:useBalance")}
-                              </Button>
-                            )}
-                          </div>
-                        </div>
-                      </FormControl>
-                      <FormDescription>
-                        {t("CreditOfferEditor:lendingAmountDescription")}
-                      </FormDescription>
-                      {(!foundAssetBalance && lendingAmount > 0) ||
-                      (foundAssetBalance &&
-                        foundAssetBalance < lendingAmount) ? (
-                        <FormMessage>
-                          {t("Predictions:insufficient_funds")}
-                        </FormMessage>
-                      ) : null}
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="rate"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>
-                        {t("CreditOfferEditor:lendingRate")}
-                      </FormLabel>
-                      <FormControl>
-                        <span className="grid grid-cols-12">
-                          <span className="col-span-9">
-                            <Input
-                              value={`${rate} %`}
-                              placeholder={`${rate} %`}
-                              disabled
-                              className="mb-1"
-                            />
-                            <Slider
-                              className="mt-3"
-                              key={`Slider${rate}`}
-                              defaultValue={[rate]}
-                              max={100}
-                              min={1}
-                              step={0.01}
-                              onValueChange={(value) => {
-                                debouncedSetRate(value[0]);
+                              onChange={(event) => {
+                                const input = event.target.value;
+                                const inputDecimals = !foundAsset
+                                  ? 2
+                                  : foundAsset.precision;
+                                let regex = new RegExp(
+                                  `^[0-9]*\\.?[0-9]{0,${inputDecimals}}$`
+                                );
+                                if (regex.test(input)) {
+                                  setLendingAmount(input);
+                                  field.onChange(input);
+                                }
                               }}
                             />
-                          </span>
+                          )}
+                        />
+                      </div>
+                      <div className="col-span-3 text-center">
+                        {foundAsset ? (
+                          <Button
+                            variant="outline"
+                            onClick={() => {
+                              event.preventDefault();
+                              setLendingAmount(foundAssetBalance);
+                              form.setValue("lendingAmount", foundAssetBalance);
+                            }}
+                          >
+                            {t("LimitOrderCard:useBalance")}
+                          </Button>
+                        ) : (
+                          <Button disabled>
+                            {t("LimitOrderCard:useBalance")}
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  </FieldContent>
+                  <FieldDescription>
+                    {t("CreditOfferEditor:lendingAmountDescription")}
+                  </FieldDescription>
+                  <FieldError>
+                    {(!foundAssetBalance && lendingAmount > 0) ||
+                    (foundAssetBalance && foundAssetBalance < lendingAmount)
+                      ? t("Predictions:insufficient_funds")
+                      : null}
+                  </FieldError>
+                </Field>
 
-                          <span className="col-span-3 ml-3 text-center">
-                            <Popover>
-                              <PopoverTrigger asChild>
-                                <span
-                                  onClick={() => {
-                                    event.preventDefault();
-                                  }}
-                                  className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4 text-lg"
-                                >
-                                  <Label>
-                                    {t("CreditOfferEditor:editLendingRate")}
-                                  </Label>{" "}
-                                </span>
-                              </PopoverTrigger>
-                              <PopoverContent>
-                                <Label>
-                                  {t("CreditOfferEditor:newLendingRate")}
-                                </Label>{" "}
-                                <Input
-                                  placeholder={rate}
-                                  className="mb-2 mt-1"
-                                  onChange={(event) => {
-                                    const input = event.target.value;
-                                    const regex = /^[0-9]*\.?[0-9]{0,2}$/;
-                                    if (
-                                      input &&
-                                      input.length &&
-                                      regex.test(input)
-                                    ) {
-                                      if (input >= 0.01 && input <= 100) {
-                                        setRate(input);
-                                      } else if (input > 100) {
-                                        setRate(100);
-                                      } else if (input < 0.01) {
-                                        setRate(0.01);
-                                      }
-                                    }
-                                  }}
-                                />
-                              </PopoverContent>
-                            </Popover>
-                          </span>
-                        </span>
-                      </FormControl>
-                      <FormDescription>
-                        {t("CreditOfferEditor:lendingRateDescription")}
-                      </FormDescription>
-                    </FormItem>
-                  )}
-                />
+                <Field>
+                  <FieldLabel>{t("CreditOfferEditor:lendingRate")}</FieldLabel>
+                  <FieldContent>
+                    <span className="grid grid-cols-12">
+                      <span className="col-span-9">
+                        <Input
+                          value={`${rate} %`}
+                          placeholder={`${rate} %`}
+                          disabled
+                          className="mb-1"
+                        />
+                        <Slider
+                          className="mt-3"
+                          key={`Slider${rate}`}
+                          defaultValue={[rate]}
+                          max={100}
+                          min={1}
+                          step={0.01}
+                          onValueChange={(value) => {
+                            debouncedSetRate(value[0]);
+                          }}
+                        />
+                      </span>
+
+                      <span className="col-span-3 ml-3 text-center">
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <span
+                              onClick={() => {
+                                event.preventDefault();
+                              }}
+                              className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4 text-lg"
+                            >
+                              <Label>
+                                {t("CreditOfferEditor:editLendingRate")}
+                              </Label>{" "}
+                            </span>
+                          </PopoverTrigger>
+                          <PopoverContent>
+                            <Label>
+                              {t("CreditOfferEditor:newLendingRate")}
+                            </Label>{" "}
+                            <Input
+                              placeholder={String(rate)}
+                              className="mb-2 mt-1"
+                              onChange={(event) => {
+                                const input = event.target.value;
+                                const regex = /^[0-9]*\.?[0-9]{0,2}$/;
+                                if (
+                                  input &&
+                                  input.length &&
+                                  regex.test(input)
+                                ) {
+                                  if (input >= 0.01 && input <= 100) {
+                                    setRate(input);
+                                  } else if (input > 100) {
+                                    setRate(100);
+                                  } else if (input < 0.01) {
+                                    setRate(0.01);
+                                  }
+                                }
+                              }}
+                            />
+                          </PopoverContent>
+                        </Popover>
+                      </span>
+                    </span>
+                  </FieldContent>
+                  <FieldDescription>
+                    {t("CreditOfferEditor:lendingRateDescription")}
+                  </FieldDescription>
+                </Field>
 
                 <span className="grid grid-cols-12 mt-3 mb-3">
                   <span className="col-span-4">
-                    <FormField
-                      control={form.control}
-                      name="repaymentPeriod"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>
-                            {t("CreditOfferEditor:repaymentPeriod")}
-                          </FormLabel>
-                          <FormControl
-                            onValueChange={(selection) => {
-                              setRepayPeriod(selection);
-                            }}
-                          >
-                            <Select>
-                              <SelectTrigger className="mb-3 w-3/4">
-                                <SelectValue
-                                  placeholder={t(
-                                    "CreditOfferEditor:placeholder1hr"
-                                  )}
-                                />
-                              </SelectTrigger>
-                              <SelectContent className="bg-white">
-                                <SelectItem value="12hr">
-                                  {t("CreditOfferEditor:12hours")}
-                                </SelectItem>
-                                <SelectItem value="24hr">
-                                  {t("CreditOfferEditor:24hours")}
-                                </SelectItem>
-                                <SelectItem value="3d">
-                                  {t("CreditOfferEditor:3days")}
-                                </SelectItem>
-                                <SelectItem value="7d">
-                                  {t("CreditOfferEditor:7days")}
-                                </SelectItem>
-                                <SelectItem value="30d">
-                                  {t("CreditOfferEditor:30days")}
-                                </SelectItem>
-                                <SelectItem value="90d">
-                                  {t("CreditOfferEditor:90days")}
-                                </SelectItem>
-                                <SelectItem value="365d">
-                                  {t("CreditOfferEditor:365days")}
-                                </SelectItem>
-                                <SelectItem value="730d">
-                                  {t("CreditOfferEditor:730days")}
-                                </SelectItem>
-                                <SelectItem value="1825d">
-                                  {t("CreditOfferEditor:1825days")}
-                                </SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </FormControl>
-                          <FormDescription>
-                            {t("CreditOfferEditor:maximumDuration")}
-                          </FormDescription>
-                        </FormItem>
-                      )}
-                    />
-                  </span>
-                  <span className="col-span-4">
-                    <FormField
-                      control={form.control}
-                      name="minimumAmount"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>
-                            {t("CreditOfferEditor:minimumAmount")}
-                          </FormLabel>
-                          <FormControl
-                            onKeyPress={(event) => {
-                              if (
-                                event.key === "." &&
-                                event.target.value.includes(".")
-                              ) {
-                                event.preventDefault();
-                              }
-                              const regex = /^[0-9]*\.?[0-9]*$/;
-                              if (!regex.test(event.key)) {
-                                event.preventDefault();
-                              }
-                            }}
-                            onChange={(event) => {
-                              const input = event.target.value;
-                              const regex = /^[0-9]*\.?[0-9]*$/;
-                              if (regex.test(input) && input > 0) {
-                                setMinimumBorowAmount(input);
-                              }
-                            }}
-                          >
-                            <Input
-                              value={minimumBorowAmount}
-                              placeholder={minimumBorowAmount}
-                              className="mb-1 w-3/4"
+                    <Field>
+                      <FieldLabel>
+                        {t("CreditOfferEditor:repaymentPeriod")}
+                      </FieldLabel>
+                      <FieldContent>
+                        <Select
+                          onValueChange={(selection) => {
+                            setRepayPeriod(selection);
+                          }}
+                        >
+                          <SelectTrigger className="mb-3 w-3/4">
+                            <SelectValue
+                              placeholder={t(
+                                "CreditOfferEditor:placeholder1hr"
+                              )}
                             />
-                          </FormControl>
-                          <FormDescription>
-                            {t("CreditOfferEditor:minimumBorrowableAmount")}
-                          </FormDescription>{" "}
-                        </FormItem>
-                      )}
-                    />
+                          </SelectTrigger>
+                          <SelectContent className="bg-white">
+                            <SelectItem value="12hr">
+                              {t("CreditOfferEditor:12hours")}
+                            </SelectItem>
+                            <SelectItem value="24hr">
+                              {t("CreditOfferEditor:24hours")}
+                            </SelectItem>
+                            <SelectItem value="3d">
+                              {t("CreditOfferEditor:3days")}
+                            </SelectItem>
+                            <SelectItem value="7d">
+                              {t("CreditOfferEditor:7days")}
+                            </SelectItem>
+                            <SelectItem value="30d">
+                              {t("CreditOfferEditor:30days")}
+                            </SelectItem>
+                            <SelectItem value="90d">
+                              {t("CreditOfferEditor:90days")}
+                            </SelectItem>
+                            <SelectItem value="365d">
+                              {t("CreditOfferEditor:365days")}
+                            </SelectItem>
+                            <SelectItem value="730d">
+                              {t("CreditOfferEditor:730days")}
+                            </SelectItem>
+                            <SelectItem value="1825d">
+                              {t("CreditOfferEditor:1825days")}
+                            </SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </FieldContent>
+                      <FieldDescription>
+                        {t("CreditOfferEditor:maximumDuration")}
+                      </FieldDescription>
+                    </Field>
                   </span>
                   <span className="col-span-4">
-                    <FormField
-                      control={form.control}
-                      name="minimumAmount"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>
-                            {t("CreditOfferEditor:expirationDate")}
-                          </FormLabel>
-                          <FormControl>
-                            <Popover>
-                              <PopoverTrigger asChild>
-                                <Button
-                                  variant={"outline"}
-                                  className={cn(
-                                    "w-[240px] justify-start text-left font-normal",
-                                    !expiration && "text-muted-foreground"
-                                  )}
-                                >
-                                  <CalendarIcon className="mr-2 h-4 w-4" />
-                                  {expiration ? (
-                                    format(expiration, "PPP")
-                                  ) : (
-                                    <span>
-                                      {t("LimitOrderCard:expiry.pickDate")}
-                                    </span>
-                                  )}
-                                </Button>
-                              </PopoverTrigger>
-                              <PopoverContent
-                                className="w-auto p-0"
-                                align="start"
-                              >
-                                <Calendar
-                                  mode="single"
-                                  selected={expiration}
-                                  onSelect={(e) => {
-                                    const parsedDate = new Date(e);
-                                    const now = new Date();
-                                    if (parsedDate < now) {
-                                      //console.log("Not a valid date");
-                                      setExpiration(
-                                        new Date(
-                                          Date.now() + 1 * 24 * 60 * 60 * 1000
-                                        )
-                                      );
-                                      return;
-                                    }
-                                    //console.log("Setting expiry date");
-                                    setExpiration(e);
-                                  }}
-                                  initialFocus
-                                />
-                              </PopoverContent>
-                            </Popover>
-                          </FormControl>
-                          <FormDescription>
-                            {t("CreditOfferEditor:creditOfferEnds")}
-                          </FormDescription>
-                        </FormItem>
-                      )}
-                    />
+                    <Field>
+                      <FieldLabel htmlFor={`minimumAmount-${offerID ?? "new"}`}>
+                        {t("CreditOfferEditor:minimumAmount")}
+                      </FieldLabel>
+                      <FieldContent>
+                        <Input
+                          id={`minimumAmount-${offerID ?? "new"}`}
+                          value={minimumBorowAmount}
+                          placeholder={String(minimumBorowAmount)}
+                          className="mb-1 w-3/4"
+                          onKeyPress={(event) => {
+                            if (
+                              event.key === "." &&
+                              event.target.value.includes(".")
+                            ) {
+                              event.preventDefault();
+                            }
+                            const regex = /^[0-9]*\.?[0-9]*$/;
+                            if (!regex.test(event.key)) {
+                              event.preventDefault();
+                            }
+                          }}
+                          onChange={(event) => {
+                            const input = event.target.value;
+                            const regex = /^[0-9]*\.?[0-9]*$/;
+                            if (regex.test(input) && input > 0) {
+                              setMinimumBorowAmount(input);
+                              form.setValue("minimumAmount", input);
+                            }
+                          }}
+                        />
+                      </FieldContent>
+                      <FieldDescription>
+                        {t("CreditOfferEditor:minimumBorrowableAmount")}
+                      </FieldDescription>{" "}
+                    </Field>
+                  </span>
+                  <span className="col-span-4">
+                    <Field>
+                      <FieldLabel>
+                        {t("CreditOfferEditor:expirationDate")}
+                      </FieldLabel>
+                      <FieldContent>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant={"outline"}
+                              className={cn(
+                                "w-[240px] justify-start text-left font-normal",
+                                !expiration && "text-muted-foreground"
+                              )}
+                            >
+                              <CalendarIcon className="mr-2 h-4 w-4" />
+                              {expiration ? (
+                                format(expiration, "PPP")
+                              ) : (
+                                <span>
+                                  {t("LimitOrderCard:expiry.pickDate")}
+                                </span>
+                              )}
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0" align="start">
+                            <Calendar
+                              mode="single"
+                              selected={expiration}
+                              onSelect={(e) => {
+                                const parsedDate = new Date(e);
+                                const now = new Date();
+                                if (parsedDate < now) {
+                                  setExpiration(
+                                    new Date(
+                                      Date.now() + 1 * 24 * 60 * 60 * 1000
+                                    )
+                                  );
+                                  return;
+                                }
+                                setExpiration(e);
+                              }}
+                              initialFocus
+                            />
+                          </PopoverContent>
+                        </Popover>
+                      </FieldContent>
+                      <FieldDescription>
+                        {t("CreditOfferEditor:creditOfferEnds")}
+                      </FieldDescription>
+                    </Field>
                   </span>
                 </span>
 
-                <FormField
-                  control={form.control}
-                  name="acceptedCollateral"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>
-                        {t("CreditOfferEditor:acceptedCollateral")}
-                      </FormLabel>
-                      <FormControl>
-                        <span className="grid grid-cols-12">
-                          <span className="col-span-9 border border-gray-300 rounded">
-                            <div className="w-full max-h-[210px] overflow-auto">
-                              <List
-                                rowComponent={CollateralRow}
-                                rowCount={acceptableCollateral.length}
-                                rowHeight={80}
-                                rowProps={{}}
-                              />
-                            </div>
-                          </span>
-                          <span className="col-span-3 ml-3 text-center">
-                            <CollateralDropDownCard
-                              chosenAssets={acceptableCollateral}
-                              lendingAsset={
-                                foundAsset && foundAsset.symbol
-                                  ? foundAsset.symbol
-                                  : ""
-                              }
-                              marketSearch={marketSearch}
-                              storeCallback={setAcceptableCollateral}
-                              chain={usr && usr.chain ? usr.chain : "bitshares"}
-                            />
-                          </span>
-                        </span>
-                      </FormControl>
-                      <FormDescription>
-                        {t("CreditOfferEditor:acceptedCollateralDescription")}
-                      </FormDescription>
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="acceptedCollateral"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>
-                        {t("CreditOfferEditor:preApprovedUsers")}
-                      </FormLabel>
-                      <FormControl>
-                        <span className="grid grid-cols-12">
-                          <span className="col-span-9 border border-gray-300 rounded">
-                            <div className="w-full max-h-[210px] overflow-auto">
-                              <List
-                                rowComponent={ApprovedBorrowerRow}
-                                rowCount={allowedAccounts.length}
-                                rowHeight={100}
-                                rowProps={{}}
-                              />
-                            </div>
-                          </span>
-                          <span className="col-span-3 ml-3 text-center">
-                            <Dialog
-                              open={targetUserDialogOpen}
-                              onOpenChange={(open) => {
-                                setTargetUserDialogOpen(open);
-                              }}
-                            >
-                              <DialogTrigger asChild>
-                                <Button variant="outline" className="ml-3 mt-1">
-                                  ➕ {t("CreditOfferEditor:addUser")}
-                                </Button>
-                              </DialogTrigger>
-                              <DialogContent className="sm:max-w-[375px] bg-white">
-                                <DialogHeader>
-                                  <DialogTitle>
-                                    {!usr || !usr.chain
-                                      ? t("Transfer:bitsharesAccountSearch")
-                                      : null}
-                                    {usr && usr.chain === "bitshares"
-                                      ? t("Transfer:bitsharesAccountSearchBTS")
-                                      : null}
-                                    {usr && usr.chain !== "bitshares"
-                                      ? t("Transfer:bitsharesAccountSearchTEST")
-                                      : null}
-                                  </DialogTitle>
-                                  <DialogDescription>
-                                    {t("Transfer:searchingForAccount")}
-                                  </DialogDescription>
-                                </DialogHeader>
-                                <AccountSearch
-                                  chain={
-                                    usr && usr.chain ? usr.chain : "bitshares"
-                                  }
-                                  excludedUsers={
-                                    usr && usr.username && usr.username.length
-                                      ? [usr]
-                                      : []
-                                  }
-                                  setChosenAccount={(_account) => {
-                                    if (
-                                      _account &&
-                                      !allowedAccounts.find(
-                                        (_usr) => _usr.id === _account.id
-                                      )
-                                    ) {
-                                      _account.amount = minimumBorowAmount ?? 1;
-                                      setAllowedAccounts(
-                                        allowedAccounts &&
-                                          allowedAccounts.length
-                                          ? [...allowedAccounts, _account]
-                                          : [_account]
-                                      );
-                                    }
-                                    setTargetUserDialogOpen(false);
-                                  }}
-                                />
-                              </DialogContent>
-                            </Dialog>
-                          </span>
-                        </span>
-                      </FormControl>
-                      <FormDescription>
-                        {t("CreditOfferEditor:limitBorrowers")}
-                      </FormDescription>
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  disabled
-                  name="fee"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t("CreditOfferEditor:networkFee")}</FormLabel>
-                      <FormDescription>
-                        {t("CreditOfferEditor:broadcastCost")}
-                      </FormDescription>
-                      <FormControl>
-                        <Input
-                          className="w-3/4"
-                          disabled
-                          value={`${fee} BTS`}
-                          placeholder={1}
+                <Field>
+                  <FieldLabel>
+                    {t("CreditOfferEditor:acceptedCollateral")}
+                  </FieldLabel>
+                  <FieldContent>
+                    <span className="grid grid-cols-12">
+                      <span className="col-span-9 border border-gray-300 rounded">
+                        <div className="w-full max-h-[210px] overflow-auto">
+                          <List
+                            rowComponent={CollateralRow}
+                            rowCount={acceptableCollateral.length}
+                            rowHeight={80}
+                            rowProps={{}}
+                          />
+                        </div>
+                      </span>
+                      <span className="col-span-3 ml-3 text-center">
+                        <CollateralDropDownCard
+                          chosenAssets={acceptableCollateral}
+                          lendingAsset={
+                            foundAsset && foundAsset.symbol
+                              ? foundAsset.symbol
+                              : ""
+                          }
+                          marketSearch={marketSearch}
+                          storeCallback={setAcceptableCollateral}
+                          chain={usr && usr.chain ? usr.chain : "bitshares"}
                         />
-                      </FormControl>
-                      {usr.id === usr.referrer ? (
-                        <FormMessage>
-                          {t("LimitOrderCard:fee.ltmRebate", {
-                            rebate: 0.8 * fee,
-                          })}
-                        </FormMessage>
-                      ) : null}
-                    </FormItem>
-                  )}
-                />
+                      </span>
+                    </span>
+                  </FieldContent>
+                  <FieldDescription>
+                    {t("CreditOfferEditor:acceptedCollateralDescription")}
+                  </FieldDescription>
+                </Field>
+
+                <Field>
+                  <FieldLabel>
+                    {t("CreditOfferEditor:preApprovedUsers")}
+                  </FieldLabel>
+                  <FieldContent>
+                    <span className="grid grid-cols-12">
+                      <span className="col-span-9 border border-gray-300 rounded">
+                        <div className="w-full max-h-[210px] overflow-auto">
+                          <List
+                            rowComponent={ApprovedBorrowerRow}
+                            rowCount={allowedAccounts.length}
+                            rowHeight={100}
+                            rowProps={{}}
+                          />
+                        </div>
+                      </span>
+                      <span className="col-span-3 ml-3 text-center">
+                        <Dialog
+                          open={targetUserDialogOpen}
+                          onOpenChange={(open) => {
+                            setTargetUserDialogOpen(open);
+                          }}
+                        >
+                          <DialogTrigger asChild>
+                            <Button variant="outline" className="ml-3 mt-1">
+                              ➕ {t("CreditOfferEditor:addUser")}
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent className="sm:max-w-[375px] bg-white">
+                            <DialogHeader>
+                              <DialogTitle>
+                                {!usr || !usr.chain
+                                  ? t("Transfer:bitsharesAccountSearch")
+                                  : null}
+                                {usr && usr.chain === "bitshares"
+                                  ? t("Transfer:bitsharesAccountSearchBTS")
+                                  : null}
+                                {usr && usr.chain !== "bitshares"
+                                  ? t("Transfer:bitsharesAccountSearchTEST")
+                                  : null}
+                              </DialogTitle>
+                              <DialogDescription>
+                                {t("Transfer:searchingForAccount")}
+                              </DialogDescription>
+                            </DialogHeader>
+                            <AccountSearch
+                              chain={usr && usr.chain ? usr.chain : "bitshares"}
+                              excludedUsers={
+                                usr && usr.username && usr.username.length
+                                  ? [usr]
+                                  : []
+                              }
+                              setChosenAccount={(_account) => {
+                                if (
+                                  _account &&
+                                  !allowedAccounts.find(
+                                    (_usr) => _usr.id === _account.id
+                                  )
+                                ) {
+                                  _account.amount = minimumBorowAmount ?? 1;
+                                  setAllowedAccounts(
+                                    allowedAccounts && allowedAccounts.length
+                                      ? [...allowedAccounts, _account]
+                                      : [_account]
+                                  );
+                                }
+                                setTargetUserDialogOpen(false);
+                              }}
+                            />
+                          </DialogContent>
+                        </Dialog>
+                      </span>
+                    </span>
+                  </FieldContent>
+                  <FieldDescription>
+                    {t("CreditOfferEditor:limitBorrowers")}
+                  </FieldDescription>
+                </Field>
+
+                <Field>
+                  <FieldLabel>{t("CreditOfferEditor:networkFee")}</FieldLabel>
+                  <FieldDescription>
+                    {t("CreditOfferEditor:broadcastCost")}
+                  </FieldDescription>
+                  <FieldContent>
+                    <Input
+                      className="w-3/4"
+                      disabled
+                      value={`${fee} BTS`}
+                      placeholder={1}
+                    />
+                  </FieldContent>
+                  {usr.id === usr.referrer ? (
+                    <FieldError>
+                      {t("LimitOrderCard:fee.ltmRebate", { rebate: 0.8 * fee })}
+                    </FieldError>
+                  ) : null}
+                </Field>
 
                 <Button className="mt-7 mb-1" variant="outline" type="submit">
                   {t("CreditOfferEditor:submit")}
                 </Button>
-              </form>
-            </Form>
+              </FieldGroup>
+            </form>
           </CardContent>
         </Card>
         {transactionJSON && showDialog ? (

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useSyncExternalStore } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { List } from "react-window";
 import { useStore } from "@nanostores/react";
 import { useTranslation } from "react-i18next";
@@ -15,14 +15,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+  Field,
+  FieldContent,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
 import { Avatar as Av, AvatarFallback } from "@/components/ui/avatar";
 import { Avatar } from "@/components/Avatar.tsx";
 import {
@@ -331,276 +330,216 @@ export default function Settlement(properties) {
       <div className="container mx-auto mt-5 mb-5">
         <div className="grid grid-cols-1 gap-3">
           <Card>
-            <CardHeader>
-              <CardTitle>
-                {t("Settlement:smartcoinSettlementFormTitle")}
-              </CardTitle>
-              <CardDescription>
-                {settlementFund && settlementFund.finalSettlementFund
-                  ? t("Settlement:bidOnGlobalSettlementFundsDescription")
-                  : t("Settlement:forceSettleAssetsDescription")}
-              </CardDescription>
-            </CardHeader>
             <CardContent>
-              <Form {...form}>
-                <form
-                  onSubmit={(event) => {
-                    setShowDialog(true);
-                    event.stopPropagation();
-                    event.preventDefault();
-                  }}
-                >
-                  <FormField
-                    control={form.control}
-                    name="account"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>
-                          {settlementFund && settlementFund.finalSettlementFund
-                            ? t("Settlement:biddingAccount")
-                            : t("Settlement:assetSettlingAccount")}
-                        </FormLabel>
-                        <FormControl>
-                          <div className="grid grid-cols-8 mt-4">
-                            <div className="col-span-1 ml-5">
-                              {usr && usr.username ? (
-                                <Avatar
-                                  size={40}
-                                  name={usr.username}
-                                  extra="Target"
-                                  expression={{
-                                    eye: "normal",
-                                    mouth: "open",
-                                  }}
-                                  colors={[
-                                    "#92A1C6",
-                                    "#146A7C",
-                                    "#F0AB3D",
-                                    "#C271B4",
-                                    "#C20D90",
-                                  ]}
-                                />
-                              ) : (
-                                <Av>
-                                  <AvatarFallback>?</AvatarFallback>
-                                </Av>
-                              )}
-                            </div>
-                            <div className="col-span-7">
-                              <Input
-                                disabled
-                                placeholder="Bitshares account (1.2.x)"
-                                className="mb-3"
-                                value={`${usr.username} (${usr.id})`}
-                                readOnly
-                              />
-                            </div>
-                          </div>
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
+              <form onSubmit={form.handleSubmit(() => setShowDialog(true))}>
+                <FieldGroup>
+                  <Field>
+                    <FieldLabel>{t("Settlement:selectedAsset")}</FieldLabel>
+                    <FieldContent>
+                      <span className="grid grid-cols-8">
+                        <span className="col-span-6">
+                          <Input
+                            disabled
+                            placeholder="Bitshares smartcoin (1.3.x)"
+                            className="mb-1"
+                            value={`${parsedAsset ? parsedAsset.s : ""} (${
+                              parsedAsset ? parsedAsset.id : ""
+                            })`}
+                            readOnly
+                          />
+                        </span>
+                      </span>
+                    </FieldContent>
+                  </Field>
+                  <Field>
+                    <FieldLabel>{t("Settlement:account")}</FieldLabel>
+                    <FieldContent>
+                      <div className="grid grid-cols-8 mt-4">
+                        <div className="col-span-1 ml-5">
+                          {usr && usr.username ? (
+                            <Avatar
+                              size={40}
+                              name={usr.username}
+                              extra="Target"
+                              expression={{
+                                eye: "normal",
+                                mouth: "open",
+                              }}
+                              colors={[
+                                "#92A1C6",
+                                "#146A7C",
+                                "#F0AB3D",
+                                "#C271B4",
+                                "#C20D90",
+                              ]}
+                            />
+                          ) : (
+                            <Av>
+                              <AvatarFallback>?</AvatarFallback>
+                            </Av>
+                          )}
+                        </div>
+                        <div className="col-span-7">
+                          <Input
+                            disabled
+                            placeholder="Bitshares account (1.2.x)"
+                            className="mb-3"
+                            value={`${usr.username} (${usr.id})`}
+                            readOnly
+                          />
+                        </div>
+                      </div>
+                    </FieldContent>
+                  </Field>
 
-                  <FormField
-                    control={form.control}
-                    name="selectedAsset"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{t("Settlement:selectedAsset")}</FormLabel>
-                        <FormControl>
-                          <span className="grid grid-cols-8">
-                            <span className="col-span-6">
-                              <Input
-                                disabled
-                                placeholder="Bitshares smartcoin (1.3.x)"
-                                className="mb-1"
-                                value={`${parsedAsset ? parsedAsset.s : ""} (${
-                                  parsedAsset ? parsedAsset.id : ""
-                                })`}
-                                readOnly
-                              />
-                            </span>
-                          </span>
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="currentFeedPrice"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>
-                          {t("Settlement:currentFeedPrice")}
-                        </FormLabel>{" "}
-                        <FormControl>
-                          <span className="grid grid-cols-8">
-                            <span className="col-span-6">
-                              {parsedAsset && parsedCollateralAsset ? (
-                                <Input
-                                  disabled
-                                  className="mb-1"
-                                  value={`${
-                                    currentFeedSettlementPrice
-                                      ? (
-                                          1 / currentFeedSettlementPrice
-                                        ).toFixed(parsedAsset.p)
-                                      : 0
-                                  } ${parsedAsset ? parsedAsset.s : ""}/${
-                                    parsedCollateralAsset
-                                      ? parsedCollateralAsset.s
-                                      : ""
-                                  }`}
-                                  readOnly
-                                />
-                              ) : (
-                                <Input
-                                  disabled
-                                  className="mb-1"
-                                  value=""
-                                  readOnly
-                                />
-                              )}
-                            </span>
-                          </span>
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
+                  <Field>
+                    <FieldLabel>{t("Settlement:currentFeedPrice")}</FieldLabel>
+                    <FieldContent>
+                      <span className="grid grid-cols-8">
+                        <span className="col-span-6">
+                          {parsedAsset && parsedCollateralAsset ? (
+                            <Input
+                              disabled
+                              className="mb-1"
+                              value={`${
+                                currentFeedSettlementPrice
+                                  ? (1 / currentFeedSettlementPrice).toFixed(
+                                      parsedAsset.p
+                                    )
+                                  : 0
+                              } ${parsedAsset ? parsedAsset.s : ""}/${
+                                parsedCollateralAsset
+                                  ? parsedCollateralAsset.s
+                                  : ""
+                              }`}
+                              readOnly
+                            />
+                          ) : (
+                            <Input
+                              disabled
+                              className="mb-1"
+                              value=""
+                              readOnly
+                            />
+                          )}
+                        </span>
+                      </span>
+                    </FieldContent>
+                  </Field>
 
                   {settlementFund && settlementFund.finalSettlementFund ? (
                     <>
-                      <FormField
-                        control={form.control}
-                        name="settlementPrice"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>
-                              {t("Settlement:finalSettlementPrice")}
-                            </FormLabel>{" "}
-                            <FormControl>
-                              <span className="grid grid-cols-8">
-                                <span className="col-span-6">
-                                  <Input
-                                    disabled
-                                    className="mb-1"
-                                    value={`${settlementFund.finalSettlementPrice} ${parsedAsset.s}/${parsedCollateralAsset.s}`}
-                                    readOnly
-                                  />
-                                </span>
-                              </span>
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="fundsAvailable"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>
-                              {t("Settlement:settlementFundsAvailable")}
-                            </FormLabel>{" "}
-                            <FormControl>
-                              <span className="grid grid-cols-8">
-                                <span className="col-span-6">
-                                  <Input
-                                    disabled
-                                    className="mb-1"
-                                    value={`${settlementFund.finalSettlementFund} ${parsedCollateralAsset.s}`}
-                                    readOnly
-                                  />
-                                </span>
-                              </span>
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="fundingRatio1"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>
-                              {t("Settlement:fundingRatio")}
-                            </FormLabel>
-                            <FormControl>
-                              <span className="grid grid-cols-8">
-                                <span className="col-span-2 mb-1">
-                                  <Input
-                                    disabled
-                                    value={`${(
-                                      (1 /
-                                        currentFeedSettlementPrice /
-                                        settlementFund.finalSettlementPrice) *
-                                      100
-                                    ).toFixed(2)} %`}
-                                    readOnly
-                                  />
-                                </span>
-                                <span className="col-span-2 text-red-500">
-                                  <Input
-                                    disabled
-                                    value={`-${(
-                                      100 -
-                                      (1 /
-                                        currentFeedSettlementPrice /
-                                        settlementFund.finalSettlementPrice) *
-                                        100
-                                    ).toFixed(2)}%`}
-                                    readOnly
-                                  />
-                                </span>
-                              </span>
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
+                      <Field>
+                        <FieldLabel>
+                          {t("Settlement:finalSettlementPrice")}
+                        </FieldLabel>
+                        <FieldContent>
+                          <span className="grid grid-cols-8">
+                            <span className="col-span-6">
+                              <Input
+                                disabled
+                                className="mb-1"
+                                value={`${settlementFund.finalSettlementPrice} ${parsedAsset.s}/${parsedCollateralAsset.s}`}
+                                readOnly
+                              />
+                            </span>
+                          </span>
+                        </FieldContent>
+                      </Field>
+                      <Field>
+                        <FieldLabel>
+                          {t("Settlement:settlementFundsAvailable")}
+                        </FieldLabel>
+                        <FieldContent>
+                          <span className="grid grid-cols-8">
+                            <span className="col-span-6">
+                              <Input
+                                disabled
+                                className="mb-1"
+                                value={`${settlementFund.finalSettlementFund} ${parsedCollateralAsset.s}`}
+                                readOnly
+                              />
+                            </span>
+                          </span>
+                        </FieldContent>
+                      </Field>
+                      <Field>
+                        <FieldLabel>{t("Settlement:fundingRatio")}</FieldLabel>
+                        <FieldContent>
+                          <span className="grid grid-cols-8">
+                            <span className="col-span-2 mb-1">
+                              <Input
+                                disabled
+                                value={`${(
+                                  (1 /
+                                    currentFeedSettlementPrice /
+                                    settlementFund.finalSettlementPrice) *
+                                  100
+                                ).toFixed(2)} %`}
+                                readOnly
+                              />
+                            </span>
+                            <span className="col-span-2 text-red-500">
+                              <Input
+                                disabled
+                                value={`-${(
+                                  100 -
+                                  (1 /
+                                    currentFeedSettlementPrice /
+                                    settlementFund.finalSettlementPrice) *
+                                    100
+                                ).toFixed(2)}%`}
+                                readOnly
+                              />
+                            </span>
+                          </span>
+                        </FieldContent>
+                      </Field>
 
-                      <FormField
-                        control={form.control}
-                        name="additionalCollateral"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>
-                              {t("Settlement:additionalCollateral")}
-                            </FormLabel>
-                            <FormDescription>
-                              {t("Settlement:additionalCollateralDescription", {
-                                asset: parsedAsset.s,
-                              })}
-                            </FormDescription>
-                            <FormControl>
-                              <span className="grid grid-cols-12">
-                                <span className="col-span-8">
-                                  <Input
-                                    placeholder={
-                                      additionalCollateral
-                                        ? `${additionalCollateral} ${parsedCollateralAsset.s}`
-                                        : `0 ${parsedCollateralAsset.s}`
-                                    }
-                                    readOnly
-                                    disabled
-                                    className="mb-3"
-                                  />
-                                </span>
-                                <span className="col-span-4 ml-3">
-                                  <Popover>
-                                    <PopoverTrigger>
-                                      <span className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4">
-                                        <Label>
-                                          {t("Settlement:changeAmount")}
-                                        </Label>
-                                      </span>
-                                    </PopoverTrigger>
-                                    <PopoverContent>
-                                      <Label>
-                                        {t("Settlement:provideNewAmount")}
-                                      </Label>
+                      <Field>
+                        <FieldLabel>
+                          {t("Settlement:additionalCollateral")}
+                        </FieldLabel>
+                        <FieldDescription>
+                          {t("Settlement:additionalCollateralDescription", {
+                            asset: parsedAsset.s,
+                          })}
+                        </FieldDescription>
+                        <FieldContent>
+                          <span className="grid grid-cols-12">
+                            <span className="col-span-8">
+                              <Input
+                                placeholder={
+                                  additionalCollateral
+                                    ? `${additionalCollateral} ${parsedCollateralAsset.s}`
+                                    : `0 ${parsedCollateralAsset.s}`
+                                }
+                                readOnly
+                                disabled
+                                className="mb-3"
+                              />
+                            </span>
+                            <span className="col-span-4 ml-3">
+                              <Popover>
+                                <PopoverTrigger>
+                                  <span className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4">
+                                    <Label>
+                                      {t("Settlement:changeAmount")}
+                                    </Label>
+                                  </span>
+                                </PopoverTrigger>
+                                <PopoverContent>
+                                  <Label>
+                                    {t("Settlement:provideNewAmount")}
+                                  </Label>
+                                  <Controller
+                                    control={form.control}
+                                    name="additionalCollateral"
+                                    render={({ field }) => (
                                       <Input
                                         placeholder={additionalCollateral}
                                         className="mb-2 mt-1"
+                                        value={field.value ?? ""}
                                         onChange={(event) => {
                                           const input = event.target.value;
                                           const regex = /^[0-9]*\.?[0-9]*$/;
@@ -609,6 +548,7 @@ export default function Settlement(properties) {
                                             input.length &&
                                             regex.test(input)
                                           ) {
+                                            field.onChange(input);
                                             setAdditionalCollateral(
                                               parseFloat(input).toFixed(
                                                 parsedCollateralAsset.p
@@ -617,55 +557,54 @@ export default function Settlement(properties) {
                                           }
                                         }}
                                       />
-                                    </PopoverContent>
-                                  </Popover>
-                                </span>
-                              </span>
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="debtCovered"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>
-                              {t("Settlement:totalDebtCoveredByBid")}
-                            </FormLabel>
-                            <FormDescription>
-                              {t("Settlement:totalDebtCoveredByBidDescription")}
-                            </FormDescription>
-                            <FormControl>
-                              <span className="grid grid-cols-12">
-                                <span className="col-span-8">
-                                  <Input
-                                    placeholder={
-                                      debtCovered
-                                        ? `${debtCovered} ${parsedAsset.s}`
-                                        : `0 ${parsedAsset.s}`
-                                    }
-                                    readOnly
-                                    disabled
-                                    className="mb-3"
+                                    )}
                                   />
-                                </span>
-                                <span className="col-span-4 ml-3">
-                                  <Popover>
-                                    <PopoverTrigger>
-                                      <span className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4">
-                                        <Label>
-                                          {t("Settlement:changeTotal")}
-                                        </Label>
-                                      </span>
-                                    </PopoverTrigger>
-                                    <PopoverContent>
-                                      <Label>
-                                        {t("Settlement:provideNewTotal")}
-                                      </Label>
+                                </PopoverContent>
+                              </Popover>
+                            </span>
+                          </span>
+                        </FieldContent>
+                      </Field>
+                      <Field>
+                        <FieldLabel>
+                          {t("Settlement:totalDebtCoveredByBid")}
+                        </FieldLabel>
+                        <FieldDescription>
+                          {t("Settlement:totalDebtCoveredByBidDescription")}
+                        </FieldDescription>
+                        <FieldContent>
+                          <span className="grid grid-cols-12">
+                            <span className="col-span-8">
+                              <Input
+                                placeholder={
+                                  debtCovered
+                                    ? `${debtCovered} ${parsedAsset.s}`
+                                    : `0 ${parsedAsset.s}`
+                                }
+                                readOnly
+                                disabled
+                                className="mb-3"
+                              />
+                            </span>
+                            <span className="col-span-4 ml-3">
+                              <Popover>
+                                <PopoverTrigger>
+                                  <span className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4">
+                                    <Label>{t("Settlement:changeTotal")}</Label>
+                                  </span>
+                                </PopoverTrigger>
+                                <PopoverContent>
+                                  <Label>
+                                    {t("Settlement:provideNewTotal")}
+                                  </Label>
+                                  <Controller
+                                    control={form.control}
+                                    name="debtCovered"
+                                    render={({ field }) => (
                                       <Input
                                         placeholder={debtCovered}
                                         className="mb-2 mt-1"
+                                        value={field.value ?? ""}
                                         onChange={(event) => {
                                           const input = event.target.value;
                                           const regex = /^[0-9]*\.?[0-9]*$/;
@@ -674,6 +613,7 @@ export default function Settlement(properties) {
                                             input.length &&
                                             regex.test(input)
                                           ) {
+                                            field.onChange(input);
                                             setDebtCovered(
                                               parseFloat(input).toFixed(
                                                 parsedAsset.p
@@ -682,14 +622,14 @@ export default function Settlement(properties) {
                                           }
                                         }}
                                       />
-                                    </PopoverContent>
-                                  </Popover>
-                                </span>
-                              </span>
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
+                                    )}
+                                  />
+                                </PopoverContent>
+                              </Popover>
+                            </span>
+                          </span>
+                        </FieldContent>
+                      </Field>
                     </>
                   ) : null}
 
@@ -697,136 +637,116 @@ export default function Settlement(properties) {
                   (individualSettlementFund._debt ||
                     individualSettlementFund._fund) ? (
                     <>
-                      <FormField
-                        control={form.control}
-                        name="isd"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>
-                              {t("Settlement:individualSettlementDebt")}
-                            </FormLabel>{" "}
-                            <FormControl>
-                              <span className="grid grid-cols-8">
-                                <span className="col-span-6">
-                                  <Input
-                                    disabled
-                                    className="mb-1"
-                                    value={`${individualSettlementFund._debt} ${parsedAsset.s}`}
-                                    readOnly
-                                  />
-                                </span>
-                              </span>
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="isf"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>
-                              {t("Settlement:individualSettlementFund")}
-                            </FormLabel>{" "}
-                            <FormControl>
-                              <span className="grid grid-cols-8">
-                                <span className="col-span-6">
-                                  <Input
-                                    disabled
-                                    className="mb-1"
-                                    value={`${individualSettlementFund._fund} ${parsedCollateralAsset.s}`}
-                                    readOnly
-                                  />
-                                </span>
-                              </span>
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="fundingRatio2"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>
-                              {t("Settlement:fundingRatio")}
-                            </FormLabel>
-                            <FormControl>
-                              <span className="grid grid-cols-8">
-                                <span className="col-span-2 mb-1">
-                                  <Input
-                                    disabled
-                                    value={`${(
-                                      ((individualSettlementFund._debt *
-                                        currentFeedSettlementPrice) /
-                                        individualSettlementFund._fund) *
-                                      100
-                                    ).toFixed(2)} %`}
-                                    readOnly
-                                  />
-                                </span>
-                                <span className="col-span-2 text-red-500">
-                                  <Input
-                                    disabled
-                                    value={`-${(
-                                      100 -
-                                      ((individualSettlementFund._debt *
-                                        currentFeedSettlementPrice) /
-                                        individualSettlementFund._fund) *
-                                        100
-                                    ).toFixed(2)}%`}
-                                    readOnly
-                                  />
-                                </span>
-                              </span>
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="ForceSettleAmount"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>
-                              {t("Settlement:forceSettleAmount")}
-                            </FormLabel>
-                            <FormDescription>
-                              {t("Settlement:forceSettleAmountDescription")}
-                            </FormDescription>
-
-                            <FormControl>
-                              <span className="grid grid-cols-12">
-                                <span className="col-span-8">
-                                  <Input
-                                    placeholder={
-                                      forceSettleAmount
-                                        ? `${forceSettleAmount} ${parsedAsset.s}`
-                                        : `0 ${parsedAsset.s}`
-                                    }
-                                    readOnly
-                                    disabled
-                                    className="mb-3"
-                                  />
-                                </span>
-                                <span className="col-span-4 ml-3">
-                                  <Popover>
-                                    <PopoverTrigger>
-                                      <span className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4">
-                                        <Label>
-                                          {t("Settlement:changeAmount")}
-                                        </Label>
-                                      </span>
-                                    </PopoverTrigger>
-                                    <PopoverContent>
-                                      <Label>
-                                        {t(
-                                          "Settlement:provideNewForceSettleAmount"
-                                        )}
-                                      </Label>
+                      <Field>
+                        <FieldLabel>
+                          {t("Settlement:individualSettlementDebt")}
+                        </FieldLabel>
+                        <FieldContent>
+                          <span className="grid grid-cols-8">
+                            <span className="col-span-6">
+                              <Input
+                                disabled
+                                className="mb-1"
+                                value={`${individualSettlementFund._debt} ${parsedAsset.s}`}
+                                readOnly
+                              />
+                            </span>
+                          </span>
+                        </FieldContent>
+                      </Field>
+                      <Field>
+                        <FieldLabel>
+                          {t("Settlement:individualSettlementFund")}
+                        </FieldLabel>
+                        <FieldContent>
+                          <span className="grid grid-cols-8">
+                            <span className="col-span-6">
+                              <Input
+                                disabled
+                                className="mb-1"
+                                value={`${individualSettlementFund._fund} ${parsedCollateralAsset.s}`}
+                                readOnly
+                              />
+                            </span>
+                          </span>
+                        </FieldContent>
+                      </Field>
+                      <Field>
+                        <FieldLabel>{t("Settlement:fundingRatio")}</FieldLabel>
+                        <FieldContent>
+                          <span className="grid grid-cols-8">
+                            <span className="col-span-2 mb-1">
+                              <Input
+                                disabled
+                                value={`${(
+                                  ((individualSettlementFund._debt *
+                                    currentFeedSettlementPrice) /
+                                    individualSettlementFund._fund) *
+                                  100
+                                ).toFixed(2)} %`}
+                                readOnly
+                              />
+                            </span>
+                            <span className="col-span-2 text-red-500">
+                              <Input
+                                disabled
+                                value={`-${(
+                                  100 -
+                                  ((individualSettlementFund._debt *
+                                    currentFeedSettlementPrice) /
+                                    individualSettlementFund._fund) *
+                                    100
+                                ).toFixed(2)}%`}
+                                readOnly
+                              />
+                            </span>
+                          </span>
+                        </FieldContent>
+                      </Field>
+                      <Field>
+                        <FieldLabel>
+                          {t("Settlement:forceSettleAmount")}
+                        </FieldLabel>
+                        <FieldDescription>
+                          {t("Settlement:forceSettleAmountDescription")}
+                        </FieldDescription>
+                        <FieldContent>
+                          <span className="grid grid-cols-12">
+                            <span className="col-span-8">
+                              <Input
+                                placeholder={
+                                  forceSettleAmount
+                                    ? `${forceSettleAmount} ${parsedAsset.s}`
+                                    : `0 ${parsedAsset.s}`
+                                }
+                                readOnly
+                                disabled
+                                className="mb-3"
+                              />
+                            </span>
+                            <span className="col-span-4 ml-3">
+                              <Popover>
+                                <PopoverTrigger>
+                                  <span className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4">
+                                    <Label>
+                                      {t("Settlement:changeAmount")}
+                                    </Label>
+                                  </span>
+                                </PopoverTrigger>
+                                <PopoverContent>
+                                  <Label>
+                                    {t(
+                                      "Settlement:provideNewForceSettleAmount"
+                                    )}
+                                  </Label>
+                                  <Controller
+                                    control={form.control}
+                                    name="ForceSettleAmount"
+                                    render={({ field }) => (
                                       <Input
                                         placeholder={forceSettleAmount}
                                         className="mb-2 mt-1"
+                                        value={field.value ?? ""}
                                         onChange={(event) => {
                                           const input = event.target.value;
                                           const regex = /^[0-9]*\.?[0-9]*$/;
@@ -835,6 +755,7 @@ export default function Settlement(properties) {
                                             input.length &&
                                             regex.test(input)
                                           ) {
+                                            field.onChange(input);
                                             setForceSettleAmount(
                                               parseFloat(input).toFixed(
                                                 parsedAsset.p
@@ -851,65 +772,69 @@ export default function Settlement(properties) {
                                           }
                                         }}
                                       />
-                                    </PopoverContent>
-                                  </Popover>
-                                </span>
-                              </span>
-                            </FormControl>
-                            {forceSettleAmount &&
-                            individualSettlementFund._debt &&
-                            forceSettleAmount >
-                              individualSettlementFund._debt ? (
-                              <FormMessage>
-                                {t("Settlement:forceSettleAmountExceedsDebt")}
-                              </FormMessage>
-                            ) : null}
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="totalReceiving"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>
-                              {t("Settlement:totalAmountReceive")}
-                            </FormLabel>
-                            <FormDescription>
-                              {t("Settlement:totalAmountReceiveDescription", {
-                                asset: parsedAsset.s,
-                              })}
-                            </FormDescription>
-                            <FormControl>
-                              <span className="grid grid-cols-12">
-                                <span className="col-span-8">
-                                  <Input
-                                    placeholder={
-                                      totalReceiving
-                                        ? `${totalReceiving} ${parsedCollateralAsset.s}`
-                                        : `0 ${parsedCollateralAsset.s}`
-                                    }
-                                    readOnly
-                                    disabled
-                                    className="mb-1"
+                                    )}
                                   />
-                                </span>
-                                <span className="col-span-4 ml-3">
-                                  <Popover>
-                                    <PopoverTrigger>
-                                      <span className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4">
-                                        <Label>
-                                          {t("Settlement:changeTotal")}
-                                        </Label>
-                                      </span>
-                                    </PopoverTrigger>
-                                    <PopoverContent>
-                                      <Label>
-                                        {t("Settlement:provideNewTotalAmount")}
-                                      </Label>
+                                </PopoverContent>
+                              </Popover>
+                            </span>
+                          </span>
+                        </FieldContent>
+                        {forceSettleAmount &&
+                        individualSettlementFund._debt &&
+                        forceSettleAmount > individualSettlementFund._debt ? (
+                          <FieldError
+                            errors={[
+                              {
+                                message: t(
+                                  "Settlement:forceSettleAmountExceedsDebt"
+                                ),
+                              },
+                            ]}
+                          />
+                        ) : null}
+                      </Field>
+                      <Field>
+                        <FieldLabel>
+                          {t("Settlement:totalAmountReceive")}
+                        </FieldLabel>
+                        <FieldDescription>
+                          {t("Settlement:totalAmountReceiveDescription", {
+                            asset: parsedAsset.s,
+                          })}
+                        </FieldDescription>
+                        <FieldContent>
+                          <span className="grid grid-cols-12">
+                            <span className="col-span-8">
+                              <Input
+                                placeholder={
+                                  totalReceiving
+                                    ? `${totalReceiving} ${parsedCollateralAsset.s}`
+                                    : `0 ${parsedCollateralAsset.s}`
+                                }
+                                readOnly
+                                disabled
+                                className="mb-1"
+                              />
+                            </span>
+                            <span className="col-span-4 ml-3">
+                              <Popover>
+                                <PopoverTrigger>
+                                  <span className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4">
+                                    <Label>{t("Settlement:changeTotal")}</Label>
+                                  </span>
+                                </PopoverTrigger>
+                                <PopoverContent>
+                                  <Label>
+                                    {t("Settlement:provideNewTotalAmount")}
+                                  </Label>
+                                  <Controller
+                                    control={form.control}
+                                    name="totalReceiving"
+                                    render={({ field }) => (
                                       <Input
                                         placeholder={totalReceiving}
                                         className="mb-2 mt-1"
+                                        value={field.value ?? ""}
                                         onChange={(event) => {
                                           const input = event.target.value;
                                           const regex = /^[0-9]*\.?[0-9]*$/;
@@ -918,6 +843,7 @@ export default function Settlement(properties) {
                                             input.length &&
                                             regex.test(input)
                                           ) {
+                                            field.onChange(input);
                                             setTotalReceiving(
                                               parseFloat(input).toFixed(
                                                 parsedCollateralAsset.p
@@ -932,76 +858,67 @@ export default function Settlement(properties) {
                                           }
                                         }}
                                       />
-                                    </PopoverContent>
-                                  </Popover>
-                                </span>
-                              </span>
-                            </FormControl>
+                                    )}
+                                  />
+                                </PopoverContent>
+                              </Popover>
+                            </span>
+                          </span>
+                        </FieldContent>
 
-                            <FormMessage>
-                              {t("Settlement:payingPremium", {
-                                premium: (
-                                  100 -
-                                  ((individualSettlementFund._debt *
-                                    currentFeedSettlementPrice) /
-                                    individualSettlementFund._fund) *
-                                    100
-                                ).toFixed(2),
-                              })}
-                            </FormMessage>
-                          </FormItem>
-                        )}
-                      />
+                        <FieldDescription>
+                          {t("Settlement:payingPremium", {
+                            premium: (
+                              100 -
+                              ((individualSettlementFund._debt *
+                                currentFeedSettlementPrice) /
+                                individualSettlementFund._fund) *
+                                100
+                            ).toFixed(2),
+                          })}
+                        </FieldDescription>
+                      </Field>
                     </>
                   ) : null}
 
-                  <FormField
-                    control={form.control}
-                    name="fee"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{t("Settlement:networkFee")}</FormLabel>
-                        <FormDescription>
-                          {t("Settlement:operation", {
-                            operation:
+                  <Field>
+                    <FieldLabel>{t("Settlement:networkFee")}</FieldLabel>
+                    <FieldDescription>
+                      {t("Settlement:operation", {
+                        operation:
+                          settlementFund && settlementFund.finalSettlementFund
+                            ? 45
+                            : 17,
+                      })}
+                    </FieldDescription>
+                    <FieldContent>
+                      <span className="grid grid-cols-8">
+                        <span className="col-span-6">
+                          <Input
+                            disabled
+                            className="mb-1"
+                            value={`${
                               settlementFund &&
                               settlementFund.finalSettlementFund
-                                ? 45
-                                : 17,
-                          })}
-                        </FormDescription>
-                        <FormControl>
-                          <span className="grid grid-cols-8">
-                            <span className="col-span-6">
-                              <Input
-                                disabled
-                                className="mb-1"
-                                value={`${
-                                  settlementFund &&
-                                  settlementFund.finalSettlementFund
-                                    ? bidFee
-                                    : settleFee
-                                } ${
-                                  usr.chain === "Bitshares" ? "BTS" : "TEST"
-                                }`}
-                                readOnly
-                              />
-                            </span>
-                          </span>
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
+                                ? bidFee
+                                : settleFee
+                            } ${usr.chain === "Bitshares" ? "BTS" : "TEST"}`}
+                            readOnly
+                          />
+                        </span>
+                      </span>
+                    </FieldContent>
+                  </Field>
 
                   {finalBitasset &&
                   finalBitasset.options.extensions.force_settle_fee_percent ? (
-                    <FormMessage>
+                    <FieldDescription>
                       {t("Settlement:additionalForceSettlementFee", {
                         fee:
                           finalBitasset.options.extensions
                             .force_settle_fee_percent / 100,
                       })}
-                    </FormMessage>
+                    </FieldDescription>
                   ) : null}
 
                   <Button className="mt-5 mb-3" type="submit">
@@ -1009,12 +926,12 @@ export default function Settlement(properties) {
                   </Button>
 
                   {collateralBiddingDisabled ? (
-                    <FormMessage>
+                    <FieldDescription>
                       {t("Settlement:collateralBiddingDisabled")}
-                    </FormMessage>
+                    </FieldDescription>
                   ) : null}
-                </form>
-              </Form>
+                </FieldGroup>
+              </form>
 
               {(!settlementFund ||
                 (settlementFund && !settlementFund.finalSettlementFund)) &&

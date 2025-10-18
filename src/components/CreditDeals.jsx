@@ -5,7 +5,7 @@ import React, {
   useMemo,
 } from "react";
 import { List } from "react-window";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { useStore } from "@nanostores/react";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
@@ -20,14 +20,13 @@ import {
 } from "@/components/ui/card";
 
 import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+  Field,
+  FieldGroup,
+  FieldLabel,
+  FieldContent,
+  FieldDescription,
+  FieldError,
+} from "@/components/ui/field";
 
 import {
   Dialog,
@@ -220,8 +219,6 @@ export default function CreditDeals(properties) {
 
     const [openRepay, setOpenRepay] = useState(false);
     const [showDialog, setShowDialog] = useState(false);
-
-    //const [repayAmount, setRepayAmount] = useState(borrowedAmount ?? 0);
     const [finalRepayAmount, setFinalRepayAmount] = useState();
 
     const redeemCollateral = useMemo(() => {
@@ -281,10 +278,10 @@ export default function CreditDeals(properties) {
 
       if (debouncedInputValue > borrowedAmount) {
         setFinalRepayAmount(borrowedAmount);
-        setInputValue(borrowedAmount); // Set value to maximum available amount
+        setInputValue(borrowedAmount);
       } else if (debouncedInputValue < minAmount) {
         setFinalRepayAmount(minAmount);
-        setInputValue(minAmount); // Set value to minimum accepted amount
+        setInputValue(minAmount);
       } else if (
         debouncedInputValue.toString().split(".").length > 1 &&
         debouncedInputValue.toString().split(".")[1].length >
@@ -294,11 +291,16 @@ export default function CreditDeals(properties) {
           debtAsset.precision
         );
         setFinalRepayAmount(fixedValue);
-        setInputValue(fixedValue); // Set value to minimum accepted amount
+        setInputValue(fixedValue);
       } else {
         setFinalRepayAmount(debouncedInputValue);
       }
     }, [debouncedInputValue, borrowedAmount, debtAsset]);
+
+    const idSuffix = useMemo(
+      () => (res?.id || "id").toString().replace(/\./g, "-"),
+      [res?.id]
+    );
 
     return (
       <div style={{ ...style }} key={`acard-${res.id}`}>
@@ -403,63 +405,53 @@ export default function CreditDeals(properties) {
                       <DialogDescription>
                         {t("CreditDeals:description")}
                       </DialogDescription>
-                      <Form {...form}>
-                        <form
-                          onSubmit={() => {
-                            setShowDialog(true);
-                            event.preventDefault();
-                          }}
-                          className="gaps-5"
-                        >
-                          <FormField
-                            control={form.control}
-                            name="account"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>
-                                  {t("CreditDeals:account")}
-                                </FormLabel>
-                                <FormControl>
-                                  <Input
-                                    disabled
-                                    readOnly
-                                    placeholder="Bitshares account"
-                                    className="mb-3 mt-3"
-                                    value={`${usr.username} (${usr.id})`}
-                                  />
-                                </FormControl>
-                              </FormItem>
-                            )}
-                          />
+                      <form
+                        onSubmit={form.handleSubmit(() => {
+                          setShowDialog(true);
+                        })}
+                        className="gaps-5"
+                      >
+                        <FieldGroup>
+                          <Field>
+                            <FieldLabel htmlFor={`account-${idSuffix}`}>
+                              {t("CreditDeals:account")}
+                            </FieldLabel>
+                            <FieldContent>
+                              <Input
+                                id={`account-${idSuffix}`}
+                                disabled
+                                readOnly
+                                placeholder="Bitshares account"
+                                className="mb-3 mt-3"
+                                value={`${usr.username} (${usr.id})`}
+                              />
+                            </FieldContent>
+                          </Field>
 
-                          <FormField
-                            control={form.control}
-                            name="balance"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>
-                                  {t("CreditDeals:balance", {
-                                    symbol: debtAsset.symbol,
-                                  })}
-                                </FormLabel>
-                                <FormControl>
-                                  <Input
-                                    disabled
-                                    readOnly
-                                    className="mb-3 mt-3"
-                                    value={`${debtAssetBalance} ${debtAsset.symbol}`}
-                                  />
-                                </FormControl>
-                              </FormItem>
-                            )}
-                          />
+                          <Field>
+                            <FieldLabel htmlFor={`balance-${idSuffix}`}>
+                              {t("CreditDeals:balance", {
+                                symbol: debtAsset.symbol,
+                              })}
+                            </FieldLabel>
+                            <FieldContent>
+                              <Input
+                                id={`balance-${idSuffix}`}
+                                disabled
+                                readOnly
+                                className="mb-3 mt-3"
+                                value={`${debtAssetBalance} ${debtAsset.symbol}`}
+                              />
+                            </FieldContent>
+                          </Field>
 
-                          <FormField
+                          <Controller
                             control={form.control}
                             name="repayAmount"
+                            defaultValue=""
                             render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>
+                              <Field>
+                                <FieldLabel htmlFor={`repay-${idSuffix}`}>
                                   <div className="grid grid-cols-2 gap-2 mt-2">
                                     <div className="col-span-1">
                                       {t("CreditDeals:repayAmount", {
@@ -473,181 +465,155 @@ export default function CreditDeals(properties) {
                                       })}
                                     </div>
                                   </div>
-                                </FormLabel>
-                                <FormDescription>
+                                </FieldLabel>
+                                <FieldDescription>
                                   {t("CreditDeals:repayDesc")}
-                                </FormDescription>
-                                <FormControl
-                                  onChange={(event) => {
-                                    const input = event.target.value;
-                                    const regex = /^[0-9]*\.?[0-9]*$/;
-                                    if (regex.test(input)) {
-                                      setInputValue(input);
-                                    }
-                                  }}
-                                >
+                                </FieldDescription>
+                                <FieldContent>
                                   <Input
-                                    label={t("CreditDeals:repayAmount", {
-                                      symbol: debtAsset.symbol,
-                                    })}
+                                    id={`repay-${idSuffix}`}
                                     className="mb-3"
-                                    value={inputValue ?? ""}
+                                    value={field.value ?? ""}
                                     placeholder={borrowedAmount}
+                                    onChange={(e) => {
+                                      const input = e.target.value;
+                                      const regex = /^[0-9]*\.?[0-9]*$/;
+                                      if (regex.test(input)) {
+                                        setInputValue(input);
+                                        field.onChange(input);
+                                      }
+                                    }}
                                   />
-                                </FormControl>
-                              </FormItem>
+                                </FieldContent>
+                              </Field>
                             )}
                           />
 
-                          <FormField
-                            control={form.control}
-                            name="collateralRedemtionAmount"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>
-                                  <div className="grid grid-cols-2 gap-2 mt-2">
-                                    <div className="col-span-1">
-                                      {t("CreditDeals:redeemCollateral")}
-                                    </div>
-                                    <div className="col-span-1 text-right">
-                                      {t("CreditDeals:remainingCollateral", {
-                                        amount: collateralAmount,
-                                        symbol: collateralAsset.symbol,
-                                      })}
-                                    </div>
-                                  </div>
-                                </FormLabel>
-                                <FormDescription>
-                                  {t("CreditDeals:collateralRedemption", {
+                          <Field>
+                            <FieldLabel htmlFor={`collateral-${idSuffix}`}>
+                              <div className="grid grid-cols-2 gap-2 mt-2">
+                                <div className="col-span-1">
+                                  {t("CreditDeals:redeemCollateral")}
+                                </div>
+                                <div className="col-span-1 text-right">
+                                  {t("CreditDeals:remainingCollateral", {
+                                    amount: collateralAmount,
                                     symbol: collateralAsset.symbol,
                                   })}
-                                </FormDescription>
-                                <FormControl>
-                                  <Input
-                                    label={t("CreditDeals:repayAmount", {
+                                </div>
+                              </div>
+                            </FieldLabel>
+                            <FieldDescription>
+                              {t("CreditDeals:collateralRedemption", {
+                                symbol: collateralAsset.symbol,
+                              })}
+                            </FieldDescription>
+                            <FieldContent>
+                              <Input
+                                id={`collateral-${idSuffix}`}
+                                value={
+                                  redeemCollateral && collateralAmount
+                                    ? `${redeemCollateral ?? "?"} ${
+                                        collateralAsset.symbol
+                                      } (${(
+                                        (redeemCollateral / collateralAmount) *
+                                        100
+                                      ).toFixed(2)}%)`
+                                    : "0"
+                                }
+                                disabled
+                                readOnly
+                                className="mb-3"
+                              />
+                            </FieldContent>
+                          </Field>
+
+                          {finalRepayAmount ? (
+                            <Field>
+                              <FieldLabel htmlFor={`loanfee-${idSuffix}`}>
+                                <div className="mt-2">
+                                  {t("CreditDeals:loanLabel")}
+                                </div>
+                              </FieldLabel>
+                              <FieldDescription>
+                                {t("CreditDeals:loanDesc")}
+                              </FieldDescription>
+                              <FieldContent>
+                                <Input
+                                  id={`loanfee-${idSuffix}`}
+                                  disabled
+                                  placeholder="0"
+                                  className="mb-3 mt-3"
+                                  value={`${loanFee} (${debtAsset.symbol}) (${
+                                    res.fee_rate / 10000
+                                  }% fee)`}
+                                />
+                              </FieldContent>
+                            </Field>
+                          ) : null}
+
+                          {finalRepayAmount ? (
+                            <Field>
+                              <FieldLabel htmlFor={`final-${idSuffix}`}>
+                                <div className="mt-2">
+                                  {t("CreditDeals:finalPaymentLabel")}
+                                </div>
+                              </FieldLabel>
+                              <FieldDescription>
+                                {t("CreditDeals:finalPaymentDesc", {
+                                  symbol: collateralAsset.symbol,
+                                })}
+                              </FieldDescription>
+                              <FieldContent>
+                                <Input
+                                  id={`final-${idSuffix}`}
+                                  disabled
+                                  placeholder="0"
+                                  className="mb-3 mt-3"
+                                  value={`${finalRepayment} (${
+                                    debtAsset.symbol
+                                  }) (debt + ${res.fee_rate / 10000}% fee)`}
+                                />
+                                {debtAssetBalance < finalRepayment ? (
+                                  <FieldError>
+                                    {t("CreditDeals:finalPaymentWarning", {
                                       symbol: debtAsset.symbol,
                                     })}
-                                    value={
-                                      redeemCollateral && collateralAmount
-                                        ? `${redeemCollateral ?? "?"} ${
-                                            collateralAsset.symbol
-                                          } (${(
-                                            (redeemCollateral /
-                                              collateralAmount) *
-                                            100
-                                          ).toFixed(2)}%)`
-                                        : "0"
-                                    }
-                                    disabled
-                                    readOnly
-                                    className="mb-3"
-                                  />
-                                </FormControl>
-                              </FormItem>
-                            )}
-                          />
-
-                          {finalRepayAmount ? (
-                            <FormField
-                              control={form.control}
-                              name="loanFee"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel>
-                                    <div className="mt-2">
-                                      {t("CreditDeals:loanLabel")}
-                                    </div>
-                                  </FormLabel>
-                                  <FormDescription>
-                                    {t("CreditDeals:loanDesc")}
-                                  </FormDescription>
-                                  <FormControl>
-                                    <Input
-                                      disabled
-                                      placeholder="0"
-                                      className="mb-3 mt-3"
-                                      value={`${loanFee} (${
-                                        debtAsset.symbol
-                                      }) (${res.fee_rate / 10000}% fee)`}
-                                    />
-                                  </FormControl>
-                                </FormItem>
-                              )}
-                            />
-                          ) : null}
-
-                          {finalRepayAmount ? (
-                            <FormField
-                              control={form.control}
-                              name="finalRepayment"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel>
-                                    <div className="mt-2">
-                                      {t("CreditDeals:finalPaymentLabel")}
-                                    </div>
-                                  </FormLabel>
-                                  <FormDescription>
-                                    {t("CreditDeals:finalPaymentDesc", {
-                                      symbol: collateralAsset.symbol,
-                                    })}
-                                  </FormDescription>
-                                  <FormControl>
-                                    <Input
-                                      disabled
-                                      placeholder="0"
-                                      className="mb-3 mt-3"
-                                      value={`${finalRepayment} (${
-                                        debtAsset.symbol
-                                      }) (debt + ${res.fee_rate / 10000}% fee)`}
-                                    />
-                                  </FormControl>
-                                  {debtAssetBalance < finalRepayment ? (
-                                    <FormMessage>
-                                      {t("CreditDeals:finalPaymentWarning", {
-                                        symbol: debtAsset.symbol,
-                                      })}
-                                    </FormMessage>
-                                  ) : null}
-                                </FormItem>
-                              )}
-                            />
-                          ) : null}
-
-                          <FormField
-                            control={form.control}
-                            name="networkFee"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>
-                                  <div className="mt-2">
-                                    {t("CreditDeals:networkFee")}
-                                  </div>
-                                </FormLabel>
-                                <FormDescription>
-                                  {t("CreditDeals:networkFeeDesc")}
-                                </FormDescription>
-                                <FormControl>
-                                  <Input
-                                    disabled
-                                    placeholder={`${fee} BTS`}
-                                    className="mb-3 mt-3"
-                                  />
-                                </FormControl>
-                                {usr.id === usr.referrer ? (
-                                  <FormMessage>
-                                    {t("CreditDeals:rebate", {
-                                      fee: fee * 0.8,
-                                      chain:
-                                        usr.chain === "bitshares"
-                                          ? "BTS"
-                                          : "TEST",
-                                    })}
-                                  </FormMessage>
+                                  </FieldError>
                                 ) : null}
-                              </FormItem>
-                            )}
-                          />
+                              </FieldContent>
+                            </Field>
+                          ) : null}
+
+                          <Field>
+                            <FieldLabel htmlFor={`networkfee-${idSuffix}`}>
+                              <div className="mt-2">
+                                {t("CreditDeals:networkFee")}
+                              </div>
+                            </FieldLabel>
+                            <FieldDescription>
+                              {t("CreditDeals:networkFeeDesc")}
+                            </FieldDescription>
+                            <FieldContent>
+                              <Input
+                                id={`networkfee-${idSuffix}`}
+                                disabled
+                                placeholder={`${fee} BTS`}
+                                className="mb-3 mt-3"
+                              />
+                              {usr.id === usr.referrer ? (
+                                <FieldError>
+                                  {t("CreditDeals:rebate", {
+                                    fee: fee * 0.8,
+                                    chain:
+                                      usr.chain === "bitshares"
+                                        ? "BTS"
+                                        : "TEST",
+                                  })}
+                                </FieldError>
+                              ) : null}
+                            </FieldContent>
+                          </Field>
 
                           {!redeemCollateral ||
                           !finalRepayAmount ||
@@ -669,8 +635,8 @@ export default function CreditDeals(properties) {
                               {t("CreditDeals:submit")}
                             </Button>
                           )}
-                        </form>
-                      </Form>
+                        </FieldGroup>
+                      </form>
                       {showDialog ? (
                         <DeepLinkDialog
                           operationNames={["credit_deal_repay"]}

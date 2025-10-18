@@ -5,7 +5,7 @@ import React, {
   useMemo,
 } from "react";
 import Fuse from "fuse.js";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { List } from "react-window";
 import { useStore } from "@nanostores/react";
 import { sha256 } from "@noble/hashes/sha2.js";
@@ -51,14 +51,13 @@ import {
 } from "@/components/ui/select";
 
 import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+  Field,
+  FieldContent,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -421,292 +420,247 @@ export default function PoolStake(properties) {
               {!assets ? <p>{t("PoolStake:loadingAssetData")}</p> : null}
               {pools && assets ? (
                 <>
-                  <Form {...form}>
-                    <form
-                      onSubmit={() => {
-                        setShowDialog(true);
-                        event.preventDefault();
-                      }}
-                    >
-                      <FormField
-                        control={form.control}
-                        name="account"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>{t("PoolStake:account")}</FormLabel>
-                            <FormControl>
-                              <div className="grid grid-cols-8">
-                                <div className="col-span-1 ml-5">
-                                  {usr && usr.username ? (
-                                    <Avatar
-                                      size={40}
-                                      name={usr.username}
-                                      extra="Target"
-                                      expression={{
-                                        eye: "normal",
-                                        mouth: "open",
-                                      }}
-                                      colors={[
-                                        "#92A1C6",
-                                        "#146A7C",
-                                        "#F0AB3D",
-                                        "#C271B4",
-                                        "#C20D90",
-                                      ]}
-                                    />
-                                  ) : (
-                                    <Av>
-                                      <AvatarFallback>?</AvatarFallback>
-                                    </Av>
-                                  )}
-                                </div>
-                                <div className="col-span-7">
-                                  <Input
-                                    disabled
-                                    readOnly
-                                    placeholder="Bitshares account (1.2.x)"
-                                    className="mb-3 mt-1"
-                                    value={`${usr.username} (${usr.id})`}
+                  <form
+                    onSubmit={form.handleSubmit(() => {
+                      setShowDialog(true);
+                    })}
+                  >
+                    <FieldGroup>
+                      <Field>
+                        <FieldLabel>{t("PoolStake:account")}</FieldLabel>
+                        <FieldContent>
+                          <div className="grid grid-cols-8">
+                            <div className="col-span-1 ml-5">
+                              {usr && usr.username ? (
+                                <Avatar
+                                  size={40}
+                                  name={usr.username}
+                                  extra="Target"
+                                  expression={{
+                                    eye: "normal",
+                                    mouth: "open",
+                                  }}
+                                  colors={[
+                                    "#92A1C6",
+                                    "#146A7C",
+                                    "#F0AB3D",
+                                    "#C271B4",
+                                    "#C20D90",
+                                  ]}
+                                />
+                              ) : (
+                                <Av>
+                                  <AvatarFallback>?</AvatarFallback>
+                                </Av>
+                              )}
+                            </div>
+                            <div className="col-span-7">
+                              <Input
+                                disabled
+                                readOnly
+                                placeholder="Bitshares account (1.2.x)"
+                                className="mb-3 mt-1"
+                                value={`${usr.username} (${usr.id})`}
+                              />
+                            </div>
+                          </div>
+                        </FieldContent>
+                      </Field>
+                      <Field>
+                        <FieldLabel>{t("PoolStake:liquidityPool")}</FieldLabel>
+                        <FieldDescription style={{ marginTop: "0px" }}>
+                          {pool
+                            ? t("PoolStake:liquidityPoolChosen")
+                            : t("PoolStake:selectLiquidityPool")}
+                        </FieldDescription>
+                        <FieldContent>
+                          <div className="grid grid-cols-5 mt-3">
+                            <div className="mt-1 col-span-4">
+                              <Select
+                                key={poolKey}
+                                onValueChange={(value) => setPool(value)}
+                              >
+                                <SelectTrigger className="mb-3">
+                                  <SelectValue
+                                    placeholder={
+                                      foundPool
+                                        ? `${foundPool.id} - ${foundPool.share_asset_symbol} - ${foundPool.asset_a_symbol}:${foundPool.asset_b_symbol}`
+                                        : t("PoolStake:selectPoolPlaceholder")
+                                    }
                                   />
-                                </div>
-                              </div>
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="pool"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>
-                              {t("PoolStake:liquidityPool")}
-                            </FormLabel>
-                            <FormDescription style={{ marginTop: "0px" }}>
-                              {pool
-                                ? t("PoolStake:liquidityPoolChosen")
-                                : t("PoolStake:selectLiquidityPool")}
-                            </FormDescription>
-                            <FormControl
-                              onChange={(event) => {
-                                setPool(event.target.value);
-                              }}
-                            >
-                              <div className="grid grid-cols-5 mt-3">
-                                <div className="mt-1 col-span-4">
-                                  <Select key={poolKey}>
-                                    <SelectTrigger className="mb-3">
-                                      <SelectValue
-                                        placeholder={
-                                          foundPool
-                                            ? `${foundPool.id} - ${foundPool.share_asset_symbol} - ${foundPool.asset_a_symbol}:${foundPool.asset_b_symbol}`
-                                            : t(
-                                                "PoolStake:selectPoolPlaceholder"
-                                              )
+                                </SelectTrigger>
+                                <SelectContent className="bg-white">
+                                  {pools && pools.length ? (
+                                    <div className="w-full max-h-[150px] overflow-auto">
+                                      <List
+                                        rowComponent={Row}
+                                        rowCount={pools.length}
+                                        rowHeight={35}
+                                        rowProps={{}}
+                                        initialScrollOffset={
+                                          pools.map((x) => x.id).indexOf(pool) *
+                                          35
                                         }
                                       />
-                                    </SelectTrigger>
-                                    <SelectContent className="bg-white">
-                                      {pools && pools.length ? (
-                                        <div className="w-full max-h-[150px] overflow-auto">
-                                          <List
-                                            rowComponent={Row}
-                                            rowCount={pools.length}
-                                            rowHeight={35}
-                                            rowProps={{}}
-                                            initialScrollOffset={
-                                              pools
-                                                .map((x) => x.id)
-                                                .indexOf(pool) * 35
-                                            }
-                                          />
-                                        </div>
-                                      ) : null}
-                                    </SelectContent>
-                                  </Select>
-                                </div>
-                                <div className="text-gray-500 text-right col-span-1 ml-3">
-                                  <Dialog
-                                    open={dialogOpen}
-                                    onOpenChange={(open) => {
-                                      if (!open) {
-                                        setThisResult();
-                                      }
-                                      setDialogOpen(open);
-                                    }}
+                                    </div>
+                                  ) : null}
+                                </SelectContent>
+                              </Select>
+                            </div>
+                            <div className="text-gray-500 text-right col-span-1 ml-3">
+                              <Dialog
+                                open={dialogOpen}
+                                onOpenChange={(open) => {
+                                  if (!open) {
+                                    setThisResult();
+                                  }
+                                  setDialogOpen(open);
+                                }}
+                              >
+                                <DialogTrigger asChild>
+                                  <Button
+                                    variant="outline"
+                                    className="h-9 mt-1 p-3 w-full"
                                   >
-                                    <DialogTrigger asChild>
-                                      <Button
-                                        variant="outline"
-                                        className="h-9 mt-1 p-3 w-full"
-                                      >
-                                        {t("PoolStake:searchButton")}
-                                      </Button>
-                                    </DialogTrigger>
-                                    <DialogContent className="sm:max-w-[900px] bg-white">
-                                      <DialogHeader>
-                                        <DialogTitle>
-                                          {t("PoolStake:searchDialogTitle")}
-                                        </DialogTitle>
-                                        <DialogDescription>
-                                          {t(
-                                            "PoolStake:searchDialogDescription"
+                                    {t("PoolStake:searchButton")}
+                                  </Button>
+                                </DialogTrigger>
+                                <DialogContent className="sm:max-w-[900px] bg-white">
+                                  <DialogHeader>
+                                    <DialogTitle>
+                                      {t("PoolStake:searchDialogTitle")}
+                                    </DialogTitle>
+                                    <DialogDescription>
+                                      {t("PoolStake:searchDialogDescription")}
+                                    </DialogDescription>
+                                  </DialogHeader>
+                                  <div className="grid grid-cols-1">
+                                    <div className="col-span-1">
+                                      <Tabs defaultValue="asset">
+                                        <TabsList className="grid max-w-[400px] grid-cols-2 mb-1 gap-3">
+                                          {activeTab === "asset" ? (
+                                            <TabsTrigger
+                                              style={activeTabStyle}
+                                              value="asset"
+                                            >
+                                              {t("PoolStake:swappableAssets")}
+                                            </TabsTrigger>
+                                          ) : (
+                                            <TabsTrigger
+                                              value="asset"
+                                              onClick={() =>
+                                                setActiveTab("asset")
+                                              }
+                                            >
+                                              {t("PoolStake:swappableAssets")}
+                                            </TabsTrigger>
                                           )}
-                                        </DialogDescription>
-                                      </DialogHeader>
-                                      <div className="grid grid-cols-1">
-                                        <div className="col-span-1">
-                                          <Tabs defaultValue="asset">
-                                            <TabsList className="grid max-w-[400px] grid-cols-2 mb-1 gap-3">
-                                              {activeTab === "asset" ? (
-                                                <TabsTrigger
-                                                  style={activeTabStyle}
-                                                  value="asset"
-                                                >
-                                                  {t(
-                                                    "PoolStake:swappableAssets"
-                                                  )}
-                                                </TabsTrigger>
-                                              ) : (
-                                                <TabsTrigger
-                                                  value="asset"
-                                                  onClick={() =>
-                                                    setActiveTab("asset")
-                                                  }
-                                                >
-                                                  {t(
-                                                    "PoolStake:swappableAssets"
-                                                  )}
-                                                </TabsTrigger>
-                                              )}
-                                              {activeTab === "share" ? (
-                                                <TabsTrigger
-                                                  style={activeTabStyle}
-                                                  value="share"
-                                                >
-                                                  {t(
-                                                    "PoolStake:poolShareAsset"
-                                                  )}
-                                                </TabsTrigger>
-                                              ) : (
-                                                <TabsTrigger
-                                                  value="share"
-                                                  onClick={() =>
-                                                    setActiveTab("share")
-                                                  }
-                                                >
-                                                  {t(
-                                                    "PoolStake:poolShareAsset"
-                                                  )}
-                                                </TabsTrigger>
-                                              )}
-                                            </TabsList>
+                                          {activeTab === "share" ? (
+                                            <TabsTrigger
+                                              style={activeTabStyle}
+                                              value="share"
+                                            >
+                                              {t("PoolStake:poolShareAsset")}
+                                            </TabsTrigger>
+                                          ) : (
+                                            <TabsTrigger
+                                              value="share"
+                                              onClick={() =>
+                                                setActiveTab("share")
+                                              }
+                                            >
+                                              {t("PoolStake:poolShareAsset")}
+                                            </TabsTrigger>
+                                          )}
+                                        </TabsList>
 
-                                            <Input
-                                              name="assetSearch"
-                                              placeholder={t(
-                                                "PoolStake:searchPlaceholder"
-                                              )}
-                                              className="mb-3 max-w-[400px]"
-                                              onChange={(event) => {
-                                                setThisInput(
-                                                  event.target.value
-                                                );
-                                                event.preventDefault();
-                                                event.stopPropagation();
-                                              }}
-                                            />
+                                        <Input
+                                          name="assetSearch"
+                                          placeholder={t(
+                                            "PoolStake:searchPlaceholder"
+                                          )}
+                                          className="mb-3 max-w-[400px]"
+                                          onChange={(event) => {
+                                            setThisInput(event.target.value);
+                                            event.preventDefault();
+                                            event.stopPropagation();
+                                          }}
+                                        />
 
-                                            <TabsContent value="share">
-                                              {thisResult &&
-                                              thisResult.length ? (
-                                                <>
-                                                  <div className="grid grid-cols-12">
-                                                    <div className="col-span-2">
-                                                      {t("PoolStake:id")}
-                                                    </div>
-                                                    <div className="col-span-3">
-                                                      <b>
-                                                        {t(
-                                                          "PoolStake:shareAsset"
-                                                        )}
-                                                      </b>
-                                                    </div>
-                                                    <div className="col-span-3">
-                                                      {t("PoolStake:assetA")}
-                                                    </div>
-                                                    <div className="col-span-3">
-                                                      {t("PoolStake:assetB")}
-                                                    </div>
-                                                    <div className="col-span-1">
-                                                      {t("PoolStake:takerFee")}
-                                                    </div>
-                                                  </div>
-                                                  <div className="w-full max-h-[400px] overflow-auto">
-                                                    <List
-                                                      rowComponent={PoolRow}
-                                                      rowCount={
-                                                        thisResult.length
-                                                      }
-                                                      rowHeight={45}
-                                                      rowProps={{}}
-                                                    />
-                                                  </div>
-                                                </>
-                                              ) : null}
-                                            </TabsContent>
+                                        <TabsContent value="share">
+                                          {thisResult && thisResult.length ? (
+                                            <>
+                                              <div className="grid grid-cols-12">
+                                                <div className="col-span-2">
+                                                  {t("PoolStake:id")}
+                                                </div>
+                                                <div className="col-span-3">
+                                                  <b>
+                                                    {t("PoolStake:shareAsset")}
+                                                  </b>
+                                                </div>
+                                                <div className="col-span-3">
+                                                  {t("PoolStake:assetA")}
+                                                </div>
+                                                <div className="col-span-3">
+                                                  {t("PoolStake:assetB")}
+                                                </div>
+                                                <div className="col-span-1">
+                                                  {t("PoolStake:takerFee")}
+                                                </div>
+                                              </div>
+                                              <div className="w-full max-h-[400px] overflow-auto">
+                                                <List
+                                                  rowComponent={PoolRow}
+                                                  rowCount={thisResult.length}
+                                                  rowHeight={45}
+                                                  rowProps={{}}
+                                                />
+                                              </div>
+                                            </>
+                                          ) : null}
+                                        </TabsContent>
 
-                                            <TabsContent value="asset">
-                                              {thisResult &&
-                                              thisResult.length ? (
-                                                <>
-                                                  <div className="grid grid-cols-12">
-                                                    <div className="col-span-2">
-                                                      {t("PoolStake:id")}
-                                                    </div>
-                                                    <div className="col-span-3">
-                                                      {t(
-                                                        "PoolStake:shareAsset"
-                                                      )}
-                                                    </div>
-                                                    <div className="col-span-3">
-                                                      <b>
-                                                        {t("PoolStake:assetA")}
-                                                      </b>
-                                                    </div>
-                                                    <div className="col-span-3">
-                                                      <b>
-                                                        {t("PoolStake:assetB")}
-                                                      </b>
-                                                    </div>
-                                                    <div className="col-span-1">
-                                                      {t("PoolStake:takerFee")}
-                                                    </div>
-                                                  </div>
-                                                  <div className="w-full max-h-[400px] overflow-auto">
-                                                    <List
-                                                      rowComponent={PoolRow}
-                                                      rowCount={
-                                                        thisResult.length
-                                                      }
-                                                      rowHeight={45}
-                                                      rowProps={{}}
-                                                    />
-                                                  </div>
-                                                </>
-                                              ) : null}
-                                            </TabsContent>
-                                          </Tabs>
-                                        </div>
-                                      </div>
-                                    </DialogContent>
-                                  </Dialog>
-                                </div>
-                              </div>
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
+                                        <TabsContent value="asset">
+                                          {thisResult && thisResult.length ? (
+                                            <>
+                                              <div className="grid grid-cols-12">
+                                                <div className="col-span-2">
+                                                  {t("PoolStake:id")}
+                                                </div>
+                                                <div className="col-span-3">
+                                                  {t("PoolStake:shareAsset")}
+                                                </div>
+                                                <div className="col-span-3">
+                                                  <b>{t("PoolStake:assetA")}</b>
+                                                </div>
+                                                <div className="col-span-3">
+                                                  <b>{t("PoolStake:assetB")}</b>
+                                                </div>
+                                                <div className="col-span-1">
+                                                  {t("PoolStake:takerFee")}
+                                                </div>
+                                              </div>
+                                              <div className="w-full max-h-[400px] overflow-auto">
+                                                <List
+                                                  rowComponent={PoolRow}
+                                                  rowCount={thisResult.length}
+                                                  rowHeight={45}
+                                                  rowProps={{}}
+                                                />
+                                              </div>
+                                            </>
+                                          ) : null}
+                                        </TabsContent>
+                                      </Tabs>
+                                    </div>
+                                  </div>
+                                </DialogContent>
+                              </Dialog>
+                            </div>
+                          </div>
+                        </FieldContent>
+                      </Field>
 
                       <div className="grid grid-cols-10 gap-5 mt-1 mb-1">
                         {pool && assetA && assetB ? (
@@ -920,57 +874,51 @@ export default function PoolStake(properties) {
 
                           <TabsContent value="stake">
                             <div className="grid grid-cols-1">
-                              <FormField
-                                control={form.control}
-                                name="stakeA"
-                                render={({ field }) => (
-                                  <FormItem>
-                                    <FormLabel>
-                                      {t("PoolStake:howMuchToStake", {
-                                        symbol: assetA ? assetA.symbol : "???",
-                                      })}
-                                    </FormLabel>
-                                    <FormControl>
-                                      <div className="grid grid-cols-12">
-                                        <div className="col-span-8">
-                                          <Input
-                                            disabled
-                                            readOnly
-                                            value={
-                                              assetA && aStake
-                                                ? `${aStake} ${assetA.symbol}`
-                                                : `0 ${assetA.symbol}`
-                                            }
-                                            onChange={(event) => {
-                                              const input = event.target.value;
-                                              const regex = /^[0-9]*\.?[0-9]*$/;
-                                              if (regex.test(input)) {
-                                                setAStake(input);
-                                              }
+                              <Field>
+                                <FieldLabel>
+                                  {t("PoolStake:howMuchToStake", {
+                                    symbol: assetA ? assetA.symbol : "???",
+                                  })}
+                                </FieldLabel>
+                                <FieldContent>
+                                  <div className="grid grid-cols-12">
+                                    <div className="col-span-8">
+                                      <Input
+                                        disabled
+                                        readOnly
+                                        value={
+                                          assetA && aStake
+                                            ? `${aStake} ${assetA.symbol}`
+                                            : `0 ${assetA.symbol}`
+                                        }
+                                      />
+                                    </div>
+                                    <div className="col-span-4 ml-3">
+                                      <Popover>
+                                        <PopoverTrigger>
+                                          <span
+                                            onClick={() => {
+                                              event.preventDefault();
                                             }}
-                                          />
-                                        </div>
-                                        <div className="col-span-4 ml-3">
-                                          <Popover>
-                                            <PopoverTrigger>
-                                              <span
-                                                onClick={() => {
-                                                  event.preventDefault();
-                                                }}
-                                                className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4"
-                                              >
-                                                <Label>
-                                                  {t("PoolStake:changeAmount")}
-                                                </Label>
-                                              </span>
-                                            </PopoverTrigger>
-                                            <PopoverContent>
-                                              <Label>
-                                                {t("PoolStake:newAmount")}
-                                              </Label>{" "}
+                                            className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4"
+                                          >
+                                            <Label>
+                                              {t("PoolStake:changeAmount")}
+                                            </Label>
+                                          </span>
+                                        </PopoverTrigger>
+                                        <PopoverContent>
+                                          <Label>
+                                            {t("PoolStake:newAmount")}
+                                          </Label>{" "}
+                                          <Controller
+                                            control={form.control}
+                                            name="stakeA"
+                                            render={({ field }) => (
                                               <Input
                                                 placeholder={aStake}
                                                 className="mb-2 mt-1"
+                                                value={field.value ?? ""}
                                                 onChange={(event) => {
                                                   const input =
                                                     event.target.value;
@@ -981,6 +929,7 @@ export default function PoolStake(properties) {
                                                     input.length &&
                                                     regex.test(input)
                                                   ) {
+                                                    field.onChange(input);
                                                     setAStake(input);
 
                                                     if (
@@ -1062,58 +1011,59 @@ export default function PoolStake(properties) {
                                                   }
                                                 }}
                                               />
-                                            </PopoverContent>
-                                          </Popover>
-                                        </div>
-                                      </div>
-                                    </FormControl>
-                                  </FormItem>
-                                )}
-                              />
-                              <FormField
-                                control={form.control}
-                                name="stakeB"
-                                render={({ field }) => (
-                                  <FormItem>
-                                    <FormLabel>
-                                      {t("PoolStake:howMuchToStake", {
-                                        symbol: assetB ? assetB.symbol : "???",
-                                      })}
-                                    </FormLabel>
-                                    <FormControl>
-                                      <div className="grid grid-cols-12">
-                                        <div className="col-span-8">
-                                          <Input
-                                            disabled
-                                            readOnly
-                                            value={
-                                              assetB && bStake
-                                                ? `${bStake} ${assetB.symbol}`
-                                                : `0 ${assetB.symbol}`
-                                            }
+                                            )}
                                           />
-                                        </div>
-                                        <div className="col-span-4 ml-3">
-                                          <Popover>
-                                            <PopoverTrigger>
-                                              <span
-                                                onClick={() => {
-                                                  event.preventDefault();
-                                                }}
-                                                className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4"
-                                              >
-                                                <Label>
-                                                  {t("PoolStake:changeAmount")}
-                                                </Label>
-                                              </span>
-                                            </PopoverTrigger>
-                                            <PopoverContent>
-                                              <Label>
-                                                {t("PoolStake:newAmount")}
-                                              </Label>{" "}
+                                        </PopoverContent>
+                                      </Popover>
+                                    </div>
+                                  </div>
+                                </FieldContent>
+                              </Field>
+                              <Field>
+                                <FieldLabel>
+                                  {t("PoolStake:howMuchToStake", {
+                                    symbol: assetB ? assetB.symbol : "???",
+                                  })}
+                                </FieldLabel>
+                                <FieldContent>
+                                  <div className="grid grid-cols-12">
+                                    <div className="col-span-8">
+                                      <Input
+                                        disabled
+                                        readOnly
+                                        value={
+                                          assetB && bStake
+                                            ? `${bStake} ${assetB.symbol}`
+                                            : `0 ${assetB.symbol}`
+                                        }
+                                      />
+                                    </div>
+                                    <div className="col-span-4 ml-3">
+                                      <Popover>
+                                        <PopoverTrigger>
+                                          <span
+                                            onClick={() => {
+                                              event.preventDefault();
+                                            }}
+                                            className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4"
+                                          >
+                                            <Label>
+                                              {t("PoolStake:changeAmount")}
+                                            </Label>
+                                          </span>
+                                        </PopoverTrigger>
+                                        <PopoverContent>
+                                          <Label>
+                                            {t("PoolStake:newAmount")}
+                                          </Label>{" "}
+                                          <Controller
+                                            control={form.control}
+                                            name="stakeB"
+                                            render={({ field }) => (
                                               <Input
                                                 placeholder={bStake}
                                                 className="mb-2 mt-1"
+                                                value={field.value ?? ""}
                                                 onChange={(event) => {
                                                   const input =
                                                     event.target.value;
@@ -1124,6 +1074,7 @@ export default function PoolStake(properties) {
                                                     input.length &&
                                                     regex.test(input)
                                                   ) {
+                                                    field.onChange(input);
                                                     setBStake(input);
 
                                                     if (
@@ -1205,89 +1156,84 @@ export default function PoolStake(properties) {
                                                   }
                                                 }}
                                               />
-                                            </PopoverContent>
-                                          </Popover>
-                                        </div>
-                                      </div>
-                                    </FormControl>
-                                  </FormItem>
-                                )}
-                              />
-                              <FormField
-                                control={form.control}
-                                name="poolShareAssetAmount"
-                                render={({ field }) => (
-                                  <FormItem>
-                                    <FormLabel>
-                                      {t("PoolStake:totalShareAssetReceive")}
-                                    </FormLabel>
-                                    <FormControl>
-                                      <div className="grid grid-cols-2 mb-3 mt-3">
-                                        <Input
-                                          disabled
-                                          readOnly
-                                          placeholder={
-                                            foundPoolDetails
-                                              ? `${totalReceiving} ${foundPoolDetails?.share_asset_symbol}`
-                                              : "0"
-                                          }
-                                        />
-                                      </div>
-                                    </FormControl>
-                                  </FormItem>
-                                )}
-                              />
+                                            )}
+                                          />
+                                        </PopoverContent>
+                                      </Popover>
+                                    </div>
+                                  </div>
+                                </FieldContent>
+                              </Field>
+                              <Field>
+                                <FieldLabel>
+                                  {t("PoolStake:totalShareAssetReceive")}
+                                </FieldLabel>
+                                <FieldContent>
+                                  <div className="grid grid-cols-2 mb-3 mt-3">
+                                    <Input
+                                      disabled
+                                      readOnly
+                                      placeholder={
+                                        foundPoolDetails
+                                          ? `${totalReceiving} ${foundPoolDetails?.share_asset_symbol}`
+                                          : "0"
+                                      }
+                                    />
+                                  </div>
+                                </FieldContent>
+                              </Field>
                             </div>
                           </TabsContent>
                           <TabsContent value="unstake">
                             <div className="grid grid-cols-1">
-                              <FormField
-                                control={form.control}
-                                name="withdrawalAmount"
-                                render={({ field }) => (
-                                  <FormItem>
-                                    <FormLabel>
-                                      {t("PoolStake:withdrawLabel", {
-                                        symbol: foundPool.share_asset_symbol,
-                                      })}
-                                    </FormLabel>
-                                    <FormDescription>
-                                      {t("PoolStake:withdrawDesc")}
-                                    </FormDescription>
-                                    <FormControl>
-                                      <div className="grid grid-cols-12">
-                                        <div className="col-span-8">
-                                          <Input
-                                            disabled
-                                            readOnly
-                                            value={
-                                              withdrawAmount
-                                                ? `${withdrawAmount} ${foundPool.share_asset_symbol}`
-                                                : `0 ${foundPool.share_asset_symbol}`
-                                            }
-                                          />
-                                        </div>
-                                        <div className="col-span-4 ml-3">
-                                          <Popover>
-                                            <PopoverTrigger>
-                                              <span
-                                                onClick={() => {
-                                                  event.preventDefault();
-                                                }}
-                                                className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4"
-                                              >
-                                                <Label>
-                                                  {t("PoolStake:changeAmount")}
-                                                </Label>
-                                              </span>
-                                            </PopoverTrigger>
-                                            <PopoverContent>
-                                              <Label>
-                                                {t("PoolStake:newAmount")}
-                                              </Label>{" "}
+                              <Field>
+                                <FieldLabel>
+                                  {t("PoolStake:withdrawLabel", {
+                                    symbol: foundPool.share_asset_symbol,
+                                  })}
+                                </FieldLabel>
+                                <FieldDescription>
+                                  {t("PoolStake:withdrawDesc")}
+                                </FieldDescription>
+                                <FieldContent>
+                                  <div className="grid grid-cols-12">
+                                    <div className="col-span-8">
+                                      <Input
+                                        disabled
+                                        readOnly
+                                        value={
+                                          withdrawAmount
+                                            ? `${withdrawAmount} ${foundPool.share_asset_symbol}`
+                                            : `0 ${foundPool.share_asset_symbol}`
+                                        }
+                                      />
+                                    </div>
+                                    <div className="col-span-4 ml-3">
+                                      <Popover>
+                                        <PopoverTrigger>
+                                          <span
+                                            onClick={() => {
+                                              event.preventDefault();
+                                            }}
+                                            className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4"
+                                          >
+                                            <Label>
+                                              {t("PoolStake:changeAmount")}
+                                            </Label>
+                                          </span>
+                                        </PopoverTrigger>
+                                        <PopoverContent>
+                                          <Label>
+                                            {t("PoolStake:newAmount")}
+                                          </Label>{" "}
+                                          <Controller
+                                            control={form.control}
+                                            name="withdrawalAmount"
+                                            render={({ field }) => (
                                               <Input
                                                 placeholder={withdrawAmount}
                                                 className="mb-2 mt-1"
+                                                value={field.value ?? ""}
                                                 onChange={(event) => {
                                                   const input =
                                                     event.target.value;
@@ -1306,6 +1252,7 @@ export default function PoolStake(properties) {
                                                       )
                                                     );
 
+                                                    field.onChange(input);
                                                     setWithdrawAmount(_input);
 
                                                     const _supply =
@@ -1362,104 +1309,86 @@ export default function PoolStake(properties) {
                                                   }
                                                 }}
                                               />
-                                            </PopoverContent>
-                                          </Popover>
-                                        </div>
-                                      </div>
-                                    </FormControl>
-                                  </FormItem>
-                                )}
-                              />
+                                            )}
+                                          />
+                                        </PopoverContent>
+                                      </Popover>
+                                    </div>
+                                  </div>
+                                </FieldContent>
+                              </Field>
 
-                              <FormField
-                                control={form.control}
-                                name="withdrawingA"
-                                render={({ field }) => (
-                                  <FormItem>
-                                    <FormLabel>
-                                      {t("PoolStake:withdrawingA", {
-                                        symbol: assetA.symbol,
-                                      })}
-                                    </FormLabel>
-                                    <FormControl>
-                                      <div className="grid grid-cols-2 mb-3 mt-3">
-                                        <Input
-                                          disabled
-                                          readOnly
-                                          placeholder={`${withdrawingA} ${assetA.symbol}`}
-                                        />
-                                      </div>
-                                    </FormControl>
-                                  </FormItem>
-                                )}
-                              />
-                              <FormField
-                                control={form.control}
-                                name="withdrawingB"
-                                render={({ field }) => (
-                                  <FormItem>
-                                    <FormLabel>
-                                      {t("PoolStake:withdrawingB", {
-                                        symbol: assetB.symbol,
-                                      })}
-                                    </FormLabel>
-                                    <FormControl>
-                                      <div className="grid grid-cols-2 mb-3 mt-3">
-                                        <Input
-                                          disabled
-                                          readOnly
-                                          placeholder={`${withdrawingB} ${assetB.symbol}`}
-                                        />
-                                      </div>
-                                    </FormControl>
-                                  </FormItem>
-                                )}
-                              />
+                              <Field>
+                                <FieldLabel>
+                                  {t("PoolStake:withdrawingA", {
+                                    symbol: assetA.symbol,
+                                  })}
+                                </FieldLabel>
+                                <FieldContent>
+                                  <div className="grid grid-cols-2 mb-3 mt-3">
+                                    <Input
+                                      disabled
+                                      readOnly
+                                      placeholder={`${withdrawingA} ${assetA.symbol}`}
+                                    />
+                                  </div>
+                                </FieldContent>
+                              </Field>
+                              <Field>
+                                <FieldLabel>
+                                  {t("PoolStake:withdrawingB", {
+                                    symbol: assetB.symbol,
+                                  })}
+                                </FieldLabel>
+                                <FieldContent>
+                                  <div className="grid grid-cols-2 mb-3 mt-3">
+                                    <Input
+                                      disabled
+                                      readOnly
+                                      placeholder={`${withdrawingB} ${assetB.symbol}`}
+                                    />
+                                  </div>
+                                </FieldContent>
+                              </Field>
                             </div>
                           </TabsContent>
                         </Tabs>
                       ) : null}
 
                       {foundPool ? (
-                        <FormField
-                          control={form.control}
-                          name="networkFee"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>{t("PoolStake:networkFee")}</FormLabel>
-                              <FormDescription style={{ marginTop: "0px" }}>
-                                {t(
-                                  `PoolStake:networkFeeDescription${
-                                    stakeTab === "stake" ? "1" : "2"
-                                  }`
-                                )}
-                              </FormDescription>
-                              <FormControl>
-                                <div className="grid grid-cols-2 mb-3 mt-3">
-                                  <div className="col-span-1">
-                                    <Input
-                                      disabled
-                                      readOnly
-                                      placeholder={`${
-                                        stakeTab === "stake" ? fee : unstakeFee
-                                      } BTS`}
-                                    />
-                                  </div>
-                                </div>
-                              </FormControl>
-                              {usr.id === usr.referrer ? (
-                                <FormMessage>
-                                  {t("PoolStake:rebate", {
-                                    rebate:
-                                      stakeTab === "stake"
-                                        ? (fee * 0.8).toFixed(5)
-                                        : (unstakeFee * 0.8).toFixed(5),
-                                  })}
-                                </FormMessage>
-                              ) : null}
-                            </FormItem>
-                          )}
-                        />
+                        <Field>
+                          <FieldLabel>{t("PoolStake:networkFee")}</FieldLabel>
+                          <FieldDescription style={{ marginTop: "0px" }}>
+                            {t(
+                              `PoolStake:networkFeeDescription${
+                                stakeTab === "stake" ? "1" : "2"
+                              }`
+                            )}
+                          </FieldDescription>
+                          <FieldContent>
+                            <div className="grid grid-cols-2 mb-3 mt-3">
+                              <div className="col-span-1">
+                                <Input
+                                  disabled
+                                  readOnly
+                                  placeholder={`${
+                                    stakeTab === "stake" ? fee : unstakeFee
+                                  } BTS`}
+                                />
+                              </div>
+                            </div>
+                          </FieldContent>
+                          {usr.id === usr.referrer ? (
+                            <FieldDescription>
+                              {t("PoolStake:rebate", {
+                                rebate:
+                                  stakeTab === "stake"
+                                    ? (fee * 0.8).toFixed(5)
+                                    : (unstakeFee * 0.8).toFixed(5),
+                              })}
+                            </FieldDescription>
+                          ) : null}
+                        </Field>
                       ) : null}
                       <Button
                         className="mt-5 mb-3"
@@ -1468,8 +1397,8 @@ export default function PoolStake(properties) {
                       >
                         {t("PoolStake:submit")}
                       </Button>
-                    </form>
-                  </Form>
+                    </FieldGroup>
+                  </form>
                   {showDialog && stakeTab === "stake" ? (
                     <DeepLinkDialog
                       operationNames={["liquidity_pool_deposit"]}

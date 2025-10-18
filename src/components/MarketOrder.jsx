@@ -5,7 +5,7 @@ import React, {
   useMemo,
   useCallback,
 } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import {
   CalendarIcon,
   LockOpen2Icon,
@@ -38,14 +38,13 @@ import {
 } from "@/components/ui/dialog";
 
 import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+  Field,
+  FieldGroup,
+  FieldLabel,
+  FieldContent,
+  FieldDescription,
+  FieldError,
+} from "@/components/ui/field";
 
 import {
   Select,
@@ -102,6 +101,15 @@ export default function MarketOrder(properties) {
   const form = useForm({
     defaultValues: {
       account: "",
+      price: 0,
+      amount: 0,
+      total: 0,
+      expiryType: "1hr",
+      expiry: null,
+      osoEnabled: false,
+      spreadPercent: 1,
+      sizePercent: 100,
+      repeat: false,
     },
   });
   const currentNode = useStore($currentNode);
@@ -274,6 +282,29 @@ export default function MarketOrder(properties) {
                 ? _baseAmount * _quoteAmount
                 : _baseAmount / _quoteAmount
             );
+
+            // Sync RHF with derived values
+            form.reset({
+              account:
+                usr && usr.id === _data.seller
+                  ? `${usr.username} (${usr.id})`
+                  : _data.seller,
+              price: !isInverted
+                ? _baseAmount * _quoteAmount
+                : _baseAmount / _quoteAmount,
+              amount: _baseAmount,
+              total: _quoteAmount,
+              expiryType: "1hr",
+              expiry: new Date(_data.expiration),
+              osoEnabled: !!(_data.on_fill && _data.on_fill.length),
+              spreadPercent: onFillContents
+                ? onFillContents.spread_percent / 100
+                : 1,
+              sizePercent: onFillContents
+                ? onFillContents.size_percent / 100
+                : 100,
+              repeat: onFillContents ? onFillContents.repeat : false,
+            });
 
             const onFillContents = _data.on_fill.length
               ? _data.on_fill[0][1]
@@ -497,159 +528,146 @@ export default function MarketOrder(properties) {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Form {...form}>
-                <form>
-                  <FormField
-                    control={form.control}
-                    name="account"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>
-                          {t("MarketOrder:limitOrderOwnerLabel")}
-                        </FormLabel>
-                        <FormControl>
-                          <div className="grid grid-cols-8 gap-2">
-                            <div className="col-span-1 ml-5">
-                              {currentLimitOrder && usr ? (
-                                <Avatar
-                                  size={40}
-                                  key={`Avatar_${
-                                    usr.id === currentLimitOrder.seller
-                                      ? "loggedIn"
-                                      : "loggedOut"
-                                  }`}
-                                  name={
-                                    usr.id === currentLimitOrder.seller
-                                      ? usr.username
-                                      : currentLimitOrder.seller.replace(
-                                          ".",
-                                          "_"
-                                        )
-                                  }
-                                  extra="Sender"
-                                  expression={{
-                                    eye:
-                                      usr.id === currentLimitOrder.seller
-                                        ? "normal"
-                                        : "sleepy",
-                                    mouth:
-                                      usr.id === currentLimitOrder.seller
-                                        ? "open"
-                                        : "unhappy",
-                                  }}
-                                  colors={[
-                                    "#92A1C6",
-                                    "#146A7C",
-                                    "#F0AB3D",
-                                    "#C271B4",
-                                    "#C20D90",
-                                  ]}
-                                />
-                              ) : null}
-                            </div>
-                            <div className="col-span-4">
-                              {usr && currentLimitOrder ? (
-                                <Input
-                                  disabled
-                                  placeholder={t(
-                                    "MarketOrder:bitsharesAccountPlaceholder"
-                                  )}
-                                  className="mb-1 mt-1"
-                                  value={
-                                    usr && usr.id === currentLimitOrder.seller
-                                      ? `${usr.username} (${usr.id})`
-                                      : currentLimitOrder.seller
-                                  }
-                                />
-                              ) : null}
-                            </div>
-                          </div>
-                        </FormControl>
-                        <FormDescription>
-                          {t("MarketOrder:limitOrderOwnerDescription")}
-                        </FormDescription>
-                        {currentLimitOrder &&
-                        usr &&
-                        usr.id !== currentLimitOrder.seller ? (
-                          <FormMessage>
-                            {t("MarketOrder:limitOrderOwnerWarning")}
-                          </FormMessage>
-                        ) : null}
-                      </FormItem>
-                    )}
-                  />
+              <form>
+                <FieldGroup>
+                  <Field>
+                    <FieldLabel>
+                      {t("MarketOrder:limitOrderOwnerLabel")}
+                    </FieldLabel>
+                    <FieldContent>
+                      <div className="grid grid-cols-8 gap-2">
+                        <div className="col-span-1 ml-5">
+                          {currentLimitOrder && usr ? (
+                            <Avatar
+                              size={40}
+                              key={`Avatar_${
+                                usr.id === currentLimitOrder.seller
+                                  ? "loggedIn"
+                                  : "loggedOut"
+                              }`}
+                              name={
+                                usr.id === currentLimitOrder.seller
+                                  ? usr.username
+                                  : currentLimitOrder.seller.replace(".", "_")
+                              }
+                              extra="Sender"
+                              expression={{
+                                eye:
+                                  usr.id === currentLimitOrder.seller
+                                    ? "normal"
+                                    : "sleepy",
+                                mouth:
+                                  usr.id === currentLimitOrder.seller
+                                    ? "open"
+                                    : "unhappy",
+                              }}
+                              colors={[
+                                "#92A1C6",
+                                "#146A7C",
+                                "#F0AB3D",
+                                "#C271B4",
+                                "#C20D90",
+                              ]}
+                            />
+                          ) : null}
+                        </div>
+                        <div className="col-span-4">
+                          {usr && currentLimitOrder ? (
+                            <Input
+                              disabled
+                              placeholder={t(
+                                "MarketOrder:bitsharesAccountPlaceholder"
+                              )}
+                              className="mb-1 mt-1"
+                              value={
+                                usr && usr.id === currentLimitOrder.seller
+                                  ? `${usr.username} (${usr.id})`
+                                  : currentLimitOrder.seller
+                              }
+                            />
+                          ) : null}
+                        </div>
+                      </div>
+                    </FieldContent>
+                    <FieldDescription>
+                      {t("MarketOrder:limitOrderOwnerDescription")}
+                    </FieldDescription>
+                    {currentLimitOrder &&
+                    usr &&
+                    usr.id !== currentLimitOrder.seller ? (
+                      <FieldError>
+                        {t("MarketOrder:limitOrderOwnerWarning")}
+                      </FieldError>
+                    ) : null}
+                  </Field>
 
-                  <FormField
-                    control={form.control}
-                    name="priceAmount"
-                    render={({ field }) => (
-                      <FormItem className="mt-4 text-xs">
-                        <span className="grid grid-cols-12">
-                          <span className="col-span-1">
-                            <HoverCard key="amountLockCard">
-                              <HoverCardTrigger>
-                                <Toggle
-                                  variant="outline"
-                                  onClick={() => {
-                                    if (priceLock === "editable") {
-                                      setPriceLock("locked");
-                                      setPrice(existingPrice);
-                                      if (amountLock === "locked") {
-                                        setTotalLock("locked");
-                                        setTotal(existingQuoteAmount);
-                                      }
-                                    } else {
-                                      setPriceLock("editable");
-                                      setTotalLock("editable");
+                  <Field>
+                    <FieldContent>
+                      <span className="grid grid-cols-12 mt-4 text-xs">
+                        <span className="col-span-1">
+                          <HoverCard key="amountLockCard">
+                            <HoverCardTrigger>
+                              <Toggle
+                                variant="outline"
+                                onClick={() => {
+                                  if (priceLock === "editable") {
+                                    setPriceLock("locked");
+                                    setPrice(existingPrice);
+                                    if (amountLock === "locked") {
+                                      setTotalLock("locked");
+                                      setTotal(existingQuoteAmount);
                                     }
-                                  }}
-                                >
-                                  {priceLock === "editable" ? (
-                                    <LockOpen2Icon className="h-4 w-4" />
-                                  ) : (
-                                    <LockClosedIcon className="h-4 w-4" />
-                                  )}
-                                </Toggle>
-                              </HoverCardTrigger>
-                              <HoverCardContent
-                                className="w-40 text-sm text-center pt-1 pb-1"
-                                derp={t(
-                                  "MarketOrder:priceLockHoverCardDescription"
-                                )}
+                                  } else {
+                                    setPriceLock("editable");
+                                    setTotalLock("editable");
+                                  }
+                                }}
                               >
-                                {priceLock === "editable"
-                                  ? t("MarketOrder:editingThePrice")
-                                  : t("MarketOrder:priceIsLocked")}
-                              </HoverCardContent>
-                            </HoverCard>
-                          </span>
-                          <span className="col-span-10">
-                            <FormLabel>
+                                {priceLock === "editable" ? (
+                                  <LockOpen2Icon className="h-4 w-4" />
+                                ) : (
+                                  <LockClosedIcon className="h-4 w-4" />
+                                )}
+                              </Toggle>
+                            </HoverCardTrigger>
+                            <HoverCardContent
+                              className="w-40 text-sm text-center pt-1 pb-1"
+                              derp={t(
+                                "MarketOrder:priceLockHoverCardDescription"
+                              )}
+                            >
                               {priceLock === "editable"
-                                ? t("MarketOrder:updatingThePrice")
-                                : t("MarketOrder:wantToChangeThePrice")}
-                            </FormLabel>
-                            <FormDescription>
-                              {priceLock === "editable"
-                                ? t("MarketOrder:existingPriceDescription", {
-                                    existingPrice: existingPrice,
-                                    quoteAssetSymbol: quoteAsset
-                                      ? quoteAsset.symbol
-                                      : "?",
-                                    baseAssetSymbol: baseAsset
-                                      ? baseAsset.symbol
-                                      : "?",
-                                  })
-                                : t("MarketOrder:clickToUnlockDescription")}
-                            </FormDescription>
-                          </span>
+                                ? t("MarketOrder:editingThePrice")
+                                : t("MarketOrder:priceIsLocked")}
+                            </HoverCardContent>
+                          </HoverCard>
                         </span>
-                      </FormItem>
-                    )}
-                  />
+                        <span className="col-span-10">
+                          <FieldLabel>
+                            {priceLock === "editable"
+                              ? t("MarketOrder:updatingThePrice")
+                              : t("MarketOrder:wantToChangeThePrice")}
+                          </FieldLabel>
+                          <FieldDescription>
+                            {priceLock === "editable"
+                              ? t("MarketOrder:existingPriceDescription", {
+                                  existingPrice: existingPrice,
+                                  quoteAssetSymbol: quoteAsset
+                                    ? quoteAsset.symbol
+                                    : "?",
+                                  baseAssetSymbol: baseAsset
+                                    ? baseAsset.symbol
+                                    : "?",
+                                })
+                              : t("MarketOrder:clickToUnlockDescription")}
+                          </FieldDescription>
+                        </span>
+                      </span>
+                    </FieldContent>
+                  </Field>
 
                   {priceLock === "editable" && quoteAsset && baseAsset ? (
-                    <FormControl>
+                    <FieldContent>
                       <span className="grid grid-cols-12 mt-3">
                         <span className="col-span-1"></span>
                         <span className="col-span-7">
@@ -675,138 +693,150 @@ export default function MarketOrder(properties) {
                               <Label>
                                 {t("MarketOrder:provideNewPriceLabel")}
                               </Label>
-                              <Input
-                                placeholder={price}
-                                className="mb-2 mt-1"
-                                onChange={(event) => {
-                                  const input = event.target.value;
-                                  const regex = /^[0-9,]*\.?[0-9]*$/;
-                                  if (
-                                    input &&
-                                    input.length &&
-                                    regex.test(input)
-                                  ) {
-                                    const parsedInput = parseFloat(
-                                      input.replaceAll(",", "")
-                                    );
-                                    if (parsedInput) {
-                                      setPrice(parsedInput);
-                                      if (amount && totalLock === "editable") {
-                                        setTotal(
-                                          parseFloat(
-                                            (
-                                              amount *
-                                              (marketInverted
-                                                ? 1 / parsedInput
-                                                : parsedInput)
-                                            ).toFixed(quoteAsset.precision)
-                                          )
+                              <Controller
+                                control={form.control}
+                                name="price"
+                                render={({ field }) => (
+                                  <Input
+                                    placeholder={price}
+                                    className="mb-2 mt-1"
+                                    onChange={(event) => {
+                                      const input = event.target.value;
+                                      const regex = /^[0-9,]*\.?[0-9]*$/;
+                                      if (
+                                        input &&
+                                        input.length &&
+                                        regex.test(input)
+                                      ) {
+                                        const parsedInput = parseFloat(
+                                          input.replaceAll(",", "")
                                         );
+                                        if (!isNaN(parsedInput)) {
+                                          setPrice(parsedInput);
+                                          field.onChange(parsedInput);
+                                          if (
+                                            amount &&
+                                            totalLock === "editable"
+                                          ) {
+                                            const newTotal = parseFloat(
+                                              (
+                                                amount *
+                                                (marketInverted
+                                                  ? 1 / parsedInput
+                                                  : parsedInput)
+                                              ).toFixed(quoteAsset.precision)
+                                            );
+                                            setTotal(newTotal);
+                                            form.setValue("total", newTotal);
+                                          }
+                                          setInputChars((c) => c + 1);
+                                        }
                                       }
-                                      setInputChars(inputChars + 1);
-                                    }
-                                  }
-                                }}
+                                    }}
+                                  />
+                                )}
                               />
                             </PopoverContent>
                           </Popover>
                         </span>
                       </span>
-                    </FormControl>
+                    </FieldContent>
                   ) : null}
 
-                  <FormField
-                    control={form.control}
-                    name="sellAmount"
-                    render={({ field }) => (
-                      <FormItem className="mt-4 text-xs">
-                        <span className="grid grid-cols-12">
-                          <span className="col-span-1">
-                            <HoverCard key="amountLockCard">
-                              <HoverCardTrigger>
-                                <Toggle
-                                  variant="outline"
-                                  onClick={() => {
-                                    if (amountLock === "editable") {
-                                      setAmountLock("locked");
-                                      if (priceLock === "locked") {
-                                        setTotalLock("locked");
-                                      }
-                                    } else {
-                                      setAmountLock("editable");
-                                      setTotalLock("editable");
+                  <Field>
+                    <FieldContent>
+                      <span className="grid grid-cols-12 mt-4 text-xs">
+                        <span className="col-span-1">
+                          <HoverCard key="amountLockCard">
+                            <HoverCardTrigger>
+                              <Toggle
+                                variant="outline"
+                                onClick={() => {
+                                  if (amountLock === "editable") {
+                                    setAmountLock("locked");
+                                    if (priceLock === "locked") {
+                                      setTotalLock("locked");
                                     }
-                                  }}
-                                >
-                                  {amountLock === "editable" ? (
-                                    <LockOpen2Icon className="h-4 w-4" />
-                                  ) : (
-                                    <LockClosedIcon className="h-4 w-4" />
-                                  )}
-                                </Toggle>
-                              </HoverCardTrigger>
-                              <HoverCardContent className="w-40 text-sm text-center pt-1 pb-1">
-                                {amountLock === "editable"
-                                  ? t("MarketOrder:editingAmountBeingSold")
-                                  : t("MarketOrder:amountLocked")}
-                              </HoverCardContent>
-                            </HoverCard>
-                          </span>
-                          <span className="col-span-11">
-                            <FormLabel>
+                                  } else {
+                                    setAmountLock("editable");
+                                    setTotalLock("editable");
+                                  }
+                                }}
+                              >
+                                {amountLock === "editable" ? (
+                                  <LockOpen2Icon className="h-4 w-4" />
+                                ) : (
+                                  <LockClosedIcon className="h-4 w-4" />
+                                )}
+                              </Toggle>
+                            </HoverCardTrigger>
+                            <HoverCardContent className="w-40 text-sm text-center pt-1 pb-1">
                               {amountLock === "editable"
-                                ? t("MarketOrder:updatingAmountBeingSold", {
-                                    baseAssetSymbol: baseAsset
-                                      ? baseAsset.symbol
-                                      : "?",
-                                  })
-                                : t("MarketOrder:wantToUpdateAmountBeingSold", {
-                                    baseAssetSymbol: baseAsset
-                                      ? baseAsset.symbol
-                                      : "?",
-                                  })}
-                            </FormLabel>
-                            <FormDescription>
-                              {amountLock === "editable"
-                                ? t("MarketOrder:existingAmountBeingSold", {
-                                    existingBaseAmount: existingBaseAmount,
-                                    baseAssetSymbol: baseAsset
-                                      ? baseAsset.symbol
-                                      : "?",
-                                  })
-                                : t("MarketOrder:clickToUnlockAmount")}
-                            </FormDescription>
-                          </span>
+                                ? t("MarketOrder:editingAmountBeingSold")
+                                : t("MarketOrder:amountLocked")}
+                            </HoverCardContent>
+                          </HoverCard>
                         </span>
-                        {amountLock === "editable" ? (
-                          <FormControl>
-                            <span className="grid grid-cols-12">
-                              <span className="col-span-1"></span>
-                              <span className="col-span-7">
-                                <Input
-                                  label={t("MarketOrder:amountLabel")}
-                                  placeholder={`${amount} ${
-                                    baseAsset ? baseAsset.symbol : "?"
-                                  }`}
-                                  disabled
-                                  readOnly
-                                />
-                              </span>
-                              <span className="col-span-4 ml-3 text-center">
-                                <Popover>
-                                  <PopoverTrigger asChild>
-                                    <Button
-                                      className="w-full"
-                                      onClick={() => event.preventDefault()}
-                                      variant="outline"
-                                    >
-                                      {t("MarketOrder:setNewSellAmountButton")}
-                                    </Button>
-                                  </PopoverTrigger>
-                                  <PopoverContent>
-                                    <Label>
-                                      {t("MarketOrder:provideNewAmountLabel")}
-                                    </Label>
+                        <span className="col-span-11">
+                          <FieldLabel>
+                            {amountLock === "editable"
+                              ? t("MarketOrder:updatingAmountBeingSold", {
+                                  baseAssetSymbol: baseAsset
+                                    ? baseAsset.symbol
+                                    : "?",
+                                })
+                              : t("MarketOrder:wantToUpdateAmountBeingSold", {
+                                  baseAssetSymbol: baseAsset
+                                    ? baseAsset.symbol
+                                    : "?",
+                                })}
+                          </FieldLabel>
+                          <FieldDescription>
+                            {amountLock === "editable"
+                              ? t("MarketOrder:existingAmountBeingSold", {
+                                  existingBaseAmount: existingBaseAmount,
+                                  baseAssetSymbol: baseAsset
+                                    ? baseAsset.symbol
+                                    : "?",
+                                })
+                              : t("MarketOrder:clickToUnlockAmount")}
+                          </FieldDescription>
+                        </span>
+                      </span>
+                    </FieldContent>
+                    {amountLock === "editable" ? (
+                      <FieldContent>
+                        <span className="grid grid-cols-12">
+                          <span className="col-span-1"></span>
+                          <span className="col-span-7">
+                            <Input
+                              label={t("MarketOrder:amountLabel")}
+                              placeholder={`${amount} ${
+                                baseAsset ? baseAsset.symbol : "?"
+                              }`}
+                              disabled
+                              readOnly
+                            />
+                          </span>
+                          <span className="col-span-4 ml-3 text-center">
+                            <Popover>
+                              <PopoverTrigger asChild>
+                                <Button
+                                  className="w-full"
+                                  onClick={() => event.preventDefault()}
+                                  variant="outline"
+                                >
+                                  {t("MarketOrder:setNewSellAmountButton")}
+                                </Button>
+                              </PopoverTrigger>
+                              <PopoverContent>
+                                <Label>
+                                  {t("MarketOrder:provideNewAmountLabel")}
+                                </Label>
+                                <Controller
+                                  control={form.control}
+                                  name="amount"
+                                  render={({ field }) => (
                                     <Input
                                       placeholder={amount}
                                       className="mb-2"
@@ -821,144 +851,144 @@ export default function MarketOrder(properties) {
                                           const parsedInput = parseFloat(
                                             input.replaceAll(",", "")
                                           );
-                                          if (parsedInput) {
-                                            setAmount(
+                                          if (!isNaN(parsedInput)) {
+                                            const fixed = parseFloat(
                                               parsedInput.toFixed(
                                                 baseAsset.precision
                                               )
                                             );
+                                            setAmount(fixed);
+                                            field.onChange(fixed);
                                             if (price) {
-                                              setTotal(
-                                                parseFloat(
-                                                  (
-                                                    parsedInput *
-                                                    (marketInverted
-                                                      ? 1 / price
-                                                      : price)
-                                                  ).toFixed(
-                                                    quoteAsset.precision
-                                                  )
-                                                )
+                                              const newTotal = parseFloat(
+                                                (
+                                                  parsedInput *
+                                                  (marketInverted
+                                                    ? 1 / price
+                                                    : price)
+                                                ).toFixed(quoteAsset.precision)
                                               );
+                                              setTotal(newTotal);
+                                              form.setValue("total", newTotal);
                                             }
-                                            setInputChars(inputChars + 1);
+                                            setInputChars((c) => c + 1);
                                           }
                                         }
                                       }}
                                     />
-                                  </PopoverContent>
-                                </Popover>
-                              </span>
-                            </span>
-                          </FormControl>
-                        ) : null}
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="sellTotal"
-                    render={({ field }) => (
-                      <FormItem className="mt-4 text-xs">
-                        <span className="grid grid-cols-12">
-                          <span className="col-span-1">
-                            <HoverCard key="sellTotalCard">
-                              <HoverCardTrigger>
-                                <Toggle
-                                  variant="outline"
-                                  onClick={() => {
-                                    if (totalLock === "editable") {
-                                      setTotalLock("locked");
-                                      setTotal(existingQuoteAmount);
-                                      setAmountLock("locked");
-                                      setAmount(existingBaseAmount);
-                                      setPriceLock("locked");
-                                      setPrice(existingPrice);
-                                    } else {
-                                      setTotalLock("editable");
-                                      setAmountLock("editable");
-                                    }
-                                  }}
-                                >
-                                  {totalLock === "editable" ? (
-                                    <LockOpen2Icon className="h-4 w-4" />
-                                  ) : (
-                                    <LockClosedIcon className="h-4 w-4" />
                                   )}
-                                </Toggle>
-                              </HoverCardTrigger>
-                              <HoverCardContent className="w-40 text-sm text-center pt-1 pb-1">
-                                {totalLock === "editable"
-                                  ? t("MarketOrder:editingTotalAmountBeingSold")
-                                  : t("MarketOrder:totalAmountLocked")}
-                              </HoverCardContent>
-                            </HoverCard>
+                                />
+                              </PopoverContent>
+                            </Popover>
                           </span>
-                          <span className="col-span-11">
-                            <FormLabel>
-                              {amountLock === "editable" ||
-                              totalLock === "editable"
-                                ? t(
-                                    "MarketOrder:updatingTotalAmountBeingBought"
-                                  )
-                                : t(
-                                    "MarketOrder:wantToUpdateTotalAmountBeingBought",
-                                    {
-                                      quoteAssetSymbol: quoteAsset
-                                        ? quoteAsset.symbol
-                                        : "?",
-                                    }
-                                  )}
-                            </FormLabel>
-                            <FormDescription>
+                        </span>
+                      </FieldContent>
+                    ) : null}
+                  </Field>
+
+                  <Field>
+                    <FieldContent>
+                      <span className="grid grid-cols-12 mt-4 text-xs">
+                        <span className="col-span-1">
+                          <HoverCard key="sellTotalCard">
+                            <HoverCardTrigger>
+                              <Toggle
+                                variant="outline"
+                                onClick={() => {
+                                  if (totalLock === "editable") {
+                                    setTotalLock("locked");
+                                    setTotal(existingQuoteAmount);
+                                    setAmountLock("locked");
+                                    setAmount(existingBaseAmount);
+                                    setPriceLock("locked");
+                                    setPrice(existingPrice);
+                                  } else {
+                                    setTotalLock("editable");
+                                    setAmountLock("editable");
+                                  }
+                                }}
+                              >
+                                {totalLock === "editable" ? (
+                                  <LockOpen2Icon className="h-4 w-4" />
+                                ) : (
+                                  <LockClosedIcon className="h-4 w-4" />
+                                )}
+                              </Toggle>
+                            </HoverCardTrigger>
+                            <HoverCardContent className="w-40 text-sm text-center pt-1 pb-1">
                               {totalLock === "editable"
-                                ? t(
-                                    "MarketOrder:existingTotalAmountBeingBought",
-                                    {
-                                      existingQuoteAmount: existingQuoteAmount,
-                                      quoteAssetSymbol: quoteAsset
-                                        ? quoteAsset.symbol
-                                        : "?",
-                                    }
-                                  )
-                                : t("MarketOrder:clickToUnlockTotalAmount", {
+                                ? t("MarketOrder:editingTotalAmountBeingSold")
+                                : t("MarketOrder:totalAmountLocked")}
+                            </HoverCardContent>
+                          </HoverCard>
+                        </span>
+                        <span className="col-span-11">
+                          <FieldLabel>
+                            {amountLock === "editable" ||
+                            totalLock === "editable"
+                              ? t("MarketOrder:updatingTotalAmountBeingBought")
+                              : t(
+                                  "MarketOrder:wantToUpdateTotalAmountBeingBought",
+                                  {
                                     quoteAssetSymbol: quoteAsset
                                       ? quoteAsset.symbol
                                       : "?",
-                                  })}
-                            </FormDescription>
-                          </span>
+                                  }
+                                )}
+                          </FieldLabel>
+                          <FieldDescription>
+                            {totalLock === "editable"
+                              ? t(
+                                  "MarketOrder:existingTotalAmountBeingBought",
+                                  {
+                                    existingQuoteAmount: existingQuoteAmount,
+                                    quoteAssetSymbol: quoteAsset
+                                      ? quoteAsset.symbol
+                                      : "?",
+                                  }
+                                )
+                              : t("MarketOrder:clickToUnlockTotalAmount", {
+                                  quoteAssetSymbol: quoteAsset
+                                    ? quoteAsset.symbol
+                                    : "?",
+                                })}
+                          </FieldDescription>
                         </span>
-                        {totalLock === "editable" && baseAsset && quoteAsset ? (
-                          <FormControl>
-                            <span className="grid grid-cols-12">
-                              <span className="col-span-1"></span>
-                              <span className="col-span-7">
-                                <Input
-                                  label={t("MarketOrder:totalLabel")}
-                                  placeholder={`${total} ${
-                                    quoteAsset ? quoteAsset.symbol : "?"
-                                  }`}
-                                  disabled
-                                  readOnly
-                                />
-                              </span>
-                              <span className="col-span-4 ml-3 text-center">
-                                <Popover>
-                                  <PopoverTrigger asChild>
-                                    <Button
-                                      className="w-full"
-                                      onClick={() => event.preventDefault()}
-                                      variant="outline"
-                                    >
-                                      {t("MarketOrder:setNewTotalAmountButton")}
-                                    </Button>
-                                  </PopoverTrigger>
-                                  <PopoverContent>
-                                    <Label>
-                                      {t("MarketOrder:provideNewTotalLabel")}
-                                    </Label>
+                      </span>
+                    </FieldContent>
+                    {totalLock === "editable" && baseAsset && quoteAsset ? (
+                      <FieldContent>
+                        <span className="grid grid-cols-12">
+                          <span className="col-span-1"></span>
+                          <span className="col-span-7">
+                            <Input
+                              label={t("MarketOrder:totalLabel")}
+                              placeholder={`${total} ${
+                                quoteAsset ? quoteAsset.symbol : "?"
+                              }`}
+                              disabled
+                              readOnly
+                            />
+                          </span>
+                          <span className="col-span-4 ml-3 text-center">
+                            <Popover>
+                              <PopoverTrigger asChild>
+                                <Button
+                                  className="w-full"
+                                  onClick={() => event.preventDefault()}
+                                  variant="outline"
+                                >
+                                  {t("MarketOrder:setNewTotalAmountButton")}
+                                </Button>
+                              </PopoverTrigger>
+                              <PopoverContent>
+                                <Label>
+                                  {t("MarketOrder:provideNewTotalLabel")}
+                                </Label>
+                                <Controller
+                                  control={form.control}
+                                  name="total"
+                                  render={({ field }) => (
                                     <Input
                                       placeholder={total}
                                       className="mb-2 mt-1"
@@ -973,490 +1003,477 @@ export default function MarketOrder(properties) {
                                           const parsedFloat = parseFloat(
                                             input.replaceAll(",", "")
                                           );
-                                          if (parsedFloat) {
-                                            setTotal(
+                                          if (!isNaN(parsedFloat)) {
+                                            const fixed = parseFloat(
                                               parsedFloat.toFixed(
                                                 quoteAsset.precision
                                               )
                                             );
+                                            setTotal(fixed);
+                                            field.onChange(fixed);
                                             if (price) {
-                                              setAmount(
+                                              const newAmount = parseFloat(
                                                 (parsedFloat / price).toFixed(
                                                   baseAsset.precision
                                                 )
                                               );
+                                              setAmount(newAmount);
+                                              form.setValue(
+                                                "amount",
+                                                newAmount
+                                              );
                                             }
-                                            setInputChars(inputChars + 1);
+                                            setInputChars((c) => c + 1);
                                           }
                                         }
                                       }}
                                     />
-                                  </PopoverContent>
-                                </Popover>
-                              </span>
-                            </span>
-                          </FormControl>
-                        ) : null}
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="expiry"
-                    render={({ field }) => (
-                      <FormItem>
-                        <span className="grid grid-cols-12 mt-4 text-sm">
-                          <span className="col-span-1">
-                            <HoverCard key="sellTotalCard">
-                              <HoverCardTrigger>
-                                <Toggle
-                                  variant="outline"
-                                  onClick={() => {
-                                    if (expirationLock === "editable") {
-                                      setExpirationLock("locked");
-                                      setDate(new Date(existingExpiry));
-                                    } else {
-                                      setExpirationLock("editable");
-                                    }
-                                  }}
-                                >
-                                  {expirationLock === "editable" ? (
-                                    <LockOpen2Icon className="h-4 w-4" />
-                                  ) : (
-                                    <LockClosedIcon className="h-4 w-4" />
                                   )}
-                                </Toggle>
-                              </HoverCardTrigger>
-                              <HoverCardContent className="w-40 text-sm text-center pt-1 pb-1">
-                                {expirationLock === "editable"
-                                  ? t("MarketOrder:editingExpiration")
-                                  : t("MarketOrder:expirationLocked")}
-                              </HoverCardContent>
-                            </HoverCard>
-                          </span>
-                          <span className="col-span-11">
-                            <FormLabel>
-                              {expirationLock === "editable"
-                                ? t("MarketOrder:updatingExpiration")
-                                : t("MarketOrder:wantToUpdateExpiration")}
-                            </FormLabel>
-                            <FormDescription>
-                              {expirationLock === "editable"
-                                ? t("MarketOrder:existingExpiration", {
-                                    existingExpiration:
-                                      currentLimitOrder.expiration.replace(
-                                        "T",
-                                        " "
-                                      ),
-                                  })
-                                : t("MarketOrder:clickToUnlockExpiration")}
-                            </FormDescription>
+                                />
+                              </PopoverContent>
+                            </Popover>
                           </span>
                         </span>
-                        {expirationLock === "editable" ? (
-                          <>
-                            <span className="grid grid-cols-12">
-                              <span className="col-span-1"></span>
-                              <span className="col-span-7">
-                                <FormControl
-                                  onValueChange={(selectedExpiry) => {
-                                    setExpiryType(selectedExpiry);
-                                    const oneHour = 60 * 60 * 1000;
-                                    const oneDay = 24 * oneHour;
-                                    if (selectedExpiry !== "specific") {
-                                      const now = new Date();
-                                      let expiryDate;
-                                      if (selectedExpiry === "1hr") {
-                                        expiryDate = new Date(
-                                          now.getTime() + oneHour
-                                        );
-                                      } else if (selectedExpiry === "12hr") {
-                                        const duration = oneHour * 12;
-                                        expiryDate = new Date(
-                                          now.getTime() + duration
-                                        );
-                                      } else if (selectedExpiry === "24hr") {
-                                        const duration = oneDay;
-                                        expiryDate = new Date(
-                                          now.getTime() + duration
-                                        );
-                                      } else if (selectedExpiry === "7d") {
-                                        const duration = oneDay * 7;
-                                        expiryDate = new Date(
-                                          now.getTime() + duration
-                                        );
-                                      } else if (selectedExpiry === "30d") {
-                                        const duration = oneDay * 30;
-                                        expiryDate = new Date(
-                                          now.getTime() + duration
-                                        );
-                                      }
+                      </FieldContent>
+                    ) : null}
+                  </Field>
 
-                                      if (expiryDate) {
-                                        setDate(expiryDate);
-                                      }
-                                      setExpiry(selectedExpiry);
-                                    } else if (selectedExpiry === "specific") {
-                                      // Setting a default date expiry
-                                      setExpiry();
+                  <Field>
+                    <FieldContent>
+                      <span className="grid grid-cols-12 mt-4 text-sm">
+                        <span className="col-span-1">
+                          <HoverCard key="sellTotalCard">
+                            <HoverCardTrigger>
+                              <Toggle
+                                variant="outline"
+                                onClick={() => {
+                                  if (expirationLock === "editable") {
+                                    setExpirationLock("locked");
+                                    setDate(new Date(existingExpiry));
+                                  } else {
+                                    setExpirationLock("editable");
+                                  }
+                                }}
+                              >
+                                {expirationLock === "editable" ? (
+                                  <LockOpen2Icon className="h-4 w-4" />
+                                ) : (
+                                  <LockClosedIcon className="h-4 w-4" />
+                                )}
+                              </Toggle>
+                            </HoverCardTrigger>
+                            <HoverCardContent className="w-40 text-sm text-center pt-1 pb-1">
+                              {expirationLock === "editable"
+                                ? t("MarketOrder:editingExpiration")
+                                : t("MarketOrder:expirationLocked")}
+                            </HoverCardContent>
+                          </HoverCard>
+                        </span>
+                        <span className="col-span-11">
+                          <FieldLabel>
+                            {expirationLock === "editable"
+                              ? t("MarketOrder:updatingExpiration")
+                              : t("MarketOrder:wantToUpdateExpiration")}
+                          </FieldLabel>
+                          <FieldDescription>
+                            {expirationLock === "editable"
+                              ? t("MarketOrder:existingExpiration", {
+                                  existingExpiration:
+                                    currentLimitOrder.expiration.replace(
+                                      "T",
+                                      " "
+                                    ),
+                                })
+                              : t("MarketOrder:clickToUnlockExpiration")}
+                          </FieldDescription>
+                        </span>
+                      </span>
+                    </FieldContent>
+                    {expirationLock === "editable" ? (
+                      <>
+                        <FieldContent>
+                          <span className="grid grid-cols-12">
+                            <span className="col-span-1"></span>
+                            <span className="col-span-7">
+                              <Select
+                                onValueChange={(selectedExpiry) => {
+                                  setExpiryType(selectedExpiry);
+                                  form.setValue("expiryType", selectedExpiry);
+                                  const oneHour = 60 * 60 * 1000;
+                                  const oneDay = 24 * oneHour;
+                                  if (selectedExpiry !== "specific") {
+                                    const now = new Date();
+                                    let expiryDate;
+                                    if (selectedExpiry === "1hr") {
+                                      expiryDate = new Date(
+                                        now.getTime() + oneHour
+                                      );
+                                    } else if (selectedExpiry === "12hr") {
+                                      const duration = oneHour * 12;
+                                      expiryDate = new Date(
+                                        now.getTime() + duration
+                                      );
+                                    } else if (selectedExpiry === "24hr") {
+                                      const duration = oneDay;
+                                      expiryDate = new Date(
+                                        now.getTime() + duration
+                                      );
+                                    } else if (selectedExpiry === "7d") {
+                                      const duration = oneDay * 7;
+                                      expiryDate = new Date(
+                                        now.getTime() + duration
+                                      );
+                                    } else if (selectedExpiry === "30d") {
+                                      const duration = oneDay * 30;
+                                      expiryDate = new Date(
+                                        now.getTime() + duration
+                                      );
                                     }
-                                    setInputChars(inputChars + 1);
-                                  }}
-                                >
-                                  <Select>
-                                    <SelectTrigger className="mb-3">
-                                      <SelectValue placeholder="1hr" />
-                                    </SelectTrigger>
-                                    <SelectContent className="bg-white">
-                                      <SelectItem value="1hr">
-                                        {t("MarketOrder:oneHour")}
-                                      </SelectItem>
-                                      <SelectItem value="12hr">
-                                        {t("MarketOrder:twelveHours")}
-                                      </SelectItem>
-                                      <SelectItem value="24hr">
-                                        {t("MarketOrder:twentyFourHours")}
-                                      </SelectItem>
-                                      <SelectItem value="7d">
-                                        {t("MarketOrder:sevenDays")}
-                                      </SelectItem>
-                                      <SelectItem value="30d">
-                                        {t("MarketOrder:thirtyDays")}
-                                      </SelectItem>
-                                      <SelectItem value="specific">
-                                        {t("MarketOrder:specificDate")}
-                                      </SelectItem>
-                                    </SelectContent>
-                                  </Select>
-                                </FormControl>
-                              </span>
-                              <span className="col-span-4 text-center ml-3">
-                                {expiryType === "specific" ? (
-                                  <Popover>
-                                    <PopoverTrigger asChild>
-                                      <Button
-                                        variant={"outline"}
-                                        className={cn(
-                                          "w-full justify-start text-left font-normal",
-                                          !date && "text-muted-foreground"
-                                        )}
-                                      >
-                                        <CalendarIcon className="mr-2 h-4 w-4" />
-                                        {date ? (
-                                          format(date, "PPP")
-                                        ) : (
-                                          <span>
-                                            {t("MarketOrder:pickADate")}
-                                          </span>
-                                        )}
-                                      </Button>
-                                    </PopoverTrigger>
-                                    <PopoverContent
-                                      className="w-auto p-0"
-                                      align="start"
-                                    >
-                                      <Calendar
-                                        mode="single"
-                                        selected={date}
-                                        onSelect={(e) => {
-                                          const parsedDate = new Date(e);
-                                          const now = new Date();
-                                          if (parsedDate < now) {
-                                            //console.log("Not a valid date");
-                                            setDate(
-                                              new Date(
-                                                Date.now() +
-                                                  1 * 24 * 60 * 60 * 1000
-                                              )
-                                            );
-                                            return;
-                                          }
-                                          //console.log("Setting expiry date");
-                                          setDate(e);
-                                        }}
-                                        initialFocus
-                                      />
-                                    </PopoverContent>
-                                  </Popover>
-                                ) : null}
-                              </span>
-                              <span className="col-span-1"></span>
-                              <span className="col-span-11">
-                                <FormDescription>
-                                  {expiryType !== "specific"
-                                    ? t("MarketOrder:limitOrderExpiry", {
-                                        expiryType: expiryType,
-                                      })
-                                    : null}
-                                </FormDescription>
-                              </span>
+
+                                    if (expiryDate) {
+                                      setDate(expiryDate);
+                                      form.setValue("expiry", expiryDate);
+                                    }
+                                    setExpiry(selectedExpiry);
+                                  } else if (selectedExpiry === "specific") {
+                                    // Setting a default date expiry
+                                    setExpiry();
+                                    form.setValue("expiry", null);
+                                  }
+                                  setInputChars(inputChars + 1);
+                                }}
+                              >
+                                <SelectTrigger className="mb-3">
+                                  <SelectValue placeholder="1hr" />
+                                </SelectTrigger>
+                                <SelectContent className="bg-white">
+                                  <SelectItem value="1hr">
+                                    {t("MarketOrder:oneHour")}
+                                  </SelectItem>
+                                  <SelectItem value="12hr">
+                                    {t("MarketOrder:twelveHours")}
+                                  </SelectItem>
+                                  <SelectItem value="24hr">
+                                    {t("MarketOrder:twentyFourHours")}
+                                  </SelectItem>
+                                  <SelectItem value="7d">
+                                    {t("MarketOrder:sevenDays")}
+                                  </SelectItem>
+                                  <SelectItem value="30d">
+                                    {t("MarketOrder:thirtyDays")}
+                                  </SelectItem>
+                                  <SelectItem value="specific">
+                                    {t("MarketOrder:specificDate")}
+                                  </SelectItem>
+                                </SelectContent>
+                              </Select>
                             </span>
-                          </>
-                        ) : null}
-                      </FormItem>
-                    )}
-                  />
+                            <span className="col-span-4 text-center ml-3">
+                              {expiryType === "specific" ? (
+                                <Popover>
+                                  <PopoverTrigger asChild>
+                                    <Button
+                                      variant={"outline"}
+                                      className={cn(
+                                        "w-full justify-start text-left font-normal",
+                                        !date && "text-muted-foreground"
+                                      )}
+                                    >
+                                      <CalendarIcon className="mr-2 h-4 w-4" />
+                                      {date ? (
+                                        format(date, "PPP")
+                                      ) : (
+                                        <span>
+                                          {t("MarketOrder:pickADate")}
+                                        </span>
+                                      )}
+                                    </Button>
+                                  </PopoverTrigger>
+                                  <PopoverContent
+                                    className="w-auto p-0"
+                                    align="start"
+                                  >
+                                    <Calendar
+                                      mode="single"
+                                      selected={date}
+                                      onSelect={(e) => {
+                                        const parsedDate = new Date(e);
+                                        const now = new Date();
+                                        if (parsedDate < now) {
+                                          //console.log("Not a valid date");
+                                          setDate(
+                                            new Date(
+                                              Date.now() +
+                                                1 * 24 * 60 * 60 * 1000
+                                            )
+                                          );
+                                          return;
+                                        }
+                                        //console.log("Setting expiry date");
+                                        setDate(e);
+                                        form.setValue("expiry", new Date(e));
+                                      }}
+                                      initialFocus
+                                    />
+                                  </PopoverContent>
+                                </Popover>
+                              ) : null}
+                            </span>
+                            <span className="col-span-1"></span>
+                            <span className="col-span-11">
+                              <FieldDescription>
+                                {expiryType !== "specific"
+                                  ? t("MarketOrder:limitOrderExpiry", {
+                                      expiryType: expiryType,
+                                    })
+                                  : null}
+                              </FieldDescription>
+                            </span>
+                          </span>
+                        </FieldContent>
+                      </>
+                    ) : null}
+                  </Field>
 
                   <Separator className="mb-2 mt-2" />
 
-                  <FormField
-                    control={form.control}
-                    name="osoValue"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormControl>
-                          <div className="flex items-center space-x-2 mt-4">
-                            <Checkbox
-                              id="terms1"
-                              checked={osoEnabled}
-                              onClick={() => {
-                                setOSOEnabled(!osoEnabled);
-                                setInputChars(inputChars + 1);
-                              }}
-                            />
-                            <label
-                              htmlFor="terms1"
-                              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                            >
-                              {osoEnabled
-                                ? t("MarketOrder:osoEnabled")
-                                : t("MarketOrder:enableOso")}
-                            </label>
-                          </div>
-                        </FormControl>
-                        {osoEnabled ? (
-                          <FormDescription>
-                            {t("MarketOrder:autoOsoActive")}
-                          </FormDescription>
-                        ) : null}
-                      </FormItem>
-                    )}
-                  />
+                  <Field>
+                    <FieldContent>
+                      <div className="flex items-center space-x-2 mt-4">
+                        <Checkbox
+                          id="terms1"
+                          checked={osoEnabled}
+                          onClick={() => {
+                            setOSOEnabled(!osoEnabled);
+                            setInputChars(inputChars + 1);
+                            form.setValue("osoEnabled", !osoEnabled);
+                          }}
+                        />
+                        <label
+                          htmlFor="terms1"
+                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        >
+                          {osoEnabled
+                            ? t("MarketOrder:osoEnabled")
+                            : t("MarketOrder:enableOso")}
+                        </label>
+                      </div>
+                    </FieldContent>
+                    {osoEnabled ? (
+                      <FieldDescription>
+                        {t("MarketOrder:autoOsoActive")}
+                      </FieldDescription>
+                    ) : null}
+                  </Field>
 
                   {osoEnabled ? (
                     <>
-                      <FormField
-                        control={form.control}
-                        name="osoSpread"
-                        render={({ field }) => (
-                          <FormItem className="mt-2 text-xs">
-                            <FormLabel className="text-sm">
-                              {t("MarketOrder:spreadPercentLabel")}
-                            </FormLabel>
-                            <FormDescription>
-                              {t("MarketOrder:spreadPercentDescription")}
-                            </FormDescription>
-                            <FormControl>
-                              <span className="grid grid-cols-12">
-                                <span className="col-span-9">
+                      <Field>
+                        <FieldLabel className="text-sm">
+                          {t("MarketOrder:spreadPercentLabel")}
+                        </FieldLabel>
+                        <FieldDescription>
+                          {t("MarketOrder:spreadPercentDescription")}
+                        </FieldDescription>
+                        <FieldContent>
+                          <span className="grid grid-cols-12">
+                            <span className="col-span-9">
+                              <Input
+                                label={t("MarketOrder:spreadPercentInput")}
+                                placeholder={spreadPercent}
+                                disabled
+                                readOnly
+                              />
+                              <Slider
+                                className="mt-3"
+                                defaultValue={[spreadPercent]}
+                                max={100}
+                                min={1}
+                                step={0.01}
+                                onValueChange={(value) => {
+                                  debouncedSetSpreadPercent(value[0]);
+                                  form.setValue("spreadPercent", value[0]);
+                                }}
+                              />
+                            </span>
+
+                            <span className="col-span-3 ml-3 text-center">
+                              <Popover>
+                                <PopoverTrigger asChild>
+                                  <span
+                                    onClick={() => {
+                                      event.preventDefault();
+                                    }}
+                                    className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4 text-lg"
+                                  >
+                                    <Label>
+                                      {t("MarketOrder:editSpreadLabel")}
+                                    </Label>
+                                  </span>
+                                </PopoverTrigger>
+                                <PopoverContent>
+                                  <Label>
+                                    {t(
+                                      "MarketOrder:provideNewSpreadPercentLabel"
+                                    )}
+                                  </Label>
                                   <Input
-                                    label={t("MarketOrder:spreadPercentInput")}
                                     placeholder={spreadPercent}
-                                    disabled
-                                    readOnly
-                                  />
-                                  <Slider
-                                    className="mt-3"
-                                    defaultValue={[spreadPercent]}
-                                    max={100}
-                                    min={1}
-                                    step={0.01}
-                                    onValueChange={(value) => {
-                                      debouncedSetSpreadPercent(value[0]);
+                                    className="mb-2 mt-1"
+                                    onChange={(event) => {
+                                      const input = event.target.value;
+                                      const regex = /^[0-9]*\.?[0-9]*$/;
+                                      if (
+                                        input &&
+                                        input.length &&
+                                        regex.test(input)
+                                      ) {
+                                        if (input >= 1 && input <= 100) {
+                                          setSpreadPercent(input);
+                                          setInputChars(inputChars + 1);
+                                          form.setValue(
+                                            "spreadPercent",
+                                            Number(input)
+                                          );
+                                        }
+                                      }
                                     }}
                                   />
-                                </span>
+                                </PopoverContent>
+                              </Popover>
+                            </span>
+                          </span>
+                        </FieldContent>
+                      </Field>
+                      <Field>
+                        <FieldLabel className="text-sm">
+                          {t("MarketOrder:sizePercentLabel")}
+                        </FieldLabel>
+                        <FieldDescription>
+                          {t("MarketOrder:sizePercentDescription")}
+                        </FieldDescription>
+                        <FieldContent>
+                          <span className="grid grid-cols-12">
+                            <span className="col-span-9">
+                              <Input
+                                label={t("MarketOrder:sizePercentLabel")}
+                                placeholder={sizePercent}
+                                disabled
+                                readOnly
+                              />
+                              <Slider
+                                className="mt-3"
+                                defaultValue={[sizePercent]}
+                                max={100}
+                                min={0}
+                                step={0.01}
+                                onValueChange={(value) => {
+                                  debouncedSetSizePercent(value[0]);
+                                  form.setValue("sizePercent", value[0]);
+                                }}
+                              />
+                            </span>
 
-                                <span className="col-span-3 ml-3 text-center">
-                                  <Popover>
-                                    <PopoverTrigger asChild>
-                                      <span
-                                        onClick={() => {
-                                          event.preventDefault();
-                                        }}
-                                        className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4 text-lg"
-                                      >
-                                        <Label>
-                                          {t("MarketOrder:editSpreadLabel")}
-                                        </Label>
-                                      </span>
-                                    </PopoverTrigger>
-                                    <PopoverContent>
-                                      <Label>
-                                        {t(
-                                          "MarketOrder:provideNewSpreadPercentLabel"
-                                        )}
-                                      </Label>
-                                      <Input
-                                        placeholder={spreadPercent}
-                                        className="mb-2 mt-1"
-                                        onChange={(event) => {
-                                          const input = event.target.value;
-                                          const regex = /^[0-9]*\.?[0-9]*$/;
-                                          if (
-                                            input &&
-                                            input.length &&
-                                            regex.test(input)
-                                          ) {
-                                            if (input >= 1 && input <= 100) {
-                                              setSpreadPercent(input);
-                                              setInputChars(inputChars + 1);
-                                            }
-                                          }
-                                        }}
-                                      />
-                                    </PopoverContent>
-                                  </Popover>
-                                </span>
-                              </span>
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="osoSize"
-                        render={({ field }) => (
-                          <FormItem className="mt-4 text-xs">
-                            <FormLabel className="text-sm">
-                              {t("MarketOrder:sizePercentLabel")}
-                            </FormLabel>
-                            <FormDescription>
-                              {t("MarketOrder:sizePercentDescription")}
-                            </FormDescription>
-                            <FormControl>
-                              <span className="grid grid-cols-12">
-                                <span className="col-span-9">
+                            <span className="col-span-3 ml-3 text-center">
+                              <Popover>
+                                <PopoverTrigger asChild>
+                                  <span
+                                    onClick={() => {
+                                      event.preventDefault();
+                                    }}
+                                    className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4 text-lg"
+                                  >
+                                    <Label>
+                                      {t("MarketOrder:editSizeLabel")}
+                                    </Label>
+                                  </span>
+                                </PopoverTrigger>
+                                <PopoverContent>
+                                  <Label>
+                                    {t(
+                                      "MarketOrder:provideNewSizePercentLabel"
+                                    )}
+                                  </Label>
                                   <Input
-                                    label={t("MarketOrder:sizePercentLabel")}
                                     placeholder={sizePercent}
-                                    disabled
-                                    readOnly
-                                  />
-                                  <Slider
-                                    className="mt-3"
-                                    defaultValue={[sizePercent]}
-                                    max={100}
-                                    min={0}
-                                    step={0.01}
-                                    onValueChange={(value) => {
-                                      debouncedSetSizePercent(value[0]);
+                                    className="mb-2 mt-1"
+                                    onChange={(event) => {
+                                      const input = event.target.value;
+                                      const regex = /^[0-9]*\.?[0-9]*$/;
+                                      if (
+                                        input &&
+                                        input.length &&
+                                        regex.test(input)
+                                      ) {
+                                        if (input >= 0 && input <= 100) {
+                                          setSizePercent(input);
+                                          setInputChars(inputChars + 1);
+                                          form.setValue(
+                                            "sizePercent",
+                                            Number(input)
+                                          );
+                                        }
+                                      }
                                     }}
                                   />
-                                </span>
+                                </PopoverContent>
+                              </Popover>
+                            </span>
+                          </span>
+                        </FieldContent>
+                      </Field>
 
-                                <span className="col-span-3 ml-3 text-center">
-                                  <Popover>
-                                    <PopoverTrigger asChild>
-                                      <span
-                                        onClick={() => {
-                                          event.preventDefault();
-                                        }}
-                                        className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4 text-lg"
-                                      >
-                                        <Label>
-                                          {t("MarketOrder:editSizeLabel")}
-                                        </Label>
-                                      </span>
-                                    </PopoverTrigger>
-                                    <PopoverContent>
-                                      <Label>
-                                        {t(
-                                          "MarketOrder:provideNewSizePercentLabel"
-                                        )}
-                                      </Label>
-                                      <Input
-                                        placeholder={sizePercent}
-                                        className="mb-2 mt-1"
-                                        onChange={(event) => {
-                                          const input = event.target.value;
-                                          const regex = /^[0-9]*\.?[0-9]*$/;
-                                          if (
-                                            input &&
-                                            input.length &&
-                                            regex.test(input)
-                                          ) {
-                                            if (input >= 0 && input <= 100) {
-                                              setSizePercent(input);
-                                              setInputChars(inputChars + 1);
-                                            }
-                                          }
-                                        }}
-                                      />
-                                    </PopoverContent>
-                                  </Popover>
-                                </span>
-                              </span>
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name="repeatValue"
-                        render={({ field }) => (
-                          <FormItem className="mt-4 text-xs">
-                            <FormLabel className="text-sm">
-                              {t("MarketOrder:setOsoRepeatLabel")}
-                            </FormLabel>
-                            <FormDescription>
-                              {t("MarketOrder:osoRepeatDescription")}
-                            </FormDescription>
-                            <FormControl>
-                              <div className="flex items-center space-x-2">
-                                <Checkbox
-                                  id="terms2"
-                                  checked={repeat}
-                                  onClick={() => {
-                                    setRepeat(!repeat);
-                                    setInputChars(inputChars + 1);
-                                  }}
-                                />
-                                <label
-                                  htmlFor="terms2"
-                                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                                >
-                                  {repeat
-                                    ? t("MarketOrder:osoConfiguredToRepeat")
-                                    : t("MarketOrder:osoConfiguredNotToRepeat")}
-                                </label>
-                              </div>
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
+                      <Field>
+                        <FieldLabel className="text-sm">
+                          {t("MarketOrder:setOsoRepeatLabel")}
+                        </FieldLabel>
+                        <FieldDescription>
+                          {t("MarketOrder:osoRepeatDescription")}
+                        </FieldDescription>
+                        <FieldContent>
+                          <div className="flex items-center space-x-2">
+                            <Checkbox
+                              id="terms2"
+                              checked={repeat}
+                              onClick={() => {
+                                setRepeat(!repeat);
+                                setInputChars(inputChars + 1);
+                                form.setValue("repeat", !repeat);
+                              }}
+                            />
+                            <label
+                              htmlFor="terms2"
+                              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                            >
+                              {repeat
+                                ? t("MarketOrder:osoConfiguredToRepeat")
+                                : t("MarketOrder:osoConfiguredNotToRepeat")}
+                            </label>
+                          </div>
+                        </FieldContent>
+                      </Field>
                     </>
                   ) : null}
 
                   <Separator className="mt-3" />
 
-                  <FormField
-                    control={form.control}
-                    name="networkFee"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>
-                          {t("MarketOrder:networkFeeLabel")}
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            disabled
-                            placeholder={`${fee} BTS`}
-                            className="mb-3 mt-3"
-                          />
-                        </FormControl>
-                        {usr.id === usr.referrer ? (
-                          <FormMessage>
-                            {t("MarketOrder:rebateMessage", {
-                              rebate: trimPrice(fee * 0.8, 5),
-                            })}
-                          </FormMessage>
-                        ) : null}
-                      </FormItem>
-                    )}
-                  />
+                  <Field>
+                    <FieldLabel>{t("MarketOrder:networkFeeLabel")}</FieldLabel>
+                    <FieldContent>
+                      <Input
+                        disabled
+                        placeholder={`${fee} BTS`}
+                        className="mb-3 mt-3"
+                      />
+                    </FieldContent>
+                    {usr.id === usr.referrer ? (
+                      <FieldError>
+                        {t("MarketOrder:rebateMessage", {
+                          rebate: trimPrice(fee * 0.8, 5),
+                        })}
+                      </FieldError>
+                    ) : null}
+                  </Field>
 
                   <Button
                     className="mt-5 mb-3"
@@ -1468,8 +1485,8 @@ export default function MarketOrder(properties) {
                   >
                     {t("MarketOrder:submitLimitOrderChangesButton")}
                   </Button>
-                </form>
-              </Form>
+                </FieldGroup>
+              </form>
               {showDialog ? (
                 <DeepLinkDialog
                   operationNames={["limit_order_update"]}
