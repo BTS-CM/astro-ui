@@ -4,7 +4,7 @@ import React, {
   useSyncExternalStore,
   useMemo,
 } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { useStore } from "@nanostores/react";
 import { sha256 } from "@noble/hashes/sha2.js";
 import { bytesToHex as toHex, utf8ToBytes } from "@noble/hashes/utils.js";
@@ -57,14 +57,17 @@ import {
 } from "@/components/ui/tooltip";
 
 import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+  Field,
+  FieldContent,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+  FieldLegend,
+  FieldSeparator,
+  FieldSet,
+  FieldTitle,
+} from "@/components/ui/field";
 
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
@@ -89,8 +92,9 @@ export default function SimpleSwap(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
   const form = useForm({
     defaultValues: {
-      account: "",
-      // Removed initial values for assetA/B from form defaults as they are handled by state
+      sellAmount: "1",
+      assetA: "",
+      assetB: "",
     },
   });
   const currentNode = useStore($currentNode);
@@ -201,6 +205,21 @@ export default function SimpleSwap(properties) {
   // State for the symbols of selected assets
   const [selectedAssetASymbol, setSelectedAssetASymbol] = useState(); // Asset User wants to SELL
   const [selectedAssetBSymbol, setSelectedAssetBSymbol] = useState(); // Asset User wants to BUY
+  // Controlled open state for dropdown menus so we can close them on selection
+  const [sendMenuOpen, setSendMenuOpen] = useState(false);
+  const [receiveMenuOpen, setReceiveMenuOpen] = useState(false);
+
+  // Keep RHF in sync when asset selections change programmatically
+  useEffect(() => {
+    if (selectedAssetASymbol !== undefined) {
+      form.setValue("assetA", selectedAssetASymbol || "");
+    }
+  }, [selectedAssetASymbol]);
+  useEffect(() => {
+    if (selectedAssetBSymbol !== undefined) {
+      form.setValue("assetB", selectedAssetBSymbol || "");
+    }
+  }, [selectedAssetBSymbol]);
 
   // Memoized list of unique asset symbols available in pools
   const poolAssets = useMemo(() => {
@@ -687,6 +706,8 @@ export default function SimpleSwap(properties) {
     assetB &&
     !showDialog;
 
+  // RHF handles sell amount invalid state via Controller rules
+
   return (
     <>
       <div className="container mx-auto mt-5 mb-5">
@@ -701,84 +722,107 @@ export default function SimpleSwap(properties) {
               {!assets ? <p>{t("SimpleSwap:loadingAssetData")}</p> : null}
               {pools && assets ? (
                 <>
-                  <Form {...form}>
-                    {/* Use a standard form element */}
-                    <form
-                      onSubmit={(event) => {
-                        event.preventDefault(); // Prevent default form submission
-                        if (canSubmit) {
-                          setShowDialog(true);
-                        }
-                      }}
-                    >
+                  {/* Use a standard form element with FieldGroup */}
+                  <form
+                    onSubmit={form.handleSubmit(() => {
+                      event.preventDefault();
+                      if (canSubmit) {
+                        setShowDialog(true);
+                      }
+                    })}
+                  >
+                    <FieldGroup>
                       {/* Row 1: Sell Amount and Sell Asset Selector */}
                       <div className="grid grid-cols-2 gap-5 mb-4">
                         {/* Sell Amount Input */}
                         <div className="col-span-1">
-                          <FormItem>
-                            <FormLabel>
-                              <div className="flex items-center space-x-1">
-                                <span>{t("SimpleSwap:amountToSwap")}</span>
-                                <TooltipProvider>
-                                  <Tooltip>
-                                    <TooltipTrigger asChild>
-                                      <QuestionMarkCircledIcon className="cursor-help" />
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                      <p>
-                                        {t("SimpleSwap:enterAmountToSwap", {
-                                          symbolA:
-                                            selectedAssetASymbol ?? "???",
-                                          symbolB:
-                                            selectedAssetBSymbol ?? "???",
-                                        })}
-                                      </p>
-                                    </TooltipContent>
-                                  </Tooltip>
-                                </TooltipProvider>
-                              </div>
-                            </FormLabel>
-                            <FormControl>
-                              <Input
-                                type="number" // Use number type for better input handling
-                                step="any" // Allow decimals
-                                min="0" // Prevent negative numbers
-                                value={sellAmount}
-                                placeholder="0.0"
-                                className="mb-3" // Removed label prop as FormLabel is used
-                                onChange={(event) => {
-                                  const input = event.target.value;
-                                  // Allow empty string, numbers, and a single decimal point
-                                  if (
-                                    input === "" ||
-                                    /^[0-9]*\.?[0-9]*$/.test(input)
-                                  ) {
-                                    setSellAmount(input);
-                                  }
-                                }}
-                              />
-                            </FormControl>{" "}
-                            {/* For potential validation errors */}
-                          </FormItem>
+                          <Controller
+                            name="sellAmount"
+                            control={form.control}
+                            rules={{
+                              required: t("SimpleSwap:enterPositiveAmount"),
+                              validate: (v) =>
+                                ((v === "" || /^[0-9]*\.?[0-9]*$/.test(v)) &&
+                                  parseFloat(v) > 0) ||
+                                t("SimpleSwap:enterPositiveAmount"),
+                            }}
+                            render={({ field, fieldState }) => (
+                              <Field data-invalid={fieldState.invalid}>
+                                <FieldLabel htmlFor="simple-swap-sell-amount">
+                                  <div className="flex items-center space-x-1">
+                                    <span>{t("SimpleSwap:amountToSwap")}</span>
+                                    <TooltipProvider>
+                                      <Tooltip>
+                                        <TooltipTrigger asChild>
+                                          <QuestionMarkCircledIcon className="cursor-help" />
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                          <p>
+                                            {t("SimpleSwap:enterAmountToSwap", {
+                                              symbolA:
+                                                selectedAssetASymbol ?? "???",
+                                              symbolB:
+                                                selectedAssetBSymbol ?? "???",
+                                            })}
+                                          </p>
+                                        </TooltipContent>
+                                      </Tooltip>
+                                    </TooltipProvider>
+                                  </div>
+                                </FieldLabel>
+                                <FieldContent>
+                                  <Input
+                                    {...field}
+                                    id="simple-swap-sell-amount"
+                                    type="number"
+                                    step="any"
+                                    min="0"
+                                    placeholder="0.0"
+                                    className="mb-3"
+                                    aria-invalid={fieldState.invalid}
+                                    onChange={(event) => {
+                                      const input = event.target.value;
+                                      // Keep RHF and local state in sync while constraining input format
+                                      if (
+                                        input === "" ||
+                                        /^[0-9]*\.?[0-9]*$/.test(input)
+                                      ) {
+                                        field.onChange(input);
+                                        setSellAmount(input);
+                                      }
+                                    }}
+                                  />
+                                </FieldContent>
+                                {fieldState.invalid && (
+                                  <FieldError errors={[fieldState.error]} />
+                                )}
+                              </Field>
+                            )}
+                          />
                         </div>
 
                         {/* Sell Asset Selector */}
                         <div className="col-span-1 self-end mb-3">
                           {" "}
                           {/* Align to bottom */}
-                          <FormField
-                            control={form.control} // Still needed for RHF integration if validation added later
-                            name="assetA" // Logical name
-                            render={(
-                              { field } // field not directly used for value, handled by state
-                            ) => (
-                              <FormItem>
-                                <FormControl>
-                                  <DropdownMenu>
+                          <Controller
+                            name="assetA"
+                            control={form.control}
+                            render={({ field, fieldState }) => (
+                              <Field data-invalid={fieldState.invalid}>
+                                <FieldContent>
+                                  <DropdownMenu
+                                    open={sendMenuOpen}
+                                    onOpenChange={setSendMenuOpen}
+                                  >
                                     <DropdownMenuTrigger asChild>
                                       <Button
                                         variant="outline"
-                                        className="hover:bg-gray-100 hover:shadow-lg w-full justify-start font-normal" // Align text left
+                                        className="hover:bg-gray-100 hover:shadow-lg w-full justify-start font-normal"
+                                        aria-label={t(
+                                          "SimpleSwap:selectSendAsset"
+                                        )}
+                                        aria-invalid={fieldState.invalid}
                                       >
                                         {selectedAssetASymbol
                                           ? selectedAssetASymbol
@@ -786,8 +830,8 @@ export default function SimpleSwap(properties) {
                                       </Button>
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent
-                                      className="p-0 w-[300px]" // Removed mt-10, side="end"
-                                      align="start" // Align dropdown content start
+                                      className="p-0 w-[300px]"
+                                      align="start"
                                     >
                                       <Command className="rounded-lg border shadow-md">
                                         <CommandInput
@@ -812,7 +856,8 @@ export default function SimpleSwap(properties) {
                                                       undefined
                                                     ); // Reset buy asset when sell asset changes
                                                     setPool(""); // Reset pool selection
-                                                    // RHF field update if needed: field.onChange(assetSymbol);
+                                                    field.onChange(assetSymbol);
+                                                    setSendMenuOpen(false);
                                                   }}
                                                   className="cursor-pointer"
                                                 >
@@ -829,21 +874,19 @@ export default function SimpleSwap(properties) {
                                       </Command>
                                     </DropdownMenuContent>
                                   </DropdownMenu>
-                                </FormControl>
-                              </FormItem>
+                                </FieldContent>
+                              </Field>
                             )}
                           />
                         </div>
                       </div>
 
-                      {/* Removed the Invert Toggle Button section */}
-
                       {/* Row 2: Buy Amount and Buy Asset Selector */}
                       <div className="grid grid-cols-2 gap-5">
                         {/* Buy Amount Display */}
                         <div className="col-span-1">
-                          <FormItem>
-                            <FormLabel>
+                          <Field>
+                            <FieldLabel htmlFor="simple-swap-buy-amount">
                               <div className="flex items-center space-x-1">
                                 <span>{t("SimpleSwap:totalAmount")}</span>
                                 <TooltipProvider>
@@ -867,23 +910,35 @@ export default function SimpleSwap(properties) {
                                   </Tooltip>
                                 </TooltipProvider>
                               </div>
-                            </FormLabel>
-                            <FormControl>{buyAmountInput}</FormControl>{" "}
-                            {/* The readonly input */}
-                          </FormItem>
+                            </FieldLabel>
+                            <FieldContent>
+                              {buyAmountInput &&
+                                React.cloneElement(buyAmountInput, {
+                                  id: "simple-swap-buy-amount",
+                                  "aria-invalid": false,
+                                })}
+                            </FieldContent>
+                          </Field>
                         </div>
 
                         {/* Buy Asset Selector */}
                         <div className="col-span-1 self-end mb-3">
-                          {" "}
-                          {/* Align to bottom */}
-                          <FormField
-                            control={form.control}
+                          <Controller
                             name="assetB"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormControl>
-                                  <DropdownMenu>
+                            control={form.control}
+                            rules={{
+                              validate: (val) =>
+                                !selectedAssetASymbol ||
+                                !!val ||
+                                t("SimpleSwap:selectAssetToReceive"),
+                            }}
+                            render={({ field, fieldState }) => (
+                              <Field data-invalid={fieldState.invalid}>
+                                <FieldContent>
+                                  <DropdownMenu
+                                    open={receiveMenuOpen}
+                                    onOpenChange={setReceiveMenuOpen}
+                                  >
                                     <DropdownMenuTrigger
                                       asChild
                                       disabled={!selectedAssetASymbol}
@@ -891,7 +946,11 @@ export default function SimpleSwap(properties) {
                                       <Button
                                         variant="outline"
                                         className="hover:bg-gray-100 hover:shadow-lg w-full justify-start font-normal"
-                                        disabled={!selectedAssetASymbol} // Disable if sell asset not chosen
+                                        disabled={!selectedAssetASymbol}
+                                        aria-label={t(
+                                          "SimpleSwap:selectReceiveAsset"
+                                        )}
+                                        aria-invalid={fieldState.invalid}
                                       >
                                         {selectedAssetBSymbol
                                           ? selectedAssetBSymbol
@@ -926,7 +985,10 @@ export default function SimpleSwap(properties) {
                                                       setSelectedAssetBSymbol(
                                                         assetSymbol
                                                       );
-                                                      // field.onChange(assetSymbol); // RHF update if needed
+                                                      field.onChange(
+                                                        assetSymbol
+                                                      );
+                                                      setReceiveMenuOpen(false);
                                                     }}
                                                     className="cursor-pointer"
                                                   >
@@ -950,8 +1012,11 @@ export default function SimpleSwap(properties) {
                                       </Command>
                                     </DropdownMenuContent>
                                   </DropdownMenu>
-                                </FormControl>
-                              </FormItem>
+                                </FieldContent>
+                                {fieldState.invalid && (
+                                  <FieldError errors={[fieldState.error]} />
+                                )}
+                              </Field>
                             )}
                           />
                         </div>
@@ -963,17 +1028,6 @@ export default function SimpleSwap(properties) {
                       selectedAssetASymbol &&
                       selectedAssetBSymbol ? (
                         <div className="mt-5 border rounded-md p-2">
-                          <Label className="text-md mb-2 block">
-                            {t("SimpleSwap:choosePool")}
-                          </Label>
-                          {finalPools.length > 1 ? (
-                            <p className="text-sm text-gray-600 mb-2">
-                              {t("SimpleSwap:multiplePoolsFound", {
-                                count: finalPools.length,
-                              })}
-                            </p>
-                          ) : null}
-
                           {/* Headers for Pool List */}
                           <div className="grid grid-cols-12 text-xs text-gray-500 mb-1 p-1 border-b">
                             <div className="col-span-1"></div>{" "}
@@ -1037,8 +1091,8 @@ export default function SimpleSwap(properties) {
                       >
                         {t("SimpleSwap:exchange")}
                       </Button>
-                    </form>
-                  </Form>
+                    </FieldGroup>
+                  </form>
 
                   {/* Deep Link Dialog */}
                   {showDialog && assetA && assetB && usr ? ( // Ensure needed data exists

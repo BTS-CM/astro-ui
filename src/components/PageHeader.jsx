@@ -558,6 +558,30 @@ export default function PageHeader(properties) {
                     className="hover:bg-slate-200 hover:text-black"
                   >
                     <NavigationMenuTrigger>
+                      {t("PageHeader:assetCreation")}
+                    </NavigationMenuTrigger>
+                  </Badge>
+                  <NavigationMenuContent>
+                    <ul className="grid gap-2 sm:w-[400px] md:w-[500px] md:grid-cols-2 lg:w-[600px] p-2">
+                      {assetCreation.map((component) => (
+                        <ListItem
+                          key={t(component.title)}
+                          title={t(component.title)}
+                          href={component.href}
+                        >
+                          {t(component.description)}
+                        </ListItem>
+                      ))}
+                    </ul>
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
+
+                <NavigationMenuItem>
+                  <Badge
+                    variant="secondary"
+                    className="hover:bg-slate-200 hover:text-black"
+                  >
+                    <NavigationMenuTrigger>
                       {t("PageHeader:accountOverviewsHeading")}
                     </NavigationMenuTrigger>
                   </Badge>
@@ -588,30 +612,6 @@ export default function PageHeader(properties) {
                   <NavigationMenuContent>
                     <ul className="grid gap-2 sm:w-[400px] md:w-[500px] md:grid-cols-2 lg:w-[600px] p-2">
                       {blockchainOverviewsHeading.map((component) => (
-                        <ListItem
-                          key={t(component.title)}
-                          title={t(component.title)}
-                          href={component.href}
-                        >
-                          {t(component.description)}
-                        </ListItem>
-                      ))}
-                    </ul>
-                  </NavigationMenuContent>
-                </NavigationMenuItem>
-
-                <NavigationMenuItem>
-                  <Badge
-                    variant="secondary"
-                    className="hover:bg-slate-200 hover:text-black"
-                  >
-                    <NavigationMenuTrigger>
-                      {t("PageHeader:assetCreation")}
-                    </NavigationMenuTrigger>
-                  </Badge>
-                  <NavigationMenuContent>
-                    <ul className="grid gap-2 sm:w-[400px] md:w-[500px] md:grid-cols-2 lg:w-[600px] p-2">
-                      {assetCreation.map((component) => (
                         <ListItem
                           key={t(component.title)}
                           title={t(component.title)}
