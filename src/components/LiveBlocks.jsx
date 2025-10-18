@@ -173,7 +173,7 @@ export default function LiveBlocks(properties) {
             className="hover:text-purple-500"
             onClick={() => {
               setHyperlink(
-                `https://blocksights.info/#/blocks/${activity.block}${
+                `https://explorer.bitshares.ws/#/blocks/${activity.block}${
                   usr.chain === "bitshares" ? "" : "?network=testnet"
                 }`
               );
@@ -234,7 +234,7 @@ export default function LiveBlocks(properties) {
             className="hover:text-purple-500"
             onClick={() => {
               setHyperlink(
-                `https://blocksights.info/#/blocks/${block.block}${
+                `https://explorer.bitshares.ws/#/blocks/${block.block}${
                   usr.chain === "bitshares" ? "" : "?network=testnet"
                 }`
               );
@@ -257,7 +257,7 @@ export default function LiveBlocks(properties) {
             className="hover:text-purple-500"
             onClick={() => {
               setHyperlink(
-                `https://blocksights.info/#/witness/${block.witness}${
+                `https://explorer.bitshares.ws/#/witness/${block.witness}${
                   usr.chain === "bitshares" ? "" : "?network=testnet"
                 }`
               );
@@ -311,7 +311,7 @@ export default function LiveBlocks(properties) {
                           className="hover:text-purple-500"
                           onClick={() => {
                             setHyperlink(
-                              `https://blocksights.info/#/witness/${
+                              `https://explorer.bitshares.ws/#/witness/${
                                 recentBlocks[0].witness
                               }${
                                 usr.chain === "bitshares"

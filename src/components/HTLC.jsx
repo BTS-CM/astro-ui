@@ -244,7 +244,7 @@ export default function Htlc(properties) {
                   classnamecontents="text-blue-500"
                   type="text"
                   text={id}
-                  hyperlink={`https://blocksights.info/#/objects/${id}${
+                  hyperlink={`https://explorer.bitshares.ws/#/objects/${id}${
                     usr.chain === "bitshares" ? "" : "?network=testnet"
                   }`}
                 />
@@ -415,7 +415,7 @@ export default function Htlc(properties) {
                   classnamecontents="text-blue-500"
                   type="text"
                   text={id}
-                  hyperlink={`https://blocksights.info/#/objects/${id}${
+                  hyperlink={`https://explorer.bitshares.ws/#/objects/${id}${
                     usr.chain === "bitshares" ? "" : "?network=testnet"
                   }`}
                 />

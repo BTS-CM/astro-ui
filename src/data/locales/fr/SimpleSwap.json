@@ -33,7 +33,7 @@
   "submit": "Soumettre",
   "exchangeHeader": "Échanger {{sellAmount}} {{symbolA}} pour {{buyAmount}} {{symbolB}}",
   "swapBuySell": "Troquer achat/vente",
-  "blocksightsPoolExplorer": "Explorateur de piscine Blocksights",
+  "bitsharesPoolExplorer": "Explorateur de piscine bitshares",
   "poolJsonButton": "Piscine JSON",
   "liquidityPoolJsonTitle": "Pool de liquidité JSON",
   "liquidityPoolJsonDescription": "Consultez les détails renvoyés par le réseau pour ce pool",

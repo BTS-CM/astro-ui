@@ -585,7 +585,7 @@ export default function Predictions(properties) {
                     }
                     type="text"
                     text={`${symbol}`}
-                    hyperlink={`https://blocksights.info/#/assets/${symbol}${
+                    hyperlink={`https://explorer.bitshares.ws/#/assets/${symbol}${
                       _chain !== "bitshares" ? "?network=testnet" : ""
                     }`}
                   />{" "}
@@ -596,9 +596,9 @@ export default function Predictions(properties) {
                     }
                     type="text"
                     text={`${res.id}`}
-                    hyperlink={`https://blocksights.info/#/assets/${res.id}${
-                      _chain !== "bitshares" ? "?network=testnet" : ""
-                    }`}
+                    hyperlink={`https://explorer.bitshares.ws/#/assets/${
+                      res.id
+                    }${_chain !== "bitshares" ? "?network=testnet" : ""}`}
                   />
                   )
                 </div>
@@ -609,7 +609,7 @@ export default function Predictions(properties) {
                     }
                     type="text"
                     text={username ?? house}
-                    hyperlink={`https://blocksights.info/#/accounts/${house}${
+                    hyperlink={`https://explorer.bitshares.ws/#/accounts/${house}${
                       _chain !== "bitshares" ? "?network=testnet" : ""
                     }`}
                   />

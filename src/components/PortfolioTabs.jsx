@@ -372,7 +372,7 @@ export default function PortfolioTabs(properties) {
                 classnamecontents="mt-2 ml-2"
                 type="button"
                 text={t("PortfolioTabs:assetInfoButton")}
-                hyperlink={`https://blocksights.info/#/assets/${
+                hyperlink={`https://explorer.bitshares.ws/#/assets/${
                   currentBalance.symbol
                 }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
               />
@@ -447,7 +447,7 @@ export default function PortfolioTabs(properties) {
                     classnamecontents="text-blue-500"
                     type="text"
                     text={` ${orderId}`}
-                    hyperlink={`https://blocksights.info/#/objects/${orderId}${
+                    hyperlink={`https://explorer.bitshares.ws/#/objects/${orderId}${
                       usr.chain === "bitshares" ? "" : "?network=testnet"
                     }`}
                   />
@@ -537,7 +537,7 @@ export default function PortfolioTabs(properties) {
                     classnamecontents="text-blue-500"
                     type="text"
                     text={` ${activityItem.account_history.operation_id}`}
-                    hyperlink={`https://blocksights.info/#/objects/${
+                    hyperlink={`https://explorer.bitshares.ws/#/objects/${
                       activityItem.account_history.operation_id
                     }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
                   />
@@ -547,7 +547,7 @@ export default function PortfolioTabs(properties) {
                     classnamecontents="text-blue-500"
                     type="text"
                     text={` ${activityItem.block_data.block_num}`}
-                    hyperlink={`https://blocksights.info/#/blocks/${
+                    hyperlink={`https://explorer.bitshares.ws/#/blocks/${
                       activityItem.block_data.block_num
                     }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
                   />

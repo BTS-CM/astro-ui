@@ -5,7 +5,7 @@
   "baseAsset": "Basisvermögenswert",
   "loading": "Wird geladen...",
   "controls": "Marktkontrollen",
-  "blocksightsMarketExplorer": "🔎 Blocksights-Marktforscher",
+  "bitsharesMarketExplorer": "🔎 bitshares-Marktforscher",
   "marketSummary": "Marktübersicht",
   "latestPrice": "Letzter Preis:",
   "24HrChange": "24-Stunden-Wechsel:",

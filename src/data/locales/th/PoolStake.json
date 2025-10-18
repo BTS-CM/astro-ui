@@ -28,7 +28,7 @@
   "rebate": "ส่วนลด: {{rebate}} รถไฟฟ้า BTS (มอบสิทธิ)",
   "submit": "ส่ง",
   "stakingAssetsDesc": "การปักหลัก {{aStake}} {{assetASymbol}} และ {{bStake}} {{assetBSymbol}} ในสระน้ำ {{poolId}}",
-  "blocksightsPoolExplorer": "นักสำรวจสระว่ายน้ำ Blocksights",
+  "bitsharesPoolExplorer": "นักสำรวจสระว่ายน้ำ bitshares",
   "poolJson": "พูล JSON",
   "liquidityPoolJson": "JSON พูลสภาพคล่อง",
   "checkPoolDetails": "ตรวจสอบรายละเอียดที่เครือข่ายส่งคืนสำหรับพูลนี้",

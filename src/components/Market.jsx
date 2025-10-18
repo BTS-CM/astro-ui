@@ -287,13 +287,13 @@ export default function Market(properties) {
           variant="outline"
           classnamecontents="mb-2 mt-2"
           type="button"
-          text={t("Market:blocksightsMarketExplorer")}
+          text={t("Market:bitsharesMarketExplorer")}
           hyperlink={
             usr.chain === "bitshares"
-              ? `https://blocksights.info/#/markets/${
+              ? `https://explorer.bitshares.ws/#/markets/${
                   activeLimitCard === "buy" ? assetA : assetB
                 }/${activeLimitCard === "buy" ? assetB : assetA}`
-              : `https://blocksights.info/#/markets/${
+              : `https://explorer.bitshares.ws/#/markets/${
                   activeLimitCard === "buy" ? assetA : assetB
                 }/${
                   activeLimitCard === "buy" ? assetB : assetA

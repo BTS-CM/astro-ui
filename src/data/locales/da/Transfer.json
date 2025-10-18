@@ -32,7 +32,7 @@
   "doubleCheckDescription": "Undgå hjertesorg, tjek dine inputs!",
   "doubleCheckFormInputs": "Inden du fortsætter, skal du dobbelttjekke formularindtastningerne.",
   "validateBeetPrompt": "Valider hele Beet-promptens indhold, før du udsender transaktionen.",
-  "blocksightsLink": "Klik her for at se {{name}}s konto på Blocksights blockchain explorer.",
+  "bitsharesLink": "Klik her for at se {{name}}s konto på bitshares blockchain explorer.",
   "scamAlertTitle": "Pas på! ",
   "scamAlertDescription": "Vær på vagt over for svindlere!",
   "scamAlertPoint1": "Krypto-udvekslinger vil ALDRIG sende dig besked med særlige overførselsinstruktioner, du skal følge for ind- eller udbetalinger.",

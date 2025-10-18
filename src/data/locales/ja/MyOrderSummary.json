@@ -3,7 +3,7 @@
   "editLimitOrderDescription": "指値注文を更新できるようになり、指値注文を更新することで手数料を節約できます。",
   "selectedOpenOrderData": "選択したオープン注文のデータ:",
   "proceedToUpdateButton": "このオープン指値注文の更新に進んでください",
-  "viewObjectOnBlocksights": "blocksights.info でオブジェクトを表示",
+  "viewObjectOnbitshares": "bitshares でオブジェクトを表示",
   "priceColumnTitle": "価格",
   "expirationDateColumnTitle": "有効期限"
 }

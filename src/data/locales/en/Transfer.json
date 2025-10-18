@@ -32,7 +32,7 @@
   "doubleCheckDescription": "Avoid heartbreak, check your inputs!",
   "doubleCheckFormInputs": "Before you proceed, please double check the form inputs.",
   "validateBeetPrompt": "Validate the entire Beet prompt contents before you broadcast the transaction.",
-  "blocksightsLink": "Click here to view {{name}}'s account on the Blocksights blockchain explorer.",
+  "bitsharesLink": "Click here to view {{name}}'s account on the bitshares blockchain explorer.",
   "scamAlertTitle": "Beware! Don't fall for scams!",
   "scamAlertDescription": "Be vigilant against scammers!",
   "scamAlertPoint1": "Crypto exchanges will NEVER direct message you in with special transfer instructions to follow for deposits nor withdrawals.",

@@ -14,7 +14,7 @@
   "offerOwnerDescription": "นี่คือบัญชีที่เป็นเจ้าของข้อเสนอเครดิตนี้",
   "existingCreditOfferJSON": "JSON ข้อเสนอเครดิตที่มีอยู่",
   "currentBlockchainData": "นี่คือข้อมูลบล็อกเชนปัจจุบันสำหรับข้อเสนอเครดิตนี้",
-  "viewOnBlockSights": "ดูได้ที่ BlockSights",
+  "viewOnbitshares": "ดูได้ที่ bitshares",
   "viewingExistingOffer": "คุณกำลังดูข้อเสนอเครดิตที่มีอยู่นี้",
   "assetToLend": "ทรัพย์สินที่จะให้ยืม",
   "lendingAssetDescription": "ข้อเสนอสินเชื่อของคุณจะเน้นไปที่การให้ยืมสินทรัพย์นี้",

@@ -14,7 +14,7 @@
   "offerOwnerDescription": "This is the account which owns this credit offer",
   "existingCreditOfferJSON": "Existing credit offer JSON",
   "currentBlockchainData": "Here's the current blockchain data for this credit offer",
-  "viewOnBlockSights": "View on BlockSights",
+  "viewOnbitshares": "View on bitshares",
   "viewingExistingOffer": "You're currently viewing this existing credit offer",
   "assetToLend": "Asset to lend",
   "lendingAssetDescription": "Your credit offer will focus on lending this asset",

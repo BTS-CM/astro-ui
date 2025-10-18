@@ -22,11 +22,10 @@ const _gradient = {
 
 const allowedDomains = [
   "https://www.electronjs.org/",
-  "https://blocksights.info/",
+  "https://explorer.bitshares.ws/",
   "https://bts.exchange/",
   "https://ex.xbts.io/",
   "https://kibana.bts.mobi/",
-  "https://www.bitsharescan.info/",
   "https://github.com/bitshares/beet",
   "https://react.dev/",
   "https://github.com/",

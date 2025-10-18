@@ -360,7 +360,7 @@ export default function Smartcoins(properties) {
                 classnamecontents="hover:text-purple-500"
                 type="text"
                 text={thisBitassetData.symbol}
-                hyperlink={`https://blocksights.info/#/assets/${
+                hyperlink={`https://explorer.bitshares.ws/#/assets/${
                   thisBitassetData.symbol
                 }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
               />
@@ -369,7 +369,7 @@ export default function Smartcoins(properties) {
                 classnamecontents="hover:text-purple-500"
                 type="text"
                 text={thisBitassetData.id}
-                hyperlink={`https://blocksights.info/#/assets/${
+                hyperlink={`https://explorer.bitshares.ws/#/assets/${
                   thisBitassetData.id
                 }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
               />
@@ -381,7 +381,7 @@ export default function Smartcoins(properties) {
                     classnamecontents="hover:text-purple-500"
                     type="text"
                     text={issuer.name}
-                    hyperlink={`https://blocksights.info/#/accounts/${
+                    hyperlink={`https://explorer.bitshares.ws/#/accounts/${
                       issuer.name
                     }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
                   />{" "}
@@ -390,7 +390,7 @@ export default function Smartcoins(properties) {
                     classnamecontents="hover:text-purple-500"
                     type="text"
                     text={issuer.id}
-                    hyperlink={`https://blocksights.info/#/accounts/${
+                    hyperlink={`https://explorer.bitshares.ws/#/accounts/${
                       issuer.id
                     }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
                   />
@@ -408,7 +408,7 @@ export default function Smartcoins(properties) {
                       classnamecontents="hover:text-purple-500"
                       type="text"
                       text={thisCollateralAssetData.symbol}
-                      hyperlink={`https://blocksights.info/#/assets/${
+                      hyperlink={`https://explorer.bitshares.ws/#/assets/${
                         thisCollateralAssetData.symbol
                       }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
                     />{" "}
@@ -417,7 +417,7 @@ export default function Smartcoins(properties) {
                       classnamecontents="hover:text-purple-500"
                       type="text"
                       text={thisCollateralAssetData.id}
-                      hyperlink={`https://blocksights.info/#/assets/${
+                      hyperlink={`https://explorer.bitshares.ws/#/assets/${
                         thisCollateralAssetData.id
                       }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
                     />

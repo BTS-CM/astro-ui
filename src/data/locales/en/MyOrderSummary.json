@@ -3,7 +3,7 @@
   "editLimitOrderDescription": "Limit orders can now be updated, save on fees by updating limit orders.",
   "selectedOpenOrderData": "Selected open order's data:",
   "proceedToUpdateButton": "Proceed to update this open limit order",
-  "viewObjectOnBlocksights": "View object on blocksights.info",
+  "viewObjectOnbitshares": "View object on bitshares",
   "priceColumnTitle": "Price",
   "expirationDateColumnTitle": "Expiry"
 }

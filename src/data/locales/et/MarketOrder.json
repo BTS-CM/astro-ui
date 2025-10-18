@@ -3,7 +3,7 @@
   "viewExistingLimitOrderDataButton": "Vaadake olemasolevaid limiittellimuse andmeid",
   "existingLimitOrderDataTitle": "Olemasolevad limiittellimuse andmed",
   "existingLimitOrderDataDescription": "See vorm värskendab järgmisi JSON-andmeid",
-  "viewObjectOnBlocksightsInfo": "Vaadake objekti saidil blocksights.info",
+  "viewObjectOnbitsharesInfo": "Vaadake objekti saidil bitshares",
   "bitsharesDexSupportDescription": "Bitshares DEX toetab nüüd avatud piiranguga tellimuste otsest redigeerimist selle vormi kaudu",
   "limitOrderOwnerLabel": "Piirtellimuse omanik",
   "bitsharesAccountPlaceholder": "Bitsharesi konto (1.2.x)",

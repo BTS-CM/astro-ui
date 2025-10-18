@@ -5,7 +5,7 @@
   "baseAsset": "Base asset",
   "loading": "Loading...",
   "controls": "Market controls",
-  "blocksightsMarketExplorer": "🔎 Blocksights market explorer",
+  "bitsharesMarketExplorer": "🔎 bitshares market explorer",
   "marketSummary": "Market summary",
   "latestPrice": "Latest price:",
   "24HrChange": "24Hr change:",

@@ -433,7 +433,7 @@ export default function Witnesses(properties) {
                       classnamecontents="text-blue-500 hover:text-purple-500"
                       type="text"
                       text={witness.id}
-                      hyperlink={`https://blocksights.info/#/objects/${
+                      hyperlink={`https://explorer.bitshares.ws/#/objects/${
                         witness.id
                       }${_chain === "bitshares" ? "" : "?network=testnet"}`}
                     />{" "}
@@ -442,7 +442,7 @@ export default function Witnesses(properties) {
                       classnamecontents="text-blue-500 hover:text-purple-500"
                       type="text"
                       text={witness.account_id}
-                      hyperlink={`https://blocksights.info/#/accounts/${
+                      hyperlink={`https://explorer.bitshares.ws/#/accounts/${
                         witness.account_id
                       }${_chain === "bitshares" ? "" : "?network=testnet"}`}
                     />
@@ -461,7 +461,7 @@ export default function Witnesses(properties) {
                             classnamecontents="text-blue-500 hover:text-purple-500"
                             type="text"
                             text={`#${witness.last_block_num}`}
-                            hyperlink={`https://blocksights.info/#/blocks/${
+                            hyperlink={`https://explorer.bitshares.ws/#/blocks/${
                               witness.last_block_num
                             }${
                               _chain === "bitshares" ? "" : "?network=testnet"

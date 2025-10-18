@@ -28,7 +28,7 @@
   "rebate": "Rabatt: {{rebate}} BTS (Vesting)",
   "submit": "Einreichen",
   "stakingAssetsDesc": "Abstecken {{aStake}} {{assetASymbol}} Und {{bStake}} {{assetBSymbol}} im Pool {{poolId}}",
-  "blocksightsPoolExplorer": "Blocksights-Pool-Explorer",
+  "bitsharesPoolExplorer": "bitshares-Pool-Explorer",
   "poolJson": "Pool-JSON",
   "liquidityPoolJson": "Liquiditätspool JSON",
   "checkPoolDetails": "Sehen Sie sich die vom Netzwerk für diesen Pool zurückgegebenen Details an",

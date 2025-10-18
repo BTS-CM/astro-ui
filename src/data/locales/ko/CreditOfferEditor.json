@@ -14,7 +14,7 @@
   "offerOwnerDescription": "이 크레딧 제안을 소유한 계정입니다.",
   "existingCreditOfferJSON": "기존 신용 제안 JSON",
   "currentBlockchainData": "이 신용 제안에 대한 현재 블록체인 데이터는 다음과 같습니다.",
-  "viewOnBlockSights": "BlockSights에서 보기",
+  "viewOnbitshares": "bitshares에서 보기",
   "viewingExistingOffer": "현재 이 기존 크레딧 제안을 보고 계십니다.",
   "assetToLend": "빌려줄 자산",
   "lendingAssetDescription": "귀하의 신용 제안은 이 자산을 대출하는 데 중점을 둘 것입니다",

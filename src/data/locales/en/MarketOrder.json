@@ -3,7 +3,7 @@
   "viewExistingLimitOrderDataButton": "View existing limit order data",
   "existingLimitOrderDataTitle": "Existing limit order data",
   "existingLimitOrderDataDescription": "This form will update the following JSON data",
-  "viewObjectOnBlocksightsInfo": "View object on blocksights.info",
+  "viewObjectOnbitsharesInfo": "View object on bitshares",
   "bitsharesDexSupportDescription": "The Bitshares DEX now supports directly editing open limit orders via this form",
   "limitOrderOwnerLabel": "Limit order owner",
   "bitsharesAccountPlaceholder": "Bitshares account (1.2.x)",

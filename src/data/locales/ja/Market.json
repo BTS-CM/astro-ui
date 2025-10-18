@@ -5,7 +5,7 @@
   "baseAsset": "基本資産",
   "loading": "読み込み中...",
   "controls": "市場管理",
-  "blocksightsMarketExplorer": "🔎 Blocksights マーケットエクスプローラー",
+  "bitsharesMarketExplorer": "🔎 bitshares マーケットエクスプローラー",
   "marketSummary": "市場概要",
   "latestPrice": "最新の価格:",
   "24HrChange": "24時間の変更:",

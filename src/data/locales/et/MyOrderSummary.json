@@ -3,7 +3,7 @@
   "editLimitOrderDescription": "Limiittellimusi saab nüüd värskendada, säästa limiittellimusi värskendades tasudelt.",
   "selectedOpenOrderData": "Valitud avatud tellimuse andmed:",
   "proceedToUpdateButton": "Jätkake selle avatud limiidi korralduse värskendamist",
-  "viewObjectOnBlocksights": "Vaadake objekti saidil blocksights.info",
+  "viewObjectOnbitshares": "Vaadake objekti saidil bitshares",
   "priceColumnTitle": "Hind",
   "expirationDateColumnTitle": "Aegumine"
 }

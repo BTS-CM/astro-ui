@@ -3,7 +3,7 @@
   "viewExistingLimitOrderDataButton": "Visualizar dados de pedidos com limite existentes",
   "existingLimitOrderDataTitle": "Dados de pedidos com limite existentes",
   "existingLimitOrderDataDescription": "Este formulário atualizará os seguintes dados JSON",
-  "viewObjectOnBlocksightsInfo": "Veja o objeto em Blocksights.info",
+  "viewObjectOnbitsharesInfo": "Veja o objeto em bitshares",
   "bitsharesDexSupportDescription": "O Bitshares DEX agora suporta a edição direta de pedidos com limite aberto por meio deste formulário",
   "limitOrderOwnerLabel": "Proprietário do pedido limitado",
   "bitsharesAccountPlaceholder": "Conta Bitshares (1.2.x)",

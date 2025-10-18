@@ -478,10 +478,8 @@ export default function MarketOrder(properties) {
                               variant="outline"
                               classnamecontents=""
                               type="button"
-                              text={t(
-                                "MarketOrder:viewObjectOnBlocksightsInfo"
-                              )}
-                              hyperlink={`https://blocksights.info/#/objects/${limitOrderID}${
+                              text={t("MarketOrder:viewObjectOnbitsharesInfo")}
+                              hyperlink={`https://explorer.bitshares.ws/#/objects/${limitOrderID}${
                                 usr.chain === "bitshares"
                                   ? ""
                                   : "?network=testnet"

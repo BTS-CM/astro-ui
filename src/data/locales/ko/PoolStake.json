@@ -28,7 +28,7 @@
   "rebate": "할인: {{rebate}} 방탄소년단 (베스팅)",
   "submit": "제출하다",
   "stakingAssetsDesc": "스테이킹 {{aStake}} {{assetASymbol}} 그리고 {{bStake}} {{assetBSymbol}} 수영장에서 {{poolId}}",
-  "blocksightsPoolExplorer": "Blocksights 풀 탐색기",
+  "bitsharesPoolExplorer": "bitshares 풀 탐색기",
   "poolJson": "풀 JSON",
   "liquidityPoolJson": "유동성 풀 JSON",
   "checkPoolDetails": "이 풀에 대해 네트워크에서 반환된 세부 정보를 확인하세요.",

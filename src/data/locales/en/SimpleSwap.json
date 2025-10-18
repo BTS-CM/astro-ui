@@ -33,7 +33,7 @@
   "submit": "Submit",
   "exchangeHeader": "Exchanging {{sellAmount}} {{symbolA}} for {{buyAmount}} {{symbolB}}",
   "swapBuySell": "Swap buy/sell",
-  "blocksightsPoolExplorer": "Blocksights pool explorer",
+  "bitsharesPoolExplorer": "bitshares pool explorer",
   "poolJsonButton": "Pool JSON",
   "liquidityPoolJsonTitle": "Liquidity Pool JSON",
   "liquidityPoolJsonDescription": "Check out the details returned by the network for this pool",

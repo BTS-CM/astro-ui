@@ -32,7 +32,7 @@
   "doubleCheckDescription": "失恋を避けて、入力内容を確認してください。",
   "doubleCheckFormInputs": "続行する前に、フォームの入力内容を再確認してください。",
   "validateBeetPrompt": "トランザクションをブロードキャストする前に、Beet プロンプトの内容全体を検証してください。",
-  "blocksightsLink": "ここをクリックしてご覧ください {{name}}Blocksights ブロックチェーン エクスプローラー上の のアカウント。",
+  "bitsharesLink": "ここをクリックしてご覧ください {{name}}bitshares ブロックチェーン エクスプローラー上の のアカウント。",
   "scamAlertTitle": "気をつけて！",
   "scamAlertDescription": "詐欺師には気をつけましょう！",
   "scamAlertPoint1": "暗号通貨取引所は、入金や出金のために従うべき特別な送金手順を直接メッセージで送信することはありません。",

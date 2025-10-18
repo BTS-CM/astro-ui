@@ -506,11 +506,10 @@ const createWindow = async () => {
   });
 
   const safeDomains = [
-    "https://blocksights.info/",
+    "https://explorer.bitshares.ws/",
     "https://bts.exchange/",
     "https://ex.xbts.io/",
     "https://kibana.bts.mobi/",
-    "https://www.bitsharescan.info/",
     "https://github.com/bitshares/beet",
   ];
   ipcMain.on("openURL", (event, arg) => {

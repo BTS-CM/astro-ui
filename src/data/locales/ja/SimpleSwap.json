@@ -33,7 +33,7 @@
   "submit": "提出する",
   "exchangeHeader": "交換 {{sellAmount}} {{symbolA}} のために {{buyAmount}} {{symbolB}}",
   "swapBuySell": "売買を交換する",
-  "blocksightsPoolExplorer": "Blocksights プール エクスプローラー",
+  "bitsharesPoolExplorer": "bitshares プール エクスプローラー",
   "poolJsonButton": "プールのJSON",
   "liquidityPoolJsonTitle": "流動性プール JSON",
   "liquidityPoolJsonDescription": "このプールに関してネットワークから返された詳細を確認してください",

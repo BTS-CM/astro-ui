@@ -32,7 +32,7 @@
   "doubleCheckDescription": "หลีกเลี่ยงการอกหัก ตรวจสอบข้อมูลของคุณ!",
   "doubleCheckFormInputs": "ก่อนที่คุณจะดำเนินการต่อ โปรดตรวจสอบอินพุตแบบฟอร์มอีกครั้ง",
   "validateBeetPrompt": "ตรวจสอบเนื้อหาพรอมต์ Beet ทั้งหมดก่อนที่คุณจะออกอากาศธุรกรรม",
-  "blocksightsLink": "คลิกที่นี่เพื่อดู {{name}}บัญชีของ Blocksights blockchain explorer",
+  "bitsharesLink": "คลิกที่นี่เพื่อดู {{name}}บัญชีของ bitshares blockchain explorer",
   "scamAlertTitle": "ระวัง! ",
   "scamAlertDescription": "ระวังมิจฉาชีพ!",
   "scamAlertPoint1": "การแลกเปลี่ยน Crypto จะไม่ส่งข้อความถึงคุณพร้อมคำแนะนำการโอนเงินพิเศษเพื่อปฏิบัติตามสำหรับการฝากหรือถอนเงิน",

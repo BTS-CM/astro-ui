@@ -32,7 +32,7 @@
   "doubleCheckDescription": "Vältige südamevalu, kontrollige oma sisendeid!",
   "doubleCheckFormInputs": "Enne jätkamist kontrollige vormi sisestusi.",
   "validateBeetPrompt": "Enne tehingu edastamist kinnitage kogu Beet-viipa sisu.",
-  "blocksightsLink": "Vaatamiseks klõpsake siin {{name}}Blocksightsi plokiahela uurija konto.",
+  "bitsharesLink": "Vaatamiseks klõpsake siin {{name}}bitsharesi plokiahela uurija konto.",
   "scamAlertTitle": "Ettevaatust! ",
   "scamAlertDescription": "Olge petturite suhtes valvsad!",
   "scamAlertPoint1": "Krüptovahetused EI suuna teile KUNAGI sõnumeid spetsiaalsete ülekandejuhistega, mida sissemaksete või väljamaksete puhul järgida.",

@@ -513,9 +513,9 @@ export default function SameTFunds(properties) {
                     classnamecontents="hover:text-purple-500"
                     type="text"
                     text={fund.id.replace("1.20.", "")}
-                    hyperlink={`https://blocksights.info/#/objects/${fund.id}${
-                      usr.chain === "bitshares" ? "" : "?network=testnet"
-                    }`}
+                    hyperlink={`https://explorer.bitshares.ws/#/objects/${
+                      fund.id
+                    }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
                   />{" "}
                   {t("CreditBorrow:common.by")}{" "}
                   {lender ? (
@@ -523,7 +523,7 @@ export default function SameTFunds(properties) {
                       classnamecontents="hover:text-purple-500"
                       type="text"
                       text={lender.name}
-                      hyperlink={`https://blocksights.info/#/accounts/${
+                      hyperlink={`https://explorer.bitshares.ws/#/accounts/${
                         lender.name
                       }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
                     />

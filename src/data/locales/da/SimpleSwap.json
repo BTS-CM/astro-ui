@@ -33,7 +33,7 @@
   "submit": "Indsend",
   "exchangeHeader": "Udveksling {{sellAmount}} {{symbolA}} for {{buyAmount}} {{symbolB}}",
   "swapBuySell": "Byt køb/sælg",
-  "blocksightsPoolExplorer": "Blocksights pool explorer",
+  "bitsharesPoolExplorer": "bitshares pool explorer",
   "poolJsonButton": "Pool JSON",
   "liquidityPoolJsonTitle": "Likviditetspool JSON",
   "liquidityPoolJsonDescription": "Tjek oplysningerne, der returneres af netværket for denne pulje",

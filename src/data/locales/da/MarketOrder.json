@@ -3,7 +3,7 @@
   "viewExistingLimitOrderDataButton": "Se eksisterende grænseordredata",
   "existingLimitOrderDataTitle": "Eksisterende grænseordredata",
   "existingLimitOrderDataDescription": "Denne formular opdaterer følgende JSON-data",
-  "viewObjectOnBlocksightsInfo": "Se objektet på blocksights.info",
+  "viewObjectOnbitsharesInfo": "Se objektet på bitshares",
   "bitsharesDexSupportDescription": "Bitshares DEX understøtter nu direkte redigering af åbne grænseordrer via denne formular",
   "limitOrderOwnerLabel": "Ejer af grænseordre",
   "bitsharesAccountPlaceholder": "Bitshares-konto (1.2.x)",

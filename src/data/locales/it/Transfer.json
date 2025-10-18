@@ -32,7 +32,7 @@
   "doubleCheckDescription": "Evita il crepacuore, controlla i tuoi input!",
   "doubleCheckFormInputs": "Prima di procedere, ricontrolla gli input del modulo.",
   "validateBeetPrompt": "Convalida l'intero contenuto del prompt di Beet prima di trasmettere la transazione.",
-  "blocksightsLink": "Clicca qui per vedere {{name}}sul blockchain explorer Blocksights.",
+  "bitsharesLink": "Clicca qui per vedere {{name}}sul blockchain explorer bitshares.",
   "scamAlertTitle": "Attenzione! ",
   "scamAlertDescription": "Attenzione ai truffatori!",
   "scamAlertPoint1": "Gli scambi di criptovalute non ti invieranno MAI un messaggio con istruzioni speciali di trasferimento da seguire per depositi o prelievi.",

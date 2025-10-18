@@ -32,7 +32,7 @@
   "doubleCheckDescription": "Vermeiden Sie Herzschmerz, überprüfen Sie Ihre Eingaben!",
   "doubleCheckFormInputs": "Bevor Sie fortfahren, überprüfen Sie bitte noch einmal die Formulareingaben.",
   "validateBeetPrompt": "Überprüfen Sie den gesamten Inhalt der Beet-Eingabeaufforderung, bevor Sie die Transaktion übertragen.",
-  "blocksightsLink": "Klicke hier, um anzusehen {{name}}s-Konto im Blocksights-Blockchain-Explorer.",
+  "bitsharesLink": "Klicke hier, um anzusehen {{name}}s-Konto im bitshares-Blockchain-Explorer.",
   "scamAlertTitle": "In acht nehmen! ",
   "scamAlertDescription": "Seien Sie wachsam gegenüber Betrügern!",
   "scamAlertPoint1": "Krypto-Börsen werden Ihnen NIEMALS direkte Nachrichten mit speziellen Überweisungsanweisungen senden, die Sie bei Ein- oder Auszahlungen befolgen müssen.",

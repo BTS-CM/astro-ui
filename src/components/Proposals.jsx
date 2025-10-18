@@ -266,7 +266,7 @@ export default function Proposals(properties) {
                     classnamecontents="hover:text-purple-500"
                     type="text"
                     text={proposal.id}
-                    hyperlink={`https://blocksights.info/#/objects/${
+                    hyperlink={`https://explorer.bitshares.ws/#/objects/${
                       proposal.id
                     }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
                   />
@@ -289,7 +289,7 @@ export default function Proposals(properties) {
                         classnamecontents="hover:text-purple-500"
                         type="text"
                         text={proposerAccount.name}
-                        hyperlink={`https://blocksights.info/#/accounts/${
+                        hyperlink={`https://explorer.bitshares.ws/#/accounts/${
                           proposerAccount.name
                         }${
                           usr.chain === "bitshares" ? "" : "?network=testnet"
@@ -304,7 +304,7 @@ export default function Proposals(properties) {
                     classnamecontents="hover:text-purple-500"
                     type="text"
                     text={proposer}
-                    hyperlink={`https://blocksights.info/#/accounts/${proposer}${
+                    hyperlink={`https://explorer.bitshares.ws/#/accounts/${proposer}${
                       usr.chain === "bitshares" ? "" : "?network=testnet"
                     }`}
                   />

@@ -33,7 +33,7 @@
   "submit": "제출하다",
   "exchangeHeader": "교환 {{sellAmount}} {{symbolA}} ~을 위한 {{buyAmount}} {{symbolB}}",
   "swapBuySell": "스왑 매수/매도",
-  "blocksightsPoolExplorer": "Blocksights 풀 탐색기",
+  "bitsharesPoolExplorer": "bitshares 풀 탐색기",
   "poolJsonButton": "풀 JSON",
   "liquidityPoolJsonTitle": "유동성 풀 JSON",
   "liquidityPoolJsonDescription": "이 풀에 대해 네트워크에서 반환된 세부 정보를 확인하세요.",

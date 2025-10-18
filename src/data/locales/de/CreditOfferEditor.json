@@ -14,7 +14,7 @@
   "offerOwnerDescription": "Dies ist das Konto, dem dieses Kreditangebot gehört",
   "existingCreditOfferJSON": "Bestehendes Kreditangebot JSON",
   "currentBlockchainData": "Hier finden Sie die aktuellen Blockchain-Daten zu diesem Kreditangebot",
-  "viewOnBlockSights": "Auf BlockSights ansehen",
+  "viewOnbitshares": "Auf bitshares ansehen",
   "viewingExistingOffer": "Sie sehen sich derzeit dieses bestehende Kreditangebot an",
   "assetToLend": "Vermögenswert zum Verleihen",
   "lendingAssetDescription": "Ihr Kreditangebot wird sich auf die Beleihung dieses Vermögenswerts konzentrieren",

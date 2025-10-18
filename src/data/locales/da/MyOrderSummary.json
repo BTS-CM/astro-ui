@@ -3,7 +3,7 @@
   "editLimitOrderDescription": "Limit-ordrer kan nu opdateres, spar på gebyrer ved at opdatere limit-ordrer.",
   "selectedOpenOrderData": "Valgte åbne ordres data:",
   "proceedToUpdateButton": "Fortsæt med at opdatere denne åbne grænseordre",
-  "viewObjectOnBlocksights": "Se objektet på blocksights.info",
+  "viewObjectOnbitshares": "Se objektet på bitshares",
   "priceColumnTitle": "Pris",
   "expirationDateColumnTitle": "Udløb"
 }

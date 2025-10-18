@@ -312,7 +312,7 @@ export default function CreditDeals(properties) {
                 text={res.id.replace("1.22.", "")}
                 hyperlink={
                   usr && usr.chain
-                    ? `https://blocksights.info/#/objects/${res.id}${
+                    ? `https://explorer.bitshares.ws/#/objects/${res.id}${
                         usr.chain === "bitshares" ? "" : "?network=testnet"
                       }`
                     : ""
@@ -323,7 +323,7 @@ export default function CreditDeals(properties) {
                 classnamecontents="text-blue-500"
                 type="text"
                 text={type === "borrower" ? res.offer_owner : res.borrower}
-                hyperlink={`https://blocksights.info/#/accounts/${
+                hyperlink={`https://explorer.bitshares.ws/#/accounts/${
                   type === "borrower" ? res.offer_owner : res.borrower
                 }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
               />
@@ -339,7 +339,7 @@ export default function CreditDeals(properties) {
                   classnamecontents="text-blue-500"
                   type="text"
                   text={res.debt_asset}
-                  hyperlink={`https://blocksights.info/#/assets/${
+                  hyperlink={`https://explorer.bitshares.ws/#/assets/${
                     res.debt_asset
                   }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
                 />
@@ -353,7 +353,7 @@ export default function CreditDeals(properties) {
                   classnamecontents="text-blue-500"
                   type="text"
                   text={res.collateral_asset}
-                  hyperlink={`https://blocksights.info/#/assets/${
+                  hyperlink={`https://explorer.bitshares.ws/#/assets/${
                     res.collateral_asset
                   }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
                 />

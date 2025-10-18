@@ -354,7 +354,7 @@ export default function CommitteeMembers(properties) {
                       classnamecontents="text-blue-500 hover:text-purple-500"
                       type="text"
                       text={member.id}
-                      hyperlink={`https://blocksights.info/#/objects/${
+                      hyperlink={`https://explorer.bitshares.ws/#/objects/${
                         member.id
                       }${_chain === "bitshares" ? "" : "?network=testnet"}`}
                     />{" "}
@@ -363,7 +363,7 @@ export default function CommitteeMembers(properties) {
                       classnamecontents="text-blue-500 hover:text-purple-500"
                       type="text"
                       text={member.account_id}
-                      hyperlink={`https://blocksights.info/#/accounts/${
+                      hyperlink={`https://explorer.bitshares.ws/#/accounts/${
                         member.account_id
                       }${_chain === "bitshares" ? "" : "?network=testnet"}`}
                     />

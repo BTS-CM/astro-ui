@@ -607,7 +607,7 @@ export default function IssuedAssets(properties) {
                     classnamecontents="hover:text-purple-500"
                     type="text"
                     text={issuedAsset.symbol}
-                    hyperlink={`https://blocksights.info/#/assets/${
+                    hyperlink={`https://explorer.bitshares.ws/#/assets/${
                       issuedAsset.symbol
                     }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
                   />
@@ -617,7 +617,7 @@ export default function IssuedAssets(properties) {
                     classnamecontents="hover:text-purple-500"
                     type="text"
                     text={issuedAsset.id}
-                    hyperlink={`https://blocksights.info/#/assets/${
+                    hyperlink={`https://explorer.bitshares.ws/#/assets/${
                       issuedAsset.id
                     }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
                   />

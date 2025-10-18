@@ -28,7 +28,7 @@
   "rebate": "Rabat: {{rebate}} BTS (vesting)",
   "submit": "Indsend",
   "stakingAssetsDesc": "Staking {{aStake}} {{assetASymbol}} og {{bStake}} {{assetBSymbol}} i pool {{poolId}}",
-  "blocksightsPoolExplorer": "Blocksights pool explorer",
+  "bitsharesPoolExplorer": "bitshares pool explorer",
   "poolJson": "Pool JSON",
   "liquidityPoolJson": "Likviditetspool JSON",
   "checkPoolDetails": "Tjek oplysningerne, der returneres af netværket for denne pulje",

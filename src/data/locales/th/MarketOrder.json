@@ -3,7 +3,7 @@
   "viewExistingLimitOrderDataButton": "ดูข้อมูลคำสั่งจำกัดที่มีอยู่",
   "existingLimitOrderDataTitle": "ข้อมูลคำสั่งจำกัดที่มีอยู่",
   "existingLimitOrderDataDescription": "แบบฟอร์มนี้จะอัปเดตข้อมูล JSON ต่อไปนี้",
-  "viewObjectOnBlocksightsInfo": "ดูวัตถุบน blockights.info",
+  "viewObjectOnbitsharesInfo": "ดูวัตถุบน bitshares",
   "bitsharesDexSupportDescription": "ขณะนี้ Bitshares DEX รองรับการแก้ไขคำสั่งจำกัดการเปิดโดยตรงผ่านแบบฟอร์มนี้",
   "limitOrderOwnerLabel": "เจ้าของคำสั่งซื้อจำกัด",
   "bitsharesAccountPlaceholder": "บัญชี Bitshares (1.2.x)",

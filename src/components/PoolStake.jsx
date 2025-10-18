@@ -720,7 +720,7 @@ export default function PoolStake(properties) {
                                       classnamecontents="text-blue-500"
                                       type="text"
                                       text={assetA.symbol}
-                                      hyperlink={`https://blocksights.info/#/assets/${
+                                      hyperlink={`https://explorer.bitshares.ws/#/assets/${
                                         assetA.id
                                       }${
                                         usr.chain === "bitshares"
@@ -749,7 +749,7 @@ export default function PoolStake(properties) {
                                       classnamecontents="text-blue-500"
                                       type="text"
                                       text={assetB.symbol}
-                                      hyperlink={`https://blocksights.info/#/assets/${
+                                      hyperlink={`https://explorer.bitshares.ws/#/assets/${
                                         assetB.id
                                       }${
                                         usr.chain === "bitshares"
@@ -780,8 +780,8 @@ export default function PoolStake(properties) {
                               variant="outline"
                               classnamecontents="ml-2"
                               type="button"
-                              text={t("PoolStake:blocksightsPoolExplorer")}
-                              hyperlink={`https://blocksights.info/#/pools/${pool}${
+                              text={t("PoolStake:bitsharesPoolExplorer")}
+                              hyperlink={`https://explorer.bitshares.ws/#/pools/${pool}${
                                 usr.chain !== "bitshares"
                                   ? "?network=testnet"
                                   : ""

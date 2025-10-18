@@ -753,10 +753,10 @@ export default function CreditOfferEditor(properties) {
                                     text={t("CreditOfferEditor:viewAccount")}
                                     hyperlink={
                                       usr.chain === "bitshares"
-                                        ? `https://blocksights.info/#/accounts/${
+                                        ? `https://explorer.bitshares.ws/#/accounts/${
                                             offerOwner ?? ""
                                           }`
-                                        : `https://blocksights.info/#/accounts/${
+                                        : `https://explorer.bitshares.ws/#/accounts/${
                                             offerOwner ?? ""
                                           }?network=testnet`
                                     }
@@ -844,12 +844,12 @@ export default function CreditOfferEditor(properties) {
                                             classnamecontents="ml-3"
                                             type="button"
                                             text={t(
-                                              "CreditOfferEditor:viewOnBlockSights"
+                                              "CreditOfferEditor:viewOnbitshares"
                                             )}
                                             hyperlink={
                                               usr.chain === "bitshares"
-                                                ? `https://blocksights.info/#/objects/${offerID}`
-                                                : `https://blocksights.info/#/objects/${offerID}?network=testnet`
+                                                ? `https://explorer.bitshares.ws/#/objects/${offerID}`
+                                                : `https://explorer.bitshares.ws/#/objects/${offerID}?network=testnet`
                                             }
                                           />
                                         </div>

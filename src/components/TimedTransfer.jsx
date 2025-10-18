@@ -832,12 +832,12 @@ export default function TimedTransfer(properties) {
                       <ExternalLink
                         type="text"
                         classnamecontents=""
-                        hyperlink={`https://blocksights.info/#/accounts/${
+                        hyperlink={`https://explorer.bitshares.ws/#/accounts/${
                           targetUser.name
                         }${
                           usr.chain === "bitshares" ? "" : "?network=testnet"
                         }`}
-                        text={t("Transfer:blocksightsLink", {
+                        text={t("Transfer:bitsharesLink", {
                           name: targetUser.name,
                         })}
                       />

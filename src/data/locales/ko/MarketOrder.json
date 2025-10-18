@@ -3,7 +3,7 @@
   "viewExistingLimitOrderDataButton": "기존 지정가 주문 데이터 보기",
   "existingLimitOrderDataTitle": "기존 지정가 주문 데이터",
   "existingLimitOrderDataDescription": "이 양식은 다음 JSON 데이터를 업데이트합니다.",
-  "viewObjectOnBlocksightsInfo": "blocksights.info에서 객체 보기",
+  "viewObjectOnbitsharesInfo": "bitshares에서 객체 보기",
   "bitsharesDexSupportDescription": "Bitshares DEX는 이제 이 양식을 통해 공개 지정가 주문을 직접 편집할 수 있도록 지원합니다.",
   "limitOrderOwnerLabel": "지정가 주문 소유자",
   "bitsharesAccountPlaceholder": "Bitshares 계정(1.2.x)",

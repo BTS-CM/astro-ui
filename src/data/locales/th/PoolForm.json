@@ -33,7 +33,7 @@
   "submit": "ส่ง",
   "exchangeHeader": "แลกเปลี่ยน {{sellAmount}} {{symbolA}} สำหรับ {{buyAmount}} {{symbolB}}",
   "swapBuySell": "แลกซื้อ/ขาย",
-  "blocksightsPoolExplorer": "นักสำรวจสระว่ายน้ำ Blocksights",
+  "bitsharesPoolExplorer": "นักสำรวจสระว่ายน้ำ bitshares",
   "poolJsonButton": "พูล JSON",
   "liquidityPoolJsonTitle": "JSON พูลสภาพคล่อง",
   "liquidityPoolJsonDescription": "ตรวจสอบรายละเอียดที่เครือข่ายส่งคืนสำหรับพูลนี้",

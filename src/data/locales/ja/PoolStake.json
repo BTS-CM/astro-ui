@@ -28,7 +28,7 @@
   "rebate": "リベート： {{rebate}} BTS (権利確定)",
   "submit": "提出する",
   "stakingAssetsDesc": "ステーキング {{aStake}} {{assetASymbol}} そして {{bStake}} {{assetBSymbol}} プールで {{poolId}}",
-  "blocksightsPoolExplorer": "Blocksights プール エクスプローラー",
+  "bitsharesPoolExplorer": "bitshares プール エクスプローラー",
   "poolJson": "プールのJSON",
   "liquidityPoolJson": "流動性プール JSON",
   "checkPoolDetails": "このプールに関してネットワークから返された詳細を確認してください",

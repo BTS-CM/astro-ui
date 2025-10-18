@@ -28,7 +28,7 @@
   "rebate": "Rebate: {{rebate}} BTS (vesting)",
   "submit": "Submit",
   "stakingAssetsDesc": "Staking {{aStake}} {{assetASymbol}} and {{bStake}} {{assetBSymbol}} in pool {{poolId}}",
-  "blocksightsPoolExplorer": "Blocksights pool explorer",
+  "bitsharesPoolExplorer": "bitshares pool explorer",
   "poolJson": "Pool JSON",
   "liquidityPoolJson": "Liquidity Pool JSON",
   "checkPoolDetails": "Check out the details returned by the network for this pool",

@@ -28,7 +28,7 @@
   "rebate": "Reembolso: {{rebate}} BTS (adquisición)",
   "submit": "Entregar",
   "stakingAssetsDesc": "Replantear {{aStake}} {{assetASymbol}} y {{bStake}} {{assetBSymbol}} en la piscina {{poolId}}",
-  "blocksightsPoolExplorer": "Explorador de piscinas de Blocksights",
+  "bitsharesPoolExplorer": "Explorador de piscinas de bitshares",
   "poolJson": "JSON del grupo",
   "liquidityPoolJson": "Fondo de liquidez JSON",
   "checkPoolDetails": "Consulte los detalles devueltos por la red para este grupo",

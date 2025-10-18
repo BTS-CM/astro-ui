@@ -3,7 +3,7 @@
   "viewExistingLimitOrderDataButton": "既存の指値注文データを表示する",
   "existingLimitOrderDataTitle": "既存の指値注文データ",
   "existingLimitOrderDataDescription": "このフォームは次の JSON データを更新します",
-  "viewObjectOnBlocksightsInfo": "blocksights.info でオブジェクトを表示",
+  "viewObjectOnbitsharesInfo": "bitshares でオブジェクトを表示",
   "bitsharesDexSupportDescription": "Bitshares DEX は、このフォームを介したオープン指値注文の直接編集をサポートするようになりました",
   "limitOrderOwnerLabel": "指値注文オーナー",
   "bitsharesAccountPlaceholder": "Bitshares アカウント (1.2.x)",

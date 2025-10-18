@@ -28,7 +28,7 @@
   "rebate": "Rabais: {{rebate}} BTS (acquisition)",
   "submit": "Soumettre",
   "stakingAssetsDesc": "Jalonnement {{aStake}} {{assetASymbol}} et {{bStake}} {{assetBSymbol}} dans la piscine {{poolId}}",
-  "blocksightsPoolExplorer": "Explorateur de piscine Blocksights",
+  "bitsharesPoolExplorer": "Explorateur de piscine bitshares",
   "poolJson": "Piscine JSON",
   "liquidityPoolJson": "Pool de liquidité JSON",
   "checkPoolDetails": "Consultez les détails renvoyés par le réseau pour ce pool",

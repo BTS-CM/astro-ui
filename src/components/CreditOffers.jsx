@@ -85,7 +85,7 @@ export default function CreditOffers(properties) {
                 classnamecontents="hover:text-purple-500"
                 type="text"
                 text={res.id.replace("1.21.", "")}
-                hyperlink={`https://blocksights.info/#/credit-offers/${res.id.replace(
+                hyperlink={`https://explorer.bitshares.ws/#/credit-offers/${res.id.replace(
                   "1.21.",
                   ""
                 )}${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
@@ -95,7 +95,7 @@ export default function CreditOffers(properties) {
                 classnamecontents="hover:text-purple-500"
                 type="text"
                 text={res.owner_name}
-                hyperlink={`https://blocksights.info/#/accounts/${
+                hyperlink={`https://explorer.bitshares.ws/#/accounts/${
                   res.owner_name
                 }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
               />{" "}
@@ -104,7 +104,7 @@ export default function CreditOffers(properties) {
                 classnamecontents="hover:text-purple-500"
                 type="text"
                 text={res.owner_account}
-                hyperlink={`https://blocksights.info/#/accounts/${
+                hyperlink={`https://explorer.bitshares.ws/#/accounts/${
                   res.owner_account
                 }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
               />

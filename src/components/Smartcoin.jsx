@@ -1242,10 +1242,10 @@ export default function Smartcoin(properties) {
                 classnamecontents="h-5 mb-2"
                 variant="outline"
                 type="button"
-                text={t("Smartcoin:viewAssetOnBlocksights")}
-                hyperlink={`https://blocksights.info/#/assets/${assetInfo.id}${
-                  usr.chain === "bitshares" ? "" : "?network=testnet"
-                }`}
+                text={t("Smartcoin:viewAssetOnbitshares")}
+                hyperlink={`https://explorer.bitshares.ws/#/assets/${
+                  assetInfo.id
+                }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
               />
             </div>
           </div>
@@ -1267,8 +1267,8 @@ export default function Smartcoin(properties) {
                       <ExternalLink
                         classnamecontents="h-8 mb-2 mt-3"
                         type="button"
-                        text={t("Smartcoin:viewIssuerOnBlocksights")}
-                        hyperlink={`https://blocksights.info/#/accounts/${
+                        text={t("Smartcoin:viewIssuerOnbitshares")}
+                        hyperlink={`https://explorer.bitshares.ws/#/accounts/${
                           assetInfo.u.split(" ")[0]
                         }${
                           usr.chain === "bitshares" ? "" : "?network=testnet"
@@ -1404,8 +1404,8 @@ export default function Smartcoin(properties) {
                     classnamecontents="h-5 mb-2"
                     variant="outline"
                     type="button"
-                    text={t("Smartcoin:viewBitassetOnBlocksights")}
-                    hyperlink={`https://blocksights.info/#/objects/${
+                    text={t("Smartcoin:viewBitassetOnbitshares")}
+                    hyperlink={`https://explorer.bitshares.ws/#/objects/${
                       bitassetInfo.id
                     }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
                   />
@@ -1748,9 +1748,9 @@ export default function Smartcoin(properties) {
             classnamecontents="text-blue-500"
             type="text"
             text={res.borrower}
-            hyperlink={`https://blocksights.info/#/accounts/${res.borrower}${
-              usr.chain === "bitshares" ? "" : "?network=testnet"
-            }`}
+            hyperlink={`https://explorer.bitshares.ws/#/accounts/${
+              res.borrower
+            }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
           />
         </div>
         <div className="col-span-1">{collateralAmount}</div>
@@ -1843,7 +1843,7 @@ export default function Smartcoin(properties) {
             classnamecontents="text-blue-500"
             type="text"
             text={userID}
-            hyperlink={`https://blocksights.info/#/accounts/${userID}${
+            hyperlink={`https://explorer.bitshares.ws/#/accounts/${userID}${
               usr.chain === "bitshares" ? "" : "?network=testnet"
             }`}
           />
@@ -3373,7 +3373,7 @@ export default function Smartcoin(properties) {
                 </div>
                 <div className="col-span-1 text-right">
                   <Button variant="outline" classnamecontents="h-5 mb-2">
-                    {t("Smartcoin:viewAssetOnBlocksights")}
+                    {t("Smartcoin:viewAssetOnbitshares")}
                   </Button>
                 </div>
               </div>
@@ -3407,7 +3407,7 @@ export default function Smartcoin(properties) {
                 </div>
                 <div className="col-span-1 text-right">
                   <Button variant="outline" classnamecontents="h-5 mb-2">
-                    {t("Smartcoin:viewBitassetOnBlocksights")}
+                    {t("Smartcoin:viewBitassetOnbitshares")}
                   </Button>
                 </div>
               </div>
@@ -3489,7 +3489,7 @@ export default function Smartcoin(properties) {
                 </div>
                 <div className="col-span-1 text-right">
                   <Button variant="outline" classnamecontents="h-5 mb-2">
-                    {t("Smartcoin:viewAssetOnBlocksights")}
+                    {t("Smartcoin:viewAssetOnbitshares")}
                   </Button>
                 </div>
               </div>

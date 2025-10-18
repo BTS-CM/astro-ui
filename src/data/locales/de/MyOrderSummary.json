@@ -3,7 +3,7 @@
   "editLimitOrderDescription": "Limit-Orders können jetzt aktualisiert werden. Sparen Sie Gebühren, indem Sie Limit-Orders aktualisieren.",
   "selectedOpenOrderData": "Daten der ausgewählten offenen Bestellung:",
   "proceedToUpdateButton": "Fahren Sie mit der Aktualisierung dieser offenen Limit-Order fort",
-  "viewObjectOnBlocksights": "Objekt auf Blocksights.info ansehen",
+  "viewObjectOnbitshares": "Objekt auf bitshares ansehen",
   "priceColumnTitle": "Preis",
   "expirationDateColumnTitle": "Ablauf"
 }

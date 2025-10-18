@@ -3,7 +3,7 @@
   "editLimitOrderDescription": "이제 지정가 주문을 업데이트할 수 있습니다. 지정가 주문을 업데이트하여 수수료를 절약하세요.",
   "selectedOpenOrderData": "선택한 미결 주문 데이터:",
   "proceedToUpdateButton": "이 공개 지정가 주문 업데이트를 진행하세요.",
-  "viewObjectOnBlocksights": "blocksights.info에서 객체 보기",
+  "viewObjectOnbitshares": "bitshares에서 객체 보기",
   "priceColumnTitle": "가격",
   "expirationDateColumnTitle": "만료"
 }

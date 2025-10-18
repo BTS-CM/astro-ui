@@ -3,7 +3,7 @@
   "viewExistingLimitOrderDataButton": "Ver datos de órdenes límite existentes",
   "existingLimitOrderDataTitle": "Datos de orden límite existentes",
   "existingLimitOrderDataDescription": "Este formulario actualizará los siguientes datos JSON",
-  "viewObjectOnBlocksightsInfo": "Ver objeto en blocksights.info",
+  "viewObjectOnbitsharesInfo": "Ver objeto en bitshares",
   "bitsharesDexSupportDescription": "Bitshares DEX ahora admite la edición directa de órdenes de límite abierto a través de este formulario",
   "limitOrderOwnerLabel": "Propietario de la orden limitada",
   "bitsharesAccountPlaceholder": "Cuenta Bitshares (1.2.x)",

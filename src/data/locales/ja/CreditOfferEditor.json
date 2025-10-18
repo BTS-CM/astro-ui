@@ -14,7 +14,7 @@
   "offerOwnerDescription": "これは、このクレジット オファーを所有するアカウントです",
   "existingCreditOfferJSON": "既存のクレジット オファー JSON",
   "currentBlockchainData": "このクレジットオファーの現在のブロックチェーンデータは次のとおりです",
-  "viewOnBlockSights": "BlockSights で見る",
+  "viewOnbitshares": "bitshares で見る",
   "viewingExistingOffer": "現在、この既存のクレジット オファーを表示しています",
   "assetToLend": "貸す資産",
   "lendingAssetDescription": "あなたのクレジットオファーはこの資産の融資に焦点を当てます",

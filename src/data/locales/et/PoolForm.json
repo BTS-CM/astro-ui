@@ -33,7 +33,7 @@
   "submit": "Esita",
   "exchangeHeader": "Vahetades {{sellAmount}} {{symbolA}} jaoks {{buyAmount}} {{symbolB}}",
   "swapBuySell": "Vahetus osta/müüa",
-  "blocksightsPoolExplorer": "Blocksightsi basseiniuurija",
+  "bitsharesPoolExplorer": "bitsharesi basseiniuurija",
   "poolJsonButton": "Pool JSON",
   "liquidityPoolJsonTitle": "Likviidsusfondi JSON",
   "liquidityPoolJsonDescription": "Vaadake võrgu poolt selle basseini kohta tagastatud üksikasju",

@@ -28,7 +28,7 @@
   "rebate": "Allahindlus: {{rebate}} BTS (üleandmine)",
   "submit": "Esita",
   "stakingAssetsDesc": "Staking {{aStake}} {{assetASymbol}} ja {{bStake}} {{assetBSymbol}} basseinis {{poolId}}",
-  "blocksightsPoolExplorer": "Blocksightsi basseiniuurija",
+  "bitsharesPoolExplorer": "bitsharesi basseiniuurija",
   "poolJson": "Pool JSON",
   "liquidityPoolJson": "Likviidsusfondi JSON",
   "checkPoolDetails": "Vaadake võrgu poolt selle basseini kohta tagastatud üksikasju",

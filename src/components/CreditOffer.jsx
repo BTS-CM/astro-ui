@@ -616,7 +616,7 @@ export default function CreditOffer(properties) {
                                             owner_name: creditOfferOwner.name,
                                           }
                                         )}
-                                        hyperlink={`https://blocksights.info/#/accounts/${
+                                        hyperlink={`https://explorer.bitshares.ws/#/accounts/${
                                           creditOfferOwner.name
                                         }${
                                           usr.chain === "bitshares"

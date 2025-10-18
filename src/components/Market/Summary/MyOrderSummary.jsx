@@ -194,10 +194,10 @@ export default function MyOrderSummary(properties) {
                     variant="outline"
                     classnamecontents=""
                     type="button"
-                    text={t("MyOrderSummary:viewObjectOnBlocksights")}
+                    text={t("MyOrderSummary:viewObjectOnbitshares")}
                     hyperlink={
                       usr && usr.chain
-                        ? `https://blocksights.info/#/objects/${res.id}${
+                        ? `https://explorer.bitshares.ws/#/objects/${res.id}${
                             usr.chain === "bitshares" ? "" : "?network=testnet"
                           }`
                         : ""

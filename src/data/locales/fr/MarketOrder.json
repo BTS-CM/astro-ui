@@ -3,7 +3,7 @@
   "viewExistingLimitOrderDataButton": "Afficher les données d'ordre limité existantes",
   "existingLimitOrderDataTitle": "Données d'ordre limité existantes",
   "existingLimitOrderDataDescription": "Ce formulaire mettra à jour les données JSON suivantes",
-  "viewObjectOnBlocksightsInfo": "Afficher l'objet sur blockights.info",
+  "viewObjectOnbitsharesInfo": "Afficher l'objet sur bitshares",
   "bitsharesDexSupportDescription": "Le Bitshares DEX prend désormais en charge la modification directe des ordres à cours limité via ce formulaire.",
   "limitOrderOwnerLabel": "Propriétaire d'un ordre limité",
   "bitsharesAccountPlaceholder": "Compte Bitshares (1.2.x)",
