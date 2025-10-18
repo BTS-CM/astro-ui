@@ -6,14 +6,6 @@ import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 import { Avatar } from "@/components/Avatar";
 
 import {
-  Card,
-  CardDescription,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-
-import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
@@ -37,6 +29,15 @@ import {
   ItemMedia,
   ItemTitle,
 } from "@/components/ui/item";
+
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 
 import AccountSelect from "../AccountSelect.jsx";
 
@@ -68,7 +69,7 @@ export default function CurrentUser(properties) {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Item variant="outline" className="bg-white">
+                <Item variant="outline" className="bg-white inline-flex w-auto">
                   <ItemMedia>
                     <InView onChange={setInView}>
                       {inView ? (
@@ -94,9 +95,23 @@ export default function CurrentUser(properties) {
                   <ItemContent>
                     <ItemTitle className="text-black">{usr.username}</ItemTitle>
                     <ItemDescription className="text-left">
-                      {usr.id}
-                      <br />
-                      {usr.chain}
+                      <Breadcrumb>
+                        <BreadcrumbList>
+                          <BreadcrumbSeparator />
+                          <BreadcrumbItem className="text-right">
+                            {usr.id}
+                          </BreadcrumbItem>
+                        </BreadcrumbList>
+                      </Breadcrumb>
+
+                      <Breadcrumb>
+                        <BreadcrumbList>
+                          <BreadcrumbSeparator />
+                          <BreadcrumbItem className="text-right">
+                            {usr.chain}
+                          </BreadcrumbItem>
+                        </BreadcrumbList>
+                      </Breadcrumb>
                     </ItemDescription>
                   </ItemContent>
                 </Item>
