@@ -288,6 +288,15 @@ export default function MarketAssetCard(properties) {
                       hyperlink={`https://kibana.bts.mobi/app/dashboards#/view/c767fb10-5c58-11eb-a22a-3fca5c3996eb?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1M,to:now))&_a=(filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:'55c28590-5c51-11eb-a22a-3fca5c3996eb',key:operation_type,negate:!t,params:(query:19),type:phrase),query:(match_phrase:(operation_type:19))),('$state':(store:appState),meta:(alias:!n,disabled:!f,index:'55c28590-5c51-11eb-a22a-3fca5c3996eb',key:operation_type,negate:!t,params:(query:2),type:phrase),query:(match_phrase:(operation_type:2)))),query:(language:kuery,query:'${assetData.id}'))`}
                     />
                   ) : null}
+                  {chain === "bitshares" ? (
+                    <ExternalLink
+                      variant="outline"
+                      classnamecontents="ml-2"
+                      type="button"
+                      text={`Bitshareschain.com`}
+                      hyperlink={`https://www.bitshareschain.com/asset/${asset}`}
+                    />
+                  ) : null}
                 </div>
                 <div>
                   <b>{t("MarketAssetCard:webWallets")}</b>
