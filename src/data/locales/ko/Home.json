@@ -250,5 +250,49 @@
     "hover1": "교환 가능한 자산으로 모든 유동성 풀을 필터링하십시오",
     "hover2": "자산 교환을위한 유동성 풀을 찾습니다.",
     "hover3": "유동성 풀을 식별하여 자산을 스테이크하십시오."
+  },
+  "features": {
+    "heading": "특징",
+    "functionalityHeading": "기능성",
+    "zeroAuth": {
+      "title": "제로 인증이 필요합니다!",
+      "description": "계정을 잠금 해제하지 않고 블록체인 거래를 구축하세요!"
+    },
+    "multiBroadcast": {
+      "title": "다양한 거래 방송 방식!",
+      "description": "QR 코드, 딥링크 또는 로컬 JSON 파일을 통해 블록체인 작업을 브로드캐스트하세요."
+    },
+    "supportsLatest": {
+      "title": "최신 Bitshares 기능을 지원합니다!",
+      "description": "최신 Bitshares DEX 개선 사항에 관심이 있으십니까? "
+    },
+    "switchChains": {
+      "title": "지원되는 블록체인 간을 쉽게 전환하세요!",
+      "description": "Bitshares 메인넷과 테스트넷 네트워크 간을 전환하는 데 몇 초가 걸립니다!"
+    },
+    "nearInstant": {
+      "title": "거의 즉각적인 블록체인 운영!",
+      "description": "3초의 블록 타이밍을 통해 방송 작업이 거의 즉시 확인됩니다!"
+    },
+    "evergreen": {
+      "title": "끊임없는 기술로 만들어졌습니다!",
+      "description": "빠르고 안전하며 안정적인 Bitshares의 미래를 위해 최신 웹 기술을 사용하세요!"
+    },
+    "multiWallets": {
+      "title": "여러 지갑을 지원합니다!",
+      "description": "Beet 또는 BeetEOS 지갑을 통해 거래를 방송하세요!"
+    },
+    "localized": {
+      "title": "여러 언어로 완전히 현지화되었습니다!",
+      "description": "11개 언어로 제공되며 계속해서 제공됩니다!"
+    },
+    "blockActors": {
+      "title": "나쁜 배우를 차단합니다!",
+      "description": "악의적인 계정과 해당 블록체인 개체를 방지하는 데 도움이 됩니다!"
+    }
+  },
+  "waveHero": {
+    "title": "차세대 Bitshares 클라이언트!",
+    "subtitle": "최신 기술로 제작되어 사용하기 쉽도록 설계되었습니다!"
   }
 }

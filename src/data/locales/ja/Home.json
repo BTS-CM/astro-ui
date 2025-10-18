@@ -250,5 +250,49 @@
     "hover1": "スワップ可能な資産ですべての流動性プールをフィルタリングします",
     "hover2": "資産を交換するための流動性プールを見つけます。",
     "hover3": "流動性プールを特定して資産を賭けます。"
+  },
+  "features": {
+    "heading": "特徴",
+    "functionalityHeading": "機能性",
+    "zeroAuth": {
+      "title": "認証不要！",
+      "description": "アカウントのロックを解除せずにブロックチェーン トランザクションを構築します。"
+    },
+    "multiBroadcast": {
+      "title": "複数のトランザクションブロードキャストメソッド!",
+      "description": "QR コード、ディープリンク、またはローカル JSON ファイルを介してブロックチェーン操作をブロードキャストします。"
+    },
+    "supportsLatest": {
+      "title": "最新の Bitshares 機能をサポートします。",
+      "description": "最新の Bitshares DEX の改善に興味がありますか?"
+    },
+    "switchChains": {
+      "title": "サポートされているブロックチェーンを簡単に切り替えることができます。",
+      "description": "Bitshares のメインネット ネットワークとテストネット ネットワーク間の切り替えには数秒かかります。"
+    },
+    "nearInstant": {
+      "title": "ほぼ瞬時のブロックチェーン操作！",
+      "description": "3 秒のブロック タイミングにより、ブロードキャスト操作はほぼ即座に検証されます。"
+    },
+    "evergreen": {
+      "title": "エバーグリーンテクノロジーで構築されています!",
+      "description": "最新の Web テクノロジーを使用して、高速、安全、信頼性の高い Bitshare の未来を実現します。"
+    },
+    "multiWallets": {
+      "title": "マルチウォレット対応！",
+      "description": "Beet または BeetEOS ウォレットを介してトランザクションをブロードキャストします。"
+    },
+    "localized": {
+      "title": "多言語に完全ローカライズ！",
+      "description": "11 の言語で利用可能であり、今後も追加予定です。"
+    },
+    "blockActors": {
+      "title": "悪質な行為者をブロックします！",
+      "description": "悪意のあるアカウントとそのブロックチェーン オブジェクトを回避するのに役立ちます。"
+    }
+  },
+  "waveHero": {
+    "title": "次世代のビットシェアクライアント!",
+    "subtitle": "最新技術を駆使し、使いやすさを追求した設計！"
   }
 }

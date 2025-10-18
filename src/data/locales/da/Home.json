@@ -250,5 +250,49 @@
     "hover1": "Filtrer alle likviditetsbassiner efter byttede aktiver",
     "hover2": "Find likviditetsbassiner til bytte af aktiver.",
     "hover3": "Identificer likviditetsbassiner til stav aktiver i."
+  },
+  "features": {
+    "heading": "Funktioner",
+    "functionalityHeading": "Funktionalitet",
+    "zeroAuth": {
+      "title": "Nul godkendelse påkrævet!",
+      "description": "Konstruer dine blockchain-transaktioner uden at låse op for nogen konti!"
+    },
+    "multiBroadcast": {
+      "title": "Flere transaktionsudsendelsesmetoder!",
+      "description": "Udsend dine blockchain-operationer via QR-koder, dybe links eller lokale JSON-filer."
+    },
+    "supportsLatest": {
+      "title": "Understøtter de nyeste Bitshares-funktioner!",
+      "description": "Interesseret i de seneste Bitshares DEX-forbedringer? "
+    },
+    "switchChains": {
+      "title": "Skift nemt mellem understøttede blockchains!",
+      "description": "Det tager sekunder at skifte mellem Bitshares mainnet og testnet netværk!"
+    },
+    "nearInstant": {
+      "title": "Næsten øjeblikkelige blockchain-operationer!",
+      "description": "Med tre sekunders blokeringstider bliver dine udsendelsesoperationer verificeret næsten øjeblikkeligt!"
+    },
+    "evergreen": {
+      "title": "Bygget med stedsegrønne teknologier!",
+      "description": "Brug af de nyeste webteknologier for en hurtig, sikker og pålidelig Bitshares fremtid!"
+    },
+    "multiWallets": {
+      "title": "Understøtter flere tegnebøger!",
+      "description": "Udsend transaktioner via Beet eller BeetEOS tegnebøger!"
+    },
+    "localized": {
+      "title": "Fuldt lokaliseret til flere sprog!",
+      "description": "Tilgængelig på 11 sprog og tæller!"
+    },
+    "blockActors": {
+      "title": "Blokerer dårlige skuespillere!",
+      "description": "Hjælper dig med at undgå ondsindede konti og deres blockchain-objekter!"
+    }
+  },
+  "waveHero": {
+    "title": "En næste generation af Bitshares-klient!",
+    "subtitle": "Bygget med den nyeste teknologi, designet til brugervenlighed!"
   }
 }

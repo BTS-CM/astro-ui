@@ -250,5 +250,49 @@
     "hover1": "Filtreerige kõik likviidsusbasseinid vahetatavate varade kaupa",
     "hover2": "Leidke likviidsusbasseinid varade vahetamiseks.",
     "hover3": "Tuvastage likviidsusbasseinid, kus on vara."
+  },
+  "features": {
+    "heading": "Omadused",
+    "functionalityHeading": "Funktsionaalsus",
+    "zeroAuth": {
+      "title": "Autentimist pole vaja!",
+      "description": "Looge oma plokiahela tehingud ilma kontosid avamata!"
+    },
+    "multiBroadcast": {
+      "title": "Mitu tehingute levitamise meetodit!",
+      "description": "Edastage oma plokiahela toiminguid QR-koodide, süvalinkide või kohalike JSON-failide kaudu."
+    },
+    "supportsLatest": {
+      "title": "Toetab uusimaid Bitsharesi funktsioone!",
+      "description": "Kas olete huvitatud Bitshares DEXi viimastest täiustustest? "
+    },
+    "switchChains": {
+      "title": "Lülituge hõlpsalt toetatud plokiahelate vahel!",
+      "description": "Bitsharesi põhivõrgu ja testneti võrkude vahetamiseks kulub sekundeid!"
+    },
+    "nearInstant": {
+      "title": "Peaaegu kohesed plokiahela toimingud!",
+      "description": "Kolmesekundilise ploki ajastusega kontrollitakse teie edastustoiminguid peaaegu kohe!"
+    },
+    "evergreen": {
+      "title": "Ehitatud igihaljaste tehnoloogiatega!",
+      "description": "Kasutades uusimaid veebitehnoloogiaid kiire, turvalise ja usaldusväärse Bitsharesi tuleviku jaoks!"
+    },
+    "multiWallets": {
+      "title": "Toetab mitut rahakotti!",
+      "description": "Edastage tehinguid Beet või BeetEOS rahakottide kaudu!"
+    },
+    "localized": {
+      "title": "Täielikult lokaliseeritud mitmesse keelde!",
+      "description": "Saadaval 11 keeles ja kasvab veelgi!"
+    },
+    "blockActors": {
+      "title": "Blokeerib halvad näitlejad!",
+      "description": "Aitab vältida pahatahtlikke kontosid ja nende plokiahela objekte!"
+    }
+  },
+  "waveHero": {
+    "title": "Järgmise põlvkonna Bitsharesi klient!",
+    "subtitle": "Ehitatud uusima tehnoloogiaga, mõeldud kasutusmugavuseks!"
   }
 }

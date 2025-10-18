@@ -250,5 +250,49 @@
     "hover1": "Filter all liquidity pools by swappable assets",
     "hover2": "Locate liquidity pools for swapping assets.",
     "hover3": "Identify liquidity pools to stake assets in."
+  },
+  "features": {
+    "heading": "Features",
+    "functionalityHeading": "Functionality",
+    "zeroAuth": {
+      "title": "Zero authentication required!",
+      "description": "Construct your blockchain transactions without unlocking any accounts!"
+    },
+    "multiBroadcast": {
+      "title": "Multiple transaction broadcast methods!",
+      "description": "Broadcast your blockchain operations via QR Codes, Deeplinks or local JSON files."
+    },
+    "supportsLatest": {
+      "title": "Supports the latest Bitshares features!",
+      "description": "Interested in the latest Bitshares DEX improvements? We've got you covered!"
+    },
+    "switchChains": {
+      "title": "Easily switch between supported blockchains!",
+      "description": "It takes seconds to switch between Bitshares mainnet and testnet networks!"
+    },
+    "nearInstant": {
+      "title": "Near-instant blockchain operations!",
+      "description": "With three second block timings your broadcast operations are verified almost instantly!"
+    },
+    "evergreen": {
+      "title": "Built with evergreen technologies!",
+      "description": "Using the latest web technologies for a fast, secure and reliable Bitshares future!"
+    },
+    "multiWallets": {
+      "title": "Supports multiple wallets!",
+      "description": "Broadcast transactions via Beet or BeetEOS wallets!"
+    },
+    "localized": {
+      "title": "Fully localized to multiple languages!",
+      "description": "Available in 11 languages and counting!"
+    },
+    "blockActors": {
+      "title": "Blocks bad actors!",
+      "description": "Helps you avoid malicious accounts and their blockchain objects!"
+    }
+  },
+  "waveHero": {
+    "title": "A Next Generation Bitshares Client!",
+    "subtitle": "Built with the latest tech, designed for ease of use!"
   }
 }

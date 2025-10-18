@@ -250,5 +250,49 @@
     "hover1": "Filtre todos os pools de liquidez por ativos trocáveis",
     "hover2": "Localize os pools de liquidez para trocar ativos.",
     "hover3": "Identifique os pools de liquidez para participar de ativos."
+  },
+  "features": {
+    "heading": "Características",
+    "functionalityHeading": "Funcionalidade",
+    "zeroAuth": {
+      "title": "Autenticação zero necessária!",
+      "description": "Construa suas transações blockchain sem desbloquear nenhuma conta!"
+    },
+    "multiBroadcast": {
+      "title": "Vários métodos de transmissão de transações!",
+      "description": "Transmita suas operações de blockchain por meio de QR Codes, Deeplinks ou arquivos JSON locais."
+    },
+    "supportsLatest": {
+      "title": "Suporta os recursos mais recentes do Bitshares!",
+      "description": "Interessado nas últimas melhorias do Bitshares DEX? "
+    },
+    "switchChains": {
+      "title": "Alterne facilmente entre blockchains suportados!",
+      "description": "Leva segundos para alternar entre as redes mainnet e testnet da Bitshares!"
+    },
+    "nearInstant": {
+      "title": "Operações de blockchain quase instantâneas!",
+      "description": "Com tempos de bloco de três segundos, suas operações de transmissão são verificadas quase instantaneamente!"
+    },
+    "evergreen": {
+      "title": "Construído com tecnologias perenes!",
+      "description": "Usando as mais recentes tecnologias da web para um futuro Bitshares rápido, seguro e confiável!"
+    },
+    "multiWallets": {
+      "title": "Suporta múltiplas carteiras!",
+      "description": "Transmita transações através de carteiras Beet ou BeetEOS!"
+    },
+    "localized": {
+      "title": "Totalmente localizado para vários idiomas!",
+      "description": "Disponível em 11 idiomas e aumentando!"
+    },
+    "blockActors": {
+      "title": "Bloqueia maus atores!",
+      "description": "Ajuda você a evitar contas maliciosas e seus objetos blockchain!"
+    }
+  },
+  "waveHero": {
+    "title": "Um cliente Bitshares de próxima geração!",
+    "subtitle": "Construído com a mais recente tecnologia, projetado para facilidade de uso!"
   }
 }

@@ -1,9 +1,11 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
+import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
 export default function WaveHero({ title, subtitle, className = "" }) {
-  const heading = title || "A Next Generation Bitshares Client!";
-  const sub =
-    subtitle || "Built with the latest tech, designed for ease of use!";
+  const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
+  const heading = title || t("Home:waveHero.title");
+  const sub = subtitle || t("Home:waveHero.subtitle");
 
   return (
     <div

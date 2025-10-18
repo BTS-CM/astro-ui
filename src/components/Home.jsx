@@ -99,7 +99,7 @@ export default function Home(properties) {
       <div className="grid grid-cols-3 gap-3 justify-items-center mb-5">
         <div className="col-span-3">
           <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight mb-5">
-            Features
+            {t("Home:features.heading")}
           </h3>
         </div>
 
@@ -111,11 +111,10 @@ export default function Home(properties) {
           <ItemMedia variant="icon">⛓️‍💥</ItemMedia>
           <ItemContent>
             <ItemTitle className="text-black">
-              Zero authentication required!
+              {t("Home:features.zeroAuth.title")}
             </ItemTitle>
             <ItemDescription>
-              Construct your blockchain transactions without unlocking any
-              accounts!
+              {t("Home:features.zeroAuth.description")}
             </ItemDescription>
           </ItemContent>
         </Item>
@@ -128,11 +127,10 @@ export default function Home(properties) {
           <ItemMedia variant="icon">📡</ItemMedia>
           <ItemContent>
             <ItemTitle className="text-black">
-              Multiple transaction broadcast methods!
+              {t("Home:features.multiBroadcast.title")}
             </ItemTitle>
             <ItemDescription>
-              Broadcast your blockchain operations via QR Codes, Deeplinks or
-              local JSON files.
+              {t("Home:features.multiBroadcast.description")}
             </ItemDescription>
           </ItemContent>
         </Item>
@@ -145,11 +143,10 @@ export default function Home(properties) {
           <ItemMedia variant="icon">🧑‍🔬</ItemMedia>
           <ItemContent>
             <ItemTitle className="text-black">
-              Supports the latest Bitshares features!
+              {t("Home:features.supportsLatest.title")}
             </ItemTitle>
             <ItemDescription>
-              Interested in the latest Bitshares DEX improvements? We've got you
-              covered!
+              {t("Home:features.supportsLatest.description")}
             </ItemDescription>
           </ItemContent>
         </Item>
@@ -162,11 +159,10 @@ export default function Home(properties) {
           <ItemMedia variant="icon">🌐</ItemMedia>
           <ItemContent>
             <ItemTitle className="text-black">
-              Easily switch between supported blockchains!
+              {t("Home:features.switchChains.title")}
             </ItemTitle>
             <ItemDescription>
-              It takes seconds to switch between Bitshares mainnet and testnet
-              networks!
+              {t("Home:features.switchChains.description")}
             </ItemDescription>
           </ItemContent>
         </Item>
@@ -179,11 +175,10 @@ export default function Home(properties) {
           <ItemMedia variant="icon">🚀</ItemMedia>
           <ItemContent>
             <ItemTitle className="text-black">
-              Near-instant blockchain operations!
+              {t("Home:features.nearInstant.title")}
             </ItemTitle>
             <ItemDescription>
-              With three second block timings your broadcast operations are
-              verified almost instantly!
+              {t("Home:features.nearInstant.description")}
             </ItemDescription>
           </ItemContent>
         </Item>
@@ -196,11 +191,10 @@ export default function Home(properties) {
           <ItemMedia variant="icon">🌲</ItemMedia>
           <ItemContent>
             <ItemTitle className="text-black">
-              Built with evergreen technologies!
+              {t("Home:features.evergreen.title")}
             </ItemTitle>
             <ItemDescription>
-              Using the latest web technologies for a fast, secure and reliable
-              Bitshares future!
+              {t("Home:features.evergreen.description")}
             </ItemDescription>
           </ItemContent>
         </Item>
@@ -213,10 +207,10 @@ export default function Home(properties) {
           <ItemMedia variant="icon">👛</ItemMedia>
           <ItemContent>
             <ItemTitle className="text-black">
-              Supports multiple wallets!
+              {t("Home:features.multiWallets.title")}
             </ItemTitle>
             <ItemDescription>
-              Broadcast transactions via Beet or BeetEOS wallets!
+              {t("Home:features.multiWallets.description")}
             </ItemDescription>
           </ItemContent>
         </Item>
@@ -229,10 +223,10 @@ export default function Home(properties) {
           <ItemMedia variant="icon">🌍</ItemMedia>
           <ItemContent>
             <ItemTitle className="text-black">
-              Fully localized to multiple languages!
+              {t("Home:features.localized.title")}
             </ItemTitle>
             <ItemDescription>
-              Available in 11 languages and counting!
+              {t("Home:features.localized.description")}
             </ItemDescription>
           </ItemContent>
         </Item>
@@ -244,9 +238,11 @@ export default function Home(properties) {
         >
           <ItemMedia variant="icon">🤚</ItemMedia>
           <ItemContent>
-            <ItemTitle className="text-black">Blocks bad actors!</ItemTitle>
+            <ItemTitle className="text-black">
+              {t("Home:features.blockActors.title")}
+            </ItemTitle>
             <ItemDescription>
-              Helps you avoid malicious accounts and their blockchain objects!
+              {t("Home:features.blockActors.description")}
             </ItemDescription>
           </ItemContent>
         </Item>
@@ -255,7 +251,7 @@ export default function Home(properties) {
       <br />
 
       <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight mb-5 text-center mt-10">
-        Functionality
+        {t("Home:features.functionalityHeading")}
       </h3>
 
       <Item variant="outline">

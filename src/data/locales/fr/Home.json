@@ -250,5 +250,49 @@
     "hover1": "Filtrez toutes les pools de liquidité par des actifs swappables",
     "hover2": "Localisez les piscines de liquidité pour échanger des actifs.",
     "hover3": "Identifiez les pools de liquidité pour accélérer les actifs."
+  },
+  "features": {
+    "heading": "Caractéristiques",
+    "functionalityHeading": "Fonctionnalité",
+    "zeroAuth": {
+      "title": "Zéro authentification requise !",
+      "description": "Construisez vos transactions blockchain sans débloquer de compte !"
+    },
+    "multiBroadcast": {
+      "title": "Plusieurs méthodes de diffusion de transactions !",
+      "description": "Diffusez vos opérations blockchain via des QR Codes, des Deeplinks ou des fichiers JSON locaux."
+    },
+    "supportsLatest": {
+      "title": "Prend en charge les dernières fonctionnalités Bitshares !",
+      "description": "Intéressé par les dernières améliorations Bitshares DEX ? "
+    },
+    "switchChains": {
+      "title": "Basculez facilement entre les blockchains prises en charge !",
+      "description": "Cela prend quelques secondes pour basculer entre le réseau principal Bitshares et les réseaux testnet !"
+    },
+    "nearInstant": {
+      "title": "Opérations blockchain quasi instantanées !",
+      "description": "Avec des timings de bloc de trois secondes, vos opérations de diffusion sont vérifiées presque instantanément !"
+    },
+    "evergreen": {
+      "title": "Construit avec des technologies à feuilles persistantes !",
+      "description": "Utiliser les dernières technologies Web pour un avenir Bitshares rapide, sécurisé et fiable !"
+    },
+    "multiWallets": {
+      "title": "Prend en charge plusieurs portefeuilles !",
+      "description": "Diffusez les transactions via les portefeuilles Beet ou BeetEOS !"
+    },
+    "localized": {
+      "title": "Entièrement localisé dans plusieurs langues !",
+      "description": "Disponible en 11 langues et ce n'est pas fini !"
+    },
+    "blockActors": {
+      "title": "Bloque les mauvais acteurs !",
+      "description": "Vous aide à éviter les comptes malveillants et leurs objets blockchain !"
+    }
+  },
+  "waveHero": {
+    "title": "Un client Bitshares de nouvelle génération !",
+    "subtitle": "Construit avec les dernières technologies, conçu pour une utilisation facile !"
   }
 }

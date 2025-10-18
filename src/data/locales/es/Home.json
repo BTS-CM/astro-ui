@@ -250,5 +250,49 @@
     "hover1": "Filtrar todos los grupos de liquidez por activos intercambiables",
     "hover2": "Localice piscinas de liquidez para intercambiar activos.",
     "hover3": "Identifique los grupos de liquidez para participar activos en."
+  },
+  "features": {
+    "heading": "Características",
+    "functionalityHeading": "Funcionalidad",
+    "zeroAuth": {
+      "title": "¡Se requiere autenticación cero!",
+      "description": "¡Construya sus transacciones blockchain sin desbloquear ninguna cuenta!"
+    },
+    "multiBroadcast": {
+      "title": "¡Múltiples métodos de transmisión de transacciones!",
+      "description": "Transmita sus operaciones blockchain a través de códigos QR, enlaces profundos o archivos JSON locales."
+    },
+    "supportsLatest": {
+      "title": "¡Admite las últimas funciones de Bitshares!",
+      "description": "¿Interesado en las últimas mejoras de Bitshares DEX? "
+    },
+    "switchChains": {
+      "title": "¡Cambie fácilmente entre cadenas de bloques compatibles!",
+      "description": "¡Se necesitan unos segundos para cambiar entre las redes principal y de prueba de Bitshares!"
+    },
+    "nearInstant": {
+      "title": "¡Operaciones blockchain casi instantáneas!",
+      "description": "¡Con tiempos de bloque de tres segundos, sus operaciones de transmisión se verifican casi al instante!"
+    },
+    "evergreen": {
+      "title": "¡Construido con tecnologías imperecederas!",
+      "description": "¡Usando las últimas tecnologías web para un futuro Bitshares rápido, seguro y confiable!"
+    },
+    "multiWallets": {
+      "title": "¡Admite múltiples billeteras!",
+      "description": "¡Transmita transacciones a través de billeteras Beet o BeetEOS!"
+    },
+    "localized": {
+      "title": "¡Completamente localizado a múltiples idiomas!",
+      "description": "¡Disponible en 11 idiomas y contando!"
+    },
+    "blockActors": {
+      "title": "¡Bloquea a los malos actores!",
+      "description": "¡Te ayuda a evitar cuentas maliciosas y sus objetos blockchain!"
+    }
+  },
+  "waveHero": {
+    "title": "¡Un cliente Bitshares de próxima generación!",
+    "subtitle": "¡Construido con la última tecnología, diseñado para facilitar su uso!"
   }
 }
