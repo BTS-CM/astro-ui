@@ -20,20 +20,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+
 import {
   Form,
   FormControl,
@@ -43,17 +36,20 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+
 import {
   Avatar as Av,
   AvatarFallback,
   AvatarImage,
 } from "@/components/ui/avatar";
 import { Avatar } from "@/components/Avatar.tsx";
+
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -81,7 +77,10 @@ import { $currentNode } from "@/stores/node.ts";
 
 import DeepLinkDialog from "./common/DeepLinkDialog";
 import ExternalLink from "./common/ExternalLink.jsx";
-import CardRow from "./common/CardRow.jsx";
+
+import AboutAssetCard from "@/components/Smartcoin/AboutAssetCard.jsx";
+import RisksCard from "@/components/Smartcoin/RisksCard.jsx";
+import UsrMarginPositionCard from "@/components/Smartcoin/UsrMarginPositionCard.jsx";
 import EmptyRow from "./common/EmptyRow.jsx";
 
 const activeTabStyle = {
@@ -542,7 +541,6 @@ export default function Smartcoin(properties) {
 
   const [originalDebtAmount, setOriginalDebtAmount] = useState(0);
   const [originalCollateralAmount, setOriginalCollateralAmount] = useState(0);
-  const [originalRatioValue, setOriginalRatioValue] = useState(0);
 
   const [tcrEnabled, setTCREnabled] = useState(false);
   const [tcrValue, setTCRValue] = useState(0);
@@ -587,7 +585,6 @@ export default function Smartcoin(properties) {
         setDebtAmount(debtAmount);
         setOriginalDebtAmount(debtAmount);
         setRatioValue(ratio);
-        setOriginalRatioValue(ratio);
 
         setFormCallPrice(callPrice);
         if (tcr) {
@@ -1035,678 +1032,6 @@ export default function Smartcoin(properties) {
     tcrValue,
   ]);
 
-  const [showClosePositionDialog, setShowClosePositionDialog] = useState(false);
-
-  const UsrMarginPositionCard = () => {
-    const res = usrMarginPositions[0];
-    const collateralAmount = humanReadableFloat(
-      res.collateral,
-      parsedCollateralAsset.p
-    );
-    const debtAmount = humanReadableFloat(res.debt, parsedAsset.p);
-
-    const tcr = res.target_collateral_ratio
-      ? `${res.target_collateral_ratio / 10}%`
-      : null;
-
-    const _ratio =
-      1 / ((currentFeedSettlementPrice * debtAmount) / collateralAmount);
-    const ratio = parseFloat(_ratio.toFixed(3));
-
-    const callPrice = res.target_collateral_ratio
-      ? parseFloat(
-          (
-            currentFeedSettlementPrice *
-            (collateralAmount /
-              (debtAmount *
-                (currentFeedSettlementPrice *
-                  (res.target_collateral_ratio / 1000))))
-          ).toFixed(parsedCollateralAsset.p)
-        )
-      : parseFloat(
-          (
-            currentFeedSettlementPrice *
-            (collateralAmount /
-              (debtAmount * (currentFeedSettlementPrice * 1.4)))
-          ).toFixed(parsedCollateralAsset.p)
-        );
-
-    return (
-      <Card className="mt-2">
-        <CardHeader className="pb-2">
-          <CardTitle>
-            {t("Smartcoin:currentMarginPosition", {
-              asset: parsedAsset.s,
-              id: parsedAsset.id,
-            })}
-          </CardTitle>
-          <CardDescription>
-            {t("Smartcoin:ongoingMarginPosition")}
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="text-sm">
-          {t("Smartcoin:balance")} <b>{debtAssetHoldings ?? 0}</b>
-          {parsedAsset ? ` ${parsedAsset.s}` : " ?"}
-          <br />
-          {t("Smartcoin:debt")}{" "}
-          <b>{humanReadableFloat(usrMarginPositions[0].debt, parsedAsset.p)}</b>{" "}
-          {parsedAsset.s}
-          <br />
-          {t("Smartcoin:collateralAtRisk")}{" "}
-          <b>
-            {humanReadableFloat(
-              usrMarginPositions[0].collateral,
-              parsedCollateralAsset.p
-            )}
-          </b>{" "}
-          {parsedCollateralAsset.s}
-          <br />
-          {t("Smartcoin:currentRatio")} <b>{ratio}</b>
-          <br />
-          {t("Smartcoin:marginCallPrice")} <b>{callPrice}</b>{" "}
-          {parsedCollateralAsset.s}
-          {" ("}
-          {(1 / callPrice).toFixed(parsedAsset.p)} {parsedAsset.s}/
-          {parsedCollateralAsset.s}
-          {")"}
-          {tcr ? (
-            <>
-              <br />
-              {t("Smartcoin:targetCollateralRatio")}
-              <b>{tcr}</b>
-            </>
-          ) : null}
-          <br />
-          <br />
-          {debtAssetHoldings >=
-          humanReadableFloat(usrMarginPositions[0].debt, parsedAsset.p) ? (
-            <Button
-              className="mt-3 mr-2"
-              onClick={() => setShowClosePositionDialog(true)}
-            >
-              {t("Smartcoin:closePosition")}
-            </Button>
-          ) : null}
-          <a
-            href={`/borrow/index.html?tab=searchOffers&searchTab=borrow&searchText=${parsedAsset.s}`}
-          >
-            <Button className="mr-2">
-              {t("Smartcoin:borrow", { asset: parsedAsset.s })}
-            </Button>
-          </a>
-          <a
-            href={`/dex/index.html?market=${parsedAsset.s}_${parsedCollateralAsset.s}`}
-          >
-            <Button className="mr-2">
-              {t("Smartcoin:buyWith", {
-                asset1: parsedAsset.s,
-                asset2: parsedCollateralAsset.s,
-              })}
-            </Button>
-          </a>
-          {showClosePositionDialog ? (
-            <DeepLinkDialog
-              operationNames={["call_order_update"]}
-              username={usr.username}
-              usrChain={usr.chain}
-              userID={usr.id}
-              dismissCallback={setShowClosePositionDialog}
-              key={`Closing${parsedAsset.s}debtposition`}
-              headerText={t("Smartcoin:closingDebtPosition", {
-                asset: parsedAsset.s,
-              })}
-              trxJSON={[exitJSON]}
-            />
-          ) : null}
-        </CardContent>
-      </Card>
-    );
-  };
-
-  const AboutAssetCard = ({
-    assetInfo,
-    bitassetInfo,
-    fullAssetInfo,
-    fullBitassetInfo,
-    type,
-    assetInfoFlags,
-    assetPermissions,
-  }) => {
-    return (
-      <Card className="mt-2">
-        <CardHeader className="pb-2">
-          <CardTitle>
-            <div className="grid grid-cols-8">
-              <div className="col-span-6">
-                {type === "debt"
-                  ? t("Smartcoin:aboutAsset", {
-                      assetType:
-                        bitassetInfo.issuer.id === "1.2.0"
-                          ? "Bitasset"
-                          : "Smartcoin",
-                      asset: assetInfo.s,
-                      id: assetInfo.id,
-                    })
-                  : t("Smartcoin:aboutBackingCollateral", {
-                      asset: assetInfo.s,
-                      id: assetInfo.id,
-                    })}
-              </div>
-              <div className="col-span-2 text-right">
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button variant="outline" className="h-5">
-                      {t("Smartcoin:viewJSON")}
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-[600px] bg-white">
-                    <DialogHeader>
-                      <DialogTitle>
-                        {t("Smartcoin:jsonSummaryData", { asset: assetInfo.s })}
-                      </DialogTitle>
-                      <DialogDescription>
-                        {t("Smartcoin:dataUsedToRender")}
-                      </DialogDescription>
-                    </DialogHeader>
-                    <div className="grid grid-cols-1">
-                      <div className="col-span-1">
-                        <ScrollArea className="h-72 rounded-md border text-sm">
-                          <pre>
-                            {JSON.stringify(
-                              { fullAssetInfo, fullBitassetInfo },
-                              null,
-                              2
-                            )}
-                          </pre>
-                        </ScrollArea>
-                      </div>
-                    </div>
-                  </DialogContent>
-                </Dialog>
-              </div>
-            </div>
-          </CardTitle>
-          <CardDescription>
-            {type === "debt"
-              ? t("Smartcoin:researchBeforeBorrow", { asset: assetInfo.s })
-              : t("Smartcoin:researchBeforeBacking", { asset: assetInfo.s })}
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-2">
-            <div className="col-span-1">
-              <Label>{t("Smartcoin:generalAssetInfo")}</Label>
-            </div>
-            <div className="col-span-1 text-right">
-              <ExternalLink
-                classnamecontents="h-5 mb-2"
-                variant="outline"
-                type="button"
-                text={t("Smartcoin:viewAssetOnbitshares")}
-                hyperlink={`https://explorer.bitshares.ws/#/assets/${
-                  assetInfo.id
-                }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
-              />
-            </div>
-          </div>
-          <div className="grid grid-cols-11 gap-1 w-full text-sm">
-            <div className="col-span-5">
-              <div className="grid grid-cols-1 gap-1 w-full text-sm">
-                <CardRow
-                  title={t("Smartcoin:issuer")}
-                  button={assetInfo.u.split(" ")[0]}
-                  dialogtitle={t("Smartcoin:issuerOfAsset", {
-                    asset: assetInfo.s,
-                  })}
-                  dialogdescription={
-                    <ul className="ml-2 list-disc [&>li]:mt-2">
-                      <li>{t("Smartcoin:issuerDetail1")}</li>
-                      <li>{t("Smartcoin:issuerDetail2")}</li>
-                      <li>{t("Smartcoin:issuerDetail3")}</li>
-                      <li>{t("Smartcoin:issuerDetail4")}</li>
-                      <ExternalLink
-                        classnamecontents="h-8 mb-2 mt-3"
-                        type="button"
-                        text={t("Smartcoin:viewIssuerOnbitshares")}
-                        hyperlink={`https://explorer.bitshares.ws/#/accounts/${
-                          assetInfo.u.split(" ")[0]
-                        }${
-                          usr.chain === "bitshares" ? "" : "?network=testnet"
-                        }`}
-                      />
-                    </ul>
-                  }
-                  tooltip={t("Smartcoin:moreAboutAssetIssuer")}
-                />
-                <CardRow
-                  title={t("Smartcoin:maximumSupply")}
-                  button={humanReadableFloat(
-                    fullAssetInfo.options.max_supply,
-                    fullAssetInfo.precision
-                  )}
-                  dialogtitle={t("Smartcoin:maximumSupplyOfAsset", {
-                    asset: assetInfo.s,
-                  })}
-                  dialogdescription={
-                    <ul className="ml-2 list-disc [&>li]:mt-2">
-                      <li>{t("Smartcoin:maximumSupplyDetail")}</li>
-                    </ul>
-                  }
-                  tooltip={t("Smartcoin:moreInfoOnMaxSupply")}
-                />
-
-                <CardRow
-                  title={t("Smartcoin:minQuantity")}
-                  button={humanReadableFloat(1, fullAssetInfo.precision)}
-                  dialogtitle={t("Smartcoin:minQuantityOfAsset", {
-                    asset: assetInfo.s,
-                  })}
-                  dialogdescription={
-                    <ul className="ml-2 list-disc [&>li]:mt-2">
-                      <li>{t("Smartcoin:minQuantityDetail1")}</li>
-                      <li>{t("Smartcoin:minQuantityDetail2")}</li>
-                    </ul>
-                  }
-                  tooltip={t("Smartcoin:moreAboutMinQuantity")}
-                />
-
-                <CardRow
-                  title={t("Smartcoin:precision")}
-                  button={fullAssetInfo.precision}
-                  dialogtitle={t("Smartcoin:precisionOfAsset", {
-                    asset: assetInfo.s,
-                  })}
-                  dialogdescription={
-                    <ul className="ml-2 list-disc [&>li]:mt-2">
-                      <li>{t("Smartcoin:precisionDetail")}</li>
-                    </ul>
-                  }
-                  tooltip={t("Smartcoin:moreAboutAssetPrecision")}
-                />
-              </div>
-            </div>
-            <div className="col-span-1 flex justify-center items-center">
-              <Separator orientation="vertical" />
-            </div>
-            <div className="col-span-5">
-              <div className="grid grid-cols-1 gap-1 w-full text-sm">
-                <CardRow
-                  title={t("Smartcoin:marketFee")}
-                  button={`${
-                    fullAssetInfo.options.market_fee_percent
-                      ? fullAssetInfo.options.market_fee_percent / 100
-                      : 0
-                  }%`}
-                  dialogtitle={t("Smartcoin:marketFeeOfAsset", {
-                    asset: assetInfo.s,
-                  })}
-                  dialogdescription={
-                    <ul className="ml-2 list-disc [&>li]:mt-2">
-                      <li>{t("Smartcoin:marketFeeDetail1")}</li>
-                      <li>{t("Smartcoin:marketFeeDetail2")}</li>
-                      <li>{t("Smartcoin:marketFeeDetail3")}</li>
-                    </ul>
-                  }
-                  tooltip={t("Smartcoin:moreAboutMarketFee")}
-                />
-
-                <CardRow
-                  title={t("Smartcoin:takerFeePercent")}
-                  button={`${
-                    fullAssetInfo.options.extensions.taker_fee_percent
-                      ? fullAssetInfo.options.extensions.taker_fee_percent / 100
-                      : 0
-                  }%`}
-                  dialogtitle={t("Smartcoin:takerFeePercentOfAsset", {
-                    asset: assetInfo.s,
-                  })}
-                  dialogdescription={
-                    <ul className="ml-2 list-disc [&>li]:mt-2">
-                      <li>{t("Smartcoin:takerFeePercentDetail")}</li>
-                    </ul>
-                  }
-                  tooltip={t("Smartcoin:moreAboutTakerFeePercent")}
-                />
-
-                <CardRow
-                  title={t("Smartcoin:rewardPercent")}
-                  button={
-                    fullAssetInfo.options.extensions.reward_percent
-                      ? fullAssetInfo.options.extensions.reward_percent / 100
-                      : 0
-                  }
-                  dialogtitle={t("Smartcoin:rewardPercentOfAsset", {
-                    asset: assetInfo.s,
-                  })}
-                  dialogdescription={
-                    <ul className="ml-2 list-disc [&>li]:mt-2">
-                      <li>{t("Smartcoin:rewardPercentDetail")}</li>
-                    </ul>
-                  }
-                  tooltip={t("Smartcoin:moreAboutRewardPercent")}
-                />
-              </div>
-            </div>
-          </div>
-
-          {bitassetInfo && bitassetInfo.id ? (
-            <>
-              <div className="grid grid-cols-2">
-                <div className="col-span-1">
-                  <Label>
-                    {bitassetInfo.issuer.id === "1.2.0"
-                      ? t("Smartcoin:bitassetInfo")
-                      : t("Smartcoin:smartcoinInfo")}
-                  </Label>
-                </div>
-                <div className="col-span-1 text-right">
-                  <ExternalLink
-                    classnamecontents="h-5 mb-2"
-                    variant="outline"
-                    type="button"
-                    text={t("Smartcoin:viewBitassetOnbitshares")}
-                    hyperlink={`https://explorer.bitshares.ws/#/objects/${
-                      bitassetInfo.id
-                    }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-11 gap-1 w-full text-sm">
-                <div className="col-span-5">
-                  <div className="grid grid-cols-1 gap-1 w-full text-sm">
-                    <CardRow
-                      title={t("Smartcoin:collateralAsset")}
-                      button={
-                        parsedCollateralAsset ? parsedCollateralAsset.s : ""
-                      }
-                      dialogtitle={t("Smartcoin:collateralAssetOfSmartcoin", {
-                        asset: assetInfo.s,
-                      })}
-                      dialogdescription={
-                        <ul className="ml-2 list-disc [&>li]:mt-2">
-                          <li>{t("Smartcoin:collateralAssetDetail")}</li>
-                        </ul>
-                      }
-                      tooltip={t("Smartcoin:moreAboutCollateralAsset")}
-                    />
-
-                    <CardRow
-                      title={t("Smartcoin:MCR")}
-                      button={`${bitassetInfo ? bitassetInfo.mcr / 10 : 0} %`}
-                      dialogtitle={t("Smartcoin:MCRofAsset", {
-                        asset: assetInfo.s,
-                      })}
-                      dialogdescription={
-                        <ul className="ml-2 list-disc [&>li]:mt-2">
-                          <li>{t("Smartcoin:MCRDetail")}</li>
-                        </ul>
-                      }
-                      tooltip={t("Smartcoin:moreAboutMCR")}
-                    />
-
-                    <CardRow
-                      title={t("Smartcoin:MSSR")}
-                      button={`${bitassetInfo ? bitassetInfo.mssr / 10 : 0} %`}
-                      dialogtitle={t("Smartcoin:MSSROfAsset", {
-                        asset: assetInfo.s,
-                      })}
-                      dialogdescription={
-                        <ul className="ml-2 list-disc [&>li]:mt-2">
-                          <li>{t("Smartcoin:MSSRDetail")}</li>
-                        </ul>
-                      }
-                      tooltip={t("Smartcoin:moreAboutMSSR")}
-                    />
-
-                    <CardRow
-                      title={t("Smartcoin:ICR")}
-                      button={`${bitassetInfo ? bitassetInfo.icr / 10 : 0} %`}
-                      dialogtitle={t("Smartcoin:ICROfAsset", {
-                        asset: assetInfo.s,
-                      })}
-                      dialogdescription={
-                        <ul className="ml-2 list-disc [&>li]:mt-2">
-                          <li>{t("Smartcoin:ICRDetail")}</li>
-                        </ul>
-                      }
-                      tooltip={t("Smartcoin:moreAboutICR")}
-                    />
-
-                    <CardRow
-                      title={t("Smartcoin:feedQty")}
-                      button={bitassetInfo ? bitassetInfo.feeds.length : 0}
-                      dialogtitle={t("Smartcoin:feedQtyOfAsset", {
-                        asset: assetInfo.s,
-                      })}
-                      dialogdescription={
-                        <ul className="ml-2 list-disc [&>li]:mt-2">
-                          <li>{t("Smartcoin:feedQtyDetail1")}</li>
-                          <li>{t("Smartcoin:feedQtyDetail2")}</li>
-                          <li>{t("Smartcoin:feedQtyDetail3")}</li>
-                          <li>{t("Smartcoin:feedQtyDetail4")}</li>
-                          <li>{t("Smartcoin:feedQtyDetail5")}</li>
-                        </ul>
-                      }
-                      tooltip={t("Smartcoin:moreAboutFeedQty")}
-                    />
-
-                    {fullBitassetInfo &&
-                    fullBitassetInfo.options.force_settlement_offset_percent ? (
-                      <CardRow
-                        title={t("Smartcoin:settlementOffset")}
-                        button={`${
-                          fullBitassetInfo.options
-                            .force_settlement_offset_percent / 100
-                        }%`}
-                        dialogtitle={t("Smartcoin:settlementOffsetOfAsset", {
-                          asset: assetInfo.s,
-                        })}
-                        dialogdescription={
-                          <ul className="ml-2 list-disc [&>li]:mt-2">
-                            <li>{t("Smartcoin:settlementOffsetDetail")}</li>
-                          </ul>
-                        }
-                        tooltip={t("Smartcoin:moreAboutSettlementOffset")}
-                      />
-                    ) : null}
-                  </div>
-                </div>
-                <div className="col-span-1 flex justify-center items-center">
-                  <Separator orientation="vertical" />
-                </div>
-                <div className="col-span-5">
-                  <div className="grid grid-cols-1 gap-1 w-full text-sm">
-                    {fullBitassetInfo &&
-                    fullBitassetInfo.options.extensions &&
-                    fullBitassetInfo.options.extensions
-                      .force_settle_fee_percent ? (
-                      <CardRow
-                        title={t("Smartcoin:settlementFee")}
-                        button={`${
-                          fullBitassetInfo.options.extensions
-                            .force_settle_fee_percent / 100
-                        }%`}
-                        dialogtitle={t("Smartcoin:settlementFeeOfAsset", {
-                          asset: assetInfo.s,
-                        })}
-                        dialogdescription={
-                          <ul className="ml-2 list-disc [&>li]:mt-2">
-                            <li>{t("Smartcoin:settlementFeeDetail")}</li>
-                          </ul>
-                        }
-                        tooltip={t("Smartcoin:moreAboutSettlementFee")}
-                      />
-                    ) : null}
-
-                    {fullBitassetInfo &&
-                    fullBitassetInfo.options.extensions &&
-                    fullBitassetInfo.options.extensions
-                      .margin_call_fee_ratio ? (
-                      <CardRow
-                        title={t("Smartcoin:marginCallFee")}
-                        button={`${
-                          fullBitassetInfo.options.extensions
-                            .margin_call_fee_ratio / 100
-                        }%`}
-                        dialogtitle={t("Smartcoin:marginCallFeeOfAsset", {
-                          asset: assetInfo.s,
-                        })}
-                        dialogdescription={
-                          <ul className="ml-2 list-disc [&>li]:mt-2">
-                            <li>{t("Smartcoin:marginCallFeeDetail1")}</li>
-                            <li>{t("Smartcoin:marginCallFeeDetail2")}</li>
-                          </ul>
-                        }
-                        tooltip={t("Smartcoin:moreAboutMarginCallFee")}
-                      />
-                    ) : null}
-
-                    {fullBitassetInfo &&
-                    fullBitassetInfo.options.extensions &&
-                    fullBitassetInfo.options.extensions
-                      .black_swan_response_method ? (
-                      <CardRow
-                        title={t("Smartcoin:BSRM")}
-                        button={
-                          fullBitassetInfo.options.extensions
-                            .black_swan_response_method
-                        }
-                        dialogtitle={t("Smartcoin:BSRMOfAsset", {
-                          asset: assetInfo.s,
-                        })}
-                        dialogdescription={
-                          <ScrollArea className="h-72">
-                            <ul className="ml-2 list-disc [&>li]:mt-2 text-sm">
-                              <li>{t("Smartcoin:BSRMDetail1")}</li>
-                              <li>
-                                <b>{t("Smartcoin:globalSettlement")}</b>
-                                <br />
-                                {t("Smartcoin:globalSettlementDetail")}
-                              </li>
-                              <li>
-                                <b>{t("Smartcoin:noSettlement")}</b>
-                                <br />
-                                {t("Smartcoin:noSettlementDetail")}
-                              </li>
-                              <li>
-                                <b>
-                                  {t("Smartcoin:individualSettlementToFund")}
-                                </b>
-                                <br />
-                                {t(
-                                  "Smartcoin:individualSettlementToFundDetail"
-                                )}
-                              </li>
-                              <li>
-                                <b>
-                                  {t("Smartcoin:individualSettlementToOrder")}
-                                </b>
-                                <br />
-                                {t(
-                                  "Smartcoin:individualSettlementToOrderDetail"
-                                )}
-                              </li>
-                            </ul>
-                          </ScrollArea>
-                        }
-                        tooltip={t("Smartcoin:moreAboutBSRM")}
-                      />
-                    ) : null}
-
-                    {fullBitassetInfo &&
-                    fullBitassetInfo.options.extensions &&
-                    fullBitassetInfo.options.extensions
-                      .initial_collateral_ratio ? (
-                      <CardRow
-                        title={t("Smartcoin:manualICR")}
-                        button={
-                          fullBitassetInfo.options.extensions
-                            .initial_collateral_ratio
-                        }
-                        dialogtitle={t("Smartcoin:manualICROfAsset", {
-                          asset: assetInfo.s,
-                        })}
-                        dialogdescription={
-                          <ul className="ml-2 list-disc [&>li]:mt-2">
-                            <li>{t("Smartcoin:manualICRDetail")}</li>
-                          </ul>
-                        }
-                        tooltip={t("Smartcoin:moreAboutManualICR")}
-                      />
-                    ) : null}
-
-                    {fullBitassetInfo &&
-                    fullBitassetInfo.options.extensions &&
-                    fullBitassetInfo.options.extensions
-                      .maintenance_collateral_ratio ? (
-                      <CardRow
-                        title={t("Smartcoin:manualMCR")}
-                        button={
-                          fullBitassetInfo.options.extensions
-                            .maintenance_collateral_ratio
-                        }
-                        dialogtitle={t("Smartcoin:manualMCROfAsset", {
-                          asset: assetInfo.s,
-                        })}
-                        dialogdescription={
-                          <ul className="ml-2 list-disc [&>li]:mt-2">
-                            <li>{t("Smartcoin:manualMCRDetail")}</li>
-                          </ul>
-                        }
-                        tooltip={t("Smartcoin:moreAboutManualMCR")}
-                      />
-                    ) : null}
-
-                    {fullBitassetInfo &&
-                    fullBitassetInfo.options.extensions &&
-                    fullBitassetInfo.options.extensions
-                      .maximum_short_squeeze_ratio ? (
-                      <CardRow
-                        title={t("Smartcoin:manualMSSR")}
-                        button={
-                          fullBitassetInfo.options.extensions
-                            .maximum_short_squeeze_ratio
-                        }
-                        dialogtitle={t("Smartcoin:manualMSSROfAsset", {
-                          asset: assetInfo.s,
-                        })}
-                        dialogdescription={
-                          <ul className="ml-2 list-disc [&>li]:mt-2">
-                            <li>{t("Smartcoin:manualMSSRDetail")}</li>
-                          </ul>
-                        }
-                        tooltip={t("Smartcoin:moreAboutManualMSSR")}
-                      />
-                    ) : null}
-                  </div>
-                </div>
-              </div>
-            </>
-          ) : null}
-
-          <Label className="pb-0">{t("Smartcoin:assetFlags")}</Label>
-          <br />
-          {assetInfoFlags && assetInfoFlags.length ? (
-            assetInfoFlags
-          ) : (
-            <span className="text-sm">{t("Smartcoin:noFlagsEnabled")}</span>
-          )}
-          <br />
-          <Label>{t("Smartcoin:assetPermissions")}</Label>
-          <br />
-          {assetPermissions && assetPermissions.length ? (
-            assetPermissions
-          ) : (
-            <span className="text-sm">
-              {t("Smartcoin:noPermissionsEnabled")}
-            </span>
-          )}
-        </CardContent>
-      </Card>
-    );
-  };
-
   const MarginPositionRow = ({ index, style }) => {
     const res = assetCallOrders[index];
     const collateralAmount = humanReadableFloat(
@@ -1904,7 +1229,7 @@ export default function Smartcoin(properties) {
                       <FormItem>
                         <FormLabel>{t("Smartcoin:borrowingAccount")}</FormLabel>
                         <FormControl>
-                          <div className="grid grid-cols-8 mt-4">
+                          <div className="grid grid-cols-12 mt-4">
                             <div className="col-span-1 ml-5">
                               {usr && usr.username ? (
                                 <Avatar
@@ -1929,7 +1254,7 @@ export default function Smartcoin(properties) {
                                 </Av>
                               )}
                             </div>
-                            <div className="col-span-7">
+                            <div className="col-span-5">
                               <Input
                                 disabled
                                 placeholder="Bitshares account (1.2.x)"
@@ -2095,7 +1420,7 @@ export default function Smartcoin(properties) {
                           style={{ marginTop: 0, paddingTop: 0 }}
                         >
                           <span className="grid grid-cols-3 mt-0 pt-0">
-                            <span className="col-span-2 mt-0 pt-0">
+                            <span className="col-span-1 text-left">
                               {t("Smartcoin:debtAmountDescription", {
                                 asset: parsedAsset ? parsedAsset.s : "?",
                               })}
@@ -2113,6 +1438,7 @@ export default function Smartcoin(properties) {
                                 asset: parsedAsset ? parsedAsset.s : "",
                               })}
                             </span>
+                            <span className={`col-span-1`}></span>
                           </span>
                         </FormDescription>
                         <FormControl>
@@ -2201,62 +1527,6 @@ export default function Smartcoin(properties) {
                                         }
                                       }}
                                     />
-                                    <div className="grid grid-cols-3 gap-2">
-                                      <Button
-                                        variant="outline"
-                                        onClick={() => {
-                                          debouncedDebtAmount(
-                                            debtAmount * 0.9,
-                                            currentFeedSettlementPrice,
-                                            collateralAmount,
-                                            ratioValue,
-                                            parsedAsset.p,
-                                            parsedCollateralAsset.p,
-                                            debtLock,
-                                            collateralLock,
-                                            ratioLock
-                                          );
-                                        }}
-                                      >
-                                        - 10%
-                                      </Button>
-                                      <Button
-                                        variant="outline"
-                                        onClick={() => {
-                                          debouncedDebtAmount(
-                                            originalDebtAmount,
-                                            currentFeedSettlementPrice,
-                                            collateralAmount,
-                                            ratioValue,
-                                            parsedAsset.p,
-                                            parsedCollateralAsset.p,
-                                            debtLock,
-                                            collateralLock,
-                                            ratioLock
-                                          );
-                                        }}
-                                      >
-                                        🔃
-                                      </Button>
-                                      <Button
-                                        variant="outline"
-                                        onClick={() => {
-                                          debouncedDebtAmount(
-                                            debtAmount * 1.1,
-                                            currentFeedSettlementPrice,
-                                            collateralAmount,
-                                            ratioValue,
-                                            parsedAsset.p,
-                                            parsedCollateralAsset.p,
-                                            debtLock,
-                                            collateralLock,
-                                            ratioLock
-                                          );
-                                        }}
-                                      >
-                                        + 10%
-                                      </Button>
-                                    </div>
                                   </PopoverContent>
                                 </Popover>
                               ) : null}
@@ -2277,7 +1547,7 @@ export default function Smartcoin(properties) {
                           style={{ marginTop: 0, paddingTop: 0 }}
                         >
                           <span className="grid grid-cols-3 mt-0 pt-0">
-                            <span className="col-span-2 mt-0 pt-0">
+                            <span className="col-span-1 text-left">
                               {t("Smartcoin:collateralAmountDescription", {
                                 asset: parsedCollateralAsset
                                   ? parsedCollateralAsset.s
@@ -2299,6 +1569,7 @@ export default function Smartcoin(properties) {
                                   : "",
                               })}
                             </span>
+                            <span></span>
                           </span>
                         </FormDescription>
                         <FormControl>
@@ -2392,65 +1663,6 @@ export default function Smartcoin(properties) {
                                         }
                                       }}
                                     />
-                                    <div className="grid grid-cols-3 gap-2">
-                                      <Button
-                                        variant="outline"
-                                        onClick={() => {
-                                          debouncedCollateralAmount(
-                                            collateralAmount * 0.9,
-                                            currentFeedSettlementPrice,
-                                            debtAmount,
-                                            collateralAmount,
-                                            parsedAsset.p,
-                                            parsedCollateralAsset.p,
-                                            ratioValue,
-                                            debtLock,
-                                            collateralLock,
-                                            ratioLock
-                                          );
-                                        }}
-                                      >
-                                        - 10%
-                                      </Button>
-                                      <Button
-                                        variant="outline"
-                                        onClick={() => {
-                                          debouncedCollateralAmount(
-                                            originalCollateralAmount,
-                                            currentFeedSettlementPrice,
-                                            debtAmount,
-                                            collateralAmount,
-                                            parsedAsset.p,
-                                            parsedCollateralAsset.p,
-                                            ratioValue,
-                                            debtLock,
-                                            collateralLock,
-                                            ratioLock
-                                          );
-                                        }}
-                                      >
-                                        🔃
-                                      </Button>
-                                      <Button
-                                        variant="outline"
-                                        onClick={() => {
-                                          debouncedCollateralAmount(
-                                            collateralAmount * 1.1,
-                                            currentFeedSettlementPrice,
-                                            debtAmount,
-                                            collateralAmount,
-                                            parsedAsset.p,
-                                            parsedCollateralAsset.p,
-                                            ratioValue,
-                                            debtLock,
-                                            collateralLock,
-                                            ratioLock
-                                          );
-                                        }}
-                                      >
-                                        + 10%
-                                      </Button>
-                                    </div>
                                   </PopoverContent>
                                 </Popover>
                               ) : null}
@@ -2471,7 +1683,7 @@ export default function Smartcoin(properties) {
                         </FormLabel>
                         <FormDescription>
                           <span className="grid grid-cols-3 mt-0 pt-0">
-                            <span className="col-span-2 mt-0 pt-0">
+                            <span className="col-span-1 text-left">
                               {t("Smartcoin:collateralDebtRatioDescription")}
                             </span>
                             <span className="col-span-1 text-right">
@@ -2479,6 +1691,7 @@ export default function Smartcoin(properties) {
                                 min: parsedBitasset.mcr / 1000,
                               })}
                             </span>
+                            <span></span>
                           </span>
                         </FormDescription>
                         <FormControl>
@@ -2600,123 +1813,6 @@ export default function Smartcoin(properties) {
                                         }
                                       }}
                                     />
-                                    <div className="grid grid-cols-1 gap-2">
-                                      <div className="grid grid-cols-3 gap-2">
-                                        <Button
-                                          variant="outline"
-                                          onClick={() => {
-                                            debouncedSetRatioValue(
-                                              ratioValue * 0.9,
-                                              currentFeedSettlementPrice,
-                                              debtAmount,
-                                              collateralAmount,
-                                              parsedBitasset.mcr,
-                                              parsedAsset.p,
-                                              parsedCollateralAsset.p,
-                                              debtLock,
-                                              collateralLock,
-                                              ratioLock
-                                            );
-                                          }}
-                                        >
-                                          - 10%
-                                        </Button>
-                                        <Button
-                                          variant="outline"
-                                          onClick={() => {
-                                            debouncedSetRatioValue(
-                                              originalRatioValue,
-                                              currentFeedSettlementPrice,
-                                              debtAmount,
-                                              collateralAmount,
-                                              parsedBitasset.mcr,
-                                              parsedAsset.p,
-                                              parsedCollateralAsset.p,
-                                              debtLock,
-                                              collateralLock,
-                                              ratioLock
-                                            );
-                                          }}
-                                        >
-                                          🔃
-                                        </Button>
-                                        <Button
-                                          variant="outline"
-                                          onClick={() => {
-                                            debouncedSetRatioValue(
-                                              ratioValue * 1.1,
-                                              currentFeedSettlementPrice,
-                                              debtAmount,
-                                              collateralAmount,
-                                              parsedBitasset.mcr,
-                                              parsedAsset.p,
-                                              parsedCollateralAsset.p,
-                                              debtLock,
-                                              collateralLock,
-                                              ratioLock
-                                            );
-                                          }}
-                                        >
-                                          + 10%
-                                        </Button>
-                                      </div>
-                                      <div className="grid grid-cols-2 gap-2">
-                                        <Button
-                                          variant="outline"
-                                          onClick={() => {
-                                            debouncedSetRatioValue(
-                                              parsedBitasset.mcr / 1000,
-                                              currentFeedSettlementPrice,
-                                              debtAmount,
-                                              collateralAmount,
-                                              parsedBitasset.mcr,
-                                              parsedAsset.p,
-                                              parsedCollateralAsset.p,
-                                              debtLock,
-                                              collateralLock,
-                                              ratioLock
-                                            );
-                                          }}
-                                        >
-                                          {t("Smartcoin:minimum")}
-                                        </Button>
-                                        {debtAmount &&
-                                        collateralAmount &&
-                                        collateralLock === "editable" ? (
-                                          <Button
-                                            variant="outline"
-                                            onClick={() => {
-                                              const _1xBacking =
-                                                currentFeedSettlementPrice *
-                                                debtAmount;
-                                              const _maxRatio =
-                                                (collateralAmount +
-                                                  collateralAssetHoldings) /
-                                                _1xBacking;
-                                              const _calculatedMaxRatio =
-                                                parseFloat(
-                                                  _maxRatio.toFixed(3)
-                                                );
-
-                                              debouncedSetRatioValue(
-                                                _calculatedMaxRatio,
-                                                currentFeedSettlementPrice,
-                                                debtAmount,
-                                                collateralAmount,
-                                                parsedBitasset.mcr,
-                                                parsedAsset.p,
-                                                parsedCollateralAsset.p,
-                                                debtLock,
-                                                collateralLock,
-                                                ratioLock
-                                              );
-                                            }}
-                                          >
-                                            {t("Smartcoin:maximum")}
-                                          </Button>
-                                        ) : null}
-                                      </div>
-                                    </div>
                                   </PopoverContent>
                                 </Popover>
                               ) : null}
@@ -2743,17 +1839,17 @@ export default function Smartcoin(properties) {
                     render={({ field }) => (
                       <FormItem>
                         <FormControl>
-                          <>
+                          <span className="inline-flex items-center gap-2">
                             <Checkbox
                               id="terms1"
                               className="mr-2"
                               checked={tcrEnabled}
-                              onClick={() => {
-                                setTCREnabled(!tcrEnabled);
-                              }}
+                              onClick={() => setTCREnabled(!tcrEnabled)}
                             />
-                            {t("Smartcoin:enableTargetCollateralRatio")}{" "}
-                          </>
+                            <span className="text-sm">
+                              {t("Smartcoin:enableTargetCollateralRatio")}
+                            </span>
+                          </span>
                         </FormControl>
                       </FormItem>
                     )}
@@ -2768,8 +1864,8 @@ export default function Smartcoin(properties) {
                             {t("Smartcoin:targetCollateralRatioValue")}
                           </FormLabel>
                           <FormDescription>
-                            <span className="grid grid-cols-4 mt-0 pt-0">
-                              <span className="col-span-3 mt-0 pt-0">
+                            <span className="grid grid-cols-3 mt-0 pt-0">
+                              <span className="col-span-1 text-left">
                                 {t(
                                   "Smartcoin:targetCollateralRatioDescription"
                                 )}
@@ -2779,6 +1875,7 @@ export default function Smartcoin(properties) {
                                   min: parsedBitasset.mcr / 1000,
                                 })}
                               </span>
+                              <span></span>
                             </span>
                           </FormDescription>
                           <FormControl>
@@ -2868,6 +1965,7 @@ export default function Smartcoin(properties) {
                           <Input
                             disabled
                             placeholder={fee ? `${fee} BTS` : ""}
+                            className="w-1/6"
                             readOnly
                           />
                         </FormControl>
@@ -3329,7 +2427,15 @@ export default function Smartcoin(properties) {
         ) : null}
 
         {usrMarginPositions && usrMarginPositions.length ? (
-          <UsrMarginPositionCard />
+          <UsrMarginPositionCard
+            usrMarginPositions={usrMarginPositions}
+            parsedCollateralAsset={parsedCollateralAsset}
+            parsedAsset={parsedAsset}
+            currentFeedSettlementPrice={currentFeedSettlementPrice}
+            debtAssetHoldings={debtAssetHoldings}
+            usr={usr}
+            exitJSON={exitJSON}
+          />
         ) : null}
 
         {!invalidUrlParams && finalAsset && parsedAsset && parsedBitasset ? (
@@ -3341,6 +2447,8 @@ export default function Smartcoin(properties) {
             type="debt"
             assetInfoFlags={parsedAssetFlags}
             assetPermissions={debtPermissions}
+            parsedCollateralAsset={parsedCollateralAsset}
+            usr={usr}
           />
         ) : null}
 
@@ -3459,6 +2567,8 @@ export default function Smartcoin(properties) {
             type="collateral"
             assetInfoFlags={collateralFlags}
             assetPermissions={collateralPermissions}
+            parsedCollateralAsset={parsedCollateralAsset}
+            usr={usr}
           />
         ) : null}
 
@@ -3803,60 +2913,7 @@ export default function Smartcoin(properties) {
         </div>
       ) : null}
 
-      <div className="grid grid-cols-1 mt-5">
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle>{t("Smartcoin:risksAssociated")}</CardTitle>
-            <CardDescription>
-              {t("Smartcoin:doYourOwnResearch2")}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {t("Smartcoin:internalRiskFactors")}
-            <br />
-            <span className="text-sm">
-              <Label className="mb-0 pb-0 text-lg">
-                {t("Smartcoin:risksAssociatedDebtCollateral")}
-              </Label>
-              <ul className="ml-2 list-disc [&>li]:mt-1 pl-2">
-                <li>{t("Smartcoin:riskLossCollateral")}</li>
-                <li>{t("Smartcoin:riskSmartcoinValueLoss")}</li>
-                <li>{t("Smartcoin:researchBeforeMarginPositions")}</li>
-                <li>{t("Smartcoin:committeeOwnedBitAssets")}</li>
-                <li>{t("Smartcoin:riskWithSmartcoinBacking")}</li>
-                <li>{t("Smartcoin:riskWithEBA")}</li>
-              </ul>
-            </span>
-            <br />
-            {t("Smartcoin:externalRiskFactors")}
-            <br />
-            <span className="text-sm">
-              <Label className="mb-0 pb-0 text-lg">
-                {t("Smartcoin:priceFeedExposure")}
-              </Label>
-              <ul className="ml-2 list-disc [&>li]:mt-2 pl-2">
-                <li>{t("Smartcoin:riskPriceFluctuation")}</li>
-                <li>{t("Smartcoin:riskReferenceAssetCease")}</li>
-              </ul>
-              <Label className="mb-0 pb-0 text-lg">
-                {t("Smartcoin:priceFeedPublisherActivity")}
-              </Label>
-              <ul className="ml-2 list-disc [&>li]:mt-2 pl-2">
-                <li>{t("Smartcoin:riskPriceFeedInactivity")}</li>
-                <li>{t("Smartcoin:riskUnstableFeedScripts")}</li>
-                <li>{t("Smartcoin:riskExhaustedBalance")}</li>
-                <li>{t("Smartcoin:riskPriceFeedDisagreement")}</li>
-              </ul>
-              <Label className="mb-0 pb-0 text-lg">
-                {t("Smartcoin:exposureToEBABackAssetBlockchainDowntime")}
-              </Label>
-              <ul className="ml-2 list-disc [&>li]:mt-2 pl-2">
-                <li>{t("Smartcoin:riskGatewayDepositServiceDown")}</li>
-              </ul>
-            </span>
-          </CardContent>
-        </Card>
-      </div>
+      <RisksCard />
     </div>
   );
 }
