@@ -1,6 +1,8 @@
 import path from "node:path";
 import os from "os";
 import url from "node:url";
+import { createConnection } from "node:net";
+import { performance } from "node:perf_hooks";
 import { readFile } from "fs/promises";
 import mime from "mime-types";
 
@@ -503,6 +505,78 @@ const createWindow = async () => {
     }
 
     return deeplink ?? null;
+  });
+
+  // Ping handler: perform a TCP connect to the host/port to measure latency using node:net
+  // Returns { ok: true, ms: <number> } on success, or { ok: false, error: <string> } on failure
+  ipcMain.handle("ping", async (event, urlToPing) => {
+    if (!urlToPing) return { ok: false, error: "missing_url" };
+
+    let parsed;
+    try {
+      parsed = new url.URL(urlToPing);
+    } catch (err) {
+      return { ok: false, error: `invalid_url: ${err && err.message}` };
+    }
+
+    // Determine host and port for the TCP connection. For ws/wss default to 80/443.
+    const hostname = parsed.hostname;
+    let port = parsed.port ? Number(parsed.port) : null;
+    if (!port) {
+      if (parsed.protocol === "wss:") port = 443;
+      else if (parsed.protocol === "ws:") port = 80;
+      else if (parsed.protocol === "https:") port = 443;
+      else if (parsed.protocol === "http:") port = 80;
+      else port = 80;
+    }
+
+    const timeoutMs = 5000; // 5s timeout as requested
+
+    return new Promise((resolve) => {
+      let settled = false;
+      const start = performance.now();
+
+      let socket;
+      try {
+        socket = createConnection({ host: hostname, port }, () => {
+          if (settled) return;
+          settled = true;
+          const ms = Math.round(performance.now() - start);
+          try {
+            socket.end();
+          } catch (e) {}
+          resolve({ ok: true, ms });
+        });
+      } catch (err) {
+        if (!settled) {
+          settled = true;
+          resolve({ ok: false, error: `connect_error: ${err && err.message}` });
+        }
+        return;
+      }
+
+      socket.setTimeout(timeoutMs);
+
+      const cleanup = () => {
+        try {
+          socket.destroy();
+        } catch (e) {}
+      };
+
+      socket.on("timeout", () => {
+        if (settled) return;
+        settled = true;
+        cleanup();
+        resolve({ ok: false, error: "timeout" });
+      });
+
+      socket.on("error", (err) => {
+        if (settled) return;
+        settled = true;
+        cleanup();
+        resolve({ ok: false, error: `error: ${err && err.message}` });
+      });
+    });
   });
 
   const safeDomains = [

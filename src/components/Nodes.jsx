@@ -25,6 +25,15 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function Nodes(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
@@ -40,6 +49,51 @@ export default function Nodes(properties) {
   const [inputURL, setInputURL] = useState("");
 
   const NodeRow = ({ index, style }) => {
+    const [open, setOpen] = useState(false);
+    const [pinging, setPinging] = useState(false);
+    const [pingResult, setPingResult] = useState(null);
+    // attempt is bumped to re-run the ping (used by Retry)
+    const [attempt, setAttempt] = useState(0);
+
+    const nodeUrl = nodes[usr.chain][index].url;
+
+    useEffect(() => {
+      let cancelled = false;
+
+      async function runPing() {
+        if (!open) return;
+        setPinging(true);
+        setPingResult(null);
+
+        // Use async/await to call the preload bridge (backend handles timeout)
+        try {
+          let res;
+          if (window?.electron?.ping) {
+            // backend should resolve with { ok: true, ms } on success
+            // or { ok: false, error: "timeout" } on timeout
+            res = await window.electron.ping(nodeUrl);
+          } else {
+            res = { ok: false, error: "no_bridge" };
+          }
+
+          if (cancelled) return;
+          setPingResult(res);
+        } catch (err) {
+          if (cancelled) return;
+          setPingResult({ ok: false, error: err?.message || String(err) });
+        } finally {
+          if (!cancelled) setPinging(false);
+        }
+      }
+
+      runPing();
+
+      return () => {
+        cancelled = true;
+      };
+    }, [open, index, attempt]);
+
+    // retry is disabled only while a ping is in progress (handled by `pinging`)
     return (
       <div style={{ ...style }} key={`acard-${index}`}>
         <Card className="ml-2 mr-2">
@@ -63,6 +117,60 @@ export default function Nodes(properties) {
                   >
                     ⬆️
                   </Button>
+                  <Dialog open={open} onOpenChange={setOpen}>
+                    <DialogTrigger asChild>
+                      <Button variant="none" className="mr-2">
+                        📶
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[420px] bg-white">
+                      <DialogHeader>
+                        <DialogTitle>Ping node</DialogTitle>
+                        <DialogDescription>
+                          Checking reachability for{" "}
+                          {nodes[usr.chain][index].url}
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="py-4">
+                        {pinging ? (
+                          <div className="flex items-center gap-2">
+                            <Spinner />
+                            <div> Pinging... </div>
+                          </div>
+                        ) : pingResult && pingResult.ok ? (
+                          <div className="text-green-600">
+                            Node is reachable!
+                            {pingResult &&
+                            typeof pingResult.ms !== "undefined" ? (
+                              <span className="ml-2 text-sm">
+                                Ping: {pingResult.ms} ms
+                              </span>
+                            ) : null}
+                          </div>
+                        ) : (
+                          <div className="text-red-600">
+                            Node appears temporarily unreachable. You will be
+                            alerted if it becomes reachable again.
+                            {pingResult && pingResult.error ? (
+                              <div className="text-sm text-red-400 mt-2">
+                                {pingResult.error}
+                              </div>
+                            ) : null}
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex justify-end">
+                        <Button
+                          className="mr-2"
+                          onClick={() => setAttempt((a) => a + 1)}
+                          disabled={pinging}
+                        >
+                          Retry
+                        </Button>
+                        <Button onClick={() => setOpen(false)}>Close</Button>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
                   <Button
                     variant="none"
                     onClick={() => {
