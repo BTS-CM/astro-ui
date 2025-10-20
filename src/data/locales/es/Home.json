@@ -21,7 +21,7 @@
     "hover3": "Ver saldos de fichas principales del comité."
   },
   "governance": {
-    "title": "🗳️ Gobierno",
+    "title": "🗳️ Registro de roles",
     "subtitle": "Crear/actualizar los roles de testigo y comité.",
     "hover1": "Crear, actualizar o invalidar su registro de testigos.",
     "hover2": "Crear o actualizar el registro de su miembro del comité."

@@ -21,7 +21,7 @@
     "hover3": "Visualizza i saldi dei token core del comitato."
   },
   "governance": {
-    "title": "🗳️ Governance",
+    "title": "🗳️ Registrazione del ruolo",
     "subtitle": "Crea/aggiorna i ruoli di testimoni e del comitato.",
     "hover1": "Crea, aggiorna o invalida la registrazione del tuo testimone.",
     "hover2": "Crea o aggiorna la registrazione dei membri del comitato."

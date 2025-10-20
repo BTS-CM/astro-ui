@@ -12,7 +12,7 @@ export default function WaveHero({ title, subtitle, className = "" }) {
       className={`relative mb-5 min-h-[420px] flex items-center ${className}`}
     >
       <svg
-        className="pointer-events-none absolute inset-0 -z-10 h-full w-[240%] -left-[70%]"
+        className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 -z-10 h-full w-[110vw]"
         viewBox="0 0 2000 600"
         preserveAspectRatio="none"
         aria-hidden="true"

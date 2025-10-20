@@ -300,16 +300,6 @@ export default function PageHeader(properties) {
       href: "/pools/index.html",
       description: "Home:pools.subtitle",
     },
-    {
-      title: "Home:witnesses.title",
-      href: "/witnesses/index.html",
-      description: "Home:witnesses.subtitle",
-    },
-    {
-      title: "Home:committee.title",
-      href: "/committee/index.html",
-      description: "Home:committee.subtitle",
-    },
   ];
 
   const assetCreation = [
@@ -327,6 +317,29 @@ export default function PageHeader(properties) {
       title: "Home:create_smartcoin.title",
       href: "/create_smartcoin/index.html",
       description: "Home:create_smartcoin.subtitle",
+    },
+  ];
+
+  const governanceHeading = [
+    {
+      title: "Home:witnesses.title",
+      href: "/witnesses/index.html",
+      description: "Home:witnesses.subtitle",
+    },
+    {
+      title: "Home:committee.title",
+      href: "/committee/index.html",
+      description: "Home:committee.subtitle",
+    },
+    {
+      title: "Home:governance.title",
+      href: "/governance/index.html",
+      description: "Home:governance.subtitle",
+    },
+    {
+      title: "Home:create_worker.title",
+      href: "/create_worker/index.html",
+      description: "Home:create_worker.subtitle",
     },
   ];
 
@@ -350,16 +363,6 @@ export default function PageHeader(properties) {
       title: "Home:create_account.title",
       href: "/create_account/index.html",
       description: "Home:create_account.subtitle",
-    },
-    {
-      title: "Home:governance.title",
-      href: "/governance/index.html",
-      description: "Home:governance.subtitle",
-    },
-    {
-      title: "Home:create_worker.title",
-      href: "/create_worker/index.html",
-      description: "Home:create_worker.subtitle",
     },
   ];
 
@@ -640,6 +643,30 @@ export default function PageHeader(properties) {
                   <NavigationMenuContent>
                     <ul className="grid gap-2 sm:w-[400px] md:w-[500px] md:grid-cols-2 lg:w-[600px] p-2">
                       {blockchainOverviewsHeading.map((component) => (
+                        <ListItem
+                          key={t(component.title)}
+                          title={t(component.title)}
+                          href={component.href}
+                        >
+                          {t(component.description)}
+                        </ListItem>
+                      ))}
+                    </ul>
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
+
+                <NavigationMenuItem>
+                  <Badge
+                    variant="secondary"
+                    className="hover:bg-slate-200 hover:text-black"
+                  >
+                    <NavigationMenuTrigger>
+                      {t("PageHeader:governanceHeading")}
+                    </NavigationMenuTrigger>
+                  </Badge>
+                  <NavigationMenuContent>
+                    <ul className="grid gap-2 sm:w-[400px] md:w-[500px] md:grid-cols-2 lg:w-[600px] p-2">
+                      {governanceHeading.map((component) => (
                         <ListItem
                           key={t(component.title)}
                           title={t(component.title)}

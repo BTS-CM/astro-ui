@@ -21,7 +21,7 @@
     "hover3": "Veja os saldos do token do comitê."
   },
   "governance": {
-    "title": "🗳️ Governança",
+    "title": "🗳️ Registro de função",
     "subtitle": "Crie/atualize as funções de testemunha e comitê.",
     "hover1": "Crie, atualize ou invalide seu registro de testemunha.",
     "hover2": "Crie ou atualize o registro do seu membro do comitê."

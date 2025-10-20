@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import WaveHero from "./WaveHero";
 import { useStore } from "@nanostores/react";
 import { useSyncExternalStore } from "react";
@@ -93,1178 +93,646 @@ export default function Home(properties) {
     }
   }, [usr, currentNode]);
 
+  const accordionSections = [
+    {
+      value: "item-1",
+      icon: "💱",
+      headingKey: "PageHeader:exchangingFundsHeading",
+      cards: [
+        {
+          key: "dex",
+          href: "/dex/index.html",
+          titleKey: "Home:dex.title",
+          subtitleKey: "Home:dex.subtitle",
+          hoverKeys: [
+            "Home:dex.hover1",
+            "Home:dex.hover2",
+            "Home:dex.hover3",
+            "Home:dex.hover4",
+          ],
+        },
+        {
+          key: "swap",
+          href: "/swap/index.html",
+          titleKey: "Home:swap.title",
+          subtitleKey: "Home:swap.subtitle",
+          hoverKeys: [
+            "Home:swap.hover1",
+            "Home:swap.hover2",
+            "Home:swap.hover3",
+          ],
+        },
+        {
+          key: "poolStake",
+          href: "/stake/index.html",
+          titleKey: "Home:stake.title",
+          subtitleKey: "Home:stake.subtitle",
+          hoverKeys: [
+            "Home:stake.hover1",
+            "Home:stake.hover2",
+            "Home:stake.hover3",
+          ],
+        },
+        {
+          key: "barter",
+          href: "/barter/index.html",
+          titleKey: "Home:barter.title",
+          subtitleKey: "Home:barter.subtitle",
+          hoverKeys: [
+            "Home:barter.hover1",
+            "Home:barter.hover2",
+            "Home:barter.hover3",
+          ],
+        },
+        {
+          key: "tfunds",
+          href: "/tfund_user/index.html",
+          titleKey: "Home:tfund_user.title",
+          subtitleKey: "Home:tfund_user.subtitle",
+          hoverKeys: [
+            "Home:tfund_user.hover1",
+            "Home:tfund_user.hover2",
+            "Home:tfund_user.hover3",
+          ],
+        },
+        {
+          key: "predictions",
+          href: "/predictions/index.html",
+          titleKey: "Home:prediction_markets.title",
+          subtitleKey: "Home:prediction_markets.subtitle",
+          hoverKeys: [
+            "Home:prediction_markets.hover1",
+            "Home:prediction_markets.hover2",
+            "Home:prediction_markets.hover3",
+          ],
+        },
+      ],
+    },
+    {
+      value: "item-2",
+      icon: "📩",
+      headingKey: "PageHeader:transferFundsHeading",
+      cards: [
+        {
+          key: "transfer",
+          href: "/transfer/index.html",
+          titleKey: "Home:transfer.title",
+          subtitleKey: "Home:transfer.subtitle",
+          hoverKeys: ["Home:transfer.hover1"],
+        },
+        {
+          key: "timed_transfer",
+          href: "/timed_transfer/index.html",
+          titleKey: "Home:timed_transfer.title",
+          subtitleKey: "Home:timed_transfer.subtitle",
+          hoverKeys: ["Home:timed_transfer.hover1"],
+        },
+        {
+          key: "withdraw_permissions",
+          href: "/withdraw_permissions/index.html",
+          titleKey: "Home:withdraw_permission.title",
+          subtitleKey: "Home:withdraw_permission.subtitle",
+          hoverKeys: [
+            "Home:withdraw_permission.hover1",
+            "Home:withdraw_permission.hover2",
+          ],
+        },
+        {
+          key: "htlc",
+          href: "/htlc/index.html",
+          titleKey: "Home:htlc.title",
+          subtitleKey: "Home:htlc.subtitle",
+          hoverKeys: [
+            "Home:htlc.hover1",
+            "Home:htlc.hover2",
+            "Home:htlc.hover3",
+          ],
+        },
+        {
+          key: "create_vesting",
+          href: "/create_vesting/index.html",
+          titleKey: "Home:create_vesting.title",
+          subtitleKey: "Home:create_vesting.subtitle",
+          hoverKeys: [
+            "Home:create_vesting.hover1",
+            "Home:create_vesting.hover2",
+            "Home:create_vesting.hover3",
+            "Home:create_vesting.hover4",
+          ],
+        },
+      ],
+    },
+    {
+      value: "item-3",
+      icon: "🏦",
+      headingKey: "PageHeader:formsOfDebtHeading",
+      cards: [
+        {
+          key: "borrow",
+          href: "/borrow/index.html",
+          titleKey: "Home:borrow.title",
+          subtitleKey: "Home:borrow.subtitle",
+          hoverKeys: [
+            "Home:borrow.hover1",
+            "Home:borrow.hover2",
+            "Home:borrow.hover3",
+          ],
+        },
+        {
+          key: "lend",
+          href: "/lend/index.html",
+          titleKey: "Home:lend.title",
+          subtitleKey: "Home:lend.subtitle",
+          hoverKeys: [
+            "Home:lend.hover1",
+            "Home:lend.hover2",
+            "Home:lend.hover3",
+          ],
+        },
+        {
+          key: "smartcoins",
+          href: "/smartcoins/index.html",
+          titleKey: "Home:smartcoins.title",
+          subtitleKey: "Home:smartcoins.subtitle",
+          hoverKeys: [
+            "Home:smartcoins.hover1",
+            "Home:smartcoins.hover2",
+            "Home:smartcoins.hover3",
+            "Home:smartcoins.hover4",
+          ],
+        },
+        {
+          key: "tfunds",
+          href: "/tfunds/index.html",
+          titleKey: "Home:tfunds.title",
+          subtitleKey: "Home:tfunds.subtitle",
+          hoverKeys: [
+            "Home:tfunds.hover1",
+            "Home:tfunds.hover2",
+            "Home:tfunds.hover3",
+            "Home:tfunds.hover4",
+          ],
+        },
+      ],
+    },
+    {
+      value: "item-6",
+      icon: "💎",
+      headingKey: "PageHeader:assetCreation",
+      cards: [
+        {
+          key: "create_prediction",
+          href: "/create_prediction/index.html",
+          titleKey: "Home:create_prediction.title",
+          subtitleKey: "Home:create_prediction.subtitle",
+          hoverKeys: [
+            "Home:create_prediction.hover1",
+            "Home:create_prediction.hover2",
+            "Home:create_prediction.hover3",
+          ],
+        },
+        {
+          key: "create_uia",
+          href: "/create_uia/index.html",
+          titleKey: "Home:create_uia.title",
+          subtitleKey: "Home:create_uia.subtitle",
+          hoverKeys: [
+            "Home:create_uia.hover1",
+            "Home:create_uia.hover2",
+            "Home:create_uia.hover3",
+          ],
+        },
+        {
+          key: "create_smartcoin",
+          href: "/create_smartcoin/index.html",
+          titleKey: "Home:create_smartcoin.title",
+          subtitleKey: "Home:create_smartcoin.subtitle",
+          hoverKeys: [
+            "Home:create_smartcoin.hover1",
+            "Home:create_smartcoin.hover2",
+            "Home:create_smartcoin.hover3",
+          ],
+        },
+      ],
+    },
+    {
+      value: "item-4",
+      icon: "👤",
+      headingKey: "PageHeader:accountOverviewsHeading",
+      cards: [
+        {
+          key: "portfolio",
+          href: "/portfolio/index.html",
+          titleKey: "Home:portfolio.title",
+          subtitleKey: "Home:portfolio.subtitle",
+          hoverKeys: [
+            "Home:portfolio.hover1",
+            "Home:portfolio.hover2",
+            "Home:portfolio.hover3",
+          ],
+        },
+        {
+          key: "issued_assets",
+          href: "/issued_assets/index.html",
+          titleKey: "Home:issued_assets.title",
+          subtitleKey: "Home:issued_assets.subtitle",
+          hoverKeys: [
+            "Home:issued_assets.hover1",
+            "Home:issued_assets.hover2",
+            "Home:issued_assets.hover3",
+          ],
+        },
+        {
+          key: "offers",
+          href: "/offers/index.html",
+          titleKey: "Home:offers.title",
+          subtitleKey: "Home:offers.subtitle",
+          hoverKeys: ["Home:offers.hover1", "Home:offers.hover2"],
+        },
+        {
+          key: "deals",
+          href: "/deals/index.html",
+          titleKey: "Home:deals.title",
+          subtitleKey: "Home:deals.subtitle",
+          hoverKeys: ["Home:deals.hover1", "Home:deals.hover2"],
+        },
+        {
+          key: "vesting",
+          href: "/vesting/index.html",
+          titleKey: "Home:vesting.title",
+          subtitleKey: "Home:vesting.subtitle",
+          hoverKeys: ["Home:vesting.hover1", "Home:vesting.hover2"],
+        },
+        {
+          key: "proposals",
+          href: "/proposals/index.html",
+          titleKey: "Home:proposals.title",
+          subtitleKey: "Home:proposals.subtitle",
+          hoverKeys: ["Home:proposals.hover1", "Home:proposals.hover2"],
+        },
+      ],
+    },
+    {
+      value: "item-5",
+      icon: "⛓️",
+      headingKey: "PageHeader:blockchainOverviewsHeading",
+      cards: [
+        {
+          key: "featured",
+          href: "/featured/index.html",
+          titleKey: "Home:featured.title",
+          subtitleKey: "Home:featured.subtitle",
+          hoverKeys: [
+            "Home:featured.hover1",
+            "Home:featured.hover2",
+            "Home:featured.hover3",
+          ],
+        },
+        {
+          key: "blocks",
+          href: "/blocks/index.html",
+          titleKey: "Home:blocks.title",
+          subtitleKey: "Home:blocks.subtitle",
+          hoverKeys: [
+            "Home:blocks.hover1",
+            "Home:blocks.hover2",
+            "Home:blocks.hover3",
+          ],
+        },
+        {
+          key: "custom_pool_tracker",
+          href: "/custom_pool_overview/index.html",
+          titleKey: "Home:custom_pool_tracker.title",
+          subtitleKey: "Home:custom_pool_tracker.subtitle",
+          hoverKeys: [
+            "Home:custom_pool_tracker.hover1",
+            "Home:custom_pool_tracker.hover2",
+          ],
+        },
+        {
+          key: "pools",
+          href: "/pools/index.html",
+          titleKey: "Home:pools.title",
+          subtitleKey: "Home:pools.subtitle",
+          hoverKeys: [
+            "Home:pools.hover1",
+            "Home:pools.hover2",
+            "Home:pools.hover3",
+          ],
+        },
+      ],
+    },
+    {
+      value: "item-8",
+      icon: "🪪",
+      headingKey: "PageHeader:governanceHeading",
+      cards: [
+        {
+          key: "witnesses",
+          href: "/witnesses/index.html",
+          titleKey: "Home:witnesses.title",
+          subtitleKey: "Home:witnesses.subtitle",
+          hoverKeys: [
+            "Home:witnesses.hover1",
+            "Home:witnesses.hover2",
+            "Home:witnesses.hover3",
+          ],
+        },
+        {
+          key: "committee",
+          href: "/committee/index.html",
+          titleKey: "Home:committee.title",
+          subtitleKey: "Home:committee.subtitle",
+          hoverKeys: [
+            "Home:committee.hover1",
+            "Home:committee.hover2",
+            "Home:committee.hover3",
+          ],
+        },
+        {
+          key: "governance",
+          href: "/governance/index.html",
+          titleKey: "Home:governance.title",
+          subtitleKey: "Home:governance.subtitle",
+          hoverKeys: ["Home:governance.hover1", "Home:governance.hover2"],
+        },
+        {
+          key: "create_worker",
+          href: "/create_worker/index.html",
+          titleKey: "Home:create_worker.title",
+          subtitleKey: "Home:create_worker.subtitle",
+          hoverKeys: [
+            "Home:create_worker.hover1",
+            "Home:create_worker.hover2",
+            "Home:create_worker.hover3",
+          ],
+        },
+      ],
+    },
+    {
+      value: "item-7",
+      icon: "⚙️",
+      headingKey: "PageHeader:settingsHeading",
+      cards: [
+        {
+          key: "accountLists",
+          href: "/account_lists/index.html",
+          titleKey: "Home:accountLists.title",
+          subtitleKey: "Home:accountLists.subtitle",
+          hoverKeys: [
+            "Home:accountLists.hover1",
+            "Home:accountLists.hover2",
+            "Home:accountLists.hover3",
+          ],
+        },
+        {
+          key: "ltm",
+          href: "/ltm/index.html",
+          titleKey: "Home:ltm.title",
+          subtitleKey: "Home:ltm.subtitle",
+          hoverKeys: [
+            "Home:ltm.hover1",
+            "Home:ltm.hover2",
+            "Home:ltm.hover3",
+            "Home:ltm.hover4",
+          ],
+        },
+        {
+          key: "nodes",
+          href: "/nodes/index.html",
+          titleKey: "Home:nodes.title",
+          subtitleKey: "Home:nodes.subtitle",
+          hoverKeys: ["Home:nodes.hover1", "Home:nodes.hover2"],
+        },
+        {
+          key: "create_account",
+          href: "/create_account/index.html",
+          titleKey: "Home:create_account.title",
+          subtitleKey: "Home:create_account.subtitle",
+          hoverKeys: [
+            "Home:create_account.hover1",
+            "Home:create_account.hover2",
+          ],
+        },
+      ],
+    },
+  ];
+
+  const renderHoverCard = (card) => (
+    <HoverCard key={card.key}>
+      <HoverCardTrigger asChild>
+        <a href={card.href} style={{ textDecoration: "none" }}>
+          <Card className="h-full hover:shadow-md hover:shadow-black">
+            <CardHeader>
+              <CardTitle>{t(card.titleKey)}</CardTitle>
+              <CardDescription>{t(card.subtitleKey)}</CardDescription>
+            </CardHeader>
+          </Card>
+        </a>
+      </HoverCardTrigger>
+      <HoverCardContent className="w-80 text-sm pt-1">
+        <ul className="ml-2 list-disc [&>li]:mt-2">
+          {card.hoverKeys?.map((hoverKey, index) => (
+            <li key={`${card.key}-hover-${index}`}>{t(hoverKey)}</li>
+          ))}
+        </ul>
+      </HoverCardContent>
+    </HoverCard>
+  );
+
   return (
-    <div className="container mx-auto mt-3 mb-5">
-      <WaveHero />
-      <div className="grid grid-cols-3 gap-3 justify-items-center mb-5">
-        <div className="col-span-3">
-          <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight mb-5">
-            {t("Home:features.heading")}
-          </h3>
+    <>
+      {/* full-bleed hero wrapper: spans entire window, clips horizontal overflow */}
+      <div className="w-full overflow-hidden">
+        <WaveHero />
+      </div>
+      <div className="container mx-auto mt-3 mb-5">
+        <div className="grid grid-cols-3 gap-3 justify-items-center mb-5">
+          <div className="col-span-3">
+            <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight mb-5">
+              {t("Home:features.heading")}
+            </h3>
+          </div>
+
+          <Item
+            key="feature-1"
+            variant="outline"
+            className="w-full bg-white max-w-sm"
+          >
+            <ItemMedia variant="icon">⛓️‍💥</ItemMedia>
+            <ItemContent>
+              <ItemTitle className="text-black">
+                {t("Home:features.zeroAuth.title")}
+              </ItemTitle>
+              <ItemDescription>
+                {t("Home:features.zeroAuth.description")}
+              </ItemDescription>
+            </ItemContent>
+          </Item>
+
+          <Item
+            key="feature-2"
+            variant="outline"
+            className="w-full bg-white max-w-sm"
+          >
+            <ItemMedia variant="icon">📡</ItemMedia>
+            <ItemContent>
+              <ItemTitle className="text-black">
+                {t("Home:features.multiBroadcast.title")}
+              </ItemTitle>
+              <ItemDescription>
+                {t("Home:features.multiBroadcast.description")}
+              </ItemDescription>
+            </ItemContent>
+          </Item>
+
+          <Item
+            key="feature-3"
+            variant="outline"
+            className="w-full bg-white max-w-sm"
+          >
+            <ItemMedia variant="icon">🧑‍🔬</ItemMedia>
+            <ItemContent>
+              <ItemTitle className="text-black">
+                {t("Home:features.supportsLatest.title")}
+              </ItemTitle>
+              <ItemDescription>
+                {t("Home:features.supportsLatest.description")}
+              </ItemDescription>
+            </ItemContent>
+          </Item>
+
+          <Item
+            key="feature-4"
+            variant="outline"
+            className="w-full bg-white max-w-sm"
+          >
+            <ItemMedia variant="icon">🌐</ItemMedia>
+            <ItemContent>
+              <ItemTitle className="text-black">
+                {t("Home:features.switchChains.title")}
+              </ItemTitle>
+              <ItemDescription>
+                {t("Home:features.switchChains.description")}
+              </ItemDescription>
+            </ItemContent>
+          </Item>
+
+          <Item
+            key="feature-5"
+            variant="outline"
+            className="w-full bg-white max-w-sm"
+          >
+            <ItemMedia variant="icon">🚀</ItemMedia>
+            <ItemContent>
+              <ItemTitle className="text-black">
+                {t("Home:features.nearInstant.title")}
+              </ItemTitle>
+              <ItemDescription>
+                {t("Home:features.nearInstant.description")}
+              </ItemDescription>
+            </ItemContent>
+          </Item>
+
+          <Item
+            key="feature-6"
+            variant="outline"
+            className="w-full bg-white max-w-sm"
+          >
+            <ItemMedia variant="icon">🌲</ItemMedia>
+            <ItemContent>
+              <ItemTitle className="text-black">
+                {t("Home:features.evergreen.title")}
+              </ItemTitle>
+              <ItemDescription>
+                {t("Home:features.evergreen.description")}
+              </ItemDescription>
+            </ItemContent>
+          </Item>
+
+          <Item
+            key="feature-7"
+            variant="outline"
+            className="w-full bg-white max-w-sm"
+          >
+            <ItemMedia variant="icon">👛</ItemMedia>
+            <ItemContent>
+              <ItemTitle className="text-black">
+                {t("Home:features.multiWallets.title")}
+              </ItemTitle>
+              <ItemDescription>
+                {t("Home:features.multiWallets.description")}
+              </ItemDescription>
+            </ItemContent>
+          </Item>
+
+          <Item
+            key="feature-8"
+            variant="outline"
+            className="w-full bg-white max-w-sm"
+          >
+            <ItemMedia variant="icon">🌍</ItemMedia>
+            <ItemContent>
+              <ItemTitle className="text-black">
+                {t("Home:features.localized.title")}
+              </ItemTitle>
+              <ItemDescription>
+                {t("Home:features.localized.description")}
+              </ItemDescription>
+            </ItemContent>
+          </Item>
+
+          <Item
+            key="feature-9"
+            variant="outline"
+            className="w-full bg-white max-w-sm"
+          >
+            <ItemMedia variant="icon">🤚</ItemMedia>
+            <ItemContent>
+              <ItemTitle className="text-black">
+                {t("Home:features.blockActors.title")}
+              </ItemTitle>
+              <ItemDescription>
+                {t("Home:features.blockActors.description")}
+              </ItemDescription>
+            </ItemContent>
+          </Item>
         </div>
 
-        <Item
-          key="feature-1"
-          variant="outline"
-          className="w-full bg-white max-w-sm"
-        >
-          <ItemMedia variant="icon">⛓️‍💥</ItemMedia>
-          <ItemContent>
-            <ItemTitle className="text-black">
-              {t("Home:features.zeroAuth.title")}
-            </ItemTitle>
-            <ItemDescription>
-              {t("Home:features.zeroAuth.description")}
-            </ItemDescription>
-          </ItemContent>
-        </Item>
+        <br />
 
-        <Item
-          key="feature-2"
-          variant="outline"
-          className="w-full bg-white max-w-sm"
-        >
-          <ItemMedia variant="icon">📡</ItemMedia>
-          <ItemContent>
-            <ItemTitle className="text-black">
-              {t("Home:features.multiBroadcast.title")}
-            </ItemTitle>
-            <ItemDescription>
-              {t("Home:features.multiBroadcast.description")}
-            </ItemDescription>
-          </ItemContent>
-        </Item>
+        <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight mb-5 text-center mt-10">
+          {t("Home:features.functionalityHeading")}
+        </h3>
 
-        <Item
-          key="feature-3"
-          variant="outline"
-          className="w-full bg-white max-w-sm"
-        >
-          <ItemMedia variant="icon">🧑‍🔬</ItemMedia>
+        <Item variant="outline">
           <ItemContent>
-            <ItemTitle className="text-black">
-              {t("Home:features.supportsLatest.title")}
-            </ItemTitle>
             <ItemDescription>
-              {t("Home:features.supportsLatest.description")}
-            </ItemDescription>
-          </ItemContent>
-        </Item>
-
-        <Item
-          key="feature-4"
-          variant="outline"
-          className="w-full bg-white max-w-sm"
-        >
-          <ItemMedia variant="icon">🌐</ItemMedia>
-          <ItemContent>
-            <ItemTitle className="text-black">
-              {t("Home:features.switchChains.title")}
-            </ItemTitle>
-            <ItemDescription>
-              {t("Home:features.switchChains.description")}
-            </ItemDescription>
-          </ItemContent>
-        </Item>
-
-        <Item
-          key="feature-5"
-          variant="outline"
-          className="w-full bg-white max-w-sm"
-        >
-          <ItemMedia variant="icon">🚀</ItemMedia>
-          <ItemContent>
-            <ItemTitle className="text-black">
-              {t("Home:features.nearInstant.title")}
-            </ItemTitle>
-            <ItemDescription>
-              {t("Home:features.nearInstant.description")}
-            </ItemDescription>
-          </ItemContent>
-        </Item>
-
-        <Item
-          key="feature-6"
-          variant="outline"
-          className="w-full bg-white max-w-sm"
-        >
-          <ItemMedia variant="icon">🌲</ItemMedia>
-          <ItemContent>
-            <ItemTitle className="text-black">
-              {t("Home:features.evergreen.title")}
-            </ItemTitle>
-            <ItemDescription>
-              {t("Home:features.evergreen.description")}
-            </ItemDescription>
-          </ItemContent>
-        </Item>
-
-        <Item
-          key="feature-7"
-          variant="outline"
-          className="w-full bg-white max-w-sm"
-        >
-          <ItemMedia variant="icon">👛</ItemMedia>
-          <ItemContent>
-            <ItemTitle className="text-black">
-              {t("Home:features.multiWallets.title")}
-            </ItemTitle>
-            <ItemDescription>
-              {t("Home:features.multiWallets.description")}
-            </ItemDescription>
-          </ItemContent>
-        </Item>
-
-        <Item
-          key="feature-8"
-          variant="outline"
-          className="w-full bg-white max-w-sm"
-        >
-          <ItemMedia variant="icon">🌍</ItemMedia>
-          <ItemContent>
-            <ItemTitle className="text-black">
-              {t("Home:features.localized.title")}
-            </ItemTitle>
-            <ItemDescription>
-              {t("Home:features.localized.description")}
-            </ItemDescription>
-          </ItemContent>
-        </Item>
-
-        <Item
-          key="feature-9"
-          variant="outline"
-          className="w-full bg-white max-w-sm"
-        >
-          <ItemMedia variant="icon">🤚</ItemMedia>
-          <ItemContent>
-            <ItemTitle className="text-black">
-              {t("Home:features.blockActors.title")}
-            </ItemTitle>
-            <ItemDescription>
-              {t("Home:features.blockActors.description")}
+              <Accordion
+                type="single"
+                collapsible
+                className="w-full"
+                defaultValue="item-1"
+              >
+                {accordionSections.map((section) => (
+                  <AccordionItem key={section.value} value={section.value}>
+                    <AccordionTrigger>
+                      <h4 className="mt-3 mb-2 scroll-m-20 text-xl font-semibold tracking-tight text-white">
+                        {section.icon} {t(section.headingKey)}
+                      </h4>
+                    </AccordionTrigger>
+                    <AccordionContent className="flex flex-col gap-4 text-balance">
+                      <div className="grid grid-cols-5 gap-3">
+                        {section.cards.map((card) => renderHoverCard(card))}
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
             </ItemDescription>
           </ItemContent>
         </Item>
       </div>
-
-      <br />
-
-      <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight mb-5 text-center mt-10">
-        {t("Home:features.functionalityHeading")}
-      </h3>
-
-      <Item variant="outline">
-        <ItemContent>
-          <ItemDescription>
-            <Accordion
-              type="single"
-              collapsible
-              className="w-full"
-              defaultValue="item-1"
-            >
-              <AccordionItem value="item-1">
-                <AccordionTrigger>
-                  <h4 className="mb-2 scroll-m-20 text-xl font-semibold tracking-tight text-white">
-                    💱 {t("PageHeader:exchangingFundsHeading")}
-                  </h4>
-                </AccordionTrigger>
-                <AccordionContent className="flex flex-col gap-4 text-balance">
-                  <div className="grid grid-cols-5 gap-3">
-                    <HoverCard key="dex">
-                      <HoverCardTrigger asChild>
-                        <a
-                          href="/dex/index.html"
-                          style={{ textDecoration: "none" }}
-                        >
-                          <Card className="h-full hover:shadow-md hover:shadow-black">
-                            <CardHeader>
-                              <CardTitle>{t("Home:dex.title")}</CardTitle>
-                              <CardDescription>
-                                {t("Home:dex.subtitle")}
-                              </CardDescription>
-                            </CardHeader>
-                          </Card>
-                        </a>
-                      </HoverCardTrigger>
-                      <HoverCardContent className="w-80 text-sm pt-1">
-                        <ul className="ml-2 list-disc [&>li]:mt-2">
-                          <li>{t("Home:dex.hover1")}</li>
-                          <li>{t("Home:dex.hover2")}</li>
-                          <li>{t("Home:dex.hover3")}</li>
-                          <li>{t("Home:dex.hover4")}</li>
-                        </ul>
-                      </HoverCardContent>
-                    </HoverCard>
-
-                    <HoverCard key="swap">
-                      <HoverCardTrigger asChild>
-                        <a
-                          href="/swap/index.html"
-                          style={{ textDecoration: "none" }}
-                        >
-                          <Card className="h-full hover:shadow-md hover:shadow-black">
-                            <CardHeader>
-                              <CardTitle>{t("Home:swap.title")}</CardTitle>
-                              <CardDescription>
-                                {t("Home:swap.subtitle")}
-                              </CardDescription>
-                            </CardHeader>
-                          </Card>
-                        </a>
-                      </HoverCardTrigger>
-                      <HoverCardContent className="w-80 text-sm pt-1">
-                        <ul className="ml-2 list-disc [&>li]:mt-2">
-                          <li>{t("Home:swap.hover1")}</li>
-                          <li>{t("Home:swap.hover2")}</li>
-                          <li>{t("Home:swap.hover3")}</li>
-                        </ul>
-                      </HoverCardContent>
-                    </HoverCard>
-
-                    <HoverCard key="poolStake">
-                      <HoverCardTrigger asChild>
-                        <a
-                          href="/stake/index.html"
-                          style={{ textDecoration: "none" }}
-                        >
-                          <Card className="h-full hover:shadow-md hover:shadow-black">
-                            <CardHeader>
-                              <CardTitle>{t("Home:stake.title")}</CardTitle>
-                              <CardDescription>
-                                {t("Home:stake.subtitle")}
-                              </CardDescription>
-                            </CardHeader>
-                          </Card>
-                        </a>
-                      </HoverCardTrigger>
-                      <HoverCardContent className="w-80 text-sm pt-1">
-                        <ul className="ml-2 list-disc [&>li]:mt-2">
-                          <li>{t("Home:stake.hover1")}</li>
-                          <li>{t("Home:stake.hover2")}</li>
-                          <li>{t("Home:stake.hover3")}</li>
-                        </ul>
-                      </HoverCardContent>
-                    </HoverCard>
-
-                    <HoverCard key="barter">
-                      <HoverCardTrigger asChild>
-                        <a
-                          href="/barter/index.html"
-                          style={{ textDecoration: "none" }}
-                        >
-                          <Card className="h-full hover:shadow-md hover:shadow-black">
-                            <CardHeader>
-                              <CardTitle>{t("Home:barter.title")}</CardTitle>
-                              <CardDescription>
-                                {t("Home:barter.subtitle")}
-                              </CardDescription>
-                            </CardHeader>
-                          </Card>
-                        </a>
-                      </HoverCardTrigger>
-                      <HoverCardContent className="w-80 text-sm pt-1">
-                        <ul className="ml-2 list-disc [&>li]:mt-2">
-                          <li>{t("Home:barter.hover1")}</li>
-                          <li>{t("Home:barter.hover2")}</li>
-                          <li>{t("Home:barter.hover3")}</li>
-                        </ul>
-                      </HoverCardContent>
-                    </HoverCard>
-
-                    <HoverCard key="tfunds">
-                      <HoverCardTrigger asChild>
-                        <a
-                          href="/tfund_user/index.html"
-                          style={{ textDecoration: "none" }}
-                        >
-                          <Card className="h-full hover:shadow-md hover:shadow-black">
-                            <CardHeader>
-                              <CardTitle>
-                                {t("Home:tfund_user.title")}
-                              </CardTitle>
-                              <CardDescription>
-                                {t("Home:tfund_user.subtitle")}
-                              </CardDescription>
-                            </CardHeader>
-                          </Card>
-                        </a>
-                      </HoverCardTrigger>
-                      <HoverCardContent className="w-80 text-sm pt-1">
-                        <ul className="ml-2 list-disc [&>li]:mt-2">
-                          <li>{t("Home:tfund_user.hover1")}</li>
-                          <li>{t("Home:tfund_user.hover2")}</li>
-                          <li>{t("Home:tfund_user.hover3")}</li>
-                        </ul>
-                      </HoverCardContent>
-                    </HoverCard>
-
-                    <HoverCard key="predictions">
-                      <HoverCardTrigger asChild>
-                        <a
-                          href="/predictions/index.html"
-                          style={{ textDecoration: "none" }}
-                        >
-                          <Card className="h-full hover:shadow-md hover:shadow-black">
-                            <CardHeader>
-                              <CardTitle>
-                                {t("Home:prediction_markets.title")}
-                              </CardTitle>
-                              <CardDescription>
-                                {t("Home:prediction_markets.subtitle")}
-                              </CardDescription>
-                            </CardHeader>
-                          </Card>
-                        </a>
-                      </HoverCardTrigger>
-                      <HoverCardContent className="w-80 text-sm pt-1">
-                        <ul className="ml-2 list-disc [&>li]:mt-2">
-                          <li>{t("Home:prediction_markets.hover1")}</li>
-                          <li>{t("Home:prediction_markets.hover2")}</li>
-                          <li>{t("Home:prediction_markets.hover3")}</li>
-                        </ul>
-                      </HoverCardContent>
-                    </HoverCard>
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-
-              <AccordionItem value="item-2">
-                <AccordionTrigger>
-                  <h4 className="mb-2 scroll-m-20 text-xl font-semibold tracking-tight text-white">
-                    📩 {t("PageHeader:transferFundsHeading")}
-                  </h4>
-                </AccordionTrigger>
-                <AccordionContent className="flex flex-col gap-4 text-balance">
-                  <div className="grid grid-cols-5 gap-3">
-                    <HoverCard key="transfer">
-                      <HoverCardTrigger asChild>
-                        <a
-                          href="/transfer/index.html"
-                          style={{ textDecoration: "none" }}
-                        >
-                          <Card className="h-full hover:shadow-md hover:shadow-black">
-                            <CardHeader>
-                              <CardTitle>{t("Home:transfer.title")}</CardTitle>
-                              <CardDescription>
-                                {t("Home:transfer.subtitle")}
-                              </CardDescription>
-                            </CardHeader>
-                          </Card>
-                        </a>
-                      </HoverCardTrigger>
-                      <HoverCardContent className="w-80 text-sm pt-1">
-                        <ul className="ml-2 list-disc [&>li]:mt-2">
-                          <li>{t("Home:transfer.hover1")}</li>
-                        </ul>
-                      </HoverCardContent>
-                    </HoverCard>
-
-                    <HoverCard key="timed_transfer">
-                      <HoverCardTrigger asChild>
-                        <a
-                          href="/timed_transfer/index.html"
-                          style={{ textDecoration: "none" }}
-                        >
-                          <Card className="h-full hover:shadow-md hover:shadow-black">
-                            <CardHeader>
-                              <CardTitle>
-                                {t("Home:timed_transfer.title")}
-                              </CardTitle>
-                              <CardDescription>
-                                {t("Home:timed_transfer.subtitle")}
-                              </CardDescription>
-                            </CardHeader>
-                          </Card>
-                        </a>
-                      </HoverCardTrigger>
-                      <HoverCardContent className="w-80 text-sm pt-1">
-                        <ul className="ml-2 list-disc [&>li]:mt-2">
-                          <li>{t("Home:timed_transfer.hover1")}</li>
-                        </ul>
-                      </HoverCardContent>
-                    </HoverCard>
-
-                    <HoverCard key="withdraw_permissions">
-                      <HoverCardTrigger asChild>
-                        <a
-                          href="/withdraw_permissions/index.html"
-                          style={{ textDecoration: "none" }}
-                        >
-                          <Card className="h-full hover:shadow-md hover:shadow-black">
-                            <CardHeader>
-                              <CardTitle>
-                                {t("Home:withdraw_permission.title")}
-                              </CardTitle>
-                              <CardDescription>
-                                {t("Home:withdraw_permission.subtitle")}
-                              </CardDescription>
-                            </CardHeader>
-                          </Card>
-                        </a>
-                      </HoverCardTrigger>
-                      <HoverCardContent className="w-80 text-sm pt-1">
-                        <ul className="ml-2 list-disc [&>li]:mt-2">
-                          <li>{t("Home:withdraw_permission.hover1")}</li>
-                          <li>{t("Home:withdraw_permission.hover2")}</li>
-                        </ul>
-                      </HoverCardContent>
-                    </HoverCard>
-
-                    <HoverCard key="htlc">
-                      <HoverCardTrigger asChild>
-                        <a
-                          href="/htlc/index.html"
-                          style={{ textDecoration: "none" }}
-                        >
-                          <Card className="h-full hover:shadow-md hover:shadow-black">
-                            <CardHeader>
-                              <CardTitle>{t("Home:htlc.title")}</CardTitle>
-                              <CardDescription>
-                                {t("Home:htlc.subtitle")}
-                              </CardDescription>
-                            </CardHeader>
-                          </Card>
-                        </a>
-                      </HoverCardTrigger>
-                      <HoverCardContent className="w-80 text-sm pt-1">
-                        <ul className="ml-2 list-disc [&>li]:mt-2">
-                          <li>{t("Home:htlc.hover1")}</li>
-                          <li>{t("Home:htlc.hover2")}</li>
-                          <li>{t("Home:htlc.hover3")}</li>
-                        </ul>
-                      </HoverCardContent>
-                    </HoverCard>
-
-                    <HoverCard key="create_vesting">
-                      <HoverCardTrigger asChild>
-                        <a
-                          href="/create_vesting/index.html"
-                          style={{ textDecoration: "none" }}
-                        >
-                          <Card className="h-full hover:shadow-md hover:shadow-black">
-                            <CardHeader>
-                              <CardTitle>
-                                {t("Home:create_vesting.title")}
-                              </CardTitle>
-                              <CardDescription>
-                                {t("Home:create_vesting.subtitle")}
-                              </CardDescription>
-                            </CardHeader>
-                          </Card>
-                        </a>
-                      </HoverCardTrigger>
-                      <HoverCardContent className="w-80 text-sm pt-1">
-                        <ul className="ml-2 list-disc [&>li]:mt-2">
-                          <li>{t("Home:create_vesting.hover1")}</li>
-                          <li>{t("Home:create_vesting.hover2")}</li>
-                          <li>{t("Home:create_vesting.hover3")}</li>
-                          <li>{t("Home:create_vesting.hover4")}</li>
-                        </ul>
-                      </HoverCardContent>
-                    </HoverCard>
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-
-              <AccordionItem value="item-3">
-                <AccordionTrigger>
-                  <h4 className="mt-3 mb-2 scroll-m-20 text-xl font-semibold tracking-tight text-white">
-                    🏦 {t("PageHeader:formsOfDebtHeading")}
-                  </h4>
-                </AccordionTrigger>
-                <AccordionContent className="flex flex-col gap-4 text-balance">
-                  <div className="grid grid-cols-5 gap-3">
-                    <HoverCard key="borrow">
-                      <HoverCardTrigger asChild>
-                        <a
-                          href="/borrow/index.html"
-                          style={{ textDecoration: "none" }}
-                        >
-                          <Card className="h-full hover:shadow-md hover:shadow-black">
-                            <CardHeader>
-                              <CardTitle>{t("Home:borrow.title")}</CardTitle>
-                              <CardDescription>
-                                {t("Home:borrow.subtitle")}
-                              </CardDescription>
-                            </CardHeader>
-                          </Card>
-                        </a>
-                      </HoverCardTrigger>
-                      <HoverCardContent className="w-80 text-sm pt-1">
-                        <ul className="ml-2 list-disc [&>li]:mt-2">
-                          <li>{t("Home:borrow.hover1")}</li>
-                          <li>{t("Home:borrow.hover2")}</li>
-                          <li>{t("Home:borrow.hover3")}</li>
-                        </ul>
-                      </HoverCardContent>
-                    </HoverCard>
-
-                    <HoverCard key="lend">
-                      <HoverCardTrigger asChild>
-                        <a
-                          href="/lend/index.html"
-                          style={{ textDecoration: "none" }}
-                        >
-                          <Card className="h-full hover:shadow-md hover:shadow-black">
-                            <CardHeader>
-                              <CardTitle>{t("Home:lend.title")}</CardTitle>
-                              <CardDescription>
-                                {t("Home:lend.subtitle")}
-                              </CardDescription>
-                            </CardHeader>
-                          </Card>
-                        </a>
-                      </HoverCardTrigger>
-                      <HoverCardContent className="w-80 text-sm pt-1">
-                        <ul className="ml-2 list-disc [&>li]:mt-2">
-                          <li>{t("Home:lend.hover1")}</li>
-                          <li>{t("Home:lend.hover2")}</li>
-                          <li>{t("Home:lend.hover3")}</li>
-                        </ul>
-                      </HoverCardContent>
-                    </HoverCard>
-
-                    <HoverCard key="smartcoins">
-                      <HoverCardTrigger asChild>
-                        <a
-                          href="/smartcoins/index.html"
-                          style={{ textDecoration: "none" }}
-                        >
-                          <Card className="h-full hover:shadow-md hover:shadow-black">
-                            <CardHeader>
-                              <CardTitle>
-                                {t("Home:smartcoins.title")}
-                              </CardTitle>
-                              <CardDescription>
-                                {t("Home:smartcoins.subtitle")}
-                              </CardDescription>
-                            </CardHeader>
-                          </Card>
-                        </a>
-                      </HoverCardTrigger>
-                      <HoverCardContent className="w-80 text-sm pt-1">
-                        <ul className="ml-2 list-disc [&>li]:mt-2">
-                          <li>{t("Home:smartcoins.hover1")}</li>
-                          <li>{t("Home:smartcoins.hover2")}</li>
-                          <li>{t("Home:smartcoins.hover3")}</li>
-                          <li>{t("Home:smartcoins.hover4")}</li>
-                        </ul>
-                      </HoverCardContent>
-                    </HoverCard>
-
-                    <HoverCard key="tfunds">
-                      <HoverCardTrigger asChild>
-                        <a
-                          href="/tfunds/index.html"
-                          style={{ textDecoration: "none" }}
-                        >
-                          <Card className="h-full hover:shadow-md hover:shadow-black">
-                            <CardHeader>
-                              <CardTitle>{t("Home:tfunds.title")}</CardTitle>
-                              <CardDescription>
-                                {t("Home:tfunds.subtitle")}
-                              </CardDescription>
-                            </CardHeader>
-                          </Card>
-                        </a>
-                      </HoverCardTrigger>
-                      <HoverCardContent className="w-80 text-sm pt-1">
-                        <ul className="ml-2 list-disc [&>li]:mt-2">
-                          <li>{t("Home:tfunds.hover1")}</li>
-                          <li>{t("Home:tfunds.hover2")}</li>
-                          <li>{t("Home:tfunds.hover3")}</li>
-                          <li>{t("Home:tfunds.hover4")}</li>
-                        </ul>
-                      </HoverCardContent>
-                    </HoverCard>
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-
-              <AccordionItem value="item-4">
-                <AccordionTrigger>
-                  <h4 className="mt-3 mb-2 scroll-m-20 text-xl font-semibold tracking-tight text-white">
-                    👤 {t("PageHeader:accountOverviewsHeading")}
-                  </h4>
-                </AccordionTrigger>
-                <AccordionContent className="flex flex-col gap-4 text-balance">
-                  <div className="grid grid-cols-5 gap-3">
-                    <HoverCard key="portfolio">
-                      <HoverCardTrigger asChild>
-                        <a
-                          href="/portfolio/index.html"
-                          style={{ textDecoration: "none" }}
-                        >
-                          <Card className="h-full hover:shadow-md hover:shadow-black">
-                            <CardHeader>
-                              <CardTitle>{t("Home:portfolio.title")}</CardTitle>
-                              <CardDescription>
-                                {t("Home:portfolio.subtitle")}
-                              </CardDescription>
-                            </CardHeader>
-                          </Card>
-                        </a>
-                      </HoverCardTrigger>
-                      <HoverCardContent className="w-80 text-sm pt-1">
-                        <ul className="ml-2 list-disc [&>li]:mt-2">
-                          <li>{t("Home:portfolio.hover1")}</li>
-                          <li>{t("Home:portfolio.hover2")}</li>
-                          <li>{t("Home:portfolio.hover3")}</li>
-                        </ul>
-                      </HoverCardContent>
-                    </HoverCard>
-
-                    <HoverCard key="issued_assets">
-                      <HoverCardTrigger asChild>
-                        <a
-                          href="/issued_assets/index.html"
-                          style={{ textDecoration: "none" }}
-                        >
-                          <Card className="h-full hover:shadow-md hover:shadow-black">
-                            <CardHeader>
-                              <CardTitle>
-                                {t("Home:issued_assets.title")}
-                              </CardTitle>
-                              <CardDescription>
-                                {t("Home:issued_assets.subtitle")}
-                              </CardDescription>
-                            </CardHeader>
-                          </Card>
-                        </a>
-                      </HoverCardTrigger>
-                      <HoverCardContent className="w-80 text-sm pt-1">
-                        <ul className="ml-2 list-disc [&>li]:mt-2">
-                          <li>{t("Home:issued_assets.hover1")}</li>
-                          <li>{t("Home:issued_assets.hover2")}</li>
-                          <li>{t("Home:issued_assets.hover3")}</li>
-                        </ul>
-                      </HoverCardContent>
-                    </HoverCard>
-
-                    <HoverCard key="offers">
-                      <HoverCardTrigger asChild>
-                        <a
-                          href="/offers/index.html"
-                          style={{ textDecoration: "none" }}
-                        >
-                          <Card className="h-full hover:shadow-md hover:shadow-black">
-                            <CardHeader>
-                              <CardTitle>{t("Home:offers.title")}</CardTitle>
-                              <CardDescription>
-                                {t("Home:offers.subtitle")}
-                              </CardDescription>
-                            </CardHeader>
-                          </Card>
-                        </a>
-                      </HoverCardTrigger>
-                      <HoverCardContent className="w-80 text-sm pt-1">
-                        <ul className="ml-2 list-disc [&>li]:mt-2">
-                          <li>{t("Home:offers.hover1")}</li>
-                          <li>{t("Home:offers.hover2")}</li>
-                        </ul>
-                      </HoverCardContent>
-                    </HoverCard>
-
-                    <HoverCard key="deals">
-                      <HoverCardTrigger asChild>
-                        <a
-                          href="/deals/index.html"
-                          style={{ textDecoration: "none" }}
-                        >
-                          <Card className="h-full hover:shadow-md hover:shadow-black">
-                            <CardHeader>
-                              <CardTitle>{t("Home:deals.title")}</CardTitle>
-                              <CardDescription>
-                                {t("Home:deals.subtitle")}
-                              </CardDescription>
-                            </CardHeader>
-                          </Card>
-                        </a>
-                      </HoverCardTrigger>
-                      <HoverCardContent className="w-80 text-sm pt-1">
-                        <ul className="ml-2 list-disc [&>li]:mt-2">
-                          <li>{t("Home:deals.hover1")}</li>
-                          <li>{t("Home:deals.hover2")}</li>
-                        </ul>
-                      </HoverCardContent>
-                    </HoverCard>
-
-                    <HoverCard key="vesting">
-                      <HoverCardTrigger asChild>
-                        <a
-                          href="/vesting/index.html"
-                          style={{ textDecoration: "none" }}
-                        >
-                          <Card className="h-full hover:shadow-md hover:shadow-black">
-                            <CardHeader>
-                              <CardTitle>{t("Home:vesting.title")}</CardTitle>
-                              <CardDescription>
-                                {t("Home:vesting.subtitle")}
-                              </CardDescription>
-                            </CardHeader>
-                          </Card>
-                        </a>
-                      </HoverCardTrigger>
-                      <HoverCardContent className="w-80 text-sm pt-1">
-                        <ul className="ml-2 list-disc [&>li]:mt-2">
-                          <li>{t("Home:vesting.hover1")}</li>
-                          <li>{t("Home:vesting.hover2")}</li>
-                        </ul>
-                      </HoverCardContent>
-                    </HoverCard>
-
-                    <HoverCard key="proposals">
-                      <HoverCardTrigger asChild>
-                        <a
-                          href="/proposals/index.html"
-                          style={{ textDecoration: "none" }}
-                        >
-                          <Card className="h-full hover:shadow-md hover:shadow-black">
-                            <CardHeader>
-                              <CardTitle>{t("Home:proposals.title")}</CardTitle>
-                              <CardDescription>
-                                {t("Home:proposals.subtitle")}
-                              </CardDescription>
-                            </CardHeader>
-                          </Card>
-                        </a>
-                      </HoverCardTrigger>
-                      <HoverCardContent className="w-80 text-sm pt-1">
-                        <ul className="ml-2 list-disc [&>li]:mt-2">
-                          <li>{t("Home:proposals.hover1")}</li>
-                          <li>{t("Home:proposals.hover2")}</li>
-                        </ul>
-                      </HoverCardContent>
-                    </HoverCard>
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-
-              <AccordionItem value="item-5">
-                <AccordionTrigger>
-                  <h4 className="mt-3 mb-2 scroll-m-20 text-xl font-semibold tracking-tight text-white">
-                    ⛓️ {t("PageHeader:blockchainOverviewsHeading")}
-                  </h4>
-                </AccordionTrigger>
-                <AccordionContent className="flex flex-col gap-4 text-balance">
-                  <div className="grid grid-cols-5 gap-3">
-                    <HoverCard key="featured">
-                      <HoverCardTrigger asChild>
-                        <a
-                          href="/featured/index.html"
-                          style={{ textDecoration: "none" }}
-                        >
-                          <Card className="h-full hover:shadow-md hover:shadow-black">
-                            <CardHeader>
-                              <CardTitle>{t("Home:featured.title")}</CardTitle>
-                              <CardDescription>
-                                {t("Home:featured.subtitle")}
-                              </CardDescription>
-                            </CardHeader>
-                          </Card>
-                        </a>
-                      </HoverCardTrigger>
-                      <HoverCardContent className="w-80 text-sm pt-1">
-                        <ul className="ml-2 list-disc [&>li]:mt-2">
-                          <li>{t("Home:featured.hover1")}</li>
-                          <li>{t("Home:featured.hover2")}</li>
-                          <li>{t("Home:featured.hover3")}</li>
-                        </ul>
-                      </HoverCardContent>
-                    </HoverCard>
-
-                    <HoverCard key="blocks">
-                      <HoverCardTrigger asChild>
-                        <a
-                          href="/blocks/index.html"
-                          style={{ textDecoration: "none" }}
-                        >
-                          <Card className="h-full hover:shadow-md hover:shadow-black">
-                            <CardHeader>
-                              <CardTitle>{t("Home:blocks.title")}</CardTitle>
-                              <CardDescription>
-                                {t("Home:blocks.subtitle")}
-                              </CardDescription>
-                            </CardHeader>
-                          </Card>
-                        </a>
-                      </HoverCardTrigger>
-                      <HoverCardContent className="w-80 text-sm pt-1">
-                        <ul className="ml-2 list-disc [&>li]:mt-2">
-                          <li>{t("Home:blocks.hover1")}</li>
-                          <li>{t("Home:blocks.hover2")}</li>
-                          <li>{t("Home:blocks.hover3")}</li>
-                        </ul>
-                      </HoverCardContent>
-                    </HoverCard>
-
-                    <HoverCard key="custom_pool_tracker">
-                      <HoverCardTrigger asChild>
-                        <a
-                          href="/custom_pool_overview/index.html"
-                          style={{ textDecoration: "none" }}
-                        >
-                          <Card className="h-full hover:shadow-md hover:shadow-black">
-                            <CardHeader>
-                              <CardTitle>
-                                {t("Home:custom_pool_tracker.title")}
-                              </CardTitle>
-                              <CardDescription>
-                                {t("Home:custom_pool_tracker.subtitle")}
-                              </CardDescription>
-                            </CardHeader>
-                          </Card>
-                        </a>
-                      </HoverCardTrigger>
-                      <HoverCardContent className="w-80 text-sm pt-1">
-                        <ul className="ml-2 list-disc [&>li]:mt-2">
-                          <li>{t("Home:custom_pool_tracker.hover1")}</li>
-                          <li>{t("Home:custom_pool_tracker.hover2")}</li>
-                        </ul>
-                      </HoverCardContent>
-                    </HoverCard>
-
-                    <HoverCard key="pools">
-                      <HoverCardTrigger asChild>
-                        <a
-                          href="/pools/index.html"
-                          style={{ textDecoration: "none" }}
-                        >
-                          <Card className="h-full hover:shadow-md hover:shadow-black">
-                            <CardHeader>
-                              <CardTitle>{t("Home:pools.title")}</CardTitle>
-                              <CardDescription>
-                                {t("Home:pools.subtitle")}
-                              </CardDescription>
-                            </CardHeader>
-                          </Card>
-                        </a>
-                      </HoverCardTrigger>
-                      <HoverCardContent className="w-80 text-sm pt-1">
-                        <ul className="ml-2 list-disc [&>li]:mt-2">
-                          <li>{t("Home:pools.hover1")}</li>
-                          <li>{t("Home:pools.hover2")}</li>
-                          <li>{t("Home:pools.hover3")}</li>
-                        </ul>
-                      </HoverCardContent>
-                    </HoverCard>
-
-                    <HoverCard key="witnesses">
-                      <HoverCardTrigger asChild>
-                        <a
-                          href="/witnesses/index.html"
-                          style={{ textDecoration: "none" }}
-                        >
-                          <Card className="h-full hover:shadow-md hover:shadow-black">
-                            <CardHeader>
-                              <CardTitle>{t("Home:witnesses.title")}</CardTitle>
-                              <CardDescription>
-                                {t("Home:witnesses.subtitle")}
-                              </CardDescription>
-                            </CardHeader>
-                          </Card>
-                        </a>
-                      </HoverCardTrigger>
-                      <HoverCardContent className="w-80 text-sm pt-1">
-                        <ul className="ml-2 list-disc [&>li]:mt-2">
-                          <li>{t("Home:witnesses.hover1")}</li>
-                          <li>{t("Home:witnesses.hover2")}</li>
-                          <li>{t("Home:witnesses.hover3")}</li>
-                        </ul>
-                      </HoverCardContent>
-                    </HoverCard>
-
-                    <HoverCard key="committee">
-                      <HoverCardTrigger asChild>
-                        <a
-                          href="/committee/index.html"
-                          style={{ textDecoration: "none" }}
-                        >
-                          <Card className="h-full hover:shadow-md hover:shadow-black">
-                            <CardHeader>
-                              <CardTitle>{t("Home:committee.title")}</CardTitle>
-                              <CardDescription>
-                                {t("Home:committee.subtitle")}
-                              </CardDescription>
-                            </CardHeader>
-                          </Card>
-                        </a>
-                      </HoverCardTrigger>
-                      <HoverCardContent className="w-80 text-sm pt-1">
-                        <ul className="ml-2 list-disc [&>li]:mt-2">
-                          <li>{t("Home:committee.hover1")}</li>
-                          <li>{t("Home:committee.hover2")}</li>
-                          <li>{t("Home:committee.hover3")}</li>
-                        </ul>
-                      </HoverCardContent>
-                    </HoverCard>
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-
-              <AccordionItem value="item-6">
-                <AccordionTrigger>
-                  <h4 className="mt-3 mb-2 scroll-m-20 text-xl font-semibold tracking-tight text-white">
-                    💎 {t("PageHeader:assetCreation")}
-                  </h4>
-                </AccordionTrigger>
-                <AccordionContent className="flex flex-col gap-4 text-balance">
-                  <div className="grid grid-cols-5 gap-3">
-                    <HoverCard key="create_prediction">
-                      <HoverCardTrigger asChild>
-                        <a
-                          href="/create_prediction/index.html"
-                          style={{ textDecoration: "none" }}
-                        >
-                          <Card className="h-full hover:shadow-md hover:shadow-black">
-                            <CardHeader>
-                              <CardTitle>
-                                {t("Home:create_prediction.title")}
-                              </CardTitle>
-                              <CardDescription>
-                                {t("Home:create_prediction.subtitle")}
-                              </CardDescription>
-                            </CardHeader>
-                          </Card>
-                        </a>
-                      </HoverCardTrigger>
-                      <HoverCardContent className="w-80 text-sm pt-1">
-                        <ul className="ml-2 list-disc [&>li]:mt-2">
-                          <li>{t("Home:create_prediction.hover1")}</li>
-                          <li>{t("Home:create_prediction.hover2")}</li>
-                          <li>{t("Home:create_prediction.hover3")}</li>
-                        </ul>
-                      </HoverCardContent>
-                    </HoverCard>
-
-                    <HoverCard key="create_uia">
-                      <HoverCardTrigger asChild>
-                        <a
-                          href="/create_uia/index.html"
-                          style={{ textDecoration: "none" }}
-                        >
-                          <Card className="h-full hover:shadow-md hover:shadow-black">
-                            <CardHeader>
-                              <CardTitle>
-                                {t("Home:create_uia.title")}
-                              </CardTitle>
-                              <CardDescription>
-                                {t("Home:create_uia.subtitle")}
-                              </CardDescription>
-                            </CardHeader>
-                          </Card>
-                        </a>
-                      </HoverCardTrigger>
-                      <HoverCardContent className="w-80 text-sm pt-1">
-                        <ul className="ml-2 list-disc [&>li]:mt-2">
-                          <li>{t("Home:create_uia.hover1")}</li>
-                          <li>{t("Home:create_uia.hover2")}</li>
-                          <li>{t("Home:create_uia.hover3")}</li>
-                        </ul>
-                      </HoverCardContent>
-                    </HoverCard>
-
-                    <HoverCard key="create_smartcoin">
-                      <HoverCardTrigger asChild>
-                        <a
-                          href="/create_smartcoin/index.html"
-                          style={{ textDecoration: "none" }}
-                        >
-                          <Card className="h-full hover:shadow-md hover:shadow-black">
-                            <CardHeader>
-                              <CardTitle>
-                                {t("Home:create_smartcoin.title")}
-                              </CardTitle>
-                              <CardDescription>
-                                {t("Home:create_smartcoin.subtitle")}
-                              </CardDescription>
-                            </CardHeader>
-                          </Card>
-                        </a>
-                      </HoverCardTrigger>
-                      <HoverCardContent className="w-80 text-sm pt-1">
-                        <ul className="ml-2 list-disc [&>li]:mt-2">
-                          <li>{t("Home:create_smartcoin.hover1")}</li>
-                          <li>{t("Home:create_smartcoin.hover2")}</li>
-                          <li>{t("Home:create_smartcoin.hover3")}</li>
-                        </ul>
-                      </HoverCardContent>
-                    </HoverCard>
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-
-              <AccordionItem value="item-7">
-                <AccordionTrigger>
-                  <h4 className="mt-3 mb-2 scroll-m-20 text-xl font-semibold tracking-tight text-white">
-                    ⚙️ {t("PageHeader:settingsHeading")}
-                  </h4>
-                </AccordionTrigger>
-                <AccordionContent className="flex flex-col gap-4 text-balance">
-                  <div className="grid grid-cols-5 gap-3">
-                    <HoverCard key="accountLists">
-                      <HoverCardTrigger asChild>
-                        <a
-                          href="/account_lists/index.html"
-                          style={{ textDecoration: "none" }}
-                        >
-                          <Card className="h-full hover:shadow-md hover:shadow-black">
-                            <CardHeader>
-                              <CardTitle>
-                                {t("Home:accountLists.title")}
-                              </CardTitle>
-                              <CardDescription>
-                                {t("Home:accountLists.subtitle")}
-                              </CardDescription>
-                            </CardHeader>
-                          </Card>
-                        </a>
-                      </HoverCardTrigger>
-                      <HoverCardContent className="w-80 text-sm pt-1">
-                        <ul className="ml-2 list-disc [&>li]:mt-2">
-                          <li>{t("Home:accountLists.hover1")}</li>
-                          <li>{t("Home:accountLists.hover2")}</li>
-                          <li>{t("Home:accountLists.hover3")}</li>
-                        </ul>
-                      </HoverCardContent>
-                    </HoverCard>
-
-                    <HoverCard key="ltm">
-                      <HoverCardTrigger asChild>
-                        <a
-                          href="/ltm/index.html"
-                          style={{ textDecoration: "none" }}
-                        >
-                          <Card className="h-full hover:shadow-md hover:shadow-black">
-                            <CardHeader>
-                              <CardTitle>{t("Home:ltm.title")}</CardTitle>
-                              <CardDescription>
-                                {t("Home:ltm.subtitle")}
-                              </CardDescription>
-                            </CardHeader>
-                          </Card>
-                        </a>
-                      </HoverCardTrigger>
-                      <HoverCardContent className="w-80 text-sm pt-1">
-                        <ul className="ml-2 list-disc [&>li]:mt-2">
-                          <li>{t("Home:ltm.hover1")}</li>
-                          <li>{t("Home:ltm.hover2")}</li>
-                          <li>{t("Home:ltm.hover3")}</li>
-                          <li>{t("Home:ltm.hover4")}</li>
-                        </ul>
-                      </HoverCardContent>
-                    </HoverCard>
-
-                    <HoverCard key="nodes">
-                      <HoverCardTrigger asChild>
-                        <a
-                          href="/nodes/index.html"
-                          style={{ textDecoration: "none" }}
-                        >
-                          <Card className="h-full hover:shadow-md hover:shadow-black">
-                            <CardHeader>
-                              <CardTitle>{t("Home:nodes.title")}</CardTitle>
-                              <CardDescription>
-                                {t("Home:nodes.subtitle")}
-                              </CardDescription>
-                            </CardHeader>
-                          </Card>
-                        </a>
-                      </HoverCardTrigger>
-                      <HoverCardContent className="w-80 text-sm pt-1">
-                        <ul className="ml-2 list-disc [&>li]:mt-2">
-                          <li>{t("Home:nodes.hover1")}</li>
-                          <li>{t("Home:nodes.hover2")}</li>
-                        </ul>
-                      </HoverCardContent>
-                    </HoverCard>
-
-                    <HoverCard key="create_account">
-                      <HoverCardTrigger asChild>
-                        <a
-                          href="/create_account/index.html"
-                          style={{ textDecoration: "none" }}
-                        >
-                          <Card className="h-full hover:shadow-md hover:shadow-black">
-                            <CardHeader>
-                              <CardTitle>
-                                {t("Home:create_account.title")}
-                              </CardTitle>
-                              <CardDescription>
-                                {t("Home:create_account.subtitle")}
-                              </CardDescription>
-                            </CardHeader>
-                          </Card>
-                        </a>
-                      </HoverCardTrigger>
-                      <HoverCardContent className="w-80 text-sm pt-1">
-                        <ul className="ml-2 list-disc [&>li]:mt-2">
-                          <li>{t("Home:create_account.hover1")}</li>
-                          <li>{t("Home:create_account.hover2")}</li>
-                        </ul>
-                      </HoverCardContent>
-                    </HoverCard>
-
-                    <HoverCard key="governance">
-                      <HoverCardTrigger asChild>
-                        <a
-                          href="/governance/index.html"
-                          style={{ textDecoration: "none" }}
-                        >
-                          <Card className="h-full hover:shadow-md hover:shadow-black">
-                            <CardHeader>
-                              <CardTitle>
-                                {t("Home:governance.title")}
-                              </CardTitle>
-                              <CardDescription>
-                                {t("Home:governance.subtitle")}
-                              </CardDescription>
-                            </CardHeader>
-                          </Card>
-                        </a>
-                      </HoverCardTrigger>
-                      <HoverCardContent className="w-80 text-sm pt-1">
-                        <ul className="ml-2 list-disc [&>li]:mt-2">
-                          <li>{t("Home:governance.hover1")}</li>
-                          <li>{t("Home:governance.hover2")}</li>
-                        </ul>
-                      </HoverCardContent>
-                    </HoverCard>
-
-                    <HoverCard key="create_worker">
-                      <HoverCardTrigger asChild>
-                        <a
-                          href="/create_worker/index.html"
-                          style={{ textDecoration: "none" }}
-                        >
-                          <Card className="h-full hover:shadow-md hover:shadow-black">
-                            <CardHeader>
-                              <CardTitle>
-                                {t("Home:create_worker.title")}
-                              </CardTitle>
-                              <CardDescription>
-                                {t("Home:create_worker.subtitle")}
-                              </CardDescription>
-                            </CardHeader>
-                          </Card>
-                        </a>
-                      </HoverCardTrigger>
-                      <HoverCardContent className="w-80 text-sm pt-1">
-                        <ul className="ml-2 list-disc [&>li]:mt-2">
-                          <li>{t("Home:create_worker.hover1")}</li>
-                          <li>{t("Home:create_worker.hover2")}</li>
-                          <li>{t("Home:create_worker.hover3")}</li>
-                        </ul>
-                      </HoverCardContent>
-                    </HoverCard>
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          </ItemDescription>
-        </ItemContent>
-      </Item>
-    </div>
+    </>
   );
 }

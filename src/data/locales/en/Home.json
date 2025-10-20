@@ -21,7 +21,7 @@
     "hover3": "View committee core token balances."
   },
   "governance": {
-    "title": "🗳️ Governance",
+    "title": "🗳️ Role Registration",
     "subtitle": "Create/Update both witness and committee roles.",
     "hover1": "Create, update or invalidate your witness registration.",
     "hover2": "Create or update your committee member registration."
