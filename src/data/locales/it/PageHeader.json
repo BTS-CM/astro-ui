@@ -90,5 +90,6 @@
   "usage": "Progettato per l'uso con ",
   "multiwallet": "multiportafoglio",
   "tfund_user": "Commercio di fondi Same-T",
-  "createAccount": "Crea account"
+  "createAccount": "Crea account",
+  "transferFundsHeading": "Trasferire fondi"
 }

@@ -1494,7 +1494,7 @@ export default function CreateSmartcoin(properties) {
 
   return (
     <>
-      <div className="container mx-auto mt-5 mb-5">
+      <div className="container mx-auto mt-5 mb-5 w-3/4">
         <div className="grid grid-cols-1 gap-3">
           <Card>
             <CardHeader className="pb-5">

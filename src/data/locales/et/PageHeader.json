@@ -90,5 +90,6 @@
   "usage": "Mõeldud kasutamiseks koos ",
   "multiwallet": "multirahakott",
   "tfund_user": "Same-T Fund Trade",
-  "createAccount": "Loo konto"
+  "createAccount": "Loo konto",
+  "transferFundsHeading": "Raha ülekandmine"
 }

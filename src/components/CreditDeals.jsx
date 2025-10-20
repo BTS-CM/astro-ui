@@ -20,6 +20,15 @@ import {
 } from "@/components/ui/card";
 
 import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
+
+import {
   Field,
   FieldGroup,
   FieldLabel,
@@ -713,7 +722,7 @@ export default function CreditDeals(properties) {
 
   return (
     <>
-      <div className="container mx-auto mt-5 mb-5">
+      <div className="container mx-auto mt-5 mb-5 w-1/2">
         <div className="grid grid-cols-1 gap-3">
           <Card>
             <CardHeader>
@@ -761,9 +770,21 @@ export default function CreditDeals(properties) {
                       />
                     </div>
                   ) : null}
-                  {borrowerDeals && !borrowerDeals.length
-                    ? t("CreditDeals:card.noBorrowers")
-                    : null}
+                  {borrowerDeals && !borrowerDeals.length ? (
+                    <Empty>
+                      <EmptyHeader>
+                        <EmptyMedia variant="icon">❕</EmptyMedia>
+                        <EmptyTitle>
+                          {t("CreditDeals:card.noBorrowers")}
+                        </EmptyTitle>
+                      </EmptyHeader>
+                      <EmptyContent>
+                        <a href="/borrow/index.html">
+                          <Button>{t("Home:borrow.title")}</Button>
+                        </a>
+                      </EmptyContent>
+                    </Empty>
+                  ) : null}
                   {!borrowerDeals ? t("CreditDeals:card.loading") : null}
                 </TabsContent>
                 <TabsContent value="lendings">
@@ -777,9 +798,16 @@ export default function CreditDeals(properties) {
                       />
                     </div>
                   ) : null}
-                  {lenderDeals && !lenderDeals.length
-                    ? t("CreditDeals:card.noLendings")
-                    : null}
+                  {lenderDeals && !lenderDeals.length ? (
+                    <Empty>
+                      <EmptyHeader>
+                        <EmptyMedia variant="icon">❕</EmptyMedia>
+                        <EmptyTitle>
+                          {t("CreditDeals:card.noLendings")}
+                        </EmptyTitle>
+                      </EmptyHeader>
+                    </Empty>
+                  ) : null}
                   {!lenderDeals ? t("CreditDeals:card.loading") : null}
                 </TabsContent>
               </Tabs>

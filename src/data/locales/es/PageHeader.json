@@ -90,5 +90,6 @@
   "usage": "Diseñado para usar con ",
   "multiwallet": "billetera múltiple",
   "tfund_user": "Operación con el mismo fondo",
-  "createAccount": "Crear cuenta"
+  "createAccount": "Crear cuenta",
+  "transferFundsHeading": "Transferir fondos"
 }

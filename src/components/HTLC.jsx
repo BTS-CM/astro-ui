@@ -236,7 +236,7 @@ export default function Htlc(properties) {
 
     return (
       <div style={style}>
-        <Card className="m-2">
+        <Card className="m-2 w-1/2">
           <CardContent className="pt-3 pb-1 text-sm">
             <div className="grid grid-cols-6 gap-1 items-center">
               <div className="col-span-1">

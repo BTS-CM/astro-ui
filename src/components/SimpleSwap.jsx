@@ -350,7 +350,6 @@ export default function SimpleSwap(properties) {
   const [assetA, setAssetA] = useState(null); // Asset details for selectedAssetASymbol
   const [assetB, setAssetB] = useState(null); // Asset details for selectedAssetBSymbol
 
-  const [foundPoolDetails, setFoundPoolDetails] = useState(); // Dynamic pool details
   const [assetADetails, setAssetADetails] = useState(null); // Dynamic asset details for A
   const [assetBDetails, setAssetBDetails] = useState(null); // Dynamic asset details for B
   const [poolShareDetails, setPoolShareDetails] = useState(null); // Dynamic details for pool share asset
@@ -399,7 +398,6 @@ export default function SimpleSwap(properties) {
 
         setFoundPool(poolData);
         setPoolShareDetails(data.poolAsset);
-        setFoundPoolDetails(data.foundPoolDetails);
 
         // IMPORTANT: Align state (assetA, assetB) with user selection (selectedAssetASymbol, selectedAssetBSymbol)
         if (assetDataA && assetDataB && poolData) {
@@ -492,9 +490,7 @@ export default function SimpleSwap(properties) {
     };
   }, [usr, assets, currentNode]); // Depend on user, assets list, and node
 
-  // Calculate the expected buy amount based on sellAmount, selected assets, and pool data
   const buyAmount = useMemo(() => {
-    // Ensure all required data is available
     if (
       !sellAmount ||
       !assetA ||
@@ -503,7 +499,7 @@ export default function SimpleSwap(properties) {
       !foundPool.balance_a ||
       !foundPool.balance_b
     ) {
-      return 0; // Or null/undefined, depending on desired display for invalid state
+      return 0;
     }
 
     const sellAmountNum = parseFloat(sellAmount);
@@ -511,14 +507,12 @@ export default function SimpleSwap(properties) {
       return 0;
     }
 
-    // assetA is the SELLING asset, assetB is the BUYING asset (due to alignment in useEffect)
     const sellingAssetDetails = assetA;
     const buyingAssetDetails = assetB;
 
     const sellPrecision = 10 ** sellingAssetDetails.precision;
     const buyPrecision = 10 ** buyingAssetDetails.precision;
 
-    // Determine which pool balance corresponds to which asset (A=Sell, B=Buy)
     let poolBalanceSell, poolBalanceBuy;
     if (foundPool.asset_a_id === sellingAssetDetails.id) {
       poolBalanceSell = Number(foundPool.balance_a);
@@ -530,12 +524,9 @@ export default function SimpleSwap(properties) {
       console.error(
         "Pool assets don't match selected assets in buyAmount calculation."
       );
-      return 0; // Should not happen
+      return 0;
     }
 
-    // --- Fee Calculations ---
-
-    // 1. Market Fee on Input (Selling Asset)
     const makerFeePercentSell =
       sellingAssetDetails?.options?.market_fee_percent ?? 0;
     const maxMarketFeeSell = sellingAssetDetails?.options?.max_market_fee ?? 0;
@@ -552,12 +543,8 @@ export default function SimpleSwap(properties) {
     const effectiveSellAmountUnits =
       amountToSellInBlockchainUnits - marketFeeAmountSell;
 
-    if (effectiveSellAmountUnits <= 0) return 0; // Cannot sell less than fee
+    if (effectiveSellAmountUnits <= 0) return 0;
 
-    // --- AMM Calculation ---
-    // Formula: output = poolBalanceBuy - floor((poolBalanceBuy * poolBalanceSell) / (poolBalanceSell + effectiveSellAmountUnits))
-    // Use floor for constant product preservation as often seen in DEX implementations.
-    // Ensure no division by zero if poolBalanceSell is somehow 0 (though unlikely for active pools)
     if (poolBalanceSell + effectiveSellAmountUnits === 0) return 0;
 
     const raw_delta_b_units =
@@ -567,22 +554,18 @@ export default function SimpleSwap(properties) {
           (Number(poolBalanceSell) + effectiveSellAmountUnits)
       );
 
-    if (raw_delta_b_units <= 0) return 0; // No output amount
+    if (raw_delta_b_units <= 0) return 0;
 
-    // 2. Pool Taker Fee (on output)
     const takerFeePercentPool = foundPool.taker_fee_percent ?? 0;
     const poolTakerFeeAmountUnits = Math.floor(
       (Number(raw_delta_b_units) * Number(takerFeePercentPool)) / 10000
     );
 
-    // 3. Market Fee on Output (Buying Asset)
     const makerFeePercentBuy =
       buyingAssetDetails?.options?.market_fee_percent ?? 0;
     const maxMarketFeeBuy = buyingAssetDetails?.options?.max_market_fee ?? 0;
     let marketFeeAmountBuyUnits = 0;
     if (makerFeePercentBuy > 0) {
-      // Apply fee on the amount *after* pool fee might be more accurate, but let's follow original structure's apparent logic (fee on raw output)
-      // Revisit if Bitshares core logic applies market fee differently (e.g., after pool fee).
       marketFeeAmountBuyUnits = Math.min(
         Number(maxMarketFeeBuy),
         Math.ceil(
@@ -591,7 +574,6 @@ export default function SimpleSwap(properties) {
       );
     }
 
-    // --- Final Amount ---
     const final_amount_b_units =
       Number(raw_delta_b_units) -
       Number(poolTakerFeeAmountUnits) -
@@ -599,15 +581,13 @@ export default function SimpleSwap(properties) {
 
     const result = final_amount_b_units / buyPrecision;
 
-    // Return final amount, ensuring it's not negative and has reasonable precision
     return result > 0
       ? parseFloat(result.toFixed(buyingAssetDetails.precision))
       : 0;
-  }, [sellAmount, assetA, assetB, foundPool]); // Dependencies: Input amount, aligned asset details, and pool data
+  }, [sellAmount, assetA, assetB, foundPool]);
 
   const [buyAmountInput, setBuyAmountInput] = useState();
   useEffect(() => {
-    // Update the readonly input field when buyAmount calculation changes
     setBuyAmountInput(
       <Input readOnly value={buyAmount ?? "0"} disabled className="mb-3" />
     );
@@ -615,30 +595,24 @@ export default function SimpleSwap(properties) {
 
   const [showDialog, setShowDialog] = useState(false);
 
-  // Update URL when pool selection changes
   useEffect(() => {
     if (pool && pool.length && selectedAssetASymbol && selectedAssetBSymbol) {
       const currentUrlParams = new URLSearchParams(window.location.search);
       currentUrlParams.set("pool", pool);
       window.history.replaceState({}, "", `?${currentUrlParams.toString()}`);
     }
-  }, [pool, selectedAssetASymbol, selectedAssetBSymbol]); // Update when pool or assets change
+  }, [pool, selectedAssetASymbol, selectedAssetBSymbol]);
 
-  // Component for rendering a row in the pool list
   const poolRow = ({ index, style }) => {
     const _pool = finalPools[index];
 
-    // Need asset details to get precision for formatting balances
-    // Note: assetA and assetB state vars hold the *selected* sell/buy asset details
-    const assetDetailA = assetA; // Corresponds to selectedAssetASymbol
-    const assetDetailB = assetB; // Corresponds to selectedAssetBSymbol
+    const assetDetailA = assetA;
+    const assetDetailB = assetB;
 
     if (!assetDetailA || !assetDetailB) {
-      // Render placeholder or empty if details not loaded yet
       return <div style={style}>Loading pool details...</div>;
     }
 
-    // Determine which pool balance belongs to which selected asset
     let balanceForSelectedA, balanceForSelectedB;
     let precisionForSelectedA, precisionForSelectedB;
 
@@ -648,28 +622,23 @@ export default function SimpleSwap(properties) {
       balanceForSelectedB = _pool.balance_b;
       precisionForSelectedB = assetDetailB.precision;
     } else {
-      // Pool's A is the user's B, Pool's B is the user's A
       balanceForSelectedA = _pool.balance_b;
       precisionForSelectedA = assetDetailA.precision;
       balanceForSelectedB = _pool.balance_a;
       precisionForSelectedB = assetDetailB.precision;
     }
 
-    // Calculate approximate fee amount for display (using current sellAmount)
-    const sellAmountNum = parseFloat(sellAmount) || 0;
     const feePercent = (_pool.taker_fee_percent ?? 0) / 100; // e.g., 0.2
-    // This is a simplification for display, actual fee depends on output amount.
-    // Let's show the fee percentage directly.
 
     return (
       <div
-        style={style} // Important for react-window virtualization
+        style={style}
         className={`grid grid-cols-12 hover:bg-purple-100 p-1 cursor-pointer ${
           pool === _pool.id ? "bg-purple-200" : ""
         }`}
         key={`pool_${_pool.id}`}
         onClick={() => {
-          setPool(_pool.id); // Select this pool when clicked
+          setPool(_pool.id);
         }}
       >
         <div className="col-span-1 flex items-center">
@@ -681,8 +650,7 @@ export default function SimpleSwap(properties) {
         </div>
         <div className="col-span-1 text-sm flex items-center">
           {_pool.id.split(".")[2]}
-        </div>{" "}
-        {/* Short ID */}
+        </div>
         <div className="col-span-4 text-sm flex items-center">
           {`${feePercent}% ${t("SimpleSwap:fee")}`}
         </div>
@@ -696,7 +664,6 @@ export default function SimpleSwap(properties) {
     );
   };
 
-  // Determine if the form is ready for submission
   const canSubmit =
     pool &&
     sellAmount &&
@@ -705,8 +672,6 @@ export default function SimpleSwap(properties) {
     assetA &&
     assetB &&
     !showDialog;
-
-  // RHF handles sell amount invalid state via Controller rules
 
   return (
     <>
@@ -722,7 +687,6 @@ export default function SimpleSwap(properties) {
               {!assets ? <p>{t("SimpleSwap:loadingAssetData")}</p> : null}
               {pools && assets ? (
                 <>
-                  {/* Use a standard form element with FieldGroup */}
                   <form
                     onSubmit={form.handleSubmit(() => {
                       event.preventDefault();
@@ -732,9 +696,7 @@ export default function SimpleSwap(properties) {
                     })}
                   >
                     <FieldGroup>
-                      {/* Row 1: Sell Amount and Sell Asset Selector */}
                       <div className="grid grid-cols-2 gap-5 mb-4">
-                        {/* Sell Amount Input */}
                         <div className="col-span-1">
                           <Controller
                             name="sellAmount"
@@ -782,7 +744,6 @@ export default function SimpleSwap(properties) {
                                     aria-invalid={fieldState.invalid}
                                     onChange={(event) => {
                                       const input = event.target.value;
-                                      // Keep RHF and local state in sync while constraining input format
                                       if (
                                         input === "" ||
                                         /^[0-9]*\.?[0-9]*$/.test(input)
@@ -801,10 +762,7 @@ export default function SimpleSwap(properties) {
                           />
                         </div>
 
-                        {/* Sell Asset Selector */}
                         <div className="col-span-1 self-end mb-3">
-                          {" "}
-                          {/* Align to bottom */}
                           <Controller
                             name="assetA"
                             control={form.control}
@@ -854,8 +812,8 @@ export default function SimpleSwap(properties) {
                                                     );
                                                     setSelectedAssetBSymbol(
                                                       undefined
-                                                    ); // Reset buy asset when sell asset changes
-                                                    setPool(""); // Reset pool selection
+                                                    );
+                                                    setPool("");
                                                     field.onChange(assetSymbol);
                                                     setSendMenuOpen(false);
                                                   }}
@@ -881,9 +839,7 @@ export default function SimpleSwap(properties) {
                         </div>
                       </div>
 
-                      {/* Row 2: Buy Amount and Buy Asset Selector */}
                       <div className="grid grid-cols-2 gap-5">
-                        {/* Buy Amount Display */}
                         <div className="col-span-1">
                           <Field>
                             <FieldLabel htmlFor="simple-swap-buy-amount">
@@ -921,7 +877,6 @@ export default function SimpleSwap(properties) {
                           </Field>
                         </div>
 
-                        {/* Buy Asset Selector */}
                         <div className="col-span-1 self-end mb-3">
                           <Controller
                             name="assetB"
@@ -1022,16 +977,13 @@ export default function SimpleSwap(properties) {
                         </div>
                       </div>
 
-                      {/* Pool Selection List */}
                       {finalPools &&
                       finalPools.length > 0 &&
                       selectedAssetASymbol &&
                       selectedAssetBSymbol ? (
                         <div className="mt-5 border rounded-md p-2">
-                          {/* Headers for Pool List */}
                           <div className="grid grid-cols-12 text-xs text-gray-500 mb-1 p-1 border-b">
-                            <div className="col-span-1"></div>{" "}
-                            {/* Check icon space */}
+                            <div className="col-span-1"></div>
                             <div className="col-span-1">ID</div>
                             <div className="col-span-4">
                               <TooltipProvider>
@@ -1055,7 +1007,7 @@ export default function SimpleSwap(properties) {
                               {selectedAssetBSymbol} ({t("SimpleSwap:balance")})
                             </div>
                           </div>
-                          {/* Virtualized List */}
+
                           <div
                             className={`w-full max-h-[${Math.min(
                               210,
@@ -1071,7 +1023,7 @@ export default function SimpleSwap(properties) {
                           </div>
                         </div>
                       ) : null}
-                      {/* Show message if assets selected but no pools found */}
+
                       {selectedAssetASymbol &&
                         selectedAssetBSymbol &&
                         finalPools.length === 0 &&
@@ -1082,10 +1034,9 @@ export default function SimpleSwap(properties) {
                           </p>
                         )}
 
-                      {/* Submit Button */}
                       <Button
-                        className="mt-5 w-full bg-purple-500 hover:bg-purple-600 text-white" // Adjusted colors
-                        variant="default" // Use default variant which often maps to primary styling
+                        className="mt-5 w-full bg-purple-500 hover:bg-purple-600 text-white"
+                        variant="default"
                         disabled={!canSubmit}
                         type="submit"
                       >
@@ -1094,44 +1045,39 @@ export default function SimpleSwap(properties) {
                     </FieldGroup>
                   </form>
 
-                  {/* Deep Link Dialog */}
-                  {showDialog && assetA && assetB && usr ? ( // Ensure needed data exists
+                  {showDialog && assetA && assetB && usr ? (
                     <DeepLinkDialog
-                      operationNames={["liquidity_pool_exchange"]} // Static operation name
+                      operationNames={["liquidity_pool_exchange"]}
                       username={usr.username}
                       usrChain={usr.chain}
                       userID={usr.id}
-                      dismissCallback={() => setShowDialog(false)} // Use callback to hide
-                      // Key ensures dialog re-renders if crucial parameters change
+                      dismissCallback={() => setShowDialog(false)}
                       key={`Exchanging${sellAmount}${assetA.symbol}for${buyAmount}${assetB.symbol}_${pool}`}
                       headerText={t("SimpleSwap:exchangeHeader", {
                         sellAmount: sellAmount,
-                        symbolA: assetA.symbol, // Sell Asset
-                        buyAmount: buyAmount.toFixed(assetB.precision), // Buy Asset, format to precision
+                        symbolA: assetA.symbol,
+                        buyAmount: buyAmount.toFixed(assetB.precision),
                         symbolB: assetB.symbol,
                       })}
                       trxJSON={[
-                        // Construct the transaction JSON
                         {
-                          fee: { amount: 0, asset_id: "1.3.0" }, // Placeholder fee
+                          fee: { amount: 0, asset_id: "1.3.0" },
                           account: usr.id,
-                          pool: pool, // The selected pool ID
+                          pool: pool,
                           amount_to_sell: {
                             amount: blockchainFloat(
                               sellAmount,
-                              assetA.precision // Precision of the selling asset
+                              assetA.precision
                             ),
-                            asset_id: assetA.id, // ID of the selling asset
+                            asset_id: assetA.id,
                           },
                           min_to_receive: {
-                            // Use calculated buyAmount, maybe with slight reduction for slippage tolerance
-                            // For now, using the calculated amount directly. Consider adding slippage control later.
                             amount: blockchainFloat(
                               buyAmount,
-                              assetB.precision, // Precision of the buying asset
-                              true // Floor the value for min_to_receive safety
+                              assetB.precision,
+                              true
                             ),
-                            asset_id: assetB.id, // ID of the buying asset
+                            asset_id: assetB.id,
                           },
                           extensions: [],
                         },
@@ -1140,7 +1086,6 @@ export default function SimpleSwap(properties) {
                   ) : null}
                 </>
               ) : (
-                // Show loading skeleton or message while pools/assets load initially
                 <div className="space-y-2">
                   <Skeleton className="h-8 w-full" />
                   <Skeleton className="h-8 w-full" />
@@ -1151,10 +1096,8 @@ export default function SimpleSwap(properties) {
           </Card>
         </div>
 
-        {/* Asset Information Cards */}
-        {pool && assetA && assetB ? ( // Only show cards if a pool and assets are selected/loaded
+        {pool && assetA && assetB ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-5">
-            {/* Buying Asset Card (Asset B) */}
             {assetB && assetBDetails ? (
               <MarketAssetCard
                 asset={assetB.symbol}
@@ -1164,13 +1107,12 @@ export default function SimpleSwap(properties) {
                 marketSearch={marketSearch}
                 chain={usr?.chain ?? _chain}
                 usrBalances={usrBalances}
-                type="buy" // Indicates this is the asset being bought
+                type="buy"
               />
             ) : (
               <AssetCardSkeleton title={t("SimpleSwap:quoteAsset")} />
             )}
 
-            {/* Selling Asset Card (Asset A) */}
             {assetA && assetADetails ? (
               <MarketAssetCard
                 asset={assetA.symbol}
@@ -1275,11 +1217,9 @@ export default function SimpleSwap(properties) {
           </div>
         ) : null}
 
-        {/* Related Actions Links */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-5">
           {pool && assetA && assetB && foundPool?.share_asset_symbol ? ( // Check required data
             <>
-              {/* Link to Purchase Stake (DEX market for Share Asset vs Core/Quote) */}
               <a
                 href={
                   `/dex/index.html?market=${foundPool.share_asset_symbol}_${
@@ -1296,7 +1236,6 @@ export default function SimpleSwap(properties) {
                 />
               </a>
 
-              {/* Link to Stake Page */}
               <a href={`/stake/index.html?pool=${pool}`}>
                 <ActionCard
                   title={t("SimpleSwap:stakeAssets")}
@@ -1307,7 +1246,6 @@ export default function SimpleSwap(properties) {
                 />
               </a>
 
-              {/* Link to DEX Market for the Pair */}
               <a
                 href={`/dex/index.html?market=${assetA.symbol}_${assetB.symbol}`}
               >
@@ -1323,55 +1261,43 @@ export default function SimpleSwap(properties) {
             </>
           ) : null}
         </div>
-      </div>
 
-      {/* Risks Section */}
-      <div className="grid grid-cols-1 mt-5 ml-4 mr-4 md:ml-8 md:mr-8 mb-5">
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle>{t("SimpleSwap:risksTitle")}</CardTitle>
-            <CardDescription>
-              {t("SimpleSwap:risksDescription")}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <span className="text-sm block mb-3">
-              {" "}
-              {/* Added block and margin */}
-              <Label className="mb-1 text-lg block">
-                {" "}
-                {/* Added block */}
-                {t("SimpleSwap:liquidityPoolRisks")}
-              </Label>
-              <ul className="ml-2 list-disc [&>li]:mt-1 pl-3">
-                {" "}
-                {/* Adjusted padding */}
-                <li>{t("SimpleSwap:liquidityPoolRisk1")}</li>
-                <li>{t("SimpleSwap:liquidityPoolRisk2")}</li>
-              </ul>
-            </span>
-            <span className="text-sm block">
-              {" "}
-              {/* Added block */}
-              <Label className="mb-1 text-lg block">
-                {" "}
-                {/* Added block */}
-                {t("SimpleSwap:swappableAssetRisks")}
-              </Label>
-              <ul className="ml-2 list-disc [&>li]:mt-1 pl-3">
-                {" "}
-                {/* Adjusted padding */}
-                <li>{t("SimpleSwap:swappableAssetRisk1")}</li>
-                <li>
-                  {/* Simplified risk 2 - just mention backing asset */}
-                  {t("SimpleSwap:swappableAssetRisk2", { symbol: "BTS" })}{" "}
-                  {/* Assuming BTS is common backing */}
-                </li>
-                <li>{t("SimpleSwap:swappableAssetRisk3")}</li>
-              </ul>
-            </span>
-          </CardContent>
-        </Card>
+        {/* Risks Section */}
+        <div className="grid grid-cols-1 mt-5 mb-5">
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle>{t("SimpleSwap:risksTitle")}</CardTitle>
+              <CardDescription>
+                {t("SimpleSwap:risksDescription")}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <span className="text-sm block mb-3">
+                <Label className="mb-1 text-lg block">
+                  {t("SimpleSwap:liquidityPoolRisks")}
+                </Label>
+                <ul className="ml-2 list-disc [&>li]:mt-1 pl-3">
+                  <li>{t("SimpleSwap:liquidityPoolRisk1")}</li>
+                  <li>{t("SimpleSwap:liquidityPoolRisk2")}</li>
+                </ul>
+              </span>
+              <span className="text-sm block">
+                <Label className="mb-1 text-lg block">
+                  {t("SimpleSwap:swappableAssetRisks")}
+                </Label>
+                <ul className="ml-2 list-disc [&>li]:mt-1 pl-3">
+                  <li>{t("SimpleSwap:swappableAssetRisk1")}</li>
+                  <li>
+                    {t("SimpleSwap:swappableAssetRisk2", {
+                      symbol: "BTS",
+                    })}
+                  </li>
+                  <li>{t("SimpleSwap:swappableAssetRisk3")}</li>
+                </ul>
+              </span>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </>
   );

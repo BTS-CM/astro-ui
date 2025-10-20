@@ -19,6 +19,15 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
+
 import HoverInfo from "@/components/common/HoverInfo.tsx";
 
 import { Button } from "@/components/ui/button";
@@ -550,7 +559,7 @@ export default function WithdrawPermissions(properties) {
 
   return (
     <>
-      <div className="container mx-auto mt-5 mb-5">
+      <div className="container mx-auto mt-5 mb-5 w-1/2">
         <div className="grid grid-cols-1 gap-3">
           <Card>
             <CardHeader>
@@ -568,9 +577,10 @@ export default function WithdrawPermissions(properties) {
                     type="header"
                   />
                 </div>
-                <div className="col-span-9 border border-gray-300 rounded">
-                  {payerWithdrawalPermissions &&
-                  payerWithdrawalPermissions.length ? (
+
+                {payerWithdrawalPermissions &&
+                payerWithdrawalPermissions.length ? (
+                  <div className="col-span-9 border border-gray-300 rounded">
                     <div className="w-full max-h-[400px] overflow-auto">
                       <List
                         rowHeight={35}
@@ -583,21 +593,50 @@ export default function WithdrawPermissions(properties) {
                         rowProps={{}}
                       />
                     </div>
-                  ) : (
-                    <p>{t("WithdrawPermissions:not_sending_anything")}</p>
-                  )}
-                </div>
-                <div className="col-span-3">
-                  <WithdrawDialog
-                    usr={usr}
-                    assets={assets}
-                    marketSearch={marketSearch}
-                    balances={balances}
-                    showDialog={showCreateDialog}
-                    setShowDialog={setShowCreateDialog}
-                    mode="create"
-                  />
-                </div>
+                    <div className="col-span-3">
+                      <WithdrawDialog
+                        usr={usr}
+                        assets={assets}
+                        marketSearch={marketSearch}
+                        balances={balances}
+                        showDialog={showCreateDialog}
+                        setShowDialog={setShowCreateDialog}
+                        mode="create"
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <div className="col-span-12">
+                      <Empty>
+                        <EmptyHeader>
+                          <EmptyMedia variant="icon">❔</EmptyMedia>
+                          <EmptyTitle>
+                            {t("WithdrawPermissions:not_sending_anything")}
+                          </EmptyTitle>
+                          <EmptyDescription>
+                            {t(
+                              "WithdrawPermissions:not_sending_anything_description"
+                            )}
+                          </EmptyDescription>
+                        </EmptyHeader>
+                        <EmptyContent>
+                          <WithdrawDialog
+                            usr={usr}
+                            assets={assets}
+                            marketSearch={marketSearch}
+                            balances={balances}
+                            showDialog={showCreateDialog}
+                            setShowDialog={setShowCreateDialog}
+                            mode="create"
+                          />
+                        </EmptyContent>
+                      </Empty>
+                    </div>
+                    <div className="col-span-8"></div>
+                  </>
+                )}
+
                 <div className="col-span-12 mt-2">
                   <HoverInfo
                     content={t("WithdrawPermissions:inbound_description")}
@@ -605,9 +644,9 @@ export default function WithdrawPermissions(properties) {
                     type="header"
                   />
                 </div>
-                <div className="col-span-12 border border-gray-300 rounded">
-                  {receivingWithdrawalPermissions &&
-                  receivingWithdrawalPermissions.length ? (
+                {receivingWithdrawalPermissions &&
+                receivingWithdrawalPermissions.length ? (
+                  <div className="col-span-12 border border-gray-300 rounded">
                     <div className="w-full max-h-[400px] overflow-auto">
                       <List
                         rowHeight={35}
@@ -620,10 +659,27 @@ export default function WithdrawPermissions(properties) {
                         rowProps={{}}
                       />
                     </div>
-                  ) : (
-                    <p>{t("WithdrawPermissions:not_receiving_anything")}</p>
-                  )}
-                </div>
+                  </div>
+                ) : (
+                  <>
+                    <div className="col-span-12">
+                      <Empty>
+                        <EmptyHeader>
+                          <EmptyMedia variant="icon">❔</EmptyMedia>
+                          <EmptyTitle>
+                            {t("WithdrawPermissions:not_receiving_anything")}
+                          </EmptyTitle>
+                          <EmptyDescription>
+                            {t(
+                              "WithdrawPermissions:not_receiving_anything_description"
+                            )}
+                          </EmptyDescription>
+                        </EmptyHeader>
+                      </Empty>
+                    </div>
+                    <div className="col-span-8"></div>
+                  </>
+                )}
               </div>
             </CardContent>
           </Card>

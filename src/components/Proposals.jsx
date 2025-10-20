@@ -30,6 +30,15 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
+
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
@@ -499,7 +508,12 @@ export default function Proposals(properties) {
                     />
                   </div>
                 ) : (
-                  <p>{t("Proposals:noProposals")}</p>
+                  <Empty>
+                    <EmptyHeader>
+                      <EmptyMedia variant="icon">❕</EmptyMedia>
+                      <EmptyTitle>{t("Proposals:noProposals")}</EmptyTitle>
+                    </EmptyHeader>
+                  </Empty>
                 )}
               </div>
             </CardContent>

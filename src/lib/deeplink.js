@@ -12,9 +12,6 @@ const chains = {
         url: "wss://api.bts.mobi/ws",
       },
       {
-        url: "wss://api.bitshares.bhuz.info/ws",
-      },
-      {
         url: "wss://btsws.roelandp.nl/ws",
       },
     ],

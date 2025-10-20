@@ -201,7 +201,7 @@ export default function MarketOrderCard(properties) {
                   : null}
               </div>
             </div>
-            <div className="max-h-[300px] overflow-auto">
+            <div className="h-[300px] overflow-hidden">
               <List
                 height={300}
                 rowComponent={Row}

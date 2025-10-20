@@ -1,4 +1,5 @@
 {
+  "existingID": "ID de oferta existente",
   "price": "Precio:",
   "editingPrice": "Precio de edición",
   "setNewPrice": "Establecer nuevo precio",

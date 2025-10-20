@@ -1,7 +1,9 @@
 {
-    "card": {
-      "title": "📜 Prüfen Sie Ihre Kreditangebote",
-      "description": "Von hier aus können Sie Ihre aktiven Kreditangebote überwachen und deren Einstellungen verwalten.",
-      "noResults": "Keine aktiven Kreditangebote gefunden."
-    }
+  "card": {
+    "title": "📜 Prüfen Sie Ihre Kreditangebote",
+    "description": "Von hier aus können Sie Ihre aktiven Kreditangebote überwachen und deren Einstellungen verwalten.",
+    "noResults": "Keine aktiven Kreditangebote gefunden.",
+    "noResultsDesc": "Sie haben derzeit keine aktiven Kreditangebote. ",
+    "create": "Kreditangebot erstellen"
   }
+}

@@ -347,6 +347,96 @@ export default function Home(properties) {
                       </HoverCardContent>
                     </HoverCard>
 
+                    <HoverCard key="barter">
+                      <HoverCardTrigger asChild>
+                        <a
+                          href="/barter/index.html"
+                          style={{ textDecoration: "none" }}
+                        >
+                          <Card className="h-full hover:shadow-md hover:shadow-black">
+                            <CardHeader>
+                              <CardTitle>{t("Home:barter.title")}</CardTitle>
+                              <CardDescription>
+                                {t("Home:barter.subtitle")}
+                              </CardDescription>
+                            </CardHeader>
+                          </Card>
+                        </a>
+                      </HoverCardTrigger>
+                      <HoverCardContent className="w-80 text-sm pt-1">
+                        <ul className="ml-2 list-disc [&>li]:mt-2">
+                          <li>{t("Home:barter.hover1")}</li>
+                          <li>{t("Home:barter.hover2")}</li>
+                          <li>{t("Home:barter.hover3")}</li>
+                        </ul>
+                      </HoverCardContent>
+                    </HoverCard>
+
+                    <HoverCard key="tfunds">
+                      <HoverCardTrigger asChild>
+                        <a
+                          href="/tfund_user/index.html"
+                          style={{ textDecoration: "none" }}
+                        >
+                          <Card className="h-full hover:shadow-md hover:shadow-black">
+                            <CardHeader>
+                              <CardTitle>
+                                {t("Home:tfund_user.title")}
+                              </CardTitle>
+                              <CardDescription>
+                                {t("Home:tfund_user.subtitle")}
+                              </CardDescription>
+                            </CardHeader>
+                          </Card>
+                        </a>
+                      </HoverCardTrigger>
+                      <HoverCardContent className="w-80 text-sm pt-1">
+                        <ul className="ml-2 list-disc [&>li]:mt-2">
+                          <li>{t("Home:tfund_user.hover1")}</li>
+                          <li>{t("Home:tfund_user.hover2")}</li>
+                          <li>{t("Home:tfund_user.hover3")}</li>
+                        </ul>
+                      </HoverCardContent>
+                    </HoverCard>
+
+                    <HoverCard key="predictions">
+                      <HoverCardTrigger asChild>
+                        <a
+                          href="/predictions/index.html"
+                          style={{ textDecoration: "none" }}
+                        >
+                          <Card className="h-full hover:shadow-md hover:shadow-black">
+                            <CardHeader>
+                              <CardTitle>
+                                {t("Home:prediction_markets.title")}
+                              </CardTitle>
+                              <CardDescription>
+                                {t("Home:prediction_markets.subtitle")}
+                              </CardDescription>
+                            </CardHeader>
+                          </Card>
+                        </a>
+                      </HoverCardTrigger>
+                      <HoverCardContent className="w-80 text-sm pt-1">
+                        <ul className="ml-2 list-disc [&>li]:mt-2">
+                          <li>{t("Home:prediction_markets.hover1")}</li>
+                          <li>{t("Home:prediction_markets.hover2")}</li>
+                          <li>{t("Home:prediction_markets.hover3")}</li>
+                        </ul>
+                      </HoverCardContent>
+                    </HoverCard>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="item-2">
+                <AccordionTrigger>
+                  <h4 className="mb-2 scroll-m-20 text-xl font-semibold tracking-tight text-white">
+                    📩 {t("PageHeader:transferFundsHeading")}
+                  </h4>
+                </AccordionTrigger>
+                <AccordionContent className="flex flex-col gap-4 text-balance">
+                  <div className="grid grid-cols-5 gap-3">
                     <HoverCard key="transfer">
                       <HoverCardTrigger asChild>
                         <a
@@ -473,36 +563,11 @@ export default function Home(properties) {
                         </ul>
                       </HoverCardContent>
                     </HoverCard>
-
-                    <HoverCard key="barter">
-                      <HoverCardTrigger asChild>
-                        <a
-                          href="/barter/index.html"
-                          style={{ textDecoration: "none" }}
-                        >
-                          <Card className="h-full hover:shadow-md hover:shadow-black">
-                            <CardHeader>
-                              <CardTitle>{t("Home:barter.title")}</CardTitle>
-                              <CardDescription>
-                                {t("Home:barter.subtitle")}
-                              </CardDescription>
-                            </CardHeader>
-                          </Card>
-                        </a>
-                      </HoverCardTrigger>
-                      <HoverCardContent className="w-80 text-sm pt-1">
-                        <ul className="ml-2 list-disc [&>li]:mt-2">
-                          <li>{t("Home:barter.hover1")}</li>
-                          <li>{t("Home:barter.hover2")}</li>
-                          <li>{t("Home:barter.hover3")}</li>
-                        </ul>
-                      </HoverCardContent>
-                    </HoverCard>
                   </div>
                 </AccordionContent>
               </AccordionItem>
 
-              <AccordionItem value="item-2">
+              <AccordionItem value="item-3">
                 <AccordionTrigger>
                   <h4 className="mt-3 mb-2 scroll-m-20 text-xl font-semibold tracking-tight text-white">
                     🏦 {t("PageHeader:formsOfDebtHeading")}
@@ -613,38 +678,11 @@ export default function Home(properties) {
                         </ul>
                       </HoverCardContent>
                     </HoverCard>
-
-                    <HoverCard key="tfunds">
-                      <HoverCardTrigger asChild>
-                        <a
-                          href="/tfund_user/index.html"
-                          style={{ textDecoration: "none" }}
-                        >
-                          <Card className="h-full hover:shadow-md hover:shadow-black">
-                            <CardHeader>
-                              <CardTitle>
-                                {t("Home:tfund_user.title")}
-                              </CardTitle>
-                              <CardDescription>
-                                {t("Home:tfund_user.subtitle")}
-                              </CardDescription>
-                            </CardHeader>
-                          </Card>
-                        </a>
-                      </HoverCardTrigger>
-                      <HoverCardContent className="w-80 text-sm pt-1">
-                        <ul className="ml-2 list-disc [&>li]:mt-2">
-                          <li>{t("Home:tfund_user.hover1")}</li>
-                          <li>{t("Home:tfund_user.hover2")}</li>
-                          <li>{t("Home:tfund_user.hover3")}</li>
-                        </ul>
-                      </HoverCardContent>
-                    </HoverCard>
                   </div>
                 </AccordionContent>
               </AccordionItem>
 
-              <AccordionItem value="item-3">
+              <AccordionItem value="item-4">
                 <AccordionTrigger>
                   <h4 className="mt-3 mb-2 scroll-m-20 text-xl font-semibold tracking-tight text-white">
                     👤 {t("PageHeader:accountOverviewsHeading")}
@@ -677,17 +715,19 @@ export default function Home(properties) {
                       </HoverCardContent>
                     </HoverCard>
 
-                    <HoverCard key="deals">
+                    <HoverCard key="issued_assets">
                       <HoverCardTrigger asChild>
                         <a
-                          href="/deals/index.html"
+                          href="/issued_assets/index.html"
                           style={{ textDecoration: "none" }}
                         >
                           <Card className="h-full hover:shadow-md hover:shadow-black">
                             <CardHeader>
-                              <CardTitle>{t("Home:deals.title")}</CardTitle>
+                              <CardTitle>
+                                {t("Home:issued_assets.title")}
+                              </CardTitle>
                               <CardDescription>
-                                {t("Home:deals.subtitle")}
+                                {t("Home:issued_assets.subtitle")}
                               </CardDescription>
                             </CardHeader>
                           </Card>
@@ -695,8 +735,9 @@ export default function Home(properties) {
                       </HoverCardTrigger>
                       <HoverCardContent className="w-80 text-sm pt-1">
                         <ul className="ml-2 list-disc [&>li]:mt-2">
-                          <li>{t("Home:deals.hover1")}</li>
-                          <li>{t("Home:deals.hover2")}</li>
+                          <li>{t("Home:issued_assets.hover1")}</li>
+                          <li>{t("Home:issued_assets.hover2")}</li>
+                          <li>{t("Home:issued_assets.hover3")}</li>
                         </ul>
                       </HoverCardContent>
                     </HoverCard>
@@ -721,6 +762,30 @@ export default function Home(properties) {
                         <ul className="ml-2 list-disc [&>li]:mt-2">
                           <li>{t("Home:offers.hover1")}</li>
                           <li>{t("Home:offers.hover2")}</li>
+                        </ul>
+                      </HoverCardContent>
+                    </HoverCard>
+
+                    <HoverCard key="deals">
+                      <HoverCardTrigger asChild>
+                        <a
+                          href="/deals/index.html"
+                          style={{ textDecoration: "none" }}
+                        >
+                          <Card className="h-full hover:shadow-md hover:shadow-black">
+                            <CardHeader>
+                              <CardTitle>{t("Home:deals.title")}</CardTitle>
+                              <CardDescription>
+                                {t("Home:deals.subtitle")}
+                              </CardDescription>
+                            </CardHeader>
+                          </Card>
+                        </a>
+                      </HoverCardTrigger>
+                      <HoverCardContent className="w-80 text-sm pt-1">
+                        <ul className="ml-2 list-disc [&>li]:mt-2">
+                          <li>{t("Home:deals.hover1")}</li>
+                          <li>{t("Home:deals.hover2")}</li>
                         </ul>
                       </HoverCardContent>
                     </HoverCard>
@@ -772,38 +837,11 @@ export default function Home(properties) {
                         </ul>
                       </HoverCardContent>
                     </HoverCard>
-
-                    <HoverCard key="issued_assets">
-                      <HoverCardTrigger asChild>
-                        <a
-                          href="/issued_assets/index.html"
-                          style={{ textDecoration: "none" }}
-                        >
-                          <Card className="h-full hover:shadow-md hover:shadow-black">
-                            <CardHeader>
-                              <CardTitle>
-                                {t("Home:issued_assets.title")}
-                              </CardTitle>
-                              <CardDescription>
-                                {t("Home:issued_assets.subtitle")}
-                              </CardDescription>
-                            </CardHeader>
-                          </Card>
-                        </a>
-                      </HoverCardTrigger>
-                      <HoverCardContent className="w-80 text-sm pt-1">
-                        <ul className="ml-2 list-disc [&>li]:mt-2">
-                          <li>{t("Home:issued_assets.hover1")}</li>
-                          <li>{t("Home:issued_assets.hover2")}</li>
-                          <li>{t("Home:issued_assets.hover3")}</li>
-                        </ul>
-                      </HoverCardContent>
-                    </HoverCard>
                   </div>
                 </AccordionContent>
               </AccordionItem>
 
-              <AccordionItem value="item-4">
+              <AccordionItem value="item-5">
                 <AccordionTrigger>
                   <h4 className="mt-3 mb-2 scroll-m-20 text-xl font-semibold tracking-tight text-white">
                     ⛓️ {t("PageHeader:blockchainOverviewsHeading")}
@@ -832,6 +870,31 @@ export default function Home(properties) {
                           <li>{t("Home:featured.hover1")}</li>
                           <li>{t("Home:featured.hover2")}</li>
                           <li>{t("Home:featured.hover3")}</li>
+                        </ul>
+                      </HoverCardContent>
+                    </HoverCard>
+
+                    <HoverCard key="blocks">
+                      <HoverCardTrigger asChild>
+                        <a
+                          href="/blocks/index.html"
+                          style={{ textDecoration: "none" }}
+                        >
+                          <Card className="h-full hover:shadow-md hover:shadow-black">
+                            <CardHeader>
+                              <CardTitle>{t("Home:blocks.title")}</CardTitle>
+                              <CardDescription>
+                                {t("Home:blocks.subtitle")}
+                              </CardDescription>
+                            </CardHeader>
+                          </Card>
+                        </a>
+                      </HoverCardTrigger>
+                      <HoverCardContent className="w-80 text-sm pt-1">
+                        <ul className="ml-2 list-disc [&>li]:mt-2">
+                          <li>{t("Home:blocks.hover1")}</li>
+                          <li>{t("Home:blocks.hover2")}</li>
+                          <li>{t("Home:blocks.hover3")}</li>
                         </ul>
                       </HoverCardContent>
                     </HoverCard>
@@ -883,58 +946,6 @@ export default function Home(properties) {
                           <li>{t("Home:pools.hover1")}</li>
                           <li>{t("Home:pools.hover2")}</li>
                           <li>{t("Home:pools.hover3")}</li>
-                        </ul>
-                      </HoverCardContent>
-                    </HoverCard>
-
-                    <HoverCard key="predictions">
-                      <HoverCardTrigger asChild>
-                        <a
-                          href="/predictions/index.html"
-                          style={{ textDecoration: "none" }}
-                        >
-                          <Card className="h-full hover:shadow-md hover:shadow-black">
-                            <CardHeader>
-                              <CardTitle>
-                                {t("Home:prediction_markets.title")}
-                              </CardTitle>
-                              <CardDescription>
-                                {t("Home:prediction_markets.subtitle")}
-                              </CardDescription>
-                            </CardHeader>
-                          </Card>
-                        </a>
-                      </HoverCardTrigger>
-                      <HoverCardContent className="w-80 text-sm pt-1">
-                        <ul className="ml-2 list-disc [&>li]:mt-2">
-                          <li>{t("Home:prediction_markets.hover1")}</li>
-                          <li>{t("Home:prediction_markets.hover2")}</li>
-                          <li>{t("Home:prediction_markets.hover3")}</li>
-                        </ul>
-                      </HoverCardContent>
-                    </HoverCard>
-
-                    <HoverCard key="blocks">
-                      <HoverCardTrigger asChild>
-                        <a
-                          href="/blocks/index.html"
-                          style={{ textDecoration: "none" }}
-                        >
-                          <Card className="h-full hover:shadow-md hover:shadow-black">
-                            <CardHeader>
-                              <CardTitle>{t("Home:blocks.title")}</CardTitle>
-                              <CardDescription>
-                                {t("Home:blocks.subtitle")}
-                              </CardDescription>
-                            </CardHeader>
-                          </Card>
-                        </a>
-                      </HoverCardTrigger>
-                      <HoverCardContent className="w-80 text-sm pt-1">
-                        <ul className="ml-2 list-disc [&>li]:mt-2">
-                          <li>{t("Home:blocks.hover1")}</li>
-                          <li>{t("Home:blocks.hover2")}</li>
-                          <li>{t("Home:blocks.hover3")}</li>
                         </ul>
                       </HoverCardContent>
                     </HoverCard>
@@ -992,7 +1003,7 @@ export default function Home(properties) {
                 </AccordionContent>
               </AccordionItem>
 
-              <AccordionItem value="item-5">
+              <AccordionItem value="item-6">
                 <AccordionTrigger>
                   <h4 className="mt-3 mb-2 scroll-m-20 text-xl font-semibold tracking-tight text-white">
                     💎 {t("PageHeader:assetCreation")}
@@ -1084,7 +1095,7 @@ export default function Home(properties) {
                 </AccordionContent>
               </AccordionItem>
 
-              <AccordionItem value="item-6">
+              <AccordionItem value="item-7">
                 <AccordionTrigger>
                   <h4 className="mt-3 mb-2 scroll-m-20 text-xl font-semibold tracking-tight text-white">
                     ⚙️ {t("PageHeader:settingsHeading")}

@@ -179,6 +179,24 @@ export default function PageHeader(properties) {
       description: "Home:stake.subtitle",
     },
     {
+      title: "Home:barter.title",
+      href: "/barter/index.html",
+      description: "Home:barter.subtitle",
+    },
+    {
+      title: "Home:tfund_user.title",
+      href: "/tfund_user/index.html",
+      description: "Home:tfund_user.subtitle",
+    },
+    {
+      title: "Home:prediction_markets.title",
+      href: "/predictions/index.html",
+      description: "Home:prediction_markets.subtitle",
+    },
+  ];
+
+  const transferFundsHeading = [
+    {
       title: "Home:transfer.title",
       href: "/transfer/index.html",
       description: "Home:transfer.subtitle",
@@ -189,24 +207,19 @@ export default function PageHeader(properties) {
       description: "Home:timed_transfer.subtitle",
     },
     {
-      title: "Home:withdraw_permission.title",
-      href: "/withdraw_permissions/index.html",
-      description: "Home:withdraw_permission.subtitle",
-    },
-    {
       title: "Home:htlc.title",
       href: "/htlc/index.html",
       description: "Home:htlc.subtitle",
     },
     {
+      title: "Home:withdraw_permission.title",
+      href: "/withdraw_permissions/index.html",
+      description: "Home:withdraw_permission.subtitle",
+    },
+    {
       title: "Home:create_vesting.title",
       href: "/create_vesting/index.html",
       description: "Home:create_vesting.subtitle",
-    },
-    {
-      title: "Home:barter.title",
-      href: "/barter/index.html",
-      description: "Home:barter.subtitle",
     },
   ];
 
@@ -231,11 +244,6 @@ export default function PageHeader(properties) {
       href: "/tfunds/index.html",
       description: "Home:tfunds.subtitle",
     },
-    {
-      title: "Home:tfund_user.title",
-      href: "/tfund_user/index.html",
-      description: "Home:tfund_user.subtitle",
-    },
   ];
 
   const accountOverviewsHeading = [
@@ -245,14 +253,19 @@ export default function PageHeader(properties) {
       description: "Home:portfolio.subtitle",
     },
     {
-      title: "Home:deals.title",
-      href: "/deals/index.html",
-      description: "Home:deals.subtitle",
+      title: "Home:issued_assets.title",
+      href: "/issued_assets/index.html",
+      description: "Home:issued_assets.subtitle",
     },
     {
       title: "Home:offers.title",
       href: "/offers/index.html",
       description: "Home:offers.subtitle",
+    },
+    {
+      title: "Home:deals.title",
+      href: "/deals/index.html",
+      description: "Home:deals.subtitle",
     },
     {
       title: "Home:vesting.title",
@@ -264,11 +277,6 @@ export default function PageHeader(properties) {
       href: "/proposals/index.html",
       description: "Home:proposals.subtitle",
     },
-    {
-      title: "Home:issued_assets.title",
-      href: "/issued_assets/index.html",
-      description: "Home:issued_assets.subtitle",
-    },
   ];
 
   const blockchainOverviewsHeading = [
@@ -276,6 +284,11 @@ export default function PageHeader(properties) {
       title: "Home:featured.title",
       href: "/featured/index.html",
       description: "Home:featured.subtitle",
+    },
+    {
+      title: "Home:blocks.title",
+      href: "/blocks/index.html",
+      description: "Home:blocks.subtitle",
     },
     {
       title: "Home:custom_pool_tracker.title",
@@ -286,16 +299,6 @@ export default function PageHeader(properties) {
       title: "Home:pools.title",
       href: "/pools/index.html",
       description: "Home:pools.subtitle",
-    },
-    {
-      title: "Home:prediction_markets.title",
-      href: "/predictions/index.html",
-      description: "Home:prediction_markets.subtitle",
-    },
-    {
-      title: "Home:blocks.title",
-      href: "/blocks/index.html",
-      description: "Home:blocks.subtitle",
     },
     {
       title: "Home:witnesses.title",
@@ -528,6 +531,31 @@ export default function PageHeader(properties) {
                     </ul>
                   </NavigationMenuContent>
                 </NavigationMenuItem>
+
+                <NavigationMenuItem>
+                  <Badge
+                    variant="secondary"
+                    className="hover:bg-slate-200 hover:text-black"
+                  >
+                    <NavigationMenuTrigger>
+                      {t("PageHeader:transferFundsHeading")}
+                    </NavigationMenuTrigger>
+                  </Badge>
+                  <NavigationMenuContent>
+                    <ul className="grid gap-2 sm:w-[400px] md:w-[500px] md:grid-cols-2 lg:w-[600px] p-2">
+                      {transferFundsHeading.map((component) => (
+                        <ListItem
+                          key={t(component.title)}
+                          title={t(component.title)}
+                          href={component.href}
+                        >
+                          {t(component.description)}
+                        </ListItem>
+                      ))}
+                    </ul>
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
+
                 <NavigationMenuItem>
                   <Badge
                     variant="secondary"

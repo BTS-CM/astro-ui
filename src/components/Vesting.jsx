@@ -13,6 +13,15 @@ import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 import { Button } from "@/components/ui/button";
 
 import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
+
+import {
   Card,
   CardContent,
   CardDescription,
@@ -169,7 +178,7 @@ export default function Vesting(properties) {
   };
 
   return (
-    <div className="container mx-auto mt-5 mb-5">
+    <div className="container mx-auto mt-5 mb-5 w-1/2">
       <div className="grid grid-cols-1 gap-3">
         <Card>
           <CardHeader className="pb-1">
@@ -205,9 +214,14 @@ export default function Vesting(properties) {
                   />
                 </div>
               ) : null}
-              {chosenVestingData && !chosenVestingData.length
-                ? t("Vesting:card.empty")
-                : null}
+              {chosenVestingData && !chosenVestingData.length ? (
+                <Empty>
+                  <EmptyHeader>
+                    <EmptyMedia variant="icon">❕</EmptyMedia>
+                    <EmptyTitle>{t("Vesting:card.empty")}</EmptyTitle>
+                  </EmptyHeader>
+                </Empty>
+              ) : null}
             </>
           </CardContent>
         </Card>

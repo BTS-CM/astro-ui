@@ -90,5 +90,6 @@
   "usage": "Konzipiert für den Einsatz mit ",
   "multiwallet": "Multiwallet",
   "tfund_user": "Same-T Fund Trade",
-  "createAccount": "Konto erstellen"
+  "createAccount": "Konto erstellen",
+  "transferFundsHeading": "Geld überweisen"
 }

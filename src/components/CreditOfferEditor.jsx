@@ -702,7 +702,7 @@ export default function CreditOfferEditor(properties) {
   };
 
   return (
-    <div className="container mx-auto mt-5 mb-5">
+    <div className="container mx-auto mt-5 mb-5 w-1/2">
       <div className="grid grid-cols-1 gap-3">
         <Card>
           <CardHeader>
@@ -767,7 +767,7 @@ export default function CreditOfferEditor(properties) {
                     <span className="col-span-6">
                       <Field>
                         <FieldLabel htmlFor={`offerId-${offerID ?? "new"}`}>
-                          Existing Offer ID
+                          {t("CreditOfferEditor:existingID")}
                         </FieldLabel>
                         <FieldContent>
                           <div className="grid grid-cols-12 mt-4">
@@ -848,11 +848,30 @@ export default function CreditOfferEditor(properties) {
                   </span>
                 ) : null}
                 <Field>
-                  <FieldLabel htmlFor={`targetAsset-${offerID ?? "new"}`}>
-                    {t("CreditOfferEditor:assetToLend")}
-                  </FieldLabel>
+                  <span className="grid grid-cols-2">
+                    <FieldLabel
+                      className="mt-2"
+                      htmlFor={`targetAsset-${offerID ?? "new"}`}
+                    >
+                      {t("CreditOfferEditor:assetToLend")}
+                    </FieldLabel>
+                    <span className="text-right mt-1">
+                      {!offerID ? (
+                        <AssetDropDown
+                          assetSymbol={selectedAsset ?? ""}
+                          assetData={null}
+                          storeCallback={setSelectedAsset}
+                          otherAsset={null}
+                          marketSearch={marketSearch}
+                          type={null}
+                          chain={usr.chain}
+                          balances={balances}
+                        />
+                      ) : null}
+                    </span>
+                  </span>
                   <FieldContent>
-                    <div className="grid grid-cols-8 mt-4">
+                    <div className="grid grid-cols-12 mt-4">
                       <div className="col-span-1 ml-5">
                         {!selectedAsset || !foundAsset ? (
                           <Av>
@@ -869,7 +888,7 @@ export default function CreditOfferEditor(properties) {
                           </Av>
                         ) : null}
                       </div>
-                      <div className="col-span-5">
+                      <div className="col-span-11">
                         {!selectedAsset || !foundAsset ? (
                           <Input
                             id={`targetAsset-${offerID ?? "new"}`}
@@ -884,20 +903,6 @@ export default function CreditOfferEditor(properties) {
                             disabled
                             placeholder={`${foundAsset.symbol} (${foundAsset.id})`}
                             className="mb-1 mt-1"
-                          />
-                        ) : null}
-                      </div>
-                      <div className="col-span-2 mt-1 ml-3 text-center">
-                        {!offerID ? (
-                          <AssetDropDown
-                            assetSymbol={selectedAsset ?? ""}
-                            assetData={null}
-                            storeCallback={setSelectedAsset}
-                            otherAsset={null}
-                            marketSearch={marketSearch}
-                            type={null}
-                            chain={usr.chain}
-                            balances={balances}
                           />
                         ) : null}
                       </div>
@@ -918,57 +923,55 @@ export default function CreditOfferEditor(properties) {
                 </Field>
 
                 <Field>
-                  <FieldLabel htmlFor={`lendingAmount-${offerID ?? "new"}`}>
-                    {t("CreditOfferEditor:amountToLend")}
-                  </FieldLabel>
-                  <FieldContent>
-                    <div className="grid grid-cols-12 gap-3">
-                      <div className="col-span-9">
-                        <Controller
-                          name="lendingAmount"
-                          control={form.control}
-                          render={({ field }) => (
-                            <Input
-                              id={`lendingAmount-${offerID ?? "new"}`}
-                              value={lendingAmount}
-                              placeholder={String(lendingAmount)}
-                              className="mb-1"
-                              onChange={(event) => {
-                                const input = event.target.value;
-                                const inputDecimals = !foundAsset
-                                  ? 2
-                                  : foundAsset.precision;
-                                let regex = new RegExp(
-                                  `^[0-9]*\\.?[0-9]{0,${inputDecimals}}$`
-                                );
-                                if (regex.test(input)) {
-                                  setLendingAmount(input);
-                                  field.onChange(input);
-                                }
-                              }}
-                            />
-                          )}
-                        />
-                      </div>
-                      <div className="col-span-3 text-center">
-                        {foundAsset ? (
-                          <Button
-                            variant="outline"
-                            onClick={() => {
-                              event.preventDefault();
-                              setLendingAmount(foundAssetBalance);
-                              form.setValue("lendingAmount", foundAssetBalance);
-                            }}
-                          >
-                            {t("LimitOrderCard:useBalance")}
-                          </Button>
-                        ) : (
-                          <Button disabled>
-                            {t("LimitOrderCard:useBalance")}
-                          </Button>
-                        )}
-                      </div>
+                  <div className="grid grid-cols-2">
+                    <FieldLabel htmlFor={`lendingAmount-${offerID ?? "new"}`}>
+                      {t("CreditOfferEditor:amountToLend")}
+                    </FieldLabel>
+                    <div className="text-right">
+                      {foundAsset ? (
+                        <Button
+                          variant="outline"
+                          onClick={() => {
+                            event.preventDefault();
+                            setLendingAmount(foundAssetBalance);
+                            form.setValue("lendingAmount", foundAssetBalance);
+                          }}
+                        >
+                          {t("LimitOrderCard:useBalance")}
+                        </Button>
+                      ) : (
+                        <Button disabled>
+                          {t("LimitOrderCard:useBalance")}
+                        </Button>
+                      )}
                     </div>
+                  </div>
+                  <FieldContent>
+                    <Controller
+                      name="lendingAmount"
+                      control={form.control}
+                      render={({ field }) => (
+                        <Input
+                          id={`lendingAmount-${offerID ?? "new"}`}
+                          value={lendingAmount}
+                          placeholder={String(lendingAmount)}
+                          className="mb-1"
+                          onChange={(event) => {
+                            const input = event.target.value;
+                            const inputDecimals = !foundAsset
+                              ? 2
+                              : foundAsset.precision;
+                            let regex = new RegExp(
+                              `^[0-9]*\\.?[0-9]{0,${inputDecimals}}$`
+                            );
+                            if (regex.test(input)) {
+                              setLendingAmount(input);
+                              field.onChange(input);
+                            }
+                          }}
+                        />
+                      )}
+                    />
                   </FieldContent>
                   <FieldDescription>
                     {t("CreditOfferEditor:lendingAmountDescription")}
@@ -982,72 +985,66 @@ export default function CreditOfferEditor(properties) {
                 </Field>
 
                 <Field>
-                  <FieldLabel>{t("CreditOfferEditor:lendingRate")}</FieldLabel>
-                  <FieldContent>
-                    <span className="grid grid-cols-12">
-                      <span className="col-span-9">
-                        <Input
-                          value={`${rate} %`}
-                          placeholder={`${rate} %`}
-                          disabled
-                          className="mb-1"
-                        />
-                        <Slider
-                          className="mt-3"
-                          key={`Slider${rate}`}
-                          defaultValue={[rate]}
-                          max={100}
-                          min={1}
-                          step={0.01}
-                          onValueChange={(value) => {
-                            debouncedSetRate(value[0]);
-                          }}
-                        />
-                      </span>
-
-                      <span className="col-span-3 ml-3 text-center">
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <span
-                              onClick={() => {
-                                event.preventDefault();
-                              }}
-                              className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4 text-lg"
-                            >
-                              <Label>
-                                {t("CreditOfferEditor:editLendingRate")}
-                              </Label>{" "}
-                            </span>
-                          </PopoverTrigger>
-                          <PopoverContent>
+                  <span className="grid grid-cols-2">
+                    <FieldLabel>
+                      {t("CreditOfferEditor:lendingRate")}
+                    </FieldLabel>
+                    <span className="text-right">
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <span
+                            onClick={() => {
+                              event.preventDefault();
+                            }}
+                            className="inline-block border border-gray-300 rounded pl-4 pb-1 pr-4 text-lg"
+                          >
                             <Label>
-                              {t("CreditOfferEditor:newLendingRate")}
+                              {t("CreditOfferEditor:editLendingRate")}
                             </Label>{" "}
-                            <Input
-                              placeholder={String(rate)}
-                              className="mb-2 mt-1"
-                              onChange={(event) => {
-                                const input = event.target.value;
-                                const regex = /^[0-9]*\.?[0-9]{0,2}$/;
-                                if (
-                                  input &&
-                                  input.length &&
-                                  regex.test(input)
-                                ) {
-                                  if (input >= 0.01 && input <= 100) {
-                                    setRate(input);
-                                  } else if (input > 100) {
-                                    setRate(100);
-                                  } else if (input < 0.01) {
-                                    setRate(0.01);
-                                  }
+                          </span>
+                        </PopoverTrigger>
+                        <PopoverContent>
+                          <Label>{t("CreditOfferEditor:newLendingRate")}</Label>{" "}
+                          <Input
+                            placeholder={String(rate)}
+                            className="mb-2 mt-1"
+                            onChange={(event) => {
+                              const input = event.target.value;
+                              const regex = /^[0-9]*\.?[0-9]{0,2}$/;
+                              if (input && input.length && regex.test(input)) {
+                                if (input >= 0.01 && input <= 100) {
+                                  setRate(input);
+                                } else if (input > 100) {
+                                  setRate(100);
+                                } else if (input < 0.01) {
+                                  setRate(0.01);
                                 }
-                              }}
-                            />
-                          </PopoverContent>
-                        </Popover>
-                      </span>
+                              }
+                            }}
+                          />
+                        </PopoverContent>
+                      </Popover>
                     </span>
+                  </span>
+
+                  <FieldContent>
+                    <Input
+                      value={`${rate} %`}
+                      placeholder={`${rate} %`}
+                      disabled
+                      className="mb-1"
+                    />
+                    <Slider
+                      className="mt-3"
+                      key={`Slider${rate}`}
+                      defaultValue={[rate]}
+                      max={100}
+                      min={1}
+                      step={0.01}
+                      onValueChange={(value) => {
+                        debouncedSetRate(value[0]);
+                      }}
+                    />
                   </FieldContent>
                   <FieldDescription>
                     {t("CreditOfferEditor:lendingRateDescription")}

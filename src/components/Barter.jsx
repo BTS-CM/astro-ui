@@ -720,15 +720,13 @@ export default function Barter(properties) {
                         <Label>{t("Barter:escrowAgent")}</Label>
                         <div className="flex items-center space-x-3">
                           <div className="flex-shrink-0">
+                            {console.log({ escrowAccount })}
                             {escrowAccount ? (
                               <Avatar
                                 size={40}
                                 name={escrowAccount.name}
                                 extra="Escrow"
-                                expression={{
-                                  eye: "suspicious",
-                                  mouth: "concerned",
-                                }}
+                                expression={{ eye: "normal", mouth: "open" }}
                                 colors={[
                                   "#F0AB3D",
                                   "#C271B4",

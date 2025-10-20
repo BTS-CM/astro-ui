@@ -97,5 +97,6 @@
   "usage": "Designed for use with ",
   "multiwallet": "multiwallet",
   "tfund_user": "Same-T Fund Trade",
-  "createAccount": "Create Account"
+  "createAccount": "Create Account",
+  "transferFundsHeading": "Transfer funds"
 }

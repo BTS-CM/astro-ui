@@ -11,9 +11,6 @@ export const chains = {
         url: "wss://api.bts.mobi/ws",
       },
       {
-        url: "wss://api.bitshares.bhuz.info/ws",
-      },
-      {
         url: "wss://btsws.roelandp.nl/ws",
       },
     ],
@@ -35,19 +32,4 @@ export const chains = {
       },
     ],
   },
-  EOS: {
-    coreSymbol: "EOS",
-    name: "EOSmainnet",
-    chainId: "aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906",
-    nodeList: [
-        {
-            url: "https://eos.greymass.com",
-            location: "Unknown",
-            region: "Unknown",
-            country: "Unknown",
-            operator: "Greymass",
-            contact: "Greymass",
-        },
-    ],
-  }
 };

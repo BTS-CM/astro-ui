@@ -90,5 +90,6 @@
   "usage": "Projetado para uso com ",
   "multiwallet": "carteira múltipla",
   "tfund_user": "Negociação de Fundo Same-T",
-  "createAccount": "Criar Conta"
+  "createAccount": "Criar Conta",
+  "transferFundsHeading": "Transferir fundos"
 }

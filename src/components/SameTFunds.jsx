@@ -36,6 +36,15 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
+
 import HoverInfo from "@/components/common/HoverInfo.tsx";
 import AssetDropDown from "@/components/Market/AssetDropDownCard.jsx";
 
@@ -341,9 +350,8 @@ export default function SameTFunds(properties) {
               {") "}
               {lender && lender.id === lender.lifetime_referrer ? " - LTM" : ""}
             </CardTitle>
-            <CardDescription></CardDescription>
           </CardHeader>
-          <CardContent className="pb-4">
+          <CardContent className="pb-4 mt-1">
             <div className="grid grid-cols-3 gap-2 text-sm">
               <div className="col-span-2">
                 <div className="grid grid-cols-2">
@@ -491,7 +499,7 @@ export default function SameTFunds(properties) {
                       setDeleteDialog(true);
                     }}
                   >
-                    Delete
+                    {t("CustomPoolOverview:delete")}
                   </Button>
                 </div>
               ) : null}
@@ -592,7 +600,7 @@ export default function SameTFunds(properties) {
 
   return (
     <>
-      <div className="container mx-auto mt-5 mb-5">
+      <div className="container mx-auto mt-5 mb-5 w-1/2">
         <div className="grid grid-cols-1 gap-3">
           <Card>
             <CardHeader className="pb-1">
@@ -801,7 +809,12 @@ export default function SameTFunds(properties) {
                     />
                   </div>
                 ) : (
-                  <div className="mt-5">{t("SameTFunds:noOwnedFunds")}</div>
+                  <Empty className="mt-5">
+                    <EmptyHeader>
+                      <EmptyMedia variant="icon">❕</EmptyMedia>
+                      <EmptyTitle>{t("SameTFunds:noOwnedFunds")}</EmptyTitle>
+                    </EmptyHeader>
+                  </Empty>
                 )
               ) : null}
               {view === "search" ? (

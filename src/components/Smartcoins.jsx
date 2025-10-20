@@ -21,6 +21,15 @@ import {
 } from "@/components/ui/hover-card";
 
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+
+import {
   Card,
   CardContent,
   CardDescription,
@@ -352,7 +361,8 @@ export default function Smartcoins(properties) {
 
     return (
       <div style={{ ...style }} key={`acard-${bitasset.asset_id}`}>
-        <Card className="ml-2 mr-2">
+        {/* allow hovercards to escape card bounds and appear above other rows */}
+        <Card className="ml-2 mr-2 overflow-visible">
           <CardHeader className="pb-1">
             <CardTitle>
               {mode === "bitasset" ? "Bitasset" : "Smartcoin"} "
@@ -399,96 +409,133 @@ export default function Smartcoins(properties) {
               ) : null}
             </CardTitle>
             <CardDescription className="text-md">
-              <div className="grid grid-cols-2 gap-1">
-                <div>
-                  {t("Smartcoins:collateral")}:
-                  <b>
-                    {" "}
-                    <ExternalLink
-                      classnamecontents="hover:text-purple-500"
-                      type="text"
-                      text={thisCollateralAssetData.symbol}
-                      hyperlink={`https://explorer.bitshares.ws/#/assets/${
-                        thisCollateralAssetData.symbol
-                      }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
-                    />{" "}
-                    {"("}
-                    <ExternalLink
-                      classnamecontents="hover:text-purple-500"
-                      type="text"
-                      text={thisCollateralAssetData.id}
-                      hyperlink={`https://explorer.bitshares.ws/#/assets/${
-                        thisCollateralAssetData.id
-                      }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
-                    />
-                    {")"}
-                  </b>
+              <div className="grid grid-cols-2">
+                <div className="grid grid-cols-1 gap-1">
+                  <div>
+                    {t("Smartcoins:collateral")}:
+                    <b>
+                      {" "}
+                      <ExternalLink
+                        classnamecontents="hover:text-purple-500"
+                        type="text"
+                        text={thisCollateralAssetData.symbol}
+                        hyperlink={`https://explorer.bitshares.ws/#/assets/${
+                          thisCollateralAssetData.symbol
+                        }${
+                          usr.chain === "bitshares" ? "" : "?network=testnet"
+                        }`}
+                      />{" "}
+                      {"("}
+                      <ExternalLink
+                        classnamecontents="hover:text-purple-500"
+                        type="text"
+                        text={thisCollateralAssetData.id}
+                        hyperlink={`https://explorer.bitshares.ws/#/assets/${
+                          thisCollateralAssetData.id
+                        }${
+                          usr.chain === "bitshares" ? "" : "?network=testnet"
+                        }`}
+                      />
+                      {")"}
+                    </b>
+                  </div>
+                  <div>
+                    {t("Smartcoins:currentSupply")}
+                    {": "}
+                    <b>
+                      {currentSupply.toLocaleString()} {thisBitassetData.symbol}
+                    </b>
+                  </div>
+                  <div>
+                    {t("Smartcoins:currentSettlementPrice")}
+                    {": "}
+                    <b>
+                      {_price > 0
+                        ? `${_price} ${thisCollateralAssetData.symbol}/${thisBitassetData.symbol}`
+                        : "??? ⚠️"}
+                    </b>
+                  </div>
                 </div>
-                <div>
-                  {t("Smartcoins:currentSupply")}
-                  {": "}
-                  <b>
-                    {currentSupply.toLocaleString()} {thisBitassetData.symbol}
-                  </b>
-                </div>
-                <div>
-                  {t("Smartcoins:currentSettlementPrice")}
-                  {": "}
-                  <b>
-                    {_price > 0
-                      ? `${_price} ${thisCollateralAssetData.symbol}/${thisBitassetData.symbol}`
-                      : "??? ⚠️"}
-                  </b>
+                <div className="grid grid-cols-2 gap-1 text-sm">
+                  <div className="grid grid-cols-1 gap-1">
+                    <Badge variant="outline">
+                      {`MCR: ${
+                        bitasset.current_feed.maintenance_collateral_ratio / 10
+                      }`}
+                    </Badge>
+                    <Badge variant="outline">
+                      {`MSSR: ${
+                        bitasset.current_feed.maximum_short_squeeze_ratio / 10
+                      }`}
+                    </Badge>
+                    <Badge variant="outline">
+                      {`ICR: ${
+                        bitasset.current_feed.initial_collateral_ratio / 10
+                      }`}
+                    </Badge>
+                  </div>
+                  <div className="grid grid-cols-1 gap-1">
+                    <Badge variant="outline">
+                      {t("Smartcoins:feedQty", {
+                        qty: bitasset.feeds?.length ?? 0,
+                      })}
+                    </Badge>
+                    {_issuer_permissions &&
+                    Object.keys(_issuer_permissions).length > 0 ? (
+                      <Dialog>
+                        <DialogTrigger>
+                          <Badge variant="outline">
+                            {`${t("Predictions:permissions")}: ${
+                              Object.keys(_issuer_permissions).length
+                            }`}
+                            <QuestionMarkCircledIcon className="ml-1" />
+                          </Badge>
+                        </DialogTrigger>
+                        <DialogContent className="bg-white">
+                          <DialogHeader>
+                            <DialogTitle>
+                              {t("Predictions:permissions")}
+                            </DialogTitle>
+                            <DialogDescription className="text-gray-800">
+                              {Object.keys(_issuer_permissions).join(", ")}
+                            </DialogDescription>
+                          </DialogHeader>
+                        </DialogContent>
+                      </Dialog>
+                    ) : (
+                      <Badge variant="outline">
+                        {t("Predictions:permissions")}: 0
+                      </Badge>
+                    )}
+                    {_flags && Object.keys(_flags).length > 0 ? (
+                      <Dialog>
+                        <DialogTrigger>
+                          <Badge variant="outline">
+                            {`${t("Predictions:flags")}: ${
+                              Object.keys(_flags).length
+                            }`}
+                            <QuestionMarkCircledIcon className="ml-1" />
+                          </Badge>
+                        </DialogTrigger>
+                        <DialogContent className="bg-white">
+                          <DialogHeader>
+                            <DialogTitle>{t("Predictions:flags")}</DialogTitle>
+                            <DialogDescription className="text-gray-800">
+                              {Object.keys(_flags).join(", ")}
+                            </DialogDescription>
+                          </DialogHeader>
+                        </DialogContent>
+                      </Dialog>
+                    ) : (
+                      <Badge variant="outline">
+                        {t("Predictions:flags")}: 0
+                      </Badge>
+                    )}
+                  </div>
                 </div>
               </div>
             </CardDescription>
           </CardHeader>
-          <CardContent className="text-sm pb-3">
-            <Badge className="mr-2 mt-2">
-              {t("Smartcoins:feedQty", { qty: bitasset.feeds?.length ?? 0 })}
-            </Badge>
-            <Badge className="mr-2">
-              MCR: {bitasset.current_feed.maintenance_collateral_ratio / 10}
-            </Badge>
-            <Badge className="mr-2">
-              MSSR: {bitasset.current_feed.maximum_short_squeeze_ratio / 10}
-            </Badge>
-            <Badge className="mr-2">
-              ICR: {bitasset.current_feed.initial_collateral_ratio / 10}
-            </Badge>
-            {_issuer_permissions &&
-            Object.keys(_issuer_permissions).length > 0 ? (
-              <HoverCard>
-                <HoverCardTrigger>
-                  <Badge className="mr-2">
-                    {t("Predictions:permissions")}:{" "}
-                    {Object.keys(_issuer_permissions).length}{" "}
-                    <QuestionMarkCircledIcon className="ml-1" />
-                  </Badge>
-                </HoverCardTrigger>
-                <HoverCardContent className={"w-80 mt-1"} align="start">
-                  {Object.keys(_issuer_permissions).join(", ")}
-                </HoverCardContent>
-              </HoverCard>
-            ) : (
-              <Badge className="mr-2">{t("Predictions:permissions")}: 0</Badge>
-            )}
-            {_flags && Object.keys(_flags).length > 0 ? (
-              <HoverCard>
-                <HoverCardTrigger>
-                  <Badge className="mr-2">
-                    {t("Predictions:flags")}: {Object.keys(_flags).length}{" "}
-                    <QuestionMarkCircledIcon className="ml-1" />
-                  </Badge>
-                </HoverCardTrigger>
-                <HoverCardContent className={"w-80 mt-1"} align="start">
-                  {Object.keys(_flags).join(", ")}
-                </HoverCardContent>
-              </HoverCard>
-            ) : (
-              <Badge className="mr-2">{t("Predictions:flags")}: 0</Badge>
-            )}
-          </CardContent>
           <CardFooter className="pb-5">
             {_price > 0 ? (
               <a href={`/smartcoin/index.html?id=${bitasset.asset_id}`}>
@@ -561,7 +608,7 @@ export default function Smartcoins(properties) {
 
   return (
     <>
-      <div className="container mx-auto mt-5 mb-5">
+      <div className="container mx-auto mt-5 mb-5 w-1/2">
         <div className="grid grid-cols-1 gap-3">
           <Card>
             <CardHeader>

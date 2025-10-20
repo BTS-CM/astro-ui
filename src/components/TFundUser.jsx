@@ -557,7 +557,7 @@ export default function SameTFunds(properties) {
                     {t("TFundUser:borrow")}
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="bg-white w-1/2 max-w-4xl bg-gray-100">
+                <DialogContent className="bg-white w-1/2 max-w-4xl">
                   <DialogHeader>
                     <DialogTitle>{t("TFundUser:dialogTitle")}</DialogTitle>
                     <DialogDescription>
@@ -863,7 +863,7 @@ export default function SameTFunds(properties) {
             <CardContent>
               <div className="grid grid-cols-1 gap-3">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label className="block text-sm font-medium text-gray-950">
                     {t("TFundUser:step1")}
                   </label>
                   <label className="block text-xs font-medium text-gray-700">
@@ -895,7 +895,7 @@ export default function SameTFunds(properties) {
                 </div>
                 {borrowPositions && borrowPositions.length ? (
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">
+                    <label className="block text-sm font-medium text-gray-950">
                       {t("TFundUser:borrowPositions")}
                     </label>
                     <label className="block text-xs font-medium text-gray-700">
@@ -927,7 +927,7 @@ export default function SameTFunds(properties) {
                 ) : null}
                 {borrowPositions && borrowPositions.length ? (
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">
+                    <label className="block text-sm font-medium text-gray-950">
                       {t("TFundUser:step2")}
                     </label>
                     <label className="block text-xs font-medium text-gray-700">
@@ -984,7 +984,7 @@ export default function SameTFunds(properties) {
                 updatedBalances &&
                 updatedBalances.length ? (
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">
+                    <label className="block text-sm font-medium text-gray-950">
                       {t("TFundUser:step3")}
                     </label>
                     <label className="block text-xs font-medium text-gray-700">

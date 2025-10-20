@@ -1,4 +1,5 @@
 {
+  "existingID": "Existing Offer ID",
   "price": "価格：",
   "editingPrice": "価格の編集",
   "setNewPrice": "新しい価格を設定する",

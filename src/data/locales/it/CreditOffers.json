@@ -1,7 +1,9 @@
 {
-    "card": {
-      "title": "📜 Controlla le tue offerte di credito",
-      "description": "Da qui puoi monitorare le tue offerte di credito attive e gestirne le impostazioni.",
-      "noResults": "Nessuna offerta di credito attiva trovata."
-    }
+  "card": {
+    "title": "📜 Controlla le tue offerte di credito",
+    "description": "Da qui puoi monitorare le tue offerte di credito attive e gestirne le impostazioni.",
+    "noResults": "Nessuna offerta di credito attiva trovata.",
+    "noResultsDesc": "Al momento non hai offerte di credito attive. ",
+    "create": "Creare un'offerta di credito"
   }
+}

@@ -150,7 +150,7 @@ export default function CreateVestingBalance(properties) {
   const [vestingDurationSeconds, setVestingDurationSeconds] = useState(0);
 
   return (
-    <div className="container mx-auto mt-5 mb-5">
+    <div className="container mx-auto mt-5 mb-5 w-1/2">
       <div className="grid grid-cols-1 gap-3">
         <Card>
           <CardHeader className="pb-1">
@@ -160,138 +160,148 @@ export default function CreateVestingBalance(properties) {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-2 gap-2 mt-1 mb-2">
-              <span className="col-span-2">
-                <HoverInfo
-                  header={t("CreateVestingBalance:policy")}
-                  content={t("CreateVestingBalance:policyDescription")}
-                  type="header"
-                />
-              </span>
-              <Button
-                onClick={() => setPolicy("ccd")}
-                variant={policy === "ccd" ? "" : "outline"}
-                size="md"
-              >
-                {t("CreateVestingBalance:ccd")}
-              </Button>
-              <Button
-                onClick={() => setPolicy("lvc")}
-                variant={policy === "lvc" ? "" : "outline"}
-                size="md"
-              >
-                {t("CreateVestingBalance:lvc")}
-              </Button>
-            </div>
-            <div className="grid grid-cols-2 gap-2">
-              <span className="col-span-2">
-                <HoverInfo
-                  header={t("CreateVestingBalance:target")}
-                  content={t("CreateVestingBalance:targetDescription")}
-                  type="header"
-                />
-              </span>
-              <Input
-                disabled
-                placeholder={
-                  targetUser
-                    ? `${targetUser.name} (${targetUser.id})`
-                    : "??? (1.2.x)"
-                }
-              />
-              <div className="grid grid-cols-2 gap-2">
-                <Dialog
-                  open={targetUserDialogOpen}
-                  onOpenChange={(open) => {
-                    setTargetUserDialogOpen(open);
-                  }}
-                >
-                  <DialogTrigger asChild>
-                    <Button variant="outline" className="hover:shadow-lg">
-                      {t("CreateVestingBalance:selectAccount")}
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-[375px] bg-white">
-                    <DialogHeader>
-                      <DialogTitle>
-                        {!usr || !usr.chain
-                          ? t("Transfer:bitsharesAccountSearch")
-                          : null}
-                        {usr && usr.chain === "bitshares"
-                          ? t("Transfer:bitsharesAccountSearchBTS")
-                          : null}
-                        {usr && usr.chain !== "bitshares"
-                          ? t("Transfer:bitsharesAccountSearchTEST")
-                          : null}
-                      </DialogTitle>
-                      <DialogDescription>
-                        {t("Transfer:searchingForAccount")}
-                      </DialogDescription>
-                    </DialogHeader>
-                    <AccountSearch
-                      chain={usr && usr.chain ? usr.chain : "bitshares"}
-                      excludedUsers={[]}
-                      setChosenAccount={(_account) => {
-                        if (_account) {
-                          //console.log({ _account, usr });
-                          setTargetUser(_account);
-                        }
-                        setTargetUserDialogOpen(false);
-                      }}
-                    />
-                  </DialogContent>
-                </Dialog>
+            <div className="grid grid-cols-1 gap-3">
+              <div className="grid grid-cols-2 gap-2 mt-1 mb-2">
+                <span className="col-span-2">
+                  <HoverInfo
+                    header={t("CreateVestingBalance:policy")}
+                    content={t("CreateVestingBalance:policyDescription")}
+                    type="header"
+                  />
+                </span>
                 <Button
-                  onClick={() => {
-                    setTargetUser({ id: usr.id, name: usr.username });
-                  }}
-                  variant="outline"
-                  className="hover:shadow-lg"
+                  onClick={() => setPolicy("ccd")}
+                  variant={policy === "ccd" ? "" : "outline"}
+                  size="md"
                 >
-                  {t("CreateVestingBalance:myAccount")}
+                  {t("CreateVestingBalance:ccd")}
+                </Button>
+                <Button
+                  onClick={() => setPolicy("lvc")}
+                  variant={policy === "lvc" ? "" : "outline"}
+                  size="md"
+                >
+                  {t("CreateVestingBalance:lvc")}
                 </Button>
               </div>
-            </div>
-            <div className="grid grid-cols-2 gap-2 mt-1">
-              <span className="col-span-2">
-                <HoverInfo
-                  header={t("CreateVestingBalance:asset")}
-                  content={t("CreateVestingBalance:assetDescription")}
-                  type="header"
-                />
-              </span>
-              <Input
-                type="text"
-                placeholder={
-                  assetData ? `${assetData.symbol} (${assetData.id})` : ""
-                }
-                disabled
-              />
-              <AssetDropDown
-                assetSymbol={asset ?? ""}
-                assetData={null}
-                storeCallback={setAsset}
-                otherAsset={null}
-                marketSearch={marketSearch}
-                type={"backing"}
-                chain={usr && usr.chain ? usr.chain : "bitshares"}
-                balances={usrBalances}
-              />
-            </div>
-            <div className="grid grid-cols-2 mt-1">
-              <HoverInfo
-                header={t("CreateVestingBalance:amount")}
-                content={t("CreateVestingBalance:amountDescription")}
-                type="header"
-              />
-              <div className="col-span-2 grid grid-cols-2 gap-2">
-                <Input
-                  type="number"
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                  className="mt-2"
-                />
-                <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-2 gap-2">
+                <span className="col-span-1">
+                  <HoverInfo
+                    header={t("CreateVestingBalance:target")}
+                    content={t("CreateVestingBalance:targetDescription")}
+                    type="header"
+                  />
+                </span>
+                <span className="col-span-1">
+                  <div className="grid grid-cols-2 gap-2">
+                    <Dialog
+                      open={targetUserDialogOpen}
+                      onOpenChange={(open) => {
+                        setTargetUserDialogOpen(open);
+                      }}
+                    >
+                      <DialogTrigger asChild>
+                        <Button variant="outline" className="hover:shadow-lg">
+                          {t("CreateVestingBalance:selectAccount")}
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-[375px] bg-white">
+                        <DialogHeader>
+                          <DialogTitle>
+                            {!usr || !usr.chain
+                              ? t("Transfer:bitsharesAccountSearch")
+                              : null}
+                            {usr && usr.chain === "bitshares"
+                              ? t("Transfer:bitsharesAccountSearchBTS")
+                              : null}
+                            {usr && usr.chain !== "bitshares"
+                              ? t("Transfer:bitsharesAccountSearchTEST")
+                              : null}
+                          </DialogTitle>
+                          <DialogDescription>
+                            {t("Transfer:searchingForAccount")}
+                          </DialogDescription>
+                        </DialogHeader>
+                        <AccountSearch
+                          chain={usr && usr.chain ? usr.chain : "bitshares"}
+                          excludedUsers={[]}
+                          setChosenAccount={(_account) => {
+                            if (_account) {
+                              //console.log({ _account, usr });
+                              setTargetUser(_account);
+                            }
+                            setTargetUserDialogOpen(false);
+                          }}
+                        />
+                      </DialogContent>
+                    </Dialog>
+                    <Button
+                      onClick={() => {
+                        setTargetUser({ id: usr.id, name: usr.username });
+                      }}
+                      variant="outline"
+                      className="hover:shadow-lg"
+                    >
+                      {t("CreateVestingBalance:myAccount")}
+                    </Button>
+                  </div>
+                </span>
+                <span className="col-span-2">
+                  <Input
+                    disabled
+                    placeholder={
+                      targetUser
+                        ? `${targetUser.name} (${targetUser.id})`
+                        : "??? (1.2.x)"
+                    }
+                  />
+                </span>
+              </div>
+              <div className="grid grid-cols-2 gap-2 mt-1">
+                <span className="col-span-1">
+                  <HoverInfo
+                    header={t("CreateVestingBalance:asset")}
+                    content={t("CreateVestingBalance:assetDescription")}
+                    type="header"
+                  />
+                </span>
+                <span className="col-span-1 text-right">
+                  <AssetDropDown
+                    assetSymbol={asset ?? ""}
+                    assetData={null}
+                    storeCallback={setAsset}
+                    otherAsset={null}
+                    marketSearch={marketSearch}
+                    type={"backing"}
+                    chain={usr && usr.chain ? usr.chain : "bitshares"}
+                    balances={usrBalances}
+                  />
+                </span>
+                <span className="col-span-2">
+                  <Input
+                    type="text"
+                    placeholder={
+                      assetData ? `${assetData.symbol} (${assetData.id})` : ""
+                    }
+                    disabled
+                  />
+                </span>
+              </div>
+              <div className="grid grid-cols-2 mt-1">
+                <span className="col-span-1">
+                  <HoverInfo
+                    header={t("CreateVestingBalance:amount")}
+                    content={t("CreateVestingBalance:amountDescription")}
+                    type="header"
+                  />
+                  {asset && amount > chosenAssetBalance ? (
+                    <Badge variant="destructive" className="h-9 mt-2">
+                      <ExclamationTriangleIcon className="mr-2" />{" "}
+                      {t("Predictions:insufficient_funds")}
+                    </Badge>
+                  ) : null}
+                </span>
+                <span className="col-span-1 text-right">
                   <Button
                     className="mt-2 ml-1 hover:shadow-md"
                     onClick={() => {
@@ -301,116 +311,120 @@ export default function CreateVestingBalance(properties) {
                   >
                     {t("Predictions:issueDialog.balance")}
                   </Button>
-                  {asset && amount > chosenAssetBalance ? (
-                    <Badge variant="destructive" className="h-9 mt-2">
-                      <ExclamationTriangleIcon className="mr-2" />{" "}
-                      {t("Predictions:insufficient_funds")}
-                    </Badge>
-                  ) : null}
-                </div>
+                </span>
+                <span className="col-span-2">
+                  <Input
+                    type="number"
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                    className="mt-2"
+                  />
+                </span>
               </div>
+              {policy === "ccd" ? (
+                <div className="grid grid-cols-1 mt-1">
+                  <HoverInfo
+                    header={t("CreateVestingBalance:startClaim")}
+                    content={t("CreateVestingBalance:startClaimDescription")}
+                    type="header"
+                  />
+                  <div className="grid grid-cols-2 gap-3 mt-2 mb-1">
+                    <DateTimePicker
+                      granularity="day"
+                      value={beginDateTime}
+                      onChange={(newDate) => {
+                        const now = new Date();
+                        if (newDate >= now) {
+                          setBeginDateTime(newDate);
+                        } else {
+                          now.setDate(now.getDate() + 7); // default a week ahead
+                          setBeginDateTime(now);
+                        }
+                      }}
+                    />
+                    <TimePicker
+                      date={beginDateTime}
+                      onChange={setBeginDateTime}
+                    />
+                  </div>
+                  <HoverInfo
+                    header={t("CreateVestingBalance:vestingSeconds")}
+                    content={t(
+                      "CreateVestingBalance:vestingSecondsDescription"
+                    )}
+                    type="header"
+                  />
+                  <Input
+                    type="number"
+                    value={vestingSeconds}
+                    onChange={(e) => setVestingSeconds(e.target.value)}
+                    className="w-1/2 mt-2"
+                  />
+                </div>
+              ) : null}
+              {policy === "lvc" ? (
+                <div className="grid grid-cols-1 mt-1">
+                  <HoverInfo
+                    header={t("CreateVestingBalance:beginTime")}
+                    content={t("CreateVestingBalance:beginTimeDescription")}
+                    type="header"
+                  />
+                  <div className="grid grid-cols-2 gap-3 mt-2 mb-1">
+                    <DateTimePicker
+                      granularity="day"
+                      value={beginDateTime}
+                      onChange={(newDate) => {
+                        const now = new Date();
+                        if (newDate >= now) {
+                          setBeginDateTime(newDate);
+                        } else {
+                          now.setDate(now.getDate() + 7); // default a week ahead
+                          setBeginDateTime(now);
+                        }
+                      }}
+                    />
+                    <TimePicker
+                      date={beginDateTime}
+                      onChange={setBeginDateTime}
+                    />
+                  </div>
+                  <HoverInfo
+                    header={t("CreateVestingBalance:vestingCliffSeconds")}
+                    content={t(
+                      "CreateVestingBalance:vestingCliffSecondsDescription"
+                    )}
+                    type="header"
+                  />
+                  <Input
+                    type="number"
+                    value={vestingCliffSeconds}
+                    onChange={(e) => setVestingCliffSeconds(e.target.value)}
+                    className="w-1/2 mt-2 mb-1"
+                  />
+                  <HoverInfo
+                    header={t("CreateVestingBalance:vestingDurationSeconds")}
+                    content={t(
+                      "CreateVestingBalance:vestingDurationSecondsDescription"
+                    )}
+                    type="header"
+                  />
+                  <Input
+                    type="number"
+                    value={vestingDurationSeconds}
+                    onChange={(e) => setVestingDurationSeconds(e.target.value)}
+                    className="w-1/2 mt-2"
+                  />
+                </div>
+              ) : null}
+              <Button
+                className="h-8 mt-4"
+                onClick={() => {
+                  setShowDialog(true);
+                }}
+              >
+                {t("CreatePrediction:buttons.submit")}
+              </Button>
             </div>
-            {policy === "ccd" ? (
-              <div className="grid grid-cols-1 mt-1">
-                <HoverInfo
-                  header={t("CreateVestingBalance:startClaim")}
-                  content={t("CreateVestingBalance:startClaimDescription")}
-                  type="header"
-                />
-                <div className="grid grid-cols-2 gap-3 mt-2 mb-1">
-                  <DateTimePicker
-                    granularity="day"
-                    value={beginDateTime}
-                    onChange={(newDate) => {
-                      const now = new Date();
-                      if (newDate >= now) {
-                        setBeginDateTime(newDate);
-                      } else {
-                        now.setDate(now.getDate() + 7); // default a week ahead
-                        setBeginDateTime(now);
-                      }
-                    }}
-                  />
-                  <TimePicker
-                    date={beginDateTime}
-                    onChange={setBeginDateTime}
-                  />
-                </div>
-                <HoverInfo
-                  header={t("CreateVestingBalance:vestingSeconds")}
-                  content={t("CreateVestingBalance:vestingSecondsDescription")}
-                  type="header"
-                />
-                <Input
-                  type="number"
-                  value={vestingSeconds}
-                  onChange={(e) => setVestingSeconds(e.target.value)}
-                  className="w-1/2 mt-2"
-                />
-              </div>
-            ) : null}
-            {policy === "lvc" ? (
-              <div className="grid grid-cols-1 mt-1">
-                <HoverInfo
-                  header={t("CreateVestingBalance:beginTime")}
-                  content={t("CreateVestingBalance:beginTimeDescription")}
-                  type="header"
-                />
-                <div className="grid grid-cols-2 gap-3 mt-2 mb-1">
-                  <DateTimePicker
-                    granularity="day"
-                    value={beginDateTime}
-                    onChange={(newDate) => {
-                      const now = new Date();
-                      if (newDate >= now) {
-                        setBeginDateTime(newDate);
-                      } else {
-                        now.setDate(now.getDate() + 7); // default a week ahead
-                        setBeginDateTime(now);
-                      }
-                    }}
-                  />
-                  <TimePicker
-                    date={beginDateTime}
-                    onChange={setBeginDateTime}
-                  />
-                </div>
-                <HoverInfo
-                  header={t("CreateVestingBalance:vestingCliffSeconds")}
-                  content={t(
-                    "CreateVestingBalance:vestingCliffSecondsDescription"
-                  )}
-                  type="header"
-                />
-                <Input
-                  type="number"
-                  value={vestingCliffSeconds}
-                  onChange={(e) => setVestingCliffSeconds(e.target.value)}
-                  className="w-1/2 mt-2 mb-1"
-                />
-                <HoverInfo
-                  header={t("CreateVestingBalance:vestingDurationSeconds")}
-                  content={t(
-                    "CreateVestingBalance:vestingDurationSecondsDescription"
-                  )}
-                  type="header"
-                />
-                <Input
-                  type="number"
-                  value={vestingDurationSeconds}
-                  onChange={(e) => setVestingDurationSeconds(e.target.value)}
-                  className="w-1/2 mt-2"
-                />
-              </div>
-            ) : null}
-            <Button
-              className="h-8 mt-4"
-              onClick={() => {
-                setShowDialog(true);
-              }}
-            >
-              {t("CreatePrediction:buttons.submit")}
-            </Button>
           </CardContent>
         </Card>
         {showDialog ? (

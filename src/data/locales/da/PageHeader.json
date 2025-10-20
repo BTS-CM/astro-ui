@@ -89,5 +89,6 @@
   "usage": "Designet til brug med ",
   "multiwallet": "multiwallet",
   "tfund_user": "Same-T Fund Trade",
-  "createAccount": "Opret konto"
+  "createAccount": "Opret konto",
+  "transferFundsHeading": "Overfør midler"
 }

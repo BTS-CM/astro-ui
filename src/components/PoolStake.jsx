@@ -84,6 +84,7 @@ import MarketAssetCardPlaceholder from "./Market/MarketAssetCardPlaceholder.jsx"
 
 import DeepLinkDialog from "./common/DeepLinkDialog.jsx";
 import ExternalLink from "./common/ExternalLink.jsx";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function PoolStake(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
@@ -232,7 +233,7 @@ export default function PoolStake(properties) {
     return (
       <div
         style={{ ...style }}
-        className="grid grid-cols-12"
+        className="grid grid-cols-12 hover:bg-purple-300"
         key={`acard-${res.id}`}
         onClick={() => {
           setPool(res.id);
@@ -405,6 +406,11 @@ export default function PoolStake(properties) {
       </SelectItem>
     );
   };
+
+  // Determine when enough data is available to safely render the rest of the form
+  const isFormReady = useMemo(() => {
+    return Boolean(pool && foundPool && foundPoolDetails && assetA && assetB);
+  }, [pool, foundPool, foundPoolDetails, assetA, assetB]);
 
   return (
     <>
@@ -662,8 +668,15 @@ export default function PoolStake(properties) {
                         </FieldContent>
                       </Field>
 
+                      {/* Show a spinner once a pool is chosen but before required data is ready */}
+                      {pool && !isFormReady ? (
+                        <div className="flex items-center justify-center py-10">
+                          <Spinner className="size-6" />
+                        </div>
+                      ) : null}
+
                       <div className="grid grid-cols-10 gap-5 mt-1 mb-1">
-                        {pool && assetA && assetB ? (
+                        {isFormReady ? (
                           <>
                             <div className="col-span-5">
                               <Card>
@@ -688,7 +701,7 @@ export default function PoolStake(properties) {
                                   </CardDescription>
                                 </CardHeader>
                                 <CardContent className="text-lg mt-0 pt-0">
-                                  {foundPoolDetails
+                                  {foundPool && foundPoolDetails
                                     ? foundPool.readable_balance_a.split(" ")[0]
                                     : "0"}
                                 </CardContent>
@@ -717,7 +730,7 @@ export default function PoolStake(properties) {
                                   </CardDescription>
                                 </CardHeader>
                                 <CardContent className="text-lg">
-                                  {foundPoolDetails
+                                  {foundPool && foundPoolDetails
                                     ? foundPool.readable_balance_b.split(" ")[0]
                                     : "0"}
                                 </CardContent>
@@ -728,7 +741,7 @@ export default function PoolStake(properties) {
                       </div>
 
                       <div className="grid grid-cols-3 mt-5 text-center">
-                        {pool ? (
+                        {isFormReady ? (
                           <>
                             <ExternalLink
                               variant="outline"
@@ -768,6 +781,20 @@ export default function PoolStake(properties) {
                                           )}
                                         </pre>
                                       </ScrollArea>
+                                      <Button
+                                        className="w-1/4 mt-2"
+                                        onClick={() => {
+                                          navigator.clipboard.writeText(
+                                            JSON.stringify(
+                                              [foundPool, foundPoolDetails],
+                                              null,
+                                              2
+                                            )
+                                          );
+                                        }}
+                                      >
+                                        {t("LiveBlocks:dialogContent.copy")}
+                                      </Button>
                                     </div>
                                   </div>
                                 </DialogContent>
@@ -819,6 +846,33 @@ export default function PoolStake(properties) {
                                           )}
                                         </pre>
                                       </ScrollArea>
+                                      <Button
+                                        className="w-1/4 mt-2"
+                                        onClick={() => {
+                                          navigator.clipboard.writeText(
+                                            JSON.stringify(
+                                              {
+                                                assetA: assetA ?? "",
+                                                assetADetails:
+                                                  assetADetails ?? {},
+                                                aBitassetData:
+                                                  aBitassetData ?? {},
+                                                assetB: assetB ?? "",
+                                                assetBDetails:
+                                                  assetBDetails ?? {},
+                                                bBitassetData:
+                                                  bBitassetData ?? {},
+                                                poolShareDetails:
+                                                  poolShareDetails ?? {},
+                                              },
+                                              null,
+                                              2
+                                            )
+                                          );
+                                        }}
+                                      >
+                                        {t("LiveBlocks:dialogContent.copy")}
+                                      </Button>
                                     </div>
                                   </div>
                                 </DialogContent>
@@ -832,7 +886,7 @@ export default function PoolStake(properties) {
                         ) : null}
                       </div>
 
-                      {pool && pool.length ? (
+                      {isFormReady ? (
                         <Tabs
                           key={`staking_${stakeTab}`}
                           defaultValue={stakeTab}
@@ -1175,7 +1229,7 @@ export default function PoolStake(properties) {
                                       readOnly
                                       placeholder={
                                         foundPoolDetails
-                                          ? `${totalReceiving} ${foundPoolDetails?.share_asset_symbol}`
+                                          ? `${totalReceiving} ${foundPool?.share_asset_symbol}`
                                           : "0"
                                       }
                                     />
@@ -1355,7 +1409,7 @@ export default function PoolStake(properties) {
                         </Tabs>
                       ) : null}
 
-                      {foundPool ? (
+                      {isFormReady ? (
                         <Field>
                           <FieldLabel>{t("PoolStake:networkFee")}</FieldLabel>
                           <FieldDescription style={{ marginTop: "0px" }}>
@@ -1390,13 +1444,15 @@ export default function PoolStake(properties) {
                           ) : null}
                         </Field>
                       ) : null}
-                      <Button
-                        className="mt-5 mb-3"
-                        variant="outline"
-                        type="submit"
-                      >
-                        {t("PoolStake:submit")}
-                      </Button>
+                      {isFormReady ? (
+                        <Button
+                          className="mt-5 mb-3"
+                          variant="outline"
+                          type="submit"
+                        >
+                          {t("PoolStake:submit")}
+                        </Button>
+                      ) : null}
                     </FieldGroup>
                   </form>
                   {showDialog && stakeTab === "stake" ? (
@@ -1467,7 +1523,12 @@ export default function PoolStake(properties) {
         </div>
 
         <div className="grid grid-cols-2 gap-5 mt-5">
-          {pool ? (
+          {pool && !isFormReady ? (
+            <div className="col-span-2 flex items-center justify-center py-10">
+              <Spinner className="size-6" />
+            </div>
+          ) : null}
+          {isFormReady ? (
             <div className="grid grid-cols-1 gap-3">
               {usrBalances && foundPoolDetails ? (
                 <>
@@ -1502,7 +1563,7 @@ export default function PoolStake(properties) {
           ) : null}
 
           <div className="grid grid-cols-1 gap-3">
-            {pool && assetA && assetB ? (
+            {isFormReady ? (
               <>
                 <Card>
                   <CardHeader className="pb-2 pt-4">
@@ -1554,7 +1615,10 @@ export default function PoolStake(properties) {
                   </CardContent>
                 </Card>
 
-                {foundPoolDetails && marketSearch && usrBalances ? (
+                {foundPool &&
+                foundPoolDetails &&
+                marketSearch &&
+                usrBalances ? (
                   <MarketAssetCard
                     asset={foundPool.share_asset_symbol}
                     assetData={foundPool.share_asset_details}

@@ -1,7 +1,9 @@
 {
-    "card": {
-      "title": "📜 Verifique suas ofertas de crédito",
-      "description": "A partir daqui você pode monitorar suas ofertas de crédito ativas e gerenciar suas configurações.",
-      "noResults": "Nenhuma oferta de crédito ativa encontrada."
-    }
+  "card": {
+    "title": "📜 Verifique suas ofertas de crédito",
+    "description": "A partir daqui você pode monitorar suas ofertas de crédito ativas e gerenciar suas configurações.",
+    "noResults": "Nenhuma oferta de crédito ativa encontrada.",
+    "noResultsDesc": "Atualmente você não tem ofertas de crédito ativas. ",
+    "create": "Criar oferta de crédito"
   }
+}

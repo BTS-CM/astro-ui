@@ -15,6 +15,15 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
+
 import { useInitCache } from "@/nanoeffects/Init.ts";
 
 import { $currentUser } from "@/stores/users.ts";
@@ -199,7 +208,7 @@ export default function CreditOffers(properties) {
 
   return (
     <>
-      <div className="container mx-auto mt-5 mb-5">
+      <div className="container mx-auto mt-5 mb-5 w-1/2">
         <div className="grid grid-cols-1 gap-3">
           <Card>
             <CardHeader className="pb-1">
@@ -220,9 +229,24 @@ export default function CreditOffers(properties) {
                     />
                   </div>
                 ) : null}
-                {offers && !offers.length
-                  ? t("CreditOffers:card.noResults")
-                  : null}
+                {offers && !offers.length ? (
+                  <Empty>
+                    <EmptyHeader>
+                      <EmptyMedia variant="icon">❕</EmptyMedia>
+                      <EmptyTitle>
+                        {t("CreditOffers:card.noResults")}
+                      </EmptyTitle>
+                      <EmptyDescription>
+                        {t("CreditOffers:card.noResultsDesc")}
+                      </EmptyDescription>
+                    </EmptyHeader>
+                    <EmptyContent>
+                      <a href="/lend/index.html">
+                        <Button>{t("CreditOffers:card.create")}</Button>
+                      </a>
+                    </EmptyContent>
+                  </Empty>
+                ) : null}
               </>
             </CardContent>
           </Card>

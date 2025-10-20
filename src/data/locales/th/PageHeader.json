@@ -90,5 +90,6 @@
   "usage": "ออกแบบมาเพื่อใช้กับ ",
   "multiwallet": "กระเป๋าหลายใบ",
   "tfund_user": "การซื้อขายกองทุน Same-T",
-  "createAccount": "สร้างบัญชี"
+  "createAccount": "สร้างบัญชี",
+  "transferFundsHeading": "โอนเงิน"
 }

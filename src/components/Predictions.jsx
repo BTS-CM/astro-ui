@@ -46,6 +46,15 @@ import {
 } from "@/components/ui/card";
 
 import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
+
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -2176,14 +2185,30 @@ export default function Predictions(properties) {
                 </div>
               ) : null}
               {chosenPMAs && !chosenPMAs.length && view === "active" ? (
-                <div className="text-center mt-5">
-                  {t("Predictions:card.emptyActive")}
-                </div>
+                <Empty className="mt-5">
+                  <EmptyHeader>
+                    <EmptyMedia variant="icon">❔</EmptyMedia>
+                    <EmptyTitle>{t("Predictions:card.emptyActive")}</EmptyTitle>
+                  </EmptyHeader>
+                  <EmptyContent>
+                    <a href="/create_prediction/index.html">
+                      <Button>{t("PageHeader:createPrediction")}</Button>
+                    </a>
+                  </EmptyContent>
+                </Empty>
               ) : null}
               {chosenPMAs && !chosenPMAs.length && view === "mine" ? (
-                <div className="text-center mt-5">
-                  {t("Predictions:card.emptyMine")}
-                </div>
+                <Empty className="mt-5">
+                  <EmptyHeader>
+                    <EmptyMedia variant="icon">❔</EmptyMedia>
+                    <EmptyTitle>{t("Predictions:card.emptyMine")}</EmptyTitle>
+                  </EmptyHeader>
+                  <EmptyContent>
+                    <a href="/create_prediction/index.html">
+                      <Button>{t("PageHeader:createPrediction")}</Button>
+                    </a>
+                  </EmptyContent>
+                </Empty>
               ) : null}
               {chosenPMAs && !chosenPMAs.length && view === "portfolio" ? (
                 <div className="text-center mt-5">

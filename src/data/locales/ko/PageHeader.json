@@ -90,5 +90,6 @@
   "usage": "다음과 함께 사용하도록 설계됨 ",
   "multiwallet": "다중 지갑",
   "tfund_user": "Same-T Fund 거래",
-  "createAccount": "계정 만들기"
+  "createAccount": "계정 만들기",
+  "transferFundsHeading": "자금 이체"
 }
