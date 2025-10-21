@@ -1,0 +1,59 @@
+{
+  "title": "Create vote-lock ticket",
+  "thumbsupNotice": {
+    "title": "Whitelist requirement",
+    "body": "To create tickets, you must hold an equivalent amount of THUMBSUP.1 tokens on the BitShares blockchain. These can be acquired from the user 'abit'. They are required to whitelist voters on-chain."
+  },
+  "description": "Lock BTS for a fixed period to gain voting power.",
+  "lockType": "Lock type",
+  "lockTypeDescription": "Choose how long to lock your tokens. Longer locks give more voting power.",
+  "radioB": {
+    "sm": "Lock 180 days (x2)",
+    "md": "Lock 360 days (x4)",
+    "lg": "Lock 720 days (x8)",
+    "xl": "Lock forever (x8)"
+  },
+  "amountHeader": "Amount to lock",
+  "amountDescription": "Enter how many BTS to lock.",
+  "summary": "Lock {{amount}} {{asset}} for voting power equivalent to {{eq}} {{asset}}.",
+  "dialogHeader": "Create ticket",
+  "leaderChange": {
+    "title": "Tickets snapshot",
+    "description": "Preview recently fetched tickets.",
+    "note": "Fetching a small sample of recent tickets to give context."
+  },
+  "myTickets": {
+    "title": "My tickets",
+    "description": "Your current tickets, totals, and effective voting power.",
+    "totalLocked": "Total locked: {{amount}} {{asset}}",
+    "totalEffective": "Effective power: {{amount}} {{asset}}",
+    "breakdown": {
+      "lock180": "Locked 180d: {{amount}} {{asset}}",
+      "lock360": "Locked 360d: {{amount}} {{asset}}",
+      "lock720": "Locked 720d: {{amount}} {{asset}}",
+      "forever": "Locked forever: {{amount}} {{asset}}",
+      "liquid": "Liquid: {{amount}} {{asset}}"
+    },
+    "table": {
+      "title": "Your tickets",
+      "id": "ID",
+      "amount": "Amount",
+      "type": "Type",
+      "effective": "Effective",
+      "actions": "Actions"
+    }
+  },
+  "buttons": {
+    "update": "Update"
+  },
+  "lockTypeLiquid": "Liquid",
+  "updateDialog": {
+    "title": "Update ticket",
+    "description": "Change the ticket lock type. Optionally, provide additional amount to retarget.",
+    "currentType": "Current type",
+    "newType": "New type",
+    "amountNewTarget": "Additional amount (optional)",
+    "cancel": "Cancel",
+    "continue": "Continue"
+  }
+}

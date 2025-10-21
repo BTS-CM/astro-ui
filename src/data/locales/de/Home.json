@@ -196,6 +196,19 @@
     "hover3": "Sie können als Wertmarke für Ihr Unternehmen, als Belohnungsmarke, als Spielmarke und mehr verwendet werden.",
     "hover4": "Gateways können börsengesicherte Vermögenswerte für den Handel am Bitshares DEX erstellen."
   },
+  "create_ticket": {
+    "title": "🎫 Ticket erstellen",
+    "subtitle": "Erstellen Sie Vote-Lock-Tickets, um an Stimmengewicht zu gewinnen.",
+    "hover1": "Vote-Lock-Tickets verleihen Ihnen Stimmgewicht für Zeugen-, Ausschuss- und Arbeiterabstimmungszwecke.",
+    "hover2": "Wenn Tickets liquidiert werden, dauert es eine bestimmte Zeit, bis Ihr Guthaben freigeschaltet wird."
+  },
+  "ticket_leaderboard": {
+    "title": "📊 Ticket-Bestenliste",
+    "subtitle": "Sehen Sie sich die kombinierte effektive Ticketleistung nach Konto an",
+    "hover1": "Sehen Sie, wer die größte Stimmmacht in der Blockchain hat.",
+    "hover2": "Vergleichen Sie, wie Ihre Stimmmacht im Vergleich zu anderen abschneidet.",
+    "hover3": "Berechnen Sie die Größe Ihrer zukünftigen Vote-Lock-Tickets, um mehr Stimmkraft zu erlangen."
+  },
   "create_smartcoin": {
     "title": "💷 Smartcoin-Asset",
     "subtitle": "Erstellen Sie ein Fiat-Stablecoin-Asset",

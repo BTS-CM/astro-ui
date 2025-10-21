@@ -1,0 +1,59 @@
+{
+  "title": "Crea un ticket per il blocco del voto",
+  "thumbsupNotice": {
+    "title": "Requisito della lista bianca",
+    "body": "Per creare biglietti, devi detenere una quantità equivalente di token THUMBSUP.1 sulla blockchain di BitShares. "
+  },
+  "description": "Blocca i BTS per un periodo fisso per ottenere potere di voto.",
+  "lockType": "Tipo di blocco",
+  "lockTypeDescription": "Scegli per quanto tempo bloccare i tuoi token. ",
+  "radioB": {
+    "sm": "Blocca 180 giorni (x2)",
+    "md": "Blocca 360 giorni (x4)",
+    "lg": "Blocca 720 giorni (x8)",
+    "xl": "Blocca per sempre (x8)"
+  },
+  "amountHeader": "Importo da bloccare",
+  "amountDescription": "Inserisci quanti BTS bloccare.",
+  "summary": "Serratura {{amount}} {{asset}} per potere di voto equivalente a {{eq}} {{asset}}.",
+  "dialogHeader": "Crea biglietto",
+  "leaderChange": {
+    "title": "Istantanea dei biglietti",
+    "description": "Anteprima dei biglietti recuperati di recente.",
+    "note": "Recupero di un piccolo campione di ticket recenti per fornire contesto."
+  },
+  "myTickets": {
+    "title": "I miei biglietti",
+    "description": "I tuoi biglietti attuali, i totali e il potere di voto effettivo.",
+    "totalLocked": "Totale bloccato: {{amount}} {{asset}}",
+    "totalEffective": "Potenza effettiva: {{amount}} {{asset}}",
+    "breakdown": {
+      "lock180": "Bloccato 180d: {{amount}} {{asset}}",
+      "lock360": "Bloccato 360d: {{amount}} {{asset}}",
+      "lock720": "Bloccato 720d: {{amount}} {{asset}}",
+      "forever": "Bloccato per sempre: {{amount}} {{asset}}",
+      "liquid": "Liquido: {{amount}} {{asset}}"
+    },
+    "table": {
+      "title": "I tuoi biglietti",
+      "id": "ID",
+      "amount": "Quantità",
+      "type": "Tipo",
+      "effective": "Efficace",
+      "actions": "Azioni"
+    }
+  },
+  "buttons": {
+    "update": "Aggiornamento"
+  },
+  "lockTypeLiquid": "Liquido",
+  "updateDialog": {
+    "title": "Aggiorna biglietto",
+    "description": "Cambia il tipo di blocco del ticket. ",
+    "currentType": "Tipo attuale",
+    "newType": "Nuovo tipo",
+    "amountNewTarget": "Importo aggiuntivo (facoltativo)",
+    "cancel": "Cancellare",
+    "continue": "Continuare"
+  }
+}

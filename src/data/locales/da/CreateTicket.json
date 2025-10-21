@@ -1,0 +1,59 @@
+{
+  "title": "Opret stemmelås-billet",
+  "thumbsupNotice": {
+    "title": "Hvidlistekrav",
+    "body": "For at oprette billetter skal du have et tilsvarende antal THUMBSUP.1-tokens på BitShares blockchain. "
+  },
+  "description": "Lås BTS i en bestemt periode for at få stemmeret.",
+  "lockType": "Lås type",
+  "lockTypeDescription": "Vælg, hvor længe du vil låse dine tokens. ",
+  "radioB": {
+    "sm": "Lås 180 dage (x2)",
+    "md": "Lås 360 dage (x4)",
+    "lg": "Lås 720 dage (x8)",
+    "xl": "Lås for evigt (x8)"
+  },
+  "amountHeader": "Beløb, der skal låses",
+  "amountDescription": "Indtast hvor mange BTS der skal låses.",
+  "summary": "Låse {{amount}} {{asset}} for stemmestyrke svarende til {{eq}} {{asset}}.",
+  "dialogHeader": "Opret billet",
+  "leaderChange": {
+    "title": "Billetbillede",
+    "description": "Forhåndsvisning af nyligt hentede billetter.",
+    "note": "Henter et lille udsnit af de seneste billetter for at give kontekst."
+  },
+  "myTickets": {
+    "title": "Mine billetter",
+    "description": "Dine nuværende billetter, totaler og effektive stemmestyrke.",
+    "totalLocked": "Total låst: {{amount}} {{asset}}",
+    "totalEffective": "Effektiv kraft: {{amount}} {{asset}}",
+    "breakdown": {
+      "lock180": "Låst 180d: {{amount}} {{asset}}",
+      "lock360": "Låst 360d: {{amount}} {{asset}}",
+      "lock720": "Låst 720d: {{amount}} {{asset}}",
+      "forever": "Låst for evigt: {{amount}} {{asset}}",
+      "liquid": "Flydende: {{amount}} {{asset}}"
+    },
+    "table": {
+      "title": "Dine billetter",
+      "id": "ID",
+      "amount": "Beløb",
+      "type": "Type",
+      "effective": "Effektiv",
+      "actions": "Handlinger"
+    }
+  },
+  "buttons": {
+    "update": "Opdatering"
+  },
+  "lockTypeLiquid": "Flydende",
+  "updateDialog": {
+    "title": "Opdater billet",
+    "description": "Skift billetlåstype. ",
+    "currentType": "Nuværende type",
+    "newType": "Ny type",
+    "amountNewTarget": "Yderligere beløb (valgfrit)",
+    "cancel": "Ophæve",
+    "continue": "Fortsætte"
+  }
+}

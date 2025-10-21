@@ -1,0 +1,59 @@
+{
+  "title": "Créer un ticket de verrouillage de vote",
+  "thumbsupNotice": {
+    "title": "Exigence de liste blanche",
+    "body": "Pour créer des tickets, vous devez détenir un nombre équivalent de jetons THUMBSUP.1 sur la blockchain BitShares. "
+  },
+  "description": "Verrouillez BTS pendant une période déterminée pour obtenir le droit de vote.",
+  "lockType": "Type de serrure",
+  "lockTypeDescription": "Choisissez combien de temps verrouiller vos jetons. ",
+  "radioB": {
+    "sm": "Verrouillage 180 jours (x2)",
+    "md": "Verrouillage 360 ​​jours (x4)",
+    "lg": "Verrouillage 720 jours (x8)",
+    "xl": "Verrouiller pour toujours (x8)"
+  },
+  "amountHeader": "Montant à bloquer",
+  "amountDescription": "Entrez le nombre de BTS à verrouiller.",
+  "summary": "Verrouillage {{amount}} {{asset}} pour un pouvoir de vote équivalent à {{eq}} {{asset}}.",
+  "dialogHeader": "Créer un ticket",
+  "leaderChange": {
+    "title": "Aperçu des billets",
+    "description": "Aperçu des billets récemment récupérés.",
+    "note": "Récupération d'un petit échantillon de tickets récents pour donner le contexte."
+  },
+  "myTickets": {
+    "title": "Mes billets",
+    "description": "Vos tickets actuels, vos totaux et votre pouvoir de vote effectif.",
+    "totalLocked": "Total verrouillé : {{amount}} {{asset}}",
+    "totalEffective": "Puissance effective : {{amount}} {{asset}}",
+    "breakdown": {
+      "lock180": "Verrouillé 180d : {{amount}} {{asset}}",
+      "lock360": "Verrouillé 360d : {{amount}} {{asset}}",
+      "lock720": "720d verrouillé : {{amount}} {{asset}}",
+      "forever": "Verrouillé pour toujours : {{amount}} {{asset}}",
+      "liquid": "Liquide: {{amount}} {{asset}}"
+    },
+    "table": {
+      "title": "Vos billets",
+      "id": "IDENTIFIANT",
+      "amount": "Montant",
+      "type": "Taper",
+      "effective": "Efficace",
+      "actions": "Actes"
+    }
+  },
+  "buttons": {
+    "update": "Mise à jour"
+  },
+  "lockTypeLiquid": "Liquide",
+  "updateDialog": {
+    "title": "Mettre à jour le ticket",
+    "description": "Modifiez le type de verrouillage du ticket. ",
+    "currentType": "Type actuel",
+    "newType": "Nouveau type",
+    "amountNewTarget": "Montant supplémentaire (facultatif)",
+    "cancel": "Annuler",
+    "continue": "Continuer"
+  }
+}

@@ -196,6 +196,19 @@
     "hover3": "Ils peuvent être utilisés comme jeton pour votre entreprise, comme jeton de récompense, comme jeton pour un jeu, et bien plus encore.",
     "hover4": "Les passerelles peuvent créer des actifs adossés à des échanges pour le trading sur Bitshares DEX."
   },
+  "create_ticket": {
+    "title": "🎫 Créer un billet",
+    "subtitle": "Créez des tickets de verrouillage de vote pour gagner du poids aux votes.",
+    "hover1": "Les tickets de verrouillage de vote vous accordent un poids de vote à des fins de vote des témoins, des comités et des travailleurs.",
+    "hover2": "Les billets, s’ils sont liquidés, prennent un certain temps avant de débloquer vos fonds."
+  },
+  "ticket_leaderboard": {
+    "title": "📊 Classement des billets",
+    "subtitle": "Afficher la puissance effective combinée des tickets par compte",
+    "hover1": "Voyez qui a le plus de pouvoir de vote sur la blockchain.",
+    "hover2": "Comparez comment votre pouvoir de vote se compare à celui des autres.",
+    "hover3": "Calculez la taille de vos futurs tickets de verrouillage de vote pour obtenir plus de pouvoir de vote."
+  },
   "create_smartcoin": {
     "title": "💷 Actif Smartcoin",
     "subtitle": "Créer un actif Fiat stablecoin",

@@ -196,6 +196,19 @@
     "hover3": "De kan bruges som et token til din virksomhed, et belønningstoken, et token til et spil og mere.",
     "hover4": "Gateways kan oprette børsstøttede aktiver til handel på Bitshares DEX."
   },
+  "create_ticket": {
+    "title": "🎫 Opret billet",
+    "subtitle": "Opret stemmelåse billetter for at få stemmevægt.",
+    "hover1": "Stemmelåsebilletter giver dig stemmevægt til vidner, udvalg og arbejderafstemningsformål.",
+    "hover2": "Billetter, hvis de likvideres, tager en bestemt periode, før de låser op for dine penge."
+  },
+  "ticket_leaderboard": {
+    "title": "📊 Billet Leaderboard",
+    "subtitle": "Se kombineret effektiv billetkraft efter konto",
+    "hover1": "Se, hvem der har flest stemmeret på blockchain.",
+    "hover2": "Sammenlign hvordan din stemmestyrke forholder sig til andres.",
+    "hover3": "Beregn størrelsen på dine fremtidige stemmelåsebilletter for at få mere stemmestyrke."
+  },
   "create_smartcoin": {
     "title": "💷 Smartcoin-aktiv",
     "subtitle": "Opret et Fiat stablecoin-aktiv",

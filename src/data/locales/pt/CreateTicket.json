@@ -1,0 +1,59 @@
+{
+  "title": "Criar ticket de bloqueio de voto",
+  "thumbsupNotice": {
+    "title": "Requisito da lista de permissões",
+    "body": "Para criar tickets, você deve manter uma quantidade equivalente de tokens THUMBSUP.1 na blockchain BitShares. "
+  },
+  "description": "Bloqueie o BTS por um período fixo para ganhar poder de voto.",
+  "lockType": "Tipo de bloqueio",
+  "lockTypeDescription": "Escolha por quanto tempo deseja bloquear seus tokens. ",
+  "radioB": {
+    "sm": "Bloquear 180 dias (x2)",
+    "md": "Bloquear 360 dias (x4)",
+    "lg": "Bloquear 720 dias (x8)",
+    "xl": "Bloquear para sempre (x8)"
+  },
+  "amountHeader": "Quantidade a bloquear",
+  "amountDescription": "Digite quantos BTS deseja bloquear.",
+  "summary": "Trancar {{amount}} {{asset}} para poder de voto equivalente a {{eq}} {{asset}}.",
+  "dialogHeader": "Criar ingresso",
+  "leaderChange": {
+    "title": "Instantâneo de ingressos",
+    "description": "Visualize tickets obtidos recentemente.",
+    "note": "Buscando uma pequena amostra de tickets recentes para contextualizar."
+  },
+  "myTickets": {
+    "title": "Meus ingressos",
+    "description": "Seus ingressos atuais, totais e poder de voto efetivo.",
+    "totalLocked": "Total bloqueado: {{amount}} {{asset}}",
+    "totalEffective": "Potência efetiva: {{amount}} {{asset}}",
+    "breakdown": {
+      "lock180": "Bloqueado 180d: {{amount}} {{asset}}",
+      "lock360": "360d bloqueado: {{amount}} {{asset}}",
+      "lock720": "720d bloqueado: {{amount}} {{asset}}",
+      "forever": "Bloqueado para sempre: {{amount}} {{asset}}",
+      "liquid": "Líquido: {{amount}} {{asset}}"
+    },
+    "table": {
+      "title": "Seus ingressos",
+      "id": "EU IA",
+      "amount": "Quantia",
+      "type": "Tipo",
+      "effective": "Eficaz",
+      "actions": "Ações"
+    }
+  },
+  "buttons": {
+    "update": "Atualizar"
+  },
+  "lockTypeLiquid": "Líquido",
+  "updateDialog": {
+    "title": "Atualizar tíquete",
+    "description": "Altere o tipo de bloqueio do ticket. ",
+    "currentType": "Tipo atual",
+    "newType": "Novo tipo",
+    "amountNewTarget": "Valor adicional (opcional)",
+    "cancel": "Cancelar",
+    "continue": "Continuar"
+  }
+}

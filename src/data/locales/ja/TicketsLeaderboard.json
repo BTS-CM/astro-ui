@@ -1,0 +1,11 @@
+{
+  "title": "チケットリーダーボード",
+  "description": "アカウントごとの合計有効チケット金額。",
+  "total": "有効なチケットの合計: {{amount}} {{asset}}",
+  "th": {
+    "account": "アカウント",
+    "amount": "有効量",
+    "percent": "全体の %",
+    "tickets": "チケット"
+  }
+}

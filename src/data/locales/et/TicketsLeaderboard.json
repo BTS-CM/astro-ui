@@ -1,0 +1,11 @@
+{
+  "title": "Pileti edetabel",
+  "description": "Kombineeritud kehtivad piletisummad kontode kaupa.",
+  "total": "Kehtivad piletid kokku: {{amount}} {{asset}}",
+  "th": {
+    "account": "konto",
+    "amount": "Efektiivne kogus",
+    "percent": "% kogusummast",
+    "tickets": "Piletid"
+  }
+}

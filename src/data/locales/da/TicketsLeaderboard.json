@@ -1,0 +1,11 @@
+{
+  "title": "Billet leaderboard",
+  "description": "Kombineret effektive billetbeløb efter konto.",
+  "total": "Samlede effektive billetter: {{amount}} {{asset}}",
+  "th": {
+    "account": "Konto",
+    "amount": "Effektivt beløb",
+    "percent": "% af alt",
+    "tickets": "Billetter"
+  }
+}

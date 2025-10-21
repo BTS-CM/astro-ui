@@ -1,0 +1,59 @@
+{
+  "title": "投票ロックチケットの作成",
+  "thumbsupNotice": {
+    "title": "ホワイトリストの要件",
+    "body": "チケットを作成するには、BitShares ブロックチェーン上に同等の量の THUMBSUP.1 トークンを保持する必要があります。"
+  },
+  "description": "BTSを一定期間ロックして投票権を獲得します。",
+  "lockType": "ロックタイプ",
+  "lockTypeDescription": "トークンをロックする期間を選択します。",
+  "radioB": {
+    "sm": "ロック180日（×2）",
+    "md": "360日ロック(x4)",
+    "lg": "ロック 720 日 (x8)",
+    "xl": "永久ロック (x8)"
+  },
+  "amountHeader": "ロックする量",
+  "amountDescription": "ロックするBTSの数を入力します。",
+  "summary": "ロック {{amount}} {{asset}} と同等の議決権 {{eq}} {{asset}}。",
+  "dialogHeader": "チケットの作成",
+  "leaderChange": {
+    "title": "チケットのスナップショット",
+    "description": "最近取得したチケットをプレビューします。",
+    "note": "コンテキストを提供するために、最近のチケットの小さなサンプルを取得します。"
+  },
+  "myTickets": {
+    "title": "私のチケット",
+    "description": "現在のチケット、合計、有効投票力。",
+    "totalLocked": "合計ロック中: {{amount}} {{asset}}",
+    "totalEffective": "有効電力: {{amount}} {{asset}}",
+    "breakdown": {
+      "lock180": "ロックされた 180 日: {{amount}} {{asset}}",
+      "lock360": "ロックされた 360d: {{amount}} {{asset}}",
+      "lock720": "ロックされた 720d: {{amount}} {{asset}}",
+      "forever": "永久にロックされます: {{amount}} {{asset}}",
+      "liquid": "液体： {{amount}} {{asset}}"
+    },
+    "table": {
+      "title": "あなたのチケット",
+      "id": "ID",
+      "amount": "額",
+      "type": "タイプ",
+      "effective": "効果的",
+      "actions": "アクション"
+    }
+  },
+  "buttons": {
+    "update": "アップデート"
+  },
+  "lockTypeLiquid": "液体",
+  "updateDialog": {
+    "title": "チケットを更新する",
+    "description": "チケットロックの種類を変更します。",
+    "currentType": "電流の種類",
+    "newType": "新しいタイプ",
+    "amountNewTarget": "追加金額（任意）",
+    "cancel": "キャンセル",
+    "continue": "続く"
+  }
+}

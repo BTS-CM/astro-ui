@@ -1,0 +1,59 @@
+{
+  "title": "Looge hääletusluku pilet",
+  "thumbsupNotice": {
+    "title": "Valge nimekirja nõue",
+    "body": "Piletite loomiseks peate hoidma BitSharesi plokiahelas samaväärset kogust THUMBSUP.1 märke. "
+  },
+  "description": "Hääleõiguse saamiseks lukustage BTS fikseeritud perioodiks.",
+  "lockType": "Luku tüüp",
+  "lockTypeDescription": "Valige, kui kauaks žetoone lukustada. ",
+  "radioB": {
+    "sm": "Lukusta 180 päeva (x2)",
+    "md": "Lukusta 360 päeva (x4)",
+    "lg": "Lukusta 720 päeva (x8)",
+    "xl": "Lukusta igavesti (x8)"
+  },
+  "amountHeader": "Lukustatav summa",
+  "amountDescription": "Sisestage, mitu BTS-i lukustada.",
+  "summary": "Lukk {{amount}} {{asset}} võrdväärse hääleõiguse eest {{eq}} {{asset}}.",
+  "dialogHeader": "Loo pilet",
+  "leaderChange": {
+    "title": "Piletite hetktõmmis",
+    "description": "Hiljuti toodud piletite eelvaade.",
+    "note": "Konteksti andmiseks hankige väike näidis hiljutistest piletitest."
+  },
+  "myTickets": {
+    "title": "Minu piletid",
+    "description": "Teie praegused piletid, kogusummad ja tegelik hääleõigus.",
+    "totalLocked": "Kokku lukustatud: {{amount}} {{asset}}",
+    "totalEffective": "Efektiivne võimsus: {{amount}} {{asset}}",
+    "breakdown": {
+      "lock180": "Lukustatud 180d: {{amount}} {{asset}}",
+      "lock360": "Lukustatud 360d: {{amount}} {{asset}}",
+      "lock720": "Lukustatud 720d: {{amount}} {{asset}}",
+      "forever": "Igaveseks lukustatud: {{amount}} {{asset}}",
+      "liquid": "Vedelik: {{amount}} {{asset}}"
+    },
+    "table": {
+      "title": "Teie piletid",
+      "id": "ID",
+      "amount": "Summa",
+      "type": "Tüüp",
+      "effective": "Tõhus",
+      "actions": "Tegevused"
+    }
+  },
+  "buttons": {
+    "update": "Värskenda"
+  },
+  "lockTypeLiquid": "Vedelik",
+  "updateDialog": {
+    "title": "Uuenda piletit",
+    "description": "Muutke piletiluku tüüpi. ",
+    "currentType": "Praegune tüüp",
+    "newType": "Uus tüüp",
+    "amountNewTarget": "Täiendav summa (valikuline)",
+    "cancel": "Tühista",
+    "continue": "Jätka"
+  }
+}

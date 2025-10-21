@@ -1,0 +1,11 @@
+{
+  "title": "Ticket leaderboard",
+  "description": "Combined effective ticket amounts by account.",
+  "total": "Total effective tickets: {{amount}} {{asset}}",
+  "th": {
+    "account": "Account",
+    "amount": "Effective amount",
+    "percent": "% of total",
+    "tickets": "Tickets"
+  }
+}

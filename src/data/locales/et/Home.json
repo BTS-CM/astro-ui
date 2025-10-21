@@ -196,6 +196,19 @@
     "hover3": "Neid saab kasutada teie ettevõtte märgina, preemia märgina, mängu märgina ja palju muud.",
     "hover4": "Lüüsid saavad Bitshares DEX-is kauplemiseks luua börsil tagatud varasid."
   },
+  "create_ticket": {
+    "title": "🎫 Loo pilet",
+    "subtitle": "Häälte kaalu suurendamiseks looge hääleluku pileteid.",
+    "hover1": "Hääleluku piletid annavad teile hääle kaalu tunnistajate, komisjonide ja töötajate hääletamisel.",
+    "hover2": "Likvideerimise korral kulub piletitel teatud ajavahemik, enne kui raha vabastate."
+  },
+  "ticket_leaderboard": {
+    "title": "📊 Piletite edetabel",
+    "subtitle": "Vaadake kombineeritud efektiivset piletivõimsust kontode kaupa",
+    "hover1": "Vaadake, kellel on plokiahelas suurim hääleõigus.",
+    "hover2": "Võrrelge, kuidas teie häälejõud teistega võrreldes on.",
+    "hover3": "Suurema hääleõiguse saamiseks arvutage oma tulevaste hääleluku piletite suurus."
+  },
   "create_smartcoin": {
     "title": "💷 Smartcoini vara",
     "subtitle": "Looge Fiati stabiilse mündi vara",

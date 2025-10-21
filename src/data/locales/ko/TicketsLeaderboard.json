@@ -1,0 +1,11 @@
+{
+  "title": "티켓 리더보드",
+  "description": "계정별 유효 티켓 금액을 합산합니다.",
+  "total": "총 유효 티켓 수: {{amount}} {{asset}}",
+  "th": {
+    "account": "계정",
+    "amount": "유효량",
+    "percent": "전체의 %",
+    "tickets": "티켓"
+  }
+}

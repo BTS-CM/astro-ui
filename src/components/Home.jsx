@@ -467,6 +467,30 @@ export default function Home(properties) {
             "Home:create_worker.hover3",
           ],
         },
+        {
+          key: "create_ticket",
+          icon: "🎫",
+          href: "/create_ticket/index.html",
+          titleKey: "Home:create_ticket.title",
+          subtitleKey: "Home:create_ticket.subtitle",
+          hoverKeys: [
+            "Home:create_ticket.hover1",
+            "Home:create_ticket.hover2",
+            "Home:create_ticket.hover3",
+          ],
+        },
+        {
+          key: "ticket_leaderboard",
+          icon: "📊",
+          href: "/ticket_leaderboard/index.html",
+          titleKey: "Home:ticket_leaderboard.title",
+          subtitleKey: "Home:ticket_leaderboard.subtitle",
+          hoverKeys: [
+            "Home:ticket_leaderboard.hover1",
+            "Home:ticket_leaderboard.hover2",
+            "Home:ticket_leaderboard.hover3",
+          ],
+        },
       ],
     },
     {

@@ -341,6 +341,16 @@ export default function PageHeader(properties) {
       href: "/create_worker/index.html",
       description: "Home:create_worker.subtitle",
     },
+    {
+      title: "Home:create_ticket.title",
+      href: "/create_ticket/index.html",
+      description: "Home:create_ticket.subtitle",
+    },
+    {
+      title: "Home:ticket_leaderboard.title",
+      href: "/ticket_leaderboard/index.html",
+      description: "Home:ticket_leaderboard.subtitle",
+    },
   ];
 
   const settingsHeading = [

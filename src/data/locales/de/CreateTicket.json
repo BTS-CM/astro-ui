@@ -1,0 +1,59 @@
+{
+  "title": "Vote-Lock-Ticket erstellen",
+  "thumbsupNotice": {
+    "title": "Whitelist-Anforderung",
+    "body": "Um Tickets zu erstellen, müssen Sie eine entsprechende Menge an THUMBSUP.1-Tokens auf der BitShares-Blockchain halten. "
+  },
+  "description": "Sperren Sie BTS für einen bestimmten Zeitraum, um Stimmrecht zu erlangen.",
+  "lockType": "Schlosstyp",
+  "lockTypeDescription": "Wählen Sie, wie lange Ihre Token gesperrt werden sollen. ",
+  "radioB": {
+    "sm": "Sperre 180 Tage (x2)",
+    "md": "360 Tage sperren (x4)",
+    "lg": "Sperre 720 Tage (x8)",
+    "xl": "Für immer sperren (x8)"
+  },
+  "amountHeader": "Zu sperrender Betrag",
+  "amountDescription": "Geben Sie ein, wie viele BTS gesperrt werden sollen.",
+  "summary": "Sperren {{amount}} {{asset}} für Stimmrechte gleichwertig {{eq}} {{asset}}.",
+  "dialogHeader": "Ticket erstellen",
+  "leaderChange": {
+    "title": "Schnappschuss der Tickets",
+    "description": "Vorschau der kürzlich abgerufenen Tickets.",
+    "note": "Rufen Sie eine kleine Auswahl aktueller Tickets ab, um den Kontext zu verdeutlichen."
+  },
+  "myTickets": {
+    "title": "Meine Tickets",
+    "description": "Ihre aktuellen Tickets, Gesamtzahlen und effektives Stimmrecht.",
+    "totalLocked": "Insgesamt gesperrt: {{amount}} {{asset}}",
+    "totalEffective": "Wirkleistung: {{amount}} {{asset}}",
+    "breakdown": {
+      "lock180": "Gesperrt 180d: {{amount}} {{asset}}",
+      "lock360": "Gesperrt 360d: {{amount}} {{asset}}",
+      "lock720": "Gesperrter 720d: {{amount}} {{asset}}",
+      "forever": "Für immer gesperrt: {{amount}} {{asset}}",
+      "liquid": "Flüssig: {{amount}} {{asset}}"
+    },
+    "table": {
+      "title": "Ihre Tickets",
+      "id": "AUSWEIS",
+      "amount": "Menge",
+      "type": "Typ",
+      "effective": "Wirksam",
+      "actions": "Aktionen"
+    }
+  },
+  "buttons": {
+    "update": "Aktualisieren"
+  },
+  "lockTypeLiquid": "Flüssig",
+  "updateDialog": {
+    "title": "Ticket aktualisieren",
+    "description": "Ändern Sie den Ticketsperrtyp. ",
+    "currentType": "Aktueller Typ",
+    "newType": "Neuer Typ",
+    "amountNewTarget": "Zusätzlicher Betrag (optional)",
+    "cancel": "Stornieren",
+    "continue": "Weitermachen"
+  }
+}

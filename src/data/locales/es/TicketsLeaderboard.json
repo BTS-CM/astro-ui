@@ -1,0 +1,11 @@
+{
+  "title": "Tabla de clasificación de entradas",
+  "description": "Montos combinados de tickets efectivos por cuenta.",
+  "total": "Tickets efectivos totales: {{amount}} {{asset}}",
+  "th": {
+    "account": "Cuenta",
+    "amount": "Monto efectivo",
+    "percent": "% del total",
+    "tickets": "Entradas"
+  }
+}

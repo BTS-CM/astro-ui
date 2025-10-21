@@ -1,0 +1,59 @@
+{
+  "title": "สร้างตั๋วล็อคการลงคะแนน",
+  "thumbsupNotice": {
+    "title": "ข้อกำหนดไวท์ลิสต์",
+    "body": "หากต้องการสร้างตั๋ว คุณต้องถือโทเค็น THUMBSUP.1 ในจำนวนที่เท่ากันบนบล็อกเชน BitShares "
+  },
+  "description": "ล็อค BTS เป็นระยะเวลาหนึ่งเพื่อรับอำนาจลงคะแนน",
+  "lockType": "ประเภทล็อค",
+  "lockTypeDescription": "เลือกระยะเวลาในการล็อคโทเค็นของคุณ ",
+  "radioB": {
+    "sm": "ล็อค 180 วัน (x2)",
+    "md": "ล็อค 360 วัน (x4)",
+    "lg": "ล็อค 720 วัน (x8)",
+    "xl": "ล็อคตลอดไป (x8)"
+  },
+  "amountHeader": "จำนวนที่จะล็อค",
+  "amountDescription": "ระบุจำนวน BTS ที่จะล็อค",
+  "summary": "ล็อค {{amount}} {{asset}} เพื่ออำนาจในการลงคะแนนเสียงเท่ากับ {{eq}} {{asset}}-",
+  "dialogHeader": "สร้างตั๋ว",
+  "leaderChange": {
+    "title": "ภาพรวมตั๋ว",
+    "description": "ดูตัวอย่างตั๋วที่เพิ่งดึงมา",
+    "note": "ดึงตัวอย่างตั๋วล่าสุดเล็กๆ น้อยๆ เพื่อให้บริบท"
+  },
+  "myTickets": {
+    "title": "ตั๋วของฉัน",
+    "description": "ตั๋วปัจจุบันของคุณ ยอดรวม และอำนาจการลงคะแนนที่มีประสิทธิผล",
+    "totalLocked": "ล็อคทั้งหมด: {{amount}} {{asset}}",
+    "totalEffective": "พลังที่มีประสิทธิภาพ: {{amount}} {{asset}}",
+    "breakdown": {
+      "lock180": "ล็อค 180d: {{amount}} {{asset}}",
+      "lock360": "ล็อค 360d: {{amount}} {{asset}}",
+      "lock720": "ล็อค 720d: {{amount}} {{asset}}",
+      "forever": "ล็อคตลอดไป: {{amount}} {{asset}}",
+      "liquid": "ของเหลว: {{amount}} {{asset}}"
+    },
+    "table": {
+      "title": "ตั๋วของคุณ",
+      "id": "บัตรประจำตัวประชาชน",
+      "amount": "จำนวน",
+      "type": "พิมพ์",
+      "effective": "มีประสิทธิภาพ",
+      "actions": "การดำเนินการ"
+    }
+  },
+  "buttons": {
+    "update": "อัปเดต"
+  },
+  "lockTypeLiquid": "ของเหลว",
+  "updateDialog": {
+    "title": "อัพเดตตั๋ว",
+    "description": "เปลี่ยนประเภทล็อคตั๋ว ",
+    "currentType": "ประเภทปัจจุบัน",
+    "newType": "ชนิดใหม่",
+    "amountNewTarget": "จำนวนเงินเพิ่มเติม (ไม่บังคับ)",
+    "cancel": "ยกเลิก",
+    "continue": "ดำเนินการต่อ"
+  }
+}

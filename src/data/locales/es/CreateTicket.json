@@ -1,0 +1,59 @@
+{
+  "title": "Crear boleto de bloqueo de votación",
+  "thumbsupNotice": {
+    "title": "Requisito de lista blanca",
+    "body": "Para crear tickets, debe tener una cantidad equivalente de tokens THUMBSUP.1 en la cadena de bloques BitShares. "
+  },
+  "description": "Bloquee BTS por un período fijo para obtener poder de voto.",
+  "lockType": "Tipo de bloqueo",
+  "lockTypeDescription": "Elija durante cuánto tiempo bloquear sus tokens. ",
+  "radioB": {
+    "sm": "Bloqueo 180 días (x2)",
+    "md": "Bloqueo 360 días (x4)",
+    "lg": "Bloqueo 720 días (x8)",
+    "xl": "Bloquear para siempre (x8)"
+  },
+  "amountHeader": "Cantidad a bloquear",
+  "amountDescription": "Ingrese cuántos BTS bloquear.",
+  "summary": "Cerrar {{amount}} {{asset}} para un poder de voto equivalente a {{eq}} {{asset}}.",
+  "dialogHeader": "Crear ticket",
+  "leaderChange": {
+    "title": "Instantánea de entradas",
+    "description": "Vista previa de entradas obtenidas recientemente.",
+    "note": "Obteniendo una pequeña muestra de tickets recientes para dar contexto."
+  },
+  "myTickets": {
+    "title": "Mis entradas",
+    "description": "Sus boletos actuales, totales y poder de voto efectivo.",
+    "totalLocked": "Total bloqueado: {{amount}} {{asset}}",
+    "totalEffective": "Poder efectivo: {{amount}} {{asset}}",
+    "breakdown": {
+      "lock180": "Bloqueado 180d: {{amount}} {{asset}}",
+      "lock360": "Bloqueado 360d: {{amount}} {{asset}}",
+      "lock720": "Bloqueado 720d: {{amount}} {{asset}}",
+      "forever": "Bloqueado para siempre: {{amount}} {{asset}}",
+      "liquid": "Líquido: {{amount}} {{asset}}"
+    },
+    "table": {
+      "title": "Tus entradas",
+      "id": "IDENTIFICACIÓN",
+      "amount": "Cantidad",
+      "type": "Tipo",
+      "effective": "Eficaz",
+      "actions": "Comportamiento"
+    }
+  },
+  "buttons": {
+    "update": "Actualizar"
+  },
+  "lockTypeLiquid": "Líquido",
+  "updateDialog": {
+    "title": "Actualizar ticket",
+    "description": "Cambie el tipo de bloqueo del ticket. ",
+    "currentType": "tipo actual",
+    "newType": "Nuevo tipo",
+    "amountNewTarget": "Monto adicional (opcional)",
+    "cancel": "Cancelar",
+    "continue": "Continuar"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "title": "Classifica dei biglietti",
+  "description": "Importi effettivi dei biglietti combinati per account.",
+  "total": "Biglietti effettivi totali: {{amount}} {{asset}}",
+  "th": {
+    "account": "Account",
+    "amount": "Importo effettivo",
+    "percent": "% del totale",
+    "tickets": "Biglietti"
+  }
+}

@@ -196,6 +196,19 @@
     "hover3": "Possono essere utilizzati come gettone per la tua attività, gettone ricompensa, gettone per un gioco e altro ancora.",
     "hover4": "I gateway possono creare asset garantiti da scambi per il trading su Bitshares DEX."
   },
+  "create_ticket": {
+    "title": "🎫 Crea biglietto",
+    "subtitle": "Crea ticket di blocco del voto per aumentare il peso del voto.",
+    "hover1": "I ticket di blocco del voto ti garantiscono il peso del voto per scopi di voto di testimoni, comitati e lavoratori.",
+    "hover2": "I ticket, se liquidati, richiedono un determinato periodo di tempo prima di sbloccare i tuoi fondi."
+  },
+  "ticket_leaderboard": {
+    "title": "📊 Classifica dei biglietti",
+    "subtitle": "Visualizza la potenza effettiva combinata dei ticket per account",
+    "hover1": "Visualizza chi ha il maggior potere di voto sulla blockchain.",
+    "hover2": "Confronta il modo in cui il tuo potere di voto si confronta con quello degli altri.",
+    "hover3": "Calcola la dimensione dei tuoi futuri biglietti per il blocco del voto per ottenere più potere di voto."
+  },
   "create_smartcoin": {
     "title": "💷 Asset Smartcoin",
     "subtitle": "Crea un asset stablecoin Fiat",

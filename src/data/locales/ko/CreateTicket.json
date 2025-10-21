@@ -1,0 +1,59 @@
+{
+  "title": "투표 잠금 티켓 만들기",
+  "thumbsupNotice": {
+    "title": "화이트리스트 요구 사항",
+    "body": "티켓을 생성하려면 BitShares 블록체인에 동일한 양의 THUMBSUP.1 토큰을 보유해야 합니다. "
+  },
+  "description": "투표권을 얻으려면 일정 기간 동안 BTS를 잠그세요.",
+  "lockType": "잠금 유형",
+  "lockTypeDescription": "토큰을 잠글 기간을 선택하세요. ",
+  "radioB": {
+    "sm": "180일 잠금(x2)",
+    "md": "360일 잠금(x4)",
+    "lg": "720일 잠금(x8)",
+    "xl": "영원히 잠금(x8)"
+  },
+  "amountHeader": "잠글 금액",
+  "amountDescription": "잠글 BTS 수를 입력하세요.",
+  "summary": "잠그다 {{amount}} {{asset}} 에 해당하는 투표권을 위해 {{eq}} {{asset}}.",
+  "dialogHeader": "티켓 만들기",
+  "leaderChange": {
+    "title": "티켓 스냅샷",
+    "description": "최근에 가져온 티켓을 미리 보세요.",
+    "note": "맥락을 제공하기 위해 최근 티켓의 작은 샘플을 가져오는 중입니다."
+  },
+  "myTickets": {
+    "title": "내 티켓",
+    "description": "현재 티켓, 총계, 유효 투표권.",
+    "totalLocked": "잠긴 총 금액: {{amount}} {{asset}}",
+    "totalEffective": "유효 전력: {{amount}} {{asset}}",
+    "breakdown": {
+      "lock180": "180일 잠김: {{amount}} {{asset}}",
+      "lock360": "잠긴 360d: {{amount}} {{asset}}",
+      "lock720": "잠긴 720d: {{amount}} {{asset}}",
+      "forever": "영원히 잠김: {{amount}} {{asset}}",
+      "liquid": "액체: {{amount}} {{asset}}"
+    },
+    "table": {
+      "title": "귀하의 티켓",
+      "id": "ID",
+      "amount": "양",
+      "type": "유형",
+      "effective": "효과적인",
+      "actions": "행위"
+    }
+  },
+  "buttons": {
+    "update": "업데이트"
+  },
+  "lockTypeLiquid": "액체",
+  "updateDialog": {
+    "title": "티켓 업데이트",
+    "description": "티켓 잠금 유형을 변경하세요. ",
+    "currentType": "현재 유형",
+    "newType": "새로운 유형",
+    "amountNewTarget": "추가금액(선택)",
+    "cancel": "취소",
+    "continue": "계속하다"
+  }
+}

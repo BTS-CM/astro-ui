@@ -70,6 +70,8 @@ const pages = [
   "WorkerCreate",
   "CommitteeMembers",
   "Witnesses",
+  "CreateTicket",
+  "TicketsLeaderboard",
 ];
 
 const locale = persistentAtom("locale", "en");

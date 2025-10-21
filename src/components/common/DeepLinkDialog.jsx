@@ -151,6 +151,8 @@ export default function DeepLinkDialog(properties) {
     headerText,
     //
     proposal = false,
+    // When true, hides/disables the ability to create a proposal from this dialog
+    disablePropose = false,
   } = properties;
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
   const usr = useSyncExternalStore(
@@ -364,7 +366,7 @@ export default function DeepLinkDialog(properties) {
                 >
                   {t("DeepLinkDialog:tabs.localJSONFile")}
                 </Button>
-                {!proposal ? (
+                {!proposal && !disablePropose ? (
                   <Button
                     className="col-span-1"
                     onClick={() => setActiveTab("propose")}
@@ -491,7 +493,7 @@ export default function DeepLinkDialog(properties) {
                   ) : null}
                 </>
               ) : null}
-              {activeTab === "propose" && !proposal ? (
+              {activeTab === "propose" && !proposal && !disablePropose ? (
                 <>
                   <Label className="text-left text-md font-bold">
                     {t("DeepLinkDialog:tabsContent.propose")}

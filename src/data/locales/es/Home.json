@@ -196,6 +196,19 @@
     "hover3": "Se pueden utilizar como token para su negocio, token de recompensa, token para un juego y más.",
     "hover4": "Las puertas de enlace pueden crear activos respaldados por intercambios para negociar en Bitshares DEX."
   },
+  "create_ticket": {
+    "title": "🎫 Crear boleto",
+    "subtitle": "Cree boletos de bloqueo de votos para ganar peso en los votos.",
+    "hover1": "Los boletos de bloqueo de votación le otorgan peso de voto para fines de votación de testigos, comités y trabajadores.",
+    "hover2": "Los boletos, si se liquidan, toman un período de tiempo determinado antes de desbloquear sus fondos."
+  },
+  "ticket_leaderboard": {
+    "title": "📊 Tabla de clasificación de entradas",
+    "subtitle": "Ver el poder de ticket efectivo combinado por cuenta",
+    "hover1": "Vea quién tiene más poder de voto en blockchain.",
+    "hover2": "Compare cómo se compara su poder de voto con el de otros.",
+    "hover3": "Calcule el tamaño de sus futuros boletos de bloqueo de votos para obtener más poder de voto."
+  },
   "create_smartcoin": {
     "title": "💷 Activo Smartcoin",
     "subtitle": "Crear un activo de moneda estable Fiat",

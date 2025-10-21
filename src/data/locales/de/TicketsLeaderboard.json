@@ -1,0 +1,11 @@
+{
+  "title": "Ticket-Bestenliste",
+  "description": "Kombinierte effektive Ticketbeträge pro Konto.",
+  "total": "Gesamtgültige Tickets: {{amount}} {{asset}}",
+  "th": {
+    "account": "Konto",
+    "amount": "Effektiver Betrag",
+    "percent": "% der Gesamtmenge",
+    "tickets": "Tickets"
+  }
+}

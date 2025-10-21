@@ -1,0 +1,11 @@
+{
+  "title": "Classement des billets",
+  "description": "Montants effectifs combinés des tickets par compte.",
+  "total": "Nombre total de tickets effectifs : {{amount}} {{asset}}",
+  "th": {
+    "account": "Compte",
+    "amount": "Montant effectif",
+    "percent": "% du total",
+    "tickets": "Billets"
+  }
+}

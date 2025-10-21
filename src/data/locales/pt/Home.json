@@ -196,6 +196,19 @@
     "hover3": "Eles podem ser usados ​​como um token para o seu negócio, um token de recompensa, um token para um jogo e muito mais.",
     "hover4": "Os gateways podem criar ativos garantidos por exchanges para negociação no Bitshares DEX."
   },
+  "create_ticket": {
+    "title": "🎫 Criar ingresso",
+    "subtitle": "Crie tickets de bloqueio de voto para ganhar peso de voto.",
+    "hover1": "Os tíquetes de bloqueio de voto concedem peso de voto para fins de votação de testemunhas, comitês e trabalhadores.",
+    "hover2": "Os ingressos, se liquidados, levam um determinado período de tempo antes de desbloquear seus fundos."
+  },
+  "ticket_leaderboard": {
+    "title": "📊 Tabela de classificação de ingressos",
+    "subtitle": "Veja o poder efetivo combinado do ticket por conta",
+    "hover1": "Veja quem tem maior poder de voto no blockchain.",
+    "hover2": "Compare como seu poder de voto se compara ao de outros.",
+    "hover3": "Calcule o tamanho de seus futuros tíquetes de bloqueio de voto para obter mais poder de voto."
+  },
   "create_smartcoin": {
     "title": "💷 Ativo Smartcoin",
     "subtitle": "Crie um ativo stablecoin Fiat",

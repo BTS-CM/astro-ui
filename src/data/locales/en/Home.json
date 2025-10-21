@@ -204,6 +204,19 @@
     "hover3": "They can be used as a stablecoin, a token for your business, a reward token, a token for a game, and more.",
     "hover4": "Smartcoins can be backed by any asset and reference any external feed."
   },
+  "create_ticket": {
+    "title": "🎫 Create Ticket",
+    "subtitle": "Create vote-lock tickets to gain vote weight.",
+    "hover1": "Vote lock tickets grant you vote weight for witness, committee and worker voting purposes.",
+    "hover2": "Tickets if liquidated take a set period of time before unlocking your funds."
+  },
+  "ticket_leaderboard": {
+    "title": "📊 Ticket Leaderboard",
+    "subtitle": "View combined effective ticket power by account",
+    "hover1": "View who has the most voting power on the blockchain.",
+    "hover2": "Compare how your voting power stacks up against others.",
+    "hover3": "Calculate the size of your future vote lock tickets to gain more voting power."
+  },
   "accountLists": {
     "title": "📋 Account Lists",
     "subtitle": "View and manage your account lists",
