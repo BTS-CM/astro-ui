@@ -274,7 +274,11 @@ function AssetIssuerActions(props) {
         if (loading) return;
         setOverrideLoading(false);
         if (error) {
-          setOverrideError(t("Common:failedToFetch", { defaultValue: "Failed to fetch balances" }));
+          setOverrideError(
+            t("Common:failedToFetch", {
+              defaultValue: "Failed to fetch balances",
+            })
+          );
           setOverrideBalanceRaw(0);
           setOverrideBalance(0);
           return;
@@ -491,7 +495,11 @@ function AssetIssuerActions(props) {
 
   // Add override transfer only if flag enabled
   // Display only when the override_authority flag is actually ENABLED on the asset
-  if ((isUIA || isNFT) && hasOverrideAuthority && issuerPermissions?.override_authority) {
+  if (
+    (isUIA || isNFT) &&
+    hasOverrideAuthority &&
+    issuerPermissions?.override_authority
+  ) {
     dropdownItems.push({
       key: "override-transfer",
       render: (
@@ -499,7 +507,9 @@ function AssetIssuerActions(props) {
           key="override-transfer"
           onClick={() => setOverrideOpen(true)}
         >
-          {t("IssuedAssets:overrideTransfer", { defaultValue: "Override transfer" })}
+          {t("IssuedAssets:overrideTransfer", {
+            defaultValue: "Override transfer",
+          })}
         </DropdownMenuItem>
       ),
     });
@@ -1266,7 +1276,10 @@ function AssetIssuerActions(props) {
           <DialogContent className="sm:max-w-[550px] bg-white">
             <DialogHeader>
               <DialogTitle>
-                {t("IssuedAssets:overrideTransfer", { defaultValue: "Override transfer" })}: {asset?.symbol}
+                {t("IssuedAssets:overrideTransfer", {
+                  defaultValue: "Override transfer",
+                })}
+                : {asset?.symbol}
               </DialogTitle>
               <DialogDescription>
                 {t("IssuedAssets:overrideTransferInfo", {
@@ -1278,9 +1291,12 @@ function AssetIssuerActions(props) {
 
             <HoverInfo
               content={t("IssuedAssets:overrideTargetInfo", {
-                defaultValue: "Choose the target account (1.2.x). We’ll auto-check balance.",
+                defaultValue:
+                  "Choose the target account (1.2.x). We’ll auto-check balance.",
               })}
-              header={t("IssuedAssets:targetUser", { defaultValue: "Target account" })}
+              header={t("IssuedAssets:targetUser", {
+                defaultValue: "Target account",
+              })}
               type="header"
             />
             <div className="grid grid-cols-8 gap-2 mt-2">
@@ -1291,7 +1307,13 @@ function AssetIssuerActions(props) {
                     name={overrideTarget.name}
                     extra="Target"
                     expression={{ eye: "normal", mouth: "open" }}
-                    colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]}
+                    colors={[
+                      "#92A1C6",
+                      "#146A7C",
+                      "#F0AB3D",
+                      "#C271B4",
+                      "#C20D90",
+                    ]}
                   />
                 ) : (
                   <Av>
@@ -1311,7 +1333,10 @@ function AssetIssuerActions(props) {
                 />
               </div>
               <div className="col-span-3 flex gap-2">
-                <Dialog open={overrideSearchOpen} onOpenChange={setOverrideSearchOpen}>
+                <Dialog
+                  open={overrideSearchOpen}
+                  onOpenChange={setOverrideSearchOpen}
+                >
                   <DialogTrigger asChild>
                     <Button variant="outline" className="mt-1">
                       <MagnifyingGlassIcon />
@@ -1329,14 +1354,20 @@ function AssetIssuerActions(props) {
                       chain={chain}
                       excludedUsers={[]}
                       setChosenAccount={(account) => {
-                        setOverrideTarget({ name: account.name, id: account.id });
+                        setOverrideTarget({
+                          name: account.name,
+                          id: account.id,
+                        });
                         setOverrideSearchOpen(false);
                       }}
                     />
                   </DialogContent>
                 </Dialog>
 
-                <Dialog open={overrideFavouritesOpen} onOpenChange={setOverrideFavouritesOpen}>
+                <Dialog
+                  open={overrideFavouritesOpen}
+                  onOpenChange={setOverrideFavouritesOpen}
+                >
                   <DialogTrigger asChild>
                     <Button variant="outline" className="mt-1">
                       <FaceIcon />
@@ -1356,7 +1387,10 @@ function AssetIssuerActions(props) {
                   </DialogContent>
                 </Dialog>
 
-                <Dialog open={overrideContactsOpen} onOpenChange={setOverrideContactsOpen}>
+                <Dialog
+                  open={overrideContactsOpen}
+                  onOpenChange={setOverrideContactsOpen}
+                >
                   <DialogTrigger asChild>
                     <Button variant="outline" className="mt-1">
                       <AvatarIcon />
@@ -1384,21 +1418,23 @@ function AssetIssuerActions(props) {
 
             <div className="mt-3 space-y-2">
               <HoverInfo
-                content={t("IssuedAssets:holderBalanceInfo", { defaultValue: "Detected balance of the target in this asset" })}
-                header={t("IssuedAssets:holderBalance", { defaultValue: "Holder balance" })}
+                content={t("IssuedAssets:holderBalanceInfo", {
+                  defaultValue: "Detected balance of the target in this asset",
+                })}
+                header={t("IssuedAssets:holderBalance", {
+                  defaultValue: "Holder balance",
+                })}
                 type="header"
               />
-              <Input
-                value={`${overrideBalance} ${asset?.symbol}`}
-                readOnly
-              />
+              <Input value={`${overrideBalance} ${asset?.symbol}`} readOnly />
             </div>
 
             {overrideBalance > 0 ? (
               <>
                 <HoverInfo
                   content={t("IssuedAssets:overrideAmountInfo", {
-                    defaultValue: "Amount to recall (must be <= holder balance)",
+                    defaultValue:
+                      "Amount to recall (must be <= holder balance)",
                   })}
                   header={t("IssuedAssets:amount", { defaultValue: "Amount" })}
                   type="header"
@@ -1431,7 +1467,9 @@ function AssetIssuerActions(props) {
                 Number(overrideAmount) > Number(overrideBalance)
               }
             >
-              {t("IssuedAssets:overrideTransfer", { defaultValue: "Override transfer" })}
+              {t("IssuedAssets:overrideTransfer", {
+                defaultValue: "Override transfer",
+              })}
             </Button>
 
             {overrideDLOpen ? (
