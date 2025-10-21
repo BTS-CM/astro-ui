@@ -91,5 +91,15 @@
   "publishTime": "Published {{hours}} hours ago",
   "inactiveSmartcoin": "This smartcoin is inactive and cannot be issued nor settled, It's either in a form of global settlement or its price feeds are insufficient to define a settlement price.",
   "priceFeedersInfo": "These are the accounts which are allowed to publish price feeds for this asset.",
-  "priceFeeders": "Price feed publishers for {{symbol}}"
+  "priceFeeders": "Price feed publishers for {{symbol}}",
+  "overrideTransfer": "Override transfer",
+  "overrideTransferInfo": "Recall tokens from a holder back to the issuer account. Provide a target account and amount up to their balance.",
+  "overrideTargetInfo": "Choose the target account (1.2.x). The holder's balance in this asset will be checked automatically.",
+  "holderBalance": "Holder balance",
+  "holderBalanceInfo": "Detected balance of the selected account in this asset.",
+  "overrideAmountInfo": "Amount to recall. This must be less than or equal to the holder's current balance.",
+  "amount": "Amount",
+  "useMax": "Use max",
+  "noAssetInBalance": "This account does not hold this asset.",
+  "overrideHeader": "Recall {{amount}} {{symbol}} from {{account}}"
 }

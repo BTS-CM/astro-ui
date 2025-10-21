@@ -90,5 +90,15 @@
   "publishTime": "Avaldatud {{hours}} tundi tagasi",
   "inactiveSmartcoin": "See nutimünt on passiivne ja seda ei saa emiteerida ega arveldada. See on kas globaalse arvelduse vormis või selle hinnavood ei ole arveldushinna määratlemiseks piisavad.",
   "priceFeedersInfo": "Need on kontod, millel on lubatud avaldada selle vara hinnavooge.",
-  "priceFeeders": "Hinnavoo avaldajad {{symbol}}"
+  "priceFeeders": "Hinnavoo avaldajad {{symbol}}",
+  "overrideTransfer": "Ülekande tühistamine",
+  "overrideTransferInfo": "Kutsuge märgid omanikult tagasi väljaandja kontole. ",
+  "overrideTargetInfo": "Valige sihtkonto (1.2.x). ",
+  "holderBalance": "Hoidja tasakaal",
+  "holderBalanceInfo": "Selles varas tuvastati valitud konto saldo.",
+  "overrideAmountInfo": "Meenutatav summa. ",
+  "amount": "Summa",
+  "useMax": "Kasutage max",
+  "noAssetInBalance": "Sellel kontol ei ole seda vara.",
+  "overrideHeader": "Tuleta meelde {{amount}} {{symbol}} alates {{account}}"
 }

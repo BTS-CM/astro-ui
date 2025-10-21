@@ -36,6 +36,7 @@ import {
   humanReadableFloat,
   getFlagBooleans,
 } from "@/lib/common.js";
+import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 
 const CORE_PRECISION = 5;
 
@@ -191,6 +192,17 @@ function AssetIssuerActions(props) {
     return getFlagBooleans(asset?.options?.issuer_permissions ?? 0);
   }, [asset?.options?.issuer_permissions]);
 
+  // Active flags set on the asset
+  const assetFlags = useMemo(() => {
+    return getFlagBooleans(asset?.options?.flags ?? 0);
+  }, [asset?.options?.flags]);
+  // Robust numeric check for override_authority active flag
+  const hasOverrideAuthority = useMemo(() => {
+    const mask = Number(asset?.options?.flags ?? 0);
+    // 0x04 is override_authority
+    return (mask & 0x04) > 0;
+  }, [asset?.options?.flags]);
+
   const [fundFeePoolDialogOpen, setFundFeePoolDialogOpen] = useState(false);
   const [fundFeePoolAmount, setFundFeePoolAmount] = useState("");
   const [fundFeePoolDeeplinkOpen, setFundFeePoolDeeplinkOpen] = useState(false);
@@ -226,6 +238,77 @@ function AssetIssuerActions(props) {
     useState(false);
   const [updateIssuerDeeplinkOpen, setUpdateIssuerDeeplinkOpen] =
     useState(false);
+
+  // Override transfer state
+  const [overrideOpen, setOverrideOpen] = useState(false);
+  const [overrideTarget, setOverrideTarget] = useState(null);
+  const [overrideTargetId, setOverrideTargetId] = useState("");
+  const [overrideBalanceRaw, setOverrideBalanceRaw] = useState(0); // blockchain units
+  const [overrideBalance, setOverrideBalance] = useState(0); // human units
+  const [overrideAmount, setOverrideAmount] = useState("");
+  const [overrideDLOpen, setOverrideDLOpen] = useState(false);
+  const [overrideLoading, setOverrideLoading] = useState(false);
+  const [overrideError, setOverrideError] = useState("");
+  const [overrideSearchOpen, setOverrideSearchOpen] = useState(false);
+  const [overrideFavouritesOpen, setOverrideFavouritesOpen] = useState(false);
+  const [overrideContactsOpen, setOverrideContactsOpen] = useState(false);
+
+  // keep a simple derived id for existing logic
+  useEffect(() => {
+    setOverrideTargetId(overrideTarget?.id ?? "");
+  }, [overrideTarget]);
+
+  useEffect(() => {
+    let unsubscribe;
+    if (overrideOpen && overrideTargetId && chain) {
+      setOverrideLoading(true);
+      setOverrideError("");
+
+      const store = createUserBalancesStore([
+        chain,
+        overrideTargetId,
+        node && node.url ? node.url : null,
+      ]);
+
+      unsubscribe = store.subscribe(({ data, error, loading }) => {
+        if (loading) return;
+        setOverrideLoading(false);
+        if (error) {
+          setOverrideError(t("Common:failedToFetch", { defaultValue: "Failed to fetch balances" }));
+          setOverrideBalanceRaw(0);
+          setOverrideBalance(0);
+          return;
+        }
+
+        if (Array.isArray(data)) {
+          const bal = data.find((b) => b.asset_id === asset?.id);
+          if (bal) {
+            const raw = parseInt(bal.amount ?? 0, 10);
+            const human = humanReadableFloat(raw, asset?.precision ?? 0);
+            setOverrideBalanceRaw(raw);
+            setOverrideBalance(human);
+            // If amount exceeds new max after change, clamp
+            if (overrideAmount && Number(overrideAmount) > human) {
+              setOverrideAmount(String(human));
+            }
+          } else {
+            setOverrideBalanceRaw(0);
+            setOverrideBalance(0);
+            setOverrideError(
+              t("IssuedAssets:noAssetInBalance", {
+                defaultValue: "This account does not hold this asset.",
+              })
+            );
+          }
+        }
+      });
+    }
+
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [overrideOpen, overrideTargetId, chain, node?.url]);
 
   const coreSymbol = chain === "bitshares" ? "BTS" : "TEST";
 
@@ -404,6 +487,22 @@ function AssetIssuerActions(props) {
         ),
       }
     );
+  }
+
+  // Add override transfer only if flag enabled
+  // Display only when the override_authority flag is actually ENABLED on the asset
+  if ((isUIA || isNFT) && hasOverrideAuthority && issuerPermissions?.override_authority) {
+    dropdownItems.push({
+      key: "override-transfer",
+      render: (
+        <DropdownMenuItem
+          key="override-transfer"
+          onClick={() => setOverrideOpen(true)}
+        >
+          {t("IssuedAssets:overrideTransfer", { defaultValue: "Override transfer" })}
+        </DropdownMenuItem>
+      ),
+    });
   }
 
   if (!dropdownItems.length) {
@@ -1153,6 +1252,214 @@ function AssetIssuerActions(props) {
                     issuer: currentUser?.id,
                     new_issuer: updateIssuerTarget?.id,
                     asset_to_update: asset?.id,
+                    extensions: {},
+                  },
+                ]}
+              />
+            ) : null}
+          </DialogContent>
+        </Dialog>
+      ) : null}
+
+      {overrideOpen ? (
+        <Dialog open={overrideOpen} onOpenChange={setOverrideOpen}>
+          <DialogContent className="sm:max-w-[550px] bg-white">
+            <DialogHeader>
+              <DialogTitle>
+                {t("IssuedAssets:overrideTransfer", { defaultValue: "Override transfer" })}: {asset?.symbol}
+              </DialogTitle>
+              <DialogDescription>
+                {t("IssuedAssets:overrideTransferInfo", {
+                  defaultValue:
+                    "Recall tokens from a holder back to the issuer account. Provide a target account ID (1.2.x), then choose an amount up to their balance.",
+                })}
+              </DialogDescription>
+            </DialogHeader>
+
+            <HoverInfo
+              content={t("IssuedAssets:overrideTargetInfo", {
+                defaultValue: "Choose the target account (1.2.x). We’ll auto-check balance.",
+              })}
+              header={t("IssuedAssets:targetUser", { defaultValue: "Target account" })}
+              type="header"
+            />
+            <div className="grid grid-cols-8 gap-2 mt-2">
+              <div className="col-span-1">
+                {overrideTarget ? (
+                  <Avatar
+                    size={40}
+                    name={overrideTarget.name}
+                    extra="Target"
+                    expression={{ eye: "normal", mouth: "open" }}
+                    colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]}
+                  />
+                ) : (
+                  <Av>
+                    <AvatarFallback>?</AvatarFallback>
+                  </Av>
+                )}
+              </div>
+              <div className="col-span-4">
+                <Input
+                  disabled
+                  placeholder={
+                    overrideTarget
+                      ? `${overrideTarget.name} (${overrideTarget.id})`
+                      : "Bitshares account (1.2.x)"
+                  }
+                  className="mb-1 mt-1"
+                />
+              </div>
+              <div className="col-span-3 flex gap-2">
+                <Dialog open={overrideSearchOpen} onOpenChange={setOverrideSearchOpen}>
+                  <DialogTrigger asChild>
+                    <Button variant="outline" className="mt-1">
+                      <MagnifyingGlassIcon />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[375px] bg-white">
+                    <DialogHeader>
+                      <DialogTitle>
+                        {chain === "bitshares"
+                          ? t("Transfer:bitsharesAccountSearchBTS")
+                          : t("Transfer:bitsharesAccountSearchTEST")}
+                      </DialogTitle>
+                    </DialogHeader>
+                    <AccountSearch
+                      chain={chain}
+                      excludedUsers={[]}
+                      setChosenAccount={(account) => {
+                        setOverrideTarget({ name: account.name, id: account.id });
+                        setOverrideSearchOpen(false);
+                      }}
+                    />
+                  </DialogContent>
+                </Dialog>
+
+                <Dialog open={overrideFavouritesOpen} onOpenChange={setOverrideFavouritesOpen}>
+                  <DialogTrigger asChild>
+                    <Button variant="outline" className="mt-1">
+                      <FaceIcon />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[375px] bg-white">
+                    <DialogHeader>
+                      <DialogTitle>{t("Favourites:usersHeader")}</DialogTitle>
+                      <DialogDescription>
+                        {t("Favourites:usersEmptyDescription")}
+                      </DialogDescription>
+                    </DialogHeader>
+                    {renderFavourites((user) => {
+                      setOverrideTarget({ name: user.name, id: user.id });
+                      setOverrideFavouritesOpen(false);
+                    })}
+                  </DialogContent>
+                </Dialog>
+
+                <Dialog open={overrideContactsOpen} onOpenChange={setOverrideContactsOpen}>
+                  <DialogTrigger asChild>
+                    <Button variant="outline" className="mt-1">
+                      <AvatarIcon />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[375px] bg-white">
+                    <DialogHeader>
+                      <DialogTitle>{t("IssuedAssets:contactList")}</DialogTitle>
+                      <DialogDescription>
+                        {t("IssuedAssets:contactListInfo")}
+                      </DialogDescription>
+                    </DialogHeader>
+                    {renderContacts((user) => {
+                      setOverrideTarget({ name: user.username, id: user.id });
+                      setOverrideContactsOpen(false);
+                    })}
+                  </DialogContent>
+                </Dialog>
+              </div>
+            </div>
+
+            {overrideError ? (
+              <p className="text-sm text-red-600 mt-2">{overrideError}</p>
+            ) : null}
+
+            <div className="mt-3 space-y-2">
+              <HoverInfo
+                content={t("IssuedAssets:holderBalanceInfo", { defaultValue: "Detected balance of the target in this asset" })}
+                header={t("IssuedAssets:holderBalance", { defaultValue: "Holder balance" })}
+                type="header"
+              />
+              <Input
+                value={`${overrideBalance} ${asset?.symbol}`}
+                readOnly
+              />
+            </div>
+
+            {overrideBalance > 0 ? (
+              <>
+                <HoverInfo
+                  content={t("IssuedAssets:overrideAmountInfo", {
+                    defaultValue: "Amount to recall (must be <= holder balance)",
+                  })}
+                  header={t("IssuedAssets:amount", { defaultValue: "Amount" })}
+                  type="header"
+                />
+                <div className="grid grid-cols-3 gap-2 mt-2">
+                  <Input
+                    type="number"
+                    value={overrideAmount}
+                    onChange={(e) => setOverrideAmount(e.target.value)}
+                    className="col-span-2"
+                  />
+                  <Button
+                    variant="outline"
+                    onClick={() => setOverrideAmount(String(overrideBalance))}
+                  >
+                    {t("IssuedAssets:useMax", { defaultValue: "Use max" })}
+                  </Button>
+                </div>
+              </>
+            ) : null}
+
+            <Button
+              className="mt-3 w-1/3"
+              onClick={() => setOverrideDLOpen(true)}
+              disabled={
+                !overrideTargetId ||
+                !overrideAmount ||
+                isNaN(Number(overrideAmount)) ||
+                Number(overrideAmount) <= 0 ||
+                Number(overrideAmount) > Number(overrideBalance)
+              }
+            >
+              {t("IssuedAssets:overrideTransfer", { defaultValue: "Override transfer" })}
+            </Button>
+
+            {overrideDLOpen ? (
+              <DeepLinkDialog
+                operationNames={["override_transfer"]}
+                username={currentUser?.username}
+                usrChain={chain}
+                userID={currentUser?.id}
+                dismissCallback={setOverrideDLOpen}
+                key={`overrideTransfer-${asset?.id}`}
+                headerText={t("IssuedAssets:overrideHeader", {
+                  defaultValue: "Recall {{amount}} {{symbol}} from {{account}}",
+                  amount: overrideAmount,
+                  symbol: asset?.symbol,
+                  account: overrideTargetId,
+                })}
+                trxJSON={[
+                  {
+                    issuer: currentUser?.id,
+                    from: overrideTargetId,
+                    to: currentUser?.id,
+                    amount: {
+                      amount: blockchainFloat(
+                        Number(overrideAmount || 0),
+                        asset?.precision ?? 0
+                      ),
+                      asset_id: asset?.id,
+                    },
                     extensions: {},
                   },
                 ]}

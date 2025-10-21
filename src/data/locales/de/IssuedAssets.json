@@ -90,5 +90,15 @@
   "publishTime": "Veröffentlicht {{hours}} Vor Stunden",
   "inactiveSmartcoin": "Dieser Smartcoin ist inaktiv und kann weder ausgegeben noch abgerechnet werden. Entweder handelt es sich um eine Form der globalen Abrechnung oder seine Preisdaten reichen nicht aus, um einen Abrechnungspreis zu definieren.",
   "priceFeedersInfo": "Dies sind die Konten, die Preis-Feeds für diesen Vermögenswert veröffentlichen dürfen.",
-  "priceFeeders": "Preis-Feed-Publisher für {{symbol}}"
+  "priceFeeders": "Preis-Feed-Publisher für {{symbol}}",
+  "overrideTransfer": "Übertragung außer Kraft setzen",
+  "overrideTransferInfo": "Rufen Sie Token von einem Inhaber zurück auf das Emittentenkonto. ",
+  "overrideTargetInfo": "Wählen Sie das Zielkonto (1.2.x). ",
+  "holderBalance": "Inhabersaldo",
+  "holderBalanceInfo": "Erkannter Saldo des ausgewählten Kontos in diesem Vermögenswert.",
+  "overrideAmountInfo": "Zurückzurufender Betrag. ",
+  "amount": "Menge",
+  "useMax": "Benutzen Sie max",
+  "noAssetInBalance": "Dieses Konto enthält diesen Vermögenswert nicht.",
+  "overrideHeader": "Abrufen {{amount}} {{symbol}} aus {{account}}"
 }

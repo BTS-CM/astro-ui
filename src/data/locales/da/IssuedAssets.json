@@ -90,5 +90,15 @@
   "publishTime": "Udgivet {{hours}} timer siden",
   "inactiveSmartcoin": "Denne smartcoin er inaktiv og kan ikke udstedes eller afregnes. Den er enten i en form for global afregning, eller dens prisfeeds er utilstrækkelige til at definere en afregningspris.",
   "priceFeedersInfo": "Dette er de konti, som har tilladelse til at offentliggøre prisfeeds for dette aktiv.",
-  "priceFeeders": "Pris feed udgivere for {{symbol}}"
+  "priceFeeders": "Pris feed udgivere for {{symbol}}",
+  "overrideTransfer": "Tilsidesæt overførsel",
+  "overrideTransferInfo": "Genkald tokens fra en indehaver tilbage til udstederkontoen. ",
+  "overrideTargetInfo": "Vælg målkontoen (1.2.x). ",
+  "holderBalance": "Holder balance",
+  "holderBalanceInfo": "Detekteret saldo på den valgte konto i dette aktiv.",
+  "overrideAmountInfo": "Beløb at tilbagekalde. ",
+  "amount": "Beløb",
+  "useMax": "Brug max",
+  "noAssetInBalance": "Denne konto indeholder ikke dette aktiv.",
+  "overrideHeader": "Minde om {{amount}} {{symbol}} fra {{account}}"
 }

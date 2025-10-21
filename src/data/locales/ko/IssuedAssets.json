@@ -90,5 +90,15 @@
   "publishTime": "게시됨 {{hours}} 몇 시간 전",
   "inactiveSmartcoin": "이 스마트코인은 비활성화되어 발행되거나 결제될 수 없습니다. 글로벌 결제 형식이거나 가격 피드가 결제 가격을 정의하기에 충분하지 않습니다.",
   "priceFeedersInfo": "이는 이 자산에 대한 가격 피드를 게시할 수 있는 계정입니다.",
-  "priceFeeders": "가격 피드 게시자: {{symbol}}"
+  "priceFeeders": "가격 피드 게시자: {{symbol}}",
+  "overrideTransfer": "환승 재정의",
+  "overrideTransferInfo": "보유자의 토큰을 발행자 계정으로 다시 회수합니다. ",
+  "overrideTargetInfo": "대상 계정(1.2.x)을 선택합니다. ",
+  "holderBalance": "홀더 잔액",
+  "holderBalanceInfo": "이 자산에서 선택한 계정의 잔액이 감지되었습니다.",
+  "overrideAmountInfo": "회수할 금액입니다. ",
+  "amount": "양",
+  "useMax": "최대 사용",
+  "noAssetInBalance": "이 계정에는 이 자산이 보관되어 있지 않습니다.",
+  "overrideHeader": "상기하다 {{amount}} {{symbol}} ~에서 {{account}}"
 }

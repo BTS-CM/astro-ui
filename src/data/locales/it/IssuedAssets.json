@@ -90,5 +90,15 @@
   "publishTime": "Pubblicato {{hours}} ore fa",
   "inactiveSmartcoin": "Questo smartcoin è inattivo e non può essere emesso né regolato, è in una forma di regolamento globale oppure i suoi feed di prezzo non sono sufficienti per definire un prezzo di regolamento.",
   "priceFeedersInfo": "Questi sono gli account a cui è consentito pubblicare feed di prezzo per questo asset.",
-  "priceFeeders": "Prezzo degli editori di feed per {{symbol}}"
+  "priceFeeders": "Prezzo degli editori di feed per {{symbol}}",
+  "overrideTransfer": "Ignora trasferimento",
+  "overrideTransferInfo": "Richiama i token dal titolare sul conto dell'emittente. ",
+  "overrideTargetInfo": "Scegli l'account di destinazione (1.2.x). ",
+  "holderBalance": "Bilancia del titolare",
+  "holderBalanceInfo": "Saldo rilevato del conto selezionato in questa risorsa.",
+  "overrideAmountInfo": "Importo da richiamare. ",
+  "amount": "Quantità",
+  "useMax": "Usa massimo",
+  "noAssetInBalance": "Questo account non contiene questa risorsa.",
+  "overrideHeader": "Richiamo {{amount}} {{symbol}} da {{account}}"
 }

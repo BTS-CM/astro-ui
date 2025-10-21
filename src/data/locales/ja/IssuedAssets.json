@@ -90,5 +90,15 @@
   "publishTime": "発行済み {{hours}} 数時間前",
   "inactiveSmartcoin": "このスマートコインは非アクティブであり、発行も決済もできません。グローバル決済の形式であるか、その価格フィードが決済価格を定義するには不十分です。",
   "priceFeedersInfo": "これらは、この資産の価格フィードを公開できるアカウントです。",
-  "priceFeeders": "価格フィード発行者 {{symbol}}"
+  "priceFeeders": "価格フィード発行者 {{symbol}}",
+  "overrideTransfer": "オーバーライド転送",
+  "overrideTransferInfo": "保有者から発行者のアカウントにトークンをリコールします。",
+  "overrideTargetInfo": "ターゲットアカウント (1.2.x) を選択します。",
+  "holderBalance": "ホルダーバランス",
+  "holderBalanceInfo": "この資産で選択されたアカウントの残高が検出されました。",
+  "overrideAmountInfo": "思い出す量。",
+  "amount": "額",
+  "useMax": "最大値を使用",
+  "noAssetInBalance": "このアカウントはこの資産を保持していません。",
+  "overrideHeader": "想起 {{amount}} {{symbol}} から {{account}}"
 }

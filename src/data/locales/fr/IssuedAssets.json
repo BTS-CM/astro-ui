@@ -90,5 +90,15 @@
   "publishTime": "Publié {{hours}} il y a des heures",
   "inactiveSmartcoin": "Ce smartcoin est inactif et ne peut être émis ni réglé. Soit il s'agit d'une forme de règlement global, soit ses flux de prix sont insuffisants pour définir un prix de règlement.",
   "priceFeedersInfo": "Ce sont les comptes autorisés à publier des flux de prix pour cet actif.",
-  "priceFeeders": "Éditeurs de flux de prix pour {{symbol}}"
+  "priceFeeders": "Éditeurs de flux de prix pour {{symbol}}",
+  "overrideTransfer": "Remplacer le transfert",
+  "overrideTransferInfo": "Rappel des jetons d'un détenteur vers le compte de l'émetteur. ",
+  "overrideTargetInfo": "Choisissez le compte cible (1.2.x). ",
+  "holderBalance": "Solde du titulaire",
+  "holderBalanceInfo": "Solde détecté du compte sélectionné dans cet actif.",
+  "overrideAmountInfo": "Montant à rappeler. ",
+  "amount": "Montant",
+  "useMax": "Utiliser au maximum",
+  "noAssetInBalance": "Ce compte ne détient pas cet actif.",
+  "overrideHeader": "Rappel {{amount}} {{symbol}} depuis {{account}}"
 }

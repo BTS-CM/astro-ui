@@ -90,5 +90,15 @@
   "publishTime": "Publicado {{hours}} horas atrás",
   "inactiveSmartcoin": "Esta smartcoin está inativa e não pode ser emitida nem liquidada. Ou está em uma forma de liquidação global ou seus preços são insuficientes para definir um preço de liquidação.",
   "priceFeedersInfo": "Estas são as contas que têm permissão para publicar feeds de preços para este ativo.",
-  "priceFeeders": "Editores de feed de preços para {{symbol}}"
+  "priceFeeders": "Editores de feed de preços para {{symbol}}",
+  "overrideTransfer": "Substituir transferência",
+  "overrideTransferInfo": "Recuperar tokens de um titular de volta para a conta do emissor. ",
+  "overrideTargetInfo": "Escolha a conta de destino (1.2.x). ",
+  "holderBalance": "Saldo do titular",
+  "holderBalanceInfo": "Saldo detectado da conta selecionada neste ativo.",
+  "overrideAmountInfo": "Quantidade a ser lembrada. ",
+  "amount": "Quantia",
+  "useMax": "Usar máx.",
+  "noAssetInBalance": "Esta conta não contém este ativo.",
+  "overrideHeader": "Lembrar {{amount}} {{symbol}} de {{account}}"
 }
