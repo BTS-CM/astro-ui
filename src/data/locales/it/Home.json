@@ -129,6 +129,12 @@
     "hover2": "Monitora i tuoi ordini aperti.",
     "hover3": "Analizza l'attività recente del tuo account."
   },
+  "favourites": {
+    "title": "⭐ I tuoi preferiti",
+    "subtitle": "Accedi rapidamente alle risorse e agli account preferiti",
+    "hover1": "Aggiungi le risorse che ti interessano per guardarle in un unico posto.",
+    "hover2": "Tieni traccia dei tuoi account preferiti per una rapida consultazione."
+  },
   "featured": {
     "title": "🏆 Mercati principali",
     "subtitle": "Scopri gli asset scambiati più attivamente oggi",

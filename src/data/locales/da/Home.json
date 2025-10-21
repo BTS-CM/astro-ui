@@ -129,6 +129,12 @@
     "hover2": "Overvåg dine åbne ordrer.",
     "hover3": "Analyser din seneste kontoaktivitet."
   },
+  "favourites": {
+    "title": "⭐ Dine favoritter",
+    "subtitle": "Få hurtigt adgang til foretrukne aktiver og konti",
+    "hover1": "Tilføj aktiver, du holder af, for at se dem ét sted.",
+    "hover2": "Spor dine yndlingskonti for hurtig reference."
+  },
   "featured": {
     "title": "🏆 Topmarkeder",
     "subtitle": "Oplev de mest aktivt handlede aktiver i dag",

@@ -65,9 +65,7 @@ export default function TicketLeaderboard() {
     [chain]
   );
 
-  const [inProgress, setInProgress] = useState(false);
   const [tickets, setTickets] = useState([]);
-  const [leaders, setLeaders] = useState([]);
 
   useEffect(() => {
     // Auto-fetch some pages on mount for a quick snapshot
@@ -88,41 +86,6 @@ export default function TicketLeaderboard() {
       if (unsubscribe) unsubscribe();
     };
   }, [chain, currentNode]);
-
-  async function fetchMore(pages = 6) {
-    // Reuse the same store with higher pageCount by triggering manual fetch via electron helper
-    setInProgress(true);
-    try {
-      if (!window || !window.electron) {
-        setInProgress(false);
-        return;
-      }
-      // Fallback manual fetch with pageCount support via backend helper if available
-      const nodeURL = currentNode ? currentNode.url : null;
-      const existing = tickets || [];
-      const lastID =
-        existing && existing.length
-          ? parseInt(existing.at(-1).id.split("1.18.")[1], 10) + 1
-          : 0;
-
-      // Use built-in backend ticket fetcher if exposed, else rely on current snapshot
-      const updated = await window.electron.getTickets(
-        nodeURL,
-        chain,
-        lastID,
-        existing,
-        pages
-      );
-      if (updated && updated.length) {
-        const merged = existing.concat(updated);
-        setTickets(merged);
-      }
-    } catch (e) {
-      console.log(e);
-    } finally {
-      setInProgress(false);
-    }
-  }
 
   const leaderboard = useMemo(() => {
     if (!tickets || !tickets.length) return { rows: [], total: 0 };
@@ -204,34 +167,6 @@ export default function TicketLeaderboard() {
   return (
     <div className="container mx-auto mt-5 mb-5 w-3/4">
       <div className="grid grid-cols-1 gap-3">
-        <Card>
-          <CardHeader className="pb-1">
-            <CardTitle>
-              {t("CreateTicket:leaderChange.title", "Tickets snapshot")}
-            </CardTitle>
-            <CardDescription>
-              {t(
-                "CreateTicket:leaderChange.description",
-                "Preview recently fetched tickets."
-              )}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center gap-3">
-              <Button disabled={inProgress} onClick={() => fetchMore(8)}>
-                {inProgress ? "⏳" : "↻"}{" "}
-                {t("Common:buttons.refresh", "Refresh")}
-              </Button>
-              <div className="text-sm opacity-80">
-                {t(
-                  "CreateTicket:leaderChange.note",
-                  "Fetching a small sample of recent tickets to give context."
-                )}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
         <Card>
           <CardHeader className="pb-1">
             <CardTitle>

@@ -61,6 +61,7 @@ import ExternalLink from "./common/ExternalLink.jsx";
 import AccountSearch from "./AccountSearch.jsx";
 import HoverInfo from "@/components/common/HoverInfo.tsx";
 import DeepLinkDialog from "@/components/common/DeepLinkDialog.jsx";
+import AssetIssuerActions from "./AssetIssuerActions.jsx";
 import {
   blockchainFloat,
   humanReadableFloat,
@@ -284,66 +285,6 @@ export default function IssuedAssets(properties) {
 
     const [viewJSON, setViewJSON] = useState(false);
     const [json, setJSON] = useState();
-
-    const [issueAssetOpen, setIssueAssetOpen] = useState(false);
-    const [issueAssetDeeplinkDialog, setIssueAssetDeeplinkDialog] =
-      useState(false);
-
-    const [targetUser, setTargetUser] = useState();
-    const [issueAmount, setIssueAmount] = useState(0);
-
-    const [targetUserDialogOpen, setTargetUserDialogOpen] = useState(false);
-    const [selectUserDialogOpen, setSelectUserDialogOpen] = useState(false);
-
-    const [reserveAssetOpen, setReserveAssetOpen] = useState(false);
-    const [reserveAssetDeeplinkDialog, setReserveAssetDeeplinkDialog] =
-      useState(false);
-    const [reserveAmount, setReserveAmount] = useState(0);
-
-    const [fundFeePoolDialogOpen, setFundFeePoolDialogOpen] = useState(false);
-    const [fundFeePoolAmount, setFundFeePoolAmount] = useState(0);
-    const [fundFeePoolDeeplinkDialog, setFundFeePoolDeeplinkDialog] =
-      useState(false);
-
-    const [claimAssetFeesOpen, setClaimAssetFeesOpen] = useState(false);
-    const [accumulatedFeeClaimAmount, setAccumulatedFeeClaimAmount] =
-      useState(0);
-    const [claimAssetFeesDialog, setClaimAssetFeesDialog] = useState(false);
-
-    const [claimFeePoolOpen, setClaimFeePoolOpen] = useState(false);
-    const [claimFeePoolDeeplinkDialog, setClaimFeePoolDeeplinkDialog] =
-      useState(false);
-    const [claimFeePoolAmount, setClaimFeePoolAmount] = useState(0);
-
-    const [assetUpdateIssuerOpen, setAssetUpdateIssuerOpen] = useState(false);
-    const [
-      assetUpdateIssuerDeeplinkDialog,
-      setAssetUpdateIssuerDeeplinkDialog,
-    ] = useState(false);
-    const [newIssuerSearchOpen, setNewIssuerSearchOpen] = useState(false);
-    const [newIssuerUserOpen, setNewIssuerUserOpen] = useState(false);
-
-    const [priceFeedPublishersOpen, setPriceFeedPublishersOpen] =
-      useState(false);
-    const [
-      priceFeedPublishersDeeplinkDialog,
-      setPriceFeedPublishersDeeplinkDialog,
-    ] = useState(false);
-    const [priceSearchDialog, setPriceSearchDialog] = useState(false);
-
-    const [priceFeedPublishers, setPriceFeedPublishers] = useState([]);
-    useEffect(() => {
-      if (
-        relevantBitassetData &&
-        priceFeederAccounts &&
-        priceFeederAccounts.length
-      ) {
-        const publishers = relevantBitassetData.feeds
-          .map((x) => x[0])
-          .map((x) => priceFeederAccounts.find((y) => y.id === x));
-        setPriceFeedPublishers(publishers);
-      }
-    }, [relevantBitassetData, priceFeederAccounts]);
 
     const [globalSettleOpen, setGlobalSettleOpen] = useState(false);
     const [globalSettleDeeplinkDialog, setGlobalSettleDeeplinkDialog] =
@@ -792,1356 +733,194 @@ export default function IssuedAssets(properties) {
                 </DropdownMenu>
 
                 {!["prediction"].includes(activeTab) ? (
-                  <>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger>
-                        <Button
-                          className="h-8 hover:shadow-inner"
-                          variant="outline"
-                        >
-                          {t("IssuedAssets:issuerActions")}
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent>
-                        {activeTab === "smartcoins" ||
-                        (activeTab === "nft" &&
-                          issuedAsset.bitasset_data_id) ? (
-                          <>
-                            <a
-                              href={`/create_smartcoin/index.html?id=${issuedAsset.id}`}
-                            >
-                              <DropdownMenuItem className="hover:shadow-inner">
-                                {t("IssuedAssets:manageUIA")}
-                              </DropdownMenuItem>
-                            </a>
-                          </>
-                        ) : null}
+                  <span className="mt-2">
+                    <AssetIssuerActions
+                      asset={issuedAsset}
+                      chain={_chain}
+                      currentUser={usr}
+                      node={currentNode}
+                      dynamicAssetData={relevantDynamicData}
+                      bitassetData={relevantBitassetData}
+                      buttonVariant="outline"
+                      buttonSize="sm"
+                      className="h-8 hover:shadow-inner"
+                    />
+                  </span>
+                ) : null}
 
-                        <DropdownMenuItem
-                          onClick={() => {
-                            setFundFeePoolDialogOpen(true);
-                          }}
-                          className="hover:shadow-inner"
-                        >
-                          {t("IssuedAssets:fundFeePool")}
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={() => {
-                            setClaimFeePoolOpen(true);
-                          }}
-                          className="hover:shadow-inner"
-                        >
-                          {t("IssuedAssets:claimFeePool")}
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={() => {
-                            setClaimAssetFeesOpen(true);
-                          }}
-                          className="hover:shadow-inner"
-                        >
-                          {t("IssuedAssets:claimAssetFees")}
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={() => {
-                            setAssetUpdateIssuerOpen(true);
-                          }}
-                          className="hover:shadow-inner"
-                        >
-                          {t("IssuedAssets:updateIssuer")}
-                        </DropdownMenuItem>
+                {globalSettleOpen ? (
+                  <Dialog
+                    open={globalSettleOpen}
+                    onOpenChange={(open) => {
+                      setGlobalSettleOpen(open);
+                    }}
+                  >
+                    <DialogContent className="sm:max-w-[550px] bg-white">
+                      <DialogHeader>
+                        <DialogTitle>
+                          {t("IssuedAssets:updateIssuer")}: {issuedAsset.symbol}{" "}
+                          ({issuedAsset.id})
+                        </DialogTitle>
+                        <DialogDescription>
+                          {t("IssuedAssets:updateIssuerInfo")}
+                        </DialogDescription>
+                      </DialogHeader>
 
-                        {["smartcoins", "nft"].includes(activeTab) &&
-                        relevantBitassetData &&
-                        _issuer_permissions.global_settle &&
-                        parseInt(
-                          relevantBitassetData.current_feed.settlement_price
-                            .quote.amount
-                        ) > 0 &&
-                        parseInt(
-                          relevantBitassetData.current_feed.settlement_price
-                            .base.amount
-                        ) > 0 ? (
-                          <DropdownMenuItem
+                      <div className="grid grid-cols-1 gap-3">
+                        <div className="grid grid-cols-3 gap-2">
+                          <Button
                             onClick={() => {
-                              setGlobalSettleOpen(true);
+                              setGlobalSettlementMode("median");
                             }}
-                            className="hover:shadow-inner"
+                            variant={
+                              globalSettlementMode === "median" ? "" : "outline"
+                            }
                           >
-                            {t("IssuedAssets:globalSettlement")}
-                          </DropdownMenuItem>
-                        ) : null}
-
-                        {["smartcoins", "nft"].includes(activeTab) &&
-                        relevantBitassetData &&
-                        (!_issuer_permissions.hasOwnProperty(
-                          "witness_fed_asset"
-                        ) ||
-                          (_issuer_permissions.hasOwnProperty(
-                            "witness_fed_asset"
-                          ) &&
-                            !_flags.hasOwnProperty("witness_fed_asset"))) &&
-                        (!_issuer_permissions.hasOwnProperty(
-                          "committee_fed_asset"
-                        ) ||
-                          (_issuer_permissions.hasOwnProperty(
-                            "committee_fed_asset"
-                          ) &&
-                            !_flags.hasOwnProperty("committee_fed_asset"))) ? (
-                          <DropdownMenuItem
+                            {t("IssuedAssets:medianFeedPrice")}
+                          </Button>
+                          <Button
                             onClick={() => {
-                              setPriceFeedPublishersOpen(true);
+                              setGlobalSettlementMode("current");
                             }}
-                            className="hover:shadow-inner"
+                            variant={
+                              globalSettlementMode === "current"
+                                ? ""
+                                : "outline"
+                            }
                           >
-                            {t(`Predictions:pricefeeder`)}
-                          </DropdownMenuItem>
-                        ) : null}
-
-                        {activeTab === "uia" ||
-                        (activeTab === "nft" &&
-                          !issuedAsset.bitasset_data_id) ? (
-                          <>
-                            <a
-                              href={`/create_uia/index.html?id=${issuedAsset.id}`}
-                            >
-                              <DropdownMenuItem className="hover:shadow-inner">
-                                {t("IssuedAssets:manageUIA")}
-                              </DropdownMenuItem>
-                            </a>
-                            <DropdownMenuItem
+                            {t("IssuedAssets:currentFeedPrice")}
+                          </Button>
+                          {relevantBitassetData &&
+                          relevantBitassetData.feeds &&
+                          relevantBitassetData.feeds.length ? (
+                            <Button
                               onClick={() => {
-                                setIssueAssetOpen(true);
+                                setGlobalSettlementMode("price_feed");
                               }}
-                              className="hover:shadow-inner"
+                              variant={
+                                globalSettlementMode === "price_feed"
+                                  ? ""
+                                  : "outline"
+                              }
                             >
-                              {t("IssuedAssets:issueAsset")}
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() => {
-                                setReserveAssetOpen(true);
-                              }}
-                              className="hover:shadow-inner"
-                            >
-                              {t("IssuedAssets:reserveAsset")}
-                            </DropdownMenuItem>
-                          </>
-                        ) : null}
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                              {t("IssuedAssets:specificPriceFeed")}
+                            </Button>
+                          ) : null}
+                        </div>
 
-                    {priceFeedPublishersOpen ? (
-                      <Dialog
-                        open={priceFeedPublishersOpen}
-                        onOpenChange={(open) => {
-                          setPriceFeedPublishersOpen(open);
-                        }}
-                      >
-                        <DialogContent className="sm:max-w-[600px] bg-white">
-                          <DialogHeader>
-                            <DialogTitle>
-                              {t(`Predictions:priceFeederDialog.title`)}
-                            </DialogTitle>
-                            <DialogDescription>
-                              {t(`Predictions:priceFeederDialog.description`)}
-                            </DialogDescription>
-                          </DialogHeader>
-                          <div className="grid grid-cols-1 gap-2">
+                        <div className="grid grid-cols-1 gap-2">
+                          {relevantBitassetData &&
+                          relevantBitassetData.feeds &&
+                          relevantBitassetData.feeds.length &&
+                          globalSettlementMode === "price_feed" ? (
+                            <>
+                              <HoverInfo
+                                content={t(
+                                  "IssuedAssets:chooseSpecificFeedInfo"
+                                )}
+                                header={t("IssuedAssets:chooseSpecificFeed")}
+                                type="header"
+                              />
+                              <div className="w-full rounded border border-black pt-1 max-h-[150px] overflow-auto">
+                                <List
+                                  rowComponent={PriceFeedRow}
+                                  rowCount={relevantBitassetData.feeds.length}
+                                  rowHeight={60}
+                                  rowProps={{}}
+                                />
+                              </div>
+                            </>
+                          ) : null}
+                          <div>
                             <HoverInfo
-                              content={t("issuedAssets:priceFeedersInfo")}
-                              header={t("issuedAssets:priceFeeders", {
-                                symbol: issuedAsset.symbol,
-                              })}
+                              content={t(
+                                "IssuedAssets:currentSettlementPriceInfo"
+                              )}
+                              header={t("IssuedAssets:currentSettlementPrice")}
                               type="header"
                             />
-                            <div className="grid grid-cols-12 mt-1">
-                              <span className="col-span-9 border border-gray-300 rounded">
-                                <div className="w-full max-h-[210px] overflow-auto">
-                                  <List
-                                    rowComponent={PriceFeedRow}
-                                    rowCount={priceFeedPublishers.length}
-                                    rowHeight={80}
-                                    rowProps={{}}
-                                  />
-                                </div>
-                              </span>
-                              <span className="col-span-3 ml-3 text-center">
-                                <Dialog
-                                  open={priceSearchDialog}
-                                  onOpenChange={(open) => {
-                                    setPriceSearchDialog(open);
-                                  }}
-                                >
-                                  <DialogTrigger asChild>
-                                    <Button
-                                      variant="outline"
-                                      className="ml-3 mt-1"
-                                    >
-                                      ➕ {t("CreditOfferEditor:addUser")}
-                                    </Button>
-                                  </DialogTrigger>
-                                  <DialogContent className="sm:max-w-[375px] bg-white">
-                                    <DialogHeader>
-                                      <DialogTitle>
-                                        {!usr || !usr.chain
-                                          ? t("Transfer:bitsharesAccountSearch")
-                                          : null}
-                                        {usr && usr.chain === "bitshares"
-                                          ? t(
-                                              "Transfer:bitsharesAccountSearchBTS"
-                                            )
-                                          : null}
-                                        {usr && usr.chain !== "bitshares"
-                                          ? t(
-                                              "Transfer:bitsharesAccountSearchTEST"
-                                            )
-                                          : null}
-                                      </DialogTitle>
-                                    </DialogHeader>
-                                    <AccountSearch
-                                      chain={
-                                        usr && usr.chain
-                                          ? usr.chain
-                                          : "bitshares"
-                                      }
-                                      excludedUsers={[]}
-                                      setChosenAccount={(_account) => {
-                                        if (
-                                          _account &&
-                                          !priceFeedPublishers.find(
-                                            (_usr) => _usr.id === _account.id
-                                          )
-                                        ) {
-                                          setPriceFeedPublishers(
-                                            priceFeedPublishers &&
-                                              priceFeedPublishers.length
-                                              ? [
-                                                  ...priceFeedPublishers,
-                                                  _account,
-                                                ]
-                                              : [_account]
-                                          );
-                                        }
-                                        setPriceSearchDialog(false);
-                                      }}
-                                    />
-                                  </DialogContent>
-                                </Dialog>
-                              </span>
-                            </div>
-                            <div className="grid grid-cols-2 gap-2">
-                              <Button
-                                className="h-6 mt-1 w-1/2"
-                                onClick={() => {
-                                  setPriceFeedPublishersDeeplinkDialog(true);
-                                }}
-                              >
-                                {t("Predictions:submit")}
-                              </Button>
-                            </div>
+                            <Input
+                              value={`${
+                                parseFloat(currentFeedSettlementPrice) > 0
+                                  ? currentFeedSettlementPrice
+                                  : "??? ⚠️"
+                              } ${collateralAsset.symbol}/${
+                                issuedAsset.symbol
+                              }`}
+                              readOnly={true}
+                              className="mt-2"
+                            />
                           </div>
-                          {priceFeedPublishersDeeplinkDialog ? (
-                            <DeepLinkDialog
-                              operationNames={["asset_update_feed_producers"]}
-                              username={usr.username}
-                              usrChain={usr.chain}
-                              userID={usr.id}
-                              dismissCallback={
-                                setPriceFeedPublishersDeeplinkDialog
-                              }
-                              key={`deeplink-pricefeeddialog-${issuedAsset.id}`}
-                              headerText={t(
-                                `Predictions:dialogContent.header_pricefeeder`
-                              )}
-                              trxJSON={[
-                                {
-                                  issuer: usr.id,
-                                  asset_to_update: issuedAsset.id,
-                                  new_feed_producers: priceFeedPublishers.map(
-                                    (_usr) => _usr.id
+                          <div className="grid grid-cols-2 gap-2">
+                            <div>
+                              <HoverInfo
+                                content={t("IssuedAssets:quoteInfo")}
+                                header={t("IssuedAssets:quote")}
+                                type="header"
+                              />
+                              <Input
+                                value={`${humanReadableFloat(
+                                  parseInt(globalSettleObject.quote.amount),
+                                  collateralAsset.precision
+                                )} ${collateralAsset.symbol} (${
+                                  collateralAsset.id
+                                })`}
+                                readOnly={true}
+                                className="mt-2"
+                              />
+                            </div>
+                            <div>
+                              <HoverInfo
+                                content={t("IssuedAssets:baseInfo")}
+                                header={t("IssuedAssets:base")}
+                                type="header"
+                              />
+                              <Input
+                                value={`${humanReadableFloat(
+                                  parseInt(
+                                    parseInt(globalSettleObject.base.amount)
                                   ),
-                                },
-                              ]}
-                            />
-                          ) : null}
-                        </DialogContent>
-                      </Dialog>
-                    ) : null}
-
-                    {(activeTab === "uia" ||
-                      (activeTab === "nft" && !issuedAsset.bitasset_data_id)) &&
-                    issueAssetOpen ? (
-                      <Dialog
-                        open={issueAssetOpen}
-                        onOpenChange={(open) => {
-                          setIssueAssetOpen(open);
-                        }}
-                      >
-                        <DialogContent className="sm:max-w-[550px] bg-white">
-                          <DialogHeader>
-                            <DialogTitle>Issue Asset</DialogTitle>
-                            <DialogDescription>
-                              {t("IssuedAssets:issueAssetDescription")}
-                            </DialogDescription>
-                          </DialogHeader>
-
-                          <div className="grid grid-cols-8 mt-2">
-                            <div className="col-span-8 mb-2">
-                              <HoverInfo
-                                content={t("IssuedAssets:targetUserInfo")}
-                                header={t("IssuedAssets:targetUser")}
-                                type="header"
-                              />
-                            </div>
-                            <div className="col-span-1">
-                              {targetUser && targetUser.name ? (
-                                <Avatar
-                                  size={40}
-                                  name={targetUser.name}
-                                  extra="Target"
-                                  expression={{
-                                    eye: "normal",
-                                    mouth: "open",
-                                  }}
-                                  colors={[
-                                    "#92A1C6",
-                                    "#146A7C",
-                                    "#F0AB3D",
-                                    "#C271B4",
-                                    "#C20D90",
-                                  ]}
-                                />
-                              ) : (
-                                <Av>
-                                  <AvatarFallback>?</AvatarFallback>
-                                </Av>
-                              )}
-                            </div>
-                            <div className="col-span-5">
-                              <Input
-                                disabled
-                                placeholder={
-                                  targetUser && targetUser.name
-                                    ? `${targetUser.name} (${targetUser.id})`
-                                    : "Bitshares account (1.2.x)"
-                                }
-                                className="mb-1 mt-1"
-                              />
-                            </div>
-                            <div className="col-span-2 grid grid-cols-2">
-                              <Dialog
-                                open={targetUserDialogOpen}
-                                onOpenChange={(open) => {
-                                  setTargetUserDialogOpen(open);
-                                }}
-                              >
-                                <DialogTrigger asChild>
-                                  <Button
-                                    variant="outline"
-                                    className="ml-3 mt-1"
-                                  >
-                                    <MagnifyingGlassIcon />
-                                  </Button>
-                                </DialogTrigger>
-                                <DialogContent className="sm:max-w-[375px] bg-white">
-                                  <DialogHeader>
-                                    <DialogTitle>
-                                      {!usr || !usr.chain
-                                        ? t(
-                                            "AccountLists:bitsharesAccountSearch"
-                                          )
-                                        : null}
-                                      {usr && usr.chain === "bitshares"
-                                        ? t(
-                                            "AccountLists:bitsharesAccountSearchBTS"
-                                          )
-                                        : null}
-                                      {usr && usr.chain !== "bitshares"
-                                        ? t(
-                                            "AccountLists:bitsharesAccountSearchTEST"
-                                          )
-                                        : null}
-                                    </DialogTitle>
-                                    <DialogDescription>
-                                      {t("AccountLists:searchingForAccount")}
-                                    </DialogDescription>
-                                  </DialogHeader>
-                                  <AccountSearch
-                                    chain={
-                                      usr && usr.chain ? usr.chain : "bitshares"
-                                    }
-                                    excludedUsers={[]}
-                                    setChosenAccount={(x) => {
-                                      setTargetUser(x);
-                                      setTargetUserDialogOpen(false);
-                                    }}
-                                    skipCheck={false}
-                                  />
-                                </DialogContent>
-                              </Dialog>
-                              <Dialog
-                                open={selectUserDialogOpen}
-                                onOpenChange={(open) => {
-                                  setSelectUserDialogOpen(open);
-                                }}
-                              >
-                                <DialogTrigger asChild>
-                                  <Button
-                                    variant="outline"
-                                    className="ml-3 mt-1"
-                                  >
-                                    <AvatarIcon />
-                                  </Button>
-                                </DialogTrigger>
-                                <DialogContent className="sm:max-w-[375px] bg-white">
-                                  <DialogHeader>
-                                    <DialogTitle>
-                                      {t("IssuedAssets:contactList")}
-                                    </DialogTitle>
-                                    <DialogDescription>
-                                      {t("IssuedAssets:contactListInfo")}
-                                    </DialogDescription>
-                                  </DialogHeader>
-                                  {users && users.length ? (
-                                    <div className="w-full max-h-[500px] overflow-auto">
-                                      <List
-                                        rowComponent={UserRow}
-                                        rowCount={users.length}
-                                        rowHeight={90}
-                                        rowProps={{}}
-                                      />
-                                    </div>
-                                  ) : (
-                                    <p>{t("IssuedAssets:noUsers")}</p>
-                                  )}
-                                </DialogContent>
-                              </Dialog>
-                            </div>
-                          </div>
-
-                          <div className="grid grid-cols-2 gap-3">
-                            <div>
-                              <HoverInfo
-                                content={t("IssuedAssets:currentSupplyInfo")}
-                                header={t("IssuedAssets:currentSupply")}
-                                type="header"
-                              />
-                              <Input
-                                value={
-                                  relevantDynamicData
-                                    ? relevantDynamicData.current_supply
-                                    : "0"
-                                }
-                                readOnly={true}
-                                className="mt-2"
-                              />
-                            </div>
-                            <div>
-                              <HoverInfo
-                                content={t("IssuedAssets:maxSupplyInfo")}
-                                header={t("IssuedAssets:maxSupply")}
-                                type="header"
-                              />
-                              <Input
-                                value={issuedAsset.options.max_supply}
+                                  issuedAsset.precision
+                                )} ${issuedAsset.symbol} (${issuedAsset.id})`}
                                 readOnly={true}
                                 className="mt-2"
                               />
                             </div>
                           </div>
-                          <HoverInfo
-                            content={t("IssuedAssets:issueAmountInfo")}
-                            header={t("IssuedAssets:issueAmount")}
-                            type="header"
-                          />
-                          <Input
-                            type="number"
-                            value={issueAmount}
-                            onChange={(e) => {
-                              setIssueAmount(e.target.value);
-                            }}
-                          />
-                          {issueAmount >
-                          humanReadableFloat(
-                            issuedAsset.options.max_supply -
-                              relevantDynamicData.current_supply,
-                            //issuedAsset.options.max_supply,
-                            issuedAsset.precision
-                          ) ? (
-                            <div className="text-red-500">
-                              {t("IssuedAssets:issueAmountExceedsMaxSupply")}
-                            </div>
-                          ) : null}
-                          <Button
-                            className="w-1/4 mt-2"
-                            onClick={() => {
-                              setIssueAssetDeeplinkDialog(true);
-                            }}
-                          >
-                            {t("IssuedAssets:issueAsset")}
-                          </Button>
-                          {targetUser && issueAssetDeeplinkDialog ? (
-                            <DeepLinkDialog
-                              operationNames={["asset_issue"]}
-                              username={usr.username}
-                              usrChain={usr.chain}
-                              userID={usr.id}
-                              dismissCallback={setIssueAssetDeeplinkDialog}
-                              key={`IssuingAsset_${issuedAsset.id}`}
-                              headerText={t("IssuedAssets:issueHeader", {
-                                amount: issueAmount,
-                                asset: issuedAsset.symbol,
-                                user: targetUser.username,
-                              })}
-                              trxJSON={[
-                                {
-                                  issuer: usr.id,
-                                  asset_to_issue: {
-                                    amount: blockchainFloat(
-                                      issueAmount,
-                                      issuedAsset.precision
-                                    ),
-                                    asset_id: issuedAsset.id,
-                                  },
-                                  issue_to_account: targetUser.id,
-                                  extensions: {},
-                                },
-                              ]}
-                            />
-                          ) : null}
-                        </DialogContent>
-                      </Dialog>
-                    ) : null}
-
-                    {(activeTab === "uia" ||
-                      (activeTab === "nft" && !issuedAsset.bitasset_data_id)) &&
-                    reserveAssetOpen ? (
-                      <Dialog
-                        open={reserveAssetOpen}
-                        onOpenChange={(open) => {
-                          setReserveAssetOpen(open);
+                        </div>
+                      </div>
+                      <Button
+                        className="w-1/2 mt-2"
+                        onClick={() => {
+                          setGlobalSettleDeeplinkDialog(true);
                         }}
                       >
-                        <DialogContent className="sm:max-w-[550px] bg-white">
-                          <DialogHeader>
-                            <DialogTitle>
-                              {t("IssuedAssets:reserveAsset")}:{" "}
-                              {issuedAsset.symbol} ({issuedAsset.id})
-                            </DialogTitle>
-                            <DialogDescription>
-                              {t("IssuedAssets:reserveAssetInfo")}
-                            </DialogDescription>
-                          </DialogHeader>
-
-                          <div className="grid grid-cols-2 gap-3">
-                            <div>
-                              <HoverInfo
-                                content={t("IssuedAssets:currentSupplyInfo")}
-                                header={t("IssuedAssets:currentSupply")}
-                                type="header"
-                              />
-                              <Input
-                                value={
-                                  relevantDynamicData
-                                    ? relevantDynamicData.current_supply
-                                    : "0"
-                                }
-                                readOnly={true}
-                                className="mt-2"
-                              />
-                            </div>
-                            <div>
-                              <HoverInfo
-                                content={t("IssuedAssets:maxSupplyInfo")}
-                                header={t("IssuedAssets:maxSupply")}
-                                type="header"
-                              />
-                              <Input
-                                value={issuedAsset.options.max_supply}
-                                readOnly={true}
-                                className="mt-2"
-                              />
-                            </div>
-                          </div>
-                          <HoverInfo
-                            content={t("IssuedAssets:reserveAmountInfo")}
-                            header={t("IssuedAssets:reserveAmount")}
-                            type="header"
-                          />
-                          <Input
-                            type="number"
-                            value={reserveAmount}
-                            onChange={(e) => {
-                              setReserveAmount(e.target.value);
-                            }}
-                          />
-                          {reserveAmount >
-                          humanReadableFloat(
-                            relevantDynamicData.current_supply,
-                            issuedAsset.precision
-                          ) ? (
-                            <div className="text-red-500">
-                              {t(
-                                "IssuedAssets:reserveAmountExceedsCurrentSupply"
-                              )}
-                            </div>
-                          ) : null}
-                          <Button
-                            className="w-1/4 mt-2"
-                            onClick={() => {
-                              setReserveAssetDeeplinkDialog(true);
-                            }}
-                          >
-                            {t("IssuedAssets:issueAsset")}
-                          </Button>
-                          {reserveAssetDeeplinkDialog ? (
-                            <DeepLinkDialog
-                              operationNames={["asset_reserve"]}
-                              username={usr.username}
-                              usrChain={usr.chain}
-                              userID={usr.id}
-                              dismissCallback={setReserveAssetDeeplinkDialog}
-                              key={`IssuingAsset_${issuedAsset.id}`}
-                              headerText={t("IssuedAssets:reserveHeader", {
-                                amount: reserveAmount,
-                                asset: issuedAsset.symbol,
-                              })}
-                              trxJSON={[
-                                {
-                                  payer: usr.id,
-                                  amount_to_reserve: {
-                                    amount: blockchainFloat(
-                                      reserveAmount,
-                                      issuedAsset.precision
-                                    ),
-                                    asset_id: issuedAsset.id,
-                                  },
-                                  extensions: {},
-                                },
-                              ]}
-                            />
-                          ) : null}
-                        </DialogContent>
-                      </Dialog>
-                    ) : null}
-
-                    {fundFeePoolDialogOpen ? (
-                      <Dialog
-                        open={fundFeePoolDialogOpen}
-                        onOpenChange={(open) => {
-                          setFundFeePoolDialogOpen(open);
-                        }}
-                      >
-                        <DialogContent className="sm:max-w-[550px] bg-white">
-                          <DialogHeader>
-                            <DialogTitle>
-                              {t("IssuedAssets:fundFeePool")}:{" "}
-                              {issuedAsset.symbol} (
-                              {usr.chain === "bitshares" ? "BTS" : "TEST"})
-                            </DialogTitle>
-                            <DialogDescription>
-                              {t("IssuedAssets:fundFeePoolInfo")}
-                            </DialogDescription>
-                          </DialogHeader>
-
-                          <HoverInfo
-                            content={t("IssuedAssets:currentFeePoolFundInfo")}
-                            header={t("IssuedAssets:currentFeePoolFund")}
-                            type="header"
-                          />
-                          <Input
-                            value={
-                              relevantDynamicData
-                                ? `${humanReadableFloat(
-                                    relevantDynamicData.fee_pool,
-                                    5
-                                  )} ${
-                                    usr.chain === "bitshares" ? "BTS" : "TEST"
-                                  }`
-                                : `0 ${
-                                    usr.chain === "bitshares" ? "BTS" : "TEST"
-                                  }`
-                            }
-                            readOnly={true}
-                            className="mt-2"
-                          />
-
-                          <HoverInfo
-                            content={t("IssuedAssets:feePoolAmountInfo")}
-                            header={t("IssuedAssets:feePoolAmount")}
-                            type="header"
-                          />
-                          <Input
-                            type="number"
-                            value={fundFeePoolAmount}
-                            onChange={(e) => {
-                              setFundFeePoolAmount(e.target.value);
-                            }}
-                          />
-                          <Button
-                            className="w-1/4 mt-2"
-                            onClick={() => {
-                              setFundFeePoolDeeplinkDialog(true);
-                            }}
-                          >
-                            {t("IssuedAssets:fundFeePool")}
-                          </Button>
-                          {fundFeePoolDeeplinkDialog ? (
-                            <DeepLinkDialog
-                              operationNames={["asset_fund_fee_pool"]}
-                              username={usr.username}
-                              usrChain={usr.chain}
-                              userID={usr.id}
-                              dismissCallback={setFundFeePoolDeeplinkDialog}
-                              key={`FundingAssetFeePool_${issuedAsset.id}`}
-                              headerText={t("IssuedAssets:feeFundHeader", {
-                                amount: fundFeePoolAmount,
-                                asset:
-                                  usr.chain === "bitshares" ? "BTS" : "TEST",
-                              })}
-                              trxJSON={[
-                                {
-                                  from_account: usr.id,
-                                  asset_id: issuedAsset.id,
-                                  amount: blockchainFloat(
-                                    fundFeePoolAmount,
-                                    issuedAsset.precision
-                                  ),
-                                  extensions: {},
-                                },
-                              ]}
-                            />
-                          ) : null}
-                        </DialogContent>
-                      </Dialog>
-                    ) : null}
-
-                    {claimAssetFeesOpen ? (
-                      <Dialog
-                        open={claimAssetFeesOpen}
-                        onOpenChange={(open) => {
-                          setClaimAssetFeesOpen(open);
-                        }}
-                      >
-                        <DialogContent className="sm:max-w-[550px] bg-white">
-                          <DialogHeader>
-                            <DialogTitle>
-                              {t("IssuedAssets:claimAssetFees")}:{" "}
-                              {issuedAsset.symbol} (
-                              {usr.chain === "bitshares" ? "BTS" : "TEST"})
-                            </DialogTitle>
-                            <DialogDescription>
-                              {t("IssuedAssets:claimAssetFeesInfo")}
-                            </DialogDescription>
-                          </DialogHeader>
-
-                          <HoverInfo
-                            content={t("IssuedAssets:accumulatedFeesInfo")}
-                            header={t("IssuedAssets:accumulatedFees")}
-                            type="header"
-                          />
-                          <Input
-                            value={
-                              relevantDynamicData
-                                ? `${humanReadableFloat(
-                                    relevantDynamicData.accumulated_fees,
-                                    5
-                                  )} ${
-                                    usr.chain === "bitshares" ? "BTS" : "TEST"
-                                  }`
-                                : `0 ${
-                                    usr.chain === "bitshares" ? "BTS" : "TEST"
-                                  }`
-                            }
-                            readOnly={true}
-                            className="mt-2"
-                          />
-
-                          <HoverInfo
-                            content={t("IssuedAssets:feesToClaimInfo")}
-                            header={t("IssuedAssets:feesToClaim")}
-                            type="header"
-                          />
-                          <div className="grid grid-cols-3 gap-2">
-                            <div className="col-span-2">
-                              <Input
-                                type="number"
-                                value={accumulatedFeeClaimAmount}
-                                onChange={(e) => {
-                                  setAccumulatedFeeClaimAmount(e.target.value);
-                                }}
-                              />
-                            </div>
-                            <Button
-                              variant="outline"
-                              onClick={() => {
-                                setAccumulatedFeeClaimAmount(
-                                  humanReadableFloat(
-                                    relevantDynamicData.accumulated_fees,
-                                    5
-                                  )
-                                );
-                              }}
-                            >
-                              {t("IssuedAssets:claimAllFees")}
-                            </Button>
-                          </div>
-                          <Button
-                            className="w-1/4 mt-2"
-                            onClick={() => {
-                              setClaimAssetFeesDialog(true);
-                            }}
-                          >
-                            {t("IssuedAssets:claimAssetFees")}
-                          </Button>
-                          {claimAssetFeesDialog ? (
-                            <DeepLinkDialog
-                              operationNames={["asset_claim_fees"]}
-                              username={usr.username}
-                              usrChain={usr.chain}
-                              userID={usr.id}
-                              dismissCallback={setClaimAssetFeesDialog}
-                              key={`ClaimingAccumulatedAssetFees_${issuedAsset.id}`}
-                              headerText={t(
-                                "IssuedAssets:assetFeeClaimHeader",
-                                {
-                                  amount: accumulatedFeeClaimAmount,
-                                  symbol: issuedAsset.symbol,
-                                  asset:
-                                    usr.chain === "bitshares" ? "BTS" : "TEST",
-                                }
-                              )}
-                              trxJSON={[
-                                {
-                                  issuer: usr.id,
-                                  amount_to_claim: {
-                                    amount: blockchainFloat(
-                                      accumulatedFeeClaimAmount,
-                                      5
-                                    ),
-                                    asset_id: issuedAsset.id,
-                                  },
-                                  extensions: {},
-                                },
-                              ]}
-                            />
-                          ) : null}
-                        </DialogContent>
-                      </Dialog>
-                    ) : null}
-
-                    {claimFeePoolOpen ? (
-                      <Dialog
-                        open={claimFeePoolOpen}
-                        onOpenChange={(open) => {
-                          setClaimFeePoolOpen(open);
-                        }}
-                      >
-                        <DialogContent className="sm:max-w-[550px] bg-white">
-                          <DialogHeader>
-                            <DialogTitle>
-                              {t("IssuedAssets:claimFeePool")}:{" "}
-                              {issuedAsset.symbol} (
-                              {usr.chain === "bitshares" ? "BTS" : "TEST"})
-                            </DialogTitle>
-                            <DialogDescription>
-                              {t("IssuedAssets:claimFeePoolInfo")}
-                            </DialogDescription>
-                          </DialogHeader>
-
-                          <HoverInfo
-                            content={t("IssuedAssets:fundFeePoolInfo")}
-                            header={t("IssuedAssets:fundFeePool")}
-                            type="header"
-                          />
-                          <Input
-                            value={
-                              relevantDynamicData
-                                ? `${humanReadableFloat(
-                                    relevantDynamicData.fee_pool,
-                                    5
-                                  )} ${
-                                    usr.chain === "bitshares" ? "BTS" : "TEST"
-                                  }`
-                                : `0 ${
-                                    usr.chain === "bitshares" ? "BTS" : "TEST"
-                                  }`
-                            }
-                            readOnly={true}
-                            className="mt-2"
-                          />
-
-                          <HoverInfo
-                            content={t("IssuedAssets:poolFeeClaimAmountInfo")}
-                            header={t("IssuedAssets:poolFeeClaimAmount")}
-                            type="header"
-                          />
-                          <div className="grid grid-cols-3 gap-2">
-                            <div className="col-span-2">
-                              <Input
-                                type="number"
-                                value={claimFeePoolAmount}
-                                onChange={(e) => {
-                                  setClaimFeePoolAmount(e.target.value);
-                                }}
-                              />
-                            </div>
-                            <Button
-                              variant="outline"
-                              onClick={() => {
-                                setClaimFeePoolAmount(
-                                  humanReadableFloat(
-                                    relevantDynamicData.fee_pool,
-                                    5
-                                  )
-                                );
-                              }}
-                            >
-                              {t("IssuedAssets:claimAllFees")}
-                            </Button>
-                          </div>
-                          <Button
-                            className="w-1/4 mt-2"
-                            onClick={() => {
-                              setClaimFeePoolDeeplinkDialog(true);
-                            }}
-                          >
-                            {t("IssuedAssets:claimFeePool")}
-                          </Button>
-                          {claimFeePoolDeeplinkDialog ? (
-                            <DeepLinkDialog
-                              operationNames={["asset_claim_pool"]}
-                              username={usr.username}
-                              usrChain={usr.chain}
-                              userID={usr.id}
-                              dismissCallback={setClaimFeePoolDeeplinkDialog}
-                              key={`ClaimingAssetFeePool_${issuedAsset.id}`}
-                              headerText={t("IssuedAssets:feePoolClaimHeader", {
-                                amount: claimFeePoolAmount,
-                                symbol:
-                                  usr.chain === "bitshares" ? "BTS" : "TEST",
-                                asset: issuedAsset.symbol,
-                              })}
-                              trxJSON={[
-                                {
-                                  issuer: usr.id,
-                                  asset_id: issuedAsset.id,
-                                  amount_to_claim: {
-                                    amount: blockchainFloat(
-                                      claimFeePoolAmount,
-                                      5
-                                    ),
-                                    asset_id: "1.3.0", // TODO: Support other fee assets
-                                  },
-                                  extensions: {},
-                                },
-                              ]}
-                            />
-                          ) : null}
-                        </DialogContent>
-                      </Dialog>
-                    ) : null}
-
-                    {assetUpdateIssuerOpen ? (
-                      <>
-                        <Dialog
-                          open={assetUpdateIssuerOpen}
-                          onOpenChange={(open) => {
-                            setAssetUpdateIssuerOpen(open);
-                          }}
-                        >
-                          <DialogContent className="sm:max-w-[550px] bg-white">
-                            <DialogHeader>
-                              <DialogTitle>
-                                {t("IssuedAssets:updateIssuer")}:{" "}
-                                {issuedAsset.symbol} ({issuedAsset.id})
-                              </DialogTitle>
-                              <DialogDescription>
-                                {t("IssuedAssets:updateIssuerInfo")}
-                              </DialogDescription>
-                            </DialogHeader>
-
-                            <div className="grid grid-cols-1 gap-3">
-                              <div>
-                                <HoverInfo
-                                  content={t("IssuedAssets:currentIssuerInfo")}
-                                  header={t("IssuedAssets:currentIssuer")}
-                                  type="header"
-                                />
-                                <Input
-                                  value={`${usr.username} (${usr.id})`}
-                                  readOnly={true}
-                                  className="mt-2"
-                                />
-                              </div>
-                              <div className="grid grid-cols-8 mt-2">
-                                <div className="col-span-8 mb-2">
-                                  <HoverInfo
-                                    content={t("IssuedAssets:newIssuerInfo")}
-                                    header={t("IssuedAssets:newIssuer")}
-                                    type="header"
-                                  />
-                                </div>
-                                <div className="col-span-1">
-                                  {targetUser && targetUser.name ? (
-                                    <Avatar
-                                      size={40}
-                                      name={targetUser.name}
-                                      extra="Target"
-                                      expression={{
-                                        eye: "normal",
-                                        mouth: "open",
-                                      }}
-                                      colors={[
-                                        "#92A1C6",
-                                        "#146A7C",
-                                        "#F0AB3D",
-                                        "#C271B4",
-                                        "#C20D90",
-                                      ]}
-                                    />
-                                  ) : (
-                                    <Av>
-                                      <AvatarFallback>?</AvatarFallback>
-                                    </Av>
-                                  )}
-                                </div>
-                                <div className="col-span-5">
-                                  <Input
-                                    disabled
-                                    placeholder={
-                                      targetUser && targetUser.name
-                                        ? `${targetUser.name} (${targetUser.id})`
-                                        : "Bitshares account (1.2.x)"
-                                    }
-                                    className="mb-1 mt-1"
-                                  />
-                                </div>
-                                <div className="col-span-2 grid grid-cols-2">
-                                  <Dialog
-                                    open={newIssuerSearchOpen}
-                                    onOpenChange={(open) => {
-                                      setNewIssuerSearchOpen(open);
-                                    }}
-                                  >
-                                    <DialogTrigger asChild>
-                                      <Button
-                                        variant="outline"
-                                        className="ml-3 mt-1"
-                                      >
-                                        <MagnifyingGlassIcon />
-                                      </Button>
-                                    </DialogTrigger>
-                                    <DialogContent className="sm:max-w-[375px] bg-white">
-                                      <DialogHeader>
-                                        <DialogTitle>
-                                          {!usr || !usr.chain
-                                            ? t(
-                                                "AccountLists:bitsharesAccountSearch"
-                                              )
-                                            : null}
-                                          {usr && usr.chain === "bitshares"
-                                            ? t(
-                                                "AccountLists:bitsharesAccountSearchBTS"
-                                              )
-                                            : null}
-                                          {usr && usr.chain !== "bitshares"
-                                            ? t(
-                                                "AccountLists:bitsharesAccountSearchTEST"
-                                              )
-                                            : null}
-                                        </DialogTitle>
-                                        <DialogDescription>
-                                          {t(
-                                            "AccountLists:searchingForAccount"
-                                          )}
-                                        </DialogDescription>
-                                      </DialogHeader>
-                                      <AccountSearch
-                                        chain={
-                                          usr && usr.chain
-                                            ? usr.chain
-                                            : "bitshares"
-                                        }
-                                        excludedUsers={[]}
-                                        setChosenAccount={(x) => {
-                                          setTargetUser(x);
-                                          setNewIssuerSearchOpen(false);
-                                        }}
-                                        skipCheck={false}
-                                      />
-                                    </DialogContent>
-                                  </Dialog>
-                                  <Dialog
-                                    open={newIssuerUserOpen}
-                                    onOpenChange={(open) => {
-                                      setNewIssuerUserOpen(open);
-                                    }}
-                                  >
-                                    <DialogTrigger asChild>
-                                      <Button
-                                        variant="outline"
-                                        className="ml-3 mt-1"
-                                      >
-                                        <AvatarIcon />
-                                      </Button>
-                                    </DialogTrigger>
-                                    <DialogContent className="sm:max-w-[375px] bg-white">
-                                      <DialogHeader>
-                                        <DialogTitle>
-                                          {t("IssuedAssets:contactList")}
-                                        </DialogTitle>
-                                        <DialogDescription>
-                                          {t("IssuedAssets:contactListInfo")}
-                                        </DialogDescription>
-                                      </DialogHeader>
-                                      {users && users.length ? (
-                                        <div className="w-full max-h-[500px] overflow-auto">
-                                          <List
-                                            rowComponent={UserRow}
-                                            rowCount={users.length}
-                                            rowHeight={90}
-                                            rowProps={{}}
-                                          />
-                                        </div>
-                                      ) : (
-                                        <p>{t("IssuedAssets:noUsers")}</p>
-                                      )}
-                                    </DialogContent>
-                                  </Dialog>
-                                </div>
-                              </div>
-                            </div>
-                            <Button
-                              className="w-1/4 mt-2"
-                              onClick={() => {
-                                setAssetUpdateIssuerDeeplinkDialog(true);
-                              }}
-                            >
-                              {t("IssuedAssets:updateIssuer")}
-                            </Button>
-                            {assetUpdateIssuerDeeplinkDialog ? (
-                              <DeepLinkDialog
-                                operationNames={["asset_update_issuer"]}
-                                username={usr.username}
-                                usrChain={usr.chain}
-                                userID={usr.id}
-                                dismissCallback={
-                                  setAssetUpdateIssuerDeeplinkDialog
-                                }
-                                key={`UpdatingAssetIssuer_${issuedAsset.id}`}
-                                headerText={t(
-                                  "IssuedAssets:updateIssuerHeader",
-                                  {
-                                    asset: issuedAsset.symbol,
-                                    currentIssuer: usr.id,
-                                    newIssuer: targetUser.id,
-                                  }
-                                )}
-                                trxJSON={[
-                                  {
-                                    issuer: usr.id,
-                                    new_issuer: targetUser.id,
-                                    asset_to_update: issuedAsset.id,
-                                    extensions: {},
-                                  },
-                                ]}
-                              />
-                            ) : null}
-                          </DialogContent>
-                        </Dialog>
-                      </>
-                    ) : null}
-
-                    {(activeTab === "smartcoins" ||
-                      (activeTab === "nft" && relevantBitassetData)) &&
-                    globalSettleOpen ? (
-                      <Dialog
-                        open={globalSettleOpen}
-                        onOpenChange={(open) => {
-                          setGlobalSettleOpen(open);
-                        }}
-                      >
-                        <DialogContent className="sm:max-w-[550px] bg-white">
-                          <DialogHeader>
-                            <DialogTitle>
-                              {t("IssuedAssets:updateIssuer")}:{" "}
-                              {issuedAsset.symbol} ({issuedAsset.id})
-                            </DialogTitle>
-                            <DialogDescription>
-                              {t("IssuedAssets:updateIssuerInfo")}
-                            </DialogDescription>
-                          </DialogHeader>
-
-                          <div className="grid grid-cols-1 gap-3">
-                            <div className="grid grid-cols-3 gap-2">
-                              <Button
-                                onClick={() => {
-                                  setGlobalSettlementMode("median");
-                                }}
-                                variant={
-                                  globalSettlementMode === "median"
-                                    ? ""
-                                    : "outline"
-                                }
-                              >
-                                {t("IssuedAssets:medianFeedPrice")}
-                              </Button>
-                              <Button
-                                onClick={() => {
-                                  setGlobalSettlementMode("current");
-                                }}
-                                variant={
-                                  globalSettlementMode === "current"
-                                    ? ""
-                                    : "outline"
-                                }
-                              >
-                                {t("IssuedAssets:currentFeedPrice")}
-                              </Button>
-                              {relevantBitassetData &&
-                              relevantBitassetData.feeds &&
-                              relevantBitassetData.feeds.length ? (
-                                <Button
-                                  onClick={() => {
-                                    setGlobalSettlementMode("price_feed");
-                                  }}
-                                  variant={
-                                    globalSettlementMode === "price_feed"
-                                      ? ""
-                                      : "outline"
-                                  }
-                                >
-                                  {t("IssuedAssets:specificPriceFeed")}
-                                </Button>
-                              ) : null}
-                            </div>
-
-                            <div className="grid grid-cols-1 gap-2">
-                              {relevantBitassetData &&
-                              relevantBitassetData.feeds &&
-                              relevantBitassetData.feeds.length &&
-                              globalSettlementMode === "price_feed" ? (
-                                <>
-                                  <HoverInfo
-                                    content={t(
-                                      "IssuedAssets:chooseSpecificFeedInfo"
-                                    )}
-                                    header={t(
-                                      "IssuedAssets:chooseSpecificFeed"
-                                    )}
-                                    type="header"
-                                  />
-                                  <div className="w-full rounded border border-black pt-1 max-h-[150px] overflow-auto">
-                                    <List
-                                      rowComponent={PriceFeedRow}
-                                      rowCount={
-                                        relevantBitassetData.feeds.length
-                                      }
-                                      rowHeight={60}
-                                      rowProps={{}}
-                                    />
-                                  </div>
-                                </>
-                              ) : null}
-                              <div>
-                                <HoverInfo
-                                  content={t(
-                                    "IssuedAssets:currentSettlementPriceInfo"
-                                  )}
-                                  header={t(
-                                    "IssuedAssets:currentSettlementPrice"
-                                  )}
-                                  type="header"
-                                />
-                                <Input
-                                  value={`${
-                                    parseFloat(currentFeedSettlementPrice) > 0
-                                      ? currentFeedSettlementPrice
-                                      : "??? ⚠️"
-                                  } ${collateralAsset.symbol}/${
-                                    issuedAsset.symbol
-                                  }`}
-                                  readOnly={true}
-                                  className="mt-2"
-                                />
-                              </div>
-                              <div className="grid grid-cols-2 gap-2">
-                                <div>
-                                  <HoverInfo
-                                    content={t("IssuedAssets:quoteInfo")}
-                                    header={t("IssuedAssets:quote")}
-                                    type="header"
-                                  />
-                                  <Input
-                                    value={`${humanReadableFloat(
-                                      parseInt(globalSettleObject.quote.amount),
-                                      collateralAsset.precision
-                                    )} ${collateralAsset.symbol} (${
-                                      collateralAsset.id
-                                    })`}
-                                    readOnly={true}
-                                    className="mt-2"
-                                  />
-                                </div>
-                                <div>
-                                  <HoverInfo
-                                    content={t("IssuedAssets:baseInfo")}
-                                    header={t("IssuedAssets:base")}
-                                    type="header"
-                                  />
-                                  <Input
-                                    value={`${humanReadableFloat(
-                                      parseInt(
-                                        parseInt(globalSettleObject.base.amount)
-                                      ),
-                                      issuedAsset.precision
-                                    )} ${issuedAsset.symbol} (${
-                                      issuedAsset.id
-                                    })`}
-                                    readOnly={true}
-                                    className="mt-2"
-                                  />
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <Button
-                            className="w-1/2 mt-2"
-                            onClick={() => {
-                              setGlobalSettleDeeplinkDialog(true);
-                            }}
-                          >
-                            {t("IssuedAssets:globallySettle")}
-                          </Button>
-                          {globalSettleDeeplinkDialog ? (
-                            <DeepLinkDialog
-                              operationNames={["asset_global_settle"]}
-                              username={usr.username}
-                              usrChain={usr.chain}
-                              userID={usr.id}
-                              dismissCallback={setGlobalSettleDeeplinkDialog}
-                              key={`globallySettlingAsset_${issuedAsset.id}`}
-                              headerText={t(
-                                "IssuedAssets:globalSettlementHeader",
-                                {
-                                  asset: issuedAsset.symbol,
-                                  mode: globalSettlementMode,
-                                }
-                              )}
-                              trxJSON={[
-                                {
-                                  issuer: usr.id,
-                                  asset_to_settle: issuedAsset.id,
-                                  settle_price: globalSettleObject,
-                                  extensions: {},
-                                },
-                              ]}
-                            />
-                          ) : null}
-                        </DialogContent>
-                      </Dialog>
-                    ) : null}
-                  </>
+                        {t("IssuedAssets:globallySettle")}
+                      </Button>
+                      {globalSettleDeeplinkDialog ? (
+                        <DeepLinkDialog
+                          operationNames={["asset_global_settle"]}
+                          username={usr.username}
+                          usrChain={usr.chain}
+                          userID={usr.id}
+                          dismissCallback={setGlobalSettleDeeplinkDialog}
+                          key={`globallySettlingAsset_${issuedAsset.id}`}
+                          headerText={t("IssuedAssets:globalSettlementHeader", {
+                            asset: issuedAsset.symbol,
+                            mode: globalSettlementMode,
+                          })}
+                          trxJSON={[
+                            {
+                              issuer: usr.id,
+                              asset_to_settle: issuedAsset.id,
+                              settle_price: globalSettleObject,
+                              extensions: {},
+                            },
+                          ]}
+                        />
+                      ) : null}
+                    </DialogContent>
+                  </Dialog>
                 ) : null}
               </span>
             </CardTitle>

@@ -129,6 +129,12 @@
     "hover2": "Überwachen Sie Ihre offenen Bestellungen.",
     "hover3": "Analysieren Sie Ihre letzten Kontoaktivitäten."
   },
+  "favourites": {
+    "title": "⭐ Deine Favoriten",
+    "subtitle": "Greifen Sie schnell auf Ihre bevorzugten Assets und Konten zu",
+    "hover1": "Fügen Sie Assets hinzu, die Ihnen wichtig sind, um sie an einem Ort anzusehen.",
+    "hover2": "Verfolgen Sie Ihre Lieblingskonten zum schnellen Nachschlagen."
+  },
   "featured": {
     "title": "🏆 Top-Märkte",
     "subtitle": "Entdecken Sie heute die am aktivsten gehandelten Vermögenswerte",

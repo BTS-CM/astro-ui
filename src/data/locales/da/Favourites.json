@@ -1,0 +1,14 @@
+{
+  "assetsHeader": "Yndlingsaktiver",
+  "addAsset": "Tilføj aktiv",
+  "issuer": "Udsteder: {{issuer}}",
+  "remove": "Fjerne",
+  "assetsEmptyTitle": "Ingen favoritaktiver",
+  "assetsEmptyDescription": "Tilføj nogle aktiver, du holder af for at se dem her.",
+  "usersHeader": "Yndlingsbrugere",
+  "addUser": "Tilføj bruger",
+  "addUserDialogTitle": "Tilføj en bruger",
+  "addUserDialogDescription": "Søg efter en Bitshares-konto for at tilføje til dine favoritter.",
+  "usersEmptyTitle": "Ingen favoritbrugere",
+  "usersEmptyDescription": "Spor konti, du holder af, ved at tilføje dem her."
+}

@@ -1,0 +1,46 @@
+---
+import { getCollection } from 'astro:content';
+
+import Layout from '../layouts/Layout.astro';
+import FavouritesView from '../components/Favourites.jsx';
+import PageHeader from '../components/PageHeader';
+import PageFooter from '../components/PageFooter';
+
+const btsAllAssets = await getCollection('btsAllAssets');
+const testAllAssets = await getCollection('testAllAssets');
+
+const btsMarketData = await getCollection('btsMarketData');
+const testMarketData = await getCollection('testMarketData');
+
+const btsAssets = btsAllAssets.map((collection) => collection.data);
+const testAssets = testAllAssets.map((collection) => collection.data);
+const btsMarkets = btsMarketData.map((collection) => collection.data);
+const testMarkets = testMarketData.map((collection) => collection.data);
+---
+
+<Layout title="Your Favourite Assets">
+  <main>
+    <PageHeader client:only="react" page="favourites" backURL="../index.html" />
+    <FavouritesView
+      client:only="react"
+      _assetsBTS={btsAssets}
+      _assetsTEST={testAssets}
+      _marketSearchBTS={btsMarkets}
+      _marketSearchTEST={testMarkets}
+    />
+    <PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/favourites.astro" />
+  </main>
+</Layout>
+
+<style>
+  main {
+    margin: auto;
+    padding: 1rem;
+    width: 100%;
+    max-width: calc(100% - 2rem);
+    color: white;
+    font-size: 20px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+</style>

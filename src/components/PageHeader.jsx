@@ -253,6 +253,11 @@ export default function PageHeader(properties) {
       description: "Home:portfolio.subtitle",
     },
     {
+      title: "Home:favourites.title",
+      href: "/favourites/index.html",
+      description: "Home:favourites.subtitle",
+    },
+    {
       title: "Home:issued_assets.title",
       href: "/issued_assets/index.html",
       description: "Home:issued_assets.subtitle",

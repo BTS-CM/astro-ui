@@ -129,6 +129,12 @@
     "hover2": "Jälgige oma avatud tellimusi.",
     "hover3": "Analüüsige oma hiljutist kontotegevust."
   },
+  "favourites": {
+    "title": "⭐ Teie lemmikud",
+    "subtitle": "Kiire juurdepääs lemmikvaradele ja -kontodele",
+    "hover1": "Lisage teile olulised varad, et neid ühes kohas vaadata.",
+    "hover2": "Kiireks viitamiseks jälgige oma lemmikkontosid."
+  },
   "featured": {
     "title": "🏆 Parimad turud",
     "subtitle": "Avastage täna kõige aktiivsemalt kaubeldavad varad",

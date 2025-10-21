@@ -1,0 +1,14 @@
+{
+  "assetsHeader": "Actifs favoris",
+  "addAsset": "Ajouter un actif",
+  "issuer": "Émetteur : {{issuer}}",
+  "remove": "Retirer",
+  "assetsEmptyTitle": "Aucun élément favori",
+  "assetsEmptyDescription": "Ajoutez quelques éléments qui vous intéressent pour les regarder ici.",
+  "usersHeader": "Utilisateurs favoris",
+  "addUser": "Ajouter un utilisateur",
+  "addUserDialogTitle": "Ajouter un utilisateur",
+  "addUserDialogDescription": "Recherchez un compte Bitshares à ajouter à vos favoris.",
+  "usersEmptyTitle": "Aucun utilisateur favori",
+  "usersEmptyDescription": "Suivez les comptes qui vous intéressent en les ajoutant ici."
+}

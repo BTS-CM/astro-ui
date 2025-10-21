@@ -1,0 +1,13 @@
+{
+  "assetsHeader": "お気に入り",
+  "issuer": "発行者: {{issuer}}",
+  "remove": "取り除く",
+  "assetsEmptyTitle": "お気に入りのアセットはありません",
+  "assetsEmptyDescription": "ここで視聴したいアセットをいくつか追加してください。",
+  "usersHeader": "お気に入りのユーザー",
+  "addUser": "ユーザーの追加",
+  "addUserDialogTitle": "ユーザーを追加する",
+  "addUserDialogDescription": "Bitshares アカウントを検索してお気に入りに追加します。",
+  "usersEmptyTitle": "お気に入りのユーザーがいません",
+  "usersEmptyDescription": "ここに追加して、関心のあるアカウントを追跡します。"
+}

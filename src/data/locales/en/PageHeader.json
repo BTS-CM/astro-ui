@@ -70,6 +70,7 @@
     "order": "Use the form below to update your existing limit order on the Bitshares DEX.",
     "pool": "Use the form below to create a Bitshares liquidity pool exchange.",
     "portfolio": "This page provides an overview of your account balances, open orders and recent activities.",
+    "favourites": "Manage and view your favourite assets and accounts.",
     "settlement": "Use the form below to bid on a smartcoin's settlement funds",
     "smartcoin": "Use the form below to issue collateralized debt into existence",
     "smartcoins": "Use the interface below to locate an asset to borrow into existence",

@@ -1,0 +1,14 @@
+{
+  "assetsHeader": "Lemmikvarad",
+  "addAsset": "Lisa vara",
+  "issuer": "Väljaandja: {{issuer}}",
+  "remove": "Eemalda",
+  "assetsEmptyTitle": "Lemmikvarasid pole",
+  "assetsEmptyDescription": "Lisage siia mõned varad, mis teile huvi pakuvad.",
+  "usersHeader": "Lemmikkasutajad",
+  "addUser": "Lisa kasutaja",
+  "addUserDialogTitle": "Lisage kasutaja",
+  "addUserDialogDescription": "Otsige oma lemmikute hulka lisamiseks Bitsharesi kontot.",
+  "usersEmptyTitle": "Lemmikkasutajaid pole",
+  "usersEmptyDescription": "Jälgige teile olulisi kontosid, lisades need siia."
+}

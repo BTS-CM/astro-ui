@@ -129,6 +129,12 @@
     "hover2": "Monitor your open orders.",
     "hover3": "Analyze your recent account activity."
   },
+  "favourites": {
+    "title": "⭐ Your Favourites",
+    "subtitle": "Quickly access favourite assets and accounts",
+    "hover1": "Add assets you care about to watch them in one place.",
+    "hover2": "Track your favourite accounts for quick reference."
+  },
   "featured": {
     "title": "🏆 Top Markets",
     "subtitle": "Discover the most actively traded assets today",

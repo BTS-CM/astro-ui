@@ -1,0 +1,13 @@
+{
+  "assetsHeader": "즐겨찾기",
+  "issuer": "발행자: {{issuer}}",
+  "remove": "제거하다",
+  "assetsEmptyTitle": "즐겨찾는 자산이 없습니다.",
+  "assetsEmptyDescription": "여기서 시청하고 싶은 자산을 추가하세요.",
+  "usersHeader": "즐겨찾는 사용자",
+  "addUser": "사용자 추가",
+  "addUserDialogTitle": "사용자 추가",
+  "addUserDialogDescription": "즐겨찾기에 추가하려면 Bitshares 계정을 검색하세요.",
+  "usersEmptyTitle": "즐겨찾는 사용자 없음",
+  "usersEmptyDescription": "여기에 추가하여 관심 있는 계정을 추적하세요."
+}

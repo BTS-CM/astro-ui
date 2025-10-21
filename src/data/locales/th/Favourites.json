@@ -1,0 +1,13 @@
+{
+  "assetsHeader": "รายการโปรดของคุณ",
+  "issuer": "ผู้ออก: {{issuer}}",
+  "remove": "ลบ",
+  "assetsEmptyTitle": "ไม่มีทรัพย์สินที่ชื่นชอบ",
+  "assetsEmptyDescription": "เพิ่มเนื้อหาที่คุณสนใจเพื่อดูที่นี่",
+  "usersHeader": "ผู้ใช้ที่ชื่นชอบ",
+  "addUser": "เพิ่มผู้ใช้",
+  "addUserDialogTitle": "เพิ่มผู้ใช้",
+  "addUserDialogDescription": "ค้นหาบัญชี Bitshares เพื่อเพิ่มลงในรายการโปรดของคุณ",
+  "usersEmptyTitle": "ไม่มีผู้ใช้ที่ชื่นชอบ",
+  "usersEmptyDescription": "ติดตามบัญชีที่คุณสนใจโดยเพิ่มได้ที่นี่"
+}

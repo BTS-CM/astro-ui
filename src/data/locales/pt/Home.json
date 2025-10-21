@@ -129,6 +129,12 @@
     "hover2": "Monitore seus pedidos em aberto.",
     "hover3": "Analise a atividade recente da sua conta."
   },
+  "favourites": {
+    "title": "⭐ Seus favoritos",
+    "subtitle": "Acesse rapidamente ativos e contas favoritas",
+    "hover1": "Adicione ativos de seu interesse para assisti-los em um só lugar.",
+    "hover2": "Acompanhe suas contas favoritas para referência rápida."
+  },
   "featured": {
     "title": "🏆 Principais mercados",
     "subtitle": "Descubra os ativos mais negociados atualmente",

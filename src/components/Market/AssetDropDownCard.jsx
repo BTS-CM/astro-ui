@@ -55,6 +55,8 @@ export default function AssetDropDown(properties) {
     size,
     chain,
     balances,
+    triggerLabel, // optional custom trigger label
+    triggerVariant, // optional custom trigger variant
   } = properties;
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
   const blocklist = useSyncExternalStore(
@@ -248,19 +250,26 @@ export default function AssetDropDown(properties) {
         ) : (
           <Button
             variant={
-              type === "base" || type === "backing" ? "outline" : "primary"
+              triggerVariant
+                ? triggerVariant
+                : type === "base" || type === "backing"
+                ? "outline"
+                : "primary"
             }
             className={`${size && size === "small" ? "h-7 " : ""}p-3 ${
               type === "quote" ? "bg-black hover:bg-gray-700 text-white" : ""
             } hover:shadow-lg`}
             onClick={() => setDialogOpen(true)}
           >
-            {!assetSymbol ? t("AssetDropDownCard:select") : null}
-            {!size && assetSymbol ? t("AssetDropDownCard:change") : null}
-            {size && assetSymbol && assetSymbol.length < 12
+            {triggerLabel
+              ? triggerLabel
+              : !assetSymbol
+              ? t("AssetDropDownCard:select")
+              : !size && assetSymbol
+              ? t("AssetDropDownCard:change")
+              : size && assetSymbol && assetSymbol.length < 12
               ? assetSymbol
-              : null}
-            {size && assetSymbol && assetSymbol.length >= 12
+              : size && assetSymbol && assetSymbol.length >= 12
               ? assetData.id
               : null}
           </Button>

@@ -1,0 +1,14 @@
+{
+  "assetsHeader": "Favourite Assets",
+  "addAsset": "Add Asset",
+  "issuer": "Issuer: {{issuer}}",
+  "remove": "Remove",
+  "assetsEmptyTitle": "No favourite assets",
+  "assetsEmptyDescription": "Add some assets you care about to watch them here.",
+  "usersHeader": "Favourite Users",
+  "addUser": "Add User",
+  "addUserDialogTitle": "Add a user",
+  "addUserDialogDescription": "Search for a Bitshares account to add to your favourites.",
+  "usersEmptyTitle": "No favourite users",
+  "usersEmptyDescription": "Track accounts you care about by adding them here."
+}

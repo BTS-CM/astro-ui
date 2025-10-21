@@ -72,6 +72,7 @@ const pages = [
   "Witnesses",
   "CreateTicket",
   "TicketsLeaderboard",
+  "Favourites",
 ];
 
 const locale = persistentAtom("locale", "en");

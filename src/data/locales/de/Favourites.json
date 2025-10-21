@@ -1,0 +1,14 @@
+{
+  "assetsHeader": "Lieblings-Assets",
+  "addAsset": "Asset hinzufügen",
+  "issuer": "Emittent: {{issuer}}",
+  "remove": "Entfernen",
+  "assetsEmptyTitle": "Keine bevorzugten Assets",
+  "assetsEmptyDescription": "Fügen Sie einige Assets hinzu, die Ihnen wichtig sind, um sie hier anzusehen.",
+  "usersHeader": "Lieblingsbenutzer",
+  "addUser": "Benutzer hinzufügen",
+  "addUserDialogTitle": "Fügen Sie einen Benutzer hinzu",
+  "addUserDialogDescription": "Suchen Sie nach einem Bitshares-Konto, um es zu Ihren Favoriten hinzuzufügen.",
+  "usersEmptyTitle": "Keine bevorzugten Benutzer",
+  "usersEmptyDescription": "Verfolgen Sie Konten, die Ihnen wichtig sind, indem Sie sie hier hinzufügen."
+}
