@@ -321,14 +321,36 @@ export default function Home(properties) {
       headingKey: "PageHeader:accountOverviewsHeading",
       cards: [
         {
-          key: "portfolio",
-          href: "/portfolio/index.html",
-          titleKey: "Home:portfolio.title",
-          subtitleKey: "Home:portfolio.subtitle",
+          key: "portfolio_balances",
+          href: "/balances/index.html",
+          titleKey: "Home:portfolio_balances.title",
+          subtitleKey: "Home:portfolio_balances.subtitle",
           hoverKeys: [
-            "Home:portfolio.hover1",
-            "Home:portfolio.hover2",
-            "Home:portfolio.hover3",
+            "Home:portfolio_balances.hover1",
+            "Home:portfolio_balances.hover2",
+            "Home:portfolio_balances.hover3",
+          ],
+        },
+        {
+          key: "portfolio_open_orders",
+          href: "/open-orders/index.html",
+          titleKey: "Home:portfolio_open_orders.title",
+          subtitleKey: "Home:portfolio_open_orders.subtitle",
+          hoverKeys: [
+            "Home:portfolio_open_orders.hover1",
+            "Home:portfolio_open_orders.hover2",
+            "Home:portfolio_open_orders.hover3",
+          ],
+        },
+        {
+          key: "portfolio_recent_activity",
+          href: "/recent-activity/index.html",
+          titleKey: "Home:portfolio_recent_activity.title",
+          subtitleKey: "Home:portfolio_recent_activity.subtitle",
+          hoverKeys: [
+            "Home:portfolio_recent_activity.hover1",
+            "Home:portfolio_recent_activity.hover2",
+            "Home:portfolio_recent_activity.hover3",
           ],
         },
         {

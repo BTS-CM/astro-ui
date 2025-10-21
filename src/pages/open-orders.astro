@@ -1,0 +1,46 @@
+---
+import { getCollection } from 'astro:content';
+
+import Layout from '../layouts/Layout.astro';
+import PortfolioOpenOrders from '../components/PortfolioOpenOrders.jsx';
+import PageHeader from '../components/PageHeader';
+import PageFooter from '../components/PageFooter';
+
+const btsAllAssets = await getCollection('btsAllAssets');
+const testAllAssets = await getCollection('testAllAssets');
+
+const btsPools = await getCollection('btsPools');
+const testPools = await getCollection('testPools');
+
+const btsAssets = btsAllAssets.map(collection => collection.data);
+const testAssets = testAllAssets.map(collection => collection.data);
+const poolsBTS = btsPools.map(collection => collection.data);
+const poolsTEST = testPools.map(collection => collection.data);
+---
+
+<Layout title="Open Orders">
+	<main>
+		<PageHeader client:only="react" page="portfolio-open-orders" backURL="../index.html" />
+		<PortfolioOpenOrders
+			client:only="react"
+			_assetsBTS={btsAssets}
+			_assetsTEST={testAssets}
+			_poolsBTS={poolsBTS}
+			_poolsTEST={poolsTEST}
+		/>
+		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/open-orders.astro" />
+	</main>
+</Layout>
+
+<style>
+	main {
+		margin: auto;
+		padding: 1rem;
+		width: 100%;
+		max-width: calc(100% - 2rem);
+		color: white;
+		font-size: 20px;
+		line-height: 1.6;
+		min-height: 100vh;
+	}
+</style>

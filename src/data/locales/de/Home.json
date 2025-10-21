@@ -129,6 +129,27 @@
     "hover2": "Überwachen Sie Ihre offenen Bestellungen.",
     "hover3": "Analysieren Sie Ihre letzten Kontoaktivitäten."
   },
+  "portfolio_balances": {
+    "title": "📊 Kontostände",
+    "subtitle": "Sehen Sie sich Ihre Liquiditätsbestände und damit verbundene Aktionen an",
+    "hover1": "Sortieren Sie die Salden nach Standard, Alphabet oder Betrag.",
+    "hover2": "Schnelle Links zu Handels- und Vermögensinformationen.",
+    "hover3": "Siehe entsprechende Liquiditätspools."
+  },
+  "portfolio_open_orders": {
+    "title": "🧾 Offene Bestellungen",
+    "subtitle": "Überprüfen und verwalten Sie Ihre offenen DEX-Bestellungen",
+    "hover1": "Springen Sie direkt zum Marktpaar.",
+    "hover2": "Eine Bestellung aktualisieren oder stornieren.",
+    "hover3": "Überprüfen Sie das Ablaufdatum und die Bestell-IDs."
+  },
+  "portfolio_recent_activity": {
+    "title": "🧠 Letzte Aktivität",
+    "subtitle": "Überprüfen Sie Ihre neuesten On-Chain-Vorgänge",
+    "hover1": "Durchsuchen Sie Vorgangs-IDs und Blöcke.",
+    "hover2": "Vorgang JSON anzeigen.",
+    "hover3": "Vollständige Aktivitätsdetails öffnen."
+  },
   "favourites": {
     "title": "⭐ Deine Favoriten",
     "subtitle": "Greifen Sie schnell auf Ihre bevorzugten Assets und Konten zu",

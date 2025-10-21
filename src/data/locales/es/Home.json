@@ -129,6 +129,27 @@
     "hover2": "Supervise sus órdenes abiertas.",
     "hover3": "Analice la actividad reciente de su cuenta."
   },
+  "portfolio_balances": {
+    "title": "📊 Saldos de cuentas",
+    "subtitle": "Consulta tus saldos líquidos y acciones relacionadas",
+    "hover1": "Ordene los saldos por defecto, alfabéticamente o por monto.",
+    "hover2": "Enlaces rápidos a información comercial y de activos.",
+    "hover3": "Ver fondos de liquidez relacionados."
+  },
+  "portfolio_open_orders": {
+    "title": "🧾 Pedidos abiertos",
+    "subtitle": "Revise y administre sus pedidos DEX abiertos",
+    "hover1": "Vaya directamente al par de mercado.",
+    "hover2": "Actualizar o cancelar un pedido.",
+    "hover3": "Verifique el vencimiento y los ID de los pedidos."
+  },
+  "portfolio_recent_activity": {
+    "title": "🧠 Actividad reciente",
+    "subtitle": "Inspeccione sus últimas operaciones en cadena",
+    "hover1": "Explore los ID y bloques de operaciones.",
+    "hover2": "Ver operación JSON.",
+    "hover3": "Abrir detalles completos de la actividad."
+  },
   "favourites": {
     "title": "⭐ Tus favoritos",
     "subtitle": "Acceda rápidamente a sus activos y cuentas favoritas",

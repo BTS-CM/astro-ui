@@ -2,7 +2,7 @@
 import { getCollection } from 'astro:content';
 
 import Layout from '../layouts/Layout.astro';
-import AccountLists from '../components/AccountLists.jsx';
+import AccountList from '../components/AccountLists.jsx';
 import PageHeader from '../components/PageHeader';
 import PageFooter from '../components/PageFooter';
 
@@ -16,7 +16,7 @@ const testGlobalParams = testFeeSchedule.map(collection => collection.data);
 <Layout title="Bitshares Account List configuration">
 	<main>
 		<PageHeader client:only="react" page="AccountLists" backURL="../index.html" />
-		<AccountLists
+		<AccountList
 			client:only="react"
 			_globalParamsBTS={btsGlobalParams}
 			_globalParamsTEST={testGlobalParams}

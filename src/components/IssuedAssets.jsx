@@ -685,10 +685,8 @@ export default function IssuedAssets(properties) {
                       </DropdownMenuItem>
                     </a>
 
-                    <a
-                      href={`/borrow/index.html?tab=searchOffers&searchTab=collateral&searchText=${issuedAsset.symbol}`}
-                    >
-                      <DropdownMenuItem className="hover:shadow-inner">
+                    <a href={`/lend/index.html?asset=${issuedAsset.symbol}`}>
+                      <DropdownMenuItem>
                         {t("IssuedAssets:creditLend")}
                       </DropdownMenuItem>
                     </a>

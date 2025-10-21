@@ -129,6 +129,27 @@
     "hover2": "Jälgige oma avatud tellimusi.",
     "hover3": "Analüüsige oma hiljutist kontotegevust."
   },
+  "portfolio_balances": {
+    "title": "📊 Kontojäägid",
+    "subtitle": "Vaadake oma likviidsete saldode ja sellega seotud toiminguid",
+    "hover1": "Sorteeri saldod vaikimisi, tähestiku või summa järgi.",
+    "hover2": "Kiired lingid kaubanduse ja varade teabe juurde.",
+    "hover3": "Vaadake seotud likviidsuskogumeid."
+  },
+  "portfolio_open_orders": {
+    "title": "🧾 Avatud tellimused",
+    "subtitle": "Vaadake ja hallake oma avatud DEX-tellimusi",
+    "hover1": "Hüppa otse turupaari juurde.",
+    "hover2": "Uuenda või tühista tellimus.",
+    "hover3": "Kontrollige aegumist ja tellimuse ID-d."
+  },
+  "portfolio_recent_activity": {
+    "title": "🧠 Hiljutine tegevus",
+    "subtitle": "Kontrollige oma viimaseid ketisiseseid toiminguid",
+    "hover1": "Sirvige toimingute ID-sid ja plokke.",
+    "hover2": "Kuva toiming JSON.",
+    "hover3": "Avage kõik tegevuse üksikasjad."
+  },
   "favourites": {
     "title": "⭐ Teie lemmikud",
     "subtitle": "Kiire juurdepääs lemmikvaradele ja -kontodele",

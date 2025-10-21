@@ -129,6 +129,27 @@
     "hover2": "Monitora i tuoi ordini aperti.",
     "hover3": "Analizza l'attività recente del tuo account."
   },
+  "portfolio_balances": {
+    "title": "📊 Saldi dei conti",
+    "subtitle": "Visualizza i tuoi saldi liquidi e le azioni correlate",
+    "hover1": "Ordina i saldi per impostazione predefinita, in ordine alfabetico o per importo.",
+    "hover2": "Collegamenti rapidi alle informazioni sugli scambi e sugli asset.",
+    "hover3": "Vedi i pool di liquidità correlati."
+  },
+  "portfolio_open_orders": {
+    "title": "🧾 Ordini Aperti",
+    "subtitle": "Rivedi e gestisci i tuoi ordini DEX aperti",
+    "hover1": "Vai direttamente alla coppia di mercato.",
+    "hover2": "Aggiorna o annulla un ordine.",
+    "hover3": "Controlla la scadenza e gli ID dell'ordine."
+  },
+  "portfolio_recent_activity": {
+    "title": "🧠 Attività recenti",
+    "subtitle": "Ispeziona le tue ultime operazioni on-chain",
+    "hover1": "Sfoglia ID e blocchi operazione.",
+    "hover2": "Visualizza l'operazione JSON.",
+    "hover3": "Apri i dettagli completi dell'attività."
+  },
   "favourites": {
     "title": "⭐ I tuoi preferiti",
     "subtitle": "Accedi rapidamente alle risorse e agli account preferiti",

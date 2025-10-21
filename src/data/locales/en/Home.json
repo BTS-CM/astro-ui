@@ -129,6 +129,27 @@
     "hover2": "Monitor your open orders.",
     "hover3": "Analyze your recent account activity."
   },
+  "portfolio_balances": {
+    "title": "📊 Account Balances",
+    "subtitle": "View your liquid balances and related actions",
+    "hover1": "Sort balances by default, alphabetical, or amount.",
+    "hover2": "Quick links to trade and asset info.",
+    "hover3": "See related liquidity pools."
+  },
+  "portfolio_open_orders": {
+    "title": "🧾 Open Orders",
+    "subtitle": "Review and manage your open DEX orders",
+    "hover1": "Jump straight to the market pair.",
+    "hover2": "Update or cancel an order.",
+    "hover3": "Check expiration and order IDs."
+  },
+  "portfolio_recent_activity": {
+    "title": "🧠 Recent Activity",
+    "subtitle": "Inspect your latest on-chain operations",
+    "hover1": "Browse operation IDs and blocks.",
+    "hover2": "View operation JSON.",
+    "hover3": "Open full activity details."
+  },
   "favourites": {
     "title": "⭐ Your Favourites",
     "subtitle": "Quickly access favourite assets and accounts",

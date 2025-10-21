@@ -129,6 +129,27 @@
     "hover2": "Overvåg dine åbne ordrer.",
     "hover3": "Analyser din seneste kontoaktivitet."
   },
+  "portfolio_balances": {
+    "title": "📊 Kontosaldi",
+    "subtitle": "Se dine likvide saldi og relaterede handlinger",
+    "hover1": "Sorter saldi som standard, alfabetisk eller beløb.",
+    "hover2": "Hurtige links til handel og aktivinfo.",
+    "hover3": "Se relaterede likviditetspuljer."
+  },
+  "portfolio_open_orders": {
+    "title": "🧾 Åbne ordrer",
+    "subtitle": "Gennemgå og administrer dine åbne DEX-ordrer",
+    "hover1": "Hop direkte til markedsparret.",
+    "hover2": "Opdater eller annuller en ordre.",
+    "hover3": "Tjek udløbs- og ordre-id'er."
+  },
+  "portfolio_recent_activity": {
+    "title": "🧠 Seneste aktivitet",
+    "subtitle": "Undersøg dine seneste on-chain operationer",
+    "hover1": "Gennemse operations-id'er og blokke.",
+    "hover2": "Se operation JSON.",
+    "hover3": "Åbn alle aktivitetsoplysninger."
+  },
   "favourites": {
     "title": "⭐ Dine favoritter",
     "subtitle": "Få hurtigt adgang til foretrukne aktiver og konti",

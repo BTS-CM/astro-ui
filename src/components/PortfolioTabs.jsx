@@ -336,7 +336,7 @@ export default function PortfolioTabs(properties) {
             <div className="col-span-3 pt-2 text-right mr-3">
               <a
                 href={`/dex/index.html?market=${currentBalance.symbol}_${
-                  currentBalance.symbol === "BTS" ? "USD" : "BTS"
+                  currentBalance.symbol === "BTS" ? "CNY" : "BTS"
                 }`}
               >
                 <Button variant="outline" className="mr-2">

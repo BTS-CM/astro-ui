@@ -248,9 +248,19 @@ export default function PageHeader(properties) {
 
   const accountOverviewsHeading = [
     {
-      title: "Home:portfolio.title",
-      href: "/portfolio/index.html",
-      description: "Home:portfolio.subtitle",
+      title: "Home:portfolio_balances.title",
+      href: "/balances/index.html",
+      description: "Home:portfolio_balances.subtitle",
+    },
+    {
+      title: "Home:portfolio_open_orders.title",
+      href: "/open-orders/index.html",
+      description: "Home:portfolio_open_orders.subtitle",
+    },
+    {
+      title: "Home:portfolio_recent_activity.title",
+      href: "/recent-activity/index.html",
+      description: "Home:portfolio_recent_activity.subtitle",
     },
     {
       title: "Home:favourites.title",

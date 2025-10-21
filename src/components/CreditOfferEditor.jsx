@@ -260,18 +260,24 @@ export default function CreditOfferEditor(properties) {
         const urlSearchParams = new URLSearchParams(window.location.search);
         const params = Object.fromEntries(urlSearchParams.entries());
         const _id = params && params.id ? params.id : null;
+        const _assetSymbol =
+          params && (params.asset || params.symbol)
+            ? params.asset || params.symbol
+            : null;
 
-        if (!_id || !_id.length) {
-          console.log("Invalid credit offer url parameter 1");
-          return;
+        // If an offer id is specified, validate and set it
+        if (_id && _id.length) {
+          if (!_id.includes("1.21.")) {
+            console.log("Invalid credit offer url parameter 2");
+            return;
+          }
+          setOfferID(_id);
         }
 
-        if (_id && _id.length && !_id.includes("1.21.")) {
-          console.log("Invalid credit offer url parameter 2");
-          return;
+        // If an asset symbol is provided, preselect it for a new offer flow
+        if (!_id && _assetSymbol && _assetSymbol.length) {
+          setSelectedAsset(_assetSymbol.toUpperCase());
         }
-
-        setOfferID(_id);
       }
     }
 

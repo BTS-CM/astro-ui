@@ -129,6 +129,27 @@
     "hover2": "미결 주문을 모니터링하세요.",
     "hover3": "최근 계정 활동을 분석하세요."
   },
+  "portfolio_balances": {
+    "title": "📊 계정 잔액",
+    "subtitle": "액체 잔액 및 관련 작업을 봅니다.",
+    "hover1": "기본, 알파벳순 또는 금액별로 잔액을 정렬합니다.",
+    "hover2": "거래 및 자산 정보에 대한 빠른 링크입니다.",
+    "hover3": "관련 유동성 풀을 참조하세요."
+  },
+  "portfolio_open_orders": {
+    "title": "🧾 공개 주문",
+    "subtitle": "공개 DEX 주문 검토 및 관리",
+    "hover1": "시장 쌍으로 바로 이동하십시오.",
+    "hover2": "주문을 업데이트하거나 취소합니다.",
+    "hover3": "만료일과 주문 ID를 확인하세요."
+  },
+  "portfolio_recent_activity": {
+    "title": "🧠 최근 활동",
+    "subtitle": "최신 온체인 작업을 검사하세요.",
+    "hover1": "작업 ID 및 블록을 찾아보세요.",
+    "hover2": "작업 JSON을 봅니다.",
+    "hover3": "전체 활동 세부정보를 엽니다."
+  },
   "favourites": {
     "title": "⭐ 즐겨찾기",
     "subtitle": "즐겨찾는 자산 및 계정에 빠르게 액세스하세요",

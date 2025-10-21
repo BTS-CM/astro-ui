@@ -2,7 +2,7 @@
 import { getCollection } from 'astro:content';
 
 import Layout from '../layouts/Layout.astro';
-import PortfolioTabs from '../components/PortfolioTabs.jsx';
+import PortfolioBalances from '../components/PortfolioBalances.jsx';
 import PageHeader from '../components/PageHeader';
 import PageFooter from '../components/PageFooter';
 
@@ -18,17 +18,17 @@ const poolsBTS = btsPools.map(collection => collection.data);
 const poolsTEST = testPools.map(collection => collection.data);
 ---
 
-<Layout title="Bitshares user portfolio - balances, open orders and recent activity">
+<Layout title="Account Balances">
 	<main>
-		<PageHeader client:only="react" page="portfolio" backURL="../index.html" />
-		<PortfolioTabs
+		<PageHeader client:only="react" page="portfolio-balances" backURL="../index.html" />
+		<PortfolioBalances
 			client:only="react"
 			_assetsBTS={btsAssets}
 			_assetsTEST={testAssets}
 			_poolsBTS={poolsBTS}
 			_poolsTEST={poolsTEST}
 		/>
-		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/portfolio.astro" />
+		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/balances.astro" />
 	</main>
 </Layout>
 

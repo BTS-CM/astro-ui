@@ -2,6 +2,7 @@ import React, { useMemo, useState, useEffect } from "react";
 import { useStore } from "@nanostores/react";
 import { List } from "react-window";
 import { Button } from "@/components/ui/button";
+
 import {
   Card,
   CardContent,
@@ -9,6 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+
 import {
   Dialog,
   DialogContent,
@@ -17,6 +19,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+
 import {
   Empty,
   EmptyContent,
@@ -25,6 +28,13 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 import AssetDropDown from "@/components/Market/AssetDropDownCard.jsx";
 import {
@@ -40,14 +50,10 @@ import {
 import { $currentNode } from "@/stores/node.ts";
 import { $currentUser } from "@/stores/users.ts";
 import AccountSearch from "@/components/AccountSearch.jsx";
+
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+
 import AssetIssuerActions from "@/components/AssetIssuerActions.jsx";
 
 /**
@@ -138,6 +144,7 @@ export default function Favourites(properties) {
       currentUser.id === item.issuer &&
       (!currentUser.chain || currentUser.chain === chain)
     );
+    console.log({ item, assetDetails });
     return (
       <div style={{ ...style, paddingRight: "10px" }}>
         <Card className="mb-3 bg-slate-50 border border-slate-200 hover:bg-slate-100 transition-colors rounded-xl">
@@ -158,7 +165,11 @@ export default function Favourites(properties) {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
-                    <a href={`/dex/index.html?market=${item.symbol}_BTS`}>
+                    <a
+                      href={`/dex/index.html?market=${item.symbol}_${
+                        item.symbol === "BTS" ? "CNY" : "BTS"
+                      }`}
+                    >
                       <DropdownMenuItem>
                         {t("IssuedAssets:proceedToTrade")}
                       </DropdownMenuItem>
@@ -170,23 +181,18 @@ export default function Favourites(properties) {
                         {t("IssuedAssets:creditBorrow")}
                       </DropdownMenuItem>
                     </a>
-                    <a
-                      href={`/borrow/index.html?tab=searchOffers&searchTab=collateral&searchText=${item.symbol}`}
-                    >
+                    <a href={`/lend/index.html?asset=${item.symbol}`}>
                       <DropdownMenuItem>
                         {t("IssuedAssets:creditLend")}
                       </DropdownMenuItem>
                     </a>
-                    <a href={`/smartcoin/index.html?id=${item.id}`}>
-                      <DropdownMenuItem>
-                        {t("IssuedAssets:proceedToBorrow")}
-                      </DropdownMenuItem>
-                    </a>
-                    <a href={`/predictions/index.html?id=${item.id}`}>
-                      <DropdownMenuItem>
-                        {t("IssuedAssets:pmaBet")}
-                      </DropdownMenuItem>
-                    </a>
+                    {assetDetails.bitasset_data_id ? (
+                      <a href={`/smartcoin/index.html?id=${item.id}`}>
+                        <DropdownMenuItem>
+                          {t("IssuedAssets:proceedToBorrow")}
+                        </DropdownMenuItem>
+                      </a>
+                    ) : null}
                   </DropdownMenuContent>
                 </DropdownMenu>
 

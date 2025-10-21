@@ -129,6 +129,27 @@
     "hover2": "Surveillez vos commandes ouvertes.",
     "hover3": "Analysez l’activité récente de votre compte."
   },
+  "portfolio_balances": {
+    "title": "📊 Soldes des comptes",
+    "subtitle": "Consultez vos soldes liquides et les actions associées",
+    "hover1": "Triez les soldes par défaut, par ordre alphabétique ou par montant.",
+    "hover2": "Liens rapides vers des informations sur le commerce et les actifs.",
+    "hover3": "Voir les pools de liquidités associés."
+  },
+  "portfolio_open_orders": {
+    "title": "🧾 Commandes ouvertes",
+    "subtitle": "Examinez et gérez vos commandes DEX ouvertes",
+    "hover1": "Accédez directement à la paire de marché.",
+    "hover2": "Mettre à jour ou annuler une commande.",
+    "hover3": "Vérifiez l’expiration et les identifiants de commande."
+  },
+  "portfolio_recent_activity": {
+    "title": "🧠 Activité récente",
+    "subtitle": "Inspectez vos dernières opérations en chaîne",
+    "hover1": "Parcourez les ID d’opération et les blocs.",
+    "hover2": "Afficher l'opération JSON.",
+    "hover3": "Ouvrez les détails complets de l'activité."
+  },
   "favourites": {
     "title": "⭐ Vos favoris",
     "subtitle": "Accédez rapidement à vos actifs et comptes favoris",
