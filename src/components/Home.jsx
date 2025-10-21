@@ -332,6 +332,13 @@ export default function Home(properties) {
           ],
         },
         {
+          key: "favourites",
+          href: "/favourites/index.html",
+          titleKey: "Home:favourites.title",
+          subtitleKey: "Home:favourites.subtitle",
+          hoverKeys: ["Home:favourites.hover1", "Home:favourites.hover2"],
+        },
+        {
           key: "issued_assets",
           href: "/issued_assets/index.html",
           titleKey: "Home:issued_assets.title",

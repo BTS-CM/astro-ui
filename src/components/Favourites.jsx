@@ -275,7 +275,9 @@ export default function Favourites(properties) {
             onOpenChange={(open) => setUserDialogOpen(open)}
           >
             <DialogTrigger asChild>
-              <Button variant="secondary">{t("Favourites:addUser")}</Button>
+              <Button variant="outline" className="hover:shadow-md">
+                {t("Favourites:addUser")}
+              </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[420px] bg-white">
               <DialogHeader>
