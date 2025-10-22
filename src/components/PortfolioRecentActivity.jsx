@@ -26,6 +26,14 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableHead,
+  TableRow,
+  TableCell,
+} from "@/components/ui/table";
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
 import { createAccountHistoryStore } from "@/nanoeffects/AccountHistory.ts";
@@ -80,50 +88,48 @@ export default function PortfolioRecentActivity() {
     const days = Math.floor(timeDiff / 1000 / 60 / 60 / 24);
     const timeDiffString = `${days}d ${hours}h ${minutes}m`;
 
+    const rowStyle = { ...style };
+
     return (
-      <div style={{ ...style }}>
-        <Card>
-          <div className="grid grid-cols-7">
-            <div className="col-span-5">
-              <CardHeader>
-                <CardTitle>
-                  {opTypes[activityItem.operation_type.toString()]}
-                </CardTitle>
-                <CardDescription>
-                  {t("PortfolioTabs:operationId")}
-                  <ExternalLink
-                    classnamecontents="text-blue-500"
-                    type="text"
-                    text={` ${activityItem.account_history.operation_id}`}
-                    hyperlink={`https://explorer.bitshares.ws/#/objects/${
-                      activityItem.account_history.operation_id
-                    }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
-                  />
-                  <br />
-                  {t("PortfolioTabs:blockNumber")}
-                  <ExternalLink
-                    classnamecontents="text-blue-500"
-                    type="text"
-                    text={` ${activityItem.block_data.block_num}`}
-                    hyperlink={`https://explorer.bitshares.ws/#/blocks/${
-                      activityItem.block_data.block_num
-                    }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
-                  />
-                  <br />
-                  {t("PortfolioTabs:timeSinceBroadcast", {
-                    timeDiff: timeDiffString,
-                  })}
-                </CardDescription>
-              </CardHeader>
+      <div style={rowStyle} className="px-2">
+        <Card className="hover:bg-gray-50">
+          <div className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr] items-start gap-2 p-2 mb-2">
+            <div className="truncate font-medium mt-2">
+              {opTypes[activityItem.operation_type.toString()]}
             </div>
-            <div className="col-span-2 mt-7">
+
+            <div className="font-mono text-xs truncate mt-2">
+              <ExternalLink
+                classnamecontents="text-blue-600 hover:underline"
+                type="text"
+                text={`${activityItem.account_history.operation_id}`}
+                hyperlink={`https://explorer.bitshares.ws/#/objects/${
+                  activityItem.account_history.operation_id
+                }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
+              />
+            </div>
+
+            <div className="font-mono text-xs truncate mt-2">
+              <ExternalLink
+                classnamecontents="text-blue-600 hover:underline"
+                type="text"
+                text={`${activityItem.block_data.block_num}`}
+                hyperlink={`https://explorer.bitshares.ws/#/blocks/${
+                  activityItem.block_data.block_num
+                }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
+              />
+            </div>
+
+            <div className="text-sm mt-2">{timeDiffString}</div>
+
+            <div className="flex items-center gap-2 justify-end">
               <Dialog>
                 <DialogTrigger asChild>
-                  <Button variant="outline">
+                  <Button size="sm" variant="outline">
                     {t("PortfolioTabs:viewOperationButton")}
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="sm:max-w-[425px] bg-white">
+                <DialogContent className="sm:max-w-[560px] bg-white">
                   <DialogHeader>
                     <DialogTitle>
                       {t("PortfolioTabs:operationJsonTitle")}
@@ -149,11 +155,11 @@ export default function PortfolioRecentActivity() {
               </Dialog>
               <Dialog>
                 <DialogTrigger asChild>
-                  <Button variant="outline" className="mt-2">
+                  <Button size="sm" variant="outline">
                     {t("PortfolioTabs:viewAllButton")}
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="sm:max-w-[425px] bg-white">
+                <DialogContent className="sm:max-w-[560px] bg-white">
                   <DialogHeader>
                     <DialogTitle>
                       {t("PortfolioTabs:fullOperationContentsTitle")}
@@ -197,14 +203,41 @@ export default function PortfolioRecentActivity() {
                 <p>{t("Market:loading")}</p>
               </div>
             ) : activity && activity.length ? (
-              <div className="max-h-[500px] overflow-auto">
-                <List
-                  rowComponent={RecentActivityRow}
-                  rowCount={activity.length}
-                  rowHeight={145}
-                  rowProps={{}}
-                />
-              </div>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="text-left">
+                      {t("PortfolioTabs:th.description", "Description")}
+                    </TableHead>
+                    <TableHead className="text-left">
+                      {t("PortfolioTabs:operationId", "Operation ID")}
+                    </TableHead>
+                    <TableHead className="text-left">
+                      {t("PortfolioTabs:blockNumber", "Block Number")}
+                    </TableHead>
+                    <TableHead className="text-left">
+                      {t("PortfolioTabs:timeSinceBroadcast")}
+                    </TableHead>
+                    <TableHead className="text-left">
+                      {t("PortfolioTabs:actions", "Actions")}
+                    </TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  <tr>
+                    <td colSpan={5} className="p-0">
+                      <div className="w-full max-h-[500px]">
+                        <List
+                          rowComponent={RecentActivityRow}
+                          rowCount={activity.length}
+                          rowHeight={70}
+                          rowProps={{}}
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                </TableBody>
+              </Table>
             ) : (
               <p>{t("PortfolioTabs:noRecentActivityFound")}</p>
             )}
