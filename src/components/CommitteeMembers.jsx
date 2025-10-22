@@ -83,41 +83,38 @@ export default function CommitteeMembers(properties) {
 
   // 1. Fetch Global Parameters (for active committee list)
   useEffect(() => {
-    let unsubscribe;
-    if (usr && usr.chain && currentNode) {
-      const globalParamsStore = createObjectStore([
-        usr.chain,
-        JSON.stringify(["2.0.0"]),
-        currentNode.url,
-      ]);
-      unsubscribe = globalParamsStore.subscribe(
-        ({ data, error, loading: gpLoading }) => {
+    async function fetchGlobalParams() {
+      if (usr && usr.chain && currentNode) {
+        const globalParamsStore = createObjectStore([
+          usr.chain,
+          JSON.stringify(["2.0.0"]),
+          currentNode.url,
+        ]);
+        globalParamsStore.subscribe(({ data, error, loading: gpLoading }) => {
           if (data && !error && !gpLoading && data[0]) {
             setActiveCommitteeMembers(data[0].active_committee_members);
           } else if (error) {
             console.error("Error fetching global parameters:", error);
           }
-        }
-      );
+        });
+      }
     }
-    return () => {
-      if (unsubscribe) unsubscribe();
-    };
+
+    fetchGlobalParams();
   }, [usr, currentNode]);
 
   // 2. Fetch All Committee Member Objects (1.5.x)
   useEffect(() => {
-    let unsubscribe;
-    if (usr && usr.chain && currentNode) {
-      const allCommitteeStore = createEveryObjectStore([
-        usr.chain,
-        1, // space_id for protocol objects
-        5, // type_id for committee_member
-        0, // start from beginning
-        currentNode.url,
-      ]);
-      unsubscribe = allCommitteeStore.subscribe(
-        ({ data, error, loading: cmLoading }) => {
+    async function fetchAllCommitteeMembers() {
+      if (usr && usr.chain && currentNode) {
+        const allCommitteeStore = createEveryObjectStore([
+          usr.chain,
+          1, // space_id for protocol objects
+          5, // type_id for committee_member
+          0, // start from beginning
+          currentNode.url,
+        ]);
+        allCommitteeStore.subscribe(({ data, error, loading: cmLoading }) => {
           if (data && !error && !cmLoading) {
             let filteredData = data.filter((x) => x); // Filter out null/undefined entries
             if (_chain === "bitshares") {
@@ -133,32 +130,30 @@ export default function CommitteeMembers(properties) {
           } else if (error) {
             console.error("Error fetching all committee members:", error);
           }
-        }
-      );
+        });
+      }
     }
-    return () => {
-      if (unsubscribe) unsubscribe();
-    };
+
+    fetchAllCommitteeMembers();
   }, [usr, currentNode, blocklist, _chain]); // Added blocklist and _chain dependency
 
   // 3. Fetch Account Objects (1.2.x) for all committee members
   useEffect(() => {
-    let unsubscribe;
-    if (usr && usr.chain && currentNode && allCommitteeMembers.length > 0) {
-      const accountIds = allCommitteeMembers.map(
-        (cm) => cm.committee_member_account
-      );
-      const uniqueAccountIds = [...new Set(accountIds)];
+    async function fetchCommitteeAccounts() {
+      if (usr && usr.chain && currentNode && allCommitteeMembers.length > 0) {
+        const accountIds = allCommitteeMembers.map(
+          (cm) => cm.committee_member_account
+        );
+        const uniqueAccountIds = [...new Set(accountIds)];
 
-      // Fetch in chunks if necessary, though createObjectStore handles arrays
-      const accountsStore = createObjectStore([
-        usr.chain,
-        JSON.stringify(uniqueAccountIds),
-        currentNode.url,
-      ]);
+        // Fetch in chunks if necessary, though createObjectStore handles arrays
+        const accountsStore = createObjectStore([
+          usr.chain,
+          JSON.stringify(uniqueAccountIds),
+          currentNode.url,
+        ]);
 
-      unsubscribe = accountsStore.subscribe(
-        ({ data, error, loading: accLoading }) => {
+        accountsStore.subscribe(({ data, error, loading: accLoading }) => {
           if (data && !error && !accLoading) {
             const accountsMap = data.reduce((acc, account) => {
               if (account) {
@@ -173,15 +168,13 @@ export default function CommitteeMembers(properties) {
             console.error("Error fetching committee accounts:", error);
             setLoading(false);
           }
-        }
-      );
-    } else if (allCommitteeMembers.length === 0 && !loading) {
-      setLoading(false); // Stop loading if there are no members to fetch accounts for
+        });
+      } else if (allCommitteeMembers.length === 0 && !loading) {
+        setLoading(false); // Stop loading if there are no members to fetch accounts for
+      }
     }
 
-    return () => {
-      if (unsubscribe) unsubscribe();
-    };
+    fetchCommitteeAccounts();
   }, [usr, currentNode, allCommitteeMembers]); // depends on allCommitteeMembers
 
   const processedMembers = useMemo(() => {
@@ -206,29 +199,28 @@ export default function CommitteeMembers(properties) {
   const [coreBalances, setCoreBalances] = useState();
   useEffect(() => {
     // fetch committee member core balances
-    let unsubscribe;
-    if (usr && usr.chain && currentNode && committeeAccounts) {
-      const accountIds = Object.keys(committeeAccounts);
-      const uniqueAccountIds = [...new Set(accountIds)];
+    async function fetchCoreBalances() {
+      if (usr && usr.chain && currentNode && committeeAccounts) {
+        const accountIds = Object.keys(committeeAccounts);
+        const uniqueAccountIds = [...new Set(accountIds)];
 
-      const coreBalancesStore = createUsersCoreBalanceStore([
-        usr.chain,
-        JSON.stringify(uniqueAccountIds),
-        currentNode.url,
-      ]);
+        const coreBalancesStore = createUsersCoreBalanceStore([
+          usr.chain,
+          JSON.stringify(uniqueAccountIds),
+          currentNode.url,
+        ]);
 
-      unsubscribe = coreBalancesStore.subscribe(({ data, error }) => {
-        if (data && !error) {
-          setCoreBalances(data);
-        } else if (error) {
-          console.error("Error fetching core balances:", error);
-        }
-      });
-
-      return () => {
-        if (unsubscribe) unsubscribe();
-      };
+        coreBalancesStore.subscribe(({ data, error }) => {
+          if (data && !error) {
+            setCoreBalances(data);
+          } else if (error) {
+            console.error("Error fetching core balances:", error);
+          }
+        });
+      }
     }
+
+    fetchCoreBalances();
   }, [currentNode, committeeAccounts]);
 
   const sortedMembers = useMemo(() => {

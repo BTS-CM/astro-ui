@@ -47,5 +47,10 @@
   "pools": "Pools",
   "default": "Misligholdelse",
   "alphabetical": "Alfabetisk",
-  "amount": "Beløb"
+  "amount": "Beløb",
+  "descriptionHeader": "Beskrivelse",
+  "orderIdHeader": "Ordre-id",
+  "expirationHeader": "Udløb",
+  "priceHeader": "Pris",
+  "actionsHeader": "Handlinger"
 }

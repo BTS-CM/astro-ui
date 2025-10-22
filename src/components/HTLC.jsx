@@ -142,10 +142,15 @@ export default function Htlc(properties) {
   const [senderHtlcs, setSenderHtlcs] = useState([]);
   const [receiverHtlcs, setReceiverHtlcs] = useState([]);
   useEffect(() => {
-    let unsubscribe;
-    if (usr && usr.chain && usr.id && currentNode && currentNode.url) {
+    async function fetchHtlcs() {
+      if (!(usr && usr.chain && usr.id && currentNode && currentNode.url)) {
+        setSenderHtlcs([]);
+        setReceiverHtlcs([]);
+        return;
+      }
+
       const htlcStore = createHTLCStore([usr.chain, usr.id, currentNode.url]);
-      unsubscribe = htlcStore.subscribe(({ data, error, loading }) => {
+      htlcStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
           setSenderHtlcs(data.sender || []);
           setReceiverHtlcs(data.receiver || []);
@@ -155,58 +160,59 @@ export default function Htlc(properties) {
           setReceiverHtlcs([]);
         }
       });
-    } else {
-      setSenderHtlcs([]);
-      setReceiverHtlcs([]);
     }
-    return () => {
-      if (unsubscribe) unsubscribe();
-    };
+
+    fetchHtlcs();
   }, [usr, currentNode]);
 
   // Fetching account names for HTLC participants
   const [htlcAccounts, setHtlcAccounts] = useState({});
   useEffect(() => {
-    let unsubscribe;
-    const allAccountIds = new Set([
-      ...senderHtlcs.map((h) => h.transfer.to),
-      ...receiverHtlcs.map((h) => h.transfer.from),
-    ]);
+    async function fetchHtlcAccounts() {
+      const allAccountIds = new Set([
+        ...senderHtlcs.map((h) => h.transfer.to),
+        ...receiverHtlcs.map((h) => h.transfer.from),
+      ]);
 
-    const uniqueAccountIds = Array.from(allAccountIds);
+      const uniqueAccountIds = Array.from(allAccountIds);
 
-    if (
-      usr &&
-      usr.chain &&
-      uniqueAccountIds.length > 0 &&
-      currentNode &&
-      currentNode.url
-    ) {
-      const neededIds = uniqueAccountIds.filter((id) => !htlcAccounts[id]);
-      if (neededIds.length > 0) {
-        const objectStore = createObjectStore([
-          usr.chain,
-          JSON.stringify(neededIds),
-          currentNode.url,
-        ]);
-        unsubscribe = objectStore.subscribe(({ data, error, loading }) => {
-          if (data && !error && !loading) {
-            const newAccounts = {};
-            data.forEach((acc) => {
-              if (acc) {
-                newAccounts[acc.id] = acc.name;
-              }
-            });
-            setHtlcAccounts((prev) => ({ ...prev, ...newAccounts }));
-          } else if (error) {
-            console.error("Error fetching HTLC account names:", error);
-          }
-        });
+      if (
+        !(
+          usr &&
+          usr.chain &&
+          uniqueAccountIds.length > 0 &&
+          currentNode &&
+          currentNode.url
+        )
+      ) {
+        return;
       }
+
+      const neededIds = uniqueAccountIds.filter((id) => !htlcAccounts[id]);
+      if (neededIds.length === 0) return;
+
+      const objectStore = createObjectStore([
+        usr.chain,
+        JSON.stringify(neededIds),
+        currentNode.url,
+      ]);
+
+      objectStore.subscribe(({ data, error, loading }) => {
+        if (data && !error && !loading) {
+          const newAccounts = {};
+          data.forEach((acc) => {
+            if (acc) {
+              newAccounts[acc.id] = acc.name;
+            }
+          });
+          setHtlcAccounts((prev) => ({ ...prev, ...newAccounts }));
+        } else if (error) {
+          console.error("Error fetching HTLC account names:", error);
+        }
+      });
     }
-    return () => {
-      if (unsubscribe) unsubscribe();
-    };
+
+    fetchHtlcAccounts();
   }, [usr, senderHtlcs, receiverHtlcs, currentNode, htlcAccounts]); // Added htlcAccounts dependency
 
   // Sender HTLC Row

@@ -47,5 +47,10 @@
   "pools": "Pools",
   "default": "Default",
   "alphabetical": "Alphabetical",
-  "amount": "Amount"
+  "amount": "Amount",
+  "descriptionHeader": "Description",
+  "orderIdHeader": "Order ID",
+  "expirationHeader": "Expiration",
+  "priceHeader": "Price",
+  "actionsHeader": "Actions"
 }

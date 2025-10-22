@@ -150,19 +150,17 @@ export default function Barter(properties) {
   }, [globalParams]);
 
   // --- Data Fetching ---
-  // Fetch current user's balances and account data
+  // Fetch current user's balances
   useEffect(() => {
-    let balancesUnsubscribe;
-    //let accountUnsubscribe;
-    if (usr && usr.id && currentNode && assets && assets.length) {
-      const userBalancesStore = createUserBalancesStore([
-        usr.chain,
-        usr.id,
-        currentNode.url,
-      ]);
+    async function fetchFromBalances() {
+      if (usr && usr.id && currentNode && assets && assets.length) {
+        const userBalancesStore = createUserBalancesStore([
+          usr.chain,
+          usr.id,
+          currentNode.url,
+        ]);
 
-      balancesUnsubscribe = userBalancesStore.subscribe(
-        ({ data, error, loading }) => {
+        userBalancesStore.subscribe(({ data, error, loading }) => {
           if (data && !error && !loading) {
             const filteredData = data.filter((balance) =>
               assets.find((x) => x.id === balance.asset_id)
@@ -171,44 +169,23 @@ export default function Barter(properties) {
           } else if (error) {
             console.error("Error fetching current user balances:", error);
           }
-        }
-      );
-
-      /*
-      const userAccountStore = createObjectStore([
-        usr.chain,
-        JSON.stringify([usr.id]),
-        currentNode.url,
-      ]);
-      accountUnsubscribe = userAccountStore.subscribe(
-        ({ data, error, loading }) => {
-          if (data && !error && !loading && data[0]) {
-            setFromAccountData(data[0]);
-          } else if (error) {
-            console.error("Error fetching current user account data:", error);
-          }
-        }
-      );
-      */
+        });
+      }
     }
-    return () => {
-      if (balancesUnsubscribe) balancesUnsubscribe();
-      //if (accountUnsubscribe) accountUnsubscribe();
-    };
+
+    fetchFromBalances();
   }, [usr, assets, currentNode]);
 
   // Fetch counterparty's balances and account data
   useEffect(() => {
-    let balancesUnsubscribe;
-    let accountUnsubscribe;
-    if (toAccount && toAccount.id && currentNode && assets && assets.length) {
-      const userBalancesStore = createUserBalancesStore([
-        usr.chain,
-        toAccount.id,
-        currentNode.url,
-      ]);
-      balancesUnsubscribe = userBalancesStore.subscribe(
-        ({ data, error, loading }) => {
+    async function fetchToBalances() {
+      if (toAccount && toAccount.id && currentNode && assets && assets.length) {
+        const userBalancesStore = createUserBalancesStore([
+          usr.chain,
+          toAccount.id,
+          currentNode.url,
+        ]);
+        userBalancesStore.subscribe(({ data, error, loading }) => {
           if (data && !error && !loading) {
             const filteredData = data.filter((balance) =>
               assets.find((x) => x.id === balance.asset_id)
@@ -217,34 +194,13 @@ export default function Barter(properties) {
           } else if (error) {
             console.error("Error fetching counterparty balances:", error);
           }
-        }
-      );
-
-      /*
-      const userAccountStore = createObjectStore([
-        usr.chain,
-        JSON.stringify([toAccount.id]),
-        currentNode.url,
-      ]);
-      accountUnsubscribe = userAccountStore.subscribe(
-        ({ data, error, loading }) => {
-          if (data && !error && !loading && data[0]) {
-            setToAccountData(data[0]);
-          } else if (error) {
-            console.error("Error fetching counterparty account data:", error);
-          }
-        }
-      );
-      */
-    } else {
-      // Reset if toAccount changes or is removed
-      setToBalances(null);
-      //setToAccountData(null);
+        });
+      } else {
+        setToBalances(null);
+      }
     }
-    return () => {
-      if (balancesUnsubscribe) balancesUnsubscribe();
-      if (accountUnsubscribe) accountUnsubscribe();
-    };
+
+    fetchToBalances();
   }, [toAccount, assets, currentNode]);
 
   // --- Validation ---

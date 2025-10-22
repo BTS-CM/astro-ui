@@ -45,23 +45,18 @@ export default function Featured(properties) {
 
   const [retrievedMarkets, setRetrievedMarkets] = useState();
   useEffect(() => {
-    let unsubscribeMarkets;
+    async function fetchTopMarkets() {
+      if (!(usr && usr.chain)) return;
 
-    if (usr && usr.chain) {
-      let marketsStore = createTopMarketsStore(usr.chain);
-
-      unsubscribeMarkets = marketsStore.subscribe(
-        ({ data, loading, error }) => {
-          if (data && !error && !loading) {
-            setRetrievedMarkets(data);
-          }
+      const marketsStore = createTopMarketsStore(usr.chain);
+      marketsStore.subscribe(({ data, loading, error }) => {
+        if (data && !error && !loading) {
+          setRetrievedMarkets(data);
         }
-      );
+      });
     }
 
-    return () => {
-      if (unsubscribeMarkets) unsubscribeMarkets();
-    };
+    fetchTopMarkets();
   }, [usr]);
 
   const marketRows = useMemo(() => {
@@ -131,8 +126,19 @@ export default function Featured(properties) {
       );
     };
 
-    return retrievedMarkets.map((market) => <Row key={market.pair} market={market} />);
-  }, [retrievedMarkets, assets, chain, _assetsBTS, _assetsTEST, poolsBTS, poolsTEST, t]);
+    return retrievedMarkets.map((market) => (
+      <Row key={market.pair} market={market} />
+    ));
+  }, [
+    retrievedMarkets,
+    assets,
+    chain,
+    _assetsBTS,
+    _assetsTEST,
+    poolsBTS,
+    poolsTEST,
+    t,
+  ]);
 
   return (
     <>

@@ -359,89 +359,82 @@ export default function SimpleSwap(properties) {
 
   // Effect to fetch detailed pool/asset data when the selected pool changes
   useEffect(() => {
-    // Reset state when pool or assets required for lookup are missing
-    if (
-      !usr ||
-      !usr.chain ||
-      !pool ||
-      !pools ||
-      !assets ||
-      !selectedAssetASymbol ||
-      !selectedAssetBSymbol
-    ) {
-      return;
-    }
+    async function fetchPoolAssets() {
+      // Reset/guard when pool or assets required for lookup are missing
+      if (
+        !usr ||
+        !usr.chain ||
+        !pool ||
+        !pools ||
+        !assets ||
+        !selectedAssetASymbol ||
+        !selectedAssetBSymbol
+      ) {
+        return;
+      }
 
-    const poolStore = createPoolAssetStore([
-      usr.chain,
-      JSON.stringify(pools), // Pass all pools for potential lookups within store
-      JSON.stringify(assets), // Pass all assets for lookups
-      pool, // The specific pool ID to focus on
-      currentNode ? currentNode.url : null,
-    ]);
+      const poolStore = createPoolAssetStore([
+        usr.chain,
+        JSON.stringify(pools), // Pass all pools for potential lookups within store
+        JSON.stringify(assets), // Pass all assets for lookups
+        pool, // The specific pool ID to focus on
+        currentNode ? currentNode.url : null,
+      ]);
 
-    let subscribed = true;
-    const unsubscribe = poolStore.subscribe(({ data, error, loading }) => {
-      if (!subscribed) return; // Prevent state updates after unmount or dependency change
-
-      if (error) {
-        console.log({ error, location: "poolStore.subscribe" });
-        // Consider resetting state on error
-        setFoundPool(null);
-        setAssetA(null);
-        setAssetB(null);
-      } else if (data && !loading) {
-        // We have data, now align it with selectedAssetASymbol and selectedAssetBSymbol
-        const poolData = data.foundPool; // The pool object from the store (matches 'pool' id)
-        const assetDataA = data.assetA; // Asset A from the pool's perspective
-        const assetDataB = data.assetB; // Asset B from the pool's perspective
-
-        setFoundPool(poolData);
-        setPoolShareDetails(data.poolAsset);
-
-        // IMPORTANT: Align state (assetA, assetB) with user selection (selectedAssetASymbol, selectedAssetBSymbol)
-        if (assetDataA && assetDataB && poolData) {
-          if (assetDataA.symbol === selectedAssetASymbol) {
-            // Pool's A matches user's Sell Asset
-            setAssetA(assetDataA);
-            setAssetB(assetDataB);
-            setAssetADetails(data.assetADetails);
-            setAssetBDetails(data.assetBDetails);
-            setABitassetData(data.bitassetA);
-            setBBitassetData(data.bitassetB);
-          } else if (assetDataB.symbol === selectedAssetASymbol) {
-            // Pool's B matches user's Sell Asset (swap them for component state)
-            setAssetA(assetDataB); // assetA state now holds the Sell asset's data
-            setAssetB(assetDataA); // assetB state now holds the Buy asset's data
-            setAssetADetails(data.assetBDetails);
-            setAssetBDetails(data.assetADetails);
-            setABitassetData(data.bitassetB);
-            setBBitassetData(data.bitassetA);
-          } else {
-            // This shouldn't happen if pool selection logic is correct, but handle defensively
-            console.error("Mismatch between selected assets and pool assets");
-            setAssetA(null);
-            setAssetB(null);
-          }
-        } else {
-          // Data missing, reset
+      poolStore.subscribe(({ data, error, loading }) => {
+        if (error) {
+          console.log({ error, location: "poolStore.subscribe" });
+          // Consider resetting state on error
+          setFoundPool(null);
           setAssetA(null);
           setAssetB(null);
-          setAssetADetails(null);
-          setAssetBDetails(null);
-          setABitassetData(null);
-          setBBitassetData(null);
-        }
-      }
-    });
+        } else if (data && !loading) {
+          // We have data, now align it with selectedAssetASymbol and selectedAssetBSymbol
+          const poolData = data.foundPool; // The pool object from the store (matches 'pool' id)
+          const assetDataA = data.assetA; // Asset A from the pool's perspective
+          const assetDataB = data.assetB; // Asset B from the pool's perspective
 
-    return () => {
-      subscribed = false; // Mark as unsubscribed
-      // Check if unsubscribe function exists before calling, although store should provide it
-      if (unsubscribe && typeof unsubscribe === "function") {
-        unsubscribe();
-      }
-    };
+          setFoundPool(poolData);
+          setPoolShareDetails(data.poolAsset);
+
+          // IMPORTANT: Align state (assetA, assetB) with user selection (selectedAssetASymbol, selectedAssetBSymbol)
+          if (assetDataA && assetDataB && poolData) {
+            if (assetDataA.symbol === selectedAssetASymbol) {
+              // Pool's A matches user's Sell Asset
+              setAssetA(assetDataA);
+              setAssetB(assetDataB);
+              setAssetADetails(data.assetADetails);
+              setAssetBDetails(data.assetBDetails);
+              setABitassetData(data.bitassetA);
+              setBBitassetData(data.bitassetB);
+            } else if (assetDataB.symbol === selectedAssetASymbol) {
+              // Pool's B matches user's Sell Asset (swap them for component state)
+              setAssetA(assetDataB); // assetA state now holds the Sell asset's data
+              setAssetB(assetDataA); // assetB state now holds the Buy asset's data
+              setAssetADetails(data.assetBDetails);
+              setAssetBDetails(data.assetADetails);
+              setABitassetData(data.bitassetB);
+              setBBitassetData(data.bitassetA);
+            } else {
+              // This shouldn't happen if pool selection logic is correct, but handle defensively
+              console.error("Mismatch between selected assets and pool assets");
+              setAssetA(null);
+              setAssetB(null);
+            }
+          } else {
+            // Data missing, reset
+            setAssetA(null);
+            setAssetB(null);
+            setAssetADetails(null);
+            setAssetBDetails(null);
+            setABitassetData(null);
+            setBBitassetData(null);
+          }
+        }
+      });
+    }
+
+    fetchPoolAssets();
     // Depend on the core identifiers and data sources
   }, [
     usr,
@@ -456,18 +449,16 @@ export default function SimpleSwap(properties) {
   // Fetch user balances
   const [usrBalances, setUsrBalances] = useState();
   useEffect(() => {
-    let unsubscribeUserBalances;
+    async function fetchUserBalances() {
+      if (usr && usr.id && assets && assets.length > 0 && currentNode) {
+        // Ensure assets are loaded
+        const userBalancesStore = createUserBalancesStore([
+          usr.chain,
+          usr.id,
+          currentNode.url,
+        ]);
 
-    if (usr && usr.id && assets && assets.length > 0 && currentNode) {
-      // Ensure assets are loaded
-      const userBalancesStore = createUserBalancesStore([
-        usr.chain,
-        usr.id,
-        currentNode.url,
-      ]);
-
-      unsubscribeUserBalances = userBalancesStore.subscribe(
-        ({ data, error, loading }) => {
+        userBalancesStore.subscribe(({ data, error, loading }) => {
           if (data && !error && !loading) {
             // Filter balances to only include assets known by the UI
             const assetIds = new Set(assets.map((a) => a.id));
@@ -479,15 +470,13 @@ export default function SimpleSwap(properties) {
             console.error("Error fetching user balances:", error);
             setUsrBalances([]); // Set to empty on error
           }
-        }
-      );
-    } else {
-      setUsrBalances(undefined); // Reset if prerequisites aren't met
+        });
+      } else {
+        setUsrBalances(undefined); // Reset if prerequisites aren't met
+      }
     }
 
-    return () => {
-      if (unsubscribeUserBalances) unsubscribeUserBalances();
-    };
+    fetchUserBalances();
   }, [usr, assets, currentNode]); // Depend on user, assets list, and node
 
   const buyAmount = useMemo(() => {

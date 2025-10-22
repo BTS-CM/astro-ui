@@ -4,7 +4,6 @@ import React, {
   useState,
   useSyncExternalStore,
 } from "react";
-import { List } from "react-window";
 import { useStore } from "@nanostores/react";
 import { sha256 } from "@noble/hashes/sha2.js";
 import { bytesToHex as toHex, utf8ToBytes } from "@noble/hashes/utils.js";
@@ -19,6 +18,9 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
+import { List } from "react-window";
+// Table header is rendered as a simple grid to avoid extra scrollbars
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
 import { createAccountLimitOrderStore } from "@/nanoeffects/AccountLimitOrders.ts";
@@ -70,27 +72,28 @@ export default function PortfolioOpenOrders({
 
   const [openOrderCounter, setOpenOrderCounter] = useState(0);
   const [openOrders, setOpenOrders] = useState();
+  const [openOrdersLoading, setOpenOrdersLoading] = useState(false);
   const [orderID, setOrderID] = useState();
   const [showDialog, setShowDialog] = useState(false);
-
   useEffect(() => {
-    let unsubscribeLimitOrdersStore;
-    if (usr && usr.id) {
-      const limitOrdersStore = createAccountLimitOrderStore([
-        usr.chain,
-        usr.id,
-      ]);
-      unsubscribeLimitOrdersStore = limitOrdersStore.subscribe(
-        ({ data, error, loading }) => {
+    async function fetchLimitOrders() {
+      if (usr && usr.id) {
+        const limitOrdersStore = createAccountLimitOrderStore([
+          usr.chain,
+          usr.id,
+        ]);
+        limitOrdersStore.subscribe(({ data, error, loading }) => {
+          setOpenOrdersLoading(Boolean(loading));
           if (data && !error && !loading) {
             setOpenOrders(data);
           }
-        }
-      );
+          if (!data && !loading && error) {
+            setOpenOrders([]);
+          }
+        });
+      }
     }
-    return () => {
-      if (unsubscribeLimitOrdersStore) unsubscribeLimitOrdersStore();
-    };
+    fetchLimitOrders();
   }, [usr, openOrderCounter]);
 
   const OpenOrdersRow = ({ index, style }) => {
@@ -114,6 +117,15 @@ export default function PortfolioOpenOrders({
       ? humanReadableFloat(sellPriceQuoteAmount, buyAsset.precision)
       : sellPriceQuoteAmount;
 
+    // Price as QUOTE per BASE
+    let priceDisplay = "-";
+    if (sellAsset && buyAsset && Number(readableBaseAmount) > 0) {
+      const price = Number(readableQuoteAmount) / Number(readableBaseAmount);
+      priceDisplay = `${price.toLocaleString(undefined, {
+        maximumFractionDigits: 8,
+      })} ${buyAsset.symbol}/${sellAsset.symbol}`;
+    }
+
     const expirationDate = new Date(expiration);
     const now = new Date();
     const timeDiff = expirationDate - now;
@@ -123,59 +135,83 @@ export default function PortfolioOpenOrders({
     const timeDiffString = `${days}d ${hours}h ${minutes}m`;
 
     return (
-      <div style={{ ...style }}>
-        <Card>
-          <div className="grid grid-cols-6">
-            <div className="col-span-4">
-              <CardHeader>
-                <CardTitle>
+      <div style={style} className="px-2">
+        <Card className="hover:bg-gray-50">
+          <div className="grid grid-cols-[40%_1fr_1fr_1fr_1fr] items-start gap-2 p-2 mb-2">
+            <div>
+              <div>
+                <a
+                  href={`/dex/index.html?market=${sellAsset?.symbol}_${buyAsset?.symbol}`}
+                  className="hover:text-blue-500"
+                >
                   {t("PortfolioTabs:sellingFor", {
                     baseAmount: readableBaseAmount,
                     baseSymbol: sellAsset?.symbol,
                     quoteAmount: readableQuoteAmount,
                     quoteSymbol: buyAsset?.symbol,
                   })}
-                </CardTitle>
-                <CardDescription>
-                  {t("PortfolioTabs:tradingPair", {
-                    baseAssetId: sellPriceBaseAssetId,
-                    quoteAssetId: sellPriceQuoteAssetId,
-                  })}
-                  <br />
-                  {t("PortfolioTabs:orderId")}
-                  <ExternalLink
-                    classnamecontents="text-blue-500"
-                    type="text"
-                    text={` ${orderId}`}
-                    hyperlink={`https://explorer.bitshares.ws/#/objects/${orderId}${
-                      usr.chain === "bitshares" ? "" : "?network=testnet"
-                    }`}
-                  />
-                  <br />
-                  {t("PortfolioTabs:expires", { timeDiff: timeDiffString })}
-                </CardDescription>
-              </CardHeader>
+                </a>
+              </div>
+              <div className="text-xs text-muted-foreground">
+                {t("PortfolioTabs:tradingPair", {
+                  baseAssetId: sellPriceBaseAssetId,
+                  quoteAssetId: sellPriceQuoteAssetId,
+                })}
+              </div>
             </div>
-            <div className="col-span-2 pt-6">
+            <div className="truncate">
+              <ExternalLink
+                classnamecontents="hover:text-blue-500"
+                type="text"
+                text={`${orderId}`}
+                hyperlink={`https://explorer.bitshares.ws/#/objects/${orderId}${
+                  usr.chain === "bitshares" ? "" : "?network=testnet"
+                }`}
+              />
+            </div>
+            <div>{timeDiffString}</div>
+            <div>
+              <div>
+                {priceDisplay && priceDisplay !== "-"
+                  ? priceDisplay.split(" ")[0]
+                  : "-"}
+              </div>
+              {priceDisplay && priceDisplay !== "-" ? (
+                <div className="text-xs text-muted-foreground">
+                  {buyAsset?.symbol}/{sellAsset?.symbol}
+                </div>
+              ) : null}
+            </div>
+            <div className="flex items-center justify-end gap-2">
               <a
                 href={`/dex/index.html?market=${sellAsset?.symbol}_${buyAsset?.symbol}`}
               >
-                <Button variant="outline">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="bg-white hover:shadow-lg"
+                >
                   {t("PortfolioTabs:tradeButton")}
                 </Button>
               </a>
               <a href={`/order/index.html?id=${orderId}`}>
-                <Button variant="outline" className="mb-3 ml-3">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="bg-white hover:shadow-lg"
+                >
                   {t("PortfolioTabs:updateButton")}
                 </Button>
               </a>
               <>
                 <Button
                   variant="outline"
+                  size="sm"
                   onClick={() => {
                     setShowDialog(true);
                     setOrderID(orderId);
                   }}
+                  className="bg-white hover:shadow-lg"
                 >
                   {t("PortfolioTabs:cancelButton")}
                 </Button>
@@ -221,14 +257,38 @@ export default function PortfolioOpenOrders({
             </CardDescription>
           </CardHeader>
           <CardContent>
-            {openOrders && openOrders.length ? (
-              <div className="max-h-[500px] overflow-auto">
-                <List
-                  rowComponent={OpenOrdersRow}
-                  rowCount={openOrders.length}
-                  rowHeight={145}
-                  rowProps={{}}
-                />
+            {openOrdersLoading ? (
+              <div className="flex items-center gap-3">
+                <Spinner />
+                <p>{t("Market:loading")}</p>
+              </div>
+            ) : openOrders && openOrders.length ? (
+              <div>
+                <div className="grid grid-cols-[40%_1fr_1fr_1fr_1fr] items-center h-10 px-2 text-muted-foreground font-medium">
+                  <div className="text-left">
+                    {t("PortfolioTabs:descriptionHeader")}
+                  </div>
+                  <div className="text-left">
+                    {t("PortfolioTabs:orderIdHeader")}
+                  </div>
+                  <div className="text-left">
+                    {t("PortfolioTabs:expirationHeader")}
+                  </div>
+                  <div className="text-left">
+                    {t("PortfolioTabs:priceHeader")}
+                  </div>
+                  <div className="text-left">
+                    {t("PortfolioTabs:actionsHeader")}
+                  </div>
+                </div>
+                <div className="max-h-[500px] overflow-auto">
+                  <List
+                    rowComponent={OpenOrdersRow}
+                    rowCount={openOrders.length}
+                    rowHeight={80}
+                    rowProps={{}}
+                  />
+                </div>
               </div>
             ) : (
               <p>{t("PortfolioTabs:noOpenOrdersFound")}</p>
@@ -240,6 +300,8 @@ export default function PortfolioOpenOrders({
                 setOpenOrders();
                 setOpenOrderCounter(openOrderCounter + 1);
               }}
+              disabled={openOrdersLoading}
+              aria-busy={openOrdersLoading}
             >
               {t("PortfolioTabs:refreshOpenOrdersButton")}
             </Button>

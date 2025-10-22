@@ -78,14 +78,14 @@ export default function GovernanceActions(properties) {
   useEffect(() => {
     if (!usr || !usr.id || !currentNode) return;
 
-    const witnessStore = createObjectStore([
-      usr.chain,
-      JSON.stringify([`1.6.${usr.id.split(".")[2]}`]), // Assuming witness ID format 1.6.x from account ID 1.2.x
-      currentNode.url,
-    ]);
+    async function fetchWitnessAndCommittee() {
+      const witnessStore = createObjectStore([
+        usr.chain,
+        JSON.stringify([`1.6.${usr.id.split(".")[2]}`]), // Assuming witness ID format 1.6.x from account ID 1.2.x
+        currentNode.url,
+      ]);
 
-    const unsubscribeWitness = witnessStore.subscribe(
-      ({ data, error, loading }) => {
+      witnessStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading && data[0]) {
           setWitnessData(data[0]);
           setNewWitnessUrl(data[0].url); // Pre-fill update form
@@ -93,30 +93,25 @@ export default function GovernanceActions(properties) {
         } else {
           setWitnessData(null); // Reset if not found or error
         }
-      }
-    );
+      });
 
-    const committeeStore = createObjectStore([
-      usr.chain,
-      JSON.stringify([`1.5.${usr.id.split(".")[2]}`]), // Assuming committee ID format 1.5.x from account ID 1.2.x
-      currentNode.url,
-    ]);
+      const committeeStore = createObjectStore([
+        usr.chain,
+        JSON.stringify([`1.5.${usr.id.split(".")[2]}`]), // Assuming committee ID format 1.5.x from account ID 1.2.x
+        currentNode.url,
+      ]);
 
-    const unsubscribeCommittee = committeeStore.subscribe(
-      ({ data, error, loading }) => {
+      committeeStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading && data[0]) {
           setCommitteeData(data[0]);
           setNewCommitteeUrl(data[0].url); // Pre-fill update form
         } else {
           setCommitteeData(null); // Reset if not found or error
         }
-      }
-    );
+      });
+    }
 
-    return () => {
-      unsubscribeWitness();
-      unsubscribeCommittee();
-    };
+    fetchWitnessAndCommittee();
   }, [usr, currentNode]);
 
   // Transaction JSON builders

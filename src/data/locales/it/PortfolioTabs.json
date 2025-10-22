@@ -47,5 +47,10 @@
   "pools": "Piscine",
   "default": "Predefinito",
   "alphabetical": "Alfabetico",
-  "amount": "Quantità"
+  "amount": "Quantità",
+  "descriptionHeader": "Descrizione",
+  "orderIdHeader": "ID dell'ordine",
+  "expirationHeader": "Scadenza",
+  "priceHeader": "Prezzo",
+  "actionsHeader": "Azioni"
 }

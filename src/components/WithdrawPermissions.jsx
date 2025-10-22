@@ -111,30 +111,26 @@ export default function WithdrawPermissions(properties) {
   const [balanceCounter, setBalanceCoutner] = useState(0);
   const [balances, setBalances] = useState();
   useEffect(() => {
-    let unsubscribeUserBalances;
+    async function fetchUserBalances() {
+      if (usr && usr.id && currentNode && assets && assets.length) {
+        const userBalancesStore = createUserBalancesStore([
+          usr.chain,
+          usr.id,
+          currentNode ? currentNode.url : null,
+        ]);
 
-    if (usr && usr.id && currentNode && assets && assets.length) {
-      const userBalancesStore = createUserBalancesStore([
-        usr.chain,
-        usr.id,
-        currentNode ? currentNode.url : null,
-      ]);
-
-      unsubscribeUserBalances = userBalancesStore.subscribe(
-        ({ data, error, loading }) => {
+        userBalancesStore.subscribe(({ data, error, loading }) => {
           if (data && !error && !loading) {
             const filteredData = data.filter((balance) =>
               assets.find((x) => x.id === balance.asset_id)
             );
             setBalances(filteredData);
           }
-        }
-      );
+        });
+      }
     }
 
-    return () => {
-      if (unsubscribeUserBalances) unsubscribeUserBalances();
-    };
+    fetchUserBalances();
   }, [usr, assets, currentNode, balanceCounter]);
 
   const [payerWithdrawalPermissions, setPayerWithdrawalPermissions] =
@@ -142,65 +138,73 @@ export default function WithdrawPermissions(properties) {
   const [receivingWithdrawalPermissions, setReceivingWithdrawalPermissions] =
     useState();
   useEffect(() => {
-    if (usr && usr.chain && currentNode) {
-      const withdrawPermissionsStore = createWithdrawPermissionsStore([
-        usr.chain,
-        usr.id,
-        currentNode ? currentNode.url : null,
-      ]);
-      withdrawPermissionsStore.subscribe(({ data, error, loading }) => {
-        if (data && !error && !loading) {
-          if (data.recieving) {
-            setReceivingWithdrawalPermissions(data.recieving);
+    async function fetchWithdrawPermissions() {
+      if (usr && usr.chain && currentNode) {
+        const withdrawPermissionsStore = createWithdrawPermissionsStore([
+          usr.chain,
+          usr.id,
+          currentNode ? currentNode.url : null,
+        ]);
+        withdrawPermissionsStore.subscribe(({ data, error, loading }) => {
+          if (data && !error && !loading) {
+            if (data.recieving) {
+              setReceivingWithdrawalPermissions(data.recieving);
+            }
+            if (data.paying) {
+              setPayerWithdrawalPermissions(data.paying);
+            }
           }
-          if (data.paying) {
-            setPayerWithdrawalPermissions(data.paying);
-          }
-        }
 
-        if (error) {
-          console.log({ error });
-        }
-      });
+          if (error) {
+            console.log({ error });
+          }
+        });
+      }
     }
+
+    fetchWithdrawPermissions();
   }, [usr, currentNode]);
 
   const [accounts, setAccounts] = useState([]);
   useEffect(() => {
-    if (
-      usr &&
-      usr.chain &&
-      currentNode &&
-      payerWithdrawalPermissions &&
-      receivingWithdrawalPermissions
-    ) {
-      const allPermissions = [
-        ...(payerWithdrawalPermissions || []),
-        ...(receivingWithdrawalPermissions || []),
-      ];
+    async function fetchAccounts() {
+      if (
+        usr &&
+        usr.chain &&
+        currentNode &&
+        payerWithdrawalPermissions &&
+        receivingWithdrawalPermissions
+      ) {
+        const allPermissions = [
+          ...(payerWithdrawalPermissions || []),
+          ...(receivingWithdrawalPermissions || []),
+        ];
 
-      const authorized_account = allPermissions.map(
-        (x) => x.authorized_account
-      );
-      const withdraw_from_account = allPermissions.map(
-        (x) => x.withdraw_from_account
-      );
-      const allAccounts = [
-        ...new Set([...authorized_account, ...withdraw_from_account]),
-      ];
+        const authorized_account = allPermissions.map(
+          (x) => x.authorized_account
+        );
+        const withdraw_from_account = allPermissions.map(
+          (x) => x.withdraw_from_account
+        );
+        const allAccounts = [
+          ...new Set([...authorized_account, ...withdraw_from_account]),
+        ];
 
-      const userStore = createObjectStore([
-        usr.chain,
-        JSON.stringify(allAccounts),
-        currentNode ? currentNode.url : null,
-      ]);
+        const userStore = createObjectStore([
+          usr.chain,
+          JSON.stringify(allAccounts),
+          currentNode ? currentNode.url : null,
+        ]);
 
-      userStore.subscribe(({ data, error, loading }) => {
-        if (data && !error && !loading) {
-          setAccounts(data);
-        }
-      });
+        userStore.subscribe(({ data, error, loading }) => {
+          if (data && !error && !loading) {
+            setAccounts(data);
+          }
+        });
+      }
     }
+
+    fetchAccounts();
   }, [
     usr,
     currentNode,

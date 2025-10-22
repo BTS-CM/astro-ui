@@ -47,5 +47,10 @@
   "pools": "สระน้ำ",
   "default": "ค่าเริ่มต้น",
   "alphabetical": "ตามตัวอักษร",
-  "amount": "จำนวน"
+  "amount": "จำนวน",
+  "descriptionHeader": "คำอธิบาย",
+  "orderIdHeader": "รหัสคำสั่งซื้อ",
+  "expirationHeader": "หมดอายุ",
+  "priceHeader": "ราคา",
+  "actionsHeader": "การดำเนินการ"
 }

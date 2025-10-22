@@ -355,30 +355,29 @@ export default function PoolStake(properties) {
 
   const [usrBalances, setUsrBalances] = useState();
   useEffect(() => {
-    let unsubscribeUserBalances;
+    async function fetchUsrBalances() {
+      if (!(usr && usr.id && assetA && assetB)) {
+        setUsrBalances([]);
+        return;
+      }
 
-    if (usr && usr.id && assetA && assetB) {
       const userBalancesStore = createUserBalancesStore([
         usr.chain,
         usr.id,
         currentNode ? currentNode.url : null,
       ]);
 
-      unsubscribeUserBalances = userBalancesStore.subscribe(
-        ({ data, error, loading }) => {
-          if (data && !error && !loading) {
-            const filteredData = data.filter((balance) =>
-              assets.find((x) => x.id === balance.asset_id)
-            );
-            setUsrBalances(filteredData);
-          }
+      userBalancesStore.subscribe(({ data, error, loading }) => {
+        if (data && !error && !loading) {
+          const filteredData = data.filter((balance) =>
+            assets.find((x) => x.id === balance.asset_id)
+          );
+          setUsrBalances(filteredData);
         }
-      );
+      });
     }
 
-    return () => {
-      if (unsubscribeUserBalances) unsubscribeUserBalances();
-    };
+    fetchUsrBalances();
   }, [usr, assetA, assetB]);
 
   const [aStake, setAStake] = useState(0);

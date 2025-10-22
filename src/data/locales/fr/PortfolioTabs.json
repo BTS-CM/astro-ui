@@ -47,5 +47,10 @@
   "pools": "Piscines",
   "default": "Défaut",
   "alphabetical": "Alphabétique",
-  "amount": "Montant"
+  "amount": "Montant",
+  "descriptionHeader": "Description",
+  "orderIdHeader": "Numéro de commande",
+  "expirationHeader": "Expiration",
+  "priceHeader": "Prix",
+  "actionsHeader": "Actes"
 }

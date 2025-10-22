@@ -66,25 +66,25 @@ export default function TicketLeaderboard() {
   );
 
   const [tickets, setTickets] = useState([]);
-
   useEffect(() => {
     // Auto-fetch some pages on mount for a quick snapshot
-    let unsubscribe;
-    if (chain === "bitshares" || chain === "bitshares_testnet") {
-      const store = createTicketsStore([
-        chain,
-        currentNode ? currentNode.url : null,
-        0,
-      ]);
-      unsubscribe = store.subscribe(({ data, error, loading }) => {
-        if (data && !error && !loading) {
-          setTickets(data);
-        }
-      });
+    async function fetchTickets() {
+      if (chain === "bitshares" || chain === "bitshares_testnet") {
+        const store = createTicketsStore([
+          chain,
+          currentNode ? currentNode.url : null,
+          0,
+        ]);
+
+        store.subscribe(({ data, error, loading }) => {
+          if (data && !error && !loading) {
+            setTickets(data);
+          }
+        });
+      }
     }
-    return () => {
-      if (unsubscribe) unsubscribe();
-    };
+
+    fetchTickets();
   }, [chain, currentNode]);
 
   const leaderboard = useMemo(() => {

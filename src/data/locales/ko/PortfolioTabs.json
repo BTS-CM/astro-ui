@@ -47,5 +47,10 @@
   "pools": "풀",
   "default": "기본",
   "alphabetical": "알파벳순",
-  "amount": "양"
+  "amount": "양",
+  "descriptionHeader": "설명",
+  "orderIdHeader": "주문 ID",
+  "expirationHeader": "만료",
+  "priceHeader": "가격",
+  "actionsHeader": "행위"
 }

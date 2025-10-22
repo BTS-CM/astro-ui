@@ -10,6 +10,7 @@ import { sha256 } from "@noble/hashes/sha2.js";
 import { bytesToHex as toHex, utf8ToBytes } from "@noble/hashes/utils.js";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
+import { Spinner } from "@/components/ui/spinner";
 
 import {
   Card,
@@ -221,16 +222,17 @@ export default function PortfolioBalances({
 
   const [balanceCounter, setBalanceCounter] = useState(0);
   const [balances, setBalances] = useState();
+  const [balancesLoading, setBalancesLoading] = useState(false);
   useEffect(() => {
-    let unsubscribeUserBalancesStore;
-    if (usr && usr.id) {
-      const userBalancesStore = createUserBalancesStore([
-        usr.chain,
-        usr.id,
-        currentNode ? currentNode.url : null,
-      ]);
-      unsubscribeUserBalancesStore = userBalancesStore.subscribe(
-        ({ data, error, loading }) => {
+    async function fetchUserBalances() {
+      if (usr && usr.id) {
+        const userBalancesStore = createUserBalancesStore([
+          usr.chain,
+          usr.id,
+          currentNode ? currentNode.url : null,
+        ]);
+        userBalancesStore.subscribe(({ data, error, loading }) => {
+          setBalancesLoading(Boolean(loading));
           if (data && !error && !loading) {
             const updatedData = data
               .filter((balance) =>
@@ -242,12 +244,14 @@ export default function PortfolioBalances({
               }));
             setBalances(updatedData);
           }
-        }
-      );
+          if (!data && !loading && error) {
+            // clear balances on error
+            setBalances([]);
+          }
+        });
+      }
     }
-    return () => {
-      if (unsubscribeUserBalancesStore) unsubscribeUserBalancesStore();
-    };
+    fetchUserBalances();
   }, [usr, balanceCounter, assets, currentNode]);
 
   const sortedUserBalances = useMemo(() => {
@@ -487,7 +491,12 @@ export default function PortfolioBalances({
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
-            {sortedUserBalances && sortedUserBalances.length ? (
+            {balancesLoading ? (
+              <div className="flex items-center gap-3">
+                <Spinner />
+                <p>{t("Market:loading")}</p>
+              </div>
+            ) : sortedUserBalances && sortedUserBalances.length ? (
               <div className="gaps-2 max-h-[500px] overflow-auto">
                 <List
                   rowComponent={BalanceRow}
@@ -506,6 +515,8 @@ export default function PortfolioBalances({
                 setBalances();
                 setBalanceCounter(balanceCounter + 1);
               }}
+              disabled={balancesLoading}
+              aria-busy={balancesLoading}
             >
               {t("PortfolioTabs:refreshBalancesButton")}
             </Button>

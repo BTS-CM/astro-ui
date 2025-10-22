@@ -47,5 +47,10 @@
   "pools": "プール",
   "default": "デフォルト",
   "alphabetical": "アルファベット順",
-  "amount": "額"
+  "amount": "額",
+  "descriptionHeader": "説明",
+  "orderIdHeader": "注文ID",
+  "expirationHeader": "有効期限",
+  "priceHeader": "価格",
+  "actionsHeader": "アクション"
 }

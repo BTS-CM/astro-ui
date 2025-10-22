@@ -146,26 +146,24 @@ export default function CustomPoolTracker(properties) {
 
   const [lpTradingVolumes, setLPTradingVolumes] = useState();
   useEffect(() => {
-    let unsubscribeStore;
+    async function fetchLPTradingVolumes() {
+      if (usr && usr.id && currentNode) {
+        const lpVolumeStore = createEveryLiquidityPoolStore([
+          usr.chain,
+          currentNode.url,
+        ]);
 
-    if (usr && usr.id && currentNode) {
-      const lpVolumeStore = createEveryLiquidityPoolStore([
-        usr.chain,
-        currentNode.url,
-      ]);
-
-      unsubscribeStore = lpVolumeStore.subscribe(({ data, error, loading }) => {
-        if (data && !error && !loading) {
-          setLPTradingVolumes(data);
-        } else if (error) {
-          console.log({ error, location: "lpVolumeStore" });
-        }
-      });
+        lpVolumeStore.subscribe(({ data, error, loading }) => {
+          if (data && !error && !loading) {
+            setLPTradingVolumes(data);
+          } else if (error) {
+            console.log({ error, location: "lpVolumeStore" });
+          }
+        });
+      }
     }
 
-    return () => {
-      if (unsubscribeStore) unsubscribeStore();
-    };
+    fetchLPTradingVolumes();
   }, [usr, currentNode]);
 
   const assets = useMemo(() => {
@@ -182,17 +180,15 @@ export default function CustomPoolTracker(properties) {
 
   const [usrBalances, setUsrBalances] = useState();
   useEffect(() => {
-    let unsubscribeUserBalances;
+    async function fetchUserBalances() {
+      if (usr && usr.id && assets && assets.length && currentNode) {
+        const userBalancesStore = createUserBalancesStore([
+          usr.chain,
+          usr.id,
+          currentNode.url,
+        ]);
 
-    if (usr && usr.id && assets && assets.length && currentNode) {
-      const userBalancesStore = createUserBalancesStore([
-        usr.chain,
-        usr.id,
-        currentNode.url,
-      ]);
-
-      unsubscribeUserBalances = userBalancesStore.subscribe(
-        ({ data, error, loading }) => {
+        userBalancesStore.subscribe(({ data, error, loading }) => {
           if (data && !error && !loading) {
             const filteredData = data.filter((balance) =>
               assets.find((x) => x.id === balance.asset_id)
@@ -201,23 +197,12 @@ export default function CustomPoolTracker(properties) {
           } else if (error) {
             console.log({ error, location: "userBalancesStore" });
           }
-        }
-      );
+        });
+      }
     }
 
-    return () => {
-      if (unsubscribeUserBalances) unsubscribeUserBalances();
-    };
+    fetchUserBalances();
   }, [usr, assets]);
-
-  /*
-  const marketSearch = useMemo(() => {
-      if (usr && usr.chain && (_marketSearchBTS || _marketSearchTEST)) {
-          return usr.chain === "bitshares" ? _marketSearchBTS : _marketSearchTEST;
-      }
-      return [];
-  }, [_marketSearchBTS, _marketSearchTEST, usr]);
-  */
 
   const pools = useMemo(() => {
     if (!_chain || (!_poolsBTS && !_poolsTEST)) {
@@ -329,63 +314,62 @@ export default function CustomPoolTracker(properties) {
 
   const [requestResponse, setRequestResponse] = useState();
   useEffect(() => {
-    let unsubscribeStore;
-    if (
-      assets &&
-      currentNode &&
-      swappableAssets &&
-      poolShareAssets &&
-      chosenPools &&
-      chosenPools.length &&
-      swappableAssets
-    ) {
-      const _chosenPoolIDs = chosenPools.map((x) => x.id);
-      const _swappableAssetDDID = swappableAssets.map((x) =>
-        x.id.replace("1.3.", "2.3.")
-      );
-      const _poolShareAssetDDID = poolShareAssets.map((x) =>
-        x.id.replace("1.3.", "2.3.")
-      );
-      const _smartcoinIDs = swappableAssets.filter((x) => x.bitasset_data_id);
+    async function fetchObjects() {
+      if (
+        assets &&
+        currentNode &&
+        swappableAssets &&
+        poolShareAssets &&
+        chosenPools &&
+        chosenPools.length &&
+        swappableAssets
+      ) {
+        const _chosenPoolIDs = chosenPools.map((x) => x.id);
+        const _swappableAssetDDID = swappableAssets.map((x) =>
+          x.id.replace("1.3.", "2.3.")
+        );
+        const _poolShareAssetDDID = poolShareAssets.map((x) =>
+          x.id.replace("1.3.", "2.3.")
+        );
+        const _smartcoinIDs = swappableAssets.filter((x) => x.bitasset_data_id);
 
-      const objectParams = [
-        // liquidity pool data
-        ..._chosenPoolIDs,
-        // dynamic data (main assets)
-        ..._swappableAssetDDID,
-        // dynamic data (pool share assets)
-        ..._poolShareAssetDDID,
-        // smartcoin data
-        ...[
-          ...new Set([
-            ..._smartcoinIDs.map((x) => x.bitasset_data_id), // user-configured
-            "2.4.294", // always include honest.usd for USD price references
-          ]),
-        ],
-      ];
+        const objectParams = [
+          // liquidity pool data
+          ..._chosenPoolIDs,
+          // dynamic data (main assets)
+          ..._swappableAssetDDID,
+          // dynamic data (pool share assets)
+          ..._poolShareAssetDDID,
+          // smartcoin data
+          ...[
+            ...new Set([
+              ..._smartcoinIDs.map((x) => x.bitasset_data_id), // user-configured
+              "2.4.294", // always include honest.usd for USD price references
+            ]),
+          ],
+        ];
 
-      try {
-        const objStore = createObjectStore([
-          _chain,
-          JSON.stringify(objectParams),
-          currentNode ? currentNode.url : null,
-        ]);
+        try {
+          const objStore = createObjectStore([
+            _chain,
+            JSON.stringify(objectParams),
+            currentNode ? currentNode.url : null,
+          ]);
 
-        unsubscribeStore = objStore.subscribe(({ data, error, loading }) => {
-          if (data && !error && !loading) {
-            setRequestResponse(data);
-          } else if (error) {
-            console.log({ error, location: "objStore" });
-          }
-        });
-      } catch (e) {
-        console.log({ e });
+          objStore.subscribe(({ data, error, loading }) => {
+            if (data && !error && !loading) {
+              setRequestResponse(data);
+            } else if (error) {
+              console.log({ error, location: "objStore" });
+            }
+          });
+        } catch (e) {
+          console.log({ e });
+        }
       }
     }
 
-    return () => {
-      if (unsubscribeStore) unsubscribeStore();
-    };
+    fetchObjects();
   }, [assets, chosenPools, swappableAssets, poolShareAssets, currentNode]);
 
   useEffect(() => {
@@ -451,35 +435,34 @@ export default function CustomPoolTracker(properties) {
 
   const [backingAssetDD, setBackingAssetDD] = useState();
   useEffect(() => {
-    let unsubscribeStore;
-    if (_chain && currentNode && backingAssets && backingAssets.length) {
-      const objStore = createObjectStore([
-        _chain,
-        JSON.stringify([
-          ...backingAssets.map((x) => x.id.replace("1.3.", "2.3.")),
-        ]),
-        currentNode ? currentNode.url : null,
-      ]);
+    async function fetchBackingAssetDD() {
+      if (_chain && currentNode && backingAssets && backingAssets.length) {
+        const objStore = createObjectStore([
+          _chain,
+          JSON.stringify([
+            ...backingAssets.map((x) => x.id.replace("1.3.", "2.3.")),
+          ]),
+          currentNode ? currentNode.url : null,
+        ]);
 
-      unsubscribeStore = objStore.subscribe(({ data, error, loading }) => {
-        if (data && !error && !loading) {
-          const _backingAssets = {};
-          data.forEach((x) => {
-            const _refID = x.id.replace("2.3.", "1.3.");
-            const _symbol = backingAssets.find((x) => x.id === _refID).symbol;
-            _backingAssets[_symbol] = x;
-          });
-          //console.log({ _backingAssets });
-          setBackingAssetDD(_backingAssets);
-        } else if (error) {
-          console.log({ error, location: "objStore2" });
-        }
-      });
+        objStore.subscribe(({ data, error, loading }) => {
+          if (data && !error && !loading) {
+            const _backingAssets = {};
+            data.forEach((x) => {
+              const _refID = x.id.replace("2.3.", "1.3.");
+              const _symbol = backingAssets.find((x) => x.id === _refID).symbol;
+              _backingAssets[_symbol] = x;
+            });
+            //console.log({ _backingAssets });
+            setBackingAssetDD(_backingAssets);
+          } else if (error) {
+            console.log({ error, location: "objStore2" });
+          }
+        });
+      }
     }
 
-    return () => {
-      if (unsubscribeStore) unsubscribeStore();
-    };
+    fetchBackingAssetDD();
   }, [_chain, backingAssets, currentNode]);
 
   // dynamic data for:
@@ -616,74 +599,55 @@ export default function CustomPoolTracker(properties) {
 
   const [smartcoinCallOrders, setSmartcoinCallOrders] = useState();
   useEffect(() => {
-    let unsubscribeStore;
-    if (currentNode && usr && usr.id && assets && swappableAssets) {
-      const _inputs = swappableAssets
-        .filter((x) => x.bitasset_data_id)
-        .map((x) => x.id);
-      const _assetStore = createAssetCallOrdersStore([
-        _chain,
-        JSON.stringify(_inputs),
-        currentNode.url,
-      ]);
+    async function fetchSmartcoinCallOrders() {
+      if (currentNode && usr && usr.id && assets && swappableAssets) {
+        const _inputs = swappableAssets
+          .filter((x) => x.bitasset_data_id)
+          .map((x) => x.id);
+        const _assetStore = createAssetCallOrdersStore([
+          _chain,
+          JSON.stringify(_inputs),
+          currentNode.url,
+        ]);
 
-      unsubscribeStore = _assetStore.subscribe(({ data, error, loading }) => {
-        if (data && !error && !loading) {
-          const userCallOrders = {};
-          data.forEach((x) => {
-            const _callOrders = Object.values(x)[0];
-            const _foundCallOrders = _callOrders.find(
-              (y) => y.borrower === usr.id
-            );
+        _assetStore.subscribe(({ data, error, loading }) => {
+          if (data && !error && !loading) {
+            const userCallOrders = {};
+            data.forEach((x) => {
+              const _callOrders = Object.values(x)[0];
+              const _foundCallOrders = _callOrders.find(
+                (y) => y.borrower === usr.id
+              );
 
-            const _key = Object.keys(x)[0]; // Extract the key from the current element
-            const _refAsset = assets.find((x) => x.id === _key);
-            userCallOrders[_refAsset.symbol] = _foundCallOrders;
-          });
-          setSmartcoinCallOrders(userCallOrders);
-        } else if (error) {
-          console.log({ error, location: "smartcoinCallOrders" });
-        }
-      });
+              const _key = Object.keys(x)[0]; // Extract the key from the current element
+              const _refAsset = assets.find((x) => x.id === _key);
+              userCallOrders[_refAsset.symbol] = _foundCallOrders;
+            });
+            setSmartcoinCallOrders(userCallOrders);
+          } else if (error) {
+            console.log({ error, location: "smartcoinCallOrders" });
+          }
+        });
+      }
     }
 
-    return () => {
-      if (unsubscribeStore) unsubscribeStore();
-    };
+    fetchSmartcoinCallOrders();
   }, [currentNode, usr, assets, swappableAssets]);
 
   const [allAssetsMarketTickers, setAllAssetsMarketTickers] = useState();
   useEffect(() => {
-    let unsubscribeStore;
-    if (
-      usr &&
-      currentNode &&
-      assets &&
-      assets.length &&
-      swappableAssets &&
-      poolShareAssets
-    ) {
-      let allTradingPairs = [];
+    async function fetchAllAssetTickers() {
+      if (
+        usr &&
+        currentNode &&
+        assets &&
+        assets.length &&
+        swappableAssets &&
+        poolShareAssets
+      ) {
+        let allTradingPairs = [];
 
-      swappableAssets.forEach((x) => {
-        const _coreAsset = usr.chain === "bitshares" ? "BTS" : "TEST";
-        const _coreTradeAsset =
-          usr.chain === "bitshares" ? "HONEST.USD" : "NFTEA"; // TODO: Replace with other assets?
-        allTradingPairs.push(
-          `${x.symbol}_${
-            x.symbol !== _coreAsset ? _coreAsset : _coreTradeAsset
-          }`
-        );
-      });
-
-      poolShareAssets.forEach((x) => {
-        allTradingPairs.push(
-          `${x.symbol}_${usr.chain === "bitshares" ? "BTS" : "TEST"}`
-        );
-      });
-
-      if (backingAssets) {
-        backingAssets.forEach((x) => {
+        swappableAssets.forEach((x) => {
           const _coreAsset = usr.chain === "bitshares" ? "BTS" : "TEST";
           const _coreTradeAsset =
             usr.chain === "bitshares" ? "HONEST.USD" : "NFTEA"; // TODO: Replace with other assets?
@@ -693,16 +657,33 @@ export default function CustomPoolTracker(properties) {
             }`
           );
         });
-      }
 
-      const assetTickerStore = createMultipleTickerStore([
-        usr.chain,
-        JSON.stringify([...new Set(allTradingPairs)]),
-        currentNode.url,
-      ]);
+        poolShareAssets.forEach((x) => {
+          allTradingPairs.push(
+            `${x.symbol}_${usr.chain === "bitshares" ? "BTS" : "TEST"}`
+          );
+        });
 
-      unsubscribeStore = assetTickerStore.subscribe(
-        ({ data, error, loading }) => {
+        if (backingAssets) {
+          backingAssets.forEach((x) => {
+            const _coreAsset = usr.chain === "bitshares" ? "BTS" : "TEST";
+            const _coreTradeAsset =
+              usr.chain === "bitshares" ? "HONEST.USD" : "NFTEA"; // TODO: Replace with other assets?
+            allTradingPairs.push(
+              `${x.symbol}_${
+                x.symbol !== _coreAsset ? _coreAsset : _coreTradeAsset
+              }`
+            );
+          });
+        }
+
+        const assetTickerStore = createMultipleTickerStore([
+          usr.chain,
+          JSON.stringify([...new Set(allTradingPairs)]),
+          currentNode.url,
+        ]);
+
+        assetTickerStore.subscribe(({ data, error, loading }) => {
           if (data && !error && !loading) {
             // { "BTS_HONEST.USD": { tickerdata } }
             //console.log({data})
@@ -710,13 +691,11 @@ export default function CustomPoolTracker(properties) {
           } else if (error) {
             console.log({ error, location: "assetTickerStore" });
           }
-        }
-      );
+        });
+      }
     }
 
-    return () => {
-      if (unsubscribeStore) unsubscribeStore();
-    };
+    fetchAllAssetTickers();
   }, [
     usr,
     currentNode,
@@ -1267,7 +1246,7 @@ export default function CustomPoolTracker(properties) {
               )
             )
           : null}
-        <div className="ml-3 mt-3 ml-1">
+        <div className="ml-3 mt-3">
           A: {_24hVolumeA}
           <br />
           B: {_24hVolumeB}

@@ -119,28 +119,28 @@ export default function CreateTicket() {
   // User-specific tickets and tallies
   const [userTickets, setUserTickets] = useState([]);
   useEffect(() => {
-    let unsubscribe;
-    if (
-      usr &&
-      usr.id &&
-      (chain === "bitshares" || chain === "bitshares_testnet")
-    ) {
-      const store = createUserTicketsStore([
-        chain,
-        usr.id,
-        currentNode ? currentNode.url : null,
-        0,
-        8, // pages to fetch for better coverage
-      ]);
-      unsubscribe = store.subscribe(({ data, error, loading }) => {
-        if (data && !error && !loading) {
-          setUserTickets(data);
-        }
-      });
+    async function fetchUserTickets() {
+      if (
+        usr &&
+        usr.id &&
+        (chain === "bitshares" || chain === "bitshares_testnet")
+      ) {
+        const store = createUserTicketsStore([
+          chain,
+          usr.id,
+          currentNode ? currentNode.url : null,
+          0,
+          8, // pages to fetch for better coverage
+        ]);
+        store.subscribe(({ data, error, loading }) => {
+          if (data && !error && !loading) {
+            setUserTickets(data);
+          }
+        });
+      }
     }
-    return () => {
-      if (unsubscribe) unsubscribe();
-    };
+
+    fetchUserTickets();
   }, [usr, chain, currentNode]);
 
   const userTotals = useMemo(() => {

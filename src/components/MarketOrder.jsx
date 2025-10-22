@@ -87,8 +87,8 @@ import {
   isInvertedMarket,
 } from "@/lib/common";
 
-import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
-import { createObjectStore } from "@/nanoeffects/Objects.ts";
+import { getAccountBalances } from "@/nanoeffects/UserBalances.ts";
+import { getObjects } from "@/nanoeffects/src/common.ts";
 
 import { Avatar } from "./Avatar.tsx";
 
@@ -229,149 +229,158 @@ export default function MarketOrder(properties) {
 
   const [currentLimitOrder, setCurrentLimitOrder] = useState();
   useEffect(() => {
-    let unsubscribeLimitOrder;
+    let cancelled = false;
 
-    if (limitOrderID && usr && usr.chain) {
-      const limitOrderStore = createObjectStore([
-        usr.chain,
-        JSON.stringify([limitOrderID]),
-      ]);
-      unsubscribeLimitOrder = limitOrderStore.subscribe(
-        ({ data, error, loading }) => {
-          if (data && !error && !loading) {
-            const _data = data[0];
-            setCurrentLimitOrder(_data);
+    async function loadLimitOrder() {
+      if (!(limitOrderID && usr && usr.chain)) return;
 
-            const foundQuoteAsset = assets.find(
-              (x) => x.id === _data.sell_price.quote.asset_id
-            );
-            const foundBaseAsset = assets.find(
-              (x) => x.id === _data.sell_price.base.asset_id
-            );
-            setQuoteAsset(foundQuoteAsset);
-            setBaseAsset(foundBaseAsset);
+      try {
+        const res = await getObjects(
+          usr.chain,
+          [limitOrderID],
+          currentNode ? currentNode.url : null
+        );
+        if (cancelled || !res || !res.length) return;
 
-            const _quoteAmount = humanReadableFloat(
-              _data.sell_price.quote.amount,
-              foundQuoteAsset.precision
-            );
-            const _baseAmount = humanReadableFloat(
-              _data.sell_price.base.amount,
-              foundBaseAsset.precision
-            );
-            const isInverted = isInvertedMarket(
-              foundBaseAsset.id,
-              foundQuoteAsset.id
-            );
-            setMarketInverted(isInverted);
+        const _data = res[0];
+        if (!_data) return;
 
-            setExistingQuoteAmount(_quoteAmount);
-            setExistingBaseAmount(_baseAmount);
-            setExistingPrice(
-              !isInverted
-                ? _baseAmount * _quoteAmount
-                : _baseAmount / _quoteAmount
-            );
-            setExistingExpiry(_data.expiration);
+        setCurrentLimitOrder(_data);
 
-            setAmount(_baseAmount);
-            setTotal(_quoteAmount);
+        const foundQuoteAsset = assets.find(
+          (x) => x.id === _data.sell_price.quote.asset_id
+        );
+        const foundBaseAsset = assets.find(
+          (x) => x.id === _data.sell_price.base.asset_id
+        );
+        setQuoteAsset(foundQuoteAsset);
+        setBaseAsset(foundBaseAsset);
 
-            setPrice(
-              !isInverted
-                ? _baseAmount * _quoteAmount
-                : _baseAmount / _quoteAmount
-            );
+        if (!(foundQuoteAsset && foundBaseAsset)) return;
 
-            // Sync RHF with derived values
-            form.reset({
-              account:
-                usr && usr.id === _data.seller
-                  ? `${usr.username} (${usr.id})`
-                  : _data.seller,
-              price: !isInverted
-                ? _baseAmount * _quoteAmount
-                : _baseAmount / _quoteAmount,
-              amount: _baseAmount,
-              total: _quoteAmount,
-              expiryType: "1hr",
-              expiry: new Date(_data.expiration),
-              osoEnabled: !!(_data.on_fill && _data.on_fill.length),
-              spreadPercent: onFillContents
-                ? onFillContents.spread_percent / 100
-                : 1,
-              sizePercent: onFillContents
-                ? onFillContents.size_percent / 100
-                : 100,
-              repeat: onFillContents ? onFillContents.repeat : false,
-            });
+        const _quoteAmount = humanReadableFloat(
+          _data.sell_price.quote.amount,
+          foundQuoteAsset.precision
+        );
+        const _baseAmount = humanReadableFloat(
+          _data.sell_price.base.amount,
+          foundBaseAsset.precision
+        );
+        const isInverted = isInvertedMarket(
+          foundBaseAsset.id,
+          foundQuoteAsset.id
+        );
+        setMarketInverted(isInverted);
 
-            const onFillContents = _data.on_fill.length
-              ? _data.on_fill[0][1]
-              : null;
-            if (onFillContents) {
-              setOSOEnabled(true);
-              setSpreadPercent(onFillContents.spread_percent / 100);
-              setSizePercent(onFillContents.size_percent / 100);
-              setExpirationSeconds(onFillContents.expiration_seconds);
-              setRepeat(onFillContents.repeat);
-            }
-          }
+        setExistingQuoteAmount(_quoteAmount);
+        setExistingBaseAmount(_baseAmount);
+        setExistingPrice(
+          !isInverted ? _baseAmount * _quoteAmount : _baseAmount / _quoteAmount
+        );
+        setExistingExpiry(_data.expiration);
+
+        setAmount(_baseAmount);
+        setTotal(_quoteAmount);
+
+        setPrice(
+          !isInverted ? _baseAmount * _quoteAmount : _baseAmount / _quoteAmount
+        );
+
+        const onFillContents =
+          _data.on_fill && _data.on_fill.length ? _data.on_fill[0][1] : null;
+
+        // Sync RHF with derived values
+        form.reset({
+          account:
+            usr && usr.id === _data.seller
+              ? `${usr.username} (${usr.id})`
+              : _data.seller,
+          price: !isInverted
+            ? _baseAmount * _quoteAmount
+            : _baseAmount / _quoteAmount,
+          amount: _baseAmount,
+          total: _quoteAmount,
+          expiryType: "1hr",
+          expiry: new Date(_data.expiration),
+          osoEnabled: !!(_data.on_fill && _data.on_fill.length),
+          spreadPercent: onFillContents
+            ? onFillContents.spread_percent / 100
+            : 1,
+          sizePercent: onFillContents ? onFillContents.size_percent / 100 : 100,
+          repeat: onFillContents ? onFillContents.repeat : false,
+        });
+
+        if (onFillContents) {
+          setOSOEnabled(true);
+          setSpreadPercent(onFillContents.spread_percent / 100);
+          setSizePercent(onFillContents.size_percent / 100);
+          setExpirationSeconds(onFillContents.expiration_seconds);
+          setRepeat(onFillContents.repeat);
         }
-      );
+      } catch (e) {
+        console.log({ e });
+      }
     }
 
+    loadLimitOrder();
+
     return () => {
-      if (unsubscribeLimitOrder) unsubscribeLimitOrder();
+      cancelled = true;
     };
-  }, [limitOrderID, usr]);
+  }, [limitOrderID, usr, assets, currentNode]);
 
   const [balances, setBalances] = useState();
   const [quoteBalance, setQuoteBalance] = useState(0);
   const [baseBalance, setBaseBalance] = useState(0);
   useEffect(() => {
-    let unsubscribeUserBalances;
+    let cancelled = false;
 
-    if (usr && usr.id && currentLimitOrder && baseAsset && quoteAsset) {
-      const userBalancesStore = createUserBalancesStore([
-        usr.chain,
-        usr.id,
-        currentNode ? currentNode.url : null,
-      ]);
+    async function loadBalances() {
+      if (!(usr && usr.id && currentLimitOrder && baseAsset && quoteAsset)) {
+        return;
+      }
 
-      unsubscribeUserBalances = userBalancesStore.subscribe(
-        ({ data, error, loading }) => {
-          if (data && !error && !loading) {
-            const filteredData = data.filter((balance) =>
-              assets.find((x) => x.id === balance.asset_id)
-            );
+      try {
+        const data = await getAccountBalances(
+          usr.chain,
+          usr.id,
+          currentNode ? currentNode.url : null
+        );
 
-            setBalances(filteredData);
-            const foundBase = filteredData.find(
-              (x) => x.asset_id === baseAsset.id
-            );
-            const foundQuote = filteredData.find(
-              (x) => x.asset_id === quoteAsset.id
-            );
-            setBaseBalance(
-              foundBase
-                ? humanReadableFloat(foundBase.amount, baseAsset.precision)
-                : 0
-            );
-            setQuoteBalance(
-              foundQuote
-                ? humanReadableFloat(foundQuote.amount, quoteAsset.precision)
-                : 0
-            );
-          }
-        }
-      );
+        if (cancelled || !data) return;
+
+        const filteredData = data.filter((balance) =>
+          assets.find((x) => x.id === balance.asset_id)
+        );
+
+        setBalances(filteredData);
+
+        const foundBase = filteredData.find((x) => x.asset_id === baseAsset.id);
+        const foundQuote = filteredData.find(
+          (x) => x.asset_id === quoteAsset.id
+        );
+
+        setBaseBalance(
+          foundBase
+            ? humanReadableFloat(foundBase.amount, baseAsset.precision)
+            : 0
+        );
+        setQuoteBalance(
+          foundQuote
+            ? humanReadableFloat(foundQuote.amount, quoteAsset.precision)
+            : 0
+        );
+      } catch (error) {
+        console.log({ error });
+      }
     }
 
+    loadBalances();
+
     return () => {
-      if (unsubscribeUserBalances) unsubscribeUserBalances();
+      cancelled = true;
     };
-  }, [usr, currentLimitOrder, baseAsset, quoteAsset]);
+  }, [usr, currentLimitOrder, baseAsset, quoteAsset, assets, currentNode]);
 
   const debouncedSetSpreadPercent = useCallback(
     debounce((input, mcr) => {
@@ -471,7 +480,7 @@ export default function MarketOrder(properties) {
 
   return (
     <>
-      <div className="container mx-auto mt-5 mb-5">
+      <div className="container mx-auto mt-5 mb-5 w-1/2">
         <div className="grid grid-cols-1 gap-3">
           <Card>
             <CardHeader className="pb-0 mb-0">

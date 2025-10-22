@@ -17,7 +17,7 @@ import { $blockList } from "@/stores/blocklist.ts";
 import { $currentUser } from "@/stores/users";
 import { $currentNode } from "@/stores/node.ts";
 import { useInitCache } from "@/nanoeffects/Init.ts";
-import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
+import { getAccountBalances } from "@/nanoeffects/UserBalances.ts";
 
 import {
   Card,
@@ -84,31 +84,29 @@ export default function CustomPoolOverview(properties) {
 
   const [usrBalances, setUsrBalances] = useState();
   useEffect(() => {
-    let unsubscribeUserBalances;
+    async function loadBalances() {
+      if (!(usr && usr.id && assets && assets.length)) return;
 
-    if (usr && usr.id && assets && assets.length) {
-      const userBalancesStore = createUserBalancesStore([
-        usr.chain,
-        usr.id,
-        currentNode ? currentNode.url : null,
-      ]);
+      try {
+        const data = await getAccountBalances(
+          usr.chain,
+          usr.id,
+          currentNode ? currentNode.url : null
+        );
 
-      unsubscribeUserBalances = userBalancesStore.subscribe(
-        ({ data, error, loading }) => {
-          if (data && !error && !loading) {
-            const filteredData = data.filter((balance) =>
-              assets.find((x) => x.id === balance.asset_id)
-            );
-            setUsrBalances(filteredData);
-          }
-        }
-      );
+        if (!data) return;
+
+        const filteredData = data.filter((balance) =>
+          assets.find((x) => x.id === balance.asset_id)
+        );
+        setUsrBalances(filteredData);
+      } catch (e) {
+        console.log({ e });
+      }
     }
 
-    return () => {
-      if (unsubscribeUserBalances) unsubscribeUserBalances();
-    };
-  }, [usr, assets]);
+    loadBalances();
+  }, [usr, assets, currentNode]);
 
   const marketSearch = useMemo(() => {
     if (usr && usr.chain && (_marketSearchBTS || _marketSearchTEST)) {

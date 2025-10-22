@@ -47,5 +47,10 @@
   "pools": "Quinielas",
   "default": "Por defecto",
   "alphabetical": "Alfabético",
-  "amount": "Cantidad"
+  "amount": "Cantidad",
+  "descriptionHeader": "Descripción",
+  "orderIdHeader": "ID de pedido",
+  "expirationHeader": "Vencimiento",
+  "priceHeader": "Precio",
+  "actionsHeader": "Comportamiento"
 }

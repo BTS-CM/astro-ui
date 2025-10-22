@@ -117,28 +117,33 @@ export default function WorkerCreate(properties) {
 
   // Fetch core asset details (BTS or TEST)
   useEffect(() => {
-    let unsubscribe;
     if (usr && usr.chain && currentNode) {
       setCoreAssetLoading(true);
       const coreAssetSymbol = usr.chain === "bitshares" ? "BTS" : "TEST";
-      const assetStore = createAssetFromSymbolStore([
-        usr.chain,
-        coreAssetSymbol,
-        currentNode.url,
-      ]);
-      unsubscribe = assetStore.subscribe(({ data, error, loading }) => {
-        if (data && !error && !loading) {
-          setCoreAsset(data.assetData);
-          setCoreAssetLoading(false);
-        } else if (error) {
-          console.error(`Error fetching core asset ${coreAssetSymbol}:`, error);
-          setCoreAssetLoading(false);
-        }
-      });
+
+      async function fetchCoreAsset() {
+        const assetStore = createAssetFromSymbolStore([
+          usr.chain,
+          coreAssetSymbol,
+          currentNode.url,
+        ]);
+
+        assetStore.subscribe(({ data, error, loading }) => {
+          if (data && !error && !loading) {
+            setCoreAsset(data.assetData);
+            setCoreAssetLoading(false);
+          } else if (error) {
+            console.error(
+              `Error fetching core asset ${coreAssetSymbol}:`,
+              error
+            );
+            setCoreAssetLoading(false);
+          }
+        });
+      }
+
+      fetchCoreAsset();
     }
-    return () => {
-      if (unsubscribe) unsubscribe();
-    };
   }, [usr, currentNode]);
 
   const canSubmit = useMemo(() => coreAsset, [coreAsset]);

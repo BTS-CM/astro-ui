@@ -47,6 +47,13 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  Empty,
+  EmptyHeader,
+  EmptyTitle,
+  EmptyContent,
+  EmptyMedia,
+} from "@/components/ui/empty";
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
 import { createIssuedAssetsStore } from "@/nanoeffects/IssuedAssets.ts";
@@ -930,7 +937,7 @@ export default function IssuedAssets(properties) {
 
   return (
     <>
-      <div className="container mx-auto mt-5 mb-5">
+      <div className="container mx-auto mt-5 mb-5 w-3/4">
         <div className="grid grid-cols-1 gap-3">
           <Card>
             <CardHeader>
@@ -1006,20 +1013,32 @@ export default function IssuedAssets(properties) {
                   )}
                 </TabsList>
                 <TabsContent value="uia">
-                  <h5 className="mb-2 text-center">
-                    {t("IssuedAssets:listingUIA", {
-                      count: relevantAssets.length,
-                    })}
-                  </h5>
+                  {relevantAssets.length > 0 ? (
+                    <h5 className="mb-2 text-center">
+                      {t("IssuedAssets:listingUIA", {
+                        count: relevantAssets.length,
+                      })}
+                    </h5>
+                  ) : null}
                   {loading ? (
                     <div className="text-center mt-5">
                       {t("CreditBorrow:common.loading")}
                     </div>
                   ) : null}
                   {(!loading && !relevantAssets) || !relevantAssets.length ? (
-                    <div className="text-center mt-5">
-                      {t("IssuedAssets:noUIA")}
-                    </div>
+                    <Empty className="mt-5">
+                      <EmptyHeader>
+                        <EmptyMedia variant="icon">❔</EmptyMedia>
+                        <EmptyTitle>{t("IssuedAssets:noUIA")}</EmptyTitle>
+                      </EmptyHeader>
+                      <EmptyContent>
+                        <Button asChild>
+                          <a href="/create_uia/index.html">
+                            {t("PageHeader:create_uia")}
+                          </a>
+                        </Button>
+                      </EmptyContent>
+                    </Empty>
                   ) : (
                     <div className="w-full max-h-[500px] overflow-auto">
                       <List
@@ -1032,20 +1051,34 @@ export default function IssuedAssets(properties) {
                   )}
                 </TabsContent>
                 <TabsContent value="smartcoins">
-                  <h5 className="mb-2 text-center">
-                    {t("IssuedAssets:listingSmartcoins", {
-                      count: relevantAssets.length,
-                    })}
-                  </h5>
+                  {relevantAssets.length > 0 ? (
+                    <h5 className="mb-2 text-center">
+                      {t("IssuedAssets:listingSmartcoins", {
+                        count: relevantAssets.length,
+                      })}
+                    </h5>
+                  ) : null}
                   {loading ? (
                     <div className="text-center mt-5">
                       {t("CreditBorrow:common.loading")}
                     </div>
                   ) : null}
                   {(!loading && !relevantAssets) || !relevantAssets.length ? (
-                    <div className="text-center mt-5">
-                      {t("IssuedAssets:noSmartcoins")}
-                    </div>
+                    <Empty className="mt-5">
+                      <EmptyHeader>
+                        <EmptyMedia variant="icon">❔</EmptyMedia>
+                        <EmptyTitle>
+                          {t("IssuedAssets:noSmartcoins")}
+                        </EmptyTitle>
+                      </EmptyHeader>
+                      <EmptyContent>
+                        <Button asChild>
+                          <a href="/create_smartcoin/index.html">
+                            {t("PageHeader:create_smartcoin")}
+                          </a>
+                        </Button>
+                      </EmptyContent>
+                    </Empty>
                   ) : (
                     <div className="w-full max-h-[500px] overflow-auto">
                       <List
@@ -1058,20 +1091,34 @@ export default function IssuedAssets(properties) {
                   )}
                 </TabsContent>
                 <TabsContent value="prediction">
-                  <h5 className="mb-2 text-center">
-                    {t("IssuedAssets:listingPredictionMarkets", {
-                      count: relevantAssets.length,
-                    })}
-                  </h5>
+                  {relevantAssets.length > 0 ? (
+                    <h5 className="mb-2 text-center">
+                      {t("IssuedAssets:listingPredictionMarkets", {
+                        count: relevantAssets.length,
+                      })}
+                    </h5>
+                  ) : null}
                   {loading ? (
                     <div className="text-center mt-5">
                       {t("CreditBorrow:common.loading")}
                     </div>
                   ) : null}
                   {(!loading && !relevantAssets) || !relevantAssets.length ? (
-                    <div className="text-center mt-5">
-                      {t("IssuedAssets:noPredictionMarkets")}
-                    </div>
+                    <Empty className="mt-5">
+                      <EmptyHeader>
+                        <EmptyMedia variant="icon">❔</EmptyMedia>
+                        <EmptyTitle>
+                          {t("IssuedAssets:noPredictionMarkets")}
+                        </EmptyTitle>
+                      </EmptyHeader>
+                      <EmptyContent>
+                        <Button asChild>
+                          <a href="/create_prediction/index.html">
+                            {t("PageHeader:createPrediction")}
+                          </a>
+                        </Button>
+                      </EmptyContent>
+                    </Empty>
                   ) : (
                     <div className="w-full max-h-[500px] overflow-auto">
                       <List
@@ -1084,20 +1131,25 @@ export default function IssuedAssets(properties) {
                   )}
                 </TabsContent>
                 <TabsContent value="nft">
-                  <h5 className="mb-2 text-center">
-                    {t("IssuedAssets:listingNFTs", {
-                      count: relevantAssets.length,
-                    })}
-                  </h5>
+                  {relevantAssets.length > 0 ? (
+                    <h5 className="mb-2 text-center">
+                      {t("IssuedAssets:listingNFTs", {
+                        count: relevantAssets.length,
+                      })}
+                    </h5>
+                  ) : null}
                   {loading ? (
                     <div className="text-center mt-5">
                       {t("CreditBorrow:common.loading")}
                     </div>
                   ) : null}
                   {(!loading && !relevantAssets) || !relevantAssets.length ? (
-                    <div className="text-center mt-5">
-                      {t("IssuedAssets:noNFTs")}
-                    </div>
+                    <Empty className="mt-5">
+                      <EmptyHeader>
+                        <EmptyMedia variant="icon">❔</EmptyMedia>
+                        <EmptyTitle>{t("IssuedAssets:noNFTs")}</EmptyTitle>
+                      </EmptyHeader>
+                    </Empty>
                   ) : (
                     <div className="w-full max-h-[500px] overflow-auto">
                       <List

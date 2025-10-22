@@ -47,5 +47,10 @@
   "pools": "Basseinid",
   "default": "Vaikimisi",
   "alphabetical": "Tähestikuline",
-  "amount": "Summa"
+  "amount": "Summa",
+  "descriptionHeader": "Kirjeldus",
+  "orderIdHeader": "Tellimuse ID",
+  "expirationHeader": "Aegumine",
+  "priceHeader": "Hind",
+  "actionsHeader": "Tegevused"
 }

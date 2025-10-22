@@ -116,80 +116,68 @@ export default function CreditDeals(properties) {
 
   const [borrowerDeals, setBorrowerDeals] = useState();
   useEffect(() => {
-    let unsubscribeBorrowerDeals;
+    async function fetchBorrowerDeals() {
+      if (usr && usr.id) {
+        const borrowerDealsStore = createBorrowerDealsStore([
+          usr.chain,
+          usr.id,
+          currentNode ? currentNode.url : null,
+        ]);
 
-    if (usr && usr.id) {
-      const borrowerDealsStore = createBorrowerDealsStore([
-        usr.chain,
-        usr.id,
-        currentNode ? currentNode.url : null,
-      ]);
-
-      unsubscribeBorrowerDeals = borrowerDealsStore.subscribe(
-        ({ data, error, loading }) => {
+        borrowerDealsStore.subscribe(({ data, error, loading }) => {
           if (data && !error && !loading) {
             setBorrowerDeals(data);
           }
-        }
-      );
+        });
+      }
     }
 
-    return () => {
-      if (unsubscribeBorrowerDeals) unsubscribeBorrowerDeals();
-    };
+    fetchBorrowerDeals();
   }, [usr]);
 
   const [lenderDeals, setLenderDeals] = useState();
   useEffect(() => {
-    let unsubscribeLenderDeals;
+    async function fetchLenderDeals() {
+      if (usr && usr.id) {
+        const lenderDealsStore = createLenderDealsStore([
+          usr.chain,
+          usr.id,
+          currentNode ? currentNode.url : null,
+        ]);
 
-    if (usr && usr.id) {
-      const lenderDealsStore = createLenderDealsStore([
-        usr.chain,
-        usr.id,
-        currentNode ? currentNode.url : null,
-      ]);
-
-      unsubscribeLenderDeals = lenderDealsStore.subscribe(
-        ({ data, error, loading }) => {
+        lenderDealsStore.subscribe(({ data, error, loading }) => {
           if (data && !error && !loading) {
             setLenderDeals(data);
           }
-        }
-      );
+        });
+      }
     }
 
-    return () => {
-      if (unsubscribeLenderDeals) unsubscribeLenderDeals();
-    };
+    fetchLenderDeals();
   }, [usr]);
 
   const [usrBalances, setUsrBalances] = useState();
   useEffect(() => {
-    let unsubscribeUserBalances;
+    async function fetchUserBalances() {
+      if (usr && usr.id) {
+        const userBalancesStore = createUserBalancesStore([
+          usr.chain,
+          usr.id,
+          currentNode ? currentNode.url : null,
+        ]);
 
-    if (usr && usr.id) {
-      const userBalancesStore = createUserBalancesStore([
-        usr.chain,
-        usr.id,
-        currentNode ? currentNode.url : null,
-      ]);
-
-      unsubscribeUserBalances = userBalancesStore.subscribe(
-        ({ data, error, loading }) => {
+        userBalancesStore.subscribe(({ data, error, loading }) => {
           if (data && !error && !loading) {
             const filteredData = data.filter((balance) =>
               assets.find((x) => x.id === balance.asset_id)
             );
             setUsrBalances(filteredData);
           }
-        }
-      );
+        });
+      }
     }
 
-    return () => {
-      if (unsubscribeUserBalances) unsubscribeUserBalances();
-    };
+    fetchUserBalances();
   }, [usr]);
 
   function CommonRow({ style, res, type }) {

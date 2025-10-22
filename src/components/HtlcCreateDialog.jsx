@@ -110,27 +110,29 @@ export default function HtlcCreateDialog(properties) {
   // Balances
   const [balances, setBalances] = useState();
   useEffect(() => {
-    let unsubscribeUserBalances;
-    if (usr && usr.id && currentNode && assets && assets.length) {
+    async function fetchUserBalances() {
+      if (!(usr && usr.id && currentNode && assets && assets.length)) {
+        setBalances([]);
+        return;
+      }
+
       const userBalancesStore = createUserBalancesStore([
         _chain,
         usr.id,
         currentNode.url,
       ]);
-      unsubscribeUserBalances = userBalancesStore.subscribe(
-        ({ data, error, loading }) => {
-          if (data && !error && !loading) {
-            const filteredData = data.filter((balance) =>
-              assets.find((x) => x.id === balance.asset_id)
-            );
-            setBalances(filteredData);
-          }
+
+      userBalancesStore.subscribe(({ data, error, loading }) => {
+        if (data && !error && !loading) {
+          const filteredData = data.filter((balance) =>
+            assets.find((x) => x.id === balance.asset_id)
+          );
+          setBalances(filteredData);
         }
-      );
+      });
     }
-    return () => {
-      if (unsubscribeUserBalances) unsubscribeUserBalances();
-    };
+
+    fetchUserBalances();
   }, [usr, assets, currentNode, _chain]); // Added _chain
 
   // Asset details

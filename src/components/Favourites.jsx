@@ -544,21 +544,27 @@ export default function Favourites(properties) {
                           <div>
                             <div className="flex items-center gap-2">
                               <a
-                                href={`/transfer/index.html?to=${encodeURIComponent(user.name)}`}
+                                href={`/transfer/index.html?to=${encodeURIComponent(
+                                  user.name
+                                )}`}
                               >
                                 <Button variant="outline" size="sm">
                                   {t("Favourites:transfer")}
                                 </Button>
                               </a>
                               <a
-                                href={`/timed_transfer/index.html?to=${encodeURIComponent(user.name)}`}
+                                href={`/timed_transfer/index.html?to=${encodeURIComponent(
+                                  user.name
+                                )}`}
                               >
                                 <Button variant="outline" size="sm">
                                   {t("Favourites:timedTransfer")}
                                 </Button>
                               </a>
                               <a
-                                href={`/create_vesting/index.html?to=${encodeURIComponent(user.name)}`}
+                                href={`/create_vesting/index.html?to=${encodeURIComponent(
+                                  user.name
+                                )}`}
                               >
                                 <Button variant="outline" size="sm">
                                   {t("Favourites:vestAssets")}

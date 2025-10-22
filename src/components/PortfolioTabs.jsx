@@ -156,16 +156,14 @@ export default function PortfolioTabs(properties) {
   const [balanceCounter, setBalanceCounter] = useState(0);
   const [balances, setBalances] = useState();
   useEffect(() => {
-    let unsubscribeUserBalancesStore;
-    if (usr && usr.id) {
-      const userBalancesStore = createUserBalancesStore([
-        usr.chain,
-        usr.id,
-        currentNode ? currentNode.url : null,
-      ]);
-
-      unsubscribeUserBalancesStore = userBalancesStore.subscribe(
-        ({ data, error, loading }) => {
+    async function fetchUserBalances() {
+      if (usr && usr.id) {
+        const userBalancesStore = createUserBalancesStore([
+          usr.chain,
+          usr.id,
+          currentNode ? currentNode.url : null,
+        ]);
+        userBalancesStore.subscribe(({ data, error, loading }) => {
           if (data && !error && !loading) {
             const updatedData = data
               .filter((balance) =>
@@ -179,13 +177,10 @@ export default function PortfolioTabs(properties) {
               });
             setBalances(updatedData);
           }
-        }
-      );
+        });
+      }
     }
-
-    return () => {
-      if (unsubscribeUserBalancesStore) unsubscribeUserBalancesStore();
-    };
+    fetchUserBalances();
   }, [usr, balanceCounter, assets]);
 
   const sortedUserBalances = useMemo(() => {
@@ -210,50 +205,38 @@ export default function PortfolioTabs(properties) {
   const [openOrderCounter, setOpenOrderCounter] = useState(0);
   const [openOrders, setOpenOrders] = useState();
   useEffect(() => {
-    let unsubscribeLimitOrdersStore;
-
-    if (usr && usr.id) {
-      const limitOrdersStore = createAccountLimitOrderStore([
-        usr.chain,
-        usr.id,
-      ]);
-
-      unsubscribeLimitOrdersStore = limitOrdersStore.subscribe(
-        ({ data, error, loading }) => {
+    async function fetchOpenOrders() {
+      if (usr && usr.id) {
+        const limitOrdersStore = createAccountLimitOrderStore([
+          usr.chain,
+          usr.id,
+        ]);
+        limitOrdersStore.subscribe(({ data, error, loading }) => {
           if (data && !error && !loading) {
             console.log("Successfully fetched open orders");
             setOpenOrders(data);
           }
-        }
-      );
+        });
+      }
     }
-
-    return () => {
-      if (unsubscribeLimitOrdersStore) unsubscribeLimitOrdersStore();
-    };
+    fetchOpenOrders();
   }, [usr, openOrderCounter]);
 
   const [activityCounter, setActivityCounter] = useState(0);
   const [activity, setActivity] = useState();
   useEffect(() => {
-    let unsubscribeUserHistoryStore;
-
-    if (usr && usr.id) {
-      const userHistoryStore = createAccountHistoryStore([usr.chain, usr.id]);
-
-      unsubscribeUserHistoryStore = userHistoryStore.subscribe(
-        ({ data, error, loading }) => {
+    async function fetchUserHistory() {
+      if (usr && usr.id) {
+        const userHistoryStore = createAccountHistoryStore([usr.chain, usr.id]);
+        userHistoryStore.subscribe(({ data, error, loading }) => {
           if (data && !error && !loading) {
             console.log("Successfully fetched history");
             setActivity(data);
           }
-        }
-      );
+        });
+      }
     }
-
-    return () => {
-      if (unsubscribeUserHistoryStore) unsubscribeUserHistoryStore();
-    };
+    fetchUserHistory();
   }, [usr, activityCounter]);
 
   const retrievedBalanceAssets = useMemo(() => {

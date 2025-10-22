@@ -103,16 +103,17 @@ export default function Witnesses(properties) {
 
   // 1. Fetch Global and Dynamic Global Parameters
   useEffect(() => {
-    let unsubscribeGlobal;
     if (usr && usr.chain && currentNode) {
       setLoading(true); // Start loading when fetching begins
-      const globalParamsStore = createObjectStore([
-        usr.chain,
-        JSON.stringify(["2.0.0", "2.1.0"]), // Fetch both objects
-        currentNode.url,
-      ]);
-      unsubscribeGlobal = globalParamsStore.subscribe(
-        ({ data, error, loading: gpLoading }) => {
+
+      async function fetchGlobalParameters() {
+        const globalParamsStore = createObjectStore([
+          usr.chain,
+          JSON.stringify(["2.0.0", "2.1.0"]), // Fetch both objects
+          currentNode.url,
+        ]);
+
+        globalParamsStore.subscribe(({ data, error, loading: gpLoading }) => {
           if (data && !error && !gpLoading && data.length === 2) {
             setActiveWitnessIds(data[0].active_witnesses);
             setGlobalParameters(data[0].parameters);
@@ -120,29 +121,27 @@ export default function Witnesses(properties) {
           } else if (error) {
             console.error("Error fetching global parameters:", error);
           }
-        }
-      );
+        });
+      }
+
+      fetchGlobalParameters();
     }
-    // Cleanup function
-    return () => {
-      if (unsubscribeGlobal) unsubscribeGlobal();
-    };
   }, [usr, currentNode]);
 
   // 2. Fetch All Witness Objects (1.6.x)
   useEffect(() => {
-    let unsubscribe;
     if (usr && usr.chain && currentNode && globalParameters) {
       // Ensure globalParameters are loaded first
-      const allWitnessStore = createEveryObjectStore([
-        usr.chain,
-        1, // space_id
-        6, // type_id for witness
-        0, // start from beginning
-        currentNode.url,
-      ]);
-      unsubscribe = allWitnessStore.subscribe(
-        ({ data, error, loading: wLoading }) => {
+      async function fetchAllWitnessObjects() {
+        const allWitnessStore = createEveryObjectStore([
+          usr.chain,
+          1, // space_id
+          6, // type_id for witness
+          0, // start from beginning
+          currentNode.url,
+        ]);
+
+        allWitnessStore.subscribe(({ data, error, loading: wLoading }) => {
           if (data && !error && !wLoading) {
             let filteredData = data.filter((x) => x); // Filter out null/undefined entries
             if (_chain === "bitshares") {
@@ -159,29 +158,27 @@ export default function Witnesses(properties) {
           } else if (error) {
             console.error("Error fetching all witnesses:", error);
           }
-        }
-      );
+        });
+      }
+
+      fetchAllWitnessObjects();
     }
-    return () => {
-      if (unsubscribe) unsubscribe();
-    };
   }, [usr, currentNode, globalParameters, blocklist, _chain]); // Added blocklist and _chain dependency
 
   // 3. Fetch Account Objects (1.2.x) for all witnesses
   useEffect(() => {
-    let unsubscribe;
     if (usr && usr.chain && currentNode && allWitnesses.length > 0) {
-      const accountIds = allWitnesses.map((w) => w.witness_account);
-      const uniqueAccountIds = [...new Set(accountIds)];
+      async function fetchWitnessAccounts() {
+        const accountIds = allWitnesses.map((w) => w.witness_account);
+        const uniqueAccountIds = [...new Set(accountIds)];
 
-      const accountsStore = createObjectStore([
-        usr.chain,
-        JSON.stringify(uniqueAccountIds),
-        currentNode.url,
-      ]);
+        const accountsStore = createObjectStore([
+          usr.chain,
+          JSON.stringify(uniqueAccountIds),
+          currentNode.url,
+        ]);
 
-      unsubscribe = accountsStore.subscribe(
-        ({ data, error, loading: accLoading }) => {
+        accountsStore.subscribe(({ data, error, loading: accLoading }) => {
           if (data && !error && !accLoading) {
             const accountsMap = data.reduce((acc, account) => {
               if (account) {
@@ -199,8 +196,10 @@ export default function Witnesses(properties) {
             console.error("Error fetching witness accounts:", error);
             setLoading(false);
           }
-        }
-      );
+        });
+      }
+
+      fetchWitnessAccounts();
     } else if (
       allWitnesses.length === 0 &&
       globalParameters &&
@@ -209,10 +208,6 @@ export default function Witnesses(properties) {
       // Stop loading if there are no witnesses to fetch accounts for, but globals are loaded
       setLoading(false);
     }
-
-    return () => {
-      if (unsubscribe) unsubscribe();
-    };
   }, [
     usr,
     currentNode,
@@ -223,29 +218,28 @@ export default function Witnesses(properties) {
 
   useEffect(() => {
     // fetch witness core balances
-    let unsubscribe;
-    if (usr && usr.chain && currentNode && allWitnesses.length > 0) {
-      const accountIds = allWitnesses.map((w) => w.witness_account);
-      const uniqueAccountIds = [...new Set(accountIds)];
+    async function fetchWitnessCoreBalances() {
+      if (usr && usr.chain && currentNode && allWitnesses.length > 0) {
+        const accountIds = allWitnesses.map((w) => w.witness_account);
+        const uniqueAccountIds = [...new Set(accountIds)];
 
-      const witnessCoreBalancesStore = createUsersCoreBalanceStore([
-        usr.chain,
-        JSON.stringify(uniqueAccountIds),
-        currentNode.url,
-      ]);
+        const witnessCoreBalancesStore = createUsersCoreBalanceStore([
+          usr.chain,
+          JSON.stringify(uniqueAccountIds),
+          currentNode.url,
+        ]);
 
-      unsubscribe = witnessCoreBalancesStore.subscribe(({ data, error }) => {
-        if (data && !error) {
-          setWitnessCoreBalances(data);
-        } else if (error) {
-          console.error("Error fetching witness core balances:", error);
-        }
-      });
-
-      return () => {
-        if (unsubscribe) unsubscribe();
-      };
+        witnessCoreBalancesStore.subscribe(({ data, error }) => {
+          if (data && !error) {
+            setWitnessCoreBalances(data);
+          } else if (error) {
+            console.error("Error fetching witness core balances:", error);
+          }
+        });
+      }
     }
+
+    fetchWitnessCoreBalances();
   }, [witnessAccounts]);
 
   const processedWitnesses = useMemo(() => {

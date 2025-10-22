@@ -150,30 +150,26 @@ export default function TimedTransfer(properties) {
   const [balanceCounter, setBalanceCoutner] = useState(0);
   const [balances, setBalances] = useState();
   useEffect(() => {
-    let unsubscribeUserBalances;
+    async function fetchUserBalances() {
+      if (usr && usr.id && currentNode && assets && assets.length) {
+        const userBalancesStore = createUserBalancesStore([
+          usr.chain,
+          usr.id,
+          currentNode ? currentNode.url : null,
+        ]);
 
-    if (usr && usr.id && currentNode && assets && assets.length) {
-      const userBalancesStore = createUserBalancesStore([
-        usr.chain,
-        usr.id,
-        currentNode ? currentNode.url : null,
-      ]);
-
-      unsubscribeUserBalances = userBalancesStore.subscribe(
-        ({ data, error, loading }) => {
+        userBalancesStore.subscribe(({ data, error, loading }) => {
           if (data && !error && !loading) {
             const filteredData = data.filter((balance) =>
               assets.find((x) => x.id === balance.asset_id)
             );
             setBalances(filteredData);
           }
-        }
-      );
+        });
+      }
     }
 
-    return () => {
-      if (unsubscribeUserBalances) unsubscribeUserBalances();
-    };
+    fetchUserBalances();
   }, [usr, assets, currentNode, balanceCounter]);
 
   const [bothUsers, setBothUsers] = useState(false);

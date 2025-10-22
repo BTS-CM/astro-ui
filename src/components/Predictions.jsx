@@ -263,17 +263,14 @@ export default function Predictions(properties) {
   const [usrBalances, setUsrBalances] = useState();
   const [balanceAssetIDs, setBalanceAssetIDs] = useState([]);
   useEffect(() => {
-    let unsubscribeUserBalances;
-
-    if (usr && usr.id) {
-      const userBalancesStore = createUserBalancesStore([
-        usr.chain,
-        usr.id,
-        currentNode ? currentNode.url : null,
-      ]);
-
-      unsubscribeUserBalances = userBalancesStore.subscribe(
-        ({ data, error, loading }) => {
+    async function fetchUserBalances() {
+      if (usr && usr.id) {
+        const userBalancesStore = createUserBalancesStore([
+          usr.chain,
+          usr.id,
+          currentNode ? currentNode.url : null,
+        ]);
+        userBalancesStore.subscribe(({ data, error, loading }) => {
           if (data && !error && !loading) {
             const filteredData = data.filter((balance) =>
               assets.find((x) => x.id === balance.asset_id)
@@ -281,13 +278,10 @@ export default function Predictions(properties) {
             setBalanceAssetIDs(filteredData.map((x) => x.asset_id));
             setUsrBalances(filteredData);
           }
-        }
-      );
+        });
+      }
     }
-
-    return () => {
-      if (unsubscribeUserBalances) unsubscribeUserBalances();
-    };
+    fetchUserBalances();
   }, [usr]);
 
   const activePMAs = useMemo(() => {

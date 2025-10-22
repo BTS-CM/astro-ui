@@ -16,6 +16,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import {
   Dialog,
   DialogContent,
@@ -50,21 +51,23 @@ export default function PortfolioRecentActivity() {
 
   const [activityCounter, setActivityCounter] = useState(0);
   const [activity, setActivity] = useState();
+  const [activityLoading, setActivityLoading] = useState(false);
   useEffect(() => {
-    let unsubscribeUserHistoryStore;
-    if (usr && usr.id) {
-      const userHistoryStore = createAccountHistoryStore([usr.chain, usr.id]);
-      unsubscribeUserHistoryStore = userHistoryStore.subscribe(
-        ({ data, error, loading }) => {
+    async function fetchUserHistory() {
+      if (usr && usr.id) {
+        const userHistoryStore = createAccountHistoryStore([usr.chain, usr.id]);
+        userHistoryStore.subscribe(({ data, error, loading }) => {
+          setActivityLoading(Boolean(loading));
           if (data && !error && !loading) {
             setActivity(data);
           }
-        }
-      );
+          if (!data && !loading && error) {
+            setActivity([]);
+          }
+        });
+      }
     }
-    return () => {
-      if (unsubscribeUserHistoryStore) unsubscribeUserHistoryStore();
-    };
+    fetchUserHistory();
   }, [usr, activityCounter]);
 
   const RecentActivityRow = ({ index, style }) => {
@@ -188,7 +191,12 @@ export default function PortfolioRecentActivity() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
-            {activity && activity.length ? (
+            {activityLoading ? (
+              <div className="flex items-center gap-3">
+                <Spinner />
+                <p>{t("Market:loading")}</p>
+              </div>
+            ) : activity && activity.length ? (
               <div className="max-h-[500px] overflow-auto">
                 <List
                   rowComponent={RecentActivityRow}
@@ -207,6 +215,8 @@ export default function PortfolioRecentActivity() {
                 setActivity();
                 setActivityCounter(activityCounter + 1);
               }}
+              disabled={activityLoading}
+              aria-busy={activityLoading}
             >
               {t("PortfolioTabs:refreshRecentActivityButton")}
             </Button>

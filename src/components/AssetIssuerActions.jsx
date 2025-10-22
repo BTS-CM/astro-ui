@@ -36,7 +36,7 @@ import {
   humanReadableFloat,
   getFlagBooleans,
 } from "@/lib/common.js";
-import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
+import { getAccountBalances } from "@/nanoeffects/UserBalances.ts";
 
 const CORE_PRECISION = 5;
 
@@ -93,57 +93,53 @@ function AssetIssuerActions(props) {
   }, [bitassetData]);
 
   useEffect(() => {
-    if (dynamicAssetData || !asset?.dynamic_asset_data_id) {
-      return;
-    }
-    if (!node?.url) {
-      return;
-    }
-
-    const store = createObjectStore([
-      chain,
-      JSON.stringify([asset.dynamic_asset_data_id]),
-      node.url,
-    ]);
-
-    const unsubscribe = store.subscribe(({ data, error, loading }) => {
-      if (!loading && !error && data && data.length) {
-        setDynamicData(data[0]);
+    async function fetchDynamicAssetData() {
+      if (dynamicAssetData || !asset?.dynamic_asset_data_id) {
+        return;
       }
-    });
-
-    return () => {
-      if (typeof unsubscribe === "function") {
-        unsubscribe();
+      if (!node?.url) {
+        return;
       }
-    };
+
+      const store = createObjectStore([
+        chain,
+        JSON.stringify([asset.dynamic_asset_data_id]),
+        node.url,
+      ]);
+
+      store.subscribe(({ data, error, loading }) => {
+        if (!loading && !error && data && data.length) {
+          setDynamicData(data[0]);
+        }
+      });
+    }
+
+    fetchDynamicAssetData();
   }, [asset?.dynamic_asset_data_id, chain, node?.url, dynamicAssetData]);
 
   useEffect(() => {
-    if (bitassetData || !asset?.bitasset_data_id) {
-      return;
-    }
-    if (!node?.url) {
-      return;
-    }
-
-    const store = createObjectStore([
-      chain,
-      JSON.stringify([asset.bitasset_data_id]),
-      node.url,
-    ]);
-
-    const unsubscribe = store.subscribe(({ data, error, loading }) => {
-      if (!loading && !error && data && data.length) {
-        setBitassetDetails(data[0]);
+    async function fetchBitassetDetails() {
+      if (bitassetData || !asset?.bitasset_data_id) {
+        return;
       }
-    });
-
-    return () => {
-      if (typeof unsubscribe === "function") {
-        unsubscribe();
+      if (!node?.url) {
+        return;
       }
-    };
+
+      const store = createObjectStore([
+        chain,
+        JSON.stringify([asset.bitasset_data_id]),
+        node.url,
+      ]);
+
+      store.subscribe(({ data, error, loading }) => {
+        if (!loading && !error && data && data.length) {
+          setBitassetDetails(data[0]);
+        }
+      });
+    }
+
+    fetchBitassetDetails();
   }, [asset?.bitasset_data_id, chain, node?.url, bitassetData]);
 
   const contacts = useMemo(() => {
@@ -259,21 +255,22 @@ function AssetIssuerActions(props) {
   }, [overrideTarget]);
 
   useEffect(() => {
-    let unsubscribe;
-    if (overrideOpen && overrideTargetId && chain) {
+    async function loadOverrideBalance() {
+      if (!(overrideOpen && overrideTargetId && chain)) return;
+
       setOverrideLoading(true);
       setOverrideError("");
 
-      const store = createUserBalancesStore([
-        chain,
-        overrideTargetId,
-        node && node.url ? node.url : null,
-      ]);
+      try {
+        const data = await getAccountBalances(
+          chain,
+          overrideTargetId,
+          node && node.url ? node.url : null
+        );
 
-      unsubscribe = store.subscribe(({ data, error, loading }) => {
-        if (loading) return;
         setOverrideLoading(false);
-        if (error) {
+
+        if (!Array.isArray(data)) {
           setOverrideError(
             t("Common:failedToFetch", {
               defaultValue: "Failed to fetch balances",
@@ -284,33 +281,37 @@ function AssetIssuerActions(props) {
           return;
         }
 
-        if (Array.isArray(data)) {
-          const bal = data.find((b) => b.asset_id === asset?.id);
-          if (bal) {
-            const raw = parseInt(bal.amount ?? 0, 10);
-            const human = humanReadableFloat(raw, asset?.precision ?? 0);
-            setOverrideBalanceRaw(raw);
-            setOverrideBalance(human);
-            // If amount exceeds new max after change, clamp
-            if (overrideAmount && Number(overrideAmount) > human) {
-              setOverrideAmount(String(human));
-            }
-          } else {
-            setOverrideBalanceRaw(0);
-            setOverrideBalance(0);
-            setOverrideError(
-              t("IssuedAssets:noAssetInBalance", {
-                defaultValue: "This account does not hold this asset.",
-              })
-            );
+        const bal = data.find((b) => b.asset_id === asset?.id);
+        if (bal) {
+          const raw = parseInt(bal.amount ?? 0, 10);
+          const human = humanReadableFloat(raw, asset?.precision ?? 0);
+          setOverrideBalanceRaw(raw);
+          setOverrideBalance(human);
+          if (overrideAmount && Number(overrideAmount) > human) {
+            setOverrideAmount(String(human));
           }
+        } else {
+          setOverrideBalanceRaw(0);
+          setOverrideBalance(0);
+          setOverrideError(
+            t("IssuedAssets:noAssetInBalance", {
+              defaultValue: "This account does not hold this asset.",
+            })
+          );
         }
-      });
+      } catch (e) {
+        setOverrideLoading(false);
+        setOverrideError(
+          t("Common:failedToFetch", {
+            defaultValue: "Failed to fetch balances",
+          })
+        );
+        setOverrideBalanceRaw(0);
+        setOverrideBalance(0);
+      }
     }
 
-    return () => {
-      if (unsubscribe) unsubscribe();
-    };
+    loadOverrideBalance();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [overrideOpen, overrideTargetId, chain, node?.url]);
 
