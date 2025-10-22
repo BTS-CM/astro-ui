@@ -10,5 +10,19 @@
   "addUserDialogTitle": "Lisage kasutaja",
   "addUserDialogDescription": "Otsige oma lemmikute hulka lisamiseks Bitsharesi kontot.",
   "usersEmptyTitle": "Lemmikkasutajaid pole",
-  "usersEmptyDescription": "Jälgige teile olulisi kontosid, lisades need siia."
+  "usersEmptyDescription": "Jälgige teile olulisi kontosid, lisades need siia.",
+  "pairsHeader": "Lemmikturupaarid",
+  "addPair": "Lisa paar",
+  "addPairDialogTitle": "Lisage turupaar",
+  "addPairDialogDescription": "Valige turupaari salvestamiseks alus ja noteerige vara (nt BTS_CNY).",
+  "selectBase": "Valige Base",
+  "selectQuote": "Valige Hinnapakkumine",
+  "trade": "Kaubandus",
+  "pairsEmptyTitle": "Lemmikturupaarid puuduvad",
+  "pairsEmptyDescription": "Looge paar nagu BTS_CNY ja see kuvatakse siin kiireks juurdepääsuks.",
+  "savePair": "Salvesta paar",
+  "clear": "Selge",
+  "transfer": "Ülekanne",
+  "timedTransfer": "Ajastatud ülekanne",
+  "vestAssets": "Vesti varad"
 }

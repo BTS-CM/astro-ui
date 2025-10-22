@@ -34,6 +34,7 @@ import {
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
+import { accountSearch } from "@/nanoeffects/UserSearch.ts";
 
 import { $currentUser } from "@/stores/users.ts";
 import { $currentNode } from "@/stores/node.ts";
@@ -148,6 +149,23 @@ export default function CreateVestingBalance(properties) {
   // lvc policy
   const [vestingCliffSeconds, setVestingCliffSeconds] = useState(0);
   const [vestingDurationSeconds, setVestingDurationSeconds] = useState(0);
+
+  // Prefill target account from URL query (?to=<name>)
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (!usr || !usr.chain) return;
+    const params = new URLSearchParams(window.location.search);
+    const toName = params.get("to");
+    if (toName && /^[a-zA-Z0-9.-]+$/.test(toName)) {
+      accountSearch(usr.chain, toName, currentNode ? currentNode.url : null)
+        .then((acct) => {
+          if (acct && acct.id && acct.name) {
+            setTargetUser({ id: acct.id, name: acct.name });
+          }
+        })
+        .catch(() => {});
+    }
+  }, [usr, currentNode]);
 
   return (
     <div className="container mx-auto mt-5 mb-5 w-1/2">

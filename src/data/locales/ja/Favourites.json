@@ -9,5 +9,19 @@
   "addUserDialogTitle": "ユーザーを追加する",
   "addUserDialogDescription": "Bitshares アカウントを検索してお気に入りに追加します。",
   "usersEmptyTitle": "お気に入りのユーザーがいません",
-  "usersEmptyDescription": "ここに追加して、関心のあるアカウントを追跡します。"
+  "usersEmptyDescription": "ここに追加して、関心のあるアカウントを追跡します。",
+  "pairsHeader": "お気に入りの市場ペア",
+  "addPair": "ペアの追加",
+  "addPairDialogTitle": "マーケットペアを追加する",
+  "addPairDialogDescription": "基準資産と相場資産を選択して、市場ペア (例: BTS_CNY) を保存します。",
+  "selectBase": "ベースの選択",
+  "selectQuote": "見積を選択",
+  "trade": "貿易",
+  "pairsEmptyTitle": "お気に入りの市場ペアはありません",
+  "pairsEmptyDescription": "BTS_CNY のようなペアを作成すると、簡単にアクセスできるようにここに表示されます。",
+  "savePair": "ペアの保存",
+  "clear": "クリア",
+  "transfer": "移行",
+  "timedTransfer": "時間指定転送",
+  "vestAssets": "ベスト資産"
 }

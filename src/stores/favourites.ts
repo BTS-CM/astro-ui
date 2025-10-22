@@ -11,6 +11,8 @@ type User = {
   id: string;
 };
 
+type MarketPair = string; // e.g. "BTS_CNY"
+
 type StoredAssets = {
   bitshares: Asset[] | [];
   bitshares_testnet: Asset[] | [];
@@ -19,6 +21,11 @@ type StoredAssets = {
 type StoredUsers = {
   bitshares: User[] | [];
   bitshares_testnet: User[] | [];
+};
+
+type StoredPairs = {
+  bitshares: MarketPair[] | [];
+  bitshares_testnet: MarketPair[] | [];
 };
 
 const $favouriteAssets = persistentMap<StoredAssets>(
@@ -44,6 +51,27 @@ const $favouriteAssets = persistentMap<StoredAssets>(
 
 const $favouriteUsers = persistentMap<StoredUsers>(
   "favouriteUsers",
+  {
+    bitshares: [],
+    bitshares_testnet: [],
+  },
+  {
+    encode(value) {
+      return JSON.stringify(value);
+    },
+    decode(value) {
+      try {
+        return JSON.parse(value);
+      } catch (e) {
+        console.log(e);
+        return value;
+      }
+    },
+  }
+);
+
+const $favouritePairs = persistentMap<StoredPairs>(
+  "favouritePairs",
   {
     bitshares: [],
     bitshares_testnet: [],
@@ -101,11 +129,32 @@ function removeFavouriteUser(chain: string, user: User) {
   $favouriteUsers.set({ ...$favouriteUsers.get(), [chain]: users });
 }
 
+function addFavouritePair(chain: string, pair: MarketPair) {
+  if (!pair || !pair.includes("_")) return;
+  const pairs = $favouritePairs.get()[chain];
+  const normalized = pair.toUpperCase();
+  if (pairs.includes(normalized)) return; // already exists
+  pairs.push(normalized);
+  $favouritePairs.set({ ...$favouritePairs.get(), [chain]: pairs });
+}
+
+function removeFavouritePair(chain: string, pair: MarketPair) {
+  const pairs = $favouritePairs.get()[chain];
+  const normalized = pair.toUpperCase();
+  const index = pairs.indexOf(normalized);
+  if (index === -1) return; // not found
+  pairs.splice(index, 1);
+  $favouritePairs.set({ ...$favouritePairs.get(), [chain]: pairs });
+}
+
 export {
   $favouriteAssets,
   $favouriteUsers,
+  $favouritePairs,
   addFavouriteAsset,
   addFavouriteUser,
+  addFavouritePair,
   removeFavouriteAsset,
   removeFavouriteUser,
+  removeFavouritePair,
 };

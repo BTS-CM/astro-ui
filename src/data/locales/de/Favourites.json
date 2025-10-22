@@ -10,5 +10,19 @@
   "addUserDialogTitle": "Fügen Sie einen Benutzer hinzu",
   "addUserDialogDescription": "Suchen Sie nach einem Bitshares-Konto, um es zu Ihren Favoriten hinzuzufügen.",
   "usersEmptyTitle": "Keine bevorzugten Benutzer",
-  "usersEmptyDescription": "Verfolgen Sie Konten, die Ihnen wichtig sind, indem Sie sie hier hinzufügen."
+  "usersEmptyDescription": "Verfolgen Sie Konten, die Ihnen wichtig sind, indem Sie sie hier hinzufügen.",
+  "pairsHeader": "Lieblingsmarktpaare",
+  "addPair": "Paar hinzufügen",
+  "addPairDialogTitle": "Fügen Sie ein Marktpaar hinzu",
+  "addPairDialogDescription": "Wählen Sie einen Basis- und Kurswert aus, um ein Marktpaar zu speichern (z. B. BTS_CNY).",
+  "selectBase": "Wählen Sie Basis",
+  "selectQuote": "Wählen Sie Angebot aus",
+  "trade": "Handel",
+  "pairsEmptyTitle": "Keine bevorzugten Marktpaare",
+  "pairsEmptyDescription": "Erstellen Sie ein Paar wie BTS_CNY und es wird hier für den schnellen Zugriff angezeigt.",
+  "savePair": "Paar speichern",
+  "clear": "Klar",
+  "transfer": "Überweisen",
+  "timedTransfer": "Zeitgesteuerte Übertragung",
+  "vestAssets": "Vest-Vermögen"
 }

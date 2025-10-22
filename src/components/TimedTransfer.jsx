@@ -65,6 +65,7 @@ import { cn } from "@/lib/utils";
 
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 import { createObjectStore } from "@/nanoeffects/Objects.ts";
+import { accountSearch } from "@/nanoeffects/UserSearch.ts";
 
 import { Avatar } from "./Avatar.tsx";
 import AccountSearch from "./AccountSearch.jsx";
@@ -220,6 +221,23 @@ export default function TimedTransfer(properties) {
       setTargetUserDialogOpen(false);
     }
   }, [targetUser]);
+
+  // Prefill target account from URL query (?to=<name>)
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (!usr || !usr.chain) return;
+    const params = new URLSearchParams(window.location.search);
+    const toName = params.get("to");
+    if (toName && /^[a-zA-Z0-9.-]+$/.test(toName)) {
+      accountSearch(usr.chain, toName, currentNode ? currentNode.url : null)
+        .then((acct) => {
+          if (acct && acct.id && acct.name) {
+            setTargetUser({ id: acct.id, name: acct.name });
+          }
+        })
+        .catch(() => {});
+    }
+  }, [usr, currentNode]);
 
   // Proposal dialog state
   const [expiryType, setExpiryType] = useState("1hr");

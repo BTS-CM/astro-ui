@@ -9,5 +9,19 @@
   "addUserDialogTitle": "Adicionar um usuário",
   "addUserDialogDescription": "Procure uma conta Bitshares para adicionar aos seus favoritos.",
   "usersEmptyTitle": "Nenhum usuário favorito",
-  "usersEmptyDescription": "Rastreie as contas de seu interesse adicionando-as aqui."
+  "usersEmptyDescription": "Rastreie as contas de seu interesse adicionando-as aqui.",
+  "pairsHeader": "Pares de mercado favoritos",
+  "addPair": "Adicionar par",
+  "addPairDialogTitle": "Adicione um par de mercado",
+  "addPairDialogDescription": "Escolha um ativo base e de cotação para salvar um par de mercado (por exemplo, BTS_CNY).",
+  "selectBase": "Selecione Base",
+  "selectQuote": "Selecione Cotação",
+  "trade": "Troca",
+  "pairsEmptyTitle": "Nenhum par de mercado favorito",
+  "pairsEmptyDescription": "Crie um par como BTS_CNY e ele aparecerá aqui para acesso rápido.",
+  "savePair": "Salvar par",
+  "clear": "Claro",
+  "transfer": "Transferir",
+  "timedTransfer": "Transferência Cronometrada",
+  "vestAssets": "Ativos de colete"
 }

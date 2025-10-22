@@ -12,10 +12,15 @@ const testAllAssets = await getCollection('testAllAssets');
 const btsMarketData = await getCollection('btsMarketData');
 const testMarketData = await getCollection('testMarketData');
 
+const btsPools = await getCollection('btsPools');
+const testPools = await getCollection('testPools');
+
 const btsAssets = btsAllAssets.map((collection) => collection.data);
 const testAssets = testAllAssets.map((collection) => collection.data);
 const btsMarkets = btsMarketData.map((collection) => collection.data);
 const testMarkets = testMarketData.map((collection) => collection.data);
+const poolsBTS = btsPools.map((collection) => collection.data);
+const poolsTEST = testPools.map((collection) => collection.data);
 ---
 
 <Layout title="Your Favourite Assets">
@@ -27,6 +32,8 @@ const testMarkets = testMarketData.map((collection) => collection.data);
       _assetsTEST={testAssets}
       _marketSearchBTS={btsMarkets}
       _marketSearchTEST={testMarkets}
+      _poolsBTS={poolsBTS}
+      _poolsTEST={poolsTEST}
     />
     <PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/favourites.astro" />
   </main>

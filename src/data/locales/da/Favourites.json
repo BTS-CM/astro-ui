@@ -10,5 +10,19 @@
   "addUserDialogTitle": "Tilføj en bruger",
   "addUserDialogDescription": "Søg efter en Bitshares-konto for at tilføje til dine favoritter.",
   "usersEmptyTitle": "Ingen favoritbrugere",
-  "usersEmptyDescription": "Spor konti, du holder af, ved at tilføje dem her."
+  "usersEmptyDescription": "Spor konti, du holder af, ved at tilføje dem her.",
+  "pairsHeader": "Yndlingsmarkedspar",
+  "addPair": "Tilføj par",
+  "addPairDialogTitle": "Tilføj et markedspar",
+  "addPairDialogDescription": "Vælg et basis- og noteringsaktiv for at gemme et markedspar (f.eks. BTS_CNY).",
+  "selectBase": "Vælg Base",
+  "selectQuote": "Vælg Citat",
+  "trade": "Handle",
+  "pairsEmptyTitle": "Ingen favoritmarkedspar",
+  "pairsEmptyDescription": "Opret et par som BTS_CNY, og det vises her for hurtig adgang.",
+  "savePair": "Gem par",
+  "clear": "Klar",
+  "transfer": "Overførsel",
+  "timedTransfer": "Tidsbestemt overførsel",
+  "vestAssets": "Vest Aktiver"
 }

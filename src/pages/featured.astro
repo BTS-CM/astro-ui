@@ -2,15 +2,31 @@
 import { getCollection } from 'astro:content';
 
 import Layout from '../layouts/Layout.astro';
-import Featured from '../components/Featured.jsx';
+import FeaturedComponent from '../components/Featured.jsx';
 import PageHeader from '../components/PageHeader';
 import PageFooter from '../components/PageFooter';
+
+const btsAllAssets = await getCollection('btsAllAssets');
+const testAllAssets = await getCollection('testAllAssets');
+const btsPools = await getCollection('btsPools');
+const testPools = await getCollection('testPools');
+
+const btsAssets = btsAllAssets.map((collection) => collection.data);
+const testAssets = testAllAssets.map((collection) => collection.data);
+const poolsBTS = btsPools.map((collection) => collection.data);
+const poolsTEST = testPools.map((collection) => collection.data);
+
 ---
 
 <Layout title="Featured Bitshares markets - listing the highest traded market pairs">
 	<main>
 		<PageHeader client:only="react" page="featured" backURL="../index.html" />
-		<Featured client:only="react" />
+		<FeaturedComponent client:only="react"
+			_assetsBTS={btsAssets}
+			_assetsTEST={testAssets}
+			_poolsBTS={poolsBTS}
+			_poolsTEST={poolsTEST}
+		/>
 		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/featured.astro" />
 	</main>
 </Layout>

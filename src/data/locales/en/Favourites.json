@@ -10,5 +10,19 @@
   "addUserDialogTitle": "Add a user",
   "addUserDialogDescription": "Search for a Bitshares account to add to your favourites.",
   "usersEmptyTitle": "No favourite users",
-  "usersEmptyDescription": "Track accounts you care about by adding them here."
+  "usersEmptyDescription": "Track accounts you care about by adding them here.",
+  "pairsHeader": "Favourite Market Pairs",
+  "addPair": "Add Pair",
+  "addPairDialogTitle": "Add a market pair",
+  "addPairDialogDescription": "Choose a base and quote asset to save a market pair (e.g. BTS_CNY).",
+  "selectBase": "Select Base",
+  "selectQuote": "Select Quote",
+  "trade": "Trade",
+  "pairsEmptyTitle": "No favourite market pairs",
+  "pairsEmptyDescription": "Create a pair like BTS_CNY and it will appear here for quick access.",
+  "savePair": "Save Pair",
+  "clear": "Clear",
+  "transfer": "Transfer",
+  "timedTransfer": "Timed Transfer",
+  "vestAssets": "Vest Assets"
 }

@@ -52,6 +52,7 @@ import { humanReadableFloat, trimPrice, blockchainFloat } from "@/lib/common";
 
 import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 import { createObjectStore } from "@/nanoeffects/Objects.ts";
+import { accountSearch } from "@/nanoeffects/UserSearch.ts";
 
 import { Avatar } from "./Avatar.tsx";
 import AccountSearch from "./AccountSearch.jsx";
@@ -212,6 +213,23 @@ export default function Transfer(properties) {
       setTargetUserDialogOpen(false);
     }
   }, [targetUser]);
+
+  // Prefill target account from URL query (?to=<name>)
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (!usr || !usr.chain) return;
+    const params = new URLSearchParams(window.location.search);
+    const toName = params.get("to");
+    if (toName && /^[a-zA-Z0-9.-]+$/.test(toName)) {
+      accountSearch(usr.chain, toName, currentNode ? currentNode.url : null)
+        .then((acct) => {
+          if (acct && acct.id && acct.name) {
+            setTargetUser({ id: acct.id, name: acct.name });
+          }
+        })
+        .catch(() => {});
+    }
+  }, [usr, currentNode]);
 
   const operationJSON = useMemo(() => {
     if (!usr || !targetUser || !foundAsset) {

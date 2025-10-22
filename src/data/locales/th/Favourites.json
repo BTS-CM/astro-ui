@@ -9,5 +9,19 @@
   "addUserDialogTitle": "เพิ่มผู้ใช้",
   "addUserDialogDescription": "ค้นหาบัญชี Bitshares เพื่อเพิ่มลงในรายการโปรดของคุณ",
   "usersEmptyTitle": "ไม่มีผู้ใช้ที่ชื่นชอบ",
-  "usersEmptyDescription": "ติดตามบัญชีที่คุณสนใจโดยเพิ่มได้ที่นี่"
+  "usersEmptyDescription": "ติดตามบัญชีที่คุณสนใจโดยเพิ่มได้ที่นี่",
+  "pairsHeader": "คู่ตลาดที่ชื่นชอบ",
+  "addPair": "เพิ่มคู่",
+  "addPairDialogTitle": "เพิ่มคู่ตลาด",
+  "addPairDialogDescription": "เลือกฐานและราคาสินทรัพย์เพื่อบันทึกคู่ตลาด (เช่น BTS_CNY)",
+  "selectBase": "เลือกฐาน",
+  "selectQuote": "เลือกใบเสนอราคา",
+  "trade": "ซื้อขาย",
+  "pairsEmptyTitle": "ไม่มีคู่ตลาดที่ชื่นชอบ",
+  "pairsEmptyDescription": "สร้างคู่สกุลเงินเช่น BTS_CNY และจะปรากฏที่นี่เพื่อให้เข้าถึงได้อย่างรวดเร็ว",
+  "savePair": "บันทึกคู่",
+  "clear": "ชัดเจน",
+  "transfer": "โอนย้าย",
+  "timedTransfer": "การโอนแบบกำหนดเวลา",
+  "vestAssets": "ทรัพย์สินเสื้อกั๊ก"
 }
