@@ -97,51 +97,41 @@ function getFlagBooleans(mask, isBitAsset = false) {
  *
  * @param {Array} accountResults
  * @param {Array} assetResults
- * @param {Object} opContents
- * @param {Array} operationArray // [0, {...}]
- * @param {Number} opType
- * @param {*} relevantOperationType
+ * @param {Object} operationObject
+ * @param {Number} operationType
  * @returns
  */
 export default async function beautify(
   accountResults, // fetched accounts
   assetResults, // fetched assets
-  opContents,
-  operationArray,
-  opType,
-  relevantOperationType
+  operationObject,
+  operationType
 ) {
-  const currentOperation = {
-    title: `operations.injected.BTS.${relevantOperationType.method}.title`,
-    opType: opType,
-    method: relevantOperationType.method,
-    op: opContents,
-    operation: operationArray,
-  };
-
-  if (opType == 0) {
+  if (operationType == 0) {
     // transfer
-    let from = accountResults.find((resAcc) => resAcc.id === opContents.from);
-    let to = accountResults.find((resAcc) => resAcc.id === opContents.to);
+    let from = accountResults.find(
+      (resAcc) => resAcc.id === operationObject.from
+    );
+    let to = accountResults.find((resAcc) => resAcc.id === operationObject.to);
     let asset = assetResults.find(
-      (assRes) => assRes.id === opContents.amount.asset_id
+      (assRes) => assRes.id === operationObject.amount.asset_id
     );
 
     if (from && to && asset) {
-      currentOperation["rows"] = [
+      return [
         {
           key: "from",
-          params: { from: from.accountName, opFrom: opContents.from },
+          params: { from: from.accountName, opFrom: operationObject.from },
         },
         {
           key: "to",
-          params: { to: to.accountName, opTo: opContents.to },
+          params: { to: to.accountName, opTo: operationObject.to },
         },
         {
           key: "amount",
           params: {
             amount: formatAsset(
-              opContents.amount.amount,
+              operationObject.amount.amount,
               asset.symbol,
               asset.precision
             ),
@@ -149,36 +139,42 @@ export default async function beautify(
         },
       ];
     }
-  } else if (opType == 1) {
+  } else if (operationType == 1) {
     // limit_order_create
     let seller = accountResults.find(
-      (resAcc) => resAcc.id === opContents.seller
+      (resAcc) => resAcc.id === operationObject.seller
     ).accountName;
     let buy = assetResults.find(
-      (assRes) => assRes.id === opContents.min_to_receive.asset_id
+      (assRes) => assRes.id === operationObject.min_to_receive.asset_id
     );
     let sell = assetResults.find(
-      (assRes) => assRes.id === opContents.amount_to_sell.asset_id
+      (assRes) => assRes.id === operationObject.amount_to_sell.asset_id
     );
 
     if (seller && buy && sell) {
-      let fillOrKill = opContents.amount_to_sell.fill_or_kill;
+      let fillOrKill = operationObject.amount_to_sell.fill_or_kill;
 
       let price =
-        humanReadableFloat(opContents.amount_to_sell.amount, sell.precision) /
-        humanReadableFloat(opContents.min_to_receive.amount, buy.precision);
+        humanReadableFloat(
+          operationObject.amount_to_sell.amount,
+          sell.precision
+        ) /
+        humanReadableFloat(
+          operationObject.min_to_receive.amount,
+          buy.precision
+        );
 
-      currentOperation["rows"] = [
+      return [
         { key: fillOrKill ? "tradeFK" : "trade" },
         {
           key: "seller",
-          params: { seller: seller, opSeller: opContents.seller },
+          params: { seller: seller, opSeller: operationObject.seller },
         },
         {
           key: "selling",
           params: {
             amount: formatAsset(
-              opContents.amount_to_sell.amount,
+              operationObject.amount_to_sell.amount,
               sell.symbol,
               sell.precision
             ),
@@ -188,7 +184,7 @@ export default async function beautify(
           key: "buying",
           params: {
             amount: formatAsset(
-              opContents.min_to_receive.amount,
+              operationObject.min_to_receive.amount,
               buy.symbol,
               buy.precision
             ),
@@ -208,31 +204,31 @@ export default async function beautify(
         {
           key: "extensions",
           params: {
-            extensions: opContents.extensions
-              ? JSON.stringify(opContents.extensions)
+            extensions: operationObject.extensions
+              ? JSON.stringify(operationObject.extensions)
               : "[]",
           },
         },
       ];
     }
-  } else if (opType == 2) {
+  } else if (operationType == 2) {
     // limit_order_cancel
     let feePayingAccount = accountResults.find(
-      (resAcc) => resAcc.id === opContents.fee_paying_account
+      (resAcc) => resAcc.id === operationObject.fee_paying_account
     ).accountName;
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
 
     if (feePayingAccount) {
-      currentOperation["rows"] = [
-        { key: "id", params: { id: opContents.order } },
+      return [
+        { key: "id", params: { id: operationObject.order } },
         {
           key: "fees",
           params: {
             fee: formatAsset(
-              opContents.fee.amount,
+              operationObject.fee.amount,
               _feeAsset.symbol,
               _feeAsset.precision
             ),
@@ -243,63 +239,64 @@ export default async function beautify(
           params: {
             account:
               feePayingAccount ??
-              "" + " (" + opContents.fee_paying_account + ")",
+              "" + " (" + operationObject.fee_paying_account + ")",
           },
         },
       ];
     }
-  } else if (opType == 3) {
+  } else if (operationType == 3) {
     // call_order_update
     let fundingAccount = accountResults.find(
-      (resAcc) => resAcc.id === opContents.funding_account
+      (resAcc) => resAcc.id === operationObject.funding_account
     ).accountName;
     let deltaCollateral = assetResults.find(
-      (assRes) => assRes.id === opContents.delta_collateral.asset_id
+      (assRes) => assRes.id === operationObject.delta_collateral.asset_id
     );
     let deltaDebt = assetResults.find(
-      (assRes) => assRes.id === opContents.delta_debt.asset_id
+      (assRes) => assRes.id === operationObject.delta_debt.asset_id
     );
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
 
     if (fundingAccount && deltaCollateral && deltaDebt) {
-      currentOperation["rows"] = [
+      return [
         {
           key: "funding_account",
           params: {
             funding_account:
-              fundingAccount ?? "" + " (" + opContents.funding_account + ")",
+              fundingAccount ??
+              "" + " (" + operationObject.funding_account + ")",
           },
         },
         {
           key: "delta_collateral",
           params: {
             delta_collateral: formatAsset(
-              opContents.delta_collateral.amount,
+              operationObject.delta_collateral.amount,
               deltaCollateral.symbol,
               deltaCollateral.precision
             ),
-            id: opContents.delta_collateral.asset_id,
+            id: operationObject.delta_collateral.asset_id,
           },
         },
         {
           key: "delta_debt",
           params: {
             delta_debt: formatAsset(
-              opContents.delta_debt.amount,
+              operationObject.delta_debt.amount,
               deltaDebt.symbol,
               deltaDebt.precision
             ),
-            id: opContents.delta_debt.asset_id,
+            id: operationObject.delta_debt.asset_id,
           },
         },
         {
           key: "fees",
           params: {
             fee: formatAsset(
-              opContents.fee.amount,
+              operationObject.fee.amount,
               _feeAsset.symbol,
               _feeAsset.precision
             ),
@@ -307,124 +304,127 @@ export default async function beautify(
         },
       ];
     }
-  } else if (opType == 5) {
+  } else if (operationType == 4) {
+    // Virtual
+    // fill_order_operation
+  } else if (operationType == 5) {
     // account_create
     let registrar = accountResults.find(
-      (resAcc) => resAcc.id === opContents.registrar
+      (resAcc) => resAcc.id === operationObject.registrar
     ).accountName;
     let referrer = accountResults.find(
-      (resAcc) => resAcc.id === opContents.referrer
+      (resAcc) => resAcc.id === operationObject.referrer
     ).accountName;
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
 
     if (registrar && referrer) {
-      currentOperation["rows"] = [
+      return [
         {
           key: "registrar",
           params: {
             registrar: registrar ?? "",
-            opRegistrar: opContents.registrar,
+            opRegistrar: operationObject.registrar,
           },
         },
         {
           key: "referrer",
           params: {
             referrer: referrer ?? "",
-            opReferrer: opContents.referrer,
+            opReferrer: operationObject.referrer,
           },
         },
         {
           key: "referrer_percent",
-          params: { referrer_percent: opContents.referrer_percent },
+          params: { referrer_percent: operationObject.referrer_percent },
         },
-        { key: "name", params: { name: opContents.name } },
+        { key: "name", params: { name: operationObject.name } },
         { key: "ownerHeader", params: {} },
         {
           key: "weight_threshold",
           params: {
-            weight_threshold: opContents.owner.weight_threshold,
+            weight_threshold: operationObject.owner.weight_threshold,
           },
         },
         {
           key: "account_auths",
           params: {
-            account_auths: JSON.stringify(opContents.owner.account_auths),
+            account_auths: JSON.stringify(operationObject.owner.account_auths),
           },
         },
         {
           key: "key_auths",
           params: {
-            key_auths: JSON.stringify(opContents.owner.key_auths),
+            key_auths: JSON.stringify(operationObject.owner.key_auths),
           },
         },
         {
           key: "address_auths",
           params: {
-            address_auths: JSON.stringify(opContents.owner.address_auths),
+            address_auths: JSON.stringify(operationObject.owner.address_auths),
           },
         },
         { key: "activeHeader", params: {} },
         {
           key: "weight_threshold",
           params: {
-            weight_threshold: opContents.active.weight_threshold,
+            weight_threshold: operationObject.active.weight_threshold,
           },
         },
         {
           key: "account_auths",
           params: {
-            account_auths: JSON.stringify(opContents.active.account_auths),
+            account_auths: JSON.stringify(operationObject.active.account_auths),
           },
         },
         {
           key: "key_auths",
           params: {
-            key_auths: JSON.stringify(opContents.active.key_auths),
+            key_auths: JSON.stringify(operationObject.active.key_auths),
           },
         },
         {
           key: "address_auths",
           params: {
-            address_auths: JSON.stringify(opContents.active.address_auths),
+            address_auths: JSON.stringify(operationObject.active.address_auths),
           },
         },
         { key: "optionsHeader", params: {} },
         {
           key: "memo_key",
-          params: { memo_key: opContents.options.memo_key },
+          params: { memo_key: operationObject.options.memo_key },
         },
         {
           key: "voting_account",
           params: {
-            voting_account: opContents.options.voting_account,
+            voting_account: operationObject.options.voting_account,
           },
         },
         {
           key: "num_witness",
-          params: { num_witness: opContents.options.num_witness },
+          params: { num_witness: operationObject.options.num_witness },
         },
         {
           key: "num_committee",
-          params: { num_committee: opContents.options.num_committee },
+          params: { num_committee: operationObject.options.num_committee },
         },
         {
           key: "votes",
-          params: { votes: JSON.stringify(opContents.options.votes) },
+          params: { votes: JSON.stringify(operationObject.options.votes) },
         },
         {
           key: "extensions",
           params: {
-            extensions: JSON.stringify(opContents.options.extensions),
+            extensions: JSON.stringify(operationObject.options.extensions),
           },
         },
         {
           key: "fees",
           params: {
             fee: formatAsset(
-              opContents.fee.amount,
+              operationObject.fee.amount,
               _feeAsset.symbol,
               _feeAsset.precision
             ),
@@ -432,50 +432,50 @@ export default async function beautify(
         },
       ];
     }
-  } else if (opType == 6) {
+  } else if (operationType == 6) {
     // account_update
     let targetAccount = accountResults.find(
-      (resAcc) => resAcc.id === opContents.account
+      (resAcc) => resAcc.id === operationObject.account
     ).accountName;
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
     if (targetAccount) {
-      currentOperation["rows"] = [
+      return [
         { key: "warning", params: {} },
         {
           key: "account",
           params: {
             account: targetAccount ?? "",
-            opAccount: opContents.account,
+            opAccount: operationObject.account,
           },
         },
         {
           key: "owner",
-          params: { owner: JSON.stringify(opContents.owner) },
+          params: { owner: JSON.stringify(operationObject.owner) },
         },
         {
           key: "active",
-          params: { active: JSON.stringify(opContents.active) },
+          params: { active: JSON.stringify(operationObject.active) },
         },
         {
           key: "new_options",
           params: {
-            new_options: JSON.stringify(opContents.new_options),
+            new_options: JSON.stringify(operationObject.new_options),
           },
         },
         {
           key: "extensions",
           params: {
-            extensions: JSON.stringify(opContents.extensions),
+            extensions: JSON.stringify(operationObject.extensions),
           },
         },
         {
           key: "fees",
           params: {
             fee: formatAsset(
-              opContents.fee.amount,
+              operationObject.fee.amount,
               _feeAsset.symbol,
               _feeAsset.precision
             ),
@@ -483,44 +483,44 @@ export default async function beautify(
         },
       ];
     }
-  } else if (opType == 7) {
+  } else if (operationType == 7) {
     // account_whitelist
     let authorizingAccount = accountResults.find(
-      (resAcc) => resAcc.id === opContents.authorizing_account
+      (resAcc) => resAcc.id === operationObject.authorizing_account
     ).accountName;
     let accountToList = accountResults.find(
-      (resAcc) => resAcc.id === opContents.account_to_list
+      (resAcc) => resAcc.id === operationObject.account_to_list
     ).accountName;
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
 
     if (authorizingAccount && accountToList) {
-      currentOperation["rows"] = [
+      return [
         {
           key: "authorizing_account",
           params: {
             authorizingAccount: authorizingAccount ?? "",
-            authorizingAccountOP: opContents.authorizing_account,
+            authorizingAccountOP: operationObject.authorizing_account,
           },
         },
         {
           key: "account_to_list",
           params: {
             accountToList: accountToList ?? "",
-            accountToListOP: opContents.account_to_list,
+            accountToListOP: operationObject.account_to_list,
           },
         },
         {
           key: "new_listing",
-          params: { new_listing: opContents.new_listing },
+          params: { new_listing: operationObject.new_listing },
         },
         {
           key: "extensions",
           params: {
-            extensions: opContents.extensions
-              ? JSON.stringify(opContents.extensions)
+            extensions: operationObject.extensions
+              ? JSON.stringify(operationObject.extensions)
               : "[]",
           },
         },
@@ -528,7 +528,7 @@ export default async function beautify(
           key: "fee",
           params: {
             fee: formatAsset(
-              opContents.fee.amount,
+              operationObject.fee.amount,
               _feeAsset.symbol,
               _feeAsset.precision
             ),
@@ -536,35 +536,35 @@ export default async function beautify(
         },
       ];
     }
-  } else if (opType == 8) {
+  } else if (operationType == 8) {
     // account_upgrade
     let accountToUpgrade = accountResults.find(
-      (resAcc) => resAcc.id === opContents.account_to_upgrade
+      (resAcc) => resAcc.id === operationObject.account_to_upgrade
     ).accountName;
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
     if (accountToUpgrade) {
-      currentOperation["rows"] = [
+      return [
         {
           key: "account_to_upgrade",
           params: {
             accountToUpgrade: accountToUpgrade ?? "",
-            accountToUpgradeOP: opContents.account_to_upgrade,
+            accountToUpgradeOP: operationObject.account_to_upgrade,
           },
         },
         {
           key: "upgrade_to_lifetime_member",
           params: {
-            upgradeToLifetimeMember: opContents.upgrade_to_lifetime_member,
+            upgradeToLifetimeMember: operationObject.upgrade_to_lifetime_member,
           },
         },
         {
           key: "extensions",
           params: {
-            extensions: opContents.extensions
-              ? JSON.stringify(opContents.extensions)
+            extensions: operationObject.extensions
+              ? JSON.stringify(operationObject.extensions)
               : "[]",
           },
         },
@@ -572,7 +572,7 @@ export default async function beautify(
           key: "fee",
           params: {
             fee: formatAsset(
-              opContents.fee.amount,
+              operationObject.fee.amount,
               _feeAsset.symbol,
               _feeAsset.precision
             ),
@@ -580,41 +580,41 @@ export default async function beautify(
         },
       ];
     }
-  } else if (opType == 9) {
+  } else if (operationType == 9) {
     // account_transfer
     let originalOwner = accountResults.find(
-      (resAcc) => resAcc.id === opContents.account_id
+      (resAcc) => resAcc.id === operationObject.account_id
     ).accountName;
     let newOwner = accountResults.find(
-      (resAcc) => resAcc.id === opContents.new_owner
+      (resAcc) => resAcc.id === operationObject.new_owner
     ).accountName;
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
 
     if (originalOwner && newOwner) {
-      currentOperation["rows"] = [
+      return [
         { key: "warning", params: {} },
         {
           key: "account_id",
           params: {
             originalOwner: originalOwner ?? "",
-            account_id: opContents.account_id,
+            account_id: operationObject.account_id,
           },
         },
         {
           key: "new_owner",
           params: {
             newOwner: newOwner ?? "",
-            newOwnerOP: opContents.new_owner,
+            newOwnerOP: operationObject.new_owner,
           },
         },
         {
           key: "fee",
           params: {
             fee: formatAsset(
-              opContents.fee.amount,
+              operationObject.fee.amount,
               _feeAsset.symbol,
               _feeAsset.precision
             ),
@@ -622,26 +622,28 @@ export default async function beautify(
         },
       ];
     }
-  } else if (opType == 10 || opType == 11) {
+  } else if (operationType == 10 || operationType == 11) {
     // asset_create & asset_update
     let asset =
-      opType === 11
+      operationType === 11
         ? assetResults.find(
-            (assRes) => assRes.id === opContents.asset_to_update
+            (assRes) => assRes.id === operationObject.asset_to_update
           ) // fetch asset to update
         : null;
 
-    let symbol = asset ? asset.symbol : opContents.symbol;
-    let precision = asset ? asset.precision : opContents.precision;
+    let symbol = asset ? asset.symbol : operationObject.symbol;
+    let precision = asset ? asset.precision : operationObject.precision;
     let is_prediction_market = asset
       ? asset.is_prediction_market
-      : opContents.is_prediction_market;
+      : operationObject.is_prediction_market;
     let options =
-      opType === 10 ? opContents.common_options : opContents.new_options;
+      operationType === 10
+        ? operationObject.common_options
+        : operationObject.new_options;
     let max_supply = options.max_supply;
     let market_fee_percent = options.market_fee_percent;
     let max_market_fee = options.max_market_fee;
-    let isBitasset = opContents.bitasset_opts ? true : false;
+    let isBitasset = operationObject.bitasset_opts ? true : false;
     let issuer_permissions = getFlagBooleans(
       options.issuer_permissions,
       isBitasset
@@ -769,40 +771,41 @@ export default async function beautify(
         {
           key: "feed_lifetime_sec",
           params: {
-            feed_lifetime_sec: opContents.bitasset_opts.feed_lifetime_sec,
+            feed_lifetime_sec: operationObject.bitasset_opts.feed_lifetime_sec,
           },
         },
         {
           key: "force_settlement_delay_sec",
           params: {
             force_settlement_delay_sec:
-              opContents.bitasset_opts.force_settlement_delay_sec,
+              operationObject.bitasset_opts.force_settlement_delay_sec,
           },
         },
         {
           key: "force_settlement_offset_percent",
           params: {
             force_settlement_offset_percent:
-              opContents.bitasset_opts.force_settlement_offset_percent,
+              operationObject.bitasset_opts.force_settlement_offset_percent,
           },
         },
         {
           key: "maximum_force_settlement_volume",
           params: {
             maximum_force_settlement_volume:
-              opContents.bitasset_opts.maximum_force_settlement_volume,
+              operationObject.bitasset_opts.maximum_force_settlement_volume,
           },
         },
         {
           key: "minimum_feeds",
           params: {
-            minimum_feeds: opContents.bitasset_opts.minimum_feeds,
+            minimum_feeds: operationObject.bitasset_opts.minimum_feeds,
           },
         },
         {
           key: "short_backing_asset",
           params: {
-            short_backing_asset: opContents.bitasset_opts.short_backing_asset,
+            short_backing_asset:
+              operationObject.bitasset_opts.short_backing_asset,
           },
         },
       ]);
@@ -850,116 +853,118 @@ export default async function beautify(
       ]);
     }
 
-    currentOperation["rows"] = tempRows;
-  } else if (opType == 12) {
+    return tempRows;
+  } else if (operationType == 12) {
     // asset_update_bitasset
     let shortBackingAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.new_options.short_backing_asset
+      (assRes) => assRes.id === operationObject.new_options.short_backing_asset
     );
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
 
     if (shortBackingAsset) {
-      currentOperation["rows"] = [
-        { key: "issuer", params: { issuer: opContents.issuer } },
+      return [
+        { key: "issuer", params: { issuer: operationObject.issuer } },
         {
           key: "asset_to_update",
-          params: { asset_to_update: opContents.asset_to_update },
+          params: { asset_to_update: operationObject.asset_to_update },
         },
         { key: "new_options", params: {} },
         {
           key: "feed_lifetime_sec",
           params: {
-            feed_lifetime_sec: opContents.new_options.feed_lifetime_sec,
+            feed_lifetime_sec: operationObject.new_options.feed_lifetime_sec,
           },
         },
         {
           key: "minimum_feeds",
           params: {
-            minimum_feeds: opContents.new_options.minimum_feeds,
+            minimum_feeds: operationObject.new_options.minimum_feeds,
           },
         },
         {
           key: "force_settlement_delay_sec",
           params: {
             force_settlement_delay_sec:
-              opContents.new_options.force_settlement_delay_sec,
+              operationObject.new_options.force_settlement_delay_sec,
           },
         },
         {
           key: "force_settlement_offset_percent",
           params: {
             force_settlement_offset_percent:
-              opContents.new_options.force_settlement_offset_percent,
+              operationObject.new_options.force_settlement_offset_percent,
           },
         },
         {
           key: "maximum_force_settlement_volume",
           params: {
             maximum_force_settlement_volume:
-              opContents.new_options.maximum_force_settlement_volume,
+              operationObject.new_options.maximum_force_settlement_volume,
           },
         },
         {
           key: "short_backing_asset",
           params: { short_backing_asset: shortBackingAsset.symbol },
         },
-        opContents.new_options.extensions
+        operationObject.new_options.extensions
           ? {
               key: "extensions",
               params: {
-                extensions: opContents.new_options.extensions,
+                extensions: operationObject.new_options.extensions,
               },
             }
           : { key: "noExtensions", params: {} },
         {
           key: "fee",
           params: {
-            fee: formatAsset(opContents.fee.amount, "BTS", 5),
-            id: opContents.fee.asset_id,
+            fee: formatAsset(operationObject.fee.amount, "BTS", 5),
+            id: operationObject.fee.asset_id,
           },
         },
       ];
     }
-  } else if (opType == 13) {
+  } else if (operationType == 13) {
     // asset_update_feed_producers
     let issuer = accountResults.find(
-      (resAcc) => resAcc.id === opContents.issuer
+      (resAcc) => resAcc.id === operationObject.issuer
     ).accountName;
     let assetToUpdate = assetResults.find(
-      (assRes) => assRes.id === opContents.new_options.short_backing_asset
+      (assRes) => assRes.id === operationObject.new_options.short_backing_asset
     );
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
 
     if (issuer && assetToUpdate) {
-      currentOperation["rows"] = [
+      return [
         {
           key: "issuer",
-          params: { issuer: issuer, issuerOP: opContents.issuer },
+          params: { issuer: issuer, issuerOP: operationObject.issuer },
         },
         {
           key: "asset_to_update",
           params: {
             symbol: assetToUpdate.symbol,
-            asset_to_update: opContents.asset_to_update,
+            asset_to_update: operationObject.asset_to_update,
           },
         },
         {
           key: "new_feed_producers",
           params: {
-            new_feed_producers: JSON.stringify(opContents.new_feed_producers),
+            new_feed_producers: JSON.stringify(
+              operationObject.new_feed_producers
+            ),
           },
         },
         {
           key: "fee",
           params: {
             fee: formatAsset(
-              opContents.fee.amount,
+              operationObject.fee.amount,
               _feeAsset.symbol,
               _feeAsset.precision
             ),
@@ -967,76 +972,76 @@ export default async function beautify(
         },
       ];
     }
-  } else if (opType == 14) {
+  } else if (operationType == 14) {
     // asset_issue
-    //let issuer = accountResults.find((resAcc) => resAcc.id === opContents.issuer).accountName;
+    //let issuer = accountResults.find((resAcc) => resAcc.id === operationObject.issuer).accountName;
     let targetAccount = accountResults.find(
-      (resAcc) => resAcc.id === opContents.issue_to_account
+      (resAcc) => resAcc.id === operationObject.issue_to_account
     ).accountName;
     let assetToIssue = assetResults.find(
-      (assRes) => assRes.id === opContents.asset_to_issue.asset_id
+      (assRes) => assRes.id === operationObject.asset_to_issue.asset_id
     );
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
 
     if (targetAccount && assetToIssue) {
-      currentOperation["rows"] = [
+      return [
         {
           key: "prompt",
           params: {
-            amount: opContents.asset_to_issue.amount,
+            amount: operationObject.asset_to_issue.amount,
             symbol: assetToIssue.symbol,
-            asset_id: opContents.asset_to_issue.asset_id,
+            asset_id: operationObject.asset_to_issue.asset_id,
             to: targetAccount,
-            toID: opContents.issue_to_account,
+            toID: operationObject.issue_to_account,
           },
         },
         {
           key: "fee",
           params: {
-            fee: JSON.stringify(opContents.fee).amount,
-            id: opContents.fee.asset_id,
+            fee: JSON.stringify(operationObject.fee).amount,
+            id: operationObject.fee.asset_id,
           },
         },
       ];
     }
-  } else if (opType == 15) {
+  } else if (operationType == 15) {
     // asset_reserve
     let payer = accountResults.find(
-      (resAcc) => resAcc.id === opContents.payer
+      (resAcc) => resAcc.id === operationObject.payer
     ).accountName;
     let assetToReserve = assetResults.find(
-      (assRes) => assRes.id === opContents.amount_to_reserve.asset_id
+      (assRes) => assRes.id === operationObject.amount_to_reserve.asset_id
     );
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
 
     if (payer && assetToReserve) {
-      currentOperation["rows"] = [
+      return [
         {
           key: "payer",
-          params: { payer: payer, payerOP: opContents.payer },
+          params: { payer: payer, payerOP: operationObject.payer },
         },
         {
           key: "amount_to_reserve",
           params: {
             amount_to_reserve: formatAsset(
-              opContents.amount_to_reserve.amount,
+              operationObject.amount_to_reserve.amount,
               assetToReserve.symbol,
               assetToReserve.precision
             ),
-            asset_id: opContents.amount_to_reserve.asset_id,
+            asset_id: operationObject.amount_to_reserve.asset_id,
           },
         },
         {
           key: "extensions",
           params: {
-            extensions: opContents.extensions
-              ? JSON.stringify(opContents.extensions)
+            extensions: operationObject.extensions
+              ? JSON.stringify(operationObject.extensions)
               : "[]",
           },
         },
@@ -1044,7 +1049,7 @@ export default async function beautify(
           key: "fee",
           params: {
             fee: formatAsset(
-              opContents.fee.amount,
+              operationObject.fee.amount,
               _feeAsset.symbol,
               _feeAsset.precision
             ),
@@ -1052,40 +1057,40 @@ export default async function beautify(
         },
       ];
     }
-  } else if (opType == 16) {
+  } else if (operationType == 16) {
     // asset_fund_fee_pool
     let fromAccount = accountResults.find(
-      (resAcc) => resAcc.id === opContents.from_account
+      (resAcc) => resAcc.id === operationObject.from_account
     ).accountName;
     let assetToFund = assetResults.find(
-      (assRes) => assRes.id === opContents.asset_id
+      (assRes) => assRes.id === operationObject.asset_id
     );
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
 
     if (fromAccount && assetToFund) {
-      currentOperation["rows"] = [
+      return [
         {
           key: "from_account",
           params: {
             from_account: fromAccount,
-            from_accountOP: opContents.from_account,
+            from_accountOP: operationObject.from_account,
           },
         },
         {
           key: "asset",
           params: {
             from_account: assetToFund.symbol,
-            from_accountOP: opContents.asset_id,
+            from_accountOP: operationObject.asset_id,
           },
         },
         {
           key: "amount",
           params: {
             amount: formatAsset(
-              opContents.amount,
+              operationObject.amount,
               assetToFund.symbol,
               assetToFund.precision
             ),
@@ -1095,7 +1100,7 @@ export default async function beautify(
           key: "fee",
           params: {
             fee: formatAsset(
-              opContents.fee.amount,
+              operationObject.fee.amount,
               _feeAsset.symbol,
               _feeAsset.precision
             ),
@@ -1103,41 +1108,41 @@ export default async function beautify(
         },
       ];
     }
-  } else if (opType == 17) {
+  } else if (operationType == 17) {
     // asset_settle
     let account = accountResults.find(
-      (resAcc) => resAcc.id === opContents.account
+      (resAcc) => resAcc.id === operationObject.account
     ).accountName;
     let assetToSettle = assetResults.find(
-      (assRes) => assRes.id === opContents.amount.asset_id
+      (assRes) => assRes.id === operationObject.amount.asset_id
     );
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
 
     if (account && assetToSettle) {
-      currentOperation["rows"] = [
+      return [
         {
           key: "account",
-          params: { account: account, accountOP: opContents.account },
+          params: { account: account, accountOP: operationObject.account },
         },
         {
           key: "amount",
           params: {
             amount: formatAsset(
-              opContents.amount.amount,
+              operationObject.amount.amount,
               assetToSettle.symbol,
               assetToSettle.precision
             ),
-            assetID: opContents.amount.asset_id,
+            assetID: operationObject.amount.asset_id,
           },
         },
         {
           key: "fee",
           params: {
             fee: formatAsset(
-              opContents.fee.amount,
+              operationObject.fee.amount,
               _feeAsset.symbol,
               _feeAsset.precision
             ),
@@ -1145,46 +1150,46 @@ export default async function beautify(
         },
       ];
     }
-  } else if (opType == 18) {
+  } else if (operationType == 18) {
     // asset_global_settle
     let issuer = accountResults.find(
-      (resAcc) => resAcc.id === opContents.account
+      (resAcc) => resAcc.id === operationObject.account
     ).accountName;
     let assetToSettle = assetResults.find(
-      (assRes) => assRes.id === opContents.asset_to_settle
+      (assRes) => assRes.id === operationObject.asset_to_settle
     );
     let baseAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.settle_price.base.asset_id
+      (assRes) => assRes.id === operationObject.settle_price.base.asset_id
     );
     let quoteAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.settle_price.quote.asset_id
+      (assRes) => assRes.id === operationObject.settle_price.quote.asset_id
     );
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
 
     if (issuer && assetToSettle && baseAsset && quoteAsset) {
       let price =
         humanReadableFloat(
-          opContents.settle_price.base.amount,
+          operationObject.settle_price.base.amount,
           baseAsset.precision
         ) /
         humanReadableFloat(
-          opContents.settle_price.quote.amount,
+          operationObject.settle_price.quote.amount,
           quoteAsset.precision
         );
 
-      currentOperation["rows"] = [
+      return [
         {
           key: "issuer",
-          params: { issuer: issuer, issuerOP: opContents.account },
+          params: { issuer: issuer, issuerOP: operationObject.account },
         },
         {
           key: "asset_to_settle",
           params: {
             asset_to_settle: assetToSettle.symbol,
-            asset_to_settleOP: opContents.asset_to_settle,
+            asset_to_settleOP: operationObject.asset_to_settle,
           },
         },
         { key: "settle_price", params: { settle_price: price } },
@@ -1192,7 +1197,7 @@ export default async function beautify(
           key: "fee",
           params: {
             fee: formatAsset(
-              opContents.fee.amount,
+              operationObject.fee.amount,
               _feeAsset.symbol,
               _feeAsset.precision
             ),
@@ -1200,56 +1205,56 @@ export default async function beautify(
         },
       ];
     }
-  } else if (opType == 19) {
+  } else if (operationType == 19) {
     // asset_publish_feed
     let publisher = accountResults.find(
-      (resAcc) => resAcc.id === opContents.publisher
+      (resAcc) => resAcc.id === operationObject.publisher
     ).accountName;
     let baseAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.settle_price.base.asset_id
+      (assRes) => assRes.id === operationObject.settle_price.base.asset_id
     ); // backing e.g. BTS
     let quoteAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.settle_price.quote.asset_id
+      (assRes) => assRes.id === operationObject.settle_price.quote.asset_id
     ); // same as asset_id
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
 
     if (publisher && baseAsset && quoteAsset) {
       let coreExchangeRate =
         humanReadableFloat(
-          opContents.feed.core_exchange_rate.base.amount,
+          operationObject.feed.core_exchange_rate.base.amount,
           baseAsset.precision
         ) /
         humanReadableFloat(
-          opContents.feed.core_exchange_rate.quote.amount,
+          operationObject.feed.core_exchange_rate.quote.amount,
           quoteAsset.precision
         );
 
       let settlementPrice =
         humanReadableFloat(
-          opContents.feed.settlement_price.base.amount,
+          operationObject.feed.settlement_price.base.amount,
           baseAsset.precision
         ) /
         humanReadableFloat(
-          opContents.feed.settlement_price.quote.amount,
+          operationObject.feed.settlement_price.quote.amount,
           quoteAsset.precision
         );
 
-      currentOperation["rows"] = [
+      return [
         {
           key: "publisher",
           params: {
             publisher: publisher,
-            publisherOP: opContents.publisher,
+            publisherOP: operationObject.publisher,
           },
         },
         {
           key: "asset_id",
           params: {
             symbol: quoteAsset.symbol,
-            asset_idOP: opContents.asset_id,
+            asset_idOP: operationObject.asset_id,
           },
         },
         { key: "feed", params: {} },
@@ -1265,21 +1270,21 @@ export default async function beautify(
           key: "maintenance_collateral_ratio",
           params: {
             maintenance_collateral_ratio:
-              opContents.feed.maintenance_collateral_ratio,
+              operationObject.feed.maintenance_collateral_ratio,
           },
         },
         {
           key: "maximum_short_squeeze_ratio",
           params: {
             maximum_short_squeeze_ratio:
-              opContents.feed.maximum_short_squeeze_ratio,
+              operationObject.feed.maximum_short_squeeze_ratio,
           },
         },
         {
           key: "extensions",
           params: {
-            extensions: opContents.extensions
-              ? JSON.stringify(opContents.extensions)
+            extensions: operationObject.extensions
+              ? JSON.stringify(operationObject.extensions)
               : "[]",
           },
         },
@@ -1287,7 +1292,7 @@ export default async function beautify(
           key: "fee",
           params: {
             fee: formatAsset(
-              opContents.fee.amount,
+              operationObject.fee.amount,
               _feeAsset.symbol,
               _feeAsset.precision
             ),
@@ -1295,34 +1300,34 @@ export default async function beautify(
         },
       ];
     }
-  } else if (opType == 20) {
+  } else if (operationType == 20) {
     // witness_create
     let witnessAccount = accountResults.find(
-      (resAcc) => resAcc.id === opContents.witness_account
+      (resAcc) => resAcc.id === operationObject.witness_account
     ).accountName;
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
     if (witnessAccount) {
-      currentOperation["rows"] = [
+      return [
         {
           key: "witness_account",
           params: {
             witness_account: witnessAccount,
-            witness_accountOP: opContents.witness_account,
+            witness_accountOP: operationObject.witness_account,
           },
         },
-        { key: "url", params: { url: opContents.url } },
+        { key: "url", params: { url: operationObject.url } },
         {
           key: "block_signing_key",
-          params: { block_signing_key: opContents.block_signing_key },
+          params: { block_signing_key: operationObject.block_signing_key },
         },
         {
           key: "fee",
           params: {
             fee: formatAsset(
-              opContents.fee.amount,
+              operationObject.fee.amount,
               _feeAsset.symbol,
               _feeAsset.precision
             ),
@@ -1330,40 +1335,40 @@ export default async function beautify(
         },
       ];
     }
-  } else if (opType == 21) {
+  } else if (operationType == 21) {
     // witness_update
     let witnessAccount = accountResults.find(
-      (resAcc) => resAcc.id === opContents.witness_account
+      (resAcc) => resAcc.id === operationObject.witness_account
     ).accountName;
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
     if (witnessAccount) {
-      currentOperation["rows"] = [
+      return [
         {
           key: "witness",
           params: {
-            witness: opContents.witness,
+            witness: operationObject.witness,
           },
         },
         {
           key: "witness_account",
           params: {
             witness_account: witnessAccount,
-            witness_accountOP: opContents.witness_account,
+            witness_accountOP: operationObject.witness_account,
           },
         },
-        { key: "new_url", params: { new_url: opContents.new_url } },
+        { key: "new_url", params: { new_url: operationObject.new_url } },
         {
           key: "new_signing_key",
-          params: { new_signing_key: opContents.new_signing_key },
+          params: { new_signing_key: operationObject.new_signing_key },
         },
         {
           key: "fee",
           params: {
             fee: formatAsset(
-              opContents.fee.amount,
+              operationObject.fee.amount,
               _feeAsset.symbol,
               _feeAsset.precision
             ),
@@ -1371,45 +1376,45 @@ export default async function beautify(
         },
       ];
     }
-  } else if (opType == 22) {
+  } else if (operationType == 22) {
     // proposal_create
     let feePayingAccount = accountResults.find(
-      (resAcc) => resAcc.id === opContents.fee_paying_account
+      (resAcc) => resAcc.id === operationObject.fee_paying_account
     ).accountName;
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
     if (feePayingAccount) {
-      currentOperation["rows"] = [
+      return [
         {
           key: "expiration_time",
-          params: { expiration_time: opContents.expiration_time },
+          params: { expiration_time: operationObject.expiration_time },
         },
         {
           key: "proposed_ops",
           params: {
-            proposed_ops: JSON.stringify(opContents.proposed_ops),
+            proposed_ops: JSON.stringify(operationObject.proposed_ops),
           },
         },
         {
           key: "review_period_seconds",
           params: {
-            review_period_seconds: opContents.review_period_seconds,
+            review_period_seconds: operationObject.review_period_seconds,
           },
         },
         {
           key: "fee_paying_account",
           params: {
             fee_paying_account: feePayingAccount,
-            fee_paying_accountOP: opContents.fee_paying_account,
+            fee_paying_accountOP: operationObject.fee_paying_account,
           },
         },
         {
           key: "fee",
           params: {
             fee: formatAsset(
-              opContents.fee.amount,
+              operationObject.fee.amount,
               _feeAsset.symbol,
               _feeAsset.precision
             ),
@@ -1417,23 +1422,23 @@ export default async function beautify(
         },
       ];
     }
-  } else if (opType == 23) {
+  } else if (operationType == 23) {
     // proposal_update
     let feePayingAccount = accountResults.find(
-      (resAcc) => resAcc.id === opContents.fee_paying_account
+      (resAcc) => resAcc.id === operationObject.fee_paying_account
     ).accountName;
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
     if (feePayingAccount) {
-      currentOperation["rows"] = [
-        { key: "proposal", params: { proposal: opContents.proposal } },
+      return [
+        { key: "proposal", params: { proposal: operationObject.proposal } },
         {
           key: "active_approvals_to_add",
           params: {
             active_approvals_to_add: JSON.stringify(
-              opContents.active_approvals_to_add
+              operationObject.active_approvals_to_add
             ),
           },
         },
@@ -1441,7 +1446,7 @@ export default async function beautify(
           key: "active_approvals_to_remove",
           params: {
             active_approvals_to_remove: JSON.stringify(
-              opContents.active_approvals_to_remove
+              operationObject.active_approvals_to_remove
             ),
           },
         },
@@ -1449,7 +1454,7 @@ export default async function beautify(
           key: "owner_approvals_to_add",
           params: {
             owner_approvals_to_add: JSON.stringify(
-              opContents.owner_approvals_to_add
+              operationObject.owner_approvals_to_add
             ),
           },
         },
@@ -1457,7 +1462,7 @@ export default async function beautify(
           key: "owner_approvals_to_remove",
           params: {
             owner_approvals_to_remove: JSON.stringify(
-              opContents.owner_approvals_to_remove
+              operationObject.owner_approvals_to_remove
             ),
           },
         },
@@ -1465,7 +1470,7 @@ export default async function beautify(
           key: "key_approvals_to_add",
           params: {
             key_approvals_to_add: JSON.stringify(
-              opContents.key_approvals_to_add
+              operationObject.key_approvals_to_add
             ),
           },
         },
@@ -1473,7 +1478,7 @@ export default async function beautify(
           key: "key_approvals_to_remove",
           params: {
             key_approvals_to_remove: JSON.stringify(
-              opContents.key_approvals_to_remove
+              operationObject.key_approvals_to_remove
             ),
           },
         },
@@ -1481,14 +1486,14 @@ export default async function beautify(
           key: "fee_paying_account",
           params: {
             fee_paying_account: feePayingAccount,
-            fee_paying_accountOP: opContents.fee_paying_account,
+            fee_paying_accountOP: operationObject.fee_paying_account,
           },
         },
         {
           key: "extensions",
           params: {
-            extensions: opContents.extensions
-              ? JSON.stringify(opContents.extensions)
+            extensions: operationObject.extensions
+              ? JSON.stringify(operationObject.extensions)
               : "[]",
           },
         },
@@ -1496,7 +1501,7 @@ export default async function beautify(
           key: "fee",
           params: {
             fee: formatAsset(
-              opContents.fee.amount,
+              operationObject.fee.amount,
               _feeAsset.symbol,
               _feeAsset.precision
             ),
@@ -1504,36 +1509,36 @@ export default async function beautify(
         },
       ];
     }
-  } else if (opType == 24) {
+  } else if (operationType == 24) {
     // proposal_delete
     let feePayingAccount = accountResults.find(
-      (resAcc) => resAcc.id === opContents.fee_paying_account
+      (resAcc) => resAcc.id === operationObject.fee_paying_account
     ).accountName;
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
     if (feePayingAccount) {
-      currentOperation["rows"] = [
+      return [
         {
           key: "using_owner_authority",
           params: {
-            using_owner_authority: opContents.using_owner_authority,
+            using_owner_authority: operationObject.using_owner_authority,
           },
         },
-        { key: "proposal", params: { proposal: opContents.proposal } },
+        { key: "proposal", params: { proposal: operationObject.proposal } },
         {
           key: "fee_paying_account",
           params: {
             fee_paying_account: feePayingAccount,
-            fee_paying_accountOP: opContents.fee_paying_account,
+            fee_paying_accountOP: operationObject.fee_paying_account,
           },
         },
         {
           key: "extensions",
           params: {
-            extensions: opContents.extensions
-              ? JSON.stringify(opContents.extensions)
+            extensions: operationObject.extensions
+              ? JSON.stringify(operationObject.extensions)
               : "[]",
           },
         },
@@ -1541,7 +1546,7 @@ export default async function beautify(
           key: "fee",
           params: {
             fee: formatAsset(
-              opContents.fee.amount,
+              operationObject.fee.amount,
               _feeAsset.symbol,
               _feeAsset.precision
             ),
@@ -1549,88 +1554,88 @@ export default async function beautify(
         },
       ];
     }
-  } else if (opType == 25) {
+  } else if (operationType == 25) {
     // withdraw_permission_create
     let to = accountResults.find(
-      (resAcc) => resAcc.id === opContents.authorized_account
+      (resAcc) => resAcc.id === operationObject.authorized_account
     ).accountName;
     let from = accountResults.find(
-      (resAcc) => resAcc.id === opContents.withdraw_from_account
+      (resAcc) => resAcc.id === operationObject.withdraw_from_account
     ).accountName;
     let asset = assetResults.find(
-      (assRes) => assRes.id === opContents.withdrawal_limit.asset_id
+      (assRes) => assRes.id === operationObject.withdrawal_limit.asset_id
     );
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
 
     if (to && from && asset) {
-      currentOperation["rows"] = [
+      return [
         {
           key: "recipient",
           params: {
             recipient: to,
-            recipientOP: opContents.authorized_account,
+            recipientOP: operationObject.authorized_account,
           },
         },
         {
           key: "withdraw_from",
           params: {
             withdraw_from: from,
-            withdraw_fromOP: opContents.withdraw_from_account,
+            withdraw_fromOP: operationObject.withdraw_from_account,
           },
         },
         {
           key: "taking",
           params: {
             amount: formatAsset(
-              opContents.withdrawal_limit.amount,
+              operationObject.withdrawal_limit.amount,
               asset.symbol,
               asset.precision
             ),
-            period_sec: opContents.withdrawal_period_sec,
-            period_qty: opContents.periods_until_expiration,
+            period_sec: operationObject.withdrawal_period_sec,
+            period_qty: operationObject.periods_until_expiration,
           },
         },
       ];
     }
-  } else if (opType == 26) {
+  } else if (operationType == 26) {
     // withdraw_permission_update
     let withdrawFromAccount = accountResults.find(
-      (resAcc) => resAcc.id === opContents.withdraw_from_account
+      (resAcc) => resAcc.id === operationObject.withdraw_from_account
     ).accountName;
     let authorizedAccount = accountResults.find(
-      (resAcc) => resAcc.id === opContents.authorized_account
+      (resAcc) => resAcc.id === operationObject.authorized_account
     ).accountName;
     let withdrawalLimit = assetResults.find(
-      (assRes) => assRes.id === opContents.withdrawal_limit.asset_id
+      (assRes) => assRes.id === operationObject.withdrawal_limit.asset_id
     );
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
 
     if (withdrawFromAccount && authorizedAccount && withdrawalLimit) {
-      currentOperation["rows"] = [
+      return [
         {
           key: "withdraw_from_account",
           params: {
             withdraw_from_account: withdrawFromAccount,
-            withdraw_from_accountOP: opContents.withdraw_from_account,
+            withdraw_from_accountOP: operationObject.withdraw_from_account,
           },
         },
         {
           key: "authorized_account",
           params: {
             authorized_account: authorizedAccount,
-            authorized_accountOP: opContents.authorized_account,
+            authorized_accountOP: operationObject.authorized_account,
           },
         },
         {
           key: "permission_to_update",
           params: {
-            permission_to_update: opContents.permission_to_update,
+            permission_to_update: operationObject.permission_to_update,
           },
         },
         withdrawalLimit
@@ -1638,7 +1643,7 @@ export default async function beautify(
               key: "withdrawal_limited",
               params: {
                 withdrawal_limit: formatAsset(
-                  opContents.withdrawal_limit.amount,
+                  operationObject.withdrawal_limit.amount,
                   withdrawalLimit.symbol,
                   withdrawalLimit.precision
                 ),
@@ -1647,31 +1652,31 @@ export default async function beautify(
           : {
               key: "withdrawal_unlimited",
               params: {
-                withdrawal_limit: opContents.withdrawal_limit.amount,
-                withdrawal_limitOP: opContents.withdrawal_limit.asset_id,
+                withdrawal_limit: operationObject.withdrawal_limit.amount,
+                withdrawal_limitOP: operationObject.withdrawal_limit.asset_id,
               },
             },
         {
           key: "withdrawal_period_sec",
           params: {
-            withdrawal_period_sec: opContents.withdrawal_period_sec,
+            withdrawal_period_sec: operationObject.withdrawal_period_sec,
           },
         },
         {
           key: "period_start_time",
-          params: { period_start_time: opContents.period_start_time },
+          params: { period_start_time: operationObject.period_start_time },
         },
         {
           key: "periods_until_expiration",
           params: {
-            periods_until_expiration: opContents.periods_until_expiration,
+            periods_until_expiration: operationObject.periods_until_expiration,
           },
         },
         {
           key: "fee",
           params: {
             fee: formatAsset(
-              opContents.fee.amount,
+              operationObject.fee.amount,
               _feeAsset.symbol,
               _feeAsset.precision
             ),
@@ -1679,42 +1684,42 @@ export default async function beautify(
         },
       ];
     }
-  } else if (opType == 27) {
+  } else if (operationType == 27) {
     // withdraw_permission_claim
     let from = accountResults.find(
-      (resAcc) => resAcc.id === opContents.withdraw_from_account
+      (resAcc) => resAcc.id === operationObject.withdraw_from_account
     ).accountName;
     let to = accountResults.find(
-      (resAcc) => resAcc.id === opContents.withdraw_to_account
+      (resAcc) => resAcc.id === operationObject.withdraw_to_account
     ).accountName;
     let withdrawnAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.amount_to_withdraw.asset_id
+      (assRes) => assRes.id === operationObject.amount_to_withdraw.asset_id
     );
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
 
     if (from && to && withdrawnAsset) {
-      currentOperation["rows"] = [
+      return [
         {
           key: "withdraw_permission",
           params: {
-            withdraw_permission: opContents.withdraw_permission,
+            withdraw_permission: operationObject.withdraw_permission,
           },
         },
         {
           key: "withdraw_from_account",
           params: {
             withdraw_from_account: from ?? "",
-            withdraw_from_accountOP: opContents.withdraw_from_account,
+            withdraw_from_accountOP: operationObject.withdraw_from_account,
           },
         },
         {
           key: "withdraw_to_account",
           params: {
             withdraw_to_account: to ?? "",
-            withdraw_to_accountOP: opContents.withdraw_to_account,
+            withdraw_to_accountOP: operationObject.withdraw_to_account,
           },
         },
         {
@@ -1722,20 +1727,20 @@ export default async function beautify(
           params: {
             amount_to_withdraw: withdrawnAsset
               ? formatAsset(
-                  opContents.amount_to_withdraw.amount,
+                  operationObject.amount_to_withdraw.amount,
                   withdrawnAsset.symbol,
                   withdrawnAsset.precision
                 )
-              : opContents.amount_to_withdraw.amount,
-            amount_to_withdrawOP: opContents.amount_to_withdraw.asset_id,
+              : operationObject.amount_to_withdraw.amount,
+            amount_to_withdrawOP: operationObject.amount_to_withdraw.asset_id,
           },
         },
-        { key: "memo", params: { memo: opContents.memo } },
+        { key: "memo", params: { memo: operationObject.memo } },
         {
           key: "fee",
           params: {
             fee: formatAsset(
-              opContents.fee.amount,
+              operationObject.fee.amount,
               _feeAsset.symbol,
               _feeAsset.precision
             ),
@@ -1743,46 +1748,46 @@ export default async function beautify(
         },
       ];
     }
-  } else if (opType == 28) {
+  } else if (operationType == 28) {
     // withdraw_permission_delete
     let withdrawFromAccount = accountResults.find(
-      (resAcc) => resAcc.id === opContents.withdraw_from_account
+      (resAcc) => resAcc.id === operationObject.withdraw_from_account
     ).accountName;
     let authorizedAccount = accountResults.find(
-      (resAcc) => resAcc.id === opContents.authorized_account
+      (resAcc) => resAcc.id === operationObject.authorized_account
     ).accountName;
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
 
     if (withdrawFromAccount && authorizedAccount) {
-      currentOperation["rows"] = [
+      return [
         {
           key: "withdraw_from_account",
           params: {
             withdraw_from_account: withdrawFromAccount,
-            withdraw_from_accountOP: opContents.withdraw_from_account,
+            withdraw_from_accountOP: operationObject.withdraw_from_account,
           },
         },
         {
           key: "authorized_account",
           params: {
             authorized_account: authorizedAccount,
-            authorized_accountOP: opContents.authorized_account,
+            authorized_accountOP: operationObject.authorized_account,
           },
         },
         {
           key: "withdrawal_permission",
           params: {
-            withdrawal_permission: opContents.withdrawal_permission,
+            withdrawal_permission: operationObject.withdrawal_permission,
           },
         },
         {
           key: "fee",
           params: {
             fee: formatAsset(
-              opContents.fee.amount,
+              operationObject.fee.amount,
               _feeAsset.symbol,
               _feeAsset.precision
             ),
@@ -1790,30 +1795,31 @@ export default async function beautify(
         },
       ];
     }
-  } else if (opType == 29) {
+  } else if (operationType == 29) {
     // committee_member_create
     let committeeMemberAccount = accountResults.find(
-      (resAcc) => resAcc.id === opContents.committee_member_account
+      (resAcc) => resAcc.id === operationObject.committee_member_account
     ).accountName;
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
     if (committeeMemberAccount) {
-      currentOperation["rows"] = [
+      return [
         {
           key: "committee_member_account",
           params: {
             committee_member_account: committeeMemberAccount,
-            committee_member_accountOP: opContents.committee_member_account,
+            committee_member_accountOP:
+              operationObject.committee_member_account,
           },
         },
-        { key: "url", params: { url: opContents.url } },
+        { key: "url", params: { url: operationObject.url } },
         {
           key: "fee",
           params: {
             fee: formatAsset(
-              opContents.fee.amount,
+              operationObject.fee.amount,
               _feeAsset.symbol,
               _feeAsset.precision
             ),
@@ -1821,34 +1827,36 @@ export default async function beautify(
         },
       ];
     }
-  } else if (opType == 30) {
+  } else if (operationType == 30) {
     // committee_member_update
+    // none in kibana?
     let committeeMemberAccount = accountResults.find(
-      (resAcc) => resAcc.id === opContents.committee_member_account
+      (resAcc) => resAcc.id === operationObject.committee_member_account
     ).accountName;
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
     if (committeeMemberAccount) {
-      currentOperation["rows"] = [
+      return [
         {
           key: "committee_member",
-          params: { committee_member: opContents.committee_member },
+          params: { committee_member: operationObject.committee_member },
         },
         {
           key: "committee_member_account",
           params: {
             committee_member_account: committeeMemberAccount,
-            committee_member_accountOP: opContents.committee_member_account,
+            committee_member_accountOP:
+              operationObject.committee_member_account,
           },
         },
-        { key: "new_url", params: { new_url: opContents.new_url } },
+        { key: "new_url", params: { new_url: operationObject.new_url } },
         {
           key: "fee",
           params: {
             fee: formatAsset(
-              opContents.fee.amount,
+              operationObject.fee.amount,
               _feeAsset.symbol,
               _feeAsset.precision
             ),
@@ -1856,238 +1864,244 @@ export default async function beautify(
         },
       ];
     }
-  } else if (opType == 31) {
+  } else if (operationType == 31) {
     // committee_member_update_global_parameters
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
-    currentOperation["rows"] = [
+    return [
       { key: "new_parameters", params: {} },
       {
         key: "current_fees",
         params: {
-          current_fees: JSON.stringify(opContents.new_parameters.current_fees),
+          current_fees: JSON.stringify(
+            operationObject.new_parameters.current_fees
+          ),
         },
       },
       {
         key: "block_interval",
-        params: { block_interval: opContents.block_interval },
+        params: { block_interval: operationObject.block_interval },
       },
       {
         key: "maintenance_interval",
         params: {
-          maintenance_interval: opContents.maintenance_interval,
+          maintenance_interval: operationObject.maintenance_interval,
         },
       },
       {
         key: "maintenance_skip_slots",
         params: {
-          maintenance_skip_slots: opContents.maintenance_skip_slots,
+          maintenance_skip_slots: operationObject.maintenance_skip_slots,
         },
       },
       {
         key: "committee_proposal_review_period",
         params: {
           committee_proposal_review_period:
-            opContents.committee_proposal_review_period,
+            operationObject.committee_proposal_review_period,
         },
       },
       {
         key: "maximum_transaction_size",
         params: {
-          maximum_transaction_size: opContents.maximum_transaction_size,
+          maximum_transaction_size: operationObject.maximum_transaction_size,
         },
       },
       {
         key: "maximum_block_size",
-        params: { maximum_block_size: opContents.maximum_block_size },
+        params: { maximum_block_size: operationObject.maximum_block_size },
       },
       {
         key: "maximum_time_until_expiration",
         params: {
           maximum_time_until_expiration:
-            opContents.maximum_time_until_expiration,
+            operationObject.maximum_time_until_expiration,
         },
       },
       {
         key: "maximum_proposal_lifetime",
         params: {
-          maximum_proposal_lifetime: opContents.maximum_proposal_lifetime,
+          maximum_proposal_lifetime: operationObject.maximum_proposal_lifetime,
         },
       },
       {
         key: "maximum_asset_whitelist_authorities",
         params: {
           maximum_asset_whitelist_authorities:
-            opContents.maximum_asset_whitelist_authorities,
+            operationObject.maximum_asset_whitelist_authorities,
         },
       },
       {
         key: "maximum_asset_feed_publishers",
         params: {
           maximum_asset_feed_publishers:
-            opContents.maximum_asset_feed_publishers,
+            operationObject.maximum_asset_feed_publishers,
         },
       },
       {
         key: "maximum_witness_count",
         params: {
-          maximum_witness_count: opContents.maximum_witness_count,
+          maximum_witness_count: operationObject.maximum_witness_count,
         },
       },
       {
         key: "maximum_committee_count",
         params: {
-          maximum_committee_count: opContents.maximum_committee_count,
+          maximum_committee_count: operationObject.maximum_committee_count,
         },
       },
       {
         key: "maximum_authority_membership",
         params: {
-          maximum_authority_membership: opContents.maximum_authority_membership,
+          maximum_authority_membership:
+            operationObject.maximum_authority_membership,
         },
       },
       {
         key: "reserve_percent_of_fee",
         params: {
-          reserve_percent_of_fee: opContents.reserve_percent_of_fee,
+          reserve_percent_of_fee: operationObject.reserve_percent_of_fee,
         },
       },
       {
         key: "network_percent_of_fee",
         params: {
-          network_percent_of_fee: opContents.network_percent_of_fee,
+          network_percent_of_fee: operationObject.network_percent_of_fee,
         },
       },
       {
         key: "lifetime_referrer_percent_of_fee",
         params: {
           lifetime_referrer_percent_of_fee:
-            opContents.lifetime_referrer_percent_of_fee,
+            operationObject.lifetime_referrer_percent_of_fee,
         },
       },
       {
         key: "cashback_vesting_period_seconds",
         params: {
           cashback_vesting_period_seconds:
-            opContents.cashback_vesting_period_seconds,
+            operationObject.cashback_vesting_period_seconds,
         },
       },
       {
         key: "cashback_vesting_threshold",
         params: {
-          cashback_vesting_threshold: opContents.cashback_vesting_threshold,
+          cashback_vesting_threshold:
+            operationObject.cashback_vesting_threshold,
         },
       },
       {
         key: "count_non_member_votes",
         params: {
-          count_non_member_votes: opContents.count_non_member_votes,
+          count_non_member_votes: operationObject.count_non_member_votes,
         },
       },
       {
         key: "allow_non_member_whitelists",
         params: {
-          allow_non_member_whitelists: opContents.allow_non_member_whitelists,
+          allow_non_member_whitelists:
+            operationObject.allow_non_member_whitelists,
         },
       },
       {
         key: "witness_pay_per_block",
         params: {
-          witness_pay_per_block: opContents.witness_pay_per_block,
+          witness_pay_per_block: operationObject.witness_pay_per_block,
         },
       },
       {
         key: "worker_budget_per_day",
         params: {
-          worker_budget_per_day: opContents.worker_budget_per_day,
+          worker_budget_per_day: operationObject.worker_budget_per_day,
         },
       },
       {
         key: "max_predicate_opcode",
         params: {
-          max_predicate_opcode: opContents.max_predicate_opcode,
+          max_predicate_opcode: operationObject.max_predicate_opcode,
         },
       },
       {
         key: "fee_liquidation_threshold",
         params: {
-          fee_liquidation_threshold: opContents.fee_liquidation_threshold,
+          fee_liquidation_threshold: operationObject.fee_liquidation_threshold,
         },
       },
       {
         key: "accounts_per_fee_scale",
         params: {
-          accounts_per_fee_scale: opContents.accounts_per_fee_scale,
+          accounts_per_fee_scale: operationObject.accounts_per_fee_scale,
         },
       },
       {
         key: "account_fee_scale_bitshifts",
         params: {
-          account_fee_scale_bitshifts: opContents.account_fee_scale_bitshifts,
+          account_fee_scale_bitshifts:
+            operationObject.account_fee_scale_bitshifts,
         },
       },
       {
         key: "max_authority_depth",
-        params: { max_authority_depth: opContents.max_authority_depth },
+        params: { max_authority_depth: operationObject.max_authority_depth },
       },
       {
         key: "extensions",
-        params: { extensions: JSON.stringify(opContents.extensions) },
+        params: { extensions: JSON.stringify(operationObject.extensions) },
       },
       {
         key: "fee",
         params: {
           fee: formatAsset(
-            opContents.fee.amount,
+            operationObject.fee.amount,
             _feeAsset.symbol,
             _feeAsset.precision
           ),
         },
       },
     ];
-  } else if (opType == 32) {
+  } else if (operationType == 32) {
     // vesting_balance_create
     let creator = accountResults.find(
-      (resAcc) => resAcc.id === opContents.creator
+      (resAcc) => resAcc.id === operationObject.creator
     ).accountName;
     let owner = accountResults.find(
-      (resAcc) => resAcc.id === opContents.owner
+      (resAcc) => resAcc.id === operationObject.owner
     ).accountName;
     let amount = assetResults.find(
-      (assRes) => assRes.id === opContents.amount.asset_id
+      (assRes) => assRes.id === operationObject.amount.asset_id
     );
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
 
     if (creator && owner && amount) {
       let tempRows = [
         {
           key: "creator",
-          params: { creator: creator, creatorOP: opContents.creator },
+          params: { creator: creator, creatorOP: operationObject.creator },
         },
         {
           key: "owner",
-          params: { owner: owner, ownerOP: opContents.owner },
+          params: { owner: owner, ownerOP: operationObject.owner },
         },
         {
           key: "amount",
           params: {
             amount: formatAsset(
-              opContents.amount.amount,
+              operationObject.amount.amount,
               amount.symbol,
               amount.precision
             ),
-            amount_id: opContents.amount.asset_id,
+            amount_id: operationObject.amount.asset_id,
           },
         },
         { key: "policy", params: {} },
       ];
 
-      let policy = opContents.policy;
+      let policy = operationObject.policy;
       if (policy[0] == 0) {
         tempRows.push({
           key: "begin_timestamp",
@@ -2118,78 +2132,78 @@ export default async function beautify(
 
       tempRows.push({
         key: "fee",
-        params: { fee: JSON.stringify(opContents.fee) },
+        params: { fee: JSON.stringify(operationObject.fee) },
       });
       return tempRows;
     }
-  } else if (opType == 33) {
+  } else if (operationType == 33) {
     // vesting_balance_withdraw
     let owner = accountResults.find(
-      (resAcc) => resAcc.id === opContents.owner
+      (resAcc) => resAcc.id === operationObject.owner
     ).accountName;
     let asset = assetResults.find(
-      (assRes) => assRes.id === opContents.amount.asset_id
+      (assRes) => assRes.id === operationObject.amount.asset_id
     );
 
     if (owner && asset) {
-      currentOperation["rows"] = [
+      return [
         {
           key: "owner",
-          params: { owner: owner, ownerOP: opContents.owner },
+          params: { owner: owner, ownerOP: operationObject.owner },
         },
         {
           key: "claim",
           params: {
             claim: formatAsset(
-              opContents.amount.amount,
+              operationObject.amount.amount,
               asset.symbol,
               asset.precision
             ),
-            asset_id: opContents.amount.asset_id,
+            asset_id: operationObject.amount.asset_id,
           },
         },
       ];
     }
-  } else if (opType == 34) {
+  } else if (operationType == 34) {
     // worker_create
     let owner = accountResults.find(
-      (resAcc) => resAcc.id === opContents.owner
+      (resAcc) => resAcc.id === operationObject.owner
     ).accountName;
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
     if (owner) {
-      currentOperation["rows"] = [
+      return [
         {
           key: "owner",
-          params: { owner: owner, ownerOP: opContents.owner },
+          params: { owner: owner, ownerOP: operationObject.owner },
         },
         {
           key: "work_begin_date",
-          params: { work_begin_date: opContents.work_begin_date },
+          params: { work_begin_date: operationObject.work_begin_date },
         },
         {
           key: "work_end_date",
-          params: { work_end_date: opContents.work_end_date },
+          params: { work_end_date: operationObject.work_end_date },
         },
         {
           key: "daily_pay",
-          params: { daily_pay: opContents.daily_pay },
+          params: { daily_pay: operationObject.daily_pay },
         },
-        { key: "name", params: { name: opContents.name } },
-        { key: "url", params: { url: opContents.url } },
+        { key: "name", params: { name: operationObject.name } },
+        { key: "url", params: { url: operationObject.url } },
         {
           key: "initializer",
           params: {
-            initializer: JSON.stringify(opContents.initializer),
+            initializer: JSON.stringify(operationObject.initializer),
           },
         },
         {
           key: "fee",
           params: {
             fee: formatAsset(
-              opContents.fee.amount,
+              operationObject.fee.amount,
               _feeAsset.symbol,
               _feeAsset.precision
             ),
@@ -2197,37 +2211,37 @@ export default async function beautify(
         },
       ];
     }
-  } else if (opType == 35) {
+  } else if (operationType == 35) {
     // custom
     let payer = accountResults.find(
-      (resAcc) => resAcc.id === opContents.payer
+      (resAcc) => resAcc.id === operationObject.payer
     ).accountName;
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
     if (payer) {
-      currentOperation["rows"] = [
+      return [
         {
           key: "payer",
-          params: { payer: payer, payerOP: opContents.payer },
+          params: { payer: payer, payerOP: operationObject.payer },
         },
         {
           key: "required_auths",
           params: {
-            required_auths: JSON.stringify(opContents.required_auths),
+            required_auths: JSON.stringify(operationObject.required_auths),
           },
         },
-        { key: "id", params: { id: opContents.id } },
+        { key: "id", params: { id: operationObject.id } },
         {
           key: "data",
-          params: { data: JSON.stringify(opContents.data) },
+          params: { data: JSON.stringify(operationObject.data) },
         },
         {
           key: "fee",
           params: {
             fee: formatAsset(
-              opContents.fee.amount,
+              operationObject.fee.amount,
               _feeAsset.symbol,
               _feeAsset.precision
             ),
@@ -2235,41 +2249,41 @@ export default async function beautify(
         },
       ];
     }
-  } else if (opType == 36) {
+  } else if (operationType == 36) {
     // assert
     let feePayingAccount = accountResults.find(
-      (resAcc) => resAcc.id === opContents.fee_paying_account
+      (resAcc) => resAcc.id === operationObject.fee_paying_account
     ).accountName;
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
     if (feePayingAccount) {
-      currentOperation["rows"] = [
+      return [
         {
           key: "fee_paying_account",
           params: {
             fee_paying_account: feePayingAccount,
-            fee_paying_accountOP: opContents.fee_paying_account,
+            fee_paying_accountOP: operationObject.fee_paying_account,
           },
         },
         {
           key: "predicates",
           params: {
-            predicates: JSON.stringify(opContents.predicates),
+            predicates: JSON.stringify(operationObject.predicates),
           },
         },
         {
           key: "required_auths",
           params: {
-            required_auths: JSON.stringify(opContents.required_auths),
+            required_auths: JSON.stringify(operationObject.required_auths),
           },
         },
         {
           key: "extensions",
           params: {
-            extensions: opContents.extensions
-              ? JSON.stringify(opContents.extensions)
+            extensions: operationObject.extensions
+              ? JSON.stringify(operationObject.extensions)
               : "[]",
           },
         },
@@ -2277,7 +2291,7 @@ export default async function beautify(
           key: "fee",
           params: {
             fee: formatAsset(
-              opContents.fee.amount,
+              operationObject.fee.amount,
               _feeAsset.symbol,
               _feeAsset.precision
             ),
@@ -2285,52 +2299,52 @@ export default async function beautify(
         },
       ];
     }
-  } else if (opType == 37) {
+  } else if (operationType == 37) {
     // balance_claim
     let depositToAccount = accountResults.find(
-      (resAcc) => resAcc.id === opContents.deposit_to_account
+      (resAcc) => resAcc.id === operationObject.deposit_to_account
     ).accountName;
     let claimedAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.amount.asset_id
+      (assRes) => assRes.id === operationObject.amount.asset_id
     );
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
 
     if (depositToAccount && claimedAsset) {
-      currentOperation["rows"] = [
+      return [
         {
           key: "deposit_to_account",
           params: {
             deposit_to_account: depositToAccount,
-            deposit_to_accountOP: opContents.deposit_to_account,
+            deposit_to_accountOP: operationObject.deposit_to_account,
           },
         },
         {
           key: "balance_to_claim",
-          params: { balance_to_claim: opContents.balance_to_claim },
+          params: { balance_to_claim: operationObject.balance_to_claim },
         },
         {
           key: "balance_owner_key",
-          params: { balance_owner_key: opContents.balance_owner_key },
+          params: { balance_owner_key: operationObject.balance_owner_key },
         },
         {
           key: "total_claimed",
           params: {
             total_claimed: formatAsset(
-              opContents.amount.amount,
+              operationObject.amount.amount,
               claimedAsset.symbol,
               claimedAsset.precision
             ),
-            asset_id: opContents.amount.asset_id,
+            asset_id: operationObject.amount.asset_id,
           },
         },
         {
           key: "fee",
           params: {
             fee: formatAsset(
-              opContents.fee.amount,
+              operationObject.fee.amount,
               _feeAsset.symbol,
               _feeAsset.precision
             ),
@@ -2338,53 +2352,53 @@ export default async function beautify(
         },
       ];
     }
-  } else if (opType == 38) {
+  } else if (operationType == 38) {
     // override_transfer
     let issuer = accountResults.find(
-      (resAcc) => resAcc.id === opContents.issuer
+      (resAcc) => resAcc.id === operationObject.issuer
     ).accountName;
     let from = accountResults.find(
-      (resAcc) => resAcc.id === opContents.from
+      (resAcc) => resAcc.id === operationObject.from
     ).accountName;
     let to = accountResults.find(
-      (resAcc) => resAcc.id === opContents.to
+      (resAcc) => resAcc.id === operationObject.to
     ).accountName;
     let overridenAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.amount.asset_id
+      (assRes) => assRes.id === operationObject.amount.asset_id
     );
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
 
     if (issuer && from && to && overridenAsset) {
-      currentOperation["rows"] = [
+      return [
         {
           key: "issuer",
-          params: { issuer: issuer, issuerOP: opContents.issuer },
+          params: { issuer: issuer, issuerOP: operationObject.issuer },
         },
         {
           key: "from",
-          params: { from: from, fromOP: opContents.from },
+          params: { from: from, fromOP: operationObject.from },
         },
-        { key: "to", params: { to: to, toOP: opContents.to } },
+        { key: "to", params: { to: to, toOP: operationObject.to } },
         {
           key: "amount",
           params: {
             amount: formatAsset(
-              opContents.amount.amount,
+              operationObject.amount.amount,
               overridenAsset.symbol,
               overridenAsset.precision
             ),
-            asset_id: opContents.amount.asset_id,
+            asset_id: operationObject.amount.asset_id,
           },
         },
-        { key: "memo", params: { memo: opContents.memo } },
+        { key: "memo", params: { memo: operationObject.memo } },
         {
           key: "fee",
           params: {
             fee: formatAsset(
-              opContents.fee.amount,
+              operationObject.fee.amount,
               _feeAsset.symbol,
               _feeAsset.precision
             ),
@@ -2392,26 +2406,26 @@ export default async function beautify(
         },
       ];
     }
-  } else if (opType == 39) {
+  } else if (operationType == 39) {
     // transfer_to_blind
     let from = accountResults.find(
-      (resAcc) => resAcc.id === opContents.from
+      (resAcc) => resAcc.id === operationObject.from
     ).accountName;
     let assetToTransfer = assetResults.find(
-      (assRes) => assRes.id === opContents.amount.asset_id
+      (assRes) => assRes.id === operationObject.amount.asset_id
     );
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
 
     if (from && assetToTransfer) {
-      currentOperation["rows"] = [
+      return [
         {
           key: "amount",
           params: {
             amount: formatAsset(
-              opContents.amount.amount,
+              operationObject.amount.amount,
               assetToTransfer.symbol,
               assetToTransfer.precision
             ),
@@ -2419,21 +2433,21 @@ export default async function beautify(
         },
         {
           key: "from",
-          params: { from: from, fromOP: opContents.from },
+          params: { from: from, fromOP: operationObject.from },
         },
         {
           key: "blinding_factor",
-          params: { blinding_factor: opContents.blinding_factor },
+          params: { blinding_factor: operationObject.blinding_factor },
         },
         {
           key: "outputs",
-          params: { outputs: JSON.stringify(opContents.outputs) },
+          params: { outputs: JSON.stringify(operationObject.outputs) },
         },
         {
           key: "fee",
           params: {
             fee: formatAsset(
-              opContents.fee.amount,
+              operationObject.fee.amount,
               _feeAsset.symbol,
               _feeAsset.precision
             ),
@@ -2441,70 +2455,70 @@ export default async function beautify(
         },
       ];
     }
-  } else if (opType == 40) {
+  } else if (operationType == 40) {
     // blind_transfer
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
-    currentOperation["rows"] = [
+    return [
       {
         key: "inputs",
-        params: { inputs: JSON.stringify(opContents.inputs) },
+        params: { inputs: JSON.stringify(operationObject.inputs) },
       },
       {
         key: "outputs",
-        params: { outputs: JSON.stringify(opContents.outputs) },
+        params: { outputs: JSON.stringify(operationObject.outputs) },
       },
       {
         key: "fee",
         params: {
           fee: formatAsset(
-            opContents.fee.amount,
+            operationObject.fee.amount,
             _feeAsset.symbol,
             _feeAsset.precision
           ),
         },
       },
     ];
-  } else if (opType == 41) {
+  } else if (operationType == 41) {
     // transfer_from_blind
     let to = accountResults.find(
-      (resAcc) => resAcc.id === opContents.to
+      (resAcc) => resAcc.id === operationObject.to
     ).accountName;
     let assetToTransfer = assetResults.find(
-      (assRes) => assRes.id === opContents.amount.asset_id
+      (assRes) => assRes.id === operationObject.amount.asset_id
     );
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
 
     if (to && assetToTransfer) {
-      currentOperation["rows"] = [
+      return [
         {
           key: "amount",
           params: {
             amount: formatAsset(
-              opContents.amount.amount,
+              operationObject.amount.amount,
               assetToTransfer.symbol,
               assetToTransfer.precision
             ),
           },
         },
-        { key: "to", params: { to: to, toOP: opContents.to } },
+        { key: "to", params: { to: to, toOP: operationObject.to } },
         {
           key: "blinding_factor",
-          params: { blinding_factor: opContents.blinding_factor },
+          params: { blinding_factor: operationObject.blinding_factor },
         },
         {
           key: "inputs",
-          params: { inputs: JSON.stringify(opContents.inputs) },
+          params: { inputs: JSON.stringify(operationObject.inputs) },
         },
         {
           key: "fee",
           params: {
             fee: formatAsset(
-              opContents.fee.amount,
+              operationObject.fee.amount,
               _feeAsset.symbol,
               _feeAsset.precision
             ),
@@ -2512,47 +2526,50 @@ export default async function beautify(
         },
       ];
     }
-  } else if (opType == 43) {
+  } else if (operationType == 42) {
+    // Virtual
+    // asset_settle_cancel_operation
+  } else if (operationType == 43) {
     // asset_claim_fees
     let issuer = accountResults.find(
-      (resAcc) => resAcc.id === opContents.issuer
+      (resAcc) => resAcc.id === operationObject.issuer
     ).accountName;
     let assetToClaim = assetResults.find(
-      (assRes) => assRes.id === opContents.amount_to_claim.asset_id
+      (assRes) => assRes.id === operationObject.amount_to_claim.asset_id
     );
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
 
     if (issuer && assetToClaim) {
-      currentOperation["rows"] = [
+      return [
         {
           key: "issuer",
-          params: { issuer: issuer, issuerOP: opContents.issuer },
+          params: { issuer: issuer, issuerOP: operationObject.issuer },
         },
         {
           key: "amount_to_claim",
           params: {
             amount_to_claim: formatAsset(
-              opContents.amount_to_claim.amount,
+              operationObject.amount_to_claim.amount,
               assetToClaim.symbol,
               assetToClaim.precision
             ),
-            asset_id: opContents.amount_to_claim.asset_id,
+            asset_id: operationObject.amount_to_claim.asset_id,
           },
         },
         {
           key: "extensions",
           params: {
-            extensions: JSON.stringify(opContents.extensions),
+            extensions: JSON.stringify(operationObject.extensions),
           },
         },
         {
           key: "fee",
           params: {
             fee: formatAsset(
-              opContents.fee.amount,
+              operationObject.fee.amount,
               _feeAsset.symbol,
               _feeAsset.precision
             ),
@@ -2560,33 +2577,36 @@ export default async function beautify(
         },
       ];
     }
-  } else if (opType == 45) {
+  } else if (operationType == 44) {
+    // Virtual
+    // fba_distribute_operation
+  } else if (operationType == 45) {
     // bid_collateral
     let bidder = accountResults.find(
-      (resAcc) => resAcc.id === opContents.bidder
+      (resAcc) => resAcc.id === operationObject.bidder
     ).accountName;
     let collateral = assetResults.find(
-      (assRes) => assRes.id === opContents.additional_collateral.asset_id
+      (assRes) => assRes.id === operationObject.additional_collateral.asset_id
     );
     let debtCovered = assetResults.find(
-      (assRes) => assRes.id === opContents.debtCovered.asset_id
+      (assRes) => assRes.id === operationObject.debtCovered.asset_id
     );
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
 
     if (bidder && collateral && debtCovered) {
-      currentOperation["rows"] = [
+      return [
         {
           key: "bidder",
-          params: { bidder: bidder, bidderOP: opContents.bidder },
+          params: { bidder: bidder, bidderOP: operationObject.bidder },
         },
         {
           key: "additional_collateral",
           params: {
             additional_collateral: formatAsset(
-              opContents.additional_collateral.amount,
+              operationObject.additional_collateral.amount,
               collateral.symbol,
               collateral.precision
             ),
@@ -2596,7 +2616,7 @@ export default async function beautify(
           key: "debt_covered",
           params: {
             debt_covered: formatAsset(
-              opContents.debt_covered.amount,
+              operationObject.debt_covered.amount,
               debtCovered.symbol,
               debtCovered.precision
             ),
@@ -2606,7 +2626,7 @@ export default async function beautify(
           key: "fee",
           params: {
             fee: formatAsset(
-              opContents.fee.amount,
+              operationObject.fee.amount,
               _feeAsset.symbol,
               _feeAsset.precision
             ),
@@ -2614,31 +2634,34 @@ export default async function beautify(
         },
       ];
     }
-  } else if (opType == 47) {
+  } else if (operationType == 46) {
+    // Virtual
+    // execute_bid_operation
+  } else if (operationType == 47) {
     // asset_claim_pool
     let issuer = accountResults.find(
-      (resAcc) => resAcc.id === opContents.issuer
+      (resAcc) => resAcc.id === operationObject.issuer
     ).accountName;
     let relevantAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.asset_id
+      (assRes) => assRes.id === operationObject.asset_id
     );
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
 
     if (issuer && relevantAsset) {
-      currentOperation["rows"] = [
+      return [
         {
           key: "issuer",
-          params: { issuer: issuer, issuerOP: opContents.issuer },
+          params: { issuer: issuer, issuerOP: operationObject.issuer },
         },
-        { key: "asset_id", params: { asset_id: opContents.asset_id } },
+        { key: "asset_id", params: { asset_id: operationObject.asset_id } },
         {
           key: "amount_to_claim",
           params: {
             amount_to_claim: formatAsset(
-              opContents.amount_to_claim.amount,
+              operationObject.amount_to_claim.amount,
               relevantAsset.symbol,
               relevantAsset.precision
             ),
@@ -2648,7 +2671,7 @@ export default async function beautify(
           key: "fee",
           params: {
             fee: formatAsset(
-              opContents.fee.amount,
+              operationObject.fee.amount,
               _feeAsset.symbol,
               _feeAsset.precision
             ),
@@ -2656,27 +2679,27 @@ export default async function beautify(
         },
       ];
     }
-  } else if (opType == 48) {
+  } else if (operationType == 48) {
     // asset_update_issuer
     let issuer = accountResults.find(
-      (resAcc) => resAcc.id === opContents.issuer
+      (resAcc) => resAcc.id === operationObject.issuer
     ).accountName;
     let new_issuer = accountResults.find(
-      (resAcc) => resAcc.id === opContents.new_issuer
+      (resAcc) => resAcc.id === operationObject.new_issuer
     ).accountName;
     let assetToUpdate = assetResults.find(
-      (assRes) => assRes.id === opContents.asset_to_update
+      (assRes) => assRes.id === operationObject.asset_to_update
     );
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
 
     if (issuer && new_issuer && assetToUpdate) {
-      currentOperation["rows"] = [
+      return [
         {
           key: "issuer",
-          params: { issuer: issuer, issuerOP: opContents.issuer },
+          params: { issuer: issuer, issuerOP: operationObject.issuer },
         },
         {
           key: "asset_to_update",
@@ -2686,14 +2709,14 @@ export default async function beautify(
           key: "new_issuer",
           params: {
             new_issuer: new_issuer,
-            new_issuerOP: opContents.new_issuer,
+            new_issuerOP: operationObject.new_issuer,
           },
         },
         {
           key: "fee",
           params: {
             fee: formatAsset(
-              opContents.fee.amount,
+              operationObject.fee.amount,
               _feeAsset.symbol,
               _feeAsset.precision
             ),
@@ -2701,34 +2724,34 @@ export default async function beautify(
         },
       ];
     }
-  } else if (opType == 49) {
+  } else if (operationType == 49) {
     // htlc_create
     let from = accountResults.find(
-      (resAcc) => resAcc.id === opContents.from
+      (resAcc) => resAcc.id === operationObject.from
     ).accountName;
     let to = accountResults.find(
-      (resAcc) => resAcc.id === opContents.to
+      (resAcc) => resAcc.id === operationObject.to
     ).accountName;
     let htlcAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.amount.asset_id
+      (assRes) => assRes.id === operationObject.amount.asset_id
     );
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
 
     if (from && to && htlcAsset) {
-      currentOperation["rows"] = [
+      return [
         {
           key: "from",
-          params: { from: from, fromOP: opContents.from },
+          params: { from: from, fromOP: operationObject.from },
         },
-        { key: "to", params: { to: to, toOP: opContents.to } },
+        { key: "to", params: { to: to, toOP: operationObject.to } },
         {
           key: "amount",
           params: {
             amount: formatAsset(
-              opContents.amount.amount,
+              operationObject.amount.amount,
               htlcAsset.symbol,
               htlcAsset.precision
             ),
@@ -2736,23 +2759,23 @@ export default async function beautify(
         },
         {
           key: "preimage_hash",
-          params: { preimage_hash: opContents.preimage_hash },
+          params: { preimage_hash: operationObject.preimage_hash },
         },
         {
           key: "preimage_size",
-          params: { preimage_size: opContents.preimage_size },
+          params: { preimage_size: operationObject.preimage_size },
         },
         {
           key: "claim_period_seconds",
           params: {
-            claim_period_seconds: opContents.claim_period_seconds,
+            claim_period_seconds: operationObject.claim_period_seconds,
           },
         },
         {
           key: "fee",
           params: {
             fee: formatAsset(
-              opContents.fee.amount,
+              operationObject.fee.amount,
               _feeAsset.symbol,
               _feeAsset.precision
             ),
@@ -2760,31 +2783,31 @@ export default async function beautify(
         },
       ];
     }
-  } else if (opType == 50) {
+  } else if (operationType == 50) {
     // htlc_redeem
     let redeemer = accountResults.find(
-      (resAcc) => resAcc.id === opContents.redeemer
+      (resAcc) => resAcc.id === operationObject.redeemer
     ).accountName;
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
     if (redeemer) {
-      currentOperation["rows"] = [
-        { key: "htlc_id", params: { htlc_id: opContents.htlc_id } },
+      return [
+        { key: "htlc_id", params: { htlc_id: operationObject.htlc_id } },
         {
           key: "redeemer",
           params: {
             redeemer: redeemer,
-            redeemerOP: opContents.redeemer,
+            redeemerOP: operationObject.redeemer,
           },
         },
-        { key: "preimage", params: { preimage: opContents.preimage } },
+        { key: "preimage", params: { preimage: operationObject.preimage } },
         {
           key: "extensions",
           params: {
-            extensions: opContents.extensions
-              ? JSON.stringify(opContents.extensions)
+            extensions: operationObject.extensions
+              ? JSON.stringify(operationObject.extensions)
               : "[]",
           },
         },
@@ -2792,7 +2815,7 @@ export default async function beautify(
           key: "fee",
           params: {
             fee: formatAsset(
-              opContents.fee.amount,
+              operationObject.fee.amount,
               _feeAsset.symbol,
               _feeAsset.precision
             ),
@@ -2800,34 +2823,37 @@ export default async function beautify(
         },
       ];
     }
-  } else if (opType == 52) {
+  } else if (operationType == 51) {
+    // Virtual
+    // htlc_redeemed_operation
+  } else if (operationType == 52) {
     // htlc_extend
     let update_issuer = accountResults.find(
-      (resAcc) => resAcc.id === opContents.update_issuer
+      (resAcc) => resAcc.id === operationObject.update_issuer
     ).accountName;
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
     if (update_issuer) {
-      currentOperation["rows"] = [
-        { key: "htlc_id", params: { htlc_id: opContents.htlc_id } },
+      return [
+        { key: "htlc_id", params: { htlc_id: operationObject.htlc_id } },
         {
           key: "update_issuer",
           params: {
             update_issuer: update_issuer,
-            update_issuerOP: opContents.update_issuer,
+            update_issuerOP: operationObject.update_issuer,
           },
         },
         {
           key: "seconds_to_add",
-          params: { seconds_to_add: opContents.seconds_to_add },
+          params: { seconds_to_add: operationObject.seconds_to_add },
         },
         {
           key: "extensions",
           params: {
-            extensions: opContents.extensions
-              ? JSON.stringify(opContents.extensions)
+            extensions: operationObject.extensions
+              ? JSON.stringify(operationObject.extensions)
               : "[]",
           },
         },
@@ -2835,7 +2861,7 @@ export default async function beautify(
           key: "fee",
           params: {
             fee: formatAsset(
-              opContents.fee.amount,
+              operationObject.fee.amount,
               _feeAsset.symbol,
               _feeAsset.precision
             ),
@@ -2843,46 +2869,50 @@ export default async function beautify(
         },
       ];
     }
-  } else if (opType == 54) {
+  } else if (operationType == 53) {
+    // Virtual
+    // htlc_refund_operation
+  } else if (operationType == 54) {
     // custom_authority_create
+    // none in kibana...
     let account = accountResults.find(
-      (resAcc) => resAcc.id === opContents.account
+      (resAcc) => resAcc.id === operationObject.account
     ).accountName;
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
     if (account) {
-      currentOperation["rows"] = [
+      return [
         {
           key: "account",
-          params: { account: account, accountOP: opContents.account },
+          params: { account: account, accountOP: operationObject.account },
         },
-        { key: "enabled", params: { enabled: opContents.enabled } },
+        { key: "enabled", params: { enabled: operationObject.enabled } },
         {
           key: "valid_from",
-          params: { valid_from: opContents.valid_from },
+          params: { valid_from: operationObject.valid_from },
         },
-        { key: "valid_to", params: { valid_to: opContents.valid_to } },
+        { key: "valid_to", params: { valid_to: operationObject.valid_to } },
         {
           key: "operation_type",
-          params: { operation_type: opContents.operation_type },
+          params: { operation_type: operationObject.operation_type },
         },
         {
           key: "auth",
-          params: { auth: JSON.stringify(opContents.auth) },
+          params: { auth: JSON.stringify(operationObject.auth) },
         },
         {
           key: "restrictions",
           params: {
-            restrictions: JSON.stringify(opContents.restrictions),
+            restrictions: JSON.stringify(operationObject.restrictions),
           },
         },
         {
           key: "extensions",
           params: {
-            extensions: opContents.extensions
-              ? JSON.stringify(opContents.extensions)
+            extensions: operationObject.extensions
+              ? JSON.stringify(operationObject.extensions)
               : "[]",
           },
         },
@@ -2890,7 +2920,7 @@ export default async function beautify(
           key: "fee",
           params: {
             fee: formatAsset(
-              opContents.fee.amount,
+              operationObject.fee.amount,
               _feeAsset.symbol,
               _feeAsset.precision
             ),
@@ -2898,63 +2928,66 @@ export default async function beautify(
         },
       ];
     }
-  } else if (opType == 55) {
+  } else if (operationType == 55) {
     // custom_authority_update
+    // not in kibana...
     let account = accountResults.find(
-      (resAcc) => resAcc.id === opContents.account
+      (resAcc) => resAcc.id === operationObject.account
     ).accountName;
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
 
     if (account) {
-      currentOperation["rows"] = [
+      return [
         {
           key: "account",
-          params: { account: account, accountOP: opContents.account },
+          params: { account: account, accountOP: operationObject.account },
         },
         {
           key: "authority_to_update",
           params: {
-            authority_to_update: opContents.authority_to_update,
+            authority_to_update: operationObject.authority_to_update,
           },
         },
         {
           key: "new_enabled",
-          params: { new_enabled: opContents.new_enabled },
+          params: { new_enabled: operationObject.new_enabled },
         },
         {
           key: "new_valid_from",
-          params: { new_valid_from: opContents.new_valid_from },
+          params: { new_valid_from: operationObject.new_valid_from },
         },
         {
           key: "new_valid_to",
-          params: { new_valid_to: opContents.new_valid_to },
+          params: { new_valid_to: operationObject.new_valid_to },
         },
         {
           key: "new_auth",
-          params: { new_auth: JSON.stringify(opContents.new_auth) },
+          params: { new_auth: JSON.stringify(operationObject.new_auth) },
         },
         {
           key: "restrictions_to_remove",
           params: {
             restrictions_to_remove: JSON.stringify(
-              opContents.restrictions_to_remove
+              operationObject.restrictions_to_remove
             ),
           },
         },
         {
           key: "restrictions_to_add",
           params: {
-            restrictions_to_add: JSON.stringify(opContents.restrictions_to_add),
+            restrictions_to_add: JSON.stringify(
+              operationObject.restrictions_to_add
+            ),
           },
         },
         {
           key: "extensions",
           params: {
-            extensions: opContents.extensions
-              ? JSON.stringify(opContents.extensions)
+            extensions: operationObject.extensions
+              ? JSON.stringify(operationObject.extensions)
               : "[]",
           },
         },
@@ -2962,7 +2995,7 @@ export default async function beautify(
           key: "fee",
           params: {
             fee: formatAsset(
-              opContents.fee.amount,
+              operationObject.fee.amount,
               _feeAsset.symbol,
               _feeAsset.precision
             ),
@@ -2970,32 +3003,33 @@ export default async function beautify(
         },
       ];
     }
-  } else if (opType == 56) {
+  } else if (operationType == 56) {
     // custom_authority_delete
+    // not in kibana...
     let account = accountResults.find(
-      (resAcc) => resAcc.id === opContents.account
+      (resAcc) => resAcc.id === operationObject.account
     ).accountName;
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
     if (account) {
-      currentOperation["rows"] = [
+      return [
         {
           key: "account",
-          params: { account: account, accountOP: opContents.account },
+          params: { account: account, accountOP: operationObject.account },
         },
         {
           key: "authority_to_delete",
           params: {
-            authority_to_delete: opContents.authority_to_delete,
+            authority_to_delete: operationObject.authority_to_delete,
           },
         },
         {
           key: "extensions",
           params: {
-            extensions: opContents.extensions
-              ? JSON.stringify(opContents.extensions)
+            extensions: operationObject.extensions
+              ? JSON.stringify(operationObject.extensions)
               : "[]",
           },
         },
@@ -3003,7 +3037,7 @@ export default async function beautify(
           key: "fee",
           params: {
             fee: formatAsset(
-              opContents.fee.amount,
+              operationObject.fee.amount,
               _feeAsset.symbol,
               _feeAsset.precision
             ),
@@ -3011,34 +3045,34 @@ export default async function beautify(
         },
       ];
     }
-  } else if (opType == 57) {
+  } else if (operationType == 57) {
     // ticket_create
     let account = accountResults.find(
-      (resAcc) => resAcc.id === opContents.account
+      (resAcc) => resAcc.id === operationObject.account
     ).accountName;
     let ticketAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.amount.asset_id
+      (assRes) => assRes.id === operationObject.amount.asset_id
     );
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
 
     if (account && ticketAsset) {
-      currentOperation["rows"] = [
+      return [
         {
           key: "account",
-          params: { account: account, accountOP: opContents.account },
+          params: { account: account, accountOP: operationObject.account },
         },
         {
           key: "target_type",
-          params: { target_type: opContents.target_type },
+          params: { target_type: operationObject.target_type },
         },
         {
           key: "amount",
           params: {
             amount: formatAsset(
-              opContents.amount.amount,
+              operationObject.amount.amount,
               ticketAsset.symbol,
               ticketAsset.precision
             ),
@@ -3047,8 +3081,8 @@ export default async function beautify(
         {
           key: "extensions",
           params: {
-            extensions: opContents.extensions
-              ? JSON.stringify(opContents.extensions)
+            extensions: operationObject.extensions
+              ? JSON.stringify(operationObject.extensions)
               : "[]",
           },
         },
@@ -3056,7 +3090,7 @@ export default async function beautify(
           key: "fee",
           params: {
             fee: formatAsset(
-              opContents.fee.amount,
+              operationObject.fee.amount,
               _feeAsset.symbol,
               _feeAsset.precision
             ),
@@ -3064,35 +3098,35 @@ export default async function beautify(
         },
       ];
     }
-  } else if (opType == 58) {
+  } else if (operationType == 58) {
     // ticket_update
     let account = accountResults.find(
-      (resAcc) => resAcc.id === opContents.account
+      (resAcc) => resAcc.id === operationObject.account
     ).accountName;
     let ticketAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.amount_for_new_target.asset_id
+      (assRes) => assRes.id === operationObject.amount_for_new_target.asset_id
     );
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
 
     if (account && ticketAsset) {
-      currentOperation["rows"] = [
-        { key: "ticket", params: { ticket: opContents.ticket } },
+      return [
+        { key: "ticket", params: { ticket: operationObject.ticket } },
         {
           key: "account",
-          params: { account: account, accountOP: opContents.account },
+          params: { account: account, accountOP: operationObject.account },
         },
         {
           key: "target_type",
-          params: { target_type: opContents.target_type },
+          params: { target_type: operationObject.target_type },
         },
         {
           key: "amount_for_new_target",
           params: {
             amount_for_new_target: formatAsset(
-              opContents.amount_for_new_target.amount,
+              operationObject.amount_for_new_target.amount,
               ticketAsset.symbol,
               ticketAsset.precision
             ),
@@ -3101,74 +3135,74 @@ export default async function beautify(
         {
           key: "extensions",
           params: {
-            extensions: opContents.extensions
-              ? JSON.stringify(opContents.extensions)
+            extensions: operationObject.extensions
+              ? JSON.stringify(operationObject.extensions)
               : "[]",
           },
         },
       ];
     }
-  } else if (opType == 59) {
+  } else if (operationType == 59) {
     // liquidity_pool_create
     let account = accountResults.find(
-      (resAcc) => resAcc.id === opContents.account
+      (resAcc) => resAcc.id === operationObject.account
     ).accountName;
     let assetA = assetResults.find(
-      (assRes) => assRes.id === opContents.asset_a
+      (assRes) => assRes.id === operationObject.asset_a
     );
     let assetB = assetResults.find(
-      (assRes) => assRes.id === opContents.asset_b
+      (assRes) => assRes.id === operationObject.asset_b
     );
     let shareAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.share_asset
+      (assRes) => assRes.id === operationObject.share_asset
     );
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
 
     if (account && assetA && assetB && shareAsset) {
-      currentOperation["rows"] = [
+      return [
         {
           key: "account",
-          params: { account: account, accountOP: opContents.account },
+          params: { account: account, accountOP: operationObject.account },
         },
         {
           key: "asset_a",
           params: {
             asset_a: assetA.symbol,
-            asset_aOP: opContents.asset_a,
+            asset_aOP: operationObject.asset_a,
           },
         },
         {
           key: "asset_b",
           params: {
             asset_b: assetB.symbol,
-            asset_bOP: opContents.asset_b,
+            asset_bOP: operationObject.asset_b,
           },
         },
         {
           key: "share_asset",
           params: {
             share_asset: shareAsset.symbol,
-            share_assetOP: opContents.share_asset,
+            share_assetOP: operationObject.share_asset,
           },
         },
         {
           key: "taker_fee_percent",
-          params: { taker_fee_percent: opContents.taker_fee_percent },
+          params: { taker_fee_percent: operationObject.taker_fee_percent },
         },
         {
           key: "withdrawal_fee_percent",
           params: {
-            withdrawal_fee_percent: opContents.withdrawal_fee_percent,
+            withdrawal_fee_percent: operationObject.withdrawal_fee_percent,
           },
         },
         {
           key: "extensions",
           params: {
-            extensions: opContents.extensions
-              ? JSON.stringify(opContents.extensions)
+            extensions: operationObject.extensions
+              ? JSON.stringify(operationObject.extensions)
               : "[]",
           },
         },
@@ -3176,7 +3210,7 @@ export default async function beautify(
           key: "fee",
           params: {
             fee: formatAsset(
-              opContents.fee.amount,
+              operationObject.fee.amount,
               _feeAsset.symbol,
               _feeAsset.precision
             ),
@@ -3184,27 +3218,27 @@ export default async function beautify(
         },
       ];
     }
-  } else if (opType == 60) {
+  } else if (operationType == 60) {
     // liquidity_pool_delete
     let account = accountResults.find(
-      (resAcc) => resAcc.id === opContents.account
+      (resAcc) => resAcc.id === operationObject.account
     ).accountName;
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
     if (account) {
-      currentOperation["rows"] = [
+      return [
         {
           key: "account",
-          params: { account: account, accountOP: opContents.account },
+          params: { account: account, accountOP: operationObject.account },
         },
-        { key: "pool_id", params: { pool_id: opContents.pool } },
+        { key: "pool_id", params: { pool_id: operationObject.pool } },
         {
           key: "extensions",
           params: {
-            extensions: opContents.extensions
-              ? JSON.stringify(opContents.extensions)
+            extensions: operationObject.extensions
+              ? JSON.stringify(operationObject.extensions)
               : "[]",
           },
         },
@@ -3212,7 +3246,7 @@ export default async function beautify(
           key: "fee",
           params: {
             fee: formatAsset(
-              opContents.fee.amount,
+              operationObject.fee.amount,
               _feeAsset.symbol,
               _feeAsset.precision
             ),
@@ -3220,56 +3254,56 @@ export default async function beautify(
         },
       ];
     }
-  } else if (opType == 61) {
+  } else if (operationType == 61) {
     // liquidity_pool_deposit
     let account = accountResults.find(
-      (resAcc) => resAcc.id === opContents.account
+      (resAcc) => resAcc.id === operationObject.account
     ).accountName;
     let amountA = assetResults.find(
-      (assRes) => assRes.id === opContents.amount_a.asset_id
+      (assRes) => assRes.id === operationObject.amount_a.asset_id
     );
     let amountB = assetResults.find(
-      (assRes) => assRes.id === opContents.amount_b.asset_id
+      (assRes) => assRes.id === operationObject.amount_b.asset_id
     );
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
 
     if (account && amountA && amountB) {
-      currentOperation["rows"] = [
+      return [
         {
           key: "account",
-          params: { account: account, accountOP: opContents.account },
+          params: { account: account, accountOP: operationObject.account },
         },
-        { key: "pool", params: { pool: opContents.pool } },
+        { key: "pool", params: { pool: operationObject.pool } },
         {
           key: "amount_a",
           params: {
             amount_a: formatAsset(
-              opContents.amount_a.amount,
+              operationObject.amount_a.amount,
               amountA.symbol,
               amountA.precision
             ),
-            amount_aOP: opContents.amount_a.asset_id,
+            amount_aOP: operationObject.amount_a.asset_id,
           },
         },
         {
           key: "amount_b",
           params: {
             amount_b: formatAsset(
-              opContents.amount_b.amount,
+              operationObject.amount_b.amount,
               amountB.symbol,
               amountB.precision
             ),
-            amount_bOP: opContents.amount_b.asset_id,
+            amount_bOP: operationObject.amount_b.asset_id,
           },
         },
         {
           key: "extensions",
           params: {
-            extensions: opContents.extensions
-              ? JSON.stringify(opContents.extensions)
+            extensions: operationObject.extensions
+              ? JSON.stringify(operationObject.extensions)
               : "[]",
           },
         },
@@ -3277,7 +3311,7 @@ export default async function beautify(
           key: "fee",
           params: {
             fee: formatAsset(
-              opContents.fee.amount,
+              operationObject.fee.amount,
               _feeAsset.symbol,
               _feeAsset.precision
             ),
@@ -3285,42 +3319,42 @@ export default async function beautify(
         },
       ];
     }
-  } else if (opType == 62) {
+  } else if (operationType == 62) {
     // liquidity_pool_withdraw
     let account = accountResults.find(
-      (resAcc) => resAcc.id === opContents.account
+      (resAcc) => resAcc.id === operationObject.account
     ).accountName;
     let shareAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.share_amount.asset_id
+      (assRes) => assRes.id === operationObject.share_amount.asset_id
     );
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
 
     if (account && shareAsset) {
-      currentOperation["rows"] = [
+      return [
         {
           key: "account",
-          params: { account: account, accountOP: opContents.account },
+          params: { account: account, accountOP: operationObject.account },
         },
-        { key: "pool", params: { pool: opContents.pool } },
+        { key: "pool", params: { pool: operationObject.pool } },
         {
           key: "share_amount",
           params: {
             share_amount: formatAsset(
-              opContents.share_amount.amount,
+              operationObject.share_amount.amount,
               shareAsset.symbol,
               shareAsset.precision
             ),
-            share_amountOP: opContents.share_amount.asset_id,
+            share_amountOP: operationObject.share_amount.asset_id,
           },
         },
         {
           key: "extensions",
           params: {
-            extensions: opContents.extensions
-              ? JSON.stringify(opContents.extensions)
+            extensions: operationObject.extensions
+              ? JSON.stringify(operationObject.extensions)
               : "[]",
           },
         },
@@ -3328,7 +3362,7 @@ export default async function beautify(
           key: "fee",
           params: {
             fee: formatAsset(
-              opContents.fee.amount,
+              operationObject.fee.amount,
               _feeAsset.symbol,
               _feeAsset.precision
             ),
@@ -3336,34 +3370,34 @@ export default async function beautify(
         },
       ];
     }
-  } else if (opType == 63) {
+  } else if (operationType == 63) {
     // liquidity_pool_exchange
     let account = accountResults.find(
-      (resAcc) => resAcc.id === opContents.account
+      (resAcc) => resAcc.id === operationObject.account
     ).accountName;
     let soldAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.amount_to_sell.asset_id
+      (assRes) => assRes.id === operationObject.amount_to_sell.asset_id
     );
     let receivedAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.min_to_receive.asset_id
+      (assRes) => assRes.id === operationObject.min_to_receive.asset_id
     );
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
 
     if (account && soldAsset && receivedAsset) {
-      currentOperation["rows"] = [
+      return [
         {
           key: "account",
-          params: { account: account, accountOP: opContents.account },
+          params: { account: account, accountOP: operationObject.account },
         },
-        { key: "pool", params: { pool: opContents.pool } },
+        { key: "pool", params: { pool: operationObject.pool } },
         {
           key: "amount_to_sell",
           params: {
             amount_to_sell: formatAsset(
-              opContents.amount_to_sell.amount,
+              operationObject.amount_to_sell.amount,
               soldAsset.symbol,
               soldAsset.precision
             ),
@@ -3373,7 +3407,7 @@ export default async function beautify(
           key: "min_to_receive",
           params: {
             min_to_receive: formatAsset(
-              opContents.min_to_receive.amount,
+              operationObject.min_to_receive.amount,
               receivedAsset.symbol,
               receivedAsset.precision
             ),
@@ -3382,8 +3416,8 @@ export default async function beautify(
         {
           key: "extensions",
           params: {
-            extensions: opContents.extensions
-              ? JSON.stringify(opContents.extensions)
+            extensions: operationObject.extensions
+              ? JSON.stringify(operationObject.extensions)
               : "[]",
           },
         },
@@ -3391,7 +3425,7 @@ export default async function beautify(
           key: "fee",
           params: {
             fee: formatAsset(
-              opContents.fee.amount,
+              operationObject.fee.amount,
               _feeAsset.symbol,
               _feeAsset.precision
             ),
@@ -3399,35 +3433,35 @@ export default async function beautify(
         },
       ];
     }
-  } else if (opType == 64) {
+  } else if (operationType == 64) {
     // samet_fund_create
     let ownerAccount = accountResults.find(
-      (resAcc) => resAcc.id === opContents.owner_account
+      (resAcc) => resAcc.id === operationObject.owner_account
     ).accountName;
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
     if (ownerAccount) {
-      currentOperation["rows"] = [
+      return [
         {
           key: "owner_account",
           params: {
             owner_account: ownerAccount,
-            owner_accountOP: opContents.owner_account,
+            owner_accountOP: operationObject.owner_account,
           },
         },
         {
           key: "asset_type",
-          params: { asset_type: opContents.asset_type },
+          params: { asset_type: operationObject.asset_type },
         },
-        { key: "balance", params: { balance: opContents.balance } },
-        { key: "fee_rate", params: { fee_rate: opContents.fee_rate } },
+        { key: "balance", params: { balance: operationObject.balance } },
+        { key: "fee_rate", params: { fee_rate: operationObject.fee_rate } },
         {
           key: "extensions",
           params: {
-            extensions: opContents.extensions
-              ? JSON.stringify(opContents.extensions)
+            extensions: operationObject.extensions
+              ? JSON.stringify(operationObject.extensions)
               : "[]",
           },
         },
@@ -3435,7 +3469,7 @@ export default async function beautify(
           key: "fee",
           params: {
             fee: formatAsset(
-              opContents.fee.amount,
+              operationObject.fee.amount,
               _feeAsset.symbol,
               _feeAsset.precision
             ),
@@ -3443,30 +3477,30 @@ export default async function beautify(
         },
       ];
     }
-  } else if (opType == 65) {
+  } else if (operationType == 65) {
     // samet_fund_delete
     let ownerAccount = accountResults.find(
-      (resAcc) => resAcc.id === opContents.owner_account
+      (resAcc) => resAcc.id === operationObject.owner_account
     ).accountName;
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
     if (ownerAccount) {
-      currentOperation["rows"] = [
+      return [
         {
           key: "owner_account",
           params: {
             owner_account: ownerAccount,
-            owner_accountOP: opContents.owner_account,
+            owner_accountOP: operationObject.owner_account,
           },
         },
-        { key: "fund_id", params: { fund_id: opContents.fund_id } },
+        { key: "fund_id", params: { fund_id: operationObject.fund_id } },
         {
           key: "extensions",
           params: {
-            extensions: opContents.extensions
-              ? JSON.stringify(opContents.extensions)
+            extensions: operationObject.extensions
+              ? JSON.stringify(operationObject.extensions)
               : "[]",
           },
         },
@@ -3474,7 +3508,7 @@ export default async function beautify(
           key: "fee",
           params: {
             fee: formatAsset(
-              opContents.fee.amount,
+              operationObject.fee.amount,
               _feeAsset.symbol,
               _feeAsset.precision
             ),
@@ -3482,37 +3516,37 @@ export default async function beautify(
         },
       ];
     }
-  } else if (opType == 66) {
+  } else if (operationType == 66) {
     // samet_fund_update
     let ownerAccount = accountResults.find(
-      (resAcc) => resAcc.id === opContents.owner_account
+      (resAcc) => resAcc.id === operationObject.owner_account
     ).accountName;
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
 
-    let deltaAmount = opContents.delta_amount
+    let deltaAmount = operationObject.delta_amount
       ? assetResults.find(
-          (assRes) => assRes.id === opContents.delta_amount.asset_id
+          (assRes) => assRes.id === operationObject.delta_amount.asset_id
         )
       : null;
     if (ownerAccount) {
-      currentOperation["rows"] = [
+      return [
         {
           key: "owner_account",
           params: {
             owner_account: ownerAccount,
-            owner_accountOP: opContents.owner_account,
+            owner_accountOP: operationObject.owner_account,
           },
         },
-        { key: "fund_id", params: { fund_id: opContents.fund_id } },
+        { key: "fund_id", params: { fund_id: operationObject.fund_id } },
         {
           key: "delta_amount",
           params: {
             delta_amount: deltaAmount
               ? formatAsset(
-                  opContents.delta_amount.amount,
+                  operationObject.delta_amount.amount,
                   deltaAmount.symbol,
                   deltaAmount.precision
                 )
@@ -3521,13 +3555,13 @@ export default async function beautify(
         },
         {
           key: "new_fee_rate",
-          params: { new_fee_rate: opContents.new_fee_rate },
+          params: { new_fee_rate: operationObject.new_fee_rate },
         },
         {
           key: "extensions",
           params: {
-            extensions: opContents.extensions
-              ? JSON.stringify(opContents.extensions)
+            extensions: operationObject.extensions
+              ? JSON.stringify(operationObject.extensions)
               : "[]",
           },
         },
@@ -3535,7 +3569,7 @@ export default async function beautify(
           key: "fee",
           params: {
             fee: formatAsset(
-              opContents.fee.amount,
+              operationObject.fee.amount,
               _feeAsset.symbol,
               _feeAsset.precision
             ),
@@ -3543,34 +3577,35 @@ export default async function beautify(
         },
       ];
     }
-  } else if (opType == 67) {
+  } else if (operationType == 67) {
     // samet_fund_borrow
+    // none in kibana..
     let borrower = accountResults.find(
-      (resAcc) => resAcc.id === opContents.borrower
+      (resAcc) => resAcc.id === operationObject.borrower
     ).accountName;
     let borrowAmount = assetResults.find(
-      (assRes) => assRes.id === opContents.borrow_amount.asset_id
+      (assRes) => assRes.id === operationObject.borrow_amount.asset_id
     );
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
 
     if (borrower && borrowAmount) {
-      currentOperation["rows"] = [
+      return [
         {
           key: "borrower",
           params: {
             borrower: borrower,
-            borrowerOP: opContents.borrower,
+            borrowerOP: operationObject.borrower,
           },
         },
-        { key: "fund_id", params: { fund_id: opContents.fund_id } },
+        { key: "fund_id", params: { fund_id: operationObject.fund_id } },
         {
           key: "borrow_amount",
           params: {
             borrow_amount: formatAsset(
-              opContents.borrow_amount.amount,
+              operationObject.borrow_amount.amount,
               borrowAmount.symbol,
               borrowAmount.precision
             ),
@@ -3579,8 +3614,8 @@ export default async function beautify(
         {
           key: "extensions",
           params: {
-            extensions: opContents.extensions
-              ? JSON.stringify(opContents.extensions)
+            extensions: operationObject.extensions
+              ? JSON.stringify(operationObject.extensions)
               : "[]",
           },
         },
@@ -3588,7 +3623,7 @@ export default async function beautify(
           key: "fee",
           params: {
             fee: formatAsset(
-              opContents.fee.amount,
+              operationObject.fee.amount,
               _feeAsset.symbol,
               _feeAsset.precision
             ),
@@ -3596,34 +3631,34 @@ export default async function beautify(
         },
       ];
     }
-  } else if (opType == 68) {
+  } else if (operationType == 68) {
     // samet_fund_repay
     let account = accountResults.find(
-      (resAcc) => resAcc.id === opContents.account
+      (resAcc) => resAcc.id === operationObject.account
     ).accountName;
     let repayAmount = assetResults.find(
-      (assRes) => assRes.id === opContents.repay_amount.asset_id
+      (assRes) => assRes.id === operationObject.repay_amount.asset_id
     );
     let fundFee = assetResults.find(
-      (assRes) => assRes.id === opContents.fund_fee.asset_id
+      (assRes) => assRes.id === operationObject.fund_fee.asset_id
     );
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
 
     if (account && repayAmount && fundFee) {
-      currentOperation["rows"] = [
+      return [
         {
           key: "account",
-          params: { account: account, accountOP: opContents.account },
+          params: { account: account, accountOP: operationObject.account },
         },
-        { key: "fund_id", params: { fund_id: opContents.fund_id } },
+        { key: "fund_id", params: { fund_id: operationObject.fund_id } },
         {
           key: "repay_amount",
           params: {
             repay_amount: formatAsset(
-              opContents.repay_amount.amount,
+              operationObject.repay_amount.amount,
               repayAmount.symbol,
               repayAmount.precision
             ),
@@ -3633,7 +3668,7 @@ export default async function beautify(
           key: "fund_fee",
           params: {
             fund_fee: formatAsset(
-              opContents.fund_fee.amount,
+              operationObject.fund_fee.amount,
               fundFee.symbol,
               fundFee.precision
             ),
@@ -3642,8 +3677,8 @@ export default async function beautify(
         {
           key: "extensions",
           params: {
-            extensions: opContents.extensions
-              ? JSON.stringify(opContents.extensions)
+            extensions: operationObject.extensions
+              ? JSON.stringify(operationObject.extensions)
               : "[]",
           },
         },
@@ -3651,7 +3686,7 @@ export default async function beautify(
           key: "fee",
           params: {
             fee: formatAsset(
-              opContents.fee.amount,
+              operationObject.fee.amount,
               _feeAsset.symbol,
               _feeAsset.precision
             ),
@@ -3659,50 +3694,50 @@ export default async function beautify(
         },
       ];
     }
-  } else if (opType == 69) {
+  } else if (operationType == 69) {
     // credit_offer_create
     let ownerAccount = accountResults.find(
-      (resAcc) => resAcc.id === opContents.owner_account
+      (resAcc) => resAcc.id === operationObject.owner_account
     ).accountName;
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
     if (ownerAccount) {
-      currentOperation["rows"] = [
+      return [
         {
           key: "owner_account",
           params: {
             owner_account: ownerAccount,
-            owner_accountOP: opContents.owner_account,
+            owner_accountOP: operationObject.owner_account,
           },
         },
         {
           key: "asset_type",
-          params: { asset_type: opContents.asset_type },
+          params: { asset_type: operationObject.asset_type },
         },
-        { key: "balance", params: { balance: opContents.balance } },
-        { key: "fee_rate", params: { fee_rate: opContents.fee_rate } },
+        { key: "balance", params: { balance: operationObject.balance } },
+        { key: "fee_rate", params: { fee_rate: operationObject.fee_rate } },
         {
           key: "max_duration_seconds",
           params: {
-            max_duration_seconds: opContents.max_duration_seconds,
+            max_duration_seconds: operationObject.max_duration_seconds,
           },
         },
         {
           key: "min_deal_amount",
-          params: { min_deal_amount: opContents.min_deal_amount },
+          params: { min_deal_amount: operationObject.min_deal_amount },
         },
-        { key: "enabled", params: { enabled: opContents.enabled } },
+        { key: "enabled", params: { enabled: operationObject.enabled } },
         {
           key: "auto_disable_time",
-          params: { auto_disable_time: opContents.auto_disable_time },
+          params: { auto_disable_time: operationObject.auto_disable_time },
         },
         {
           key: "acceptable_collateral",
           params: {
             acceptable_collateral: JSON.stringify(
-              opContents.acceptable_collateral
+              operationObject.acceptable_collateral
             ),
           },
         },
@@ -3710,15 +3745,15 @@ export default async function beautify(
           key: "acceptable_borrowers",
           params: {
             acceptable_borrowers: JSON.stringify(
-              opContents.acceptable_borrowers
+              operationObject.acceptable_borrowers
             ),
           },
         },
         {
           key: "extensions",
           params: {
-            extensions: opContents.extensions
-              ? JSON.stringify(opContents.extensions)
+            extensions: operationObject.extensions
+              ? JSON.stringify(operationObject.extensions)
               : "[]",
           },
         },
@@ -3726,7 +3761,7 @@ export default async function beautify(
           key: "fee",
           params: {
             fee: formatAsset(
-              opContents.fee.amount,
+              operationObject.fee.amount,
               _feeAsset.symbol,
               _feeAsset.precision
             ),
@@ -3734,30 +3769,30 @@ export default async function beautify(
         },
       ];
     }
-  } else if (opType == 70) {
+  } else if (operationType == 70) {
     // credit_offer_delete
     let ownerAccount = accountResults.find(
-      (resAcc) => resAcc.id === opContents.owner_account
+      (resAcc) => resAcc.id === operationObject.owner_account
     ).accountName;
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
     if (ownerAccount) {
-      currentOperation["rows"] = [
+      return [
         {
           key: "owner_account",
           params: {
             owner_account: ownerAccount,
-            owner_accountOP: opContents.owner_account,
+            owner_accountOP: operationObject.owner_account,
           },
         },
-        { key: "offer_id", params: { offer_id: opContents.offer_id } },
+        { key: "offer_id", params: { offer_id: operationObject.offer_id } },
         {
           key: "extensions",
           params: {
-            extensions: opContents.extensions
-              ? JSON.stringify(opContents.extensions)
+            extensions: operationObject.extensions
+              ? JSON.stringify(operationObject.extensions)
               : "[]",
           },
         },
@@ -3765,7 +3800,7 @@ export default async function beautify(
           key: "fee",
           params: {
             fee: formatAsset(
-              opContents.fee.amount,
+              operationObject.fee.amount,
               _feeAsset.symbol,
               _feeAsset.precision
             ),
@@ -3773,63 +3808,63 @@ export default async function beautify(
         },
       ];
     }
-  } else if (opType == 71) {
+  } else if (operationType == 71) {
     // credit_offer_update
     let ownerAccount = accountResults.find(
-      (resAcc) => resAcc.id === opContents.owner_account
+      (resAcc) => resAcc.id === operationObject.owner_account
     ).accountName;
 
-    let deltaAmount = opContents.delta_amount
+    let deltaAmount = operationObject.delta_amount
       ? assetResults.find(
-          (assRes) => assRes.id === opContents.delta_amount.asset_id
+          (assRes) => assRes.id === operationObject.delta_amount.asset_id
         )
       : null;
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
 
     if (ownerAccount && deltaAmount) {
-      currentOperation["rows"] = [
+      return [
         {
           key: "owner_account",
           params: {
             owner_account: ownerAccount,
-            owner_accountOP: opContents.owner_account,
+            owner_accountOP: operationObject.owner_account,
           },
         },
-        { key: "offer_id", params: { offer_id: opContents.offer_id } },
+        { key: "offer_id", params: { offer_id: operationObject.offer_id } },
         {
           key: "delta_amount",
           params: {
             delta_amount: formatAsset(
-              opContents.delta_amount.amount,
+              operationObject.delta_amount.amount,
               deltaAmount.symbol,
               deltaAmount.precision
             ),
           },
         },
-        { key: "fee_rate", params: { fee_rate: opContents.fee_rate } },
+        { key: "fee_rate", params: { fee_rate: operationObject.fee_rate } },
         {
           key: "max_duration_seconds",
           params: {
-            max_duration_seconds: opContents.max_duration_seconds,
+            max_duration_seconds: operationObject.max_duration_seconds,
           },
         },
         {
           key: "min_deal_amount",
-          params: { min_deal_amount: opContents.min_deal_amount },
+          params: { min_deal_amount: operationObject.min_deal_amount },
         },
-        { key: "enabled", params: { enabled: opContents.enabled } },
+        { key: "enabled", params: { enabled: operationObject.enabled } },
         {
           key: "auto_disable_time",
-          params: { auto_disable_time: opContents.auto_disable_time },
+          params: { auto_disable_time: operationObject.auto_disable_time },
         },
         {
           key: "acceptable_collateral",
           params: {
             acceptable_collateral: JSON.stringify(
-              opContents.acceptable_collateral
+              operationObject.acceptable_collateral
             ),
           },
         },
@@ -3837,15 +3872,15 @@ export default async function beautify(
           key: "acceptable_borrowers",
           params: {
             acceptable_borrowers: JSON.stringify(
-              opContents.acceptable_borrowers
+              operationObject.acceptable_borrowers
             ),
           },
         },
         {
           key: "extensions",
           params: {
-            extensions: opContents.extensions
-              ? JSON.stringify(opContents.extensions)
+            extensions: operationObject.extensions
+              ? JSON.stringify(operationObject.extensions)
               : "[]",
           },
         },
@@ -3853,7 +3888,7 @@ export default async function beautify(
           key: "fee",
           params: {
             fee: formatAsset(
-              opContents.fee.amount,
+              operationObject.fee.amount,
               _feeAsset.symbol,
               _feeAsset.precision
             ),
@@ -3861,37 +3896,37 @@ export default async function beautify(
         },
       ];
     }
-  } else if (opType == 72) {
+  } else if (operationType == 72) {
     // credit_offer_accept
     let borrower = accountResults.find(
-      (resAcc) => resAcc.id === opContents.borrower
+      (resAcc) => resAcc.id === operationObject.borrower
     ).accountName;
     let borrowAmount = assetResults.find(
-      (assRes) => assRes.id === opContents.borrow_amount.asset_id
+      (assRes) => assRes.id === operationObject.borrow_amount.asset_id
     );
     let collateral = assetResults.find(
-      (assRes) => assRes.id === opContents.collateral.asset_id
+      (assRes) => assRes.id === operationObject.collateral.asset_id
     );
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
 
     if (borrower && borrowAmount && collateral) {
-      currentOperation["rows"] = [
+      return [
         {
           key: "borrower",
           params: {
             borrower: borrower,
-            borrowerOP: opContents.borrower,
+            borrowerOP: operationObject.borrower,
           },
         },
-        { key: "offer_id", params: { offer_id: opContents.offer_id } },
+        { key: "offer_id", params: { offer_id: operationObject.offer_id } },
         {
           key: "borrow_amount",
           params: {
             borrow_amount: formatAsset(
-              opContents.borrow_amount.amount,
+              operationObject.borrow_amount.amount,
               borrowAmount.symbol,
               borrowAmount.precision
             ),
@@ -3901,7 +3936,7 @@ export default async function beautify(
           key: "collateral",
           params: {
             collateral: formatAsset(
-              opContents.collateral.amount,
+              operationObject.collateral.amount,
               collateral.symbol,
               collateral.precision
             ),
@@ -3909,19 +3944,19 @@ export default async function beautify(
         },
         {
           key: "max_fee_rate",
-          params: { max_fee_rate: opContents.max_fee_rate },
+          params: { max_fee_rate: operationObject.max_fee_rate },
         },
         {
           key: "min_duration_seconds",
           params: {
-            min_duration_seconds: opContents.min_duration_seconds,
+            min_duration_seconds: operationObject.min_duration_seconds,
           },
         },
         {
           key: "extensions",
           params: {
-            extensions: opContents.extensions
-              ? JSON.stringify(opContents.extensions)
+            extensions: operationObject.extensions
+              ? JSON.stringify(operationObject.extensions)
               : "[]",
           },
         },
@@ -3929,7 +3964,7 @@ export default async function beautify(
           key: "fee",
           params: {
             fee: formatAsset(
-              opContents.fee.amount,
+              operationObject.fee.amount,
               _feeAsset.symbol,
               _feeAsset.precision
             ),
@@ -3937,34 +3972,34 @@ export default async function beautify(
         },
       ];
     }
-  } else if (opType == 73) {
+  } else if (operationType == 73) {
     // credit_deal_repay
     let account = accountResults.find(
-      (resAcc) => resAcc.id === opContents.account
+      (resAcc) => resAcc.id === operationObject.account
     ).accountName;
     let repayAmount = assetResults.find(
-      (assRes) => assRes.id === opContents.repay_amount.asset_id
+      (assRes) => assRes.id === operationObject.repay_amount.asset_id
     );
     let creditFee = assetResults.find(
-      (assRes) => assRes.id === opContents.credit_fee.asset_id
+      (assRes) => assRes.id === operationObject.credit_fee.asset_id
     );
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
 
     if (account && repayAmount && creditFee) {
-      currentOperation["rows"] = [
+      return [
         {
           key: "account",
-          params: { account: account, accountOP: opContents.account },
+          params: { account: account, accountOP: operationObject.account },
         },
-        { key: "deal_id", params: { deal_id: opContents.deal_id } },
+        { key: "deal_id", params: { deal_id: operationObject.deal_id } },
         {
           key: "repay_amount",
           params: {
             repay_amount: formatAsset(
-              opContents.repay_amount.amount,
+              operationObject.repay_amount.amount,
               repayAmount.symbol,
               repayAmount.precision
             ),
@@ -3974,7 +4009,7 @@ export default async function beautify(
           key: "credit_fee",
           params: {
             credit_fee: formatAsset(
-              opContents.credit_fee.amount,
+              operationObject.credit_fee.amount,
               creditFee.symbol,
               creditFee.precision
             ),
@@ -3983,8 +4018,8 @@ export default async function beautify(
         {
           key: "extensions",
           params: {
-            extensions: opContents.extensions
-              ? JSON.stringify(opContents.extensions)
+            extensions: operationObject.extensions
+              ? JSON.stringify(operationObject.extensions)
               : "[]",
           },
         },
@@ -3992,7 +4027,7 @@ export default async function beautify(
           key: "fee",
           params: {
             fee: formatAsset(
-              opContents.fee.amount,
+              operationObject.fee.amount,
               _feeAsset.symbol,
               _feeAsset.precision
             ),
@@ -4000,64 +4035,67 @@ export default async function beautify(
         },
       ];
     }
-  } else if (opType == 75) {
+  } else if (operationType == 74) {
+    // Virtual
+    // credit_deal_expired_operation
+  } else if (operationType == 75) {
     // liquidity_pool_update_operation
     let _ownerAccount = accountResults.find(
-      (resAcc) => resAcc.id === opContents.account
+      (resAcc) => resAcc.id === operationObject.account
     ).accountName;
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
-    currentOperation["rows"] = [
+    return [
       {
         key: "account",
         params: {
           owner_account: _ownerAccount,
-          owner_accountOP: opContents.account,
+          owner_accountOP: operationObject.account,
         },
       },
-      { key: "pool", params: { pool_id: opContents.pool } },
+      { key: "pool", params: { pool_id: operationObject.pool } },
       {
         key: "taker_fee_percent",
-        params: { taker_fee_percent: opContents.taker_fee_percent },
+        params: { taker_fee_percent: operationObject.taker_fee_percent },
       },
       {
         key: "withdrawal_fee_percent",
         params: {
-          withdrawal_fee_percent: opContents.withdrawal_fee_percent,
+          withdrawal_fee_percent: operationObject.withdrawal_fee_percent,
         },
       },
       {
         key: "extensions",
-        params: { extensions: JSON.stringify(opContents.extensions) },
+        params: { extensions: JSON.stringify(operationObject.extensions) },
       },
       {
         key: "fee",
         params: {
           fee: formatAsset(
-            opContents.fee.amount,
+            operationObject.fee.amount,
             _feeAsset.symbol,
             _feeAsset.precision
           ),
         },
       },
     ];
-  } else if (opType == 76) {
+  } else if (operationType == 76) {
     // credit_deal_update_operation
     let _borrowerAccount = accountResults.find(
-      (resAcc) => resAcc.id === opContents.account
+      (resAcc) => resAcc.id === operationObject.account
     ).accountName;
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
-    currentOperation["rows"] = [
+    return [
       {
         key: "fee",
         params: {
           fee: formatAsset(
-            opContents.fee.amount,
+            operationObject.fee.amount,
             _feeAsset.symbol,
             _feeAsset.precision
           ),
@@ -4067,27 +4105,27 @@ export default async function beautify(
         key: "account",
         params: {
           account: _borrowerAccount,
-          accountOP: opContents.account,
+          accountOP: operationObject.account,
         },
       },
-      { key: "deal_id", params: { deal_id: opContents.deal_id } },
+      { key: "deal_id", params: { deal_id: operationObject.deal_id } },
       {
         key: "auto_repay",
-        params: { auto_repay: opContents.auto_repay },
+        params: { auto_repay: operationObject.auto_repay },
       },
     ];
-  } else if (opType == 77) {
+  } else if (operationType == 77) {
     // limit_order_update_operation
     let _sellerAccount = accountResults.find(
-      (resAcc) => resAcc.id === opContents.seller
+      (resAcc) => resAcc.id === operationObject.seller
     ).accountName;
 
     let _assetToSell = assetResults.find(
-      (assRes) => assRes.id === opContents.delta_amount_to_sell.asset_id
+      (assRes) => assRes.id === operationObject.delta_amount_to_sell.asset_id
     );
 
     let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === opContents.fee.asset_id
+      (assRes) => assRes.id === operationObject.fee.asset_id
     );
 
     const rowContents = [
@@ -4095,7 +4133,7 @@ export default async function beautify(
         key: "fee",
         params: {
           fee: formatAsset(
-            opContents.fee.amount,
+            operationObject.fee.amount,
             _feeAsset.symbol,
             _feeAsset.precision
           ),
@@ -4105,25 +4143,25 @@ export default async function beautify(
         key: "seller",
         params: {
           seller: _sellerAccount,
-          sellerOP: opContents.seller,
+          sellerOP: operationObject.seller,
         },
       },
-      { key: "order", params: { order: opContents.order } },
+      { key: "order", params: { order: operationObject.order } },
     ];
 
-    if (opContents.new_price) {
+    if (operationObject.new_price) {
       rowContents.push({
         key: "new_price",
-        params: { new_price: opContents.new_price },
+        params: { new_price: operationObject.new_price },
       });
     }
 
-    if (opContents.delta_amount_to_sell) {
+    if (operationObject.delta_amount_to_sell) {
       rowContents.push({
         key: "delta_amount_to_sell",
         params: {
           delta_amount_to_sell: formatAsset(
-            opContents.delta_amount_to_sell.amount,
+            operationObject.delta_amount_to_sell.amount,
             _assetToSell.symbol,
             _assetToSell.precision
           ),
@@ -4131,31 +4169,31 @@ export default async function beautify(
       });
     }
 
-    if (opContents.new_expiration) {
+    if (operationObject.new_expiration) {
       rowContents.push({
         key: "new_expiration",
-        params: { new_expiration: opContents.new_expiration },
+        params: { new_expiration: operationObject.new_expiration },
       });
     }
 
-    if (opContents.on_fill) {
+    if (operationObject.on_fill) {
       rowContents.push({
         key: "on_fill",
-        params: { on_fill: JSON.stringify(opContents.on_fill) },
+        params: { on_fill: JSON.stringify(operationObject.on_fill) },
       });
     }
 
-    if (opContents.extensions) {
+    if (operationObject.extensions) {
       rowContents.push({
         key: "extensions",
         params: {
-          extensions: JSON.stringify(opContents.extensions),
+          extensions: JSON.stringify(operationObject.extensions),
         },
       });
     }
 
-    currentOperation["rows"] = rowContents;
+    return rowContents;
   }
 
-  return currentOperation; // No matching operation
+  return null; // No matching operation
 }
