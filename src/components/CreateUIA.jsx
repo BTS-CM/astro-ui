@@ -517,7 +517,7 @@ export default function UIA(properties) {
                 Full URL
               </Button>
             </DialogTrigger>
-            <DialogContent className="bg-white w-full max-w-4xl bg-gray-100">
+            <DialogContent className="bg-white w-full max-w-4xl">
               <DialogHeader>
                 <DialogTitle>Full IPFS URL</DialogTitle>
               </DialogHeader>
@@ -2027,7 +2027,7 @@ export default function UIA(properties) {
                             {t("AssetCommon:nft.modifyMultimediaContents")}
                           </Button>
                         </DialogTrigger>
-                        <DialogContent className="bg-white w-full max-w-4xl bg-gray-100">
+                        <DialogContent className="bg-white w-full max-w-4xl">
                           <DialogHeader>
                             <DialogTitle>
                               {t("AssetCommon:nft.modifyingMultimediaContents")}
