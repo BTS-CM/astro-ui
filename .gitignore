@@ -183,3 +183,5 @@ src/data/bitshares_testnet/minPools.json
 
 astroDist
 dist
+/src/lib/_non_virtual_op_examples
+/src/lib/_virtual_op_examples

@@ -113,28 +113,31 @@ export default async function beautify(
       (resAcc) => resAcc.id === operationObject.from
     );
     let to = accountResults.find((resAcc) => resAcc.id === operationObject.to);
-    let asset = assetResults.find(
-      (assRes) => assRes.id === operationObject.amount.asset_id
-    );
+
+    let amount;
+    if (operationObject.amount_) {
+      // temporary fix for some ops having amount_ instead of amount
+      amount = operationObject.amount_;
+    } else {
+      amount = operationObject.amount;
+    }
+
+    let asset = assetResults.find((assRes) => assRes.id === amount.asset_id);
 
     if (from && to && asset) {
       return [
         {
           key: "from",
-          params: { from: from.accountName, opFrom: operationObject.from },
+          params: { from: from.name, opFrom: operationObject.from },
         },
         {
           key: "to",
-          params: { to: to.accountName, opTo: operationObject.to },
+          params: { to: to.name, opTo: operationObject.to },
         },
         {
           key: "amount",
           params: {
-            amount: formatAsset(
-              operationObject.amount.amount,
-              asset.symbol,
-              asset.precision
-            ),
+            amount: formatAsset(amount.amount, asset.symbol, asset.precision),
           },
         },
       ];
@@ -143,7 +146,7 @@ export default async function beautify(
     // limit_order_create
     let seller = accountResults.find(
       (resAcc) => resAcc.id === operationObject.seller
-    ).accountName;
+    ).name;
     let buy = assetResults.find(
       (assRes) => assRes.id === operationObject.min_to_receive.asset_id
     );
@@ -215,7 +218,7 @@ export default async function beautify(
     // limit_order_cancel
     let feePayingAccount = accountResults.find(
       (resAcc) => resAcc.id === operationObject.fee_paying_account
-    ).accountName;
+    ).name;
 
     let _feeAsset = assetResults.find(
       (assRes) => assRes.id === operationObject.fee.asset_id
@@ -224,16 +227,6 @@ export default async function beautify(
     if (feePayingAccount) {
       return [
         { key: "id", params: { id: operationObject.order } },
-        {
-          key: "fees",
-          params: {
-            fee: formatAsset(
-              operationObject.fee.amount,
-              _feeAsset.symbol,
-              _feeAsset.precision
-            ),
-          },
-        },
         {
           key: "account",
           params: {
@@ -248,7 +241,7 @@ export default async function beautify(
     // call_order_update
     let fundingAccount = accountResults.find(
       (resAcc) => resAcc.id === operationObject.funding_account
-    ).accountName;
+    ).name;
     let deltaCollateral = assetResults.find(
       (assRes) => assRes.id === operationObject.delta_collateral.asset_id
     );
@@ -292,16 +285,6 @@ export default async function beautify(
             id: operationObject.delta_debt.asset_id,
           },
         },
-        {
-          key: "fees",
-          params: {
-            fee: formatAsset(
-              operationObject.fee.amount,
-              _feeAsset.symbol,
-              _feeAsset.precision
-            ),
-          },
-        },
       ];
     }
   } else if (operationType == 4) {
@@ -311,10 +294,10 @@ export default async function beautify(
     // account_create
     let registrar = accountResults.find(
       (resAcc) => resAcc.id === operationObject.registrar
-    ).accountName;
+    ).name;
     let referrer = accountResults.find(
       (resAcc) => resAcc.id === operationObject.referrer
-    ).accountName;
+    ).name;
 
     let _feeAsset = assetResults.find(
       (assRes) => assRes.id === operationObject.fee.asset_id
@@ -420,23 +403,13 @@ export default async function beautify(
             extensions: JSON.stringify(operationObject.options.extensions),
           },
         },
-        {
-          key: "fees",
-          params: {
-            fee: formatAsset(
-              operationObject.fee.amount,
-              _feeAsset.symbol,
-              _feeAsset.precision
-            ),
-          },
-        },
       ];
     }
   } else if (operationType == 6) {
     // account_update
     let targetAccount = accountResults.find(
       (resAcc) => resAcc.id === operationObject.account
-    ).accountName;
+    ).name;
 
     let _feeAsset = assetResults.find(
       (assRes) => assRes.id === operationObject.fee.asset_id
@@ -471,26 +444,16 @@ export default async function beautify(
             extensions: JSON.stringify(operationObject.extensions),
           },
         },
-        {
-          key: "fees",
-          params: {
-            fee: formatAsset(
-              operationObject.fee.amount,
-              _feeAsset.symbol,
-              _feeAsset.precision
-            ),
-          },
-        },
       ];
     }
   } else if (operationType == 7) {
     // account_whitelist
     let authorizingAccount = accountResults.find(
       (resAcc) => resAcc.id === operationObject.authorizing_account
-    ).accountName;
+    ).name;
     let accountToList = accountResults.find(
       (resAcc) => resAcc.id === operationObject.account_to_list
-    ).accountName;
+    ).name;
 
     let _feeAsset = assetResults.find(
       (assRes) => assRes.id === operationObject.fee.asset_id
@@ -540,7 +503,7 @@ export default async function beautify(
     // account_upgrade
     let accountToUpgrade = accountResults.find(
       (resAcc) => resAcc.id === operationObject.account_to_upgrade
-    ).accountName;
+    ).name;
 
     let _feeAsset = assetResults.find(
       (assRes) => assRes.id === operationObject.fee.asset_id
@@ -584,10 +547,10 @@ export default async function beautify(
     // account_transfer
     let originalOwner = accountResults.find(
       (resAcc) => resAcc.id === operationObject.account_id
-    ).accountName;
+    ).name;
     let newOwner = accountResults.find(
       (resAcc) => resAcc.id === operationObject.new_owner
-    ).accountName;
+    ).name;
 
     let _feeAsset = assetResults.find(
       (assRes) => assRes.id === operationObject.fee.asset_id
@@ -930,7 +893,7 @@ export default async function beautify(
     // asset_update_feed_producers
     let issuer = accountResults.find(
       (resAcc) => resAcc.id === operationObject.issuer
-    ).accountName;
+    ).name;
     let assetToUpdate = assetResults.find(
       (assRes) => assRes.id === operationObject.new_options.short_backing_asset
     );
@@ -974,10 +937,10 @@ export default async function beautify(
     }
   } else if (operationType == 14) {
     // asset_issue
-    //let issuer = accountResults.find((resAcc) => resAcc.id === operationObject.issuer).accountName;
+    //let issuer = accountResults.find((resAcc) => resAcc.id === operationObject.issuer).name;
     let targetAccount = accountResults.find(
       (resAcc) => resAcc.id === operationObject.issue_to_account
-    ).accountName;
+    ).name;
     let assetToIssue = assetResults.find(
       (assRes) => assRes.id === operationObject.asset_to_issue.asset_id
     );
@@ -1011,7 +974,7 @@ export default async function beautify(
     // asset_reserve
     let payer = accountResults.find(
       (resAcc) => resAcc.id === operationObject.payer
-    ).accountName;
+    ).name;
     let assetToReserve = assetResults.find(
       (assRes) => assRes.id === operationObject.amount_to_reserve.asset_id
     );
@@ -1061,7 +1024,7 @@ export default async function beautify(
     // asset_fund_fee_pool
     let fromAccount = accountResults.find(
       (resAcc) => resAcc.id === operationObject.from_account
-    ).accountName;
+    ).name;
     let assetToFund = assetResults.find(
       (assRes) => assRes.id === operationObject.asset_id
     );
@@ -1112,9 +1075,18 @@ export default async function beautify(
     // asset_settle
     let account = accountResults.find(
       (resAcc) => resAcc.id === operationObject.account
-    ).accountName;
+    ).name;
+
+    let amount;
+    if (operationObject.amount_) {
+      // temporary fix for some ops having amount_ instead of amount
+      amount = operationObject.amount_;
+    } else {
+      amount = operationObject.amount;
+    }
+
     let assetToSettle = assetResults.find(
-      (assRes) => assRes.id === operationObject.amount.asset_id
+      (assRes) => assRes.id === amount.asset_id
     );
 
     let _feeAsset = assetResults.find(
@@ -1131,11 +1103,11 @@ export default async function beautify(
           key: "amount",
           params: {
             amount: formatAsset(
-              operationObject.amount.amount,
+              amount.amount,
               assetToSettle.symbol,
               assetToSettle.precision
             ),
-            assetID: operationObject.amount.asset_id,
+            assetID: amount.asset_id,
           },
         },
         {
@@ -1154,7 +1126,7 @@ export default async function beautify(
     // asset_global_settle
     let issuer = accountResults.find(
       (resAcc) => resAcc.id === operationObject.account
-    ).accountName;
+    ).name;
     let assetToSettle = assetResults.find(
       (assRes) => assRes.id === operationObject.asset_to_settle
     );
@@ -1209,7 +1181,7 @@ export default async function beautify(
     // asset_publish_feed
     let publisher = accountResults.find(
       (resAcc) => resAcc.id === operationObject.publisher
-    ).accountName;
+    ).name;
     let baseAsset = assetResults.find(
       (assRes) => assRes.id === operationObject.settle_price.base.asset_id
     ); // backing e.g. BTS
@@ -1304,7 +1276,7 @@ export default async function beautify(
     // witness_create
     let witnessAccount = accountResults.find(
       (resAcc) => resAcc.id === operationObject.witness_account
-    ).accountName;
+    ).name;
 
     let _feeAsset = assetResults.find(
       (assRes) => assRes.id === operationObject.fee.asset_id
@@ -1339,7 +1311,7 @@ export default async function beautify(
     // witness_update
     let witnessAccount = accountResults.find(
       (resAcc) => resAcc.id === operationObject.witness_account
-    ).accountName;
+    ).name;
 
     let _feeAsset = assetResults.find(
       (assRes) => assRes.id === operationObject.fee.asset_id
@@ -1380,7 +1352,7 @@ export default async function beautify(
     // proposal_create
     let feePayingAccount = accountResults.find(
       (resAcc) => resAcc.id === operationObject.fee_paying_account
-    ).accountName;
+    ).name;
 
     let _feeAsset = assetResults.find(
       (assRes) => assRes.id === operationObject.fee.asset_id
@@ -1426,7 +1398,7 @@ export default async function beautify(
     // proposal_update
     let feePayingAccount = accountResults.find(
       (resAcc) => resAcc.id === operationObject.fee_paying_account
-    ).accountName;
+    ).name;
 
     let _feeAsset = assetResults.find(
       (assRes) => assRes.id === operationObject.fee.asset_id
@@ -1513,7 +1485,7 @@ export default async function beautify(
     // proposal_delete
     let feePayingAccount = accountResults.find(
       (resAcc) => resAcc.id === operationObject.fee_paying_account
-    ).accountName;
+    ).name;
 
     let _feeAsset = assetResults.find(
       (assRes) => assRes.id === operationObject.fee.asset_id
@@ -1558,10 +1530,10 @@ export default async function beautify(
     // withdraw_permission_create
     let to = accountResults.find(
       (resAcc) => resAcc.id === operationObject.authorized_account
-    ).accountName;
+    ).name;
     let from = accountResults.find(
       (resAcc) => resAcc.id === operationObject.withdraw_from_account
-    ).accountName;
+    ).name;
     let asset = assetResults.find(
       (assRes) => assRes.id === operationObject.withdrawal_limit.asset_id
     );
@@ -1604,10 +1576,10 @@ export default async function beautify(
     // withdraw_permission_update
     let withdrawFromAccount = accountResults.find(
       (resAcc) => resAcc.id === operationObject.withdraw_from_account
-    ).accountName;
+    ).name;
     let authorizedAccount = accountResults.find(
       (resAcc) => resAcc.id === operationObject.authorized_account
-    ).accountName;
+    ).name;
     let withdrawalLimit = assetResults.find(
       (assRes) => assRes.id === operationObject.withdrawal_limit.asset_id
     );
@@ -1688,10 +1660,10 @@ export default async function beautify(
     // withdraw_permission_claim
     let from = accountResults.find(
       (resAcc) => resAcc.id === operationObject.withdraw_from_account
-    ).accountName;
+    ).name;
     let to = accountResults.find(
       (resAcc) => resAcc.id === operationObject.withdraw_to_account
-    ).accountName;
+    ).name;
     let withdrawnAsset = assetResults.find(
       (assRes) => assRes.id === operationObject.amount_to_withdraw.asset_id
     );
@@ -1752,10 +1724,10 @@ export default async function beautify(
     // withdraw_permission_delete
     let withdrawFromAccount = accountResults.find(
       (resAcc) => resAcc.id === operationObject.withdraw_from_account
-    ).accountName;
+    ).name;
     let authorizedAccount = accountResults.find(
       (resAcc) => resAcc.id === operationObject.authorized_account
-    ).accountName;
+    ).name;
 
     let _feeAsset = assetResults.find(
       (assRes) => assRes.id === operationObject.fee.asset_id
@@ -1799,7 +1771,7 @@ export default async function beautify(
     // committee_member_create
     let committeeMemberAccount = accountResults.find(
       (resAcc) => resAcc.id === operationObject.committee_member_account
-    ).accountName;
+    ).name;
 
     let _feeAsset = assetResults.find(
       (assRes) => assRes.id === operationObject.fee.asset_id
@@ -1832,7 +1804,7 @@ export default async function beautify(
     // none in kibana?
     let committeeMemberAccount = accountResults.find(
       (resAcc) => resAcc.id === operationObject.committee_member_account
-    ).accountName;
+    ).name;
 
     let _feeAsset = assetResults.find(
       (assRes) => assRes.id === operationObject.fee.asset_id
@@ -2065,17 +2037,20 @@ export default async function beautify(
     // vesting_balance_create
     let creator = accountResults.find(
       (resAcc) => resAcc.id === operationObject.creator
-    ).accountName;
+    ).name;
     let owner = accountResults.find(
       (resAcc) => resAcc.id === operationObject.owner
-    ).accountName;
-    let amount = assetResults.find(
-      (assRes) => assRes.id === operationObject.amount.asset_id
-    );
+    ).name;
 
-    let _feeAsset = assetResults.find(
-      (assRes) => assRes.id === operationObject.fee.asset_id
-    );
+    let _amount;
+    if (operationObject.amount_) {
+      // temporary fix for some ops having amount_ instead of amount
+      _amount = operationObject.amount_;
+    } else {
+      _amount = operationObject.amount;
+    }
+
+    let amount = assetResults.find((assRes) => assRes.id === _amount.asset_id);
 
     if (creator && owner && amount) {
       let tempRows = [
@@ -2091,11 +2066,11 @@ export default async function beautify(
           key: "amount",
           params: {
             amount: formatAsset(
-              operationObject.amount.amount,
+              _amount.amount,
               amount.symbol,
               amount.precision
             ),
-            amount_id: operationObject.amount.asset_id,
+            amount_id: _amount.asset_id,
           },
         },
         { key: "policy", params: {} },
@@ -2140,10 +2115,17 @@ export default async function beautify(
     // vesting_balance_withdraw
     let owner = accountResults.find(
       (resAcc) => resAcc.id === operationObject.owner
-    ).accountName;
-    let asset = assetResults.find(
-      (assRes) => assRes.id === operationObject.amount.asset_id
-    );
+    ).name;
+
+    let _amount;
+    if (operationObject.amount_) {
+      // temporary fix for some ops having amount_ instead of amount
+      _amount = operationObject.amount_;
+    } else {
+      _amount = operationObject.amount;
+    }
+
+    let asset = assetResults.find((assRes) => assRes.id === _amount.asset_id);
 
     if (owner && asset) {
       return [
@@ -2154,12 +2136,8 @@ export default async function beautify(
         {
           key: "claim",
           params: {
-            claim: formatAsset(
-              operationObject.amount.amount,
-              asset.symbol,
-              asset.precision
-            ),
-            asset_id: operationObject.amount.asset_id,
+            claim: formatAsset(_amount.amount, asset.symbol, asset.precision),
+            asset_id: _amount.asset_id,
           },
         },
       ];
@@ -2168,7 +2146,7 @@ export default async function beautify(
     // worker_create
     let owner = accountResults.find(
       (resAcc) => resAcc.id === operationObject.owner
-    ).accountName;
+    ).name;
 
     let _feeAsset = assetResults.find(
       (assRes) => assRes.id === operationObject.fee.asset_id
@@ -2215,7 +2193,7 @@ export default async function beautify(
     // custom
     let payer = accountResults.find(
       (resAcc) => resAcc.id === operationObject.payer
-    ).accountName;
+    ).name;
 
     let _feeAsset = assetResults.find(
       (assRes) => assRes.id === operationObject.fee.asset_id
@@ -2253,7 +2231,7 @@ export default async function beautify(
     // assert
     let feePayingAccount = accountResults.find(
       (resAcc) => resAcc.id === operationObject.fee_paying_account
-    ).accountName;
+    ).name;
 
     let _feeAsset = assetResults.find(
       (assRes) => assRes.id === operationObject.fee.asset_id
@@ -2303,9 +2281,18 @@ export default async function beautify(
     // balance_claim
     let depositToAccount = accountResults.find(
       (resAcc) => resAcc.id === operationObject.deposit_to_account
-    ).accountName;
+    ).name;
+
+    let _amount;
+    if (operationObject.amount_) {
+      // temporary fix for some ops having amount_ instead of amount
+      _amount = operationObject.amount_;
+    } else {
+      _amount = operationObject.amount;
+    }
+
     let claimedAsset = assetResults.find(
-      (assRes) => assRes.id === operationObject.amount.asset_id
+      (assRes) => assRes.id === _amount.asset_id
     );
 
     let _feeAsset = assetResults.find(
@@ -2333,11 +2320,11 @@ export default async function beautify(
           key: "total_claimed",
           params: {
             total_claimed: formatAsset(
-              operationObject.amount.amount,
+              _amount.amount,
               claimedAsset.symbol,
               claimedAsset.precision
             ),
-            asset_id: operationObject.amount.asset_id,
+            asset_id: _amount.asset_id,
           },
         },
         {
@@ -2356,15 +2343,24 @@ export default async function beautify(
     // override_transfer
     let issuer = accountResults.find(
       (resAcc) => resAcc.id === operationObject.issuer
-    ).accountName;
+    ).name;
     let from = accountResults.find(
       (resAcc) => resAcc.id === operationObject.from
-    ).accountName;
+    ).name;
     let to = accountResults.find(
       (resAcc) => resAcc.id === operationObject.to
-    ).accountName;
+    ).name;
+
+    let _amount;
+    if (operationObject.amount_) {
+      // temporary fix for some ops having amount_ instead of amount
+      _amount = operationObject.amount_;
+    } else {
+      _amount = operationObject.amount;
+    }
+
     let overridenAsset = assetResults.find(
-      (assRes) => assRes.id === operationObject.amount.asset_id
+      (assRes) => assRes.id === _amount.asset_id
     );
 
     let _feeAsset = assetResults.find(
@@ -2386,11 +2382,11 @@ export default async function beautify(
           key: "amount",
           params: {
             amount: formatAsset(
-              operationObject.amount.amount,
+              _amount.amount,
               overridenAsset.symbol,
               overridenAsset.precision
             ),
-            asset_id: operationObject.amount.asset_id,
+            asset_id: _amount.asset_id,
           },
         },
         { key: "memo", params: { memo: operationObject.memo } },
@@ -2410,9 +2406,18 @@ export default async function beautify(
     // transfer_to_blind
     let from = accountResults.find(
       (resAcc) => resAcc.id === operationObject.from
-    ).accountName;
+    ).name;
+
+    let _amount;
+    if (operationObject.amount_) {
+      // temporary fix for some ops having amount_ instead of amount
+      _amount = operationObject.amount_;
+    } else {
+      _amount = operationObject.amount;
+    }
+
     let assetToTransfer = assetResults.find(
-      (assRes) => assRes.id === operationObject.amount.asset_id
+      (assRes) => assRes.id === _amount.asset_id
     );
 
     let _feeAsset = assetResults.find(
@@ -2425,7 +2430,7 @@ export default async function beautify(
           key: "amount",
           params: {
             amount: formatAsset(
-              operationObject.amount.amount,
+              _amount.amount,
               assetToTransfer.symbol,
               assetToTransfer.precision
             ),
@@ -2484,9 +2489,18 @@ export default async function beautify(
     // transfer_from_blind
     let to = accountResults.find(
       (resAcc) => resAcc.id === operationObject.to
-    ).accountName;
+    ).name;
+
+    let _amount;
+    if (operationObject.amount_) {
+      // temporary fix for some ops having amount_ instead of amount
+      _amount = operationObject.amount_;
+    } else {
+      _amount = operationObject.amount;
+    }
+
     let assetToTransfer = assetResults.find(
-      (assRes) => assRes.id === operationObject.amount.asset_id
+      (assRes) => assRes.id === _amount.asset_id
     );
 
     let _feeAsset = assetResults.find(
@@ -2499,7 +2513,7 @@ export default async function beautify(
           key: "amount",
           params: {
             amount: formatAsset(
-              operationObject.amount.amount,
+              _amount.amount,
               assetToTransfer.symbol,
               assetToTransfer.precision
             ),
@@ -2533,7 +2547,8 @@ export default async function beautify(
     // asset_claim_fees
     let issuer = accountResults.find(
       (resAcc) => resAcc.id === operationObject.issuer
-    ).accountName;
+    ).name;
+
     let assetToClaim = assetResults.find(
       (assRes) => assRes.id === operationObject.amount_to_claim.asset_id
     );
@@ -2584,7 +2599,7 @@ export default async function beautify(
     // bid_collateral
     let bidder = accountResults.find(
       (resAcc) => resAcc.id === operationObject.bidder
-    ).accountName;
+    ).name;
     let collateral = assetResults.find(
       (assRes) => assRes.id === operationObject.additional_collateral.asset_id
     );
@@ -2641,7 +2656,7 @@ export default async function beautify(
     // asset_claim_pool
     let issuer = accountResults.find(
       (resAcc) => resAcc.id === operationObject.issuer
-    ).accountName;
+    ).name;
     let relevantAsset = assetResults.find(
       (assRes) => assRes.id === operationObject.asset_id
     );
@@ -2683,10 +2698,10 @@ export default async function beautify(
     // asset_update_issuer
     let issuer = accountResults.find(
       (resAcc) => resAcc.id === operationObject.issuer
-    ).accountName;
+    ).name;
     let new_issuer = accountResults.find(
       (resAcc) => resAcc.id === operationObject.new_issuer
-    ).accountName;
+    ).name;
     let assetToUpdate = assetResults.find(
       (assRes) => assRes.id === operationObject.asset_to_update
     );
@@ -2728,12 +2743,21 @@ export default async function beautify(
     // htlc_create
     let from = accountResults.find(
       (resAcc) => resAcc.id === operationObject.from
-    ).accountName;
+    ).name;
     let to = accountResults.find(
       (resAcc) => resAcc.id === operationObject.to
-    ).accountName;
+    ).name;
+
+    let _amount;
+    if (operationObject.amount_) {
+      // temporary fix for some ops having amount_ instead of amount
+      _amount = operationObject.amount_;
+    } else {
+      _amount = operationObject.amount;
+    }
+
     let htlcAsset = assetResults.find(
-      (assRes) => assRes.id === operationObject.amount.asset_id
+      (assRes) => assRes.id === _amount.asset_id
     );
 
     let _feeAsset = assetResults.find(
@@ -2751,7 +2775,7 @@ export default async function beautify(
           key: "amount",
           params: {
             amount: formatAsset(
-              operationObject.amount.amount,
+              _amount.amount,
               htlcAsset.symbol,
               htlcAsset.precision
             ),
@@ -2787,7 +2811,7 @@ export default async function beautify(
     // htlc_redeem
     let redeemer = accountResults.find(
       (resAcc) => resAcc.id === operationObject.redeemer
-    ).accountName;
+    ).name;
 
     let _feeAsset = assetResults.find(
       (assRes) => assRes.id === operationObject.fee.asset_id
@@ -2830,7 +2854,7 @@ export default async function beautify(
     // htlc_extend
     let update_issuer = accountResults.find(
       (resAcc) => resAcc.id === operationObject.update_issuer
-    ).accountName;
+    ).name;
 
     let _feeAsset = assetResults.find(
       (assRes) => assRes.id === operationObject.fee.asset_id
@@ -2877,7 +2901,7 @@ export default async function beautify(
     // none in kibana...
     let account = accountResults.find(
       (resAcc) => resAcc.id === operationObject.account
-    ).accountName;
+    ).name;
 
     let _feeAsset = assetResults.find(
       (assRes) => assRes.id === operationObject.fee.asset_id
@@ -2933,7 +2957,7 @@ export default async function beautify(
     // not in kibana...
     let account = accountResults.find(
       (resAcc) => resAcc.id === operationObject.account
-    ).accountName;
+    ).name;
 
     let _feeAsset = assetResults.find(
       (assRes) => assRes.id === operationObject.fee.asset_id
@@ -3008,7 +3032,7 @@ export default async function beautify(
     // not in kibana...
     let account = accountResults.find(
       (resAcc) => resAcc.id === operationObject.account
-    ).accountName;
+    ).name;
 
     let _feeAsset = assetResults.find(
       (assRes) => assRes.id === operationObject.fee.asset_id
@@ -3049,9 +3073,18 @@ export default async function beautify(
     // ticket_create
     let account = accountResults.find(
       (resAcc) => resAcc.id === operationObject.account
-    ).accountName;
+    ).name;
+
+    let _amount;
+    if (operationObject.amount_) {
+      // temporary fix for some ops having amount_ instead of amount
+      _amount = operationObject.amount_;
+    } else {
+      _amount = operationObject.amount;
+    }
+
     let ticketAsset = assetResults.find(
-      (assRes) => assRes.id === operationObject.amount.asset_id
+      (assRes) => assRes.id === _amount.asset_id
     );
 
     let _feeAsset = assetResults.find(
@@ -3072,7 +3105,7 @@ export default async function beautify(
           key: "amount",
           params: {
             amount: formatAsset(
-              operationObject.amount.amount,
+              _amount.amount,
               ticketAsset.symbol,
               ticketAsset.precision
             ),
@@ -3102,7 +3135,7 @@ export default async function beautify(
     // ticket_update
     let account = accountResults.find(
       (resAcc) => resAcc.id === operationObject.account
-    ).accountName;
+    ).name;
     let ticketAsset = assetResults.find(
       (assRes) => assRes.id === operationObject.amount_for_new_target.asset_id
     );
@@ -3146,7 +3179,7 @@ export default async function beautify(
     // liquidity_pool_create
     let account = accountResults.find(
       (resAcc) => resAcc.id === operationObject.account
-    ).accountName;
+    ).name;
     let assetA = assetResults.find(
       (assRes) => assRes.id === operationObject.asset_a
     );
@@ -3222,7 +3255,7 @@ export default async function beautify(
     // liquidity_pool_delete
     let account = accountResults.find(
       (resAcc) => resAcc.id === operationObject.account
-    ).accountName;
+    ).name;
 
     let _feeAsset = assetResults.find(
       (assRes) => assRes.id === operationObject.fee.asset_id
@@ -3258,7 +3291,7 @@ export default async function beautify(
     // liquidity_pool_deposit
     let account = accountResults.find(
       (resAcc) => resAcc.id === operationObject.account
-    ).accountName;
+    ).name;
     let amountA = assetResults.find(
       (assRes) => assRes.id === operationObject.amount_a.asset_id
     );
@@ -3323,7 +3356,7 @@ export default async function beautify(
     // liquidity_pool_withdraw
     let account = accountResults.find(
       (resAcc) => resAcc.id === operationObject.account
-    ).accountName;
+    ).name;
     let shareAsset = assetResults.find(
       (assRes) => assRes.id === operationObject.share_amount.asset_id
     );
@@ -3374,7 +3407,7 @@ export default async function beautify(
     // liquidity_pool_exchange
     let account = accountResults.find(
       (resAcc) => resAcc.id === operationObject.account
-    ).accountName;
+    ).name;
     let soldAsset = assetResults.find(
       (assRes) => assRes.id === operationObject.amount_to_sell.asset_id
     );
@@ -3437,7 +3470,7 @@ export default async function beautify(
     // samet_fund_create
     let ownerAccount = accountResults.find(
       (resAcc) => resAcc.id === operationObject.owner_account
-    ).accountName;
+    ).name;
 
     let _feeAsset = assetResults.find(
       (assRes) => assRes.id === operationObject.fee.asset_id
@@ -3481,7 +3514,7 @@ export default async function beautify(
     // samet_fund_delete
     let ownerAccount = accountResults.find(
       (resAcc) => resAcc.id === operationObject.owner_account
-    ).accountName;
+    ).name;
 
     let _feeAsset = assetResults.find(
       (assRes) => assRes.id === operationObject.fee.asset_id
@@ -3520,7 +3553,7 @@ export default async function beautify(
     // samet_fund_update
     let ownerAccount = accountResults.find(
       (resAcc) => resAcc.id === operationObject.owner_account
-    ).accountName;
+    ).name;
 
     let _feeAsset = assetResults.find(
       (assRes) => assRes.id === operationObject.fee.asset_id
@@ -3582,7 +3615,7 @@ export default async function beautify(
     // none in kibana..
     let borrower = accountResults.find(
       (resAcc) => resAcc.id === operationObject.borrower
-    ).accountName;
+    ).name;
     let borrowAmount = assetResults.find(
       (assRes) => assRes.id === operationObject.borrow_amount.asset_id
     );
@@ -3635,7 +3668,7 @@ export default async function beautify(
     // samet_fund_repay
     let account = accountResults.find(
       (resAcc) => resAcc.id === operationObject.account
-    ).accountName;
+    ).name;
     let repayAmount = assetResults.find(
       (assRes) => assRes.id === operationObject.repay_amount.asset_id
     );
@@ -3698,7 +3731,7 @@ export default async function beautify(
     // credit_offer_create
     let ownerAccount = accountResults.find(
       (resAcc) => resAcc.id === operationObject.owner_account
-    ).accountName;
+    ).name;
 
     let _feeAsset = assetResults.find(
       (assRes) => assRes.id === operationObject.fee.asset_id
@@ -3773,7 +3806,7 @@ export default async function beautify(
     // credit_offer_delete
     let ownerAccount = accountResults.find(
       (resAcc) => resAcc.id === operationObject.owner_account
-    ).accountName;
+    ).name;
 
     let _feeAsset = assetResults.find(
       (assRes) => assRes.id === operationObject.fee.asset_id
@@ -3812,7 +3845,7 @@ export default async function beautify(
     // credit_offer_update
     let ownerAccount = accountResults.find(
       (resAcc) => resAcc.id === operationObject.owner_account
-    ).accountName;
+    ).name;
 
     let deltaAmount = operationObject.delta_amount
       ? assetResults.find(
@@ -3900,7 +3933,7 @@ export default async function beautify(
     // credit_offer_accept
     let borrower = accountResults.find(
       (resAcc) => resAcc.id === operationObject.borrower
-    ).accountName;
+    ).name;
     let borrowAmount = assetResults.find(
       (assRes) => assRes.id === operationObject.borrow_amount.asset_id
     );
@@ -3976,7 +4009,7 @@ export default async function beautify(
     // credit_deal_repay
     let account = accountResults.find(
       (resAcc) => resAcc.id === operationObject.account
-    ).accountName;
+    ).name;
     let repayAmount = assetResults.find(
       (assRes) => assRes.id === operationObject.repay_amount.asset_id
     );
@@ -4042,7 +4075,7 @@ export default async function beautify(
     // liquidity_pool_update_operation
     let _ownerAccount = accountResults.find(
       (resAcc) => resAcc.id === operationObject.account
-    ).accountName;
+    ).name;
 
     let _feeAsset = assetResults.find(
       (assRes) => assRes.id === operationObject.fee.asset_id
@@ -4085,7 +4118,7 @@ export default async function beautify(
     // credit_deal_update_operation
     let _borrowerAccount = accountResults.find(
       (resAcc) => resAcc.id === operationObject.account
-    ).accountName;
+    ).name;
 
     let _feeAsset = assetResults.find(
       (assRes) => assRes.id === operationObject.fee.asset_id
@@ -4118,7 +4151,7 @@ export default async function beautify(
     // limit_order_update_operation
     let _sellerAccount = accountResults.find(
       (resAcc) => resAcc.id === operationObject.seller
-    ).accountName;
+    ).name;
 
     let _assetToSell = assetResults.find(
       (assRes) => assRes.id === operationObject.delta_amount_to_sell.asset_id

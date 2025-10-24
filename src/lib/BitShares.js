@@ -116,11 +116,4 @@ async function extractObjects(operationObject) {
   return { accountsToFetch, assetsToFetch };
 }
 
-/*
-  return beautify(
-    accountResults, // fetched accounts
-    assetResults, // fetched assets
-    operationObject,
-    operationType
-  );
-*/
+export { extractObjects };

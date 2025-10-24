@@ -374,9 +374,9 @@ export default function CreditOfferEditor(properties) {
       const _identityBatch = identityChunks[chunkIndex];
       const _batchIDs = _identityBatch.flatMap(Object.keys);
 
-      const usernameDataStore = createUsernameStore([
+      const usernameDataStore = createObjectStore([
         usr.chain,
-        _batchIDs,
+        JSON.stringify(_batchIDs),
         currentNode ? currentNode.url : null,
       ]);
       unsub = usernameDataStore.subscribe(({ data }) => {
