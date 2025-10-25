@@ -32,6 +32,24 @@
     },
     "tooltip": "Pakkumine müüa teatud summa vara kindlaksmääratud vahetuskursiga teatud ajaks"
   },
+  "fill_order": {
+    "method": "Täitke tellimus",
+    "title": "Tellimuse täitmise sündmus",
+    "result": "Täitke tellimuse tulemus",
+    "headers": {
+      "request": "Kas salvestada järgmine tellimuse täitmine?",
+      "result": "Salvestati järgmine tellimuse täitmine:"
+    },
+    "rows": {
+      "account": "Konto: {{account}} ({{accountOP}})",
+      "order_id": "Telli: {{order_id}}",
+      "pays": "Maksab: {{pays}} ({{paysOP}})",
+      "receives": "Saab vastu: {{receives}} ({{receivesOP}})",
+      "price": "Hind: {{price}} ({{base_symbol}}/{{quote_symbol}})",
+      "is_maker": "Tootja: {{is_maker}}"
+    },
+    "tooltip": "Limiittellimuse tehingu teostamine"
+  },
   "limit_order_cancel": {
     "method": "Piiratud tellimuse tühistamine",
     "title": "Piiratud tellimuse tühistamise taotlus",
@@ -790,6 +808,22 @@
     },
     "tooltip": "Võtke varad pimebilansilt välja"
   },
+  "asset_settle_cancel": {
+    "method": "Varade arvelduse tühistamine",
+    "title": "Varade arvelduse tühistamise taotlus",
+    "result": "Varade arvelduse tühistamise tulemus",
+    "headers": {
+      "request": "Kas tühistada järgmine varade arveldus?",
+      "result": "Järgmine varaarveldus tühistati:"
+    },
+    "rows": {
+      "settlement": "Arveldus: {{settlement}}",
+      "account": "Konto: {{account}} ({{accountOP}})",
+      "amount": "Summa: {{amount}} ({{asset_id}})",
+      "extensions": "Laiendused: {{extensions}}"
+    },
+    "tooltip": "Tühistage ootel olev varade arvelduskorraldus"
+  },
   "asset_claim_fees": {
     "method": "Varanõude tasud",
     "title": "Varanõude tasude taotlus",
@@ -803,6 +837,21 @@
       "amount_to_claim": "Nõude summa: {{amount_to_claim}} ({{asset_id}})"
     },
     "tooltip": "Nõuda tasud varalt"
+  },
+  "fba_distribute": {
+    "method": "FBA levitada",
+    "title": "FBA levitamistaotlus",
+    "result": "FBA levitamise tulemus",
+    "headers": {
+      "request": "Kas jagada tasusid järgmisest FBA akumulaatorist?",
+      "result": "Salvestati järgmine FBA jaotus:"
+    },
+    "rows": {
+      "account": "Konto: {{account}} ({{accountOP}})",
+      "fba_id": "FBA aku: {{fba_id}}",
+      "amount": "Summa: {{amount}} ({{asset_id}})"
+    },
+    "tooltip": "Jaotage tasud tasuliste varade akumulaatorist"
   },
   "bid_collateral": {
     "method": "Pakkumise tagatis",
@@ -818,6 +867,21 @@
       "debt_covered": "Võlg kaetud: {{debt_covered}}"
     },
     "tooltip": "Tehke pakkumine bitassets tagatistagatisele, kui see on globaalselt arveldatud"
+  },
+  "execute_bid": {
+    "method": "Tehke pakkumine",
+    "title": "Teostage pakkumise sündmus",
+    "result": "Teostage pakkumise tulemus",
+    "headers": {
+      "request": "Kas salvestada järgmine teostatud pakkumine?",
+      "result": "Registreeriti järgmine pakkumise täitmine:"
+    },
+    "rows": {
+      "bidder": "Pakkuja: {{bidder}} ({{bidderOP}})",
+      "debt": "Võlg: {{debt}}",
+      "collateral": "Tagatis: {{collateral}}"
+    },
+    "tooltip": "Tagatise pakkumise teostamine pärast globaalset arveldust"
   },
   "asset_claim_pool": {
     "method": "Varade nõuete kogum",
@@ -898,6 +962,44 @@
       "extensions": "Laiendused: {{extensions}}"
     },
     "tooltip": "Pikendage HTLC toimingu kestust"
+  },
+  "htlc_redeemed": {
+    "method": "HTLC lunastatud",
+    "title": "HTLC lunastatud sündmus",
+    "result": "HTLC Lunastatud tulemus",
+    "headers": {
+      "request": "Kas salvestada järgmine HTLC lunastus?",
+      "result": "Registreeriti järgmine HTLC lunastamine:"
+    },
+    "rows": {
+      "htlc_id": "HTLC ID: {{htlc_id}}",
+      "from": "Alates: {{from}} ({{fromOP}})",
+      "to": "Saaja: {{to}} ({{toOP}})",
+      "redeemer": "Lunastaja: {{redeemer}} ({{redeemerOP}})",
+      "amount": "Summa: {{amount}} ({{asset_id}})",
+      "htlc_preimage_hash": "Eelpildi räsi: {{htlc_preimage_hash}}",
+      "htlc_preimage_size": "Eelpildi suurus: {{htlc_preimage_size}}",
+      "preimage": "Eelpilt: {{preimage}}"
+    },
+    "tooltip": "HTLC lunastamise kirje"
+  },
+  "htlc_refund": {
+    "method": "HTLC tagasimakse",
+    "title": "HTLC tagasimakse sündmus",
+    "result": "HTLC tagasimakse tulemus",
+    "headers": {
+      "request": "Kas salvestada järgmine HTLC tagasimakse?",
+      "result": "Salvestati järgmine HTLC tagasimakse:"
+    },
+    "rows": {
+      "htlc_id": "HTLC ID: {{htlc_id}}",
+      "to": "Saaja: {{to}} ({{toOP}})",
+      "original_htlc_recipient": "Algne saaja: {{original_htlc_recipient}} ({{original_htlc_recipientOP}})",
+      "amount": "Summa: {{amount}} ({{asset_id}})",
+      "htlc_preimage_hash": "Eelpildi räsi: {{htlc_preimage_hash}}",
+      "htlc_preimage_size": "Eelpildi suurus: {{htlc_preimage_size}}"
+    },
+    "tooltip": "HTLC tagasimakse kirje aegumise tõttu"
   },
   "custom_authority_create": {
     "method": "Kohandatud volituste loomine",
@@ -1281,6 +1383,25 @@
       "auto_repay": "Automaatne tagasimakse: {{auto_repay}}"
     },
     "tooltip": "Värskendage krediidilepingut"
+  },
+  "credit_deal_expired": {
+    "method": "Krediidileping aegus",
+    "title": "Krediidilepingu aegumise sündmus",
+    "result": "Krediiditehingu aegumise tulemus",
+    "headers": {
+      "request": "Kas salvestada järgmine aegunud krediiditehing?",
+      "result": "Salvestati järgmine krediiditehingu aegumine:"
+    },
+    "rows": {
+      "deal_id": "Pakkumise ID: {{deal_id}}",
+      "offer_id": "Pakkumise ID: {{offer_id}}",
+      "offer_owner": "Pakkumise omanik: {{offer_owner}} ({{offer_ownerOP}})",
+      "borrower": "Laenaja: {{borrower}} ({{borrowerOP}})",
+      "unpaid_amount": "Tasumata summa: {{unpaid_amount}} ({{unpaid_amountOP}})",
+      "collateral": "Tagatis: {{collateral}} ({{collateralOP}})",
+      "fee_rate": "Tasu määr: {{fee_rate}}"
+    },
+    "tooltip": "Kirje aegunud krediiditehingu ja sellest tulenevate summade kohta"
   },
   "limit_order_update_operation": {
     "method": "Piirtellimuse värskendus",

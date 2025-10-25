@@ -32,6 +32,24 @@
     },
     "tooltip": "Une offre de vendre un montant d'un actif à un taux de change spécifié avant un certain temps"
   },
+  "fill_order": {
+    "method": "Remplir la commande",
+    "title": "Événement de commande de remplissage",
+    "result": "Résultat de la commande de remplissage",
+    "headers": {
+      "request": "Enregistrer l'exécution de la commande suivante ?",
+      "result": "L'exécution de la commande suivante a été enregistrée :"
+    },
+    "rows": {
+      "account": "Compte: {{account}} ({{accountOP}})",
+      "order_id": "Commande: {{order_id}}",
+      "pays": "Paye : {{pays}} ({{paysOP}})",
+      "receives": "Reçoit : {{receives}} ({{receivesOP}})",
+      "price": "Prix: {{price}} ({{base_symbol}}/{{quote_symbol}})",
+      "is_maker": "Fabricant: {{is_maker}}"
+    },
+    "tooltip": "Exécution d’une transaction par ordre limité"
+  },
   "limit_order_cancel": {
     "method": "Annulation d'un ordre limité",
     "title": "Demande d'annulation d'un ordre limité",
@@ -790,6 +808,22 @@
     },
     "tooltip": "Retirer des actifs d'un solde aveugle"
   },
+  "asset_settle_cancel": {
+    "method": "Annulation du règlement des actifs",
+    "title": "Demande d'annulation de règlement d'actifs",
+    "result": "Résultat de l'annulation du règlement des actifs",
+    "headers": {
+      "request": "Annuler le règlement patrimonial suivant ?",
+      "result": "Le règlement patrimonial suivant a été annulé :"
+    },
+    "rows": {
+      "settlement": "Règlement: {{settlement}}",
+      "account": "Compte: {{account}} ({{accountOP}})",
+      "amount": "Montant: {{amount}} ({{asset_id}})",
+      "extensions": "Prolongements : {{extensions}}"
+    },
+    "tooltip": "Annuler un ordre de règlement d'actifs en attente"
+  },
   "asset_claim_fees": {
     "method": "Frais de réclamation d'actifs",
     "title": "Demande de frais de sinistre",
@@ -803,6 +837,21 @@
       "amount_to_claim": "Montant à réclamer : {{amount_to_claim}} ({{asset_id}})"
     },
     "tooltip": "Réclamez les frais d'un actif"
+  },
+  "fba_distribute": {
+    "method": "Distribution Expédié par Amazon",
+    "title": "Demande de distribution Expédié par Amazon",
+    "result": "Résultat de distribution Expédié par Amazon",
+    "headers": {
+      "request": "Répartir les frais de l'accumulateur Expédié par Amazon suivant ?",
+      "result": "La distribution Expédié par Amazon suivante a été enregistrée :"
+    },
+    "rows": {
+      "account": "Compte: {{account}} ({{accountOP}})",
+      "fba_id": "Accumulateur Expédié par Amazon : {{fba_id}}",
+      "amount": "Montant: {{amount}} ({{asset_id}})"
+    },
+    "tooltip": "Répartir les frais d'un accumulateur d'actifs adossés à des frais"
   },
   "bid_collateral": {
     "method": "Garantie de soumission",
@@ -818,6 +867,21 @@
       "debt_covered": "Dette couverte : {{debt_covered}}"
     },
     "tooltip": "Enchérir sur une garantie de garantie de bitassets une fois réglé globalement"
+  },
+  "execute_bid": {
+    "method": "Exécuter l'offre",
+    "title": "Exécuter l'événement d'enchère",
+    "result": "Exécuter le résultat de l'offre",
+    "headers": {
+      "request": "Enregistrer l'offre exécutée suivante ?",
+      "result": "L’exécution des offres suivante a été enregistrée :"
+    },
+    "rows": {
+      "bidder": "Soumissionnaire: {{bidder}} ({{bidderOP}})",
+      "debt": "Dette: {{debt}}",
+      "collateral": "Collatéral: {{collateral}}"
+    },
+    "tooltip": "Exécution d'une offre de garantie après règlement global"
   },
   "asset_claim_pool": {
     "method": "Pool de créances sur les actifs",
@@ -898,6 +962,44 @@
       "extensions": "Extensions : {{extensions}}"
     },
     "tooltip": "Prolonger la durée d'une opération HTLC"
+  },
+  "htlc_redeemed": {
+    "method": "HTLC racheté",
+    "title": "Événement HTLC échangé",
+    "result": "Résultat HTLC échangé",
+    "headers": {
+      "request": "Enregistrer le rachat HTLC suivant ?",
+      "result": "Le rachat HTLC suivant a été enregistré :"
+    },
+    "rows": {
+      "htlc_id": "Identifiant HTLC : {{htlc_id}}",
+      "from": "Depuis: {{from}} ({{fromOP}})",
+      "to": "À: {{to}} ({{toOP}})",
+      "redeemer": "Rédempteur: {{redeemer}} ({{redeemerOP}})",
+      "amount": "Montant: {{amount}} ({{asset_id}})",
+      "htlc_preimage_hash": "Hachage de pré-image : {{htlc_preimage_hash}}",
+      "htlc_preimage_size": "Taille de la pré-image : {{htlc_preimage_size}}",
+      "preimage": "Préimage : {{preimage}}"
+    },
+    "tooltip": "Enregistrement d'un rachat HTLC"
+  },
+  "htlc_refund": {
+    "method": "Remboursement HTLC",
+    "title": "Événement de remboursement HTLC",
+    "result": "Résultat du remboursement HTLC",
+    "headers": {
+      "request": "Enregistrer le remboursement HTLC suivant ?",
+      "result": "Le remboursement HTLC suivant a été enregistré :"
+    },
+    "rows": {
+      "htlc_id": "Identifiant HTLC : {{htlc_id}}",
+      "to": "À: {{to}} ({{toOP}})",
+      "original_htlc_recipient": "Destinataire initial : {{original_htlc_recipient}} ({{original_htlc_recipientOP}})",
+      "amount": "Montant: {{amount}} ({{asset_id}})",
+      "htlc_preimage_hash": "Hachage de pré-image : {{htlc_preimage_hash}}",
+      "htlc_preimage_size": "Taille de la pré-image : {{htlc_preimage_size}}"
+    },
+    "tooltip": "Enregistrement d'un remboursement HTLC pour cause d'expiration"
   },
   "custom_authority_create": {
     "method": "Création d'autorité personnalisée",
@@ -1281,6 +1383,25 @@
       "auto_repay": "Remboursement automatique : {{auto_repay}}"
     },
     "tooltip": "Mettre à jour une offre de crédit"
+  },
+  "credit_deal_expired": {
+    "method": "Accord de crédit expiré",
+    "title": "Événement d'accord de crédit expiré",
+    "result": "Résultat de l'accord de crédit expiré",
+    "headers": {
+      "request": "Enregistrer l'accord de crédit expiré suivant ?",
+      "result": "L’expiration de l’accord de crédit suivante a été enregistrée :"
+    },
+    "rows": {
+      "deal_id": "ID de l'accord : {{deal_id}}",
+      "offer_id": "Identifiant de l'offre : {{offer_id}}",
+      "offer_owner": "Propriétaire de l'offre : {{offer_owner}} ({{offer_ownerOP}})",
+      "borrower": "Emprunteur: {{borrower}} ({{borrowerOP}})",
+      "unpaid_amount": "Montant impayé : {{unpaid_amount}} ({{unpaid_amountOP}})",
+      "collateral": "Collatéral: {{collateral}} ({{collateralOP}})",
+      "fee_rate": "Tarif des frais : {{fee_rate}}"
+    },
+    "tooltip": "Registre d'une opération de crédit expirée et les montants qui en résultent"
   },
   "limit_order_update_operation": {
     "method": "Mise à jour des ordres limités",

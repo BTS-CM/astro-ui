@@ -32,6 +32,24 @@
     },
     "tooltip": "특정 시점까지 특정 환율로 자산 금액을 판매하겠다는 제안"
   },
+  "fill_order": {
+    "method": "주문 작성",
+    "title": "주문완료 이벤트",
+    "result": "주문 결과 작성",
+    "headers": {
+      "request": "다음 주문 작성을 기록하시겠습니까?",
+      "result": "다음 주문 체결이 기록되었습니다."
+    },
+    "rows": {
+      "account": "계정: {{account}} ({{accountOP}})",
+      "order_id": "주문하다: {{order_id}}",
+      "pays": "지불: {{pays}} ({{paysOP}})",
+      "receives": "수신: {{receives}} ({{receivesOP}})",
+      "price": "가격: {{price}} ({{base_symbol}}/{{quote_symbol}})",
+      "is_maker": "만드는 사람: {{is_maker}}"
+    },
+    "tooltip": "지정가 주문 거래 실행"
+  },
   "limit_order_cancel": {
     "method": "지정가 주문 취소",
     "title": "지정가 주문 취소 요청",
@@ -790,6 +808,22 @@
     },
     "tooltip": "블라인드 잔액에서 자산 인출"
   },
+  "asset_settle_cancel": {
+    "method": "자산 정산 취소",
+    "title": "자산 정산 취소 요청",
+    "result": "자산 정산 취소 결과",
+    "headers": {
+      "request": "다음 자산 정산을 취소하시겠습니까?",
+      "result": "다음 자산 정산이 취소되었습니다."
+    },
+    "rows": {
+      "settlement": "합의: {{settlement}}",
+      "account": "계정: {{account}} ({{accountOP}})",
+      "amount": "양: {{amount}} ({{asset_id}})",
+      "extensions": "확장: {{extensions}}"
+    },
+    "tooltip": "대기 중인 자산 정산 주문 취소"
+  },
   "asset_claim_fees": {
     "method": "자산 청구 수수료",
     "title": "자산 청구 수수료 요청",
@@ -803,6 +837,21 @@
       "amount_to_claim": "청구 금액: {{amount_to_claim}} ({{asset_id}})"
     },
     "tooltip": "자산에서 수수료 청구"
+  },
+  "fba_distribute": {
+    "method": "FBA 배포",
+    "title": "FBA 배포 요청",
+    "result": "FBA 배포 결과",
+    "headers": {
+      "request": "다음 FBA 누적기에서 수수료를 분배하시겠습니까?",
+      "result": "다음 FBA 배포가 기록되었습니다."
+    },
+    "rows": {
+      "account": "계정: {{account}} ({{accountOP}})",
+      "fba_id": "FBA 누산기: {{fba_id}}",
+      "amount": "양: {{amount}} ({{asset_id}})"
+    },
+    "tooltip": "수수료 지원 자산 누산기에서 수수료 분배"
   },
   "bid_collateral": {
     "method": "입찰 자료",
@@ -818,6 +867,21 @@
       "debt_covered": "담보된 부채: {{debt_covered}}"
     },
     "tooltip": "전 세계적으로 결제될 때 비트에셋을 뒷받침하는 담보에 입찰하세요."
+  },
+  "execute_bid": {
+    "method": "입찰 실행",
+    "title": "입찰 이벤트 실행",
+    "result": "입찰결과 실행",
+    "headers": {
+      "request": "다음 실행된 입찰을 기록하시겠습니까?",
+      "result": "다음 입찰 실행이 기록되었습니다."
+    },
+    "rows": {
+      "bidder": "명령자: {{bidder}} ({{bidderOP}})",
+      "debt": "빚: {{debt}}",
+      "collateral": "방계친: {{collateral}}"
+    },
+    "tooltip": "글로벌 정산 후 담보 입찰 실행"
   },
   "asset_claim_pool": {
     "method": "자산 청구 풀",
@@ -898,6 +962,44 @@
       "extensions": "확장자: {{extensions}}"
     },
     "tooltip": "HTLC 작업 기간 연장"
+  },
+  "htlc_redeemed": {
+    "method": "HTLC가 사용됨",
+    "title": "HTLC 상환 이벤트",
+    "result": "HTLC 상환 결과",
+    "headers": {
+      "request": "다음 HTLC 상환을 기록하시겠습니까?",
+      "result": "다음 HTLC 상환이 기록되었습니다."
+    },
+    "rows": {
+      "htlc_id": "HTLC ID: {{htlc_id}}",
+      "from": "에서: {{from}} ({{fromOP}})",
+      "to": "에게: {{to}} ({{toOP}})",
+      "redeemer": "구속자: {{redeemer}} ({{redeemerOP}})",
+      "amount": "양: {{amount}} ({{asset_id}})",
+      "htlc_preimage_hash": "사전 이미지 해시: {{htlc_preimage_hash}}",
+      "htlc_preimage_size": "사전 이미지 크기: {{htlc_preimage_size}}",
+      "preimage": "사전 이미지: {{preimage}}"
+    },
+    "tooltip": "HTLC 상환 기록"
+  },
+  "htlc_refund": {
+    "method": "HTLC 환불",
+    "title": "HTLC 환불 이벤트",
+    "result": "HTLC 환불 결과",
+    "headers": {
+      "request": "다음 HTLC 환불을 기록하시겠습니까?",
+      "result": "다음 HTLC 환불이 기록되었습니다."
+    },
+    "rows": {
+      "htlc_id": "HTLC ID: {{htlc_id}}",
+      "to": "에게: {{to}} ({{toOP}})",
+      "original_htlc_recipient": "원래 수신자: {{original_htlc_recipient}} ({{original_htlc_recipientOP}})",
+      "amount": "양: {{amount}} ({{asset_id}})",
+      "htlc_preimage_hash": "사전 이미지 해시: {{htlc_preimage_hash}}",
+      "htlc_preimage_size": "사전 이미지 크기: {{htlc_preimage_size}}"
+    },
+    "tooltip": "만료로 인한 HTLC 환불 기록"
   },
   "custom_authority_create": {
     "method": "사용자 정의 권한 생성",
@@ -1281,6 +1383,25 @@
       "auto_repay": "자동 상환: {{auto_repay}}"
     },
     "tooltip": "신용 거래 업데이트"
+  },
+  "credit_deal_expired": {
+    "method": "크레딧 거래가 만료되었습니다.",
+    "title": "신용 거래 만료 이벤트",
+    "result": "신용 거래 만료 결과",
+    "headers": {
+      "request": "다음 만료된 신용 거래를 기록하시겠습니까?",
+      "result": "다음 신용 거래 만료가 기록되었습니다."
+    },
+    "rows": {
+      "deal_id": "거래 ID: {{deal_id}}",
+      "offer_id": "혜택 ID: {{offer_id}}",
+      "offer_owner": "제안 소유자: {{offer_owner}} ({{offer_ownerOP}})",
+      "borrower": "빌어 쓰는 사람: {{borrower}} ({{borrowerOP}})",
+      "unpaid_amount": "미지급 금액: {{unpaid_amount}} ({{unpaid_amountOP}})",
+      "collateral": "방계친: {{collateral}} ({{collateralOP}})",
+      "fee_rate": "수수료율: {{fee_rate}}"
+    },
+    "tooltip": "만료된 신용 거래 및 결과 금액 기록"
   },
   "limit_order_update_operation": {
     "method": "제한 주문 업데이트",

@@ -282,6 +282,74 @@ export default async function beautify(
   } else if (operationType == 4) {
     // Virtual
     // fill_order_operation
+    let account = accountResults.find(
+      (resAcc) => resAcc.id === operationObject.account_id
+    )?.name;
+
+    let paysAsset = assetResults.find(
+      (assRes) => assRes.id === operationObject.pays.asset_id
+    );
+    let receivesAsset = assetResults.find(
+      (assRes) => assRes.id === operationObject.receives.asset_id
+    );
+
+    let baseAsset = assetResults.find(
+      (assRes) => assRes.id === operationObject.fill_price.base.asset_id
+    );
+    let quoteAsset = assetResults.find(
+      (assRes) => assRes.id === operationObject.fill_price.quote.asset_id
+    );
+
+    if (account && paysAsset && receivesAsset && baseAsset && quoteAsset) {
+      const price =
+        humanReadableFloat(
+          operationObject.fill_price.base.amount,
+          baseAsset.precision
+        ) /
+        humanReadableFloat(
+          operationObject.fill_price.quote.amount,
+          quoteAsset.precision
+        );
+
+      return [
+        {
+          key: "account",
+          params: { account: account, accountOP: operationObject.account_id },
+        },
+        { key: "order_id", params: { order_id: operationObject.order_id } },
+        {
+          key: "pays",
+          params: {
+            pays: formatAsset(
+              operationObject.pays.amount,
+              paysAsset.symbol,
+              paysAsset.precision
+            ),
+            paysOP: operationObject.pays.asset_id,
+          },
+        },
+        {
+          key: "receives",
+          params: {
+            receives: formatAsset(
+              operationObject.receives.amount,
+              receivesAsset.symbol,
+              receivesAsset.precision
+            ),
+            receivesOP: operationObject.receives.asset_id,
+          },
+        },
+        {
+          key: "price",
+          params: {
+            price: price,
+            base_symbol: baseAsset.symbol,
+            quote_symbol: quoteAsset.symbol,
+          },
+        },
+        { key: "is_maker", params: { is_maker: operationObject.is_maker } },
+      ];
+    }
   } else if (operationType == 5) {
     // account_create
     let registrar = accountResults.find(
@@ -2121,6 +2189,49 @@ export default async function beautify(
   } else if (operationType == 42) {
     // Virtual
     // asset_settle_cancel_operation
+    let account = accountResults.find(
+      (resAcc) => resAcc.id === operationObject.account
+    )?.name;
+
+    let _amount;
+    if (operationObject.amount_) {
+      // temporary fix for some ops having amount_ instead of amount
+      _amount = operationObject.amount_;
+    } else {
+      _amount = operationObject.amount;
+    }
+
+    let asset = _amount
+      ? assetResults.find((assRes) => assRes.id === _amount.asset_id)
+      : null;
+
+    if (account && asset) {
+      return [
+        {
+          key: "settlement",
+          params: { settlement: operationObject.settlement },
+        },
+        {
+          key: "account",
+          params: { account: account, accountOP: operationObject.account },
+        },
+        {
+          key: "amount",
+          params: {
+            amount: formatAsset(_amount.amount, asset.symbol, asset.precision),
+            asset_id: _amount.asset_id,
+          },
+        },
+        {
+          key: "extensions",
+          params: {
+            extensions: operationObject.extensions
+              ? JSON.stringify(operationObject.extensions)
+              : "[]",
+          },
+        },
+      ];
+    }
   } else if (operationType == 43) {
     // asset_claim_fees
     let issuer = accountResults.find(
@@ -2159,6 +2270,34 @@ export default async function beautify(
   } else if (operationType == 44) {
     // Virtual
     // fba_distribute_operation
+    let account = accountResults.find(
+      (resAcc) => resAcc.id === operationObject.account_id
+    )?.name;
+
+    // amount is share_type (core asset); use fee.asset_id as the asset reference
+    let coreAssetId = operationObject?.fee?.asset_id || "1.3.0";
+    let coreAsset = assetResults.find((assRes) => assRes.id === coreAssetId);
+
+    if (account && coreAsset) {
+      return [
+        {
+          key: "account",
+          params: { account: account, accountOP: operationObject.account_id },
+        },
+        { key: "fba_id", params: { fba_id: operationObject.fba_id } },
+        {
+          key: "amount",
+          params: {
+            amount: formatAsset(
+              operationObject.amount,
+              coreAsset.symbol,
+              coreAsset.precision
+            ),
+            asset_id: coreAssetId,
+          },
+        },
+      ];
+    }
   } else if (operationType == 45) {
     // bid_collateral
     let bidder = accountResults.find(
@@ -2202,6 +2341,45 @@ export default async function beautify(
   } else if (operationType == 46) {
     // Virtual
     // execute_bid_operation
+    let bidder = accountResults.find(
+      (resAcc) => resAcc.id === operationObject.bidder
+    )?.name;
+
+    let debtAsset = assetResults.find(
+      (assRes) => assRes.id === operationObject.debt.asset_id
+    );
+    let collateralAsset = assetResults.find(
+      (assRes) => assRes.id === operationObject.collateral.asset_id
+    );
+
+    if (bidder && debtAsset && collateralAsset) {
+      return [
+        {
+          key: "bidder",
+          params: { bidder: bidder, bidderOP: operationObject.bidder },
+        },
+        {
+          key: "debt",
+          params: {
+            debt: formatAsset(
+              operationObject.debt.amount,
+              debtAsset.symbol,
+              debtAsset.precision
+            ),
+          },
+        },
+        {
+          key: "collateral",
+          params: {
+            collateral: formatAsset(
+              operationObject.collateral.amount,
+              collateralAsset.symbol,
+              collateralAsset.precision
+            ),
+          },
+        },
+      ];
+    }
   } else if (operationType == 47) {
     // asset_claim_pool
     let issuer = accountResults.find(
@@ -2345,6 +2523,66 @@ export default async function beautify(
   } else if (operationType == 51) {
     // Virtual
     // htlc_redeemed_operation
+    let from = accountResults.find(
+      (resAcc) => resAcc.id === operationObject.from
+    )?.name;
+    let to = accountResults.find(
+      (resAcc) => resAcc.id === operationObject.to
+    )?.name;
+    let redeemer = accountResults.find(
+      (resAcc) => resAcc.id === operationObject.redeemer
+    )?.name;
+
+    let _amount;
+    if (operationObject.amount_) {
+      // temporary fix for some ops having amount_ instead of amount
+      _amount = operationObject.amount_;
+    } else {
+      _amount = operationObject.amount;
+    }
+
+    let asset = _amount
+      ? assetResults.find((assRes) => assRes.id === _amount.asset_id)
+      : null;
+
+    const preimageHash = Array.isArray(operationObject.htlc_preimage_hash)
+      ? operationObject.htlc_preimage_hash[1]
+      : operationObject.htlc_preimage_hash
+      ? JSON.stringify(operationObject.htlc_preimage_hash)
+      : null;
+
+    if (from && to && redeemer && asset) {
+      return [
+        { key: "htlc_id", params: { htlc_id: operationObject.htlc_id } },
+        {
+          key: "from",
+          params: { from: from, fromOP: operationObject.from },
+        },
+        { key: "to", params: { to: to, toOP: operationObject.to } },
+        {
+          key: "redeemer",
+          params: { redeemer: redeemer, redeemerOP: operationObject.redeemer },
+        },
+        {
+          key: "amount",
+          params: {
+            amount: formatAsset(_amount.amount, asset.symbol, asset.precision),
+            asset_id: _amount.asset_id,
+          },
+        },
+        preimageHash
+          ? {
+              key: "htlc_preimage_hash",
+              params: { htlc_preimage_hash: preimageHash },
+            }
+          : { key: "htlc_preimage_hash", params: { htlc_preimage_hash: "" } },
+        {
+          key: "htlc_preimage_size",
+          params: { htlc_preimage_size: operationObject.htlc_preimage_size },
+        },
+        { key: "preimage", params: { preimage: operationObject.preimage } },
+      ];
+    }
   } else if (operationType == 52) {
     // htlc_extend
     let update_issuer = accountResults.find(
@@ -2378,6 +2616,61 @@ export default async function beautify(
   } else if (operationType == 53) {
     // Virtual
     // htlc_refund_operation
+    let to = accountResults.find(
+      (resAcc) => resAcc.id === operationObject.to
+    )?.name;
+
+    let originalRecipient = accountResults.find(
+      (resAcc) => resAcc.id === operationObject.original_htlc_recipient
+    )?.name;
+
+    // Prefer explicit htlc_amount, but be robust to amount_/amount fallbacks
+    let _amount =
+      operationObject.htlc_amount_ ||
+      operationObject.htlc_amount ||
+      operationObject.amount_ ||
+      operationObject.amount;
+
+    let asset = _amount
+      ? assetResults.find((assRes) => assRes.id === _amount.asset_id)
+      : null;
+
+    const preimageHash = Array.isArray(operationObject.htlc_preimage_hash)
+      ? operationObject.htlc_preimage_hash[1]
+      : operationObject.htlc_preimage_hash
+      ? JSON.stringify(operationObject.htlc_preimage_hash)
+      : null;
+
+    if (to && originalRecipient && asset) {
+      return [
+        { key: "htlc_id", params: { htlc_id: operationObject.htlc_id } },
+        { key: "to", params: { to: to, toOP: operationObject.to } },
+        {
+          key: "original_htlc_recipient",
+          params: {
+            original_htlc_recipient: originalRecipient,
+            original_htlc_recipientOP: operationObject.original_htlc_recipient,
+          },
+        },
+        {
+          key: "amount",
+          params: {
+            amount: formatAsset(_amount.amount, asset.symbol, asset.precision),
+            asset_id: _amount.asset_id,
+          },
+        },
+        preimageHash
+          ? {
+              key: "htlc_preimage_hash",
+              params: { htlc_preimage_hash: preimageHash },
+            }
+          : { key: "htlc_preimage_hash", params: { htlc_preimage_hash: "" } },
+        {
+          key: "htlc_preimage_size",
+          params: { htlc_preimage_size: operationObject.htlc_preimage_size },
+        },
+      ];
+    }
   } else if (operationType == 54) {
     // custom_authority_create
     // none in kibana...
@@ -3290,6 +3583,64 @@ export default async function beautify(
   } else if (operationType == 74) {
     // Virtual
     // credit_deal_expired_operation
+    let offerOwner = accountResults.find(
+      (resAcc) => resAcc.id === operationObject.offer_owner
+    )?.name;
+    let borrower = accountResults.find(
+      (resAcc) => resAcc.id === operationObject.borrower
+    )?.name;
+
+    let unpaidAsset = operationObject.unpaid_amount
+      ? assetResults.find(
+          (assRes) => assRes.id === operationObject.unpaid_amount.asset_id
+        )
+      : null;
+    let collateralAsset = operationObject.collateral
+      ? assetResults.find(
+          (assRes) => assRes.id === operationObject.collateral.asset_id
+        )
+      : null;
+
+    if (offerOwner && borrower && unpaidAsset && collateralAsset) {
+      return [
+        { key: "deal_id", params: { deal_id: operationObject.deal_id } },
+        { key: "offer_id", params: { offer_id: operationObject.offer_id } },
+        {
+          key: "offer_owner",
+          params: {
+            offer_owner: offerOwner,
+            offer_ownerOP: operationObject.offer_owner,
+          },
+        },
+        {
+          key: "borrower",
+          params: { borrower: borrower, borrowerOP: operationObject.borrower },
+        },
+        {
+          key: "unpaid_amount",
+          params: {
+            unpaid_amount: formatAsset(
+              operationObject.unpaid_amount.amount,
+              unpaidAsset.symbol,
+              unpaidAsset.precision
+            ),
+            unpaid_amountOP: operationObject.unpaid_amount.asset_id,
+          },
+        },
+        {
+          key: "collateral",
+          params: {
+            collateral: formatAsset(
+              operationObject.collateral.amount,
+              collateralAsset.symbol,
+              collateralAsset.precision
+            ),
+            collateralOP: operationObject.collateral.asset_id,
+          },
+        },
+        { key: "fee_rate", params: { fee_rate: operationObject.fee_rate } },
+      ];
+    }
   } else if (operationType == 75) {
     // liquidity_pool_update_operation
     let _ownerAccount = accountResults.find(

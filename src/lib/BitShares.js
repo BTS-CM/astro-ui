@@ -59,6 +59,8 @@ async function extractObjects(operationObject) {
     "redeemer",
     "update_issuer",
     "borrower",
+    "original_htlc_recipient", // htlc_refund (53)
+    "offer_owner", // credit_deal_expired (74)
   ];
 
   const assetKeys = [
@@ -97,6 +99,11 @@ async function extractObjects(operationObject) {
     "fee.asset_id",
     "pays.asset_id", // fill_order
     "receives.asset_id", // fill_order
+    "fill_price.base.asset_id", // fill_order
+    "fill_price.quote.asset_id", // fill_order
+    "debt.asset_id", // execute_bid (46)
+    "htlc_amount.asset_id", // htlc_refund (53)
+    "unpaid_amount.asset_id", // credit_deal_expired (74)
   ];
 
   for (let k = 0; k < idKeys.length; k++) {

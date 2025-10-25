@@ -32,6 +32,24 @@
     },
     "tooltip": "การเสนอขายสินทรัพย์ตามอัตราแลกเปลี่ยนที่ระบุภายในระยะเวลาหนึ่ง"
   },
+  "fill_order": {
+    "method": "กรอกคำสั่งซื้อ",
+    "title": "กิจกรรมเติมออเดอร์",
+    "result": "กรอกผลการสั่งซื้อ",
+    "headers": {
+      "request": "บันทึกการกรอกคำสั่งต่อไปนี้?",
+      "result": "บันทึกการกรอกคำสั่งซื้อต่อไปนี้:"
+    },
+    "rows": {
+      "account": "บัญชี: {{account}} -{{accountOP}}-",
+      "order_id": "คำสั่ง: {{order_id}}",
+      "pays": "จ่าย: {{pays}} -{{paysOP}}-",
+      "receives": "รับ: {{receives}} -{{receivesOP}}-",
+      "price": "ราคา: {{price}} -{{base_symbol}}-{{quote_symbol}}-",
+      "is_maker": "ผู้ผลิต: {{is_maker}}"
+    },
+    "tooltip": "การดำเนินการซื้อขายคำสั่งจำกัด"
+  },
   "limit_order_cancel": {
     "method": "ยกเลิกคำสั่งจำกัด",
     "title": "จำกัดคำขอยกเลิกคำสั่งซื้อ",
@@ -790,6 +808,22 @@
     },
     "tooltip": "ถอนสินทรัพย์ออกจากยอดคงเหลือที่ไม่เปิดเผย"
   },
+  "asset_settle_cancel": {
+    "method": "ยกเลิกการชำระสินทรัพย์",
+    "title": "คำขอยกเลิกการชำระเงินสินทรัพย์",
+    "result": "ผลการยกเลิกการชำระเงินสินทรัพย์",
+    "headers": {
+      "request": "ยกเลิกการชำระสินทรัพย์ต่อไปนี้หรือไม่",
+      "result": "การชำระสินทรัพย์ต่อไปนี้ถูกยกเลิก:"
+    },
+    "rows": {
+      "settlement": "การตั้งถิ่นฐาน: {{settlement}}",
+      "account": "บัญชี: {{account}} -{{accountOP}}-",
+      "amount": "จำนวน: {{amount}} -{{asset_id}}-",
+      "extensions": "ส่วนขยาย: {{extensions}}"
+    },
+    "tooltip": "ยกเลิกคำสั่งการชำระหนี้สินทรัพย์ที่รอดำเนินการ"
+  },
   "asset_claim_fees": {
     "method": "ค่าธรรมเนียมการเรียกร้องทรัพย์สิน",
     "title": "คำขอค่าธรรมเนียมการเรียกร้องทรัพย์สิน",
@@ -803,6 +837,21 @@
       "amount_to_claim": "จำนวนเงินที่จะอ้างสิทธิ์: {{amount_to_claim}} ({{asset_id}})"
     },
     "tooltip": "เรียกร้องค่าธรรมเนียมจากสินทรัพย์"
+  },
+  "fba_distribute": {
+    "method": "FBA แจกครับ",
+    "title": "FBA แจกจ่ายคำขอ",
+    "result": "FBA แจกผล",
+    "headers": {
+      "request": "กระจายค่าธรรมเนียมจากตัวสะสม FBA ต่อไปนี้หรือไม่",
+      "result": "บันทึกการกระจาย FBA ต่อไปนี้:"
+    },
+    "rows": {
+      "account": "บัญชี: {{account}} -{{accountOP}}-",
+      "fba_id": "ตัวสะสม FBA: {{fba_id}}",
+      "amount": "จำนวน: {{amount}} -{{asset_id}}-"
+    },
+    "tooltip": "กระจายค่าธรรมเนียมจากผู้สะสมสินทรัพย์ที่ได้รับการสนับสนุนค่าธรรมเนียม"
   },
   "bid_collateral": {
     "method": "หลักประกันการประมูล",
@@ -818,6 +867,21 @@
       "debt_covered": "หนี้ที่ครอบคลุม: {{debt_covered}}"
     },
     "tooltip": "ประมูลหลักประกันสำหรับสินทรัพย์บิตเมื่อชำระบัญชีทั่วโลก"
+  },
+  "execute_bid": {
+    "method": "ดำเนินการประมูล",
+    "title": "ดำเนินกิจกรรมการประมูล",
+    "result": "ดำเนินการผลการประมูล",
+    "headers": {
+      "request": "บันทึกการประมูลที่ดำเนินการต่อไปนี้หรือไม่",
+      "result": "มีการบันทึกการดำเนินการเสนอราคาต่อไปนี้:"
+    },
+    "rows": {
+      "bidder": "ผู้เสนอราคา: {{bidder}} -{{bidderOP}}-",
+      "debt": "หนี้: {{debt}}",
+      "collateral": "หลักประกัน: {{collateral}}"
+    },
+    "tooltip": "การดำเนินการประมูลหลักประกันหลังจากการชำระหนี้ทั่วโลก"
   },
   "asset_claim_pool": {
     "method": "กลุ่มการเรียกร้องสินทรัพย์",
@@ -898,6 +962,44 @@
       "extensions": "ส่วนขยาย: {{extensions}}"
     },
     "tooltip": "ขยายระยะเวลาของการดำเนินการ HTLC"
+  },
+  "htlc_redeemed": {
+    "method": "HTLC แลกแล้ว",
+    "title": "เหตุการณ์ HTLC แลก",
+    "result": "ผลการแลก HTLC",
+    "headers": {
+      "request": "บันทึกการแลก HTLC ต่อไปนี้หรือไม่",
+      "result": "การแลกใช้ HTLC ต่อไปนี้ถูกบันทึกไว้:"
+    },
+    "rows": {
+      "htlc_id": "รหัส HTML: {{htlc_id}}",
+      "from": "จาก: {{from}} -{{fromOP}}-",
+      "to": "ถึง: {{to}} -{{toOP}}-",
+      "redeemer": "ผู้ไถ่: {{redeemer}} -{{redeemerOP}}-",
+      "amount": "จำนวน: {{amount}} -{{asset_id}}-",
+      "htlc_preimage_hash": "แฮชพรีอิมเมจ: {{htlc_preimage_hash}}",
+      "htlc_preimage_size": "ขนาดภาพก่อน: {{htlc_preimage_size}}",
+      "preimage": "พรีอิมเมจ: {{preimage}}"
+    },
+    "tooltip": "บันทึกการแลก HTLC"
+  },
+  "htlc_refund": {
+    "method": "การคืนเงิน HTLC",
+    "title": "เหตุการณ์การคืนเงิน HTLC",
+    "result": "ผลการคืนเงิน HTLC",
+    "headers": {
+      "request": "บันทึกการคืนเงิน HTLC ต่อไปนี้หรือไม่",
+      "result": "การคืนเงิน HTLC ต่อไปนี้ถูกบันทึก:"
+    },
+    "rows": {
+      "htlc_id": "รหัส HTML: {{htlc_id}}",
+      "to": "ถึง: {{to}} -{{toOP}}-",
+      "original_htlc_recipient": "ผู้รับเดิม: {{original_htlc_recipient}} -{{original_htlc_recipientOP}}-",
+      "amount": "จำนวน: {{amount}} -{{asset_id}}-",
+      "htlc_preimage_hash": "แฮชพรีอิมเมจ: {{htlc_preimage_hash}}",
+      "htlc_preimage_size": "ขนาดภาพก่อน: {{htlc_preimage_size}}"
+    },
+    "tooltip": "บันทึกการคืนเงิน HTLC เนื่องจากการหมดอายุ"
   },
   "custom_authority_create": {
     "method": "สร้างสิทธิ์แบบกำหนดเอง",
@@ -1281,6 +1383,25 @@
       "auto_repay": "ชำระคืนอัตโนมัติ: {{auto_repay}}"
     },
     "tooltip": "อัพเดตข้อตกลงสินเชื่อ"
+  },
+  "credit_deal_expired": {
+    "method": "ข้อตกลงสินเชื่อหมดอายุแล้ว",
+    "title": "เหตุการณ์ข้อตกลงสินเชื่อหมดอายุ",
+    "result": "ผลข้อตกลงสินเชื่อหมดอายุ",
+    "headers": {
+      "request": "บันทึกข้อตกลงเครดิตที่หมดอายุต่อไปนี้หรือไม่",
+      "result": "การหมดอายุข้อตกลงเครดิตต่อไปนี้ถูกบันทึก:"
+    },
+    "rows": {
+      "deal_id": "รหัสข้อตกลง: {{deal_id}}",
+      "offer_id": "รหัสข้อเสนอ: {{offer_id}}",
+      "offer_owner": "เจ้าของข้อเสนอ: {{offer_owner}} -{{offer_ownerOP}}-",
+      "borrower": "ผู้กู้: {{borrower}} -{{borrowerOP}}-",
+      "unpaid_amount": "จำนวนเงินที่ยังไม่ได้ชำระ: {{unpaid_amount}} -{{unpaid_amountOP}}-",
+      "collateral": "หลักประกัน: {{collateral}} -{{collateralOP}}-",
+      "fee_rate": "อัตราค่าธรรมเนียม: {{fee_rate}}"
+    },
+    "tooltip": "บันทึกข้อตกลงสินเชื่อที่หมดอายุและจำนวนเงินผลลัพธ์"
   },
   "limit_order_update_operation": {
     "method": "อัพเดตคำสั่งจำกัด",

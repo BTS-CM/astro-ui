@@ -32,6 +32,24 @@
     },
     "tooltip": "Ein Angebot, eine bestimmte Menge eines Vermögenswerts zu einem bestimmten Wechselkurs zu einem bestimmten Zeitpunkt zu verkaufen"
   },
+  "fill_order": {
+    "method": "Bestellung ausfüllen",
+    "title": "Auftragsereignis ausführen",
+    "result": "Auftragsergebnis ausfüllen",
+    "headers": {
+      "request": "Erfassen Sie die folgende Auftragserfüllung?",
+      "result": "Die folgende Auftragsausführung wurde aufgezeichnet:"
+    },
+    "rows": {
+      "account": "Konto: {{account}} ({{accountOP}})",
+      "order_id": "Befehl: {{order_id}}",
+      "pays": "Zahlt: {{pays}} ({{paysOP}})",
+      "receives": "Erhält: {{receives}} ({{receivesOP}})",
+      "price": "Preis: {{price}} ({{base_symbol}}/{{quote_symbol}})",
+      "is_maker": "Hersteller: {{is_maker}}"
+    },
+    "tooltip": "Ausführung eines Limit-Order-Geschäfts"
+  },
   "limit_order_cancel": {
     "method": "Limit-Order stornieren",
     "title": "Anfrage zur Stornierung einer Limit-Order",
@@ -790,6 +808,22 @@
     },
     "tooltip": "Heben Sie Vermögenswerte von einem Blindguthaben ab"
   },
+  "asset_settle_cancel": {
+    "method": "Asset-Abrechnung stornieren",
+    "title": "Anfrage zum Abbrechen der Vermögensabrechnung",
+    "result": "Ergebnis des Abbruchs der Anlagenabrechnung",
+    "headers": {
+      "request": "Folgende Vermögensabrechnung stornieren?",
+      "result": "Folgende Vermögensabrechnung wurde storniert:"
+    },
+    "rows": {
+      "settlement": "Siedlung: {{settlement}}",
+      "account": "Konto: {{account}} ({{accountOP}})",
+      "amount": "Menge: {{amount}} ({{asset_id}})",
+      "extensions": "Erweiterungen: {{extensions}}"
+    },
+    "tooltip": "Stornieren Sie einen ausstehenden Vermögensausgleichsauftrag"
+  },
   "asset_claim_fees": {
     "method": "Gebühren für Vermögensansprüche",
     "title": "Anfrage zu Vermögensforderungsgebühren",
@@ -803,6 +837,21 @@
       "amount_to_claim": "Anspruchsbetrag: {{amount_to_claim}} ({{asset_id}})"
     },
     "tooltip": "Fordern Sie die Gebühren von einem Vermögenswert an"
+  },
+  "fba_distribute": {
+    "method": "Versand durch Amazon",
+    "title": "Versandanfrage für Versand durch Amazon",
+    "result": "FBA-Verteilungsergebnis",
+    "headers": {
+      "request": "Gebühren aus dem folgenden FBA-Akkumulator verteilen?",
+      "result": "Die folgende FBA-Verteilung wurde aufgezeichnet:"
+    },
+    "rows": {
+      "account": "Konto: {{account}} ({{accountOP}})",
+      "fba_id": "FBA-Akku: {{fba_id}}",
+      "amount": "Menge: {{amount}} ({{asset_id}})"
+    },
+    "tooltip": "Verteilen Sie Gebühren aus einem gebührenbesicherten Vermögensakkumulator"
   },
   "bid_collateral": {
     "method": "Bieten Sie Sicherheiten",
@@ -818,6 +867,21 @@
       "debt_covered": "Schulden gedeckt: {{debt_covered}}"
     },
     "tooltip": "Bieten Sie bei globaler Abwicklung auf eine Bitassets-Besicherungssicherheit"
+  },
+  "execute_bid": {
+    "method": "Gebot ausführen",
+    "title": "Gebotsereignis ausführen",
+    "result": "Gebotsergebnis ausführen",
+    "headers": {
+      "request": "Das folgende ausgeführte Gebot aufzeichnen?",
+      "result": "Die folgende Angebotsausführung wurde aufgezeichnet:"
+    },
+    "rows": {
+      "bidder": "Bieter: {{bidder}} ({{bidderOP}})",
+      "debt": "Schulden: {{debt}}",
+      "collateral": "Sicherheit: {{collateral}}"
+    },
+    "tooltip": "Durchführung eines Sicherheitenangebots nach globaler Abwicklung"
   },
   "asset_claim_pool": {
     "method": "Pool von Vermögensansprüchen",
@@ -898,6 +962,44 @@
       "extensions": "Erweiterungen: {{extensions}}"
     },
     "tooltip": "Verlängern Sie die Dauer eines HTLC-Vorgangs"
+  },
+  "htlc_redeemed": {
+    "method": "HTLC eingelöst",
+    "title": "HTLC eingelöstes Ereignis",
+    "result": "HTLC Eingelöstes Ergebnis",
+    "headers": {
+      "request": "Die folgende HTLC-Einlösung aufzeichnen?",
+      "result": "Die folgende HTLC-Einlösung wurde aufgezeichnet:"
+    },
+    "rows": {
+      "htlc_id": "HTLC-ID: {{htlc_id}}",
+      "from": "Aus: {{from}} ({{fromOP}})",
+      "to": "Zu: {{to}} ({{toOP}})",
+      "redeemer": "Erlöser: {{redeemer}} ({{redeemerOP}})",
+      "amount": "Menge: {{amount}} ({{asset_id}})",
+      "htlc_preimage_hash": "Vorbild-Hash: {{htlc_preimage_hash}}",
+      "htlc_preimage_size": "Größe des Vorbilds: {{htlc_preimage_size}}",
+      "preimage": "Vorbild: {{preimage}}"
+    },
+    "tooltip": "Aufzeichnung einer HTLC-Einlösung"
+  },
+  "htlc_refund": {
+    "method": "HTLC-Rückerstattung",
+    "title": "HTLC-Rückerstattungsereignis",
+    "result": "HTLC-Rückerstattungsergebnis",
+    "headers": {
+      "request": "Die folgende HTLC-Rückerstattung aufzeichnen?",
+      "result": "Die folgende HTLC-Rückerstattung wurde erfasst:"
+    },
+    "rows": {
+      "htlc_id": "HTLC-ID: {{htlc_id}}",
+      "to": "Zu: {{to}} ({{toOP}})",
+      "original_htlc_recipient": "Ursprünglicher Empfänger: {{original_htlc_recipient}} ({{original_htlc_recipientOP}})",
+      "amount": "Menge: {{amount}} ({{asset_id}})",
+      "htlc_preimage_hash": "Vorbild-Hash: {{htlc_preimage_hash}}",
+      "htlc_preimage_size": "Größe des Vorbilds: {{htlc_preimage_size}}"
+    },
+    "tooltip": "Aufzeichnung einer HTLC-Rückerstattung aufgrund des Ablaufs"
   },
   "custom_authority_create": {
     "method": "Benutzerdefinierte Autorität erstellen",
@@ -1281,6 +1383,25 @@
       "auto_repay": "Automatische Rückzahlung: {{auto_repay}}"
     },
     "tooltip": "Aktualisieren Sie einen Kreditvertrag"
+  },
+  "credit_deal_expired": {
+    "method": "Kreditvertrag abgelaufen",
+    "title": "Ereignis „Kreditvertrag abgelaufen“.",
+    "result": "Ergebnis: Kreditvertrag abgelaufen",
+    "headers": {
+      "request": "Den folgenden abgelaufenen Kreditvertrag erfassen?",
+      "result": "Der folgende Ablauf des Kreditvertrags wurde erfasst:"
+    },
+    "rows": {
+      "deal_id": "Deal-ID: {{deal_id}}",
+      "offer_id": "Angebots-ID: {{offer_id}}",
+      "offer_owner": "Angebotsinhaber: {{offer_owner}} ({{offer_ownerOP}})",
+      "borrower": "Kreditnehmer: {{borrower}} ({{borrowerOP}})",
+      "unpaid_amount": "Unbezahlter Betrag: {{unpaid_amount}} ({{unpaid_amountOP}})",
+      "collateral": "Sicherheit: {{collateral}} ({{collateralOP}})",
+      "fee_rate": "Gebührensatz: {{fee_rate}}"
+    },
+    "tooltip": "Aufzeichnung eines abgelaufenen Kreditgeschäfts und der daraus resultierenden Beträge"
   },
   "limit_order_update_operation": {
     "method": "Aktualisierung der Limit-Order",

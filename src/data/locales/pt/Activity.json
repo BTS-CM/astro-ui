@@ -32,6 +32,24 @@
     },
     "tooltip": "Uma oferta para vender uma quantia de um ativo a uma taxa de câmbio especificada e em um determinado momento"
   },
+  "fill_order": {
+    "method": "Preencher pedido",
+    "title": "Preencher evento de pedido",
+    "result": "Preencher o resultado do pedido",
+    "headers": {
+      "request": "Registre o seguinte preenchimento de pedido?",
+      "result": "O seguinte preenchimento de pedido foi registrado:"
+    },
+    "rows": {
+      "account": "Conta: {{account}} ({{accountOP}})",
+      "order_id": "Ordem: {{order_id}}",
+      "pays": "Paga: {{pays}} ({{paysOP}})",
+      "receives": "Recebe: {{receives}} ({{receivesOP}})",
+      "price": "Preço: {{price}} ({{base_symbol}}/{{quote_symbol}})",
+      "is_maker": "Fabricante: {{is_maker}}"
+    },
+    "tooltip": "Execução de uma negociação com ordem limitada"
+  },
   "limit_order_cancel": {
     "method": "Limite de cancelamento de pedido",
     "title": "Limitar solicitação de cancelamento de pedido",
@@ -790,6 +808,22 @@
     },
     "tooltip": "Retirar ativos de um saldo cego"
   },
+  "asset_settle_cancel": {
+    "method": "Liquidação de ativos cancelada",
+    "title": "Solicitação de cancelamento de liquidação de ativos",
+    "result": "Resultado do cancelamento da liquidação de ativos",
+    "headers": {
+      "request": "Cancelar a seguinte liquidação de ativos?",
+      "result": "A seguinte liquidação de ativos foi cancelada:"
+    },
+    "rows": {
+      "settlement": "Povoado: {{settlement}}",
+      "account": "Conta: {{account}} ({{accountOP}})",
+      "amount": "Quantia: {{amount}} ({{asset_id}})",
+      "extensions": "Extensões: {{extensions}}"
+    },
+    "tooltip": "Cancelar uma ordem de liquidação de ativos pendentes"
+  },
   "asset_claim_fees": {
     "method": "Taxas de reivindicação de ativos",
     "title": "Solicitação de taxas de reivindicação de ativos",
@@ -803,6 +837,21 @@
       "amount_to_claim": "Valor a ser reivindicado: {{amount_to_claim}} ({{asset_id}})"
     },
     "tooltip": "Reivindique as taxas de um ativo"
+  },
+  "fba_distribute": {
+    "method": "Distribuição FBA",
+    "title": "Solicitação de distribuição FBA",
+    "result": "Resultado de distribuição FBA",
+    "headers": {
+      "request": "Distribuir taxas do seguinte acumulador FBA?",
+      "result": "A seguinte distribuição FBA foi registrada:"
+    },
+    "rows": {
+      "account": "Conta: {{account}} ({{accountOP}})",
+      "fba_id": "Acumulador FBA: {{fba_id}}",
+      "amount": "Quantia: {{amount}} ({{asset_id}})"
+    },
+    "tooltip": "Distribuir taxas de um acumulador de ativos garantidos por taxas"
   },
   "bid_collateral": {
     "method": "Material de lance",
@@ -818,6 +867,21 @@
       "debt_covered": "Dívida coberta: {{debt_covered}}"
     },
     "tooltip": "Faça lances em uma garantia de garantia de bitassets quando liquidada globalmente"
+  },
+  "execute_bid": {
+    "method": "Executar lance",
+    "title": "Executar evento de lance",
+    "result": "Executar resultado do lance",
+    "headers": {
+      "request": "Registrar o seguinte lance executado?",
+      "result": "Foi registrada a seguinte execução de licitação:"
+    },
+    "rows": {
+      "bidder": "Licitante: {{bidder}} ({{bidderOP}})",
+      "debt": "Dívida: {{debt}}",
+      "collateral": "Garantia: {{collateral}}"
+    },
+    "tooltip": "Execução de oferta de garantia após liquidação global"
   },
   "asset_claim_pool": {
     "method": "Conjunto de reivindicações de ativos",
@@ -898,6 +962,44 @@
       "extensions": "Extensões: {{extensions}}"
     },
     "tooltip": "Prolongue a duração de uma operação HTML"
+  },
+  "htlc_redeemed": {
+    "method": "HTML resgatado",
+    "title": "Evento HTLC resgatado",
+    "result": "Resultado resgatado HTLC",
+    "headers": {
+      "request": "Registre o seguinte resgate de HTLC?",
+      "result": "O seguinte resgate de HTLC foi registrado:"
+    },
+    "rows": {
+      "htlc_id": "ID HTML: {{htlc_id}}",
+      "from": "De: {{from}} ({{fromOP}})",
+      "to": "Para: {{to}} ({{toOP}})",
+      "redeemer": "Redentor: {{redeemer}} ({{redeemerOP}})",
+      "amount": "Quantia: {{amount}} ({{asset_id}})",
+      "htlc_preimage_hash": "Hash de pré-imagem: {{htlc_preimage_hash}}",
+      "htlc_preimage_size": "Tamanho da pré-imagem: {{htlc_preimage_size}}",
+      "preimage": "Pré-imagem: {{preimage}}"
+    },
+    "tooltip": "Registro de um resgate HTLC"
+  },
+  "htlc_refund": {
+    "method": "Reembolso HTML",
+    "title": "Evento de reembolso HTLC",
+    "result": "Resultado do reembolso HTLC",
+    "headers": {
+      "request": "Registre o seguinte reembolso de HTLC?",
+      "result": "O seguinte reembolso HTLC foi registrado:"
+    },
+    "rows": {
+      "htlc_id": "ID HTML: {{htlc_id}}",
+      "to": "Para: {{to}} ({{toOP}})",
+      "original_htlc_recipient": "Destinatário original: {{original_htlc_recipient}} ({{original_htlc_recipientOP}})",
+      "amount": "Quantia: {{amount}} ({{asset_id}})",
+      "htlc_preimage_hash": "Hash de pré-imagem: {{htlc_preimage_hash}}",
+      "htlc_preimage_size": "Tamanho da pré-imagem: {{htlc_preimage_size}}"
+    },
+    "tooltip": "Registro de um reembolso HTLC devido ao vencimento"
   },
   "custom_authority_create": {
     "method": "Criação de autoridade personalizada",
@@ -1281,6 +1383,25 @@
       "auto_repay": "Reembolso automático: {{auto_repay}}"
     },
     "tooltip": "Atualizar uma oferta de crédito"
+  },
+  "credit_deal_expired": {
+    "method": "Contrato de crédito expirou",
+    "title": "Evento de acordo de crédito expirado",
+    "result": "Resultado da transação de crédito expirada",
+    "headers": {
+      "request": "Registrar o seguinte acordo de crédito expirado?",
+      "result": "Foi registrado o seguinte vencimento da operação de crédito:"
+    },
+    "rows": {
+      "deal_id": "ID da transação: {{deal_id}}",
+      "offer_id": "ID da oferta: {{offer_id}}",
+      "offer_owner": "Proprietário da oferta: {{offer_owner}} ({{offer_ownerOP}})",
+      "borrower": "Mutuário: {{borrower}} ({{borrowerOP}})",
+      "unpaid_amount": "Valor não pago: {{unpaid_amount}} ({{unpaid_amountOP}})",
+      "collateral": "Garantia: {{collateral}} ({{collateralOP}})",
+      "fee_rate": "Taxa de taxa: {{fee_rate}}"
+    },
+    "tooltip": "Registro de uma transação de crédito expirada e os valores resultantes"
   },
   "limit_order_update_operation": {
     "method": "Atualização de pedido limite",

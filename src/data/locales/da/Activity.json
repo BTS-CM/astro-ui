@@ -32,6 +32,24 @@
     },
     "tooltip": "Et tilbud om at sælge et beløb af et aktiv til en bestemt valutakurs inden for et bestemt tidspunkt"
   },
+  "fill_order": {
+    "method": "Udfyld ordre",
+    "title": "Fyld ordrebegivenhed",
+    "result": "Fyld ordre resultat",
+    "headers": {
+      "request": "Optage følgende ordreudfyldning?",
+      "result": "Følgende ordreudfyldning blev registreret:"
+    },
+    "rows": {
+      "account": "Konto: {{account}} ({{accountOP}})",
+      "order_id": "Bestille: {{order_id}}",
+      "pays": "Betaler: {{pays}} ({{paysOP}})",
+      "receives": "Modtager: {{receives}} ({{receivesOP}})",
+      "price": "Pris: {{price}} ({{base_symbol}}/{{quote_symbol}})",
+      "is_maker": "Maker: {{is_maker}}"
+    },
+    "tooltip": "Udførelse af en limiteret handel"
+  },
   "limit_order_cancel": {
     "method": "Begræns ordre annulleret",
     "title": "Begræns ordre annullering anmodning",
@@ -790,6 +808,22 @@
     },
     "tooltip": "Udtag aktiver fra en blind saldo"
   },
+  "asset_settle_cancel": {
+    "method": "Aktivafregning annuller",
+    "title": "Anmodning om annullering af aktivafregning",
+    "result": "Annulleringsresultat for aktivafregning",
+    "headers": {
+      "request": "Annullere følgende aktivafregning?",
+      "result": "Følgende aktivafregning blev annulleret:"
+    },
+    "rows": {
+      "settlement": "Afregning: {{settlement}}",
+      "account": "Konto: {{account}} ({{accountOP}})",
+      "amount": "Beløb: {{amount}} ({{asset_id}})",
+      "extensions": "Udvidelser: {{extensions}}"
+    },
+    "tooltip": "Annuller en afventende aktivafviklingsordre"
+  },
   "asset_claim_fees": {
     "method": "Aktivkravsgebyrer",
     "title": "Anmodning om gebyr for aktivkrav",
@@ -803,6 +837,21 @@
       "amount_to_claim": "Beløb til krav: {{amount_to_claim}} ({{asset_id}})"
     },
     "tooltip": "Gør krav på gebyrerne fra et aktiv"
+  },
+  "fba_distribute": {
+    "method": "FBA distribuere",
+    "title": "FBA distribuere anmodning",
+    "result": "FBA distribuer resultatet",
+    "headers": {
+      "request": "Fordele gebyrer fra følgende FBA-akkumulator?",
+      "result": "Følgende FBA-fordeling blev registreret:"
+    },
+    "rows": {
+      "account": "Konto: {{account}} ({{accountOP}})",
+      "fba_id": "FBA akkumulator: {{fba_id}}",
+      "amount": "Beløb: {{amount}} ({{asset_id}})"
+    },
+    "tooltip": "Fordel gebyrer fra en Fee-Backed Asset-akkumulator"
   },
   "bid_collateral": {
     "method": "Byd sikkerhed",
@@ -818,6 +867,21 @@
       "debt_covered": "Gæld dækket: {{debt_covered}}"
     },
     "tooltip": "Byd på en sikkerhedsstillelse for bitassets, når den afvikles globalt"
+  },
+  "execute_bid": {
+    "method": "Udfør bud",
+    "title": "Udfør budbegivenhed",
+    "result": "Udfør budresultat",
+    "headers": {
+      "request": "Optage følgende udførte bud?",
+      "result": "Følgende bududførelse blev registreret:"
+    },
+    "rows": {
+      "bidder": "Budgiver: {{bidder}} ({{bidderOP}})",
+      "debt": "Gæld: {{debt}}",
+      "collateral": "Sikkerhed: {{collateral}}"
+    },
+    "tooltip": "Udførelse af et sikkerhedsstillelsesbud efter global afvikling"
   },
   "asset_claim_pool": {
     "method": "Aktivkravspulje",
@@ -898,6 +962,44 @@
       "extensions": "Udvidelser: {{extensions}}"
     },
     "tooltip": "Forlæng varigheden af ​​en HTLC-operation"
+  },
+  "htlc_redeemed": {
+    "method": "HTLC indløst",
+    "title": "HTLC Redeemed begivenhed",
+    "result": "HTLC indløst resultat",
+    "headers": {
+      "request": "Optage følgende HTLC-indløsning?",
+      "result": "Følgende HTLC-indløsning blev registreret:"
+    },
+    "rows": {
+      "htlc_id": "HTC ID: {{htlc_id}}",
+      "from": "Fra: {{from}} ({{fromOP}})",
+      "to": "Til: {{to}} ({{toOP}})",
+      "redeemer": "Forløser: {{redeemer}} ({{redeemerOP}})",
+      "amount": "Beløb: {{amount}} ({{asset_id}})",
+      "htlc_preimage_hash": "Preimage hash: {{htlc_preimage_hash}}",
+      "htlc_preimage_size": "Forbillede størrelse: {{htlc_preimage_size}}",
+      "preimage": "Forbillede: {{preimage}}"
+    },
+    "tooltip": "Registrering af en HTLC-indløsning"
+  },
+  "htlc_refund": {
+    "method": "HTC Refusion",
+    "title": "HTC Refusion begivenhed",
+    "result": "Resultat af HTC Refusion",
+    "headers": {
+      "request": "Optage følgende HTTP-refusion?",
+      "result": "Følgende HTLC-refusion blev registreret:"
+    },
+    "rows": {
+      "htlc_id": "HTC ID: {{htlc_id}}",
+      "to": "Til: {{to}} ({{toOP}})",
+      "original_htlc_recipient": "Oprindelig modtager: {{original_htlc_recipient}} ({{original_htlc_recipientOP}})",
+      "amount": "Beløb: {{amount}} ({{asset_id}})",
+      "htlc_preimage_hash": "Preimage hash: {{htlc_preimage_hash}}",
+      "htlc_preimage_size": "Forbillede størrelse: {{htlc_preimage_size}}"
+    },
+    "tooltip": "Registrering af en HTLC-refusion på grund af udløb"
   },
   "custom_authority_create": {
     "method": "Opret brugerdefineret autoritet",
@@ -1281,6 +1383,25 @@
       "auto_repay": "Automatisk tilbagebetaling: {{auto_repay}}"
     },
     "tooltip": "Opdater en kreditaftale"
+  },
+  "credit_deal_expired": {
+    "method": "Kreditaftalen udløb",
+    "title": "Begivenhed for kreditaftale udløb",
+    "result": "Resultat af kreditaftale udløbet",
+    "headers": {
+      "request": "Registrere følgende udløbne kreditaftale?",
+      "result": "Følgende kreditaftales udløb blev registreret:"
+    },
+    "rows": {
+      "deal_id": "Aftale-id: {{deal_id}}",
+      "offer_id": "Tilbuds-id: {{offer_id}}",
+      "offer_owner": "Tilbyd ejer: {{offer_owner}} ({{offer_ownerOP}})",
+      "borrower": "Låntager: {{borrower}} ({{borrowerOP}})",
+      "unpaid_amount": "Ubetalt beløb: {{unpaid_amount}} ({{unpaid_amountOP}})",
+      "collateral": "Sikkerhed: {{collateral}} ({{collateralOP}})",
+      "fee_rate": "Gebyrsats: {{fee_rate}}"
+    },
+    "tooltip": "Registrering af en udløbet kreditaftale og de resulterende beløb"
   },
   "limit_order_update_operation": {
     "method": "Begræns ordreopdatering",

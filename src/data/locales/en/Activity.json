@@ -33,6 +33,24 @@
     },
     "tooltip": "An offer to sell an amount of an asset at a specified exchange rate by a certain time"
   },
+  "fill_order": {
+    "method": "Fill order",
+    "title": "Fill order event",
+    "result": "Fill order result",
+    "headers": {
+      "request": "Record the following order fill?",
+      "result": "The following order fill was recorded:"
+    },
+    "rows": {
+      "account": "Account: {{account}} ({{accountOP}})",
+      "order_id": "Order: {{order_id}}",
+      "pays": "Pays: {{pays}} ({{paysOP}})",
+      "receives": "Receives: {{receives}} ({{receivesOP}})",
+      "price": "Price: {{price}} ({{base_symbol}}/{{quote_symbol}})",
+      "is_maker": "Maker: {{is_maker}}"
+    },
+    "tooltip": "Execution of a limit order trade"
+  },
   "limit_order_cancel": {
     "method": "Limit order cancel",
     "title": "Limit order cancel request",
@@ -791,6 +809,22 @@
     },
     "tooltip": "Withdraw assets from a blind balance"
   },
+  "asset_settle_cancel": {
+    "method": "Asset settle cancel",
+    "title": "Asset settle cancel request",
+    "result": "Asset settle cancel result",
+    "headers": {
+      "request": "Cancel the following asset settlement?",
+      "result": "The following asset settlement was canceled:"
+    },
+    "rows": {
+      "settlement": "Settlement: {{settlement}}",
+      "account": "Account: {{account}} ({{accountOP}})",
+      "amount": "Amount: {{amount}} ({{asset_id}})",
+      "extensions": "Extensions: {{extensions}}"
+    },
+    "tooltip": "Cancel a pending asset settlement order"
+  },
   "asset_claim_fees": {
     "method": "Asset claim fees",
     "title": "Asset claim fees request",
@@ -804,6 +838,21 @@
       "amount_to_claim": "Amount to claim: {{amount_to_claim}} ({{asset_id}})"
     },
     "tooltip": "Claim the fees from an asset"
+  },
+  "fba_distribute": {
+    "method": "FBA distribute",
+    "title": "FBA distribute request",
+    "result": "FBA distribute result",
+    "headers": {
+      "request": "Distribute fees from the following FBA accumulator?",
+      "result": "The following FBA distribution was recorded:"
+    },
+    "rows": {
+      "account": "Account: {{account}} ({{accountOP}})",
+      "fba_id": "FBA accumulator: {{fba_id}}",
+      "amount": "Amount: {{amount}} ({{asset_id}})"
+    },
+    "tooltip": "Distribute fees from a Fee-Backed Asset accumulator"
   },
   "bid_collateral": {
     "method": "Bid collateral",
@@ -819,6 +868,21 @@
       "debt_covered": "Debt covered: {{debt_covered}}"
     },
     "tooltip": "Bid on a bitassets backing collateral when globally settled"
+  },
+  "execute_bid": {
+    "method": "Execute bid",
+    "title": "Execute bid event",
+    "result": "Execute bid result",
+    "headers": {
+      "request": "Record the following executed bid?",
+      "result": "The following bid execution was recorded:"
+    },
+    "rows": {
+      "bidder": "Bidder: {{bidder}} ({{bidderOP}})",
+      "debt": "Debt: {{debt}}",
+      "collateral": "Collateral: {{collateral}}"
+    },
+    "tooltip": "Execution of a collateral bid after global settlement"
   },
   "asset_claim_pool": {
     "method": "Asset claim pool",
@@ -899,6 +963,44 @@
       "extensions": "Extensions: {{extensions}}"
     },
     "tooltip": "Extend the duration of an HTLC operation"
+  },
+  "htlc_redeemed": {
+    "method": "HTLC Redeemed",
+    "title": "HTLC Redeemed event",
+    "result": "HTLC Redeemed result",
+    "headers": {
+      "request": "Record the following HTLC redemption?",
+      "result": "The following HTLC redemption was recorded:"
+    },
+    "rows": {
+      "htlc_id": "HTLC ID: {{htlc_id}}",
+      "from": "From: {{from}} ({{fromOP}})",
+      "to": "To: {{to}} ({{toOP}})",
+      "redeemer": "Redeemer: {{redeemer}} ({{redeemerOP}})",
+      "amount": "Amount: {{amount}} ({{asset_id}})",
+      "htlc_preimage_hash": "Preimage hash: {{htlc_preimage_hash}}",
+      "htlc_preimage_size": "Preimage size: {{htlc_preimage_size}}",
+      "preimage": "Preimage: {{preimage}}"
+    },
+    "tooltip": "Record of an HTLC redemption"
+  },
+  "htlc_refund": {
+    "method": "HTLC Refund",
+    "title": "HTLC Refund event",
+    "result": "HTLC Refund result",
+    "headers": {
+      "request": "Record the following HTLC refund?",
+      "result": "The following HTLC refund was recorded:"
+    },
+    "rows": {
+      "htlc_id": "HTLC ID: {{htlc_id}}",
+      "to": "To: {{to}} ({{toOP}})",
+      "original_htlc_recipient": "Original recipient: {{original_htlc_recipient}} ({{original_htlc_recipientOP}})",
+      "amount": "Amount: {{amount}} ({{asset_id}})",
+      "htlc_preimage_hash": "Preimage hash: {{htlc_preimage_hash}}",
+      "htlc_preimage_size": "Preimage size: {{htlc_preimage_size}}"
+    },
+    "tooltip": "Record of an HTLC refund due to expiration"
   },
   "custom_authority_create": {
     "method": "Custom authority create",
@@ -1282,6 +1384,25 @@
       "auto_repay": "Auto repay: {{auto_repay}}"
     },
     "tooltip": "Update a credit deal"
+  },
+  "credit_deal_expired": {
+    "method": "Credit deal expired",
+    "title": "Credit deal expired event",
+    "result": "Credit deal expired result",
+    "headers": {
+      "request": "Record the following expired credit deal?",
+      "result": "The following credit deal expiration was recorded:"
+    },
+    "rows": {
+      "deal_id": "Deal ID: {{deal_id}}",
+      "offer_id": "Offer ID: {{offer_id}}",
+      "offer_owner": "Offer owner: {{offer_owner}} ({{offer_ownerOP}})",
+      "borrower": "Borrower: {{borrower}} ({{borrowerOP}})",
+      "unpaid_amount": "Unpaid amount: {{unpaid_amount}} ({{unpaid_amountOP}})",
+      "collateral": "Collateral: {{collateral}} ({{collateralOP}})",
+      "fee_rate": "Fee rate: {{fee_rate}}"
+    },
+    "tooltip": "Record of an expired credit deal and the resulting amounts"
   },
   "limit_order_update_operation": {
     "method": "Limit order update",

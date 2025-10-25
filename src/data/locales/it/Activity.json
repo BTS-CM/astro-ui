@@ -32,6 +32,24 @@
     },
     "tooltip": "Un'offerta di vendita di un importo di un bene a un tasso di cambio specificato entro un determinato periodo"
   },
+  "fill_order": {
+    "method": "Compila l'ordine",
+    "title": "Evento di compilazione dell'ordine",
+    "result": "Compila il risultato dell'ordine",
+    "headers": {
+      "request": "Registrare il seguente completamento dell'ordine?",
+      "result": "È stata registrata la seguente evasione dell'ordine:"
+    },
+    "rows": {
+      "account": "Account: {{account}} ({{accountOP}})",
+      "order_id": "Ordine: {{order_id}}",
+      "pays": "Paga: {{pays}} ({{paysOP}})",
+      "receives": "Riceve: {{receives}} ({{receivesOP}})",
+      "price": "Prezzo: {{price}} ({{base_symbol}}/{{quote_symbol}})",
+      "is_maker": "Creatore: {{is_maker}}"
+    },
+    "tooltip": "Esecuzione di un'operazione con ordine limite"
+  },
   "limit_order_cancel": {
     "method": "Annullamento dell'ordine con limite",
     "title": "Richiesta di annullamento dell'ordine limitato",
@@ -790,6 +808,22 @@
     },
     "tooltip": "Prelevare asset da un saldo cieco"
   },
+  "asset_settle_cancel": {
+    "method": "Annullamento della liquidazione delle risorse",
+    "title": "Richiesta di annullamento liquidazione asset",
+    "result": "Risultato dell'annullamento della liquidazione delle risorse",
+    "headers": {
+      "request": "Annullare la seguente liquidazione patrimoniale?",
+      "result": "È stata annullata la seguente liquidazione patrimoniale:"
+    },
+    "rows": {
+      "settlement": "Insediamento: {{settlement}}",
+      "account": "Account: {{account}} ({{accountOP}})",
+      "amount": "Quantità: {{amount}} ({{asset_id}})",
+      "extensions": "Estensioni: {{extensions}}"
+    },
+    "tooltip": "Annullare un ordine di liquidazione patrimoniale in sospeso"
+  },
   "asset_claim_fees": {
     "method": "Commissioni per la rivendicazione dei beni",
     "title": "Richiesta di commissioni per la rivendicazione dei beni",
@@ -803,6 +837,21 @@
       "amount_to_claim": "Importo da richiedere: {{amount_to_claim}} ({{asset_id}})"
     },
     "tooltip": "Richiedi le commissioni da una risorsa"
+  },
+  "fba_distribute": {
+    "method": "Distribuire Logistica di Amazon",
+    "title": "Richiesta di distribuzione di Logistica di Amazon",
+    "result": "Risultato distribuito da Logistica di Amazon",
+    "headers": {
+      "request": "Distribuire le commissioni dal seguente accumulatore FBA?",
+      "result": "È stata registrata la seguente distribuzione FBA:"
+    },
+    "rows": {
+      "account": "Account: {{account}} ({{accountOP}})",
+      "fba_id": "Accumulatore Logistica di Amazon: {{fba_id}}",
+      "amount": "Quantità: {{amount}} ({{asset_id}})"
+    },
+    "tooltip": "Distribuire le commissioni da un accumulatore di asset con garanzia di commissioni"
   },
   "bid_collateral": {
     "method": "Offerta garanzia",
@@ -818,6 +867,21 @@
       "debt_covered": "Debito coperto: {{debt_covered}}"
     },
     "tooltip": "Fai offerte su un bitasset a sostegno della garanzia collaterale quando regolato a livello globale"
+  },
+  "execute_bid": {
+    "method": "Esegui l'offerta",
+    "title": "Esegui l'evento di offerta",
+    "result": "Esegui il risultato dell'offerta",
+    "headers": {
+      "request": "Registrare la seguente offerta eseguita?",
+      "result": "È stata registrata la seguente esecuzione dell'offerta:"
+    },
+    "rows": {
+      "bidder": "Offerente: {{bidder}} ({{bidderOP}})",
+      "debt": "Debito: {{debt}}",
+      "collateral": "Garanzia: {{collateral}}"
+    },
+    "tooltip": "Esecuzione di un'offerta di garanzia dopo il regolamento globale"
   },
   "asset_claim_pool": {
     "method": "Pool di rivendicazioni di beni",
@@ -898,6 +962,44 @@
       "extensions": "Estensioni: {{extensions}}"
     },
     "tooltip": "Estendere la durata di un'operazione HTLC"
+  },
+  "htlc_redeemed": {
+    "method": "HTLC riscattato",
+    "title": "Evento riscattato da HTLC",
+    "result": "Risultato riscattato da HTLC",
+    "headers": {
+      "request": "Registrare il seguente riscatto HTLC?",
+      "result": "È stato registrato il seguente riscatto HTLC:"
+    },
+    "rows": {
+      "htlc_id": "IDHTLC: {{htlc_id}}",
+      "from": "Da: {{from}} ({{fromOP}})",
+      "to": "A: {{to}} ({{toOP}})",
+      "redeemer": "Redentore: {{redeemer}} ({{redeemerOP}})",
+      "amount": "Quantità: {{amount}} ({{asset_id}})",
+      "htlc_preimage_hash": "Hash preimmagine: {{htlc_preimage_hash}}",
+      "htlc_preimage_size": "Dimensioni della preimmagine: {{htlc_preimage_size}}",
+      "preimage": "Immagine preliminare: {{preimage}}"
+    },
+    "tooltip": "Record di un riscatto HTLC"
+  },
+  "htlc_refund": {
+    "method": "Rimborso HTLC",
+    "title": "Evento di rimborso HTLC",
+    "result": "Risultato del rimborso HTLC",
+    "headers": {
+      "request": "Registrare il seguente rimborso HTLC?",
+      "result": "È stato registrato il seguente rimborso HTLC:"
+    },
+    "rows": {
+      "htlc_id": "IDHTLC: {{htlc_id}}",
+      "to": "A: {{to}} ({{toOP}})",
+      "original_htlc_recipient": "Destinatario originale: {{original_htlc_recipient}} ({{original_htlc_recipientOP}})",
+      "amount": "Quantità: {{amount}} ({{asset_id}})",
+      "htlc_preimage_hash": "Hash preimmagine: {{htlc_preimage_hash}}",
+      "htlc_preimage_size": "Dimensioni della preimmagine: {{htlc_preimage_size}}"
+    },
+    "tooltip": "Registrazione di un rimborso HTLC per scadenza"
   },
   "custom_authority_create": {
     "method": "Creazione dell'autorizzazione personalizzata",
@@ -1281,6 +1383,25 @@
       "auto_repay": "Rimborso automatico: {{auto_repay}}"
     },
     "tooltip": "Aggiorna un contratto di credito"
+  },
+  "credit_deal_expired": {
+    "method": "Contratto di credito scaduto",
+    "title": "Evento contratto di credito scaduto",
+    "result": "Risultato del contratto di credito scaduto",
+    "headers": {
+      "request": "Registrare il seguente contratto di credito scaduto?",
+      "result": "È stata registrata la seguente scadenza del contratto di credito:"
+    },
+    "rows": {
+      "deal_id": "ID offerta: {{deal_id}}",
+      "offer_id": "ID offerta: {{offer_id}}",
+      "offer_owner": "Proprietario dell'offerta: {{offer_owner}} ({{offer_ownerOP}})",
+      "borrower": "Mutuatario: {{borrower}} ({{borrowerOP}})",
+      "unpaid_amount": "Importo non pagato: {{unpaid_amount}} ({{unpaid_amountOP}})",
+      "collateral": "Garanzia: {{collateral}} ({{collateralOP}})",
+      "fee_rate": "Tasso di commissione: {{fee_rate}}"
+    },
+    "tooltip": "Registrazione di un contratto di credito scaduto e degli importi risultanti"
   },
   "limit_order_update_operation": {
     "method": "Aggiornamento dell'ordine limite",

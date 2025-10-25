@@ -32,6 +32,24 @@
     },
     "tooltip": "一定の期間までに指定された為替レートで一定量の資産を売却するというオファー"
   },
+  "fill_order": {
+    "method": "注文を実行する",
+    "title": "約定注文イベント",
+    "result": "約定注文結果",
+    "headers": {
+      "request": "次の注文約定を記録しますか?",
+      "result": "次の注文約定が記録されました。"
+    },
+    "rows": {
+      "account": "アカウント： {{account}} ({{accountOP}})",
+      "order_id": "注文： {{order_id}}",
+      "pays": "支払い: {{pays}} ({{paysOP}})",
+      "receives": "受信するもの: {{receives}} ({{receivesOP}})",
+      "price": "価格： {{price}} ({{base_symbol}}/{{quote_symbol}})",
+      "is_maker": "メーカー: {{is_maker}}"
+    },
+    "tooltip": "指値注文取引の実行"
+  },
   "limit_order_cancel": {
     "method": "指値注文キャンセル",
     "title": "指値注文キャンセルリクエスト",
@@ -790,6 +808,22 @@
     },
     "tooltip": "ブラインド残高から資産を引き出す"
   },
+  "asset_settle_cancel": {
+    "method": "資産決済キャンセル",
+    "title": "資産決済キャンセルリクエスト",
+    "result": "資産決済キャンセル結果",
+    "headers": {
+      "request": "次の資産決済をキャンセルしますか?",
+      "result": "以下の資産決済がキャンセルされました:"
+    },
+    "rows": {
+      "settlement": "決済： {{settlement}}",
+      "account": "アカウント： {{account}} ({{accountOP}})",
+      "amount": "額： {{amount}} ({{asset_id}})",
+      "extensions": "拡張機能: {{extensions}}"
+    },
+    "tooltip": "未決の資産決済注文をキャンセルする"
+  },
   "asset_claim_fees": {
     "method": "資産請求手数料",
     "title": "資産請求手数料の請求",
@@ -803,6 +837,21 @@
       "amount_to_claim": "請求額: {{amount_to_claim}} ({{asset_id}})"
     },
     "tooltip": "資産から手数料を請求する"
+  },
+  "fba_distribute": {
+    "method": "FBA配布",
+    "title": "FBA配布リクエスト",
+    "result": "FBA配信結果",
+    "headers": {
+      "request": "次のFBAアキュムレータから手数料を分配しますか?",
+      "result": "次の FBA 配信が記録されました。"
+    },
+    "rows": {
+      "account": "アカウント： {{account}} ({{accountOP}})",
+      "fba_id": "FBAアキュムレータ: {{fba_id}}",
+      "amount": "額： {{amount}} ({{asset_id}})"
+    },
+    "tooltip": "手数料担保資産アキュムレータから手数料を分配する"
   },
   "bid_collateral": {
     "method": "入札担保",
@@ -818,6 +867,21 @@
       "debt_covered": "カバーされた負債: {{debt_covered}}"
     },
     "tooltip": "グローバル決済時にビットアセットを裏付ける担保に入札"
+  },
+  "execute_bid": {
+    "method": "入札の実行",
+    "title": "入札イベントの実行",
+    "result": "入札結果の執行",
+    "headers": {
+      "request": "次の実行された入札を記録しますか?",
+      "result": "次の入札執行が記録されました。"
+    },
+    "rows": {
+      "bidder": "入札者: {{bidder}} ({{bidderOP}})",
+      "debt": "借金： {{debt}}",
+      "collateral": "担保： {{collateral}}"
+    },
+    "tooltip": "グローバル決済後の担保入札の実行"
   },
   "asset_claim_pool": {
     "method": "資産請求プール",
@@ -898,6 +962,44 @@
       "extensions": "拡張機能: {{extensions}}"
     },
     "tooltip": "HTLC 操作の継続時間を延長する"
+  },
+  "htlc_redeemed": {
+    "method": "HTLC が引き換えられました",
+    "title": "HTLC 引き換えイベント",
+    "result": "HTLC 引き換え結果",
+    "headers": {
+      "request": "次の HTLC 引き換えを記録しますか?",
+      "result": "次の HTLC 償還が記録されました。"
+    },
+    "rows": {
+      "htlc_id": "HTLC ID: {{htlc_id}}",
+      "from": "から： {{from}} ({{fromOP}})",
+      "to": "に： {{to}} ({{toOP}})",
+      "redeemer": "償還者: {{redeemer}} ({{redeemerOP}})",
+      "amount": "額： {{amount}} ({{asset_id}})",
+      "htlc_preimage_hash": "プリイメージハッシュ: {{htlc_preimage_hash}}",
+      "htlc_preimage_size": "プリイメージのサイズ: {{htlc_preimage_size}}",
+      "preimage": "プリ画像: {{preimage}}"
+    },
+    "tooltip": "HTLC 償還の記録"
+  },
+  "htlc_refund": {
+    "method": "HTLCの払い戻し",
+    "title": "HTLC返金イベント",
+    "result": "HTLC 返金結果",
+    "headers": {
+      "request": "次の HTLC 払い戻しを記録しますか?",
+      "result": "次の HTLC 払い戻しが記録されました。"
+    },
+    "rows": {
+      "htlc_id": "HTLC ID: {{htlc_id}}",
+      "to": "に： {{to}} ({{toOP}})",
+      "original_htlc_recipient": "元の受信者: {{original_htlc_recipient}} ({{original_htlc_recipientOP}})",
+      "amount": "額： {{amount}} ({{asset_id}})",
+      "htlc_preimage_hash": "プリイメージハッシュ: {{htlc_preimage_hash}}",
+      "htlc_preimage_size": "プリイメージのサイズ: {{htlc_preimage_size}}"
+    },
+    "tooltip": "有効期限切れによる HTLC 払い戻しの記録"
   },
   "custom_authority_create": {
     "method": "カスタム権限の作成",
@@ -1281,6 +1383,25 @@
       "auto_repay": "自動返済: {{auto_repay}}"
     },
     "tooltip": "クレジット取引を更新する"
+  },
+  "credit_deal_expired": {
+    "method": "クレジット契約の期限が切れました",
+    "title": "クレジット取引の期限切れイベント",
+    "result": "クレジット取引の期限切れの結果",
+    "headers": {
+      "request": "次の期限切れのクレジット取引を記録しますか?",
+      "result": "次のクレジット取引の有効期限が記録されました。"
+    },
+    "rows": {
+      "deal_id": "取引ID: {{deal_id}}",
+      "offer_id": "オファーID: {{offer_id}}",
+      "offer_owner": "オファーの所有者: {{offer_owner}} ({{offer_ownerOP}})",
+      "borrower": "借り手： {{borrower}} ({{borrowerOP}})",
+      "unpaid_amount": "未払い金額: {{unpaid_amount}} ({{unpaid_amountOP}})",
+      "collateral": "担保： {{collateral}} ({{collateralOP}})",
+      "fee_rate": "料金率: {{fee_rate}}"
+    },
+    "tooltip": "期限切れのクレジット取引とその結果の金額の記録"
   },
   "limit_order_update_operation": {
     "method": "指値注文の更新",
