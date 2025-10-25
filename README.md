@@ -4,16 +4,6 @@ Created using [Astro](https://docs.astro.build), [React](https://react.dev/) & [
 
 Integrates with both the [Beet](https://github.com/bitshares/beet) and [BeetEOS](https://github.com/beetapp/beeteos) multiwallets, for the Bitshares and Bitshares Testnet blockchains.
 
-## Recent dev blogs
-- [Barter, View Witnesses, View Committee members, create/update witness/committee roles & create worker proposals!](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-dev-blog-5-new-pages-barter-view-witnesses-view-committee-members-create-update-witness-committee-roles-and)
-- [Hash Time-Locked Contracts - Create / Extend / Redeem!](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-dev-blog-hash-time-locked-contracts-create-extend-redeem)
-- [User Feedback Request - What feature do you want to see introduced next?](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-user-feedback-request-what-feature-do-you-want-to-see-introduced-next)
-- [Direct Debit & Timed Transfers!](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-dev-blog-direct-debit-and-timed-transfers)
-- [Why you should support the Bitshares Astro-UI Development Worker Proposal!](https://hive.blog/bitshares/@nftea.gallery/why-you-should-support-the-bitshares-astro-ui-development-worker-proposal)
-- [Custom Liquidity Pool Tracker Page & Liquidity Pool Overview Page!](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-dev-blog-custom-liquidity-pool-tracker-page-and-liquidity-pool-overview-page)
-- [Creating cloud accounts, crafting same-t fund limit order transactions and transfer memos!](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-dev-blog-creating-cloud-accounts-crafting-same-t-fund-limit-order-transactions-and-transfer-memos)
-- [New Featured Liquidity Pool Overview page!](https://hive.blog/hive-120117/@nftea.gallery/bitshares-astro-ui-dev-blog-new-featured-liquidity-pool-overview-page-in-v0-3-31)
-
 ## Functionality
 
 - Create/Extend/Redeem Hash Time-Locked Contracts (HTLC)
@@ -52,10 +42,14 @@ Integrates with both the [Beet](https://github.com/bitshares/beet) and [BeetEOS]
 - Create proposals for all operations
 - View account proposals - approve/reject
 - Configure account lists
+- View favourite assets, accounts, market trading pairs
+- View ticket leaderboards
+- Create/Update vote lock tickets
+- Perform override transfers
 
 ## Screenshot
 
-![image](https://github.com/user-attachments/assets/8e7e7d97-df97-4ff4-9e8c-c969de207a63)
+<img width="1568" height="1047" alt="image" src="https://github.com/user-attachments/assets/6e7d4a29-3b48-47aa-bf55-9e381d93bc7d" />
 
 ## Dev Commands
 
