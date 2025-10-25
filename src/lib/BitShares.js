@@ -59,6 +59,7 @@ async function extractObjects(operationObject) {
     "redeemer",
     "update_issuer",
     "borrower",
+    "owner_", // worker_create variant
     "original_htlc_recipient", // htlc_refund (53)
     "offer_owner", // credit_deal_expired (74)
   ];

@@ -1897,15 +1897,16 @@ export default async function beautify(
     }
   } else if (operationType == 34) {
     // worker_create
-    let owner = accountResults.find(
-      (resAcc) => resAcc.id === operationObject.owner
-    ).name;
+    const _ownerId = operationObject.owner || operationObject.owner_;
+    let owner = _ownerId
+      ? accountResults.find((resAcc) => resAcc.id === _ownerId)?.name
+      : null;
 
     if (owner) {
       return [
         {
           key: "owner",
-          params: { owner: owner, ownerOP: operationObject.owner },
+          params: { owner: owner, ownerOP: _ownerId },
         },
         {
           key: "work_begin_date",
@@ -1924,7 +1925,14 @@ export default async function beautify(
         {
           key: "initializer",
           params: {
-            initializer: JSON.stringify(operationObject.initializer),
+            initializer:
+              typeof operationObject.initializer === "string"
+                ? operationObject.initializer
+                : JSON.stringify(
+                    operationObject.initializer ||
+                      operationObject.initializer_object ||
+                      {}
+                  ),
           },
         },
       ];

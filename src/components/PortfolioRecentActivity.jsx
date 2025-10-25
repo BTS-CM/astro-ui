@@ -61,8 +61,27 @@ import {
   createUsernameStore,
   createObjectStore,
 } from "@/nanoeffects/Objects.ts";
+import DOMPurify from "dompurify";
 
 export default function PortfolioRecentActivity() {
+  // Sanitize and decode HTML entities to readable text
+  const sanitizeAndDecode = (input) => {
+    if (input === null || input === undefined) return "";
+    try {
+      const str = String(input);
+      // Strip any tags/attrs first
+      const sanitized = DOMPurify.sanitize(str, {
+        ALLOWED_TAGS: [],
+        ALLOWED_ATTR: [],
+      });
+      // Decode HTML entities safely via browser
+      const textarea = document.createElement("textarea");
+      textarea.innerHTML = sanitized;
+      return textarea.value;
+    } catch (e) {
+      return String(input);
+    }
+  };
   const { t } = useTranslation(locale.get(), { i18n: i18nInstance });
   const usr = useSyncExternalStore(
     $currentUser.subscribe,
@@ -329,9 +348,11 @@ export default function PortfolioRecentActivity() {
                               ] || []
                             ).map((row, i) => (
                               <div key={i} className="text-sm">
-                                {t(
-                                  `Activity:${opKey}.rows.${row.key}`,
-                                  row.params || {}
+                                {sanitizeAndDecode(
+                                  t(
+                                    `Activity:${opKey}.rows.${row.key}`,
+                                    row.params || {}
+                                  )
                                 )}
                               </div>
                             ))}
