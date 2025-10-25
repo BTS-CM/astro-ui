@@ -42,7 +42,6 @@
     },
     "rows": {
       "id": "注文 ID: {{id}}",
-      "fees": "推定手数料: {{fees}}",
       "account": "料金支払いアカウント: {{account}}"
     },
     "tooltip": "指値注文オペレーションのキャンセル"
@@ -58,8 +57,7 @@
     "rows": {
       "funding_account": "資金調達アカウント: {{funding_account}}",
       "delta_collateral": "デルタ担保: {{delta_collateral}} ({{id}})",
-      "delta_debt": "デルタ債務: {{delta_debt}} ({{id}})",
-      "fees": "推定手数料: {{fees}}"
+      "delta_debt": "デルタ債務: {{delta_debt}} ({{id}})"
     },
     "tooltip": "既存のコールオーダーの更新"
   },
@@ -88,8 +86,7 @@
       "num_witness": "証人の数: {{num_witness}}",
       "num_committee": "委員会メンバーの数: {{num_committee}}",
       "votes": "投票: {{votes}}",
-      "extensions": "拡張機能: {{extensions}}",
-      "fees": "推定手数料: {{fees}}"
+      "extensions": "拡張機能: {{extensions}}"
     },
     "tooltip": "新しいアカウントの作成"
   },
@@ -107,8 +104,7 @@
       "owner": "所有者: {{owner}}",
       "active": "アクティブ: {{active}}",
       "new_options": "新しいオプション: {{new_options}}",
-      "extensions": "拡張機能: {{extensions}}",
-      "fees": "推定手数料: {{fees}}"
+      "extensions": "拡張機能: {{extensions}}"
     },
     "tooltip": "この操作は、既存のアカウントを更新するために使用されます。"
   },
@@ -124,8 +120,7 @@
       "authorizing_account": "承認アカウント: {{authorizingAccount}} (authorizingAccountOP)",
       "account_to_list": "リストするアカウント: {{accountToList}} (accountToListOP)",
       "new_listing": "新しいリスト: {{newListing}}",
-      "extensions": "拡張機能: {{extensions}}",
-      "fee": "料金: {{fee}}"
+      "extensions": "拡張機能: {{extensions}}"
     },
     "tooltip": "この操作は、主にホワイトリストに登録された資産の取引のために、アカウントをホワイトリストおよびブラックリストに登録するために使用されます。"
   },
@@ -140,8 +135,7 @@
     "rows": {
       "account_to_upgrade": "アップグレードするアカウント: {{accountToUpgrade}} (accountToUpgradeOP)",
       "upgrade_to_lifetime_member": "生涯メンバーへのアップグレード: {{upgradeToLifetimeMember}}",
-      "extensions": "拡張機能: {{extensions}}",
-      "fee": "推定料金: {{fee}}"
+      "extensions": "拡張機能: {{extensions}}"
     },
     "tooltip": "この操作は、アカウントをメンバーにアップグレードするか、サブスクリプションを更新するために使用されます。"
   },
@@ -156,8 +150,7 @@
     "rows": {
       "warning": "警告: この操作は元に戻すことができません。",
       "account_id": "アカウント ID: {{originalOwner}} ({{account_id}})",
-      "new_owner": "新しい所有者: {{newOwner}} ({{newOwnerOP}})",
-      "fee": "推定料金: {{fee}}"
+      "new_owner": "新しい所有者: {{newOwner}} ({{newOwnerOP}})"
     },
     "tooltip": "ホワイトリストをクリアしながらアカウントを別のアカウントに転送します"
   },
@@ -298,8 +291,7 @@
       "maximum_force_settlement_volume": "最大強制決済量: {{maximum_force_settlement_volume}}",
       "short_backing_asset": "ショートバッキングアセット: {{symbol}} ({{short_backing_asset}})",
       "extensions": "拡張機能: {{extensions}}",
-      "noExtensions": "拡張子なし",
-      "fee": "推定料金: {{fee}} ({{id}})"
+      "noExtensions": "拡張子なし"
     },
     "tooltip": "作成した bitasset 設定を更新する"
   },
@@ -314,8 +306,7 @@
     "rows": {
       "issuer": "発行者: {{issuer}} ({{issuerOP}})",
       "asset_to_update": "更新するアセット: {{symbol}} ({{asset_to_update}})",
-      "new_feed_producers": "新しいフィードプロデューサー: {{new_feed_producers}}",
-      "fee": "推定料金: {{fee}}"
+      "new_feed_producers": "新しいフィードプロデューサー: {{new_feed_producers}}"
     },
     "tooltip": "作成されたビットアセットの承認済みフィードプロデューサーのリストを更新します"
   },
@@ -328,8 +319,7 @@
       "result": "以下の資産発行が承認されました。"
     },
     "rows": {
-      "prompt": "{{amount}} {{symbol}} ({{assetID}}) を {{to}} ({{toID}}) に発行しますか?",
-      "fee": "推定料金: {{fee}} ({{id}})"
+      "prompt": "{{amount}} {{symbol}} ({{assetID}}) を {{to}} ({{toID}}) に発行しますか?"
     },
     "tooltip": "作成したアセットを個人に発行する"
   },
@@ -344,8 +334,7 @@
     "rows": {
       "payer": "支払者: {{payer}} ({{payerOP}})",
       "amount_to_reserve": "予約金額: {{amount_to_reserve}} ({{amount_to_reserveOP}})",
-      "extensions": "拡張機能: {{extensions}}",
-      "fee": "推定料金: {{fee}}"
+      "extensions": "拡張機能: {{extensions}}"
     },
     "tooltip": "作成したアセットを予約する"
   },
@@ -360,8 +349,7 @@
     "rows": {
       "from_account": "アカウントから: {{from_account}} ({{from_accountOP}})",
       "asset": "アセット: {{asset}} ({{assetOP}})",
-      "amount": "金額: {{amount}}",
-      "fee": "推定料金: {{fee}}"
+      "amount": "金額: {{amount}}"
     },
     "tooltip": "作成したアセットの料金プールに資金を提供します"
   },
@@ -375,8 +363,7 @@
     },
     "rows": {
       "account": "アカウント: {{account}} ({{accountOP}})",
-      "amount": "金額: {{amount}} ({{assetID}})",
-      "fee": "推定料金: {{fee}}"
+      "amount": "金額: {{amount}} ({{assetID}})"
     },
     "tooltip": "ポートフォリオ内の資産を決済する"
   },
@@ -391,8 +378,7 @@
     "rows": {
       "issuer": "発行者: {{issuer}} ({{issuerOP}})",
       "asset_to_settle": "決済する資産: {{asset_to_settle}} ({{asset_to_settleOP}})",
-      "settle_price": "決済価格: {{settle_price}}",
-      "fee": "推定料金: {{fee}}"
+      "settle_price": "決済価格: {{settle_price}}"
     },
     "tooltip": "作成したビットアセットの 1 つをグローバルに決済します"
   },
@@ -412,8 +398,7 @@
       "settlement_price": "決済価格: {{settlement_price}}",
       "maintenance_collateral_ratio": "維持担保比率: {{maintenance_collateral_ratio}}",
       "maximum_short_squeeze_ratio": "最大ショートスクイーズ比: {{maximum_short_squeeze_ratio}}",
-      "extensions": "拡張機能: {{extensions}}",
-      "fee": "推定料金: {{fee}}"
+      "extensions": "拡張機能: {{extensions}}"
     },
     "tooltip": "Bitasset の価格フィードを公開する"
   },
@@ -428,8 +413,7 @@
     "rows": {
       "witness_account": "証人アカウント: {{witness_account}} ({{witness_accountOP}})",
       "url": "URL: {{url}}",
-      "block_signing_key": "ブロック署名キー: {{block_signing_key}}",
-      "fee": "推定料金: {{fee}}"
+      "block_signing_key": "ブロック署名キー: {{block_signing_key}}"
     },
     "tooltip": "証人アカウントを作成する"
   },
@@ -445,8 +429,7 @@
       "witness": "証人: {{witness}}",
       "witness_account": "証人アカウント: {{witness_account}} ({{witness_accountOP}})",
       "new_url": "新しい URL: {{new_url}}",
-      "new_signing_key": "新しい署名キー: {{new_signing_key}}",
-      "fee": "推定料金: {{fee}}"
+      "new_signing_key": "新しい署名キー: {{new_signing_key}}"
     },
     "tooltip": "証人アカウントを更新する"
   },
@@ -462,8 +445,7 @@
       "expiration_time": "有効期限: {{expiration_time}}",
       "proposed_ops": "提案されたオペレーション: {{proposed_ops}}",
       "review_period_seconds": "レビュー期間の秒数: {{review_period_seconds}}",
-      "fee_paying_account": "料金支払いアカウント: {{fee_paying_account}} ({{fee_paying_accountOP}})",
-      "fee": "推定料金: {{fee}}"
+      "fee_paying_account": "料金支払いアカウント: {{fee_paying_account}} ({{fee_paying_accountOP}})"
     },
     "tooltip": "ブロックチェーン運用提案書を作成する"
   },
@@ -484,8 +466,7 @@
       "key_approvals_to_add": "追加する主要な承認: {{key_approvals_to_add}}",
       "key_approvals_to_remove": "削除する主要な承認: {{key_approvals_to_remove}}",
       "fee_paying_account": "料金支払いアカウント: {{fee_paying_account}} ({{fee_paying_accountOP}})",
-      "extensions": "拡張機能: {{extensions}}",
-      "fee": "推定料金: {{fee}}"
+      "extensions": "拡張機能: {{extensions}}"
     },
     "tooltip": "ブロックチェーン運用提案を更新する"
   },
@@ -501,8 +482,7 @@
       "using_owner_authority": "所有者権限の使用: {{using_owner_authority}}",
       "proposal": "提案: {{proposal}}",
       "fee_paying_account": "料金支払いアカウント: {{fee_paying_account}} ({{fee_paying_accountOP}})",
-      "extensions": "拡張機能: {{extensions}}",
-      "fee": "推定料金: {{fee}}"
+      "extensions": "拡張機能: {{extensions}}"
     },
     "tooltip": "ブロックチェーン運用提案を削除する"
   },
@@ -538,8 +518,7 @@
       "withdrawal_unlimited": "出金制限: {{withdrawal_limit}} ({{withdrawal_limitOP}})",
       "withdrawal_period_sec": "出金期間 (秒): {{withdrawal_period_sec}}",
       "period_start_time": "期間の開始時刻: {{period_start_time}}",
-      "periods_until_expiration": "有効期限までの期間: {{periods_until_expiration}}",
-      "fee": "推定料金: {{fee}}"
+      "periods_until_expiration": "有効期限までの期間: {{periods_until_expiration}}"
     },
     "tooltip": "出金許可を更新する"
   },
@@ -556,8 +535,7 @@
       "withdraw_from_account": "アカウントからの出金: {{withdraw_from_account}} ({{withdraw_from_accountOP}})",
       "withdraw_to_account": "アカウントへの出金: {{withdraw_to_account}} ({{withdraw_to_accountOP}})",
       "amount_to_withdraw": "出金金額: {{amount_to_withdraw}} ({{amount_to_withdrawOP}})",
-      "memo": "メモ: {{memo}}",
-      "fee": "推定料金: {{fee}}"
+      "memo": "メモ: {{memo}}"
     },
     "tooltip": "撤回許可からの請求"
   },
@@ -572,8 +550,7 @@
     "rows": {
       "withdraw_from_account": "アカウントからの出金: {{withdraw_from_account}} ({{withdraw_from_accountOP}})",
       "authorized_account": "承認されたアカウント: {{authorized_account}} ({{authorized_accountOP}})",
-      "withdrawal_permission": "出金許可: {{withdrawal_permission}}",
-      "fee": "推定料金: {{fee}}"
+      "withdrawal_permission": "出金許可: {{withdrawal_permission}}"
     },
     "tooltip": "撤回権限を削除する"
   },
@@ -587,8 +564,7 @@
     },
     "rows": {
       "committee_member_account": "委員会メンバーのアカウント: {{committee_member_account}} ({{committee_member_accountOP}})",
-      "url": "URL: {{url}}",
-      "fee": "推定料金: {{fee}}"
+      "url": "URL: {{url}}"
     },
     "tooltip": "委員会メンバーのアカウントを作成する"
   },
@@ -603,8 +579,7 @@
     "rows": {
       "committee_member": "委員会メンバー: {{committee_member}}",
       "committee_member_account": "委員会メンバーのアカウント: {{committee_member_account}} ({{committee_member_accountOP}})",
-      "new_url": "新しい URL: {{new_url}}",
-      "fee": "推定料金: {{fee}}"
+      "new_url": "新しい URL: {{new_url}}"
     },
     "tooltip": "委員会メンバーのアカウント詳細を更新する"
   },
@@ -646,8 +621,7 @@
       "accounts_per_fee_scale": "料金スケールごとのアカウント数: {{accounts_per_fee_scale}}",
       "account_fee_scale_bitshifts": "アカウント手数料スケールのビットシフト: {{account_fee_scale_bitshifts}}",
       "max_authority_depth": "最大権限の深さ: {{max_authority_depth}}",
-      "extensions": "拡張機能: {{extensions}}",
-      "fee": "推定料金: {{fee}}"
+      "extensions": "拡張機能: {{extensions}}"
     },
     "tooltip": "Bitshares ブロックチェーンのグローバル パラメーター値に対する委員会メンバーのスタンスを公開する"
   },
@@ -668,8 +642,7 @@
       "vesting_cliff_seconds": "権利確定クリフ秒数: {{vesting_cliff_seconds}}",
       "vesting_duration_seconds": "権利確定期間の秒数: {{vesting_duration_seconds}}",
       "start_claim": "申請の開始: {{start_claim}}",
-      "vesting_seconds": "権利確定秒数: {{vesting_seconds}}",
-      "fee": "推定料金: {{fee}}"
+      "vesting_seconds": "権利確定秒数: {{vesting_seconds}}"
     },
     "tooltip": "権利確定残高を作成する"
   },
@@ -702,8 +675,7 @@
       "daily_pay": "日給: {{daily_pay}}",
       "name": "名前: {{name}}",
       "url": "URL: {{url}}",
-      "initializer": "イニシャライザ: {{initializer}}",
-      "fee": "推定料金: {{fee}}"
+      "initializer": "イニシャライザ: {{initializer}}"
     },
     "tooltip": "従業員の提案を作成する"
   },
@@ -719,8 +691,7 @@
       "payer": "支払者: {{payer}} ({{payerOP}})",
       "required_auths": "必要な権限: {{required_auths}}",
       "id": "{{id}}",
-      "data": "データ: {{data}}",
-      "fee": "推定料金: {{fee}}"
+      "data": "データ: {{data}}"
     },
     "tooltip": "証人コンセンサスの上に高レベルのプロトコルを追加する一般的な方法を提供します"
   },
@@ -736,8 +707,7 @@
       "fee_paying_account": "料金支払いアカウント: {{fee_paying_account}} ({{fee_paying_accountOP}})",
       "predicates": "述語: {{predicates}}",
       "required_auths": "必要な権限: {{required_auths}}",
-      "extensions": "拡張機能: {{extensions}}",
-      "fee": "推定料金: {{fee}}"
+      "extensions": "拡張機能: {{extensions}}"
     },
     "tooltip": "いくつかの条件が真であることをアサートします。"
   },
@@ -753,8 +723,7 @@
       "deposit_to_account": "アカウントへの入金: {{deposit_to_account}} ({{deposit_to_accountOP}})",
       "balance_to_claim": "請求残高: {{balance_to_claim}} ({{asset_id}})",
       "balance_owner_key": "残高所有者キー: {{balance_owner_key}}",
-      "total_claimed": "請求総額: {{total_claimed}} ({{asset_id}})",
-      "fee": "推定料金: {{fee}}"
+      "total_claimed": "請求総額: {{total_claimed}} ({{asset_id}})"
     },
     "tooltip": "残高からの請求"
   },
@@ -771,8 +740,7 @@
       "from": "差出人: {{from}} ({{fromOP}})",
       "to": "宛先: {{to}} ({{toOP}})",
       "amount": "金額: {{amount}} ({{asset_id}})",
-      "memo": "メモ: {{memo}}",
-      "fee": "推定料金: {{fee}}"
+      "memo": "メモ: {{memo}}"
     },
     "tooltip": "転送操作をオーバーライドする"
   },
@@ -788,8 +756,7 @@
       "amount": "金額: {{amount}}",
       "from": "差出人: {{from}} ({{fromOP}})",
       "blinding_factor": "ブラインドファクター: {{blinding_factor}}",
-      "outputs": "出力: {{outputs}}",
-      "fee": "推定料金: {{fee}}"
+      "outputs": "出力: {{outputs}}"
     },
     "tooltip": "資産をブラインド先に転送する"
   },
@@ -803,8 +770,7 @@
     },
     "rows": {
       "inputs": "入力: {{inputs}}",
-      "outputs": "出力: {{outputs}}",
-      "fee": "推定料金: {{fee}}"
+      "outputs": "出力: {{outputs}}"
     },
     "tooltip": "ブラインド資産をブラインド方法で転送する"
   },
@@ -820,8 +786,7 @@
       "amount": "金額: {{amount}}",
       "to": "宛先: {{to}} ({{toOP}})",
       "blinding_factor": "ブラインドファクター: {{blinding_factor}}",
-      "inputs": "入力: {{inputs}}",
-      "fee": "推定料金: {{fee}}"
+      "inputs": "入力: {{inputs}}"
     },
     "tooltip": "ブラインド残高から資産を引き出す"
   },
@@ -835,8 +800,7 @@
     },
     "rows": {
       "issuer": "発行者: {{issuer}} ({{issuerOP}})",
-      "amount_to_claim": "請求額: {{amount_to_claim}} ({{asset_id}})",
-      "fee": "推定料金: {{fee}}"
+      "amount_to_claim": "請求額: {{amount_to_claim}} ({{asset_id}})"
     },
     "tooltip": "資産から手数料を請求する"
   },
@@ -851,8 +815,7 @@
     "rows": {
       "bidder": "入札者: {{bidder}} ({{bidderOP}})",
       "additional_collateral": "追加の担保: {{additional_collateral}}",
-      "debt_covered": "カバーされた負債: {{debt_covered}}",
-      "fee": "推定料金: {{fee}}"
+      "debt_covered": "カバーされた負債: {{debt_covered}}"
     },
     "tooltip": "グローバル決済時にビットアセットを裏付ける担保に入札"
   },
@@ -867,8 +830,7 @@
     "rows": {
       "issuer": "発行者: {{issuer}} ({{issuerOP}})",
       "asset_id": "アセット: {{asset_id}}",
-      "amount_to_claim": "請求額: {{amount_to_claim}}",
-      "fee": "推定料金: {{fee}}"
+      "amount_to_claim": "請求額: {{amount_to_claim}}"
     },
     "tooltip": "指定された資産の手数料プールから BTS を発行者の残高に戻します"
   },
@@ -883,8 +845,7 @@
     "rows": {
       "issuer": "発行者: {{issuer}} ({{issuerOP}})",
       "asset_to_update": "更新するアセット: {{asset_to_update}}",
-      "new_issuer": "新しい発行者: {{new_issuer}} ({new_issuerOP})",
-      "fee": "推定料金: {{fee}}"
+      "new_issuer": "新しい発行者: {{new_issuer}} ({new_issuerOP})"
     },
     "tooltip": "資産の発行者を新しい管理者アカウントに更新します。"
   },
@@ -902,8 +863,7 @@
       "amount": "金額: {{amount}}",
       "preimage_hash": "プリイメージハッシュ: {{preimage_hash}}",
       "preimage_size": "プリイメージのサイズ: {{preimage_size}}",
-      "claim_period_seconds": "請求期間 (秒): {{claim_period_seconds}}",
-      "fee": "推定料金: {{fee}}"
+      "claim_period_seconds": "請求期間 (秒): {{claim_period_seconds}}"
     },
     "tooltip": "ハッシュ タイム ロック コントラクト (HTLC) オペレーションを作成する"
   },
@@ -919,8 +879,7 @@
       "htlc_id": "HTLC ID: {{htlc_id}}",
       "redeemer": "引き換え者: {{redeemer}} ({{redeemerOP}})",
       "preimage": "プリイメージ: {{preimage}}",
-      "extensions": "拡張機能: {{extensions}}",
-      "fee": "推定料金: {{fee}}"
+      "extensions": "拡張機能: {{extensions}}"
     },
     "tooltip": "HTLC 操作のコンテンツを引き換える"
   },
@@ -936,8 +895,7 @@
       "htlc_id": "HTLC ID: {{htlc_id}}",
       "update_issuer": "更新発行者: {{update_issuer}} ({{update_issuerOP}})",
       "seconds_to_add": "追加する秒数: {{seconds_to_add}}",
-      "extensions": "拡張機能: {{extensions}}",
-      "fee": "推定料金: {{fee}}"
+      "extensions": "拡張機能: {{extensions}}"
     },
     "tooltip": "HTLC 操作の継続時間を延長する"
   },
@@ -957,8 +915,7 @@
       "operation_type": "操作タイプ: {{operation_type}}",
       "auth": "権限: {{auth}}",
       "restrictions": "制限事項: {{restrictions}}",
-      "extensions": "拡張機能: {{extensions}}",
-      "fee": "推定料金: {{fee}}"
+      "extensions": "拡張機能: {{extensions}}"
     },
     "tooltip": "新しいカスタム認証局を作成します。"
   },
@@ -979,8 +936,7 @@
       "new_auth": "新しい権限: {{new_auth}}",
       "restrictions_to_remove": "削除する制限: {{restrictions_to_remove}}",
       "restrictions_to_add": "追加する制限: {{restrictions_to_add}}",
-      "extensions": "拡張機能: {{extensions}}",
-      "fee": "推定料金: {{fee}}"
+      "extensions": "拡張機能: {{extensions}}"
     },
     "tooltip": "カスタム認証局を更新します。"
   },
@@ -995,8 +951,7 @@
     "rows": {
       "account": "アカウント: {{account}} ({{accountOP}})",
       "authority_to_delete": "削除権限: {{authority_to_delete}}",
-      "extensions": "拡張機能: {{extensions}}",
-      "fee": "推定料金: {{fee}}"
+      "extensions": "拡張機能: {{extensions}}"
     },
     "tooltip": "カスタム認証局を削除します。"
   },
@@ -1012,8 +967,7 @@
       "account": "アカウント: {{account}} ({{accountOP}})",
       "target_type": "ターゲットタイプ: {{target_type}}",
       "amount": "金額: {{amount}}",
-      "extensions": "拡張機能: {{extensions}}",
-      "fee": "推定料金: {{fee}}"
+      "extensions": "拡張機能: {{extensions}}"
     },
     "tooltip": "新しいチケットを作成します。"
   },
@@ -1049,8 +1003,7 @@
       "share_asset": "アセットを共有: {{share_asset}} ({{share_assetOP}})",
       "taker_fee_percent": "テイカー手数料パーセント: {{taker_fee_percent}}",
       "withdrawal_fee_percent": "出金手数料パーセント: {{withdrawal_fee_percent}}",
-      "extensions": "拡張機能: {{extensions}}",
-      "fee": "推定料金: {{fee}}"
+      "extensions": "拡張機能: {{extensions}}"
     },
     "tooltip": "流動性プールを作成する"
   },
@@ -1065,8 +1018,7 @@
     "rows": {
       "account": "アカウント: {{account}} ({{accountOP}})",
       "pool_id": "プール ID: {{pool_id}}",
-      "extensions": "拡張機能: {{extensions}}",
-      "fee": "推定料金: {{fee}}"
+      "extensions": "拡張機能: {{extensions}}"
     },
     "tooltip": "流動性プールを削除する"
   },
@@ -1083,8 +1035,7 @@
       "pool": "プール: {{pool}}",
       "asset_a": "アセット A: {{asset_a}} ({{asset_aOP}})",
       "asset_b": "アセット B: {{asset_b}} ({{asset_bOP}})",
-      "extensions": "拡張機能: {{extensions}}",
-      "fee": "推定料金: {{fee}}"
+      "extensions": "拡張機能: {{extensions}}"
     },
     "tooltip": "流動性プールに資金を入金する"
   },
@@ -1100,8 +1051,7 @@
       "account": "アカウント: {{account}} ({{accountOP}})",
       "pool": "プール: {{pool}}",
       "share_asset": "アセットを共有: {{share_asset}} ({{share_assetOP}})",
-      "extensions": "拡張機能: {{extensions}}",
-      "fee": "推定料金: {{fee}}"
+      "extensions": "拡張機能: {{extensions}}"
     },
     "tooltip": "流動性プールから資金を引き出す"
   },
@@ -1118,8 +1068,7 @@
       "pool": "プール: {{pool}}",
       "amount_to_sell": "売却額: {{amount_to_sell}}",
       "min_to_receive": "最小受信時間: {{min_to_receive}}",
-      "extensions": "拡張機能: {{extensions}}",
-      "fee": "推定料金: {{fee}}"
+      "extensions": "拡張機能: {{extensions}}"
     },
     "tooltip": "流動性プールとの交換。"
   },
@@ -1136,8 +1085,7 @@
       "asset_type": "アセットタイプ: {{asset_type}}",
       "balance": "残高: {{balance}}",
       "fee_rate": "手数料率: {{fee_rate}}",
-      "extensions": "拡張機能: {{extensions}}",
-      "fee": "推定料金: {{fee}}"
+      "extensions": "拡張機能: {{extensions}}"
     },
     "tooltip": "新しい SameT ファンドを作成します。 "
   },
@@ -1152,8 +1100,7 @@
     "rows": {
       "owner_account": "所有者のアカウント: {{owner_account}} ({{owner_accountOP}})",
       "fund_id": "ファンド ID: {{fund_id}}",
-      "extensions": "拡張機能: {{extensions}}",
-      "fee": "推定料金: {{fee}}"
+      "extensions": "拡張機能: {{extensions}}"
     },
     "tooltip": "SameT ファンド オブジェクトを削除します。"
   },
@@ -1170,8 +1117,7 @@
       "fund_id": "ファンド ID: {{fund_id}}",
       "delta_amount": "デルタ金額: {{delta_amount}}",
       "new_fee_rate": "新しい手数料率: {{new_fee_rate}}",
-      "extensions": "拡張機能: {{extensions}}",
-      "fee": "推定料金: {{fee}}"
+      "extensions": "拡張機能: {{extensions}}"
     },
     "tooltip": "SameT ファンド オブジェクトを更新します。"
   },
@@ -1187,8 +1133,7 @@
       "borrower": "借り手: {{borrower}} ({{borrowerOP}})",
       "fund_id": "ファンド ID: {{fund_id}}",
       "borrow_amount": "借入額: {{borrow_amount}}",
-      "extensions": "拡張機能: {{extensions}}",
-      "fee": "推定料金: {{fee}}"
+      "extensions": "拡張機能: {{extensions}}"
     },
     "tooltip": "SameT ファンドから借ります。"
   },
@@ -1205,8 +1150,7 @@
       "fund_id": "ファンド ID: {{fund_id}}",
       "repay_amount": "返済額: {{repay_amount}}",
       "fund_fee": "ファンド手数料: {{fund_fee}}",
-      "extensions": "拡張機能: {{extensions}}",
-      "fee": "推定料金: {{fee}}"
+      "extensions": "拡張機能: {{extensions}}"
     },
     "tooltip": "SameT ファンドに借金を返済します。"
   },
@@ -1229,8 +1173,7 @@
       "auto_disable_time": "自動無効化時間: {{auto_disable_time}}",
       "acceptable_collateral": "許容可能な担保: {{acceptable_collateral}}",
       "acceptable_borrowers": "受け入れ可能な借り手: {{acceptable_borrowers}}",
-      "extensions": "拡張機能: {{extensions}}",
-      "fee": "推定料金: {{fee}}"
+      "extensions": "拡張機能: {{extensions}}"
     },
     "tooltip": "新しいクレジットオファーを作成します。"
   },
@@ -1245,8 +1188,7 @@
     "rows": {
       "owner_account": "所有者のアカウント: {{owner_account}} ({{owner_accountOP}})",
       "offer_id": "オファー ID: {{offer_id}}",
-      "extensions": "拡張機能: {{extensions}}",
-      "fee": "推定料金: {{fee}}"
+      "extensions": "拡張機能: {{extensions}}"
     },
     "tooltip": "クレジットオファーを削除します。"
   },
@@ -1269,8 +1211,7 @@
       "auto_disable_time": "自動無効化時間: {{auto_disable_time}}",
       "acceptable_collateral": "許容可能な担保: {{acceptable_collateral}}",
       "acceptable_borrowers": "受け入れ可能な借り手: {{acceptable_borrowers}}",
-      "extensions": "拡張機能: {{extensions}}",
-      "fee": "推定料金: {{fee}}"
+      "extensions": "拡張機能: {{extensions}}"
     },
     "tooltip": "クレジットオファーを更新する"
   },
@@ -1289,8 +1230,7 @@
       "collateral": "担保: {{collateral}}",
       "max_fee_rate": "最大手数料率: {{max_fee_rate}}",
       "min_duration_seconds": "最小継続時間秒: {{min_duration_seconds}}",
-      "extensions": "拡張機能: {{extensions}}",
-      "fee": "推定料金: {{fee}}"
+      "extensions": "拡張機能: {{extensions}}"
     },
     "tooltip": "クレジットのオファーを受け入れ、クレジット取引を作成します。"
   },
@@ -1307,8 +1247,7 @@
       "deal_id": "取引 ID: {{deal_id}}",
       "repay_amount": "返済額: {{repay_amount}}",
       "credit_fee": "クレジット手数料: {{credit_fee}}",
-      "extensions": "拡張機能: {{extensions}}",
-      "fee": "推定料金: {{fee}}"
+      "extensions": "拡張機能: {{extensions}}"
     },
     "tooltip": "クレジット契約を返済します。"
   },
@@ -1324,8 +1263,7 @@
       "owner_account": "所有者のアカウント: {{owner_account}} ({{owner_accountOP}})",
       "pool_id": "プール ID: {{pool_id}}",
       "new_parameters": "新しいパラメータ: {{new_parameters}}",
-      "extensions": "拡張機能: {{extensions}}",
-      "fee": "推定料金: {{fee}}"
+      "extensions": "拡張機能: {{extensions}}"
     },
     "tooltip": "流動性プールを更新する"
   },
@@ -1338,7 +1276,6 @@
       "result": "次のクレジット取引が更新されました:"
     },
     "rows": {
-      "fee": "推定料金: {{fee}}",
       "account": "アカウント: {{account}} ({{accountOP}})",
       "deal_id": "取引 ID: {{deal_id}}",
       "auto_repay": "自動返済: {{auto_repay}}"
@@ -1354,7 +1291,6 @@
       "result": "次の指値注文が更新されました。"
     },
     "rows": {
-      "fee": "推定料金: {{fee}}",
       "seller": "販売者: {{seller}} ({{sellerOP}})",
       "order": "注文: {{order}}",
       "new_price": "新しい価格: {{new_price}}",

@@ -42,7 +42,6 @@
     },
     "rows": {
       "id": "Tellimuse ID: {{id}}",
-      "fees": "Hinnangulised tasud: {{fees}}",
       "account": "Tasu maksmise konto: {{account}}"
     },
     "tooltip": "Limiittellimuse toimingu tühistamine"
@@ -58,8 +57,7 @@
     "rows": {
       "funding_account": "Rahastamiskonto: {{funding_account}}",
       "delta_collateral": "Delta tagatis: {{delta_collateral}} ({{id}})",
-      "delta_debt": "Delta võlg: {{delta_debt}} ({{id}})",
-      "fees": "Hinnangulised tasud: {{fees}}"
+      "delta_debt": "Delta võlg: {{delta_debt}} ({{id}})"
     },
     "tooltip": "Olemasoleva kõnetellimuse värskendamine"
   },
@@ -88,8 +86,7 @@
       "num_witness": "Tunnistajate arv: {{num_witness}}",
       "num_committee": "Komisjoni liikmete arv: {{num_committee}}",
       "votes": "Hääled: {{votes}}",
-      "extensions": "Laiendused: {{extensions}}",
-      "fees": "Hinnangulised tasud: {{fees}}"
+      "extensions": "Laiendused: {{extensions}}"
     },
     "tooltip": "Uue konto loomine"
   },
@@ -107,8 +104,7 @@
       "owner": "Omanik: {{owner}}",
       "active": "Aktiivne: {{active}}",
       "new_options": "Uued valikud: {{new_options}}",
-      "extensions": "Laiendused: {{extensions}}",
-      "fees": "Hinnanguline tasu: {{fees}}"
+      "extensions": "Laiendused: {{extensions}}"
     },
     "tooltip": "Seda toimingut kasutatakse olemasoleva konto värskendamiseks. "
   },
@@ -124,8 +120,7 @@
       "authorizing_account": "Konto volitamine: {{authorizingAccount}} (authorizingAccountOP)",
       "account_to_list": "Loendisse lisatav konto: {{accountToList}} (accountToListOP)",
       "new_listing": "Uus kirje: {{newListing}}",
-      "extensions": "Laiendused: {{extensions}}",
-      "fee": "Tasu: {{fee}}"
+      "extensions": "Laiendused: {{extensions}}"
     },
     "tooltip": "Seda toimingut kasutatakse kontode valgesse ja musta nimekirja lisamiseks, peamiselt lubatud nimekirja kantud varadega tehingute tegemiseks"
   },
@@ -140,8 +135,7 @@
     "rows": {
       "account_to_upgrade": "Uuendatav konto: {{accountToUpgrade}} (accountToUpgradeOP)",
       "upgrade_to_lifetime_member": "Uuenda eluaegseks liikmeks: {{upgradeToLifetimeMember}}",
-      "extensions": "Laiendused: {{extensions}}",
-      "fee": "Hinnanguline tasu: {{fee}}"
+      "extensions": "Laiendused: {{extensions}}"
     },
     "tooltip": "Seda toimingut kasutatakse konto üleviimiseks liikmeks või selle tellimuse uuendamiseks."
   },
@@ -156,8 +150,7 @@
     "rows": {
       "warning": "Hoiatus: see toiming on pöördumatu!",
       "account_id": "Konto ID: {{originalOwner}} ({{account_id}})",
-      "new_owner": "Uus omanik: {{newOwner}} ({{newOwnerOP}})",
-      "fee": "Hinnanguline tasu: {{fee}}"
+      "new_owner": "Uus omanik: {{newOwner}} ({{newOwnerOP}})"
     },
     "tooltip": "Teisaldab konto teisele kontole, kustutades samal ajal valge nimekirja"
   },
@@ -298,8 +291,7 @@
       "maximum_force_settlement_volume": "Maksimaalne jõuga kokkuleppe maht: {{maximum_force_settlement_volume}}",
       "short_backing_asset": "Lühike tagavara: {{symbol}} ({{short_backing_asset}})",
       "extensions": "Laiendused: {{extensions}}",
-      "noExtensions": "Laiendusi pole",
-      "fee": "Hinnanguline tasu: {{fee}} ({{id}})"
+      "noExtensions": "Laiendusi pole"
     },
     "tooltip": "Värskendage loodud bitasset seadeid"
   },
@@ -314,8 +306,7 @@
     "rows": {
       "issuer": "Väljaandja: {{issuer}} ({{issuerOP}})",
       "asset_to_update": "Värskendatav vara: {{symbol}} ({{asset_to_update}})",
-      "new_feed_producers": "Uued vootootjad: {{new_feed_producers}}",
-      "fee": "Hinnanguline tasu: {{fee}}"
+      "new_feed_producers": "Uued vootootjad: {{new_feed_producers}}"
     },
     "tooltip": "Värskendage loodud bitivarade heakskiidetud söödatootjate loendit"
   },
@@ -328,8 +319,7 @@
       "result": "Kiideti heaks järgmine varade emiteerimine:"
     },
     "rows": {
-      "prompt": "Kas anda välja {{amount}} {{symbol}} ({{assetID}}) kasutajale {{to}} ({{toID}})?",
-      "fee": "Hinnanguline tasu: {{fee}} ({{id}})"
+      "prompt": "Kas anda välja {{amount}} {{symbol}} ({{assetID}}) kasutajale {{to}} ({{toID}})?"
     },
     "tooltip": "Väljasta oma loodud varad üksikisikutele"
   },
@@ -344,8 +334,7 @@
     "rows": {
       "payer": "Maksja: {{payer}} ({{payerOP}})",
       "amount_to_reserve": "Reserveeritav summa: {{amount_to_reserve}} ({{amount_to_reserveOP}})",
-      "extensions": "Laiendused: {{extensions}}",
-      "fee": "Hinnanguline tasu: {{fee}}"
+      "extensions": "Laiendused: {{extensions}}"
     },
     "tooltip": "Broneerige loodud varad"
   },
@@ -360,8 +349,7 @@
     "rows": {
       "from_account": "Kontolt: {{from_account}} ({{from_accountOP}})",
       "asset": "Vara: {{asset}} ({{assetOP}})",
-      "amount": "Summa: {{amount}}",
-      "fee": "Hinnanguline tasu: {{fee}}"
+      "amount": "Summa: {{amount}}"
     },
     "tooltip": "Rahastage loodud vara tasufondi"
   },
@@ -375,8 +363,7 @@
     },
     "rows": {
       "account": "Konto: {{account}} ({{accountOP}})",
-      "amount": "Summa: {{amount}} ({{assetID}})",
-      "fee": "Hinnanguline tasu: {{fee}}"
+      "amount": "Summa: {{amount}} ({{assetID}})"
     },
     "tooltip": "Arveldage oma portfellis vara"
   },
@@ -391,8 +378,7 @@
     "rows": {
       "issuer": "Väljaandja: {{issuer}} ({{issuerOP}})",
       "asset_to_settle": "Arveldatav vara: {{asset_to_settle}} ({{asset_to_settleOP}})",
-      "settle_price": "Lepingu hind: {{settle_price}}",
-      "fee": "Hinnanguline tasu: {{fee}}"
+      "settle_price": "Lepingu hind: {{settle_price}}"
     },
     "tooltip": "Arveldage globaalselt üks oma loodud bitivaradest"
   },
@@ -412,8 +398,7 @@
       "settlement_price": "Lõpphind: {{settlement_price}}",
       "maintenance_collateral_ratio": "Hooldustagatise suhe: {{maintenance_collateral_ratio}}",
       "maximum_short_squeeze_ratio": "Maksimaalne lühike pigistussuhe: {{maximum_short_squeeze_ratio}}",
-      "extensions": "Laiendused: {{extensions}}",
-      "fee": "Hinnanguline tasu: {{fee}}"
+      "extensions": "Laiendused: {{extensions}}"
     },
     "tooltip": "Avaldage bitassetile hinnavoog"
   },
@@ -428,8 +413,7 @@
     "rows": {
       "witness_account": "Tunnistaja konto: {{witness_account}} ({{witness_accountOP}})",
       "url": "URL: {{url}}",
-      "block_signing_key": "Blokeeri allkirjastamisvõti: {{block_signing_key}}",
-      "fee": "Hinnanguline tasu: {{fee}}"
+      "block_signing_key": "Blokeeri allkirjastamisvõti: {{block_signing_key}}"
     },
     "tooltip": "Looge tunnistaja konto"
   },
@@ -445,8 +429,7 @@
       "witness": "Tunnistaja: {{witness}}",
       "witness_account": "Tunnistaja konto: {{witness_account}} ({{witness_accountOP}})",
       "new_url": "Uus URL: {{new_url}}",
-      "new_signing_key": "Uus allkirjastamisvõti: {{new_signing_key}}",
-      "fee": "Hinnanguline tasu: {{fee}}"
+      "new_signing_key": "Uus allkirjastamisvõti: {{new_signing_key}}"
     },
     "tooltip": "Värskendage oma tunnistaja kontot"
   },
@@ -462,8 +445,7 @@
       "expiration_time": "Aegumisaeg: {{expiration_time}}",
       "proposed_ops": "Kavandatud toimingud: {{proposed_ops}}",
       "review_period_seconds": "Ülevaatusperioodi sekundid: {{review_period_seconds}}",
-      "fee_paying_account": "Tasu maksmise konto: {{fee_paying_account}} ({{fee_paying_accountOP}})",
-      "fee": "Hinnanguline tasu: {{fee}}"
+      "fee_paying_account": "Tasu maksmise konto: {{fee_paying_account}} ({{fee_paying_accountOP}})"
     },
     "tooltip": "Looge plokiahela toimimise ettepanek"
   },
@@ -484,8 +466,7 @@
       "key_approvals_to_add": "Lisatavad võtmekinnitused: {{key_approvals_to_add}}",
       "key_approvals_to_remove": "Eemaldatavad võtmekinnitused: {{key_approvals_to_remove}}",
       "fee_paying_account": "Tasu maksmise konto: {{fee_paying_account}} ({{fee_paying_accountOP}})",
-      "extensions": "Laiendused: {{extensions}}",
-      "fee": "Hinnanguline tasu: {{fee}}"
+      "extensions": "Laiendused: {{extensions}}"
     },
     "tooltip": "Värskendage plokiahela toimimise ettepanekut"
   },
@@ -501,8 +482,7 @@
       "using_owner_authority": "Omaniku volituse kasutamine: {{using_owner_authority}}",
       "proposal": "Ettepanek: {{proposal}}",
       "fee_paying_account": "Tasu maksmise konto: {{fee_paying_account}} ({{fee_paying_accountOP}})",
-      "extensions": "Laiendused: {{extensions}}",
-      "fee": "Hinnanguline tasu: {{fee}}"
+      "extensions": "Laiendused: {{extensions}}"
     },
     "tooltip": "Kustutage plokiahela toimimise ettepanek"
   },
@@ -538,8 +518,7 @@
       "withdrawal_unlimited": "Väljavõtmise limiit: {{withdrawal_limit}} ({{withdrawal_limitOP}})",
       "withdrawal_period_sec": "Taganemisperiood (sekundites): {{withdrawal_period_sec}}",
       "period_start_time": "Perioodi algusaeg: {{period_start_time}}",
-      "periods_until_expiration": "Period kuni aegumiseni: {{periods_until_expiration}}",
-      "fee": "Hinnanguline tasu: {{fee}}"
+      "periods_until_expiration": "Period kuni aegumiseni: {{periods_until_expiration}}"
     },
     "tooltip": "Värskendage tühistamisluba"
   },
@@ -556,8 +535,7 @@
       "withdraw_from_account": "Eemalda kontolt: {{withdraw_from_account}} ({{withdraw_from_accountOP}})",
       "withdraw_to_account": "Kontole väljavõtmine: {{withdraw_to_account}} ({{withdraw_to_accountOP}})",
       "amount_to_withdraw": "Väljamakstav summa: {{amount_to_withdraw}} ({{amount_to_withdrawOP}})",
-      "memo": "Memo: {{memo}}",
-      "fee": "Hinnanguline tasu: {{fee}}"
+      "memo": "Memo: {{memo}}"
     },
     "tooltip": "Nõue tagasivõtmise loa alusel"
   },
@@ -572,8 +550,7 @@
     "rows": {
       "withdraw_from_account": "Eemalda kontolt: {{withdraw_from_account}} ({{withdraw_from_accountOP}})",
       "authorized_account": "Volitatud konto: {{authorized_account}} ({{authorized_accountOP}})",
-      "withdrawal_permission": "Väljavõtmise luba: {{withdrawal_permission}}",
-      "fee": "Hinnanguline tasu: {{fee}}"
+      "withdrawal_permission": "Väljavõtmise luba: {{withdrawal_permission}}"
     },
     "tooltip": "Kustutage tühistamisluba"
   },
@@ -587,8 +564,7 @@
     },
     "rows": {
       "committee_member_account": "Komisjoni liikme konto: {{committee_member_account}} ({{committee_member_accountOP}})",
-      "url": "URL: {{url}}",
-      "fee": "Hinnanguline tasu: {{fee}}"
+      "url": "URL: {{url}}"
     },
     "tooltip": "Looge komisjoni liikme konto"
   },
@@ -603,8 +579,7 @@
     "rows": {
       "committee_member": "Komisjoni liige: {{committee_member}}",
       "committee_member_account": "Komisjoni liikme konto: {{committee_member_account}} ({{committee_member_accountOP}})",
-      "new_url": "Uus URL: {{new_url}}",
-      "fee": "Hinnanguline tasu: {{fee}}"
+      "new_url": "Uus URL: {{new_url}}"
     },
     "tooltip": "Värskendage oma komitee liikme konto üksikasju"
   },
@@ -646,8 +621,7 @@
       "accounts_per_fee_scale": "Kontod tasu skaala kohta: {{accounts_per_fee_scale}}",
       "account_fee_scale_bitshifts": "Kontotasude skaala bitinihked: {{account_fee_scale_bitshifts}}",
       "max_authority_depth": "Maksimaalne volituse sügavus: {{max_authority_depth}}",
-      "extensions": "Laiendused: {{extensions}}",
-      "fee": "Hinnanguline tasu: {{fee}}"
+      "extensions": "Laiendused: {{extensions}}"
     },
     "tooltip": "Avaldage oma komitee liikme seisukoht Bitsharesi plokiahela globaalsete parameetrite väärtuste kohta"
   },
@@ -668,8 +642,7 @@
       "vesting_cliff_seconds": "Kalju sekundite omandamine: {{vesting_cliff_seconds}}",
       "vesting_duration_seconds": "Üleandmise kestus sekundites: {{vesting_duration_seconds}}",
       "start_claim": "Alusta nõuet: {{start_claim}}",
-      "vesting_seconds": "Üleandmise sekundid: {{vesting_seconds}}",
-      "fee": "Hinnanguline tasu: {{fee}}"
+      "vesting_seconds": "Üleandmise sekundid: {{vesting_seconds}}"
     },
     "tooltip": "Looge omandamise saldo"
   },
@@ -702,8 +675,7 @@
       "daily_pay": "Päevatasu: {{daily_pay}}",
       "name": "Nimi: {{name}}",
       "url": "URL: {{url}}",
-      "initializer": "Initsialiseerija: {{initializer}}",
-      "fee": "Hinnanguline tasu: {{fee}}"
+      "initializer": "Initsialiseerija: {{initializer}}"
     },
     "tooltip": "Looge töötaja ettepanek"
   },
@@ -719,8 +691,7 @@
       "payer": "Maksja: {{payer}} ({{payerOP}})",
       "required_auths": "Nõutavad volitused: {{required_auths}}",
       "id": "Ma {{id}}",
-      "data": "Andmed: {{data}}",
-      "fee": "Hinnanguline tasu: {{fee}}"
+      "data": "Andmed: {{data}}"
     },
     "tooltip": "Pakub üldist viisi kõrgema taseme protokollide lisamiseks tunnistajate konsensuse peale"
   },
@@ -736,8 +707,7 @@
       "fee_paying_account": "Tasu maksmise konto: {{fee_paying_account}} ({{fee_paying_accountOP}})",
       "predicates": "Predikaadid: {{predicates}}",
       "required_auths": "Nõutavad volitused: {{required_auths}}",
-      "extensions": "Laiendused: {{extensions}}",
-      "fee": "Hinnanguline tasu: {{fee}}"
+      "extensions": "Laiendused: {{extensions}}"
     },
     "tooltip": "Kinnitage, et mõned tingimused on tõesed."
   },
@@ -753,8 +723,7 @@
       "deposit_to_account": "Deposiit kontole: {{deposit_to_account}} ({{deposit_to_accountOP}})",
       "balance_to_claim": "Nõutav saldo: {{balance_to_claim}} ({{asset_id}})",
       "balance_owner_key": "Saldo omaniku võti: {{balance_owner_key}}",
-      "total_claimed": "Nõude kogusumma: {{total_claimed}} ({{asset_id}})",
-      "fee": "Hinnanguline tasu: {{fee}}"
+      "total_claimed": "Nõude kogusumma: {{total_claimed}} ({{asset_id}})"
     },
     "tooltip": "Nõue saldost"
   },
@@ -771,8 +740,7 @@
       "from": "Saatja: {{from}} ({{fromOP}})",
       "to": "Saaja: {{to}} ({{toOP}})",
       "amount": "Summa: {{amount}} ({{asset_id}})",
-      "memo": "Memo: {{memo}}",
-      "fee": "Hinnanguline tasu: {{fee}}"
+      "memo": "Memo: {{memo}}"
     },
     "tooltip": "Edastustoimingu tühistamine"
   },
@@ -788,8 +756,7 @@
       "amount": "Summa: {{amount}}",
       "from": "Saatja: {{from}} ({{fromOP}})",
       "blinding_factor": "Pimestav tegur: {{blinding_factor}}",
-      "outputs": "Väljundid: {{outputs}}",
-      "fee": "Hinnanguline tasu: {{fee}}"
+      "outputs": "Väljundid: {{outputs}}"
     },
     "tooltip": "Viige varad pimedasse sihtkohta"
   },
@@ -803,8 +770,7 @@
     },
     "rows": {
       "inputs": "Sisendid: {{inputs}}",
-      "outputs": "Väljundid: {{outputs}}",
-      "fee": "Hinnanguline tasu: {{fee}}"
+      "outputs": "Väljundid: {{outputs}}"
     },
     "tooltip": "Pimedate varade pimesi ülekandmine"
   },
@@ -820,8 +786,7 @@
       "amount": "Summa: {{amount}}",
       "to": "Saaja: {{to}} ({{toOP}})",
       "blinding_factor": "Pimestav tegur: {{blinding_factor}}",
-      "inputs": "Sisendid: {{inputs}}",
-      "fee": "Hinnanguline tasu: {{fee}}"
+      "inputs": "Sisendid: {{inputs}}"
     },
     "tooltip": "Võtke varad pimebilansilt välja"
   },
@@ -835,8 +800,7 @@
     },
     "rows": {
       "issuer": "Väljaandja: {{issuer}} ({{issuerOP}})",
-      "amount_to_claim": "Nõude summa: {{amount_to_claim}} ({{asset_id}})",
-      "fee": "Hinnanguline tasu: {{fee}}"
+      "amount_to_claim": "Nõude summa: {{amount_to_claim}} ({{asset_id}})"
     },
     "tooltip": "Nõuda tasud varalt"
   },
@@ -851,8 +815,7 @@
     "rows": {
       "bidder": "Pakkuja: {{bidder}} ({{bidderOP}})",
       "additional_collateral": "Lisatagatis: {{additional_collateral}}",
-      "debt_covered": "Võlg kaetud: {{debt_covered}}",
-      "fee": "Hinnanguline tasu: {{fee}}"
+      "debt_covered": "Võlg kaetud: {{debt_covered}}"
     },
     "tooltip": "Tehke pakkumine bitassets tagatistagatisele, kui see on globaalselt arveldatud"
   },
@@ -867,8 +830,7 @@
     "rows": {
       "issuer": "Väljaandja: {{issuer}} ({{issuerOP}})",
       "asset_id": "Vara: {{asset_id}}",
-      "amount_to_claim": "Nõude summa: {{amount_to_claim}}",
-      "fee": "Hinnanguline tasu: {{fee}}"
+      "amount_to_claim": "Nõude summa: {{amount_to_claim}}"
     },
     "tooltip": "Kandab BTS-i kindlaksmääratud vara tasufondist tagasi emitendi saldole"
   },
@@ -883,8 +845,7 @@
     "rows": {
       "issuer": "Väljaandja: {{issuer}} ({{issuerOP}})",
       "asset_to_update": "Värskendatav vara: {{asset_to_update}}",
-      "new_issuer": "Uus väljaandja: {{new_issuer}} ({new_issuerOP})",
-      "fee": "Hinnanguline tasu: {{fee}}"
+      "new_issuer": "Uus väljaandja: {{new_issuer}} ({new_issuerOP})"
     },
     "tooltip": "Värskendage vara väljaandja uuele administraatorikontole."
   },
@@ -902,8 +863,7 @@
       "amount": "Summa: {{amount}}",
       "preimage_hash": "Eelpildi räsi: {{preimage_hash}}",
       "preimage_size": "Eelpildi suurus: {{preimage_size}}",
-      "claim_period_seconds": "Nõude esitamise periood (sekundites): {{claim_period_seconds}}",
-      "fee": "Hinnanguline tasu: {{fee}}"
+      "claim_period_seconds": "Nõude esitamise periood (sekundites): {{claim_period_seconds}}"
     },
     "tooltip": "Looge räsiajaga lukustatud lepingu (HTLC) toiming"
   },
@@ -919,8 +879,7 @@
       "htlc_id": "HTLC ID: {{htlc_id}}",
       "redeemer": "Lunastaja: {{redeemer}} ({{redeemerOP}})",
       "preimage": "Eelpilt: {{preimage}}",
-      "extensions": "Laiendused: {{extensions}}",
-      "fee": "Hinnanguline tasu: {{fee}}"
+      "extensions": "Laiendused: {{extensions}}"
     },
     "tooltip": "Lunastage HTLC-toimingu sisu"
   },
@@ -936,8 +895,7 @@
       "htlc_id": "HTLC ID: {{htlc_id}}",
       "update_issuer": "Värskenduse väljaandja: {{update_issuer}} ({{update_issuerOP}})",
       "seconds_to_add": "Sekundid lisamiseks: {{seconds_to_add}}",
-      "extensions": "Laiendused: {{extensions}}",
-      "fee": "Hinnanguline tasu: {{fee}}"
+      "extensions": "Laiendused: {{extensions}}"
     },
     "tooltip": "Pikendage HTLC toimingu kestust"
   },
@@ -957,8 +915,7 @@
       "operation_type": "Toimingu tüüp: {{operation_type}}",
       "auth": "Volitus: {{auth}}",
       "restrictions": "Piirangud: {{restrictions}}",
-      "extensions": "Laiendused: {{extensions}}",
-      "fee": "Hinnanguline tasu: {{fee}}"
+      "extensions": "Laiendused: {{extensions}}"
     },
     "tooltip": "Looge uus kohandatud asutus."
   },
@@ -979,8 +936,7 @@
       "new_auth": "Uus volitus: {{new_auth}}",
       "restrictions_to_remove": "Eemaldamise piirangud: {{restrictions_to_remove}}",
       "restrictions_to_add": "Lisamise piirangud: {{restrictions_to_add}}",
-      "extensions": "Laiendused: {{extensions}}",
-      "fee": "Hinnanguline tasu: {{fee}}"
+      "extensions": "Laiendused: {{extensions}}"
     },
     "tooltip": "Värskendage kohandatud asutust."
   },
@@ -995,8 +951,7 @@
     "rows": {
       "account": "Konto: {{account}} ({{accountOP}})",
       "authority_to_delete": "Kustutamisvolitus: {{authority_to_delete}}",
-      "extensions": "Laiendused: {{extensions}}",
-      "fee": "Hinnanguline tasu: {{fee}}"
+      "extensions": "Laiendused: {{extensions}}"
     },
     "tooltip": "Kustutage kohandatud asutus."
   },
@@ -1012,8 +967,7 @@
       "account": "Konto: {{account}} ({{accountOP}})",
       "target_type": "Sihtmärgi tüüp: {{target_type}}",
       "amount": "Summa: {{amount}}",
-      "extensions": "Laiendused: {{extensions}}",
-      "fee": "Hinnanguline tasu: {{fee}}"
+      "extensions": "Laiendused: {{extensions}}"
     },
     "tooltip": "Looge uus pilet."
   },
@@ -1049,8 +1003,7 @@
       "share_asset": "Jaga vara: {{share_asset}} ({{share_assetOP}})",
       "taker_fee_percent": "Võtja tasu protsent: {{taker_fee_percent}}",
       "withdrawal_fee_percent": "Väljamaksetasu protsent: {{withdrawal_fee_percent}}",
-      "extensions": "Laiendused: {{extensions}}",
-      "fee": "Hinnanguline tasu: {{fee}}"
+      "extensions": "Laiendused: {{extensions}}"
     },
     "tooltip": "Looge likviidsuskogum"
   },
@@ -1065,8 +1018,7 @@
     "rows": {
       "account": "Konto: {{account}} ({{accountOP}})",
       "pool_id": "Basseini ID: {{pool_id}}",
-      "extensions": "Laiendused: {{extensions}}",
-      "fee": "Hinnanguline tasu: {{fee}}"
+      "extensions": "Laiendused: {{extensions}}"
     },
     "tooltip": "Kustutage likviidsuskogum"
   },
@@ -1083,8 +1035,7 @@
       "pool": "Bassein: {{pool}}",
       "asset_a": "Vara A: {{asset_a}} ({{asset_aOP}})",
       "asset_b": "Vara B: {{asset_b}} ({{asset_bOP}})",
-      "extensions": "Laiendused: {{extensions}}",
-      "fee": "Hinnanguline tasu: {{fee}}"
+      "extensions": "Laiendused: {{extensions}}"
     },
     "tooltip": "Deponeerige raha likviidsusfondi"
   },
@@ -1100,8 +1051,7 @@
       "account": "Konto: {{account}} ({{accountOP}})",
       "pool": "Bassein: {{pool}}",
       "share_asset": "Jaga vara: {{share_asset}} ({{share_assetOP}})",
-      "extensions": "Laiendused: {{extensions}}",
-      "fee": "Hinnanguline tasu: {{fee}}"
+      "extensions": "Laiendused: {{extensions}}"
     },
     "tooltip": "Võtke raha välja likviidsuskogumist"
   },
@@ -1118,8 +1068,7 @@
       "pool": "Bassein: {{pool}}",
       "amount_to_sell": "Müüdav summa: {{amount_to_sell}}",
       "min_to_receive": "Minimaalne vastuvõtt: {{min_to_receive}}",
-      "extensions": "Laiendused: {{extensions}}",
-      "fee": "Hinnanguline tasu: {{fee}}"
+      "extensions": "Laiendused: {{extensions}}"
     },
     "tooltip": "Vahetada likviidsusfondiga."
   },
@@ -1136,8 +1085,7 @@
       "asset_type": "Vara tüüp: {{asset_type}}",
       "balance": "Saldo: {{balance}}",
       "fee_rate": "Tasu määr: {{fee_rate}}",
-      "extensions": "Laiendused: {{extensions}}",
-      "fee": "Hinnanguline tasu: {{fee}}"
+      "extensions": "Laiendused: {{extensions}}"
     },
     "tooltip": "Looge uus SameT fond. "
   },
@@ -1152,8 +1100,7 @@
     "rows": {
       "owner_account": "Omaniku konto: {{owner_account}} ({{owner_accountOP}})",
       "fund_id": "Fondi ID: {{fund_id}}",
-      "extensions": "Laiendused: {{extensions}}",
-      "fee": "Hinnanguline tasu: {{fee}}"
+      "extensions": "Laiendused: {{extensions}}"
     },
     "tooltip": "Kustutage SameT fondi objekt."
   },
@@ -1170,8 +1117,7 @@
       "fund_id": "Fondi ID: {{fund_id}}",
       "delta_amount": "Delta summa: {{delta_amount}}",
       "new_fee_rate": "Uus tasumäär: {{new_fee_rate}}",
-      "extensions": "Laiendused: {{extensions}}",
-      "fee": "Hinnanguline tasu: {{fee}}"
+      "extensions": "Laiendused: {{extensions}}"
     },
     "tooltip": "SameT fondi objekti värskendamine."
   },
@@ -1187,8 +1133,7 @@
       "borrower": "Laenaja: {{borrower}} ({{borrowerOP}})",
       "fund_id": "Fondi ID: {{fund_id}}",
       "borrow_amount": "Laenusumma: {{borrow_amount}}",
-      "extensions": "Laiendused: {{extensions}}",
-      "fee": "Hinnanguline tasu: {{fee}}"
+      "extensions": "Laiendused: {{extensions}}"
     },
     "tooltip": "Laena SameT fondist."
   },
@@ -1205,8 +1150,7 @@
       "fund_id": "Fondi ID: {{fund_id}}",
       "repay_amount": "Tagasimakse summa: {{repay_amount}}",
       "fund_fee": "Fonditasu: {{fund_fee}}",
-      "extensions": "Laiendused: {{extensions}}",
-      "fee": "Hinnanguline tasu: {{fee}}"
+      "extensions": "Laiendused: {{extensions}}"
     },
     "tooltip": "Makske võlg tagasi SameT fondi."
   },
@@ -1229,8 +1173,7 @@
       "auto_disable_time": "Automaatse keelamise aeg: {{auto_disable_time}}",
       "acceptable_collateral": "Aktsepteeritav tagatis: {{acceptable_collateral}}",
       "acceptable_borrowers": "Aktsepteeritavad laenuvõtjad: {{acceptable_borrowers}}",
-      "extensions": "Laiendused: {{extensions}}",
-      "fee": "Hinnanguline tasu: {{fee}}"
+      "extensions": "Laiendused: {{extensions}}"
     },
     "tooltip": "Looge uus krediidipakkumine. "
   },
@@ -1245,8 +1188,7 @@
     "rows": {
       "owner_account": "Omaniku konto: {{owner_account}} ({{owner_accountOP}})",
       "offer_id": "Pakkumise ID: {{offer_id}}",
-      "extensions": "Laiendused: {{extensions}}",
-      "fee": "Hinnanguline tasu: {{fee}}"
+      "extensions": "Laiendused: {{extensions}}"
     },
     "tooltip": "Kustutage krediidipakkumine."
   },
@@ -1269,8 +1211,7 @@
       "auto_disable_time": "Automaatse keelamise aeg: {{auto_disable_time}}",
       "acceptable_collateral": "Aktsepteeritav tagatis: {{acceptable_collateral}}",
       "acceptable_borrowers": "Aktsepteeritavad laenuvõtjad: {{acceptable_borrowers}}",
-      "extensions": "Laiendused: {{extensions}}",
-      "fee": "Hinnanguline tasu: {{fee}}"
+      "extensions": "Laiendused: {{extensions}}"
     },
     "tooltip": "Uuenda krediidipakkumist"
   },
@@ -1289,8 +1230,7 @@
       "collateral": "Tagatis: {{collateral}}",
       "max_fee_rate": "Maksimaalne tasumäär: {{max_fee_rate}}",
       "min_duration_seconds": "Minimaalne kestus sekundites: {{min_duration_seconds}}",
-      "extensions": "Laiendused: {{extensions}}",
-      "fee": "Hinnanguline tasu: {{fee}}"
+      "extensions": "Laiendused: {{extensions}}"
     },
     "tooltip": "Nõustuge krediidipakkumisega ja looge krediiditehing."
   },
@@ -1307,8 +1247,7 @@
       "deal_id": "Tehingu ID: {{deal_id}}",
       "repay_amount": "Tagasimakse summa: {{repay_amount}}",
       "credit_fee": "Krediiditasu: {{credit_fee}}",
-      "extensions": "Laiendused: {{extensions}}",
-      "fee": "Hinnanguline tasu: {{fee}}"
+      "extensions": "Laiendused: {{extensions}}"
     },
     "tooltip": "Makske krediiditehing tagasi."
   },
@@ -1324,8 +1263,7 @@
       "owner_account": "Omaniku konto: {{owner_account}} ({{owner_accountOP}})",
       "pool_id": "Basseini ID: {{pool_id}}",
       "new_parameters": "Uued parameetrid: {{new_parameters}}",
-      "extensions": "Laiendused: {{extensions}}",
-      "fee": "Hinnanguline tasu: {{fee}}"
+      "extensions": "Laiendused: {{extensions}}"
     },
     "tooltip": "Värskendage likviidsusfondi"
   },
@@ -1338,7 +1276,6 @@
       "result": "Järgmist krediiditehingut värskendati:"
     },
     "rows": {
-      "fee": "Hinnanguline tasu: {{fee}}",
       "account": "Konto: {{account}} ({{accountOP}})",
       "deal_id": "Tehingu ID: {{deal_id}}",
       "auto_repay": "Automaatne tagasimakse: {{auto_repay}}"
@@ -1354,7 +1291,6 @@
       "result": "Järgmist limiittellimust värskendati:"
     },
     "rows": {
-      "fee": "Hinnanguline tasu: {{fee}}",
       "seller": "Müüja: {{seller}} ({{sellerOP}})",
       "order": "Tellimus: {{order}}",
       "new_price": "Uus hind: {{new_price}}",

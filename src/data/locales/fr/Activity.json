@@ -42,7 +42,6 @@
     },
     "rows": {
       "id": "Numéro de commande : {{id}}",
-      "fees": "Frais estimés : {{fees}}",
       "account": "Compte payant : {{account}}"
     },
     "tooltip": "Annulation d'une opération d'ordre limité"
@@ -58,8 +57,7 @@
     "rows": {
       "funding_account": "Compte de financement : {{funding_account}}",
       "delta_collateral": "Garantie Delta : {{delta_collateral}} ({{id}})",
-      "delta_debt": "Dette Delta : {{delta_debt}} ({{id}})",
-      "fees": "Frais estimés : {{fees}}"
+      "delta_debt": "Dette Delta : {{delta_debt}} ({{id}})"
     },
     "tooltip": "Mettre à jour une commande d'appel existante"
   },
@@ -88,8 +86,7 @@
       "num_witness": "Nombre de témoins : {{num_witness}}",
       "num_committee": "Nombre de membres du comité : {{num_committee}}",
       "votes": "Votes : {{votes}}",
-      "extensions": "Extensions : {{extensions}}",
-      "fees": "Frais estimés : {{fees}}"
+      "extensions": "Extensions : {{extensions}}"
     },
     "tooltip": "Création d'un nouveau compte"
   },
@@ -107,8 +104,7 @@
       "owner": "Propriétaire : {{owner}}",
       "active": "Actif : {{active}}",
       "new_options": "Nouvelles options : {{new_options}}",
-      "extensions": "Extensions : {{extensions}}",
-      "fees": "Frais estimés : {{fees}}"
+      "extensions": "Extensions : {{extensions}}"
     },
     "tooltip": "Cette opération permet de mettre à jour un compte existant. "
   },
@@ -124,8 +120,7 @@
       "authorizing_account": "Compte d'autorisation : {{authorizingAccount}} (authorizingAccountOP)",
       "account_to_list": "Compte à lister : {{accountToList}} (accountToListOP)",
       "new_listing": "Nouvelle annonce : {{newListing}}",
-      "extensions": "Extensions : {{extensions}}",
-      "fee": "Frais : {{fee}}"
+      "extensions": "Extensions : {{extensions}}"
     },
     "tooltip": "Cette opération est utilisée pour mettre les comptes sur liste blanche et noire, principalement pour effectuer des transactions sur les actifs sur liste blanche."
   },
@@ -140,8 +135,7 @@
     "rows": {
       "account_to_upgrade": "Compte à mettre à niveau : {{accountToUpgrade}} (accountToUpgradeOP)",
       "upgrade_to_lifetime_member": "Devenir membre à vie : {{upgradeToLifetimeMember}}",
-      "extensions": "Extensions : {{extensions}}",
-      "fee": "Frais estimés : {{fee}}"
+      "extensions": "Extensions : {{extensions}}"
     },
     "tooltip": "Cette opération permet de faire évoluer un compte vers un membre, ou de renouveler son abonnement."
   },
@@ -156,8 +150,7 @@
     "rows": {
       "warning": "Attention : Cette action est irréversible !",
       "account_id": "ID de compte : {{originalOwner}} ({{account_id}})",
-      "new_owner": "Nouveau propriétaire : {{newOwner}} ({{newOwnerOP}})",
-      "fee": "Frais estimés : {{fee}}"
+      "new_owner": "Nouveau propriétaire : {{newOwner}} ({{newOwnerOP}})"
     },
     "tooltip": "Transfère le compte vers un autre compte tout en effaçant la liste blanche"
   },
@@ -298,8 +291,7 @@
       "maximum_force_settlement_volume": "Volume maximum de règlement des forces : {{maximum_force_settlement_volume}}",
       "short_backing_asset": "Actif de support court : {{symbol}} ({{short_backing_asset}})",
       "extensions": "Extensions : {{extensions}}",
-      "noExtensions": "Aucune extension",
-      "fee": "Frais estimés : {{fee}} ({{id}})"
+      "noExtensions": "Aucune extension"
     },
     "tooltip": "Mettre à jour les paramètres des actifs binaires créés"
   },
@@ -314,8 +306,7 @@
     "rows": {
       "issuer": "Émetteur : {{issuer}} ({{issuerOP}})",
       "asset_to_update": "Actif à mettre à jour : {{symbol}} ({{asset_to_update}})",
-      "new_feed_producers": "Nouveaux producteurs d'aliments : {{new_feed_producers}}",
-      "fee": "Frais estimés : {{fee}}"
+      "new_feed_producers": "Nouveaux producteurs d'aliments : {{new_feed_producers}}"
     },
     "tooltip": "Mettre à jour la liste des producteurs d'aliments agréés pour le bitasset créé"
   },
@@ -328,8 +319,7 @@
       "result": "L'émission d'actifs suivante a été approuvée :"
     },
     "rows": {
-      "prompt": "Émettre {{amount}} {{symbol}} ({{assetID}}) à {{to}} ({{toID}}) ?",
-      "fee": "Frais estimés : {{fee}} ({{id}})"
+      "prompt": "Émettre {{amount}} {{symbol}} ({{assetID}}) à {{to}} ({{toID}}) ?"
     },
     "tooltip": "Transmettez vos actifs créés à des particuliers"
   },
@@ -344,8 +334,7 @@
     "rows": {
       "payer": "Payeur : {{payer}} ({{payerOP}})",
       "amount_to_reserve": "Montant à réserver : {{amount_to_reserve}} ({{amount_to_reserveOP}})",
-      "extensions": "Extensions : {{extensions}}",
-      "fee": "Frais estimés : {{fee}}"
+      "extensions": "Extensions : {{extensions}}"
     },
     "tooltip": "Réservez vos actifs créés"
   },
@@ -360,8 +349,7 @@
     "rows": {
       "from_account": "Depuis le compte : {{from_account}} ({{from_accountOP}})",
       "asset": "Actif : {{asset}} ({{assetOP}})",
-      "amount": "Montant : {{amount}}",
-      "fee": "Frais estimés : {{fee}}"
+      "amount": "Montant : {{amount}}"
     },
     "tooltip": "Financez le pool de frais pour votre actif créé"
   },
@@ -375,8 +363,7 @@
     },
     "rows": {
       "account": "Compte : {{account}} ({{accountOP}})",
-      "amount": "Montant : {{amount}} ({{assetID}})",
-      "fee": "Frais estimés : {{fee}}"
+      "amount": "Montant : {{amount}} ({{assetID}})"
     },
     "tooltip": "Installer un actif dans votre portefeuille"
   },
@@ -391,8 +378,7 @@
     "rows": {
       "issuer": "Émetteur : {{issuer}} ({{issuerOP}})",
       "asset_to_settle": "Actif à régler : {{asset_to_settle}} ({{asset_to_settleOP}})",
-      "settle_price": "Prix ​​de règlement : {{settle_price}}",
-      "fee": "Frais estimés : {{fee}}"
+      "settle_price": "Prix ​​de règlement : {{settle_price}}"
     },
     "tooltip": "Réglez globalement l'un de vos bitassets créés"
   },
@@ -412,8 +398,7 @@
       "settlement_price": "Prix ​​de règlement : {{settlement_price}}",
       "maintenance_collateral_ratio": "Ratio de garantie de maintenance : {{maintenance_collateral_ratio}}",
       "maximum_short_squeeze_ratio": "Taux de compression court maximum : {{maximum_short_squeeze_ratio}}",
-      "extensions": "Extensions : {{extensions}}",
-      "fee": "Frais estimés : {{fee}}"
+      "extensions": "Extensions : {{extensions}}"
     },
     "tooltip": "Publier un flux de prix pour un bitasset"
   },
@@ -428,8 +413,7 @@
     "rows": {
       "witness_account": "Compte témoin : {{witness_account}} ({{witness_accountOP}})",
       "url": "URL : {{url}}",
-      "block_signing_key": "Clé de signature de bloc : {{block_signing_key}}",
-      "fee": "Frais estimés : {{fee}}"
+      "block_signing_key": "Clé de signature de bloc : {{block_signing_key}}"
     },
     "tooltip": "Créer un compte témoin"
   },
@@ -445,8 +429,7 @@
       "witness": "Témoin : {{witness}}",
       "witness_account": "Compte témoin : {{witness_account}} ({{witness_accountOP}})",
       "new_url": "Nouvelle URL : {{new_url}}",
-      "new_signing_key": "Nouvelle clé de signature : {{new_signing_key}}",
-      "fee": "Frais estimés : {{fee}}"
+      "new_signing_key": "Nouvelle clé de signature : {{new_signing_key}}"
     },
     "tooltip": "Mettez à jour votre compte témoin"
   },
@@ -462,8 +445,7 @@
       "expiration_time": "Heure d'expiration : {{expiration_time}}",
       "proposed_ops": "Opérations proposées : {{proposed_ops}}",
       "review_period_seconds": "Secondes de la période d'examen : {{review_period_seconds}}",
-      "fee_paying_account": "Compte payant : {{fee_paying_account}} ({{fee_paying_accountOP}})",
-      "fee": "Frais estimés : {{fee}}"
+      "fee_paying_account": "Compte payant : {{fee_paying_account}} ({{fee_paying_accountOP}})"
     },
     "tooltip": "Créer une proposition d'opération blockchain"
   },
@@ -484,8 +466,7 @@
       "key_approvals_to_add": "Approbations clés à ajouter : {{key_approvals_to_add}}",
       "key_approvals_to_remove": "Approbations clés à supprimer : {{key_approvals_to_remove}}",
       "fee_paying_account": "Compte payant : {{fee_paying_account}} ({{fee_paying_accountOP}})",
-      "extensions": "Extensions : {{extensions}}",
-      "fee": "Frais estimés : {{fee}}"
+      "extensions": "Extensions : {{extensions}}"
     },
     "tooltip": "Mettre à jour une proposition d'opération blockchain"
   },
@@ -501,8 +482,7 @@
       "using_owner_authority": "Utilisation de l'autorité du propriétaire : {{using_owner_authority}}",
       "proposal": "Proposition : {{proposal}}",
       "fee_paying_account": "Compte payant : {{fee_paying_account}} ({{fee_paying_accountOP}})",
-      "extensions": "Extensions : {{extensions}}",
-      "fee": "Frais estimés : {{fee}}"
+      "extensions": "Extensions : {{extensions}}"
     },
     "tooltip": "Supprimer une proposition d'opération blockchain"
   },
@@ -538,8 +518,7 @@
       "withdrawal_unlimited": "Limite de retrait : {{withdrawal_limit}} ({{withdrawal_limitOP}})",
       "withdrawal_period_sec": "Délai de rétractation (secondes) : {{withdrawal_period_sec}}",
       "period_start_time": "Heure de début des règles : {{period_start_time}}",
-      "periods_until_expiration": "Périodes jusqu'à l'expiration : {{periods_until_expiration}}",
-      "fee": "Frais estimés : {{fee}}"
+      "periods_until_expiration": "Périodes jusqu'à l'expiration : {{periods_until_expiration}}"
     },
     "tooltip": "Mettre à jour une autorisation de retrait"
   },
@@ -556,8 +535,7 @@
       "withdraw_from_account": "Retirer du compte : {{withdraw_from_account}} ({{withdraw_from_accountOP}})",
       "withdraw_to_account": "Retrait sur le compte : {{withdraw_to_account}} ({{withdraw_to_accountOP}})",
       "amount_to_withdraw": "Montant à retirer : {{amount_to_withdraw}} ({{amount_to_withdrawOP}})",
-      "memo": "Mémo : {{memo}}",
-      "fee": "Frais estimés : {{fee}}"
+      "memo": "Mémo : {{memo}}"
     },
     "tooltip": "Réclamation d'une autorisation de retrait"
   },
@@ -572,8 +550,7 @@
     "rows": {
       "withdraw_from_account": "Retirer du compte : {{withdraw_from_account}} ({{withdraw_from_accountOP}})",
       "authorized_account": "Compte autorisé : {{authorized_account}} ({{authorized_accountOP}})",
-      "withdrawal_permission": "Autorisation de retrait : {{withdrawal_permission}}",
-      "fee": "Frais estimés : {{fee}}"
+      "withdrawal_permission": "Autorisation de retrait : {{withdrawal_permission}}"
     },
     "tooltip": "Supprimer une autorisation de retrait"
   },
@@ -587,8 +564,7 @@
     },
     "rows": {
       "committee_member_account": "Compte membre du comité : {{committee_member_account}} ({{committee_member_accountOP}})",
-      "url": "URL : {{url}}",
-      "fee": "Frais estimés : {{fee}}"
+      "url": "URL : {{url}}"
     },
     "tooltip": "Créer un compte membre du comité"
   },
@@ -603,8 +579,7 @@
     "rows": {
       "committee_member": "Membre du comité : {{committee_member}}",
       "committee_member_account": "Compte membre du comité : {{committee_member_account}} ({{committee_member_accountOP}})",
-      "new_url": "Nouvelle URL : {{new_url}}",
-      "fee": "Frais estimés : {{fee}}"
+      "new_url": "Nouvelle URL : {{new_url}}"
     },
     "tooltip": "Mettez à jour les détails de votre compte de membre du comité"
   },
@@ -646,8 +621,7 @@
       "accounts_per_fee_scale": "Comptes par barème de frais : {{accounts_per_fee_scale}}",
       "account_fee_scale_bitshifts": "Bitshifts de l'échelle des frais de compte : {{account_fee_scale_bitshifts}}",
       "max_authority_depth": "Profondeur maximale de l'autorité : {{max_authority_depth}}",
-      "extensions": "Extensions : {{extensions}}",
-      "fee": "Frais estimés : {{fee}}"
+      "extensions": "Extensions : {{extensions}}"
     },
     "tooltip": "Publiez la position des membres de votre comité sur les valeurs des paramètres globaux de la blockchain Bitshares"
   },
@@ -668,8 +642,7 @@
       "vesting_cliff_seconds": "Acquisition de secondes de falaise : {{vesting_cliff_seconds}}",
       "vesting_duration_seconds": "Durée d'acquisition en secondes : {{vesting_duration_seconds}}",
       "start_claim": "Démarrer la réclamation : {{start_claim}}",
-      "vesting_seconds": "Secondes d'acquisition : {{vesting_seconds}}",
-      "fee": "Frais estimés : {{fee}}"
+      "vesting_seconds": "Secondes d'acquisition : {{vesting_seconds}}"
     },
     "tooltip": "Créer un solde d'acquisition"
   },
@@ -702,8 +675,7 @@
       "daily_pay": "Salaire journalier : {{daily_pay}}",
       "name": "Nom {{name}}",
       "url": "URL : {{url}}",
-      "initializer": "Initialiseur : {{initializer}}",
-      "fee": "Frais estimés : {{fee}}"
+      "initializer": "Initialiseur : {{initializer}}"
     },
     "tooltip": "Créer une proposition de travailleur"
   },
@@ -719,8 +691,7 @@
       "payer": "Payeur : {{payer}} ({{payerOP}})",
       "required_auths": "Autorités requises : {{required_auths}}",
       "id": "Je l'ai {{id}}",
-      "data": "Données : {{data}}",
-      "fee": "Frais estimés : {{fee}}"
+      "data": "Données : {{data}}"
     },
     "tooltip": "Fournit un moyen générique d’ajouter des protocoles de niveau supérieur au consensus des témoins"
   },
@@ -736,8 +707,7 @@
       "fee_paying_account": "Compte payant : {{fee_paying_account}} ({{fee_paying_accountOP}})",
       "predicates": "Prédicats : {{predicates}}",
       "required_auths": "Autorités requises : {{required_auths}}",
-      "extensions": "Extensions : {{extensions}}",
-      "fee": "Frais estimés : {{fee}}"
+      "extensions": "Extensions : {{extensions}}"
     },
     "tooltip": "Affirmez que certaines conditions sont vraies."
   },
@@ -753,8 +723,7 @@
       "deposit_to_account": "Dépôt sur le compte : {{deposit_to_account}} ({{deposit_to_accountOP}})",
       "balance_to_claim": "Solde à réclamer : {{balance_to_claim}} ({{asset_id}})",
       "balance_owner_key": "Clé du propriétaire du solde : {{balance_owner_key}}",
-      "total_claimed": "Total réclamé : {{total_claimed}} ({{asset_id}})",
-      "fee": "Frais estimés : {{fee}}"
+      "total_claimed": "Total réclamé : {{total_claimed}} ({{asset_id}})"
     },
     "tooltip": "Réclamation à partir d'un solde"
   },
@@ -771,8 +740,7 @@
       "from": "De : {{from}} ({{fromOP}})",
       "to": "À : {{to}} ({{toOP}})",
       "amount": "Montant : {{amount}} ({{asset_id}})",
-      "memo": "Mémo : {{memo}}",
-      "fee": "Frais estimés : {{fee}}"
+      "memo": "Mémo : {{memo}}"
     },
     "tooltip": "Remplacer une opération de transfert"
   },
@@ -788,8 +756,7 @@
       "amount": "Montant : {{amount}}",
       "from": "De : {{from}} ({{fromOP}})",
       "blinding_factor": "Facteur aveuglant : {{blinding_factor}}",
-      "outputs": "Résultats : {{outputs}}",
-      "fee": "Frais estimés : {{fee}}"
+      "outputs": "Résultats : {{outputs}}"
     },
     "tooltip": "Transférer des actifs vers une destination aveugle"
   },
@@ -803,8 +770,7 @@
     },
     "rows": {
       "inputs": "Entrées : {{inputs}}",
-      "outputs": "Résultats : {{outputs}}",
-      "fee": "Frais estimés : {{fee}}"
+      "outputs": "Résultats : {{outputs}}"
     },
     "tooltip": "Transférer des actifs aveugles de manière aveugle"
   },
@@ -820,8 +786,7 @@
       "amount": "Montant : {{amount}}",
       "to": "À : {{to}} ({{toOP}})",
       "blinding_factor": "Facteur aveuglant : {{blinding_factor}}",
-      "inputs": "Entrées : {{inputs}}",
-      "fee": "Frais estimés : {{fee}}"
+      "inputs": "Entrées : {{inputs}}"
     },
     "tooltip": "Retirer des actifs d'un solde aveugle"
   },
@@ -835,8 +800,7 @@
     },
     "rows": {
       "issuer": "Émetteur : {{issuer}} ({{issuerOP}})",
-      "amount_to_claim": "Montant à réclamer : {{amount_to_claim}} ({{asset_id}})",
-      "fee": "Frais estimés : {{fee}}"
+      "amount_to_claim": "Montant à réclamer : {{amount_to_claim}} ({{asset_id}})"
     },
     "tooltip": "Réclamez les frais d'un actif"
   },
@@ -851,8 +815,7 @@
     "rows": {
       "bidder": "Enchérisseur : {{bidder}} ({{bidderOP}})",
       "additional_collateral": "Garantie supplémentaire : {{additional_collateral}}",
-      "debt_covered": "Dette couverte : {{debt_covered}}",
-      "fee": "Frais estimés : {{fee}}"
+      "debt_covered": "Dette couverte : {{debt_covered}}"
     },
     "tooltip": "Enchérir sur une garantie de garantie de bitassets une fois réglé globalement"
   },
@@ -867,8 +830,7 @@
     "rows": {
       "issuer": "Émetteur : {{issuer}} ({{issuerOP}})",
       "asset_id": "Actif : {{asset_id}}",
-      "amount_to_claim": "Montant à réclamer : {{amount_to_claim}}",
-      "fee": "Frais estimés : {{fee}}"
+      "amount_to_claim": "Montant à réclamer : {{amount_to_claim}}"
     },
     "tooltip": "Transfère les BTS du pool de frais d'un actif spécifié vers le solde de l'émetteur"
   },
@@ -883,8 +845,7 @@
     "rows": {
       "issuer": "Émetteur : {{issuer}} ({{issuerOP}})",
       "asset_to_update": "Élément à mettre à jour : {{asset_to_update}}",
-      "new_issuer": "Nouvel émetteur : {{new_issuer}} ({new_issuerOP})",
-      "fee": "Frais estimés : {{fee}}"
+      "new_issuer": "Nouvel émetteur : {{new_issuer}} ({new_issuerOP})"
     },
     "tooltip": "Mettre à jour l'émetteur d'un actif vers un nouveau compte administrateur."
   },
@@ -902,8 +863,7 @@
       "amount": "Montant : {{amount}}",
       "preimage_hash": "Hachage de préimage : {{preimage_hash}}",
       "preimage_size": "Taille de la préimage : {{preimage_size}}",
-      "claim_period_seconds": "Période de réclamation (secondes) : {{claim_period_seconds}}",
-      "fee": "Frais estimés : {{fee}}"
+      "claim_period_seconds": "Période de réclamation (secondes) : {{claim_period_seconds}}"
     },
     "tooltip": "Créer une opération de contrat à durée de hachage verrouillée (HTLC)"
   },
@@ -919,8 +879,7 @@
       "htlc_id": "ID HTLC : {{htlc_id}}",
       "redeemer": "Rédempteur : {{redeemer}} ({{redeemerOP}})",
       "preimage": "Préimage : {{preimage}}",
-      "extensions": "Extensions : {{extensions}}",
-      "fee": "Frais estimés : {{fee}}"
+      "extensions": "Extensions : {{extensions}}"
     },
     "tooltip": "Récupérer le contenu d'une opération HTLC"
   },
@@ -936,8 +895,7 @@
       "htlc_id": "ID HTLC : {{htlc_id}}",
       "update_issuer": "Émetteur de la mise à jour : {{update_issuer}} ({{update_issuerOP}})",
       "seconds_to_add": "Secondes à ajouter : {{seconds_to_add}}",
-      "extensions": "Extensions : {{extensions}}",
-      "fee": "Frais estimés : {{fee}}"
+      "extensions": "Extensions : {{extensions}}"
     },
     "tooltip": "Prolonger la durée d'une opération HTLC"
   },
@@ -957,8 +915,7 @@
       "operation_type": "Type d'opération : {{operation_type}}",
       "auth": "Autorité : {{auth}}",
       "restrictions": "Restrictions : {{restrictions}}",
-      "extensions": "Extensions : {{extensions}}",
-      "fee": "Frais estimés : {{fee}}"
+      "extensions": "Extensions : {{extensions}}"
     },
     "tooltip": "Créez une nouvelle autorité personnalisée."
   },
@@ -979,8 +936,7 @@
       "new_auth": "Nouvelle autorité : {{new_auth}}",
       "restrictions_to_remove": "Restrictions à supprimer : {{restrictions_to_remove}}",
       "restrictions_to_add": "Restrictions à ajouter : {{restrictions_to_add}}",
-      "extensions": "Extensions : {{extensions}}",
-      "fee": "Frais estimés : {{fee}}"
+      "extensions": "Extensions : {{extensions}}"
     },
     "tooltip": "Mettez à jour une autorité personnalisée."
   },
@@ -995,8 +951,7 @@
     "rows": {
       "account": "Compte : {{account}} ({{accountOP}})",
       "authority_to_delete": "Autorité de suppression : {{authority_to_delete}}",
-      "extensions": "Extensions : {{extensions}}",
-      "fee": "Frais estimés : {{fee}}"
+      "extensions": "Extensions : {{extensions}}"
     },
     "tooltip": "Supprimez une autorité personnalisée."
   },
@@ -1012,8 +967,7 @@
       "account": "Compte : {{account}} ({{accountOP}})",
       "target_type": "Type de cible : {{target_type}}",
       "amount": "Montant : {{amount}}",
-      "extensions": "Extensions : {{extensions}}",
-      "fee": "Frais estimés : {{fee}}"
+      "extensions": "Extensions : {{extensions}}"
     },
     "tooltip": "Créez un nouveau billet."
   },
@@ -1049,8 +1003,7 @@
       "share_asset": "Partager l'actif : {{share_asset}} ({{share_assetOP}})",
       "taker_fee_percent": "Pourcentage des frais du preneur : {{taker_fee_percent}}",
       "withdrawal_fee_percent": "Pourcentage des frais de retrait : {{withdrawal_fee_percent}}",
-      "extensions": "Extensions : {{extensions}}",
-      "fee": "Frais estimés : {{fee}}"
+      "extensions": "Extensions : {{extensions}}"
     },
     "tooltip": "Créer un pool de liquidité"
   },
@@ -1065,8 +1018,7 @@
     "rows": {
       "account": "Compte : {{account}} ({{accountOP}})",
       "pool_id": "ID du pool : {{pool_id}}",
-      "extensions": "Extensions : {{extensions}}",
-      "fee": "Frais estimés : {{fee}}"
+      "extensions": "Extensions : {{extensions}}"
     },
     "tooltip": "Supprimer un pool de liquidité"
   },
@@ -1083,8 +1035,7 @@
       "pool": "Piscine : {{pool}}",
       "asset_a": "Actif A : {{asset_a}} ({{asset_aOP}})",
       "asset_b": "Actif B : {{asset_b}} ({{asset_bOP}})",
-      "extensions": "Extensions : {{extensions}}",
-      "fee": "Frais estimés : {{fee}}"
+      "extensions": "Extensions : {{extensions}}"
     },
     "tooltip": "Déposer des fonds dans un pool de liquidités"
   },
@@ -1100,8 +1051,7 @@
       "account": "Compte : {{account}} ({{accountOP}})",
       "pool": "Piscine : {{pool}}",
       "share_asset": "Partager l'actif : {{share_asset}} ({{share_assetOP}})",
-      "extensions": "Extensions : {{extensions}}",
-      "fee": "Frais estimés : {{fee}}"
+      "extensions": "Extensions : {{extensions}}"
     },
     "tooltip": "Retirer des fonds d'un pool de liquidité"
   },
@@ -1118,8 +1068,7 @@
       "pool": "Piscine : {{pool}}",
       "amount_to_sell": "Montant à vendre : {{amount_to_sell}}",
       "min_to_receive": "Min pour recevoir : {{min_to_receive}}",
-      "extensions": "Extensions : {{extensions}}",
-      "fee": "Frais estimés : {{fee}}"
+      "extensions": "Extensions : {{extensions}}"
     },
     "tooltip": "Échangez avec un pool de liquidité."
   },
@@ -1136,8 +1085,7 @@
       "asset_type": "Type d'actif : {{asset_type}}",
       "balance": "Solde : {{balance}}",
       "fee_rate": "Tarif des frais : {{fee_rate}}",
-      "extensions": "Extensions : {{extensions}}",
-      "fee": "Frais estimés : {{fee}}"
+      "extensions": "Extensions : {{extensions}}"
     },
     "tooltip": "Créez un nouveau fonds SameT. "
   },
@@ -1152,8 +1100,7 @@
     "rows": {
       "owner_account": "Compte propriétaire : {{owner_account}} ({{owner_accountOP}})",
       "fund_id": "ID du fonds : {{fund_id}}",
-      "extensions": "Extensions : {{extensions}}",
-      "fee": "Frais estimés : {{fee}}"
+      "extensions": "Extensions : {{extensions}}"
     },
     "tooltip": "Supprimez un objet de fonds SameT."
   },
@@ -1170,8 +1117,7 @@
       "fund_id": "ID du fonds : {{fund_id}}",
       "delta_amount": "Montant delta : {{delta_amount}}",
       "new_fee_rate": "Nouveau taux de frais : {{new_fee_rate}}",
-      "extensions": "Extensions : {{extensions}}",
-      "fee": "Frais estimés : {{fee}}"
+      "extensions": "Extensions : {{extensions}}"
     },
     "tooltip": "Mettez à jour un objet de fonds SameT."
   },
@@ -1187,8 +1133,7 @@
       "borrower": "Emprunteur : {{borrower}} ({{borrowerOP}})",
       "fund_id": "ID du fonds : {{fund_id}}",
       "borrow_amount": "Montant de l'emprunt : {{borrow_amount}}",
-      "extensions": "Extensions : {{extensions}}",
-      "fee": "Frais estimés : {{fee}}"
+      "extensions": "Extensions : {{extensions}}"
     },
     "tooltip": "Empruntez auprès d’un fonds SameT."
   },
@@ -1205,8 +1150,7 @@
       "fund_id": "ID du fonds : {{fund_id}}",
       "repay_amount": "Montant du remboursement : {{repay_amount}}",
       "fund_fee": "Frais du fonds : {{fund_fee}}",
-      "extensions": "Extensions : {{extensions}}",
-      "fee": "Frais estimés : {{fee}}"
+      "extensions": "Extensions : {{extensions}}"
     },
     "tooltip": "Rembourser la dette auprès d’un fonds SameT."
   },
@@ -1229,8 +1173,7 @@
       "auto_disable_time": "Heure de désactivation automatique : {{auto_disable_time}}",
       "acceptable_collateral": "Garantie acceptable : {{acceptable_collateral}}",
       "acceptable_borrowers": "Emprunteurs acceptables : {{acceptable_borrowers}}",
-      "extensions": "Extensions : {{extensions}}",
-      "fee": "Frais estimés : {{fee}}"
+      "extensions": "Extensions : {{extensions}}"
     },
     "tooltip": "Créez une nouvelle offre de crédit. "
   },
@@ -1245,8 +1188,7 @@
     "rows": {
       "owner_account": "Compte propriétaire : {{owner_account}} ({{owner_accountOP}})",
       "offer_id": "ID de l'offre : {{offer_id}}",
-      "extensions": "Extensions : {{extensions}}",
-      "fee": "Frais estimés : {{fee}}"
+      "extensions": "Extensions : {{extensions}}"
     },
     "tooltip": "Supprimer une offre de crédit."
   },
@@ -1269,8 +1211,7 @@
       "auto_disable_time": "Heure de désactivation automatique : {{auto_disable_time}}",
       "acceptable_collateral": "Garantie acceptable : {{acceptable_collateral}}",
       "acceptable_borrowers": "Emprunteurs acceptables : {{acceptable_borrowers}}",
-      "extensions": "Extensions : {{extensions}}",
-      "fee": "Frais estimés : {{fee}}"
+      "extensions": "Extensions : {{extensions}}"
     },
     "tooltip": "Mettre à jour une offre de crédit"
   },
@@ -1289,8 +1230,7 @@
       "collateral": "Garantie : {{collateral}}",
       "max_fee_rate": "Taux de frais maximum : {{max_fee_rate}}",
       "min_duration_seconds": "Durée minimale en secondes : {{min_duration_seconds}}",
-      "extensions": "Extensions : {{extensions}}",
-      "fee": "Frais estimés : {{fee}}"
+      "extensions": "Extensions : {{extensions}}"
     },
     "tooltip": "Acceptez une offre de crédit et créez une offre de crédit."
   },
@@ -1307,8 +1247,7 @@
       "deal_id": "ID de l'accord : {{deal_id}}",
       "repay_amount": "Montant du remboursement : {{repay_amount}}",
       "credit_fee": "Frais de crédit : {{credit_fee}}",
-      "extensions": "Extensions : {{extensions}}",
-      "fee": "Frais estimés : {{fee}}"
+      "extensions": "Extensions : {{extensions}}"
     },
     "tooltip": "Rembourser une opération de crédit."
   },
@@ -1324,8 +1263,7 @@
       "owner_account": "Compte propriétaire : {{owner_account}} ({{owner_accountOP}})",
       "pool_id": "ID du pool : {{pool_id}}",
       "new_parameters": "Nouveaux paramètres : {{new_parameters}}",
-      "extensions": "Extensions : {{extensions}}",
-      "fee": "Frais estimés : {{fee}}"
+      "extensions": "Extensions : {{extensions}}"
     },
     "tooltip": "Mettre à jour un pool de liquidité"
   },
@@ -1338,7 +1276,6 @@
       "result": "L'accord de crédit suivant a été mis à jour :"
     },
     "rows": {
-      "fee": "Frais estimés : {{fee}}",
       "account": "Compte : {{account}} ({{accountOP}})",
       "deal_id": "ID de l'accord : {{deal_id}}",
       "auto_repay": "Remboursement automatique : {{auto_repay}}"
@@ -1354,7 +1291,6 @@
       "result": "L'ordre limité suivant a été mis à jour :"
     },
     "rows": {
-      "fee": "Frais estimés : {{fee}}",
       "seller": "Vendeur : {{seller}} ({{sellerOP}})",
       "order": "Commande : {{order}}",
       "new_price": "Nouveau prix : {{new_price}}",

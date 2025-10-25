@@ -42,7 +42,6 @@
     },
     "rows": {
       "id": "รหัสคำสั่งซื้อ: {{id}}",
-      "fees": "ค่าธรรมเนียมโดยประมาณ: {{fees}}",
       "account": "บัญชีการชำระค่าธรรมเนียม: {{account}}"
     },
     "tooltip": "การยกเลิกการดำเนินการคำสั่งจำกัด"
@@ -58,8 +57,7 @@
     "rows": {
       "funding_account": "บัญชีเงินทุน: {{funding_account}}",
       "delta_collateral": "หลักประกันเดลต้า: {{delta_collateral}} ({{id}})",
-      "delta_debt": "หนี้เดลต้า: {{delta_debt}} ({{id}})",
-      "fees": "ค่าธรรมเนียมโดยประมาณ: {{fees}}"
+      "delta_debt": "หนี้เดลต้า: {{delta_debt}} ({{id}})"
     },
     "tooltip": "การอัพเดตคำสั่งโทรที่มีอยู่"
   },
@@ -88,8 +86,7 @@
       "num_witness": "จำนวนพยาน: {{num_witness}}",
       "num_committee": "จำนวนสมาชิกคณะกรรมการ: {{num_committee}}",
       "votes": "โหวต: {{votes}}",
-      "extensions": "ส่วนขยาย: {{extensions}}",
-      "fees": "ค่าธรรมเนียมโดยประมาณ: {{fees}}"
+      "extensions": "ส่วนขยาย: {{extensions}}"
     },
     "tooltip": "การสร้างบัญชีใหม่"
   },
@@ -107,8 +104,7 @@
       "owner": "เจ้าของ: {{owner}}",
       "active": "ใช้งานอยู่: {{active}}",
       "new_options": "ตัวเลือกใหม่: {{new_options}}",
-      "extensions": "ส่วนขยาย: {{extensions}}",
-      "fees": "ค่าธรรมเนียมโดยประมาณ: {{fees}}"
+      "extensions": "ส่วนขยาย: {{extensions}}"
     },
     "tooltip": "การดำเนินการนี้ใช้เพื่ออัปเดตบัญชีที่มีอยู่ "
   },
@@ -124,8 +120,7 @@
       "authorizing_account": "การอนุญาตบัญชี: {{authorizingAccount}} (authorizingAccountOP)",
       "account_to_list": "บัญชีที่จะแสดงรายการ: {{accountToList}} (accountToListOP)",
       "new_listing": "รายการใหม่: {{newListing}}",
-      "extensions": "ส่วนขยาย: {{extensions}}",
-      "fee": "ค่าธรรมเนียม: {{fee}}"
+      "extensions": "ส่วนขยาย: {{extensions}}"
     },
     "tooltip": "การดำเนินการนี้ใช้เพื่อขึ้นบัญชีไวท์ลิสต์และบัญชีดำ โดยหลักแล้วสำหรับการทำธุรกรรมในสินทรัพย์ที่ไวท์ลิสต์"
   },
@@ -140,8 +135,7 @@
     "rows": {
       "account_to_upgrade": "บัญชีที่จะอัปเกรด: {{accountToUpgrade}} (accountToUpgradeOP)",
       "upgrade_to_lifetime_member": "อัปเกรดเป็นสมาชิกตลอดชีพ: {{upgradeToLifetimeMember}}",
-      "extensions": "ส่วนขยาย: {{extensions}}",
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}}"
+      "extensions": "ส่วนขยาย: {{extensions}}"
     },
     "tooltip": "การดำเนินการนี้ใช้เพื่ออัพเกรดบัญชีเป็นสมาชิกหรือต่ออายุการสมัคร"
   },
@@ -156,8 +150,7 @@
     "rows": {
       "warning": "คำเตือน: การกระทำนี้ไม่สามารถย้อนกลับได้!",
       "account_id": "รหัสบัญชี: {{originalOwner}} ({{account_id}})",
-      "new_owner": "เจ้าของใหม่: {{newOwner}} ({{newOwnerOP}})",
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}}"
+      "new_owner": "เจ้าของใหม่: {{newOwner}} ({{newOwnerOP}})"
     },
     "tooltip": "โอนบัญชีไปยังบัญชีอื่นในขณะที่ล้างรายการสีขาว"
   },
@@ -298,8 +291,7 @@
       "maximum_force_settlement_volume": "ปริมาณการชำระหนี้สูงสุด: {{maximum_force_settlement_volume}}",
       "short_backing_asset": "สินทรัพย์สำรองแบบสั้น: {{symbol}} ({{short_backing_asset}})",
       "extensions": "ส่วนขยาย: {{extensions}}",
-      "noExtensions": "ไม่มีส่วนขยาย",
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}} ({{id}})"
+      "noExtensions": "ไม่มีส่วนขยาย"
     },
     "tooltip": "อัปเดตการตั้งค่าบิตแอสเซทที่สร้างขึ้น"
   },
@@ -314,8 +306,7 @@
     "rows": {
       "issuer": "ผู้ออก: {{issuer}} ({{issuerOP}})",
       "asset_to_update": "เนื้อหาที่จะอัปเดต: {{symbol}} ({{asset_to_update}})",
-      "new_feed_producers": "ผู้ผลิตฟีดใหม่: {{new_feed_producers}}",
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}}"
+      "new_feed_producers": "ผู้ผลิตฟีดใหม่: {{new_feed_producers}}"
     },
     "tooltip": "อัปเดตรายชื่อผู้ผลิตฟีดที่ได้รับอนุมัติสำหรับบิตแอสเซ็ตที่สร้างขึ้น"
   },
@@ -328,8 +319,7 @@
       "result": "อนุมัติการออกสินทรัพย์ดังต่อไปนี้:"
     },
     "rows": {
-      "prompt": "ออก {{amount}} {{symbol}} ({{assetID}}) ถึง {{to}} ({{toID}})?",
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}} ({{id}})"
+      "prompt": "ออก {{amount}} {{symbol}} ({{assetID}}) ถึง {{to}} ({{toID}})?"
     },
     "tooltip": "ออกสินทรัพย์ที่คุณสร้างขึ้นให้กับบุคคล"
   },
@@ -344,8 +334,7 @@
     "rows": {
       "payer": "ผู้ชำระเงิน: {{payer}} ({{payerOP}})",
       "amount_to_reserve": "จำนวนเงินที่จะจอง: {{amount_to_reserve}} ({{amount_to_reserveOP}})",
-      "extensions": "ส่วนขยาย: {{extensions}}",
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}}"
+      "extensions": "ส่วนขยาย: {{extensions}}"
     },
     "tooltip": "สำรองทรัพย์สินที่คุณสร้างขึ้น"
   },
@@ -360,8 +349,7 @@
     "rows": {
       "from_account": "จากบัญชี: {{from_account}} ({{from_accountOP}})",
       "asset": "สินทรัพย์: {{asset}} ({{assetOP}})",
-      "amount": "จำนวนเงิน: {{amount}}",
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}}"
+      "amount": "จำนวนเงิน: {{amount}}"
     },
     "tooltip": "กองทุนรวมค่าธรรมเนียมสำหรับสินทรัพย์ที่คุณสร้างขึ้น"
   },
@@ -375,8 +363,7 @@
     },
     "rows": {
       "account": "บัญชี: {{account}} ({{accountOP}})",
-      "amount": "จำนวนเงิน: {{amount}} ({{assetID}})",
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}}"
+      "amount": "จำนวนเงิน: {{amount}} ({{assetID}})"
     },
     "tooltip": "ชำระสินทรัพย์ในพอร์ตโฟลิโอของคุณ"
   },
@@ -391,8 +378,7 @@
     "rows": {
       "issuer": "ผู้ออก: {{issuer}} ({{issuerOP}})",
       "asset_to_settle": "สินทรัพย์ที่จะชำระ: {{asset_to_settle}} ({{asset_to_settleOP}})",
-      "settle_price": "กำหนดราคา: {{settle_price}}",
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}}"
+      "settle_price": "กำหนดราคา: {{settle_price}}"
     },
     "tooltip": "ชำระหนึ่งในบิตแอสเซทที่คุณสร้างขึ้นทั่วโลก"
   },
@@ -412,8 +398,7 @@
       "settlement_price": "ราคาชำระบัญชี: {{settlement_price}}",
       "maintenance_collateral_ratio": "อัตราส่วนหลักประกันการบำรุงรักษา: {{maintenance_collateral_ratio}}",
       "maximum_short_squeeze_ratio": "อัตราส่วนการบีบสั้นสูงสุด: {{maximum_short_squeeze_ratio}}",
-      "extensions": "ส่วนขยาย: {{extensions}}",
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}}"
+      "extensions": "ส่วนขยาย: {{extensions}}"
     },
     "tooltip": "เผยแพร่ฟีดราคาสำหรับบิตแอสเซ็ต"
   },
@@ -428,8 +413,7 @@
     "rows": {
       "witness_account": "บัญชีพยาน: {{witness_account}} ({{witness_accountOP}})",
       "url": "URL: {{url}}",
-      "block_signing_key": "คีย์การลงนามแบบบล็อก: {{block_signing_key}}",
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}}"
+      "block_signing_key": "คีย์การลงนามแบบบล็อก: {{block_signing_key}}"
     },
     "tooltip": "สร้างบัญชีพยาน"
   },
@@ -445,8 +429,7 @@
       "witness": "พยาน: {{witness}}",
       "witness_account": "บัญชีพยาน: {{witness_account}} ({{witness_accountOP}})",
       "new_url": "URL ใหม่: {{new_url}}",
-      "new_signing_key": "รหัสการลงนามใหม่: {{new_signing_key}}",
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}}"
+      "new_signing_key": "รหัสการลงนามใหม่: {{new_signing_key}}"
     },
     "tooltip": "อัปเดตบัญชีพยานของคุณ"
   },
@@ -462,8 +445,7 @@
       "expiration_time": "เวลาหมดอายุ: {{expiration_time}}",
       "proposed_ops": "การดำเนินการที่เสนอ: {{proposed_ops}}",
       "review_period_seconds": "ช่วงเวลาตรวจสอบ วินาที: {{review_period_seconds}}",
-      "fee_paying_account": "บัญชีการชำระค่าธรรมเนียม: {{fee_paying_account}} ({{fee_paying_accountOP}})",
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}}"
+      "fee_paying_account": "บัญชีการชำระค่าธรรมเนียม: {{fee_paying_account}} ({{fee_paying_accountOP}})"
     },
     "tooltip": "สร้างข้อเสนอการดำเนินงานบล็อคเชน"
   },
@@ -484,8 +466,7 @@
       "key_approvals_to_add": "การอนุมัติที่สำคัญที่จะเพิ่ม: {{key_approvals_to_add}}",
       "key_approvals_to_remove": "การอนุมัติที่สำคัญที่จะลบ: {{key_approvals_to_remove}}",
       "fee_paying_account": "บัญชีการชำระค่าธรรมเนียม: {{fee_paying_account}} ({{fee_paying_accountOP}})",
-      "extensions": "ส่วนขยาย: {{extensions}}",
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}}"
+      "extensions": "ส่วนขยาย: {{extensions}}"
     },
     "tooltip": "อัปเดตข้อเสนอการดำเนินงานบล็อคเชน"
   },
@@ -501,8 +482,7 @@
       "using_owner_authority": "การใช้สิทธิ์ของเจ้าของ: {{using_owner_authority}}",
       "proposal": "ข้อเสนอ: {{proposal}}",
       "fee_paying_account": "บัญชีการชำระค่าธรรมเนียม: {{fee_paying_account}} ({{fee_paying_accountOP}})",
-      "extensions": "ส่วนขยาย: {{extensions}}",
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}}"
+      "extensions": "ส่วนขยาย: {{extensions}}"
     },
     "tooltip": "ลบข้อเสนอการดำเนินงานบล็อคเชน"
   },
@@ -538,8 +518,7 @@
       "withdrawal_unlimited": "ขีดจำกัดการถอน: {{withdrawal_limit}} ({{withdrawal_limitOP}})",
       "withdrawal_period_sec": "ระยะเวลาการถอน (วินาที): {{withdrawal_period_sec}}",
       "period_start_time": "เวลาเริ่มต้นช่วงเวลา: {{period_start_time}}",
-      "periods_until_expiration": "ระยะเวลาจนกว่าจะหมดอายุ: {{periods_until_expiration}}",
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}}"
+      "periods_until_expiration": "ระยะเวลาจนกว่าจะหมดอายุ: {{periods_until_expiration}}"
     },
     "tooltip": "อัพเดทการอนุญาตถอน"
   },
@@ -556,8 +535,7 @@
       "withdraw_from_account": "ถอนออกจากบัญชี: {{withdraw_from_account}} ({{withdraw_from_accountOP}})",
       "withdraw_to_account": "ถอนไปยังบัญชี: {{withdraw_to_account}} ({{withdraw_to_accountOP}})",
       "amount_to_withdraw": "จำนวนเงินที่จะถอน: {{amount_to_withdraw}} ({{amount_to_withdrawOP}})",
-      "memo": "บันทึกช่วยจำ: {{memo}}",
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}}"
+      "memo": "บันทึกช่วยจำ: {{memo}}"
     },
     "tooltip": "เรียกร้องจากการเพิกถอนใบอนุญาต"
   },
@@ -572,8 +550,7 @@
     "rows": {
       "withdraw_from_account": "ถอนออกจากบัญชี: {{withdraw_from_account}} ({{withdraw_from_accountOP}})",
       "authorized_account": "บัญชีที่ได้รับอนุญาต: {{authorized_account}} ({{authorized_accountOP}})",
-      "withdrawal_permission": "การอนุญาตการถอน: {{withdrawal_permission}}",
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}}"
+      "withdrawal_permission": "การอนุญาตการถอน: {{withdrawal_permission}}"
     },
     "tooltip": "ลบการอนุญาตการถอน"
   },
@@ -587,8 +564,7 @@
     },
     "rows": {
       "committee_member_account": "บัญชีสมาชิกคณะกรรมการ: {{committee_member_account}} ({{committee_member_accountOP}})",
-      "url": "URL: {{url}}",
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}}"
+      "url": "URL: {{url}}"
     },
     "tooltip": "สร้างบัญชีสมาชิกคณะกรรมการ"
   },
@@ -603,8 +579,7 @@
     "rows": {
       "committee_member": "สมาชิกคณะกรรมการ: {{committee_member}}",
       "committee_member_account": "บัญชีสมาชิกคณะกรรมการ: {{committee_member_account}} ({{committee_member_accountOP}})",
-      "new_url": "URL ใหม่: {{new_url}}",
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}}"
+      "new_url": "URL ใหม่: {{new_url}}"
     },
     "tooltip": "อัปเดตรายละเอียดบัญชีสมาชิกคณะกรรมการของคุณ"
   },
@@ -646,8 +621,7 @@
       "accounts_per_fee_scale": "บัญชีต่อระดับค่าธรรมเนียม: {{accounts_per_fee_scale}}",
       "account_fee_scale_bitshifts": "ระดับค่าธรรมเนียมบัญชี bitshifts: {{account_fee_scale_bitshifts}}",
       "max_authority_depth": "ความลึกของอำนาจสูงสุด: {{max_authority_depth}}",
-      "extensions": "ส่วนขยาย: {{extensions}}",
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}}"
+      "extensions": "ส่วนขยาย: {{extensions}}"
     },
     "tooltip": "เผยแพร่จุดยืนของสมาชิกคณะกรรมการของคุณเกี่ยวกับค่าพารามิเตอร์ทั่วโลกของ Bitshares blockchain"
   },
@@ -668,8 +642,7 @@
       "vesting_cliff_seconds": "วินาทีที่หน้าผาตก: {{vesting_cliff_seconds}}",
       "vesting_duration_seconds": "ระยะเวลาการได้รับสิทธิ์เป็นวินาที: {{vesting_duration_seconds}}",
       "start_claim": "เริ่มการอ้างสิทธิ์: {{start_claim}}",
-      "vesting_seconds": "วินาทีที่ได้รับสิทธิ์: {{vesting_seconds}}",
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}}"
+      "vesting_seconds": "วินาทีที่ได้รับสิทธิ์: {{vesting_seconds}}"
     },
     "tooltip": "สร้างยอดดุลการให้สิทธิ"
   },
@@ -702,8 +675,7 @@
       "daily_pay": "จ่ายรายวัน: {{daily_pay}}",
       "name": "ชื่อ: {{name}}",
       "url": "URL: {{url}}",
-      "initializer": "เครื่องมือเริ่มต้น: {{initializer}}",
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}}"
+      "initializer": "เครื่องมือเริ่มต้น: {{initializer}}"
     },
     "tooltip": "สร้างข้อเสนอของผู้ปฏิบัติงาน"
   },
@@ -719,8 +691,7 @@
       "payer": "ผู้ชำระเงิน: {{payer}} ({{payerOP}})",
       "required_auths": "หน่วยงานที่จำเป็น: {{required_auths}}",
       "id": "{{id}}",
-      "data": "ข้อมูล: {{data}}",
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}}"
+      "data": "ข้อมูล: {{data}}"
     },
     "tooltip": "มอบวิธีการทั่วไปในการเพิ่มโปรโตคอลระดับที่สูงขึ้นนอกเหนือจากฉันทามติของพยาน"
   },
@@ -736,8 +707,7 @@
       "fee_paying_account": "บัญชีการชำระค่าธรรมเนียม: {{fee_paying_account}} ({{fee_paying_accountOP}})",
       "predicates": "ภาคแสดง: {{predicates}}",
       "required_auths": "หน่วยงานที่จำเป็น: {{required_auths}}",
-      "extensions": "ส่วนขยาย: {{extensions}}",
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}}"
+      "extensions": "ส่วนขยาย: {{extensions}}"
     },
     "tooltip": "ยืนยันว่าเงื่อนไขบางประการเป็นจริง"
   },
@@ -753,8 +723,7 @@
       "deposit_to_account": "ฝากเข้าบัญชี: {{deposit_to_account}} ({{deposit_to_accountOP}})",
       "balance_to_claim": "ยอดคงเหลือที่จะอ้างสิทธิ์: {{balance_to_claim}} ({{asset_id}})",
       "balance_owner_key": "รหัสเจ้าของยอดคงเหลือ: {{balance_owner_key}}",
-      "total_claimed": "อ้างสิทธิ์ทั้งหมด: {{total_claimed}} ({{asset_id}})",
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}}"
+      "total_claimed": "อ้างสิทธิ์ทั้งหมด: {{total_claimed}} ({{asset_id}})"
     },
     "tooltip": "เรียกร้องจากยอดคงเหลือ"
   },
@@ -771,8 +740,7 @@
       "from": "จาก: {{from}} ({{fromOP}})",
       "to": "ถึง: {{to}} ({{toOP}})",
       "amount": "จำนวนเงิน: {{amount}} ({{asset_id}})",
-      "memo": "บันทึกช่วยจำ: {{memo}}",
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}}"
+      "memo": "บันทึกช่วยจำ: {{memo}}"
     },
     "tooltip": "แทนที่การดำเนินการถ่ายโอน"
   },
@@ -788,8 +756,7 @@
       "amount": "จำนวนเงิน: {{amount}}",
       "from": "จาก: {{from}} ({{fromOP}})",
       "blinding_factor": "ปัจจัยที่ทำให้ไม่เห็น: {{blinding_factor}}",
-      "outputs": "เอาท์พุท: {{outputs}}",
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}}"
+      "outputs": "เอาท์พุท: {{outputs}}"
     },
     "tooltip": "โอนสินทรัพย์ไปยังปลายทางที่มองไม่เห็น"
   },
@@ -803,8 +770,7 @@
     },
     "rows": {
       "inputs": "อินพุต: {{inputs}}",
-      "outputs": "เอาท์พุท: {{outputs}}",
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}}"
+      "outputs": "เอาท์พุท: {{outputs}}"
     },
     "tooltip": "โอนทรัพย์สินที่มองไม่เห็นในลักษณะที่มองไม่เห็น"
   },
@@ -820,8 +786,7 @@
       "amount": "จำนวนเงิน: {{amount}}",
       "to": "ถึง: {{to}} ({{toOP}})",
       "blinding_factor": "ปัจจัยที่ทำให้ไม่เห็น: {{blinding_factor}}",
-      "inputs": "อินพุต: {{inputs}}",
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}}"
+      "inputs": "อินพุต: {{inputs}}"
     },
     "tooltip": "ถอนสินทรัพย์ออกจากยอดคงเหลือที่ไม่เปิดเผย"
   },
@@ -835,8 +800,7 @@
     },
     "rows": {
       "issuer": "ผู้ออก: {{issuer}} ({{issuerOP}})",
-      "amount_to_claim": "จำนวนเงินที่จะอ้างสิทธิ์: {{amount_to_claim}} ({{asset_id}})",
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}}"
+      "amount_to_claim": "จำนวนเงินที่จะอ้างสิทธิ์: {{amount_to_claim}} ({{asset_id}})"
     },
     "tooltip": "เรียกร้องค่าธรรมเนียมจากสินทรัพย์"
   },
@@ -851,8 +815,7 @@
     "rows": {
       "bidder": "ผู้เสนอราคา: {{bidder}} ({{bidderOP}})",
       "additional_collateral": "หลักประกันเพิ่มเติม: {{additional_collateral}}",
-      "debt_covered": "หนี้ที่ครอบคลุม: {{debt_covered}}",
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}}"
+      "debt_covered": "หนี้ที่ครอบคลุม: {{debt_covered}}"
     },
     "tooltip": "ประมูลหลักประกันสำหรับสินทรัพย์บิตเมื่อชำระบัญชีทั่วโลก"
   },
@@ -867,8 +830,7 @@
     "rows": {
       "issuer": "ผู้ออก: {{issuer}} ({{issuerOP}})",
       "asset_id": "เนื้อหา: {{asset_id}}",
-      "amount_to_claim": "จำนวนเงินที่จะเรียกร้อง: {{amount_to_claim}}",
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}}"
+      "amount_to_claim": "จำนวนเงินที่จะเรียกร้อง: {{amount_to_claim}}"
     },
     "tooltip": "โอน BTS จากกลุ่มค่าธรรมเนียมของสินทรัพย์ที่ระบุกลับไปยังยอดคงเหลือของผู้ออก"
   },
@@ -883,8 +845,7 @@
     "rows": {
       "issuer": "ผู้ออก: {{issuer}} ({{issuerOP}})",
       "asset_to_update": "เนื้อหาที่จะอัปเดต: {{asset_to_update}}",
-      "new_issuer": "ผู้ออกใหม่: {{new_issuer}} ({new_issuerOP})",
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}}"
+      "new_issuer": "ผู้ออกใหม่: {{new_issuer}} ({new_issuerOP})"
     },
     "tooltip": "อัปเดตผู้ออกสินทรัพย์เป็นบัญชีผู้ดูแลระบบใหม่"
   },
@@ -902,8 +863,7 @@
       "amount": "จำนวนเงิน: {{amount}}",
       "preimage_hash": "แฮชพรีอิมเมจ: {{preimage_hash}}",
       "preimage_size": "ขนาดภาพล่วงหน้า: {{preimage_size}}",
-      "claim_period_seconds": "ระยะเวลาการอ้างสิทธิ์ (วินาที): {{claim_period_seconds}}",
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}}"
+      "claim_period_seconds": "ระยะเวลาการอ้างสิทธิ์ (วินาที): {{claim_period_seconds}}"
     },
     "tooltip": "สร้างการดำเนินการสัญญาล็อคเวลาแฮช (HTLC)"
   },
@@ -919,8 +879,7 @@
       "htlc_id": "รหัส HTML: {{htlc_id}}",
       "redeemer": "ผู้ไถ่: {{redeemer}} ({{redeemerOP}})",
       "preimage": "พรีอิมเมจ: {{preimage}}",
-      "extensions": "ส่วนขยาย: {{extensions}}",
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}}"
+      "extensions": "ส่วนขยาย: {{extensions}}"
     },
     "tooltip": "แลกเนื้อหาของการดำเนินการ HTLC"
   },
@@ -936,8 +895,7 @@
       "htlc_id": "รหัส HTML: {{htlc_id}}",
       "update_issuer": "อัปเดตผู้ออก: {{update_issuer}} ({{update_issuerOP}})",
       "seconds_to_add": "วินาทีที่จะเพิ่ม: {{seconds_to_add}}",
-      "extensions": "ส่วนขยาย: {{extensions}}",
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}}"
+      "extensions": "ส่วนขยาย: {{extensions}}"
     },
     "tooltip": "ขยายระยะเวลาของการดำเนินการ HTLC"
   },
@@ -957,8 +915,7 @@
       "operation_type": "ประเภทการดำเนินการ: {{operation_type}}",
       "auth": "ผู้มีอำนาจ: {{auth}}",
       "restrictions": "ข้อจำกัด: {{restrictions}}",
-      "extensions": "ส่วนขยาย: {{extensions}}",
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}}"
+      "extensions": "ส่วนขยาย: {{extensions}}"
     },
     "tooltip": "สร้างสิทธิ์แบบกำหนดเองใหม่"
   },
@@ -979,8 +936,7 @@
       "new_auth": "ผู้มีอำนาจใหม่: {{new_auth}}",
       "restrictions_to_remove": "ข้อจำกัดในการลบ: {{restrictions_to_remove}}",
       "restrictions_to_add": "ข้อจำกัดในการเพิ่ม: {{restrictions_to_add}}",
-      "extensions": "ส่วนขยาย: {{extensions}}",
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}}"
+      "extensions": "ส่วนขยาย: {{extensions}}"
     },
     "tooltip": "อัปเดตสิทธิ์แบบกำหนดเอง"
   },
@@ -995,8 +951,7 @@
     "rows": {
       "account": "บัญชี: {{account}} ({{accountOP}})",
       "authority_to_delete": "ผู้มีอำนาจในการลบ: {{authority_to_delete}}",
-      "extensions": "ส่วนขยาย: {{extensions}}",
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}}"
+      "extensions": "ส่วนขยาย: {{extensions}}"
     },
     "tooltip": "ลบสิทธิ์แบบกำหนดเอง"
   },
@@ -1012,8 +967,7 @@
       "account": "บัญชี: {{account}} ({{accountOP}})",
       "target_type": "ประเภทเป้าหมาย: {{target_type}}",
       "amount": "จำนวนเงิน: {{amount}}",
-      "extensions": "ส่วนขยาย: {{extensions}}",
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}}"
+      "extensions": "ส่วนขยาย: {{extensions}}"
     },
     "tooltip": "สร้างตั๋วใหม่"
   },
@@ -1049,8 +1003,7 @@
       "share_asset": "แบ่งปันเนื้อหา: {{share_asset}} ({{share_assetOP}})",
       "taker_fee_percent": "เปอร์เซ็นต์ค่าธรรมเนียมผู้รับ: {{taker_fee_percent}}",
       "withdrawal_fee_percent": "เปอร์เซ็นต์ค่าธรรมเนียมการถอน: {{withdrawal_fee_percent}}",
-      "extensions": "ส่วนขยาย: {{extensions}}",
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}}"
+      "extensions": "ส่วนขยาย: {{extensions}}"
     },
     "tooltip": "สร้างแหล่งรวมสภาพคล่อง"
   },
@@ -1065,8 +1018,7 @@
     "rows": {
       "account": "บัญชี: {{account}} ({{accountOP}})",
       "pool_id": "รหัสพูล: {{pool_id}}",
-      "extensions": "ส่วนขยาย: {{extensions}}",
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}}"
+      "extensions": "ส่วนขยาย: {{extensions}}"
     },
     "tooltip": "ลบกลุ่มสภาพคล่อง"
   },
@@ -1083,8 +1035,7 @@
       "pool": "พูล: {{pool}}",
       "asset_a": "สินทรัพย์ A: {{asset_a}} ({{asset_aOP}})",
       "asset_b": "สินทรัพย์ B: {{asset_b}} ({{asset_bOP}})",
-      "extensions": "ส่วนขยาย: {{extensions}}",
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}}"
+      "extensions": "ส่วนขยาย: {{extensions}}"
     },
     "tooltip": "ฝากเงินเข้าในแหล่งรวมสภาพคล่อง"
   },
@@ -1100,8 +1051,7 @@
       "account": "บัญชี: {{account}} ({{accountOP}})",
       "pool": "พูล: {{pool}}",
       "share_asset": "แบ่งปันเนื้อหา: {{share_asset}} ({{share_assetOP}})",
-      "extensions": "ส่วนขยาย: {{extensions}}",
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}}"
+      "extensions": "ส่วนขยาย: {{extensions}}"
     },
     "tooltip": "ถอนเงินออกจากแหล่งรวมสภาพคล่อง"
   },
@@ -1118,8 +1068,7 @@
       "pool": "พูล: {{pool}}",
       "amount_to_sell": "จำนวนที่จะขาย: {{amount_to_sell}}",
       "min_to_receive": "ขั้นต่ำที่จะได้รับ: {{min_to_receive}}",
-      "extensions": "ส่วนขยาย: {{extensions}}",
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}}"
+      "extensions": "ส่วนขยาย: {{extensions}}"
     },
     "tooltip": "แลกเปลี่ยนกับแหล่งรวมสภาพคล่อง"
   },
@@ -1136,8 +1085,7 @@
       "asset_type": "ประเภทเนื้อหา: {{asset_type}}",
       "balance": "ยอดคงเหลือ: {{balance}}",
       "fee_rate": "อัตราค่าธรรมเนียม: {{fee_rate}}",
-      "extensions": "ส่วนขยาย: {{extensions}}",
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}}"
+      "extensions": "ส่วนขยาย: {{extensions}}"
     },
     "tooltip": "สร้างกองทุน SameT ใหม่ "
   },
@@ -1152,8 +1100,7 @@
     "rows": {
       "owner_account": "บัญชีเจ้าของ: {{owner_account}} ({{owner_accountOP}})",
       "fund_id": "รหัสกองทุน: {{fund_id}}",
-      "extensions": "ส่วนขยาย: {{extensions}}",
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}}"
+      "extensions": "ส่วนขยาย: {{extensions}}"
     },
     "tooltip": "ลบออบเจ็กต์กองทุน SameT"
   },
@@ -1170,8 +1117,7 @@
       "fund_id": "รหัสกองทุน: {{fund_id}}",
       "delta_amount": "จำนวนเดลต้า: {{delta_amount}}",
       "new_fee_rate": "อัตราค่าธรรมเนียมใหม่: {{new_fee_rate}}",
-      "extensions": "ส่วนขยาย: {{extensions}}",
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}}"
+      "extensions": "ส่วนขยาย: {{extensions}}"
     },
     "tooltip": "อัปเดตออบเจ็กต์กองทุน SameT"
   },
@@ -1187,8 +1133,7 @@
       "borrower": "ผู้ยืม: {{borrower}} ({{borrowerOP}})",
       "fund_id": "รหัสกองทุน: {{fund_id}}",
       "borrow_amount": "จำนวนยืม: {{borrow_amount}}",
-      "extensions": "ส่วนขยาย: {{extensions}}",
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}}"
+      "extensions": "ส่วนขยาย: {{extensions}}"
     },
     "tooltip": "ยืมจากกองทุน SameT"
   },
@@ -1205,8 +1150,7 @@
       "fund_id": "รหัสกองทุน: {{fund_id}}",
       "repay_amount": "จำนวนเงินที่ชำระคืน: {{repay_amount}}",
       "fund_fee": "ค่าธรรมเนียมกองทุน: {{fund_fee}}",
-      "extensions": "ส่วนขยาย: {{extensions}}",
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}}"
+      "extensions": "ส่วนขยาย: {{extensions}}"
     },
     "tooltip": "ชำระหนี้ให้กับกองทุน SameT"
   },
@@ -1229,8 +1173,7 @@
       "auto_disable_time": "เวลาปิดการใช้งานอัตโนมัติ: {{auto_disable_time}}",
       "acceptable_collateral": "หลักประกันที่ยอมรับได้: {{acceptable_collateral}}",
       "acceptable_borrowers": "ผู้กู้ยืมที่ยอมรับได้: {{acceptable_borrowers}}",
-      "extensions": "ส่วนขยาย: {{extensions}}",
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}}"
+      "extensions": "ส่วนขยาย: {{extensions}}"
     },
     "tooltip": "สร้างข้อเสนอสินเชื่อใหม่ "
   },
@@ -1245,8 +1188,7 @@
     "rows": {
       "owner_account": "บัญชีเจ้าของ: {{owner_account}} ({{owner_accountOP}})",
       "offer_id": "รหัสข้อเสนอ: {{offer_id}}",
-      "extensions": "ส่วนขยาย: {{extensions}}",
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}}"
+      "extensions": "ส่วนขยาย: {{extensions}}"
     },
     "tooltip": "ลบข้อเสนอสินเชื่อ"
   },
@@ -1269,8 +1211,7 @@
       "auto_disable_time": "เวลาปิดการใช้งานอัตโนมัติ: {{auto_disable_time}}",
       "acceptable_collateral": "หลักประกันที่ยอมรับได้: {{acceptable_collateral}}",
       "acceptable_borrowers": "ผู้กู้ยืมที่ยอมรับได้: {{acceptable_borrowers}}",
-      "extensions": "ส่วนขยาย: {{extensions}}",
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}}"
+      "extensions": "ส่วนขยาย: {{extensions}}"
     },
     "tooltip": "อัพเดตข้อเสนอสินเชื่อ"
   },
@@ -1289,8 +1230,7 @@
       "collateral": "หลักประกัน: {{collateral}}",
       "max_fee_rate": "อัตราค่าธรรมเนียมสูงสุด: {{max_fee_rate}}",
       "min_duration_seconds": "ระยะเวลาต่ำสุด วินาที: {{min_duration_seconds}}",
-      "extensions": "ส่วนขยาย: {{extensions}}",
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}}"
+      "extensions": "ส่วนขยาย: {{extensions}}"
     },
     "tooltip": "ยอมรับข้อเสนอสินเชื่อและสร้างข้อตกลงสินเชื่อ"
   },
@@ -1307,8 +1247,7 @@
       "deal_id": "รหัสดีล: {{deal_id}}",
       "repay_amount": "จำนวนเงินที่ชำระคืน: {{repay_amount}}",
       "credit_fee": "ค่าธรรมเนียมเครดิต: {{credit_fee}}",
-      "extensions": "ส่วนขยาย: {{extensions}}",
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}}"
+      "extensions": "ส่วนขยาย: {{extensions}}"
     },
     "tooltip": "ชำระคืนข้อตกลงเครดิต"
   },
@@ -1324,8 +1263,7 @@
       "owner_account": "บัญชีเจ้าของ: {{owner_account}} ({{owner_accountOP}})",
       "pool_id": "รหัสพูล: {{pool_id}}",
       "new_parameters": "พารามิเตอร์ใหม่: {{new_parameters}}",
-      "extensions": "ส่วนขยาย: {{extensions}}",
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}}"
+      "extensions": "ส่วนขยาย: {{extensions}}"
     },
     "tooltip": "อัพเดตกลุ่มสภาพคล่อง"
   },
@@ -1338,7 +1276,6 @@
       "result": "ข้อตกลงสินเชื่อต่อไปนี้ได้รับการปรับปรุง:"
     },
     "rows": {
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}}",
       "account": "บัญชี: {{account}} ({{accountOP}})",
       "deal_id": "รหัสดีล: {{deal_id}}",
       "auto_repay": "ชำระคืนอัตโนมัติ: {{auto_repay}}"
@@ -1354,7 +1291,6 @@
       "result": "อัปเดตคำสั่งจำกัดต่อไปนี้แล้ว:"
     },
     "rows": {
-      "fee": "ค่าธรรมเนียมโดยประมาณ: {{fee}}",
       "seller": "ผู้ขาย: {{seller}} ({{sellerOP}})",
       "order": "คำสั่งซื้อ: {{order}}",
       "new_price": "ราคาใหม่: {{new_price}}",

@@ -42,7 +42,6 @@
     },
     "rows": {
       "id": "주문 ID: {{id}}",
-      "fees": "예상 수수료: {{fees}}",
       "account": "수수료 지불 계정: {{account}}"
     },
     "tooltip": "지정가 주문 작업 취소"
@@ -58,8 +57,7 @@
     "rows": {
       "funding_account": "자금 계좌: {{funding_account}}",
       "delta_collateral": "델타 담보: {{delta_collateral}} ({{id}})",
-      "delta_debt": "델타 부채: {{delta_debt}} ({{id}})",
-      "fees": "예상 수수료: {{fees}}"
+      "delta_debt": "델타 부채: {{delta_debt}} ({{id}})"
     },
     "tooltip": "기존 통화 순서 업데이트"
   },
@@ -88,8 +86,7 @@
       "num_witness": "증인 수: {{num_witness}}",
       "num_committee": "위원회 구성원 수: {{num_committee}}",
       "votes": "투표수: {{votes}}",
-      "extensions": "확장자: {{extensions}}",
-      "fees": "예상 수수료: {{fees}}"
+      "extensions": "확장자: {{extensions}}"
     },
     "tooltip": "새 계정 만들기"
   },
@@ -107,8 +104,7 @@
       "owner": "소유자: {{owner}}",
       "active": "활성: {{active}}",
       "new_options": "새로운 옵션: {{new_options}}",
-      "extensions": "확장자: {{extensions}}",
-      "fees": "예상 수수료: {{fees}}"
+      "extensions": "확장자: {{extensions}}"
     },
     "tooltip": "이 작업은 기존 계정을 업데이트하는 데 사용됩니다. "
   },
@@ -124,8 +120,7 @@
       "authorizing_account": "승인 계정: {{authorizingAccount}}(authorizingAccountOP)",
       "account_to_list": "나열할 계정: {{accountToList}}(accountToListOP)",
       "new_listing": "새 목록: {{newListing}}",
-      "extensions": "확장자: {{extensions}}",
-      "fee": "수수료: {{fee}}"
+      "extensions": "확장자: {{extensions}}"
     },
     "tooltip": "이 작업은 주로 화이트리스트 자산 거래를 위해 화이트리스트 및 블랙리스트 계정에 사용됩니다."
   },
@@ -140,8 +135,7 @@
     "rows": {
       "account_to_upgrade": "업그레이드할 계정: {{accountToUpgrade}}(accountToUpgradeOP)",
       "upgrade_to_lifetime_member": "평생 회원으로 업그레이드: {{upgradeToLifetimeMember}}",
-      "extensions": "확장자: {{extensions}}",
-      "fee": "예상 수수료: {{fee}}"
+      "extensions": "확장자: {{extensions}}"
     },
     "tooltip": "이 작업은 계정을 회원으로 업그레이드하거나 구독을 갱신하는 데 사용됩니다."
   },
@@ -156,8 +150,7 @@
     "rows": {
       "warning": "경고: 이 작업은 되돌릴 수 없습니다!",
       "account_id": "계정 ID: {{originalOwner}} ({{account_id}})",
-      "new_owner": "새 소유자: {{newOwner}} ({{newOwnerOP}})",
-      "fee": "예상 수수료: {{fee}}"
+      "new_owner": "새 소유자: {{newOwner}} ({{newOwnerOP}})"
     },
     "tooltip": "화이트리스트를 삭제하면서 해당 계정을 다른 계정으로 이전합니다."
   },
@@ -298,8 +291,7 @@
       "maximum_force_settlement_volume": "최대 강제 정산량: {{maximum_force_settlement_volume}}",
       "short_backing_asset": "매도 지원 자산: {{symbol}} ({{short_backing_asset}})",
       "extensions": "확장자: {{extensions}}",
-      "noExtensions": "확장 프로그램 없음",
-      "fee": "예상 수수료: {{fee}} ({{id}})"
+      "noExtensions": "확장 프로그램 없음"
     },
     "tooltip": "생성된 비트 자산 설정 업데이트"
   },
@@ -314,8 +306,7 @@
     "rows": {
       "issuer": "발급자: {{issuer}}({{issuerOP}})",
       "asset_to_update": "업데이트할 자산: {{symbol}} ({{asset_to_update}})",
-      "new_feed_producers": "새 피드 제작자: {{new_feed_producers}}",
-      "fee": "예상 수수료: {{fee}}"
+      "new_feed_producers": "새 피드 제작자: {{new_feed_producers}}"
     },
     "tooltip": "생성된 비트 자산에 대해 승인된 피드 생산자 목록 업데이트"
   },
@@ -328,8 +319,7 @@
       "result": "다음 자산 발행이 승인되었습니다."
     },
     "rows": {
-      "prompt": "{{amount}} {{symbol}}({{assetID}})을(를) {{to}}({{toID}})에 발행하시겠습니까?",
-      "fee": "예상 수수료: {{fee}} ({{id}})"
+      "prompt": "{{amount}} {{symbol}}({{assetID}})을(를) {{to}}({{toID}})에 발행하시겠습니까?"
     },
     "tooltip": "생성된 자산을 개인에게 발행"
   },
@@ -344,8 +334,7 @@
     "rows": {
       "payer": "지불인: {{payer}} ({{payerOP}})",
       "amount_to_reserve": "예치할 금액: {{amount_to_reserve}} ({{amount_to_reserveOP}})",
-      "extensions": "확장자: {{extensions}}",
-      "fee": "예상 수수료: {{fee}}"
+      "extensions": "확장자: {{extensions}}"
     },
     "tooltip": "생성된 자산을 예약하세요"
   },
@@ -360,8 +349,7 @@
     "rows": {
       "from_account": "계정: {{from_account}} ({{from_accountOP}})",
       "asset": "자산: {{asset}} ({{assetOP}})",
-      "amount": "금액: {{amount}}",
-      "fee": "예상 수수료: {{fee}}"
+      "amount": "금액: {{amount}}"
     },
     "tooltip": "생성된 자산에 대한 수수료 풀에 자금을 조달하세요"
   },
@@ -375,8 +363,7 @@
     },
     "rows": {
       "account": "계정: {{account}} ({{accountOP}})",
-      "amount": "금액: {{amount}} ({{assetID}})",
-      "fee": "예상 수수료: {{fee}}"
+      "amount": "금액: {{amount}} ({{assetID}})"
     },
     "tooltip": "포트폴리오에서 자산 정산"
   },
@@ -391,8 +378,7 @@
     "rows": {
       "issuer": "발급자: {{issuer}}({{issuerOP}})",
       "asset_to_settle": "정산할 자산: {{asset_to_settle}} ({{asset_to_settleOP}})",
-      "settle_price": "정산가: {{settle_price}}",
-      "fee": "예상 수수료: {{fee}}"
+      "settle_price": "정산가: {{settle_price}}"
     },
     "tooltip": "생성된 비트자산 중 하나를 전 세계적으로 정산합니다."
   },
@@ -412,8 +398,7 @@
       "settlement_price": "정산 가격: {{settlement_price}}",
       "maintenance_collateral_ratio": "유지담보 비율: {{maintenance_collateral_ratio}}",
       "maximum_short_squeeze_ratio": "최대 숏 스퀴즈 비율: {{maximum_short_squeeze_ratio}}",
-      "extensions": "확장자: {{extensions}}",
-      "fee": "예상 수수료: {{fee}}"
+      "extensions": "확장자: {{extensions}}"
     },
     "tooltip": "bitasset에 대한 가격 피드 게시"
   },
@@ -428,8 +413,7 @@
     "rows": {
       "witness_account": "증인 계정: {{witness_account}} ({{witness_accountOP}})",
       "url": "URL: {{url}}",
-      "block_signing_key": "블록 서명 키: {{block_signing_key}}",
-      "fee": "예상 수수료: {{fee}}"
+      "block_signing_key": "블록 서명 키: {{block_signing_key}}"
     },
     "tooltip": "증인 계정 만들기"
   },
@@ -445,8 +429,7 @@
       "witness": "증인: {{witness}}",
       "witness_account": "증인 계정: {{witness_account}} ({{witness_accountOP}})",
       "new_url": "새 URL: {{new_url}}",
-      "new_signing_key": "새 서명 키: {{new_signing_key}}",
-      "fee": "예상 수수료: {{fee}}"
+      "new_signing_key": "새 서명 키: {{new_signing_key}}"
     },
     "tooltip": "증인 계정 업데이트"
   },
@@ -462,8 +445,7 @@
       "expiration_time": "만료 시간: {{expiration_time}}",
       "proposed_ops": "제안된 작업: {{proposed_ops}}",
       "review_period_seconds": "검토 기간(초): {{review_period_seconds}}",
-      "fee_paying_account": "수수료 지불 계정: {{fee_paying_account}} ({{fee_paying_accountOP}})",
-      "fee": "예상 수수료: {{fee}}"
+      "fee_paying_account": "수수료 지불 계정: {{fee_paying_account}} ({{fee_paying_accountOP}})"
     },
     "tooltip": "블록체인 운영 제안서 작성"
   },
@@ -484,8 +466,7 @@
       "key_approvals_to_add": "추가할 주요 승인: {{key_approvals_to_add}}",
       "key_approvals_to_remove": "삭제할 주요 승인: {{key_approvals_to_remove}}",
       "fee_paying_account": "수수료 지불 계정: {{fee_paying_account}} ({{fee_paying_accountOP}})",
-      "extensions": "확장자: {{extensions}}",
-      "fee": "예상 수수료: {{fee}}"
+      "extensions": "확장자: {{extensions}}"
     },
     "tooltip": "블록체인 운영 제안 업데이트"
   },
@@ -501,8 +482,7 @@
       "using_owner_authority": "소유자 권한 사용: {{using_owner_authority}}",
       "proposal": "제안: {{proposal}}",
       "fee_paying_account": "수수료 지불 계정: {{fee_paying_account}} ({{fee_paying_accountOP}})",
-      "extensions": "확장자: {{extensions}}",
-      "fee": "예상 수수료: {{fee}}"
+      "extensions": "확장자: {{extensions}}"
     },
     "tooltip": "블록체인 운영 제안 삭제"
   },
@@ -538,8 +518,7 @@
       "withdrawal_unlimited": "출금 한도: {{withdrawal_limit}} ({{withdrawal_limitOP}})",
       "withdrawal_period_sec": "출금 기간(초): {{withdrawal_period_sec}}",
       "period_start_time": "기간 시작 시간: {{period_start_time}}",
-      "periods_until_expiration": "만료까지의 기간: {{periods_until_expiration}}",
-      "fee": "예상 수수료: {{fee}}"
+      "periods_until_expiration": "만료까지의 기간: {{periods_until_expiration}}"
     },
     "tooltip": "철회 권한 업데이트"
   },
@@ -556,8 +535,7 @@
       "withdraw_from_account": "계좌에서 인출: {{withdraw_from_account}} ({{withdraw_from_accountOP}})",
       "withdraw_to_account": "계좌로 인출: {{withdraw_to_account}} ({{withdraw_to_accountOP}})",
       "amount_to_withdraw": "인출 금액: {{amount_to_withdraw}} ({{amount_to_withdrawOP}})",
-      "memo": "메모: {{memo}}",
-      "fee": "예상 수수료: {{fee}}"
+      "memo": "메모: {{memo}}"
     },
     "tooltip": "철회 허가 청구"
   },
@@ -572,8 +550,7 @@
     "rows": {
       "withdraw_from_account": "계좌에서 인출: {{withdraw_from_account}} ({{withdraw_from_accountOP}})",
       "authorized_account": "승인된 계정: {{authorized_account}} ({{authorized_accountOP}})",
-      "withdrawal_permission": "철회 권한: {{withdrawal_permission}}",
-      "fee": "예상 수수료: {{fee}}"
+      "withdrawal_permission": "철회 권한: {{withdrawal_permission}}"
     },
     "tooltip": "철회 권한 삭제"
   },
@@ -587,8 +564,7 @@
     },
     "rows": {
       "committee_member_account": "위원회 회원 계정: {{committee_member_account}} ({{committee_member_accountOP}})",
-      "url": "URL: {{url}}",
-      "fee": "예상 수수료: {{fee}}"
+      "url": "URL: {{url}}"
     },
     "tooltip": "위원회 구성원 계정 만들기"
   },
@@ -603,8 +579,7 @@
     "rows": {
       "committee_member": "위원회 회원: {{committee_member}}",
       "committee_member_account": "위원회 회원 계정: {{committee_member_account}} ({{committee_member_accountOP}})",
-      "new_url": "새 URL: {{new_url}}",
-      "fee": "예상 수수료: {{fee}}"
+      "new_url": "새 URL: {{new_url}}"
     },
     "tooltip": "위원회 구성원 계정 세부정보를 업데이트하세요."
   },
@@ -646,8 +621,7 @@
       "accounts_per_fee_scale": "수수료 규모별 계정: {{accounts_per_fee_scale}}",
       "account_fee_scale_bitshifts": "계정 수수료 규모 비트 이동: {{account_fee_scale_bitshifts}}",
       "max_authority_depth": "최대 권한 깊이: {{max_authority_depth}}",
-      "extensions": "확장자: {{extensions}}",
-      "fee": "예상 수수료: {{fee}}"
+      "extensions": "확장자: {{extensions}}"
     },
     "tooltip": "Bitshares 블록체인 글로벌 매개변수 값에 대한 위원회 구성원의 입장을 게시하세요."
   },
@@ -668,8 +642,7 @@
       "vesting_cliff_seconds": "베스팅 절벽 초: {{vesting_cliff_seconds}}",
       "vesting_duration_seconds": "베스팅 기간(초): {{vesting_duration_seconds}}",
       "start_claim": "소유권 주장 시작: {{start_claim}}",
-      "vesting_seconds": "베스팅 초: {{vesting_seconds}}",
-      "fee": "예상 수수료: {{fee}}"
+      "vesting_seconds": "베스팅 초: {{vesting_seconds}}"
     },
     "tooltip": "베스팅 잔액 생성"
   },
@@ -702,8 +675,7 @@
       "daily_pay": "일일 급여: {{daily_pay}}",
       "name": "이름: {{name}}",
       "url": "URL: {{url}}",
-      "initializer": "초기화 프로그램: {{initializer}}",
-      "fee": "예상 수수료: {{fee}}"
+      "initializer": "초기화 프로그램: {{initializer}}"
     },
     "tooltip": "작업자 제안 만들기"
   },
@@ -719,8 +691,7 @@
       "payer": "지불인: {{payer}} ({{payerOP}})",
       "required_auths": "필수 권한: {{required_auths}}",
       "id": "ID: {{id}}",
-      "data": "데이터: {{data}}",
-      "fee": "예상 수수료: {{fee}}"
+      "data": "데이터: {{data}}"
     },
     "tooltip": "증인 합의 위에 더 높은 수준의 프로토콜을 추가하는 일반적인 방법을 제공합니다."
   },
@@ -736,8 +707,7 @@
       "fee_paying_account": "수수료 지불 계정: {{fee_paying_account}} ({{fee_paying_accountOP}})",
       "predicates": "술어: {{predicates}}",
       "required_auths": "필수 권한: {{required_auths}}",
-      "extensions": "확장자: {{extensions}}",
-      "fee": "예상 수수료: {{fee}}"
+      "extensions": "확장자: {{extensions}}"
     },
     "tooltip": "일부 조건이 true인지 확인합니다."
   },
@@ -753,8 +723,7 @@
       "deposit_to_account": "계좌 입금: {{deposit_to_account}} ({{deposit_to_accountOP}})",
       "balance_to_claim": "청구할 잔액: {{balance_to_claim}} ({{asset_id}})",
       "balance_owner_key": "잔액 소유자 키: {{balance_owner_key}}",
-      "total_claimed": "청구된 총 금액: {{total_claimed}}({{asset_id}})",
-      "fee": "예상 수수료: {{fee}}"
+      "total_claimed": "청구된 총 금액: {{total_claimed}}({{asset_id}})"
     },
     "tooltip": "잔액 청구"
   },
@@ -771,8 +740,7 @@
       "from": "보낸 사람: {{from}} ({{fromOP}})",
       "to": "받는 사람: {{to}} ({{toOP}})",
       "amount": "금액: {{amount}} ({{asset_id}})",
-      "memo": "메모: {{memo}}",
-      "fee": "예상 수수료: {{fee}}"
+      "memo": "메모: {{memo}}"
     },
     "tooltip": "전송 작업 재정의"
   },
@@ -788,8 +756,7 @@
       "amount": "금액: {{amount}}",
       "from": "보낸 사람: {{from}} ({{fromOP}})",
       "blinding_factor": "눈부신 요인: {{blinding_factor}}",
-      "outputs": "출력: {{outputs}}",
-      "fee": "예상 수수료: {{fee}}"
+      "outputs": "출력: {{outputs}}"
     },
     "tooltip": "맹목적인 대상으로 자산 전송"
   },
@@ -803,8 +770,7 @@
     },
     "rows": {
       "inputs": "입력: {{inputs}}",
-      "outputs": "출력: {{outputs}}",
-      "fee": "예상 수수료: {{fee}}"
+      "outputs": "출력: {{outputs}}"
     },
     "tooltip": "블라인드 자산을 맹목적으로 양도"
   },
@@ -820,8 +786,7 @@
       "amount": "금액: {{amount}}",
       "to": "받는 사람: {{to}} ({{toOP}})",
       "blinding_factor": "눈부신 요인: {{blinding_factor}}",
-      "inputs": "입력: {{inputs}}",
-      "fee": "예상 수수료: {{fee}}"
+      "inputs": "입력: {{inputs}}"
     },
     "tooltip": "블라인드 잔액에서 자산 인출"
   },
@@ -835,8 +800,7 @@
     },
     "rows": {
       "issuer": "발급자: {{issuer}}({{issuerOP}})",
-      "amount_to_claim": "청구 금액: {{amount_to_claim}} ({{asset_id}})",
-      "fee": "예상 수수료: {{fee}}"
+      "amount_to_claim": "청구 금액: {{amount_to_claim}} ({{asset_id}})"
     },
     "tooltip": "자산에서 수수료 청구"
   },
@@ -851,8 +815,7 @@
     "rows": {
       "bidder": "입찰자: {{bidder}} ({{bidderOP}})",
       "additional_collateral": "추가 담보: {{additional_collateral}}",
-      "debt_covered": "담보된 부채: {{debt_covered}}",
-      "fee": "예상 수수료: {{fee}}"
+      "debt_covered": "담보된 부채: {{debt_covered}}"
     },
     "tooltip": "전 세계적으로 결제될 때 비트에셋을 뒷받침하는 담보에 입찰하세요."
   },
@@ -867,8 +830,7 @@
     "rows": {
       "issuer": "발급자: {{issuer}}({{issuerOP}})",
       "asset_id": "자산: {{asset_id}}",
-      "amount_to_claim": "청구 금액: {{amount_to_claim}}",
-      "fee": "예상 수수료: {{fee}}"
+      "amount_to_claim": "청구 금액: {{amount_to_claim}}"
     },
     "tooltip": "지정된 자산의 수수료 풀에서 발행자의 잔액으로 BTS를 다시 이체합니다."
   },
@@ -883,8 +845,7 @@
     "rows": {
       "issuer": "발급자: {{issuer}}({{issuerOP}})",
       "asset_to_update": "업데이트할 자산: {{asset_to_update}}",
-      "new_issuer": "새 발급자: {{new_issuer}}({new_issuerOP})",
-      "fee": "예상 수수료: {{fee}}"
+      "new_issuer": "새 발급자: {{new_issuer}}({new_issuerOP})"
     },
     "tooltip": "자산 발급자를 새 관리자 계정으로 업데이트합니다."
   },
@@ -902,8 +863,7 @@
       "amount": "금액: {{amount}}",
       "preimage_hash": "사전 이미지 해시: {{preimage_hash}}",
       "preimage_size": "사전 이미지 크기: {{preimage_size}}",
-      "claim_period_seconds": "청구 기간(초): {{claim_period_seconds}}",
-      "fee": "예상 수수료: {{fee}}"
+      "claim_period_seconds": "청구 기간(초): {{claim_period_seconds}}"
     },
     "tooltip": "해시 시간 잠금 계약(HTLC) 작업 생성"
   },
@@ -919,8 +879,7 @@
       "htlc_id": "HTLC ID: {{htlc_id}}",
       "redeemer": "구속자: {{redeemer}} ({{redeemerOP}})",
       "preimage": "사전 이미지: {{preimage}}",
-      "extensions": "확장자: {{extensions}}",
-      "fee": "예상 수수료: {{fee}}"
+      "extensions": "확장자: {{extensions}}"
     },
     "tooltip": "HTLC 작업의 콘텐츠 상환"
   },
@@ -936,8 +895,7 @@
       "htlc_id": "HTLC ID: {{htlc_id}}",
       "update_issuer": "업데이트 발급자: {{update_issuer}}({{update_issuerOP}})",
       "seconds_to_add": "추가할 시간(초): {{seconds_to_add}}",
-      "extensions": "확장자: {{extensions}}",
-      "fee": "예상 수수료: {{fee}}"
+      "extensions": "확장자: {{extensions}}"
     },
     "tooltip": "HTLC 작업 기간 연장"
   },
@@ -957,8 +915,7 @@
       "operation_type": "작업 유형: {{operation_type}}",
       "auth": "권한: {{auth}}",
       "restrictions": "제한사항: {{restrictions}}",
-      "extensions": "확장자: {{extensions}}",
-      "fee": "예상 수수료: {{fee}}"
+      "extensions": "확장자: {{extensions}}"
     },
     "tooltip": "새 사용자 정의 권한을 만듭니다."
   },
@@ -979,8 +936,7 @@
       "new_auth": "새 권한: {{new_auth}}",
       "restrictions_to_remove": "제거할 제한사항: {{restrictions_to_remove}}",
       "restrictions_to_add": "추가할 제한사항: {{restrictions_to_add}}",
-      "extensions": "확장자: {{extensions}}",
-      "fee": "예상 수수료: {{fee}}"
+      "extensions": "확장자: {{extensions}}"
     },
     "tooltip": "사용자 정의 권한을 업데이트합니다."
   },
@@ -995,8 +951,7 @@
     "rows": {
       "account": "계정: {{account}} ({{accountOP}})",
       "authority_to_delete": "삭제 권한 : {{authority_to_delete}}",
-      "extensions": "확장자: {{extensions}}",
-      "fee": "예상 수수료: {{fee}}"
+      "extensions": "확장자: {{extensions}}"
     },
     "tooltip": "사용자 정의 권한을 삭제합니다."
   },
@@ -1012,8 +967,7 @@
       "account": "계정: {{account}} ({{accountOP}})",
       "target_type": "대상 유형: {{target_type}}",
       "amount": "금액: {{amount}}",
-      "extensions": "확장자: {{extensions}}",
-      "fee": "예상 수수료: {{fee}}"
+      "extensions": "확장자: {{extensions}}"
     },
     "tooltip": "새 티켓을 만듭니다."
   },
@@ -1049,8 +1003,7 @@
       "share_asset": "자산 공유: {{share_asset}} ({{share_assetOP}})",
       "taker_fee_percent": "테이커 수수료 비율: {{taker_fee_percent}}",
       "withdrawal_fee_percent": "인출 수수료 비율: {{withdrawal_fee_percent}}",
-      "extensions": "확장자: {{extensions}}",
-      "fee": "예상 수수료: {{fee}}"
+      "extensions": "확장자: {{extensions}}"
     },
     "tooltip": "유동성 풀 생성"
   },
@@ -1065,8 +1018,7 @@
     "rows": {
       "account": "계정: {{account}} ({{accountOP}})",
       "pool_id": "풀 ID: {{pool_id}}",
-      "extensions": "확장자: {{extensions}}",
-      "fee": "예상 수수료: {{fee}}"
+      "extensions": "확장자: {{extensions}}"
     },
     "tooltip": "유동성 풀 삭제"
   },
@@ -1083,8 +1035,7 @@
       "pool": "풀: {{pool}}",
       "asset_a": "자산 A: {{asset_a}} ({{asset_aOP}})",
       "asset_b": "자산 B: {{asset_b}} ({{asset_bOP}})",
-      "extensions": "확장자: {{extensions}}",
-      "fee": "예상 수수료: {{fee}}"
+      "extensions": "확장자: {{extensions}}"
     },
     "tooltip": "유동성 풀에 자금 예치"
   },
@@ -1100,8 +1051,7 @@
       "account": "계정: {{account}} ({{accountOP}})",
       "pool": "풀: {{pool}}",
       "share_asset": "자산 공유: {{share_asset}} ({{share_assetOP}})",
-      "extensions": "확장자: {{extensions}}",
-      "fee": "예상 수수료: {{fee}}"
+      "extensions": "확장자: {{extensions}}"
     },
     "tooltip": "유동성 풀에서 자금 인출"
   },
@@ -1118,8 +1068,7 @@
       "pool": "풀: {{pool}}",
       "amount_to_sell": "판매 금액: {{amount_to_sell}}",
       "min_to_receive": "최소 수신 가능 시간: {{min_to_receive}}",
-      "extensions": "확장자: {{extensions}}",
-      "fee": "예상 수수료: {{fee}}"
+      "extensions": "확장자: {{extensions}}"
     },
     "tooltip": "유동성 풀과 교환하세요."
   },
@@ -1136,8 +1085,7 @@
       "asset_type": "자산 유형: {{asset_type}}",
       "balance": "잔액: {{balance}}",
       "fee_rate": "수수료율: {{fee_rate}}",
-      "extensions": "확장자: {{extensions}}",
-      "fee": "예상 수수료: {{fee}}"
+      "extensions": "확장자: {{extensions}}"
     },
     "tooltip": "새로운 SameT 펀드를 만드세요. "
   },
@@ -1152,8 +1100,7 @@
     "rows": {
       "owner_account": "소유자 계정: {{owner_account}} ({{owner_accountOP}})",
       "fund_id": "펀드 ID: {{fund_id}}",
-      "extensions": "확장자: {{extensions}}",
-      "fee": "예상 수수료: {{fee}}"
+      "extensions": "확장자: {{extensions}}"
     },
     "tooltip": "SameT 자금 객체를 삭제합니다."
   },
@@ -1170,8 +1117,7 @@
       "fund_id": "펀드 ID: {{fund_id}}",
       "delta_amount": "델타 금액: {{delta_amount}}",
       "new_fee_rate": "새로운 수수료율: {{new_fee_rate}}",
-      "extensions": "확장자: {{extensions}}",
-      "fee": "예상 수수료: {{fee}}"
+      "extensions": "확장자: {{extensions}}"
     },
     "tooltip": "SameT 자금 객체를 업데이트합니다."
   },
@@ -1187,8 +1133,7 @@
       "borrower": "차용자: {{borrower}} ({{borrowerOP}})",
       "fund_id": "펀드 ID: {{fund_id}}",
       "borrow_amount": "대출 금액: {{borrow_amount}}",
-      "extensions": "확장자: {{extensions}}",
-      "fee": "예상 수수료: {{fee}}"
+      "extensions": "확장자: {{extensions}}"
     },
     "tooltip": "SameT 펀드에서 빌리세요."
   },
@@ -1205,8 +1150,7 @@
       "fund_id": "펀드 ID: {{fund_id}}",
       "repay_amount": "상환 금액: {{repay_amount}}",
       "fund_fee": "펀드 수수료: {{fund_fee}}",
-      "extensions": "확장자: {{extensions}}",
-      "fee": "예상 수수료: {{fee}}"
+      "extensions": "확장자: {{extensions}}"
     },
     "tooltip": "SameT 펀드에 부채를 상환하세요."
   },
@@ -1229,8 +1173,7 @@
       "auto_disable_time": "자동 비활성화 시간: {{auto_disable_time}}",
       "acceptable_collateral": "허용되는 담보: {{acceptable_collateral}}",
       "acceptable_borrowers": "허용되는 차용자: {{acceptable_borrowers}}",
-      "extensions": "확장자: {{extensions}}",
-      "fee": "예상 수수료: {{fee}}"
+      "extensions": "확장자: {{extensions}}"
     },
     "tooltip": "새로운 크레딧 제안을 생성하세요. "
   },
@@ -1245,8 +1188,7 @@
     "rows": {
       "owner_account": "소유자 계정: {{owner_account}} ({{owner_accountOP}})",
       "offer_id": "제안 ID: {{offer_id}}",
-      "extensions": "확장자: {{extensions}}",
-      "fee": "예상 수수료: {{fee}}"
+      "extensions": "확장자: {{extensions}}"
     },
     "tooltip": "크레딧 제안을 삭제합니다."
   },
@@ -1269,8 +1211,7 @@
       "auto_disable_time": "자동 비활성화 시간: {{auto_disable_time}}",
       "acceptable_collateral": "허용되는 담보: {{acceptable_collateral}}",
       "acceptable_borrowers": "허용되는 차용자: {{acceptable_borrowers}}",
-      "extensions": "확장자: {{extensions}}",
-      "fee": "예상 수수료: {{fee}}"
+      "extensions": "확장자: {{extensions}}"
     },
     "tooltip": "크레딧 제안 업데이트"
   },
@@ -1289,8 +1230,7 @@
       "collateral": "담보: {{collateral}}",
       "max_fee_rate": "최대 수수료율: {{max_fee_rate}}",
       "min_duration_seconds": "최소 기간(초): {{min_duration_seconds}}",
-      "extensions": "확장자: {{extensions}}",
-      "fee": "예상 수수료: {{fee}}"
+      "extensions": "확장자: {{extensions}}"
     },
     "tooltip": "신용 제안을 수락하고 신용 거래를 생성하세요."
   },
@@ -1307,8 +1247,7 @@
       "deal_id": "거래 ID: {{deal_id}}",
       "repay_amount": "상환 금액: {{repay_amount}}",
       "credit_fee": "신용 수수료: {{credit_fee}}",
-      "extensions": "확장자: {{extensions}}",
-      "fee": "예상 수수료: {{fee}}"
+      "extensions": "확장자: {{extensions}}"
     },
     "tooltip": "신용 거래를 상환하십시오."
   },
@@ -1324,8 +1263,7 @@
       "owner_account": "소유자 계정: {{owner_account}} ({{owner_accountOP}})",
       "pool_id": "풀 ID: {{pool_id}}",
       "new_parameters": "새 매개변수: {{new_parameters}}",
-      "extensions": "확장자: {{extensions}}",
-      "fee": "예상 수수료: {{fee}}"
+      "extensions": "확장자: {{extensions}}"
     },
     "tooltip": "유동성 풀 업데이트"
   },
@@ -1338,7 +1276,6 @@
       "result": "다음 크레딧 거래가 업데이트되었습니다."
     },
     "rows": {
-      "fee": "예상 수수료: {{fee}}",
       "account": "계정: {{account}} ({{accountOP}})",
       "deal_id": "거래 ID: {{deal_id}}",
       "auto_repay": "자동 상환: {{auto_repay}}"
@@ -1354,7 +1291,6 @@
       "result": "다음 지정가 주문이 업데이트되었습니다:"
     },
     "rows": {
-      "fee": "예상 수수료: {{fee}}",
       "seller": "판매자: {{seller}} ({{sellerOP}})",
       "order": "주문: {{order}}",
       "new_price": "새 가격: {{new_price}}",

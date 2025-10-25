@@ -42,7 +42,6 @@
     },
     "rows": {
       "id": "Ordre-id: {{id}}",
-      "fees": "Anslåede gebyrer: {{fees}}",
       "account": "Gebyrbetalingskonto: {{account}}"
     },
     "tooltip": "Annullering af en limiteret ordreoperation"
@@ -58,8 +57,7 @@
     "rows": {
       "funding_account": "Finansieringskonto: {{funding_account}}",
       "delta_collateral": "Deltasikkerhed: {{delta_collateral}} ({{id}})",
-      "delta_debt": "Deltagæld: {{delta_debt}} ({{id}})",
-      "fees": "Anslåede gebyrer: {{fees}}"
+      "delta_debt": "Deltagæld: {{delta_debt}} ({{id}})"
     },
     "tooltip": "Opdatering af en eksisterende opkaldsordre"
   },
@@ -88,8 +86,7 @@
       "num_witness": "Antal vidner: {{num_witness}}",
       "num_committee": "Antal udvalgsmedlemmer: {{num_committee}}",
       "votes": "Stemmer: {{votes}}",
-      "extensions": "Udvidelser: {{extensions}}",
-      "fees": "Anslåede gebyrer: {{fees}}"
+      "extensions": "Udvidelser: {{extensions}}"
     },
     "tooltip": "Oprettelse af en ny konto"
   },
@@ -107,8 +104,7 @@
       "owner": "Ejer: {{owner}}",
       "active": "Aktiv: {{active}}",
       "new_options": "Nye muligheder: {{new_options}}",
-      "extensions": "Udvidelser: {{extensions}}",
-      "fees": "Estimeret gebyr: {{fees}}"
+      "extensions": "Udvidelser: {{extensions}}"
     },
     "tooltip": "Denne handling bruges til at opdatere en eksisterende konto. "
   },
@@ -124,8 +120,7 @@
       "authorizing_account": "Godkender konto: {{authorizingAccount}} (authorizingAccountOP)",
       "account_to_list": "Konto til liste: {{accountToList}} (accountToListOP)",
       "new_listing": "Ny fortegnelse: {{newListing}}",
-      "extensions": "Udvidelser: {{extensions}}",
-      "fee": "Gebyr: {{fee}}"
+      "extensions": "Udvidelser: {{extensions}}"
     },
     "tooltip": "Denne handling bruges til at hvidliste og sortliste konti, primært til at handle med hvidlistede aktiver"
   },
@@ -140,8 +135,7 @@
     "rows": {
       "account_to_upgrade": "Konto, der skal opgraderes: {{accountToUpgrade}} (accountToUpgradeOP)",
       "upgrade_to_lifetime_member": "Opgrader til livstidsmedlem: {{upgradeToLifetimeMember}}",
-      "extensions": "Udvidelser: {{extensions}}",
-      "fee": "Estimeret gebyr: {{fee}}"
+      "extensions": "Udvidelser: {{extensions}}"
     },
     "tooltip": "Denne handling bruges til at opgradere en konto til et medlem eller forny dets abonnement."
   },
@@ -156,8 +150,7 @@
     "rows": {
       "warning": "Advarsel: Denne handling er irreversibel!",
       "account_id": "Konto-id: {{originalOwner}} ({{account_id}})",
-      "new_owner": "Ny ejer: {{newOwner}} ({{newOwnerOP}})",
-      "fee": "Estimeret gebyr: {{fee}}"
+      "new_owner": "Ny ejer: {{newOwner}} ({{newOwnerOP}})"
     },
     "tooltip": "Overfører kontoen til en anden konto, mens hvidlisten ryddes"
   },
@@ -298,8 +291,7 @@
       "maximum_force_settlement_volume": "Maksimal kraftafregningsvolumen: {{maximum_force_settlement_volume}}",
       "short_backing_asset": "Kort støtteaktiv: {{symbol}} ({{short_backing_asset}})",
       "extensions": "Udvidelser: {{extensions}}",
-      "noExtensions": "Ingen udvidelser",
-      "fee": "Estimeret gebyr: {{fee}} ({{id}})"
+      "noExtensions": "Ingen udvidelser"
     },
     "tooltip": "Opdater oprettede bitasset-indstillinger"
   },
@@ -314,8 +306,7 @@
     "rows": {
       "issuer": "Udsteder: {{issuer}} ({{issuerOP}})",
       "asset_to_update": "Aktiv, der skal opdateres: {{symbol}} ({{asset_to_update}})",
-      "new_feed_producers": "Nye feedproducenter: {{new_feed_producers}}",
-      "fee": "Estimeret gebyr: {{fee}}"
+      "new_feed_producers": "Nye feedproducenter: {{new_feed_producers}}"
     },
     "tooltip": "Opdater listen over godkendte foderproducenter for oprettet bitasset"
   },
@@ -328,8 +319,7 @@
       "result": "Følgende aktivudstedelse blev godkendt:"
     },
     "rows": {
-      "prompt": "Udsted {{amount}} {{symbol}} ({{assetID}}) til {{to}} ({{toID}})?",
-      "fee": "Estimeret gebyr: {{fee}} ({{id}})"
+      "prompt": "Udsted {{amount}} {{symbol}} ({{assetID}}) til {{to}} ({{toID}})?"
     },
     "tooltip": "Udsted dine oprettede aktiver til enkeltpersoner"
   },
@@ -344,8 +334,7 @@
     "rows": {
       "payer": "Betaler: {{payer}} ({{payerOP}})",
       "amount_to_reserve": "Beløb at reservere: {{amount_to_reserve}} ({{amount_to_reserveOP}})",
-      "extensions": "Udvidelser: {{extensions}}",
-      "fee": "Estimeret gebyr: {{fee}}"
+      "extensions": "Udvidelser: {{extensions}}"
     },
     "tooltip": "Reserver dine oprettede aktiver"
   },
@@ -360,8 +349,7 @@
     "rows": {
       "from_account": "Fra konto: {{from_account}} ({{from_accountOP}})",
       "asset": "Aktiv: {{asset}} ({{assetOP}})",
-      "amount": "Beløb: {{amount}}",
-      "fee": "Estimeret gebyr: {{fee}}"
+      "amount": "Beløb: {{amount}}"
     },
     "tooltip": "Finansier gebyrpuljen for dit oprettede aktiv"
   },
@@ -375,8 +363,7 @@
     },
     "rows": {
       "account": "Konto: {{account}} ({{accountOP}})",
-      "amount": "Beløb: {{amount}} ({{assetID}})",
-      "fee": "Estimeret gebyr: {{fee}}"
+      "amount": "Beløb: {{amount}} ({{assetID}})"
     },
     "tooltip": "Afregn et aktiv i din portefølje"
   },
@@ -391,8 +378,7 @@
     "rows": {
       "issuer": "Udsteder: {{issuer}} ({{issuerOP}})",
       "asset_to_settle": "Aktiv, der skal afregnes: {{asset_to_settle}} ({{asset_to_settleOP}})",
-      "settle_price": "Afregn pris: {{settle_price}}",
-      "fee": "Estimeret gebyr: {{fee}}"
+      "settle_price": "Afregn pris: {{settle_price}}"
     },
     "tooltip": "Globalt afregn et af dine oprettede bitassets"
   },
@@ -412,8 +398,7 @@
       "settlement_price": "Afregningspris: {{settlement_price}}",
       "maintenance_collateral_ratio": "Vedligeholdelsessikkerhedsforhold: {{maintenance_collateral_ratio}}",
       "maximum_short_squeeze_ratio": "Maksimalt kort squeeze-forhold: {{maximum_short_squeeze_ratio}}",
-      "extensions": "Udvidelser: {{extensions}}",
-      "fee": "Estimeret gebyr: {{fee}}"
+      "extensions": "Udvidelser: {{extensions}}"
     },
     "tooltip": "Udgiv et prisfeed for et bitasset"
   },
@@ -428,8 +413,7 @@
     "rows": {
       "witness_account": "Vidnekonto: {{witness_account}} ({{witness_accountOP}})",
       "url": "URL: {{url}}",
-      "block_signing_key": "Bloker signaturnøgle: {{block_signing_key}}",
-      "fee": "Estimeret gebyr: {{fee}}"
+      "block_signing_key": "Bloker signaturnøgle: {{block_signing_key}}"
     },
     "tooltip": "Opret en vidneberetning"
   },
@@ -445,8 +429,7 @@
       "witness": "Vidne: {{witness}}",
       "witness_account": "Vidnekonto: {{witness_account}} ({{witness_accountOP}})",
       "new_url": "Ny webadresse: {{new_url}}",
-      "new_signing_key": "Ny signeringsnøgle: {{new_signing_key}}",
-      "fee": "Estimeret gebyr: {{fee}}"
+      "new_signing_key": "Ny signeringsnøgle: {{new_signing_key}}"
     },
     "tooltip": "Opdater din vidnekonto"
   },
@@ -462,8 +445,7 @@
       "expiration_time": "Udløbstid: {{expiration_time}}",
       "proposed_ops": "Foreslåede operationer: {{proposed_ops}}",
       "review_period_seconds": "Sekunder for gennemgangsperiode: {{review_period_seconds}}",
-      "fee_paying_account": "Gebyrbetalingskonto: {{fee_paying_account}} ({{fee_paying_accountOP}})",
-      "fee": "Estimeret gebyr: {{fee}}"
+      "fee_paying_account": "Gebyrbetalingskonto: {{fee_paying_account}} ({{fee_paying_accountOP}})"
     },
     "tooltip": "Opret et forslag til blockchain-operation"
   },
@@ -484,8 +466,7 @@
       "key_approvals_to_add": "Nøglegodkendelser at tilføje: {{key_approvals_to_add}}",
       "key_approvals_to_remove": "Nøglegodkendelser, der skal fjernes: {{key_approvals_to_remove}}",
       "fee_paying_account": "Gebyrbetalingskonto: {{fee_paying_account}} ({{fee_paying_accountOP}})",
-      "extensions": "Udvidelser: {{extensions}}",
-      "fee": "Estimeret gebyr: {{fee}}"
+      "extensions": "Udvidelser: {{extensions}}"
     },
     "tooltip": "Opdater et forslag til blockchain-operation"
   },
@@ -501,8 +482,7 @@
       "using_owner_authority": "Brug af ejerautoritet: {{using_owner_authority}}",
       "proposal": "Forslag: {{proposal}}",
       "fee_paying_account": "Gebyrbetalingskonto: {{fee_paying_account}} ({{fee_paying_accountOP}})",
-      "extensions": "Udvidelser: {{extensions}}",
-      "fee": "Estimeret gebyr: {{fee}}"
+      "extensions": "Udvidelser: {{extensions}}"
     },
     "tooltip": "Slet et forslag til blockchain-operation"
   },
@@ -538,8 +518,7 @@
       "withdrawal_unlimited": "Udbetalingsgrænse: {{withdrawal_limit}} ({{withdrawal_limitOP}})",
       "withdrawal_period_sec": "Tilbagetrækningsperiode (sekunder): {{withdrawal_period_sec}}",
       "period_start_time": "Periodens starttidspunkt: {{period_start_time}}",
-      "periods_until_expiration": "Perioder indtil udløb: {{periods_until_expiration}}",
-      "fee": "Estimeret gebyr: {{fee}}"
+      "periods_until_expiration": "Perioder indtil udløb: {{periods_until_expiration}}"
     },
     "tooltip": "Opdater en tilbagetrækningstilladelse"
   },
@@ -556,8 +535,7 @@
       "withdraw_from_account": "Hæv fra konto: {{withdraw_from_account}} ({{withdraw_from_accountOP}})",
       "withdraw_to_account": "Hæv til konto: {{withdraw_to_account}} ({{withdraw_to_accountOP}})",
       "amount_to_withdraw": "Beløb, der skal trækkes ud: {{amount_to_withdraw}} ({{amount_to_withdrawOP}})",
-      "memo": "Notat: {{memo}}",
-      "fee": "Estimeret gebyr: {{fee}}"
+      "memo": "Notat: {{memo}}"
     },
     "tooltip": "Krav fra en tilbagetrækningstilladelse"
   },
@@ -572,8 +550,7 @@
     "rows": {
       "withdraw_from_account": "Hæv fra konto: {{withdraw_from_account}} ({{withdraw_from_accountOP}})",
       "authorized_account": "Autoriseret konto: {{authorized_account}} ({{authorized_accountOP}})",
-      "withdrawal_permission": "Tilbagetrækningstilladelse: {{withdrawal_permission}}",
-      "fee": "Estimeret gebyr: {{fee}}"
+      "withdrawal_permission": "Tilbagetrækningstilladelse: {{withdrawal_permission}}"
     },
     "tooltip": "Slet en tilbagetrækningstilladelse"
   },
@@ -587,8 +564,7 @@
     },
     "rows": {
       "committee_member_account": "Udvalgsmedlemskonto: {{committee_member_account}} ({{committee_member_accountOP}})",
-      "url": "URL: {{url}}",
-      "fee": "Estimeret gebyr: {{fee}}"
+      "url": "URL: {{url}}"
     },
     "tooltip": "Opret en udvalgsmedlemskonto"
   },
@@ -603,8 +579,7 @@
     "rows": {
       "committee_member": "Udvalgsmedlem: {{committee_member}}",
       "committee_member_account": "Udvalgsmedlemskonto: {{committee_member_account}} ({{committee_member_accountOP}})",
-      "new_url": "Ny webadresse: {{new_url}}",
-      "fee": "Estimeret gebyr: {{fee}}"
+      "new_url": "Ny webadresse: {{new_url}}"
     },
     "tooltip": "Opdater dine udvalgsmedlemskontooplysninger"
   },
@@ -646,8 +621,7 @@
       "accounts_per_fee_scale": "Konti pr. gebyrskala: {{accounts_per_fee_scale}}",
       "account_fee_scale_bitshifts": "Kontogebyrskala bitshifts: {{account_fee_scale_bitshifts}}",
       "max_authority_depth": "Maks. autoritetsdybde: {{max_authority_depth}}",
-      "extensions": "Udvidelser: {{extensions}}",
-      "fee": "Estimeret gebyr: {{fee}}"
+      "extensions": "Udvidelser: {{extensions}}"
     },
     "tooltip": "Offentliggør din komitémedlems holdning til Bitshares blockchain globale parameterværdier"
   },
@@ -668,8 +642,7 @@
       "vesting_cliff_seconds": "Vesting cliff sekunder: {{vesting_cliff_seconds}}",
       "vesting_duration_seconds": "Optjeningsvarighed sekunder: {{vesting_duration_seconds}}",
       "start_claim": "Start krav: {{start_claim}}",
-      "vesting_seconds": "Optjening sekunder: {{vesting_seconds}}",
-      "fee": "Estimeret gebyr: {{fee}}"
+      "vesting_seconds": "Optjening sekunder: {{vesting_seconds}}"
     },
     "tooltip": "Opret en optjeningsbalance"
   },
@@ -702,8 +675,7 @@
       "daily_pay": "Dagsløn: {{daily_pay}}",
       "name": "Navn: {{name}}",
       "url": "URL: {{url}}",
-      "initializer": "Initializer: {{initializer}}",
-      "fee": "Estimeret gebyr: {{fee}}"
+      "initializer": "Initializer: {{initializer}}"
     },
     "tooltip": "Opret et medarbejderforslag"
   },
@@ -719,8 +691,7 @@
       "payer": "Betaler: {{payer}} ({{payerOP}})",
       "required_auths": "Nødvendige myndigheder: {{required_auths}}",
       "id": "Jeg {{id}}",
-      "data": "Data: {{data}}",
-      "fee": "Estimeret gebyr: {{fee}}"
+      "data": "Data: {{data}}"
     },
     "tooltip": "Giver en generisk måde at tilføje protokoller på højere niveau oven på vidnekonsensus"
   },
@@ -736,8 +707,7 @@
       "fee_paying_account": "Gebyrbetalingskonto: {{fee_paying_account}} ({{fee_paying_accountOP}})",
       "predicates": "Prædikater: {{predicates}}",
       "required_auths": "Nødvendige myndigheder: {{required_auths}}",
-      "extensions": "Udvidelser: {{extensions}}",
-      "fee": "Estimeret gebyr: {{fee}}"
+      "extensions": "Udvidelser: {{extensions}}"
     },
     "tooltip": "Påstå, at nogle forhold er sande."
   },
@@ -753,8 +723,7 @@
       "deposit_to_account": "Indbetal til konto: {{deposit_to_account}} ({{deposit_to_accountOP}})",
       "balance_to_claim": "Saldo at gøre krav på: {{balance_to_claim}} ({{asset_id}})",
       "balance_owner_key": "Saldoejernøgle: {{balance_owner_key}}",
-      "total_claimed": "Samlet krav: {{total_claimed}} ({{asset_id}})",
-      "fee": "Estimeret gebyr: {{fee}}"
+      "total_claimed": "Samlet krav: {{total_claimed}} ({{asset_id}})"
     },
     "tooltip": "Krav fra en balance"
   },
@@ -771,8 +740,7 @@
       "from": "Fra: {{from}} ({{fromOP}})",
       "to": "Til: {{to}} ({{toOP}})",
       "amount": "Beløb: {{amount}} ({{asset_id}})",
-      "memo": "Notat: {{memo}}",
-      "fee": "Estimeret gebyr: {{fee}}"
+      "memo": "Notat: {{memo}}"
     },
     "tooltip": "Tilsidesæt en overførselshandling"
   },
@@ -788,8 +756,7 @@
       "amount": "Beløb: {{amount}}",
       "from": "Fra: {{from}} ({{fromOP}})",
       "blinding_factor": "Blindingsfaktor: {{blinding_factor}}",
-      "outputs": "Udgange: {{outputs}}",
-      "fee": "Estimeret gebyr: {{fee}}"
+      "outputs": "Udgange: {{outputs}}"
     },
     "tooltip": "Overfør aktiver til en blind destination"
   },
@@ -803,8 +770,7 @@
     },
     "rows": {
       "inputs": "Input: {{inputs}}",
-      "outputs": "Udgange: {{outputs}}",
-      "fee": "Estimeret gebyr: {{fee}}"
+      "outputs": "Udgange: {{outputs}}"
     },
     "tooltip": "Overfør blinde aktiver på en blind måde"
   },
@@ -820,8 +786,7 @@
       "amount": "Beløb: {{amount}}",
       "to": "Til: {{to}} ({{toOP}})",
       "blinding_factor": "Blindingsfaktor: {{blinding_factor}}",
-      "inputs": "Input: {{inputs}}",
-      "fee": "Estimeret gebyr: {{fee}}"
+      "inputs": "Input: {{inputs}}"
     },
     "tooltip": "Udtag aktiver fra en blind saldo"
   },
@@ -835,8 +800,7 @@
     },
     "rows": {
       "issuer": "Udsteder: {{issuer}} ({{issuerOP}})",
-      "amount_to_claim": "Beløb til krav: {{amount_to_claim}} ({{asset_id}})",
-      "fee": "Estimeret gebyr: {{fee}}"
+      "amount_to_claim": "Beløb til krav: {{amount_to_claim}} ({{asset_id}})"
     },
     "tooltip": "Gør krav på gebyrerne fra et aktiv"
   },
@@ -851,8 +815,7 @@
     "rows": {
       "bidder": "Budgiver: {{bidder}} ({{bidderOP}})",
       "additional_collateral": "Yderligere sikkerhed: {{additional_collateral}}",
-      "debt_covered": "Gæld dækket: {{debt_covered}}",
-      "fee": "Estimeret gebyr: {{fee}}"
+      "debt_covered": "Gæld dækket: {{debt_covered}}"
     },
     "tooltip": "Byd på en sikkerhedsstillelse for bitassets, når den afvikles globalt"
   },
@@ -867,8 +830,7 @@
     "rows": {
       "issuer": "Udsteder: {{issuer}} ({{issuerOP}})",
       "asset_id": "Aktiv: {{asset_id}}",
-      "amount_to_claim": "Beløb til krav: {{amount_to_claim}}",
-      "fee": "Estimeret gebyr: {{fee}}"
+      "amount_to_claim": "Beløb til krav: {{amount_to_claim}}"
     },
     "tooltip": "Overfører BTS fra gebyrpuljen for et specificeret aktiv tilbage til udsteders saldo"
   },
@@ -883,8 +845,7 @@
     "rows": {
       "issuer": "Udsteder: {{issuer}} ({{issuerOP}})",
       "asset_to_update": "Aktiv, der skal opdateres: {{asset_to_update}}",
-      "new_issuer": "Ny udsteder: {{new_issuer}} ({new_issuerOP})",
-      "fee": "Estimeret gebyr: {{fee}}"
+      "new_issuer": "Ny udsteder: {{new_issuer}} ({new_issuerOP})"
     },
     "tooltip": "Opdater udsteder af et aktiv til en ny administratorkonto."
   },
@@ -902,8 +863,7 @@
       "amount": "Beløb: {{amount}}",
       "preimage_hash": "Preimage hash: {{preimage_hash}}",
       "preimage_size": "Preimage størrelse: {{preimage_size}}",
-      "claim_period_seconds": "Kravperiode (sekunder): {{claim_period_seconds}}",
-      "fee": "Estimeret gebyr: {{fee}}"
+      "claim_period_seconds": "Kravperiode (sekunder): {{claim_period_seconds}}"
     },
     "tooltip": "Opret en hash time locked contract (HTLC) operation"
   },
@@ -919,8 +879,7 @@
       "htlc_id": "HTC ID: {{htlc_id}}",
       "redeemer": "Redeemer: {{redeemer}} ({{redeemerOP}})",
       "preimage": "Preimage: {{preimage}}",
-      "extensions": "Udvidelser: {{extensions}}",
-      "fee": "Estimeret gebyr: {{fee}}"
+      "extensions": "Udvidelser: {{extensions}}"
     },
     "tooltip": "Indløs indholdet af en HTLC-operation"
   },
@@ -936,8 +895,7 @@
       "htlc_id": "HTC ID: {{htlc_id}}",
       "update_issuer": "Opdater udsteder: {{update_issuer}} ({{update_issuerOP}})",
       "seconds_to_add": "Sekunder at tilføje: {{seconds_to_add}}",
-      "extensions": "Udvidelser: {{extensions}}",
-      "fee": "Estimeret gebyr: {{fee}}"
+      "extensions": "Udvidelser: {{extensions}}"
     },
     "tooltip": "Forlæng varigheden af ​​en HTLC-operation"
   },
@@ -957,8 +915,7 @@
       "operation_type": "Operationstype: {{operation_type}}",
       "auth": "Autoritet: {{auth}}",
       "restrictions": "Begrænsninger: {{restrictions}}",
-      "extensions": "Udvidelser: {{extensions}}",
-      "fee": "Estimeret gebyr: {{fee}}"
+      "extensions": "Udvidelser: {{extensions}}"
     },
     "tooltip": "Opret en ny brugerdefineret myndighed."
   },
@@ -979,8 +936,7 @@
       "new_auth": "Ny myndighed: {{new_auth}}",
       "restrictions_to_remove": "Begrænsninger, der skal fjernes: {{restrictions_to_remove}}",
       "restrictions_to_add": "Begrænsninger at tilføje: {{restrictions_to_add}}",
-      "extensions": "Udvidelser: {{extensions}}",
-      "fee": "Estimeret gebyr: {{fee}}"
+      "extensions": "Udvidelser: {{extensions}}"
     },
     "tooltip": "Opdater en tilpasset myndighed."
   },
@@ -995,8 +951,7 @@
     "rows": {
       "account": "Konto: {{account}} ({{accountOP}})",
       "authority_to_delete": "Bemyndigelse til at slette: {{authority_to_delete}}",
-      "extensions": "Udvidelser: {{extensions}}",
-      "fee": "Estimeret gebyr: {{fee}}"
+      "extensions": "Udvidelser: {{extensions}}"
     },
     "tooltip": "Slet en tilpasset myndighed."
   },
@@ -1012,8 +967,7 @@
       "account": "Konto: {{account}} ({{accountOP}})",
       "target_type": "Måltype: {{target_type}}",
       "amount": "Beløb: {{amount}}",
-      "extensions": "Udvidelser: {{extensions}}",
-      "fee": "Estimeret gebyr: {{fee}}"
+      "extensions": "Udvidelser: {{extensions}}"
     },
     "tooltip": "Opret en ny billet."
   },
@@ -1049,8 +1003,7 @@
       "share_asset": "Del aktiv: {{share_asset}} ({{share_assetOP}})",
       "taker_fee_percent": "Procent af takergebyr: {{taker_fee_percent}}",
       "withdrawal_fee_percent": "Procent for tilbagetrækningsgebyr: {{withdrawal_fee_percent}}",
-      "extensions": "Udvidelser: {{extensions}}",
-      "fee": "Estimeret gebyr: {{fee}}"
+      "extensions": "Udvidelser: {{extensions}}"
     },
     "tooltip": "Opret en likviditetspulje"
   },
@@ -1065,8 +1018,7 @@
     "rows": {
       "account": "Konto: {{account}} ({{accountOP}})",
       "pool_id": "Pool-id: {{pool_id}}",
-      "extensions": "Udvidelser: {{extensions}}",
-      "fee": "Estimeret gebyr: {{fee}}"
+      "extensions": "Udvidelser: {{extensions}}"
     },
     "tooltip": "Slet en likviditetspulje"
   },
@@ -1083,8 +1035,7 @@
       "pool": "Pool: {{pool}}",
       "asset_a": "Aktiv A: {{asset_a}} ({{asset_aOP}})",
       "asset_b": "Aktiv B: {{asset_b}} ({{asset_bOP}})",
-      "extensions": "Udvidelser: {{extensions}}",
-      "fee": "Estimeret gebyr: {{fee}}"
+      "extensions": "Udvidelser: {{extensions}}"
     },
     "tooltip": "Indskyder midler i en likviditetspulje"
   },
@@ -1100,8 +1051,7 @@
       "account": "Konto: {{account}} ({{accountOP}})",
       "pool": "Pool: {{pool}}",
       "share_asset": "Del aktiv: {{share_asset}} ({{share_assetOP}})",
-      "extensions": "Udvidelser: {{extensions}}",
-      "fee": "Estimeret gebyr: {{fee}}"
+      "extensions": "Udvidelser: {{extensions}}"
     },
     "tooltip": "Hæve midler fra en likviditetspulje"
   },
@@ -1118,8 +1068,7 @@
       "pool": "Pool: {{pool}}",
       "amount_to_sell": "Salgsbeløb: {{amount_to_sell}}",
       "min_to_receive": "Min. at modtage: {{min_to_receive}}",
-      "extensions": "Udvidelser: {{extensions}}",
-      "fee": "Estimeret gebyr: {{fee}}"
+      "extensions": "Udvidelser: {{extensions}}"
     },
     "tooltip": "Udveksling med en likviditetspulje."
   },
@@ -1136,8 +1085,7 @@
       "asset_type": "Aktivtype: {{asset_type}}",
       "balance": "Saldo: {{balance}}",
       "fee_rate": "Gebyrsats: {{fee_rate}}",
-      "extensions": "Udvidelser: {{extensions}}",
-      "fee": "Estimeret gebyr: {{fee}}"
+      "extensions": "Udvidelser: {{extensions}}"
     },
     "tooltip": "Opret en ny SameT-fond. "
   },
@@ -1152,8 +1100,7 @@
     "rows": {
       "owner_account": "Ejerkonto: {{owner_account}} ({{owner_accountOP}})",
       "fund_id": "Fonds-id: {{fund_id}}",
-      "extensions": "Udvidelser: {{extensions}}",
-      "fee": "Estimeret gebyr: {{fee}}"
+      "extensions": "Udvidelser: {{extensions}}"
     },
     "tooltip": "Slet et SameT-fondsobjekt."
   },
@@ -1170,8 +1117,7 @@
       "fund_id": "Fonds-id: {{fund_id}}",
       "delta_amount": "Deltabeløb: {{delta_amount}}",
       "new_fee_rate": "Ny gebyrsats: {{new_fee_rate}}",
-      "extensions": "Udvidelser: {{extensions}}",
-      "fee": "Estimeret gebyr: {{fee}}"
+      "extensions": "Udvidelser: {{extensions}}"
     },
     "tooltip": "Opdater et SameT-fondsobjekt."
   },
@@ -1187,8 +1133,7 @@
       "borrower": "Låntager: {{borrower}} ({{borrowerOP}})",
       "fund_id": "Fonds-id: {{fund_id}}",
       "borrow_amount": "Lånebeløb: {{borrow_amount}}",
-      "extensions": "Udvidelser: {{extensions}}",
-      "fee": "Estimeret gebyr: {{fee}}"
+      "extensions": "Udvidelser: {{extensions}}"
     },
     "tooltip": "Lån fra en SameT-fond."
   },
@@ -1205,8 +1150,7 @@
       "fund_id": "Fonds-id: {{fund_id}}",
       "repay_amount": "Tilbagebetalingsbeløb: {{repay_amount}}",
       "fund_fee": "Fondsgebyr: {{fund_fee}}",
-      "extensions": "Udvidelser: {{extensions}}",
-      "fee": "Estimeret gebyr: {{fee}}"
+      "extensions": "Udvidelser: {{extensions}}"
     },
     "tooltip": "Indfri gæld til en SameT-fond."
   },
@@ -1229,8 +1173,7 @@
       "auto_disable_time": "Automatisk deaktiveringstid: {{auto_disable_time}}",
       "acceptable_collateral": "Acceptabel sikkerhed: {{acceptable_collateral}}",
       "acceptable_borrowers": "Acceptable låntagere: {{acceptable_borrowers}}",
-      "extensions": "Udvidelser: {{extensions}}",
-      "fee": "Estimeret gebyr: {{fee}}"
+      "extensions": "Udvidelser: {{extensions}}"
     },
     "tooltip": "Opret et nyt kredittilbud. "
   },
@@ -1245,8 +1188,7 @@
     "rows": {
       "owner_account": "Ejerkonto: {{owner_account}} ({{owner_accountOP}})",
       "offer_id": "Tilbuds-id: {{offer_id}}",
-      "extensions": "Udvidelser: {{extensions}}",
-      "fee": "Estimeret gebyr: {{fee}}"
+      "extensions": "Udvidelser: {{extensions}}"
     },
     "tooltip": "Slet et kredittilbud."
   },
@@ -1269,8 +1211,7 @@
       "auto_disable_time": "Automatisk deaktiveringstid: {{auto_disable_time}}",
       "acceptable_collateral": "Acceptabel sikkerhed: {{acceptable_collateral}}",
       "acceptable_borrowers": "Acceptable låntagere: {{acceptable_borrowers}}",
-      "extensions": "Udvidelser: {{extensions}}",
-      "fee": "Estimeret gebyr: {{fee}}"
+      "extensions": "Udvidelser: {{extensions}}"
     },
     "tooltip": "Opdater et kredittilbud"
   },
@@ -1289,8 +1230,7 @@
       "collateral": "Sikkerhed: {{collateral}}",
       "max_fee_rate": "Maks. gebyrsats: {{max_fee_rate}}",
       "min_duration_seconds": "Min. varighed sekunder: {{min_duration_seconds}}",
-      "extensions": "Udvidelser: {{extensions}}",
-      "fee": "Estimeret gebyr: {{fee}}"
+      "extensions": "Udvidelser: {{extensions}}"
     },
     "tooltip": "Accepter et kredittilbud og lav en kreditaftale."
   },
@@ -1307,8 +1247,7 @@
       "deal_id": "Aftale-id: {{deal_id}}",
       "repay_amount": "Tilbagebetalingsbeløb: {{repay_amount}}",
       "credit_fee": "Kreditgebyr: {{credit_fee}}",
-      "extensions": "Udvidelser: {{extensions}}",
-      "fee": "Estimeret gebyr: {{fee}}"
+      "extensions": "Udvidelser: {{extensions}}"
     },
     "tooltip": "Tilbagebetal en kreditaftale."
   },
@@ -1324,8 +1263,7 @@
       "owner_account": "Ejerkonto: {{owner_account}} ({{owner_accountOP}})",
       "pool_id": "Pool-id: {{pool_id}}",
       "new_parameters": "Nye parametre: {{new_parameters}}",
-      "extensions": "Udvidelser: {{extensions}}",
-      "fee": "Estimeret gebyr: {{fee}}"
+      "extensions": "Udvidelser: {{extensions}}"
     },
     "tooltip": "Opdater en likviditetspulje"
   },
@@ -1338,7 +1276,6 @@
       "result": "Følgende kreditaftale blev opdateret:"
     },
     "rows": {
-      "fee": "Estimeret gebyr: {{fee}}",
       "account": "Konto: {{account}} ({{accountOP}})",
       "deal_id": "Aftale-id: {{deal_id}}",
       "auto_repay": "Automatisk tilbagebetaling: {{auto_repay}}"
@@ -1354,7 +1291,6 @@
       "result": "Følgende grænserækkefølge blev opdateret:"
     },
     "rows": {
-      "fee": "Estimeret gebyr: {{fee}}",
       "seller": "Sælger: {{seller}} ({{sellerOP}})",
       "order": "Ordre: {{order}}",
       "new_price": "Ny pris: {{new_price}}",

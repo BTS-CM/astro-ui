@@ -8,6 +8,7 @@ import { List } from "react-window";
 import { useStore } from "@nanostores/react";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
+import { copyToClipboard } from "@/lib/common.js";
 
 import {
   Card,
@@ -48,6 +49,7 @@ import { $currentNode } from "@/stores/node.ts";
 import { opTypes, operationTypes } from "@/lib/opTypes";
 import beautify from "@/lib/beautify.js";
 import { extractObjects } from "@/lib/BitShares.js";
+import { humanReadableFloat } from "@/lib/common";
 
 import ChainTypes from "@/bts/chain/ChainTypes.js";
 import btsAllAssets from "@/data/bitshares/allAssets.json";
@@ -261,10 +263,24 @@ export default function PortfolioRecentActivity() {
       return found?.method || null;
     }, [activityItem.operation_type]);
 
+    const feeDisplay = useMemo(() => {
+      const fee = activityItem?.operation_history?.op_object?.fee;
+      if (!fee || typeof fee.amount !== "number" || !fee.asset_id) return "-";
+
+      const allAssets =
+        usr?.chain === "bitshares" ? btsAllAssets : testAllAssets;
+      const asset = (allAssets || []).find((a) => a?.id === fee.asset_id);
+
+      const precision = asset?.precision ?? 0;
+      const symbol = asset?.symbol ?? fee.asset_id;
+      const value = humanReadableFloat(fee.amount, precision);
+      return `${value} ${symbol}`;
+    }, [activityItem, usr]);
+
     return (
       <div style={rowStyle} className="px-2">
         <Card className="hover:bg-gray-50">
-          <div className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr] items-start gap-2 p-2 mb-2">
+          <div className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr_1fr] items-start gap-2 p-2 mb-2">
             <div className="truncate font-medium mt-2">
               <Dialog
                 open={opDialogOpen}
@@ -356,6 +372,8 @@ export default function PortfolioRecentActivity() {
 
             <div className="text-sm mt-2">{timeDiffString}</div>
 
+            <div className="text-sm mt-2">{feeDisplay}</div>
+
             <div className="flex items-center gap-2 justify-end">
               <Dialog>
                 <DialogTrigger asChild>
@@ -383,6 +401,21 @@ export default function PortfolioRecentActivity() {
                           )}
                         </pre>
                       </ScrollArea>
+
+                      <Button
+                        onClick={() => {
+                          copyToClipboard(
+                            JSON.stringify(
+                              activityItem.operation_history.op_object,
+                              null,
+                              4
+                            )
+                          );
+                        }}
+                        className="mt-2"
+                      >
+                        {t("DeepLinkDialog:tabsContent.copyOperationJSON")}
+                      </Button>
                     </div>
                   </div>
                 </DialogContent>
@@ -407,6 +440,16 @@ export default function PortfolioRecentActivity() {
                       <ScrollArea className="h-72 rounded-md border">
                         <pre>{JSON.stringify(activityItem, null, 2)}</pre>
                       </ScrollArea>
+                      <Button
+                        onClick={() => {
+                          copyToClipboard(
+                            JSON.stringify(activityItem, null, 4)
+                          );
+                        }}
+                        className="mt-2"
+                      >
+                        {t("DeepLinkDialog:tabsContent.copyOperationJSON")}
+                      </Button>
                     </div>
                   </div>
                 </DialogContent>
@@ -440,26 +483,35 @@ export default function PortfolioRecentActivity() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="text-left">
-                      {t("PortfolioTabs:th.description", "Description")}
-                    </TableHead>
-                    <TableHead className="text-left">
-                      {t("PortfolioTabs:operationId", "Operation ID")}
-                    </TableHead>
-                    <TableHead className="text-left">
-                      {t("PortfolioTabs:blockNumber", "Block Number")}
-                    </TableHead>
-                    <TableHead className="text-left">
-                      {t("PortfolioTabs:timeSinceBroadcast")}
-                    </TableHead>
-                    <TableHead className="text-left">
-                      {t("PortfolioTabs:actions", "Actions")}
+                    <TableHead colSpan={6} className="p-0">
+                      <div className="px-2">
+                        <div className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr_1fr] items-start gap-2 p-2">
+                          <div className="text-left">
+                            {t("PortfolioTabs:th.description", "Description")}
+                          </div>
+                          <div className="text-left">
+                            {t("PortfolioTabs:operationId", "Operation ID")}
+                          </div>
+                          <div className="text-left">
+                            {t("PortfolioTabs:blockNumber", "Block Number")}
+                          </div>
+                          <div className="text-left">
+                            {t("PortfolioTabs:timeSinceBroadcast")}
+                          </div>
+                          <div className="text-left">
+                            {t("PoolTracker:fees")}
+                          </div>
+                          <div className="text-right">
+                            {t("PortfolioTabs:actions", "Actions")}
+                          </div>
+                        </div>
+                      </div>
                     </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   <tr>
-                    <td colSpan={5} className="p-0">
+                    <td colSpan={6} className="p-0">
                       <div className="w-full max-h-[500px]">
                         <List
                           rowComponent={RecentActivityRow}
