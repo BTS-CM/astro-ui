@@ -49,6 +49,9 @@ import CurrentUser from "./common/CurrentUser.jsx";
 import { $currentUser } from "@/stores/users.ts";
 import { NavigationMenuIndicator } from "@radix-ui/react-navigation-menu";
 
+// Sidebar imports
+// Use the same Button component as the language dropdown so the appearance matches
+
 function MenuRow(properties) {
   const { url, text, icon } = properties;
 
@@ -392,346 +395,367 @@ export default function PageHeader(properties) {
   ];
 
   return (
-    <>
-      <div key={`header`} className="container mx-auto mb-3">
-        <div className="grid grid-cols-12">
-          <div className="col-span-12">
-            <div className="grid grid-cols-12 mb-3">
-              <div className="col-span-3 mt-2">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button>
-                      <svg
-                        viewBox="0 0 512 512"
-                        fill="currentColor"
-                        height="1em"
-                        width="1em"
-                      >
-                        <path
-                          fill="none"
-                          stroke="currentColor"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={32}
-                          d="M48 112h288M192 64v48M272 448l96-224 96 224M301.5 384h133M281.3 112S257 206 199 277 80 384 80 384"
-                        />
-                        <path
-                          fill="none"
-                          stroke="currentColor"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={32}
-                          d="M256 336s-35-27-72-75-56-85-56-85"
-                        />
-                      </svg>
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className="mt-10 p-0" side="end">
-                    <Command className="rounded-lg border shadow-md">
-                      <CommandInput
-                        placeholder={t("PageHeader:commandSearchPlaceholder")}
+    <div key={`header`} className="container mx-auto mb-3">
+      <div className="grid grid-cols-12">
+        <div className="col-span-12">
+          <div className="grid grid-cols-12 mb-3">
+            <div className="col-span-3 mt-2">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button>
+                    <svg
+                      viewBox="0 0 512 512"
+                      fill="currentColor"
+                      height="1em"
+                      width="1em"
+                    >
+                      <path
+                        fill="none"
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={32}
+                        d="M48 112h288M192 64v48M272 448l96-224 96 224M301.5 384h133M281.3 112S257 206 199 277 80 384 80 384"
                       />
-                      <CommandList>
-                        <CommandEmpty>
-                          {t("PageHeader:noResultsFound")}
-                        </CommandEmpty>
-                        <CommandGroup
-                          heading={t("PageHeader:exchangingFundsHeading")}
-                        >
-                          <LanguageRow
-                            language="en"
-                            i18n={i18n}
-                            text={t("PageHeader:english")}
-                          />
-                          <LanguageRow
-                            language="da"
-                            i18n={i18n}
-                            text={t("PageHeader:danish")}
-                          />
-                          <LanguageRow
-                            language="de"
-                            i18n={i18n}
-                            text={t("PageHeader:german")}
-                          />
-                          <LanguageRow
-                            language="es"
-                            i18n={i18n}
-                            text={t("PageHeader:spanish")}
-                          />
-                          <LanguageRow
-                            language="fr"
-                            i18n={i18n}
-                            text={t("PageHeader:french")}
-                          />
-                          <LanguageRow
-                            language="it"
-                            i18n={i18n}
-                            text={t("PageHeader:italian")}
-                          />
-                          <LanguageRow
-                            language="ja"
-                            i18n={i18n}
-                            text={t("PageHeader:japanese")}
-                          />
-                          <LanguageRow
-                            language="ko"
-                            i18n={i18n}
-                            text={t("PageHeader:korean")}
-                          />
-                          <LanguageRow
-                            language="pt"
-                            i18n={i18n}
-                            text={t("PageHeader:portuguese")}
-                          />
-                          <LanguageRow
-                            language="th"
-                            i18n={i18n}
-                            text={t("PageHeader:thai")}
-                          />
-                        </CommandGroup>
-                      </CommandList>
-                    </Command>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
+                      <path
+                        fill="none"
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={32}
+                        d="M256 336s-35-27-72-75-56-85-56-85"
+                      />
+                    </svg>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="mt-10 p-0" side="end">
+                  <Command className="rounded-lg border shadow-md">
+                    <CommandInput
+                      placeholder={t("PageHeader:commandSearchPlaceholder")}
+                    />
+                    <CommandList>
+                      <CommandEmpty>
+                        {t("PageHeader:noResultsFound")}
+                      </CommandEmpty>
+                      <CommandGroup
+                        heading={t("PageHeader:exchangingFundsHeading")}
+                      >
+                        <LanguageRow
+                          language="en"
+                          i18n={i18n}
+                          text={t("PageHeader:english")}
+                        />
+                        <LanguageRow
+                          language="da"
+                          i18n={i18n}
+                          text={t("PageHeader:danish")}
+                        />
+                        <LanguageRow
+                          language="de"
+                          i18n={i18n}
+                          text={t("PageHeader:german")}
+                        />
+                        <LanguageRow
+                          language="es"
+                          i18n={i18n}
+                          text={t("PageHeader:spanish")}
+                        />
+                        <LanguageRow
+                          language="fr"
+                          i18n={i18n}
+                          text={t("PageHeader:french")}
+                        />
+                        <LanguageRow
+                          language="it"
+                          i18n={i18n}
+                          text={t("PageHeader:italian")}
+                        />
+                        <LanguageRow
+                          language="ja"
+                          i18n={i18n}
+                          text={t("PageHeader:japanese")}
+                        />
+                        <LanguageRow
+                          language="ko"
+                          i18n={i18n}
+                          text={t("PageHeader:korean")}
+                        />
+                        <LanguageRow
+                          language="pt"
+                          i18n={i18n}
+                          text={t("PageHeader:portuguese")}
+                        />
+                        <LanguageRow
+                          language="th"
+                          i18n={i18n}
+                          text={t("PageHeader:thai")}
+                        />
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </DropdownMenuContent>
+              </DropdownMenu>
 
-              <div className="col-span-6 text-center">
-                <h2>
-                  <a
-                    href="/index.html"
-                    onClick={() => {
-                      if (window.location.pathname === "/blocks/index.html") {
-                        window.electron.stopBlocks({});
-                      }
+              {/* Sidebar toggle shown on mobile and md, hidden on lg+ */}
+              <Button
+                size="icon"
+                className="lg:hidden ml-2 inline-flex align-middle h-7 w-7"
+                onClick={() => window.__toggleSidebar && window.__toggleSidebar()}
+                aria-label="Toggle Sidebar"
+                title="Toggle Sidebar"
+              >
+                {/* same icon as SidebarTrigger used (ViewVertical-like) */}
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="size-4"
+                >
+                  <path d="M3 4h18M3 12h18M3 20h18" />
+                </svg>
+              </Button>
+            </div>
+
+            <div className="col-span-6 text-center">
+              <h2>
+                <a
+                  href="/index.html"
+                  onClick={() => {
+                    if (window.location.pathname === "/blocks/index.html") {
+                      window.electron.stopBlocks({});
+                    }
+                  }}
+                >
+                  {page && page === "index"
+                    ? t("PageHeader:welcomeMessage")
+                    : ""}
+                  <span
+                    style={{
+                      backgroundImage: "var(--accent-gradient)",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                      backgroundSize: "400%",
+                      backgroundPosition: "0%",
                     }}
                   >
-                    {page && page === "index"
-                      ? t("PageHeader:welcomeMessage")
-                      : ""}
-                    <span
-                      style={{
-                        backgroundImage: "var(--accent-gradient)",
-                        WebkitBackgroundClip: "text",
-                        WebkitTextFillColor: "transparent",
-                        backgroundSize: "400%",
-                        backgroundPosition: "0%",
-                      }}
-                    >
-                      {t("PageHeader:uiName")}
-                    </span>
-                  </a>
-                </h2>
-                <h4 className="text-muted-foreground">
-                  {t(`PageHeader:descText.${page}`)}
-                </h4>
-              </div>
+                    {t("PageHeader:uiName")}
+                  </span>
+                </a>
+              </h2>
+              <h4 className="text-muted-foreground">
+                {t(`PageHeader:descText.${page}`)}
+              </h4>
+            </div>
 
-              <div className="col-span-3 text-right mt-2">
-                {usr && usr.username && usr.username.length ? (
-                  <CurrentUser usr={usr} />
-                ) : null}
-              </div>
+            <div className="col-span-3 text-right mt-2">
+              {usr && usr.username && usr.username.length ? (
+                <CurrentUser usr={usr} />
+              ) : null}
             </div>
           </div>
-          <div className="col-span-12">
-            <NavigationMenu>
-              <NavigationMenuList className="gap-2">
-                <NavigationMenuItem>
-                  <Badge
-                    variant="secondary"
-                    className="hover:bg-slate-200 hover:text-black"
-                  >
-                    <NavigationMenuTrigger>
-                      {t("PageHeader:exchangingFundsHeading")}
-                    </NavigationMenuTrigger>
-                  </Badge>
-                  <NavigationMenuContent>
-                    <ul className="grid gap-2 sm:w-[400px] md:w-[500px] md:grid-cols-2 lg:w-[600px] p-2">
-                      {exchangingFundsHeading.map((component) => (
-                        <ListItem
-                          key={t(component.title)}
-                          title={t(component.title)}
-                          href={component.href}
-                        >
-                          {t(component.description)}
-                        </ListItem>
-                      ))}
-                    </ul>
-                  </NavigationMenuContent>
-                </NavigationMenuItem>
+        </div>
+        <div className="col-span-12">
+          {/* Hide the nav menu on mobile and md; show on lg+ */}
+          <NavigationMenu className="hidden lg:block">
+            <NavigationMenuList className="gap-2">
+              <NavigationMenuItem>
+                <Badge
+                  variant="secondary"
+                  className="hover:bg-slate-200 hover:text-black"
+                >
+                  <NavigationMenuTrigger>
+                    {t("PageHeader:exchangingFundsHeading")}
+                  </NavigationMenuTrigger>
+                </Badge>
+                <NavigationMenuContent>
+                  <ul className="grid gap-2 sm:w-[400px] md:w-[500px] md:grid-cols-2 lg:w-[600px] p-2">
+                    {exchangingFundsHeading.map((component) => (
+                      <ListItem
+                        key={t(component.title)}
+                        title={t(component.title)}
+                        href={component.href}
+                      >
+                        {t(component.description)}
+                      </ListItem>
+                    ))}
+                  </ul>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
 
-                <NavigationMenuItem>
-                  <Badge
-                    variant="secondary"
-                    className="hover:bg-slate-200 hover:text-black"
-                  >
-                    <NavigationMenuTrigger>
-                      {t("PageHeader:transferFundsHeading")}
-                    </NavigationMenuTrigger>
-                  </Badge>
-                  <NavigationMenuContent>
-                    <ul className="grid gap-2 sm:w-[400px] md:w-[500px] md:grid-cols-2 lg:w-[600px] p-2">
-                      {transferFundsHeading.map((component) => (
-                        <ListItem
-                          key={t(component.title)}
-                          title={t(component.title)}
-                          href={component.href}
-                        >
-                          {t(component.description)}
-                        </ListItem>
-                      ))}
-                    </ul>
-                  </NavigationMenuContent>
-                </NavigationMenuItem>
+              <NavigationMenuItem>
+                <Badge
+                  variant="secondary"
+                  className="hover:bg-slate-200 hover:text-black"
+                >
+                  <NavigationMenuTrigger>
+                    {t("PageHeader:transferFundsHeading")}
+                  </NavigationMenuTrigger>
+                </Badge>
+                <NavigationMenuContent>
+                  <ul className="grid gap-2 sm:w-[400px] md:w-[500px] md:grid-cols-2 lg:w-[600px] p-2">
+                    {transferFundsHeading.map((component) => (
+                      <ListItem
+                        key={t(component.title)}
+                        title={t(component.title)}
+                        href={component.href}
+                      >
+                        {t(component.description)}
+                      </ListItem>
+                    ))}
+                  </ul>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
 
-                <NavigationMenuItem>
-                  <Badge
-                    variant="secondary"
-                    className="hover:bg-slate-200 hover:text-black"
-                  >
-                    <NavigationMenuTrigger>
-                      {t("PageHeader:formsOfDebtHeading")}
-                    </NavigationMenuTrigger>
-                  </Badge>
-                  <NavigationMenuContent>
-                    <ul className="grid gap-2 sm:w-[400px] md:w-[500px] md:grid-cols-2 lg:w-[600px] p-2">
-                      {formsOfDebtHeading.map((component) => (
-                        <ListItem
-                          key={t(component.title)}
-                          title={t(component.title)}
-                          href={component.href}
-                        >
-                          {t(component.description)}
-                        </ListItem>
-                      ))}
-                    </ul>
-                  </NavigationMenuContent>
-                </NavigationMenuItem>
+              <NavigationMenuItem>
+                <Badge
+                  variant="secondary"
+                  className="hover:bg-slate-200 hover:text-black"
+                >
+                  <NavigationMenuTrigger>
+                    {t("PageHeader:formsOfDebtHeading")}
+                  </NavigationMenuTrigger>
+                </Badge>
+                <NavigationMenuContent>
+                  <ul className="grid gap-2 sm:w-[400px] md:w-[500px] md:grid-cols-2 lg:w-[600px] p-2">
+                    {formsOfDebtHeading.map((component) => (
+                      <ListItem
+                        key={t(component.title)}
+                        title={t(component.title)}
+                        href={component.href}
+                      >
+                        {t(component.description)}
+                      </ListItem>
+                    ))}
+                  </ul>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
 
-                <NavigationMenuItem>
-                  <Badge
-                    variant="secondary"
-                    className="hover:bg-slate-200 hover:text-black"
-                  >
-                    <NavigationMenuTrigger>
-                      {t("PageHeader:assetCreation")}
-                    </NavigationMenuTrigger>
-                  </Badge>
-                  <NavigationMenuContent>
-                    <ul className="grid gap-2 sm:w-[400px] md:w-[500px] md:grid-cols-2 lg:w-[600px] p-2">
-                      {assetCreation.map((component) => (
-                        <ListItem
-                          key={t(component.title)}
-                          title={t(component.title)}
-                          href={component.href}
-                        >
-                          {t(component.description)}
-                        </ListItem>
-                      ))}
-                    </ul>
-                  </NavigationMenuContent>
-                </NavigationMenuItem>
+              <NavigationMenuItem>
+                <Badge
+                  variant="secondary"
+                  className="hover:bg-slate-200 hover:text-black"
+                >
+                  <NavigationMenuTrigger>
+                    {t("PageHeader:assetCreation")}
+                  </NavigationMenuTrigger>
+                </Badge>
+                <NavigationMenuContent>
+                  <ul className="grid gap-2 sm:w-[400px] md:w-[500px] md:grid-cols-2 lg:w-[600px] p-2">
+                    {assetCreation.map((component) => (
+                      <ListItem
+                        key={t(component.title)}
+                        title={t(component.title)}
+                        href={component.href}
+                      >
+                        {t(component.description)}
+                      </ListItem>
+                    ))}
+                  </ul>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
 
-                <NavigationMenuItem>
-                  <Badge
-                    variant="secondary"
-                    className="hover:bg-slate-200 hover:text-black"
-                  >
-                    <NavigationMenuTrigger>
-                      {t("PageHeader:accountOverviewsHeading")}
-                    </NavigationMenuTrigger>
-                  </Badge>
-                  <NavigationMenuContent>
-                    <ul className="grid gap-2 sm:w-[400px] md:w-[500px] md:grid-cols-2 lg:w-[600px] p-2">
-                      {accountOverviewsHeading.map((component) => (
-                        <ListItem
-                          key={t(component.title)}
-                          title={t(component.title)}
-                          href={component.href}
-                        >
-                          {t(component.description)}
-                        </ListItem>
-                      ))}
-                    </ul>
-                  </NavigationMenuContent>
-                </NavigationMenuItem>
+              <NavigationMenuItem>
+                <Badge
+                  variant="secondary"
+                  className="hover:bg-slate-200 hover:text-black"
+                >
+                  <NavigationMenuTrigger>
+                    {t("PageHeader:accountOverviewsHeading")}
+                  </NavigationMenuTrigger>
+                </Badge>
+                <NavigationMenuContent>
+                  <ul className="grid gap-2 sm:w-[400px] md:w-[500px] md:grid-cols-2 lg:w-[600px] p-2">
+                    {accountOverviewsHeading.map((component) => (
+                      <ListItem
+                        key={t(component.title)}
+                        title={t(component.title)}
+                        href={component.href}
+                      >
+                        {t(component.description)}
+                      </ListItem>
+                    ))}
+                  </ul>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
 
-                <NavigationMenuItem>
-                  <Badge
-                    variant="secondary"
-                    className="hover:bg-slate-200 hover:text-black"
-                  >
-                    <NavigationMenuTrigger>
-                      {t("PageHeader:blockchainOverviewsHeading")}
-                    </NavigationMenuTrigger>
-                  </Badge>
-                  <NavigationMenuContent>
-                    <ul className="grid gap-2 sm:w-[400px] md:w-[500px] md:grid-cols-2 lg:w-[600px] p-2">
-                      {blockchainOverviewsHeading.map((component) => (
-                        <ListItem
-                          key={t(component.title)}
-                          title={t(component.title)}
-                          href={component.href}
-                        >
-                          {t(component.description)}
-                        </ListItem>
-                      ))}
-                    </ul>
-                  </NavigationMenuContent>
-                </NavigationMenuItem>
+              <NavigationMenuItem>
+                <Badge
+                  variant="secondary"
+                  className="hover:bg-slate-200 hover:text-black"
+                >
+                  <NavigationMenuTrigger>
+                    {t("PageHeader:blockchainOverviewsHeading")}
+                  </NavigationMenuTrigger>
+                </Badge>
+                <NavigationMenuContent>
+                  <ul className="grid gap-2 sm:w-[400px] md:w-[500px] md:grid-cols-2 lg:w-[600px] p-2">
+                    {blockchainOverviewsHeading.map((component) => (
+                      <ListItem
+                        key={t(component.title)}
+                        title={t(component.title)}
+                        href={component.href}
+                      >
+                        {t(component.description)}
+                      </ListItem>
+                    ))}
+                  </ul>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
 
-                <NavigationMenuItem>
-                  <Badge
-                    variant="secondary"
-                    className="hover:bg-slate-200 hover:text-black"
-                  >
-                    <NavigationMenuTrigger>
-                      {t("PageHeader:governanceHeading")}
-                    </NavigationMenuTrigger>
-                  </Badge>
-                  <NavigationMenuContent>
-                    <ul className="grid gap-2 sm:w-[400px] md:w-[500px] md:grid-cols-2 lg:w-[600px] p-2">
-                      {governanceHeading.map((component) => (
-                        <ListItem
-                          key={t(component.title)}
-                          title={t(component.title)}
-                          href={component.href}
-                        >
-                          {t(component.description)}
-                        </ListItem>
-                      ))}
-                    </ul>
-                  </NavigationMenuContent>
-                </NavigationMenuItem>
+              <NavigationMenuItem>
+                <Badge
+                  variant="secondary"
+                  className="hover:bg-slate-200 hover:text-black"
+                >
+                  <NavigationMenuTrigger>
+                    {t("PageHeader:governanceHeading")}
+                  </NavigationMenuTrigger>
+                </Badge>
+                <NavigationMenuContent>
+                  <ul className="grid gap-2 sm:w-[400px] md:w-[500px] md:grid-cols-2 lg:w-[600px] p-2">
+                    {governanceHeading.map((component) => (
+                      <ListItem
+                        key={t(component.title)}
+                        title={t(component.title)}
+                        href={component.href}
+                      >
+                        {t(component.description)}
+                      </ListItem>
+                    ))}
+                  </ul>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
 
-                <NavigationMenuItem>
-                  <Badge
-                    variant="secondary"
-                    className="hover:bg-slate-200 hover:text-black"
-                  >
-                    <NavigationMenuTrigger>
-                      {t("PageHeader:settingsHeading")}
-                    </NavigationMenuTrigger>
-                  </Badge>
-                  <NavigationMenuContent>
-                    <ul className="grid gap-2 sm:w-[400px] md:w-[500px] md:grid-cols-2 lg:w-[600px] p-2">
-                      {settingsHeading.map((component) => (
-                        <ListItem
-                          key={t(component.title)}
-                          title={t(component.title)}
-                          href={component.href}
-                        >
-                          {t(component.description)}
-                        </ListItem>
-                      ))}
-                    </ul>
-                  </NavigationMenuContent>
-                </NavigationMenuItem>
-              </NavigationMenuList>
-            </NavigationMenu>
-          </div>
+              <NavigationMenuItem>
+                <Badge
+                  variant="secondary"
+                  className="hover:bg-slate-200 hover:text-black"
+                >
+                  <NavigationMenuTrigger>
+                    {t("PageHeader:settingsHeading")}
+                  </NavigationMenuTrigger>
+                </Badge>
+                <NavigationMenuContent>
+                  <ul className="grid gap-2 sm:w-[400px] md:w-[500px] md:grid-cols-2 lg:w-[600px] p-2">
+                    {settingsHeading.map((component) => (
+                      <ListItem
+                        key={t(component.title)}
+                        title={t(component.title)}
+                        href={component.href}
+                      >
+                        {t(component.description)}
+                      </ListItem>
+                    ))}
+                  </ul>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
         </div>
       </div>
-    </>
+    </div>
   );
 }

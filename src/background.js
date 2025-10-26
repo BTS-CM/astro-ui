@@ -40,8 +40,8 @@ protocol.registerSchemesAsPrivileged([
 
 const createWindow = async () => {
   mainWindow = new BrowserWindow({
-    minWidth: 1280,
-    minHeight: 720,
+    minWidth: 540,
+    minHeight: 100,
     maximizable: true,
     useContentSize: true,
     autoHideMenuBar: true,

@@ -7,6 +7,7 @@ interface Props {
 
 const { title } = Astro.props;
 import '@/styles/globals.css'
+import SidebarRoot from '@/components/SidebarRoot.jsx'
 ---
 
 <!DOCTYPE html>
@@ -21,7 +22,10 @@ import '@/styles/globals.css'
 		<ClientRouter />
 	</head>
 	<body>
-		<slot />
+		<!-- Wrap the entire app content with the SidebarRoot so its flex wrapper includes the page -->
+		<SidebarRoot client:only="react">
+			<slot />
+		</SidebarRoot>
 	</body>
 </html>
 <style is:global>
