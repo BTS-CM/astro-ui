@@ -12,6 +12,7 @@
     "viewTRXObject": "TRX-Objekt anzeigen",
     "rawDeeplink": "Roher Deeplink",
     "localJSONFile": "Lokale JSON-Datei",
+    "qrCode": "QR-Code",
     "propose": "Vorschlag"
   },
   "tabsContent": {
@@ -20,7 +21,7 @@
     "copyOperationJSON": "Kopiervorgang JSON",
     "usingDeeplink": "Verwendung eines Deeplinks zur Übertragung über das Beet-Multiwallet",
     "step1": "Starten Sie das BEET-Wallet und navigieren Sie im Menü zu „Raw Link“. Das Wallet muss für die Dauer der Übertragung entsperrt bleiben.",
-    "step2": "Auf dieser Seite können Sie entweder alle Vorgänge zulassen oder nur den Vorgang „{{operationName}}“ sowie „injectedCall“ zulassen (klicken Sie anschließend auf „Speichern“).",
+    "step2": "Auf dieser Seite können Sie entweder alle Vorgänge zulassen oder nur den Vorgang zulassen.{{operationName}}' sowie 'injectedCall' (klicken Sie dann auf Speichern).",
     "step3": "Sobald in Beet „Bereit für Rohlinks“ angezeigt wird, können Sie auf die Schaltfläche unten klicken, um fortzufahren.",
     "step4": "Es wird eine BEET-Eingabeaufforderung angezeigt, die den Inhalt überprüft, optional eine Beet-Quittung anfordert und dann die Transaktion an die Blockchain sendet.",
     "step5": "Sie erhalten in diesem Fenster keine Bestätigung, aber Ihr Vorgang wird innerhalb von Sekunden auf der Blockchain verarbeitet.",
@@ -35,6 +36,15 @@
     "downloadBeetOperationJSON": "Laden Sie Beet Operation JSON herunter",
     "propose": "Erstellen eines neuen Vorschlags",
     "proposeDescription": "Wenn Sie nicht der Eigentümer (oder Miteigentümer) des Kontos sind, das Sie zum Erstellen des vorgeschlagenen Vorgangs verwenden, können Sie einen Vorschlag erstellen, den der Kontoinhaber nach eigenem Ermessen prüfen und veröffentlichen kann."
+  },
+  "qr": {
+    "ecl": "Fehlerkorrekturstufe",
+    "size": "Größe",
+    "padding": "Polsterung",
+    "style": "Stil",
+    "bgc": "Hintergrundfarbe",
+    "fgc": "Vordergrundfarbe",
+    "generating": "QR-Inhalte werden generiert..."
   },
   "proposal": {
     "targetContent": "Dies ist das Konto, mit dem Sie das Angebot erstellen, als Endbenutzer Vorgänge in der Astro-Benutzeroberfläche erstellen und dann hier Ihr Konto zur Zahlung der Angebotsgebühr angeben.",

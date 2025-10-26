@@ -22,6 +22,7 @@ import {
 
 import { initApplicationMenu } from "./lib/applicationMenu.js";
 import { generateDeepLink } from "./lib/deeplink.js";
+import { generateQRContents } from "./lib/qr.js";
 
 let mainWindow = null;
 let tray = null;
@@ -505,6 +506,24 @@ const createWindow = async () => {
     }
 
     return deeplink ?? null;
+  });
+
+  ipcMain.handle("generateQRContents", async (event, arg) => {
+    const { usrChain, nodeURL, currentNode, operationNames, trxJSON } = arg;
+
+    let qr;
+    try {
+      qr = await generateQRContents(
+        usrChain,
+        nodeURL || currentNode,
+        operationNames,
+        trxJSON
+      );
+    } catch (error) {
+      console.log({ error });
+    }
+
+    return qr ?? null;
   });
 
   // Ping handler: perform a TCP connect to the host/port to measure latency using node:net

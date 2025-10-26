@@ -54,6 +54,7 @@ import { $currentUser } from "@/stores/users.ts";
 
 import { Avatar } from "../Avatar.tsx";
 import AccountSearch from "../AccountSearch.jsx";
+import { QRCode } from "react-qrcode-logo";
 
 const operationNumbers = {
   transfer: 0,
@@ -235,6 +236,37 @@ export default function DeepLinkDialog(properties) {
 
   const [deeplinkJSON, setDeeplinkJSON] = useState(null);
 
+  // QR code customization state
+  const [qrECL, setQRECL] = useState("M");
+  const [qrSize, setQRSize] = useState("250");
+  const [qrQZ, setQRQZ] = useState("25");
+  const [qrStyle, setQRStyle] = useState("squares");
+  const [qrBGC, setQRBGC] = useState("#ffffff");
+  const [qrFGC, setQRFGC] = useState("#000000");
+  const [qrContents, setQRContents] = useState(null);
+
+  // Build transaction object in main process for QR encoding
+  useEffect(() => {
+    async function fetchQRContents() {
+      if (!window || !window.electron) return;
+      if (!usrChain || !operationNames || !trxJSON) return;
+
+      try {
+        const response = await window.electron.generateQRContents({
+          usrChain,
+          currentNode: currentNode ? currentNode.url : "",
+          operationNames,
+          trxJSON,
+        });
+        setQRContents(response || null);
+      } catch (e) {
+        console.error("Failed generating QR contents", e);
+        setQRContents(null);
+      }
+    }
+    fetchQRContents();
+  }, [usrChain, currentNode, operationNames, trxJSON]);
+
   useEffect(() => {
     async function calculateDeeplinkJSON() {
       if (!targetUser || !date || !trxJSON) {
@@ -366,6 +398,13 @@ export default function DeepLinkDialog(properties) {
                 >
                   {t("DeepLinkDialog:tabs.localJSONFile")}
                 </Button>
+                <Button
+                  className="col-span-1"
+                  onClick={() => setActiveTab("qr")}
+                  variant={activeTab === "qr" ? "" : "outline"}
+                >
+                  {t("DeepLinkDialog:tabs.qrCode")}
+                </Button>
                 {!proposal && !disablePropose ? (
                   <Button
                     className="col-span-1"
@@ -491,6 +530,122 @@ export default function DeepLinkDialog(properties) {
                       </Button>
                     </a>
                   ) : null}
+                </>
+              ) : null}
+              {activeTab === "qr" ? (
+                <>
+                  <Label className="text-left text-md font-bold">
+                    {t("DeepLinkDialog:tabs.qrCode")}
+                  </Label>
+                  <div className="flex flex-col sm:flex-row gap-6 items-start">
+                    <div className="flex items-center justify-center p-2 border rounded-md">
+                      {qrContents ? (
+                        <QRCode
+                          value={JSON.stringify(qrContents)}
+                          ecLevel={qrECL}
+                          size={parseInt(qrSize, 10)}
+                          quietZone={parseInt(qrQZ, 10)}
+                          qrStyle={qrStyle}
+                          bgColor={qrBGC}
+                          fgColor={qrFGC}
+                        />
+                      ) : (
+                        <span className="text-sm opacity-70">
+                          {t("DeepLinkDialog:qr.generating")}
+                        </span>
+                      )}
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
+                      <div>
+                        <Label className="mb-1 block">
+                          {t("DeepLinkDialog:qr.ecl")}
+                        </Label>
+                        <Select onValueChange={(v) => setQRECL(v)}>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder={qrECL} />
+                          </SelectTrigger>
+                          <SelectContent className="bg-white">
+                            {["L", "M", "Q", "H"].map((lvl) => (
+                              <SelectItem key={lvl} value={lvl}>
+                                {lvl}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div>
+                        <Label className="mb-1 block">
+                          {t("DeepLinkDialog:qr.size")}
+                        </Label>
+                        <Select onValueChange={(v) => setQRSize(v)}>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder={qrSize} />
+                          </SelectTrigger>
+                          <SelectContent className="bg-white">
+                            {["150", "250", "300", "350", "385"].map((s) => (
+                              <SelectItem key={s} value={s}>
+                                {s}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div>
+                        <Label className="mb-1 block">
+                          {t("DeepLinkDialog:qr.padding")}
+                        </Label>
+                        <Select onValueChange={(v) => setQRQZ(v)}>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder={qrQZ} />
+                          </SelectTrigger>
+                          <SelectContent className="bg-white">
+                            {["5", "10", "25", "50"].map((p) => (
+                              <SelectItem key={p} value={p}>
+                                {p}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div>
+                        <Label className="mb-1 block">
+                          {t("DeepLinkDialog:qr.style")}
+                        </Label>
+                        <Select onValueChange={(v) => setQRStyle(v)}>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder={qrStyle} />
+                          </SelectTrigger>
+                          <SelectContent className="bg-white">
+                            {["dots", "squares"].map((st) => (
+                              <SelectItem key={st} value={st}>
+                                {st}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div>
+                        <Label className="mb-1 block">
+                          {t("DeepLinkDialog:qr.bgc")}
+                        </Label>
+                        <Input
+                          type="color"
+                          value={qrBGC}
+                          onChange={(e) => setQRBGC(e.target.value)}
+                        />
+                      </div>
+                      <div>
+                        <Label className="mb-1 block">
+                          {t("DeepLinkDialog:qr.fgc")}
+                        </Label>
+                        <Input
+                          type="color"
+                          value={qrFGC}
+                          onChange={(e) => setQRFGC(e.target.value)}
+                        />
+                      </div>
+                    </div>
+                  </div>
                 </>
               ) : null}
               {activeTab === "propose" && !proposal && !disablePropose ? (

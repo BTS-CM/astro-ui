@@ -12,6 +12,7 @@
     "viewTRXObject": "View TRX Object",
     "rawDeeplink": "Raw Deeplink",
     "localJSONFile": "Local JSON file",
+    "qrCode": "QR Code",
     "propose": "Proposal"
   },
   "tabsContent": {
@@ -35,6 +36,15 @@
     "downloadBeetOperationJSON": "Download Beet operation JSON",
     "propose": "Creating a new proposal",
     "proposeDescription": "If you're not the owner (or are a co-owner) of the account you're using to construct the proposed operation, then you can create a proposal for the account owner to review and broadcast at their discretion."
+  },
+  "qr": {
+    "ecl": "Error correction level",
+    "size": "Size",
+    "padding": "Padding",
+    "style": "Style",
+    "bgc": "Background color",
+    "fgc": "Foreground color",
+    "generating": "Generating QR contents..."
   },
   "proposal": {
     "targetContent": "This is the account which you'll use to create the proposal, Construct operations in the Astro UI as the end user, and then provide your proposal fee paying account here.",

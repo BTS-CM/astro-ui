@@ -12,16 +12,17 @@
     "viewTRXObject": "Vaadake TRX objekti",
     "rawDeeplink": "Toores sügavlink",
     "localJSONFile": "Kohalik JSON-fail",
+    "qrCode": "QR-kood",
     "propose": "Ettepanek"
   },
   "tabsContent": {
     "transactionObjectJSON": "Tehinguobjekti JSON",
-    "operationType": "Operatsiooni tüüp:",
+    "operationType": "Toimingu tüüp:",
     "copyOperationJSON": "Kopeerimistoimingu JSON",
     "usingDeeplink": "Süvalingi kasutamine edastuseks Beet multiwalleti kaudu",
     "step1": "Käivitage BEET rahakott ja navigeerige menüüs 'Raw Link', rahakott peab jääma ülekande ajaks lukustamata.",
-    "step2": "Sellel lehel saate lubada kõik toimingud või ainult toimingu '{{operationName}}' ja 'injectedCall' (seejärel klõpsake nuppu Salvesta).",
-    "step3": "Kui Beetis kuvatakse teade „Toores linkide jaoks valmis”, võite jätkamiseks klõpsata alloleval nupul.",
+    "step2": "Sellel lehel saate lubada kõik toimingud või ainult toimingu \"{{operationName}}\", samuti \"injectedCall\" (seejärel klõpsake nuppu Salvesta).",
+    "step3": "Kui Beetis kuvatakse teade „Toores linkide jaoks valmis”, võite jätkata jätkamiseks klõpsata alloleval nupul.",
     "step4": "Kuvatakse BEET-viip, kontrollige sisu, taotlege soovi korral Beet-kviitungit ja edastage tehing plokiahelasse.",
     "step5": "Te ei saa selles aknas kinnitust, kuid teie toiming töödeldakse plokiahelas mõne sekundi jooksul.",
     "triggerRawBeet": "Käivitage töötlemata peedi sügavlink",
@@ -35,6 +36,15 @@
     "downloadBeetOperationJSON": "Laadige alla suhkrupeedi operatsiooni JSON",
     "propose": "Uue ettepaneku koostamine",
     "proposeDescription": "Kui te ei ole kavandatava toimingu koostamiseks kasutatava konto omanik (või olete kaasomanik), saate luua konto omanikule ettepaneku, mille ta oma äranägemise järgi üle vaatab ja edastab."
+  },
+  "qr": {
+    "ecl": "Veaparanduse tase",
+    "size": "Suurus",
+    "padding": "Polsterdus",
+    "style": "Stiil",
+    "bgc": "Taustavärv",
+    "fgc": "Esiplaani värv",
+    "generating": "QR-sisu genereerimine..."
   },
   "proposal": {
     "targetContent": "See on konto, mida saate kasutada ettepaneku loomiseks, lõppkasutajana Astro kasutajaliideses operatsioonide loomiseks ja seejärel oma ettepaneku tasu maksmise konto sisestamiseks siin.",

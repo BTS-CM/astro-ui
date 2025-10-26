@@ -12,6 +12,7 @@
     "viewTRXObject": "Afficher l'objet TRX",
     "rawDeeplink": "Lien profond brut",
     "localJSONFile": "Fichier JSON local",
+    "qrCode": "Code QR",
     "propose": "Proposition"
   },
   "tabsContent": {
@@ -20,7 +21,7 @@
     "copyOperationJSON": "Opération de copie JSON",
     "usingDeeplink": "Utiliser un lien profond pour diffuser via le multiwallet Beet",
     "step1": "Lancez le portefeuille BEET et accédez à « Raw Link » dans le menu, le portefeuille doit rester déverrouillé pendant toute la durée de la diffusion.",
-    "step2": "À partir de cette page, vous pouvez soit autoriser toutes les opérations, soit autoriser uniquement l'opération « {{operationName}} » ainsi que « injectedCall » (puis cliquez sur Enregistrer).",
+    "step2": "À partir de cette page, vous pouvez soit autoriser toutes les opérations, soit autoriser uniquement l'opération '{{operationName}}' ainsi que 'injectedCall' (puis cliquez sur Enregistrer).",
     "step3": "Une fois que « Prêt pour les liens bruts » s'affiche dans Beet, vous pouvez cliquer sur le bouton ci-dessous pour continuer.",
     "step4": "Une invite BEET s'affichera, vérifiera le contenu, demandera éventuellement un reçu Beet, puis diffusera la transaction sur la blockchain.",
     "step5": "Vous ne recevrez pas de confirmation dans cette fenêtre, mais votre opération sera traitée en quelques secondes sur la blockchain.",
@@ -35,6 +36,15 @@
     "downloadBeetOperationJSON": "Télécharger l'opération Betterave JSON",
     "propose": "Créer une nouvelle proposition",
     "proposeDescription": "Si vous n'êtes pas propriétaire (ou copropriétaire) du compte que vous utilisez pour construire l'opération proposée, vous pouvez créer une proposition que le propriétaire du compte pourra examiner et diffuser à sa discrétion."
+  },
+  "qr": {
+    "ecl": "Niveau de correction des erreurs",
+    "size": "Taille",
+    "padding": "Rembourrage",
+    "style": "Style",
+    "bgc": "Couleur de fond",
+    "fgc": "Couleur de premier plan",
+    "generating": "Génération de contenu QR..."
   },
   "proposal": {
     "targetContent": "Il s'agit du compte que vous utiliserez pour créer la proposition, construire des opérations dans l'interface utilisateur Astro en tant qu'utilisateur final, puis fournir ici votre compte payant les frais de proposition.",

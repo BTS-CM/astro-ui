@@ -12,6 +12,7 @@
     "viewTRXObject": "Ver objeto TRX",
     "rawDeeplink": "Enlace profundo sin procesar",
     "localJSONFile": "Archivo JSON local",
+    "qrCode": "Código QR",
     "propose": "Propuesta"
   },
   "tabsContent": {
@@ -20,7 +21,7 @@
     "copyOperationJSON": "Operación de copia JSON",
     "usingDeeplink": "Usar un enlace profundo para transmitir a través del multiwallet Beet",
     "step1": "Inicie la billetera BEET y navegue hasta 'Enlace sin formato' en el menú; la billetera debe permanecer desbloqueada durante la transmisión.",
-    "step2": "Desde esta página puedes permitir todas las operaciones o solo permitir la operación '{{operationName}}' así como 'injectedCall' (luego haz clic en guardar).",
+    "step2": "Desde esta página puede permitir todas las operaciones o permitir únicamente la operación '{{operationName}}' así como 'injectedCall' (luego haga clic en guardar).",
     "step3": "Una vez que aparezca 'Listo para enlaces sin formato' en Beet, puede hacer clic en el botón a continuación para continuar.",
     "step4": "Se mostrará un mensaje de BEET, verificará el contenido, opcionalmente solicitará un recibo de Beet y luego transmitirá la transacción a la cadena de bloques.",
     "step5": "No recibirá una confirmación en esta ventana, pero su operación se procesará en segundos en la cadena de bloques.",
@@ -35,6 +36,15 @@
     "downloadBeetOperationJSON": "Descargar operación remolacha JSON",
     "propose": "Creando una nueva propuesta",
     "proposeDescription": "Si no es el propietario (o copropietario) de la cuenta que está utilizando para construir la operación propuesta, puede crear una propuesta para que el propietario de la cuenta la revise y la transmita a su discreción."
+  },
+  "qr": {
+    "ecl": "Nivel de corrección de errores",
+    "size": "Tamaño",
+    "padding": "Relleno",
+    "style": "Estilo",
+    "bgc": "Color de fondo",
+    "fgc": "color de primer plano",
+    "generating": "Generando contenidos QR..."
   },
   "proposal": {
     "targetContent": "Esta es la cuenta que utilizará para crear la propuesta, construir operaciones en la interfaz de usuario de Astro como usuario final y luego proporcionar la cuenta de pago de tarifas de propuesta aquí.",

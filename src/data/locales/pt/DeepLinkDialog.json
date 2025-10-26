@@ -12,6 +12,7 @@
     "viewTRXObject": "Ver objeto TRX",
     "rawDeeplink": "Link direto bruto",
     "localJSONFile": "Arquivo JSON local",
+    "qrCode": "Código QR",
     "propose": "Proposta"
   },
   "tabsContent": {
@@ -20,7 +21,7 @@
     "copyOperationJSON": "Copiar operação JSON",
     "usingDeeplink": "Usando um deeplink para transmitir através da multiwallet Beet",
     "step1": "Inicie a carteira BEET e navegue até ‘Raw Link’ no menu, a carteira deve permanecer desbloqueada durante a transmissão.",
-    "step2": "Nesta página, você pode permitir todas as operações ou permitir apenas a operação '{{operationName}}' e 'injectedCall' (depois clique em salvar).",
+    "step2": "Nesta página você pode permitir todas as operações ou permitir apenas a operação '{{operationName}}' bem como 'injectedCall' (depois clique em salvar).",
     "step3": "Assim que 'Pronto para links brutos' aparecer no Beet, você pode clicar no botão abaixo para continuar.",
     "step4": "Um prompt BEET será exibido, verificará o conteúdo, opcionalmente solicitará um recibo do Beet e, em seguida, transmitirá a transação para o blockchain.",
     "step5": "Você não receberá uma confirmação nesta janela, mas sua operação será processada em segundos no blockchain.",
@@ -35,6 +36,15 @@
     "downloadBeetOperationJSON": "Baixe JSON da operação Beet",
     "propose": "Criando uma nova proposta",
     "proposeDescription": "Se você não for o proprietário (ou coproprietário) da conta que está usando para construir a operação proposta, poderá criar uma proposta para o proprietário da conta revisar e transmitir a seu critério."
+  },
+  "qr": {
+    "ecl": "Nível de correção de erros",
+    "size": "Tamanho",
+    "padding": "Preenchimento",
+    "style": "Estilo",
+    "bgc": "Cor de fundo",
+    "fgc": "Cor do primeiro plano",
+    "generating": "Gerando conteúdo QR..."
   },
   "proposal": {
     "targetContent": "Esta é a conta que você usará para criar a proposta, construir operações na UI do Astro como usuário final e, em seguida, fornecer sua conta de pagamento de taxa de proposta aqui.",

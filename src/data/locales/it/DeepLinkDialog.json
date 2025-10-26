@@ -5,13 +5,14 @@
     "readyToBroadcast": "La tua operazione Bitshares Beet è pronta per essere trasmessa!",
     "chooseMethod": "Scegli tra i metodi seguenti per trasmettere al tuo portafoglio preferito.",
     "bitsharesBEETMultiwallet": "Multiportafoglio Bitshares BEET",
-    "errorOccurred": "Si è verificato un errore, mi dispiace, chiudi questa finestra di dialogo e riprova.",
+    "errorOccurred": "Si è verificato un errore, mi spiace, chiudi questa finestra di dialogo e riprova.",
     "beetWallet": "Multiportafoglio Bitshares BEET"
   },
   "tabs": {
     "viewTRXObject": "Visualizza oggetto TRX",
     "rawDeeplink": "Collegamento diretto grezzo",
     "localJSONFile": "File JSON locale",
+    "qrCode": "Codice QR",
     "propose": "Proposta"
   },
   "tabsContent": {
@@ -20,7 +21,7 @@
     "copyOperationJSON": "Operazione di copia JSON",
     "usingDeeplink": "Utilizzo di un deeplink per trasmettere tramite il multiwallet Beet",
     "step1": "Avvia il portafoglio BEET e vai a \"Raw Link\" nel menu, il portafoglio deve rimanere sbloccato per tutta la durata della trasmissione.",
-    "step2": "Da questa pagina puoi consentire tutte le operazioni oppure consentire solo l'operazione '{{operationName}}' e 'injectedCall' (quindi fai clic su Salva).",
+    "step2": "Da questa pagina è possibile consentire tutte le operazioni oppure consentire solo l'operazione '{{operationName}}' e 'injectedCall' (quindi fare clic su Salva).",
     "step3": "Una volta visualizzato \"Pronto per i collegamenti grezzi\" in Beet, puoi fare clic sul pulsante in basso per procedere.",
     "step4": "Verrà visualizzato un messaggio BEET, verificherà il contenuto, facoltativamente richiederà una ricevuta di BEET e quindi trasmetterà la transazione sulla blockchain.",
     "step5": "Non riceverai una conferma in questa finestra, ma la tua operazione verrà elaborata in pochi secondi sulla blockchain.",
@@ -35,6 +36,15 @@
     "downloadBeetOperationJSON": "Scarica l'operazione barbabietola JSON",
     "propose": "Creazione di una nuova proposta",
     "proposeDescription": "Se non sei il proprietario (o sei un comproprietario) dell'account che stai utilizzando per costruire l'operazione proposta, puoi creare una proposta che il proprietario dell'account possa rivedere e trasmettere a sua discrezione."
+  },
+  "qr": {
+    "ecl": "Livello di correzione degli errori",
+    "size": "Misurare",
+    "padding": "Imbottitura",
+    "style": "Stile",
+    "bgc": "Colore di sfondo",
+    "fgc": "Colore di primo piano",
+    "generating": "Generazione di contenuti QR..."
   },
   "proposal": {
     "targetContent": "Questo è l'account che utilizzerai per creare la proposta, costruire operazioni nell'interfaccia utente di Astro come utente finale e quindi fornire qui il tuo account per il pagamento della tariffa della proposta.",

@@ -12,6 +12,7 @@
     "viewTRXObject": "TRX 객체 보기",
     "rawDeeplink": "원시 딥링크",
     "localJSONFile": "로컬 JSON 파일",
+    "qrCode": "QR코드",
     "propose": "제안"
   },
   "tabsContent": {
@@ -20,7 +21,7 @@
     "copyOperationJSON": "복사 작업 JSON",
     "usingDeeplink": "딥링크를 사용하여 Beet 다중 지갑을 통해 브로드캐스트",
     "step1": "BEET 지갑을 실행하고 메뉴에서 'Raw Link'로 이동하세요. 방송이 진행되는 동안 지갑은 잠금 해제된 상태로 유지되어야 합니다.",
-    "step2": "이 페이지에서 모든 작업을 허용하거나, 작업 '{{operationName}}'과 'injectedCall'만 허용할 수 있습니다(그런 다음 저장을 클릭).",
+    "step2": "이 페이지에서 모든 작업을 허용하거나 ' 작업만 허용할 수 있습니다.{{operationName}}' 및 'injectedCall'(그런 다음 저장을 클릭).",
     "step3": "Beet에 'Ready for raw link'가 표시되면 아래 버튼을 클릭하여 계속 진행할 수 있습니다.",
     "step4": "BEET 프롬프트가 표시되고 내용을 확인하며 선택적으로 Beet 영수증을 요청한 다음 거래를 블록체인에 브로드캐스트합니다.",
     "step5": "이 창에서는 확인을 받지 못하지만 작업은 블록체인에서 몇 초 내에 처리됩니다.",
@@ -35,6 +36,15 @@
     "downloadBeetOperationJSON": "Beet 작업 JSON 다운로드",
     "propose": "새 제안 만들기",
     "proposeDescription": "귀하가 제안된 작업을 구성하는 데 사용하는 계정의 소유자(또는 공동 소유자)가 아닌 경우 계정 소유자가 재량에 따라 검토하고 방송할 수 있는 제안을 작성할 수 있습니다."
+  },
+  "qr": {
+    "ecl": "오류 수정 수준",
+    "size": "크기",
+    "padding": "심",
+    "style": "스타일",
+    "bgc": "배경색",
+    "fgc": "전경색",
+    "generating": "QR 콘텐츠 생성 중..."
   },
   "proposal": {
     "targetContent": "이는 제안서를 생성하고 최종 사용자로서 Astro UI에서 작업을 구성한 다음 여기에 제안 수수료 지불 계정을 제공하는 데 사용할 계정입니다.",

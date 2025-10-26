@@ -23,6 +23,8 @@ contextBridge.exposeInMainWorld("electron", {
   // API queries
   generateDeepLink: async (args) =>
     ipcRenderer.invoke("generateDeepLink", args),
+  generateQRContents: async (args) =>
+    ipcRenderer.invoke("generateQRContents", args),
   calculateOperationFees: async (args) =>
     ipcRenderer.invoke("calculateOperationFees", args),
   // Ping a node URL from the main process. Returns an object { ok: boolean, status?: number, error?: string }
