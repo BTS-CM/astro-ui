@@ -599,19 +599,15 @@ export default function Home(properties) {
       <div className="w-full overflow-hidden">
         <WaveHero />
       </div>
-      <div className="container mx-auto mt-3 mb-5">
-        <div className="grid grid-cols-3 gap-3 justify-items-center mb-5">
-          <div className="col-span-3">
-            <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight mb-5">
+      <div className="container mx-auto mt-3 mb-5 px-3 sm:px-4">
+        <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6 mb-5">
+          <div className="col-span-1 sm:col-span-1 md:col-span-2 lg:col-span-3">
+            <h3 className="scroll-m-20 text-xl sm:text-2xl font-semibold tracking-tight mb-4 sm:mb-5">
               {t("Home:features.heading")}
             </h3>
           </div>
 
-          <Item
-            key="feature-1"
-            variant="outline"
-            className="w-full bg-white max-w-sm"
-          >
+          <Item key="feature-1" variant="outline" className="w-full bg-white">
             <ItemMedia variant="icon">⛓️‍💥</ItemMedia>
             <ItemContent>
               <ItemTitle className="text-black">
@@ -623,11 +619,7 @@ export default function Home(properties) {
             </ItemContent>
           </Item>
 
-          <Item
-            key="feature-2"
-            variant="outline"
-            className="w-full bg-white max-w-sm"
-          >
+          <Item key="feature-2" variant="outline" className="w-full bg-white">
             <ItemMedia variant="icon">📡</ItemMedia>
             <ItemContent>
               <ItemTitle className="text-black">
@@ -639,11 +631,7 @@ export default function Home(properties) {
             </ItemContent>
           </Item>
 
-          <Item
-            key="feature-3"
-            variant="outline"
-            className="w-full bg-white max-w-sm"
-          >
+          <Item key="feature-3" variant="outline" className="w-full bg-white">
             <ItemMedia variant="icon">🧑‍🔬</ItemMedia>
             <ItemContent>
               <ItemTitle className="text-black">
@@ -655,11 +643,7 @@ export default function Home(properties) {
             </ItemContent>
           </Item>
 
-          <Item
-            key="feature-4"
-            variant="outline"
-            className="w-full bg-white max-w-sm"
-          >
+          <Item key="feature-4" variant="outline" className="w-full bg-white">
             <ItemMedia variant="icon">🌐</ItemMedia>
             <ItemContent>
               <ItemTitle className="text-black">
@@ -671,11 +655,7 @@ export default function Home(properties) {
             </ItemContent>
           </Item>
 
-          <Item
-            key="feature-5"
-            variant="outline"
-            className="w-full bg-white max-w-sm"
-          >
+          <Item key="feature-5" variant="outline" className="w-full bg-white">
             <ItemMedia variant="icon">🚀</ItemMedia>
             <ItemContent>
               <ItemTitle className="text-black">
@@ -687,11 +667,7 @@ export default function Home(properties) {
             </ItemContent>
           </Item>
 
-          <Item
-            key="feature-6"
-            variant="outline"
-            className="w-full bg-white max-w-sm"
-          >
+          <Item key="feature-6" variant="outline" className="w-full bg-white">
             <ItemMedia variant="icon">🌲</ItemMedia>
             <ItemContent>
               <ItemTitle className="text-black">
@@ -703,11 +679,7 @@ export default function Home(properties) {
             </ItemContent>
           </Item>
 
-          <Item
-            key="feature-7"
-            variant="outline"
-            className="w-full bg-white max-w-sm"
-          >
+          <Item key="feature-7" variant="outline" className="w-full bg-white">
             <ItemMedia variant="icon">👛</ItemMedia>
             <ItemContent>
               <ItemTitle className="text-black">
@@ -719,11 +691,7 @@ export default function Home(properties) {
             </ItemContent>
           </Item>
 
-          <Item
-            key="feature-8"
-            variant="outline"
-            className="w-full bg-white max-w-sm"
-          >
+          <Item key="feature-8" variant="outline" className="w-full bg-white">
             <ItemMedia variant="icon">🌍</ItemMedia>
             <ItemContent>
               <ItemTitle className="text-black">
@@ -735,11 +703,7 @@ export default function Home(properties) {
             </ItemContent>
           </Item>
 
-          <Item
-            key="feature-9"
-            variant="outline"
-            className="w-full bg-white max-w-sm"
-          >
+          <Item key="feature-9" variant="outline" className="w-full bg-white">
             <ItemMedia variant="icon">🤚</ItemMedia>
             <ItemContent>
               <ItemTitle className="text-black">
@@ -754,7 +718,7 @@ export default function Home(properties) {
 
         <br />
 
-        <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight mb-5 text-center mt-10">
+        <h3 className="scroll-m-20 text-xl sm:text-2xl font-semibold tracking-tight mb-4 sm:mb-5 text-center mt-8 sm:mt-10">
           {t("Home:features.functionalityHeading")}
         </h3>
 
@@ -775,7 +739,7 @@ export default function Home(properties) {
                       </h4>
                     </AccordionTrigger>
                     <AccordionContent className="flex flex-col gap-4 text-balance">
-                      <div className="grid grid-cols-5 gap-3">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
                         {section.cards.map((card) => renderHoverCard(card))}
                       </div>
                     </AccordionContent>

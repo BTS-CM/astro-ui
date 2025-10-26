@@ -577,10 +577,10 @@ export default function Predictions(properties) {
 
     return (
       <div style={{ ...style }} key={`acard-${res.id}`}>
-        <Card className={`ml-2 mr-2 h-[260px]`}>
+        <Card className={`ml-2 mr-2`}>
           <CardHeader className="pb-0 pt-3">
             <CardTitle>
-              <div className="grid grid-cols-2">
+              <div className="grid grid-cols-1 md:grid-cols-2">
                 <div>
                   <ExternalLink
                     classnamecontents={
@@ -605,7 +605,7 @@ export default function Predictions(properties) {
                   />
                   )
                 </div>
-                <div className="text-right">
+                <div className="md:text-right">
                   <ExternalLink
                     classnamecontents={
                       "text-xl text-semibold hover:text-purple-600"
@@ -622,11 +622,7 @@ export default function Predictions(properties) {
           </CardHeader>
           <CardContent className="text-sm pb-3 mt-1">
             <div className="grid grid-cols-1 gap-2">
-              <div
-                className={`grid grid-cols-${
-                  usr.id === house ? 5 : 4
-                } gap-2 mt-2`}
-              >
+              <div className={`grid grid-cols-1 md:grid-cols-5 gap-2 mt-2`}>
                 <Button
                   onClick={() => setRowView("about")}
                   variant={rowView === "about" ? "" : "outline"}
@@ -667,7 +663,7 @@ export default function Predictions(properties) {
                     disabled={true}
                     className="max-h-[80px] mt-1"
                   />
-                  <div className="mt-2 grid grid-cols-2 gap-2">
+                  <div className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-2">
                     <div>
                       <b>
                         {t(
@@ -2128,7 +2124,7 @@ export default function Predictions(properties) {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-5 gap-2 mt-2 mb-2">
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-2 mt-2 mb-2">
               <Button
                 onClick={() => setView("active")}
                 variant={view === "active" ? "" : "outline"}
@@ -2168,15 +2164,29 @@ export default function Predictions(properties) {
 
             <>
               {chosenPMAs && chosenPMAs.length ? (
-                <div className="w-full mt-3 max-h-[500px] overflow-auto">
-                  <List
-                    rowComponent={PredictionRow}
-                    rowCount={chosenPMAs.length}
-                    rowHeight={275}
-                    key={`list-${view}`}
-                    rowProps={{}}
-                  />
-                </div>
+                <>
+                  {/* Mobile: visible when viewport is smaller than md */}
+                  <div className="block md:hidden w-full mt-3 max-h-[500px] overflow-auto">
+                    <List
+                      rowComponent={PredictionRow}
+                      rowCount={chosenPMAs.length}
+                      rowHeight={450}
+                      key={`list-${view}`}
+                      rowProps={{}}
+                    />
+                  </div>
+
+                  {/* Desktop: visible at md and larger */}
+                  <div className="hidden md:block w-full mt-3 max-h-[500px] overflow-auto">
+                    <List
+                      rowComponent={PredictionRow}
+                      rowCount={chosenPMAs.length}
+                      rowHeight={275} // original desktop height
+                      key={`list-${view}-desktop`}
+                      rowProps={{}}
+                    />
+                  </div>
+                </>
               ) : null}
               {chosenPMAs && !chosenPMAs.length && view === "active" ? (
                 <Empty className="mt-5">

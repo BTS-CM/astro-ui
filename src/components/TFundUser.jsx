@@ -18,6 +18,14 @@ import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableHead,
+  TableRow,
+} from "@/components/ui/table";
+
+import {
   Card,
   CardContent,
   CardDescription,
@@ -488,23 +496,47 @@ export default function SameTFunds(properties) {
 
     return (
       <div style={style} key={`sametfund-${fund.id}`}>
-        <Card className="w-full">
-          <div className="grid grid-cols-12 gap-2">
-            <div className="col-span-10">
+        <Dialog
+          open={borrowPositionDialog}
+          onOpenChange={setBorrowPositionDialog}
+        >
+          <DialogTrigger asChild>
+            <Card className="w-full hover:bg-gray-100">
               <CardHeader className="pt-1 pb-1">
                 <CardDescription>
-                  {t("TFundUser:fund")}
-                  {" #"}
-                  <ExternalLink
-                    classnamecontents="hover:text-purple-500"
-                    type="text"
-                    text={fund.id.replace("1.20.", "")}
-                    hyperlink={`https://explorer.bitshares.ws/#/objects/${
-                      fund.id
-                    }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
-                  />{" "}
-                  {t("CreditBorrow:common.by")}{" "}
-                  {lender ? (
+                  <div className="grid grid-cols-4 gap-2 text-sm cursor-pointer p-2">
+                    <div>{fund.id}</div>
+                    <div>{lender ? lender.name : "???"}</div>
+                    <div>{`${balance - unpaidAmount} ${assetName}`}</div>
+                    <div>
+                      {`${feeRate} %`}
+                      {feeRate > 20 ? " ⚠️" : null}
+                    </div>
+                  </div>
+                </CardDescription>
+              </CardHeader>
+            </Card>
+          </DialogTrigger>
+          <DialogContent className="bg-white w-1/2 max-w-4xl">
+            <DialogHeader>
+              <DialogTitle>{t("TFundUser:dialogTitle")}</DialogTitle>
+              <DialogDescription>
+                {t("WithdrawPermissions:id")}
+                {": "}
+                <ExternalLink
+                  classnamecontents="hover:text-purple-500"
+                  type="text"
+                  text={fund.id}
+                  hyperlink={`https://explorer.bitshares.ws/#/objects/${
+                    fund.id
+                  }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
+                />
+                <br />
+                {lender ? (
+                  <>
+                    {t("Smartcoin:owner")}
+                    {": "}
+
                     <ExternalLink
                       classnamecontents="hover:text-purple-500"
                       type="text"
@@ -513,156 +545,121 @@ export default function SameTFunds(properties) {
                         lender.name
                       }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
                     />
-                  ) : (
-                    "???"
-                  )}
-                  <div className="grid grid-cols-3 gap-2 text-sm">
-                    <div className="col-span-2">
-                      <div className="grid grid-cols-2">
-                        <div>
-                          {t("TFundUser:offering")}:
-                          <b>{` ${balance - unpaidAmount} ${assetName}`}</b>
-                        </div>
-                        <div>
-                          {t("TFundUser:fee")}:<b>{` ${feeRate} %`}</b>
-                          {feeRate > 20 ? "⚠️" : null}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </CardDescription>
-              </CardHeader>
+                    <br />
+                  </>
+                ) : null}
+                {t("TFundUser:amountAvailable")}: {balance - unpaidAmount}{" "}
+                {assetName}
+                <br />
+                {t("TFundUser:feeRate")}: {feeRate}%
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid grid-cols-1 gap-3">
+              <Input
+                value={borrowAmount}
+                type="text"
+                onInput={(e) => {
+                  const value = e.currentTarget.value;
+                  if (regex.test(value)) {
+                    setBorrowAmount(
+                      balance - unpaidAmount < value
+                        ? balance - unpaidAmount
+                        : value
+                    );
+                  }
+                }}
+              />
+              <div className="grid grid-cols-5 gap-2">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setBorrowAmount(0);
+                  }}
+                >
+                  {t("TFundUser:zeroPercent")}
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setBorrowAmount((balance - unpaidAmount) * 0.25);
+                  }}
+                >
+                  {t("TFundUser:twentyFivePercent")}
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setBorrowAmount((balance - unpaidAmount) * 0.5);
+                  }}
+                >
+                  {t("TFundUser:fiftyPercent")}
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setBorrowAmount((balance - unpaidAmount) * 0.75);
+                  }}
+                >
+                  {t("TFundUser:seventyFivePercent")}
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setBorrowAmount(balance - unpaidAmount);
+                  }}
+                >
+                  {t("TFundUser:hundredPercent")}
+                </Button>
+              </div>
+              {borrowAmount > 0 ? (
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setBorrowPositions((prevBorrowPositions) => {
+                      const _borrows = [...prevBorrowPositions];
+                      const existingBorrow = _borrows.find(
+                        (x) => x.id === fund.id
+                      );
+
+                      if (existingBorrow) {
+                        existingBorrow.borrow_amount = parseFloat(borrowAmount);
+                      } else {
+                        _borrows.push({
+                          id: fund.id,
+                          asset_id: fund.asset_type,
+                          borrow_amount: parseFloat(borrowAmount),
+                          fee_rate: fund.fee_rate,
+                        });
+                      }
+
+                      return _borrows;
+                    });
+
+                    setBorrowPositionDialog(false);
+                  }}
+                >
+                  {t("TFundUser:submit")}
+                </Button>
+              ) : (
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setBorrowPositions((prevBorrowPositions) => {
+                      const _borrows = prevBorrowPositions.filter(
+                        (x) => x.id !== fund.id
+                      );
+                      return _borrows;
+                    });
+
+                    setBorrowPositionDialog(false);
+                  }}
+                >
+                  {t("TFundUser:submit")}
+                </Button>
+              )}
             </div>
-            <div className="col-span-2 flex items-center justify-center">
-              <Dialog
-                open={borrowPositionDialog}
-                onOpenChange={setBorrowPositionDialog}
-              >
-                <DialogTrigger>
-                  <Button variant="outline" className="self-center">
-                    {t("TFundUser:borrow")}
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="bg-white w-1/2 max-w-4xl">
-                  <DialogHeader>
-                    <DialogTitle>{t("TFundUser:dialogTitle")}</DialogTitle>
-                    <DialogDescription>
-                      {t("TFundUser:amountAvailable")}: {balance - unpaidAmount}{" "}
-                      {assetName}
-                      <br />
-                      {t("TFundUser:feeRate")}: {feeRate}%
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="grid grid-cols-1 gap-3">
-                    <Input
-                      value={borrowAmount}
-                      type="text"
-                      onInput={(e) => {
-                        const value = e.currentTarget.value;
-                        if (regex.test(value)) {
-                          setBorrowAmount(
-                            balance - unpaidAmount < value
-                              ? balance - unpaidAmount
-                              : value
-                          );
-                        }
-                      }}
-                    />
-                    <div className="grid grid-cols-5 gap-2">
-                      <Button
-                        variant="outline"
-                        onClick={() => {
-                          setBorrowAmount(0);
-                        }}
-                      >
-                        {t("TFundUser:zeroPercent")}
-                      </Button>
-                      <Button
-                        variant="outline"
-                        onClick={() => {
-                          setBorrowAmount((balance - unpaidAmount) * 0.25);
-                        }}
-                      >
-                        {t("TFundUser:twentyFivePercent")}
-                      </Button>
-                      <Button
-                        variant="outline"
-                        onClick={() => {
-                          setBorrowAmount((balance - unpaidAmount) * 0.5);
-                        }}
-                      >
-                        {t("TFundUser:fiftyPercent")}
-                      </Button>
-                      <Button
-                        variant="outline"
-                        onClick={() => {
-                          setBorrowAmount((balance - unpaidAmount) * 0.75);
-                        }}
-                      >
-                        {t("TFundUser:seventyFivePercent")}
-                      </Button>
-                      <Button
-                        variant="outline"
-                        onClick={() => {
-                          setBorrowAmount(balance - unpaidAmount);
-                        }}
-                      >
-                        {t("TFundUser:hundredPercent")}
-                      </Button>
-                    </div>
-                    {borrowAmount > 0 ? (
-                      <Button
-                        variant="outline"
-                        onClick={() => {
-                          setBorrowPositions((prevBorrowPositions) => {
-                            const _borrows = [...prevBorrowPositions];
-                            const existingBorrow = _borrows.find(
-                              (x) => x.id === fund.id
-                            );
-
-                            if (existingBorrow) {
-                              existingBorrow.borrow_amount =
-                                parseFloat(borrowAmount);
-                            } else {
-                              _borrows.push({
-                                id: fund.id,
-                                asset_id: fund.asset_type,
-                                borrow_amount: parseFloat(borrowAmount),
-                                fee_rate: fund.fee_rate,
-                              });
-                            }
-
-                            return _borrows;
-                          });
-
-                          setBorrowPositionDialog(false);
-                        }}
-                      >
-                        {t("TFundUser:submit")}
-                      </Button>
-                    ) : (
-                      <Button
-                        variant="outline"
-                        onClick={() => {
-                          setBorrowPositions((prevBorrowPositions) => {
-                            const _borrows = prevBorrowPositions.filter(
-                              (x) => x.id !== fund.id
-                            );
-                            return _borrows;
-                          });
-
-                          setBorrowPositionDialog(false);
-                        }}
-                      >
-                        {t("TFundUser:submit")}
-                      </Button>
-                    )}
-                  </div>
-                </DialogContent>
-              </Dialog>
-            </div>
-          </div>
-        </Card>
+          </DialogContent>
+        </Dialog>
       </div>
     );
   };
@@ -860,15 +857,31 @@ export default function SameTFunds(properties) {
                     lenderAccounts.length &&
                     sameTFunds &&
                     sameTFunds.length > 0 ? (
-                      <div className="w-full max-h-[250px] overflow-auto">
-                        <List
-                          rowComponent={FundRow}
-                          rowCount={sameTFunds.length}
-                          rowHeight={55}
-                          rowProps={{}}
-                          key={`list-sametfunds`}
-                        />
-                      </div>
+                      <>
+                        <div className="grid grid-cols-4">
+                          <label className="block text-sm font-medium text-gray-700">
+                            {t("WithdrawPermissions:id")}
+                          </label>
+                          <label className="block text-sm font-medium text-gray-700">
+                            {t("Smartcoin:owner")}
+                          </label>
+                          <label className="block text-sm font-medium text-gray-700">
+                            {t("CreditBorrow:common.offering")}
+                          </label>
+                          <label className="block text-sm font-medium text-gray-700">
+                            {t("PoolForm:fee")}
+                          </label>
+                        </div>
+                        <div className="w-full max-h-[250px] overflow-auto">
+                          <List
+                            rowComponent={FundRow}
+                            rowCount={sameTFunds.length}
+                            rowHeight={55}
+                            rowProps={{}}
+                            key={`list-sametfunds`}
+                          />
+                        </div>
+                      </>
                     ) : (
                       <div className="space-y-2 mt-5">
                         <Skeleton className="h-4 w-[250px]" />

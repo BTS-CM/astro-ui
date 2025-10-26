@@ -413,7 +413,7 @@ export default function PoolStake(properties) {
 
   return (
     <>
-      <div className="container mx-auto mt-5 mb-5 w-1/2">
+      <div className="container mx-auto mt-5 mb-5 w-full lg:w-1/2 px-3 sm:px-4">
         <div className="grid grid-cols-1 gap-3">
           <Card className="p-2">
             <CardHeader>
@@ -431,10 +431,10 @@ export default function PoolStake(properties) {
                     })}
                   >
                     <FieldGroup>
-                      <Field>
+                      <Field className="mb-4">
                         <FieldLabel>{t("PoolStake:account")}</FieldLabel>
                         <FieldContent>
-                          <div className="grid grid-cols-8">
+                          <div className="grid grid-cols-8 gap-3">
                             <div className="col-span-1 ml-5">
                               {usr && usr.username ? (
                                 <Avatar
@@ -471,7 +471,7 @@ export default function PoolStake(properties) {
                           </div>
                         </FieldContent>
                       </Field>
-                      <Field>
+                      <Field className="mb-4">
                         <FieldLabel>{t("PoolStake:liquidityPool")}</FieldLabel>
                         <FieldDescription style={{ marginTop: "0px" }}>
                           {pool
@@ -479,7 +479,7 @@ export default function PoolStake(properties) {
                             : t("PoolStake:selectLiquidityPool")}
                         </FieldDescription>
                         <FieldContent>
-                          <div className="grid grid-cols-5 mt-3">
+                          <div className="grid grid-cols-5 mt-3 gap-3">
                             <div className="mt-1 col-span-4">
                               <Select
                                 key={poolKey}
@@ -674,7 +674,7 @@ export default function PoolStake(properties) {
                         </div>
                       ) : null}
 
-                      <div className="grid grid-cols-10 gap-5 mt-1 mb-1">
+                      <div className="grid grid-cols-1 lg:grid-cols-10 gap-5 mt-1 mb-1">
                         {isFormReady ? (
                           <>
                             <div className="col-span-5">
@@ -739,7 +739,7 @@ export default function PoolStake(properties) {
                         ) : null}
                       </div>
 
-                      <div className="grid grid-cols-3 mt-5 text-center">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-2 mt-5 text-center">
                         {isFormReady ? (
                           <>
                             <ExternalLink
@@ -927,14 +927,14 @@ export default function PoolStake(properties) {
 
                           <TabsContent value="stake">
                             <div className="grid grid-cols-1">
-                              <Field>
+                              <Field className="mb-4">
                                 <FieldLabel>
                                   {t("PoolStake:howMuchToStake", {
                                     symbol: assetA ? assetA.symbol : "???",
                                   })}
                                 </FieldLabel>
                                 <FieldContent>
-                                  <div className="grid grid-cols-12">
+                                  <div className="grid grid-cols-12 gap-3">
                                     <div className="col-span-8">
                                       <Input
                                         disabled
@@ -1072,14 +1072,14 @@ export default function PoolStake(properties) {
                                   </div>
                                 </FieldContent>
                               </Field>
-                              <Field>
+                              <Field className="mb-4">
                                 <FieldLabel>
                                   {t("PoolStake:howMuchToStake", {
                                     symbol: assetB ? assetB.symbol : "???",
                                   })}
                                 </FieldLabel>
                                 <FieldContent>
-                                  <div className="grid grid-cols-12">
+                                  <div className="grid grid-cols-12 gap-3">
                                     <div className="col-span-8">
                                       <Input
                                         disabled
@@ -1217,12 +1217,12 @@ export default function PoolStake(properties) {
                                   </div>
                                 </FieldContent>
                               </Field>
-                              <Field>
+                              <Field className="mb-4">
                                 <FieldLabel>
                                   {t("PoolStake:totalShareAssetReceive")}
                                 </FieldLabel>
                                 <FieldContent>
-                                  <div className="grid grid-cols-2 mb-3 mt-3">
+                                  <div className="grid grid-cols-1 md:grid-cols-2 mb-3 mt-3">
                                     <Input
                                       disabled
                                       readOnly
@@ -1239,7 +1239,7 @@ export default function PoolStake(properties) {
                           </TabsContent>
                           <TabsContent value="unstake">
                             <div className="grid grid-cols-1">
-                              <Field>
+                              <Field className="mb-4">
                                 <FieldLabel>
                                   {t("PoolStake:withdrawLabel", {
                                     symbol: foundPool.share_asset_symbol,
@@ -1371,14 +1371,14 @@ export default function PoolStake(properties) {
                                 </FieldContent>
                               </Field>
 
-                              <Field>
+                              <Field className="mb-4">
                                 <FieldLabel>
                                   {t("PoolStake:withdrawingA", {
                                     symbol: assetA.symbol,
                                   })}
                                 </FieldLabel>
                                 <FieldContent>
-                                  <div className="grid grid-cols-2 mb-3 mt-3">
+                                  <div className="grid grid-cols-1 md:grid-cols-2 mb-3 mt-3 gap-3">
                                     <Input
                                       disabled
                                       readOnly
@@ -1394,7 +1394,7 @@ export default function PoolStake(properties) {
                                   })}
                                 </FieldLabel>
                                 <FieldContent>
-                                  <div className="grid grid-cols-2 mb-3 mt-3">
+                                  <div className="grid grid-cols-1 md:grid-cols-2 mb-3 mt-3 gap-3">
                                     <Input
                                       disabled
                                       readOnly
@@ -1419,7 +1419,7 @@ export default function PoolStake(properties) {
                             )}
                           </FieldDescription>
                           <FieldContent>
-                            <div className="grid grid-cols-2 mb-3 mt-3">
+                            <div className="grid grid-cols-1 md:grid-cols-2 mb-3 mt-3 gap-3">
                               <div className="col-span-1">
                                 <Input
                                   disabled
@@ -1521,7 +1521,7 @@ export default function PoolStake(properties) {
           </Card>
         </div>
 
-        <div className="grid grid-cols-2 gap-5 mt-5">
+        <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-5 mt-5 items-stretch">
           {pool && !isFormReady ? (
             <div className="col-span-2 flex items-center justify-center py-10">
               <Spinner className="size-6" />

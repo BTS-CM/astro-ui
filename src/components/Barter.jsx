@@ -457,8 +457,8 @@ export default function Barter(properties) {
             {/* Counterparty Selection */}
             <div className="space-y-2">
               <Label>{t("Barter:counterparty")}</Label>
-              <div className="grid grid-cols-2">
-                <div className="flex items-center space-x-3">
+              <div className="grid grid-cols-1 lg:grid-cols-2">
+                <div className="w-full flex items-center space-x-3">
                   <div className="flex-shrink-0">
                     {toAccount ? (
                       <Avatar
@@ -486,7 +486,7 @@ export default function Barter(properties) {
                     value={
                       toAccount ? `${toAccount.name} (${toAccount.id})` : ""
                     }
-                    className="flex-grow"
+                    className="flex-1 min-w-0"
                     readOnly
                   />
                   <Dialog

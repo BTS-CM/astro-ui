@@ -395,11 +395,11 @@ export default function PageHeader(properties) {
   ];
 
   return (
-    <div key={`header`} className="container mx-auto mb-3">
+    <div key={`header`} className="container mx-auto mb-3 px-3 sm:px-4">
       <div className="grid grid-cols-12">
         <div className="col-span-12">
-          <div className="grid grid-cols-12 mb-3">
-            <div className="col-span-3 mt-2">
+          <div className="grid grid-cols-12 gap-3 mb-3">
+            <div className="col-span-12 md:col-span-3 mt-2 flex items-center gap-2">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button>
@@ -499,8 +499,10 @@ export default function PageHeader(properties) {
               {/* Sidebar toggle shown on mobile and md, hidden on lg+ */}
               <Button
                 size="icon"
-                className="lg:hidden ml-2 inline-flex align-middle h-7 w-7"
-                onClick={() => window.__toggleSidebar && window.__toggleSidebar()}
+                className="lg:hidden inline-flex align-middle h-7 w-7"
+                onClick={() =>
+                  window.__toggleSidebar && window.__toggleSidebar()
+                }
                 aria-label="Toggle Sidebar"
                 title="Toggle Sidebar"
               >
@@ -519,7 +521,7 @@ export default function PageHeader(properties) {
               </Button>
             </div>
 
-            <div className="col-span-6 text-center">
+            <div className="col-span-12 md:col-span-6 text-center">
               <h2>
                 <a
                   href="/index.html"
@@ -545,12 +547,12 @@ export default function PageHeader(properties) {
                   </span>
                 </a>
               </h2>
-              <h4 className="text-muted-foreground">
+              <h4 className="text-sm sm:text-base text-muted-foreground">
                 {t(`PageHeader:descText.${page}`)}
               </h4>
             </div>
 
-            <div className="col-span-3 text-right mt-2">
+            <div className="col-span-12 md:col-span-3 text-left md:text-right mt-2">
               {usr && usr.username && usr.username.length ? (
                 <CurrentUser usr={usr} />
               ) : null}
