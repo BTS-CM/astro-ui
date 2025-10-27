@@ -244,7 +244,7 @@ export default function PortfolioOpenOrders({
                       <b>{t("PortfolioTabs:priceHeader")}</b>: {priceDisplay}
                     </span>
                     <span>
-                      <b>{t("PortfolioTabs:priceHeader")}</b> {orderId}
+                      <b>{t("PortfolioTabs:orderId")}</b> {orderId}
                     </span>
                   </div>
                   <div className="grid grid-cols-5 gap-2 mt-2">
@@ -255,7 +255,52 @@ export default function PortfolioOpenOrders({
             </DialogContent>
           </Dialog>
         </div>
-        <div style={style} className="px-2 hidden md:block">
+
+        {/* MD-only view: smaller text, no Order ID or Expiration columns */}
+        <div style={style} className="px-2 hidden md:block lg:hidden">
+          <Card className="hover:bg-gray-50 text-sm">
+            <div className="grid grid-cols-[50%_110px_1fr] items-start gap-2 p-2 mb-2">
+              <div>
+                <div>
+                  <a
+                    href={`/dex/index.html?market=${sellAsset?.symbol}_${buyAsset?.symbol}`}
+                    className="hover:text-blue-500"
+                  >
+                    {t("PortfolioTabs:sellingFor", {
+                      baseAmount: readableBaseAmount,
+                      baseSymbol: sellAsset?.symbol,
+                      quoteAmount: readableQuoteAmount,
+                      quoteSymbol: buyAsset?.symbol,
+                    })}
+                  </a>
+                </div>
+                <div className="text-xs text-muted-foreground">
+                  {t("PortfolioTabs:tradingPair", {
+                    baseAssetId: sellPriceBaseAssetId,
+                    quoteAssetId: sellPriceQuoteAssetId,
+                  })}
+                </div>
+              </div>
+              <div
+                title={`${
+                  priceDisplay && priceDisplay !== "-"
+                    ? priceDisplay.split(" ")[0]
+                    : 0
+                } ${buyAsset?.symbol}/${sellAsset?.symbol}`}
+              >
+                {priceDisplay && priceDisplay !== "-"
+                  ? priceDisplay.split(" ")[0]
+                  : "?"}
+              </div>
+              <span className="flex items-center justify-end gap-1">
+                {rightActions}
+              </span>
+            </div>
+          </Card>
+        </div>
+
+        {/* LG+ view: existing 5-column layout with Order ID and Expiration */}
+        <div style={style} className="px-2 hidden lg:block text-sm">
           <Card className="hover:bg-gray-50">
             <div className="grid grid-cols-[40%_1fr_1fr_1fr_1fr] items-start gap-2 p-2 mb-2">
               <div>
@@ -330,7 +375,22 @@ export default function PortfolioOpenOrders({
               </div>
             ) : openOrders && openOrders.length ? (
               <div>
-                <span className="hidden md:block">
+                {/* MD-only header: no Order ID or Expiration, smaller text */}
+                <span className="hidden md:block lg:hidden">
+                  <div className="grid grid-cols-[50%_110px_1fr] items-center h-10 px-2 text-muted-foreground font-medium text-sm">
+                    <div className="text-left">
+                      {t("PortfolioTabs:descriptionHeader")}
+                    </div>
+                    <div className="text-left">
+                      {t("PortfolioTabs:priceHeader")}
+                    </div>
+                    <div className="text-left">
+                      {t("PortfolioTabs:actionsHeader")}
+                    </div>
+                  </div>
+                </span>
+                {/* LG+ header: original 5 columns */}
+                <span className="hidden lg:block">
                   <div className="grid grid-cols-[40%_1fr_1fr_1fr_1fr] items-center h-10 px-2 text-muted-foreground font-medium">
                     <div className="text-left">
                       {t("PortfolioTabs:descriptionHeader")}
