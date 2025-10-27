@@ -1490,7 +1490,7 @@ export default function CreateSmartcoin(properties) {
 
   return (
     <>
-      <div className="container mx-auto mt-5 mb-5 w-3/4">
+      <div className="container mx-auto mt-5 mb-5 w-full md:w-3/4">
         <div className="grid grid-cols-1 gap-3">
           <Card>
             <CardHeader className="pb-5">
@@ -1545,7 +1545,7 @@ export default function CreateSmartcoin(properties) {
 
                   {!editing || (editing && hasEditedAssetOptions) ? (
                     <span>
-                      <div className={`grid grid-cols-3 gap-5`}>
+                      <div className={`grid grid-cols-1 md:grid-cols-3 gap-5`}>
                         <div>
                           <HoverInfo
                             content={t(
@@ -1699,7 +1699,7 @@ export default function CreateSmartcoin(properties) {
                         className="mt-1"
                       />
 
-                      <div className="grid grid-cols-2 gap-5 mb-3">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-3">
                         <div>
                           <HoverInfo
                             content={t(
@@ -1755,7 +1755,7 @@ export default function CreateSmartcoin(properties) {
                         </div>
                       </div>
 
-                      <div className="grid grid-cols-3 gap-5 mb-3">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-3">
                         <div>
                           <HoverInfo
                             content={t(
@@ -1863,7 +1863,7 @@ export default function CreateSmartcoin(properties) {
                         </div>
                       ) : null}
 
-                      <div className="grid grid-cols-2 gap-5 mt-2">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-2">
                         <AssetFlag
                           alreadyDisabled={false}
                           id={"allowed_markets"}
@@ -1921,7 +1921,7 @@ export default function CreateSmartcoin(properties) {
                           </div>
                         </div>
                       ) : null}
-                      <div className="grid grid-cols-2 gap-5 mt-2">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-2">
                         <AssetFlag
                           alreadyDisabled={false}
                           id={"banned_markets"}
@@ -1981,7 +1981,7 @@ export default function CreateSmartcoin(properties) {
                       ) : null}
                       <Separator className="my-4 mt-5" />
 
-                      <div className="grid grid-cols-2 gap-5">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div>
                           <HoverInfo
                             content={t(
@@ -2594,15 +2594,19 @@ export default function CreateSmartcoin(properties) {
                           />
                         </div>
                       </div>
-                      <div className="grid grid-cols-2 gap-5 mt-2">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-2">
                         <div className="text-md text-gray-300">
-                          Issuer Permissions: {issuer_permissions}{" "}
+                          {t("CreateSmartcoin:issuerPermissions")}
+                          {": "}
+                          {issuer_permissions}{" "}
                           {existingAssetData
                             ? `(${existingAssetData.options.issuer_permissions})`
                             : null}
                         </div>
                         <div className="text-md text-gray-300">
-                          Asset Flags: {flags}{" "}
+                          {t("CreateSmartcoin:assetFlags")}
+                          {": "}
+                          {flags}{" "}
                           {existingAssetData
                             ? `(${existingAssetData.options.flags})`
                             : null}
@@ -3426,7 +3430,7 @@ export default function CreateSmartcoin(properties) {
                   </div>
                 ) : null}
 
-                <div className="col-span-2 grid grid-cols-2">
+                <div className="col-span-1 md:col-span-2 grid grid-cols-2">
                   <HoverInfo
                     content={t("AssetCommon:nft.main_header_content")}
                     header={t("AssetCommon:nft.main_header")}
@@ -3807,7 +3811,7 @@ export default function CreateSmartcoin(properties) {
                         header={t("AssetCommon:nft.header")}
                         type="header"
                       />
-                      <div className="grid grid-cols-2 gap-5">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div className="col-span-1">
                           <HoverInfo
                             content={t("AssetCommon:nft.NFTTitleContent")}

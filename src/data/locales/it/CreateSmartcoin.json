@@ -1,4 +1,5 @@
 {
+  "issuerPermissions": "Autorizzazioni dell'emittente",
   "card": {
     "title_create": "Creazione di un nuovo asset Smartcoin",
     "title_edit": "Modifica di un asset Smartcoin esistente",

@@ -1,4 +1,5 @@
 {
+  "issuerPermissions": "Väljaandja load",
   "card": {
     "title_create": "Uue Smartcoini vara loomine",
     "title_edit": "Olemasoleva Smartcoini vara redigeerimine",

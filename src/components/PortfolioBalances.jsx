@@ -321,113 +321,128 @@ export default function PortfolioBalances({
         pool.asset_b_symbol === currentAsset.symbol
     );
 
+    const rightContents = (
+      <>
+        <a
+          href={`/dex/index.html?market=${currentAsset.symbol}_${
+            currentAsset.symbol === "BTS" ? "CNY" : "BTS"
+          }`}
+        >
+          <Button variant="outline" className="mr-2 hover:shadow-lg bg-white">
+            {t("PortfolioTabs:tradeButton")}
+          </Button>
+        </a>
+
+        <a
+          href={`/borrow/index.html?tab=searchOffers&searchTab=borrow&searchText=${currentAsset.symbol}`}
+        >
+          <Button variant="outline" className="mr-2 hover:shadow-lg bg-white">
+            {t("IssuedAssets:creditBorrow")}
+          </Button>
+        </a>
+
+        <a href={`/lend/index.html?asset=${currentAsset.symbol}`}>
+          <Button variant="outline" className="mr-2 hover:shadow-lg bg-white">
+            {t("IssuedAssets:creditLend")}
+          </Button>
+        </a>
+
+        {currentAsset.bitasset_data_id ? (
+          <a href={`/smartcoin/index.html?id=${currentAsset.id}`}>
+            <Button variant="outline" className="mr-2 hover:shadow-lg bg-white">
+              {t("IssuedAssets:proceedToBorrow")}
+            </Button>
+          </a>
+        ) : null}
+
+        <HoverCard>
+          <HoverCardTrigger asChild>
+            <PoolDialog
+              poolArray={relevantPools}
+              t={t}
+              dialogTitle={t("PoolDialogs:assetAPoolsDialogTitle", {
+                assetA: currentAsset.symbol,
+              })}
+              dialogDescription={t("PoolDialogs:assetAPoolsDialogDescription", {
+                assetA: currentAsset.symbol,
+                assetAId: currentAsset.id,
+              })}
+            />
+          </HoverCardTrigger>
+          <HoverCardContent className="w-60 bg-white">
+            {t("PoolDialogs:assetAHoverCardContent", {
+              assetA: currentAsset.symbol,
+            })}
+          </HoverCardContent>
+        </HoverCard>
+      </>
+    );
+
     return (
       <div style={{ ...style, marginBottom: "8px" }}>
         <Card className="hover:bg-gray-50">
           <div className="grid grid-cols-6">
-            <div className="col-span-3 text-left">
+            <div className="col-span-4 md:col-span-2 text-left">
               <CardHeader className="pt-3 pb-3">
-                <CardTitle>
+                <CardTitle title={`${t("PoolStake:id")}: ${currentAsset.id}`}>
                   <ExternalLink
                     variant="outline"
                     classnamecontents="mt-2 hover:text-blue-500"
                     type="text"
-                    text={t("PortfolioTabs:assetTitle", {
-                      symbol: currentAsset.symbol,
-                      assetId: rowBalance.asset_id,
-                    })}
+                    text={currentAsset.symbol}
                     hyperlink={`https://explorer.bitshares.ws/#/assets/${
                       currentAsset.symbol
                     }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
                   />
                 </CardTitle>
                 <CardDescription>
-                  {t("PortfolioTabs:liquidAmount", { amount: readableBalance })}
+                  <div className="flex items-center space-x-2">
+                    <button
+                      onClick={onToggleFavourite}
+                      aria-label={isFavourited ? "Unfavourite" : "Favourite"}
+                      title={isFavourited ? "Unfavourite" : "Favourite"}
+                      className="p-0 m-0 inline-flex items-center"
+                    >
+                      {isFavourited ? (
+                        <StarFilledIcon className="h-4 w-4 text-yellow-500" />
+                      ) : (
+                        <StarIcon className="h-4 w-4" />
+                      )}
+                    </button>
+
+                    <span
+                      title={t("PortfolioTabs:liquidAmount", {
+                        amount: readableBalance,
+                      })}
+                      className="text-sm"
+                    >
+                      {readableBalance}
+                    </span>
+                  </div>
                 </CardDescription>
               </CardHeader>
             </div>
-            <div className="col-span-3 text-right mr-3 mt-4">
-              <a
-                href={`/dex/index.html?market=${currentAsset.symbol}_${
-                  currentAsset.symbol === "BTS" ? "CNY" : "BTS"
-                }`}
-              >
-                <Button
-                  variant="outline"
-                  className="mr-2 hover:shadow-lg bg-white"
-                >
-                  {t("PortfolioTabs:tradeButton")}
-                </Button>
-              </a>
-
-              <a
-                href={`/borrow/index.html?tab=searchOffers&searchTab=borrow&searchText=${currentAsset.symbol}`}
-              >
-                <Button
-                  variant="outline"
-                  className="mr-2 hover:shadow-lg bg-white"
-                >
-                  {t("IssuedAssets:creditBorrow")}
-                </Button>
-              </a>
-
-              <a href={`/lend/index.html?asset=${currentAsset.symbol}`}>
-                <Button
-                  variant="outline"
-                  className="mr-2 hover:shadow-lg bg-white"
-                >
-                  {t("IssuedAssets:creditLend")}
-                </Button>
-              </a>
-
-              {currentAsset.bitasset_data_id ? (
-                <a href={`/smartcoin/index.html?id=${currentAsset.id}`}>
-                  <Button
-                    variant="outline"
-                    className="mr-2 hover:shadow-lg bg-white"
-                  >
-                    {t("IssuedAssets:proceedToBorrow")}
-                  </Button>
-                </a>
-              ) : null}
-
-              <HoverCard>
-                <HoverCardTrigger asChild>
-                  <PoolDialog
-                    poolArray={relevantPools}
-                    t={t}
-                    dialogTitle={t("PoolDialogs:assetAPoolsDialogTitle", {
-                      assetA: currentAsset.symbol,
-                    })}
-                    dialogDescription={t(
-                      "PoolDialogs:assetAPoolsDialogDescription",
-                      {
-                        assetA: currentAsset.symbol,
-                        assetAId: currentAsset.id,
-                      }
-                    )}
-                  />
-                </HoverCardTrigger>
-                <HoverCardContent className="w-60 bg-white">
-                  {t("PoolDialogs:assetAHoverCardContent", {
-                    assetA: currentAsset.symbol,
-                  })}
-                </HoverCardContent>
-              </HoverCard>
-
-              <Button
-                variant="outline"
-                className="ml-2 bg-white hover:shadow-lg"
-                onClick={onToggleFavourite}
-                aria-label={isFavourited ? "Unfavourite" : "Favourite"}
-                title={isFavourited ? "Unfavourite" : "Favourite"}
-              >
-                {isFavourited ? (
-                  <StarFilledIcon className="h-4 w-4 text-yellow-500" />
-                ) : (
-                  <StarIcon className="h-4 w-4" />
-                )}
-              </Button>
+            <div className="block md:hidden text-right col-span-2 mt-4 mr-4">
+              <Dialog>
+                <DialogTrigger>
+                  <Button>{t("HTLC:actionsColumn")}</Button>
+                </DialogTrigger>
+                <DialogContent className="bg-white">
+                  <DialogHeader>
+                    <DialogTitle>
+                      {t("HTLC:actionsColumn")} - {currentAsset.symbol}
+                    </DialogTitle>
+                    <DialogDescription>
+                      <div className="grid grid-cols-5 gap-2">
+                        {rightContents}
+                      </div>
+                    </DialogDescription>
+                  </DialogHeader>
+                </DialogContent>
+              </Dialog>
+            </div>
+            <div className="hidden md:block col-span-4 text-right mt-4">
+              {rightContents}
             </div>
           </div>
         </Card>

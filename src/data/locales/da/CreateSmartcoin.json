@@ -1,4 +1,5 @@
 {
+  "issuerPermissions": "Udstedertilladelser",
   "card": {
     "title_create": "Oprettelse af et nyt Smartcoin-aktiv",
     "title_edit": "Redigering af et eksisterende Smartcoin-aktiv",

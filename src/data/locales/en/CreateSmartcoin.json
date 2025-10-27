@@ -1,4 +1,5 @@
 {
+  "issuerPermissions": "Issuer Permissions",
   "card": {
     "title_create": "Creating a new Smartcoin asset",
     "title_edit": "Editing an existing Smartcoin asset",

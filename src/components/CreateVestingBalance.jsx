@@ -164,7 +164,7 @@ export default function CreateVestingBalance(properties) {
   }, [usr, currentNode]);
 
   return (
-    <div className="container mx-auto mt-5 mb-5 w-1/2">
+    <div className="container mx-auto mt-5 mb-5 w-full md:w-1/2">
       <div className="grid grid-cols-1 gap-3">
         <Card>
           <CardHeader className="pb-1">
@@ -198,7 +198,7 @@ export default function CreateVestingBalance(properties) {
                   {t("CreateVestingBalance:lvc")}
                 </Button>
               </div>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                 <span className="col-span-1">
                   <HoverInfo
                     header={t("CreateVestingBalance:target")}
@@ -342,7 +342,7 @@ export default function CreateVestingBalance(properties) {
                     content={t("CreateVestingBalance:startClaimDescription")}
                     type="header"
                   />
-                  <div className="grid grid-cols-2 gap-3 mt-2 mb-1">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-2 mb-1">
                     <DateTimePicker
                       granularity="day"
                       value={beginDateTime}

@@ -273,7 +273,7 @@ export default function Transfer(properties) {
 
   return (
     <>
-      <div className="container mx-auto mt-5 mb-5 w-1/2">
+      <div className="container mx-auto mt-5 mb-5 w-full md:w-3/4 lg:1/2">
         <div className="grid grid-cols-1 gap-3">
           <Card>
             <CardHeader>
@@ -366,7 +366,7 @@ export default function Transfer(properties) {
                               </Av>
                             )}
                           </div>
-                          <div className="col-span-5">
+                          <div className="col-span-7 md:col-span-5">
                             <Input
                               {...field}
                               disabled
@@ -463,7 +463,7 @@ export default function Transfer(properties) {
                               </Av>
                             ) : null}
                           </div>
-                          <div className="col-span-5">
+                          <div className="col-span-7 md:col-span-5">
                             {!selectedAsset || !foundAsset ? (
                               <Input
                                 {...field}

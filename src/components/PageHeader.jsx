@@ -552,7 +552,7 @@ export default function PageHeader(properties) {
               </h4>
             </div>
 
-            <div className="col-span-12 md:col-span-3 text-left md:text-right mt-2">
+            <div className="col-span-12 md:col-span-3 text-center md:text-right mt-2">
               {usr && usr.username && usr.username.length ? (
                 <CurrentUser usr={usr} />
               ) : null}

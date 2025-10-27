@@ -1007,7 +1007,7 @@ export default function UIA(properties) {
 
   return (
     <>
-      <div className="container mx-auto mt-5 mb-5 w-3/4">
+      <div className="container mx-auto mt-5 mb-5 w-full md:w-3/4">
         <div className="grid grid-cols-1 gap-3">
           <Card>
             <CardHeader className="pb-1">
@@ -1032,7 +1032,7 @@ export default function UIA(properties) {
                     type="header"
                   />
 
-                  <div className="grid grid-cols-3 gap-5">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                     <div>
                       <HoverInfo
                         content={t(
@@ -1145,7 +1145,7 @@ export default function UIA(properties) {
                     className="mt-1"
                   />
 
-                  <div className="grid grid-cols-2 gap-5 mb-3">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-3">
                     <div>
                       <HoverInfo
                         content={t(
@@ -1188,7 +1188,7 @@ export default function UIA(properties) {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-3 gap-5 mb-3">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-3">
                     <div>
                       <HoverInfo
                         content={t(
@@ -1369,7 +1369,7 @@ export default function UIA(properties) {
                   <Separator className="my-4 mt-5" />
                 </div>
                 <div className="col-span-2">
-                  <div className="grid grid-cols-2 gap-5">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div>
                       <HoverInfo
                         content={t("AssetCommon:permissions.header_content")}
@@ -1979,7 +1979,7 @@ export default function UIA(properties) {
                   </div>
                 ) : null}
 
-                <div className="col-span-2 grid grid-cols-2">
+                <div className="col-span-2 grid grid-cols-1 md:grid-cols-2">
                   <HoverInfo
                     content={t("AssetCommon:nft.main_header_content")}
                     header={t("AssetCommon:nft.main_header")}
@@ -2354,7 +2354,7 @@ export default function UIA(properties) {
                         header={t("AssetCommon:nft.header")}
                         type="header"
                       />
-                      <div className="grid grid-cols-2 gap-5">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div className="col-span-1">
                           <HoverInfo
                             content={t("AssetCommon:nft.NFTTitleContent")}

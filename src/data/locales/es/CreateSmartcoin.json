@@ -1,4 +1,5 @@
 {
+  "issuerPermissions": "Permisos del emisor",
   "card": {
     "title_create": "Creando un nuevo activo Smartcoin",
     "title_edit": "Editar un activo Smartcoin existente",

@@ -1,4 +1,5 @@
 {
+  "issuerPermissions": "สิทธิ์ของผู้ออก",
   "card": {
     "title_create": "การสร้างสินทรัพย์ Smartcoin ใหม่",
     "title_edit": "การแก้ไขสินทรัพย์ Smartcoin ที่มีอยู่",

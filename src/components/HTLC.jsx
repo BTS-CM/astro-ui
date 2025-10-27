@@ -242,7 +242,7 @@ export default function Htlc(properties) {
 
     return (
       <div style={style}>
-        <Card className="m-2 w-1/2">
+        <Card className="m-2 w-full md:w-1/2">
           <CardContent className="pt-3 pb-1 text-sm">
             <div className="grid grid-cols-6 gap-1 items-center">
               <div className="col-span-1">
@@ -541,7 +541,7 @@ export default function Htlc(properties) {
             <CardContent>
               {/* Sender HTLCs */}
               <div className="grid grid-cols-1 gap-3 mb-4">
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <HoverInfo
                     content={t("HTLC:senderDesc")}
                     header={t("HTLC:senderHeader")}

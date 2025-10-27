@@ -704,7 +704,7 @@ export default function CreditOfferEditor(properties) {
   };
 
   return (
-    <div className="container mx-auto mt-5 mb-5 w-1/2">
+    <div className="container mx-auto mt-5 mb-5 w-full md:w-1/2">
       <div className="grid grid-cols-1 gap-3">
         <Card>
           <CardHeader>

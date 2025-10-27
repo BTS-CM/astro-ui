@@ -538,7 +538,7 @@ export default function Prediction(properties) {
 
   return (
     <>
-      <div className="container mx-auto mt-5 mb-5 w-3/4">
+      <div className="container mx-auto mt-5 mb-5 w-full md:w-3/4">
         <div className="grid grid-cols-1 gap-3">
           <Card>
             <CardHeader className="pb-1">
@@ -556,7 +556,7 @@ export default function Prediction(properties) {
                     type="header"
                   />
 
-                  <div className="grid grid-cols-2 gap-5">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div>
                       <HoverInfo
                         content={t(
@@ -612,7 +612,7 @@ export default function Prediction(properties) {
                     onInput={(e) => setDesc(e.currentTarget.value)}
                   />
 
-                  <div className="grid grid-cols-2 gap-5">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div>
                       <HoverInfo
                         content={t(
@@ -737,7 +737,7 @@ export default function Prediction(properties) {
                     )}
                     header={t("CreatePrediction:pma.resolution.header")}
                   />
-                  <div className="grid grid-cols-2 gap-3 mt-2">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-2">
                     <DateTimePicker
                       granularity="day"
                       value={date}
@@ -958,7 +958,7 @@ export default function Prediction(properties) {
                   <Separator className="my-4 mt-5" />
                 </div>
                 <div className="col-span-2 mb-2">
-                  <div className="grid grid-cols-2 gap-5">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div>
                       <HoverInfo
                         content={t("AssetCommon:permissions.header_content")}

@@ -1,4 +1,5 @@
 {
+  "issuerPermissions": "발급자 권한",
   "card": {
     "title_create": "새로운 Smartcoin 자산 생성",
     "title_edit": "기존 Smartcoin 자산 편집",

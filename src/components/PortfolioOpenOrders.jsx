@@ -17,6 +17,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { List } from "react-window";
@@ -134,115 +144,171 @@ export default function PortfolioOpenOrders({
     const days = Math.floor(timeDiff / 1000 / 60 / 60 / 24);
     const timeDiffString = `${days}d ${hours}h ${minutes}m`;
 
+    const rightActions = (
+      <>
+        <a
+          href={`/dex/index.html?market=${sellAsset?.symbol}_${buyAsset?.symbol}`}
+        >
+          <Button
+            variant="outline"
+            size="sm"
+            className="bg-white hover:shadow-lg"
+          >
+            {t("PortfolioTabs:tradeButton")}
+          </Button>
+        </a>
+        <a href={`/order/index.html?id=${orderId}`}>
+          <Button
+            variant="outline"
+            size="sm"
+            className="bg-white hover:shadow-lg"
+          >
+            {t("PortfolioTabs:updateButton")}
+          </Button>
+        </a>
+        <>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              setShowDialog(true);
+              setOrderID(orderId);
+            }}
+            className="bg-white hover:shadow-lg"
+          >
+            {t("PortfolioTabs:cancelButton")}
+          </Button>
+          {showDialog && orderId === orderID ? (
+            <DeepLinkDialog
+              operationNames={["limit_order_cancel"]}
+              username={usr.username}
+              usrChain={usr.chain}
+              userID={usr.id}
+              dismissCallback={setShowDialog}
+              key={`Cancelling${readableBaseAmount}${sellAsset?.symbol}for${readableQuoteAmount}${buyAsset?.symbol}`}
+              headerText={t("PortfolioTabs:cancelOffer", {
+                baseAmount: readableBaseAmount,
+                baseSymbol: sellAsset?.symbol,
+                quoteAmount: readableQuoteAmount,
+                quoteSymbol: buyAsset?.symbol,
+              })}
+              trxJSON={[
+                {
+                  fee_paying_account: usr.id,
+                  order: orderID,
+                  extensions: [],
+                },
+              ]}
+            />
+          ) : null}
+        </>
+      </>
+    );
+
     return (
-      <div style={style} className="px-2">
-        <Card className="hover:bg-gray-50">
-          <div className="grid grid-cols-[40%_1fr_1fr_1fr_1fr] items-start gap-2 p-2 mb-2">
-            <div>
-              <div>
-                <a
-                  href={`/dex/index.html?market=${sellAsset?.symbol}_${buyAsset?.symbol}`}
-                  className="hover:text-blue-500"
-                >
+      <>
+        <div style={style} className="px-2 block md:hidden">
+          <Dialog>
+            <DialogTrigger asChild>
+              <Card
+                className="hover:bg-gray-50 w-full p-3"
+                title={`${orderId} - ${timeDiffString}`}
+              >
+                <CardTitle className="text-sm">
                   {t("PortfolioTabs:sellingFor", {
                     baseAmount: readableBaseAmount,
                     baseSymbol: sellAsset?.symbol,
                     quoteAmount: readableQuoteAmount,
                     quoteSymbol: buyAsset?.symbol,
                   })}
-                </a>
-              </div>
-              <div className="text-xs text-muted-foreground">
-                {t("PortfolioTabs:tradingPair", {
-                  baseAssetId: sellPriceBaseAssetId,
-                  quoteAssetId: sellPriceQuoteAssetId,
-                })}
-              </div>
-            </div>
-            <div className="truncate">
-              <ExternalLink
-                classnamecontents="hover:text-blue-500"
-                type="text"
-                text={`${orderId}`}
-                hyperlink={`https://explorer.bitshares.ws/#/objects/${orderId}${
-                  usr.chain === "bitshares" ? "" : "?network=testnet"
-                }`}
-              />
-            </div>
-            <div>{timeDiffString}</div>
-            <div>
+                </CardTitle>
+                <CardDescription>
+                  {priceDisplay && priceDisplay !== "-"
+                    ? `${priceDisplay.split(" ")[0]} ${buyAsset?.symbol}/${
+                        sellAsset?.symbol
+                      }`
+                    : ""}
+                </CardDescription>
+              </Card>
+            </DialogTrigger>
+            <DialogContent className="bg-white">
+              <DialogHeader>
+                <DialogTitle>{`${readableBaseAmount} ${sellAsset?.symbol} → ${readableQuoteAmount} ${buyAsset?.symbol}`}</DialogTitle>
+                <DialogDescription>
+                  <div className="grid grid-cols-1 gap-1">
+                    <span>
+                      <b>{t("PortfolioTabs:expirationHeader")}</b>:{" "}
+                      {timeDiffString}
+                    </span>
+                    <span>
+                      <b>{t("PortfolioTabs:priceHeader")}</b>: {priceDisplay}
+                    </span>
+                    <span>
+                      <b>{t("PortfolioTabs:priceHeader")}</b> {orderId}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-5 gap-2 mt-2">
+                    {rightActions}
+                  </div>
+                </DialogDescription>
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
+        </div>
+        <div style={style} className="px-2 hidden md:block">
+          <Card className="hover:bg-gray-50">
+            <div className="grid grid-cols-[40%_1fr_1fr_1fr_1fr] items-start gap-2 p-2 mb-2">
               <div>
-                {priceDisplay && priceDisplay !== "-"
-                  ? priceDisplay.split(" ")[0]
-                  : "-"}
-              </div>
-              {priceDisplay && priceDisplay !== "-" ? (
-                <div className="text-xs text-muted-foreground">
-                  {buyAsset?.symbol}/{sellAsset?.symbol}
-                </div>
-              ) : null}
-            </div>
-            <div className="flex items-center justify-end gap-2">
-              <a
-                href={`/dex/index.html?market=${sellAsset?.symbol}_${buyAsset?.symbol}`}
-              >
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="bg-white hover:shadow-lg"
-                >
-                  {t("PortfolioTabs:tradeButton")}
-                </Button>
-              </a>
-              <a href={`/order/index.html?id=${orderId}`}>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="bg-white hover:shadow-lg"
-                >
-                  {t("PortfolioTabs:updateButton")}
-                </Button>
-              </a>
-              <>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => {
-                    setShowDialog(true);
-                    setOrderID(orderId);
-                  }}
-                  className="bg-white hover:shadow-lg"
-                >
-                  {t("PortfolioTabs:cancelButton")}
-                </Button>
-                {showDialog && orderId === orderID ? (
-                  <DeepLinkDialog
-                    operationNames={["limit_order_cancel"]}
-                    username={usr.username}
-                    usrChain={usr.chain}
-                    userID={usr.id}
-                    dismissCallback={setShowDialog}
-                    key={`Cancelling${readableBaseAmount}${sellAsset?.symbol}for${readableQuoteAmount}${buyAsset?.symbol}`}
-                    headerText={t("PortfolioTabs:cancelOffer", {
+                <div>
+                  <a
+                    href={`/dex/index.html?market=${sellAsset?.symbol}_${buyAsset?.symbol}`}
+                    className="hover:text-blue-500"
+                  >
+                    {t("PortfolioTabs:sellingFor", {
                       baseAmount: readableBaseAmount,
                       baseSymbol: sellAsset?.symbol,
                       quoteAmount: readableQuoteAmount,
                       quoteSymbol: buyAsset?.symbol,
                     })}
-                    trxJSON={[
-                      {
-                        fee_paying_account: usr.id,
-                        order: orderID,
-                        extensions: [],
-                      },
-                    ]}
-                  />
+                  </a>
+                </div>
+                <div className="text-xs text-muted-foreground">
+                  {t("PortfolioTabs:tradingPair", {
+                    baseAssetId: sellPriceBaseAssetId,
+                    quoteAssetId: sellPriceQuoteAssetId,
+                  })}
+                </div>
+              </div>
+              <div className="truncate">
+                <ExternalLink
+                  classnamecontents="hover:text-blue-500"
+                  type="text"
+                  text={`${orderId}`}
+                  hyperlink={`https://explorer.bitshares.ws/#/objects/${orderId}${
+                    usr.chain === "bitshares" ? "" : "?network=testnet"
+                  }`}
+                />
+              </div>
+              <div>{timeDiffString}</div>
+              <div>
+                <div>
+                  {priceDisplay && priceDisplay !== "-"
+                    ? priceDisplay.split(" ")[0]
+                    : "-"}
+                </div>
+                {priceDisplay && priceDisplay !== "-" ? (
+                  <div className="text-xs text-muted-foreground">
+                    {buyAsset?.symbol}/{sellAsset?.symbol}
+                  </div>
                 ) : null}
-              </>
+              </div>
+              <span className="flex items-center justify-end gap-2">
+                {rightActions}
+              </span>
             </div>
-          </div>
-        </Card>
-      </div>
+          </Card>
+        </div>
+      </>
     );
   };
 
@@ -264,23 +330,25 @@ export default function PortfolioOpenOrders({
               </div>
             ) : openOrders && openOrders.length ? (
               <div>
-                <div className="grid grid-cols-[40%_1fr_1fr_1fr_1fr] items-center h-10 px-2 text-muted-foreground font-medium">
-                  <div className="text-left">
-                    {t("PortfolioTabs:descriptionHeader")}
+                <span className="hidden md:block">
+                  <div className="grid grid-cols-[40%_1fr_1fr_1fr_1fr] items-center h-10 px-2 text-muted-foreground font-medium">
+                    <div className="text-left">
+                      {t("PortfolioTabs:descriptionHeader")}
+                    </div>
+                    <div className="text-left">
+                      {t("PortfolioTabs:orderIdHeader")}
+                    </div>
+                    <div className="text-left">
+                      {t("PortfolioTabs:expirationHeader")}
+                    </div>
+                    <div className="text-left">
+                      {t("PortfolioTabs:priceHeader")}
+                    </div>
+                    <div className="text-left">
+                      {t("PortfolioTabs:actionsHeader")}
+                    </div>
                   </div>
-                  <div className="text-left">
-                    {t("PortfolioTabs:orderIdHeader")}
-                  </div>
-                  <div className="text-left">
-                    {t("PortfolioTabs:expirationHeader")}
-                  </div>
-                  <div className="text-left">
-                    {t("PortfolioTabs:priceHeader")}
-                  </div>
-                  <div className="text-left">
-                    {t("PortfolioTabs:actionsHeader")}
-                  </div>
-                </div>
+                </span>
                 <div className="max-h-[500px] overflow-auto">
                   <List
                     rowComponent={OpenOrdersRow}

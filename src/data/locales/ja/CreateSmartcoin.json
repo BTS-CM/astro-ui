@@ -1,4 +1,5 @@
 {
+  "issuerPermissions": "発行者の権限",
   "card": {
     "title_create": "新しいスマートコイン資産の作成",
     "title_edit": "既存のスマートコイン資産の編集",
