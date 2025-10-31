@@ -13,7 +13,6 @@ import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
 import { Textarea } from "@/components/ui/textarea";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Card,
   CardContent,
@@ -296,6 +295,7 @@ export default function IssuedAssets(properties) {
     const [globalSettleOpen, setGlobalSettleOpen] = useState(false);
     const [globalSettleDeeplinkDialog, setGlobalSettleDeeplinkDialog] =
       useState(false);
+    const [smActionsOpen, setSmActionsOpen] = useState(false);
 
     const [priceFeederIndex, setPriceFeederIndex] = useState(0);
     const [globalSettlementMode, setGlobalSettlementMode] = useState("median");
@@ -523,414 +523,443 @@ export default function IssuedAssets(properties) {
       );
     };
 
+    const issueThingsRow = (
+      <>
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <Button className="h-8 hover:shadow-inner" variant="outline">
+              JSON
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem
+              className="hover:shadow-inner"
+              onClick={() => {
+                setJSON(issuedAsset);
+                setViewJSON(true);
+              }}
+            >
+              {t("IssuedAssets:issuedAssetData")}
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              className="hover:shadow-inner"
+              onClick={() => {
+                setJSON(relevantDynamicData);
+                setViewJSON(true);
+              }}
+            >
+              {t("IssuedAssets:issuedDynamicData")}
+            </DropdownMenuItem>
+            {parsedDescription &&
+            parsedDescription.hasOwnProperty("nft_object") ? (
+              <DropdownMenuItem
+                className="hover:shadow-inner"
+                onClick={() => {
+                  setJSON(parsedDescription.nft_object);
+                  setViewJSON(true);
+                }}
+              >
+                {t("IssuedAssets:issuedNFTObject")}
+              </DropdownMenuItem>
+            ) : null}
+            {relevantBitassetData ? (
+              <DropdownMenuItem
+                className="hover:shadow-inner"
+                onClick={() => {
+                  setJSON(relevantBitassetData);
+                  setViewJSON(true);
+                }}
+              >
+                {t("IssuedAssets:issuedSmartcoinData")}
+              </DropdownMenuItem>
+            ) : null}
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        {viewJSON && json ? (
+          <Dialog
+            open={viewJSON}
+            onOpenChange={(open) => {
+              setViewJSON(open);
+            }}
+          >
+            <DialogContent className="sm:max-w-[750px] bg-white">
+              <DialogHeader>
+                <DialogTitle>{t("LiveBlocks:dialogContent.json")}</DialogTitle>
+                <DialogDescription>
+                  {t("LiveBlocks:dialogContent.jsonDescription")}
+                </DialogDescription>
+              </DialogHeader>
+              <Textarea
+                value={JSON.stringify(json, null, 2)}
+                readOnly={true}
+                rows={15}
+              />
+              <Button
+                className="w-1/4 mt-2"
+                onClick={() => {
+                  navigator.clipboard.writeText(JSON.stringify(json, null, 2));
+                }}
+              >
+                {t("LiveBlocks:dialogContent.copy")}
+              </Button>
+            </DialogContent>
+          </Dialog>
+        ) : null}
+
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <Button className="h-8 hover:shadow-inner" variant="outline">
+              {t("IssuedAssets:userActions")}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <a
+              href={`/dex/index.html?market=${issuedAsset.symbol}_${
+                parsedDescription && parsedDescription.market
+                  ? parsedDescription.market
+                  : "BTS"
+              }`}
+            >
+              <DropdownMenuItem className="hover:shadow-inner">
+                {t("IssuedAssets:proceedToTrade")}
+              </DropdownMenuItem>
+            </a>
+
+            <a
+              href={`/borrow/index.html?tab=searchOffers&searchTab=borrow&searchText=${issuedAsset.symbol}`}
+            >
+              <DropdownMenuItem className="hover:shadow-inner">
+                {t("IssuedAssets:creditBorrow")}
+              </DropdownMenuItem>
+            </a>
+
+            <a href={`/lend/index.html?asset=${issuedAsset.symbol}`}>
+              <DropdownMenuItem>
+                {t("IssuedAssets:creditLend")}
+              </DropdownMenuItem>
+            </a>
+
+            {activeTab === "smartcoins" ? (
+              <a href={`/smartcoin/index.html?id=${issuedAsset.id}`}>
+                <DropdownMenuItem className="hover:shadow-inner">
+                  {t("IssuedAssets:proceedToBorrow")}
+                </DropdownMenuItem>
+              </a>
+            ) : null}
+
+            {activeTab === "smartcoins" &&
+            relevantBitassetData &&
+            ((relevantBitassetData.current_feed.settlement_price.base.amount ===
+              0 &&
+              relevantBitassetData.current_feed.settlement_price.quote
+                .amount === 0) ||
+              !relevantBitassetData.feeds.length ||
+              (parseInt(relevantBitassetData.settlement_price.base.amount) >
+                0 &&
+                parseInt(relevantBitassetData.settlement_price.quote.amount)) ||
+              parseInt(relevantBitassetData.settlement_fund) > 0) ? (
+              <a href={`/settlement/index.html?id=${issuedAsset.id}`}>
+                <DropdownMenuItem className="hover:shadow-inner">
+                  {t("IssuedAssets:collateralBid")}
+                </DropdownMenuItem>
+              </a>
+            ) : null}
+
+            {activeTab === "prediction" ? (
+              <a href={`/predictions/index.html?id=${issuedAsset.id}`}>
+                <DropdownMenuItem className="hover:shadow-inner">
+                  {t("IssuedAssets:pmaBet")}
+                </DropdownMenuItem>
+              </a>
+            ) : null}
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        {!["prediction"].includes(activeTab) ? (
+          <span className="mt-2">
+            <AssetIssuerActions
+              asset={issuedAsset}
+              chain={_chain}
+              currentUser={usr}
+              node={currentNode}
+              dynamicAssetData={relevantDynamicData}
+              bitassetData={relevantBitassetData}
+              buttonVariant="outline"
+              buttonSize="sm"
+              className="h-8 hover:shadow-inner"
+            />
+          </span>
+        ) : null}
+
+        {globalSettleOpen ? (
+          <Dialog
+            open={globalSettleOpen}
+            onOpenChange={(open) => {
+              setGlobalSettleOpen(open);
+            }}
+          >
+            <DialogContent className="sm:max-w-[550px] bg-white">
+              <DialogHeader>
+                <DialogTitle>
+                  {t("IssuedAssets:updateIssuer")}: {issuedAsset.symbol} (
+                  {issuedAsset.id})
+                </DialogTitle>
+                <DialogDescription>
+                  {t("IssuedAssets:updateIssuerInfo")}
+                </DialogDescription>
+              </DialogHeader>
+
+              <div className="grid grid-cols-1 gap-3">
+                <div className="grid grid-cols-3 gap-2">
+                  <Button
+                    onClick={() => {
+                      setGlobalSettlementMode("median");
+                    }}
+                    variant={globalSettlementMode === "median" ? "" : "outline"}
+                  >
+                    {t("IssuedAssets:medianFeedPrice")}
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setGlobalSettlementMode("current");
+                    }}
+                    variant={
+                      globalSettlementMode === "current" ? "" : "outline"
+                    }
+                  >
+                    {t("IssuedAssets:currentFeedPrice")}
+                  </Button>
+                  {relevantBitassetData &&
+                  relevantBitassetData.feeds &&
+                  relevantBitassetData.feeds.length ? (
+                    <Button
+                      onClick={() => {
+                        setGlobalSettlementMode("price_feed");
+                      }}
+                      variant={
+                        globalSettlementMode === "price_feed" ? "" : "outline"
+                      }
+                    >
+                      {t("IssuedAssets:specificPriceFeed")}
+                    </Button>
+                  ) : null}
+                </div>
+
+                <div className="grid grid-cols-1 gap-2">
+                  {relevantBitassetData &&
+                  relevantBitassetData.feeds &&
+                  relevantBitassetData.feeds.length &&
+                  globalSettlementMode === "price_feed" ? (
+                    <>
+                      <HoverInfo
+                        content={t("IssuedAssets:chooseSpecificFeedInfo")}
+                        header={t("IssuedAssets:chooseSpecificFeed")}
+                        type="header"
+                      />
+                      <div className="w-full rounded border border-black pt-1 max-h-[150px] overflow-auto">
+                        <List
+                          rowComponent={PriceFeedRow}
+                          rowCount={relevantBitassetData.feeds.length}
+                          rowHeight={60}
+                          rowProps={{}}
+                        />
+                      </div>
+                    </>
+                  ) : null}
+                  <div>
+                    <HoverInfo
+                      content={t("IssuedAssets:currentSettlementPriceInfo")}
+                      header={t("IssuedAssets:currentSettlementPrice")}
+                      type="header"
+                    />
+                    <Input
+                      value={`${
+                        parseFloat(currentFeedSettlementPrice) > 0
+                          ? currentFeedSettlementPrice
+                          : "??? ⚠️"
+                      } ${collateralAsset.symbol}/${issuedAsset.symbol}`}
+                      readOnly={true}
+                      className="mt-2"
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <HoverInfo
+                        content={t("IssuedAssets:quoteInfo")}
+                        header={t("IssuedAssets:quote")}
+                        type="header"
+                      />
+                      <Input
+                        value={`${humanReadableFloat(
+                          parseInt(globalSettleObject.quote.amount),
+                          collateralAsset.precision
+                        )} ${collateralAsset.symbol} (${collateralAsset.id})`}
+                        readOnly={true}
+                        className="mt-2"
+                      />
+                    </div>
+                    <div>
+                      <HoverInfo
+                        content={t("IssuedAssets:baseInfo")}
+                        header={t("IssuedAssets:base")}
+                        type="header"
+                      />
+                      <Input
+                        value={`${humanReadableFloat(
+                          parseInt(parseInt(globalSettleObject.base.amount)),
+                          issuedAsset.precision
+                        )} ${issuedAsset.symbol} (${issuedAsset.id})`}
+                        readOnly={true}
+                        className="mt-2"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <Button
+                className="w-1/2 mt-2"
+                onClick={() => {
+                  setGlobalSettleDeeplinkDialog(true);
+                }}
+              >
+                {t("IssuedAssets:globallySettle")}
+              </Button>
+              {globalSettleDeeplinkDialog ? (
+                <DeepLinkDialog
+                  operationNames={["asset_global_settle"]}
+                  username={usr.username}
+                  usrChain={usr.chain}
+                  userID={usr.id}
+                  dismissCallback={setGlobalSettleDeeplinkDialog}
+                  key={`globallySettlingAsset_${issuedAsset.id}`}
+                  headerText={t("IssuedAssets:globalSettlementHeader", {
+                    asset: issuedAsset.symbol,
+                    mode: globalSettlementMode,
+                  })}
+                  trxJSON={[
+                    {
+                      issuer: usr.id,
+                      asset_to_settle: issuedAsset.id,
+                      settle_price: globalSettleObject,
+                      extensions: {},
+                    },
+                  ]}
+                />
+              ) : null}
+            </DialogContent>
+          </Dialog>
+        ) : null}
+      </>
+    );
+
+    const smartcoinCheck =
+      activeTab === "smartcoins" &&
+      relevantBitassetData &&
+      ((relevantBitassetData.current_feed.settlement_price.base.amount === 0 &&
+        relevantBitassetData.current_feed.settlement_price.quote.amount ===
+          0) ||
+        !relevantBitassetData.feeds.length ||
+        (parseInt(relevantBitassetData.settlement_price.base.amount) > 0 &&
+          parseInt(relevantBitassetData.settlement_price.quote.amount)) ||
+        parseInt(relevantBitassetData.settlement_fund) > 0) ? (
+        <HoverInfo
+          content={t("IssuedAssets:inactiveSmartcoin")}
+          header={<ExclamationTriangleIcon className="ml-3 mt-1 w-6 h-6" />}
+          type="header"
+        />
+      ) : null;
+
     return (
       <div style={{ ...style }} key={`acard-${issuedAsset.id}`}>
-        <Card className="ml-2 mr-2">
+        <Card
+          className="lg:hidden ml-2 mr-2 cursor-pointer lg:cursor-default"
+          onClick={() => {
+            if (typeof window !== "undefined" && window.innerWidth < 1024) {
+              // Prevent accidental re-open when closing via backdrop (event bubbling)
+              if (smActionsOpen) return;
+              setSmActionsOpen(true);
+            }
+          }}
+        >
           <CardHeader className="pb-1">
-            <CardTitle className="grid grid-cols-2 gap-5">
-              <span className="pb-5 grid grid-cols-2">
-                {activeTab === "smartcoins" &&
-                relevantBitassetData &&
-                ((relevantBitassetData.current_feed.settlement_price.base
-                  .amount === 0 &&
-                  relevantBitassetData.current_feed.settlement_price.quote
-                    .amount === 0) ||
-                  !relevantBitassetData.feeds.length ||
-                  (parseInt(relevantBitassetData.settlement_price.base.amount) >
-                    0 &&
-                    parseInt(
-                      relevantBitassetData.settlement_price.quote.amount
-                    )) ||
-                  parseInt(relevantBitassetData.settlement_fund) > 0) ? (
-                  <HoverInfo
-                    content={t("IssuedAssets:inactiveSmartcoin")}
-                    header={
-                      <ExclamationTriangleIcon className="ml-3 mt-1 w-6 h-6" />
-                    }
-                    type="header"
-                  />
-                ) : null}
-                <div>
-                  <ExternalLink
-                    classnamecontents="hover:text-purple-500"
-                    type="text"
-                    text={issuedAsset.symbol}
-                    hyperlink={`https://explorer.bitshares.ws/#/assets/${
-                      issuedAsset.symbol
-                    }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
-                  />
-                  <br />
-                  {" ("}
-                  <ExternalLink
-                    classnamecontents="hover:text-purple-500"
-                    type="text"
-                    text={issuedAsset.id}
-                    hyperlink={`https://explorer.bitshares.ws/#/assets/${
-                      issuedAsset.id
-                    }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
-                  />
-                  {")"}
-                </div>
-              </span>
-              <span className="mb-3 text-right grid grid-cols-3 gap-3">
-                <DropdownMenu>
-                  <DropdownMenuTrigger>
-                    <Button
-                      className="h-8 hover:shadow-inner"
-                      variant="outline"
-                    >
-                      JSON
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    <DropdownMenuItem
-                      className="hover:shadow-inner"
-                      onClick={() => {
-                        setJSON(issuedAsset);
-                        setViewJSON(true);
-                      }}
-                    >
-                      {t("IssuedAssets:issuedAssetData")}
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      className="hover:shadow-inner"
-                      onClick={() => {
-                        setJSON(relevantDynamicData);
-                        setViewJSON(true);
-                      }}
-                    >
-                      {t("IssuedAssets:issuedDynamicData")}
-                    </DropdownMenuItem>
-                    {parsedDescription &&
-                    parsedDescription.hasOwnProperty("nft_object") ? (
-                      <DropdownMenuItem
-                        className="hover:shadow-inner"
-                        onClick={() => {
-                          setJSON(parsedDescription.nft_object);
-                          setViewJSON(true);
-                        }}
-                      >
-                        {t("IssuedAssets:issuedNFTObject")}
-                      </DropdownMenuItem>
-                    ) : null}
-                    {relevantBitassetData ? (
-                      <DropdownMenuItem
-                        className="hover:shadow-inner"
-                        onClick={() => {
-                          setJSON(relevantBitassetData);
-                          setViewJSON(true);
-                        }}
-                      >
-                        {t("IssuedAssets:issuedSmartcoinData")}
-                      </DropdownMenuItem>
-                    ) : null}
-                  </DropdownMenuContent>
-                </DropdownMenu>
-
-                {viewJSON && json ? (
-                  <Dialog
-                    open={viewJSON}
-                    onOpenChange={(open) => {
-                      setViewJSON(open);
-                    }}
-                  >
-                    <DialogContent className="sm:max-w-[750px] bg-white">
-                      <DialogHeader>
-                        <DialogTitle>
-                          {t("LiveBlocks:dialogContent.json")}
-                        </DialogTitle>
-                        <DialogDescription>
-                          {t("LiveBlocks:dialogContent.jsonDescription")}
-                        </DialogDescription>
-                      </DialogHeader>
-                      <Textarea
-                        value={JSON.stringify(json, null, 2)}
-                        readOnly={true}
-                        rows={15}
-                      />
-                      <Button
-                        className="w-1/4 mt-2"
-                        onClick={() => {
-                          navigator.clipboard.writeText(
-                            json.stringify(json, null, 2)
-                          );
-                        }}
-                      >
-                        {t("LiveBlocks:dialogContent.copy")}
-                      </Button>
-                    </DialogContent>
-                  </Dialog>
-                ) : null}
-
-                <DropdownMenu>
-                  <DropdownMenuTrigger>
-                    <Button
-                      className="h-8 hover:shadow-inner"
-                      variant="outline"
-                    >
-                      {t("IssuedAssets:userActions")}
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    <a
-                      href={`/dex/index.html?market=${issuedAsset.symbol}_${
-                        parsedDescription && parsedDescription.market
-                          ? parsedDescription.market
-                          : "BTS"
-                      }`}
-                    >
-                      <DropdownMenuItem className="hover:shadow-inner">
-                        {t("IssuedAssets:proceedToTrade")}
-                      </DropdownMenuItem>
-                    </a>
-
-                    <a
-                      href={`/borrow/index.html?tab=searchOffers&searchTab=borrow&searchText=${issuedAsset.symbol}`}
-                    >
-                      <DropdownMenuItem className="hover:shadow-inner">
-                        {t("IssuedAssets:creditBorrow")}
-                      </DropdownMenuItem>
-                    </a>
-
-                    <a href={`/lend/index.html?asset=${issuedAsset.symbol}`}>
-                      <DropdownMenuItem>
-                        {t("IssuedAssets:creditLend")}
-                      </DropdownMenuItem>
-                    </a>
-
-                    {activeTab === "smartcoins" ? (
-                      <a href={`/smartcoin/index.html?id=${issuedAsset.id}`}>
-                        <DropdownMenuItem className="hover:shadow-inner">
-                          {t("IssuedAssets:proceedToBorrow")}
-                        </DropdownMenuItem>
-                      </a>
-                    ) : null}
-
-                    {activeTab === "smartcoins" &&
-                    relevantBitassetData &&
-                    ((relevantBitassetData.current_feed.settlement_price.base
-                      .amount === 0 &&
-                      relevantBitassetData.current_feed.settlement_price.quote
-                        .amount === 0) ||
-                      !relevantBitassetData.feeds.length ||
-                      (parseInt(
-                        relevantBitassetData.settlement_price.base.amount
-                      ) > 0 &&
-                        parseInt(
-                          relevantBitassetData.settlement_price.quote.amount
-                        )) ||
-                      parseInt(relevantBitassetData.settlement_fund) > 0) ? (
-                      <a href={`/settlement/index.html?id=${issuedAsset.id}`}>
-                        <DropdownMenuItem className="hover:shadow-inner">
-                          {t("IssuedAssets:collateralBid")}
-                        </DropdownMenuItem>
-                      </a>
-                    ) : null}
-
-                    {activeTab === "prediction" ? (
-                      <a href={`/predictions/index.html?id=${issuedAsset.id}`}>
-                        <DropdownMenuItem className="hover:shadow-inner">
-                          {t("IssuedAssets:pmaBet")}
-                        </DropdownMenuItem>
-                      </a>
-                    ) : null}
-                  </DropdownMenuContent>
-                </DropdownMenu>
-
-                {!["prediction"].includes(activeTab) ? (
-                  <span className="mt-2">
-                    <AssetIssuerActions
-                      asset={issuedAsset}
-                      chain={_chain}
-                      currentUser={usr}
-                      node={currentNode}
-                      dynamicAssetData={relevantDynamicData}
-                      bitassetData={relevantBitassetData}
-                      buttonVariant="outline"
-                      buttonSize="sm"
-                      className="h-8 hover:shadow-inner"
+            <CardTitle>
+              <div className="lg:grid lg:grid-cols-2 lg:gap-5">
+                <div className="pb-2">
+                  {smartcoinCheck}
+                  {/* Inline symbol + ID on md and below; stacked on lg */}
+                  <div className="flex items-center gap-2 text-sm">
+                    <ExternalLink
+                      classnamecontents="hover:text-purple-500"
+                      type="text"
+                      text={issuedAsset.symbol}
+                      hyperlink={`https://explorer.bitshares.ws/#/assets/${
+                        issuedAsset.symbol
+                      }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
                     />
-                  </span>
-                ) : null}
-
-                {globalSettleOpen ? (
-                  <Dialog
-                    open={globalSettleOpen}
-                    onOpenChange={(open) => {
-                      setGlobalSettleOpen(open);
-                    }}
-                  >
-                    <DialogContent className="sm:max-w-[550px] bg-white">
-                      <DialogHeader>
-                        <DialogTitle>
-                          {t("IssuedAssets:updateIssuer")}: {issuedAsset.symbol}{" "}
-                          ({issuedAsset.id})
-                        </DialogTitle>
-                        <DialogDescription>
-                          {t("IssuedAssets:updateIssuerInfo")}
-                        </DialogDescription>
-                      </DialogHeader>
-
-                      <div className="grid grid-cols-1 gap-3">
-                        <div className="grid grid-cols-3 gap-2">
-                          <Button
-                            onClick={() => {
-                              setGlobalSettlementMode("median");
-                            }}
-                            variant={
-                              globalSettlementMode === "median" ? "" : "outline"
-                            }
-                          >
-                            {t("IssuedAssets:medianFeedPrice")}
-                          </Button>
-                          <Button
-                            onClick={() => {
-                              setGlobalSettlementMode("current");
-                            }}
-                            variant={
-                              globalSettlementMode === "current"
-                                ? ""
-                                : "outline"
-                            }
-                          >
-                            {t("IssuedAssets:currentFeedPrice")}
-                          </Button>
-                          {relevantBitassetData &&
-                          relevantBitassetData.feeds &&
-                          relevantBitassetData.feeds.length ? (
-                            <Button
-                              onClick={() => {
-                                setGlobalSettlementMode("price_feed");
-                              }}
-                              variant={
-                                globalSettlementMode === "price_feed"
-                                  ? ""
-                                  : "outline"
-                              }
-                            >
-                              {t("IssuedAssets:specificPriceFeed")}
-                            </Button>
-                          ) : null}
-                        </div>
-
-                        <div className="grid grid-cols-1 gap-2">
-                          {relevantBitassetData &&
-                          relevantBitassetData.feeds &&
-                          relevantBitassetData.feeds.length &&
-                          globalSettlementMode === "price_feed" ? (
-                            <>
-                              <HoverInfo
-                                content={t(
-                                  "IssuedAssets:chooseSpecificFeedInfo"
-                                )}
-                                header={t("IssuedAssets:chooseSpecificFeed")}
-                                type="header"
-                              />
-                              <div className="w-full rounded border border-black pt-1 max-h-[150px] overflow-auto">
-                                <List
-                                  rowComponent={PriceFeedRow}
-                                  rowCount={relevantBitassetData.feeds.length}
-                                  rowHeight={60}
-                                  rowProps={{}}
-                                />
-                              </div>
-                            </>
-                          ) : null}
-                          <div>
-                            <HoverInfo
-                              content={t(
-                                "IssuedAssets:currentSettlementPriceInfo"
-                              )}
-                              header={t("IssuedAssets:currentSettlementPrice")}
-                              type="header"
-                            />
-                            <Input
-                              value={`${
-                                parseFloat(currentFeedSettlementPrice) > 0
-                                  ? currentFeedSettlementPrice
-                                  : "??? ⚠️"
-                              } ${collateralAsset.symbol}/${
-                                issuedAsset.symbol
-                              }`}
-                              readOnly={true}
-                              className="mt-2"
-                            />
-                          </div>
-                          <div className="grid grid-cols-2 gap-2">
-                            <div>
-                              <HoverInfo
-                                content={t("IssuedAssets:quoteInfo")}
-                                header={t("IssuedAssets:quote")}
-                                type="header"
-                              />
-                              <Input
-                                value={`${humanReadableFloat(
-                                  parseInt(globalSettleObject.quote.amount),
-                                  collateralAsset.precision
-                                )} ${collateralAsset.symbol} (${
-                                  collateralAsset.id
-                                })`}
-                                readOnly={true}
-                                className="mt-2"
-                              />
-                            </div>
-                            <div>
-                              <HoverInfo
-                                content={t("IssuedAssets:baseInfo")}
-                                header={t("IssuedAssets:base")}
-                                type="header"
-                              />
-                              <Input
-                                value={`${humanReadableFloat(
-                                  parseInt(
-                                    parseInt(globalSettleObject.base.amount)
-                                  ),
-                                  issuedAsset.precision
-                                )} ${issuedAsset.symbol} (${issuedAsset.id})`}
-                                readOnly={true}
-                                className="mt-2"
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <Button
-                        className="w-1/2 mt-2"
-                        onClick={() => {
-                          setGlobalSettleDeeplinkDialog(true);
-                        }}
-                      >
-                        {t("IssuedAssets:globallySettle")}
-                      </Button>
-                      {globalSettleDeeplinkDialog ? (
-                        <DeepLinkDialog
-                          operationNames={["asset_global_settle"]}
-                          username={usr.username}
-                          usrChain={usr.chain}
-                          userID={usr.id}
-                          dismissCallback={setGlobalSettleDeeplinkDialog}
-                          key={`globallySettlingAsset_${issuedAsset.id}`}
-                          headerText={t("IssuedAssets:globalSettlementHeader", {
-                            asset: issuedAsset.symbol,
-                            mode: globalSettlementMode,
-                          })}
-                          trxJSON={[
-                            {
-                              issuer: usr.id,
-                              asset_to_settle: issuedAsset.id,
-                              settle_price: globalSettleObject,
-                              extensions: {},
-                            },
-                          ]}
-                        />
-                      ) : null}
-                    </DialogContent>
-                  </Dialog>
-                ) : null}
-              </span>
+                    <span>
+                      (
+                      <ExternalLink
+                        classnamecontents="hover:text-purple-500"
+                        type="text"
+                        text={issuedAsset.id}
+                        hyperlink={`https://explorer.bitshares.ws/#/assets/${
+                          issuedAsset.id
+                        }${
+                          usr.chain === "bitshares" ? "" : "?network=testnet"
+                        }`}
+                      />
+                      )
+                    </span>
+                  </div>
+                  <div className="hidden lg:block">
+                    <ExternalLink
+                      classnamecontents="hover:text-purple-500"
+                      type="text"
+                      text={issuedAsset.symbol}
+                      hyperlink={`https://explorer.bitshares.ws/#/assets/${
+                        issuedAsset.symbol
+                      }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
+                    />
+                    <br />
+                    {" ("}
+                    <ExternalLink
+                      classnamecontents="hover:text-purple-500"
+                      type="text"
+                      text={issuedAsset.id}
+                      hyperlink={`https://explorer.bitshares.ws/#/assets/${
+                        issuedAsset.id
+                      }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
+                    />
+                    {")"}
+                  </div>
+                </div>
+                {/* MD+ actions on the right */}
+                <div className="hidden lg:grid lg:grid-cols-3 lg:gap-3 text-right">
+                  {issueThingsRow}
+                </div>
+              </div>
             </CardTitle>
           </CardHeader>
         </Card>
+        <Dialog open={smActionsOpen} onOpenChange={setSmActionsOpen}>
+          <DialogTrigger asChild>
+            {/* whole card for showing to sm/md but not lg+ */}
+          </DialogTrigger>
+          <DialogContent className="bg-white sm:max-w-[560px] lg:hidden">
+            <DialogHeader>
+              <DialogTitle>
+                {issuedAsset.symbol} ({issuedAsset.id})
+              </DialogTitle>
+              <DialogDescription>
+                {t("IssuedAssets:description")}
+              </DialogDescription>
+            </DialogHeader>
+            <div className="hidden lg:grid lg:grid-cols-3 lg:gap-3 text-right">
+              {issueThingsRow}
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     );
   };
@@ -945,74 +974,54 @@ export default function IssuedAssets(properties) {
               <CardDescription>{t("IssuedAssets:description")}</CardDescription>
             </CardHeader>
             <CardContent>
-              <Tabs
-                key={`Tabs_${activeTab ?? ""}`}
-                defaultValue={activeTab ?? "uia"}
-                className="w-full"
-              >
-                <TabsList className="grid w-full grid-cols-4 gap-2">
-                  {activeTab === "uia" ? (
-                    <TabsTrigger value="uia" style={activeTabStyle}>
-                      {t("IssuedAssets:uiaButton")}
-                    </TabsTrigger>
-                  ) : (
-                    <TabsTrigger
-                      value="uia"
-                      onClick={() => {
-                        setActiveTab("uia");
-                        window.history.replaceState({}, "", `?tab=uia`);
-                      }}
-                    >
-                      {t("IssuedAssets:uiaButton")}
-                    </TabsTrigger>
-                  )}
-                  {activeTab === "smartcoins" ? (
-                    <TabsTrigger value="smartcoins" style={activeTabStyle}>
-                      {t("IssuedAssets:smartcoinsButton")}
-                    </TabsTrigger>
-                  ) : (
-                    <TabsTrigger
-                      value="smartcoins"
-                      onClick={() => {
-                        setActiveTab("smartcoins");
-                        window.history.replaceState({}, "", `?tab=smartcoins`);
-                      }}
-                    >
-                      {t("IssuedAssets:smartcoinsButton")}
-                    </TabsTrigger>
-                  )}
-                  {activeTab === "prediction" ? (
-                    <TabsTrigger value="prediction" style={activeTabStyle}>
-                      {t("IssuedAssets:predictionButton")}
-                    </TabsTrigger>
-                  ) : (
-                    <TabsTrigger
-                      value="prediction"
-                      onClick={() => {
-                        setActiveTab("prediction");
-                        window.history.replaceState({}, "", `?tab=prediction`);
-                      }}
-                    >
-                      {t("IssuedAssets:predictionButton")}
-                    </TabsTrigger>
-                  )}
-                  {activeTab === "nft" ? (
-                    <TabsTrigger value="nft" style={activeTabStyle}>
-                      {t("IssuedAssets:nftButton")}
-                    </TabsTrigger>
-                  ) : (
-                    <TabsTrigger
-                      value="nft"
-                      onClick={() => {
-                        setActiveTab("nft");
-                        window.history.replaceState({}, "", `?tab=nft`);
-                      }}
-                    >
-                      {t("IssuedAssets:nftButton")}
-                    </TabsTrigger>
-                  )}
-                </TabsList>
-                <TabsContent value="uia">
+              {/* Button group replacing tab wrappers; separated from content */}
+              <div className="w-full mb-3">
+                <div className="grid grid-cols-1 lg:grid-cols-4 gap-2">
+                  <Button
+                    variant="outline"
+                    style={activeTab === "uia" ? activeTabStyle : {}}
+                    onClick={() => {
+                      setActiveTab("uia");
+                      window.history.replaceState({}, "", `?tab=uia`);
+                    }}
+                  >
+                    {t("IssuedAssets:uiaButton")}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    style={activeTab === "smartcoins" ? activeTabStyle : {}}
+                    onClick={() => {
+                      setActiveTab("smartcoins");
+                      window.history.replaceState({}, "", `?tab=smartcoins`);
+                    }}
+                  >
+                    {t("IssuedAssets:smartcoinsButton")}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    style={activeTab === "prediction" ? activeTabStyle : {}}
+                    onClick={() => {
+                      setActiveTab("prediction");
+                      window.history.replaceState({}, "", `?tab=prediction`);
+                    }}
+                  >
+                    {t("IssuedAssets:predictionButton")}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    style={activeTab === "nft" ? activeTabStyle : {}}
+                    onClick={() => {
+                      setActiveTab("nft");
+                      window.history.replaceState({}, "", `?tab=nft`);
+                    }}
+                  >
+                    {t("IssuedAssets:nftButton")}
+                  </Button>
+                </div>
+              </div>
+
+              {activeTab === "uia" && (
+                <div className="mt-2">
                   {relevantAssets.length > 0 ? (
                     <h5 className="mb-2 text-center">
                       {t("IssuedAssets:listingUIA", {
@@ -1040,17 +1049,32 @@ export default function IssuedAssets(properties) {
                       </EmptyContent>
                     </Empty>
                   ) : (
-                    <div className="w-full max-h-[500px] overflow-auto">
-                      <List
-                        rowComponent={AssetRow}
-                        rowCount={relevantAssets.length}
-                        rowHeight={90}
-                        rowProps={{}}
-                      />
-                    </div>
+                    <>
+                      {/* SM-only taller rows to accommodate stacked actions */}
+                      <div className="w-full max-h-[500px] overflow-auto block md:hidden">
+                        <List
+                          rowComponent={AssetRow}
+                          rowCount={relevantAssets.length}
+                          rowHeight={90}
+                          rowProps={{}}
+                        />
+                      </div>
+                      {/* MD+ original height */}
+                      <div className="w-full max-h-[500px] overflow-auto hidden md:block">
+                        <List
+                          rowComponent={AssetRow}
+                          rowCount={relevantAssets.length}
+                          rowHeight={90}
+                          rowProps={{}}
+                        />
+                      </div>
+                    </>
                   )}
-                </TabsContent>
-                <TabsContent value="smartcoins">
+                </div>
+              )}
+
+              {activeTab === "smartcoins" && (
+                <div className="mt-2">
                   {relevantAssets.length > 0 ? (
                     <h5 className="mb-2 text-center">
                       {t("IssuedAssets:listingSmartcoins", {
@@ -1080,17 +1104,30 @@ export default function IssuedAssets(properties) {
                       </EmptyContent>
                     </Empty>
                   ) : (
-                    <div className="w-full max-h-[500px] overflow-auto">
-                      <List
-                        rowComponent={AssetRow}
-                        rowCount={relevantAssets.length}
-                        rowHeight={90}
-                        rowProps={{}}
-                      />
-                    </div>
+                    <>
+                      <div className="w-full max-h-[500px] overflow-auto block md:hidden">
+                        <List
+                          rowComponent={AssetRow}
+                          rowCount={relevantAssets.length}
+                          rowHeight={90}
+                          rowProps={{}}
+                        />
+                      </div>
+                      <div className="w-full max-h-[500px] overflow-auto hidden md:block">
+                        <List
+                          rowComponent={AssetRow}
+                          rowCount={relevantAssets.length}
+                          rowHeight={90}
+                          rowProps={{}}
+                        />
+                      </div>
+                    </>
                   )}
-                </TabsContent>
-                <TabsContent value="prediction">
+                </div>
+              )}
+
+              {activeTab === "prediction" && (
+                <div className="mt-2">
                   {relevantAssets.length > 0 ? (
                     <h5 className="mb-2 text-center">
                       {t("IssuedAssets:listingPredictionMarkets", {
@@ -1120,17 +1157,30 @@ export default function IssuedAssets(properties) {
                       </EmptyContent>
                     </Empty>
                   ) : (
-                    <div className="w-full max-h-[500px] overflow-auto">
-                      <List
-                        rowComponent={AssetRow}
-                        rowCount={relevantAssets.length}
-                        rowHeight={90}
-                        rowProps={{}}
-                      />
-                    </div>
+                    <>
+                      <div className="w-full max-h-[500px] overflow-auto block md:hidden">
+                        <List
+                          rowComponent={AssetRow}
+                          rowCount={relevantAssets.length}
+                          rowHeight={90}
+                          rowProps={{}}
+                        />
+                      </div>
+                      <div className="w-full max-h-[500px] overflow-auto hidden md:block">
+                        <List
+                          rowComponent={AssetRow}
+                          rowCount={relevantAssets.length}
+                          rowHeight={90}
+                          rowProps={{}}
+                        />
+                      </div>
+                    </>
                   )}
-                </TabsContent>
-                <TabsContent value="nft">
+                </div>
+              )}
+
+              {activeTab === "nft" && (
+                <div className="mt-2">
                   {relevantAssets.length > 0 ? (
                     <h5 className="mb-2 text-center">
                       {t("IssuedAssets:listingNFTs", {
@@ -1151,17 +1201,27 @@ export default function IssuedAssets(properties) {
                       </EmptyHeader>
                     </Empty>
                   ) : (
-                    <div className="w-full max-h-[500px] overflow-auto">
-                      <List
-                        rowComponent={AssetRow}
-                        rowCount={relevantAssets.length}
-                        rowHeight={90}
-                        rowProps={{}}
-                      />
-                    </div>
+                    <>
+                      <div className="w-full max-h-[500px] overflow-auto block md:hidden">
+                        <List
+                          rowComponent={AssetRow}
+                          rowCount={relevantAssets.length}
+                          rowHeight={90}
+                          rowProps={{}}
+                        />
+                      </div>
+                      <div className="w-full max-h-[500px] overflow-auto hidden md:block">
+                        <List
+                          rowComponent={AssetRow}
+                          rowCount={relevantAssets.length}
+                          rowHeight={90}
+                          rowProps={{}}
+                        />
+                      </div>
+                    </>
                   )}
-                </TabsContent>
-              </Tabs>
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>

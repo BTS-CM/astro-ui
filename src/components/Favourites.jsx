@@ -176,7 +176,80 @@ export default function Favourites(properties) {
     console.log({ item, assetDetails });
     return (
       <div style={{ ...style, paddingRight: "10px" }}>
-        <Card className="mb-3 bg-slate-50 border border-slate-200 hover:bg-slate-100 transition-colors rounded-xl">
+        {/* SM-only card: actions moved below text */}
+        <Card className="mb-3 bg-slate-50 border border-slate-200 hover:bg-slate-100 transition-colors rounded-xl block md:hidden">
+          <CardHeader className="px-4 py-4">
+            <div className="space-y-1">
+              <CardTitle className="text-base text-slate-900">{`${item.symbol} (${item.id})`}</CardTitle>
+              <CardDescription className="text-xs text-muted-foreground">
+                {t("Favourites:issuer", { issuer: item.issuer })}
+              </CardDescription>
+            </div>
+            <div className="mt-3 flex items-center gap-2 flex-wrap">
+              {/* User actions like IssuedAssets */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm">
+                    {t("IssuedAssets:userActions")}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <a
+                    href={`/dex/index.html?market=${item.symbol}_$${
+                      item.symbol === "BTS" ? "CNY" : "BTS"
+                    }`}
+                  >
+                    <DropdownMenuItem>
+                      {t("IssuedAssets:proceedToTrade")}
+                    </DropdownMenuItem>
+                  </a>
+                  <a
+                    href={`/borrow/index.html?tab=searchOffers&searchTab=borrow&searchText=${item.symbol}`}
+                  >
+                    <DropdownMenuItem>
+                      {t("IssuedAssets:creditBorrow")}
+                    </DropdownMenuItem>
+                  </a>
+                  <a href={`/lend/index.html?asset=${item.symbol}`}>
+                    <DropdownMenuItem>
+                      {t("IssuedAssets:creditLend")}
+                    </DropdownMenuItem>
+                  </a>
+                  {assetDetails.bitasset_data_id ? (
+                    <a href={`/smartcoin/index.html?id=${item.id}`}>
+                      <DropdownMenuItem>
+                        {t("IssuedAssets:proceedToBorrow")}
+                      </DropdownMenuItem>
+                    </a>
+                  ) : null}
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              {/* Issuer actions link to create/manage pages */}
+              {showIssuerActions && assetDetails ? (
+                <AssetIssuerActions
+                  asset={assetDetails}
+                  chain={chain}
+                  currentUser={currentUser}
+                  node={currentNode}
+                  buttonVariant="outline"
+                  buttonSize="sm"
+                />
+              ) : null}
+
+              <Button
+                variant="default"
+                size="sm"
+                onClick={() => removeFavouriteAsset(chain, item)}
+              >
+                ❌
+              </Button>
+            </div>
+          </CardHeader>
+        </Card>
+
+        {/* MD+ card: original layout */}
+        <Card className="mb-3 bg-slate-50 border border-slate-200 hover:bg-slate-100 transition-colors rounded-xl hidden md:block">
           <CardHeader className="px-4 py-4 flex flex-row items-center justify-between">
             <div className="space-y-1">
               <CardTitle className="text-base text-slate-900">{`${item.symbol} (${item.id})`}</CardTitle>
@@ -195,7 +268,7 @@ export default function Favourites(properties) {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
                     <a
-                      href={`/dex/index.html?market=${item.symbol}_${
+                      href={`/dex/index.html?market=${item.symbol}_$${
                         item.symbol === "BTS" ? "CNY" : "BTS"
                       }`}
                     >
@@ -238,11 +311,11 @@ export default function Favourites(properties) {
                 ) : null}
 
                 <Button
-                  variant="destructive"
+                  variant="default"
                   size="sm"
                   onClick={() => removeFavouriteAsset(chain, item)}
                 >
-                  {t("Favourites:remove")}
+                  ❌
                 </Button>
               </div>
             </div>
@@ -277,14 +350,26 @@ export default function Favourites(properties) {
         </CardHeader>
         <CardContent className="p-4">
           {chainFavourites && chainFavourites.length ? (
-            <div className="w-full max-h-[420px] overflow-auto">
-              <List
-                rowComponent={Row}
-                rowCount={chainFavourites.length}
-                rowHeight={96}
-                rowProps={{}}
-              />
-            </div>
+            <>
+              {/* SM-only list with taller row height for vertically stacked actions */}
+              <div className="w-full max-h-[420px] overflow-auto block md:hidden">
+                <List
+                  rowComponent={Row}
+                  rowCount={chainFavourites.length}
+                  rowHeight={128}
+                  rowProps={{}}
+                />
+              </div>
+              {/* MD+ list uses original row height and layout */}
+              <div className="w-full max-h-[420px] overflow-auto hidden md:block">
+                <List
+                  rowComponent={Row}
+                  rowCount={chainFavourites.length}
+                  rowHeight={96}
+                  rowProps={{}}
+                />
+              </div>
+            </>
           ) : (
             <Empty className="mt-2">
               <EmptyHeader>
@@ -405,81 +490,161 @@ export default function Favourites(properties) {
         </CardHeader>
         <CardContent className="p-4">
           {chainPairs && chainPairs.length ? (
-            <div className="w-full max-h-[420px] overflow-auto">
-              <List
-                rowComponent={({ index, style }) => {
-                  const pair = chainPairs[index];
-                  if (!pair) return null;
-                  return (
-                    <div style={{ ...style, paddingRight: "10px" }}>
-                      <Card className="mb-3 bg-slate-50 border border-slate-200 hover:bg-slate-100 transition-colors rounded-xl">
-                        <CardHeader className="px-4 py-4 flex flex-row items-center justify-between">
-                          <div className="space-y-1">
-                            <CardTitle className="text-base text-slate-900">
-                              {pair}
-                            </CardTitle>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <a href={`/dex/index.html?market=${pair}`}>
-                              <Button variant="outline" size="sm">
-                                {t("Favourites:trade")}
-                              </Button>
-                            </a>
-                            <Dialog>
-                              <DialogTrigger asChild>
+            <>
+              {/* SM-only list with actions stacked under the text */}
+              <div className="w-full max-h-[420px] overflow-auto block md:hidden">
+                <List
+                  rowComponent={({ index, style }) => {
+                    const pair = chainPairs[index];
+                    if (!pair) return null;
+                    return (
+                      <div style={{ ...style, paddingRight: "10px" }}>
+                        <Card className="mb-3 bg-slate-50 border border-slate-200 hover:bg-slate-100 transition-colors rounded-xl">
+                          <CardHeader className="px-4 py-4">
+                            <div className="space-y-1">
+                              <CardTitle className="text-base text-slate-900">
+                                {pair}
+                              </CardTitle>
+                            </div>
+                            <div className="mt-3 flex items-center gap-2 flex-wrap">
+                              <a href={`/dex/index.html?market=${pair}`}>
                                 <Button variant="outline" size="sm">
-                                  {t("PageHeader:pools")}
+                                  {t("Favourites:trade")}
                                 </Button>
-                              </DialogTrigger>
-                              <DialogContent className="sm:max-w-[820px] bg-white">
-                                {(() => {
-                                  const [assetA, assetB] = pair.split("_");
-                                  const assetAData = assets.find(
-                                    (a) => a.symbol === assetA
-                                  ) || {
-                                    id: assetA,
-                                    symbol: assetA,
-                                  };
-                                  const assetBData = assets.find(
-                                    (a) => a.symbol === assetB
-                                  ) || {
-                                    id: assetB,
-                                    symbol: assetB,
-                                  };
-                                  return (
-                                    <PoolDialogs
-                                      assetA={assetA}
-                                      assetB={assetB}
-                                      assetAData={assetAData}
-                                      assetBData={assetBData}
-                                      chain={chain}
-                                      _assetsBTS={_assetsBTS}
-                                      _assetsTEST={_assetsTEST}
-                                      _poolsBTS={_poolsBTS}
-                                      _poolsTEST={_poolsTEST}
-                                    />
-                                  );
-                                })()}
-                              </DialogContent>
-                            </Dialog>
-                            <Button
-                              variant="destructive"
-                              size="sm"
-                              onClick={() => removeFavouritePair(chain, pair)}
-                            >
-                              {t("Favourites:remove")}
-                            </Button>
-                          </div>
-                        </CardHeader>
-                      </Card>
-                    </div>
-                  );
-                }}
-                rowCount={chainPairs.length}
-                rowHeight={88}
-                rowProps={{}}
-              />
-            </div>
+                              </a>
+                              <Dialog>
+                                <DialogTrigger asChild>
+                                  <Button variant="outline" size="sm">
+                                    {t("PageHeader:pools")}
+                                  </Button>
+                                </DialogTrigger>
+                                <DialogContent className="sm:max-w-[820px] bg-white">
+                                  {(() => {
+                                    const [assetA, assetB] = pair.split("_");
+                                    const assetAData = assets.find(
+                                      (a) => a.symbol === assetA
+                                    ) || {
+                                      id: assetA,
+                                      symbol: assetA,
+                                    };
+                                    const assetBData = assets.find(
+                                      (a) => a.symbol === assetB
+                                    ) || {
+                                      id: assetB,
+                                      symbol: assetB,
+                                    };
+                                    return (
+                                      <PoolDialogs
+                                        assetA={assetA}
+                                        assetB={assetB}
+                                        assetAData={assetAData}
+                                        assetBData={assetBData}
+                                        chain={chain}
+                                        _assetsBTS={_assetsBTS}
+                                        _assetsTEST={_assetsTEST}
+                                        _poolsBTS={_poolsBTS}
+                                        _poolsTEST={_poolsTEST}
+                                      />
+                                    );
+                                  })()}
+                                </DialogContent>
+                              </Dialog>
+                              <Button
+                                variant="default"
+                                size="sm"
+                                onClick={() => removeFavouritePair(chain, pair)}
+                              >
+                                ❌
+                              </Button>
+                            </div>
+                          </CardHeader>
+                        </Card>
+                      </div>
+                    );
+                  }}
+                  rowCount={chainPairs.length}
+                  rowHeight={120}
+                  rowProps={{}}
+                />
+              </div>
+
+              {/* MD+ list unchanged */}
+              <div className="w-full max-h-[420px] overflow-auto hidden md:block">
+                <List
+                  rowComponent={({ index, style }) => {
+                    const pair = chainPairs[index];
+                    if (!pair) return null;
+                    return (
+                      <div style={{ ...style, paddingRight: "10px" }}>
+                        <Card className="mb-3 bg-slate-50 border border-slate-200 hover:bg-slate-100 transition-colors rounded-xl">
+                          <CardHeader className="px-4 py-4 flex flex-row items-center justify-between">
+                            <div className="space-y-1">
+                              <CardTitle className="text-base text-slate-900">
+                                {pair}
+                              </CardTitle>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <a href={`/dex/index.html?market=${pair}`}>
+                                <Button variant="outline" size="sm">
+                                  {t("Favourites:trade")}
+                                </Button>
+                              </a>
+                              <Dialog>
+                                <DialogTrigger asChild>
+                                  <Button variant="outline" size="sm">
+                                    {t("PageHeader:pools")}
+                                  </Button>
+                                </DialogTrigger>
+                                <DialogContent className="sm:max-w-[820px] bg-white">
+                                  {(() => {
+                                    const [assetA, assetB] = pair.split("_");
+                                    const assetAData = assets.find(
+                                      (a) => a.symbol === assetA
+                                    ) || {
+                                      id: assetA,
+                                      symbol: assetA,
+                                    };
+                                    const assetBData = assets.find(
+                                      (a) => a.symbol === assetB
+                                    ) || {
+                                      id: assetB,
+                                      symbol: assetB,
+                                    };
+                                    return (
+                                      <PoolDialogs
+                                        assetA={assetA}
+                                        assetB={assetB}
+                                        assetAData={assetAData}
+                                        assetBData={assetBData}
+                                        chain={chain}
+                                        _assetsBTS={_assetsBTS}
+                                        _assetsTEST={_assetsTEST}
+                                        _poolsBTS={_poolsBTS}
+                                        _poolsTEST={_poolsTEST}
+                                      />
+                                    );
+                                  })()}
+                                </DialogContent>
+                              </Dialog>
+                              <Button
+                                variant="default"
+                                size="sm"
+                                onClick={() => removeFavouritePair(chain, pair)}
+                              >
+                                ❌
+                              </Button>
+                            </div>
+                          </CardHeader>
+                        </Card>
+                      </div>
+                    );
+                  }}
+                  rowCount={chainPairs.length}
+                  rowHeight={88}
+                  rowProps={{}}
+                />
+              </div>
+            </>
           ) : (
             <Empty className="mt-2">
               <EmptyHeader>
@@ -526,23 +691,24 @@ export default function Favourites(properties) {
         </CardHeader>
         <CardContent className="p-4">
           {favouriteUsers && (favouriteUsers[chain] ?? []).length ? (
-            <div className="w-full max-h-[420px] overflow-auto">
-              <List
-                rowComponent={({ index, style }) => {
-                  const user = favouriteUsers[chain][index];
-                  if (!user) return null;
-                  return (
-                    <div style={{ ...style, paddingRight: "10px" }}>
-                      <Card className="mb-3 bg-slate-50 border border-slate-200 hover:bg-slate-100 transition-colors">
-                        <CardHeader className="px-4 py-4 flex flex-row items-center justify-between">
-                          <div className="space-y-1">
-                            <CardTitle className="text-base text-slate-900">{`${user.name}`}</CardTitle>
-                            <CardDescription className="text-xs text-muted-foreground">
-                              {user.id}
-                            </CardDescription>
-                          </div>
-                          <div>
-                            <div className="flex items-center gap-2">
+            <>
+              {/* SM-only list with actions below text */}
+              <div className="w-full max-h-[420px] overflow-auto block md:hidden">
+                <List
+                  rowComponent={({ index, style }) => {
+                    const user = favouriteUsers[chain][index];
+                    if (!user) return null;
+                    return (
+                      <div style={{ ...style, paddingRight: "10px" }}>
+                        <Card className="mb-3 bg-slate-50 border border-slate-200 hover:bg-slate-100 transition-colors">
+                          <CardHeader className="px-4 py-4">
+                            <div className="space-y-1">
+                              <CardTitle className="text-base text-slate-900">{`${user.name}`}</CardTitle>
+                              <CardDescription className="text-xs text-muted-foreground">
+                                {user.id}
+                              </CardDescription>
+                            </div>
+                            <div className="mt-3 flex items-center gap-2 flex-wrap">
                               <a
                                 href={`/transfer/index.html?to=${encodeURIComponent(
                                   user.name
@@ -571,24 +737,91 @@ export default function Favourites(properties) {
                                 </Button>
                               </a>
                               <Button
-                                variant="destructive"
+                                variant="default"
                                 size="sm"
                                 onClick={() => removeFavouriteUser(chain, user)}
                               >
-                                {t("Favourites:remove")}
+                                ❌
                               </Button>
                             </div>
-                          </div>
-                        </CardHeader>
-                      </Card>
-                    </div>
-                  );
-                }}
-                rowCount={favouriteUsers[chain].length}
-                rowHeight={88}
-                rowProps={{}}
-              />
-            </div>
+                          </CardHeader>
+                        </Card>
+                      </div>
+                    );
+                  }}
+                  rowCount={favouriteUsers[chain].length}
+                  rowHeight={120}
+                  rowProps={{}}
+                />
+              </div>
+
+              {/* MD+ list unchanged */}
+              <div className="w-full max-h-[420px] overflow-auto hidden md:block">
+                <List
+                  rowComponent={({ index, style }) => {
+                    const user = favouriteUsers[chain][index];
+                    if (!user) return null;
+                    return (
+                      <div style={{ ...style, paddingRight: "10px" }}>
+                        <Card className="mb-3 bg-slate-50 border border-slate-200 hover:bg-slate-100 transition-colors">
+                          <CardHeader className="px-4 py-4 flex flex-row items-center justify-between">
+                            <div className="space-y-1">
+                              <CardTitle className="text-base text-slate-900">{`${user.name}`}</CardTitle>
+                              <CardDescription className="text-xs text-muted-foreground">
+                                {user.id}
+                              </CardDescription>
+                            </div>
+                            <div>
+                              <div className="flex items-center gap-2">
+                                <a
+                                  href={`/transfer/index.html?to=${encodeURIComponent(
+                                    user.name
+                                  )}`}
+                                >
+                                  <Button variant="outline" size="sm">
+                                    {t("Favourites:transfer")}
+                                  </Button>
+                                </a>
+                                <a
+                                  href={`/timed_transfer/index.html?to=${encodeURIComponent(
+                                    user.name
+                                  )}`}
+                                >
+                                  <Button variant="outline" size="sm">
+                                    {t("Favourites:timedTransfer")}
+                                  </Button>
+                                </a>
+                                <a
+                                  href={`/create_vesting/index.html?to=${encodeURIComponent(
+                                    user.name
+                                  )}`}
+                                >
+                                  <Button variant="outline" size="sm">
+                                    {t("Favourites:vestAssets")}
+                                  </Button>
+                                </a>
+                                <Button
+                                  variant="default"
+                                  size="sm"
+                                  onClick={() =>
+                                    removeFavouriteUser(chain, user)
+                                  }
+                                >
+                                  ❌
+                                </Button>
+                              </div>
+                            </div>
+                          </CardHeader>
+                        </Card>
+                      </div>
+                    );
+                  }}
+                  rowCount={favouriteUsers[chain].length}
+                  rowHeight={88}
+                  rowProps={{}}
+                />
+              </div>
+            </>
           ) : (
             <Empty className="mt-2">
               <EmptyHeader>
