@@ -1,7 +1,17 @@
 import React, { useEffect, useMemo, useState } from "react";
+import {
+  MagnifyingGlassIcon,
+  AvatarIcon,
+  CheckIcon,
+  FaceIcon,
+} from "@radix-ui/react-icons";
+import { useStore } from "@nanostores/react";
+import { sha256 } from "@noble/hashes/sha2.js";
+import { bytesToHex as toHex, utf8ToBytes } from "@noble/hashes/utils.js";
+
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
-import { Button } from "@/components/ui/button";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,27 +26,26 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import HoverInfo from "@/components/common/HoverInfo.tsx";
-import AccountSearch from "@/components/AccountSearch.jsx";
-import DeepLinkDialog from "@/components/common/DeepLinkDialog.jsx";
 import { Avatar as Av, AvatarFallback } from "@/components/ui/avatar";
 import { Avatar } from "@/components/Avatar.tsx";
-import {
-  MagnifyingGlassIcon,
-  AvatarIcon,
-  FaceIcon,
-} from "@radix-ui/react-icons";
-import { useStore } from "@nanostores/react";
+
 import { $userStorage } from "@/stores/users.ts";
 import { $favouriteUsers } from "@/stores/favourites.ts";
 import { createObjectStore } from "@/nanoeffects/Objects.ts";
+import { getAccountBalances } from "@/nanoeffects/UserBalances.ts";
+
+import AccountSearch from "@/components/AccountSearch.jsx";
+import DeepLinkDialog from "@/components/common/DeepLinkDialog.jsx";
+import HoverInfo from "@/components/common/HoverInfo.tsx";
+
 import {
   blockchainFloat,
   humanReadableFloat,
   getFlagBooleans,
 } from "@/lib/common.js";
-import { getAccountBalances } from "@/nanoeffects/UserBalances.ts";
 
 const CORE_PRECISION = 5;
 
@@ -66,11 +75,13 @@ function parseDescription(description) {
 function AssetIssuerActions(props) {
   const {
     asset,
+    assets,
     chain,
     currentUser,
     node,
     dynamicAssetData,
     bitassetData,
+    priceFeederAccounts,
     buttonVariant = "outline",
     buttonSize = "sm",
     className,
@@ -83,6 +94,232 @@ function AssetIssuerActions(props) {
 
   const [dynamicData, setDynamicData] = useState(dynamicAssetData ?? null);
   const [bitassetDetails, setBitassetDetails] = useState(bitassetData ?? null);
+
+  const [globalSettleOpen, setGlobalSettleOpen] = useState(false);
+  const [globalSettleDeeplinkDialog, setGlobalSettleDeeplinkDialog] =
+    useState(false);
+
+  const [priceFeederIndex, setPriceFeederIndex] = useState(0);
+  const [globalSettlementMode, setGlobalSettlementMode] = useState("median");
+
+  const globalSettleObject = useMemo(() => {
+    if (!bitassetData) {
+      return null;
+    }
+
+    switch (globalSettlementMode) {
+      case "median":
+        return bitassetData.median_feed.settlement_price;
+      case "current":
+        return bitassetData.current_feed.settlement_price;
+      case "price_feed":
+        return bitassetData.feeds[priceFeederIndex][1][1].settlement_price;
+    }
+  }, [globalSettlementMode, bitassetData, priceFeederIndex]);
+
+  const _flags = getFlagBooleans(asset.options.flags);
+  const _issuer_permissions = getFlagBooleans(asset.options.issuer_permissions);
+
+  const collateralAsset = useMemo(() => {
+    if (bitassetData) {
+      return assets.find(
+        (x) => x.id === bitassetData.options.short_backing_asset
+      );
+    }
+  }, [bitassetData]);
+
+  const currentFeedSettlementPrice = useMemo(() => {
+    if (!globalSettleObject || !collateralAsset || !asset) {
+      return 0;
+    }
+
+    if (globalSettleObject) {
+      return parseFloat(
+        (
+          humanReadableFloat(
+            parseInt(globalSettleObject.quote.amount),
+            collateralAsset.precision
+          ) /
+          humanReadableFloat(
+            parseInt(globalSettleObject.base.amount),
+            asset.precision
+          )
+        ).toFixed(collateralAsset.precision)
+      );
+    }
+  }, [collateralAsset, asset, globalSettleObject]);
+
+  const PriceFeedRow = ({ index: x, style: rowStyle }) => {
+    const priceFeed = bitassetData.feeds[x];
+    if (
+      !priceFeed ||
+      !priceFeed[1] ||
+      !priceFeed[1][1] ||
+      !priceFeed[1][1].settlement_price
+    ) {
+      console.error("Error: Invalid priceFeed structure", { priceFeed, x });
+      return null;
+    }
+
+    const hexID = toHex(sha256(utf8ToBytes(priceFeed[0])));
+    const settlementPrice = parseFloat(
+      (
+        humanReadableFloat(
+          parseInt(priceFeed[1][1].settlement_price.quote.amount),
+          collateralAsset.precision
+        ) /
+        humanReadableFloat(
+          parseInt(priceFeed[1][1].settlement_price.base.amount),
+          asset.precision
+        )
+      ).toFixed(collateralAsset.precision)
+    );
+
+    const feedPublishTime = new Date(priceFeed[1][0]);
+    const hoursSincePublished = Math.floor(
+      (new Date().getTime() - feedPublishTime.getTime()) / (1000 * 60 * 60)
+    );
+
+    const foundFeeder = priceFeederAccounts.find(
+      (account) => account.id === priceFeed[0]
+    );
+
+    return (
+      <div
+        style={{ ...rowStyle }}
+        key={`priceFeedRow-${hexID}`}
+        onClick={() => {
+          setPriceFeederIndex(x);
+        }}
+      >
+        <Card className="ml-2 mr-2">
+          <div className="flex items-center">
+            {x === priceFeederIndex ? (
+              <div className="ml-5">
+                <CheckIcon />
+              </div>
+            ) : null}
+            <CardHeader className="pb-1 pt-1">
+              <CardTitle>
+                <div className="flex items-center">
+                  {foundFeeder ? foundFeeder.name : null} ({priceFeed[0]})
+                  {" - "}
+                  {settlementPrice} {collateralAsset.symbol}/{asset.symbol}
+                </div>
+              </CardTitle>
+              <CardDescription>
+                {t("IssuedAssets:publishTime", {
+                  hours: hoursSincePublished,
+                })}
+              </CardDescription>
+            </CardHeader>
+          </div>
+        </Card>
+      </div>
+    );
+  };
+
+  const pricefeederRow = ({ index, style }) => {
+    let res = priceFeedPublishers[index];
+    if (!res) {
+      return null;
+    }
+
+    return (
+      <div style={{ ...style }} key={`acard-${res.id}`}>
+        <Card className="ml-2 mr-2 mt-1">
+          <CardHeader className="pb-3 pt-3">
+            <span className="flex items-center w-full">
+              <span className="flex-shrink-0">
+                <Avatar
+                  size={40}
+                  name={res.name}
+                  extra="Borrower"
+                  expression={{ eye: "normal", mouth: "open" }}
+                  colors={[
+                    "#92A1C6",
+                    "#146A7C",
+                    "#F0AB3D",
+                    "#C271B4",
+                    "#C20D90",
+                  ]}
+                />
+              </span>
+              <span className="flex-grow ml-3">
+                #{index + 1}: {res.name} ({res.id})
+              </span>
+              <span className="flex-shrink-0">
+                <Button
+                  variant="outline"
+                  className="mr-2"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const _update = priceFeedPublishers.filter(
+                      (x) => x.id !== res.id
+                    );
+                    setPriceFeedPublishers(_update);
+                  }}
+                >
+                  ❌
+                </Button>
+              </span>
+            </span>
+          </CardHeader>
+        </Card>
+      </div>
+    );
+  };
+
+  const UserRow = ({ index: x, style: rowStyle }) => {
+    const user = users[x];
+    if (!user) {
+      return null;
+    }
+
+    return (
+      <div
+        style={{ ...rowStyle }}
+        key={`acard-${user.id}`}
+        onClick={() => {
+          setTargetUser({
+            name: user.username,
+            id: user.id,
+            chain: user.chain,
+          });
+          setSelectUserDialogOpen(false);
+          setNewIssuerUserOpen(false);
+        }}
+      >
+        <Card className="ml-2 mr-2">
+          <CardHeader className="pb-5">
+            <CardTitle>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <Avatar
+                  size={40}
+                  name={user.username}
+                  extra="Target"
+                  expression={{
+                    eye: "normal",
+                    mouth: "open",
+                  }}
+                  colors={[
+                    "#92A1C6",
+                    "#146A7C",
+                    "#F0AB3D",
+                    "#C271B4",
+                    "#C20D90",
+                  ]}
+                />
+                <span style={{ marginLeft: "10px" }}>
+                  {user.username} ({user.id})
+                </span>
+              </div>
+            </CardTitle>
+          </CardHeader>
+        </Card>
+      </div>
+    );
+  };
 
   useEffect(() => {
     setDynamicData(dynamicAssetData ?? null);
@@ -1072,6 +1309,162 @@ function AssetIssuerActions(props) {
                       ),
                       asset_id: asset?.id,
                     },
+                    extensions: {},
+                  },
+                ]}
+              />
+            ) : null}
+          </DialogContent>
+        </Dialog>
+      ) : null}
+
+      {globalSettleOpen ? (
+        <Dialog
+          open={globalSettleOpen}
+          onOpenChange={(open) => {
+            setGlobalSettleOpen(open);
+          }}
+        >
+          <DialogContent className="sm:max-w-[550px] bg-white">
+            <DialogHeader>
+              <DialogTitle>
+                {t("IssuedAssets:updateIssuer")}: {asset.symbol} ({asset.id})
+              </DialogTitle>
+              <DialogDescription>
+                {t("IssuedAssets:updateIssuerInfo")}
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="grid grid-cols-1 gap-3">
+              <div className="grid grid-cols-3 gap-2">
+                <Button
+                  onClick={() => {
+                    setGlobalSettlementMode("median");
+                  }}
+                  variant={globalSettlementMode === "median" ? "" : "outline"}
+                >
+                  {t("IssuedAssets:medianFeedPrice")}
+                </Button>
+                <Button
+                  onClick={() => {
+                    setGlobalSettlementMode("current");
+                  }}
+                  variant={globalSettlementMode === "current" ? "" : "outline"}
+                >
+                  {t("IssuedAssets:currentFeedPrice")}
+                </Button>
+                {bitassetData &&
+                bitassetData.feeds &&
+                bitassetData.feeds.length ? (
+                  <Button
+                    onClick={() => {
+                      setGlobalSettlementMode("price_feed");
+                    }}
+                    variant={
+                      globalSettlementMode === "price_feed" ? "" : "outline"
+                    }
+                  >
+                    {t("IssuedAssets:specificPriceFeed")}
+                  </Button>
+                ) : null}
+              </div>
+
+              <div className="grid grid-cols-1 gap-2">
+                {bitassetData &&
+                bitassetData.feeds &&
+                bitassetData.feeds.length &&
+                globalSettlementMode === "price_feed" ? (
+                  <>
+                    <HoverInfo
+                      content={t("IssuedAssets:chooseSpecificFeedInfo")}
+                      header={t("IssuedAssets:chooseSpecificFeed")}
+                      type="header"
+                    />
+                    <div className="w-full rounded border border-black pt-1 max-h-[150px] overflow-auto">
+                      <List
+                        rowComponent={PriceFeedRow}
+                        rowCount={bitassetData.feeds.length}
+                        rowHeight={60}
+                        rowProps={{}}
+                      />
+                    </div>
+                  </>
+                ) : null}
+                <div>
+                  <HoverInfo
+                    content={t("IssuedAssets:currentSettlementPriceInfo")}
+                    header={t("IssuedAssets:currentSettlementPrice")}
+                    type="header"
+                  />
+                  <Input
+                    value={`${
+                      parseFloat(currentFeedSettlementPrice) > 0
+                        ? currentFeedSettlementPrice
+                        : "??? ⚠️"
+                    } ${collateralAsset.symbol}/${asset.symbol}`}
+                    readOnly={true}
+                    className="mt-2"
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <HoverInfo
+                      content={t("IssuedAssets:quoteInfo")}
+                      header={t("IssuedAssets:quote")}
+                      type="header"
+                    />
+                    <Input
+                      value={`${humanReadableFloat(
+                        parseInt(globalSettleObject.quote.amount),
+                        collateralAsset.precision
+                      )} ${collateralAsset.symbol} (${collateralAsset.id})`}
+                      readOnly={true}
+                      className="mt-2"
+                    />
+                  </div>
+                  <div>
+                    <HoverInfo
+                      content={t("IssuedAssets:baseInfo")}
+                      header={t("IssuedAssets:base")}
+                      type="header"
+                    />
+                    <Input
+                      value={`${humanReadableFloat(
+                        parseInt(parseInt(globalSettleObject.base.amount)),
+                        asset.precision
+                      )} ${asset.symbol} (${asset.id})`}
+                      readOnly={true}
+                      className="mt-2"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <Button
+              className="w-1/2 mt-2"
+              onClick={() => {
+                setGlobalSettleDeeplinkDialog(true);
+              }}
+            >
+              {t("IssuedAssets:globallySettle")}
+            </Button>
+            {globalSettleDeeplinkDialog ? (
+              <DeepLinkDialog
+                operationNames={["asset_global_settle"]}
+                username={usr.username}
+                usrChain={usr.chain}
+                userID={usr.id}
+                dismissCallback={setGlobalSettleDeeplinkDialog}
+                key={`globallySettlingAsset_${asset.id}`}
+                headerText={t("IssuedAssets:globalSettlementHeader", {
+                  asset: asset.symbol,
+                  mode: globalSettlementMode,
+                })}
+                trxJSON={[
+                  {
+                    issuer: usr.id,
+                    asset_to_settle: asset.id,
+                    settle_price: globalSettleObject,
                     extensions: {},
                   },
                 ]}
