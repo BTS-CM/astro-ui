@@ -5,6 +5,7 @@ import {
   CheckIcon,
   FaceIcon,
 } from "@radix-ui/react-icons";
+import { List } from "react-window";
 import { useStore } from "@nanostores/react";
 import { sha256 } from "@noble/hashes/sha2.js";
 import { bytesToHex as toHex, utf8ToBytes } from "@noble/hashes/utils.js";
@@ -18,6 +19,15 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+
 import {
   Dialog,
   DialogContent,
@@ -94,6 +104,23 @@ function AssetIssuerActions(props) {
 
   const [dynamicData, setDynamicData] = useState(dynamicAssetData ?? null);
   const [bitassetDetails, setBitassetDetails] = useState(bitassetData ?? null);
+
+  const [priceFeedPublishersOpen, setPriceFeedPublishersOpen] = useState(false);
+  const [
+    priceFeedPublishersDeeplinkDialog,
+    setPriceFeedPublishersDeeplinkDialog,
+  ] = useState(false);
+  const [priceSearchDialog, setPriceSearchDialog] = useState(false);
+
+  const [priceFeedPublishers, setPriceFeedPublishers] = useState([]);
+  useEffect(() => {
+    if (bitassetDetails && priceFeederAccounts && priceFeederAccounts.length) {
+      const publishers = bitassetDetails.feeds
+        .map((x) => x[0])
+        .map((x) => priceFeederAccounts.find((y) => y.id === x));
+      setPriceFeedPublishers(publishers);
+    }
+  }, [bitassetDetails, priceFeederAccounts]);
 
   const [globalSettleOpen, setGlobalSettleOpen] = useState(false);
   const [globalSettleDeeplinkDialog, setGlobalSettleDeeplinkDialog] =
@@ -219,7 +246,7 @@ function AssetIssuerActions(props) {
     );
   };
 
-  const pricefeederRow = ({ index, style }) => {
+  const PriceFeederRow = ({ index, style }) => {
     let res = priceFeedPublishers[index];
     if (!res) {
       return null;
@@ -270,6 +297,7 @@ function AssetIssuerActions(props) {
     );
   };
 
+  /*
   const UserRow = ({ index: x, style: rowStyle }) => {
     const user = users[x];
     if (!user) {
@@ -320,6 +348,7 @@ function AssetIssuerActions(props) {
       </div>
     );
   };
+  */
 
   useEffect(() => {
     setDynamicData(dynamicAssetData ?? null);
@@ -623,6 +652,30 @@ function AssetIssuerActions(props) {
 
   const dropdownItems = [];
 
+  if (
+    bitassetData &&
+    (!_issuer_permissions.hasOwnProperty("witness_fed_asset") ||
+      (_issuer_permissions.hasOwnProperty("witness_fed_asset") &&
+        !_flags.hasOwnProperty("witness_fed_asset"))) &&
+    (!_issuer_permissions.hasOwnProperty("committee_fed_asset") ||
+      (_issuer_permissions.hasOwnProperty("committee_fed_asset") &&
+        !_flags.hasOwnProperty("committee_fed_asset")))
+  ) {
+    dropdownItems.push({
+      key: "priceFeedPubishers",
+      render: (
+        <DropdownMenuItem
+          onClick={() => {
+            setPriceFeedPublishersOpen(true);
+          }}
+          className="hover:shadow-inner"
+        >
+          {t(`Predictions:pricefeeder`)}
+        </DropdownMenuItem>
+      ),
+    });
+  }
+
   if (manageHref) {
     dropdownItems.push({
       key: "manage",
@@ -696,7 +749,10 @@ function AssetIssuerActions(props) {
       dropdownItems.push({
         key: "global-settlement-disabled",
         render: (
-          <DropdownMenuItem key="global-settlement" disabled>
+          <DropdownMenuItem
+            key="global-settlement"
+            onClick={() => setGlobalSettleOpen(true)}
+          >
             {t("IssuedAssets:globalSettlement")}
           </DropdownMenuItem>
         ),
@@ -1049,6 +1105,129 @@ function AssetIssuerActions(props) {
                       asset_id: asset?.id,
                     },
                     extensions: {},
+                  },
+                ]}
+              />
+            ) : null}
+          </DialogContent>
+        </Dialog>
+      ) : null}
+
+      {priceFeedPublishersOpen ? (
+        <Dialog
+          open={priceFeedPublishersOpen}
+          onOpenChange={(open) => {
+            setPriceFeedPublishersOpen(open);
+          }}
+        >
+          <DialogContent className="sm:max-w-[600px] bg-white">
+            <DialogHeader>
+              <DialogTitle>
+                {t(`Predictions:priceFeederDialog.title`)}
+              </DialogTitle>
+              <DialogDescription>
+                {t(`Predictions:priceFeederDialog.description`)}
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid grid-cols-1 gap-2">
+              <HoverInfo
+                content={t("issuedAssets:priceFeedersInfo")}
+                header={t("issuedAssets:priceFeeders", {
+                  symbol: asset.symbol,
+                })}
+                type="header"
+              />
+              <div className="grid grid-cols-12 mt-1">
+                <span className="col-span-9 border border-gray-300 rounded">
+                  <div className="w-full max-h-[210px] overflow-auto">
+                    <List
+                      rowComponent={PriceFeederRow}
+                      rowCount={priceFeedPublishers.length}
+                      rowHeight={80}
+                      rowProps={{}}
+                    />
+                  </div>
+                </span>
+                <span className="col-span-3 ml-3 text-center">
+                  <Dialog
+                    open={priceSearchDialog}
+                    onOpenChange={(open) => {
+                      setPriceSearchDialog(open);
+                    }}
+                  >
+                    <DialogTrigger asChild>
+                      <Button variant="outline" className="ml-3 mt-1">
+                        ➕ {t("CreditOfferEditor:addUser")}
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[375px] bg-white">
+                      <DialogHeader>
+                        <DialogTitle>
+                          {!currentUser || !currentUser.chain
+                            ? t("Transfer:bitsharesAccountSearch")
+                            : null}
+                          {currentUser && currentUser.chain === "bitshares"
+                            ? t("Transfer:bitsharesAccountSearchBTS")
+                            : null}
+                          {currentUser && currentUser.chain !== "bitshares"
+                            ? t("Transfer:bitsharesAccountSearchTEST")
+                            : null}
+                        </DialogTitle>
+                      </DialogHeader>
+                      <AccountSearch
+                        chain={
+                          currentUser && currentUser.chain
+                            ? currentUser.chain
+                            : "bitshares"
+                        }
+                        excludedUsers={[]}
+                        setChosenAccount={(_account) => {
+                          if (
+                            _account &&
+                            !priceFeedPublishers.find(
+                              (_usr) => _usr.id === _account.id
+                            )
+                          ) {
+                            setPriceFeedPublishers(
+                              priceFeedPublishers && priceFeedPublishers.length
+                                ? [...priceFeedPublishers, _account]
+                                : [_account]
+                            );
+                          }
+                          setPriceSearchDialog(false);
+                        }}
+                      />
+                    </DialogContent>
+                  </Dialog>
+                </span>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <Button
+                  className="h-6 mt-1 w-1/2"
+                  onClick={() => {
+                    setPriceFeedPublishersDeeplinkDialog(true);
+                  }}
+                >
+                  {t("Predictions:submit")}
+                </Button>
+              </div>
+            </div>
+            {priceFeedPublishersDeeplinkDialog ? (
+              <DeepLinkDialog
+                operationNames={["asset_update_feed_producers"]}
+                username={currentUser.username}
+                usrChain={currentUser.chain}
+                userID={currentUser.id}
+                dismissCallback={setPriceFeedPublishersDeeplinkDialog}
+                key={`deeplink-pricefeeddialog-${asset.id}`}
+                headerText={t(`Predictions:dialogContent.header_pricefeeder`)}
+                trxJSON={[
+                  {
+                    issuer: currentUser.id,
+                    asset_to_update: asset.id,
+                    new_feed_producers: priceFeedPublishers.map(
+                      (_usr) => _usr.id
+                    ),
                   },
                 ]}
               />
@@ -1451,9 +1630,9 @@ function AssetIssuerActions(props) {
             {globalSettleDeeplinkDialog ? (
               <DeepLinkDialog
                 operationNames={["asset_global_settle"]}
-                username={usr.username}
-                usrChain={usr.chain}
-                userID={usr.id}
+                username={currentUser.username}
+                usrChain={currentUser.chain}
+                userID={currentUser.id}
                 dismissCallback={setGlobalSettleDeeplinkDialog}
                 key={`globallySettlingAsset_${asset.id}`}
                 headerText={t("IssuedAssets:globalSettlementHeader", {
@@ -1462,7 +1641,7 @@ function AssetIssuerActions(props) {
                 })}
                 trxJSON={[
                   {
-                    issuer: usr.id,
+                    issuer: currentUser.id,
                     asset_to_settle: asset.id,
                     settle_price: globalSettleObject,
                     extensions: {},
