@@ -62,14 +62,6 @@ import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
 import AssetIssuerActions from "@/components/AssetIssuerActions.jsx";
 
-/**
- * Favourites list view
- * Props:
- *  - _assetsBTS: full asset objects (BTS)
- *  - _assetsTEST: full asset objects (TESTNET)
- *  - _marketSearchBTS: market search compressed list (BTS)
- *  - _marketSearchTEST: market search compressed list (TESTNET)
- */
 export default function Favourites(properties) {
   const {
     _assetsBTS,
@@ -115,9 +107,98 @@ export default function Favourites(properties) {
   }, [_marketSearchBTS, _marketSearchTEST, chain]);
 
   const chainFavourites = useMemo(() => {
+    // favourite assets
     if (!favourites) return [];
     return favourites[chain] ?? [];
   }, [favourites, chain]);
+
+  const favouriteAssets = useMemo(() => {
+    if (!chainFavourites) return [];
+    return assets.filter((asset) =>
+      chainFavourites.some((fav) => fav.id === asset.id)
+    );
+  }, [chainFavourites, assets]);
+
+  const [dynamicData, setDynamicData] = useState([]);
+  useEffect(() => {
+    async function fetching() {
+      const requiredStore = createObjectStore([
+        usr.chain,
+        JSON.stringify(
+          favouriteAssets.map((asset) => asset.dynamic_asset_data_id)
+        ),
+        currentNode ? currentNode.url : null,
+      ]);
+
+      requiredStore.subscribe(({ data, error, loading }) => {
+        if (data && !error && !loading) {
+          setDynamicData(data);
+        }
+      });
+    }
+
+    if (favouriteAssets && favouriteAssets.length) {
+      fetching();
+    }
+  }, [favouriteAssets]);
+
+  const [bitassetData, setBitassetData] = useState([]);
+  useEffect(() => {
+    async function fetching() {
+      const requiredStore = createObjectStore([
+        usr.chain,
+        JSON.stringify(
+          favouriteAssets
+            .filter((asset) => asset.bitasset_data_id)
+            .map((asset) => asset.bitasset_data_id)
+        ),
+        currentNode ? currentNode.url : null,
+      ]);
+
+      requiredStore.subscribe(({ data, error, loading }) => {
+        if (data && !error && !loading) {
+          setBitassetData(data);
+        }
+      });
+    }
+
+    if (favouriteAssets && favouriteAssets.length) {
+      fetching();
+    }
+  }, [favouriteAssets]);
+
+  const priceFeederAccountIDs = useMemo(() => {
+    if (!bitassetData) {
+      return [];
+    }
+
+    const priceFeeders = Array.from(
+      new Set(bitassetData.flatMap((data) => data.feeds.map((feed) => feed[0])))
+    );
+
+    return priceFeeders;
+  }, [bitassetData]);
+
+  const [priceFeederAccounts, setPriceFeederAccounts] = useState([]);
+  useEffect(() => {
+    async function fetching() {
+      const requiredStore = createObjectStore([
+        usr.chain,
+        JSON.stringify(priceFeederAccountIDs),
+        currentNode ? currentNode.url : null,
+      ]);
+
+      requiredStore.subscribe(({ data, error, loading }) => {
+        if (data && !error && !loading) {
+          setPriceFeederAccounts(data);
+        }
+      });
+    }
+
+    if (priceFeederAccountIDs && priceFeederAccountIDs.length) {
+      fetching();
+    }
+  }, [priceFeederAccountIDs]);
 
   const chainPairs = useMemo(() => {
     if (!favouritePairs) return [];
@@ -173,7 +254,17 @@ export default function Favourites(properties) {
       currentUser.id === item.issuer &&
       (!currentUser.chain || currentUser.chain === chain)
     );
-    console.log({ item, assetDetails });
+
+    const fullAsset = favouriteAssets.find((a) => a.id === item.id);
+
+    const relevantDynamicData = dynamicData.find(
+      (data) => data.id === fullAsset.dynamic_asset_data_id
+    );
+
+    const relevantBitassetData = fullAsset.bitasset_data_id
+      ? bitassetData.find((data) => data.id === fullAsset.bitasset_data_id)
+      : null;
+
     return (
       <div style={{ ...style, paddingRight: "10px" }}>
         {/* SM-only card: actions moved below text */}
@@ -229,9 +320,13 @@ export default function Favourites(properties) {
               {showIssuerActions && assetDetails ? (
                 <AssetIssuerActions
                   asset={assetDetails}
+                  assets={assets}
                   chain={chain}
                   currentUser={currentUser}
                   node={currentNode}
+                  dynamicAssetData={relevantDynamicData}
+                  bitassetData={relevantBitassetData}
+                  priceFeederAccounts={priceFeederAccounts}
                   buttonVariant="outline"
                   buttonSize="sm"
                 />
@@ -302,9 +397,13 @@ export default function Favourites(properties) {
                 {showIssuerActions && assetDetails ? (
                   <AssetIssuerActions
                     asset={assetDetails}
+                    assets={assets}
                     chain={chain}
                     currentUser={currentUser}
                     node={currentNode}
+                    dynamicAssetData={relevantDynamicData}
+                    bitassetData={relevantBitassetData}
+                    priceFeederAccounts={priceFeederAccounts}
                     buttonVariant="outline"
                     buttonSize="sm"
                   />
