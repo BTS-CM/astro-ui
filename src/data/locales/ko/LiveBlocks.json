@@ -31,11 +31,17 @@
   },
   "recentActivity": {
     "content": "블록체인의 최근 활동.",
-    "header": "최근 활동"
+    "header": "최근 활동",
+    "blocks": "차단하다",
+    "operations": "운영"
   },
   "recentBlocks": {
     "content": "최근 블록 목록.",
-    "header": "최근 블록"
+    "header": "최근 블록",
+    "blockId": "블록 ID",
+    "timestamp": "타임스탬프",
+    "witnessId": "증인 ID",
+    "transaction": "거래"
   },
   "dialogContent": {
     "json": "JSON 데이터",

@@ -209,7 +209,7 @@ export default function Vesting(properties) {
                   <List
                     rowComponent={VestingRow}
                     rowCount={chosenVestingData.length}
-                    rowHeight={vestingType === "cashback" ? 175 : 135}
+                    rowHeight={vestingType === "cashback" ? 175 : 150}
                     rowProps={{}}
                   />
                 </div>

@@ -167,7 +167,7 @@ export default function LiveBlocks(properties) {
     const activity = activities[index];
     if (!activity) return null;
     return (
-      <div style={style} className="border grid grid-cols-5 gap-2 mb-1 mt-1">
+      <div style={style} className="border grid grid-cols-2 gap-2 mb-1 mt-1">
         <div className="col-span-1 ml-2">
           <span
             className="hover:text-purple-500"
@@ -183,7 +183,7 @@ export default function LiveBlocks(properties) {
             {activity.block}
           </span>
         </div>
-        <div className="col-span-4">
+        <div className="col-span-1">
           {activity.operations.length && activity.operations.length > 10 ? (
             <Badge
               onClick={() => {
@@ -227,8 +227,18 @@ export default function LiveBlocks(properties) {
   const BlockRow = ({ index, style }) => {
     const block = recentBlocks[index];
     if (!block) return null;
+    const _ts = new Date(block.timestamp).toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: false,
+    });
     return (
-      <div style={style} className="border p-2 grid grid-cols-4 gap-2">
+      <div
+        style={style}
+        className="border p-2 grid grid-cols-2 md:grid-cols-4 gap-2"
+        title={`${_ts} : ${block.witness}`}
+      >
         <div>
           <span
             className="hover:text-purple-500"
@@ -244,15 +254,8 @@ export default function LiveBlocks(properties) {
             {block.block}
           </span>
         </div>
-        <div>
-          {new Date(block.timestamp).toLocaleTimeString("en-US", {
-            hour: "2-digit",
-            minute: "2-digit",
-            second: "2-digit",
-            hour12: false,
-          })}
-        </div>
-        <div>
+        <div className="hidden md:block">{_ts}</div>
+        <div className="hidden md:block">
           <span
             className="hover:text-purple-500"
             onClick={() => {
@@ -284,7 +287,7 @@ export default function LiveBlocks(properties) {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-2 gap-2 mt-2">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 mt-2">
                 <div className="grid grid-cols-2 gap-2">
                   <Card>
                     <CardContent className="pt-5">
@@ -410,7 +413,7 @@ export default function LiveBlocks(properties) {
                   </Card>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-2 mt-2">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 mt-2">
                 <Card>
                   <CardContent className="pt-5">
                     <HoverInfo
@@ -418,9 +421,13 @@ export default function LiveBlocks(properties) {
                       header={t("LiveBlocks:recentActivity.header")}
                       type="header"
                     />
-                    <div className="grid grid-cols-5 gap-2">
-                      <span className="col-span-1">Block</span>
-                      <span className="col-span-4">Operations</span>
+                    <div className="grid grid-cols-2 gap-2">
+                      <span className="col-span-1">
+                        {t("LiveBlocks:recentActivity.blocks")}
+                      </span>
+                      <span className="col-span-1">
+                        {t("LiveBlocks:recentActivity.operations")}
+                      </span>
                     </div>
                     <div className="w-full max-h-[350px] overflow-auto">
                       <List
@@ -439,11 +446,15 @@ export default function LiveBlocks(properties) {
                       header={t("LiveBlocks:recentBlocks.header")}
                       type="header"
                     />
-                    <div className="grid grid-cols-4 gap-2">
-                      <span>Block ID</span>
-                      <span>Timestamp</span>
-                      <span>Witness ID</span>
-                      <span>Transaction</span>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                      <span>{t("LiveBlocks:recentBlocks.blockId")}</span>
+                      <span className="hidden md:block">
+                        {t("LiveBlocks:recentBlocks.timestamp")}
+                      </span>
+                      <span className="hidden md:block">
+                        {t("LiveBlocks:recentBlocks.witnessId")}
+                      </span>
+                      <span>{t("LiveBlocks:recentBlocks.transaction")}</span>
                     </div>
                     <div className="w-full max-h-[350px] overflow-auto">
                       <List

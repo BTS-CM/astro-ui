@@ -1,13 +1,14 @@
 {
-    "title": "Likviidsusbasseinid",
-    "description": "Leidke kiiresti likviidsusbasseinid, et kaubelda, vahetada, panustada jne!",
-    "simpleSwap": "Lihtne vahetus",
-    "poolSwap": "Likviidsusbasseini vahetus",
-    "stakeAssets": "Osalusvara",
-    "buyPoolShareAsset": "Osta aktsiavara",
-    "dialogTitle": "Likviidsusbasseini jätkamine: {{id}}",
-    "dialogDescription": "Vahetage, panustage, vahetage selle basseini varad allpool!",
-    "buyAsset": "Kaubavahetus",
-    "borrowAsset": "Laenama",
-    "issueAsset": "Väljaandmine"
+  "title": "Likviidsusbasseinid",
+  "description": "Leidke kiiresti likviidsusbasseinid, et kaubelda, vahetada, panustada jne!",
+  "simpleSwap": "Lihtne vahetus",
+  "poolSwap": "Likviidsusbasseini vahetus",
+  "stakeAssets": "Osalusvara",
+  "buyPoolShareAsset": "Osta aktsiavara",
+  "dialogTitle": "Likviidsusbasseini jätkamine: {{id}}",
+  "dialogDescription": "Vahetage, panustage, vahetage selle basseini varad allpool!",
+  "buyAsset": "Kaubavahetus",
+  "borrowAsset": "Laenama",
+  "issueAsset": "Väljaandmine",
+  "details": "Üksikasjad"
 }

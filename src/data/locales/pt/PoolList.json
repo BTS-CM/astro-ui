@@ -1,13 +1,14 @@
 {
-    "title": "Pools de liquidez",
-    "description": "Localize rapidamente os pools de liquidez para negociar, trocar, participar, etc!",
-    "simpleSwap": "Troca simples",
-    "poolSwap": "Troca de liquidez do pool",
-    "stakeAssets": "Ativos de estaca",
-    "buyPoolShareAsset": "Comprar ativo compartilhado",
-    "dialogTitle": "Procurando com o pool de liquidez: {{id}}",
-    "dialogDescription": "Troque, estaca, troque os ativos desta piscina abaixo!",
-    "buyAsset": "Troca",
-    "borrowAsset": "Emprestar",
-    "issueAsset": "Emitir"
+  "title": "Pools de liquidez",
+  "description": "Localize rapidamente os pools de liquidez para negociar, trocar, participar, etc!",
+  "simpleSwap": "Troca simples",
+  "poolSwap": "Troca de liquidez do pool",
+  "stakeAssets": "Ativos de estaca",
+  "buyPoolShareAsset": "Comprar ativo compartilhado",
+  "dialogTitle": "Procurando com o pool de liquidez: {{id}}",
+  "dialogDescription": "Troque, estaca, troque os ativos desta piscina abaixo!",
+  "buyAsset": "Troca",
+  "borrowAsset": "Emprestar",
+  "issueAsset": "Emitir",
+  "details": "Detalhes"
 }

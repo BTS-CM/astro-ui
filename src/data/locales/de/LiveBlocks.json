@@ -31,11 +31,17 @@
   },
   "recentActivity": {
     "content": "Aktuelle Aktivität in der Blockchain.",
-    "header": "Letzte Aktivität"
+    "header": "Letzte Aktivität",
+    "blocks": "Block",
+    "operations": "Operationen"
   },
   "recentBlocks": {
     "content": "Liste der letzten Blöcke.",
-    "header": "Aktuelle Blöcke"
+    "header": "Aktuelle Blöcke",
+    "blockId": "Block-ID",
+    "timestamp": "Zeitstempel",
+    "witnessId": "Zeugenausweis",
+    "transaction": "Transaktion"
   },
   "dialogContent": {
     "json": "JSON-Daten",

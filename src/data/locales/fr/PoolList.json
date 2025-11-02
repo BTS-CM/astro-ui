@@ -1,13 +1,14 @@
 {
-    "title": "Pools de liquidité",
-    "description": "Localisez rapidement les pools de liquidité pour échanger, échanger, enjurer, etc.!",
-    "simpleSwap": "Échange simple",
-    "poolSwap": "Échange de piscine de liquidité",
-    "stakeAssets": "Actifs des intérêts",
-    "buyPoolShareAsset": "Acheter un actif",
-    "dialogTitle": "Procéder avec la piscine de liquidité: {{id}}",
-    "dialogDescription": "Échangez, enjurer, échanger les actifs de cette piscine ci-dessous!",
-    "buyAsset": "Commerce",
-    "borrowAsset": "Emprunter",
-    "issueAsset": "Problème"
+  "title": "Pools de liquidité",
+  "description": "Localisez rapidement les pools de liquidité pour échanger, échanger, enjurer, etc.!",
+  "simpleSwap": "Échange simple",
+  "poolSwap": "Échange de piscine de liquidité",
+  "stakeAssets": "Actifs des intérêts",
+  "buyPoolShareAsset": "Acheter un actif",
+  "dialogTitle": "Procéder avec la piscine de liquidité: {{id}}",
+  "dialogDescription": "Échangez, enjurer, échanger les actifs de cette piscine ci-dessous!",
+  "buyAsset": "Commerce",
+  "borrowAsset": "Emprunter",
+  "issueAsset": "Problème",
+  "details": "Détails"
 }

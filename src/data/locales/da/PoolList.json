@@ -1,13 +1,14 @@
 {
-    "title": "Likviditetsbassiner",
-    "description": "Find hurtigt likviditetspooler til handel, byt, stav osv.!",
-    "simpleSwap": "Enkel swap",
-    "poolSwap": "Likviditetspoolbytte",
-    "stakeAssets": "Stake -aktiver",
-    "buyPoolShareAsset": "Køb aktieaktivt",
-    "dialogTitle": "Fortsætter med likviditetspool: {{id}}",
-    "dialogDescription": "Byt, indsats, udveksl denne pools aktiver nedenfor!",
-    "buyAsset": "Handle",
-    "borrowAsset": "Låne",
-    "issueAsset": "Spørgsmål"
+  "title": "Likviditetsbassiner",
+  "description": "Find hurtigt likviditetspooler til handel, byt, stav osv.!",
+  "simpleSwap": "Enkel swap",
+  "poolSwap": "Likviditetspoolbytte",
+  "stakeAssets": "Stake -aktiver",
+  "buyPoolShareAsset": "Køb aktieaktivt",
+  "dialogTitle": "Fortsætter med likviditetspool: {{id}}",
+  "dialogDescription": "Byt, indsats, udveksl denne pools aktiver nedenfor!",
+  "buyAsset": "Handle",
+  "borrowAsset": "Låne",
+  "issueAsset": "Spørgsmål",
+  "details": "Detaljer"
 }

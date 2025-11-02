@@ -212,7 +212,7 @@ export default function WorkerCreate(properties) {
 
   return (
     <>
-      <div className="container mx-auto mt-5 mb-5 w-1/2">
+      <div className="container mx-auto mt-5 mb-5 w-full md:w-3/4">
         <Card>
           <CardHeader>
             <CardTitle>{t("WorkerCreate:title")}</CardTitle>

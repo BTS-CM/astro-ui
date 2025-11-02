@@ -1,13 +1,14 @@
 {
-    "title": "유동성 풀",
-    "description": "유동성 풀을 빠르게 찾아 거래, 교환, 스테이크 등을 신속하게 찾으십시오!",
-    "simpleSwap": "간단한 스왑",
-    "poolSwap": "유동성 풀 스왑",
-    "stakeAssets": "스테이크 자산",
-    "buyPoolShareAsset": "공유 자산을 구매하십시오",
-    "dialogTitle": "유동성 풀 진행 : {{id}}",
-    "dialogDescription": "스왑, 스테이크,이 풀의 자산을 아래에서 교환하십시오!",
-    "buyAsset": "거래",
-    "borrowAsset": "빌리다",
-    "issueAsset": "문제"
+  "title": "유동성 풀",
+  "description": "유동성 풀을 빠르게 찾아 거래, 교환, 스테이크 등을 신속하게 찾으십시오!",
+  "simpleSwap": "간단한 스왑",
+  "poolSwap": "유동성 풀 스왑",
+  "stakeAssets": "스테이크 자산",
+  "buyPoolShareAsset": "공유 자산을 구매하십시오",
+  "dialogTitle": "유동성 풀 진행 : {{id}}",
+  "dialogDescription": "스왑, 스테이크,이 풀의 자산을 아래에서 교환하십시오!",
+  "buyAsset": "거래",
+  "borrowAsset": "빌리다",
+  "issueAsset": "문제",
+  "details": "세부"
 }

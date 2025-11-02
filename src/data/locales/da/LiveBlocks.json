@@ -32,11 +32,17 @@
   },
   "recentActivity": {
     "content": "Seneste aktivitet i blockchain.",
-    "header": "Seneste aktivitet"
+    "header": "Seneste aktivitet",
+    "blocks": "Blok",
+    "operations": "Operationer"
   },
   "recentBlocks": {
     "content": "Liste over seneste blokke.",
-    "header": "Nylige blokke"
+    "header": "Nylige blokke",
+    "blockId": "Bloker ID",
+    "timestamp": "Tidsstempel",
+    "witnessId": "Vidne ID",
+    "transaction": "Transaktion"
   },
   "dialogContent": {
     "json": "JSON-data",
