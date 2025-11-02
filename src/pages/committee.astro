@@ -16,7 +16,7 @@ const page = "committee";
 ---
 <Layout title="Bitshares Committee Members">
     <main>
-        <PageHeader page={page} client:only="react" />
+        <PageHeader page={page} client:only="react" backURL="" />
         <CommitteeMembers
             client:only="react"
             _assetsBTS={btsAssets}
@@ -25,3 +25,16 @@ const page = "committee";
          <PageFooter sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/committee.astro" client:only="react" />
     </main>
 </Layout>
+
+<style>
+	main {
+		margin: auto;
+		padding: 1rem;
+		width: 100%;
+		max-width: calc(100% - 2rem);
+		color: white;
+		font-size: 20px;
+		line-height: 1.6;
+		min-height: 100vh;
+	}
+</style>

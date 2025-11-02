@@ -102,10 +102,10 @@ export default function Nodes(properties) {
           >
             <CardTitle>
               <div className={`grid grid-cols-4 gap-2 items-center mt-0 pt-0`}>
-                <div className={`col-span-3`}>
-                  {index + 1}: {nodes[usr.chain][index].url}
+                <div className="col-span-4 md:col-span-3">
+                  {nodes[usr.chain][index].url}
                 </div>
-                <div className="text-right flex items-center justify-end">
+                <div className="col-span-4 md:col-span-1 text-right flex items-center justify-end">
                   <Button
                     className="mr-2"
                     variant="none"
@@ -192,7 +192,7 @@ export default function Nodes(properties) {
 
   return (
     <>
-      <div className="container mx-auto mt-5 mb-5 w-1/2">
+      <div className="container mx-auto mt-5 mb-5 w-full lg:w-3/4">
         <div className="grid grid-cols-1 gap-3">
           <Card>
             <CardHeader>
@@ -204,14 +204,24 @@ export default function Nodes(properties) {
               usr.chain &&
               nodes[usr.chain] &&
               nodes[usr.chain].length ? (
-                <div className="w-full max-h-[250px] overflow-auto">
-                  <List
-                    rowComponent={NodeRow}
-                    rowCount={nodes[usr.chain].length}
-                    rowHeight={50}
-                    rowProps={{}}
-                  />
-                </div>
+                <>
+                  <div className="hidden md:block w-full max-h-[250px] overflow-auto">
+                    <List
+                      rowComponent={NodeRow}
+                      rowCount={nodes[usr.chain].length}
+                      rowHeight={50}
+                      rowProps={{}}
+                    />
+                  </div>
+                  <div className="md:hidden w-full max-h-[250px] overflow-auto">
+                    <List
+                      rowComponent={NodeRow}
+                      rowCount={nodes[usr.chain].length}
+                      rowHeight={75}
+                      rowProps={{}}
+                    />
+                  </div>
+                </>
               ) : (
                 <p>{t("Nodes:none")}</p>
               )}

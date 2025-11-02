@@ -172,7 +172,7 @@ const CreateAccount = () => {
   };
 
   return (
-    <div className="container mx-auto mt-5 mb-5 w-1/2">
+    <div className="container mx-auto mt-5 mb-5 w-full lg:w-3/4">
       <div className="grid grid-cols-1 gap-3">
         <Card>
           <CardHeader className="pb-5">
@@ -214,7 +214,7 @@ const CreateAccount = () => {
                 ) : null}
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 flex items-center">
+                <label className="text-sm font-medium text-gray-700 flex items-center">
                   {t("CreateAccount:generatedPassword")}
                   <HoverCard>
                     <HoverCardTrigger asChild>
@@ -226,14 +226,14 @@ const CreateAccount = () => {
                   </HoverCard>
                 </label>
                 <div className="grid grid-cols-4 gap-3">
-                  <div className="col-span-3">
+                  <div className="col-span-4 md:col-span-3">
                     <Input
                       type={passMode === "hide" ? "password" : "text"}
                       value={generatedPassword}
                       disabled
                     />
                   </div>
-                  <div className="col-span-1">
+                  <div className="col-span-4 md:col-span-1">
                     <Button
                       variant="outline"
                       className="mr-2"
@@ -302,7 +302,7 @@ const CreateAccount = () => {
               </div>
 
               <div className="grid grid-cols-1 gap-3">
-                <div>
+                <div className="flex items-center">
                   <Checkbox
                     id="checkbox1"
                     checked={loseAccessChecked}
@@ -314,7 +314,7 @@ const CreateAccount = () => {
                     {t("CreateAccount:loseAccess")}
                   </label>
                 </div>
-                <div>
+                <div className="flex items-center">
                   <Checkbox
                     id="checkbox2"
                     checked={noRecoveryChecked}
@@ -326,7 +326,7 @@ const CreateAccount = () => {
                     {t("CreateAccount:noRecovery")}
                   </label>
                 </div>
-                <div>
+                <div className="flex items-center">
                   <Checkbox
                     id="checkbox3"
                     checked={writtenDownChecked}

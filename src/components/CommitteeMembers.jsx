@@ -31,8 +31,6 @@ import {
 
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ScrollArea } from "@/components/ui/scroll-area";
-
 import { Avatar } from "@/components/Avatar.tsx"; // Re-using existing component
 
 import { $currentUser } from "@/stores/users.ts";
@@ -43,7 +41,7 @@ import {
   createObjectStore,
   createEveryObjectStore,
 } from "@/nanoeffects/Objects.ts";
-import { createUsersCoreBalanceStore } from "@/nanoeffects/UserBalances.js";
+
 import { useInitCache } from "@/nanoeffects/Init.ts";
 
 import { humanReadableFloat, debounce } from "@/lib/common";
@@ -196,33 +194,6 @@ export default function CommitteeMembers(properties) {
       ); // Apply filter
   }, [allCommitteeMembers, committeeAccounts, activeCommitteeMembers, filter]);
 
-  const [coreBalances, setCoreBalances] = useState();
-  useEffect(() => {
-    // fetch committee member core balances
-    async function fetchCoreBalances() {
-      if (usr && usr.chain && currentNode && committeeAccounts) {
-        const accountIds = Object.keys(committeeAccounts);
-        const uniqueAccountIds = [...new Set(accountIds)];
-
-        const coreBalancesStore = createUsersCoreBalanceStore([
-          usr.chain,
-          JSON.stringify(uniqueAccountIds),
-          currentNode.url,
-        ]);
-
-        coreBalancesStore.subscribe(({ data, error }) => {
-          if (data && !error) {
-            setCoreBalances(data);
-          } else if (error) {
-            console.error("Error fetching core balances:", error);
-          }
-        });
-      }
-    }
-
-    fetchCoreBalances();
-  }, [currentNode, committeeAccounts]);
-
   const sortedMembers = useMemo(() => {
     const sorted = [...processedMembers].sort((a, b) => {
       if (sortKey === "name") {
@@ -258,17 +229,6 @@ export default function CommitteeMembers(properties) {
   const CommitteeRow = ({ index, style }) => {
     const member = sortedMembers[index];
     if (!member) return null;
-
-    const foundBalance = coreBalances
-      ? coreBalances.find((balance) => balance.id === member.account_id)
-      : null;
-
-    const coreTokenBalance = foundBalance ? foundBalance.balance[0].amount : 0;
-
-    const humanReadableBalance = humanReadableFloat(
-      coreTokenBalance,
-      5
-    ).toLocaleString(undefined, { minimumFractionDigits: 5 });
 
     const votes = committeeAccounts[member.account_id]?.options.votes || [];
     const filteredVotes = votes.filter((x) => parseInt(x.split(":")[0]) === 0);
@@ -320,25 +280,27 @@ export default function CommitteeMembers(properties) {
           <DialogTrigger asChild>
             <Card className={`mb-1 ${member.active ? "bg-green-100" : ""}`}>
               <CardContent className="pt-3 pb-3 text-sm">
-                <div className="grid grid-cols-4 gap-2 items-center">
+                <div className="grid grid-cols-3 gap-2 items-center">
                   <div className="flex items-center">
-                    <Avatar
-                      size={30}
-                      name={member.name}
-                      extra={`CM${index}`}
-                      expression={
-                        !member.active
-                          ? { eye: "sleepy", mouth: "unhappy" }
-                          : { eye: "normal", mouth: "open" }
-                      }
-                      colors={[
-                        "#146A7C",
-                        "#F0AB3D",
-                        "#C271B4",
-                        "#C20D90",
-                        "#92A1C6",
-                      ]}
-                    />
+                    <span className="hidden md:block">
+                      <Avatar
+                        size={30}
+                        name={member.name}
+                        extra={`CM${index}`}
+                        expression={
+                          !member.active
+                            ? { eye: "sleepy", mouth: "unhappy" }
+                            : { eye: "normal", mouth: "open" }
+                        }
+                        colors={[
+                          "#146A7C",
+                          "#F0AB3D",
+                          "#C271B4",
+                          "#C20D90",
+                          "#92A1C6",
+                        ]}
+                      />
+                    </span>
                     <span className="ml-2">{member.name}</span>
                   </div>
                   <div>
@@ -362,14 +324,11 @@ export default function CommitteeMembers(properties) {
                     )
                   </div>
                   <div className="text-right pr-3">
-                    {humanReadableBalance} BTS
-                  </div>
-                  <div className="text-right pr-3">
                     {humanReadableFloat(member.total_votes, 5).toLocaleString(
                       undefined,
-                      { minimumFractionDigits: 5 }
-                    )}{" "}
-                    BTS
+                      { minimumFractionDigits: 0, maximumFractionDigits: 0 }
+                    )}
+                    {_chain === "bitshares" ? " BTS" : " TEST"}
                   </div>
                 </div>
               </CardContent>
@@ -417,17 +376,14 @@ export default function CommitteeMembers(properties) {
             onChange={(e) => debouncedFilterChange(e.target.value)}
             className="mb-4 w-full md:w-1/3"
           />
-          {loading ||
-          !sortedMembers ||
-          !sortedMembers.length ||
-          !coreBalances ? (
+          {loading || !sortedMembers || !sortedMembers.length ? (
             <div className="space-y-2">
               <Skeleton className="h-12 w-full" />
               <Skeleton className="h-64 w-full" />
             </div>
           ) : (
             <div className="w-full">
-              <div className="grid grid-cols-4 gap-2 p-2 bg-gray-100 rounded-t-md font-semibold text-sm sticky top-0 z-10">
+              <div className="grid grid-cols-3 gap-2 p-2 bg-gray-100 rounded-t-md font-semibold text-sm sticky top-0 z-10">
                 <div
                   className="cursor-pointer"
                   onClick={() => handleSort("name")}
@@ -440,9 +396,6 @@ export default function CommitteeMembers(properties) {
                     : ""}
                 </div>
                 <div>{t("CommitteeMembers:ids")}</div>
-                <div className="text-right">
-                  {t("CommitteeMembers:coreTokenBalance")}
-                </div>
                 <div
                   className="text-right pr-3 cursor-pointer"
                   onClick={() => handleSort("votes")}

@@ -5,10 +5,10 @@ import React, {
   useSyncExternalStore,
 } from "react";
 import { useStore } from "@nanostores/react";
+import { List } from "react-window";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -16,6 +16,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+
 import {
   Table,
   TableHeader,
@@ -24,8 +25,7 @@ import {
   TableRow,
   TableCell,
 } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { List } from "react-window";
+
 import {
   Dialog,
   DialogContent,
@@ -33,14 +33,20 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
+
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+
 import ExternalLink from "@/components/common/ExternalLink.jsx";
 
 import ChainTypes from "@/bts/chain/ChainTypes.js";
+import { humanReadableFloat } from "@/lib/common.js";
+
 import { $currentNode } from "@/stores/node.ts";
 import { $currentUser } from "@/stores/users.ts";
 import { createTicketsStore } from "@/nanoeffects/Tickets.ts";
-import { humanReadableFloat } from "@/lib/common.js";
 import { getObjects } from "@/nanoeffects/src/common";
+import { DialogTrigger } from "@radix-ui/react-dialog";
 
 export default function TicketLeaderboard() {
   const { t } = useTranslation(locale.get(), { i18n: i18nInstance });
@@ -164,8 +170,108 @@ export default function TicketLeaderboard() {
     fetchAccountsWS();
   }, [leaderboard.rows, chain, currentNode]);
 
+  const LeaderboardRow = ({ index, style }) => {
+    const r = leaderboard.rows[index];
+    const acc = accounts[r.id];
+    const name = acc && acc.name ? acc.name : r.id;
+
+    return (
+      <div key={r.id} style={style}>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Card className="hover:bg-gray-200">
+              <CardContent>
+                <div className="grid grid-cols-3">
+                  <div className="text-xs lg:text-lg mt-5">{name}</div>
+
+                  <div className="text-xs lg:text-lg mt-5">
+                    {r.amount.toLocaleString(locale.get() || undefined, {
+                      minimumFractionDigits: 0,
+                      maximumFractionDigits: 0,
+                    })}{" "}
+                    {assetSymbol}
+                  </div>
+
+                  <div className="text-xs lg:text-lg mt-5">
+                    {r.percent.toFixed(2)}%
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[720px] bg-white">
+            <div className="flex items-center gap-2 mt-3 text-center">
+              <Table>
+                <TableBody>
+                  <TableRow>
+                    <TableCell className="font-bold">
+                      {t("TicketsLeaderboard:th.account", "Account")}
+                    </TableCell>
+                    <TableCell>
+                      <ExternalLink
+                        type="text"
+                        hyperlink={`https://explorer.bitshares.ws/#/accounts/${name}`}
+                        text={name}
+                        classnamecontents="hover:underline text-blue-600 cursor-pointer"
+                      />
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell className="font-bold">
+                      {t("TicketsLeaderboard:th.amount", "Effective amount")}
+                    </TableCell>
+                    <TableCell>
+                      {r.amount.toLocaleString(locale.get() || undefined, {
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 0,
+                      })}{" "}
+                      {assetSymbol}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell className="font-bold">
+                      {t("TicketsLeaderboard:th.percent", "% of total")}
+                    </TableCell>
+                    <TableCell>{r.percent.toFixed(2)}%</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell className="font-bold">
+                      {t("TicketsLeaderboard:th.tickets", "Tickets")}
+                    </TableCell>
+                    <TableCell>
+                      {r.tickets.map((tid) => (
+                        <Badge
+                          key={tid}
+                          className="cursor-pointer hover:bg-gray-400 mr-1"
+                          variant="secondary"
+                          onClick={() => {
+                            setActiveTicketId(tid);
+                            const found =
+                              tickets.find((tk) => tk.id === tid) || null;
+                            setActiveTicketObj(found);
+                            setShowTicketDialog(true);
+                          }}
+                          title={t(
+                            "TicketsLeaderboard:showTicketJSON",
+                            "Show ticket JSON"
+                          )}
+                        >
+                          {tid}
+                        </Badge>
+                      ))}
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </div>
+          </DialogContent>
+        </Dialog>
+      </div>
+    );
+  };
+
   return (
-    <div className="container mx-auto mt-5 mb-5 w-3/4">
+    <div className="container mx-auto mt-5 mb-5 w-full md:w-3/4">
       <div className="grid grid-cols-1 gap-3">
         <Card>
           <CardHeader className="pb-1">
@@ -189,109 +295,19 @@ export default function TicketLeaderboard() {
                 asset: assetSymbol,
               })}
             </div>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-[200px]">
-                    {t("TicketsLeaderboard:th.account", "Account")}
-                  </TableHead>
-                  <TableHead>
-                    {t("TicketsLeaderboard:th.amount", "Effective amount")}
-                  </TableHead>
-                  <TableHead className="text-left">
-                    {t("TicketsLeaderboard:th.percent", "% of total")}
-                  </TableHead>
-                  <TableHead>
-                    {t("TicketsLeaderboard:th.tickets", "Tickets")}
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                <tr>
-                  <td colSpan={4} className="p-0">
-                    <div className="w-full max-h-[320px]">
-                      <List
-                        rowComponent={function LeaderRow({ index, style }) {
-                          const r = leaderboard.rows[index];
-                          const acc = accounts[r.id];
-                          const name = acc && acc.name ? acc.name : r.id;
-
-                          const rowStyle = {
-                            ...style,
-                            display: "grid",
-                            gridTemplateColumns: "200px 1fr 120px 1fr",
-                            alignItems: "center",
-                            gap: "0.5rem",
-                            padding: "0.5rem",
-                            borderBottom: "1px solid rgba(0,0,0,0.04)",
-                            boxSizing: "border-box",
-                          };
-
-                          return (
-                            <div
-                              key={r.id}
-                              style={rowStyle}
-                              className="grid grid-cols-4"
-                            >
-                              <div className="font-mono text-xs">
-                                <ExternalLink
-                                  type="text"
-                                  hyperlink={`https://explorer.bitshares.ws/#/accounts/${name}`}
-                                  text={name}
-                                  classnamecontents="hover:underline text-blue-600 cursor-pointer"
-                                />
-                              </div>
-
-                              <div>
-                                {r.amount.toLocaleString(
-                                  locale.get() || undefined,
-                                  {
-                                    minimumFractionDigits: 5,
-                                    maximumFractionDigits: 5,
-                                  }
-                                )}{" "}
-                                {assetSymbol}
-                              </div>
-
-                              <div>{r.percent.toFixed(2)}%</div>
-
-                              <div className="font-mono text-[11px] break-words">
-                                <div className="flex flex-wrap gap-1">
-                                  {r.tickets.map((tid) => (
-                                    <Badge
-                                      key={tid}
-                                      className="cursor-pointer hover:bg-gray-400"
-                                      variant="secondary"
-                                      onClick={() => {
-                                        setActiveTicketId(tid);
-                                        const found =
-                                          tickets.find((tk) => tk.id === tid) ||
-                                          null;
-                                        setActiveTicketObj(found);
-                                        setShowTicketDialog(true);
-                                      }}
-                                      title={t(
-                                        "TicketsLeaderboard:showTicketJSON",
-                                        "Show ticket JSON"
-                                      )}
-                                    >
-                                      {tid}
-                                    </Badge>
-                                  ))}
-                                </div>
-                              </div>
-                            </div>
-                          );
-                        }}
-                        rowCount={leaderboard.rows.length}
-                        rowHeight={48}
-                        rowProps={{}}
-                      />
-                    </div>
-                  </td>
-                </tr>
-              </TableBody>
-            </Table>
+            <div className="grid grid-cols-3">
+              <div>{t("TicketsLeaderboard:th.account", "Account")}</div>
+              <div>{t("TicketsLeaderboard:th.amount", "Effective amount")}</div>
+              <div>{t("TicketsLeaderboard:th.percent", "% of total")}</div>
+            </div>
+            <div className="w-full max-h-[320px] overflow-auto">
+              <List
+                rowComponent={LeaderboardRow}
+                rowCount={leaderboard.rows.length}
+                rowHeight={75}
+                rowProps={{}}
+              />
+            </div>
           </CardContent>
         </Card>
 
