@@ -769,7 +769,7 @@ export default function SameTFunds(properties) {
                       <List
                         rowComponent={Row}
                         rowCount={relevantFunds.length}
-                        rowHeight={110}
+                        rowHeight={120}
                         rowProps={{}}
                         key={`list-${view}`}
                       />
@@ -795,7 +795,7 @@ export default function SameTFunds(properties) {
                       <List
                         rowComponent={Row}
                         rowCount={myTFunds.length}
-                        rowHeight={110}
+                        rowHeight={120}
                         rowProps={{}}
                         key={`list-${view}`}
                       />
@@ -843,7 +843,7 @@ export default function SameTFunds(properties) {
                       <List
                         rowComponent={Row}
                         rowCount={searchResults.length}
-                        rowHeight={110}
+                        rowHeight={120}
                         rowProps={{}}
                         key={`list-${view}`}
                       />
