@@ -1,13 +1,14 @@
 {
-    "title": "流動性プール",
-    "description": "流動性プールをすばやく見つけて、取引、交換、賭け金など！",
-    "simpleSwap": "簡単なスワップ",
-    "poolSwap": "流動性プールスワップ",
-    "stakeAssets": "ステークアセット",
-    "buyPoolShareAsset": "共有資産を購入します",
-    "dialogTitle": "流動性プールの進行： {{id}}",
-    "dialogDescription": "スワップ、ステーク、以下のこのプールの資産を交換してください！",
-    "buyAsset": "貿易",
-    "borrowAsset": "借りる",
-    "issueAsset": "問題"
+  "title": "流動性プール",
+  "description": "流動性プールをすばやく見つけて、取引、交換、賭け金など！",
+  "simpleSwap": "簡単なスワップ",
+  "poolSwap": "流動性プールスワップ",
+  "stakeAssets": "ステークアセット",
+  "buyPoolShareAsset": "共有資産を購入します",
+  "dialogTitle": "流動性プールの進行： {{id}}",
+  "dialogDescription": "スワップ、ステーク、以下のこのプールの資産を交換してください！",
+  "buyAsset": "貿易",
+  "borrowAsset": "借りる",
+  "issueAsset": "問題",
+  "details": "詳細"
 }

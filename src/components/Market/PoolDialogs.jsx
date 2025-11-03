@@ -136,20 +136,36 @@ export default function PoolDialogs(properties) {
     asset_b_symbol,
   }) {
     return (
-      <div className="grid grid-cols-10">
-        <div className="col-span-1">
-          <p>{id}</p>
+      <>
+        <div className="hidden md:grid md:grid-cols-10 hover:bg-slate-100">
+          <div className="col-span-1">
+            <p>{id}</p>
+          </div>
+          <div className="col-span-3">
+            <p>{share_asset_symbol}</p>
+          </div>
+          <div className="col-span-3">
+            <p>{asset_a_symbol}</p>
+          </div>
+          <div className="col-span-3">
+            <p>{asset_b_symbol}</p>
+          </div>
         </div>
-        <div className="col-span-3">
-          <p>{share_asset_symbol}</p>
+        <div
+          className="grid md:hidden grid-cols-10 hover:bg-slate-100"
+          title={share_asset_symbol}
+        >
+          <div className="col-span-2">
+            <p>{id}</p>
+          </div>
+          <div className="col-span-4">
+            <p>{asset_a_symbol}</p>
+          </div>
+          <div className="col-span-4">
+            <p>{asset_b_symbol}</p>
+          </div>
         </div>
-        <div className="col-span-3">
-          <p>{asset_a_symbol}</p>
-        </div>
-        <div className="col-span-3">
-          <p>{asset_b_symbol}</p>
-        </div>
-      </div>
+      </>
     );
   }
 
@@ -266,7 +282,7 @@ export default function PoolDialogs(properties) {
             <DialogDescription>{dialogDescription}</DialogDescription>
           </DialogHeader>
           <div className="grid grid-cols-1">
-            <div className="grid grid-cols-10">
+            <div className="hidden md:grid md:grid-cols-10">
               <div className="col-span-1">{t("PoolDialogs:idColumnTitle")}</div>
               <div className="col-span-3">
                 {t("PoolDialogs:shareAssetColumnTitle")}
@@ -275,6 +291,15 @@ export default function PoolDialogs(properties) {
                 {t("PoolDialogs:assetAColumnTitle")}
               </div>
               <div className="col-span-3">
+                {t("PoolDialogs:assetBColumnTitle")}
+              </div>
+            </div>
+            <div className="grid md:hidden grid-cols-10">
+              <div className="col-span-2">{t("PoolDialogs:idColumnTitle")}</div>
+              <div className="col-span-4">
+                {t("PoolDialogs:assetAColumnTitle")}
+              </div>
+              <div className="col-span-4">
                 {t("PoolDialogs:assetBColumnTitle")}
               </div>
             </div>
@@ -293,7 +318,7 @@ export default function PoolDialogs(properties) {
   }
 
   return (
-    <div className="grid grid-cols-3 gap-5 mt-3">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-3">
       <HoverCard key="hover_a">
         <HoverCardTrigger asChild>
           <div>

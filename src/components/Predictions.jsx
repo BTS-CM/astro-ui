@@ -2165,7 +2165,6 @@ export default function Predictions(properties) {
             <>
               {chosenPMAs && chosenPMAs.length ? (
                 <>
-                  {/* Mobile: visible when viewport is smaller than md */}
                   <div className="block md:hidden w-full mt-3 max-h-[500px] overflow-auto">
                     <List
                       rowComponent={PredictionRow}
@@ -2176,12 +2175,11 @@ export default function Predictions(properties) {
                     />
                   </div>
 
-                  {/* Desktop: visible at md and larger */}
                   <div className="hidden md:block w-full mt-3 max-h-[500px] overflow-auto">
                     <List
                       rowComponent={PredictionRow}
                       rowCount={chosenPMAs.length}
-                      rowHeight={275} // original desktop height
+                      rowHeight={275}
                       key={`list-${view}-desktop`}
                       rowProps={{}}
                     />

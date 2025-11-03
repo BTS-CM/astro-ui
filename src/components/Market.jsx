@@ -333,7 +333,7 @@ export default function Market(properties) {
   return (
     <>
       <div className="container mx-auto mt-5 mb-5">
-        <div className="grid grid-cols-2 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div className="col-span-1">
             <div className="flex-grow mb-2">
               <Card>
@@ -658,7 +658,7 @@ export default function Market(properties) {
         <div className="grid grid-cols-1 gap-5 mt-5">
           {assetAData && assetBData ? (
             <>
-              <div className="w-full grid grid-cols-2 gap-5">
+              <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-5">
                 {buyOrders && !marketOrdersLoading ? (
                   <MarketOrderCard
                     cardType="buy"

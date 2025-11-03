@@ -17,6 +17,17 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+
+import { Button } from "@/components/ui/button.jsx";
+
 import { useInitCache } from "@/nanoeffects/Init.ts";
 import { createTopMarketsStore } from "@/nanoeffects/TopMarkets.ts";
 import { $currentUser } from "@/stores/users.ts";
@@ -73,55 +84,60 @@ export default function Featured(properties) {
         id: assetB,
         symbol: assetB,
       };
-      const [showPools, setShowPools] = useState(false);
 
       return (
         <div className="col-span-1 border-b-2 py-2" key={pairUnderscore}>
-          <div className="grid grid-cols-4 gap-2 items-center">
-            <a
-              className="col-span-1 hover:underline"
-              href={`/dex/index.html?market=${pairUnderscore}`}
-            >
-              {market.pair}
-            </a>
-            <a
-              className="col-span-1"
-              href={`/dex/index.html?market=${pairUnderscore}`}
-            >
-              {market["24h_volume"]}
-            </a>
-            <a
-              className="col-span-1"
-              href={`/dex/index.html?market=${pairUnderscore}`}
-            >
-              {market.nb_operations}
-            </a>
-            <div className="col-span-1 flex justify-end">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setShowPools((v) => !v)}
-                title={t("PageHeader:pools")}
+          <div
+            className="grid grid-cols-4 gap-2 items-center"
+            title={`${t("Featured:hourVolume")}: ${market["24h_volume"]} ${t(
+              "Featured:trades"
+            )}: ${market.nb_operations}`}
+          >
+            <span className="col-span-2 md:col-span-1">
+              <a
+                className="hover:underline"
+                href={`/dex/index.html?market=${pairUnderscore}`}
               >
-                {t("PageHeader:pools")}
-              </Button>
+                {market.pair}
+              </a>
+            </span>
+            <span className="hidden md:block col-span-1">
+              <a href={`/dex/index.html?market=${pairUnderscore}`}>
+                {market["24h_volume"]}
+              </a>
+            </span>
+            <span className="hidden md:block col-span-1">
+              <a href={`/dex/index.html?market=${pairUnderscore}`}>
+                {market.nb_operations}
+              </a>
+            </span>
+            <div className="col-span-2 md:col-span-1 flex justify-end">
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    title={t("PageHeader:pools")}
+                  >
+                    {t("PageHeader:pools")}
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="bg-white">
+                  <PoolDialogs
+                    assetA={assetA}
+                    assetB={assetB}
+                    assetAData={assetAData}
+                    assetBData={assetBData}
+                    chain={chain}
+                    _assetsBTS={_assetsBTS}
+                    _assetsTEST={_assetsTEST}
+                    _poolsBTS={poolsBTS}
+                    _poolsTEST={poolsTEST}
+                  />
+                </DialogContent>
+              </Dialog>
             </div>
           </div>
-          {showPools ? (
-            <div className="mt-2">
-              <PoolDialogs
-                assetA={assetA}
-                assetB={assetB}
-                assetAData={assetAData}
-                assetBData={assetBData}
-                chain={chain}
-                _assetsBTS={_assetsBTS}
-                _assetsTEST={_assetsTEST}
-                _poolsBTS={poolsBTS}
-                _poolsTEST={poolsTEST}
-              />
-            </div>
-          ) : null}
         </div>
       );
     };
@@ -154,15 +170,18 @@ export default function Featured(properties) {
                 <>
                   <div className="grid grid-cols-1">
                     <div className="col-span-1">
-                      <div className="grid grid-cols-3 gap-1 text-center border-b-2">
-                        <div className="col-span-1">
+                      <div className="grid grid-cols-4 gap-1 text-center border-b-2">
+                        <div className="col-span-2 md:col-span-1">
                           <b>{t("Featured:marketTradingPair")}</b>
                         </div>
-                        <div className="col-span-1">
+                        <div className="hidden md:block col-span-1">
                           <b>{t("Featured:hourVolume")}</b>
                         </div>
-                        <div className="col-span-1">
+                        <div className="hidden md:block col-span-1">
                           <b>{t("Featured:trades")}</b>
+                        </div>
+                        <div className="col-span-2 md:col-span-1">
+                          <b>{t("PortfolioTabs:pools")}</b>
                         </div>
                       </div>
                     </div>

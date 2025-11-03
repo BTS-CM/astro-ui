@@ -704,7 +704,7 @@ export default function CreditOfferEditor(properties) {
   };
 
   return (
-    <div className="container mx-auto mt-5 mb-5 w-full md:w-1/2">
+    <div className="container mx-auto mt-5 mb-5 w-full lg:w-1/2">
       <div className="grid grid-cols-1 gap-3">
         <Card>
           <CardHeader>
@@ -728,7 +728,7 @@ export default function CreditOfferEditor(properties) {
               <FieldGroup>
                 {offerID ? (
                   <span className="grid grid-cols-12">
-                    <span className="col-span-6">
+                    <span className="col-span-12 lg:col-span-6">
                       <Field>
                         <FieldLabel htmlFor={`offerOwner-${offerID ?? "new"}`}>
                           {t("CreditOfferEditor:offerOwner")}
@@ -766,7 +766,7 @@ export default function CreditOfferEditor(properties) {
                         </FieldDescription>
                       </Field>
                     </span>
-                    <span className="col-span-6">
+                    <span className="col-span-12 lg:col-span-6">
                       <Field>
                         <FieldLabel htmlFor={`offerId-${offerID ?? "new"}`}>
                           {t("CreditOfferEditor:existingID")}
@@ -1054,7 +1054,7 @@ export default function CreditOfferEditor(properties) {
                 </Field>
 
                 <span className="grid grid-cols-12 mt-3 mb-3">
-                  <span className="col-span-4">
+                  <span className="col-span-12 lg:col-span-4">
                     <Field>
                       <FieldLabel>
                         {t("CreditOfferEditor:repaymentPeriod")}
@@ -1108,7 +1108,7 @@ export default function CreditOfferEditor(properties) {
                       </FieldDescription>
                     </Field>
                   </span>
-                  <span className="col-span-4">
+                  <span className="col-span-12 lg:col-span-4">
                     <Field>
                       <FieldLabel htmlFor={`minimumAmount-${offerID ?? "new"}`}>
                         {t("CreditOfferEditor:minimumAmount")}
@@ -1146,7 +1146,7 @@ export default function CreditOfferEditor(properties) {
                       </FieldDescription>{" "}
                     </Field>
                   </span>
-                  <span className="col-span-4">
+                  <span className="col-span-12 lg:col-span-4">
                     <Field>
                       <FieldLabel>
                         {t("CreditOfferEditor:expirationDate")}
@@ -1206,7 +1206,7 @@ export default function CreditOfferEditor(properties) {
                   </FieldLabel>
                   <FieldContent>
                     <span className="grid grid-cols-12">
-                      <span className="col-span-9 border border-gray-300 rounded">
+                      <span className="col-span-12 lg:col-span-9 border border-gray-300 rounded">
                         <div className="w-full max-h-[210px] overflow-auto">
                           <List
                             rowComponent={CollateralRow}
@@ -1216,7 +1216,7 @@ export default function CreditOfferEditor(properties) {
                           />
                         </div>
                       </span>
-                      <span className="col-span-3 ml-3 text-center">
+                      <span className="col-span-12 lg:col-span-3 ml-3 text-center">
                         <CollateralDropDownCard
                           chosenAssets={acceptableCollateral}
                           lendingAsset={
@@ -1238,21 +1238,12 @@ export default function CreditOfferEditor(properties) {
 
                 <Field>
                   <FieldLabel>
-                    {t("CreditOfferEditor:preApprovedUsers")}
-                  </FieldLabel>
-                  <FieldContent>
                     <span className="grid grid-cols-12">
-                      <span className="col-span-9 border border-gray-300 rounded">
-                        <div className="w-full max-h-[210px] overflow-auto">
-                          <List
-                            rowComponent={ApprovedBorrowerRow}
-                            rowCount={allowedAccounts.length}
-                            rowHeight={100}
-                            rowProps={{}}
-                          />
-                        </div>
+                      <span className="col-span-9 ml-3 text-left">
+                        {t("CreditOfferEditor:preApprovedUsers")}
                       </span>
-                      <span className="col-span-3 ml-3 text-center">
+
+                      <span className="col-span-3 ml-3 text-right">
                         <Dialog
                           open={targetUserDialogOpen}
                           onOpenChange={(open) => {
@@ -1260,7 +1251,10 @@ export default function CreditOfferEditor(properties) {
                           }}
                         >
                           <DialogTrigger asChild>
-                            <Button variant="outline" className="ml-3 mt-1">
+                            <Button
+                              variant="outline"
+                              className="ml-3 mt-1 bg-white"
+                            >
                               ➕ {t("CreditOfferEditor:addUser")}
                             </Button>
                           </DialogTrigger>
@@ -1307,6 +1301,20 @@ export default function CreditOfferEditor(properties) {
                             />
                           </DialogContent>
                         </Dialog>
+                      </span>
+                    </span>
+                  </FieldLabel>
+                  <FieldContent>
+                    <span className="grid grid-cols-12">
+                      <span className="col-span-12 border border-gray-300 rounded">
+                        <div className="w-full max-h-[210px] overflow-auto">
+                          <List
+                            rowComponent={ApprovedBorrowerRow}
+                            rowCount={allowedAccounts.length}
+                            rowHeight={100}
+                            rowProps={{}}
+                          />
+                        </div>
                       </span>
                     </span>
                   </FieldContent>

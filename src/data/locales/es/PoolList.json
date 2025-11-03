@@ -1,13 +1,14 @@
 {
-    "title": "Piscinas de liquidez",
-    "description": "¡Localice rápidamente las piscinas de liquidez para comerciar, intercambiar, estaca, etc.!",
-    "simpleSwap": "Intercambio simple",
-    "poolSwap": "Swap de piscina de liquidez",
-    "stakeAssets": "Activo de estaca",
-    "buyPoolShareAsset": "Comprar activo de acciones",
-    "dialogTitle": "Proceder con la piscina de liquidez: {{id}}",
-    "dialogDescription": "¡Cambie, estaca, intercambia los activos de esta piscina a continuación!",
-    "buyAsset": "Comercio",
-    "borrowAsset": "Pedir prestado",
-    "issueAsset": "Asunto"
+  "title": "Piscinas de liquidez",
+  "description": "¡Localice rápidamente las piscinas de liquidez para comerciar, intercambiar, estaca, etc.!",
+  "simpleSwap": "Intercambio simple",
+  "poolSwap": "Swap de piscina de liquidez",
+  "stakeAssets": "Activo de estaca",
+  "buyPoolShareAsset": "Comprar activo de acciones",
+  "dialogTitle": "Proceder con la piscina de liquidez: {{id}}",
+  "dialogDescription": "¡Cambie, estaca, intercambia los activos de esta piscina a continuación!",
+  "buyAsset": "Comercio",
+  "borrowAsset": "Pedir prestado",
+  "issueAsset": "Asunto",
+  "details": "Detalles"
 }

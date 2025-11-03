@@ -62,14 +62,6 @@ import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
 import AssetIssuerActions from "@/components/AssetIssuerActions.jsx";
 
-/**
- * Favourites list view
- * Props:
- *  - _assetsBTS: full asset objects (BTS)
- *  - _assetsTEST: full asset objects (TESTNET)
- *  - _marketSearchBTS: market search compressed list (BTS)
- *  - _marketSearchTEST: market search compressed list (TESTNET)
- */
 export default function Favourites(properties) {
   const {
     _assetsBTS,
@@ -115,9 +107,98 @@ export default function Favourites(properties) {
   }, [_marketSearchBTS, _marketSearchTEST, chain]);
 
   const chainFavourites = useMemo(() => {
+    // favourite assets
     if (!favourites) return [];
     return favourites[chain] ?? [];
   }, [favourites, chain]);
+
+  const favouriteAssets = useMemo(() => {
+    if (!chainFavourites) return [];
+    return assets.filter((asset) =>
+      chainFavourites.some((fav) => fav.id === asset.id)
+    );
+  }, [chainFavourites, assets]);
+
+  const [dynamicData, setDynamicData] = useState([]);
+  useEffect(() => {
+    async function fetching() {
+      const requiredStore = createObjectStore([
+        usr.chain,
+        JSON.stringify(
+          favouriteAssets.map((asset) => asset.dynamic_asset_data_id)
+        ),
+        currentNode ? currentNode.url : null,
+      ]);
+
+      requiredStore.subscribe(({ data, error, loading }) => {
+        if (data && !error && !loading) {
+          setDynamicData(data);
+        }
+      });
+    }
+
+    if (favouriteAssets && favouriteAssets.length) {
+      fetching();
+    }
+  }, [favouriteAssets]);
+
+  const [bitassetData, setBitassetData] = useState([]);
+  useEffect(() => {
+    async function fetching() {
+      const requiredStore = createObjectStore([
+        usr.chain,
+        JSON.stringify(
+          favouriteAssets
+            .filter((asset) => asset.bitasset_data_id)
+            .map((asset) => asset.bitasset_data_id)
+        ),
+        currentNode ? currentNode.url : null,
+      ]);
+
+      requiredStore.subscribe(({ data, error, loading }) => {
+        if (data && !error && !loading) {
+          setBitassetData(data);
+        }
+      });
+    }
+
+    if (favouriteAssets && favouriteAssets.length) {
+      fetching();
+    }
+  }, [favouriteAssets]);
+
+  const priceFeederAccountIDs = useMemo(() => {
+    if (!bitassetData) {
+      return [];
+    }
+
+    const priceFeeders = Array.from(
+      new Set(bitassetData.flatMap((data) => data.feeds.map((feed) => feed[0])))
+    );
+
+    return priceFeeders;
+  }, [bitassetData]);
+
+  const [priceFeederAccounts, setPriceFeederAccounts] = useState([]);
+  useEffect(() => {
+    async function fetching() {
+      const requiredStore = createObjectStore([
+        usr.chain,
+        JSON.stringify(priceFeederAccountIDs),
+        currentNode ? currentNode.url : null,
+      ]);
+
+      requiredStore.subscribe(({ data, error, loading }) => {
+        if (data && !error && !loading) {
+          setPriceFeederAccounts(data);
+        }
+      });
+    }
+
+    if (priceFeederAccountIDs && priceFeederAccountIDs.length) {
+      fetching();
+    }
+  }, [priceFeederAccountIDs]);
 
   const chainPairs = useMemo(() => {
     if (!favouritePairs) return [];
@@ -173,10 +254,93 @@ export default function Favourites(properties) {
       currentUser.id === item.issuer &&
       (!currentUser.chain || currentUser.chain === chain)
     );
-    console.log({ item, assetDetails });
+
+    const fullAsset = favouriteAssets.find((a) => a.id === item.id);
+
+    const relevantDynamicData = dynamicData.find(
+      (data) => data.id === fullAsset.dynamic_asset_data_id
+    );
+
+    const relevantBitassetData = fullAsset.bitasset_data_id
+      ? bitassetData.find((data) => data.id === fullAsset.bitasset_data_id)
+      : null;
+
     return (
       <div style={{ ...style, paddingRight: "10px" }}>
-        <Card className="mb-3 bg-slate-50 border border-slate-200 hover:bg-slate-100 transition-colors rounded-xl">
+        <Card className="mb-3 bg-slate-50 border border-slate-200 hover:bg-slate-100 transition-colors rounded-xl block md:hidden">
+          <CardHeader className="px-4 py-4">
+            <div className="space-y-1">
+              <CardTitle className="text-base text-slate-900">{`${item.symbol} (${item.id})`}</CardTitle>
+              <CardDescription className="text-xs text-muted-foreground">
+                {t("Favourites:issuer", { issuer: item.issuer })}
+              </CardDescription>
+            </div>
+            <div className="mt-3 flex items-center gap-2 flex-wrap">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm">
+                    {t("IssuedAssets:userActions")}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <a
+                    href={`/dex/index.html?market=${item.symbol}_$${
+                      item.symbol === "BTS" ? "CNY" : "BTS"
+                    }`}
+                  >
+                    <DropdownMenuItem>
+                      {t("IssuedAssets:proceedToTrade")}
+                    </DropdownMenuItem>
+                  </a>
+                  <a
+                    href={`/borrow/index.html?tab=searchOffers&searchTab=borrow&searchText=${item.symbol}`}
+                  >
+                    <DropdownMenuItem>
+                      {t("IssuedAssets:creditBorrow")}
+                    </DropdownMenuItem>
+                  </a>
+                  <a href={`/lend/index.html?asset=${item.symbol}`}>
+                    <DropdownMenuItem>
+                      {t("IssuedAssets:creditLend")}
+                    </DropdownMenuItem>
+                  </a>
+                  {assetDetails.bitasset_data_id ? (
+                    <a href={`/smartcoin/index.html?id=${item.id}`}>
+                      <DropdownMenuItem>
+                        {t("IssuedAssets:proceedToBorrow")}
+                      </DropdownMenuItem>
+                    </a>
+                  ) : null}
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              {showIssuerActions && assetDetails ? (
+                <AssetIssuerActions
+                  asset={assetDetails}
+                  assets={assets}
+                  chain={chain}
+                  currentUser={currentUser}
+                  node={currentNode}
+                  dynamicAssetData={relevantDynamicData}
+                  bitassetData={relevantBitassetData}
+                  priceFeederAccounts={priceFeederAccounts}
+                  buttonVariant="outline"
+                  buttonSize="sm"
+                />
+              ) : null}
+
+              <Button
+                variant="default"
+                size="sm"
+                onClick={() => removeFavouriteAsset(chain, item)}
+              >
+                ❌
+              </Button>
+            </div>
+          </CardHeader>
+        </Card>
+
+        <Card className="mb-3 bg-slate-50 border border-slate-200 hover:bg-slate-100 transition-colors rounded-xl hidden md:block">
           <CardHeader className="px-4 py-4 flex flex-row items-center justify-between">
             <div className="space-y-1">
               <CardTitle className="text-base text-slate-900">{`${item.symbol} (${item.id})`}</CardTitle>
@@ -186,7 +350,6 @@ export default function Favourites(properties) {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                {/* User actions like IssuedAssets */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline" size="sm">
@@ -195,7 +358,7 @@ export default function Favourites(properties) {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
                     <a
-                      href={`/dex/index.html?market=${item.symbol}_${
+                      href={`/dex/index.html?market=${item.symbol}_$${
                         item.symbol === "BTS" ? "CNY" : "BTS"
                       }`}
                     >
@@ -225,24 +388,27 @@ export default function Favourites(properties) {
                   </DropdownMenuContent>
                 </DropdownMenu>
 
-                {/* Issuer actions link to create/manage pages */}
                 {showIssuerActions && assetDetails ? (
                   <AssetIssuerActions
                     asset={assetDetails}
+                    assets={assets}
                     chain={chain}
                     currentUser={currentUser}
                     node={currentNode}
+                    dynamicAssetData={relevantDynamicData}
+                    bitassetData={relevantBitassetData}
+                    priceFeederAccounts={priceFeederAccounts}
                     buttonVariant="outline"
                     buttonSize="sm"
                   />
                 ) : null}
 
                 <Button
-                  variant="destructive"
+                  variant="default"
                   size="sm"
                   onClick={() => removeFavouriteAsset(chain, item)}
                 >
-                  {t("Favourites:remove")}
+                  ❌
                 </Button>
               </div>
             </div>
@@ -254,7 +420,6 @@ export default function Favourites(properties) {
 
   return (
     <div className="container mx-auto mt-5 mb-10 max-w-4xl">
-      {/* Favourite Assets Card */}
       <Card className="mb-8 rounded-xl overflow-hidden">
         <CardHeader className="px-5 py-4 flex flex-row items-center justify-between bg-slate-50 border-b">
           <CardTitle className="text-xl font-bold tracking-tight text-slate-900">
@@ -277,14 +442,24 @@ export default function Favourites(properties) {
         </CardHeader>
         <CardContent className="p-4">
           {chainFavourites && chainFavourites.length ? (
-            <div className="w-full max-h-[420px] overflow-auto">
-              <List
-                rowComponent={Row}
-                rowCount={chainFavourites.length}
-                rowHeight={96}
-                rowProps={{}}
-              />
-            </div>
+            <>
+              <div className="w-full max-h-[420px] overflow-auto block md:hidden">
+                <List
+                  rowComponent={Row}
+                  rowCount={chainFavourites.length}
+                  rowHeight={128}
+                  rowProps={{}}
+                />
+              </div>
+              <div className="w-full max-h-[420px] overflow-auto hidden md:block">
+                <List
+                  rowComponent={Row}
+                  rowCount={chainFavourites.length}
+                  rowHeight={96}
+                  rowProps={{}}
+                />
+              </div>
+            </>
           ) : (
             <Empty className="mt-2">
               <EmptyHeader>
@@ -299,7 +474,6 @@ export default function Favourites(properties) {
         </CardContent>
       </Card>
 
-      {/* Favourite Market Pairs Card */}
       <Card className="mb-8 rounded-xl overflow-hidden">
         <CardHeader className="px-5 py-4 flex flex-row items-center justify-between bg-slate-50 border-b">
           <CardTitle className="text-xl font-bold tracking-tight text-slate-900">
@@ -405,81 +579,159 @@ export default function Favourites(properties) {
         </CardHeader>
         <CardContent className="p-4">
           {chainPairs && chainPairs.length ? (
-            <div className="w-full max-h-[420px] overflow-auto">
-              <List
-                rowComponent={({ index, style }) => {
-                  const pair = chainPairs[index];
-                  if (!pair) return null;
-                  return (
-                    <div style={{ ...style, paddingRight: "10px" }}>
-                      <Card className="mb-3 bg-slate-50 border border-slate-200 hover:bg-slate-100 transition-colors rounded-xl">
-                        <CardHeader className="px-4 py-4 flex flex-row items-center justify-between">
-                          <div className="space-y-1">
-                            <CardTitle className="text-base text-slate-900">
-                              {pair}
-                            </CardTitle>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <a href={`/dex/index.html?market=${pair}`}>
-                              <Button variant="outline" size="sm">
-                                {t("Favourites:trade")}
-                              </Button>
-                            </a>
-                            <Dialog>
-                              <DialogTrigger asChild>
+            <>
+              <div className="w-full max-h-[420px] overflow-auto block md:hidden">
+                <List
+                  rowComponent={({ index, style }) => {
+                    const pair = chainPairs[index];
+                    if (!pair) return null;
+                    return (
+                      <div style={{ ...style, paddingRight: "10px" }}>
+                        <Card className="mb-3 bg-slate-50 border border-slate-200 hover:bg-slate-100 transition-colors rounded-xl">
+                          <CardHeader className="px-4 py-4">
+                            <div className="space-y-1">
+                              <CardTitle className="text-base text-slate-900">
+                                {pair}
+                              </CardTitle>
+                            </div>
+                            <div className="mt-3 flex items-center gap-2 flex-wrap">
+                              <a href={`/dex/index.html?market=${pair}`}>
                                 <Button variant="outline" size="sm">
-                                  {t("PageHeader:pools")}
+                                  {t("Favourites:trade")}
                                 </Button>
-                              </DialogTrigger>
-                              <DialogContent className="sm:max-w-[820px] bg-white">
-                                {(() => {
-                                  const [assetA, assetB] = pair.split("_");
-                                  const assetAData = assets.find(
-                                    (a) => a.symbol === assetA
-                                  ) || {
-                                    id: assetA,
-                                    symbol: assetA,
-                                  };
-                                  const assetBData = assets.find(
-                                    (a) => a.symbol === assetB
-                                  ) || {
-                                    id: assetB,
-                                    symbol: assetB,
-                                  };
-                                  return (
-                                    <PoolDialogs
-                                      assetA={assetA}
-                                      assetB={assetB}
-                                      assetAData={assetAData}
-                                      assetBData={assetBData}
-                                      chain={chain}
-                                      _assetsBTS={_assetsBTS}
-                                      _assetsTEST={_assetsTEST}
-                                      _poolsBTS={_poolsBTS}
-                                      _poolsTEST={_poolsTEST}
-                                    />
-                                  );
-                                })()}
-                              </DialogContent>
-                            </Dialog>
-                            <Button
-                              variant="destructive"
-                              size="sm"
-                              onClick={() => removeFavouritePair(chain, pair)}
-                            >
-                              {t("Favourites:remove")}
-                            </Button>
-                          </div>
-                        </CardHeader>
-                      </Card>
-                    </div>
-                  );
-                }}
-                rowCount={chainPairs.length}
-                rowHeight={88}
-                rowProps={{}}
-              />
-            </div>
+                              </a>
+                              <Dialog>
+                                <DialogTrigger asChild>
+                                  <Button variant="outline" size="sm">
+                                    {t("PageHeader:pools")}
+                                  </Button>
+                                </DialogTrigger>
+                                <DialogContent className="sm:max-w-[820px] bg-white">
+                                  {(() => {
+                                    const [assetA, assetB] = pair.split("_");
+                                    const assetAData = assets.find(
+                                      (a) => a.symbol === assetA
+                                    ) || {
+                                      id: assetA,
+                                      symbol: assetA,
+                                    };
+                                    const assetBData = assets.find(
+                                      (a) => a.symbol === assetB
+                                    ) || {
+                                      id: assetB,
+                                      symbol: assetB,
+                                    };
+                                    return (
+                                      <PoolDialogs
+                                        assetA={assetA}
+                                        assetB={assetB}
+                                        assetAData={assetAData}
+                                        assetBData={assetBData}
+                                        chain={chain}
+                                        _assetsBTS={_assetsBTS}
+                                        _assetsTEST={_assetsTEST}
+                                        _poolsBTS={_poolsBTS}
+                                        _poolsTEST={_poolsTEST}
+                                      />
+                                    );
+                                  })()}
+                                </DialogContent>
+                              </Dialog>
+                              <Button
+                                variant="default"
+                                size="sm"
+                                onClick={() => removeFavouritePair(chain, pair)}
+                              >
+                                ❌
+                              </Button>
+                            </div>
+                          </CardHeader>
+                        </Card>
+                      </div>
+                    );
+                  }}
+                  rowCount={chainPairs.length}
+                  rowHeight={120}
+                  rowProps={{}}
+                />
+              </div>
+
+              <div className="w-full max-h-[420px] overflow-auto hidden md:block">
+                <List
+                  rowComponent={({ index, style }) => {
+                    const pair = chainPairs[index];
+                    if (!pair) return null;
+                    return (
+                      <div style={{ ...style, paddingRight: "10px" }}>
+                        <Card className="mb-3 bg-slate-50 border border-slate-200 hover:bg-slate-100 transition-colors rounded-xl">
+                          <CardHeader className="px-4 py-4 flex flex-row items-center justify-between">
+                            <div className="space-y-1">
+                              <CardTitle className="text-base text-slate-900">
+                                {pair}
+                              </CardTitle>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <a href={`/dex/index.html?market=${pair}`}>
+                                <Button variant="outline" size="sm">
+                                  {t("Favourites:trade")}
+                                </Button>
+                              </a>
+                              <Dialog>
+                                <DialogTrigger asChild>
+                                  <Button variant="outline" size="sm">
+                                    {t("PageHeader:pools")}
+                                  </Button>
+                                </DialogTrigger>
+                                <DialogContent className="sm:max-w-[820px] bg-white">
+                                  {(() => {
+                                    const [assetA, assetB] = pair.split("_");
+                                    const assetAData = assets.find(
+                                      (a) => a.symbol === assetA
+                                    ) || {
+                                      id: assetA,
+                                      symbol: assetA,
+                                    };
+                                    const assetBData = assets.find(
+                                      (a) => a.symbol === assetB
+                                    ) || {
+                                      id: assetB,
+                                      symbol: assetB,
+                                    };
+                                    return (
+                                      <PoolDialogs
+                                        assetA={assetA}
+                                        assetB={assetB}
+                                        assetAData={assetAData}
+                                        assetBData={assetBData}
+                                        chain={chain}
+                                        _assetsBTS={_assetsBTS}
+                                        _assetsTEST={_assetsTEST}
+                                        _poolsBTS={_poolsBTS}
+                                        _poolsTEST={_poolsTEST}
+                                      />
+                                    );
+                                  })()}
+                                </DialogContent>
+                              </Dialog>
+                              <Button
+                                variant="default"
+                                size="sm"
+                                onClick={() => removeFavouritePair(chain, pair)}
+                              >
+                                ❌
+                              </Button>
+                            </div>
+                          </CardHeader>
+                        </Card>
+                      </div>
+                    );
+                  }}
+                  rowCount={chainPairs.length}
+                  rowHeight={88}
+                  rowProps={{}}
+                />
+              </div>
+            </>
           ) : (
             <Empty className="mt-2">
               <EmptyHeader>
@@ -494,7 +746,6 @@ export default function Favourites(properties) {
         </CardContent>
       </Card>
 
-      {/* Favourite Users Card */}
       <Card className="rounded-xl overflow-hidden">
         <CardHeader className="px-5 py-4 flex flex-row items-center justify-between bg-slate-50 border-b">
           <CardTitle className="text-xl font-bold tracking-tight text-slate-900">
@@ -526,23 +777,23 @@ export default function Favourites(properties) {
         </CardHeader>
         <CardContent className="p-4">
           {favouriteUsers && (favouriteUsers[chain] ?? []).length ? (
-            <div className="w-full max-h-[420px] overflow-auto">
-              <List
-                rowComponent={({ index, style }) => {
-                  const user = favouriteUsers[chain][index];
-                  if (!user) return null;
-                  return (
-                    <div style={{ ...style, paddingRight: "10px" }}>
-                      <Card className="mb-3 bg-slate-50 border border-slate-200 hover:bg-slate-100 transition-colors">
-                        <CardHeader className="px-4 py-4 flex flex-row items-center justify-between">
-                          <div className="space-y-1">
-                            <CardTitle className="text-base text-slate-900">{`${user.name}`}</CardTitle>
-                            <CardDescription className="text-xs text-muted-foreground">
-                              {user.id}
-                            </CardDescription>
-                          </div>
-                          <div>
-                            <div className="flex items-center gap-2">
+            <>
+              <div className="w-full max-h-[420px] overflow-auto block md:hidden">
+                <List
+                  rowComponent={({ index, style }) => {
+                    const user = favouriteUsers[chain][index];
+                    if (!user) return null;
+                    return (
+                      <div style={{ ...style, paddingRight: "10px" }}>
+                        <Card className="mb-3 bg-slate-50 border border-slate-200 hover:bg-slate-100 transition-colors">
+                          <CardHeader className="px-4 py-4">
+                            <div className="space-y-1">
+                              <CardTitle className="text-base text-slate-900">{`${user.name}`}</CardTitle>
+                              <CardDescription className="text-xs text-muted-foreground">
+                                {user.id}
+                              </CardDescription>
+                            </div>
+                            <div className="mt-3 flex items-center gap-2 flex-wrap">
                               <a
                                 href={`/transfer/index.html?to=${encodeURIComponent(
                                   user.name
@@ -571,24 +822,90 @@ export default function Favourites(properties) {
                                 </Button>
                               </a>
                               <Button
-                                variant="destructive"
+                                variant="default"
                                 size="sm"
                                 onClick={() => removeFavouriteUser(chain, user)}
                               >
-                                {t("Favourites:remove")}
+                                ❌
                               </Button>
                             </div>
-                          </div>
-                        </CardHeader>
-                      </Card>
-                    </div>
-                  );
-                }}
-                rowCount={favouriteUsers[chain].length}
-                rowHeight={88}
-                rowProps={{}}
-              />
-            </div>
+                          </CardHeader>
+                        </Card>
+                      </div>
+                    );
+                  }}
+                  rowCount={favouriteUsers[chain].length}
+                  rowHeight={120}
+                  rowProps={{}}
+                />
+              </div>
+
+              <div className="w-full max-h-[420px] overflow-auto hidden md:block">
+                <List
+                  rowComponent={({ index, style }) => {
+                    const user = favouriteUsers[chain][index];
+                    if (!user) return null;
+                    return (
+                      <div style={{ ...style, paddingRight: "10px" }}>
+                        <Card className="mb-3 bg-slate-50 border border-slate-200 hover:bg-slate-100 transition-colors">
+                          <CardHeader className="px-4 py-4 flex flex-row items-center justify-between">
+                            <div className="space-y-1">
+                              <CardTitle className="text-base text-slate-900">{`${user.name}`}</CardTitle>
+                              <CardDescription className="text-xs text-muted-foreground">
+                                {user.id}
+                              </CardDescription>
+                            </div>
+                            <div>
+                              <div className="flex items-center gap-2">
+                                <a
+                                  href={`/transfer/index.html?to=${encodeURIComponent(
+                                    user.name
+                                  )}`}
+                                >
+                                  <Button variant="outline" size="sm">
+                                    {t("Favourites:transfer")}
+                                  </Button>
+                                </a>
+                                <a
+                                  href={`/timed_transfer/index.html?to=${encodeURIComponent(
+                                    user.name
+                                  )}`}
+                                >
+                                  <Button variant="outline" size="sm">
+                                    {t("Favourites:timedTransfer")}
+                                  </Button>
+                                </a>
+                                <a
+                                  href={`/create_vesting/index.html?to=${encodeURIComponent(
+                                    user.name
+                                  )}`}
+                                >
+                                  <Button variant="outline" size="sm">
+                                    {t("Favourites:vestAssets")}
+                                  </Button>
+                                </a>
+                                <Button
+                                  variant="default"
+                                  size="sm"
+                                  onClick={() =>
+                                    removeFavouriteUser(chain, user)
+                                  }
+                                >
+                                  ❌
+                                </Button>
+                              </div>
+                            </div>
+                          </CardHeader>
+                        </Card>
+                      </div>
+                    );
+                  }}
+                  rowCount={favouriteUsers[chain].length}
+                  rowHeight={88}
+                  rowProps={{}}
+                />
+              </div>
+            </>
           ) : (
             <Empty className="mt-2">
               <EmptyHeader>

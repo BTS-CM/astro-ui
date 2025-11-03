@@ -667,7 +667,6 @@ export default function PoolStake(properties) {
                         </FieldContent>
                       </Field>
 
-                      {/* Show a spinner once a pool is chosen but before required data is ready */}
                       {pool && !isFormReady ? (
                         <div className="flex items-center justify-center py-10">
                           <Spinner className="size-6" />

@@ -710,7 +710,7 @@ export default function CreditDeals(properties) {
 
   return (
     <>
-      <div className="container mx-auto mt-5 mb-5 w-1/2">
+      <div className="container mx-auto mt-5 mb-5 w-full lg:w-1/2">
         <div className="grid grid-cols-1 gap-3">
           <Card>
             <CardHeader>
@@ -749,14 +749,24 @@ export default function CreditDeals(properties) {
                 </TabsList>
                 <TabsContent value="borrowings">
                   {borrowerDeals && borrowerDeals.length ? (
-                    <div className="w-full max-h-[500px] overflow-auto">
-                      <List
-                        rowComponent={BorrowerRow}
-                        rowCount={borrowerDeals.length}
-                        rowHeight={225}
-                        rowProps={{}}
-                      />
-                    </div>
+                    <>
+                      <div className="hidden md:block w-full max-h-[500px] overflow-auto">
+                        <List
+                          rowComponent={BorrowerRow}
+                          rowCount={borrowerDeals.length}
+                          rowHeight={225}
+                          rowProps={{}}
+                        />
+                      </div>
+                      <div className="block md:hidden w-full max-h-[500px] overflow-auto">
+                        <List
+                          rowComponent={BorrowerRow}
+                          rowCount={borrowerDeals.length}
+                          rowHeight={250}
+                          rowProps={{}}
+                        />
+                      </div>
+                    </>
                   ) : null}
                   {borrowerDeals && !borrowerDeals.length ? (
                     <Empty>
@@ -777,14 +787,24 @@ export default function CreditDeals(properties) {
                 </TabsContent>
                 <TabsContent value="lendings">
                   {lenderDeals && lenderDeals.length ? (
-                    <div className="w-full max-h-[500px] overflow-auto">
-                      <List
-                        rowComponent={OwnerRow}
-                        rowCount={lenderDeals.length}
-                        rowHeight={165}
-                        rowProps={{}}
-                      />
-                    </div>
+                    <>
+                      <div className="hidden md:block w-full max-h-[500px] overflow-auto">
+                        <List
+                          rowComponent={OwnerRow}
+                          rowCount={lenderDeals.length}
+                          rowHeight={165}
+                          rowProps={{}}
+                        />
+                      </div>
+                      <div className="block md:hidden w-full max-h-[500px] overflow-auto">
+                        <List
+                          rowComponent={OwnerRow}
+                          rowCount={lenderDeals.length}
+                          rowHeight={230}
+                          rowProps={{}}
+                        />
+                      </div>
+                    </>
                   ) : null}
                   {lenderDeals && !lenderDeals.length ? (
                     <Empty>

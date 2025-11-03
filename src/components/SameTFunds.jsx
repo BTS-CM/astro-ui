@@ -348,39 +348,24 @@ export default function SameTFunds(properties) {
           <CardContent className="pb-4 mt-1">
             <div className="grid grid-cols-3 gap-2 text-sm">
               <div className="col-span-2">
-                <div className="grid grid-cols-2">
-                  <div>
-                    {t("SameTFunds:offering")}:
-                    <b>{` ${balance} ${assetName}`}</b>
-                  </div>
-                  <div>
-                    {t("SameTFunds:fee")}:<b>{` ${feeRate} %`}</b>
-                    {feeRate > 20 ? "⚠️" : null}
-                  </div>
-                  <div>
-                    {t("SameTFunds:unpaidAmount")}:
-                    <b>{` ${unpaidAmount} ${assetName}`}</b>
-                  </div>
-                  <div>
-                    {t("SameTFunds:id")}:{" "}
-                    <b>
-                      <ExternalLink
-                        classnamecontents="hover:text-purple-500"
-                        type="text"
-                        text={fund.id}
-                        hyperlink={`https://explorer.bitshares.ws/#/objects/${
-                          fund.id
-                        }${
-                          usr.chain === "bitshares" ? "" : "?network=testnet"
-                        }`}
-                      />
-                    </b>
-                  </div>
-                </div>
+                {t("SameTFunds:offering")}:
+                <b>{` ${balance - unpaidAmount} `}</b>
+                <ExternalLink
+                  classnamecontents="hover:text-purple-500 font-bold"
+                  type="text"
+                  text={assetName}
+                  hyperlink={`https://explorer.bitshares.ws/#/assets/${assetName}${
+                    usr.chain === "bitshares" ? "" : "?network=testnet"
+                  }`}
+                />
+              </div>
+              <div>
+                {t("SameTFunds:fee")}:<b>{` ${feeRate} %`}</b>
+                {feeRate > 20 ? "⚠️" : null}
               </div>
 
               {usr.id === fund.owner_account ? (
-                <div className="grid grid-cols-2 gap-3">
+                <div className="col-span-3 grid grid-cols-2 gap-3">
                   <Dialog
                     open={updatePrompt}
                     onOpenChange={(open) => {
@@ -388,7 +373,7 @@ export default function SameTFunds(properties) {
                     }}
                   >
                     <DialogTrigger asChild>
-                      <Button>{t("SameTFunds:update")}</Button>
+                      <Button size="sm">{t("SameTFunds:update")}</Button>
                     </DialogTrigger>
                     <DialogContent className="w-full bg-white">
                       <DialogHeader>
@@ -489,6 +474,7 @@ export default function SameTFunds(properties) {
                     </DialogContent>
                   </Dialog>
                   <Button
+                    size="sm"
                     onClick={() => {
                       setDeleteDialog(true);
                     }}
@@ -594,7 +580,7 @@ export default function SameTFunds(properties) {
 
   return (
     <>
-      <div className="container mx-auto mt-5 mb-5 w-full md:w-1/2">
+      <div className="container mx-auto mt-5 mb-5 w-full md:w-3/4 lg:w-1/2">
         <div className="grid grid-cols-1 gap-3">
           <Card>
             <CardHeader className="pb-1">
@@ -779,13 +765,24 @@ export default function SameTFunds(properties) {
               {view === "all" ? (
                 relevantFunds && relevantFunds.length > 0 ? (
                   <div className="w-full mt-3 max-h-[500px] overflow-auto">
-                    <List
-                      rowComponent={Row}
-                      rowCount={relevantFunds.length}
-                      rowHeight={110}
-                      rowProps={{}}
-                      key={`list-${view}`}
-                    />
+                    <span className="hidden md:block">
+                      <List
+                        rowComponent={Row}
+                        rowCount={relevantFunds.length}
+                        rowHeight={120}
+                        rowProps={{}}
+                        key={`list-${view}`}
+                      />
+                    </span>
+                    <span className="block md:hidden">
+                      <List
+                        rowComponent={Row}
+                        rowCount={relevantFunds.length}
+                        rowHeight={160}
+                        rowProps={{}}
+                        key={`list-${view}`}
+                      />
+                    </span>
                   </div>
                 ) : (
                   <div className="mt-5">{t("SameTFunds:noFunds")}</div>
@@ -794,13 +791,24 @@ export default function SameTFunds(properties) {
               {view === "mine" ? (
                 myTFunds && myTFunds.length > 0 ? (
                   <div className="w-full mt-3 max-h-[500px] overflow-auto">
-                    <List
-                      rowComponent={Row}
-                      rowCount={myTFunds.length}
-                      rowHeight={110}
-                      rowProps={{}}
-                      key={`list-${view}`}
-                    />
+                    <span className="hidden md:block">
+                      <List
+                        rowComponent={Row}
+                        rowCount={myTFunds.length}
+                        rowHeight={120}
+                        rowProps={{}}
+                        key={`list-${view}`}
+                      />
+                    </span>
+                    <span className="block md:hidden">
+                      <List
+                        rowComponent={Row}
+                        rowCount={myTFunds.length}
+                        rowHeight={160}
+                        rowProps={{}}
+                        key={`list-${view}`}
+                      />
+                    </span>
                   </div>
                 ) : (
                   <Empty className="mt-5">
@@ -831,13 +839,24 @@ export default function SameTFunds(properties) {
               {view === "search" ? (
                 searchResults && searchResults.length > 0 ? (
                   <div className="w-full mt-3 max-h-[500px] overflow-auto">
-                    <List
-                      rowComponent={Row}
-                      rowCount={searchResults.length}
-                      rowHeight={110}
-                      rowProps={{}}
-                      key={`list-${view}`}
-                    />
+                    <span className="hidden md:block">
+                      <List
+                        rowComponent={Row}
+                        rowCount={searchResults.length}
+                        rowHeight={120}
+                        rowProps={{}}
+                        key={`list-${view}`}
+                      />
+                    </span>
+                    <span className="block md:hidden">
+                      <List
+                        rowComponent={Row}
+                        rowCount={searchResults.length}
+                        rowHeight={160}
+                        rowProps={{}}
+                        key={`list-${view}`}
+                      />
+                    </span>
                   </div>
                 ) : (
                   <div className="mt-5">{t("SameTFunds:noSearchResults")}</div>

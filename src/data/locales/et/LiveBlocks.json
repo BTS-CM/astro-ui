@@ -31,11 +31,17 @@
   },
   "recentActivity": {
     "content": "Hiljutine tegevus plokiahelas.",
-    "header": "Hiljutine tegevus"
+    "header": "Hiljutine tegevus",
+    "blocks": "Blokeeri",
+    "operations": "Operatsioonid"
   },
   "recentBlocks": {
     "content": "Viimaste plokkide loend.",
-    "header": "Viimased plokid"
+    "header": "Viimased plokid",
+    "blockId": "Blokeeri ID",
+    "timestamp": "Ajatempel",
+    "witnessId": "Tunnistaja ID",
+    "transaction": "Tehing"
   },
   "dialogContent": {
     "json": "JSON-andmed",

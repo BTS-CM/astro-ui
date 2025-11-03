@@ -256,7 +256,6 @@ export default function PortfolioOpenOrders({
           </Dialog>
         </div>
 
-        {/* MD-only view: smaller text, no Order ID or Expiration columns */}
         <div style={style} className="px-2 hidden md:block lg:hidden">
           <Card className="hover:bg-gray-50 text-sm">
             <div className="grid grid-cols-[50%_110px_1fr] items-start gap-2 p-2 mb-2">
@@ -299,7 +298,6 @@ export default function PortfolioOpenOrders({
           </Card>
         </div>
 
-        {/* LG+ view: existing 5-column layout with Order ID and Expiration */}
         <div style={style} className="px-2 hidden lg:block text-sm">
           <Card className="hover:bg-gray-50">
             <div className="grid grid-cols-[40%_1fr_1fr_1fr_1fr] items-start gap-2 p-2 mb-2">
@@ -375,7 +373,6 @@ export default function PortfolioOpenOrders({
               </div>
             ) : openOrders && openOrders.length ? (
               <div>
-                {/* MD-only header: no Order ID or Expiration, smaller text */}
                 <span className="hidden md:block lg:hidden">
                   <div className="grid grid-cols-[50%_110px_1fr] items-center h-10 px-2 text-muted-foreground font-medium text-sm">
                     <div className="text-left">
@@ -389,7 +386,6 @@ export default function PortfolioOpenOrders({
                     </div>
                   </div>
                 </span>
-                {/* LG+ header: original 5 columns */}
                 <span className="hidden lg:block">
                   <div className="grid grid-cols-[40%_1fr_1fr_1fr_1fr] items-center h-10 px-2 text-muted-foreground font-medium">
                     <div className="text-left">

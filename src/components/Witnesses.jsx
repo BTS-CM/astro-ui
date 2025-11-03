@@ -44,7 +44,6 @@ import {
   createObjectStore,
   createEveryObjectStore,
 } from "@/nanoeffects/Objects.ts";
-import { createUsersCoreBalanceStore } from "@/nanoeffects/UserBalances.js";
 
 import { humanReadableFloat, debounce } from "@/lib/common";
 import ExternalLink from "./common/ExternalLink.jsx";
@@ -216,32 +215,6 @@ export default function Witnesses(properties) {
     dynamicGlobalParameters,
   ]); // Depends on allWitnesses & globals
 
-  useEffect(() => {
-    // fetch witness core balances
-    async function fetchWitnessCoreBalances() {
-      if (usr && usr.chain && currentNode && allWitnesses.length > 0) {
-        const accountIds = allWitnesses.map((w) => w.witness_account);
-        const uniqueAccountIds = [...new Set(accountIds)];
-
-        const witnessCoreBalancesStore = createUsersCoreBalanceStore([
-          usr.chain,
-          JSON.stringify(uniqueAccountIds),
-          currentNode.url,
-        ]);
-
-        witnessCoreBalancesStore.subscribe(({ data, error }) => {
-          if (data && !error) {
-            setWitnessCoreBalances(data);
-          } else if (error) {
-            console.error("Error fetching witness core balances:", error);
-          }
-        });
-      }
-    }
-
-    fetchWitnessCoreBalances();
-  }, [witnessAccounts]);
-
   const processedWitnesses = useMemo(() => {
     const blockInterval = globalParameters?.block_interval ?? 3; // Default to 3s if not loaded
     const currentAslot = dynamicGlobalParameters?.current_aslot ?? 0;
@@ -299,8 +272,8 @@ export default function Witnesses(properties) {
     let standby = processedWitnesses;
     standby.sort((a, b) => {
       if (sortKey === "name") return a.name.localeCompare(b.name);
-      if (sortKey === "votes" || sortKey === "rank")
-        return b.total_votes - a.total_votes; // Sort standby by votes too
+      if (sortKey === "votes") return a.total_votes - b.total_votes;
+      if (sortKey === "rank") return b.total_votes - a.total_votes;
       if (sortKey === "missed") return a.total_missed - b.total_missed;
       return 0;
     });
@@ -331,24 +304,13 @@ export default function Witnesses(properties) {
     if (!witness) return null;
 
     let missedClass = "text-green-600"; // Default (low missed)
-    if (witness.total_missed > 500 && witness.total_missed <= 1250)
+    if (witness.total_missed > 500 && witness.total_missed <= 1250) {
       missedClass = "text-blue-600";
-    else if (witness.total_missed > 1250 && witness.total_missed <= 2000)
+    } else if (witness.total_missed > 1250 && witness.total_missed <= 2000) {
       missedClass = "text-orange-600";
-    else if (witness.total_missed > 2000) missedClass = "text-red-600";
-
-    const foundBalance = witnessCoreBalances.find(
-      (balance) => balance.id === witness.account_id
-    );
-
-    const coreTokenBalance = foundBalance ? foundBalance.balance[0].amount : 0;
-
-    const humanReadableBalance =
-      coreTokenBalance && coreTokenBalance > 0
-        ? humanReadableFloat(coreTokenBalance, 5).toLocaleString(undefined, {
-            minimumFractionDigits: 5,
-          })
-        : 0;
+    } else if (witness.total_missed > 2000) {
+      missedClass = "text-red-600";
+    }
 
     const votes = witnessAccounts[witness.account_id]?.options.votes || [];
     const filteredVotes = votes.filter((x) => parseInt(x.split(":")[0]) === 1);
@@ -400,29 +362,31 @@ export default function Witnesses(properties) {
             <Card className={`mb-1 ${witness.active ? "bg-green-100" : ""}`}>
               <CardContent className="pt-3 pb-3 text-sm">
                 <div className="grid grid-cols-12 gap-2 items-center">
-                  <div className="col-span-3 flex items-center">
-                    <Avatar
-                      size={30}
-                      name={witness.name}
-                      extra={`W${index}`}
-                      expression={
-                        witness.signingKey ===
-                          "BTS1111111111111111111111111111111114T1Anm" ||
-                        !witness.active
-                          ? { eye: "sleepy", mouth: "unhappy" }
-                          : { eye: "normal", mouth: "open" }
-                      }
-                      colors={[
-                        "#F0AB3D",
-                        "#C271B4",
-                        "#C20D90",
-                        "#92A1C6",
-                        "#146A7C",
-                      ]}
-                    />
+                  <div className="col-span-4 md:col-span-3 flex items-center">
+                    <span className="hidden md:block">
+                      <Avatar
+                        size={30}
+                        name={witness.name}
+                        extra={`W${index}`}
+                        expression={
+                          witness.signingKey ===
+                            "BTS1111111111111111111111111111111114T1Anm" ||
+                          !witness.active
+                            ? { eye: "sleepy", mouth: "unhappy" }
+                            : { eye: "normal", mouth: "open" }
+                        }
+                        colors={[
+                          "#F0AB3D",
+                          "#C271B4",
+                          "#C20D90",
+                          "#92A1C6",
+                          "#146A7C",
+                        ]}
+                      />
+                    </span>
                     <span className="ml-2">{witness.name}</span>
                   </div>
-                  <div className="col-span-2">
+                  <div className="col-span-4 md:col-span-2">
                     <ExternalLink
                       classnamecontents="text-blue-500 hover:text-purple-500"
                       type="text"
@@ -442,7 +406,7 @@ export default function Witnesses(properties) {
                     />
                     )
                   </div>
-                  <div className="col-span-2">
+                  <div className="hidden md:block col-span-3">
                     {witness.last_aslot_time
                       ? formatTimeAgo(witness.last_aslot_time, t)
                       : "N/A"}
@@ -467,19 +431,16 @@ export default function Witnesses(properties) {
                     ) : null}
                   </div>
                   <div
-                    className={`col-span-1 text-center font-medium ${missedClass}`}
+                    className={`hidden md:block col-span-1 text-center font-medium ${missedClass}`}
                   >
                     {witness.total_missed}
                   </div>
-                  <div className={`col-span-1 text-center font-medium`}>
-                    {humanReadableBalance}
-                  </div>
-                  <div className="col-span-3 text-right pr-3">
+                  <div className="col-span-4 md:col-span-3 text-right pr-3">
                     {humanReadableFloat(witness.total_votes, 5).toLocaleString(
                       undefined,
-                      { minimumFractionDigits: 5 }
-                    )}{" "}
-                    BTS
+                      { minimumFractionDigits: 0, maximumFractionDigits: 0 }
+                    )}
+                    {_chain === "bitshares" ? " BTS" : " TEST"}
                   </div>
                 </div>
               </CardContent>
@@ -539,7 +500,7 @@ export default function Witnesses(properties) {
             <div className="w-full">
               <div className="grid grid-cols-12 gap-2 p-2 bg-gray-100 rounded-t-md font-semibold text-sm sticky top-0 z-10">
                 <div
-                  className="col-span-3 cursor-pointer"
+                  className="col-span-4 md:col-span-3 cursor-pointer"
                   onClick={() => handleSort("name")}
                 >
                   {t("Witnesses:name")}{" "}
@@ -549,10 +510,14 @@ export default function Witnesses(properties) {
                       : "▼"
                     : ""}
                 </div>
-                <div className="col-span-2">{t("Witnesses:ids")}</div>
-                <div className="col-span-2">{t("Witnesses:lastBlock")}</div>
+                <div className="col-span-4 md:col-span-3">
+                  {t("Witnesses:ids")}
+                </div>
+                <div className="hidden md:block col-span-2">
+                  {t("Witnesses:lastBlock")}
+                </div>
                 <div
-                  className="col-span-1 text-center cursor-pointer"
+                  className="hidden md:block col-span-1 text-center cursor-pointer"
                   onClick={() => handleSort("missed")}
                 >
                   {t("Witnesses:missed")}{" "}
@@ -562,9 +527,8 @@ export default function Witnesses(properties) {
                       : "▼"
                     : ""}
                 </div>
-                <div className="col-span-1">{t("Witnesses:balance")} (BTS)</div>
                 <div
-                  className="col-span-3 text-right pr-3 cursor-pointer"
+                  className="col-span-4 md:col-span-3 text-right pr-3 cursor-pointer"
                   onClick={() => handleSort("votes")}
                 >
                   {t("Witnesses:votes")}{" "}

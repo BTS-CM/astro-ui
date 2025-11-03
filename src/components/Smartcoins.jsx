@@ -13,13 +13,6 @@ import { QuestionMarkCircledIcon } from "@radix-ui/react-icons";
 import { useTranslation } from "react-i18next";
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
-
 import {
   Dialog,
   DialogContent,
@@ -41,6 +34,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { Separator } from "./ui/separator.jsx";
 
 import { debounce } from "@/lib/common.js";
 import { getFlagBooleans } from "@/lib/common.js";
@@ -361,11 +355,9 @@ export default function Smartcoins(properties) {
 
     return (
       <div style={{ ...style }} key={`acard-${bitasset.asset_id}`}>
-        {/* allow hovercards to escape card bounds and appear above other rows */}
         <Card className="ml-2 mr-2 overflow-visible">
           <CardHeader className="pb-1">
             <CardTitle>
-              {mode === "bitasset" ? "Bitasset" : "Smartcoin"} "
               <ExternalLink
                 classnamecontents="hover:text-purple-500"
                 type="text"
@@ -374,7 +366,7 @@ export default function Smartcoins(properties) {
                   thisBitassetData.symbol
                 }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
               />
-              " {"("}
+              {" ("}
               <ExternalLink
                 classnamecontents="hover:text-purple-500"
                 type="text"
@@ -383,34 +375,38 @@ export default function Smartcoins(properties) {
                   thisBitassetData.id
                 }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
               />
-              {")"}{" "}
-              {issuer ? (
-                <>
-                  {t("Smartcoins:createdBy")}{" "}
-                  <ExternalLink
-                    classnamecontents="hover:text-purple-500"
-                    type="text"
-                    text={issuer.name}
-                    hyperlink={`https://explorer.bitshares.ws/#/accounts/${
-                      issuer.name
-                    }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
-                  />{" "}
-                  {"("}
-                  <ExternalLink
-                    classnamecontents="hover:text-purple-500"
-                    type="text"
-                    text={issuer.id}
-                    hyperlink={`https://explorer.bitshares.ws/#/accounts/${
-                      issuer.id
-                    }${usr.chain === "bitshares" ? "" : "?network=testnet"}`}
-                  />
-                  {")"}
-                </>
-              ) : null}
+              {")"}
             </CardTitle>
             <CardDescription className="text-md">
-              <div className="grid grid-cols-2">
-                <div className="grid grid-cols-1 gap-1">
+              <div className="grid grid-cols-1 md:grid-cols-2">
+                <div className="grid grid-cols-1 gap-1 text-sm">
+                  {issuer ? (
+                    <div>
+                      {t("Smartcoins:createdBy")}{" "}
+                      <ExternalLink
+                        classnamecontents="hover:text-purple-500 font-bold"
+                        type="text"
+                        text={issuer.name}
+                        hyperlink={`https://explorer.bitshares.ws/#/accounts/${
+                          issuer.name
+                        }${
+                          usr.chain === "bitshares" ? "" : "?network=testnet"
+                        }`}
+                      />{" "}
+                      {"("}
+                      <ExternalLink
+                        classnamecontents="hover:text-purple-500 font-bold"
+                        type="text"
+                        text={issuer.id}
+                        hyperlink={`https://explorer.bitshares.ws/#/accounts/${
+                          issuer.id
+                        }${
+                          usr.chain === "bitshares" ? "" : "?network=testnet"
+                        }`}
+                      />
+                      {")"}
+                    </div>
+                  ) : null}
                   <div>
                     {t("Smartcoins:collateral")}:
                     <b>
@@ -456,7 +452,7 @@ export default function Smartcoins(properties) {
                     </b>
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-1 text-sm">
+                <div className="grid grid-cols-2 gap-1 text-sm sm:mt-3">
                   <div className="grid grid-cols-1 gap-1">
                     <Badge variant="outline">
                       {`MCR: ${
@@ -608,7 +604,7 @@ export default function Smartcoins(properties) {
 
   return (
     <>
-      <div className="container mx-auto mt-5 mb-5 w-full md:w-1/2">
+      <div className="container mx-auto mt-5 mb-5 w-full md:w-3/4">
         <div className="grid grid-cols-1 gap-3">
           <Card>
             <CardHeader>
@@ -618,305 +614,346 @@ export default function Smartcoins(properties) {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Tabs
-                key={`Tabs_${activeTab ?? ""}${activeSearch ?? ""}`}
-                defaultValue={activeTab ?? "all"}
-                className="w-full"
-              >
-                <TabsList className="grid w-full grid-cols-4 gap-2">
-                  {activeTab === "all" ? (
-                    <TabsTrigger value="all" style={activeTabStyle}>
-                      {t("Smartcoins:viewingAllAssets")}
-                    </TabsTrigger>
-                  ) : (
-                    <TabsTrigger
-                      value="all"
-                      onClick={() => {
+              <div className="w-full">
+                <div className="grid w-full grid-cols-1 md:grid-cols-4 gap-2 mb-3">
+                  <Button
+                    style={activeTab === "all" ? activeTabStyle : {}}
+                    variant={activeTab === "all" ? undefined : "outline"}
+                    onClick={() => {
+                      if (activeTab !== "all") {
                         setActiveTab("all");
                         window.history.replaceState({}, "", `?tab=all`);
-                      }}
-                    >
-                      {t("Smartcoins:viewAllAssets")}
-                    </TabsTrigger>
-                  )}
-                  {activeTab === "compatible" ? (
-                    <TabsTrigger value="compatible" style={activeTabStyle}>
-                      {t("Smartcoins:viewingCompatible")}
-                    </TabsTrigger>
-                  ) : (
-                    <TabsTrigger
-                      value="compatible"
-                      onClick={() => {
+                      }
+                    }}
+                  >
+                    {activeTab === "all"
+                      ? t("Smartcoins:viewingAllAssets")
+                      : t("Smartcoins:viewAllAssets")}
+                  </Button>
+                  <Button
+                    style={activeTab === "compatible" ? activeTabStyle : {}}
+                    variant={activeTab === "compatible" ? undefined : "outline"}
+                    onClick={() => {
+                      if (activeTab !== "compatible") {
                         setActiveTab("compatible");
                         window.history.replaceState({}, "", `?tab=compatible`);
-                      }}
-                    >
-                      {t("Smartcoins:viewCompatible")}
-                    </TabsTrigger>
-                  )}
-                  {activeTab === "holdings" ? (
-                    <TabsTrigger value="holdings" style={activeTabStyle}>
-                      {t("Smartcoins:viewingHoldings")}
-                    </TabsTrigger>
-                  ) : (
-                    <TabsTrigger
-                      value="holdings"
-                      onClick={() => {
+                      }
+                    }}
+                  >
+                    {activeTab === "compatible"
+                      ? t("Smartcoins:viewingCompatible")
+                      : t("Smartcoins:viewCompatible")}
+                  </Button>
+                  <Button
+                    style={activeTab === "holdings" ? activeTabStyle : {}}
+                    variant={activeTab === "holdings" ? undefined : "outline"}
+                    onClick={() => {
+                      if (activeTab !== "holdings") {
                         setActiveTab("holdings");
                         window.history.replaceState({}, "", `?tab=holdings`);
-                      }}
-                    >
-                      {t("Smartcoins:viewHoldings")}
-                    </TabsTrigger>
-                  )}
-                  {activeTab === "search" ? (
-                    <TabsTrigger value="search" style={activeTabStyle}>
-                      {t("Smartcoins:searching")}
-                    </TabsTrigger>
-                  ) : (
-                    <TabsTrigger
-                      value="search"
-                      onClick={() => {
+                      }
+                    }}
+                  >
+                    {activeTab === "holdings"
+                      ? t("Smartcoins:viewingHoldings")
+                      : t("Smartcoins:viewHoldings")}
+                  </Button>
+                  <Button
+                    style={activeTab === "search" ? activeTabStyle : {}}
+                    variant={activeTab === "search" ? undefined : "outline"}
+                    onClick={() => {
+                      if (activeTab !== "search") {
                         setActiveTab("search");
                         window.history.replaceState(
                           {},
                           "",
                           `?tab=search&searchTab=borrow`
                         );
-                      }}
-                    >
-                      {t("Smartcoins:search")}
-                    </TabsTrigger>
-                  )}
-                </TabsList>
-                <TabsContent value="all">
-                  <div className="grid grid-cols-3 gap-5">
-                    <Button
-                      onClick={() => {
-                        setMode("bitassets");
-                      }}
-                      variant={`${mode === "bitassets" ? "" : "outline"}`}
-                      className="h-6 mb-3 ml-2"
-                    >
-                      {t("Smartcoins:bitassets")}
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        setMode("honest");
-                      }}
-                      variant={`${mode === "honest" ? "" : "outline"}`}
-                      className="h-6 mb-3 ml-2"
-                    >
-                      Honest™️ Smartcoins
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        setMode("privateSmartcoins");
-                      }}
-                      variant={`${
-                        mode === "privateSmartcoins" ? "" : "outline"
-                      }`}
-                      className="h-6 mb-3 mr-2"
-                    >
-                      {t("Smartcoins:privateSmartcoins")}
-                    </Button>
-                  </div>
-                  <h5 className="mb-2 text-center">
-                    {t("Smartcoins:listingAllSmartcoins", {
-                      count: relevantBitassetData.length,
-                    })}
-                  </h5>
-                  {!assetIssuers || !assetIssuers.length ? (
-                    <div className="text-center mt-5">
-                      {t("CreditBorrow:common.loading")}
-                    </div>
-                  ) : (
-                    <div className="w-full max-h-[600px] overflow-auto">
-                      <List
-                        rowComponent={BitassetRow}
-                        rowCount={relevantBitassetData.length}
-                        rowHeight={235}
-                        rowProps={{}}
-                      />
-                    </div>
-                  )}
-                </TabsContent>
-                <TabsContent value="compatible">
-                  <div className="grid grid-cols-3 gap-5">
-                    <Button
-                      onClick={() => {
-                        setMode("bitassets");
-                      }}
-                      variant={`${mode === "bitassets" ? "" : "outline"}`}
-                      className="h-6 mb-3 ml-2"
-                    >
-                      {t("Smartcoins:bitassets")}
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        setMode("honest");
-                      }}
-                      variant={`${mode === "honest" ? "" : "outline"}`}
-                      className="h-6 mb-3 ml-2"
-                    >
-                      Honest™️ Smartcoins
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        setMode("privateSmartcoins");
-                      }}
-                      variant={`${
-                        mode === "privateSmartcoins" ? "" : "outline"
-                      }`}
-                      className="h-6 mb-3 mr-2"
-                    >
-                      {t("Smartcoins:privateSmartcoins")}
-                    </Button>
-                  </div>
-                  <h5 className="mb-2 text-center">
-                    {t("Smartcoins:listingCompatibleSmartcoins", {
-                      count: relevantBitassetData.length,
-                    })}
-                  </h5>
-                  {!assetIssuers || !assetIssuers.length ? (
-                    <div className="text-center mt-5">
-                      {t("CreditBorrow:common.loading")}
-                    </div>
-                  ) : (
-                    <div className="w-full max-h-[600px] overflow-auto">
-                      <List
-                        rowComponent={BitassetRow}
-                        rowCount={relevantBitassetData.length}
-                        rowHeight={235}
-                        rowProps={{}}
-                      />
-                    </div>
-                  )}
-                </TabsContent>
-                <TabsContent value="holdings">
-                  <div className="grid grid-cols-3 gap-5">
-                    <Button
-                      onClick={() => {
-                        setMode("bitassets");
-                      }}
-                      variant={`${mode === "bitassets" ? "" : "outline"}`}
-                      className="h-6 mb-3 ml-2"
-                    >
-                      {t("Smartcoins:bitassets")}
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        setMode("honest");
-                      }}
-                      variant={`${mode === "honest" ? "" : "outline"}`}
-                      className="h-6 mb-3 ml-2"
-                    >
-                      Honest™️ Smartcoins
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        setMode("privateSmartcoins");
-                      }}
-                      variant={`${
-                        mode === "privateSmartcoins" ? "" : "outline"
-                      }`}
-                      className="h-6 mb-3 mr-2"
-                    >
-                      {t("Smartcoins:privateSmartcoins")}
-                    </Button>
-                  </div>
-                  <h5 className="mb-2 text-center">
-                    {t("Smartcoins:listingHeldSmartcoins", {
-                      count: relevantBitassetData
-                        ? relevantBitassetData.length
-                        : 0,
-                    })}
-                  </h5>
-                  {!assetIssuers || !assetIssuers.length ? (
-                    <div className="text-center mt-5">
-                      {t("CreditBorrow:common.loading")}
-                    </div>
-                  ) : (
-                    <div className="w-full max-h-[600px] overflow-auto">
-                      <List
-                        rowComponent={BitassetRow}
-                        rowCount={
-                          relevantBitassetData ? relevantBitassetData.length : 0
-                        }
-                        rowHeight={235}
-                        rowProps={{}}
-                      />
-                    </div>
-                  )}
-                </TabsContent>
-                <TabsContent value="search">
-                  <h5 className="mb-2 text-center">
-                    {t("Smartcoins:howToSearch")}
-                  </h5>{" "}
-                  <Tabs
-                    defaultValue={activeSearch ?? "borrow"}
-                    className="w-full"
+                      }
+                    }}
                   >
-                    <TabsList className="grid w-full grid-cols-3 gap-2">
-                      {activeSearch === "borrow" ? (
-                        <TabsTrigger value="borrow" style={activeTabStyle}>
-                          {t("Smartcoins:searchingByBorrowable")}
-                        </TabsTrigger>
-                      ) : (
-                        <TabsTrigger
-                          value="borrow"
-                          onClick={() => {
+                    {activeTab === "search"
+                      ? t("Smartcoins:searching")
+                      : t("Smartcoins:search")}
+                  </Button>
+                </div>
+
+                <Separator className="my-4 mb-3 mt-1" />
+
+                {activeTab === "all" && (
+                  <>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-5">
+                      <Button
+                        onClick={() => {
+                          setMode("bitassets");
+                        }}
+                        variant={`${mode === "bitassets" ? "" : "outline"}`}
+                        className="h-6 md:mb-3 md:ml-2"
+                      >
+                        {t("Smartcoins:bitassets")}
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          setMode("honest");
+                        }}
+                        variant={`${mode === "honest" ? "" : "outline"}`}
+                        className="h-6 md:mb-3 md:ml-2"
+                      >
+                        Honest™️ Smartcoins
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          setMode("privateSmartcoins");
+                        }}
+                        variant={`${
+                          mode === "privateSmartcoins" ? "" : "outline"
+                        }`}
+                        className="h-6 md:mb-3 md:mr-2"
+                      >
+                        {t("Smartcoins:privateSmartcoins")}
+                      </Button>
+                    </div>
+                    <h5 className="mb-2 text-center">
+                      {t("Smartcoins:listingAllSmartcoins", {
+                        count: relevantBitassetData.length,
+                      })}
+                    </h5>
+                    {!assetIssuers || !assetIssuers.length ? (
+                      <div className="text-center mt-5">
+                        {t("CreditBorrow:common.loading")}
+                      </div>
+                    ) : (
+                      <div className="w-full max-h-[600px] overflow-auto">
+                        <div className="hidden md:block">
+                          <List
+                            rowComponent={BitassetRow}
+                            rowCount={relevantBitassetData.length}
+                            rowHeight={235}
+                            rowProps={{}}
+                          />
+                        </div>
+                        <div className="block md:hidden">
+                          <List
+                            rowComponent={BitassetRow}
+                            rowCount={relevantBitassetData.length}
+                            rowHeight={325}
+                            rowProps={{}}
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </>
+                )}
+                {activeTab === "compatible" && (
+                  <>
+                    <div className="grid grid-cols-3 gap-5">
+                      <Button
+                        onClick={() => {
+                          setMode("bitassets");
+                        }}
+                        variant={`${mode === "bitassets" ? "" : "outline"}`}
+                        className="h-6 mb-3 ml-2"
+                      >
+                        {t("Smartcoins:bitassets")}
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          setMode("honest");
+                        }}
+                        variant={`${mode === "honest" ? "" : "outline"}`}
+                        className="h-6 mb-3 ml-2"
+                      >
+                        Honest™️ Smartcoins
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          setMode("privateSmartcoins");
+                        }}
+                        variant={`${
+                          mode === "privateSmartcoins" ? "" : "outline"
+                        }`}
+                        className="h-6 mb-3 mr-2"
+                      >
+                        {t("Smartcoins:privateSmartcoins")}
+                      </Button>
+                    </div>
+                    <h5 className="mb-2 text-center">
+                      {t("Smartcoins:listingCompatibleSmartcoins", {
+                        count: relevantBitassetData.length,
+                      })}
+                    </h5>
+                    {!assetIssuers || !assetIssuers.length ? (
+                      <div className="text-center mt-5">
+                        {t("CreditBorrow:common.loading")}
+                      </div>
+                    ) : (
+                      <div className="w-full max-h-[600px] overflow-auto">
+                        <div className="hidden md:block">
+                          <List
+                            rowComponent={BitassetRow}
+                            rowCount={relevantBitassetData.length}
+                            rowHeight={235}
+                            rowProps={{}}
+                          />
+                        </div>
+                        <div className="block md:hidden">
+                          <List
+                            rowComponent={BitassetRow}
+                            rowCount={relevantBitassetData.length}
+                            rowHeight={325}
+                            rowProps={{}}
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </>
+                )}
+                {activeTab === "holdings" && (
+                  <>
+                    <div className="grid grid-cols-3 gap-5">
+                      <Button
+                        onClick={() => {
+                          setMode("bitassets");
+                        }}
+                        variant={`${mode === "bitassets" ? "" : "outline"}`}
+                        className="h-6 mb-3 ml-2"
+                      >
+                        {t("Smartcoins:bitassets")}
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          setMode("honest");
+                        }}
+                        variant={`${mode === "honest" ? "" : "outline"}`}
+                        className="h-6 mb-3 ml-2"
+                      >
+                        Honest™️ Smartcoins
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          setMode("privateSmartcoins");
+                        }}
+                        variant={`${
+                          mode === "privateSmartcoins" ? "" : "outline"
+                        }`}
+                        className="h-6 mb-3 mr-2"
+                      >
+                        {t("Smartcoins:privateSmartcoins")}
+                      </Button>
+                    </div>
+                    <h5 className="mb-2 text-center">
+                      {t("Smartcoins:listingHeldSmartcoins", {
+                        count: relevantBitassetData
+                          ? relevantBitassetData.length
+                          : 0,
+                      })}
+                    </h5>
+                    {!assetIssuers || !assetIssuers.length ? (
+                      <div className="text-center mt-5">
+                        {t("CreditBorrow:common.loading")}
+                      </div>
+                    ) : (
+                      <div className="w-full max-h-[600px] overflow-auto">
+                        <div className="hidden md:block">
+                          <List
+                            rowComponent={BitassetRow}
+                            rowCount={
+                              relevantBitassetData
+                                ? relevantBitassetData.length
+                                : 0
+                            }
+                            rowHeight={235}
+                            rowProps={{}}
+                          />
+                        </div>
+                        <div className="block md:hidden">
+                          <List
+                            rowComponent={BitassetRow}
+                            rowCount={
+                              relevantBitassetData
+                                ? relevantBitassetData.length
+                                : 0
+                            }
+                            rowHeight={325}
+                            rowProps={{}}
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </>
+                )}
+                {activeTab === "search" && (
+                  <>
+                    <h5 className="mb-2 text-center">
+                      {t("Smartcoins:howToSearch")}
+                    </h5>{" "}
+                    <div className="grid w-full grid-cols-1 sm:grid-cols-3 gap-2">
+                      <Button
+                        style={activeSearch === "borrow" ? activeTabStyle : {}}
+                        variant={
+                          activeSearch === "borrow" ? undefined : "outline"
+                        }
+                        onClick={() => {
+                          if (activeSearch !== "borrow") {
                             setActiveSearch("borrow");
                             window.history.replaceState(
                               {},
                               "",
                               `?tab=search&searchTab=borrow`
                             );
-                          }}
-                        >
-                          {t("Smartcoins:searchByBorrowable")}
-                        </TabsTrigger>
-                      )}
-                      {activeSearch === "collateral" ? (
-                        <TabsTrigger value="collateral" style={activeTabStyle}>
-                          {t("Smartcoins:searchingByCollateral")}
-                        </TabsTrigger>
-                      ) : (
-                        <TabsTrigger
-                          value="collateral"
-                          onClick={() => {
+                          }
+                        }}
+                        className="h-6"
+                      >
+                        {activeSearch === "borrow"
+                          ? t("Smartcoins:searchingByBorrowable")
+                          : t("Smartcoins:searchByBorrowable")}
+                      </Button>
+                      <Button
+                        style={
+                          activeSearch === "collateral" ? activeTabStyle : {}
+                        }
+                        variant={
+                          activeSearch === "collateral" ? undefined : "outline"
+                        }
+                        onClick={() => {
+                          if (activeSearch !== "collateral") {
                             setActiveSearch("collateral");
                             window.history.replaceState(
                               {},
                               "",
                               `?tab=search&searchTab=collateral`
                             );
-                          }}
-                        >
-                          {t("Smartcoins:searchByCollateral")}
-                        </TabsTrigger>
-                      )}
-                      {activeSearch === "issuer" ? (
-                        <TabsTrigger value="issuer" style={activeTabStyle}>
-                          {t("Smartcoins:searchingByIssuer")}
-                        </TabsTrigger>
-                      ) : (
-                        <TabsTrigger
-                          value="issuer"
-                          onClick={() => {
+                          }
+                        }}
+                        className="h-6"
+                      >
+                        {activeSearch === "collateral"
+                          ? t("Smartcoins:searchingByCollateral")
+                          : t("Smartcoins:searchByCollateral")}
+                      </Button>
+                      <Button
+                        style={activeSearch === "issuer" ? activeTabStyle : {}}
+                        variant={
+                          activeSearch === "issuer" ? undefined : "outline"
+                        }
+                        onClick={() => {
+                          if (activeSearch !== "issuer") {
                             setActiveSearch("issuer");
                             window.history.replaceState(
                               {},
                               "",
                               `?tab=search&searchTab=issuer`
                             );
-                          }}
-                        >
-                          {t("Smartcoins:searchByIssuer")}
-                        </TabsTrigger>
-                      )}
-                    </TabsList>
-
+                          }
+                        }}
+                        className="h-6"
+                      >
+                        {activeSearch === "issuer"
+                          ? t("Smartcoins:searchingByIssuer")
+                          : t("Smartcoins:searchByIssuer")}
+                      </Button>
+                    </div>
                     <Input
                       name="searchInput"
                       placeholder={
@@ -929,55 +966,38 @@ export default function Smartcoins(properties) {
                         debouncedSetSearchInput(event);
                       }}
                     />
-
-                    <TabsContent value="borrow">
-                      {thisResult && thisResult.length ? (
-                        <div className="w-full max-h-[600px] overflow-auto">
-                          <List
-                            rowComponent={SearchRow}
-                            rowCount={thisResult.length}
-                            rowHeight={235}
-                            rowProps={{}}
-                          />
-                        </div>
-                      ) : null}
-                      {thisInput && thisResult && !thisResult.length ? (
-                        <>{t("Smartcoins:noResultsFound")}</>
-                      ) : null}
-                    </TabsContent>
-                    <TabsContent value="collateral">
-                      {thisResult && thisResult.length ? (
-                        <div className="w-full max-h-[600px] overflow-auto">
-                          <List
-                            rowComponent={SearchRow}
-                            rowCount={thisResult.length}
-                            rowHeight={235}
-                            rowProps={{}}
-                          />
-                        </div>
-                      ) : null}
-                      {thisInput && thisResult && !thisResult.length ? (
-                        <>{t("Smartcoins:noResultsFound")}</>
-                      ) : null}
-                    </TabsContent>
-                    <TabsContent value="issuer">
-                      {thisResult && thisResult.length ? (
-                        <div className="w-full max-h-[600px] overflow-auto">
-                          <List
-                            rowComponent={SearchRow}
-                            rowCount={thisResult.length}
-                            rowHeight={235}
-                            rowProps={{}}
-                          />
-                        </div>
-                      ) : null}
-                      {thisInput && thisResult && !thisResult.length ? (
-                        <>{t("Smartcoins:noResultsFound")}</>
-                      ) : null}
-                    </TabsContent>
-                  </Tabs>
-                </TabsContent>
-              </Tabs>
+                    {["borrow", "collateral", "issuer"].includes(
+                      activeSearch
+                    ) && (
+                      <>
+                        {thisResult && thisResult.length ? (
+                          <div className="w-full max-h-[600px] overflow-auto">
+                            <div className="hidden md:block">
+                              <List
+                                rowComponent={SearchRow}
+                                rowCount={thisResult.length}
+                                rowHeight={235}
+                                rowProps={{}}
+                              />
+                            </div>
+                            <div className="block md:hidden">
+                              <List
+                                rowComponent={SearchRow}
+                                rowCount={thisResult.length}
+                                rowHeight={325}
+                                rowProps={{}}
+                              />
+                            </div>
+                          </div>
+                        ) : null}
+                        {thisInput && thisResult && !thisResult.length ? (
+                          <>{t("Smartcoins:noResultsFound")}</>
+                        ) : null}
+                      </>
+                    )}
+                  </>
+                )}
+              </div>
             </CardContent>
           </Card>
         </div>

@@ -496,7 +496,6 @@ export default function PageHeader(properties) {
                 </DropdownMenuContent>
               </DropdownMenu>
 
-              {/* Sidebar toggle shown on mobile and md, hidden on lg+ */}
               <Button
                 size="icon"
                 className="lg:hidden inline-flex align-middle h-7 w-7"
@@ -506,7 +505,6 @@ export default function PageHeader(properties) {
                 aria-label="Toggle Sidebar"
                 title="Toggle Sidebar"
               >
-                {/* same icon as SidebarTrigger used (ViewVertical-like) */}
                 <svg
                   viewBox="0 0 24 24"
                   fill="none"
@@ -560,7 +558,6 @@ export default function PageHeader(properties) {
           </div>
         </div>
         <div className="col-span-12">
-          {/* Hide the nav menu on mobile and md; show on lg+ */}
           <NavigationMenu className="hidden lg:block">
             <NavigationMenuList className="gap-2">
               <NavigationMenuItem>

@@ -143,7 +143,7 @@ export default function CreditOffers(properties) {
             </CardDescription>
           </CardHeader>
           <CardContent className="text-sm pb-3">
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
               <div className="col-span-1">
                 {t("CreditBorrow:common.fee", { fee: res.fee_rate / 10000 })}
                 <br />
@@ -208,7 +208,7 @@ export default function CreditOffers(properties) {
 
   return (
     <>
-      <div className="container mx-auto mt-5 mb-5 w-1/2">
+      <div className="container mx-auto mt-5 mb-5 w-full lg:w-1/2">
         <div className="grid grid-cols-1 gap-3">
           <Card>
             <CardHeader className="pb-1">

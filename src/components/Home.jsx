@@ -595,7 +595,6 @@ export default function Home(properties) {
 
   return (
     <>
-      {/* full-bleed hero wrapper: spans entire window, clips horizontal overflow */}
       <div className="w-full overflow-hidden">
         <WaveHero />
       </div>

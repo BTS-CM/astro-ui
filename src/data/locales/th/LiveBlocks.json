@@ -31,11 +31,17 @@
   },
   "recentActivity": {
     "content": "กิจกรรมล่าสุดในบล็อคเชน",
-    "header": "กิจกรรมล่าสุด"
+    "header": "กิจกรรมล่าสุด",
+    "blocks": "ปิดกั้น",
+    "operations": "การดำเนินงาน"
   },
   "recentBlocks": {
     "content": "รายการบล็อกล่าสุด",
-    "header": "บล็อกล่าสุด"
+    "header": "บล็อกล่าสุด",
+    "blockId": "บล็อกไอดี",
+    "timestamp": "การประทับเวลา",
+    "witnessId": "บัตรประจำตัวพยาน",
+    "transaction": "ธุรกรรม"
   },
   "dialogContent": {
     "json": "ข้อมูล JSON",

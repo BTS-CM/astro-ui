@@ -37,6 +37,17 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -214,11 +225,18 @@ export default function CustomPoolOverview(properties) {
             <Card className="hover:bg-purple-100">
               <CardHeader className="p-0">
                 <CardDescription>
-                  <div className="grid grid-cols-8 gap-2">
-                    <div className="flex items-center justify-center">
+                  <div
+                    className="grid grid-cols-4 md:grid-cols-8 gap-2"
+                    title={`${t("CustomPoolOverview:takerFee")}: ${
+                      pool.taker_fee_percent / 100
+                    }% & ${t("CustomPoolOverview:withdrawalFee")}: ${
+                      pool.withdrawal_fee_percent / 100
+                    }%`}
+                  >
+                    <div className="hidden md:flex items-center justify-center">
                       {pool.id}
                     </div>
-                    <div className="flex items-center justify-center">
+                    <div className="hidden md:flex items-center justify-center">
                       {shareAsset.symbol}
                     </div>
                     <div className="flex items-center justify-center">
@@ -233,10 +251,10 @@ export default function CustomPoolOverview(properties) {
                     <div className="flex items-center justify-center">
                       {humanReadableFloat(pool.balance_b, assetB.precision)}
                     </div>
-                    <div className="flex items-center justify-center">
+                    <div className="hidden md:flex items-center justify-center">
                       {pool.taker_fee_percent / 100}%
                     </div>
-                    <div className="flex items-center justify-center">
+                    <div className="hidden md:flex items-center justify-center">
                       {pool.withdrawal_fee_percent / 100}%
                     </div>
                   </div>
@@ -254,6 +272,72 @@ export default function CustomPoolOverview(properties) {
               </DialogDescription>
             </DialogHeader>
             <div className="grid grid-cols-2 gap-2">
+              <div className="col-span-2">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>{t("PoolList:details")}</TableHead>
+                      <TableHead></TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell className="font-bold">
+                        {t("CustomPoolOverview:poolId")}
+                      </TableCell>
+                      <TableCell>{pool.id}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell className="font-bold">
+                        {t("CustomPoolOverview:shareAsset")}
+                      </TableCell>
+                      <TableCell>{shareAsset.symbol}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell className="font-bold">
+                        {t("CustomPoolOverview:assetA")}
+                      </TableCell>
+                      <TableCell>{assetA.symbol}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell className="font-bold">
+                        {t("CustomPoolOverview:assetAQty")}
+                      </TableCell>
+                      <TableCell>
+                        {humanReadableFloat(pool.balance_a, assetA.precision)}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell className="font-bold">
+                        {t("CustomPoolOverview:assetB")}
+                      </TableCell>
+                      <TableCell>{assetB.symbol}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell className="font-bold">
+                        {t("CustomPoolOverview:assetBQty")}
+                      </TableCell>
+                      <TableCell>
+                        {humanReadableFloat(pool.balance_b, assetB.precision)}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell className="font-bold">
+                        {t("CustomPoolOverview:takerFee")}
+                      </TableCell>
+                      <TableCell>{pool.taker_fee_percent / 100}%</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell className="font-bold">
+                        {t("CustomPoolOverview:withdrawalFee")}
+                      </TableCell>
+                      <TableCell>
+                        {pool.withdrawal_fee_percent / 100}%
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </div>
               <div className="col-span-2">
                 <h2>{shareAsset.symbol}</h2>
               </div>
@@ -379,15 +463,23 @@ export default function CustomPoolOverview(properties) {
               content={t("CustomPoolOverview:hoverPoolDetailsContent")}
               header={t("CustomPoolOverview:hoverPoolDetailsHeader")}
             />
-            <div className="grid grid-cols-8 gap-2 text-center">
-              <div>{t("CustomPoolOverview:poolId")}</div>
-              <div>{t("CustomPoolOverview:shareAsset")}</div>
+            <div className="grid grid-cols-4 md:grid-cols-8 gap-2 text-center">
+              <div className="hidden md:block">
+                {t("CustomPoolOverview:poolId")}
+              </div>
+              <div className="hidden md:block">
+                {t("CustomPoolOverview:shareAsset")}
+              </div>
               <div>{t("CustomPoolOverview:assetA")}</div>
               <div>{t("CustomPoolOverview:assetAQty")}</div>
               <div>{t("CustomPoolOverview:assetB")}</div>
               <div>{t("CustomPoolOverview:assetBQty")}</div>
-              <div>{t("CustomPoolOverview:takerFee")}</div>
-              <div>{t("CustomPoolOverview:withdrawalFee")}</div>
+              <div className="hidden md:block">
+                {t("CustomPoolOverview:takerFee")}
+              </div>
+              <div className="hidden md:block">
+                {t("CustomPoolOverview:withdrawalFee")}
+              </div>
             </div>
             <div className="border rounded border-gray-300 p-2">
               <div className="w-full max-h-[200px] overflow-auto">

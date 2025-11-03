@@ -539,7 +539,6 @@ export default function Htlc(properties) {
               <CardDescription>{t("HTLC:description")}</CardDescription>
             </CardHeader>
             <CardContent>
-              {/* Sender HTLCs */}
               <div className="grid grid-cols-1 gap-3 mb-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <HoverInfo
@@ -586,7 +585,6 @@ export default function Htlc(properties) {
                 </div>
               </div>
 
-              {/* Receiver HTLCs */}
               <div className="grid grid-cols-12 gap-3">
                 <div className="col-span-12">
                   <HoverInfo
@@ -628,7 +626,6 @@ export default function Htlc(properties) {
           </Card>
         </div>
 
-        {/* Create HTLC Dialog */}
         {showCreateDialog ? (
           <HtlcCreateDialog
             usr={usr}

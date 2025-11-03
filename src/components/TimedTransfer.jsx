@@ -272,7 +272,6 @@ export default function TimedTransfer(properties) {
                 }}
               >
                 <FieldGroup>
-                  {/* Sending account */}
                   <Field>
                     <FieldLabel>{t("Transfer:sendingAccount")}</FieldLabel>
                     <FieldContent>
@@ -308,7 +307,6 @@ export default function TimedTransfer(properties) {
                     </FieldDescription>
                   </Field>
 
-                  {/* Target account */}
                   <Field>
                     <FieldLabel>{t("Transfer:targetAccount")}</FieldLabel>
                     <FieldContent>
@@ -401,7 +399,6 @@ export default function TimedTransfer(properties) {
                     </FieldDescription>
                   </Field>
 
-                  {/* Asset to transfer */}
                   <Field>
                     <FieldLabel>{t("Transfer:assetToTransfer")}</FieldLabel>
                     <FieldContent>
@@ -466,7 +463,6 @@ export default function TimedTransfer(properties) {
                     </FieldError>
                   </Field>
 
-                  {/* Available amount */}
                   {selectedAsset && targetUser ? (
                     <Field>
                       <FieldLabel>
@@ -501,7 +497,6 @@ export default function TimedTransfer(properties) {
                     </Field>
                   ) : null}
 
-                  {/* Amount to transfer */}
                   {selectedAsset && targetUser ? (
                     <Field>
                       <FieldLabel>
@@ -538,7 +533,6 @@ export default function TimedTransfer(properties) {
                     </Field>
                   ) : null}
 
-                  {/* Expiry and review period */}
                   <div className="grid grid-cols-2 gap-3">
                     <div className="grid grid-cols-1 gap-3">
                       <HoverInfo
@@ -680,7 +674,6 @@ export default function TimedTransfer(properties) {
                     </div>
                   </div>
 
-                  {/* Network fee */}
                   {selectedAsset && targetUser ? (
                     <Field>
                       <FieldLabel>{t("Transfer:networkFee")}</FieldLabel>
@@ -703,7 +696,6 @@ export default function TimedTransfer(properties) {
                     </Field>
                   ) : null}
 
-                  {/* Submit */}
                   {!transferAmount ? (
                     <Button
                       className="mt-5 mb-3"

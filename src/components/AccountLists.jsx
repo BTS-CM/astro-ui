@@ -198,7 +198,7 @@ export default function AccountLists(properties) {
 
   return (
     <>
-      <div className="container mx-auto mt-5 mb-5 w-1/2">
+      <div className="container mx-auto mt-5 mb-5 w-full md:w-3/4 lg:w-1/2">
         <div className="grid grid-cols-1 gap-3">
           <Card>
             <CardHeader>
@@ -262,7 +262,7 @@ export default function AccountLists(properties) {
                 </div>
 
                 <div className="grid grid-cols-8 mt-4">
-                  <div className="col-span-1 ml-5">
+                  <div className="hidden md:block col-span-1 ml-5">
                     {targetUser && targetUser.name ? (
                       <Avatar
                         size={40}

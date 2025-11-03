@@ -69,7 +69,6 @@ import {
 } from "@/lib/common.js";
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
-import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 import { createFullSmartcoinStore } from "@/nanoeffects/FullSmartcoin.ts";
 
 import { $currentUser } from "@/stores/users.ts";
@@ -1054,8 +1053,8 @@ export default function Smartcoin(properties) {
         <div className="col-span-1">{collateralAmount}</div>
         <div className="col-span-1">{debtAmount}</div>
         <div className="col-span-1">{callPrice}</div>
-        <div className="col-span-1">{tcr}</div>
-        <div className="col-span-1">{ratio}</div>
+        <div className="hidden md:block col-span-1">{tcr}</div>
+        <div className="hidden md:block col-span-1">{ratio}</div>
       </div>
     );
   };
@@ -1135,8 +1134,8 @@ export default function Smartcoin(properties) {
     ).toFixed(parsedCollateralAsset.p);
 
     return (
-      <div className="grid grid-cols-11 text-sm" style={style}>
-        <div className="col-span-2 mr-1">
+      <div className="grid grid-cols-7 md:grid-cols-11 text-sm" style={style}>
+        <div className="hidden md:block col-span-2 mr-1">
           <ExternalLink
             classnamecontents="text-blue-500"
             type="text"
@@ -1146,7 +1145,9 @@ export default function Smartcoin(properties) {
             }`}
           />
         </div>
-        <div className="col-span-2 ml-1">{timeAgo(date, t)}</div>
+        <div className="hidden md:block col-span-2 ml-1">
+          {timeAgo(date, t)}
+        </div>
         <div className="col-span-2">{coreExchangeRate}</div>
         <div className="col-span-2">{feedPrice}</div>
         <div className="col-span-1">{feedObj.initial_collateral_ratio}</div>
@@ -1157,7 +1158,7 @@ export default function Smartcoin(properties) {
   };
 
   return (
-    <div className="container mx-auto mt-5 mb-5 w-3/4">
+    <div className="container mx-auto mt-5 mb-5 w-full md:w-3/4">
       <div className="grid grid-cols-1 gap-3">
         {marketSearch && invalidUrlParams ? (
           <Card>
@@ -1203,7 +1204,7 @@ export default function Smartcoin(properties) {
                         <FormLabel>{t("Smartcoin:borrowingAccount")}</FormLabel>
                         <FormControl>
                           <div className="grid grid-cols-12 mt-4">
-                            <div className="col-span-1 ml-5">
+                            <div className="hidden md:block col-span-1 ml-5">
                               {usr && usr.username ? (
                                 <Avatar
                                   size={40}
@@ -1227,7 +1228,7 @@ export default function Smartcoin(properties) {
                                 </Av>
                               )}
                             </div>
-                            <div className="col-span-5">
+                            <div className="col-span-12 md:col-span-5">
                               <Input
                                 disabled
                                 placeholder="Bitshares account (1.2.x)"
@@ -1263,7 +1264,10 @@ export default function Smartcoin(properties) {
                             </span>
                             <span className="col-span-2">
                               <a href="/smartcoins/index.html">
-                                <Button className="ml-3" variant="outline">
+                                <Button
+                                  className="ml-3 bg-white"
+                                  variant="outline"
+                                >
                                   {t("Smartcoin:changeAssetButton")}
                                 </Button>
                               </a>
@@ -1274,7 +1278,7 @@ export default function Smartcoin(properties) {
                     )}
                   />
 
-                  <div className="grid grid-cols-2 gap-3 mt-3">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
                     <Card>
                       <CardHeader className="pb-3">
                         <CardTitle>
@@ -1392,14 +1396,14 @@ export default function Smartcoin(properties) {
                         <FormDescription
                           style={{ marginTop: 0, paddingTop: 0 }}
                         >
-                          <span className="grid grid-cols-3 mt-0 pt-0">
+                          <span className="grid grid-cols-1 md:grid-cols-3 mt-0 pt-0">
                             <span className="col-span-1 text-left">
                               {t("Smartcoin:debtAmountDescription", {
                                 asset: parsedAsset ? parsedAsset.s : "?",
                               })}
                             </span>
                             <span
-                              className={`col-span-1 text-right ${
+                              className={`col-span-1 md:text-right ${
                                 debtAssetHoldings &&
                                 debtAssetHoldings.toString().includes("-")
                                   ? "text-red-500"
@@ -1411,12 +1415,14 @@ export default function Smartcoin(properties) {
                                 asset: parsedAsset ? parsedAsset.s : "",
                               })}
                             </span>
-                            <span className={`col-span-1`}></span>
+                            <span
+                              className={`hidden md:block col-span-1`}
+                            ></span>
                           </span>
                         </FormDescription>
                         <FormControl>
                           <span className="grid grid-cols-12">
-                            <span className="col-span-1">
+                            <span className="col-span-2 md:col-span-1">
                               <HoverCard key="debtLockCard">
                                 <HoverCardTrigger asChild>
                                   <Toggle
@@ -1443,7 +1449,7 @@ export default function Smartcoin(properties) {
                                 </HoverCardContent>
                               </HoverCard>
                             </span>
-                            <span className="col-span-7">
+                            <span className="col-span-10 md:col-span-7">
                               <Input
                                 label={t("Smartcoin:amountOfDebtToIssue")}
                                 value={
@@ -1456,7 +1462,7 @@ export default function Smartcoin(properties) {
                                 className="mb-3"
                               />
                             </span>
-                            <span className="col-span-4 ml-3">
+                            <span className="col-span-12 sm:mt-3 md:mt-0 md:col-span-4 md:ml-3">
                               {debtLock === "editable" ? (
                                 <Popover>
                                   <PopoverTrigger>
@@ -1519,7 +1525,7 @@ export default function Smartcoin(properties) {
                         <FormDescription
                           style={{ marginTop: 0, paddingTop: 0 }}
                         >
-                          <span className="grid grid-cols-3 mt-0 pt-0">
+                          <span className="grid grid-cols-1 md:grid-cols-3 mt-0 pt-0">
                             <span className="col-span-1 text-left">
                               {t("Smartcoin:collateralAmountDescription", {
                                 asset: parsedCollateralAsset
@@ -1528,7 +1534,7 @@ export default function Smartcoin(properties) {
                               })}
                             </span>
                             <span
-                              className={`col-span-1 text-right ${
+                              className={`col-span-1 md:text-right ${
                                 collateralAssetHoldings &&
                                 collateralAssetHoldings.toString().includes("-")
                                   ? "text-red-500"
@@ -1542,12 +1548,12 @@ export default function Smartcoin(properties) {
                                   : "",
                               })}
                             </span>
-                            <span></span>
+                            <span className="hidden md:block"></span>
                           </span>
                         </FormDescription>
                         <FormControl>
                           <span className="grid grid-cols-12">
-                            <span className="col-span-1">
+                            <span className="col-span-2 md:col-span-1">
                               <HoverCard key="collateralLockCard">
                                 <HoverCardTrigger asChild>
                                   <Toggle
@@ -1574,7 +1580,7 @@ export default function Smartcoin(properties) {
                                 </HoverCardContent>
                               </HoverCard>
                             </span>
-                            <span className="col-span-7">
+                            <span className="col-span-10 md:col-span-7">
                               <Input
                                 label={t(
                                   "Smartcoin:amountOfCollateralToCommit"
@@ -1589,7 +1595,7 @@ export default function Smartcoin(properties) {
                                 className="mb-3"
                               />
                             </span>
-                            <span className="col-span-4 ml-3">
+                            <span className="col-span-12 sm:mt-3 md:mt-0 md:col-span-4 md:ml-3">
                               {collateralLock === "editable" ? (
                                 <Popover>
                                   <PopoverTrigger>
@@ -1655,21 +1661,21 @@ export default function Smartcoin(properties) {
                           {t("Smartcoin:collateralDebtRatio")}
                         </FormLabel>
                         <FormDescription>
-                          <span className="grid grid-cols-3 mt-0 pt-0">
+                          <span className="grid grid-cols-1 md:grid-cols-3 mt-0 pt-0">
                             <span className="col-span-1 text-left">
                               {t("Smartcoin:collateralDebtRatioDescription")}
                             </span>
-                            <span className="col-span-1 text-right">
+                            <span className="col-span-1 md:text-right">
                               {t("Smartcoin:collateralDebtRatioMin", {
                                 min: parsedBitasset.mcr / 1000,
                               })}
                             </span>
-                            <span></span>
+                            <span className="hidden md:block"></span>
                           </span>
                         </FormDescription>
                         <FormControl>
                           <span className="grid grid-cols-12">
-                            <span className="col-span-1">
+                            <span className="col-span-2 md:col-span-1">
                               <HoverCard key="ratioLockCard">
                                 <HoverCardTrigger asChild>
                                   <Toggle
@@ -1700,7 +1706,7 @@ export default function Smartcoin(properties) {
                                 </HoverCardContent>
                               </HoverCard>
                             </span>
-                            <span className="col-span-7">
+                            <span className="col-span-12 md:col-span-7">
                               {ratioValue ? (
                                 <Input
                                   label={t("Smartcoin:ratioOfCollateralToDebt")}
@@ -1741,7 +1747,7 @@ export default function Smartcoin(properties) {
                                 />
                               ) : null}
                             </span>
-                            <span className="col-span-4 ml-3">
+                            <span className="col-span-12 sm:mt-3 md:mt-0 md:col-span-4 md:ml-3">
                               {ratioLock === "editable" ? (
                                 <Popover>
                                   <PopoverTrigger>
@@ -1837,18 +1843,18 @@ export default function Smartcoin(properties) {
                             {t("Smartcoin:targetCollateralRatioValue")}
                           </FormLabel>
                           <FormDescription>
-                            <span className="grid grid-cols-3 mt-0 pt-0">
+                            <span className="grid grid-cols-1 md:grid-cols-3 mt-0 pt-0">
                               <span className="col-span-1 text-left">
                                 {t(
                                   "Smartcoin:targetCollateralRatioDescription"
                                 )}
                               </span>
-                              <span className="col-span-1 text-right">
+                              <span className="col-span-1 md:text-right">
                                 {t("Smartcoin:targetCollateralRatioMin", {
                                   min: parsedBitasset.mcr / 1000,
                                 })}
                               </span>
-                              <span></span>
+                              <span className="hidden md:block"></span>
                             </span>
                           </FormDescription>
                           <FormControl>
@@ -2766,15 +2772,19 @@ export default function Smartcoin(properties) {
             <CardContent>
               {assetCallOrders && assetCallOrders.length ? (
                 <>
-                  <div className="grid grid-cols-6">
+                  <div className="grid grid-cols-4 md:grid-cols-6">
                     <div className="col-span-1">{t("Smartcoin:borrower")}</div>
                     <div className="col-span-1">
                       {t("Smartcoin:collateral")}
                     </div>
                     <div className="col-span-1">{t("Smartcoin:debt")}</div>
                     <div className="col-span-1">{t("Smartcoin:callPrice")}</div>
-                    <div className="col-span-1">{t("Smartcoin:tcr")}</div>
-                    <div className="col-span-1">{t("Smartcoin:ratio")}</div>
+                    <div className="hidden md:block col-span-1">
+                      {t("Smartcoin:tcr")}
+                    </div>
+                    <div className="hidden md:block col-span-1">
+                      {t("Smartcoin:ratio")}
+                    </div>
                   </div>
                   <div className="w-full max-h-[260px] overflow-auto">
                     <List

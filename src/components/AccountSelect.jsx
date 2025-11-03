@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useSyncExternalStore } from "react";
+import React, {
+  useState,
+  useEffect,
+  useSyncExternalStore,
+  useMemo,
+} from "react";
+import { List } from "react-window";
 import { useStore } from "@nanostores/react";
 import { sha256 } from "@noble/hashes/sha2.js";
 import { bytesToHex as toHex, utf8ToBytes } from "@noble/hashes/utils.js";
@@ -148,15 +154,15 @@ export default function AccountSelect(properties) {
 
   const SecondResponse = ({ user }) => {
     return (
-      <HoverCard key={user.id}>
-        <HoverCardTrigger asChild>
+      <div className="grid grid-cols-12">
+        <div className="col-span-10">
           <Card
             onClick={() => {
               setCurrentUser(user.username, user.id, user.referrer, user.chain);
             }}
           >
-            <div className="grid grid-cols-4">
-              <div className="col-span-1 pt-6 pl-2">
+            <div className="grid grid-cols-12">
+              <div className="col-span-2 pt-6 pl-2">
                 <Avatar
                   size={40}
                   name={user.username}
@@ -174,7 +180,7 @@ export default function AccountSelect(properties) {
                   ]}
                 />
               </div>
-              <div className="col-span-3">
+              <div className="col-span-10">
                 <CardHeader>
                   <CardTitle
                     style={{
@@ -190,21 +196,42 @@ export default function AccountSelect(properties) {
               </div>
             </div>
           </Card>
-        </HoverCardTrigger>
-        <HoverCardContent className="w-80">
-          {t("AccountSelect:forgetPrompt", { user: user.username })}
-          <br />
+        </div>
+        <div className="col-span-2 text-center">
           <Button
-            className="w-full mt-2 text-bold text-white"
-            variant="destructive"
+            className="mt-5"
+            variant="outline"
+            size="icon"
             onClick={() => {
               removeUser(user.id);
             }}
+            title={t("AccountSelect:forgetButton")}
           >
-            {t("AccountSelect:forgetButton")}
+            ❌
           </Button>
-        </HoverCardContent>
-      </HoverCard>
+        </div>
+      </div>
+    );
+  };
+
+  // Memoized users filtered by selected chain
+  const filteredUsers = useMemo(() => {
+    return (users || []).filter((user) => user.chain === chain);
+  }, [users, chain]);
+
+  // One row renderer for react-window List wrapper (1 per row)
+  const Row = ({ index, style }) => {
+    const user = filteredUsers[index];
+    if (!user) return null;
+    const content = <SecondResponse user={user} />;
+    return (
+      <div style={style} className="pr-2">
+        {usr && chain !== usr.chain ? (
+          <a href={window.location.pathname}>{content}</a>
+        ) : (
+          content
+        )}
+      </div>
     );
   };
 
@@ -323,19 +350,15 @@ export default function AccountSelect(properties) {
             : "Bitshares testnet (TEST)"}
           <br />
           {t("AccountSelect:existing.description")}
-          <div className="grid grid-cols-2 gap-3 mb-5 mt-5">
-            {users.filter((user) => user.chain === chain).length ? (
-              users
-                .filter((user) => user.chain === chain)
-                .map((user) => {
-                  return usr && chain !== usr.chain ? (
-                    <a href={window.location.pathname}>
-                      <SecondResponse user={user} />
-                    </a>
-                  ) : (
-                    <SecondResponse user={user} />
-                  );
-                })
+          <div className="w-full mt-5 mb-5 max-h-[500px] overflow-auto">
+            {filteredUsers.length ? (
+              <List
+                rowComponent={Row}
+                rowCount={filteredUsers.length}
+                rowHeight={110}
+                rowProps={{}}
+                key={`list-existing-${chain}`}
+              />
             ) : (
               <p className="text-red-500 text-xs italic">
                 {t("AccountSelect:existing.none")}

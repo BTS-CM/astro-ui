@@ -31,11 +31,17 @@
   },
   "recentActivity": {
     "content": "ブロックチェーンにおける最近のアクティビティ。",
-    "header": "最近の活動"
+    "header": "最近の活動",
+    "blocks": "ブロック",
+    "operations": "運営"
   },
   "recentBlocks": {
     "content": "最近のブロックのリスト。",
-    "header": "最近のブロック"
+    "header": "最近のブロック",
+    "blockId": "ブロックID",
+    "timestamp": "タイムスタンプ",
+    "witnessId": "証人ID",
+    "transaction": "取引"
   },
   "dialogContent": {
     "json": "JSONデータ",
