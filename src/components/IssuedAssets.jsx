@@ -142,6 +142,8 @@ export default function IssuedAssets(properties) {
             !asset.bitasset_data_id &&
             !asset.options.description.includes("nft_object")
         );
+      case "pools":
+        return issuedAssets.filter((asset) => asset.for_liquidity_pool);
       case "smartcoins":
         return issuedAssets.filter(
           (asset) =>
@@ -564,6 +566,16 @@ export default function IssuedAssets(properties) {
                     }}
                   >
                     {t("IssuedAssets:uiaButton")}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    style={activeTab === "pools" ? activeTabStyle : {}}
+                    onClick={() => {
+                      setActiveTab("pools");
+                      window.history.replaceState({}, "", `?tab=pools`);
+                    }}
+                  >
+                    {t("IssuedAssets:poolsButton")}
                   </Button>
                   <Button
                     variant="outline"

@@ -1,0 +1,46 @@
+---
+import { getCollection } from 'astro:content';
+
+import Layout from '../layouts/Layout.astro';
+import PageHeader from '../components/PageHeader';
+import PageFooter from '../components/PageFooter';
+import CreatePool from '../components/CreatePool';
+
+const btsAllAssets = await getCollection('btsAllAssets');
+const testAllAssets = await getCollection('testAllAssets');
+
+const btsMarketData = await getCollection('btsMarketData');
+const testMarketData = await getCollection('testMarketData');
+
+const btsAssets = btsAllAssets.map(collection => collection.data);
+const testAssets = testAllAssets.map(collection => collection.data);
+const marketSearchBTS = btsMarketData.map(collection => collection.data);
+const marketSearchTEST = testMarketData.map(collection => collection.data);
+---
+
+<Layout title="Bitshares Beet Astro UI - Creating a Liquidity Pool">
+	<main>
+		<PageHeader client:only="react" page="create_pool" backURL="" />
+		<CreatePool
+			client:only="react"
+			_assetsBTS={btsAssets}
+			_assetsTEST={testAssets}
+			_marketSearchBTS={marketSearchBTS}
+			_marketSearchTEST={marketSearchTEST}
+		/>
+		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/create_uia/index.astro" />
+	</main>
+</Layout>
+
+<style>
+	main {
+		margin: auto;
+		padding: 1rem;
+		width: 100%;
+		max-width: calc(100% - 2rem);
+		color: white;
+		font-size: 20px;
+		line-height: 1.6;
+		min-height: 100vh;
+	}
+</style>

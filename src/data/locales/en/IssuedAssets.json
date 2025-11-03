@@ -8,6 +8,7 @@
   "manageUIA": "Edit",
   "pmaBet": "Bet",
   "uiaButton": "User Issued Assets",
+  "poolsButton": "Liquidity Pool Assets",
   "smartcoinsButton": "Smartcoin Assets",
   "predictionButton": "Prediction Market Assets",
   "nftButton": "Non-Fungible Token Assets",

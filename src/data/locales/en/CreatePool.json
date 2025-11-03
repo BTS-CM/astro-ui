@@ -1,0 +1,4 @@
+{
+  "title": "Create a new liquidity pool",
+  "description": "Create a new liquidity pool by converting an existing user issued asset into a pool share asset. Liquidity pools can swap any two assets on the blockchain with your own fee configuration."
+}

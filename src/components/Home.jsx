@@ -313,6 +313,17 @@ export default function Home(properties) {
             "Home:create_smartcoin.hover3",
           ],
         },
+        {
+          key: "create_liquidity_pool",
+          href: "/create_pool/index.html",
+          titleKey: "Home:create_liquidity_pool.title",
+          subtitleKey: "Home:create_liquidity_pool.subtitle",
+          hoverKeys: [
+            "Home:create_liquidity_pool.hover1",
+            "Home:create_liquidity_pool.hover2",
+            "Home:create_liquidity_pool.hover3",
+          ],
+        },
       ],
     },
     {
