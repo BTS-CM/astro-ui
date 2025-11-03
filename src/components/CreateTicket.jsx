@@ -362,8 +362,6 @@ export default function CreateTicket() {
           </CardContent>
         </Card>
 
-        {/* Removed global tickets snapshot; only user tickets are shown below. */}
-
         {usr && userTickets ? (
           <Card>
             <CardHeader className="pb-1">

@@ -347,7 +347,6 @@ export default function GovernanceActions(properties) {
         </Card>
       </div>
 
-      {/* Deeplink Dialogs */}
       {showWitnessCreateDialog && usr ? (
         <DeepLinkDialog
           operationNames={["witness_create"]}

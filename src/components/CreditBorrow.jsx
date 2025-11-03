@@ -14,7 +14,6 @@ import { useTranslation } from "react-i18next";
 
 import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -361,7 +360,7 @@ export default function CreditBorrow(properties) {
             </CardDescription>
           </CardHeader>
           <CardContent className="text-sm pb-3">
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
               <div className="col-span-1">
                 {t("CreditBorrow:common.fee", { fee: res.fee_rate / 10000 })}
                 <br />
@@ -387,25 +386,31 @@ export default function CreditBorrow(properties) {
             </div>
           </CardContent>
           <CardFooter className="pb-5">
-            <a href={`/offer/index.html?id=${res.id}`}>
-              <Button>
-                {t("CreditBorrow:common.proceed", {
-                  offerID: res.id.replace("1.21.", ""),
-                })}
-              </Button>
-            </a>
-            <a href={`/lend/index.html?id=${res.id}`}>
-              <Button className="ml-2">
-                {t(
-                  `CreditBorrow:common.${
-                    usr.id === res.owner_account ? "edit" : "view"
-                  }`,
-                  {
-                    offerID: res.id.replace("1.21.", ""),
-                  }
-                )}
-              </Button>
-            </a>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+              <div>
+                <a href={`/offer/index.html?id=${res.id}`}>
+                  <Button>
+                    {t("CreditBorrow:common.proceed", {
+                      offerID: res.id.replace("1.21.", ""),
+                    })}
+                  </Button>
+                </a>
+              </div>
+              <div>
+                <a href={`/lend/index.html?id=${res.id}`}>
+                  <Button>
+                    {t(
+                      `CreditBorrow:common.${
+                        usr.id === res.owner_account ? "edit" : "view"
+                      }`,
+                      {
+                        offerID: res.id.replace("1.21.", ""),
+                      }
+                    )}
+                  </Button>
+                </a>
+              </div>
+            </div>
           </CardFooter>
         </Card>
       </div>
@@ -477,7 +482,7 @@ export default function CreditBorrow(properties) {
       window.history.replaceState(
         {},
         "",
-        `?tab=search&searchTab=${activeSearch}&searchText=${event.target.value}`
+        `?tab=searchOffers&searchTab=${activeSearch}&searchText=${event.target.value}`
       );
     }, 500),
     []
@@ -485,7 +490,7 @@ export default function CreditBorrow(properties) {
 
   return (
     <>
-      <div className="container mx-auto mt-5 mb-5 w-1/2">
+      <div className="container mx-auto mt-5 mb-5 w-full lg:w-3/4">
         <div className="grid grid-cols-1 gap-3">
           <Card>
             <CardHeader className="pb-1">
@@ -497,64 +502,61 @@ export default function CreditBorrow(properties) {
             <CardContent>
               {offers && offers.length && activeTab ? (
                 <>
-                  <Tabs
-                    key={`top_tab_${activeTab}`}
-                    defaultValue={activeTab}
-                    className="w-full"
-                  >
-                    <TabsList className="grid w-full grid-cols-3 gap-2">
-                      {activeTab === "allOffers" ? (
-                        <TabsTrigger value="allOffers" style={activeTabStyle}>
-                          {t("CreditBorrow:card.viewingAll")}
-                        </TabsTrigger>
-                      ) : (
-                        <TabsTrigger
-                          value="allOffers"
-                          onClick={(event) => {
+                  <div className="w-full">
+                    <div className="grid w-full grid-cols-1 md:grid-cols-3 gap-2">
+                      <Button
+                        style={activeTab === "allOffers" ? activeTabStyle : {}}
+                        variant={
+                          activeTab === "allOffers" ? undefined : "secondary"
+                        }
+                        onClick={() => {
+                          if (activeTab !== "allOffers") {
                             setActiveTab("allOffers");
                             window.history.replaceState(
                               {},
                               "",
                               `?tab=allOffers`
                             );
-                          }}
-                        >
-                          {t("CreditBorrow:card.viewAll")}
-                        </TabsTrigger>
-                      )}
-                      {activeTab === "availableOffers" ? (
-                        <TabsTrigger
-                          value="availableOffers"
-                          style={activeTabStyle}
-                        >
-                          {t("CreditBorrow:card.viewingAvailable")}
-                        </TabsTrigger>
-                      ) : (
-                        <TabsTrigger
-                          value="availableOffers"
-                          onClick={(event) => {
+                          }
+                        }}
+                      >
+                        {activeTab === "allOffers"
+                          ? t("CreditBorrow:card.viewingAll")
+                          : t("CreditBorrow:card.viewAll")}
+                      </Button>
+                      <Button
+                        style={
+                          activeTab === "availableOffers" ? activeTabStyle : {}
+                        }
+                        variant={
+                          activeTab === "availableOffers"
+                            ? undefined
+                            : "secondary"
+                        }
+                        onClick={() => {
+                          if (activeTab !== "availableOffers") {
                             setActiveTab("availableOffers");
                             window.history.replaceState(
                               {},
                               "",
                               `?tab=availableOffers`
                             );
-                          }}
-                        >
-                          {t("CreditBorrow:card.viewAvailable")}
-                        </TabsTrigger>
-                      )}
-                      {activeTab === "searchOffers" ? (
-                        <TabsTrigger
-                          value="searchOffers"
-                          style={activeTabStyle}
-                        >
-                          {t("CreditBorrow:card.viewingSearch")}
-                        </TabsTrigger>
-                      ) : (
-                        <TabsTrigger
-                          value="searchOffers"
-                          onClick={(event) => {
+                          }
+                        }}
+                      >
+                        {activeTab === "availableOffers"
+                          ? t("CreditBorrow:card.viewingAvailable")
+                          : t("CreditBorrow:card.viewAvailable")}
+                      </Button>
+                      <Button
+                        style={
+                          activeTab === "searchOffers" ? activeTabStyle : {}
+                        }
+                        variant={
+                          activeTab === "searchOffers" ? undefined : "secondary"
+                        }
+                        onClick={() => {
+                          if (activeTab !== "searchOffers") {
                             setActiveTab("searchOffers");
                             window.history.replaceState(
                               {},
@@ -563,181 +565,200 @@ export default function CreditBorrow(properties) {
                                 thisInput ?? ""
                               }`
                             );
-                          }}
-                        >
-                          {t("CreditBorrow:card.viewSearch")}
-                        </TabsTrigger>
-                      )}
-                    </TabsList>
-                    <TabsContent value="allOffers">
+                          }
+                        }}
+                      >
+                        {activeTab === "searchOffers"
+                          ? t("CreditBorrow:card.viewingSearch")
+                          : t("CreditBorrow:card.viewSearch")}
+                      </Button>
+                    </div>
+                  </div>
+
+                  {activeTab === "allOffers" && (
+                    <div>
                       <h5 className="mb-2 text-center">
                         {t("CreditBorrow:card.allOffers")}
                       </h5>
                       {assets && offers && offers.length ? (
                         <div className="w-full max-h-[500px] overflow-auto">
-                          <List
-                            rowComponent={OfferRow}
-                            rowCount={offers.length}
-                            rowHeight={225}
-                            rowProps={{}}
-                          />
+                          <span className="hidden md:block">
+                            <List
+                              rowComponent={OfferRow}
+                              rowCount={offers.length}
+                              rowHeight={225}
+                              rowProps={{}}
+                            />
+                          </span>
+                          <span className="block md:hidden">
+                            <List
+                              rowComponent={OfferRow}
+                              rowCount={offers.length}
+                              rowHeight={350}
+                              rowProps={{}}
+                            />
+                          </span>
                         </div>
                       ) : null}
-                    </TabsContent>
-                    <TabsContent value="availableOffers">
+                    </div>
+                  )}
+
+                  {activeTab === "availableOffers" && (
+                    <div>
                       <h5 className="mb-2 text-center">
                         {t("CreditBorrow:card.availableOffers")}
                       </h5>
                       {assets && compatibleOffers && compatibleOffers.length ? (
                         <div className="w-full max-h-[500px] overflow-auto">
-                          <List
-                            rowComponent={BalanceRow}
-                            rowCount={compatibleOffers.length}
-                            rowHeight={225}
-                            rowProps={{}}
-                          />
+                          <span className="hidden md:block">
+                            <List
+                              rowComponent={BalanceRow}
+                              rowCount={compatibleOffers.length}
+                              rowHeight={225}
+                              rowProps={{}}
+                            />
+                          </span>
+                          <span className="block md:hidden">
+                            <List
+                              rowComponent={BalanceRow}
+                              rowCount={compatibleOffers.length}
+                              rowHeight={350}
+                              rowProps={{}}
+                            />
+                          </span>
                         </div>
                       ) : null}
-                    </TabsContent>
-                    <TabsContent value="searchOffers">
+                    </div>
+                  )}
+
+                  {activeTab === "searchOffers" && (
+                    <div>
                       <h5 className="mb-2 text-center">
                         {t("CreditBorrow:card.searchPrompt")}
                       </h5>
-                      <Tabs
-                        defaultValue={activeSearch ?? "borrow"}
-                        className="w-full"
-                      >
-                        <TabsList className="grid w-full grid-cols-3 gap-2">
-                          {activeSearch === "borrow" ? (
-                            <TabsTrigger value="borrow" style={activeTabStyle}>
-                              {t("CreditBorrow:card.borrowSearching")}
-                            </TabsTrigger>
-                          ) : (
-                            <TabsTrigger
-                              value="borrow"
-                              onClick={() => {
-                                setActiveSearch("borrow");
-                                window.history.replaceState(
-                                  {},
-                                  "",
-                                  `?tab=searchOffers&searchTab=borrow${
-                                    thisInput ? `&searchText=${thisInput}` : ""
-                                  }`
-                                );
-                              }}
-                            >
-                              {t("CreditBorrow:card.borrowSearch")}
-                            </TabsTrigger>
-                          )}
-                          {activeSearch === "collateral" ? (
-                            <TabsTrigger
-                              value="collateral"
-                              style={activeTabStyle}
-                            >
-                              {t("CreditBorrow:card.collateralSearching")}
-                            </TabsTrigger>
-                          ) : (
-                            <TabsTrigger
-                              value="collateral"
-                              onClick={() => {
-                                setActiveSearch("collateral");
-                                window.history.replaceState(
-                                  {},
-                                  "",
-                                  `?tab=searchOffers&searchTab=collateral${
-                                    thisInput ? `&searchText=${thisInput}` : ""
-                                  }`
-                                );
-                              }}
-                            >
-                              {t("CreditBorrow:card.collateralSearch")}
-                            </TabsTrigger>
-                          )}
-                          {activeSearch === "owner_name" ? (
-                            <TabsTrigger
-                              value="owner_name"
-                              style={activeTabStyle}
-                            >
-                              {t("CreditBorrow:card.ownerSearching")}
-                            </TabsTrigger>
-                          ) : (
-                            <TabsTrigger
-                              value="owner_name"
-                              onClick={() => {
-                                setActiveSearch("owner_name");
-                                window.history.replaceState(
-                                  {},
-                                  "",
-                                  `?tab=searchOffers&searchTab=owner_name${
-                                    thisInput ? `&searchText=${thisInput}` : ""
-                                  }`
-                                );
-                              }}
-                            >
-                              {t("CreditBorrow:card.ownerSearch")}
-                            </TabsTrigger>
-                          )}
-                        </TabsList>
-                        <Input
-                          name="searchInput"
-                          placeholder={
-                            thisSearchInput ?? t("Smartcoins:enterSearchText")
+                      <div className="grid w-full grid-cols-1 sm:grid-cols-3 gap-2">
+                        <Button
+                          style={
+                            activeSearch === "borrow" ? activeTabStyle : {}
                           }
-                          className="mb-3 mt-3 w-full"
-                          value={thisSearchInput || ""}
-                          onChange={(event) => {
-                            setThisSearchInput(event.target.value);
-                            debouncedSetSearchInput(event);
+                          variant={
+                            activeSearch === "borrow" ? undefined : "secondary"
+                          }
+                          onClick={() => {
+                            if (activeSearch !== "borrow") {
+                              setActiveSearch("borrow");
+                              window.history.replaceState(
+                                {},
+                                "",
+                                `?tab=searchOffers&searchTab=borrow${
+                                  thisInput ? `&searchText=${thisInput}` : ""
+                                }`
+                              );
+                            }
                           }}
-                        />
-                        <TabsContent value="borrow">
-                          {thisResult && thisResult.length ? (
-                            <div className="w-full max-h-[210px] overflow-auto">
-                              <List
-                                rowComponent={SearchRow}
-                                rowCount={thisResult.length}
-                                rowHeight={225}
-                                rowProps={{}}
-                              />
-                            </div>
-                          ) : null}
-                          {thisInput && thisResult && !thisResult.length
-                            ? t("CreditBorrow:card.noResults")
-                            : null}
-                        </TabsContent>
-                        <TabsContent value="collateral">
+                        >
+                          {activeSearch === "borrow"
+                            ? t("CreditBorrow:card.borrowSearching")
+                            : t("CreditBorrow:card.borrowSearch")}
+                        </Button>
+                        <Button
+                          style={
+                            activeSearch === "collateral" ? activeTabStyle : {}
+                          }
+                          variant={
+                            activeSearch === "collateral"
+                              ? undefined
+                              : "secondary"
+                          }
+                          onClick={() => {
+                            if (activeSearch !== "collateral") {
+                              setActiveSearch("collateral");
+                              window.history.replaceState(
+                                {},
+                                "",
+                                `?tab=searchOffers&searchTab=collateral${
+                                  thisInput ? `&searchText=${thisInput}` : ""
+                                }`
+                              );
+                            }
+                          }}
+                        >
+                          {activeSearch === "collateral"
+                            ? t("CreditBorrow:card.collateralSearching")
+                            : t("CreditBorrow:card.collateralSearch")}
+                        </Button>
+                        <Button
+                          style={
+                            activeSearch === "owner_name" ? activeTabStyle : {}
+                          }
+                          variant={
+                            activeSearch === "owner_name"
+                              ? undefined
+                              : "secondary"
+                          }
+                          onClick={() => {
+                            if (activeSearch !== "owner_name") {
+                              setActiveSearch("owner_name");
+                              window.history.replaceState(
+                                {},
+                                "",
+                                `?tab=searchOffers&searchTab=owner_name${
+                                  thisInput ? `&searchText=${thisInput}` : ""
+                                }`
+                              );
+                            }
+                          }}
+                        >
+                          {activeSearch === "owner_name"
+                            ? t("CreditBorrow:card.ownerSearching")
+                            : t("CreditBorrow:card.ownerSearch")}
+                        </Button>
+                      </div>
+
+                      <Input
+                        name="searchInput"
+                        placeholder={
+                          thisSearchInput ?? t("Smartcoins:enterSearchText")
+                        }
+                        className="mb-3 mt-3 w-full"
+                        value={thisSearchInput || ""}
+                        onChange={(event) => {
+                          setThisSearchInput(event.target.value);
+                          debouncedSetSearchInput(event);
+                        }}
+                      />
+
+                      {["borrow", "collateral", "owner_name"].includes(
+                        activeSearch
+                      ) && (
+                        <>
                           {thisResult && thisResult.length ? (
                             <div className="w-full max-h-[500px] overflow-auto">
-                              <List
-                                rowComponent={SearchRow}
-                                rowCount={thisResult.length}
-                                rowHeight={225}
-                                rowProps={{}}
-                              />
+                              <span className="hidden md:block">
+                                <List
+                                  rowComponent={SearchRow}
+                                  rowCount={thisResult.length}
+                                  rowHeight={225}
+                                  rowProps={{}}
+                                />
+                              </span>
+                              <span className="block md:hidden">
+                                <List
+                                  rowComponent={SearchRow}
+                                  rowCount={thisResult.length}
+                                  rowHeight={350}
+                                  rowProps={{}}
+                                />
+                              </span>
                             </div>
                           ) : null}
                           {thisInput && thisResult && !thisResult.length
                             ? t("CreditBorrow:card.noResults")
                             : null}
-                        </TabsContent>
-                        <TabsContent value="owner_name">
-                          {thisResult && thisResult.length ? (
-                            <div className="w-full max-h-[500px] overflow-auto">
-                              <List
-                                rowComponent={SearchRow}
-                                rowCount={thisResult.length}
-                                rowHeight={225}
-                                rowProps={{}}
-                              />
-                            </div>
-                          ) : null}
-                          {thisInput && thisResult && !thisResult.length
-                            ? t("CreditBorrow:card.noResults")
-                            : null}
-                        </TabsContent>
-                      </Tabs>
-                    </TabsContent>
-                  </Tabs>
+                        </>
+                      )}
+                    </div>
+                  )}
                 </>
               ) : (
                 t("CreditBorrow:card.loading")

@@ -46,7 +46,6 @@ export default function WaveHero({ title, subtitle, className = "" }) {
             height="1000"
             filterUnits="userSpaceOnUse"
           >
-            {/* much lighter blur so thin strands remain crisp */}
             <feGaussianBlur stdDeviation="6" />
           </filter>
           <linearGradient id="fadeY" x1="0" y1="0" x2="0" y2="1">
@@ -65,7 +64,6 @@ export default function WaveHero({ title, subtitle, className = "" }) {
           strokeLinecap="round"
           mask="url(#fadeBandMask)"
         >
-          {/* thinner, spaghetti-like strands */}
           <path
             d="M0 320 C 250 200 500 440 750 320 S 1250 200 1500 320 S 2000 440 2000 320"
             stroke="url(#waveGrad2)"
@@ -146,7 +144,6 @@ export default function WaveHero({ title, subtitle, className = "" }) {
             />
           </path>
 
-          {/* extra thin strands for spaghetti look */}
           <path
             d="M0 340 C 200 260 400 460 600 340 S 1000 260 1200 340 S 1600 460 2000 340"
             stroke="url(#waveGrad1)"
@@ -179,7 +176,6 @@ export default function WaveHero({ title, subtitle, className = "" }) {
             />
           </path>
 
-          {/* duplicated thinner strands (offsets + varied durations) to double density */}
           <path
             d="M0 330 C 250 210 500 430 750 330 S 1250 210 1500 330 S 2000 430 2000 330"
             stroke="url(#waveGrad2)"

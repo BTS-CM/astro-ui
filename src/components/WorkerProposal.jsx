@@ -224,7 +224,6 @@ export default function WorkerCreate(properties) {
               className="space-y-4"
             >
               <FieldGroup>
-                {/* Worker Name */}
                 <Controller
                   name="workerName"
                   control={control}
@@ -258,7 +257,6 @@ export default function WorkerCreate(properties) {
                   )}
                 />
 
-                {/* URL */}
                 <Controller
                   name="workerUrl"
                   control={control}
@@ -292,7 +290,6 @@ export default function WorkerCreate(properties) {
                   )}
                 />
 
-                {/* Dates */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <Controller
                     name="startDate"
@@ -372,7 +369,6 @@ export default function WorkerCreate(properties) {
                   />
                 </div>
 
-                {/* Daily Pay */}
                 <Controller
                   name="dailyPay"
                   control={control}
@@ -411,7 +407,6 @@ export default function WorkerCreate(properties) {
                   )}
                 />
 
-                {/* Worker Type & Vesting Period */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <Controller
                     name="workerType"
@@ -498,7 +493,6 @@ export default function WorkerCreate(properties) {
         </Card>
       </div>
 
-      {/* Deeplink Dialog */}
       {showDialog && usr && trxJSON ? (
         <DeepLinkDialog
           operationNames={["worker_create"]}

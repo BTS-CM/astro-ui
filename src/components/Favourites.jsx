@@ -267,7 +267,6 @@ export default function Favourites(properties) {
 
     return (
       <div style={{ ...style, paddingRight: "10px" }}>
-        {/* SM-only card: actions moved below text */}
         <Card className="mb-3 bg-slate-50 border border-slate-200 hover:bg-slate-100 transition-colors rounded-xl block md:hidden">
           <CardHeader className="px-4 py-4">
             <div className="space-y-1">
@@ -277,7 +276,6 @@ export default function Favourites(properties) {
               </CardDescription>
             </div>
             <div className="mt-3 flex items-center gap-2 flex-wrap">
-              {/* User actions like IssuedAssets */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" size="sm">
@@ -316,7 +314,6 @@ export default function Favourites(properties) {
                 </DropdownMenuContent>
               </DropdownMenu>
 
-              {/* Issuer actions link to create/manage pages */}
               {showIssuerActions && assetDetails ? (
                 <AssetIssuerActions
                   asset={assetDetails}
@@ -343,7 +340,6 @@ export default function Favourites(properties) {
           </CardHeader>
         </Card>
 
-        {/* MD+ card: original layout */}
         <Card className="mb-3 bg-slate-50 border border-slate-200 hover:bg-slate-100 transition-colors rounded-xl hidden md:block">
           <CardHeader className="px-4 py-4 flex flex-row items-center justify-between">
             <div className="space-y-1">
@@ -354,7 +350,6 @@ export default function Favourites(properties) {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                {/* User actions like IssuedAssets */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline" size="sm">
@@ -393,7 +388,6 @@ export default function Favourites(properties) {
                   </DropdownMenuContent>
                 </DropdownMenu>
 
-                {/* Issuer actions link to create/manage pages */}
                 {showIssuerActions && assetDetails ? (
                   <AssetIssuerActions
                     asset={assetDetails}
@@ -426,7 +420,6 @@ export default function Favourites(properties) {
 
   return (
     <div className="container mx-auto mt-5 mb-10 max-w-4xl">
-      {/* Favourite Assets Card */}
       <Card className="mb-8 rounded-xl overflow-hidden">
         <CardHeader className="px-5 py-4 flex flex-row items-center justify-between bg-slate-50 border-b">
           <CardTitle className="text-xl font-bold tracking-tight text-slate-900">
@@ -450,7 +443,6 @@ export default function Favourites(properties) {
         <CardContent className="p-4">
           {chainFavourites && chainFavourites.length ? (
             <>
-              {/* SM-only list with taller row height for vertically stacked actions */}
               <div className="w-full max-h-[420px] overflow-auto block md:hidden">
                 <List
                   rowComponent={Row}
@@ -459,7 +451,6 @@ export default function Favourites(properties) {
                   rowProps={{}}
                 />
               </div>
-              {/* MD+ list uses original row height and layout */}
               <div className="w-full max-h-[420px] overflow-auto hidden md:block">
                 <List
                   rowComponent={Row}
@@ -483,7 +474,6 @@ export default function Favourites(properties) {
         </CardContent>
       </Card>
 
-      {/* Favourite Market Pairs Card */}
       <Card className="mb-8 rounded-xl overflow-hidden">
         <CardHeader className="px-5 py-4 flex flex-row items-center justify-between bg-slate-50 border-b">
           <CardTitle className="text-xl font-bold tracking-tight text-slate-900">
@@ -590,7 +580,6 @@ export default function Favourites(properties) {
         <CardContent className="p-4">
           {chainPairs && chainPairs.length ? (
             <>
-              {/* SM-only list with actions stacked under the text */}
               <div className="w-full max-h-[420px] overflow-auto block md:hidden">
                 <List
                   rowComponent={({ index, style }) => {
@@ -667,7 +656,6 @@ export default function Favourites(properties) {
                 />
               </div>
 
-              {/* MD+ list unchanged */}
               <div className="w-full max-h-[420px] overflow-auto hidden md:block">
                 <List
                   rowComponent={({ index, style }) => {
@@ -758,7 +746,6 @@ export default function Favourites(properties) {
         </CardContent>
       </Card>
 
-      {/* Favourite Users Card */}
       <Card className="rounded-xl overflow-hidden">
         <CardHeader className="px-5 py-4 flex flex-row items-center justify-between bg-slate-50 border-b">
           <CardTitle className="text-xl font-bold tracking-tight text-slate-900">
@@ -791,7 +778,6 @@ export default function Favourites(properties) {
         <CardContent className="p-4">
           {favouriteUsers && (favouriteUsers[chain] ?? []).length ? (
             <>
-              {/* SM-only list with actions below text */}
               <div className="w-full max-h-[420px] overflow-auto block md:hidden">
                 <List
                   rowComponent={({ index, style }) => {
@@ -854,7 +840,6 @@ export default function Favourites(properties) {
                 />
               </div>
 
-              {/* MD+ list unchanged */}
               <div className="w-full max-h-[420px] overflow-auto hidden md:block">
                 <List
                   rowComponent={({ index, style }) => {

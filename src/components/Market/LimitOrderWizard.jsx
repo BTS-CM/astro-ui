@@ -306,7 +306,7 @@ export default function LimitOrderWizard(properties) {
                     setTempBuyAmount(limitOrderBuyAmount);
                   }}
                 >
-                  {t("LimitOrderWizard:buy")}
+                  ➕
                 </Button>
               </DialogTrigger>
               <DialogContent className="bg-white">
@@ -586,7 +586,7 @@ export default function LimitOrderWizard(properties) {
                 });
               }}
             >
-              {t("CustomPoolOverview:delete")}
+              ➖
             </Button>
           ) : null}
         </div>
@@ -598,7 +598,7 @@ export default function LimitOrderWizard(properties) {
     <Dialog open={addOperationDialog} onOpenChange={setAddOperationDialog}>
       <DialogTrigger>
         <Button variant="outline" className="mt-3">
-          {t("LimitOrderWizard:add")}
+          ➕
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[1080px] bg-white">

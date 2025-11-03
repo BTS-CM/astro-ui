@@ -35,7 +35,7 @@ export default function MarketSummaryTabs(properties) {
   return (
     <>
       <div className="grid grid-cols-1 mt-5 gap-5">
-        <div className="grid grid-cols-2 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <MarketTradeContents
             type="buy"
             publicMarketHistory={publicMarketHistory}
@@ -62,7 +62,7 @@ export default function MarketSummaryTabs(properties) {
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <MyOpenOrders
             type="buy"
             assetAData={assetAData}
@@ -92,7 +92,7 @@ export default function MarketSummaryTabs(properties) {
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <MyCompletedTrades
             type="buy"
             assetAData={assetAData}

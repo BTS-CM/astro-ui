@@ -554,7 +554,6 @@ export default function HtlcCreateDialog(properties) {
         </DialogContent>
       </Dialog>
 
-      {/* Deeplink Dialog */}
       {showDeeplinkDialog && trxJSON ? (
         <DeepLinkDialog
           operationNames={["htlc_create"]}

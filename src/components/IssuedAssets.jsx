@@ -503,7 +503,6 @@ export default function IssuedAssets(properties) {
                     />
                     {")"}
                   </div>
-                  {/* MD+ actions on the right */}
                   <div className="hidden lg:grid lg:grid-cols-3 lg:gap-3 text-right">
                     {issueThingsRow}
                   </div>
@@ -554,7 +553,6 @@ export default function IssuedAssets(properties) {
               <CardDescription>{t("IssuedAssets:description")}</CardDescription>
             </CardHeader>
             <CardContent>
-              {/* Button group replacing tab wrappers; separated from content */}
               <div className="w-full mb-3">
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-2">
                   <Button
@@ -630,7 +628,6 @@ export default function IssuedAssets(properties) {
                     </Empty>
                   ) : (
                     <>
-                      {/* SM-only taller rows to accommodate stacked actions */}
                       <div className="w-full max-h-[500px] min-h-[500px] overflow-auto block md:hidden">
                         <List
                           rowComponent={AssetRow}
@@ -639,7 +636,6 @@ export default function IssuedAssets(properties) {
                           rowProps={{}}
                         />
                       </div>
-                      {/* MD+ original height */}
                       <div className="w-full max-h-[500px] min-h-[500px] overflow-auto hidden md:block">
                         <List
                           rowComponent={AssetRow}

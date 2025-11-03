@@ -380,7 +380,6 @@ export default function Barter(properties) {
         style={style}
       >
         <div className="grid grid-cols-5 gap-3">
-          {/* Amount Input */}
           <div className="space-y-1 col-span-2">
             <Input
               id={`amount-${party}-${assetData.id}`}
@@ -389,7 +388,6 @@ export default function Barter(properties) {
               disabled
             />
           </div>
-          {/* Display chosen asset */}
           <div className="space-y-1 col-span-2">
             <Input
               id={`asset-${party}-${assetData.id}`}
@@ -403,15 +401,15 @@ export default function Barter(properties) {
               onClick={() => {
                 if (party === "from") {
                   setFromAssets((prevAssets) => {
-                    const updatedAssets = { ...prevAssets }; // Create a shallow copy
-                    delete updatedAssets[assetData.id]; // Remove the field
-                    return updatedAssets; // Return the updated object
+                    const updatedAssets = { ...prevAssets };
+                    delete updatedAssets[assetData.id];
+                    return updatedAssets;
                   });
                 } else {
                   setToAssets((prevAssets) => {
-                    const updatedAssets = { ...prevAssets }; // Create a shallow copy
-                    delete updatedAssets[assetData.id]; // Remove the field
-                    return updatedAssets; // Return the updated object
+                    const updatedAssets = { ...prevAssets };
+                    delete updatedAssets[assetData.id];
+                    return updatedAssets;
                   });
                 }
               }}
@@ -454,7 +452,6 @@ export default function Barter(properties) {
             <CardDescription>{t("Barter:description")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            {/* Counterparty Selection */}
             <div className="space-y-2">
               <Label>{t("Barter:counterparty")}</Label>
               <div className="grid grid-cols-1 lg:grid-cols-2">
@@ -526,9 +523,7 @@ export default function Barter(properties) {
             {toAccount ? (
               <>
                 <Separator />
-                {/* Barter Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-11 gap-4 items-start">
-                  {/* User A Offer */}
                   <div className="md:col-span-5 space-y-3">
                     <Card>
                       <CardHeader>
@@ -587,7 +582,6 @@ export default function Barter(properties) {
                     </Card>
                   </div>
 
-                  {/* User B Offer */}
                   <div className="md:col-span-5 space-y-3">
                     <Card>
                       <CardHeader>
@@ -652,7 +646,6 @@ export default function Barter(properties) {
 
                 <Separator />
 
-                {/* Escrow Section */}
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-2">
@@ -671,7 +664,6 @@ export default function Barter(properties) {
 
                   {showEscrow && (
                     <Card className="p-4 space-y-4">
-                      {/* Escrow Agent Selection */}
                       <div className="space-y-2">
                         <Label>{t("Barter:escrowAgent")}</Label>
                         <div className="flex items-center space-x-3">
@@ -746,7 +738,6 @@ export default function Barter(properties) {
                         </div>
                       </div>
 
-                      {/* Escrow Options */}
                       <div className="space-y-2">
                         <div className="flex items-center space-x-2">
                           <Checkbox
@@ -761,7 +752,6 @@ export default function Barter(properties) {
                         </div>
                       </div>
 
-                      {/* Escrow Payment */}
                       <div className="space-y-2">
                         <HoverInfo
                           content={t("Barter:escrowPaymentInfo")}
@@ -801,16 +791,14 @@ export default function Barter(properties) {
         </Card>
       </div>
 
-      {/* Deeplink Dialog */}
       {showDialog && canSubmit && usr && proposalOperations ? (
         <DeepLinkDialog
-          operationNames={["proposal_create"]} // Wrap transfers in a proposal
+          operationNames={["proposal_create"]}
           username={usr.username}
           usrChain={_chain}
           userID={usr.id}
           dismissCallback={() => {
             setShowDialog(false);
-            // Optionally reset form state here
           }}
           key={`Barter_${usr.id}_${toAccount?.id || ""}`}
           headerText={t("Barter:deeplinkHeader", {

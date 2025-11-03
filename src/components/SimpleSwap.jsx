@@ -1111,19 +1111,18 @@ export default function SimpleSwap(properties) {
                 marketSearch={marketSearch}
                 chain={usr?.chain ?? _chain}
                 usrBalances={usrBalances}
-                type="sell" // Indicates this is the asset being sold
+                type="sell"
               />
             ) : (
               <AssetCardSkeleton title={t("SimpleSwap:baseAsset")} />
             )}
 
-            {/* Pool Share Asset Card */}
-            {foundPool && poolShareDetails && foundPool.share_asset_details ? ( // Ensure share asset details exist
+            {foundPool && poolShareDetails && foundPool.share_asset_details ? (
               <MarketAssetCard
                 asset={foundPool.share_asset_symbol}
-                assetData={foundPool.share_asset_details} // Static share asset data
-                assetDetails={poolShareDetails} // Dynamic share asset data
-                bitassetData={null} // Pool shares are typically not bitassets
+                assetData={foundPool.share_asset_details}
+                assetDetails={poolShareDetails}
+                bitassetData={null}
                 marketSearch={marketSearch}
                 chain={usr?.chain ?? _chain}
                 usrBalances={usrBalances}
@@ -1133,7 +1132,6 @@ export default function SimpleSwap(properties) {
               <AssetCardSkeleton title={t("SimpleSwap:poolShareAsset")} />
             )}
 
-            {/* Borrow Links Card */}
             <Card>
               <CardHeader className="pb-2 pt-4">
                 <CardTitle>{t("SimpleSwap:borrowAssets")}</CardTitle>
@@ -1207,14 +1205,12 @@ export default function SimpleSwap(properties) {
         ) : null}
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-5">
-          {pool && assetA && assetB && foundPool?.share_asset_symbol ? ( // Check required data
+          {pool && assetA && assetB && foundPool?.share_asset_symbol ? (
             <>
               <a
-                href={
-                  `/dex/index.html?market=${foundPool.share_asset_symbol}_${
-                    assetA.symbol === "BTS" ? assetB.symbol : "BTS"
-                  }` // Market vs BTS or the other asset if A is BTS
-                }
+                href={`/dex/index.html?market=${foundPool.share_asset_symbol}_${
+                  assetA.symbol === "BTS" ? assetB.symbol : "BTS"
+                }`}
               >
                 <ActionCard
                   title={t("SimpleSwap:purchaseStake")}
@@ -1251,7 +1247,6 @@ export default function SimpleSwap(properties) {
           ) : null}
         </div>
 
-        {/* Risks Section */}
         <div className="grid grid-cols-1 mt-5 mb-5">
           <Card>
             <CardHeader className="pb-3">
@@ -1292,7 +1287,6 @@ export default function SimpleSwap(properties) {
   );
 }
 
-// Helper component for skeleton loading state of asset cards
 function AssetCardSkeleton({ title }) {
   const { t } = useTranslation(locale.get(), { i18n: i18nInstance });
   return (
@@ -1315,12 +1309,10 @@ function AssetCardSkeleton({ title }) {
   );
 }
 
-// Helper component for action links cards
 function ActionCard({ title, description, content }) {
   return (
     <Card className="hover:shadow-md transition-shadow h-full">
       {" "}
-      {/* Ensure cards have same height */}
       <CardHeader className="pb-2 pt-4">
         <CardTitle>{title}</CardTitle>
         <CardDescription className="text-sm">{description}</CardDescription>

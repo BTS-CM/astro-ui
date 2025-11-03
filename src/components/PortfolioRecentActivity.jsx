@@ -298,7 +298,6 @@ export default function PortfolioRecentActivity() {
 
     return (
       <div style={rowStyle} className="px-2">
-        {/* SM-only view: more vertical space, hide Op ID, Block, Fees, Actions */}
         <Card className="hover:bg-gray-50 md:hidden p-3">
           <div className="grid grid-cols-[2fr_1fr] items-start gap-2">
             <div className="truncate font-medium mt-2">
@@ -373,7 +372,6 @@ export default function PortfolioRecentActivity() {
           </div>
         </Card>
 
-        {/* MD-only view: drop Actions */}
         <Card className="hover:bg-gray-50 hidden md:block lg:hidden">
           <div className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr] items-start gap-2 p-2 mb-2">
             <div className="truncate font-medium mt-2">
@@ -473,7 +471,6 @@ export default function PortfolioRecentActivity() {
           </div>
         </Card>
 
-        {/* LG+ view: existing 6-column layout with Actions */}
         <Card className="hover:bg-gray-50 hidden lg:block">
           <div className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr_1fr] items-start gap-2 p-2 mb-2">
             <div className="truncate font-medium mt-2">
@@ -682,8 +679,6 @@ export default function PortfolioRecentActivity() {
                   <TableRow>
                     <TableHead colSpan={6} className="p-0">
                       <div className="px-2">
-                        {/* SM: no header to keep it compact */}
-                        {/* MD-only header: drop Actions */}
                         <div className="hidden md:grid lg:hidden grid-cols-[1fr_1fr_1fr_1fr_1fr] items-start gap-2 p-2">
                           <div className="text-left">
                             {t("PortfolioTabs:th.description", "Description")}
@@ -701,7 +696,6 @@ export default function PortfolioRecentActivity() {
                             {t("PoolTracker:fees")}
                           </div>
                         </div>
-                        {/* LG header: original with Actions */}
                         <div className="hidden lg:grid grid-cols-[1fr_1fr_1fr_1fr_1fr_1fr] items-start gap-2 p-2">
                           <div className="text-left">
                             {t("PortfolioTabs:th.description", "Description")}
