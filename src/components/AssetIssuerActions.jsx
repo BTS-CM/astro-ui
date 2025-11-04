@@ -678,7 +678,7 @@ function AssetIssuerActions(props) {
           onClick={() => {
             setPriceFeedPublishersOpen(true);
           }}
-          className="hover:bg-gray-200"
+          className="hover:shadow-inner"
         >
           {t(`Predictions:pricefeeder`)}
         </DropdownMenuItem>
@@ -707,7 +707,7 @@ function AssetIssuerActions(props) {
             onClick={() => {
               setDeletePoolOpen(true);
             }}
-            className="hover:bg-gray-200"
+            className="hover:shadow-inner"
           >
             {t(`IssuedAssets:deletePool`)}
           </DropdownMenuItem>
@@ -720,7 +720,7 @@ function AssetIssuerActions(props) {
     dropdownItems.push({
       key: "manage",
       render: (
-        <DropdownMenuItem className="hover:bg-gray-200" asChild key="manage">
+        <DropdownMenuItem className="hover:shadow-inner" asChild key="manage">
           <a href={manageHref}>{t("IssuedAssets:manageUIA")}</a>
         </DropdownMenuItem>
       ),
@@ -733,7 +733,7 @@ function AssetIssuerActions(props) {
       render: (
         <DropdownMenuItem
           key="fund-fee-pool"
-          className="hover:bg-gray-200"
+          className="hover:shadow-inner"
           onClick={() => setFundFeePoolDialogOpen(true)}
         >
           {t("IssuedAssets:fundFeePool")}
@@ -745,7 +745,7 @@ function AssetIssuerActions(props) {
       render: (
         <DropdownMenuItem
           key="claim-fee-pool"
-          className="hover:bg-gray-200"
+          className="hover:shadow-inner"
           onClick={() => setClaimFeePoolOpen(true)}
         >
           {t("IssuedAssets:claimFeePool")}
@@ -757,7 +757,7 @@ function AssetIssuerActions(props) {
       render: (
         <DropdownMenuItem
           key="claim-asset-fees"
-          className="hover:bg-gray-200"
+          className="hover:shadow-inner"
           onClick={() => setClaimAssetFeesOpen(true)}
         >
           {t("IssuedAssets:claimAssetFees")}
@@ -769,7 +769,7 @@ function AssetIssuerActions(props) {
       render: (
         <DropdownMenuItem
           key="update-issuer"
-          className="hover:bg-gray-200"
+          className="hover:shadow-inner"
           onClick={() => setUpdateIssuerOpen(true)}
         >
           {t("IssuedAssets:updateIssuer")}
@@ -795,6 +795,7 @@ function AssetIssuerActions(props) {
         render: (
           <DropdownMenuItem
             key="global-settlement"
+            className="hover:shadow-inner"
             onClick={() => setGlobalSettleOpen(true)}
           >
             {t("IssuedAssets:globalSettlement")}
@@ -811,6 +812,7 @@ function AssetIssuerActions(props) {
         render: (
           <DropdownMenuItem
             key="issue-asset"
+            className="hover:shadow-inner"
             onClick={() => setIssueAssetOpen(true)}
           >
             {t("IssuedAssets:issueAsset")}
@@ -822,6 +824,7 @@ function AssetIssuerActions(props) {
         render: (
           <DropdownMenuItem
             key="reserve-asset"
+            className="hover:shadow-inner"
             onClick={() => setReserveAssetOpen(true)}
           >
             {t("IssuedAssets:reserveAsset")}
@@ -843,6 +846,7 @@ function AssetIssuerActions(props) {
       render: (
         <DropdownMenuItem
           key="override-transfer"
+          className="hover:shadow-inner"
           onClick={() => setOverrideOpen(true)}
         >
           {t("IssuedAssets:overrideTransfer", {
