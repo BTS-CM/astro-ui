@@ -13,6 +13,8 @@
   "predictionButton": "Prediction Market Assets",
   "nftButton": "Non-Fungible Token Assets",
   "listingUIA": "Listing {{count}} User Issued Assets",
+  "listingPools": "Listing {{count}} Liquidity Pool Assets",
+  "deletePool": "Delete Pool",
   "noUIA": "No User Issued Assets found",
   "listingSmartcoins": "Listing {{count}} Smartcoin Assets",
   "noSmartcoins": "No Smartcoin Assets found",

@@ -112,6 +112,9 @@ function AssetIssuerActions(props) {
   ] = useState(false);
   const [priceSearchDialog, setPriceSearchDialog] = useState(false);
 
+  const [deletePoolOpen, setDeletePoolOpen] = useState(false);
+  const [deletePoolDeeplinkOpen, setDeletePoolDeeplinkOpen] = useState(false);
+
   const [priceFeedPublishers, setPriceFeedPublishers] = useState([]);
   useEffect(() => {
     if (bitassetDetails && priceFeederAccounts && priceFeederAccounts.length) {
@@ -675,7 +678,7 @@ function AssetIssuerActions(props) {
           onClick={() => {
             setPriceFeedPublishersOpen(true);
           }}
-          className="hover:shadow-inner"
+          className="hover:bg-gray-200"
         >
           {t(`Predictions:pricefeeder`)}
         </DropdownMenuItem>
@@ -683,11 +686,41 @@ function AssetIssuerActions(props) {
     });
   }
 
+  if (asset && asset.for_liquidity_pool && dynamicAssetData) {
+    if (
+      dynamicAssetData.current_supply ||
+      dynamicAssetData.confidential_supply
+    ) {
+      dropdownItems.push({
+        key: "delete-pool-disabled",
+        render: (
+          <DropdownMenuItem disabled>
+            {t(`IssuedAssets:deletePool`)}
+          </DropdownMenuItem>
+        ),
+      });
+    } else {
+      dropdownItems.push({
+        key: "delete-pool-disabled",
+        render: (
+          <DropdownMenuItem
+            onClick={() => {
+              setDeletePoolOpen(true);
+            }}
+            className="hover:bg-gray-200"
+          >
+            {t(`IssuedAssets:deletePool`)}
+          </DropdownMenuItem>
+        ),
+      });
+    }
+  }
+
   if (manageHref) {
     dropdownItems.push({
       key: "manage",
       render: (
-        <DropdownMenuItem asChild key="manage">
+        <DropdownMenuItem className="hover:bg-gray-200" asChild key="manage">
           <a href={manageHref}>{t("IssuedAssets:manageUIA")}</a>
         </DropdownMenuItem>
       ),
@@ -700,6 +733,7 @@ function AssetIssuerActions(props) {
       render: (
         <DropdownMenuItem
           key="fund-fee-pool"
+          className="hover:bg-gray-200"
           onClick={() => setFundFeePoolDialogOpen(true)}
         >
           {t("IssuedAssets:fundFeePool")}
@@ -711,6 +745,7 @@ function AssetIssuerActions(props) {
       render: (
         <DropdownMenuItem
           key="claim-fee-pool"
+          className="hover:bg-gray-200"
           onClick={() => setClaimFeePoolOpen(true)}
         >
           {t("IssuedAssets:claimFeePool")}
@@ -722,6 +757,7 @@ function AssetIssuerActions(props) {
       render: (
         <DropdownMenuItem
           key="claim-asset-fees"
+          className="hover:bg-gray-200"
           onClick={() => setClaimAssetFeesOpen(true)}
         >
           {t("IssuedAssets:claimAssetFees")}
@@ -733,6 +769,7 @@ function AssetIssuerActions(props) {
       render: (
         <DropdownMenuItem
           key="update-issuer"
+          className="hover:bg-gray-200"
           onClick={() => setUpdateIssuerOpen(true)}
         >
           {t("IssuedAssets:updateIssuer")}
@@ -875,6 +912,58 @@ function AssetIssuerActions(props) {
           {dropdownItems.map((item) => item.render)}
         </DropdownMenuContent>
       </DropdownMenu>
+
+      {deletePoolOpen ? (
+        <Dialog open={deletePoolOpen} onOpenChange={setDeletePoolOpen}>
+          <DialogContent className="sm:max-w-[550px] bg-white">
+            <DialogHeader>
+              <DialogTitle>
+                {t("IssuedAssets:deletePool")}: {asset?.symbol} (
+                {asset.for_liquidity_pool})
+              </DialogTitle>
+            </DialogHeader>
+
+            <HoverInfo
+              content={t("CustomPoolOverview:poolId")}
+              header={t("CustomPoolOverview:poolId")}
+              type="header"
+            />
+            <Input
+              value={`${asset.for_liquidity_pool}`}
+              readOnly
+              className="mt-2"
+            />
+
+            <Button
+              className="mt-3 w-1/3"
+              onClick={() => setDeletePoolDeeplinkOpen(true)}
+            >
+              {t("IssuedAssets:deletePool")}
+            </Button>
+
+            {deletePoolDeeplinkOpen ? (
+              <DeepLinkDialog
+                operationNames={["liquidity_pool_delete"]}
+                username={currentUser?.username}
+                usrChain={chain}
+                userID={currentUser?.id}
+                dismissCallback={setDeletePoolDeeplinkOpen}
+                key={`deletePool-${asset?.for_liquidity_pool}`}
+                headerText={`${t("CustomPoolOverview:poolId")}: ${
+                  asset.for_liquidity_pool
+                }`}
+                trxJSON={[
+                  {
+                    account: currentUser?.id,
+                    pool: asset.for_liquidity_pool,
+                    extensions: {},
+                  },
+                ]}
+              />
+            ) : null}
+          </DialogContent>
+        </Dialog>
+      ) : null}
 
       {fundFeePoolDialogOpen ? (
         <Dialog

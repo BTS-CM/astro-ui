@@ -12,6 +12,8 @@
   "predictionButton": "Actifs du marché de prédiction",
   "nftButton": "Actifs symboliques non fongibles",
   "listingUIA": "Inscription {{count}} Actifs émis par l'utilisateur",
+  "listingPools": "Inscription {{count}} Actifs du pool de liquidités",
+  "deletePool": "Supprimer le pool",
   "noUIA": "Aucun actif émis par l'utilisateur trouvé",
   "listingSmartcoins": "Inscription {{count}} Actifs Smartcoins",
   "noSmartcoins": "Aucun actif Smartcoin trouvé",

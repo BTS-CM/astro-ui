@@ -12,6 +12,8 @@
   "predictionButton": "Asset del mercato di previsione",
   "nftButton": "Risorse token non fungibili",
   "listingUIA": "Elenco {{count}} Risorse emesse dall'utente",
+  "listingPools": "Elenco {{count}} Attività della riserva di liquidità",
+  "deletePool": "Elimina pool",
   "noUIA": "Nessuna risorsa emessa dall'utente trovata",
   "listingSmartcoins": "Elenco {{count}} Asset Smartcoin",
   "noSmartcoins": "Nessun asset Smartcoin trovato",

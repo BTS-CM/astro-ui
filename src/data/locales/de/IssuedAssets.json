@@ -12,6 +12,8 @@
   "predictionButton": "Prognosemarktvermögen",
   "nftButton": "Nicht fungible Token-Vermögenswerte",
   "listingUIA": "Auflistung {{count}} Vom Benutzer ausgegebene Vermögenswerte",
+  "listingPools": "Auflistung {{count}} Liquiditätspoolvermögen",
+  "deletePool": "Pool löschen",
   "noUIA": "Keine vom Benutzer ausgegebenen Assets gefunden",
   "listingSmartcoins": "Auflistung {{count}} Smartcoin-Vermögenswerte",
   "noSmartcoins": "Keine Smartcoin-Assets gefunden",

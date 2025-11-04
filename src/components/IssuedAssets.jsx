@@ -135,7 +135,10 @@ export default function IssuedAssets(properties) {
             !asset.for_liquidity_pool
         );
       case "pools":
-        return issuedAssets.filter((asset) => asset.for_liquidity_pool);
+        const foundPools = issuedAssets.filter(
+          (asset) => asset.for_liquidity_pool
+        );
+        return foundPools;
       case "smartcoins":
         return issuedAssets.filter(
           (asset) =>
@@ -640,6 +643,65 @@ export default function IssuedAssets(properties) {
                         <Button asChild>
                           <a href="/create_uia/index.html">
                             {t("PageHeader:create_uia")}
+                          </a>
+                        </Button>
+                      </EmptyContent>
+                    </Empty>
+                  ) : (
+                    <>
+                      {dynamicData && dynamicData.length ? (
+                        <>
+                          <div className="w-full max-h-[500px] min-h-[500px] overflow-auto block md:hidden">
+                            <List
+                              rowComponent={AssetRow}
+                              rowCount={relevantAssets.length}
+                              rowHeight={90}
+                              rowProps={{}}
+                            />
+                          </div>
+                          <div className="w-full max-h-[500px] min-h-[500px] overflow-auto hidden md:block">
+                            <List
+                              rowComponent={AssetRow}
+                              rowCount={relevantAssets.length}
+                              rowHeight={90}
+                              rowProps={{}}
+                            />
+                          </div>
+                        </>
+                      ) : (
+                        <div className="text-center mt-5">
+                          {t("CreditBorrow:common.loading")}
+                        </div>
+                      )}
+                    </>
+                  )}
+                </div>
+              )}
+
+              {activeTab === "pools" && (
+                <div className="mt-2">
+                  {relevantAssets.length > 0 ? (
+                    <h5 className="mb-2 text-center">
+                      {t("IssuedAssets:listingPools", {
+                        count: relevantAssets.length,
+                      })}
+                    </h5>
+                  ) : null}
+                  {loading ? (
+                    <div className="text-center mt-5">
+                      {t("CreditBorrow:common.loading")}
+                    </div>
+                  ) : null}
+                  {(!loading && !relevantAssets) || !relevantAssets.length ? (
+                    <Empty className="mt-5">
+                      <EmptyHeader>
+                        <EmptyMedia variant="icon">❔</EmptyMedia>
+                        <EmptyTitle>{t("IssuedAssets:noPools")}</EmptyTitle>
+                      </EmptyHeader>
+                      <EmptyContent>
+                        <Button asChild>
+                          <a href="/create_pool/index.html">
+                            {t("PageHeader:create_pool")}
                           </a>
                         </Button>
                       </EmptyContent>

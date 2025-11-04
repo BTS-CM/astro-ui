@@ -12,6 +12,8 @@
   "predictionButton": "สินทรัพย์ตลาดทำนาย",
   "nftButton": "สินทรัพย์โทเค็นที่ไม่สามารถทดแทนได้",
   "listingUIA": "รายการ {{count}} สินทรัพย์ที่ผู้ใช้ออก",
+  "listingPools": "รายการ {{count}} สินทรัพย์สภาพคล่องพูล",
+  "deletePool": "ลบพูล",
   "noUIA": "ไม่พบเนื้อหาที่ผู้ใช้ออก",
   "listingSmartcoins": "รายการ {{count}} สินทรัพย์ Smartcoin",
   "noSmartcoins": "ไม่พบสินทรัพย์ Smartcoin",

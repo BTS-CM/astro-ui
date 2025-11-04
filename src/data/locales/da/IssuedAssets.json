@@ -12,6 +12,8 @@
   "predictionButton": "Forudsigelse af markedsaktiver",
   "nftButton": "Ikke-fungible tokenaktiver",
   "listingUIA": "Fortegnelse {{count}} Brugerudstedte aktiver",
+  "listingPools": "Fortegnelse {{count}} Likviditetspuljeaktiver",
+  "deletePool": "Slet pool",
   "noUIA": "Ingen brugerudstedte aktiver fundet",
   "listingSmartcoins": "Fortegnelse {{count}} Smartcoin-aktiver",
   "noSmartcoins": "Ingen Smartcoin-aktiver fundet",

@@ -12,6 +12,8 @@
   "predictionButton": "Prognoositavad turuvarad",
   "nftButton": "Mittevahetatavad märgivarad",
   "listingUIA": "Nimekiri {{count}} Kasutaja väljastatud varad",
+  "listingPools": "Nimekiri {{count}} Likviidsusfondi varad",
+  "deletePool": "Kustuta bassein",
   "noUIA": "Ühtegi kasutaja väljastatud vara ei leitud",
   "listingSmartcoins": "Nimekiri {{count}} Smartcoini varad",
   "noSmartcoins": "Smartcoini varasid ei leitud",
