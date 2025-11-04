@@ -1,0 +1,14 @@
+{
+  "title": "Opret en ny likviditetspulje",
+  "deeplinkDialogTitle": "Oprettelse af en likviditetspulje",
+  "description": "Opret en ny likviditetspulje ved at konvertere et eksisterende brugerudstedt aktiv til et puljeaktieaktiv. ",
+  "taker_fee_header": "Modtagergebyr (%)",
+  "taker_fee_content": "Procentdel, der opkræves til modtagere, når de handler mod din pool. ",
+  "withdrawal_fee_header": "Udbetalingsgebyr (%)",
+  "withdrawal_fee_content": "Procent, der opkræves, når likviditet trækkes ud af puljen. ",
+  "noEligibleAssets": "Der er ingen tilgængelige kvalificerede aktiver til at oprette en likviditetspulje med, det skal være et brugerudstedt aktiv uden udstedt forsyning.",
+  "assetA": "Angiv det første handelsaktiv",
+  "assetA_description": "Dette er det første aktiv i handelsparret for likviditetspuljen.",
+  "assetB": "Giv et andet handelsaktiv",
+  "assetB_description": "Dette er det andet aktiv i handelsparret for likviditetspuljen."
+}

@@ -244,6 +244,13 @@
     "hover3": "De kan bruges som en stablecoin, et token til din virksomhed, et belønningstoken, et token til et spil og mere.",
     "hover4": "Smartcoins kan bakkes op af ethvert aktiv og referere til ethvert eksternt feed."
   },
+  "create_liquidity_pool": {
+    "title": "💧 Opret likviditetspulje",
+    "subtitle": "Opret en ny likviditetspulje til at bytte 2 af alle aktiver",
+    "hover1": "Konverterer et brugerudstedt aktiv til et likviditetspuljeaktieaktiv.",
+    "hover2": "Konfigurer likviditetspuljen til at bytte 2 aktiver på blockchain.",
+    "hover3": "Anvend dine egne gebyrer for at tjene fra andre ved at bruge din likviditetspulje."
+  },
   "accountLists": {
     "title": "📋 Kontolister",
     "subtitle": "Se og administrer dine kontolister",

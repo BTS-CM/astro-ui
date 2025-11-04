@@ -1,0 +1,14 @@
+{
+  "title": "Erstellen Sie einen neuen Liquiditätspool",
+  "deeplinkDialogTitle": "Erstellen eines Liquiditätspools",
+  "description": "Erstellen Sie einen neuen Liquiditätspool, indem Sie einen vorhandenen, vom Benutzer ausgegebenen Vermögenswert in einen gemeinsam genutzten Pool-Vermögenswert umwandeln. ",
+  "taker_fee_header": "Abnehmergebühr (%)",
+  "taker_fee_content": "Prozentsatz, der den Abnehmern berechnet wird, wenn sie gegen Ihren Pool handeln. ",
+  "withdrawal_fee_header": "Auszahlungsgebühr (%)",
+  "withdrawal_fee_content": "Prozentsatz, der berechnet wird, wenn Liquidität aus dem Pool entnommen wird. ",
+  "noEligibleAssets": "Es sind keine geeigneten Vermögenswerte für die Erstellung eines Liquiditätspools verfügbar. Es muss sich um einen vom Benutzer ausgegebenen Vermögenswert ohne ausgegebenen Vorrat handeln.",
+  "assetA": "Stellen Sie den ersten Handelswert bereit",
+  "assetA_description": "Dies ist der erste Vermögenswert im Handelspaar für den Liquiditätspool.",
+  "assetB": "Stellen Sie ein zweites Handelsvermögen bereit",
+  "assetB_description": "Dies ist der zweite Vermögenswert im Handelspaar für den Liquiditätspool."
+}

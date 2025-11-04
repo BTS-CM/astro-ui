@@ -244,6 +244,13 @@
     "hover3": "Ils peuvent être utilisés comme stablecoin, jeton pour votre entreprise, jeton de récompense, jeton pour un jeu, et plus encore.",
     "hover4": "Les Smartcoins peuvent être soutenus par n’importe quel actif et référencer n’importe quel flux externe."
   },
+  "create_liquidity_pool": {
+    "title": "💧 Créer un pool de liquidités",
+    "subtitle": "Créez un nouveau pool de liquidités pour échanger 2 de tous les actifs",
+    "hover1": "Convertit un actif émis par l'utilisateur en un actif de partage de pool de liquidité.",
+    "hover2": "Configurez le pool de liquidité pour échanger 2 actifs sur la blockchain.",
+    "hover3": "Appliquez vos propres frais pour gagner auprès des autres en utilisant votre pool de liquidités."
+  },
   "accountLists": {
     "title": "📋 Listes de comptes",
     "subtitle": "Afficher et gérer vos listes de comptes",

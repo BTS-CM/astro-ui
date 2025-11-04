@@ -244,6 +244,13 @@
     "hover3": "Possono essere utilizzati come stablecoin, token per la tua attività, token di ricompensa, token per un gioco e altro ancora.",
     "hover4": "Gli smartcoin possono essere supportati da qualsiasi asset e fare riferimento a qualsiasi feed esterno."
   },
+  "create_liquidity_pool": {
+    "title": "💧 Crea un pool di liquidità",
+    "subtitle": "Crea un nuovo pool di liquidità per lo scambio di 2 asset qualsiasi",
+    "hover1": "Converte un asset emesso dall'utente in un asset condiviso di pool di liquidità.",
+    "hover2": "Configura il pool di liquidità per scambiare 2 asset qualsiasi sulla blockchain.",
+    "hover3": "Applica le tue commissioni per guadagnare dagli altri utilizzando il tuo pool di liquidità."
+  },
   "accountLists": {
     "title": "📋 Elenchi di account",
     "subtitle": "Visualizza e gestisci gli elenchi dei tuoi account",

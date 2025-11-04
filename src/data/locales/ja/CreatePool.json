@@ -1,0 +1,14 @@
+{
+  "title": "新しい流動性プールを作成する",
+  "deeplinkDialogTitle": "流動性プールの作成",
+  "description": "既存のユーザー発行資産をプールシェア資産に変換して、新しい流動性プールを作成します。",
+  "taker_fee_header": "テイカー手数料 (%)",
+  "taker_fee_content": "テイカーがプールに対して取引するときに請求されるパーセンテージ。 ",
+  "withdrawal_fee_header": "出金手数料(%)",
+  "withdrawal_fee_content": "流動性がプールから引き出されるときに請求される割合。 ",
+  "noEligibleAssets": "流動性プールを作成できる適格な資産がありません。供給が発行されていないユーザー発行の資産である必要があります。",
+  "assetA": "最初の取引資産を提供する",
+  "assetA_description": "これは、流動性プールの取引ペアの最初の資産です。",
+  "assetB": "2番目の取引資産を提供する",
+  "assetB_description": "これは、流動性プールの取引ペアの 2 番目の資産です。"
+}

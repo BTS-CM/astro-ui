@@ -1,0 +1,14 @@
+{
+  "title": "Looge uus likviidsuskogum",
+  "deeplinkDialogTitle": "Likviidsusfondi loomine",
+  "description": "Looge uus likviidsuskogum, teisendades olemasoleva kasutaja väljastatud vara kogumi aktsiavaraks. ",
+  "taker_fee_header": "Võtmistasu (%)",
+  "taker_fee_content": "Võtjatelt tasutud protsent, kui nad kauplevad teie fondi vastu. ",
+  "withdrawal_fee_header": "Väljamaksetasu (%)",
+  "withdrawal_fee_content": "Likviidsuse kogumist väljavõtmisel nõutav protsent. ",
+  "noEligibleAssets": "Likviidsuskogumi loomiseks pole saadaval kõlblikke varasid, see peab olema kasutaja väljastatud vara ilma väljastatud pakkumiseta.",
+  "assetA": "Esitage esimene kauplemisvara",
+  "assetA_description": "See on likviidsuskogumi kauplemispaari esimene vara.",
+  "assetB": "Pakkuge teine ​​kauplemisvara",
+  "assetB_description": "See on likviidsuskogumi kauplemispaari teine ​​vara."
+}

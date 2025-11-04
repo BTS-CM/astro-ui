@@ -4,7 +4,7 @@ import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import PageHeader from '../components/PageHeader';
 import PageFooter from '../components/PageFooter';
-import CreatePool from '../components/CreatePool';
+import CreateLiquidityPool from '../components/CreatePool';
 
 const btsAllAssets = await getCollection('btsAllAssets');
 const testAllAssets = await getCollection('testAllAssets');
@@ -21,14 +21,14 @@ const marketSearchTEST = testMarketData.map(collection => collection.data);
 <Layout title="Bitshares Beet Astro UI - Creating a Liquidity Pool">
 	<main>
 		<PageHeader client:only="react" page="create_pool" backURL="" />
-		<CreatePool
+		<CreateLiquidityPool
 			client:only="react"
 			_assetsBTS={btsAssets}
 			_assetsTEST={testAssets}
 			_marketSearchBTS={marketSearchBTS}
 			_marketSearchTEST={marketSearchTEST}
 		/>
-		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/create_uia/index.astro" />
+		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/create_pool/index.astro" />
 	</main>
 </Layout>
 

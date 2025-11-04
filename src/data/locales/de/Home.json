@@ -244,6 +244,13 @@
     "hover3": "Sie können als Stablecoin, als Token für Ihr Unternehmen, als Belohnungstoken, als Token für ein Spiel und mehr verwendet werden.",
     "hover4": "Smartcoins können durch jeden Vermögenswert gedeckt sein und auf jeden externen Feed verweisen."
   },
+  "create_liquidity_pool": {
+    "title": "💧 Create Liquidity Pool",
+    "subtitle": "Create a new liquidity pool for swapping 2 of any assets",
+    "hover1": "Converts an user issued asset to a liquidity pool share asset.",
+    "hover2": "Configure the liquidity pool to swap any 2 assets on the blockchain.",
+    "hover3": "Apply your own fees to earn from others using your liquidity pool."
+  },
   "accountLists": {
     "title": "📋 Kontolisten",
     "subtitle": "Zeigen Sie Ihre Kontolisten an und verwalten Sie sie",
