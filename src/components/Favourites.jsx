@@ -1,7 +1,14 @@
-import React, { useMemo, useState, useEffect } from "react";
+import React, {
+  useMemo,
+  useState,
+  useEffect,
+  useSyncExternalStore,
+} from "react";
 import { useStore } from "@nanostores/react";
 import { List } from "react-window";
-import { Button } from "@/components/ui/button";
+
+import { useTranslation } from "react-i18next";
+import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
 
 import {
   Card,
@@ -36,31 +43,29 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import AssetDropDown from "@/components/Market/AssetDropDownCard.jsx";
+import { Button } from "@/components/ui/button";
+
 import {
   $favouriteAssets,
   addFavouriteAsset,
   removeFavouriteAsset,
-} from "@/stores/favourites.ts";
-import {
   $favouriteUsers,
   addFavouriteUser,
   removeFavouriteUser,
-} from "@/stores/favourites.ts";
-import {
   $favouritePairs,
   addFavouritePair,
   removeFavouritePair,
 } from "@/stores/favourites.ts";
+
 import { $currentNode } from "@/stores/node.ts";
 import { $currentUser } from "@/stores/users.ts";
+
 import AccountSearch from "@/components/AccountSearch.jsx";
 import PoolDialogs from "@/components/Market/PoolDialogs.jsx";
-
-import { useTranslation } from "react-i18next";
-import { i18n as i18nInstance, locale } from "@/lib/i18n.js";
-
 import AssetIssuerActions from "@/components/AssetIssuerActions.jsx";
+import AssetDropDown from "@/components/Market/AssetDropDownCard.jsx";
+
+import { createObjectStore } from "@/nanoeffects/Objects.ts";
 
 export default function Favourites(properties) {
   const {
@@ -74,43 +79,40 @@ export default function Favourites(properties) {
 
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
   const currentNode = useStore($currentNode);
-  const currentUser = useStore($currentUser);
+
   const favourites = useStore($favouriteAssets);
   const favouriteUsers = useStore($favouriteUsers);
   const favouritePairs = useStore($favouritePairs);
 
-  const chain = useMemo(() => {
+  const currentUser = useSyncExternalStore(
+    $currentUser.subscribe,
+    $currentUser.get,
+    () => true
+  );
+
+  const _chain = useMemo(() => {
     // Fall back to bitshares if chain not initialised yet
-    if (currentNode && currentNode.chain) return currentNode.chain;
+    if (currentUser && currentUser.chain) return currentUser.chain;
     return "bitshares";
-  }, [currentNode]);
+  }, [currentUser]);
 
   const assets = useMemo(() => {
-    if (chain === "bitshares") return _assetsBTS ?? [];
-    return _assetsTEST ?? [];
-  }, [_assetsBTS, _assetsTEST, chain]);
-
-  const assetMap = useMemo(() => {
-    if (!assets || !assets.length) return new Map();
-    const map = new Map();
-    assets.forEach((asset) => {
-      if (asset && asset.id) {
-        map.set(asset.id, asset);
-      }
-    });
-    return map;
-  }, [assets]);
+    if (_chain && (_assetsBTS || _assetsTEST)) {
+      return _chain === "bitshares" ? _assetsBTS : _assetsTEST;
+    }
+    return [];
+  }, [_assetsBTS, _assetsTEST, _chain]);
 
   const marketSearch = useMemo(() => {
-    if (chain === "bitshares") return _marketSearchBTS ?? [];
+    if (_chain === "bitshares") return _marketSearchBTS ?? [];
     return _marketSearchTEST ?? [];
-  }, [_marketSearchBTS, _marketSearchTEST, chain]);
+  }, [_marketSearchBTS, _marketSearchTEST, _chain]);
 
   const chainFavourites = useMemo(() => {
     // favourite assets
     if (!favourites) return [];
-    return favourites[chain] ?? [];
-  }, [favourites, chain]);
+    return favourites[_chain] ?? [];
+  }, [favourites, _chain]);
 
   const favouriteAssets = useMemo(() => {
     if (!chainFavourites) return [];
@@ -119,13 +121,40 @@ export default function Favourites(properties) {
     );
   }, [chainFavourites, assets]);
 
-  const [dynamicData, setDynamicData] = useState([]);
+  const [fullFavouriteAssetData, setFullFavouriteAssetData] = useState([]);
+  const [fullFavouriteLoading, setFullFavouriteLoading] = useState(false);
   useEffect(() => {
     async function fetching() {
       const requiredStore = createObjectStore([
-        usr.chain,
+        _chain,
+        JSON.stringify(favouriteAssets.map((asset) => asset.id)),
+        currentNode ? currentNode.url : null,
+      ]);
+
+      requiredStore.subscribe(({ data, error, loading }) => {
+        if (data && !error && !loading) {
+          setFullFavouriteAssetData(data);
+          setFullFavouriteLoading(false);
+        }
+      });
+    }
+
+    if (_chain && favouriteAssets && favouriteAssets.length) {
+      setFullFavouriteLoading(true);
+      fetching();
+    } else {
+      setFullFavouriteLoading(false);
+    }
+  }, [favouriteAssets]);
+
+  const [dynamicData, setDynamicData] = useState([]);
+  const [dynamicLoading, setDynamicLoading] = useState(false);
+  useEffect(() => {
+    async function fetching() {
+      const requiredStore = createObjectStore([
+        _chain,
         JSON.stringify(
-          favouriteAssets.map((asset) => asset.dynamic_asset_data_id)
+          favouriteAssets.map((asset) => asset.id.replace("1.3.", "2.3."))
         ),
         currentNode ? currentNode.url : null,
       ]);
@@ -133,20 +162,25 @@ export default function Favourites(properties) {
       requiredStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
           setDynamicData(data);
+          setDynamicLoading(false);
         }
       });
     }
 
-    if (favouriteAssets && favouriteAssets.length) {
+    if (_chain && favouriteAssets && favouriteAssets.length) {
+      setDynamicLoading(true);
       fetching();
+    } else {
+      setDynamicLoading(false);
     }
   }, [favouriteAssets]);
 
   const [bitassetData, setBitassetData] = useState([]);
+  const [bitassetLoading, setBitassetLoading] = useState(false);
   useEffect(() => {
     async function fetching() {
       const requiredStore = createObjectStore([
-        usr.chain,
+        _chain,
         JSON.stringify(
           favouriteAssets
             .filter((asset) => asset.bitasset_data_id)
@@ -158,12 +192,21 @@ export default function Favourites(properties) {
       requiredStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
           setBitassetData(data);
+          setBitassetLoading(false);
         }
       });
     }
 
-    if (favouriteAssets && favouriteAssets.length) {
-      fetching();
+    if (_chain && favouriteAssets && favouriteAssets.length) {
+      const ids = favouriteAssets
+        .filter((asset) => asset.bitasset_data_id)
+        .map((asset) => asset.bitasset_data_id);
+      if (ids && ids.length) {
+        setBitassetLoading(true);
+        fetching();
+      } else {
+        setBitassetLoading(false);
+      }
     }
   }, [favouriteAssets]);
 
@@ -180,10 +223,11 @@ export default function Favourites(properties) {
   }, [bitassetData]);
 
   const [priceFeederAccounts, setPriceFeederAccounts] = useState([]);
+  const [feederLoading, setFeederLoading] = useState(false);
   useEffect(() => {
     async function fetching() {
       const requiredStore = createObjectStore([
-        usr.chain,
+        _chain,
         JSON.stringify(priceFeederAccountIDs),
         currentNode ? currentNode.url : null,
       ]);
@@ -191,19 +235,26 @@ export default function Favourites(properties) {
       requiredStore.subscribe(({ data, error, loading }) => {
         if (data && !error && !loading) {
           setPriceFeederAccounts(data);
+          setFeederLoading(false);
         }
       });
     }
 
-    if (priceFeederAccountIDs && priceFeederAccountIDs.length) {
+    if (_chain && priceFeederAccountIDs && priceFeederAccountIDs.length) {
+      setFeederLoading(true);
       fetching();
+    } else {
+      setFeederLoading(false);
     }
   }, [priceFeederAccountIDs]);
 
+  const loading =
+    dynamicLoading || bitassetLoading || feederLoading || fullFavouriteLoading;
+
   const chainPairs = useMemo(() => {
     if (!favouritePairs) return [];
-    return favouritePairs[chain] ?? [];
-  }, [favouritePairs, chain]);
+    return favouritePairs[_chain] ?? [];
+  }, [favouritePairs, _chain]);
 
   const [addSelection, setAddSelection] = useState();
   const [userDialogOpen, setUserDialogOpen] = useState(false);
@@ -218,7 +269,7 @@ export default function Favourites(properties) {
 
     const found = assets.find((a) => a.symbol === addSelection);
     if (found) {
-      addFavouriteAsset(chain, {
+      addFavouriteAsset(_chain, {
         symbol: found.symbol,
         id: found.id,
         issuer: found.issuer,
@@ -226,15 +277,15 @@ export default function Favourites(properties) {
     }
     // reset selection to avoid re-adding
     setAddSelection(undefined);
-  }, [addSelection, assets, chain]);
+  }, [addSelection, assets, _chain]);
 
   // Handle user selection from dialog
   useEffect(() => {
     if (!selectedUser) return;
-    addFavouriteUser(chain, { name: selectedUser.name, id: selectedUser.id });
+    addFavouriteUser(_chain, { name: selectedUser.name, id: selectedUser.id });
     setSelectedUser(undefined);
     setUserDialogOpen(false);
-  }, [selectedUser, chain]);
+  }, [selectedUser, _chain]);
 
   // Reset pair selections when closing the dialog
   useEffect(() => {
@@ -246,19 +297,24 @@ export default function Favourites(properties) {
 
   const Row = ({ index, style }) => {
     const item = chainFavourites[index];
-    if (!item) return null;
-    const assetDetails = assetMap.get(item.id);
+
+    if (!item) {
+      return;
+    }
+
+    const assetDetails = fullFavouriteAssetData.find((a) => a.id === item.id);
+
     const showIssuerActions = !!(
       currentUser?.id &&
       item?.issuer &&
       currentUser.id === item.issuer &&
-      (!currentUser.chain || currentUser.chain === chain)
+      (!currentUser.chain || currentUser.chain === _chain)
     );
 
     const fullAsset = favouriteAssets.find((a) => a.id === item.id);
 
     const relevantDynamicData = dynamicData.find(
-      (data) => data.id === fullAsset.dynamic_asset_data_id
+      (data) => data.id === fullAsset.id.replace("1.3.", "2.3.")
     );
 
     const relevantBitassetData = fullAsset.bitasset_data_id
@@ -318,7 +374,7 @@ export default function Favourites(properties) {
                 <AssetIssuerActions
                   asset={assetDetails}
                   assets={assets}
-                  chain={chain}
+                  chain={_chain}
                   currentUser={currentUser}
                   node={currentNode}
                   dynamicAssetData={relevantDynamicData}
@@ -332,7 +388,7 @@ export default function Favourites(properties) {
               <Button
                 variant="default"
                 size="sm"
-                onClick={() => removeFavouriteAsset(chain, item)}
+                onClick={() => removeFavouriteAsset(_chain, item)}
               >
                 ❌
               </Button>
@@ -392,7 +448,7 @@ export default function Favourites(properties) {
                   <AssetIssuerActions
                     asset={assetDetails}
                     assets={assets}
-                    chain={chain}
+                    chain={_chain}
                     currentUser={currentUser}
                     node={currentNode}
                     dynamicAssetData={relevantDynamicData}
@@ -406,7 +462,7 @@ export default function Favourites(properties) {
                 <Button
                   variant="default"
                   size="sm"
-                  onClick={() => removeFavouriteAsset(chain, item)}
+                  onClick={() => removeFavouriteAsset(_chain, item)}
                 >
                   ❌
                 </Button>
@@ -433,7 +489,7 @@ export default function Favourites(properties) {
               otherAsset={null}
               marketSearch={marketSearch}
               type={null}
-              chain={chain}
+              chain={_chain}
               balances={null}
               triggerLabel={t("Favourites:addAsset")}
               triggerVariant="outline"
@@ -443,22 +499,30 @@ export default function Favourites(properties) {
         <CardContent className="p-4">
           {chainFavourites && chainFavourites.length ? (
             <>
-              <div className="w-full max-h-[420px] overflow-auto block md:hidden">
-                <List
-                  rowComponent={Row}
-                  rowCount={chainFavourites.length}
-                  rowHeight={128}
-                  rowProps={{}}
-                />
-              </div>
-              <div className="w-full max-h-[420px] overflow-auto hidden md:block">
-                <List
-                  rowComponent={Row}
-                  rowCount={chainFavourites.length}
-                  rowHeight={96}
-                  rowProps={{}}
-                />
-              </div>
+              {loading ? (
+                <div className="text-center mt-5">
+                  {t("CreditBorrow:common.loading")}
+                </div>
+              ) : (
+                <>
+                  <div className="w-full max-h-[420px] overflow-auto block md:hidden">
+                    <List
+                      rowComponent={Row}
+                      rowCount={chainFavourites.length}
+                      rowHeight={128}
+                      rowProps={{}}
+                    />
+                  </div>
+                  <div className="w-full max-h-[420px] overflow-auto hidden md:block">
+                    <List
+                      rowComponent={Row}
+                      rowCount={chainFavourites.length}
+                      rowHeight={96}
+                      rowProps={{}}
+                    />
+                  </div>
+                </>
+              )}
             </>
           ) : (
             <Empty className="mt-2">
@@ -503,7 +567,7 @@ export default function Favourites(properties) {
                   otherAsset={pairQuoteSelection}
                   marketSearch={marketSearch}
                   type="base"
-                  chain={chain}
+                  chain={_chain}
                   balances={null}
                   triggerLabel={
                     pairBaseSelection
@@ -519,7 +583,7 @@ export default function Favourites(properties) {
                   otherAsset={pairBaseSelection}
                   marketSearch={marketSearch}
                   type="quote"
-                  chain={chain}
+                  chain={_chain}
                   balances={null}
                   triggerLabel={
                     pairQuoteSelection
@@ -565,7 +629,7 @@ export default function Favourites(properties) {
                         pairBaseSelection !== pairQuoteSelection
                       ) {
                         const pair = `${pairBaseSelection}_${pairQuoteSelection}`;
-                        addFavouritePair(chain, pair);
+                        addFavouritePair(_chain, pair);
                         setPairDialogOpen(false);
                       }
                     }}
@@ -627,7 +691,7 @@ export default function Favourites(properties) {
                                         assetB={assetB}
                                         assetAData={assetAData}
                                         assetBData={assetBData}
-                                        chain={chain}
+                                        chain={_chain}
                                         _assetsBTS={_assetsBTS}
                                         _assetsTEST={_assetsTEST}
                                         _poolsBTS={_poolsBTS}
@@ -640,7 +704,9 @@ export default function Favourites(properties) {
                               <Button
                                 variant="default"
                                 size="sm"
-                                onClick={() => removeFavouritePair(chain, pair)}
+                                onClick={() =>
+                                  removeFavouritePair(_chain, pair)
+                                }
                               >
                                 ❌
                               </Button>
@@ -703,7 +769,7 @@ export default function Favourites(properties) {
                                         assetB={assetB}
                                         assetAData={assetAData}
                                         assetBData={assetBData}
-                                        chain={chain}
+                                        chain={_chain}
                                         _assetsBTS={_assetsBTS}
                                         _assetsTEST={_assetsTEST}
                                         _poolsBTS={_poolsBTS}
@@ -716,7 +782,9 @@ export default function Favourites(properties) {
                               <Button
                                 variant="default"
                                 size="sm"
-                                onClick={() => removeFavouritePair(chain, pair)}
+                                onClick={() =>
+                                  removeFavouritePair(_chain, pair)
+                                }
                               >
                                 ❌
                               </Button>
@@ -768,7 +836,7 @@ export default function Favourites(properties) {
                 </DialogDescription>
               </DialogHeader>
               <AccountSearch
-                chain={chain}
+                chain={_chain}
                 excludedUsers={[]}
                 setChosenAccount={setSelectedUser}
               />
@@ -776,12 +844,12 @@ export default function Favourites(properties) {
           </Dialog>
         </CardHeader>
         <CardContent className="p-4">
-          {favouriteUsers && (favouriteUsers[chain] ?? []).length ? (
+          {favouriteUsers && (favouriteUsers[_chain] ?? []).length ? (
             <>
               <div className="w-full max-h-[420px] overflow-auto block md:hidden">
                 <List
                   rowComponent={({ index, style }) => {
-                    const user = favouriteUsers[chain][index];
+                    const user = favouriteUsers[_chain][index];
                     if (!user) return null;
                     return (
                       <div style={{ ...style, paddingRight: "10px" }}>
@@ -824,7 +892,9 @@ export default function Favourites(properties) {
                               <Button
                                 variant="default"
                                 size="sm"
-                                onClick={() => removeFavouriteUser(chain, user)}
+                                onClick={() =>
+                                  removeFavouriteUser(_chain, user)
+                                }
                               >
                                 ❌
                               </Button>
@@ -834,7 +904,7 @@ export default function Favourites(properties) {
                       </div>
                     );
                   }}
-                  rowCount={favouriteUsers[chain].length}
+                  rowCount={favouriteUsers[_chain].length}
                   rowHeight={120}
                   rowProps={{}}
                 />
@@ -843,7 +913,7 @@ export default function Favourites(properties) {
               <div className="w-full max-h-[420px] overflow-auto hidden md:block">
                 <List
                   rowComponent={({ index, style }) => {
-                    const user = favouriteUsers[chain][index];
+                    const user = favouriteUsers[_chain][index];
                     if (!user) return null;
                     return (
                       <div style={{ ...style, paddingRight: "10px" }}>
@@ -888,7 +958,7 @@ export default function Favourites(properties) {
                                   variant="default"
                                   size="sm"
                                   onClick={() =>
-                                    removeFavouriteUser(chain, user)
+                                    removeFavouriteUser(_chain, user)
                                   }
                                 >
                                   ❌
@@ -900,7 +970,7 @@ export default function Favourites(properties) {
                       </div>
                     );
                   }}
-                  rowCount={favouriteUsers[chain].length}
+                  rowCount={favouriteUsers[_chain].length}
                   rowHeight={88}
                   rowProps={{}}
                 />

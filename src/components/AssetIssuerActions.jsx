@@ -350,6 +350,7 @@ function AssetIssuerActions(props) {
   };
   */
 
+  /*
   useEffect(() => {
     setDynamicData(dynamicAssetData ?? null);
   }, [dynamicAssetData]);
@@ -357,6 +358,7 @@ function AssetIssuerActions(props) {
   useEffect(() => {
     setBitassetDetails(bitassetData ?? null);
   }, [bitassetData]);
+  */
 
   useEffect(() => {
     async function fetchDynamicAssetData() {
@@ -380,7 +382,9 @@ function AssetIssuerActions(props) {
       });
     }
 
-    fetchDynamicAssetData();
+    if (!dynamicAssetData) {
+      fetchDynamicAssetData();
+    }
   }, [asset?.dynamic_asset_data_id, chain, node?.url, dynamicAssetData]);
 
   useEffect(() => {
@@ -405,7 +409,9 @@ function AssetIssuerActions(props) {
       });
     }
 
-    fetchBitassetDetails();
+    if (!bitassetData) {
+      fetchBitassetDetails();
+    }
   }, [asset?.bitasset_data_id, chain, node?.url, bitassetData]);
 
   const contacts = useMemo(() => {
@@ -458,6 +464,7 @@ function AssetIssuerActions(props) {
   const assetFlags = useMemo(() => {
     return getFlagBooleans(asset?.options?.flags ?? 0);
   }, [asset?.options?.flags]);
+
   // Robust numeric check for override_authority active flag
   const hasOverrideAuthority = useMemo(() => {
     const mask = Number(asset?.options?.flags ?? 0);
