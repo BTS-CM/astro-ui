@@ -231,6 +231,13 @@
     "hover3": "They can be used as a stablecoin, a token for your business, a reward token, a token for a game, and more.",
     "hover4": "Smartcoins can be backed by any asset and reference any external feed."
   },
+  "create_liquidity_pool": {
+    "title": "💧 Create Liquidity Pool",
+    "subtitle": "Create a new liquidity pool for swapping 2 of any assets",
+    "hover1": "Converts an user issued asset to a liquidity pool share asset.",
+    "hover2": "Configure the liquidity pool to swap any 2 assets on the blockchain.",
+    "hover3": "Apply your own fees to earn from others using your liquidity pool."
+  },
   "create_ticket": {
     "title": "🎫 Create Ticket",
     "subtitle": "Create vote-lock tickets to gain vote weight.",

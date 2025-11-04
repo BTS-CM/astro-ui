@@ -1,0 +1,14 @@
+{
+  "title": "Crear un nuevo fondo de liquidez",
+  "deeplinkDialogTitle": "Crear un fondo común de liquidez",
+  "description": "Cree un nuevo fondo de liquidez convirtiendo un activo emitido por un usuario existente en un activo de acciones del fondo. ",
+  "taker_fee_header": "Tarifa del tomador (%)",
+  "taker_fee_content": "Porcentaje que se cobra a los receptores cuando negocian con su grupo. ",
+  "withdrawal_fee_header": "Comisión de retiro (%)",
+  "withdrawal_fee_content": "Porcentaje que se cobra cuando se retira liquidez del pool. ",
+  "noEligibleAssets": "No hay activos elegibles disponibles para crear un fondo de liquidez; debe ser un activo emitido por el usuario sin suministro emitido.",
+  "assetA": "Proporcionar el primer activo comercial",
+  "assetA_description": "Este es el primer activo del par comercial del fondo de liquidez.",
+  "assetB": "Proporcionar un segundo activo comercial",
+  "assetB_description": "Este es el segundo activo del par comercial del fondo de liquidez."
+}

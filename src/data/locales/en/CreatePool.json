@@ -1,0 +1,14 @@
+{
+  "title": "Create a new liquidity pool",
+  "deeplinkDialogTitle": "Creating a Liquidity Pool",
+  "description": "Create a new liquidity pool by converting an existing user issued asset into a pool share asset. Liquidity pools can swap any two assets on the blockchain with your own fee configuration.",
+  "taker_fee_header": "Taker fee (%)",
+  "taker_fee_content": "Percentage charged to takers when they trade against your pool. Enter a value between 0 and 100.",
+  "withdrawal_fee_header": "Withdrawal fee (%)",
+  "withdrawal_fee_content": "Percentage charged when liquidity is withdrawn from the pool. Enter a value between 0 and 100.",
+  "noEligibleAssets": "No eligible assets available to create a liquidity pool with, it must be an user issued asset with no issued supply.",
+  "assetA": "Provide the first trading asset",
+  "assetA_description": "This is the first asset in the trading pair for the liquidity pool.",
+  "assetB": "Provide second trading asset",
+  "assetB_description": "This is the second asset in the trading pair for the liquidity pool."
+}

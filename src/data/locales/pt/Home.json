@@ -244,6 +244,13 @@
     "hover3": "Eles podem ser usados ​​como stablecoin, token para o seu negócio, token de recompensa, token para um jogo e muito mais.",
     "hover4": "Smartcoins podem ser apoiados por qualquer ativo e fazer referência a qualquer feed externo."
   },
+  "create_liquidity_pool": {
+    "title": "💧 Criar pool de liquidez",
+    "subtitle": "Crie um novo pool de liquidez para trocar 2 de quaisquer ativos",
+    "hover1": "Converte um ativo emitido pelo usuário em um ativo de participação no pool de liquidez.",
+    "hover2": "Configure o pool de liquidez para trocar quaisquer 2 ativos no blockchain.",
+    "hover3": "Aplique suas próprias taxas para ganhar de outras pessoas usando seu pool de liquidez."
+  },
   "accountLists": {
     "title": "📋 Listas de contas",
     "subtitle": "Visualize e gerencie suas listas de contas",

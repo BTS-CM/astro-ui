@@ -111,22 +111,11 @@ export default function IssuedAssets(properties) {
     }
 
     if (usr && usr.id && currentNode && currentNode.url) {
+      console.log("Fetching issued assets...");
       setLoading(true);
       fetching();
     }
   }, [usr, currentNode]);
-
-  const [users, setUsers] = useState();
-  useEffect(() => {
-    if (!usr) {
-      return;
-    }
-    const unsubscribe = $userStorage.subscribe((value) => {
-      const chainUsers = value.users.filter((user) => user.chain === usr.chain);
-      setUsers(chainUsers);
-    });
-    return unsubscribe;
-  }, [$userStorage, usr]);
 
   const [activeTab, setActiveTab] = useState("uia");
 
@@ -135,13 +124,21 @@ export default function IssuedAssets(properties) {
       return [];
     }
 
+    console.log("Filtering relevant assets...");
+
     switch (activeTab) {
       case "uia":
         return issuedAssets.filter(
           (asset) =>
             !asset.bitasset_data_id &&
-            !asset.options.description.includes("nft_object")
+            !asset.options.description.includes("nft_object") &&
+            !asset.for_liquidity_pool
         );
+      case "pools":
+        const foundPools = issuedAssets.filter(
+          (asset) => asset.for_liquidity_pool
+        );
+        return foundPools;
       case "smartcoins":
         return issuedAssets.filter(
           (asset) =>
@@ -167,14 +164,20 @@ export default function IssuedAssets(properties) {
     }
   }, [issuedAssets, activeTab]);
 
+  const dynamicDataIDs = useMemo(() => {
+    if (!issuedAssets) {
+      return [];
+    }
+
+    return issuedAssets.map((asset) => asset.dynamic_asset_data_id);
+  }, [issuedAssets]);
+
   const [dynamicData, setDynamicData] = useState([]);
   useEffect(() => {
     async function fetching() {
       const requiredStore = createObjectStore([
         usr.chain,
-        JSON.stringify(
-          issuedAssets.map((asset) => asset.dynamic_asset_data_id)
-        ),
+        JSON.stringify(dynamicDataIDs),
         currentNode ? currentNode.url : null,
       ]);
 
@@ -185,9 +188,21 @@ export default function IssuedAssets(properties) {
       });
     }
 
-    if (issuedAssets && issuedAssets.length) {
+    if (dynamicDataIDs && dynamicDataIDs.length) {
       fetching();
     }
+  }, [dynamicDataIDs]);
+
+  const bitassetDataIDs = useMemo(() => {
+    if (!issuedAssets) {
+      return [];
+    }
+
+    const bitassetIDs = issuedAssets
+      .filter((asset) => asset.bitasset_data_id)
+      .map((asset) => asset.bitasset_data_id);
+
+    return bitassetIDs;
   }, [issuedAssets]);
 
   const [bitassetData, setBitassetData] = useState([]);
@@ -195,11 +210,7 @@ export default function IssuedAssets(properties) {
     async function fetching() {
       const requiredStore = createObjectStore([
         usr.chain,
-        JSON.stringify(
-          issuedAssets
-            .filter((asset) => asset.bitasset_data_id)
-            .map((asset) => asset.bitasset_data_id)
-        ),
+        JSON.stringify(bitassetDataIDs),
         currentNode ? currentNode.url : null,
       ]);
 
@@ -210,10 +221,10 @@ export default function IssuedAssets(properties) {
       });
     }
 
-    if (issuedAssets && issuedAssets.length) {
+    if (bitassetDataIDs && bitassetDataIDs.length) {
       fetching();
     }
-  }, [issuedAssets]);
+  }, [bitassetDataIDs]);
 
   const priceFeederAccountIDs = useMemo(() => {
     if (!bitassetData) {
@@ -554,7 +565,7 @@ export default function IssuedAssets(properties) {
             </CardHeader>
             <CardContent>
               <div className="w-full mb-3">
-                <div className="grid grid-cols-1 lg:grid-cols-4 gap-2">
+                <div className="grid grid-cols-1 lg:grid-cols-5 gap-2">
                   <Button
                     variant="outline"
                     style={activeTab === "uia" ? activeTabStyle : {}}
@@ -564,6 +575,16 @@ export default function IssuedAssets(properties) {
                     }}
                   >
                     {t("IssuedAssets:uiaButton")}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    style={activeTab === "pools" ? activeTabStyle : {}}
+                    onClick={() => {
+                      setActiveTab("pools");
+                      window.history.replaceState({}, "", `?tab=pools`);
+                    }}
+                  >
+                    {t("IssuedAssets:poolsButton")}
                   </Button>
                   <Button
                     variant="outline"
@@ -628,22 +649,89 @@ export default function IssuedAssets(properties) {
                     </Empty>
                   ) : (
                     <>
-                      <div className="w-full max-h-[500px] min-h-[500px] overflow-auto block md:hidden">
-                        <List
-                          rowComponent={AssetRow}
-                          rowCount={relevantAssets.length}
-                          rowHeight={90}
-                          rowProps={{}}
-                        />
-                      </div>
-                      <div className="w-full max-h-[500px] min-h-[500px] overflow-auto hidden md:block">
-                        <List
-                          rowComponent={AssetRow}
-                          rowCount={relevantAssets.length}
-                          rowHeight={90}
-                          rowProps={{}}
-                        />
-                      </div>
+                      {dynamicData && dynamicData.length ? (
+                        <>
+                          <div className="w-full max-h-[500px] min-h-[500px] overflow-auto block md:hidden">
+                            <List
+                              rowComponent={AssetRow}
+                              rowCount={relevantAssets.length}
+                              rowHeight={90}
+                              rowProps={{}}
+                            />
+                          </div>
+                          <div className="w-full max-h-[500px] min-h-[500px] overflow-auto hidden md:block">
+                            <List
+                              rowComponent={AssetRow}
+                              rowCount={relevantAssets.length}
+                              rowHeight={90}
+                              rowProps={{}}
+                            />
+                          </div>
+                        </>
+                      ) : (
+                        <div className="text-center mt-5">
+                          {t("CreditBorrow:common.loading")}
+                        </div>
+                      )}
+                    </>
+                  )}
+                </div>
+              )}
+
+              {activeTab === "pools" && (
+                <div className="mt-2">
+                  {relevantAssets.length > 0 ? (
+                    <h5 className="mb-2 text-center">
+                      {t("IssuedAssets:listingPools", {
+                        count: relevantAssets.length,
+                      })}
+                    </h5>
+                  ) : null}
+                  {loading ? (
+                    <div className="text-center mt-5">
+                      {t("CreditBorrow:common.loading")}
+                    </div>
+                  ) : null}
+                  {(!loading && !relevantAssets) || !relevantAssets.length ? (
+                    <Empty className="mt-5">
+                      <EmptyHeader>
+                        <EmptyMedia variant="icon">❔</EmptyMedia>
+                        <EmptyTitle>{t("IssuedAssets:noPools")}</EmptyTitle>
+                      </EmptyHeader>
+                      <EmptyContent>
+                        <Button asChild>
+                          <a href="/create_pool/index.html">
+                            {t("PageHeader:create_pool")}
+                          </a>
+                        </Button>
+                      </EmptyContent>
+                    </Empty>
+                  ) : (
+                    <>
+                      {dynamicData && dynamicData.length ? (
+                        <>
+                          <div className="w-full max-h-[500px] min-h-[500px] overflow-auto block md:hidden">
+                            <List
+                              rowComponent={AssetRow}
+                              rowCount={relevantAssets.length}
+                              rowHeight={90}
+                              rowProps={{}}
+                            />
+                          </div>
+                          <div className="w-full max-h-[500px] min-h-[500px] overflow-auto hidden md:block">
+                            <List
+                              rowComponent={AssetRow}
+                              rowCount={relevantAssets.length}
+                              rowHeight={90}
+                              rowProps={{}}
+                            />
+                          </div>
+                        </>
+                      ) : (
+                        <div className="text-center mt-5">
+                          {t("CreditBorrow:common.loading")}
+                        </div>
+                      )}
                     </>
                   )}
                 </div>

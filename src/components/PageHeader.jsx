@@ -336,6 +336,11 @@ export default function PageHeader(properties) {
       href: "/create_smartcoin/index.html",
       description: "Home:create_smartcoin.subtitle",
     },
+    {
+      title: "Home:create_liquidity_pool.title",
+      href: "/create_pool/index.html",
+      description: "Home:create_liquidity_pool.subtitle",
+    },
   ];
 
   const governanceHeading = [

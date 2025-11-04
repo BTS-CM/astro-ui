@@ -1,0 +1,14 @@
+{
+  "title": "Creare un nuovo pool di liquidità",
+  "deeplinkDialogTitle": "Creazione di una riserva di liquidità",
+  "description": "Creare un nuovo pool di liquidità convertendo un asset esistente emesso dall'utente in un asset condiviso del pool. ",
+  "taker_fee_header": "Commissione dell'acquirente (%)",
+  "taker_fee_content": "Percentuale addebitata agli acquirenti quando scambiano contro il tuo pool. ",
+  "withdrawal_fee_header": "Commissione di prelievo (%)",
+  "withdrawal_fee_content": "Percentuale addebitata quando la liquidità viene ritirata dal pool. ",
+  "noEligibleAssets": "Non sono disponibili asset idonei per creare un pool di liquidità. Deve trattarsi di un asset emesso dall'utente senza offerta emessa.",
+  "assetA": "Fornire il primo asset di scambio",
+  "assetA_description": "Questo è il primo asset nella coppia di trading per il pool di liquidità.",
+  "assetB": "Fornire una seconda risorsa di trading",
+  "assetB_description": "Questo è il secondo asset nella coppia di trading per il pool di liquidità."
+}

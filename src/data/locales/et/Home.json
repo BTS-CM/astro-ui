@@ -244,6 +244,13 @@
     "hover3": "Neid saab kasutada stabiilse mündina, teie ettevõtte märgina, preemia märgina, mängu märgina ja palju muud.",
     "hover4": "Nutikamünte saab toetada mis tahes varaga ja viidata mis tahes välisele kanalile."
   },
+  "create_liquidity_pool": {
+    "title": "💧 Looge likviidsusbassein",
+    "subtitle": "Looge uus likviidsuskogum 2 vara vahetamiseks",
+    "hover1": "Teisendab kasutaja väljastatud vara likviidsuskogumi aktsiavaraks.",
+    "hover2": "Seadistage likviidsuskogum, et vahetada plokiahelas kaks vara.",
+    "hover3": "Rakendage oma tasusid, et teenida teistelt oma likviidsusfondi kasutavatelt raha."
+  },
   "accountLists": {
     "title": "📋 Kontode loendid",
     "subtitle": "Saate vaadata ja hallata oma kontoloendeid",

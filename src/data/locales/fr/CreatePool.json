@@ -1,0 +1,14 @@
+{
+  "title": "Créer un nouveau pool de liquidité",
+  "deeplinkDialogTitle": "Créer un pool de liquidités",
+  "description": "Créez un nouveau pool de liquidités en convertissant un actif émis par un utilisateur existant en un actif partagé par le pool. ",
+  "taker_fee_header": "Frais du preneur (%)",
+  "taker_fee_content": "Pourcentage facturé aux preneurs lorsqu'ils négocient contre votre pool. ",
+  "withdrawal_fee_header": "Frais de retrait (%)",
+  "withdrawal_fee_content": "Pourcentage facturé lorsque la liquidité est retirée du pool. ",
+  "noEligibleAssets": "Aucun actif éligible disponible pour créer un pool de liquidités, il doit s'agir d'un actif émis par l'utilisateur sans approvisionnement émis.",
+  "assetA": "Fournir le premier actif de trading",
+  "assetA_description": "Il s'agit du premier actif de la paire de négociation pour le pool de liquidité.",
+  "assetB": "Fournir un deuxième actif commercial",
+  "assetB_description": "Il s'agit du deuxième actif de la paire de négociation pour le pool de liquidité."
+}

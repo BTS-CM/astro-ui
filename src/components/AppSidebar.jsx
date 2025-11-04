@@ -51,6 +51,22 @@ export default function AppSidebar() {
     { title: "Home:tfunds.title", href: "/tfunds/index.html" },
   ];
 
+  const assetCreation = [
+    {
+      title: "Home:create_prediction.title",
+      href: "/create_prediction/index.html",
+    },
+    { title: "Home:create_uia.title", href: "/create_uia/index.html" },
+    {
+      title: "Home:create_smartcoin.title",
+      href: "/create_smartcoin/index.html",
+    },
+    {
+      title: "Home:create_liquidity_pool.title",
+      href: "/create_pool/index.html",
+    },
+  ];
+
   const accountOverviewsHeading = [
     { title: "Home:portfolio_balances.title", href: "/balances/index.html" },
     {
@@ -77,18 +93,6 @@ export default function AppSidebar() {
       href: "/custom_pool_overview/index.html",
     },
     { title: "Home:pools.title", href: "/pools/index.html" },
-  ];
-
-  const assetCreation = [
-    {
-      title: "Home:create_prediction.title",
-      href: "/create_prediction/index.html",
-    },
-    { title: "Home:create_uia.title", href: "/create_uia/index.html" },
-    {
-      title: "Home:create_smartcoin.title",
-      href: "/create_smartcoin/index.html",
-    },
   ];
 
   const governanceHeading = [
@@ -127,6 +131,11 @@ export default function AppSidebar() {
       items: formsOfDebtHeading,
     },
     {
+      key: "assets",
+      label: t("PageHeader:assetCreation"),
+      items: assetCreation,
+    },
+    {
       key: "accounts",
       label: t("PageHeader:accountOverviewsHeading"),
       items: accountOverviewsHeading,
@@ -135,11 +144,6 @@ export default function AppSidebar() {
       key: "chain",
       label: t("PageHeader:blockchainOverviewsHeading"),
       items: blockchainOverviewsHeading,
-    },
-    {
-      key: "assets",
-      label: t("PageHeader:assetCreation"),
-      items: assetCreation,
     },
     {
       key: "gov",

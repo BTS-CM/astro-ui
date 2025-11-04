@@ -1,0 +1,14 @@
+{
+  "title": "새로운 유동성 풀 생성",
+  "deeplinkDialogTitle": "유동성 풀 생성",
+  "description": "기존 사용자 발행 자산을 풀 공유 자산으로 전환하여 새로운 유동성 풀을 생성합니다. ",
+  "taker_fee_header": "테이커 수수료(%)",
+  "taker_fee_content": "테이커가 귀하의 풀을 상대로 거래할 때 테이커에게 청구되는 백분율입니다. ",
+  "withdrawal_fee_header": "출금수수료(%)",
+  "withdrawal_fee_content": "풀에서 유동성이 인출될 때 부과되는 백분율입니다. ",
+  "noEligibleAssets": "유동성 풀을 생성하는 데 사용할 수 있는 적격 자산이 없습니다. 발행된 공급이 없는 사용자 발행 자산이어야 합니다.",
+  "assetA": "최초의 거래 자산 제공",
+  "assetA_description": "이는 유동성 풀에 대한 거래 쌍의 첫 번째 자산입니다.",
+  "assetB": "두 번째 거래 자산 제공",
+  "assetB_description": "이는 유동성 풀에 대한 거래 쌍의 두 번째 자산입니다."
+}

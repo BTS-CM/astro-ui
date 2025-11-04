@@ -244,6 +244,13 @@
     "hover3": "Se pueden utilizar como moneda estable, token para su negocio, token de recompensa, token para un juego y más.",
     "hover4": "Las Smartcoins pueden estar respaldadas por cualquier activo y hacer referencia a cualquier fuente externa."
   },
+  "create_liquidity_pool": {
+    "title": "💧 Crear fondo de liquidez",
+    "subtitle": "Cree un nuevo fondo de liquidez para intercambiar 2 de cualquier activo",
+    "hover1": "Convierte un activo emitido por el usuario en un activo compartido del fondo de liquidez.",
+    "hover2": "Configure el fondo de liquidez para intercambiar 2 activos cualesquiera en la cadena de bloques.",
+    "hover3": "Aplique sus propias tarifas para ganar dinero de otros utilizando su fondo de liquidez."
+  },
   "accountLists": {
     "title": "📋 Listas de cuentas",
     "subtitle": "Ver y administrar sus listas de cuentas",

@@ -1,0 +1,14 @@
+{
+  "title": "Crie um novo pool de liquidez",
+  "deeplinkDialogTitle": "Criando um pool de liquidez",
+  "description": "Crie um novo pool de liquidez convertendo um ativo existente emitido pelo usuário em um ativo de compartilhamento do pool. ",
+  "taker_fee_header": "Taxa do tomador (%)",
+  "taker_fee_content": "Porcentagem cobrada dos compradores quando eles negociam contra o seu pool. ",
+  "withdrawal_fee_header": "Taxa de retirada (%)",
+  "withdrawal_fee_content": "Percentual cobrado quando a liquidez é retirada do pool. ",
+  "noEligibleAssets": "Não há ativos elegíveis disponíveis para criar um pool de liquidez; deve ser um ativo emitido pelo usuário sem fornecimento emitido.",
+  "assetA": "Forneça o primeiro ativo comercial",
+  "assetA_description": "Este é o primeiro ativo do par de negociação para o pool de liquidez.",
+  "assetB": "Fornecer um segundo ativo comercial",
+  "assetB_description": "Este é o segundo ativo no par de negociação do pool de liquidez."
+}
