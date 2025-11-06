@@ -24,6 +24,7 @@
   "creditDeals": "ข้อเสนอสินเชื่อ",
   "settingsHeading": "การตั้งค่า",
   "governanceHeading": "ธรรมาภิบาล",
+  "invoicingHeading": "Invoicing System",
   "simpleSwap": "สลับง่าย",
   "vestAssets": "ทรัพย์สินเสื้อกั๊ก",
   "sameTFunds": "กองทุนเซม-ที",
@@ -88,7 +89,10 @@
     "proposals": "ดูการอนุมัติสำหรับบัญชีของคุณด้านล่าง และอนุมัติหรือปฏิเสธหลังจากประเมินอย่างละเอียดแล้ว",
     "pool_tracker": "ตรวจสอบ Honest Liquidity Pool และสถิติที่เกี่ยวข้องที่น่าสนใจได้อย่างง่ายดาย!",
     "create_account": "ใช้แบบฟอร์มด้านล่างเพื่อสร้างบัญชีคลาวด์ใหม่บนบล็อคเชน Bitshares",
-    "tfund_user": "ใช้แบบฟอร์มด้านล่างในการสร้างคำสั่งจำกัด Bitshares ที่ซับซ้อนและการดำเนินการยืม/ชำระคืนกองทุนเดียวกัน"
+    "tfund_user": "ใช้แบบฟอร์มด้านล่างในการสร้างคำสั่งจำกัด Bitshares ที่ซับซ้อนและการดำเนินการยืม/ชำระคืนกองทุนเดียวกัน",
+    "custom_pool_overview": "",
+    "custom_pool_tracker": "",
+    "invoice_inventory": "Manage inventory items and associated prices for invoicing."
   },
   "back": "กลับไป",
   "usage": "ออกแบบมาเพื่อใช้กับ ",

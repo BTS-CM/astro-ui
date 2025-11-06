@@ -278,6 +278,11 @@
     "hover1": "Create a free account using a public faucet.",
     "hover2": "Generate a premium account using an existing LTM account."
   },
+  "invoice_inventory": {
+    "title": "📦 Invoice Inventory",
+    "subtitle": "Manage items and prices used for invoicing",
+    "hover1": "Create and manage inventory items and their prices for invoices."
+  },
   "tfund_user": {
     "title": "🚀 Same-T Fund Trade",
     "subtitle": "Borrow, trade, repay, simple!",

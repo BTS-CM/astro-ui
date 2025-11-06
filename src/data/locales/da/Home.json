@@ -278,6 +278,11 @@
     "hover1": "Opret en gratis konto ved hjælp af en offentlig vandhane.",
     "hover2": "Generer en premium -konto ved hjælp af en eksisterende LTM -konto."
   },
+  "invoice_inventory": {
+    "title": "📦 Fakturabeholdning",
+    "subtitle": "Administrer varer og priser brugt til fakturering",
+    "hover1": "Opret og administrer lagervarer og deres priser for fakturaer."
+  },
   "tfund_user": {
     "title": "🚀 Samme-T-fondshandel",
     "subtitle": "Lån, handel, tilbagebetaling, enkel!",

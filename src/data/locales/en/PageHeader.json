@@ -24,6 +24,7 @@
   "creditDeals": "Credit deals",
   "settingsHeading": "Settings",
   "governanceHeading": "Governance",
+  "invoicingHeading": "Invoicing System",
   "simpleSwap": "Simple swap",
   "vestAssets": "Vest Assets",
   "sameTFunds": "Same-T Funds",
@@ -96,7 +97,8 @@
     "create_account": "Use the form below to create a new cloud account on the Bitshares blockchain.",
     "tfund_user": "Use the form below to craft complex chains of Bitshares limit orders and same-t fund borrow/repay operations.",
     "custom_pool_overview": "",
-    "custom_pool_tracker": ""
+    "custom_pool_tracker": "",
+    "invoice_inventory": "Manage inventory items and associated prices for invoicing."
   },
   "back": "Go back",
   "usage": "Designed for use with ",

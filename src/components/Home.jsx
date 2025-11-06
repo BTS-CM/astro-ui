@@ -534,6 +534,20 @@ export default function Home(properties) {
       ],
     },
     {
+      value: "item-9",
+      icon: "🏪",
+      headingKey: "PageHeader:invoicingHeading",
+      cards: [
+        {
+          key: "invoice_inventory",
+          href: "/invoice_inventory/index.html",
+          titleKey: "Home:invoice_inventory.title",
+          subtitleKey: "Home:invoice_inventory.subtitle",
+          hoverKeys: ["Home:invoice_inventory.hover1"],
+        },
+      ],
+    },
+    {
       value: "item-7",
       icon: "⚙️",
       headingKey: "PageHeader:settingsHeading",

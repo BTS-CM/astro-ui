@@ -278,6 +278,11 @@
     "hover1": "Crea un account gratuito utilizzando un rubinetto pubblico.",
     "hover2": "Genera un account premium utilizzando un account LTM esistente."
   },
+  "invoice_inventory": {
+    "title": "📦 Fattura Inventario",
+    "subtitle": "Gestire articoli e prezzi utilizzati per la fatturazione",
+    "hover1": "Creare e gestire gli articoli di inventario e i relativi prezzi per le fatture."
+  },
   "tfund_user": {
     "title": "🚀 Trade del fondo dello stesso T",
     "subtitle": "Prendi in prestito, commercio, rimborso, semplice!",

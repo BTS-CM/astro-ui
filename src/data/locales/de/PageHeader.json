@@ -24,6 +24,7 @@
   "creditDeals": "Kreditgeschäfte",
   "settingsHeading": "Einstellungen",
   "governanceHeading": "Regierungsführung",
+  "invoicingHeading": "Invoicing System",
   "simpleSwap": "Einfacher Tausch",
   "vestAssets": "Vest-Vermögen",
   "sameTFunds": "Same-T-Fonds",
@@ -88,7 +89,10 @@
     "proposals": "Sehen Sie sich unten die Genehmigungen für Ihr Konto an und genehmigen Sie sie oder lehnen Sie sie ab, nachdem Sie sie gründlich geprüft haben.",
     "pool_tracker": "Überwachen Sie ganz einfach den Honest Liquidity Pool und relevante interessante Statistiken!",
     "create_account": "Verwenden Sie das untenstehende Formular, um ein neues Cloud-Konto in der Bitshares-Blockchain zu erstellen.",
-    "tfund_user": "Verwenden Sie das unten stehende Formular, um komplexe Ketten von Bitshares-Limitaufträgen und Same-T-Fonds-Ausleih-/Rückzahlungsvorgängen zu erstellen."
+    "tfund_user": "Verwenden Sie das unten stehende Formular, um komplexe Ketten von Bitshares-Limitaufträgen und Same-T-Fonds-Ausleih-/Rückzahlungsvorgängen zu erstellen.",
+    "custom_pool_overview": "",
+    "custom_pool_tracker": "",
+    "invoice_inventory": "Manage inventory items and associated prices for invoicing."
   },
   "back": "Geh zurück",
   "usage": "Konzipiert für den Einsatz mit ",

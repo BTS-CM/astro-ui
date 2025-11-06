@@ -24,6 +24,7 @@
   "creditDeals": "Krediiditehingud",
   "settingsHeading": "Seaded",
   "governanceHeading": "Juhtimine",
+  "invoicingHeading": "Invoicing System",
   "simpleSwap": "Lihtne vahetus",
   "vestAssets": "Vesti varad",
   "sameTFunds": "Sama-T fondid",
@@ -88,7 +89,10 @@
     "proposals": "Vaadake allpool oma konto kinnitusi ja kinnitage need pärast nende põhjalikku hindamist või lükake need tagasi.",
     "pool_tracker": "Jälgige hõlpsalt ausat likviidsusfondi ja asjakohast huvitavat statistikat!",
     "create_account": "Kasutage allolevat vormi, et luua Bitsharesi plokiahelas uus pilvekonto.",
-    "tfund_user": "Kasutage allolevat vormi, et koostada keerulisi Bitsharesi limiitkorralduste kette ja sama fondi laenu-/tagasimaksete toiminguid."
+    "tfund_user": "Kasutage allolevat vormi, et koostada keerulisi Bitsharesi limiitkorralduste kette ja sama fondi laenu-/tagasimaksete toiminguid.",
+    "custom_pool_overview": "",
+    "custom_pool_tracker": "",
+    "invoice_inventory": "Manage inventory items and associated prices for invoicing."
   },
   "back": "Mine tagasi",
   "usage": "Mõeldud kasutamiseks koos ",

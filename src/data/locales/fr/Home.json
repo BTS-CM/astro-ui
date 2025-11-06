@@ -278,6 +278,11 @@
     "hover1": "Créez un compte gratuit à l'aide d'un robinet public.",
     "hover2": "Générez un compte premium à l'aide d'un compte LTM existant."
   },
+  "invoice_inventory": {
+    "title": "📦 Inventaire des factures",
+    "subtitle": "Gérer les articles et les prix utilisés pour la facturation",
+    "hover1": "Créez et gérez les articles en stock et leurs prix pour les factures."
+  },
   "tfund_user": {
     "title": "🚀 Trade de fonds Same-T",
     "subtitle": "Emprunter, échanger, rembourser, simple!",

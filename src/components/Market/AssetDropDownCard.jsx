@@ -50,6 +50,7 @@ export default function AssetDropDown(properties) {
     assetData,
     storeCallback,
     otherAsset,
+    otherAssets, // Array of other chosen assets to exclude
     marketSearch,
     type,
     size,
@@ -74,6 +75,12 @@ export default function AssetDropDown(properties) {
             (asset) => asset.s !== otherAsset && asset.s !== assetSymbol
           )
         : marketSearch.filter((asset) => asset.s !== assetSymbol);
+
+      if (otherAssets && Array.isArray(otherAssets) && otherAssets.length) {
+        currentContents = currentContents.filter(
+          (asset) => !otherAssets.includes(asset.s)
+        );
+      }
 
       if (chain === "bitshares" && blocklist && blocklist.users) {
         currentContents = currentContents.filter(

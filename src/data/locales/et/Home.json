@@ -278,6 +278,11 @@
     "hover1": "Looge tasuta konto, kasutades avalikku kraani.",
     "hover2": "Genereerige olemasoleva LTM -konto abil esmaklassiline konto."
   },
+  "invoice_inventory": {
+    "title": "📦 Arvete laoseisu",
+    "subtitle": "Hallake arveldamisel kasutatud esemeid ja hindu",
+    "hover1": "Looge ja hallake laoartikleid ja nende hindu arvete jaoks."
+  },
   "tfund_user": {
     "title": "🚀 SAMA-T Fondi kaubandus",
     "subtitle": "Laenake, kaubelda, tagasi maksta, lihtne!",

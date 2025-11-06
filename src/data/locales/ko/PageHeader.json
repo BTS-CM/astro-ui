@@ -24,6 +24,7 @@
   "creditDeals": "신용 거래",
   "settingsHeading": "설정",
   "governanceHeading": "통치",
+  "invoicingHeading": "Invoicing System",
   "simpleSwap": "단순 교환",
   "vestAssets": "조끼 자산",
   "sameTFunds": "Same-T 펀드",
@@ -88,7 +89,10 @@
     "proposals": "아래에서 귀하의 계정에 대한 승인을 확인하고, 철저히 평가한 후 승인하거나 거부하세요.",
     "pool_tracker": "정직한 유동성 풀과 관련된 흥미로운 통계를 쉽게 모니터링하세요!",
     "create_account": "아래 양식을 사용하여 Bitshares 블록체인에 새로운 클라우드 계정을 만드세요.",
-    "tfund_user": "아래 양식을 사용하여 Bitshares 한도 주문과 동일 펀드 차용/상환 작업의 복잡한 체인을 만들어 보세요."
+    "tfund_user": "아래 양식을 사용하여 Bitshares 한도 주문과 동일 펀드 차용/상환 작업의 복잡한 체인을 만들어 보세요.",
+    "custom_pool_overview": "",
+    "custom_pool_tracker": "",
+    "invoice_inventory": "Manage inventory items and associated prices for invoicing."
   },
   "back": "돌아가기",
   "usage": "다음과 함께 사용하도록 설계됨 ",

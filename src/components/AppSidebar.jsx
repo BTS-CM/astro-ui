@@ -114,6 +114,13 @@ export default function AppSidebar() {
     { title: "Home:create_account.title", href: "/create_account/index.html" },
   ];
 
+  const invoicingHeading = [
+    {
+      title: "Home:invoice_inventory.title",
+      href: "/invoice_inventory/index.html",
+    },
+  ];
+
   const sections = [
     {
       key: "exchanging",
@@ -151,6 +158,11 @@ export default function AppSidebar() {
       items: governanceHeading,
     },
     {
+      key: "invoicing",
+      label: t("PageHeader:invoicingHeading"),
+      items: invoicingHeading,
+    },
+    {
       key: "settings",
       label: t("PageHeader:settingsHeading"),
       items: settingsHeading,
@@ -166,6 +178,7 @@ export default function AppSidebar() {
     assets: "🛠️",
     gov: "🏛️",
     settings: "⚙️",
+    invoicing: "🏪",
   };
 
   const { openMobile, isMobile } = useSidebar();
