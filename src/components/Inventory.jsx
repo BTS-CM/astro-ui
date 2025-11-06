@@ -25,12 +25,6 @@ import {
 } from "@/components/ui/alert-dialog";
 
 import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
-
-import {
   Command,
   CommandEmpty,
   CommandGroup,
@@ -53,15 +47,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-
-import {
-  Item,
-  ItemActions,
-  ItemContent,
-  ItemDescription,
-  ItemMedia,
-  ItemTitle,
-} from "@/components/ui/item";
 
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -198,24 +183,6 @@ export default function LTM(properties) {
     const it = items[index];
     if (!it) return null;
     const [confirmOpen, setConfirmOpen] = useState(false);
-
-    /*
-      export type InventoryItem = {
-        id?: string;
-        barcode?: string;
-        name: string;
-        category: string;
-        description?: string;
-        quantity?: number;
-        location?: string;
-        unitPrice?: string;
-        reorderLevel?: number;
-        supplier?: string;
-        unit?: string;
-        lastModified?: string; // ISO timestamp
-        prices: PriceOption[];
-      };
-    */
 
     let _name = it.name ?? "";
     if (_name.length > 15) {
