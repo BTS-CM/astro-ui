@@ -283,6 +283,17 @@
     "subtitle": "Gestire articoli e prezzi utilizzati per la fatturazione",
     "hover1": "Creare e gestire gli articoli di inventario e i relativi prezzi per le fatture."
   },
+  "create_invoice": {
+    "title": "🧾 Crea fattura",
+    "subtitle": "Genera codici fattura per i clienti",
+    "hover1": "Crea una fattura selezionando gli articoli dall'inventario, fornendo quantità e dettagli della fattura."
+  },
+  "pay_invoice": {
+    "title": "💵 Paga fattura",
+    "subtitle": "Pagare le fatture utilizzando i codici fattura",
+    "hover1": "Paga una fattura inserendo il codice fattura fornito dall'autore della fattura.",
+    "hover2": "Facoltativamente, paga con risorse diverse per ciascun articolo acquistato."
+  },
   "tfund_user": {
     "title": "🚀 Trade del fondo dello stesso T",
     "subtitle": "Prendi in prestito, commercio, rimborso, semplice!",

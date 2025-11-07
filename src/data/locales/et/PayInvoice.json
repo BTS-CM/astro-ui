@@ -1,0 +1,69 @@
+{
+  "title": "Arve tasumine",
+  "description": "Valige, kuidas soovite maksta, ja jätkake makse(te) edastamisega.",
+  "recipientAccount": {
+    "header": "Saaja konto",
+    "info": "See on konto, mille teilt palutakse sellel arvel tasuda."
+  },
+  "recipientName": {
+    "header": "Saaja nimi",
+    "info": "See on arve koostaja suvaline lihttekstinimi, mis näitab, kellele makstakse. "
+  },
+  "identifier": {
+    "header": "Identifikaator",
+    "info": "Seda identifikaatorit kasutatakse arve tasumisel memo/sõnumina."
+  },
+  "timeSince": {
+    "header": "Aeg alates arve koostamisest",
+    "info": "See on siis, kui arve koostati."
+  },
+  "note": {
+    "header": "Märkus",
+    "info": "See on arve koostaja esitatud valikuline märkus."
+  },
+  "invoiceItems": {
+    "title": "Arve kirjed",
+    "headers": {
+      "items": "Üksused",
+      "description": "Kirjeldus",
+      "paymentMethods": "Makseviisid"
+    },
+    "paymentMethodsLabel": "Makseviisid",
+    "selectPaymentMethodPlaceholder": "Valige makseviis",
+    "tooltips": {
+      "quantity": "Kogus \"{{name}}\"ostetakse: {{quantity}}",
+      "descriptionOf": "Kirjeldus \"{{name}}\"",
+      "selectPayment": "Valige rippmenüüst oma makseviis"
+    }
+  },
+  "payButton": "Jätkake arve tasumisega",
+  "dialogHeader": "Arve tasumine",
+  "totals": {
+    "title": "Arvete maksed kokku",
+    "description": "Kui palju kulutate võrreldes olemasolevate saldodega.",
+    "columns": {
+      "total": "Vara kogusumma",
+      "balance": "Varade saldo summa",
+      "sufficient": "Piisav tasakaal"
+    },
+    "tooltips": {
+      "amountRequested": "See on summa {{asset}} taotletakse.",
+      "currentBalance": "See on teie praegune saldo {{asset}}.",
+      "needMore": "Peate omandama {{required}} rohkem {{asset}} et jätkata eduka arve tasumisega!"
+    }
+  },
+  "invalid": {
+    "title": "Kehtetu arve",
+    "description": "Esitatud arve kood on kehtetu. ",
+    "reset": "Lähtesta arve kood"
+  },
+  "initial": {
+    "title": "Arve tasumine",
+    "description": "Pärast kehtiva arve koodi sisestamist ilmuvad teie arve andmed!",
+    "placeholder": "Sisesta siia arve kood...",
+    "process": "Töötle arve kood"
+  },
+  "format": {
+    "recipientField": "{{name}} ({{id}})"
+  }
+}

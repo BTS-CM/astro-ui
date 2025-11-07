@@ -1,0 +1,69 @@
+{
+  "title": "pagar una factura",
+  "description": "Seleccione cómo desea pagar y luego proceda a transmitir los pagos.",
+  "recipientAccount": {
+    "header": "Cuenta de destinatario",
+    "info": "Esta es la cuenta que se le solicita que pague en esta factura."
+  },
+  "recipientName": {
+    "header": "Nombre del destinatario",
+    "info": "Este es un nombre de texto plano arbitrario para que el creador de la factura indique a quién se le paga. "
+  },
+  "identifier": {
+    "header": "Identificador",
+    "info": "Este identificador se utilizará como nota/mensaje cuando se pague la factura."
+  },
+  "timeSince": {
+    "header": "Tiempo desde la creación de la factura",
+    "info": "Fue entonces cuando se creó la factura."
+  },
+  "note": {
+    "header": "Nota",
+    "info": "Esta es una nota opcional proporcionada por el creador de la factura."
+  },
+  "invoiceItems": {
+    "title": "Artículos de factura",
+    "headers": {
+      "items": "Elementos",
+      "description": "Descripción",
+      "paymentMethods": "Métodos de pago"
+    },
+    "paymentMethodsLabel": "Métodos de pago",
+    "selectPaymentMethodPlaceholder": "Selecciona el método de pago",
+    "tooltips": {
+      "quantity": "Cantidad de \"{{name}}\" en proceso de compra: {{quantity}}",
+      "descriptionOf": "Descripción de \"{{name}}\"",
+      "selectPayment": "Seleccione su método de pago en el selector desplegable"
+    }
+  },
+  "payButton": "Proceder al pago de la factura",
+  "dialogHeader": "pagar factura",
+  "totals": {
+    "title": "Pagos totales de facturas",
+    "description": "Cuánto estás gastando en comparación con tus saldos disponibles.",
+    "columns": {
+      "total": "Monto total del activo",
+      "balance": "Importe del saldo del activo",
+      "sufficient": "Saldo suficiente"
+    },
+    "tooltips": {
+      "amountRequested": "Esta es la cantidad de {{asset}} siendo solicitado.",
+      "currentBalance": "Este es su saldo actual de {{asset}}.",
+      "needMore": "Debes adquirir {{required}} más {{asset}} para proceder con el pago exitoso de la factura!"
+    }
+  },
+  "invalid": {
+    "title": "Factura no válida",
+    "description": "El código de factura proporcionado no es válido. ",
+    "reset": "Restablecer código de factura"
+  },
+  "initial": {
+    "title": "pagar una factura",
+    "description": "Después de proporcionar un código de factura válido, aparecerán los detalles de su factura.",
+    "placeholder": "Ingrese el código de factura aquí...",
+    "process": "Código de factura de proceso"
+  },
+  "format": {
+    "recipientField": "{{name}} ({{id}})"
+  }
+}

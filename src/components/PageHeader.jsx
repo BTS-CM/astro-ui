@@ -410,6 +410,11 @@ export default function PageHeader(properties) {
       href: "/create_invoice/index.html",
       description: "Home:create_invoice.subtitle",
     },
+    {
+      title: "Home:pay_invoice.title",
+      href: "/pay_invoice/index.html",
+      description: "Home:pay_invoice.subtitle",
+    },
   ];
 
   return (

@@ -1,0 +1,69 @@
+{
+  "title": "Betaling af en faktura",
+  "description": "Vælg, hvordan du ønsker at betale, og fortsæt med at udsende betalingen/betalingerne.",
+  "recipientAccount": {
+    "header": "Modtagerkonto",
+    "info": "Dette er den konto, som du bliver bedt om at betale på denne faktura."
+  },
+  "recipientName": {
+    "header": "Modtagers navn",
+    "info": "Dette er et vilkårligt almindeligt tekstnavn til fakturaopretteren for at angive, hvem der bliver betalt. "
+  },
+  "identifier": {
+    "header": "Identifikator",
+    "info": "Denne identifikator vil blive brugt som notat/besked, når fakturaen betales."
+  },
+  "timeSince": {
+    "header": "Tid siden fakturaoprettelse",
+    "info": "Det er her, fakturaen blev oprettet."
+  },
+  "note": {
+    "header": "Note",
+    "info": "Dette er en valgfri note fra fakturaopretteren."
+  },
+  "invoiceItems": {
+    "title": "Fakturavarer",
+    "headers": {
+      "items": "genstande",
+      "description": "Beskrivelse",
+      "paymentMethods": "Betalingsmetoder"
+    },
+    "paymentMethodsLabel": "Betalingsmetoder",
+    "selectPaymentMethodPlaceholder": "Vælg betalingsmetode",
+    "tooltips": {
+      "quantity": "Mængde af \"{{name}}\" bliver købt: {{quantity}}",
+      "descriptionOf": "Beskrivelse af \"{{name}}\"",
+      "selectPayment": "Vælg din betalingsmetode fra rullemenuen"
+    }
+  },
+  "payButton": "Fortsæt med at betale faktura",
+  "dialogHeader": "Betaling af faktura",
+  "totals": {
+    "title": "Samlede fakturabetalinger",
+    "description": "Hvor meget du bruger i forhold til dine tilgængelige saldi.",
+    "columns": {
+      "total": "Samlet aktivbeløb",
+      "balance": "Asset balance beløb",
+      "sufficient": "Tilstrækkelig balance"
+    },
+    "tooltips": {
+      "amountRequested": "Dette er mængden af {{asset}} bliver efterspurgt.",
+      "currentBalance": "Dette er din nuværende saldo på {{asset}}.",
+      "needMore": "Du skal erhverve {{required}} mere {{asset}} for at fortsætte med vellykket fakturabetaling!"
+    }
+  },
+  "invalid": {
+    "title": "Ugyldig faktura",
+    "description": "Den angivne fakturakode er ugyldig. ",
+    "reset": "Nulstil fakturakode"
+  },
+  "initial": {
+    "title": "Betaling af en faktura",
+    "description": "Når du har angivet en gyldig fakturakode, vises dine fakturaoplysninger!",
+    "placeholder": "Indtast fakturakode her...",
+    "process": "Behandle fakturakode"
+  },
+  "format": {
+    "recipientField": "{{name}} ({{id}})"
+  }
+}

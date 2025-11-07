@@ -1,0 +1,91 @@
+{
+  "title": "Générateur de facture",
+  "description": "Sélectionnez les articles, fournissez les détails, puis générez un code de facture que les payeurs pourront utiliser.",
+  "recipientAccount": {
+    "header": "Compte destinataire",
+    "info": "Il s'agit du compte qui recevra les fonds de l'utilisateur payant la facture."
+  },
+  "recipientName": {
+    "header": "Nom du destinataire",
+    "info": "Vous pouvez définir vous-même un nom arbitraire en texte clair pour indiquer qui est payé. "
+  },
+  "identifier": {
+    "header": "Identifiant",
+    "info": "L'identifiant doit être utilisé comme mémo/message lorsque la demande est payée."
+  },
+  "note": {
+    "header": "Note",
+    "info": "Vous pouvez joindre une note à cette demande de paiement, il peut s'agir de toute information complémentaire."
+  },
+  "inventory": {
+    "header": "Articles en stock",
+    "addItem": "Ajouter un article",
+    "searchPlaceholder": "Rechercher dans l'inventaire...",
+    "selectItemDialog": {
+      "title": "Sélectionner un article",
+      "description": "Choisissez un article à ajouter à cette facture."
+    },
+    "table": {
+      "name": "Nom",
+      "inStock": "En stock",
+      "price": "Prix"
+    }
+  },
+  "selectedItems": {
+    "table": {
+      "name": "Nom",
+      "nameTooltip": "Le nom de l'article acheté.",
+      "quantity": "Quantité achetée",
+      "quantityTooltip": "Nombre d'unités de l'article achetées par le bénéficiaire de la facture.",
+      "totalPossiblePrices": "Prix ​​totaux possibles",
+      "totalPricesTooltip": "Le bénéficiaire de la facture ne paiera qu'un seul de ces types d'actifs par article acheté."
+    },
+    "row": {
+      "quantityTitle": "Quantité achetée : {{quantity}}",
+      "totalsTitle": "Totaux"
+    }
+  },
+  "prices": {
+    "countLabel": "{{count}} prix",
+    "possibleTotals": {
+      "dialogTitle": "Totaux possibles",
+      "dialogDescription": "En payant l'un des montants d'actif suivants, le payeur de la facture aura payé l'intégralité de la facture pour cette quantité de cet article."
+    }
+  },
+  "quantity": {
+    "dialogTitle": "Quantité",
+    "dialogDescription": "Combien \"{{name}}\" à ajouter ?",
+    "add": "Ajouter"
+  },
+  "itemDetails": {
+    "dialogTitle": "Détails de l'article",
+    "dialogDescription": "Propriétés complètes de l'élément sélectionné."
+  },
+  "emptyInventory": {
+    "title": "Aucun article en inventaire pour l'instant !",
+    "description": "Vous devez créer des articles en stock avant de pouvoir générer une facture !",
+    "button": "Inventaire d'articles"
+  },
+  "generateInvoice": {
+    "button": "Générer une facture",
+    "buttonActive": "générer une facture"
+  },
+  "generatedInvoice": {
+    "dialogTitle": "Facture générée",
+    "dialogDescription": "Fournissez au client le code de facture suivant pour payer la facture.",
+    "copyButton": "Copier le code de la facture dans le presse-papiers"
+  },
+  "scanner": {
+    "scan": "Balayage",
+    "dialogTitle": "Scanner le code-barres",
+    "dialogDescription": "Pointez votre appareil photo sur un code-barres pour ajouter l'élément correspondant.",
+    "rear": "Arrière",
+    "front": "Devant",
+    "torchOn": "Torche allumée",
+    "torchOff": "Torche éteinte",
+    "close": "Fermer",
+    "retry": "Réessayer",
+    "switch": "Changer",
+    "itemNotFound": "Article introuvable"
+  }
+}

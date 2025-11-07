@@ -19,10 +19,8 @@ const { encode } = pkg;
 import HoverInfo from "@/components/common/HoverInfo.tsx";
 
 import { useInitCache } from "@/nanoeffects/Init.ts";
-import { createUserBalancesStore } from "@/nanoeffects/UserBalances.ts";
 
 import { $currentUser } from "@/stores/users.ts";
-import { $currentNode } from "@/stores/node.ts";
 import { $inventoryStorage } from "@/stores/inventory";
 
 import { copyToClipboard } from "@/lib/common";
@@ -102,15 +100,6 @@ export default function InvoiceCreator(properties) {
   );
 
   useInitCache(usr && usr.chain ? usr.chain : "bitshares", []);
-
-  const { _assetsBTS, _assetsTEST } = properties;
-
-  const assets = useMemo(() => {
-    if (usr && usr.chain) {
-      return usr.chain === "bitshares" ? _assetsBTS || [] : _assetsTEST || [];
-    }
-    return [];
-  }, [usr, _assetsBTS, _assetsTEST]);
 
   const inventory = useStore($inventoryStorage);
   const items = (inventory && inventory.items) || [];
@@ -262,14 +251,14 @@ export default function InvoiceCreator(properties) {
             variant="outline"
             onClick={() => setScannerOpen(true)}
           >
-            Scan
+            {t("InvoiceCreator:scanner.scan")}
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[640px] bg-white">
           <DialogHeader>
-            <DialogTitle>Scan barcode</DialogTitle>
+            <DialogTitle>{t("InvoiceCreator:scanner.dialogTitle")}</DialogTitle>
             <DialogDescription>
-              Point your camera at a barcode to add the corresponding item.
+              {t("InvoiceCreator:scanner.dialogDescription")}
             </DialogDescription>
           </DialogHeader>
 
@@ -286,10 +275,14 @@ export default function InvoiceCreator(properties) {
                   });
                 }}
               >
-                {facingMode === "environment" ? "Rear" : "Front"}
+                {facingMode === "environment"
+                  ? t("InvoiceCreator:scanner.rear")
+                  : t("InvoiceCreator:scanner.front")}
               </Button>
               <Button size="sm" onClick={() => setTorchEnabled((v) => !v)}>
-                {torchEnabled ? "Torch On" : "Torch Off"}
+                {torchEnabled
+                  ? t("InvoiceCreator:scanner.torchOn")
+                  : t("InvoiceCreator:scanner.torchOff")}
               </Button>
               <Button
                 size="sm"
@@ -300,7 +293,7 @@ export default function InvoiceCreator(properties) {
                   setScannerError(null);
                 }}
               >
-                Close
+                {t("InvoiceCreator:scanner.close")}
               </Button>
             </div>
 
@@ -334,7 +327,9 @@ export default function InvoiceCreator(properties) {
                         setStopStream(true);
                         setQtyDialogOpen(true);
                       } else {
-                        setScannerError(new Error("Item not found"));
+                        setScannerError(
+                          new Error(t("InvoiceCreator:scanner.itemNotFound"))
+                        );
                         setStopStream(true);
                       }
                     }
@@ -357,7 +352,7 @@ export default function InvoiceCreator(properties) {
                         setStopStream(false);
                       }}
                     >
-                      Retry
+                      {t("InvoiceCreator:scanner.retry")}
                     </Button>
                     <Button
                       size="sm"
@@ -369,7 +364,7 @@ export default function InvoiceCreator(properties) {
                         setStopStream(false);
                       }}
                     >
-                      Switch
+                      {t("InvoiceCreator:scanner.switch")}
                     </Button>
                   </div>
                 </div>
@@ -408,24 +403,33 @@ export default function InvoiceCreator(properties) {
               </div>
               <div
                 className="col-span-2 text-center mt-1"
-                title={`Quantity being purchased: ${it.quantity}`}
+                title={t("InvoiceCreator:selectedItems.row.quantityTitle", {
+                  quantity: it.quantity,
+                })}
               >
                 {it.quantity}
               </div>
-              <div className="col-span-4 text-center pr-2 mt-1" title="Totals">
+              <div
+                className="col-span-4 text-center pr-2 mt-1"
+                title={t("InvoiceCreator:selectedItems.row.totalsTitle")}
+              >
                 <Dialog>
                   <DialogTrigger asChild>
                     <Button variant="outline">
-                      {it.item.prices.length} prices
+                      {t("InvoiceCreator:prices.countLabel", {
+                        count: it.item.prices.length,
+                      })}
                     </Button>
                   </DialogTrigger>
                   <DialogContent className="sm:max-w-[420px] bg-white">
                     <DialogHeader>
-                      <DialogTitle>Possible Totals</DialogTitle>
+                      <DialogTitle>
+                        {t("InvoiceCreator:prices.possibleTotals.dialogTitle")}
+                      </DialogTitle>
                       <DialogDescription>
-                        By paying one of the following asset amounts the invoice
-                        payer will have paid the invoice in full for this
-                        quantity of this item.
+                        {t(
+                          "InvoiceCreator:prices.possibleTotals.dialogDescription"
+                        )}
                       </DialogDescription>
                     </DialogHeader>
                     <div className="flex flex-wrap justify-start gap-1">
@@ -509,10 +513,9 @@ export default function InvoiceCreator(properties) {
         <div className="grid grid-cols-1 gap-3">
           <Card>
             <CardHeader>
-              <CardTitle>Invoice generator</CardTitle>
+              <CardTitle>{t("InvoiceCreator:title")}</CardTitle>
               <CardDescription>
-                Select items, provide details then generate an invoice code for
-                payers to use.
+                {t("InvoiceCreator:description")}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -520,10 +523,8 @@ export default function InvoiceCreator(properties) {
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <HoverInfo
-                      content={
-                        "This is the account which will receieve funds from the invoice paying user."
-                      }
-                      header={"Recipient Account"}
+                      content={t("InvoiceCreator:recipientAccount.info")}
+                      header={t("InvoiceCreator:recipientAccount.header")}
                       type="header"
                     />
                     <Input
@@ -534,10 +535,8 @@ export default function InvoiceCreator(properties) {
                   </div>
                   <div>
                     <HoverInfo
-                      content={
-                        "You can define an arbitrary plaintext name for yourself to indicate who is being paid. Must not be a BitShares account name."
-                      }
-                      header={"Recipient Name"}
+                      content={t("InvoiceCreator:recipientName.info")}
+                      header={t("InvoiceCreator:recipientName.header")}
                       type="header"
                     />
                     <Input
@@ -548,10 +547,8 @@ export default function InvoiceCreator(properties) {
                   </div>
                 </div>
                 <HoverInfo
-                  content={
-                    "The identifier needs to be used as the memo/message when the request is paid."
-                  }
-                  header={"Identifier"}
+                  content={t("InvoiceCreator:identifier.info")}
+                  header={t("InvoiceCreator:identifier.header")}
                   type="header"
                 />
                 <Input
@@ -560,10 +557,8 @@ export default function InvoiceCreator(properties) {
                   className="mt-2"
                 />
                 <HoverInfo
-                  content={
-                    "You can attach a note to this payment request, this can be any additional information."
-                  }
-                  header={"Note"}
+                  content={t("InvoiceCreator:note.info")}
+                  header={t("InvoiceCreator:note.header")}
                   type="header"
                 />
                 <Textarea
@@ -578,7 +573,7 @@ export default function InvoiceCreator(properties) {
                       <CardHeader>
                         <CardTitle>
                           <div className="grid grid-cols-2">
-                            <div>Inventory items</div>
+                            <div>{t("InvoiceCreator:inventory.header")}</div>
                             <div className="text-right">
                               <div className="inline-flex items-center gap-2">
                                 <ScannerDialog />
@@ -591,20 +586,28 @@ export default function InvoiceCreator(properties) {
                                       variant="outline"
                                       onClick={() => setAddDialogOpen(true)}
                                     >
-                                      Add item
+                                      {t("InvoiceCreator:inventory.addItem")}
                                     </Button>
                                   </DialogTrigger>
                                   <DialogContent className="sm:max-w-[720px] sm:min-w-[720px] bg-white">
                                     <DialogHeader>
-                                      <DialogTitle>Select Item</DialogTitle>
+                                      <DialogTitle>
+                                        {t(
+                                          "InvoiceCreator:inventory.selectItemDialog.title"
+                                        )}
+                                      </DialogTitle>
                                       <DialogDescription>
-                                        Choose an item to add to this invoice.
+                                        {t(
+                                          "InvoiceCreator:inventory.selectItemDialog.description"
+                                        )}
                                       </DialogDescription>
                                     </DialogHeader>
                                     <div className="grid grid-cols-1 gap-3">
                                       <div>
                                         <Input
-                                          placeholder="Search inventory..."
+                                          placeholder={t(
+                                            "InvoiceCreator:inventory.searchPlaceholder"
+                                          )}
                                           value={searchQuery}
                                           onChange={(e) =>
                                             setSearchQuery(e.target.value)
@@ -614,13 +617,19 @@ export default function InvoiceCreator(properties) {
                                       <div className="border rounded">
                                         <div className="grid grid-cols-12 text-center text-sm px-2 py-1">
                                           <div className="col-span-6 text-left">
-                                            Name
+                                            {t(
+                                              "InvoiceCreator:inventory.table.name"
+                                            )}
                                           </div>
                                           <div className="col-span-3">
-                                            In Stock
+                                            {t(
+                                              "InvoiceCreator:inventory.table.inStock"
+                                            )}
                                           </div>
                                           <div className="col-span-3 text-right pr-2">
-                                            Price
+                                            {t(
+                                              "InvoiceCreator:inventory.table.price"
+                                            )}
                                           </div>
                                         </div>
                                         <div className="w-full max-h-[360px] min-h-[360px] overflow-auto">
@@ -645,21 +654,29 @@ export default function InvoiceCreator(properties) {
                           <div className="grid grid-cols-12 text-center text-sm px-2 py-1 border-b-2">
                             <div
                               className="col-span-5 text-left"
-                              title="The name of the item being bought."
+                              title={t(
+                                "InvoiceCreator:selectedItems.table.nameTooltip"
+                              )}
                             >
-                              Name
+                              {t("InvoiceCreator:selectedItems.table.name")}
                             </div>
                             <div
                               className="col-span-2"
-                              title="Number of units of the item being bought by the invoice payee."
+                              title={t(
+                                "InvoiceCreator:selectedItems.table.quantityTooltip"
+                              )}
                             >
-                              Quantity being bought
+                              {t("InvoiceCreator:selectedItems.table.quantity")}
                             </div>
                             <div
                               className="col-span-4 text-center pr-2"
-                              title="The invoice payee will only pay one of these asset types per item purchased."
+                              title={t(
+                                "InvoiceCreator:selectedItems.table.totalPricesTooltip"
+                              )}
                             >
-                              Total possible prices
+                              {t(
+                                "InvoiceCreator:selectedItems.table.totalPossiblePrices"
+                              )}
                             </div>
                             <div className="col-span-1"></div>
                           </div>
@@ -680,9 +697,13 @@ export default function InvoiceCreator(properties) {
                     >
                       <DialogContent className="sm:max-w-[420px] bg-white">
                         <DialogHeader>
-                          <DialogTitle>Quantity</DialogTitle>
+                          <DialogTitle>
+                            {t("InvoiceCreator:quantity.dialogTitle")}
+                          </DialogTitle>
                           <DialogDescription>
-                            How many "{candidateItem?.name}" to add?
+                            {t("InvoiceCreator:quantity.dialogDescription", {
+                              name: candidateItem?.name || "",
+                            })}
                           </DialogDescription>
                         </DialogHeader>
                         <div className="grid grid-cols-3 gap-2 items-center">
@@ -703,7 +724,7 @@ export default function InvoiceCreator(properties) {
                                 setAddDialogOpen(false);
                               }}
                             >
-                              Add
+                              {t("InvoiceCreator:quantity.add")}
                             </Button>
                           </div>
                         </div>
@@ -715,9 +736,11 @@ export default function InvoiceCreator(properties) {
                     >
                       <DialogContent className="sm:max-w-[640px] bg-white">
                         <DialogHeader>
-                          <DialogTitle>Item Details</DialogTitle>
+                          <DialogTitle>
+                            {t("InvoiceCreator:itemDetails.dialogTitle")}
+                          </DialogTitle>
                           <DialogDescription>
-                            Full properties for the selected item.
+                            {t("InvoiceCreator:itemDetails.dialogDescription")}
                           </DialogDescription>
                         </DialogHeader>
                         <div className="max-h-[420px] overflow-auto text-sm">
@@ -751,16 +774,19 @@ export default function InvoiceCreator(properties) {
                       <EmptyMedia variant="icon">
                         <Folder />
                       </EmptyMedia>
-                      <EmptyTitle>No items in inventory yet!</EmptyTitle>
+                      <EmptyTitle>
+                        {t("InvoiceCreator:emptyInventory.title")}
+                      </EmptyTitle>
                       <EmptyDescription>
-                        You need to create inventory items before an invoice can
-                        be generated!
+                        {t("InvoiceCreator:emptyInventory.description")}
                       </EmptyDescription>
                     </EmptyHeader>
                     <EmptyContent>
                       <div className="text-center">
                         <a href="/invoice_inventory/index.html">
-                          <Button>Item Inventory</Button>
+                          <Button>
+                            {t("InvoiceCreator:emptyInventory.button")}
+                          </Button>
                         </a>
                       </div>
                     </EmptyContent>
@@ -773,15 +799,16 @@ export default function InvoiceCreator(properties) {
                 <Dialog>
                   <DialogTrigger asChild>
                     <Button onClick={handleGenerateInvoice}>
-                      generate invoice
+                      {t("InvoiceCreator:generateInvoice.buttonActive")}
                     </Button>
                   </DialogTrigger>
                   <DialogContent className="sm:max-w-[720px] sm:min-w-[720px] bg-white">
                     <DialogHeader>
-                      <DialogTitle>Generated Invoice</DialogTitle>
+                      <DialogTitle>
+                        {t("InvoiceCreator:generatedInvoice.dialogTitle")}
+                      </DialogTitle>
                       <DialogDescription>
-                        Provide the customer the following invoice code to pay
-                        the invoice.
+                        {t("InvoiceCreator:generatedInvoice.dialogDescription")}
                       </DialogDescription>
                     </DialogHeader>
                     <Textarea
@@ -795,12 +822,14 @@ export default function InvoiceCreator(properties) {
                       }}
                       className="mt-2"
                     >
-                      Copy invoice code to clipboard
+                      {t("InvoiceCreator:generatedInvoice.copyButton")}
                     </Button>
                   </DialogContent>
                 </Dialog>
               ) : (
-                <Button disabled>Generate invoice</Button>
+                <Button disabled>
+                  {t("InvoiceCreator:generateInvoice.button")}
+                </Button>
               )}
             </CardFooter>
           </Card>

@@ -1,0 +1,37 @@
+---
+import { getCollection } from 'astro:content';
+
+import Layout from '../layouts/Layout.astro';
+import UserPayInvoice from '../components/PayInvoice.jsx';
+import PageHeader from '../components/PageHeader.jsx';
+import PageFooter from '../components/PageFooter.jsx';
+
+const btsAllAssets = await getCollection('btsAllAssets');
+const testAllAssets = await getCollection('testAllAssets');
+
+const btsAssets = btsAllAssets.map((collection) => collection.data);
+const testAssets = testAllAssets.map((collection) => collection.data);
+---
+
+<Layout title="Bitshares Pay Invoice">
+	<main>
+		<PageHeader client:only="react" page="pay_invoice" backURL="../index.html" />
+		<UserPayInvoice client:only="react"
+			_assetsBTS={btsAssets}
+			_assetsTEST={testAssets} />
+		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/pay_invoice.astro" />
+	</main>
+</Layout>
+
+<style>
+	main {
+		margin: auto;
+		padding: 1rem;
+		width: 100%;
+		max-width: calc(100% - 2rem);
+		color: white;
+		font-size: 20px;
+		line-height: 1.6;
+		min-height: 100vh;
+	}
+</style>

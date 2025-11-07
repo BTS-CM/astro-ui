@@ -1,0 +1,91 @@
+{
+  "title": "Generatore di fatture",
+  "description": "Seleziona gli articoli, fornisci i dettagli, quindi genera un codice fattura che i pagatori potranno utilizzare.",
+  "recipientAccount": {
+    "header": "Conto del destinatario",
+    "info": "Questo è l'account che riceverà i fondi dall'utente che paga la fattura."
+  },
+  "recipientName": {
+    "header": "Nome del destinatario",
+    "info": "Puoi definire tu stesso un nome in chiaro arbitrario per indicare chi viene pagato. "
+  },
+  "identifier": {
+    "header": "Identificatore",
+    "info": "L'identificatore deve essere utilizzato come promemoria/messaggio quando la richiesta viene pagata."
+  },
+  "note": {
+    "header": "Nota",
+    "info": "È possibile allegare una nota a questa richiesta di pagamento, che può contenere qualsiasi informazione aggiuntiva."
+  },
+  "inventory": {
+    "header": "Articoli di inventario",
+    "addItem": "Aggiungi elemento",
+    "searchPlaceholder": "Cerca nell'inventario...",
+    "selectItemDialog": {
+      "title": "Seleziona elemento",
+      "description": "Scegli un articolo da aggiungere a questa fattura."
+    },
+    "table": {
+      "name": "Nome",
+      "inStock": "In magazzino",
+      "price": "Prezzo"
+    }
+  },
+  "selectedItems": {
+    "table": {
+      "name": "Nome",
+      "nameTooltip": "Il nome dell'articolo acquistato.",
+      "quantity": "Quantità acquistata",
+      "quantityTooltip": "Numero di unità dell'articolo acquistate dal beneficiario della fattura.",
+      "totalPossiblePrices": "Prezzi totali possibili",
+      "totalPricesTooltip": "Il beneficiario della fattura pagherà solo uno di questi tipi di asset per articolo acquistato."
+    },
+    "row": {
+      "quantityTitle": "Quantità acquistata: {{quantity}}",
+      "totalsTitle": "Totali"
+    }
+  },
+  "prices": {
+    "countLabel": "{{count}} prezzi",
+    "possibleTotals": {
+      "dialogTitle": "Totali possibili",
+      "dialogDescription": "Pagando uno dei seguenti importi patrimoniali, il pagatore della fattura avrà pagato l'intero importo della fattura per questa quantità di questo articolo."
+    }
+  },
+  "quantity": {
+    "dialogTitle": "Quantità",
+    "dialogDescription": "Quanti \"{{name}}\"aggiungere?",
+    "add": "Aggiungere"
+  },
+  "itemDetails": {
+    "dialogTitle": "Dettagli articolo",
+    "dialogDescription": "Proprietà complete per l'elemento selezionato."
+  },
+  "emptyInventory": {
+    "title": "Nessun articolo ancora nell'inventario!",
+    "description": "È necessario creare articoli di inventario prima di poter generare una fattura!",
+    "button": "Inventario degli articoli"
+  },
+  "generateInvoice": {
+    "button": "Genera fattura",
+    "buttonActive": "generare fattura"
+  },
+  "generatedInvoice": {
+    "dialogTitle": "Fattura generata",
+    "dialogDescription": "Fornire al cliente il seguente codice fattura per pagare la fattura.",
+    "copyButton": "Copia il codice fattura negli appunti"
+  },
+  "scanner": {
+    "scan": "Scansione",
+    "dialogTitle": "Scansiona il codice a barre",
+    "dialogDescription": "Punta la fotocamera su un codice a barre per aggiungere l'articolo corrispondente.",
+    "rear": "Posteriore",
+    "front": "Fronte",
+    "torchOn": "Torcia accesa",
+    "torchOff": "Torcia spenta",
+    "close": "Vicino",
+    "retry": "Riprova",
+    "switch": "Interruttore",
+    "itemNotFound": "Articolo non trovato"
+  }
+}

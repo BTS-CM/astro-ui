@@ -552,6 +552,13 @@ export default function Home(properties) {
           subtitleKey: "Home:create_invoice.subtitle",
           hoverKeys: ["Home:create_invoice.hover1"],
         },
+        {
+          key: "pay_invoice",
+          href: "/pay_invoice/index.html",
+          titleKey: "Home:pay_invoice.title",
+          subtitleKey: "Home:pay_invoice.subtitle",
+          hoverKeys: ["Home:pay_invoice.hover1", "Home:pay_invoice.hover2"],
+        },
       ],
     },
     {

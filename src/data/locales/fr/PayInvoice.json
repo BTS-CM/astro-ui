@@ -1,0 +1,69 @@
+{
+  "title": "Payer une facture",
+  "description": "Sélectionnez le mode de paiement que vous souhaitez puis procédez à la diffusion du ou des paiements.",
+  "recipientAccount": {
+    "header": "Compte destinataire",
+    "info": "Il s'agit du compte qu'il vous est demandé de payer sur cette facture."
+  },
+  "recipientName": {
+    "header": "Nom du destinataire",
+    "info": "Il s'agit d'un nom arbitraire en texte brut permettant au créateur de la facture d'indiquer qui est payé. "
+  },
+  "identifier": {
+    "header": "Identifiant",
+    "info": "Cet identifiant servira de mémo/message lors du paiement de la facture."
+  },
+  "timeSince": {
+    "header": "Temps écoulé depuis la création de la facture",
+    "info": "C'est à ce moment-là que la facture a été créée."
+  },
+  "note": {
+    "header": "Note",
+    "info": "Il s'agit d'une note facultative fournie par le créateur de la facture."
+  },
+  "invoiceItems": {
+    "title": "Postes de facture",
+    "headers": {
+      "items": "Articles",
+      "description": "Description",
+      "paymentMethods": "Modes de paiement"
+    },
+    "paymentMethodsLabel": "Méthodes de paiement",
+    "selectPaymentMethodPlaceholder": "Sélectionnez le mode de paiement",
+    "tooltips": {
+      "quantity": "Quantité de \"{{name}}\" en cours d'achat : {{quantity}}",
+      "descriptionOf": "Description de \"{{name}}\"",
+      "selectPayment": "Sélectionnez votre mode de paiement dans le sélecteur déroulant"
+    }
+  },
+  "payButton": "Procéder au paiement de la facture",
+  "dialogHeader": "Payer la facture",
+  "totals": {
+    "title": "Paiements totaux des factures",
+    "description": "Combien vous dépensez par rapport à vos soldes disponibles.",
+    "columns": {
+      "total": "Montant total de l'actif",
+      "balance": "Montant du solde de l'actif",
+      "sufficient": "Solde suffisant"
+    },
+    "tooltips": {
+      "amountRequested": "C'est le montant de {{asset}} étant demandée.",
+      "currentBalance": "Ceci est votre solde actuel de {{asset}}.",
+      "needMore": "Vous devez acquérir {{required}} plus {{asset}} pour procéder au paiement réussi de la facture !"
+    }
+  },
+  "invalid": {
+    "title": "Facture invalide",
+    "description": "Le code de facture fourni n'est pas valide. ",
+    "reset": "Réinitialiser le code de facture"
+  },
+  "initial": {
+    "title": "Payer une facture",
+    "description": "Après avoir fourni un code de facture valide, les détails de votre facture apparaîtront !",
+    "placeholder": "Entrez le code de facture ici...",
+    "process": "Traiter le code de facture"
+  },
+  "format": {
+    "recipientField": "{{name}} ({{id}})"
+  }
+}

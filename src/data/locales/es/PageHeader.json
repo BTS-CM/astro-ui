@@ -90,9 +90,15 @@
     "pool_tracker": "¡Monitoree fácilmente el Honest Liquidity Pool y las estadísticas interesantes relevantes!",
     "create_account": "Utilice el formulario a continuación para crear una nueva cuenta en la nube en la cadena de bloques Bitshares.",
     "tfund_user": "Utilice el formulario a continuación para crear cadenas complejas de órdenes limitadas de Bitshares y operaciones de préstamo/reembolso de fondos del mismo tipo.",
-    "custom_pool_overview": "",
-    "custom_pool_tracker": "",
-    "invoice_inventory": "Manage inventory items and associated prices for invoicing."
+    "custom_pool_overview": "¡Cree sus propios rastreadores de fondos múltiples para fines de monitoreo avanzado de fondos de liquidez!",
+    "custom_pool_tracker": "¡Monitoreo de los datos de seguimiento de su fondo de liquidez personalizado, adaptados a sus preferencias!",
+    "pools": "¡Busque entre todos los fondos de liquidez disponibles los pares comerciales que podrían interesarle!",
+    "create_ticket": "¡Cree un boleto de bloqueo de votación que le otorga la posibilidad de votar en la cadena de bloques sobre asuntos importantes!",
+    "ticket_leaderboard": "¡Supervise fácilmente las cuentas principales con mayor peso de votos para influir en la gobernanza de blockchain!",
+    "create_pool": "Cree un nuevo grupo de liquidez convirtiendo un activo emitido por un usuario existente en un token de activo compartido del grupo.",
+    "invoice_inventory": "Gestionar artículos de inventario y precios asociados para facturación.",
+    "create_invoice": "Cree una factura seleccionando artículos de inventario, estableciendo cantidades y generando una nota identificadora para el pago.",
+    "pay_invoice": "Procese y gestione el pago de los códigos de factura que le envíen los vendedores en la cadena de bloques Bitshares."
   },
   "back": "Regresa",
   "usage": "Diseñado para usar con ",

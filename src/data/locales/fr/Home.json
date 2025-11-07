@@ -283,6 +283,17 @@
     "subtitle": "Gérer les articles et les prix utilisés pour la facturation",
     "hover1": "Créez et gérez les articles en stock et leurs prix pour les factures."
   },
+  "create_invoice": {
+    "title": "🧾 Créer une facture",
+    "subtitle": "Générer des codes de facture pour les clients",
+    "hover1": "Créez une facture en sélectionnant des articles dans l'inventaire, en fournissant les quantités et les détails de la facture."
+  },
+  "pay_invoice": {
+    "title": "💵 Payer la facture",
+    "subtitle": "Payer les factures en utilisant les codes de facture",
+    "hover1": "Payez une facture en saisissant le code de facture fourni par le créateur de la facture.",
+    "hover2": "Payez éventuellement avec différents actifs pour chaque article acheté."
+  },
   "tfund_user": {
     "title": "🚀 Trade de fonds Same-T",
     "subtitle": "Emprunter, échanger, rembourser, simple!",

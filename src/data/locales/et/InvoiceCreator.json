@@ -1,0 +1,91 @@
+{
+  "title": "Arve generaator",
+  "description": "Valige üksused, esitage üksikasjad ja seejärel looge maksjatele kasutamiseks arve kood.",
+  "recipientAccount": {
+    "header": "Saaja konto",
+    "info": "See on konto, millele laekub raha arveid maksvalt kasutajalt."
+  },
+  "recipientName": {
+    "header": "Saaja nimi",
+    "info": "Saate määrata enda jaoks suvalise lihttekstinime, et näidata, kellele makstakse. "
+  },
+  "identifier": {
+    "header": "Identifikaator",
+    "info": "Taotluse tasumisel tuleb identifikaatorit kasutada memo/sõnumina."
+  },
+  "note": {
+    "header": "Märkus",
+    "info": "Sellele maksetaotlusele saate lisada märkuse, see võib olla igasugune lisainfo."
+  },
+  "inventory": {
+    "header": "Varude kaubad",
+    "addItem": "Lisa üksus",
+    "searchPlaceholder": "Otsi laoseisust...",
+    "selectItemDialog": {
+      "title": "Valige üksus",
+      "description": "Valige üksus, mida sellele arvele lisada."
+    },
+    "table": {
+      "name": "Nimi",
+      "inStock": "Laos",
+      "price": "Hind"
+    }
+  },
+  "selectedItems": {
+    "table": {
+      "name": "Nimi",
+      "nameTooltip": "Ostetava kauba nimi.",
+      "quantity": "Ostetav kogus",
+      "quantityTooltip": "Arve saaja poolt ostetud kauba ühikute arv.",
+      "totalPossiblePrices": "Võimalikud hinnad kokku",
+      "totalPricesTooltip": "Arve saaja maksab iga ostetud kauba kohta ainult ühte neist varatüüpidest."
+    },
+    "row": {
+      "quantityTitle": "Ostetav kogus: {{quantity}}",
+      "totalsTitle": "Kokkuvõtted"
+    }
+  },
+  "prices": {
+    "countLabel": "{{count}} hinnad",
+    "possibleTotals": {
+      "dialogTitle": "Võimalikud summad",
+      "dialogDescription": "Tasudes ühe järgmistest varasummadest, on arve maksja selle kauba selle koguse eest arve täielikult tasunud."
+    }
+  },
+  "quantity": {
+    "dialogTitle": "Kogus",
+    "dialogDescription": "kui palju\"{{name}}\" lisada?",
+    "add": "Lisa"
+  },
+  "itemDetails": {
+    "dialogTitle": "Üksuse üksikasjad",
+    "dialogDescription": "Valitud üksuse täielikud omadused."
+  },
+  "emptyInventory": {
+    "title": "Laos pole veel kaupu!",
+    "description": "Enne arve koostamist peate looma laoartiklid!",
+    "button": "Kauba laoseisu"
+  },
+  "generateInvoice": {
+    "button": "Loo arve",
+    "buttonActive": "genereerida arve"
+  },
+  "generatedInvoice": {
+    "dialogTitle": "Loodud arve",
+    "dialogDescription": "Esitage kliendile arve tasumiseks järgmine arve kood.",
+    "copyButton": "Kopeerige arve kood lõikelauale"
+  },
+  "scanner": {
+    "scan": "Skaneeri",
+    "dialogTitle": "Skanni vöötkoodi",
+    "dialogDescription": "Suunake kaamera vastava üksuse lisamiseks vöötkoodile.",
+    "rear": "Tagumine",
+    "front": "Esiosa",
+    "torchOn": "Taskulambi sisse",
+    "torchOff": "Põletik väljas",
+    "close": "Sule",
+    "retry": "Proovi uuesti",
+    "switch": "Lüliti",
+    "itemNotFound": "Üksust ei leitud"
+  }
+}

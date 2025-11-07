@@ -1,0 +1,69 @@
+{
+  "title": "Eine Rechnung bezahlen",
+  "description": "Wählen Sie aus, wie Sie bezahlen möchten, und fahren Sie dann mit der Übermittlung der Zahlung(en) fort.",
+  "recipientAccount": {
+    "header": "Empfängerkonto",
+    "info": "Dies ist das Konto, zu dessen Zahlung Sie in dieser Rechnung aufgefordert werden."
+  },
+  "recipientName": {
+    "header": "Empfängername",
+    "info": "Dies ist ein beliebiger Klartextname für den Rechnungsersteller, der angibt, wer bezahlt wird. "
+  },
+  "identifier": {
+    "header": "Kennung",
+    "info": "Diese Kennung wird als Notiz/Nachricht verwendet, wenn die Rechnung bezahlt wird."
+  },
+  "timeSince": {
+    "header": "Zeit seit Rechnungserstellung",
+    "info": "Zu diesem Zeitpunkt wurde die Rechnung erstellt."
+  },
+  "note": {
+    "header": "Notiz",
+    "info": "Dies ist ein optionaler Hinweis des Rechnungserstellers."
+  },
+  "invoiceItems": {
+    "title": "Rechnungspositionen",
+    "headers": {
+      "items": "Artikel",
+      "description": "Beschreibung",
+      "paymentMethods": "Zahlungsmethoden"
+    },
+    "paymentMethodsLabel": "Zahlungsmethoden",
+    "selectPaymentMethodPlaceholder": "Zahlungsart auswählen",
+    "tooltips": {
+      "quantity": "Menge von „{{name}}„gekauft wird: {{quantity}}",
+      "descriptionOf": "Beschreibung von „{{name}}\"",
+      "selectPayment": "Wählen Sie Ihre Zahlungsmethode aus der Dropdown-Auswahl aus"
+    }
+  },
+  "payButton": "Fahren Sie mit der Bezahlung der Rechnung fort",
+  "dialogHeader": "Rechnung bezahlen",
+  "totals": {
+    "title": "Gesamtzahl der Rechnungszahlungen",
+    "description": "Wie viel geben Sie im Vergleich zu Ihrem verfügbaren Guthaben aus?",
+    "columns": {
+      "total": "Gesamtvermögenswert",
+      "balance": "Betrag des Vermögenssaldos",
+      "sufficient": "Ausreichendes Gleichgewicht"
+    },
+    "tooltips": {
+      "amountRequested": "Das ist die Menge {{asset}} angefordert wird.",
+      "currentBalance": "Dies ist Ihr aktueller Kontostand {{asset}}.",
+      "needMore": "Sie müssen erwerben {{required}} mehr {{asset}} um mit der erfolgreichen Rechnungszahlung fortzufahren!"
+    }
+  },
+  "invalid": {
+    "title": "Ungültige Rechnung",
+    "description": "Der angegebene Rechnungscode ist ungültig. ",
+    "reset": "Rechnungscode zurücksetzen"
+  },
+  "initial": {
+    "title": "Eine Rechnung bezahlen",
+    "description": "Nach Eingabe eines gültigen Rechnungscodes erscheinen Ihre Rechnungsdaten!",
+    "placeholder": "Geben Sie hier den Rechnungscode ein...",
+    "process": "Rechnungscode verarbeiten"
+  },
+  "format": {
+    "recipientField": "{{name}} ({{id}})"
+  }
+}

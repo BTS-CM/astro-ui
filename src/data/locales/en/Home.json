@@ -286,7 +286,13 @@
   "create_invoice": {
     "title": "🧾 Create Invoice",
     "subtitle": "Generate invoice codes for customers",
-    "hover1": "Create an invoice by selecting items, quantities and a memo identifier."
+    "hover1": "Create an invoice by selecting items from the inventory, providing quantities and invoice details."
+  },
+  "pay_invoice": {
+    "title": "💵 Pay Invoice",
+    "subtitle": "Pay invoices using invoice codes",
+    "hover1": "Pay an invoice by entering the invoice code provided by the invoice creator.",
+    "hover2": "Optionally pay with different assets for each item being purchased."
   },
   "tfund_user": {
     "title": "🚀 Same-T Fund Trade",

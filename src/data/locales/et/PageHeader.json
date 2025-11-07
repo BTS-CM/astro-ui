@@ -90,9 +90,15 @@
     "pool_tracker": "Jälgige hõlpsalt ausat likviidsusfondi ja asjakohast huvitavat statistikat!",
     "create_account": "Kasutage allolevat vormi, et luua Bitsharesi plokiahelas uus pilvekonto.",
     "tfund_user": "Kasutage allolevat vormi, et koostada keerulisi Bitsharesi limiitkorralduste kette ja sama fondi laenu-/tagasimaksete toiminguid.",
-    "custom_pool_overview": "",
-    "custom_pool_tracker": "",
-    "invoice_inventory": "Manage inventory items and associated prices for invoicing."
+    "custom_pool_overview": "Täiustatud likviidsuse kogumi jälgimise eesmärgil looge oma mitme basseini jälgijad!",
+    "custom_pool_tracker": "Teie kohandatud likviidsuse kogumi jälgija andmete jälgimine, mis on kohandatud teie eelistustele!",
+    "pools": "Otsige kõigist saadaolevatest likviidsusfondidest kauplemispaare, millest võiksite huvitatud olla!",
+    "create_ticket": "Looge hääleluku pilet, mis annab teile võimaluse hääletada plokiahelas olulistes asjades!",
+    "ticket_leaderboard": "Jälgige hõlpsalt plokiahela juhtimise mõjutamiseks kõige suurema häältekaaluga parimaid kontosid!",
+    "create_pool": "Looge uus likviidsuskogum, teisendades olemasoleva kasutaja väljastatud vara kogumi aktsiavara märgiks.",
+    "invoice_inventory": "Hallake laoartikleid ja nendega seotud hindu arveldamiseks.",
+    "create_invoice": "Koostage arve, valides laoartikleid, määrates kogused ja genereerides maksmiseks tunnusmemo.",
+    "pay_invoice": "Töödelge ja käsitlege Bitsharesi plokiahelas müüjate poolt teile saadetud arvekoodide eest tasumist."
   },
   "back": "Mine tagasi",
   "usage": "Mõeldud kasutamiseks koos ",

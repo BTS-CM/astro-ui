@@ -1,0 +1,91 @@
+{
+  "title": "請求書ジェネレータ",
+  "description": "アイテムを選択し、詳細を入力して、支払者が使用できる請求書コードを生成します。",
+  "recipientAccount": {
+    "header": "受信者のアカウント",
+    "info": "これは、請求書支払いユーザーから資金を受け取るアカウントです。"
+  },
+  "recipientName": {
+    "header": "受信者名",
+    "info": "誰に支払いを受けているかを示すために、任意のプレーンテキスト名を自分で定義できます。 "
+  },
+  "identifier": {
+    "header": "識別子",
+    "info": "この識別子は、リクエストの支払い時にメモ/メッセージとして使用する必要があります。"
+  },
+  "note": {
+    "header": "注記",
+    "info": "この支払いリクエストにはメモを添付できます。これには追加情報を含めることができます。"
+  },
+  "inventory": {
+    "header": "在庫品目",
+    "addItem": "アイテムの追加",
+    "searchPlaceholder": "在庫を検索...",
+    "selectItemDialog": {
+      "title": "項目の選択",
+      "description": "この請求書に追加する項目を選択してください。"
+    },
+    "table": {
+      "name": "名前",
+      "inStock": "在庫あり",
+      "price": "価格"
+    }
+  },
+  "selectedItems": {
+    "table": {
+      "name": "名前",
+      "nameTooltip": "購入される商品の名前。",
+      "quantity": "購入中の数量",
+      "quantityTooltip": "請求書の受取人が購入する商品の単位数。",
+      "totalPossiblePrices": "可能な合計価格",
+      "totalPricesTooltip": "請求書の受取人は、購入した商品ごとにこれらの資産タイプのいずれか 1 つだけを支払います。"
+    },
+    "row": {
+      "quantityTitle": "購入中の数量: {{quantity}}",
+      "totalsTitle": "合計"
+    }
+  },
+  "prices": {
+    "countLabel": "{{count}} 価格",
+    "possibleTotals": {
+      "dialogTitle": "可能な合計数",
+      "dialogDescription": "以下の資産金額のいずれかを支払うことにより、請求書支払者はこの商品のこの数量に対する請求書の全額を支払ったことになります。"
+    }
+  },
+  "quantity": {
+    "dialogTitle": "量",
+    "dialogDescription": "幾つか \"{{name}}「追加しますか？",
+    "add": "追加"
+  },
+  "itemDetails": {
+    "dialogTitle": "アイテム詳細",
+    "dialogDescription": "選択した項目の完全なプロパティ。"
+  },
+  "emptyInventory": {
+    "title": "在庫商品はまだありません!",
+    "description": "請求書を生成する前に、在庫アイテムを作成する必要があります。",
+    "button": "アイテムの在庫"
+  },
+  "generateInvoice": {
+    "button": "請求書の生成",
+    "buttonActive": "請求書の生成"
+  },
+  "generatedInvoice": {
+    "dialogTitle": "生成された請求書",
+    "dialogDescription": "請求書を支払うために次の請求書コードを顧客に提供します。",
+    "copyButton": "請求書コードをクリップボードにコピーします"
+  },
+  "scanner": {
+    "scan": "スキャン",
+    "dialogTitle": "バーコードをスキャンする",
+    "dialogDescription": "カメラをバーコードに向けて、対応する商品を追加します。",
+    "rear": "後方",
+    "front": "フロント",
+    "torchOn": "トーチオン",
+    "torchOff": "トーチオフ",
+    "close": "近い",
+    "retry": "リトライ",
+    "switch": "スイッチ",
+    "itemNotFound": "アイテムが見つかりません"
+  }
+}

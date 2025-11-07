@@ -441,7 +441,7 @@ export default function Proposals(properties) {
                             {t(`Operations:${operationStrings[operation[0]]}`)}
                           </div>
                           <Textarea
-                            className="w-full h-32 mt-2 p-2 border rounded-md mb-5 mt-3"
+                            className="w-full h-32 p-2 border rounded-md mb-5 mt-3"
                             value={JSON.stringify(operation, null, 2)}
                             readOnly={true}
                             rows={15}

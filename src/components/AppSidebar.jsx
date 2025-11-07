@@ -123,6 +123,10 @@ export default function AppSidebar() {
       title: "Home:create_invoice.title",
       href: "/create_invoice/index.html",
     },
+    {
+      title: "Home:pay_invoice.title",
+      href: "/pay_invoice/index.html",
+    },
   ];
 
   const sections = [

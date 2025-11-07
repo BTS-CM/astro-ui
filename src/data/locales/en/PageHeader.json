@@ -96,10 +96,15 @@
     "pool_tracker": "Easily monitor the Honest Liquidity Pool and relevant interesting stats!",
     "create_account": "Use the form below to create a new cloud account on the Bitshares blockchain.",
     "tfund_user": "Use the form below to craft complex chains of Bitshares limit orders and same-t fund borrow/repay operations.",
+    "custom_pool_overview": "Create your own multi-pool trackers for advanced liquidity pool monitoring purposes!",
+    "custom_pool_tracker": "Monitoring your custom liquidity pool tracker data, tailored to your preferences!",
+    "pools": "Search through all the available liquidity pools for trading pairs you might be interested in!",
+    "create_ticket": "Create a vote lock ticket which grants you the ability to vote on the blockchain regarding important matter!",
+    "ticket_leaderboard": "Easily monitor the top accounts with most vote weight for influencing blockchain governance!",
+    "create_pool": "Create a new liquidity pool by converting an existing user issued asset to a pool share asset token.",
+    "invoice_inventory": "Manage inventory items and associated prices for invoicing.",
     "create_invoice": "Create an invoice by selecting inventory items, setting quantities and generating an identifier memo for payment.",
-    "custom_pool_overview": "",
-    "custom_pool_tracker": "",
-    "invoice_inventory": "Manage inventory items and associated prices for invoicing."
+    "pay_invoice": "Process and handle payment for invoice codes sent to you by sellers on the Bitshares blockchain."
   },
   "back": "Go back",
   "usage": "Designed for use with ",

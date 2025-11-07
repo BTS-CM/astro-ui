@@ -90,9 +90,15 @@
     "pool_tracker": "Überwachen Sie ganz einfach den Honest Liquidity Pool und relevante interessante Statistiken!",
     "create_account": "Verwenden Sie das untenstehende Formular, um ein neues Cloud-Konto in der Bitshares-Blockchain zu erstellen.",
     "tfund_user": "Verwenden Sie das unten stehende Formular, um komplexe Ketten von Bitshares-Limitaufträgen und Same-T-Fonds-Ausleih-/Rückzahlungsvorgängen zu erstellen.",
-    "custom_pool_overview": "",
-    "custom_pool_tracker": "",
-    "invoice_inventory": "Manage inventory items and associated prices for invoicing."
+    "custom_pool_overview": "Erstellen Sie Ihre eigenen Multi-Pool-Tracker für erweiterte Liquiditäts-Pool-Überwachungszwecke!",
+    "custom_pool_tracker": "Überwachen Sie Ihre benutzerdefinierten Liquiditätspool-Trackerdaten, zugeschnitten auf Ihre Vorlieben!",
+    "pools": "Durchsuchen Sie alle verfügbaren Liquiditätspools nach Handelspaaren, die Sie interessieren könnten!",
+    "create_ticket": "Erstellen Sie ein Vote-Lock-Ticket, das Ihnen die Möglichkeit gibt, in wichtigen Angelegenheiten über die Blockchain abzustimmen!",
+    "ticket_leaderboard": "Überwachen Sie ganz einfach die Top-Konten mit dem höchsten Stimmengewicht, um Einfluss auf die Blockchain-Governance zu nehmen!",
+    "create_pool": "Erstellen Sie einen neuen Liquiditätspool, indem Sie einen vorhandenen, vom Benutzer ausgegebenen Vermögenswert in einen Pool-Share-Asset-Token umwandeln.",
+    "invoice_inventory": "Verwalten Sie Lagerartikel und zugehörige Preise für die Rechnungsstellung.",
+    "create_invoice": "Erstellen Sie eine Rechnung, indem Sie Lagerartikel auswählen, Mengen festlegen und ein Identifikationsmemo für die Zahlung erstellen.",
+    "pay_invoice": "Verarbeiten und wickeln Sie die Zahlung für Rechnungscodes ab, die Ihnen von Verkäufern auf der Bitshares-Blockchain zugesandt werden."
   },
   "back": "Geh zurück",
   "usage": "Konzipiert für den Einsatz mit ",

@@ -283,6 +283,17 @@
     "subtitle": "Gestionar artículos y precios utilizados para la facturación.",
     "hover1": "Cree y administre artículos de inventario y sus precios para facturas."
   },
+  "create_invoice": {
+    "title": "🧾 Crear factura",
+    "subtitle": "Generar códigos de factura para clientes.",
+    "hover1": "Cree una factura seleccionando artículos del inventario, proporcionando cantidades y detalles de la factura."
+  },
+  "pay_invoice": {
+    "title": "💵 Pagar factura",
+    "subtitle": "Pagar facturas usando códigos de factura",
+    "hover1": "Pague una factura ingresando el código de factura proporcionado por el creador de la factura.",
+    "hover2": "Opcionalmente, pague con diferentes activos por cada artículo que compre."
+  },
   "tfund_user": {
     "title": "🚀 Comercio de fondos del mismo T",
     "subtitle": "¡Toma prestado, comercio, reembolso, simple!",

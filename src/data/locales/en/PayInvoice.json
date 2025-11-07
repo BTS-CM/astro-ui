@@ -1,0 +1,69 @@
+{
+  "title": "Paying an invoice",
+  "description": "Select how you wish to pay then proceed with broadcasting the payment(s).",
+  "recipientAccount": {
+    "header": "Recipient Account",
+    "info": "This is the account which you're being asked to pay in this invoice."
+  },
+  "recipientName": {
+    "header": "Recipient Name",
+    "info": "This is an arbitrary plaintext name for the invoice creator to indicate who is being paid. It is not necessarily a BitShares account name."
+  },
+  "identifier": {
+    "header": "Identifier",
+    "info": "This identifier will be used as the memo/message when the invoice is paid."
+  },
+  "timeSince": {
+    "header": "Time since invoice creation",
+    "info": "This is when the invoice was created."
+  },
+  "note": {
+    "header": "Note",
+    "info": "This is an optional note provided by the invoice creator."
+  },
+  "invoiceItems": {
+    "title": "Invoice items",
+    "headers": {
+      "items": "Items",
+      "description": "Description",
+      "paymentMethods": "Payment methods"
+    },
+    "paymentMethodsLabel": "Payment Methods",
+    "selectPaymentMethodPlaceholder": "Select payment method",
+    "tooltips": {
+      "quantity": "Quantity of \"{{name}}\" being purchased: {{quantity}}",
+      "descriptionOf": "Description of \"{{name}}\"",
+      "selectPayment": "Select your payment method from the dropdown selector"
+    }
+  },
+  "payButton": "Proceed to pay invoice",
+  "dialogHeader": "Paying invoice",
+  "totals": {
+    "title": "Total invoice payments",
+    "description": "How much you're spending compared to your available balances.",
+    "columns": {
+      "total": "Total asset amount",
+      "balance": "Asset balance amount",
+      "sufficient": "Sufficient balance"
+    },
+    "tooltips": {
+      "amountRequested": "This is the amount of {{asset}} being requested.",
+      "currentBalance": "This is your current balance of {{asset}}.",
+      "needMore": "You must acquire {{required}} more {{asset}} to proceed with successful invoice payment!"
+    }
+  },
+  "invalid": {
+    "title": "Invalid Invoice",
+    "description": "The provided invoice code is invalid. Please check the code and try again.",
+    "reset": "Reset Invoice Code"
+  },
+  "initial": {
+    "title": "Paying an invoice",
+    "description": "After providing a valid invoice code, your invoice details will appear!",
+    "placeholder": "Enter invoice code here...",
+    "process": "Process Invoice Code"
+  },
+  "format": {
+    "recipientField": "{{name}} ({{id}})"
+  }
+}

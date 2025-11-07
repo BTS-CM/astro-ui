@@ -89,9 +89,15 @@
     "pool_tracker": "Overvåg nemt den ærlige likviditetspulje og relevante interessante statistikker!",
     "create_account": "Brug formularen nedenfor til at oprette en ny cloud-konto på Bitshares blockchain.",
     "tfund_user": "Brug formularen nedenfor til at lave komplekse kæder af Bitshares limit-ordrer og same-t fund låne-/tilbagebetalingsoperationer.",
-    "custom_pool_overview": "",
-    "custom_pool_tracker": "",
-    "invoice_inventory": "Manage inventory items and associated prices for invoicing."
+    "custom_pool_overview": "Opret dine egne multi-pool trackere til avanceret likviditetspuljeovervågning!",
+    "custom_pool_tracker": "Overvågning af dine brugerdefinerede likviditetspuljesporingsdata, skræddersyet til dine præferencer!",
+    "pools": "Søg gennem alle de tilgængelige likviditetspuljer for handelspar, du måske er interesseret i!",
+    "create_ticket": "Opret en stemmelås-billet, som giver dig mulighed for at stemme på blockchain vedrørende vigtige spørgsmål!",
+    "ticket_leaderboard": "Overvåg nemt de øverste konti med størst stemmevægt for at påvirke blockchain-styring!",
+    "create_pool": "Opret en ny likviditetspulje ved at konvertere et eksisterende brugerudstedt aktiv til et puljeaktieaktivtoken.",
+    "invoice_inventory": "Håndtere lagervarer og tilhørende priser til fakturering.",
+    "create_invoice": "Opret en faktura ved at vælge lagervarer, angive mængder og generere et identifikationsnotat til betaling.",
+    "pay_invoice": "Behandle og håndtere betaling for fakturakoder sendt til dig af sælgere på Bitshares blockchain."
   },
   "back": "Gå tilbage",
   "usage": "Designet til brug med ",

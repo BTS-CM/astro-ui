@@ -90,9 +90,15 @@
     "pool_tracker": "Honest Liquidity Pool と関連する興味深い統計を簡単に監視できます。",
     "create_account": "以下のフォームを使用して、Bitshares ブロックチェーン上に新しいクラウド アカウントを作成します。",
     "tfund_user": "以下のフォームを使用して、Bitshares 指値注文および同じ資金の借入/返済操作の複雑なチェーンを作成します。",
-    "custom_pool_overview": "",
-    "custom_pool_tracker": "",
-    "invoice_inventory": "Manage inventory items and associated prices for invoicing."
+    "custom_pool_overview": "高度な流動性プール監視を目的として、独自のマルチプール トラッカーを作成します。",
+    "custom_pool_tracker": "好みに合わせてカスタム流動性プール トラッカー データを監視します。",
+    "pools": "興味のある取引ペアの利用可能な流動性プールをすべて検索してください。",
+    "create_ticket": "重要事項に関してブロックチェーン上で投票できるようにする投票ロック チケットを作成します。",
+    "ticket_leaderboard": "ブロックチェーンのガバナンスに影響を与える投票の重みが最も高い上位アカウントを簡単に監視できます。",
+    "create_pool": "既存のユーザー発行資産をプール共有資産トークンに変換して、新しい流動性プールを作成します。",
+    "invoice_inventory": "請求書の在庫品目と関連する価格を管理します。",
+    "create_invoice": "在庫品目を選択し、数量を設定し、支払い用の識別メモを生成して請求書を作成します。",
+    "pay_invoice": "Bitshares ブロックチェーン上の販売者から送信された請求書コードの支払いを処理および処理します。"
   },
   "back": "戻る",
   "usage": "で使用するように設計されています ",
