@@ -1,0 +1,69 @@
+{
+  "title": "송장 지불",
+  "description": "결제 방법을 선택한 후 결제 방송을 진행하세요.",
+  "recipientAccount": {
+    "header": "수취인 계정",
+    "info": "이는 귀하가 이 인보이스에서 지불하도록 요청받은 계좌입니다."
+  },
+  "recipientName": {
+    "header": "수신자 이름",
+    "info": "이는 송장 작성자가 지불받는 사람을 나타내는 임의의 일반 텍스트 이름입니다. "
+  },
+  "identifier": {
+    "header": "식별자",
+    "info": "이 식별자는 청구서 결제 시 메모/메시지로 사용됩니다."
+  },
+  "timeSince": {
+    "header": "송장 생성 이후 시간",
+    "info": "송장이 생성된 시점입니다."
+  },
+  "note": {
+    "header": "메모",
+    "info": "이는 송장 작성자가 제공하는 선택적 메모입니다."
+  },
+  "invoiceItems": {
+    "title": "송장 항목",
+    "headers": {
+      "items": "품목",
+      "description": "설명",
+      "paymentMethods": "결제 방법"
+    },
+    "paymentMethodsLabel": "결제 방법",
+    "selectPaymentMethodPlaceholder": "결제 수단 선택",
+    "tooltips": {
+      "quantity": "\"의 수량{{name}}\" 구매 중: {{quantity}}",
+      "descriptionOf": "\"에 대한 설명{{name}}\"",
+      "selectPayment": "드롭다운 선택기에서 결제 방법을 선택하세요."
+    }
+  },
+  "payButton": "청구서 결제를 진행하세요",
+  "dialogHeader": "송장 지불",
+  "totals": {
+    "title": "총 청구서 지불",
+    "description": "사용 가능한 잔액과 비교하여 지출하고 있는 금액입니다.",
+    "columns": {
+      "total": "총자산금액",
+      "balance": "자산잔액",
+      "sufficient": "충분한 균형"
+    },
+    "tooltips": {
+      "amountRequested": "이 금액은 {{asset}} 요청중입니다.",
+      "currentBalance": "현재 잔액은 다음과 같습니다. {{asset}}.",
+      "needMore": "취득해야 합니다. {{required}} 더 {{asset}} 성공적인 청구서 결제를 진행하려면!"
+    }
+  },
+  "invalid": {
+    "title": "잘못된 송장",
+    "description": "제공된 송장 코드가 잘못되었습니다. ",
+    "reset": "송장 코드 재설정"
+  },
+  "initial": {
+    "title": "송장 지불",
+    "description": "유효한 송장 코드를 입력하면 송장 세부정보가 표시됩니다!",
+    "placeholder": "여기에 송장 코드를 입력하세요...",
+    "process": "송장 코드 처리"
+  },
+  "format": {
+    "recipientField": "{{name}} ({{id}})"
+  }
+}

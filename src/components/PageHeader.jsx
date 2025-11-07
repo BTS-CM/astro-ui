@@ -399,6 +399,24 @@ export default function PageHeader(properties) {
     },
   ];
 
+  const invoicingHeading = [
+    {
+      title: "Home:invoice_inventory.title",
+      href: "/invoice_inventory/index.html",
+      description: "Home:invoice_inventory.subtitle",
+    },
+    {
+      title: "Home:create_invoice.title",
+      href: "/create_invoice/index.html",
+      description: "Home:create_invoice.subtitle",
+    },
+    {
+      title: "Home:pay_invoice.title",
+      href: "/pay_invoice/index.html",
+      description: "Home:pay_invoice.subtitle",
+    },
+  ];
+
   return (
     <div key={`header`} className="container mx-auto mb-3 px-3 sm:px-4">
       <div className="grid grid-cols-12">
@@ -721,6 +739,30 @@ export default function PageHeader(properties) {
                 <NavigationMenuContent>
                   <ul className="grid gap-2 sm:w-[400px] md:w-[500px] md:grid-cols-2 lg:w-[600px] p-2">
                     {governanceHeading.map((component) => (
+                      <ListItem
+                        key={t(component.title)}
+                        title={t(component.title)}
+                        href={component.href}
+                      >
+                        {t(component.description)}
+                      </ListItem>
+                    ))}
+                  </ul>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+
+              <NavigationMenuItem>
+                <Badge
+                  variant="secondary"
+                  className="hover:bg-slate-200 hover:text-black"
+                >
+                  <NavigationMenuTrigger>
+                    {t("PageHeader:invoicingHeading")}
+                  </NavigationMenuTrigger>
+                </Badge>
+                <NavigationMenuContent>
+                  <ul className="grid gap-2 sm:w-[400px] md:w-[500px] md:grid-cols-2 lg:w-[600px] p-2">
+                    {invoicingHeading.map((component) => (
                       <ListItem
                         key={t(component.title)}
                         title={t(component.title)}

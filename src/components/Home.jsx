@@ -534,6 +534,34 @@ export default function Home(properties) {
       ],
     },
     {
+      value: "item-9",
+      icon: "🏪",
+      headingKey: "PageHeader:invoicingHeading",
+      cards: [
+        {
+          key: "invoice_inventory",
+          href: "/invoice_inventory/index.html",
+          titleKey: "Home:invoice_inventory.title",
+          subtitleKey: "Home:invoice_inventory.subtitle",
+          hoverKeys: ["Home:invoice_inventory.hover1"],
+        },
+        {
+          key: "create_invoice",
+          href: "/create_invoice/index.html",
+          titleKey: "Home:create_invoice.title",
+          subtitleKey: "Home:create_invoice.subtitle",
+          hoverKeys: ["Home:create_invoice.hover1"],
+        },
+        {
+          key: "pay_invoice",
+          href: "/pay_invoice/index.html",
+          titleKey: "Home:pay_invoice.title",
+          subtitleKey: "Home:pay_invoice.subtitle",
+          hoverKeys: ["Home:pay_invoice.hover1", "Home:pay_invoice.hover2"],
+        },
+      ],
+    },
+    {
       value: "item-7",
       icon: "⚙️",
       headingKey: "PageHeader:settingsHeading",

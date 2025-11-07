@@ -278,6 +278,22 @@
     "hover1": "Opret en gratis konto ved hjælp af en offentlig vandhane.",
     "hover2": "Generer en premium -konto ved hjælp af en eksisterende LTM -konto."
   },
+  "invoice_inventory": {
+    "title": "📦 Fakturabeholdning",
+    "subtitle": "Administrer varer og priser brugt til fakturering",
+    "hover1": "Opret og administrer lagervarer og deres priser for fakturaer."
+  },
+  "create_invoice": {
+    "title": "🧾 Opret faktura",
+    "subtitle": "Generer fakturakoder til kunder",
+    "hover1": "Opret en faktura ved at vælge varer fra beholdningen, angive mængder og fakturaoplysninger."
+  },
+  "pay_invoice": {
+    "title": "💵 Betal faktura",
+    "subtitle": "Betal fakturaer ved hjælp af fakturakoder",
+    "hover1": "Betal en faktura ved at indtaste fakturakoden oplyst af fakturaopretteren.",
+    "hover2": "Betal eventuelt med forskellige aktiver for hver vare, der købes."
+  },
   "tfund_user": {
     "title": "🚀 Samme-T-fondshandel",
     "subtitle": "Lån, handel, tilbagebetaling, enkel!",

@@ -278,6 +278,22 @@
     "hover1": "Crie uma conta gratuita usando uma torneira pública.",
     "hover2": "Gere uma conta premium usando uma conta LTM existente."
   },
+  "invoice_inventory": {
+    "title": "📦 Inventário de fatura",
+    "subtitle": "Gerenciar itens e preços usados ​​para faturamento",
+    "hover1": "Crie e gerencie itens de estoque e seus preços para faturas."
+  },
+  "create_invoice": {
+    "title": "🧾 Criar fatura",
+    "subtitle": "Gerar códigos de fatura para clientes",
+    "hover1": "Crie uma fatura selecionando itens do estoque, fornecendo quantidades e detalhes da fatura."
+  },
+  "pay_invoice": {
+    "title": "💵 Pagar fatura",
+    "subtitle": "Pagar faturas usando códigos de fatura",
+    "hover1": "Pague uma fatura inserindo o código da fatura fornecido pelo criador da fatura.",
+    "hover2": "Opcionalmente, pague com ativos diferentes para cada item adquirido."
+  },
   "tfund_user": {
     "title": "🚀 Comércio de fundos do mesmo T",
     "subtitle": "Pedir emprestado, comércio, reembolso, simples!",

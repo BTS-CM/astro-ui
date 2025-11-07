@@ -1,6 +1,6 @@
 import { persistentMap } from "@nanostores/persistent";
 
-type Asset = {
+export type Asset = {
   symbol: string;
   id: string;
   issuer: string;

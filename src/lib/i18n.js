@@ -75,6 +75,9 @@ const pages = [
   "CreateTicket",
   "TicketsLeaderboard",
   "Favourites",
+  "Inventory",
+  "InvoiceCreator",
+  "PayInvoice",
 ];
 
 const locale = persistentAtom("locale", "en");

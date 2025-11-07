@@ -278,6 +278,22 @@
     "hover1": "Create a free account using a public faucet.",
     "hover2": "Generate a premium account using an existing LTM account."
   },
+  "invoice_inventory": {
+    "title": "📦 Invoice Inventory",
+    "subtitle": "Manage items and prices used for invoicing",
+    "hover1": "Create and manage inventory items and their prices for invoices."
+  },
+  "create_invoice": {
+    "title": "🧾 Create Invoice",
+    "subtitle": "Generate invoice codes for customers",
+    "hover1": "Create an invoice by selecting items from the inventory, providing quantities and invoice details."
+  },
+  "pay_invoice": {
+    "title": "💵 Pay Invoice",
+    "subtitle": "Pay invoices using invoice codes",
+    "hover1": "Pay an invoice by entering the invoice code provided by the invoice creator.",
+    "hover2": "Optionally pay with different assets for each item being purchased."
+  },
   "tfund_user": {
     "title": "🚀 Same-T Fund Trade",
     "subtitle": "Borrow, trade, repay, simple!",

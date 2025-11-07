@@ -278,6 +278,22 @@
     "hover1": "Looge tasuta konto, kasutades avalikku kraani.",
     "hover2": "Genereerige olemasoleva LTM -konto abil esmaklassiline konto."
   },
+  "invoice_inventory": {
+    "title": "📦 Arvete laoseisu",
+    "subtitle": "Hallake arveldamisel kasutatud esemeid ja hindu",
+    "hover1": "Looge ja hallake laoartikleid ja nende hindu arvete jaoks."
+  },
+  "create_invoice": {
+    "title": "🧾 Loo arve",
+    "subtitle": "Looge klientidele arvekoode",
+    "hover1": "Koostage arve, valides kaubad laost, esitades kogused ja arve üksikasjad."
+  },
+  "pay_invoice": {
+    "title": "💵 Makske arve",
+    "subtitle": "Tasuge arveid kasutades arvekoode",
+    "hover1": "Tasuge arve sisestades arve koostaja antud arve koodi.",
+    "hover2": "Soovi korral makske iga ostetava kauba eest erinevate varadega."
+  },
   "tfund_user": {
     "title": "🚀 SAMA-T Fondi kaubandus",
     "subtitle": "Laenake, kaubelda, tagasi maksta, lihtne!",

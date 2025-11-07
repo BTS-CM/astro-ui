@@ -1,0 +1,69 @@
+{
+  "title": "Pagando uma fatura",
+  "description": "Selecione como deseja pagar e prossiga com a transmissão do(s) pagamento(s).",
+  "recipientAccount": {
+    "header": "Conta do destinatário",
+    "info": "Esta é a conta que você deverá pagar nesta fatura."
+  },
+  "recipientName": {
+    "header": "Nome do destinatário",
+    "info": "Este é um nome de texto simples arbitrário para o criador da fatura indicar quem está sendo pago. "
+  },
+  "identifier": {
+    "header": "Identificador",
+    "info": "Este identificador será utilizado como memorando/mensagem quando a fatura for paga."
+  },
+  "timeSince": {
+    "header": "Tempo desde a criação da fatura",
+    "info": "Foi quando a fatura foi criada."
+  },
+  "note": {
+    "header": "Observação",
+    "info": "Esta é uma nota opcional fornecida pelo criador da fatura."
+  },
+  "invoiceItems": {
+    "title": "Itens de fatura",
+    "headers": {
+      "items": "Unid",
+      "description": "Descrição",
+      "paymentMethods": "Métodos de pagamento"
+    },
+    "paymentMethodsLabel": "Métodos de pagamento",
+    "selectPaymentMethodPlaceholder": "Selecione a forma de pagamento",
+    "tooltips": {
+      "quantity": "Quantidade de \"{{name}}\" sendo comprado: {{quantity}}",
+      "descriptionOf": "Descrição de \"{{name}}\"",
+      "selectPayment": "Selecione sua forma de pagamento no seletor suspenso"
+    }
+  },
+  "payButton": "Proceder ao pagamento da fatura",
+  "dialogHeader": "Pagando fatura",
+  "totals": {
+    "title": "Total de pagamentos de faturas",
+    "description": "Quanto você está gastando em comparação com seus saldos disponíveis.",
+    "columns": {
+      "total": "Valor total do ativo",
+      "balance": "Valor do saldo do ativo",
+      "sufficient": "Equilíbrio suficiente"
+    },
+    "tooltips": {
+      "amountRequested": "Esta é a quantidade {{asset}} sendo solicitado.",
+      "currentBalance": "Este é o seu saldo atual de {{asset}}.",
+      "needMore": "Você deve adquirir {{required}} mais {{asset}} para prosseguir com o pagamento da fatura com sucesso!"
+    }
+  },
+  "invalid": {
+    "title": "Fatura inválida",
+    "description": "O código da fatura fornecido é inválido. ",
+    "reset": "Redefinir código da fatura"
+  },
+  "initial": {
+    "title": "Pagando uma fatura",
+    "description": "Depois de fornecer um código de fatura válido, os detalhes da sua fatura aparecerão!",
+    "placeholder": "Insira o código da fatura aqui...",
+    "process": "Código de fatura de processo"
+  },
+  "format": {
+    "recipientField": "{{name}} ({{id}})"
+  }
+}

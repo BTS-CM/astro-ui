@@ -1,0 +1,69 @@
+{
+  "title": "Pagamento di una fattura",
+  "description": "Seleziona la modalità di pagamento, quindi procedi con la trasmissione del/i pagamento/i.",
+  "recipientAccount": {
+    "header": "Conto del destinatario",
+    "info": "Questo è l'account che ti viene chiesto di pagare in questa fattura."
+  },
+  "recipientName": {
+    "header": "Nome del destinatario",
+    "info": "Si tratta di un nome in chiaro arbitrario utilizzato dall'autore della fattura per indicare chi viene pagato. "
+  },
+  "identifier": {
+    "header": "Identificatore",
+    "info": "Questo identificatore verrà utilizzato come promemoria/messaggio al momento del pagamento della fattura."
+  },
+  "timeSince": {
+    "header": "Tempo trascorso dalla creazione della fattura",
+    "info": "Questo è il momento in cui è stata creata la fattura."
+  },
+  "note": {
+    "header": "Nota",
+    "info": "Questa è una nota facoltativa fornita dall'autore della fattura."
+  },
+  "invoiceItems": {
+    "title": "Elementi della fattura",
+    "headers": {
+      "items": "Elementi",
+      "description": "Descrizione",
+      "paymentMethods": "Metodi di pagamento"
+    },
+    "paymentMethodsLabel": "Metodi di pagamento",
+    "selectPaymentMethodPlaceholder": "Seleziona il metodo di pagamento",
+    "tooltips": {
+      "quantity": "Quantità di \"{{name}}\" in fase di acquisto: {{quantity}}",
+      "descriptionOf": "Descrizione di \"{{name}}\"",
+      "selectPayment": "Seleziona il tuo metodo di pagamento dal selettore a discesa"
+    }
+  },
+  "payButton": "Procedere al pagamento della fattura",
+  "dialogHeader": "Pagamento fattura",
+  "totals": {
+    "title": "Pagamenti totali delle fatture",
+    "description": "Quanto stai spendendo rispetto ai saldi disponibili.",
+    "columns": {
+      "total": "Importo totale del bene",
+      "balance": "Importo del saldo patrimoniale",
+      "sufficient": "Equilibrio sufficiente"
+    },
+    "tooltips": {
+      "amountRequested": "Questo è l'importo di {{asset}} essere richiesto.",
+      "currentBalance": "Questo è il tuo saldo attuale di {{asset}}.",
+      "needMore": "Devi acquisire {{required}} Di più {{asset}} per procedere con successo al pagamento della fattura!"
+    }
+  },
+  "invalid": {
+    "title": "Fattura non valida",
+    "description": "Il codice fattura fornito non è valido. ",
+    "reset": "Reimposta codice fattura"
+  },
+  "initial": {
+    "title": "Pagamento di una fattura",
+    "description": "Dopo aver fornito un codice fattura valido, verranno visualizzati i dettagli della fattura!",
+    "placeholder": "Inserisci qui il codice fattura...",
+    "process": "Elaborare il codice fattura"
+  },
+  "format": {
+    "recipientField": "{{name}} ({{id}})"
+  }
+}

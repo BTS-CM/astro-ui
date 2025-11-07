@@ -278,6 +278,22 @@
     "hover1": "Erstellen Sie ein kostenloses Konto mit einem öffentlichen Wasserhahn.",
     "hover2": "Generieren Sie ein Premium -Konto mit einem vorhandenen LTM -Konto."
   },
+  "invoice_inventory": {
+    "title": "📦 Rechnungsbestand",
+    "subtitle": "Verwalten Sie Artikel und Preise, die für die Rechnungsstellung verwendet werden",
+    "hover1": "Erstellen und verwalten Sie Lagerartikel und deren Preise für Rechnungen."
+  },
+  "create_invoice": {
+    "title": "🧾 Rechnung erstellen",
+    "subtitle": "Generieren Sie Rechnungscodes für Kunden",
+    "hover1": "Erstellen Sie eine Rechnung, indem Sie Artikel aus dem Lagerbestand auswählen und Mengen und Rechnungsdetails angeben."
+  },
+  "pay_invoice": {
+    "title": "💵 Rechnung bezahlen",
+    "subtitle": "Bezahlen Sie Rechnungen mit Rechnungscodes",
+    "hover1": "Bezahlen Sie eine Rechnung, indem Sie den vom Rechnungsersteller bereitgestellten Rechnungscode eingeben.",
+    "hover2": "Bezahlen Sie optional für jeden gekauften Artikel mit unterschiedlichen Vermögenswerten."
+  },
   "tfund_user": {
     "title": "🚀 Handel mit gleichem T-Fonds",
     "subtitle": "Leihen, handeln, zurückzahlen, einfach!",

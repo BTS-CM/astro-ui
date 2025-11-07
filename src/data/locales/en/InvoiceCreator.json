@@ -1,0 +1,91 @@
+{
+  "title": "Invoice generator",
+  "description": "Select items, provide details then generate an invoice code for payers to use.",
+  "recipientAccount": {
+    "header": "Recipient Account",
+    "info": "This is the account which will receieve funds from the invoice paying user."
+  },
+  "recipientName": {
+    "header": "Recipient Name",
+    "info": "You can define an arbitrary plaintext name for yourself to indicate who is being paid. Must not be a BitShares account name."
+  },
+  "identifier": {
+    "header": "Identifier",
+    "info": "The identifier needs to be used as the memo/message when the request is paid."
+  },
+  "note": {
+    "header": "Note",
+    "info": "You can attach a note to this payment request, this can be any additional information."
+  },
+  "inventory": {
+    "header": "Inventory items",
+    "addItem": "Add item",
+    "searchPlaceholder": "Search inventory...",
+    "selectItemDialog": {
+      "title": "Select Item",
+      "description": "Choose an item to add to this invoice."
+    },
+    "table": {
+      "name": "Name",
+      "inStock": "In Stock",
+      "price": "Price"
+    }
+  },
+  "selectedItems": {
+    "table": {
+      "name": "Name",
+      "nameTooltip": "The name of the item being bought.",
+      "quantity": "Quantity being bought",
+      "quantityTooltip": "Number of units of the item being bought by the invoice payee.",
+      "totalPossiblePrices": "Total possible prices",
+      "totalPricesTooltip": "The invoice payee will only pay one of these asset types per item purchased."
+    },
+    "row": {
+      "quantityTitle": "Quantity being purchased: {{quantity}}",
+      "totalsTitle": "Totals"
+    }
+  },
+  "prices": {
+    "countLabel": "{{count}} prices",
+    "possibleTotals": {
+      "dialogTitle": "Possible Totals",
+      "dialogDescription": "By paying one of the following asset amounts the invoice payer will have paid the invoice in full for this quantity of this item."
+    }
+  },
+  "quantity": {
+    "dialogTitle": "Quantity",
+    "dialogDescription": "How many \"{{name}}\" to add?",
+    "add": "Add"
+  },
+  "itemDetails": {
+    "dialogTitle": "Item Details",
+    "dialogDescription": "Full properties for the selected item."
+  },
+  "emptyInventory": {
+    "title": "No items in inventory yet!",
+    "description": "You need to create inventory items before an invoice can be generated!",
+    "button": "Item Inventory"
+  },
+  "generateInvoice": {
+    "button": "Generate invoice",
+    "buttonActive": "generate invoice"
+  },
+  "generatedInvoice": {
+    "dialogTitle": "Generated Invoice",
+    "dialogDescription": "Provide the customer the following invoice code to pay the invoice.",
+    "copyButton": "Copy invoice code to clipboard"
+  },
+  "scanner": {
+    "scan": "Scan",
+    "dialogTitle": "Scan barcode",
+    "dialogDescription": "Point your camera at a barcode to add the corresponding item.",
+    "rear": "Rear",
+    "front": "Front",
+    "torchOn": "Torch On",
+    "torchOff": "Torch Off",
+    "close": "Close",
+    "retry": "Retry",
+    "switch": "Switch",
+    "itemNotFound": "Item not found"
+  }
+}

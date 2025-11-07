@@ -1,0 +1,69 @@
+{
+  "title": "請求書の支払い",
+  "description": "支払い方法を選択し、支払いのブロードキャストに進みます。",
+  "recipientAccount": {
+    "header": "受信者のアカウント",
+    "info": "これは、この請求書で支払うように求められているアカウントです。"
+  },
+  "recipientName": {
+    "header": "受信者名",
+    "info": "これは、請求書の作成者が誰に支払われるかを示すための任意の平文名です。"
+  },
+  "identifier": {
+    "header": "識別子",
+    "info": "この識別子は、請求書の支払い時にメモ/メッセージとして使用されます。"
+  },
+  "timeSince": {
+    "header": "請求書作成からの経過時間",
+    "info": "請求書が作成されたときです。"
+  },
+  "note": {
+    "header": "注記",
+    "info": "これは請求書の作成者によって提供されるオプションのメモです。"
+  },
+  "invoiceItems": {
+    "title": "請求書項目",
+    "headers": {
+      "items": "アイテム",
+      "description": "説明",
+      "paymentMethods": "支払い方法"
+    },
+    "paymentMethodsLabel": "支払い方法",
+    "selectPaymentMethodPlaceholder": "支払い方法を選択してください",
+    "tooltips": {
+      "quantity": "「」の数量{{name}}「購入中: {{quantity}}",
+      "descriptionOf": "「」の説明{{name}}」",
+      "selectPayment": "ドロップダウンセレクターからお支払い方法を選択してください"
+    }
+  },
+  "payButton": "請求書の支払いに進む",
+  "dialogHeader": "請求書の支払い",
+  "totals": {
+    "title": "請求書の支払い総額",
+    "description": "利用可能な残高と比較してどれだけ使っているか。",
+    "columns": {
+      "total": "総資産額",
+      "balance": "資産残高額",
+      "sufficient": "十分なバランス"
+    },
+    "tooltips": {
+      "amountRequested": "この量です {{asset}} 求められている。",
+      "currentBalance": "これが現在の残高です {{asset}}。",
+      "needMore": "取得する必要があります {{required}} もっと {{asset}} 請求書の支払いを正常に続行するには、"
+    }
+  },
+  "invalid": {
+    "title": "無効な請求書",
+    "description": "指定された請求書コードは無効です。",
+    "reset": "請求書コードをリセット"
+  },
+  "initial": {
+    "title": "請求書の支払い",
+    "description": "有効な請求書コードを入力すると、請求書の詳細が表示されます。",
+    "placeholder": "ここに請求書コードを入力してください...",
+    "process": "請求書コードの処理"
+  },
+  "format": {
+    "recipientField": "{{name}} ({{id}})"
+  }
+}
