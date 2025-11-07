@@ -337,6 +337,189 @@ export default function Inventory(properties) {
     );
   };
 
+  const SmallRow = ({ index, style }) => {
+    const it = items[index];
+    if (!it) return null;
+    const [confirmOpen, setConfirmOpen] = useState(false);
+
+    let _name = it.name ?? "";
+    if (_name.length > 30) {
+      _name = _name.slice(0, 30) + "...";
+    }
+
+    let _description = it.description ?? "";
+    if (_description.length > 30) {
+      _description = _description.slice(0, 30) + "...";
+    }
+
+    let _category = it.category ?? "";
+    if (_category.length > 30) {
+      _category = _category.slice(0, 30) + "...";
+    }
+
+    let _location = it.location ?? "";
+    if (_location.length > 30) {
+      _location = _location.slice(0, 30) + "...";
+    }
+
+    let _supplier = it.supplier ?? "";
+    if (_supplier.length > 30) {
+      _supplier = _supplier.slice(0, 30) + "...";
+    }
+
+    return (
+      <div style={style} key={it.id ?? it.barcode} className="px-2">
+        <Dialog>
+          <DialogTrigger asChild>
+            <Card variant="outline" className="min-h-[50px] hover:bg-gray-400">
+              <div className="grid grid-cols-3 text-center text-sm">
+                <div className="mt-3" title={it.name}>
+                  {_name}
+                </div>
+                <div className="mt-3" title={it.description}>
+                  {_description}
+                </div>
+                <div className="mt-3" title={it.quantity}>
+                  {it.quantity ?? 0}
+                </div>
+              </div>
+            </Card>
+          </DialogTrigger>
+          <DialogContent className="bg-white">
+            <div className="grid grid-cols-1 gap-2">
+              <div>
+                {t("Inventory:headerName")}: {_name}
+              </div>
+              <div>
+                {t("Inventory:headerDescription")}: {_description}
+              </div>
+              <div>
+                {t("Inventory:headerCategory")}: {_category}
+              </div>
+              <div>
+                {t("Inventory:headerQuantity")}: {it.quantity ?? 0}
+              </div>
+              <div>
+                {t("Inventory:headerReorderAt")}: {it.reorderLevel ?? 0}
+              </div>
+              <div>
+                {t("Inventory:headerLocation")}: {_location}
+              </div>
+              <div>
+                {t("Inventory:headerSupplier")}: {_supplier}
+              </div>
+              <div>
+                {t("Inventory:headerUnitPrice")}: {it.unitPrice ?? ""}
+              </div>
+              <div>
+                {t("Inventory:headerUnits")}: {it.unit ?? ""}
+              </div>
+              <div>
+                {t("Inventory:headerPrices")}:{" "}
+                <Dialog>
+                  <DialogTrigger>
+                    <Button
+                      variant="outline"
+                      className="hover:bg-slate-200 mt-1"
+                    >
+                      {`${it.prices.length} ${t("Inventory:prices")}`}
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="bg-white">
+                    <DialogHeader>
+                      <DialogTitle>
+                        {t("Inventory:pricesFor", { name: it.name })}
+                      </DialogTitle>
+                    </DialogHeader>
+                    <div>
+                      {it.prices && it.prices.length
+                        ? it.prices.map((p, i) => (
+                            <Badge className="m-2" key={`price-${i}`}>
+                              {`${p.price} ${p.asset}`}
+                            </Badge>
+                          ))
+                        : null}
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              </div>
+              <div>
+                <Button
+                  title={t("LimitOrderCard:editLabel")}
+                  className="mt-1 mr-2"
+                  variant="outline"
+                  size="icon"
+                  onClick={() => {
+                    // open dialog in edit mode
+                    setEditingItemId(it.id ?? null);
+                    setFormBarcode(it.barcode ?? "");
+                    setFormName(it.name ?? "");
+                    setFormPrices(it.prices ? [...it.prices] : []);
+                    setValue(it.category ?? "");
+                    setFormDescription(it.description ?? "");
+                    setFormQuantity(
+                      it.quantity !== undefined ? String(it.quantity) : ""
+                    );
+                    setFormLocation(it.location ?? "");
+                    setFormUnitPrice(it.unitPrice ?? "");
+                    setFormReorderLevel(
+                      it.reorderLevel !== undefined
+                        ? String(it.reorderLevel)
+                        : ""
+                    );
+                    setFormSupplier(it.supplier ?? "");
+                    setFormUnit(it.unit ?? "");
+                    setDialogOpen(true);
+                  }}
+                >
+                  🔧
+                </Button>
+                <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+                  <AlertDialogTrigger asChild>
+                    <Button
+                      title={t("CustomPoolOverview:delete")}
+                      className="mt-1"
+                      variant="outline"
+                      size="icon"
+                      onClick={() => setConfirmOpen(true)}
+                    >
+                      ❌
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent className="bg-white">
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>
+                        {t("Inventory:deleteItemTitle")}
+                      </AlertDialogTitle>
+                      <AlertDialogDescription>
+                        {t("Inventory:deleteItemDesc", { name: it.name })}
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>
+                        {t("Inventory:cancel")}
+                      </AlertDialogCancel>
+                      <AlertDialogAction
+                        onClick={() => {
+                          if (it.id) {
+                            removeItemById(it.id);
+                          }
+                          setConfirmOpen(false);
+                        }}
+                      >
+                        {t("Inventory:delete")}
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      </div>
+    );
+  };
+
   const allPriceRowAssets = useMemo(() => {
     const assetsSet = new Set();
     for (const row of formPrices) {
@@ -989,25 +1172,49 @@ export default function Inventory(properties) {
                   </div>
                 ) : (
                   <div className="border rounded border-gray-300 p-2">
-                    <div className="grid grid-cols-11 text-center">
+                    <div className="grid grid-cols-3 lg:grid-cols-11 text-center">
                       <div>{t("Inventory:headerName")}</div>
                       <div>{t("Inventory:headerDescription")}</div>
-                      <div>{t("Inventory:headerCategory")}</div>
+                      <div className="hidden lg:block">
+                        {t("Inventory:headerCategory")}
+                      </div>
                       <div>{t("Inventory:headerQuantity")}</div>
-                      <div>{t("Inventory:headerReorderAt")}</div>
-                      <div>{t("Inventory:headerLocation")}</div>
-                      <div>{t("Inventory:headerSupplier")}</div>
-                      <div>{t("Inventory:headerUnitPrice")}</div>
-                      <div>{t("Inventory:headerUnits")}</div>
-                      <div>{t("Inventory:headerPrices")}</div>
+                      <div className="hidden lg:block">
+                        {t("Inventory:headerReorderAt")}
+                      </div>
+                      <div className="hidden lg:block">
+                        {t("Inventory:headerLocation")}
+                      </div>
+                      <div className="hidden lg:block">
+                        {t("Inventory:headerSupplier")}
+                      </div>
+                      <div className="hidden lg:block">
+                        {t("Inventory:headerUnitPrice")}
+                      </div>
+                      <div className="hidden lg:block">
+                        {t("Inventory:headerUnits")}
+                      </div>
+                      <div className="hidden lg:block">
+                        {t("Inventory:headerPrices")}
+                      </div>
                     </div>
                     <div className="w-full max-h-[500px] min-h-[500px] overflow-auto">
-                      <List
-                        rowComponent={Row}
-                        rowCount={items.length}
-                        rowHeight={60}
-                        rowProps={{}}
-                      />
+                      <div className="hidden lg:block">
+                        <List
+                          rowComponent={Row}
+                          rowCount={items.length}
+                          rowHeight={60}
+                          rowProps={{}}
+                        />
+                      </div>
+                      <div className="block lg:hidden">
+                        <List
+                          rowComponent={SmallRow}
+                          rowCount={items.length}
+                          rowHeight={60}
+                          rowProps={{}}
+                        />
+                      </div>
                     </div>
                   </div>
                 )}
