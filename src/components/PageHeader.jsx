@@ -405,6 +405,11 @@ export default function PageHeader(properties) {
       href: "/invoice_inventory/index.html",
       description: "Home:invoice_inventory.subtitle",
     },
+    {
+      title: "Home:create_invoice.title",
+      href: "/create_invoice/index.html",
+      description: "Home:create_invoice.subtitle",
+    },
   ];
 
   return (

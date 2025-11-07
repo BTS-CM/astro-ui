@@ -80,7 +80,7 @@ import { Input } from "@/components/ui/input";
 import BarcodeScanner from "react-qr-barcode-scanner";
 import AssetDropDown from "@/components/Market/AssetDropDownCard.jsx";
 
-export default function LTM(properties) {
+export default function Inventory(properties) {
   const { t, i18n } = useTranslation(locale.get(), { i18n: i18nInstance });
   const usr = useSyncExternalStore(
     $currentUser.subscribe,

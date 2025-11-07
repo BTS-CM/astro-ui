@@ -96,6 +96,7 @@
     "pool_tracker": "Easily monitor the Honest Liquidity Pool and relevant interesting stats!",
     "create_account": "Use the form below to create a new cloud account on the Bitshares blockchain.",
     "tfund_user": "Use the form below to craft complex chains of Bitshares limit orders and same-t fund borrow/repay operations.",
+    "create_invoice": "Create an invoice by selecting inventory items, setting quantities and generating an identifier memo for payment.",
     "custom_pool_overview": "",
     "custom_pool_tracker": "",
     "invoice_inventory": "Manage inventory items and associated prices for invoicing."

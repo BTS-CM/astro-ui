@@ -545,6 +545,13 @@ export default function Home(properties) {
           subtitleKey: "Home:invoice_inventory.subtitle",
           hoverKeys: ["Home:invoice_inventory.hover1"],
         },
+        {
+          key: "create_invoice",
+          href: "/create_invoice/index.html",
+          titleKey: "Home:create_invoice.title",
+          subtitleKey: "Home:create_invoice.subtitle",
+          hoverKeys: ["Home:create_invoice.hover1"],
+        },
       ],
     },
     {

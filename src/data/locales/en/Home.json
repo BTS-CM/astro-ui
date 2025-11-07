@@ -283,6 +283,11 @@
     "subtitle": "Manage items and prices used for invoicing",
     "hover1": "Create and manage inventory items and their prices for invoices."
   },
+  "create_invoice": {
+    "title": "🧾 Create Invoice",
+    "subtitle": "Generate invoice codes for customers",
+    "hover1": "Create an invoice by selecting items, quantities and a memo identifier."
+  },
   "tfund_user": {
     "title": "🚀 Same-T Fund Trade",
     "subtitle": "Borrow, trade, repay, simple!",

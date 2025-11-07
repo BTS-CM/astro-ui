@@ -119,6 +119,10 @@ export default function AppSidebar() {
       title: "Home:invoice_inventory.title",
       href: "/invoice_inventory/index.html",
     },
+    {
+      title: "Home:create_invoice.title",
+      href: "/create_invoice/index.html",
+    },
   ];
 
   const sections = [
