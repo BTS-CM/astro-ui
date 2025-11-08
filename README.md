@@ -1,8 +1,17 @@
+<img width="1674" height="1051" alt="image" src="https://github.com/user-attachments/assets/73251441-59b1-4c80-bdd2-c2eaa3da2513" />
+
 # Bitshares astro UI
 
-Created using [Astro](https://docs.astro.build), [React](https://react.dev/) & [Electron](https://www.electronjs.org).
+Created using [Astro](https://docs.astro.build), [React](https://react.dev/), [Shadcn/ui](https://ui.shadcn.com/docs) & [Electron](https://www.electronjs.org).
 
 Integrates with both the [Beet](https://github.com/bitshares/beet) and [BeetEOS](https://github.com/beetapp/beeteos) multiwallets, for the Bitshares and Bitshares Testnet blockchains.
+
+## Download the Astro UI!
+
+Check out the latest releases:
+https://github.com/BTS-CM/astro-ui/releases
+
+Supports Windows, Linux and Mac OSX.
 
 ## Functionality
 
@@ -46,10 +55,8 @@ Integrates with both the [Beet](https://github.com/bitshares/beet) and [BeetEOS]
 - View ticket leaderboards
 - Create/Update vote lock tickets
 - Perform override transfers
-
-## Screenshot
-
-<img width="1568" height="1047" alt="image" src="https://github.com/user-attachments/assets/6e7d4a29-3b48-47aa-bf55-9e381d93bc7d" />
+- Create invoices, pay invoices, manage invoice inventory
+- Create liquidity pools
 
 ## Dev Commands
 
@@ -64,10 +71,3 @@ All commands are run from the root of the project, from a terminal:
 | `npm run start`                        | Runs the electron app in dev mode.               |
 | `npm run build:astro \| npm run start` | Builds then runs the electorn app in dev mode.   |
 | `npm run dist:windows-latest`          | Builds the windows application.                  |
-
-## Download the Astro UI!
-
-Check out the latest releases:
-https://github.com/BTS-CM/astro-ui/releases
-
-Supports Windows, Linux and Mac OSX.
