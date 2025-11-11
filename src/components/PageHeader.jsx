@@ -345,6 +345,11 @@ export default function PageHeader(properties) {
 
   const governanceHeading = [
     {
+      title: "Home:vote.title",
+      href: "/vote/index.html",
+      description: "Home:vote.subtitle",
+    },
+    {
       title: "Home:witnesses.title",
       href: "/witnesses/index.html",
       description: "Home:witnesses.subtitle",

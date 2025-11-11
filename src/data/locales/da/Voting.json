@@ -1,0 +1,18 @@
+{
+  "title": "Arbejderforslag",
+  "description": "Afstemning om arbejderforslag for at godtgøre udviklere for foreslåede opgaver og for at beslutte strategiske resultater gennem politisk afstemning.",
+  "tabs": {
+    "witnesses": "Vidner",
+    "committee": "Udvalgsmedlemmer",
+    "workers": "Arbejderforslag"
+  },
+  "toggleVote": "Skift afstemning",
+  "workers": {
+    "active": "Aktiv",
+    "needed": "Tiltrængt",
+    "duration": "Varighed",
+    "dailyPay": "Daglig løn ({{symbol}})"
+  },
+  "submit": "Indsend",
+  "headerText": "Opdatering af stemmeoversigt for arbejdere, udvalgsmedlemmer og arbejderforslag!"
+}

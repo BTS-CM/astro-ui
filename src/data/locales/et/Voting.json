@@ -1,0 +1,18 @@
+{
+  "title": "Tööliste ettepanekud",
+  "description": "Hääletage töötajate ettepanekuid hüvitada arendajatele pakutud ülesannete eest ja otsustada strateegiliste tulemuste üle poliitilise küsitluse kaudu.",
+  "tabs": {
+    "witnesses": "Tunnistajad",
+    "committee": "komisjoni liikmed",
+    "workers": "Tööliste ettepanekud"
+  },
+  "toggleVote": "Lülitage hääletus sisse",
+  "workers": {
+    "active": "Aktiivne",
+    "needed": "Vajalik",
+    "duration": "Kestus",
+    "dailyPay": "Päevatasu ({{symbol}})"
+  },
+  "submit": "Esita",
+  "headerText": "Töötajate, komisjoniliikmete ja töötajate ettepanekute hääletuslehte uuendatakse!"
+}

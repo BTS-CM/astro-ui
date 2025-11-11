@@ -1,0 +1,18 @@
+{
+  "title": "Vorschläge für Arbeitnehmer",
+  "description": "Stimmen Sie über Arbeitnehmervorschläge ab, um Entwicklern die vorgeschlagenen Aufgaben zu erstatten und strategische Ergebnisse durch politische Umfragen festzulegen.",
+  "tabs": {
+    "witnesses": "Zeugen",
+    "committee": "Ausschussmitglieder",
+    "workers": "Vorschläge für Arbeitnehmer"
+  },
+  "toggleVote": "Abstimmung umschalten",
+  "workers": {
+    "active": "Aktiv",
+    "needed": "Benötigt",
+    "duration": "Dauer",
+    "dailyPay": "Tägliches Gehalt ({{symbol}})"
+  },
+  "submit": "Einreichen",
+  "headerText": "Aktualisierung der Abstimmungsliste für Arbeitnehmer, Ausschussmitglieder und Arbeitnehmervorschläge!"
+}

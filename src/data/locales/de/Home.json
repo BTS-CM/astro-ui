@@ -1,4 +1,11 @@
 {
+  "vote": {
+    "title": "🗳️ Abstimmung",
+    "subtitle": "Stimmen Sie für Zeugen, Ausschussmitglieder und Arbeitnehmervorschläge",
+    "hover1": "Stimmen Sie für Zeugen, die Blöcke auf der Blockchain produzieren.",
+    "hover2": "Stimmen Sie für Ausschussmitglieder, die die Blockchain regieren.",
+    "hover3": "Stimmen Sie für Vorschläge der Arbeitnehmer zur Finanzierung von Ideen zur Blockchain."
+  },
   "barter": {
     "title": "🛒 Tauschhandel",
     "subtitle": "Handeln Sie Vermögenswerte mit anderen Benutzern",

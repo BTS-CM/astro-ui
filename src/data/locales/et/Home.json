@@ -1,4 +1,11 @@
 {
+  "vote": {
+    "title": "🗳️ Hääletamine",
+    "subtitle": "Hääletage tunnistajate, komisjoni liikmete ja töötajate ettepanekute poolt",
+    "hover1": "Hääletage tunnistajate poolt, kes toodavad plokiahelas plokke.",
+    "hover2": "Hääletage plokiahelat juhtivate komisjoni liikmete poolt.",
+    "hover3": "Hääletage töötajate ettepanekute poolt plokiahela ideede rahastamiseks."
+  },
   "barter": {
     "title": "🛒 barter",
     "subtitle": "Kaubavahetus teiste kasutajatega",

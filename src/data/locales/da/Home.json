@@ -1,4 +1,11 @@
 {
+  "vote": {
+    "title": "🗳️ Afstemning",
+    "subtitle": "Stem på vidner, udvalgsmedlemmer og arbejderforslag",
+    "hover1": "Stem på vidner, der producerer blokke på blockchain.",
+    "hover2": "Stem på udvalgsmedlemmer, der styrer blockchain.",
+    "hover3": "Stem på arbejderforslag til finansiering af ideer på blockchain."
+  },
   "barter": {
     "title": "🛒 Barter",
     "subtitle": "Handelsaktiver med andre brugere",

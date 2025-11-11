@@ -1,0 +1,18 @@
+{
+  "title": "Propositions des travailleurs",
+  "description": "Votez sur les propositions des travailleurs pour rembourser les développeurs pour les tâches proposées et pour décider des résultats stratégiques par le biais de sondages politiques.",
+  "tabs": {
+    "witnesses": "Témoins",
+    "committee": "Membres du comité",
+    "workers": "Propositions des travailleurs"
+  },
+  "toggleVote": "Basculer le vote",
+  "workers": {
+    "active": "Actif",
+    "needed": "Nécessaire",
+    "duration": "Durée",
+    "dailyPay": "Salaire journalier ({{symbol}})"
+  },
+  "submit": "Soumettre",
+  "headerText": "Mise à jour de la liste de vote pour les travailleurs, les membres des comités et les propositions des travailleurs !"
+}

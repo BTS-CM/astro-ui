@@ -828,11 +828,8 @@ export default function Witnesses(properties) {
     <div className="container mx-auto mt-5 mb-5">
       <Card>
         <CardHeader>
-          <CardTitle>Worker proposals</CardTitle>
-          <CardDescription>
-            Vote on worker proposals to reimburse developers for proposed tasks
-            and to decide strategic outcomes through political polling.
-          </CardDescription>
+          <CardTitle>{t("Voting:title")}</CardTitle>
+          <CardDescription>{t("Voting:description")}</CardDescription>
         </CardHeader>
         <CardContent>
           <Input
@@ -845,19 +842,19 @@ export default function Witnesses(properties) {
               variant={selectedVoteType === "witnesses" ? "default" : "outline"}
               onClick={() => setSelectedVoteType("witnesses")}
             >
-              Witnesses
+              {t("Voting:tabs.witnesses")}
             </Button>
             <Button
               variant={selectedVoteType === "committee" ? "default" : "outline"}
               onClick={() => setSelectedVoteType("committee")}
             >
-              Committee members
+              {t("Voting:tabs.committee")}
             </Button>
             <Button
               variant={selectedVoteType === "workers" ? "default" : "outline"}
               onClick={() => setSelectedVoteType("workers")}
             >
-              Worker proposals
+              {t("Voting:tabs.workers")}
             </Button>
           </div>
           {selectedVoteType === "workers" ? (
@@ -887,7 +884,7 @@ export default function Witnesses(properties) {
                       : "▼"
                     : ""}
                 </div>
-                <div>Toggle Vote</div>
+                <div>{t("Voting:toggleVote")}</div>
               </div>
               <ScrollArea className="h-[500px] pt-1 w-full">
                 {sortedWitnesses && sortedWitnesses.length && checkedVotes ? (
@@ -926,7 +923,7 @@ export default function Witnesses(properties) {
                       : "▼"
                     : ""}
                 </div>
-                <div>Toggle Vote</div>
+                <div>{t("Voting:toggleVote")}</div>
               </div>
               <div className="w-full max-h-[500px] overflow-auto">
                 {sortedWitnesses && sortedWitnesses.length && checkedVotes ? (
@@ -948,7 +945,7 @@ export default function Witnesses(properties) {
           {selectedVoteType === "workers" ? (
             <div className="w-full">
               <div className="grid grid-cols-12 gap-2 p-2 bg-gray-100 rounded-t-md font-semibold text-sm">
-                <div>Active</div>
+                <div>{t("Voting:workers.active")}</div>
                 <div>{t("CommitteeMembers:ids")}</div>
                 <div className="col-span-4" onClick={() => handleSort("name")}>
                   {t("CommitteeMembers:name")}{" "}
@@ -967,16 +964,20 @@ export default function Witnesses(properties) {
                     : ""}
                 </div>
                 <div onClick={() => handleSort("needed")}>
-                  Needed{" "}
+                  {t("Voting:workers.needed")}{" "}
                   {sortKey === "votes"
                     ? sortDirection === "asc"
                       ? "▲"
                       : "▼"
                     : ""}
                 </div>
-                <div className="col-span-2">Duration</div>
-                <div>Daily Pay (BTS)</div>
-                <div>Toggle Vote</div>
+                <div className="col-span-2">{t("Voting:workers.duration")}</div>
+                <div>
+                  {t("Voting:workers.dailyPay", {
+                    symbol: _chain === "bitshares" ? "BTS" : "TEST",
+                  })}
+                </div>
+                <div>{t("Voting:toggleVote")}</div>
               </div>
               <div className="w-full max-h-[500px] overflow-auto">
                 {sortedWorkers && sortedWorkers.length && checkedVotes ? (
@@ -998,7 +999,7 @@ export default function Witnesses(properties) {
         </CardContent>
         <CardFooter>
           <Button onClick={() => setShowDialog(true)} disabled={!checkedVotes}>
-            Submit
+            {t("Voting:submit")}
           </Button>
         </CardFooter>
       </Card>
@@ -1010,9 +1011,7 @@ export default function Witnesses(properties) {
           userID={usr.id}
           dismissCallback={setShowDialog}
           key={`VotingDialog`}
-          headerText={
-            "Updating voting slate for workers, committee members and worker proposals!"
-          }
+          headerText={t("Voting:headerText")}
           trxJSON={[trxJSON]}
         />
       ) : null}

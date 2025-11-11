@@ -1,0 +1,18 @@
+{
+  "title": "Propostas de trabalhadores",
+  "description": "Vote nas propostas dos trabalhadores para reembolsar os desenvolvedores pelas tarefas propostas e para decidir resultados estratégicos por meio de pesquisas políticas.",
+  "tabs": {
+    "witnesses": "Testemunhas",
+    "committee": "Membros do comitê",
+    "workers": "Propostas de trabalhadores"
+  },
+  "toggleVote": "Alternar votação",
+  "workers": {
+    "active": "Ativo",
+    "needed": "Necessário",
+    "duration": "Duração",
+    "dailyPay": "Pagamento Diário ({{symbol}})"
+  },
+  "submit": "Enviar",
+  "headerText": "Atualizando a lista de votação para trabalhadores, membros de comitês e propostas de trabalhadores!"
+}

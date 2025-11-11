@@ -1,0 +1,18 @@
+{
+  "title": "Worker proposals",
+  "description": "Vote on worker proposals to reimburse developers for proposed tasks and to decide strategic outcomes through political polling.",
+  "tabs": {
+    "witnesses": "Witnesses",
+    "committee": "Committee members",
+    "workers": "Worker proposals"
+  },
+  "toggleVote": "Toggle Vote",
+  "workers": {
+    "active": "Active",
+    "needed": "Needed",
+    "duration": "Duration",
+    "dailyPay": "Daily Pay ({{symbol}})"
+  },
+  "submit": "Submit",
+  "headerText": "Updating voting slate for workers, committee members and worker proposals!"
+}

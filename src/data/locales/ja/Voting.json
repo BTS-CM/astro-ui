@@ -1,0 +1,18 @@
+{
+  "title": "労働者の提案",
+  "description": "提案されたタスクに対して開発者に返済し、政治的投票を通じて戦略的結果を決定するための労働者の提案に投票します。",
+  "tabs": {
+    "witnesses": "証人",
+    "committee": "委員",
+    "workers": "労働者の提案"
+  },
+  "toggleVote": "投票を切り替え",
+  "workers": {
+    "active": "アクティブ",
+    "needed": "必要です",
+    "duration": "間隔",
+    "dailyPay": "日払い ({{symbol}}）"
+  },
+  "submit": "提出する",
+  "headerText": "労働者、委員会メンバー、労働者提案の投票表を更新中!"
+}

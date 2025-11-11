@@ -1,0 +1,18 @@
+{
+  "title": "근로자 제안",
+  "description": "제안된 작업에 대해 개발자에게 보상하고 정치적 여론 조사를 통해 전략적 결과를 결정하기 위해 작업자 제안에 투표하세요.",
+  "tabs": {
+    "witnesses": "증인",
+    "committee": "위원회 구성원",
+    "workers": "근로자 제안"
+  },
+  "toggleVote": "투표 전환",
+  "workers": {
+    "active": "활동적인",
+    "needed": "필요",
+    "duration": "지속",
+    "dailyPay": "일일 급여({{symbol}})"
+  },
+  "submit": "제출하다",
+  "headerText": "근로자, 위원회 구성원 및 근로자 제안에 대한 투표 목록을 업데이트 중입니다!"
+}

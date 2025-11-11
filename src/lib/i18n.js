@@ -72,6 +72,7 @@ const pages = [
   "WorkerCreate",
   "CommitteeMembers",
   "Witnesses",
+  "Voting",
   "CreateTicket",
   "TicketsLeaderboard",
   "Favourites",

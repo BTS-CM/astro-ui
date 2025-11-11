@@ -468,6 +468,13 @@ export default function Home(properties) {
       headingKey: "PageHeader:governanceHeading",
       cards: [
         {
+          key: "vote",
+          href: "/vote/index.html",
+          titleKey: "Home:vote.title",
+          subtitleKey: "Home:vote.subtitle",
+          hoverKeys: [],
+        },
+        {
           key: "witnesses",
           href: "/witnesses/index.html",
           titleKey: "Home:witnesses.title",
