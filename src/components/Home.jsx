@@ -472,7 +472,11 @@ export default function Home(properties) {
           href: "/vote/index.html",
           titleKey: "Home:vote.title",
           subtitleKey: "Home:vote.subtitle",
-          hoverKeys: [],
+          hoverKeys: [
+            "Home:vote.hover1",
+            "Home:vote.hover2",
+            "Home:vote.hover3",
+          ],
         },
         {
           key: "witnesses",

@@ -14,5 +14,11 @@
     "dailyPay": "Päevatasu ({{symbol}})"
   },
   "submit": "Esita",
-  "headerText": "Töötajate, komisjoniliikmete ja töötajate ettepanekute hääletuslehte uuendatakse!"
+  "headerText": "Töötajate, komisjoniliikmete ja töötajate ettepanekute hääletuslehte uuendatakse!",
+  "ticket": {
+    "title": "Kas olete juba hääleluku pileti loonud?",
+    "descriptionLine1": "Ilma piletita ei mõjuta teie hääletamist!",
+    "descriptionLine2": "Looge hääleluku pilet, et osaleda plokiahela juhtimises.",
+    "createButton": "Loo pilet"
+  }
 }

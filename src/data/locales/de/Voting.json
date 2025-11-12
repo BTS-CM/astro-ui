@@ -14,5 +14,11 @@
     "dailyPay": "Tägliches Gehalt ({{symbol}})"
   },
   "submit": "Einreichen",
-  "headerText": "Aktualisierung der Abstimmungsliste für Arbeitnehmer, Ausschussmitglieder und Arbeitnehmervorschläge!"
+  "headerText": "Aktualisierung der Abstimmungsliste für Arbeitnehmer, Ausschussmitglieder und Arbeitnehmervorschläge!",
+  "ticket": {
+    "title": "Haben Sie schon ein Vote-Lock-Ticket erstellt?",
+    "descriptionLine1": "Ohne Ticket hat Ihre Stimmabgabe keinen Einfluss!",
+    "descriptionLine2": "Erstellen Sie ein Vote-Lock-Ticket, um an der Blockchain-Governance teilzunehmen.",
+    "createButton": "Ticket erstellen"
+  }
 }

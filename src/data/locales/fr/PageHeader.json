@@ -52,6 +52,7 @@
   "portuguese": "Portugais (pt)",
   "thai": "Thaï (th)",
   "descText": {
+    "vote": "Le vote fait partie intégrante de la preuve de participation déléguée, alors votez pour les membres du comité, les témoins et les travailleurs pour aider à gouverner la blockchain !",
     "htlc": "Utilisez le formulaire ci-dessous pour créer, prolonger et échanger des contrats verrouillés dans le temps hachés.",
     "timed_transfer": "Utilisez le formulaire ci-dessous pour créer un transfert programmé d'actifs vers un autre compte.",
     "withdraw_permissions": "Utilisez cette page pour créer, mettre à jour, supprimer et demander des autorisations de retrait.",

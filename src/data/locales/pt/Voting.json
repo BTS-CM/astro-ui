@@ -14,5 +14,11 @@
     "dailyPay": "Pagamento Diário ({{symbol}})"
   },
   "submit": "Enviar",
-  "headerText": "Atualizando a lista de votação para trabalhadores, membros de comitês e propostas de trabalhadores!"
+  "headerText": "Atualizando a lista de votação para trabalhadores, membros de comitês e propostas de trabalhadores!",
+  "ticket": {
+    "title": "Você já criou um ticket de bloqueio de votação?",
+    "descriptionLine1": "Sem bilhete a sua votação não terá influência!",
+    "descriptionLine2": "Crie um ticket de bloqueio de votação para participar da governança do blockchain.",
+    "createButton": "Criar ingresso"
+  }
 }

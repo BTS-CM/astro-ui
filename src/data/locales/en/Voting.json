@@ -14,5 +14,11 @@
     "dailyPay": "Daily Pay ({{symbol}})"
   },
   "submit": "Submit",
-  "headerText": "Updating voting slate for workers, committee members and worker proposals!"
+  "headerText": "Updating voting slate for workers, committee members and worker proposals!",
+  "ticket": {
+    "title": "Have you created a vote lock ticket yet?",
+    "descriptionLine1": "Without a ticket your voting won't have influence!",
+    "descriptionLine2": "Create a vote lock ticket to participate in blockchain governance.",
+    "createButton": "Create Ticket"
+  }
 }

@@ -14,5 +14,11 @@
     "dailyPay": "Retribuzione giornaliera ({{symbol}})"
   },
   "submit": "Invia",
-  "headerText": "Aggiornamento delle liste elettorali dei lavoratori, dei membri dei comitati e delle proposte dei lavoratori!"
+  "headerText": "Aggiornamento delle liste elettorali dei lavoratori, dei membri dei comitati e delle proposte dei lavoratori!",
+  "ticket": {
+    "title": "Hai già creato un ticket per il blocco del voto?",
+    "descriptionLine1": "Senza biglietto il tuo voto non avrà influenza!",
+    "descriptionLine2": "Crea un ticket per il blocco del voto per partecipare alla governance della blockchain.",
+    "createButton": "Crea biglietto"
+  }
 }

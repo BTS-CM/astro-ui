@@ -21,6 +21,15 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
+import {
+  Empty,
+  EmptyHeader,
+  EmptyTitle,
+  EmptyContent,
+  EmptyMedia,
+  EmptyDescription,
+} from "@/components/ui/empty";
+
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -76,8 +85,15 @@ export default function Witnesses(properties) {
   const [allWorkerProposals, setAllWorkerProposals] = useState([]);
 
   const [filter, setFilter] = useState("");
-  const [sortKey, setSortKey] = useState("rank"); // rank, name, votes, missed
-  const [sortDirection, setSortDirection] = useState("asc"); // asc, desc
+
+  const [witnessSortKey, setWitnessSortKey] = useState("rank");
+  const [witnessSortDirection, setWitnessSortDirection] = useState("asc");
+
+  const [committeeSortKey, setCommitteeSortKey] = useState("votes");
+  const [committeeSortDirection, setCommitteeSortDirection] = useState("desc");
+
+  const [workerSortKey, setWorkerSortKey] = useState("votes");
+  const [workerSortDirection, setWorkerSortDirection] = useState("desc");
 
   // 1. Fetch Global and Dynamic Global Parameters
   useEffect(() => {
@@ -439,64 +455,78 @@ export default function Witnesses(properties) {
   const sortedWitnesses = useMemo(() => {
     let standby = processedWitnesses;
     standby.sort((a, b) => {
-      if (sortKey === "name") return a.name.localeCompare(b.name);
-      if (sortKey === "votes") return a.total_votes - b.total_votes;
-      if (sortKey === "rank") return b.total_votes - a.total_votes;
+      if (witnessSortKey === "name") return a.name.localeCompare(b.name);
+      if (witnessSortKey === "votes") return a.total_votes - b.total_votes;
+      if (witnessSortKey === "rank") return b.total_votes - a.total_votes;
       return 0;
     });
-    if (sortDirection === "desc") {
+    if (witnessSortDirection === "desc") {
       standby.reverse();
     }
     return standby;
-  }, [processedWitnesses, sortKey, sortDirection]);
+  }, [processedWitnesses, witnessSortKey, witnessSortDirection]);
 
   const sortedMembers = useMemo(() => {
     const sorted = [...processedCommitteeMembers].sort((a, b) => {
-      if (sortKey === "name") {
-        return sortDirection === "asc"
+      if (committeeSortKey === "name") {
+        return committeeSortDirection === "asc"
           ? a.name.localeCompare(b.name)
           : b.name.localeCompare(a.name);
-      } else if (sortKey === "votes") {
-        return sortDirection === "asc"
+      } else if (committeeSortKey === "votes") {
+        return committeeSortDirection === "asc"
           ? a.total_votes - b.total_votes
           : b.total_votes - a.total_votes;
       }
       return 0; // Default case (shouldn't happen)
     });
     return sorted;
-  }, [processedCommitteeMembers, sortKey, sortDirection]);
+  }, [processedCommitteeMembers, committeeSortKey, committeeSortDirection]);
 
   const sortedWorkers = useMemo(() => {
     // id, votes, needed, daily pay
     const sorted = [...processedWorkerProposals].sort((a, b) => {
-      if (sortKey === "name") {
-        return sortDirection === "asc"
+      if (workerSortKey === "name") {
+        return workerSortDirection === "asc"
           ? a.name.localeCompare(b.name)
           : b.name.localeCompare(a.name);
-      } else if (sortKey === "votes") {
-        return sortDirection === "asc"
+      } else if (workerSortKey === "votes") {
+        return workerSortDirection === "asc"
           ? a.readableVotesFor - b.readableVotesFor
           : b.readableVotesFor - a.readableVotesFor;
-      } else if (sortKey === "needed") {
-        return sortDirection === "asc"
-          ? a.needed - b.needed
-          : b.needed - a.needed;
-      } else if (sortKey === "daily_pay") {
-        return sortDirection === "asc"
+      } else if (workerSortKey === "daily_pay") {
+        return workerSortDirection === "asc"
           ? a.readablePay - b.readablePay
           : b.readablePay - a.readablePay;
       }
       return 0; // Default case (shouldn't happen)
     });
     return sorted;
-  }, [processedWorkerProposals, sortKey, sortDirection]);
+  }, [processedWorkerProposals, workerSortKey, workerSortDirection]);
 
-  const handleSort = (key) => {
-    if (sortKey === key) {
-      setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
+  const handleWitnessSort = (key) => {
+    if (witnessSortKey === key) {
+      setWitnessSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
     } else {
-      setSortKey(key);
-      setSortDirection("asc"); // Default to asc when changing column
+      setWitnessSortKey(key);
+      setWitnessSortDirection("asc"); // Default to asc when changing column
+    }
+  };
+
+  const handleCommitteeSort = (key) => {
+    if (committeeSortKey === key) {
+      setCommitteeSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
+    } else {
+      setCommitteeSortKey(key);
+      setCommitteeSortDirection("asc"); // Default to asc when changing column
+    }
+  };
+
+  const handleWorkerSort = (key) => {
+    if (workerSortKey === key) {
+      setWorkerSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
+    } else {
+      setWorkerSortKey(key);
+      setWorkerSortDirection("asc"); // Default to asc when changing column
     }
   };
 
@@ -507,7 +537,6 @@ export default function Witnesses(properties) {
     []
   );
 
-  // given requested daily_pay and budgetConsumers and total_votes_for calculate needed votes to pass others till daily pay is afforded by budget
   function calculateNeededVotes(_workerProposal) {
     let totalVotesNeeded = 0;
     let remainingBudget = 400000 - consumedBudget;
@@ -526,6 +555,16 @@ export default function Witnesses(properties) {
       }
     }
     return totalVotesNeeded - _workerProposal.readableVotesFor;
+  }
+
+  function formatDate(dateStr) {
+    if (!dateStr) return "";
+    // If the string contains a 'T', take the date portion before it; otherwise assume it's already a date
+    const datePart = dateStr.includes("T") ? dateStr.split("T")[0] : dateStr;
+    const parts = datePart.split("-"); // [YYYY, MM, DD]
+    if (parts.length !== 3) return dateStr; // fallback
+    const [y, m, d] = parts;
+    return `${d}/${m}/${y}`;
   }
 
   const [committeeVotes, setCommitteeVotes] = useState([]);
@@ -659,7 +698,7 @@ export default function Witnesses(properties) {
   };
 
   const CommitteeRow = ({ index, style }) => {
-    const member = processedCommitteeMembers[index];
+    const member = sortedMembers[index];
     if (!member) return null;
     const { vote_id } = member;
 
@@ -747,28 +786,40 @@ export default function Witnesses(properties) {
   };
 
   const WorkerRow = ({ index, style }) => {
-    const worker = processedWorkerProposals[index];
+    const worker = sortedWorkers[index];
     if (!worker) return null;
     const { vote_for } = worker;
     const isToggled = useMemo(() => {
       return workerVotes.includes(vote_for);
     }, [workerVotes, vote_for]);
-    // status, id, name, votes, needed votes to activate, duration, daily pay, toggle vote
+
+    const begin = formatDate(worker.work_begin_date);
+    const end = formatDate(worker.work_end_date);
+
     return (
       <div style={style} key={worker.id}>
         <Card className={`mb-1`}>
           <CardContent className="pt-3 pb-3 text-sm">
-            <div className="grid grid-cols-12 gap-2 items-center">
+            <div className="grid grid-cols-8 md:grid-cols-12 gap-2 items-center">
               <div>
                 {budgetConsumers.find((bc) => bc.id === worker.id)
                   ? "✅"
                   : "❌"}
               </div>
-              <div>{worker.id}</div>
-              <div className="col-span-4 grid grid-cols-1">
+              <div className="hidden md:block">
+                <ExternalLink
+                  classnamecontents="text-blue-500 hover:text-purple-500"
+                  type="text"
+                  text={worker.id}
+                  hyperlink={`https://explorer.bitshares.ws/#/objects/${
+                    worker.id
+                  }${_chain === "bitshares" ? "" : "?network=testnet"}`}
+                />
+              </div>
+              <div className="col-span-3 grid grid-cols-1">
                 <div title={worker.name}>
-                  {worker.name.length > 15
-                    ? `${worker.name.splice(0, 15)}...`
+                  {worker.name.length > 20
+                    ? `${worker.name.slice(0, 20)}...`
                     : worker.name}
                 </div>
                 <div>
@@ -776,7 +827,7 @@ export default function Witnesses(properties) {
                     classnamecontents="text-blue-500 hover:text-purple-500"
                     type="text"
                     text={worker.username}
-                    hyperlink={`https://explorer.bitshares.ws/#/objects/${
+                    hyperlink={`https://explorer.bitshares.ws/#/accounts/${
                       worker.username
                     }${_chain === "bitshares" ? "" : "?network=testnet"}`}
                   />{" "}
@@ -785,17 +836,21 @@ export default function Witnesses(properties) {
                     classnamecontents="text-blue-500 hover:text-purple-500"
                     type="text"
                     text={worker.worker_account}
-                    hyperlink={`https://explorer.bitshares.ws/#/accounts/${
+                    hyperlink={`https://explorer.bitshares.ws/#/objects/${
                       worker.worker_account
                     }${_chain === "bitshares" ? "" : "?network=testnet"}`}
                   />
                   )
                 </div>
               </div>
-              <div>{worker.readableVotesFor}</div>
-              <div>{calculateNeededVotes(worker)}</div>
+              <div className="hidden md:block col-span-2">
+                {worker.readableVotesFor}
+              </div>
+              <div className="hidden md:block">
+                {calculateNeededVotes(worker)}
+              </div>
               <div className="col-span-2">
-                {worker.work_begin_date} - {worker.work_end_date}
+                {begin} - {end}
               </div>
               <div>{worker.readablePay}</div>
               <div>
@@ -837,7 +892,7 @@ export default function Witnesses(properties) {
             onChange={(e) => debouncedFilterChange(e.target.value)}
             className="mb-4 w-full md:w-1/3"
           />
-          <div className="w-full grid grid-cols-3 gap-3 mb-3">
+          <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
             <Button
               variant={selectedVoteType === "witnesses" ? "default" : "outline"}
               onClick={() => setSelectedVoteType("witnesses")}
@@ -857,29 +912,26 @@ export default function Witnesses(properties) {
               {t("Voting:tabs.workers")}
             </Button>
           </div>
-          {selectedVoteType === "workers" ? (
-            <div className="w-full grid grid-cols-3 gap-3 mb-3"></div>
-          ) : null}
 
           {selectedVoteType === "witnesses" ? (
             <div className="w-full">
               <div className="grid grid-cols-4 gap-2 p-2 bg-gray-100 rounded-t-md font-semibold text-sm">
                 <div
                   className="cursor-pointer"
-                  onClick={() => handleSort("name")}
+                  onClick={() => handleWitnessSort("name")}
                 >
                   {t("Witnesses:name")}{" "}
-                  {sortKey === "name"
-                    ? sortDirection === "asc"
+                  {witnessSortKey === "name"
+                    ? witnessSortDirection === "asc"
                       ? "▲"
                       : "▼"
                     : ""}
                 </div>
                 <div>{t("Witnesses:ids")}</div>
-                <div onClick={() => handleSort("votes")}>
+                <div onClick={() => handleWitnessSort("votes")}>
                   {t("Witnesses:votes")}{" "}
-                  {sortKey === "votes"
-                    ? sortDirection === "asc"
+                  {witnessSortKey === "votes"
+                    ? witnessSortDirection === "asc"
                       ? "▲"
                       : "▼"
                     : ""}
@@ -906,19 +958,19 @@ export default function Witnesses(properties) {
           {selectedVoteType === "committee" ? (
             <div className="w-full">
               <div className="grid grid-cols-4 gap-2 p-2 bg-gray-100 rounded-t-md font-semibold text-sm">
-                <div onClick={() => handleSort("name")}>
+                <div onClick={() => handleCommitteeSort("name")}>
                   {t("CommitteeMembers:name")}{" "}
-                  {sortKey === "name"
-                    ? sortDirection === "asc"
+                  {committeeSortKey === "name"
+                    ? committeeSortDirection === "asc"
                       ? "▲"
                       : "▼"
                     : ""}
                 </div>
                 <div>{t("CommitteeMembers:ids")}</div>
-                <div onClick={() => handleSort("votes")}>
+                <div onClick={() => handleCommitteeSort("votes")}>
                   {t("CommitteeMembers:votes")}{" "}
-                  {sortKey === "votes"
-                    ? sortDirection === "asc"
+                  {committeeSortKey === "votes"
+                    ? committeeSortDirection === "asc"
                       ? "▲"
                       : "▼"
                     : ""}
@@ -944,32 +996,35 @@ export default function Witnesses(properties) {
           ) : null}
           {selectedVoteType === "workers" ? (
             <div className="w-full">
-              <div className="grid grid-cols-12 gap-2 p-2 bg-gray-100 rounded-t-md font-semibold text-sm">
+              <div className="grid grid-cols-8 md:grid-cols-12 gap-2 p-2 bg-gray-100 rounded-t-md font-semibold text-sm">
                 <div>{t("Voting:workers.active")}</div>
-                <div>{t("CommitteeMembers:ids")}</div>
-                <div className="col-span-4" onClick={() => handleSort("name")}>
+                <div className="hidden md:block">
+                  {t("CommitteeMembers:ids")}
+                </div>
+                <div
+                  className="col-span-3"
+                  onClick={() => handleWorkerSort("name")}
+                >
                   {t("CommitteeMembers:name")}{" "}
-                  {sortKey === "name"
-                    ? sortDirection === "asc"
+                  {workerSortKey === "name"
+                    ? workerSortDirection === "asc"
                       ? "▲"
                       : "▼"
                     : ""}
                 </div>
-                <div onClick={() => handleSort("votes")}>
+                <div
+                  className="col-span-2 hidden md:block"
+                  onClick={() => handleWorkerSort("votes")}
+                >
                   {t("CommitteeMembers:votes")}{" "}
-                  {sortKey === "votes"
-                    ? sortDirection === "asc"
+                  {workerSortKey === "votes"
+                    ? workerSortDirection === "asc"
                       ? "▲"
                       : "▼"
                     : ""}
                 </div>
-                <div onClick={() => handleSort("needed")}>
-                  {t("Voting:workers.needed")}{" "}
-                  {sortKey === "votes"
-                    ? sortDirection === "asc"
-                      ? "▲"
-                      : "▼"
-                    : ""}
+                <div className="hidden md:block">
+                  {t("Voting:workers.needed")}
                 </div>
                 <div className="col-span-2">{t("Voting:workers.duration")}</div>
                 <div>
@@ -1002,6 +1057,26 @@ export default function Witnesses(properties) {
             {t("Voting:submit")}
           </Button>
         </CardFooter>
+      </Card>
+      <Card className="mt-5 w-full md:w-1/2 mx-auto">
+        <Empty className="mt-5">
+          <EmptyHeader>
+            <EmptyMedia variant="icon">❔</EmptyMedia>
+            <EmptyTitle>{t("Voting:ticket.title")}</EmptyTitle>
+            <EmptyDescription>
+              {t("Voting:ticket.descriptionLine1")}
+              <br />
+              {t("Voting:ticket.descriptionLine2")}
+            </EmptyDescription>
+          </EmptyHeader>
+          <EmptyContent>
+            <Button asChild>
+              <a href="/create_ticket/index.html">
+                {t("Voting:ticket.createButton")}
+              </a>
+            </Button>
+          </EmptyContent>
+        </Empty>
       </Card>
       {showDialog ? (
         <DeepLinkDialog
