@@ -22,6 +22,11 @@ import { useInitCache } from "@/nanoeffects/Init.ts";
 
 import { $currentUser } from "@/stores/users.ts";
 import { $inventoryStorage } from "@/stores/inventory";
+import {
+  $generatedInvoiceStorage,
+  hasGeneratedInvoice,
+  saveGeneratedInvoice,
+} from "@/stores/invoices";
 
 import { copyToClipboard } from "@/lib/common";
 import BarcodeScanner from "react-qr-barcode-scanner";
@@ -109,6 +114,7 @@ export default function InvoiceCreator(properties) {
   const [note, setNote] = useState("");
   const [selectedItems, setSelectedItems] = useState([]);
   const [generatedCode, setGeneratedCode] = useState("");
+  const [copied, setCopied] = useState(false);
 
   // Add-item dialog state and helpers
   const [addDialogOpen, setAddDialogOpen] = useState(false);
@@ -217,6 +223,8 @@ export default function InvoiceCreator(properties) {
       setGeneratedCode("Error generating invoice");
     }
   }, [selectedItems, recipientName, identifier, note, usr]);
+
+  const invoiceStore = useStore($generatedInvoiceStorage); // re-render when generated invoices change
 
   const canSubmit = useMemo(() => {
     const hasRecipientName = (recipientName || "").trim().length > 0;
@@ -796,36 +804,112 @@ export default function InvoiceCreator(properties) {
             </CardContent>
             <CardFooter>
               {canSubmit ? (
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button onClick={handleGenerateInvoice}>
-                      {t("InvoiceCreator:generateInvoice.buttonActive")}
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-[720px] sm:min-w-[720px] bg-white">
-                    <DialogHeader>
-                      <DialogTitle>
-                        {t("InvoiceCreator:generatedInvoice.dialogTitle")}
-                      </DialogTitle>
-                      <DialogDescription>
-                        {t("InvoiceCreator:generatedInvoice.dialogDescription")}
-                      </DialogDescription>
-                    </DialogHeader>
-                    <Textarea
-                      value={generatedCode}
-                      readOnly
-                      className="w-full h-48"
-                    />
-                    <Button
-                      onClick={() => {
-                        copyToClipboard(generatedCode);
-                      }}
-                      className="mt-2"
-                    >
-                      {t("InvoiceCreator:generatedInvoice.copyButton")}
-                    </Button>
-                  </DialogContent>
-                </Dialog>
+                <div className="flex flex-wrap gap-3 items-center">
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button onClick={handleGenerateInvoice}>
+                        {t(
+                          "InvoiceCreator:generateInvoice.buttonActive",
+                          "Proceed to pay invoice"
+                        )}
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[720px] sm:min-w-[720px] bg-white">
+                      <DialogHeader>
+                        <DialogTitle>
+                          {t("InvoiceCreator:generatedInvoice.dialogTitle")}
+                        </DialogTitle>
+                        <DialogDescription>
+                          {t(
+                            "InvoiceCreator:generatedInvoice.dialogDescription"
+                          )}
+                        </DialogDescription>
+                      </DialogHeader>
+                      <Textarea
+                        value={generatedCode}
+                        readOnly
+                        className="w-full h-48"
+                      />
+                      <div className="flex items-center gap-2 mt-2">
+                        <Button
+                          onClick={() => {
+                            if (!generatedCode) return;
+                            copyToClipboard(generatedCode);
+                            setCopied(true);
+                            setTimeout(() => setCopied(false), 2000);
+                          }}
+                          disabled={!generatedCode || copied}
+                        >
+                          {copied
+                            ? t(
+                                "InvoiceCreator:generatedInvoice.copiedButton",
+                                "Copied"
+                              )
+                            : t(
+                                "InvoiceCreator:generatedInvoice.copyButton",
+                                "Copy"
+                              )}
+                        </Button>
+                        <Button
+                          onClick={() => {
+                            if (!generatedCode) return;
+                            if (!hasGeneratedInvoice(generatedCode)) {
+                              saveGeneratedInvoice(generatedCode);
+                            }
+                          }}
+                          disabled={
+                            !generatedCode || hasGeneratedInvoice(generatedCode)
+                          }
+                          variant={
+                            hasGeneratedInvoice(generatedCode)
+                              ? "outline"
+                              : "default"
+                          }
+                        >
+                          {hasGeneratedInvoice(generatedCode)
+                            ? t(
+                                "InvoiceCreator:generatedInvoice.invoiceSaved",
+                                "Invoice saved"
+                              )
+                            : t(
+                                "InvoiceCreator:generatedInvoice.saveInvoice",
+                                "Save invoice"
+                              )}
+                        </Button>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+                  <Button
+                    onClick={async () => {
+                      // Ensure invoice code exists
+                      if (!generatedCode) {
+                        await handleGenerateInvoice();
+                      }
+                      if (
+                        generatedCode &&
+                        !hasGeneratedInvoice(generatedCode)
+                      ) {
+                        saveGeneratedInvoice(generatedCode);
+                      }
+                    }}
+                    disabled={
+                      !canSubmit ||
+                      (generatedCode && hasGeneratedInvoice(generatedCode))
+                    }
+                    variant={
+                      generatedCode && hasGeneratedInvoice(generatedCode)
+                        ? "outline"
+                        : "secondary"
+                    }
+                  >
+                    {generatedCode && hasGeneratedInvoice(generatedCode)
+                      ? t("InvoiceCreator:saveForLater.saved", "Invoice saved")
+                      : t(
+                          "InvoiceCreator:saveForLater.button",
+                          "Save invoice for later payment"
+                        )}
+                  </Button>
+                </div>
               ) : (
                 <Button disabled>
                   {t("InvoiceCreator:generateInvoice.button")}

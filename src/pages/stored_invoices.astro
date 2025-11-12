@@ -1,0 +1,27 @@
+---
+import Layout from '../layouts/Layout.astro';
+import InvoiceStorage from '../components/InvoiceStorage.jsx';
+import PageHeader from '../components/PageHeader.jsx';
+import PageFooter from '../components/PageFooter.jsx';
+---
+
+<Layout title="Bitshares Create Invoice Storage">
+	<main>
+		<PageHeader client:only="react" page="stored_invoices" backURL="../index.html" />
+		<InvoiceStorage client:only="react" />
+		<PageFooter client:only="react" sourceURL="https://github.com/BTS-CM/astro-ui/blob/main/src/pages/stored_invoices.astro" />
+	</main>
+</Layout>
+
+<style>
+	main {
+		margin: auto;
+		padding: 1rem;
+		width: 100%;
+		max-width: calc(100% - 2rem);
+		color: white;
+		font-size: 20px;
+		line-height: 1.6;
+		min-height: 100vh;
+	}
+</style>
