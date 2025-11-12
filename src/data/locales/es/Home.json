@@ -1,4 +1,11 @@
 {
+  "vote": {
+    "title": "🗳️ Votación",
+    "subtitle": "Votación por testigos, miembros del comité y propuestas de trabajadores.",
+    "hover1": "Vote por los testigos que producen bloques en la cadena de bloques.",
+    "hover2": "Vote por los miembros del comité que gobiernan la cadena de bloques.",
+    "hover3": "Vote por las propuestas de los trabajadores para financiar ideas en blockchain."
+  },
   "barter": {
     "title": "🛒 Cortador",
     "subtitle": "Activos comerciales con otros usuarios",

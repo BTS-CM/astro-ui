@@ -1,0 +1,24 @@
+{
+  "title": "Proposte dei lavoratori",
+  "description": "Vota le proposte dei lavoratori per rimborsare gli sviluppatori per i compiti proposti e per decidere i risultati strategici attraverso sondaggi politici.",
+  "tabs": {
+    "witnesses": "Testimoni",
+    "committee": "Membri del comitato",
+    "workers": "Proposte dei lavoratori"
+  },
+  "toggleVote": "Attiva/disattiva votazione",
+  "workers": {
+    "active": "Attivo",
+    "needed": "Necessario",
+    "duration": "Durata",
+    "dailyPay": "Retribuzione giornaliera ({{symbol}})"
+  },
+  "submit": "Invia",
+  "headerText": "Aggiornamento delle liste elettorali dei lavoratori, dei membri dei comitati e delle proposte dei lavoratori!",
+  "ticket": {
+    "title": "Hai già creato un ticket per il blocco del voto?",
+    "descriptionLine1": "Senza biglietto il tuo voto non avrà influenza!",
+    "descriptionLine2": "Crea un ticket per il blocco del voto per partecipare alla governance della blockchain.",
+    "createButton": "Crea biglietto"
+  }
+}

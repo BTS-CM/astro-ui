@@ -6,7 +6,7 @@
   "pools": "유동성 풀",
   "assetCreation": "자산 생성",
   "welcomeMessage": "에 오신 것을 환영합니다 ",
-  "uiName": "Bitshares 비트 애스트로 UI",
+  "uiName": "Bitshares Astro UI",
   "commandSearchPlaceholder": "명령을 입력하거나 검색하세요...",
   "noResultsFound": "검색 결과가 없습니다.",
   "exchangingFundsHeading": "자금 교환",
@@ -52,6 +52,7 @@
   "portuguese": "포르투갈어(pt)",
   "thai": "태국어(일)",
   "descText": {
+    "vote": "투표는 위임 지분 증명의 필수적인 부분이므로 위원회 구성원, 증인 및 직원에게 투표하여 블록체인을 관리하는 데 도움을 주세요!",
     "htlc": "아래 양식을 사용하여 해시된 시간 잠금 계약을 만들고, 연장하고, 상환하세요.",
     "timed_transfer": "아래 양식을 사용하여 다른 계정으로 자산을 정해진 시간 내에 이체합니다.",
     "withdraw_permissions": "이 페이지를 사용하여 생성, 업데이트, 삭제 및 인출 권한 작업을 작성합니다.",

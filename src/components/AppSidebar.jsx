@@ -96,6 +96,7 @@ export default function AppSidebar() {
   ];
 
   const governanceHeading = [
+    { title: "Home.vote.title", href: "/vote/index.html" },
     { title: "Home:witnesses.title", href: "/witnesses/index.html" },
     { title: "Home:committee.title", href: "/committee/index.html" },
     { title: "Home:governance.title", href: "/governance/index.html" },

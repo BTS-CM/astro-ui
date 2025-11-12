@@ -6,7 +6,7 @@
   "pools": "Liquiditätspools",
   "assetCreation": "Vermögenserstellung",
   "welcomeMessage": "Willkommen zu ",
-  "uiName": "Bitshares Beet Astro-Benutzeroberfläche",
+  "uiName": "Bitshares Astro UI",
   "commandSearchPlaceholder": "Geben Sie einen Befehl ein oder suchen Sie...",
   "noResultsFound": "Keine Ergebnisse gefunden.",
   "exchangingFundsHeading": "Gelder austauschen",
@@ -52,6 +52,7 @@
   "portuguese": "Portugiesisch (pt)",
   "thai": "Thai (th)",
   "descText": {
+    "vote": "Abstimmungen sind ein wesentlicher Bestandteil des Delegated Proof of Stake, also stimmen Sie über Ausschussmitglieder, Zeugen und Arbeiter ab, um bei der Verwaltung der Blockchain mitzuhelfen!",
     "htlc": "Verwenden Sie das untenstehende Formular, um gehashte, zeitgesperrte Verträge zu erstellen, zu verlängern und einzulösen.",
     "timed_transfer": "Verwenden Sie das untenstehende Formular, um eine zeitgesteuerte Übertragung von Vermögenswerten auf ein anderes Konto zu veranlassen.",
     "withdraw_permissions": "Auf dieser Seite können Sie Vorgänge zum Erstellen, Aktualisieren, Löschen und Einfordern von Widerrufsberechtigungen durchführen.",

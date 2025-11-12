@@ -1,0 +1,24 @@
+{
+  "title": "Propositions des travailleurs",
+  "description": "Votez sur les propositions des travailleurs pour rembourser les développeurs pour les tâches proposées et pour décider des résultats stratégiques par le biais de sondages politiques.",
+  "tabs": {
+    "witnesses": "Témoins",
+    "committee": "Membres du comité",
+    "workers": "Propositions des travailleurs"
+  },
+  "toggleVote": "Basculer le vote",
+  "workers": {
+    "active": "Actif",
+    "needed": "Nécessaire",
+    "duration": "Durée",
+    "dailyPay": "Salaire journalier ({{symbol}})"
+  },
+  "submit": "Soumettre",
+  "headerText": "Mise à jour de la liste de vote pour les travailleurs, les membres des comités et les propositions des travailleurs !",
+  "ticket": {
+    "title": "Avez-vous déjà créé un ticket de verrouillage de vote ?",
+    "descriptionLine1": "Sans ticket, votre vote n'aura aucune influence !",
+    "descriptionLine2": "Créez un ticket de verrouillage de vote pour participer à la gouvernance de la blockchain.",
+    "createButton": "Créer un ticket"
+  }
+}

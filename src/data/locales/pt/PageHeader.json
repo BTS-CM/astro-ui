@@ -6,7 +6,7 @@
   "pools": "Pools de Liquidez",
   "assetCreation": "Criação de ativos",
   "welcomeMessage": "Bem vindo à ",
-  "uiName": "Interface do usuário Bitshares Beet Astro",
+  "uiName": "Bitshares Astro UI",
   "commandSearchPlaceholder": "Digite um comando ou pesquise...",
   "noResultsFound": "Nenhum resultado encontrado.",
   "exchangingFundsHeading": "Troca de fundos",
@@ -52,6 +52,7 @@
   "portuguese": "Português (pt)",
   "thai": "Tailandês (th)",
   "descText": {
+    "vote": "A votação é parte integrante da Prova de Participação Delegada, portanto vote nos membros do comitê, testemunhas e trabalhadores para ajudar a governar o blockchain!",
     "htlc": "Use o formulário abaixo para criar, estender e resgatar contratos com bloqueio de tempo com hash.",
     "timed_transfer": "Use o formulário abaixo para criar uma transferência programada de ativos para outra conta.",
     "withdraw_permissions": "Use esta página para elaborar operações de permissão de criação, atualização, exclusão e reivindicação de retirada.",

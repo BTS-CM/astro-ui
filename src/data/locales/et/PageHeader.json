@@ -6,7 +6,7 @@
   "pools": "Likviidsusbasseinid",
   "assetCreation": "Vara loomine",
   "welcomeMessage": "Tere tulemast ",
-  "uiName": "Bitshares Beet Astro kasutajaliides",
+  "uiName": "Bitshares Astro UI",
   "commandSearchPlaceholder": "Sisestage käsk või otsige...",
   "noResultsFound": "Tulemusi ei leitud.",
   "exchangingFundsHeading": "Vahendite vahetamine",
@@ -52,6 +52,7 @@
   "portuguese": "portugali (pt)",
   "thai": "Tai (th)",
   "descText": {
+    "vote": "Hääletamine on osaluse delegeeritud tõendi lahutamatu osa, seega hääletage komisjoni liikmete, tunnistajate ja töötajate poolt, et aidata plokiahelat juhtida!",
     "htlc": "Kasutage allolevat vormi ajaliselt lukustatud räsilepingute loomiseks, pikendamiseks ja lunastamiseks.",
     "timed_transfer": "Varade ajastatud ülekandmiseks teisele kontole kasutage allolevat vormi.",
     "withdraw_permissions": "Kasutage seda lehte, et luua, värskendada, kustutada ja taotleda loa tühistamise toiminguid.",
